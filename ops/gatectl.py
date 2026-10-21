@@ -68,6 +68,7 @@ GLOBAL_DENY = [
     "docs/**",
     "migration/**",
     "evidence/**",
+    "data/**",
     ".github/**",
     ".claude/**",
     ".gitattributes",

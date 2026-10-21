@@ -120,7 +120,7 @@ def cmd_state(args) -> int:
 # --------------------------------------------------------------------------
 SUPERVISOR_OWNED = [
     "plans/**", "project/**", "ops/**", "schemas/**", "docs/**", "migration/**", "evidence/**",
-    ".github/**", ".claude/**", ".gitattributes", ".gitignore", "AGENTS.md", "README.md",
+    "data/**", ".github/**", ".claude/**", ".gitattributes", ".gitignore", "AGENTS.md", "README.md",
 ]
 
 
