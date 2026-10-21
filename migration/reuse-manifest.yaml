@@ -1,0 +1,157 @@
+schema_version: 1
+manifest_status: LEDGER_OPEN
+project: repo-presenter
+created_at: "2026-10-21T00:00:00Z"
+updated_at: "2026-10-21T00:00:00Z"
+
+authority:
+  governance: AGENTS.md
+  reuse_model: INCREMENTAL_PULL
+  note: >
+    This is a ledger, not a census (same model the old repo used for its own pull
+    from foss-readme-optimizer). A module enters this repository only when a
+    taskcard actually pulls it, with its own file record, ported tests, and a cut
+    import closure. Everything never pulled is RETIRE by default. Dispositions
+    below reflect evidence gathered in docs/history-reconstruction.md
+    (2026-10-21); they are not yet completed code pulls — pull work happens
+    under P1_VERTICAL_SLICE taskcards.
+
+sources:
+  - id: old-repository-presenter
+    repository: babar-raza/repository-presenter
+    local_path: E:\Users\prora\OneDrive\Documents\GitHub\repository-presenter
+    role: primary salvage source (mission §1)
+  - id: foss-mcp
+    repository: babar-raza/foss-mcp
+    local_path: E:\Users\prora\OneDrive\Documents\GitHub\foss-mcp
+    role: supervisor mechanics reference only, not a product authority (mission §1, §4)
+  - id: aspose-org
+    local_path: C:\Users\babar\Documents\GitHub\aspose.org
+    role: optional README-refresh skill/code reference (mission §10), not yet inspected
+  - id: foss-readme-optimizer
+    repository: babar-raza/foss-readme-optimizer
+    role: >
+      the old repo's own predecessor/salvage source (its migration/reuse-manifest.yaml,
+      frozen_revision a8a163f7e9a7beeac1d2ef8b7c02e8e4bd5a7815). Transitive source,
+      not yet inspected directly here; only relevant if a component demonstrably
+      worked better there than in the old repo (mission §2).
+
+entries:
+  - component: "components/readme/review/independent/review.py (reviewer verdict-fold logic)"
+    source: old-repository-presenter
+    evaluated_at_shas: [cc6da3681226, fa04bc96ef6f, e482390bde59e77]
+    behavior: >
+      Independent non-authoring reviewer that returns a verdict; a demotion rule
+      folds REJECT findings into advisory annotations under conditions.
+    evidence: docs/history-reconstruction.md "The acceptance-integrity bug, in detail"
+    known_defect: >
+      Pre-2026-10-10: folded REJECT to ACCEPT whenever a finding's quoted span
+      matched a literal SUPPORTED fact value, regardless of the finding's actual
+      merit (confirmed: 27 of 30 sealed reviews affected). Fixed 2026-10-10
+      (e482390bde59e77) by splitting DETERMINISTIC_RULES (may refute with
+      refuted_by{rule,evidence}) from JUDGMENT_RULES (annotate only, never fold).
+    first_observed_working: never — the post-fix version has not been exercised
+      end to end against a real candidate as of 2026-10-21.
+    licensing: proprietary, same owner (babar-raza) — no restriction beyond normal
+      private-repo reuse by the same owner.
+    disposition: ADAPT
+    reason: >
+      The deterministic/judgment rule-split *pattern* is sound design and worth
+      re-implementing; the code itself is unproven post-fix and the component's
+      sibling (the Lane L validation chain) has an independently-confirmed blind
+      spot (Oct 20 findings: 71/366 contradicted examples passed its gates). Do
+      not REUSE verbatim; write this repo's own reviewer against the pattern,
+      verified fresh in P1.
+    target_module: src/repo_presenter/readme/review/independent_reviewer.py (planned, not yet created)
+    smallest_first_integration_test: >
+      Feed the reviewer a candidate with one deliberately false claim whose
+      quoted span happens to also match a literal SUPPORTED fact elsewhere in
+      the candidate; assert the verdict is REJECT, not ACCEPT (this is the
+      exact negative control the old bug would have failed).
+    portfolio_consumers: both lanes, every candidate — this is the acceptance gate.
+    invalidation_impact: >
+      None yet — not pulled. Once pulled, a change to this module's logic
+      reopens review for every candidate it has verdicted (mission §8).
+
+  - component: "components/readme/acceptance/judge.py"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    behavior: UNKNOWN — not yet read.
+    disposition: PENDING_REVIEW
+    reason: >
+      Same family as review.py (the Lane L validation chain the Oct 20 owner
+      ruling found broken: examples/links/API/format-claim detection gaps).
+      Must not be dispositioned REUSE without independent re-verification
+      against the Oct 20 defect taxonomy in docs/history-reconstruction.md.
+    next_step: read judge.py + the BC-04/BC-14 validators it calls; cross-check
+      each against the four Oct 20 defect classes before any disposition.
+
+  - component: "registry / product discovery / processability / source snapshots and safe git clones"
+    source: old-repository-presenter
+    disposition: PENDING_REVIEW
+    reason: >
+      Mission §3 names this as a prioritized salvage area but it has not yet
+      been read in this repository's P0 pass. data/registry.json's structure
+      was skimmed only to confirm the pinned P1 target's provider_identity
+      (project/state.yaml P1_VERTICAL_SLICE).
+    next_step: read core/registry, data/registry.json, and the clone/snapshot
+      code before P1 needs it.
+
+  - component: "extraction, package ownership, public API verification, example execution"
+    source: old-repository-presenter
+    disposition: PENDING_REVIEW
+    reason: not yet read.
+    next_step: read before P1's fact-building step for the pinned target.
+
+  - component: "components/readme_correction/apply.py, engine.py, detectors/, chain.py, verify.py (Lane L correction engine)"
+    source: old-repository-presenter
+    disposition: PENDING_REVIEW
+    reason: >
+      This is the component the Oct 20 ruling found broken in its *output*
+      (examples/links/API/format claims). The engine architecture (edit
+      operations with stable anchors) may still be sound even if its detector
+      coverage is incomplete — these are separable claims. Not yet read in
+      enough depth here to disposition either way.
+    next_step: read apply.py/engine.py/chain.py structure vs. detectors/
+      coverage separately; the Oct 20 findings are about detector coverage
+      gaps, not necessarily the engine's edit-application mechanism.
+
+  - component: "GitHub App, source freshness, authorization, PR branch/issue reconciliation (components/propose/, components/issues/, core/github/, core/authorization/)"
+    source: old-repository-presenter
+    disposition: PENDING_REVIEW
+    reason: not yet read. Needed for P3 (hosted effects), not P0/P1.
+    next_step: defer review until P1 vertical slice is proven; not required to
+      produce a local candidate.
+
+  - component: "foss-mcp ops/ supervisor mechanics"
+    source: foss-mcp
+    disposition: ADAPT
+    reason: >
+      See the dedicated adaptation plan this repo's P0 pass produced (fork
+      report, 2026-10-21): gatecli.py is the business-logic half (despite the
+      smaller-sounding name), gatectl.py the shared-utility half; gateverify.py
+      is the acceptance engine (run_checks/do_verify/rebuild_state); cardlint.py
+      and secretscan.py are general-purpose and portable near-verbatim;
+      integrate.py is a sound atomic-cherry-pick pattern to port once a second
+      taskcard exists. foss-mcp-specific: the taskcard `lane` enum (collides
+      conceptually with this project's own Lane L/R — must not reuse the same
+      field name), the `gate` id pattern (^G[0-5]$), release.py (Docker image
+      bookkeeping, irrelevant here), and the hardcoded foss-mcp repo path.
+    target_module: ops/ (this repository)
+    smallest_first_integration_test: >
+      Port schemas/taskcard.schema.json + receipt.schema.json + state.schema.json
+      (with lane/gate fields adapted), then validate/state/commit-guard/instruct/
+      status-append/verify/review commands sufficient for one taskcard's full
+      tick→dispatch→worker-commit→review→accept loop.
+    portfolio_consumers: every future taskcard in this repository.
+
+  - component: "old repo's Lane L corpus (34 bundles) and Lane R sealed candidates (28/30)"
+    source: old-repository-presenter
+    disposition: FIXTURE_ONLY
+    reason: >
+      Per the Oct 20 owner ruling and the pre-Oct-10 reviewer bug, none of
+      these are trustworthy positive examples. Usable only as negative/positive
+      holdout material (mission §3) after this repo's own fresh review of each
+      candidate — never imported as "already accepted" work.
+    next_step: when this repo's own independent reviewer exists, run it against
+      a sample of these old candidates as holdout fixtures, not as seed content.

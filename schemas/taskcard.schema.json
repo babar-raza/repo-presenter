@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/babar-raza/repo-presenter/schemas/taskcard.schema.json",
+  "title": "repo-presenter taskcard",
+  "description": "Shape of project/taskcards/TC-NNN.yaml. A card is the worker's COMPLETE contract; the worker never reads AGENTS.md, docs/MISSION_AUTHORITY.md, or the mission document. Cards are immutable once issued. Adapted from foss-mcp's ops/SUPERVISOR.md mechanics (schemas/taskcard.schema.json there) for this repository on 2026-10-21: 'lane' renamed to 'track' because this product's README pipeline already uses 'Lane L'/'Lane R' for a different axis and the two must never collide; 'track' is left a free-form string (not a closed enum) because this repository's own work categories are not yet known, unlike foss-mcp's fixed six.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "gate", "track", "purpose", "depends_on", "write_paths",
+    "satisfies", "source_refs", "checks", "negative_control",
+    "evidence", "closeout", "recovery"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^TC-[0-9]{3}[a-z]?$" },
+    "gate": { "$ref": "#/$defs/gate_id" },
+    "track": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40,
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "A short kebab-case label for the kind of work (e.g. supervisor-infra, facts-extraction, lane-l-correction, lane-r-reconstruction, independent-review, effects-github). Free-form by design for v1."
+    },
+    "purpose": { "$ref": "#/$defs/text" },
+    "depends_on": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^TC-[0-9]{3}[a-z]?$" },
+      "uniqueItems": true
+    },
+    "write_paths": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/path_glob" }
+    },
+    "satisfies": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/req_id" },
+      "uniqueItems": true
+    },
+    "source_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["file", "anchor"],
+        "properties": {
+          "file": { "$ref": "#/$defs/text" },
+          "anchor": { "$ref": "#/$defs/text" },
+          "sha256": { "$ref": "#/$defs/sha256" }
+        }
+      }
+    },
+    "inputs": { "type": "array", "items": { "$ref": "#/$defs/text" } },
+    "actions": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/text" } },
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["command", "expect", "timeout_seconds", "proves"],
+        "properties": {
+          "command": { "$ref": "#/$defs/text" },
+          "cwd": { "type": "string" },
+          "expect": { "const": "exit 0" },
+          "timeout_seconds": { "type": "integer", "minimum": 1, "maximum": 3600 },
+          "proves": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/req_id" } },
+          "junitxml": { "type": "boolean" }
+        }
+      }
+    },
+    "negative_control": {
+      "description": "Supervisor-authored falsifier. verify applies it and REQUIRES the card's checks to fail; a suite that passes both ways is vacuous. mutate is a shell command run against the verification worktree.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rationale"],
+      "properties": {
+        "patch": { "type": "string", "pattern": "^evidence/negctl/TC-[0-9]{3}[a-z]?[.]patch$" },
+        "mutate": { "type": "string", "minLength": 1, "description": "Shell command run in the worktree that breaks what the card built." },
+        "rationale": { "$ref": "#/$defs/text" }
+      },
+      "oneOf": [ { "required": ["patch"] }, { "required": ["mutate"] } ]
+    },
+    "min_tests": { "type": "integer", "minimum": 0 },
+    "requires": {
+      "description": "Capabilities the checks need. A missing one gives BLOCKED_ENV, never FAIL. v1 only probes python and git.",
+      "type": "array", "uniqueItems": true,
+      "items": { "enum": ["python", "git"] }
+    },
+    "network": {
+      "type": "boolean", "default": false,
+      "description": "Whether this card's CHECKS need the network at verification time."
+    },
+    "evidence": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/text" } },
+    "closeout": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/text" } },
+    "recovery": { "$ref": "#/$defs/text" }
+  },
+  "$defs": {
+    "text": { "type": "string", "minLength": 1 },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "gate_id": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+    "req_id": { "type": "string", "pattern": "^REQ-[A-Z0-9]+-[0-9]{3}$" },
+    "path_glob": { "type": "string", "minLength": 1, "maxLength": 200, "pattern": "^[A-Za-z0-9_./*-]+$" }
+  }
+}

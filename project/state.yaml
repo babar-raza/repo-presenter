@@ -1,0 +1,64 @@
+schema_version: 1
+project: repo-presenter
+updated_at: "2026-10-21T00:00:00Z"
+
+authority:
+  mission: plans/repository_presenter_fresh_start_supervisor_prompt.md
+  product: docs/MISSION_AUTHORITY.md
+  governance: AGENTS.md
+  legacy_reuse: migration/reuse-manifest.yaml
+  history: docs/history-reconstruction.md
+
+progress:
+  unit: authorizable README candidates (independently verified by this repo's own reviewer, not inherited from the old repo's judge)
+  lane_l_accepted: 0
+  lane_l_blocked: 0
+  lane_r_accepted: 0
+  lane_r_blocked: 0
+  upstream_prs: 0
+  upstream_issues_filed: 0
+  note: >
+    All counts above are 0 because this repository has not yet produced or verified a
+    single candidate. The old repo's "28 sealed / 0 authorizable of 36" is historical
+    evidence (see docs/history-reconstruction.md), not a starting count here.
+
+current_gate:
+  id: P0_BOOTSTRAP
+  status: IN_PROGRESS
+  purpose: >
+    Mission section 12, P0: verify checkout and access, scan legacy worktrees/branches,
+    read idea.md, create the smallest valid new supervisor authority, taskcard/verifier,
+    and a machine-readable reuse manifest; complete a targeted historical falsification.
+  acceptance:
+    - docs/MISSION_AUTHORITY.md exists and cites authority order (DONE)
+    - AGENTS.md exists with the taskcard/worker/supervisor split (DONE)
+    - migration/reuse-manifest.yaml exists and is LEDGER_OPEN (DONE, 9 entries: 1 ADAPT-reviewer-pattern, 1 ADAPT-foss-mcp-ops, 1 FIXTURE_ONLY-old-candidates, 6 PENDING_REVIEW)
+    - docs/history-reconstruction.md exists with independently re-verified checkpoints (DONE — confirmed the reviewer fold-to-ACCEPT bug at cc6da368/fa04bc96, scale 27/30, fixed 2026-10-10 at e482390b and never re-verified since; corrected the mission doc's PR #347 "0/20 sampled" citation as unsourced)
+    - ops/ has a minimal gatectl covering validate/state/commit-guard/instruct/status-append/verify/review (IN_PROGRESS)
+  blocker: null
+
+accepted_gates: []
+
+active_work_item:
+  id: P1_VERTICAL_SLICE
+  status: PENDING
+  purpose: >
+    Mission section 12, P1: demonstrate both Lane L and Lane R on the same pinned real
+    repository, with an independent verifier this repo built itself (not the old repo's
+    review.py/judge.py — see docs/MISSION_AUTHORITY.md "critical fact"), producing a real
+    candidate document, not a seal or a section.
+  pinned_target:
+    repository: aspose-3d-foss/Aspose.3D-FOSS-for-Python
+    reason: >
+      Matches the mission document's own cited G1 canary (cc6da3681226) and the old
+      repo's current state.yaml canary — reusing the same repository identity keeps
+      continuity with existing cited evidence without reusing any old code or task queue.
+    provider_identity:
+      provider: github
+      repository_id: 1138357893
+      node_id: R_kgDOQ9n2hQ
+  prerequisites:
+    - P0_BOOTSTRAP accepted
+  blocker: "P0_BOOTSTRAP in progress"
+
+next_ready_items: []

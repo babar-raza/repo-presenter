@@ -1,0 +1,42 @@
+id: TC-000
+gate: P0_BOOTSTRAP
+track: supervisor-infra
+purpose: >
+  Prove the verify/review loop (two clean runs, flake detection, a
+  must-fail negative control, a schema-validated receipt) actually works
+  end to end against a trivial real commit, before any README-pipeline
+  code exists. Not the product -- the supervisor machinery itself.
+depends_on: []
+write_paths:
+  - src/repo_presenter/**
+  - tests/**
+satisfies:
+  - REQ-SMOKE-001
+source_refs:
+  - file: ops/SUPERVISOR.md
+    anchor: "Tick"
+inputs: []
+actions:
+  - "Create src/repo_presenter/__init__.py with a non-empty __version__ string."
+  - "Create tests/test_version.py asserting __version__ is a non-empty str."
+checks:
+  - command: python -m pytest tests/test_version.py -q
+    expect: exit 0
+    timeout_seconds: 60
+    proves:
+      - REQ-SMOKE-001
+requires:
+  - python
+network: false
+negative_control:
+  mutate: "python -c \"import pathlib; p = pathlib.Path('src/repo_presenter/__init__.py'); s = p.read_text(encoding='utf-8'); q = chr(34); s2 = s.replace(q+'0.1.0'+q, q+q); p.write_text(s2, encoding='utf-8')\""
+  rationale: >
+    Blanks the version string the smoke test asserts is non-empty. Proves the
+    verify loop actually detects a real break in what the card built, not
+    just a vacuous pass -- the exact property foss-mcp's falsifier discipline
+    exists to guarantee (ops/SUPERVISOR.md).
+evidence:
+  - evidence/build/P0_BOOTSTRAP/TC-000/receipt.json
+closeout:
+  - "python ops/gatecli.py status-append --card TC-000 --phase committed --verdict pass --summary \"smoke card implemented\" --attempt 1"
+recovery: "Revert the commit; touches only src/repo_presenter/ and tests/, nothing governance-owned."

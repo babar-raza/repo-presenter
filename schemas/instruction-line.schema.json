@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/babar-raza/repo-presenter/schemas/instruction-line.schema.json",
+  "title": "repo-presenter supervisor instruction line",
+  "description": "One line of ops/instructions.jsonl. Supervisor appends only, via gatecli. card_sha256 pins the card the worker was dispatched against, so a worker editing its own card cannot redefine its own permissions. Ported near-verbatim from foss-mcp's schemas/instruction-line.schema.json (2026-10-21) -- no foss-mcp-specific content.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["ts", "target_card", "kind", "instruction", "card_sha256", "issue_rev", "attempt"],
+  "properties": {
+    "ts":          { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$" },
+    "target_card": { "type": "string", "pattern": "^(TC-[0-9]{3}[a-z]?|ALL)$" },
+    "kind":        { "enum": ["dispatch", "rework", "root_cause", "stop", "channel_init", "supersede"] },
+    "instruction": { "type": "string", "minLength": 1 },
+    "card_sha256": { "type": "string", "pattern": "^([0-9a-f]{64}|NONE)$" },
+    "issue_rev":   { "type": "string", "pattern": "^([0-9a-f]{40}|NONE)$" },
+    "attempt":     { "type": "integer", "minimum": 0, "maximum": 3 },
+    "successor":   { "type": "string", "pattern": "^TC-[0-9]{3}[a-z]?$", "description": "Only for kind supersede: the accepted card that carries this card's work." }
+  }
+}
