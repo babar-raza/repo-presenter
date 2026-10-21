@@ -2,7 +2,7 @@ schema_version: 1
 manifest_status: LEDGER_OPEN
 project: repo-presenter
 created_at: "2026-10-21T00:00:00Z"
-updated_at: "2026-10-21T00:00:00Z"
+updated_at: "2026-10-21T12:00:00Z"
 
 authority:
   governance: AGENTS.md
@@ -118,10 +118,63 @@ entries:
 
   - component: "GitHub App, source freshness, authorization, PR branch/issue reconciliation (components/propose/, components/issues/, core/github/, core/authorization/)"
     source: old-repository-presenter
-    disposition: PENDING_REVIEW
-    reason: not yet read. Needed for P3 (hosted effects), not P0/P1.
-    next_step: defer review until P1 vertical slice is proven; not required to
-      produce a local candidate.
+    evaluated_at_shas: [30952faf]
+    behavior: >
+      Read in depth for the issues/github/authorization slice: components/issues/file.py (five
+      write gates - registry write gate, owner kill-switch env var, verified write-scoped token,
+      per-handoff owner approval record, target match - plus a remote fingerprint-marker dedup
+      search and a reconciliation retry on an ambiguous create outcome), components/issues/ledger.py
+      (the dedup ledger: a read layer over committed handoff artifacts, keyed on
+      {repository, defect_fingerprint}), core/github/client.py (injected fetch/write callables,
+      create_issue, find_issue_with_marker), core/github/token_provenance.py
+      (verify_installation_token: ghs_-prefix + GET /installation/repositories scope check;
+      verify_pull_request_app for PR-authored-by-the-App attestation), core/authorization/refusals.py
+      (the typed Refusal vocabulary every write path shares). components/propose/ (the PR
+      branch/contents effect) and the per-handoff approval-record store
+      (core/authorization/proposal.py, record_provenance.py) were read for shape only, not pulled.
+    evidence: >
+      This repository's own src/repo_presenter/github/{client.py,token_provenance.py,errors.py},
+      src/repo_presenter/issues/{dedup.py,file.py}, src/repo_presenter/authorization/refusals.py,
+      and their ported tests under tests/github/ and tests/issues/ (33 tests, all green,
+      `python -m pytest tests/github tests/issues -q`), plus the real filed issue this pull produced
+      end to end: aspose-3d-foss/Aspose.3D-FOSS-for-Python#<see filed_issue.json under
+      evidence/build/P1_VERTICAL_SLICE/aspose-3d-foss__Aspose.3D-FOSS-for-Python/>.
+    disposition: ADAPT
+    reason: >
+      create_issue and find_issue_with_marker (core/github/client.py) and
+      verify_installation_token (core/github/token_provenance.py) are sound as designed - their
+      fetch/write-injection shape ported with no behavior change and their ported tests pass
+      unmodified in substance. Pulled, trimmed, and proven end to end today: issue creation plus a
+      live fingerprint-marker dedup search, gated by an owner kill-switch and an explicit
+      authorized flag, using a local GH_TOKEN. NOT reused verbatim: the five-gate stack in
+      components/issues/file.py (registry write gate, per-handoff approval-record store, target
+      match against a committed handoff artifact) depends on components this repository has not
+      pulled yet (the registry write gate, the handoff/ledger schema, the approval-record store) -
+      porting those gates before this repository has the artifacts they gate on would be gating
+      against nothing. verify_pull_request_app and the components/propose/ PR-effect primitives are
+      deferred in full: no PR effect exists here yet to attribute.
+    target_module: >
+      src/repo_presenter/github/client.py, src/repo_presenter/github/token_provenance.py,
+      src/repo_presenter/github/errors.py, src/repo_presenter/issues/dedup.py,
+      src/repo_presenter/issues/file.py, src/repo_presenter/authorization/refusals.py (all present,
+      not planned)
+    smallest_first_integration_test: >
+      File one real issue against a disposable target through repo_presenter.issues.file.file_issue
+      using a local GH_TOKEN, re-running the dedup search immediately beforehand; read the filed
+      issue back with `gh issue view` and confirm title/body/number/URL match what was sent. Done:
+      aspose-3d-foss/Aspose.3D-FOSS-for-Python, OBJ-export defect (this taskcard).
+    portfolio_consumers: every future upstream-defect handoff this repository files, across both
+      lanes, once the handoff/ledger/approval-record components above are themselves pulled.
+    invalidation_impact: >
+      None yet for the approval-record/registry-gate halves (not pulled). For the pulled halves: a
+      change to repo_presenter.issues.dedup's marker format invalidates dedup for any issue already
+      filed under the old marker (none exist before this taskcard's filing); a change to
+      token_provenance's local/production split reopens review of every future filing's
+      authorization path.
+    next_step: >
+      pull the handoff schema/ledger (components/issues/model.py, ledger.py) and a minimal
+      registry/approval-record gate before this repository files a second issue under its own
+      multi-gate discipline rather than the caller-supplied `authorized` flag this pull uses.
 
   - component: "foss-mcp ops/ supervisor mechanics"
     source: foss-mcp
