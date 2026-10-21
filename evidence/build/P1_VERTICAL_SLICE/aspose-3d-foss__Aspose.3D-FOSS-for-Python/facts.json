@@ -1,0 +1,95 @@
+{
+  "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Python",
+  "provider_identity": {
+    "provider": "github",
+    "repository_id": 1138357893,
+    "node_id": "R_kgDOQ9n2hQ"
+  },
+  "source_revision": "65b1f577c0f16d0d9112bb6c1153d3024543ac02",
+  "default_branch": "master",
+  "readme_blob_sha": "47fb6f51ea6d7eedaea25f4769cd0e54fe5e1580",
+  "verified_at": "2026-10-21",
+  "verification_note": "This exact source_revision is the mission document's own cited G2 canary (fa04bc96ef6f sealed a candidate against it, 2026-09-05, under the pre-fix reviewer — see docs/history-reconstruction.md). The upstream repo has not pushed since (pushed_at 2026-09-03T07:12:51Z). Facts below are verified fresh in this session, not inherited from any old candidate/review.",
+  "method": "Live GitHub Contents/Trees API reads (gh CLI, authenticated, repo+workflow scopes) plus executable verification: pip install aspose-3d-foss==26.1.0 into an isolated venv and run real Scene.open()/Scene.save() calls. PyPI metadata cross-checked via https://pypi.org/pypi/aspose-3d-foss/json. ObjExporter.py byte-diffed between the installed PyPI wheel and the live GitHub blob (identical) to confirm the defect below is not a stale-package artifact.",
+  "facts": [
+    {
+      "id": "F-PKG-VERSION",
+      "claim": "PyPI package aspose-3d-foss is at version 26.1.0",
+      "disposition": "SUPPORTED",
+      "evidence": "pypi.org/pypi/aspose-3d-foss/json -> info.version == '26.1.0'; setup.py version=\"26.1.0\" at the pinned source_revision"
+    },
+    {
+      "id": "F-PKG-REQUIRES-PYTHON",
+      "claim": "Package requires Python >=3.7, no upper bound stated",
+      "disposition": "SUPPORTED",
+      "evidence": "pypi.org/pypi/aspose-3d-foss/json -> info.requires_python == '>=3.7'; setup.py python_requires=\">=3.7\""
+    },
+    {
+      "id": "F-PKG-NO-DEPS",
+      "claim": "No required third-party package dependencies",
+      "disposition": "SUPPORTED",
+      "evidence": "setup.py install_requires is empty (verified via GitHub Contents API read of setup.py at source_revision)"
+    },
+    {
+      "id": "F-FORMATS-REGISTERED",
+      "claim": "Scene.open()/Scene.save() can dispatch exactly 6 formats: OBJ, STL, glTF, 3MF, FBX (import-only), COLLADA (import-only)",
+      "disposition": "SUPPORTED",
+      "evidence": "aspose/threed/formats/__init__.py:_register_plugins() registers exactly ObjPlugin, StlPlugin, GltfPlugin, ThreeMfPlugin, FbxPlugin, ColladaPlugin via IOService.register_plugin(); no other format module (Pdf/Ply/Rvm/U3d/Jt/Amf/Html5/A3dw/Usd/Draco/Discreet3ds) is registered despite their LoadOptions/SaveOptions classes existing as importable types."
+    },
+    {
+      "id": "F-OBJ-EXPORT-BROKEN",
+      "claim": "Scene.save() to an .obj path or stream succeeds, producing a valid OBJ file",
+      "disposition": "CONTRADICTED",
+      "evidence": "Two independent, compounding defects reproduced live, both in aspose/threed/formats/obj/ObjExporter.py (confirmed byte-identical between the installed PyPI 26.1.0 wheel and the live GitHub master blob): (1) line 50, _write_obj() builds `content` as a Python str and calls stream.write(content) directly on a stream opened in binary mode ('wb', which is what Scene.save() always uses when given a filename) -- Python raises TypeError: a bytes-like object is required, not 'str'. This alone accounts for every Scene.save(<path ending .obj>) call failing via the only entry point the README documents. (2) Independently of (1): even calling ObjExporter().export() directly with a correctly-typed text stream (io.StringIO(), bypassing Scene.save() entirely -- not a usage pattern shown anywhere in the README) produces 0 bytes of output, because _collect_nodes() only inspects `node.entity` on the node it is first called with (scene.root_node) and recurses into node.child_nodes from INSIDE that same `if node.entity is not None` block -- so when the root node itself carries no entity (true of every documented usage pattern in this README, which always attaches entities to a named child node via create_child_node()), the function returns immediately without ever visiting any child node, and finds nothing to write. Confirmed independent of Python version choice (str-vs-bytes TypeError on a binary stream.write is unconditional Python I/O behavior; the node-collection defect is pure logic, not version-gated).",
+      "severity": "live README contradiction (Key Capabilities bullet 2 + At a Glance diagram node c2 + Outputs node o1 all claim OBJ export works; API Reference table line for ObjExporter also claims it 'writes the given Scene to Wavefront OBJ, including per-node materials' -- false for every documented usage pattern) and two genuine, independent upstream product defects, not a presentation gap. No committed test (tests/test_obj_importer.py is import-only; no test_obj_exporter.py or equivalent exists) exercises OBJ export at all."
+    },
+    {
+      "id": "F-STL-EXPORT-WORKS",
+      "claim": "Scene.save() to .stl produces real geometry",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: Box(length=2,width=1,height=1).to_mesh() added as a node entity, scene.save('box.stl') succeeds, produces a 3062-byte file (plausible for a 12-triangle box in ASCII STL)."
+    },
+    {
+      "id": "F-GLTF-EXPORT-WORKS",
+      "claim": "Scene.save() to .gltf produces real geometry",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: same box, scene.save('box.gltf') succeeds, 1143-byte valid-looking file."
+    },
+    {
+      "id": "F-3MF-EXPORT-WORKS",
+      "claim": "Scene.save() to .3mf produces real geometry",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: same box, scene.save('box.3mf') succeeds, 488-byte file. (Note: an earlier test run using a raw, unconverted Box primitive -- not calling to_mesh() first, contrary to the README's own documented pattern -- produced a misleadingly empty 0-byte 3MF with no exception; this is expected given the primitive-vs-mesh API as documented, not a defect, and is noted here only to record that the test methodology was corrected before trusting this result.)"
+    },
+    {
+      "id": "F-OBJ-IMPORT-WORKS",
+      "claim": "Scene.open() can read a real .obj file (OBJ import is unaffected by the export defect above)",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: wrote a minimal hand-authored 3-vertex/1-triangle .obj fixture, scene.open('triangle.obj') succeeded, mesh.control_points length 3, mesh.polygon_count 1 -- correct."
+    },
+    {
+      "id": "F-FBX-IMPORT-ONLY",
+      "claim": "FbxExporter.save()/save_to_stream() both raise NotImplementedError; FBX is import-only",
+      "disposition": "SUPPORTED",
+      "evidence": "Read aspose/threed/formats/fbx/FbxExporter.py directly: both methods unconditionally `raise NotImplementedError(...)`. Also confirmed FbxExporter does not override Exporter.supports_format(), so it inherits the base class's own NotImplementedError stub."
+    },
+    {
+      "id": "F-COLLADA-EXPORT-UNREACHABLE",
+      "claim": "COLLADA export is registered but not reachable through Scene.save(), because IOService's exporter lookup reaches the unimplemented FbxExporter.supports_format() before ever reaching the real, working ColladaExporter",
+      "disposition": "SUPPORTED",
+      "evidence": "Read IOService.create_exporter(): iterates self._exporters in registration order [Obj, Stl, Gltf, ThreeMf, Fbx, Collada] calling exporter.supports_format(format_type) and returning the first True; FbxExporter inherits the unimplemented base supports_format() which raises NotImplementedError unconditionally, so the loop raises before reaching ColladaExporter -- regardless of what format is actually requested. Read ColladaExporter.export(): a real, working XML-writing implementation exists but is provably unreachable through Scene.save() given the above. Reproduced live: scene.save('x.dae') raises NotImplementedError: supports_format is not implemented."
+    },
+    {
+      "id": "F-COLLADA-IMPORT-WORKS",
+      "claim": "COLLADA import works",
+      "disposition": "UNVERIFIED",
+      "evidence": "ColladaImporter exists with an apparently real implementation (not stubbed), consistent with the README's claim, but not executed against a real .dae fixture in this session -- no .dae sample file was available to test import with. Treat as UNVERIFIED, not CONFIRMED, until a real fixture is run through it."
+    },
+    {
+      "id": "F-TOP-LEVEL-IMPORT-GOTCHA",
+      "claim": "Importing OBJ/STL/glTF/COLLADA option classes from the shared top-level aspose.threed.formats package (rather than each format's own submodule) resolves to a broken duplicate; 3MF and FBX are unaffected",
+      "disposition": "UNVERIFIED",
+      "evidence": "Not independently executed in this session (would require importing via the top-level path and confirming the duplicate/broken-base-class behavior). Plausible given the package's import structure (aspose/threed/formats/__init__.py vs. aspose/threed/formats/obj/__init__.py etc. as separate modules), but not proven here. Treat as UNVERIFIED pending a dedicated test."
+    }
+  ]
+}

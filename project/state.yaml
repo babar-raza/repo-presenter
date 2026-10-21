@@ -11,42 +11,71 @@ authority:
 
 progress:
   unit: authorizable README candidates (independently verified by this repo's own reviewer, not inherited from the old repo's judge)
-  lane_l_accepted: 0
+  lane_l_accepted: 1
   lane_l_blocked: 0
-  lane_r_accepted: 0
+  lane_r_accepted: 1
   lane_r_blocked: 0
   upstream_prs: 0
   upstream_issues_filed: 0
+  upstream_issues_drafted_pending_owner_authorization: 1
   note: >
-    All counts above are 0 because this repository has not yet produced or verified a
-    single candidate. The old repo's "28 sealed / 0 authorizable of 36" is historical
-    evidence (see docs/history-reconstruction.md), not a starting count here.
+    2026-10-21: first real candidates, both lanes, same pinned repository
+    (aspose-3d-foss/Aspose.3D-FOSS-for-Python @ 65b1f577c0f16d0d9112bb6c1153d3024543ac02).
+    Evidence: evidence/build/P1_VERTICAL_SLICE/aspose-3d-foss__Aspose.3D-FOSS-for-Python/
+    (facts.json, lane_l_candidate.md + lane_l_review.json [ACCEPT], lane_r_candidate.md +
+    lane_r_plan.md + content_units.json + lane_r_review.json [ACCEPT], draft_upstream_issue.md).
+    Finding: the live README was already ~99% accurate; the one confirmed defect is OBJ
+    export being completely non-functional (two independent root causes, reproduced live
+    against the installed PyPI package and the current GitHub master blob). Lane L and
+    Lane R candidates are byte-identical by principled convergence (see lane_r_plan.md),
+    not by Lane R deferring to Lane L -- this convergence is recorded as a falsifiable
+    claim to test against a weaker-README repository in P2, not assumed general.
+    NOT YET DONE: no PR opened (no effect authorization requested or given this session);
+    no issue filed (drafted and deduped -- 0 existing issues in the target repo -- but
+    requires explicit owner go-ahead per mission section 9 before filing); no automated
+    rerun/no-op proof exists yet (ops/ tooling still being built in parallel, see
+    migration/reuse-manifest.yaml); composition and review were performed by this session
+    acting as the LLM step, not yet by an automated hosted pipeline call.
+    The old repo's "28 sealed / 0 authorizable of 36" remains historical evidence only
+    (docs/history-reconstruction.md), not a starting count here.
 
 current_gate:
-  id: P0_BOOTSTRAP
+  id: P1_PORTFOLIO_SCALE
   status: IN_PROGRESS
   purpose: >
-    Mission section 12, P0: verify checkout and access, scan legacy worktrees/branches,
-    read idea.md, create the smallest valid new supervisor authority, taskcard/verifier,
-    and a machine-readable reuse manifest; complete a targeted historical falsification.
+    Owner direction, 2026-10-21 (session transcript, not a mission-doc citation — recorded
+    here as the live binding instruction per AGENTS.md's authority table): the P1 single-repo
+    proof is sufficient as a mechanism proof; it is NOT the goal. The goal is the full app per
+    plans/repository_presenter_fresh_start_supervisor_prompt.md — both lanes, at least 28
+    fully reviewed candidates across real upstream repositories. Issue filing must go through
+    a properly imported Issues component + Repository Presenter GitHub App access (old repo
+    already implements this — import it, do not hand-file via ad hoc gh CLI calls).
   acceptance:
-    - docs/MISSION_AUTHORITY.md exists and cites authority order (DONE)
-    - AGENTS.md exists with the taskcard/worker/supervisor split (DONE)
-    - migration/reuse-manifest.yaml exists and is LEDGER_OPEN (DONE, 9 entries: 1 ADAPT-reviewer-pattern, 1 ADAPT-foss-mcp-ops, 1 FIXTURE_ONLY-old-candidates, 6 PENDING_REVIEW)
-    - docs/history-reconstruction.md exists with independently re-verified checkpoints (DONE — confirmed the reviewer fold-to-ACCEPT bug at cc6da368/fa04bc96, scale 27/30, fixed 2026-10-10 at e482390b and never re-verified since; corrected the mission doc's PR #347 "0/20 sampled" citation as unsourced)
-    - ops/ has a minimal gatectl covering validate/state/commit-guard/instruct/status-append/verify/review (IN_PROGRESS)
+    - components/issues/, core/github/, core/authorization/ (GitHub App auth + issue filing) imported from the old repo, adapted, independently tested against this repo's own facts/candidates (PENDING)
+    - A repeatable per-repository pipeline exists (facts -> Lane L candidate -> Lane R candidate -> independent review) that does not require hand-driving each repository the way the pinned P1 slice was done (PENDING)
+    - At least 28 repositories have a fully reviewed (ACCEPT or evidenced BLOCKED) candidate for both lanes (PENDING — 1/28 done: aspose-3d-foss/Aspose.3D-FOSS-for-Python)
+    - Registry of authorized repositories established in this repo (not re-trusting the old repo's data/registry.json counts without re-derivation — mission section 5) (PENDING)
   blocker: null
 
-accepted_gates: []
+accepted_gates:
+  - P0_BOOTSTRAP
 
 active_work_item:
   id: P1_VERTICAL_SLICE
-  status: PENDING
+  status: ACCEPTED
   purpose: >
     Mission section 12, P1: demonstrate both Lane L and Lane R on the same pinned real
     repository, with an independent verifier this repo built itself (not the old repo's
     review.py/judge.py — see docs/MISSION_AUTHORITY.md "critical fact"), producing a real
-    candidate document, not a seal or a section.
+    candidate document, not a seal or a section. Superseded as the active focus by
+    P1_PORTFOLIO_SCALE per owner direction 2026-10-21; kept here as the proven mechanism
+    reference, not re-run per repository going forward (that would not scale to 28+).
+  acceptance:
+    - Both lanes produce a real candidate document on the pinned repository (DONE)
+    - Independent reviewer (fresh, not old repo's) verdicts both ACCEPT with real checks (DONE)
+    - At least one independently reproducible upstream defect found and evidenced (DONE — OBJ export, two root causes)
+    - Upstream effect (issue filing) — NOT done ad hoc; routed through the imported Issues/GitHub App component under P1_PORTFOLIO_SCALE instead
+    - Automated rerun/no-op proof via this repo's own tooling (PENDING — ops/ v1 exists; rerun proof wiring still to come)
   pinned_target:
     repository: aspose-3d-foss/Aspose.3D-FOSS-for-Python
     reason: >
@@ -57,8 +86,27 @@ active_work_item:
       provider: github
       repository_id: 1138357893
       node_id: R_kgDOQ9n2hQ
-  prerequisites:
-    - P0_BOOTSTRAP accepted
-  blocker: "P0_BOOTSTRAP in progress"
 
-next_ready_items: []
+next_ready_items:
+  - id: IMPORT_ISSUES_GITHUB_APP
+    status: READY
+    purpose: >
+      Read old repo's components/issues/, core/github/, core/authorization/ end to end
+      (not yet read this session). Determine: does the GitHub App integration require
+      credentials (App ID, private key, installation ID) not present in this environment?
+      If so, the issues component must still be imported and independently tested in
+      local-GH_TOKEN mode (idea.md's own two-credential-provider model: operator GH_TOKEN
+      locally, GitHub App in production) — production App wiring is a P3 concern, not a
+      P1_PORTFOLIO_SCALE blocker.
+  - id: BUILD_PORTFOLIO_REGISTRY
+    status: READY
+    purpose: >
+      Derive this repo's own data/registry.json equivalent: discover the authorized
+      repository set (read old repo's data/products.json / data/registry.json as a
+      starting list to re-verify, per mission section 5 — not to copy denominators).
+  - id: BUILD_REPEATABLE_PIPELINE
+    status: READY
+    purpose: >
+      Generalize the manual P1 steps (fact extraction, Lane L patch, Lane R plan +
+      candidate, independent review) into a script/tool runnable per-repository without
+      per-repository hand-driving, so 28+ repositories is tractable.

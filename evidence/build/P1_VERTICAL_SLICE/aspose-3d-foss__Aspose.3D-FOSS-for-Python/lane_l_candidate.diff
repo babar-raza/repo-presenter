@@ -1,0 +1,82 @@
+--- C:\Users\babar\AppData\Local\Temp\claude\c--Users-babar-Documents-GitHub-repo-presenter\242f4b80-0cb4-4279-bfdb-9b140760105b\scratchpad\live_readme_copy.md	2026-10-21 17:23:53.105120900 +0500
++++ C:\Users\babar\Documents\GitHub\repo-presenter\evidence\build\P1_VERTICAL_SLICE\aspose-3d-foss__Aspose.3D-FOSS-for-Python\lane_l_candidate.md	2026-10-21 17:25:58.827360000 +0500
+@@ -5,9 +5,9 @@
+ [![Aspose.3D FOSS for Python](https://products.aspose.org/media/3d/python/banner-readme.png)](https://products.aspose.org/3d/python/)
+ 
+ Aspose.3D FOSS for Python is a pure-Python, MIT-licensed library for loading, constructing,
+-and exporting 3D scenes. It reads and writes OBJ, STL, glTF/GLB, COLLADA, and 3MF files, plus
+-imports FBX, through a `Scene`/`Node`/`Mesh` object graph, with no native runtime or external
+-SDK to install.
++and exporting 3D scenes. It reads OBJ, STL, glTF/GLB, COLLADA, and 3MF files, writes STL,
++glTF/GLB, and 3MF files, and imports FBX, through a `Scene`/`Node`/`Mesh` object graph, with no
++native runtime or external SDK to install.
+ 
+ ## Navigation
+ 
+@@ -37,7 +37,7 @@
+     subgraph capl[" "]
+       direction TB
+       c1["Multi-format scene import (OBJ, STL, glTF, COLLADA, 3MF)"]
+-      c2["Multi-format scene export (OBJ, STL, glTF, 3MF)"]
++      c2["Multi-format scene export (STL, glTF, 3MF)"]
+       c3["Scene-graph construction and traversal"]
+       c4["Mesh authoring and editing"]
+     end
+@@ -51,7 +51,7 @@
+   end
+   subgraph Outputs["Outputs"]
+     direction TB
+-    o1["OBJ, STL, glTF, or 3MF file"]
++    o1["STL, glTF, or 3MF file"]
+   end
+   StartingPoints --> PRODUCT --> Capabilities --> Outputs
+ ```
+@@ -61,10 +61,10 @@
+ - Read OBJ, STL, glTF/GLB, COLLADA, and 3MF (the 3D Manufacturing Format used in 3D-printing
+   workflows) files with `Scene.open()`, which auto-detects the format from the file extension
+   or an explicit `FileFormat`.
+-- Write scenes back out to OBJ, STL, glTF/GLB, or 3MF with `Scene.save()`, each format backed
+-  by its own `SaveOptions` subclass (`ObjSaveOptions`, `GltfSaveOptions`, and so on) for
+-  coordinate flipping, unit scaling, and compression settings (COLLADA export is registered
+-  but not reachable through `Scene.save()` — see Scope and Limitations).
++- Write scenes back out to STL, glTF/GLB, or 3MF with `Scene.save()`, each format backed
++  by its own `SaveOptions` subclass (`GltfSaveOptions`, `ThreeMfSaveOptions`, and so on) for
++  coordinate flipping, unit scaling, and compression settings (OBJ and COLLADA export are
++  registered but not reachable through `Scene.save()` — see Scope and Limitations).
+ - Build and traverse a scene graph with `Node.create_child_node()`, `Node.add_entity()`, and
+   `Node.child_nodes`; every node carries its own `Transform` (translation, rotation, scale, and
+   pivots) independent of whatever entity or material is attached to it.
+@@ -282,7 +282,7 @@
+ node.transform.translation = Vector3(0.0, 1.0, 0.0)
+ node.transform.scaling = Vector3(0.5, 2.0, 0.5)
+ 
+-scene.save("post.obj")
++scene.save("post.stl")
+ ```
+ 
+ ### Build a Mesh and Export It to STL
+@@ -533,7 +533,7 @@
+ | `NurbsDirection` | Describes the knot vector, order, degree, and NURBS type along one parametric direction (U or V) of a `NurbsSurface`. |
+ | `NurbsSurface` | Represents a NURBS surface via control points and per-direction `NurbsDirection` data; its `to_mesh()` conversion raises `NotImplementedError` in this FOSS build. |
+ | `NurbsType` | Enum with 3 members, `OPEN`, `CLOSED`, and `PERIODIC`, classifying a NURBS curve or surface direction. |
+-| `ObjExporter` | ObjExporter.export writes the given Scene to Wavefront OBJ, including per-node materials. |
++| `ObjExporter` | ObjExporter.export is not reachable through `Scene.save()` in this build — see Scope and Limitations. |
+ | `ObjFormat` | ObjFormat.create_load_options creates and returns an ObjLoadOptions instance for importing OBJ files. |
+ | `ObjFormatDetector` | ObjFormatDetector.detect inspects a stream and reports whether its content is Wavefront OBJ. |
+ | `ObjImporter` | ObjImporter.import_scene loads OBJ data from a stream into a Scene using ObjLoadOptions. |
+@@ -731,6 +731,15 @@
+   `FbxExporter` (whose `supports_format()` is unimplemented and raises unconditionally) before
+   it ever reaches `ColladaExporter`, so the lookup itself fails before a real, working
+   `ColladaExporter` is ever consulted — reproduced directly against this build.
++- OBJ import works, but OBJ export is not reachable through `Scene.save()`, for two independent
++  reasons reproduced directly against this build: `ObjExporter._write_obj()` builds its content
++  as a Python `str` and writes it straight to the stream `Scene.save()` always opens in binary
++  mode, which raises `TypeError: a bytes-like object is required, not 'str'`; and, separately,
++  calling `ObjExporter.export()` directly with a correctly-typed text stream still writes zero
++  bytes, because `_collect_nodes()` only inspects the node it is first called with and descends
++  into child nodes from inside that same check — so it finds nothing whenever the scene's
++  entities live on named child nodes, which is how every example in this README builds a scene.
++  No test in this repository exercises OBJ export.
+ - Always import a format's load/save options class from its own format submodule (as every
+   example in this README does), never from the shared top-level `aspose.threed.formats`
+   package — for OBJ, STL, glTF, and COLLADA specifically, the top-level package name resolves
