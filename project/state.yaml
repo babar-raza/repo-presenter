@@ -99,11 +99,15 @@ next_ready_items:
       locally, GitHub App in production) — production App wiring is a P3 concern, not a
       P1_PORTFOLIO_SCALE blocker.
   - id: BUILD_PORTFOLIO_REGISTRY
-    status: READY
+    status: DONE
     purpose: >
-      Derive this repo's own data/registry.json equivalent: discover the authorized
-      repository set (read old repo's data/products.json / data/registry.json as a
-      starting list to re-verify, per mission section 5 — not to copy denominators).
+      data/registry.json built (36 entries): started from old repo's registry as a
+      candidate list, every repository_id/node_id/default_branch/archived/private/
+      pushed_at independently re-fetched live via gh API, not copied. All 36 matched
+      the old registry's claimed identity (no stale/renamed/transferred repo found).
+      NOT yet done: discovery of repositories beyond these 36 (mission section 5)
+      and re-verification of family/platform/ecosystem classification labels
+      (currently reused from the old registry as metadata, not re-derived).
   - id: BUILD_REPEATABLE_PIPELINE
     status: READY
     purpose: >
