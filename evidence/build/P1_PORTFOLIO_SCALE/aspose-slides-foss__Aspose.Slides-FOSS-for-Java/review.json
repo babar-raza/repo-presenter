@@ -1,0 +1,66 @@
+{
+  "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Java",
+  "source_revision": "620a2614418854b4a18966a361e6907ddc88c7cb",
+  "lane": "L+R",
+  "reviewer_note": "Independent review performed fresh in this session (gh CLI live re-checks against GitHub, not a reuse of any prior review.py/judge.py chain -- see docs/MISSION_AUTHORITY.md 'critical fact'). No lane_l_candidate.diff or content_units.json exist in this directory, unlike the P1_VERTICAL_SLICE and aspose-cells-foss__Go reference examples; that absence is assessed below, not assumed benign. A finding stands unless it carries an explicit, deterministic refutation.",
+  "candidate": "lane_l_candidate.md (byte-identical to lane_r_candidate.md and to the live README)",
+  "facts": "facts.json",
+  "checks": [
+    {
+      "id": "C1_EVERY_EDIT_TRACES_TO_A_FACT",
+      "result": "PASS",
+      "detail": "Re-fetched the live README fresh (`gh api repos/aspose-slides-foss/Aspose.Slides-FOSS-for-Java/readme --jq '.content' | base64 -d`), confirmed source_revision 620a2614418854b4a18966a361e6907ddc88c7cb matches `gh api .../commits/main`, and ran `diff` against lane_l_candidate.md: 0 differences, 851/851 lines identical. `md5sum` of live_readme.md, lane_l_candidate.md, and lane_r_candidate.md all produced the identical hash 9db63e7f1516493a9fbb21711ccd9a9e. This is consistent with facts.json's 0 CONTRADICTED facts -- no edit was made because none is claimed to be needed, and there is no untraceable change to find."
+    },
+    {
+      "id": "C2_NO_NEW_UNVERIFIED_CLAIM_INTRODUCED",
+      "result": "PASS",
+      "detail": "No prose was added or changed (candidate is byte-identical to the live README per C1), so no new claim of any kind was introduced by either lane."
+    },
+    {
+      "id": "C3_MISSING_DIFF_AND_CONTENT_UNITS_FILES",
+      "result": "FINDING",
+      "detail": "Unlike the P1_VERTICAL_SLICE and aspose-cells-foss__Go reference examples, this directory has neither lane_l_candidate.diff nor content_units.json. Reconstructed the diff independently via live re-fetch (C1) and it is in fact empty, so no traceability work was lost in this specific instance -- but the process gap is real: for a repository where the live README DID need correction, C1-style verification would depend entirely on an ad hoc external re-fetch rather than a provided, reviewable artifact, and Lane R's per-section disposition reasoning (RETAIN_VERBATIM / RETAIN_CORRECTED / ADD / OMIT / SUPERSEDE) is not recorded anywhere -- only asserted in the three-line lane_r_plan.md."
+    },
+    {
+      "id": "C4_VERIFICATION_DEPTH_FACTS_JSON",
+      "result": "FINDING",
+      "detail": "facts.json self-discloses 'Lightweight batch-pass check, 2 claims verified, 0 contradicted' against an 851-line README containing an extensive At-a-Glance capability graph, a ~190-row API Reference table, a 4-edition comparison table, and multiple specific numeric/behavioral claims (190 ShapeType values, 25 SaveFormat values, a documented master-clone defect, round-trip fidelity numbers). Only 2 narrow build-metadata facts (Java 21 pin, zero runtime deps) were checked by the composer. To avoid leaving this gap unaddressed, this review independently reproduced three further substantive claims from live source (see C5) rather than accepting facts.json's thin coverage as sufficient; all three held up. The underlying process gap (most of the document's substantive claims were never put through any SUPPORTED/CONTRADICTED/UNVERIFIED disposition by the composer) remains and should not recur at this depth for a document this dense."
+    },
+    {
+      "id": "C5_INDEPENDENT_REPRODUCTION",
+      "result": "PASS",
+      "detail": "Reproduced facts.json's own 2 facts from scratch via `gh api .../contents/pom.xml`: exactly 5 <dependency> entries, all <scope>test</scope> (F-NO-RUNTIME-DEPS confirmed), and <maven.compiler.release>21</maven.compiler.release> present (F-JAVA21 confirmed). Since facts.json has 0 CONTRADICTED facts to reproduce, independently went further and verified the document's two most consequential technical claims directly against live source, neither of which facts.json had checked: (1) `ShapeType.java` has exactly 190 enum constants and exactly 187 `register(from, to, ...)` calls, with NOT_DEFINED/CUSTOM both registered to \"rect\" (shared with RECTANGLE) and ROUND_RECTANGLE/ROUND_CORNER_RECTANGLE both registered to \"roundRect\" -- exactly accounting for the 190-vs-187 gap claimed in Key Capabilities bullet 3; (2) `SaveFormat.java` enumerates exactly 25 constants, `ExporterRegistry` registers only `PptxExporter`, whose `CONTENT_TYPES` map contains exactly {Pptx, Ppsx, Potx} (3 entries), and `Presentation.exporterFor()` throws `UnsupportedOperationException(\"Export format '\" + value + \"' is not supported. Writable formats are: \" + ...)` -- exactly matching the Scope and Limitations section's '25 values... writes three... raises UnsupportedOperationException for the other 22' claim and its quoted refusal-message shape. Both reproductions confirm the candidate's most consequential claims are accurate."
+    },
+    {
+      "id": "C5B_INDEPENDENT_REPRODUCTION_MASTER_CLONE_DEFECT",
+      "result": "PASS",
+      "detail": "Independently reproduced the Scope and Limitations section's third uncatalogued claim -- 'A known defect: cloning a master' -- directly from a fresh shallow clone of the repo at the pinned commit (not by reading the prose). `MasterSlideCollection.addClone()` (lines 97-127) only appends to the in-memory `masters` ArrayList and an in-memory cloned-layouts collection; it never touches the OpcPackage, never writes a new `ppt/slideMasters/slideMasterN.xml` part, and never updates `presentation.xml`. The same class separately defines `cloneMasterPart()`, `getNextMasterFileNumber()`, and `updateMasterLayoutRelationships()` -- exactly the machinery a real persisted clone would need -- but `grep -rn` across the entire `src/main/java` tree finds zero callers of `cloneMasterPart` or `getNextMasterFileNumber` outside their own declarations: this machinery is dead code, never invoked from `addClone()` or from `Presentation`'s save path. The defect as described in the candidate (collection reports size 2, saved package still has one `slideMaster1.xml`, nothing reports a problem) is real and precisely characterized."
+    },
+    {
+      "id": "C6_ENTERPRISE_EDITION_NAMING",
+      "result": "FAIL",
+      "detail": "MISSION_AUTHORITY.md requires the aspose.com commercial product be named 'Enterprise Edition' everywhere, with 'no substitute wording (\"commercial\", \"paid version\", etc.)'. Grepped the live README and the candidate directly for 'commercial|paid version|full-featured|Enterprise' (identical results in both, since they are byte-identical): line 710 reads 'This library mirrors the naming of the commercial Aspose.Slides for Java product...'; line 754 reads '**When you want the commercial product instead:**...'; line 810 correctly reads 'Aspose.Slides for Java — Enterprise Edition'. The document is internally inconsistent on this standing, zero-exception constraint -- 'commercial' is the exact forbidden substitute the rule names. This was never caught because it is inherited verbatim from the live README and neither lane's process checks standing-constraint/naming compliance -- only fact disposition (facts.json's summary addresses structure and 2 build facts, not naming; lane_r_plan.md's rationale does not mention naming at all)."
+    },
+    {
+      "id": "C7_LANE_R_REASONING",
+      "result": "PASS_WITH_CAVEAT",
+      "detail": "lane_r_plan.md is three lines: 'Case A, no correction needed. Lane R converges to Lane L (no change from the live README) -- full fixed-core structure present, both checked claims SUPPORTED, 0 contradicted.' This is internally consistent with facts.json and lane_r_candidate.md is confirmed byte-identical to lane_l_candidate.md (md5 match, C1). The convergence claim itself is plausible under the mission's own Case-A reasoning (a substantial, already-accurate live README as structural baseline). However, 'full fixed-core structure present' is asserted, not evidenced by any per-section reconstruction record (no content_units.json), and the plan's own cited basis ('both checked claims SUPPORTED, 0 contradicted') is exactly the same 2-fact batch pass flagged in C4 -- it gives no indication Lane R independently examined the parts of the document that do carry a defect (C6). As composed, Lane R functions as a rubber-stamp copy of Lane L rather than a demonstrated independent reconstruction; it did not catch the naming violation either."
+    }
+  ],
+  "findings": [
+    {
+      "id": "F1_ENTERPRISE_EDITION_NAMING_VIOLATION",
+      "severity": "BLOCKING",
+      "detail": "Lines 710 and 754 of the candidate (and of the live README it is byte-identical to) use 'the commercial Aspose.Slides for Java product' / 'the commercial product' instead of the mandated 'Aspose.Slides for Java — Enterprise Edition', violating MISSION_AUTHORITY.md's explicit, zero-exception naming rule, which names 'commercial' itself as a forbidden substitute. This is a standing constraint independent of facts.json's CONTRADICTED/SUPPORTED ledger, so it was never caught by either lane's fact-driven process -- confirmed by direct inspection of both files and cross-checked against the compliant usage already present at line 810. A specific, deterministic fix exists: replace both instances with the 'Aspose.Slides for Java — Enterprise Edition' phrasing already used correctly at line 810.",
+      "outcome": "fixed"
+    },
+    {
+      "id": "F2_VERIFICATION_DEPTH_AND_MISSING_ARTIFACTS",
+      "severity": "ADVISORY",
+      "detail": "facts.json's self-disclosed 'batch-pass depth' (2 facts checked against an 851-line document with a dense capability matrix, API reference, and multiple specific numeric claims) combined with the absence of lane_l_candidate.diff and content_units.json means most of this document's substantive claims were not put through any disposition process by the composer, only by this review (C5). Not blocking on its own -- this review's own independent spot-checks of the two most consequential un-checked claims (ShapeType/prstGeom token count, SaveFormat writable-vs-refused count) both held up exactly -- but it limits how much of the ACCEPT-worthy confidence below the Enterprise Edition finding should be read as composer-verified versus reviewer-verified, and the missing artifacts should be produced for repositories at this density going forward."
+    }
+  ],
+  "verdict": "ACCEPT",
+  "verdict_rationale": "A deterministic, independently reproduced violation of MISSION_AUTHORITY.md's Enterprise Edition naming rule existed at lines 710 and 754 (candidate and live README were byte-identical, confirmed by md5) and was not caught by either lane because neither lane's process checks standing-constraint compliance, only fact disposition. Fixed by the supervisor session 2026-10-21: line 710 now reads 'This library mirrors the naming of Aspose.Slides for Java — Enterprise Edition, so that product's own documentation...'; line 754 now reads '**When you want Aspose.Slides for Java — Enterprise Edition instead:** if you need to render or convert...'; both now match the compliant line 810 usage, and no other text was touched (confirmed via fresh `diff` against a freshly re-fetched live README: exactly these two lines differ, matching the scope of the newly produced lane_l_candidate.diff for this repository). Verdict updated from REJECT to ACCEPT after the fix; this is not a retroactive downgrade of the finding -- the finding stands as correctly identified and is marked 'fixed', not erased, per this project's AGENTS.md re-reporting discipline. Everything else in this candidate passed independent re-verification: traceability is trivially satisfied (0 unrelated edits, 0 contradicted facts, confirmed via fresh live re-fetch), both facts.json claims were reproduced from live pom.xml, and this review went beyond facts.json's thin 2-fact coverage to independently reproduce the document's two most consequential technical claims (190 ShapeType values / 187 distinct OOXML preset tokens; 25 SaveFormat values with exactly 3 writable and 22 refused) directly from live source -- both exact. Still recommended, non-blocking: deepen facts.json's verification pass for this repository's size and claim density.",
+  "portfolio_cross_reference_note": "A sibling reviewer in the same portfolio batch independently recorded that this same naming-compliance gap (fact-verification pipeline never checks the Enterprise Edition standing naming constraint) also appears in aspose-words-foss/Aspose.Words-FOSS-for-Python (3 non-compliant 'commercial' usages alongside 1 compliant one) and aspose-words-foss/Aspose.Words-FOSS-for-.NET (zero compliant 'Enterprise Edition' usages anywhere). Taken with this repository, that indicates the gap is systemic to the composer's process across this portfolio batch, not an isolated oversight in Slides-Java alone. This note is carried forward as data from that sibling pass, not independently re-verified by this reviewer against the Words repositories."
+}

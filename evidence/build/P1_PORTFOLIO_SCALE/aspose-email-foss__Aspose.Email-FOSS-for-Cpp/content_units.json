@@ -1,0 +1,31 @@
+{
+  "repository": "aspose-email-foss/Aspose.Email-FOSS-for-Cpp",
+  "source_revision": "c844a467cf7f2503819b655f4d6ceaef91056c40",
+  "note": "Mission section 7 step 3 content-unit inventory. Case A. Zero CONTRADICTED facts this session -- every unit below is RETAIN_VERBATIM except the one tied to the UNVERIFIED multipart/EML fact, which is retained as-is per mission rule (unverified is never presented as false).",
+  "units": [
+    {"id": "U-H1", "unit": "H1 title + badge row + banner", "disposition": "RETAIN_VERBATIM", "reason": "Badge order (license, C++17) matches the fixed-core contract; C++17 badge consistent with F-CMAKE-CXX17-VERSION-FLOOR."},
+    {"id": "U-OPENING", "unit": "Opening paragraph", "disposition": "RETAIN_VERBATIM", "reason": "No third-party dependency claim matches F-NO-FETCHED-DEPENDENCY; low-level and high-level API description matches F-MAPI-MESSAGE-API-SIGNATURES."},
+    {"id": "U-NAV", "unit": "Navigation list", "disposition": "RETAIN_VERBATIM", "reason": "Matches the fixed-core section set exactly."},
+    {"id": "U-GLANCE", "unit": "At a Glance mermaid diagram", "disposition": "RETAIN_VERBATIM", "reason": "Three mother blocks already run left-to-right per docs/MISSION_AUTHORITY.md R7; no node makes a claim contradicted this session."},
+    {"id": "U-KEYCAP-ALL", "unit": "Key Capabilities bullets (CFB access, MSG model, message authoring, recipients/attachments, MSG/EML interoperability)", "disposition": "RETAIN_VERBATIM", "reason": "API signatures confirmed (F-MAPI-MESSAGE-API-SIGNATURES); the MSG/EML interoperability bullet rests on F-MULTIPART-EML-PARSING-NOT-EXECUTED (UNVERIFIED, not contradicted) -- retained per the unverified-is-not-false rule."},
+    {"id": "U-INSTALL", "unit": "Installation section (add_subdirectory / find_package, Build, Install)", "disposition": "RETAIN_VERBATIM", "reason": "F-CMAKE-CXX17-VERSION-FLOOR and F-DEFAULT-PRESET-TESTS-ON-EXAMPLES-OFF both SUPPORTED against the real CMakeLists.txt; the library target name (AsposeEmailFoss/AsposeEmailFoss::AsposeEmailFoss) matches the add_library() call read directly."},
+    {"id": "U-DEPS", "unit": "Dependencies section", "disposition": "RETAIN_VERBATIM", "reason": "F-CMAKE-CXX17-VERSION-FLOOR and F-NO-FETCHED-DEPENDENCY both SUPPORTED."},
+    {"id": "U-QUICKSTART", "unit": "Quick Start examples (read subject; create+save MSG/EML)", "disposition": "RETAIN_VERBATIM", "reason": "mapi_message::from_stream, ::create, set_sender_name/set_sender_email_address, add_recipient, add_attachment, save, save_to_eml all confirmed present with matching signatures in mapi_message.hpp."},
+    {"id": "U-EXAMPLES-CREATE", "unit": "Additional Examples: Create a Message and Save Both MSG and EML (full CLI excerpt)", "disposition": "RETAIN_VERBATIM", "reason": "set_property/common_message_property_id/property_type_code, add_recipient with recipient_type_cc/recipient_type_bcc, add_attachment, save, from_file, save_to_eml -- every call used here matches a confirmed signature in mapi_message.hpp."},
+    {"id": "U-EXAMPLES-INSPECT", "unit": "Additional Examples: Inspect Low-Level MSG and CFB Structure", "disposition": "RETAIN_VERBATIM", "reason": "msg_reader::from_file and msg_document::from_reader both declared exactly as used, per include/aspose/email/foss/msg/*.hpp (read as part of the API Reference cross-check)."},
+    {"id": "U-APIREF-INTRO", "unit": "API Reference intro paragraph", "disposition": "RETAIN_VERBATIM", "reason": "Describes mapi_message as primary entry point and the lower-level reader/writer classes; consistent with the confirmed header structure."},
+    {"id": "U-APIREF-TABLES", "unit": "API Reference class/struct/enum tables + Detailed Member Reference", "disposition": "RETAIN_VERBATIM", "reason": "F-26-PUBLIC-TYPES SUPPORTED by an exhaustive, independent count of every public header's top-level declarations (18 classes + 2 structs + 6 enums = 26), matching the table's own row count exactly."},
+    {"id": "U-DOCS-RESOURCES", "unit": "Documentation & Resources section", "disposition": "RETAIN_VERBATIM", "reason": "'26 public types' cross-reference matches F-26-PUBLIC-TYPES; links not independently re-verified for liveness this session."},
+    {"id": "U-SCOPE-LIMITATIONS", "unit": "Scope and Limitations section (3 bullets + Enterprise Edition cross-link)", "disposition": "RETAIN_VERBATIM", "reason": "No SMTP/IMAP/POP3, no PST, curated-subset-of-named-accessors claims not contradicted by anything found this session; Enterprise Edition naming matches docs/MISSION_AUTHORITY.md exactly."},
+    {"id": "U-DEVTEST", "unit": "Development and Testing section", "disposition": "RETAIN_VERBATIM", "reason": "F-THREE-TEST-EXECUTABLES SUPPORTED against the real tests/CMakeLists.txt -- all three names, their source files, and the one-line descriptions all match exactly. Not executed (no CMake toolchain available), so the claim that these tests currently PASS is not itself independently confirmed, but the structural claims (names, count, source mapping) are."},
+    {"id": "U-LICENSE", "unit": "License section", "disposition": "RETAIN_VERBATIM", "reason": "MIT license; LICENSE file referenced and badge present; not independently re-read this session but no contradicting evidence."}
+  ],
+  "summary": {
+    "total_units": 15,
+    "retain_verbatim": 15,
+    "retain_corrected": 0,
+    "add": 0,
+    "omit": 0,
+    "supersede": 0
+  }
+}

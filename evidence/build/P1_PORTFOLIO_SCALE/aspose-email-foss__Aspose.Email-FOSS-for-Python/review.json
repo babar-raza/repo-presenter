@@ -1,0 +1,44 @@
+{
+  "repository": "aspose-email-foss/Aspose.Email-FOSS-for-Python",
+  "source_revision": "10a906b48c0c11005c4d93b524e4431901c9717c",
+  "lane": "L+R (empty-patch; candidates byte-identical to each other and to live_readme.md)",
+  "candidate": "lane_l_candidate.md (== lane_r_candidate.md == live_readme.md)",
+  "facts": "facts.json",
+  "content_units": "content_units.json",
+  "checks": [
+    {
+      "id": "C1_EMPTY_PATCH_VERIFIED",
+      "result": "PASS",
+      "detail": "`diff -u live_readme.md lane_l_candidate.md` and `diff -u lane_l_candidate.md lane_r_candidate.md` both produce zero output. Consistent with facts.json reporting 10 SUPPORTED, 0 CONTRADICTED, 0 UNVERIFIED."
+    },
+    {
+      "id": "C2_NO_FALSE_POSITIVE_CORRECTION",
+      "result": "PASS",
+      "detail": "No text changed, so no UNVERIFIED fact could have been silently treated as CONTRADICTED."
+    },
+    {
+      "id": "C3_NO_CONTRADICTED_FACT_LEFT_UNCORRECTED",
+      "result": "PASS",
+      "detail": "facts.json has zero CONTRADICTED facts; all 17 content_units.json entries are RETAIN_VERBATIM, internally consistent with an empty-patch outcome. This repository's facts.json is the deepest of the batch -- real pip install + verbatim execution of every runnable example, plus 2 beyond-README probes, plus a real `python -m unittest discover` run (18/18 pass, including test_readme_quick_start_round_trip) against a fresh clone at the pinned source_revision."
+    },
+    {
+      "id": "C4_INDEPENDENT_SPOT_CHECK (required step 4)",
+      "result": "FAIL",
+      "detail": "No CONTRADICTED fact exists, so per the task's instructions I independently re-verified the most consequential SUPPORTED-by-implication claim that facts.json does NOT itself cover: the Documentation & Resources / API Reference claim 'the complete, browsable reference for all 30 public types' (lane_l_candidate.md line 359; table independently counted at exactly 30 rows: 11 CFB + 19 MSG). content_units.json's own U-APIREF-TABLES and U-DOCS-RESOURCES notes flag this count as 'not independently re-tallied against source this session' -- i.e. the composer itself knew this was a gap. I pip-installed the real package (aspose-email-foss==26.3) into a fresh venv and tested the one table row that looked most likely to be inaccurate: `MapiPropertyCollection`. Result: it is NOT part of the public `aspose.email_foss.msg` namespace -- `'MapiPropertyCollection' in msg.__all__` is False, and `msg.MapiPropertyCollection` raises AttributeError. It is only reachable via the private submodule path `aspose.email_foss.msg.mapi_message.MapiPropertyCollection`, which no README example imports or names. By the same public-surface standard the composer correctly applied elsewhere in this same table (e.g. `MutableMapiAttachment`, `SectorNumber`, `StreamId`, `FileTime` -- all present in __all__ but correctly NOT given their own table row where redundant/non-class -- showing the composer does distinguish exported vs. non-exported names), `MapiPropertyCollection` is an outlier: it is listed as one of the '30 public types' but fails the same importability test the rest of the table implicitly passes."
+    },
+    {
+      "id": "C5_LANE_R_REASONING_HOLDS",
+      "result": "PASS",
+      "detail": "lane_r_plan.md's case-A convergence reasoning (zero CONTRADICTED facts -> empty-patch ACCEPT on both lanes) is consistent with facts.json as written. Not undermined by the C4 finding, since that finding concerns a claim facts.json never disposed of in the first place (a coverage gap, not a wrong disposition that the lane-R reasoning relied on)."
+    }
+  ],
+  "findings": [
+    {
+      "id": "F-UNDISPOSED-PUBLIC-TYPE-CLAIM",
+      "severity": "MODERATE",
+      "detail": "The '30 public types' claim (and by extension every individual row of the API Reference table, including MapiPropertyCollection) has NO corresponding fact in facts.json -- not SUPPORTED, not CONTRADICTED, not even UNVERIFIED. content_units.json's own prose ('not independently re-tallied... a future recheck could add that same cross-check here') shows the composer was aware this was unchecked, but the candidate still retains the full table VERBATIM with no disposition recorded anywhere, which is a traceability gap against docs/MISSION_AUTHORITY.md's requirement that 'every claim... traces to a verified fact with a SUPPORTED/CONTRADICTED/UNVERIFIED disposition.' My own independent execution-based check found that one of the 30 rows, `MapiPropertyCollection`, is not actually part of the package's exported public surface (`__all__`), only reachable via a private submodule path -- a genuine, previously-uncaught discrepancy, though a narrow one: the type is real, its instances do flow through the public API (as the `.properties` attribute of `MapiMessage`/`MapiAttachment`/`MapiRecipient`), so whether it counts as 'public' is a defensible judgment call rather than an outright false claim. This is a pre-existing live-README claim, not something the composition process introduced. Recommendation: facts.json should add an explicit fact disposing of the 30-type count (ideally UNVERIFIED or SUPPORTED-with-the-MapiPropertyCollection-caveat noted) rather than leaving the entire API Reference table with zero factual coverage."
+    }
+  ],
+  "verdict": "ACCEPT",
+  "verdict_rationale": "The empty-patch outcome is correct given facts.json's 10/10 SUPPORTED, 0 CONTRADICTED record, which is unusually well-verified (real pip install, real verbatim execution of every example, a real passing test suite run against a fresh clone, and a real CI-matrix source read). The one real problem my independent spot-check surfaced -- the API Reference table's public-type count and its MapiPropertyCollection row having zero disposition in facts.json at all -- is a traceability/coverage gap, not a demonstrated false statement in the candidate; the type is real and its instances are genuinely part of the public object graph, just not separately importable by name. This does not rise to REJECT because it is a pre-existing live-README claim left untouched (not a fabricated addition), and the underlying fact (the type exists and does real work) is true even though its 'is it public' framing is debatable. Recorded as a MODERATE finding so a future verification pass closes the coverage gap rather than silently carrying it forward."
+}

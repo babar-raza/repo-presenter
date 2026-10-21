@@ -1,0 +1,16 @@
+{
+  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp",
+  "source_revision": "4b83c9fec1e37fd205156770161f6843bac00ceb",
+  "default_branch": "main",
+  "verified_at": "2026-10-21",
+  "verification_depth": "SOURCE_READING_ONLY, but a direct and exact match for the one claim checked (not a build/execution).",
+  "facts": [
+    {
+      "id": "F-XMPVALUE-STUBS",
+      "claim": "A handful of XmpValue type-checking helpers -- IsDateTime, IsField, IsNamedValue, IsRaw, IsNamedValues, and IsStructure -- are stubs that always return false; use IsString/IsInteger/IsDouble/IsArray instead",
+      "disposition": "SUPPORTED",
+      "evidence": "Read include/aspose/pdf/xmp_value.hpp directly: lines 47-52 define exactly `IsDateTime() { return false; }`, `IsField() { return false; }`, `IsNamedValue() { return false; }`, `IsRaw() { return false; }`, `IsNamedValues() { return false; }`, `IsStructure() { return false; }` as inline stubs; IsString/IsInteger/IsDouble/IsArray (line 42-45) are declared only (implemented elsewhere, not stubbed) -- an exact match to the claim, including which methods are and are not stubbed."
+    }
+  ],
+  "note": "1 of 1 checked claim SUPPORTED with an exact code match. Live README unchanged. Only one claim was deeply checked this pass given batch time constraints; the rest of this README (935 lines) was not independently spot-checked beyond this."
+}

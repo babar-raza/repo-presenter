@@ -1,0 +1,31 @@
+{
+  "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript",
+  "source_revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4",
+  "note": "Mission section 7 step 3 content-unit inventory. Empty-patch ACCEPT case: every unit retained verbatim, zero corrections, because every checked fact (facts.json) came back SUPPORTED.",
+  "units": [
+    {"id": "U-H1", "unit": "H1 title + badge row + banner", "disposition": "RETAIN_VERBATIM", "reason": "Badge order and banner placement match the fixed-core contract."},
+    {"id": "U-OPENING", "unit": "Opening paragraph", "disposition": "RETAIN_VERBATIM", "reason": "Format list (glTF, OBJ, STL, FBX, COLLADA) matches the formats with real Importer/Exporter classes in src/aspose/threed/formats/; not contradicted by any defect found (the defects found are export-path bugs, not absence of the format entirely)."},
+    {"id": "U-NAV", "unit": "Navigation list", "disposition": "RETAIN_VERBATIM", "reason": "Matches fixed-core section set exactly."},
+    {"id": "U-GLANCE", "unit": "At a Glance diagram", "disposition": "RETAIN_VERBATIM", "reason": "Lists only formats with real importer/exporter classes; not contradicted."},
+    {"id": "U-KEYCAP", "unit": "Key Capabilities bullets 1-9", "disposition": "RETAIN_VERBATIM", "reason": "Already self-hedges the two real defects found this session (OBJ export, GLB export) inline with 'carry real, current defects; see Scope and Limitations' and 'see the real npm packaging defect disclosed in Scope and Limitations' -- exactly the already-accurate disclosure pattern this session's independent checks confirmed."},
+    {"id": "U-INSTALL", "unit": "Installation section", "disposition": "RETAIN_VERBATIM", "reason": "Source-install instructions accurate; no published-package install is claimed (consistent with F-PACKAGE-JSON-ENTRY-POINT-DEFECT)."},
+    {"id": "U-DEPS", "unit": "Dependencies section", "disposition": "RETAIN_VERBATIM", "reason": "F-PKG-DEPS SUPPORTED exactly against package.json's dependencies/devDependencies split."},
+    {"id": "U-QUICKSTART", "unit": "Quick Start (OBJ to glTF via dist path import)", "disposition": "RETAIN_VERBATIM", "reason": "Already imports from the real build output path, not the package name -- consistent with F-PACKAGE-JSON-ENTRY-POINT-DEFECT; glTF JSON export (not binary) is unaffected by the GLB defect."},
+    {"id": "U-EXAMPLES", "unit": "Additional Examples (node enumeration, OBJ+STL round trip, PolygonModifier)", "disposition": "RETAIN_VERBATIM", "reason": "STL export and PolygonModifier.triangulate() not among the defects found; not contradicted."},
+    {"id": "U-APIREF-INTRO", "unit": "API Reference intro paragraph", "disposition": "RETAIN_VERBATIM", "reason": "General description, not contradicted."},
+    {"id": "U-APIREF-TABLE", "unit": "API Reference table (all module sections)", "disposition": "RETAIN_VERBATIM", "reason": "Every row this session independently checked (ObjExporter, GltfExporter/GltfSaveOptions, ThreeMfImporter/Exporter, Mesh boolean ops) already carries an accurate inline caveat pointing to Scope and Limitations; all confirmed SUPPORTED."},
+    {"id": "U-DOCS-RESOURCES", "unit": "Documentation & Resources section", "disposition": "RETAIN_VERBATIM", "reason": "Links not independently re-verified for liveness this session; no contradicting evidence."},
+    {"id": "U-SCOPE-ALL", "unit": "Scope and Limitations section (all 11 bullets)", "disposition": "RETAIN_VERBATIM", "reason": "Every bullet this session independently checked against source (rendering, 3MF npm packaging, Mesh boolean ops/optimize/isManifold, VertexElement.setIndices/clear, Node.selectSingleObject/selectObjects, FileSystem abstraction, package.json entry point, OBJ material assignment, OBJ export traversal, GLB RangeError) came back SUPPORTED with the exact root cause independently reproduced from source; the text watermarking and glTF re-import duplicate-nodes bullets were not independently re-executed this session but are not contradicted by anything found."},
+    {"id": "U-ENTERPRISE-LINK", "unit": "Enterprise Edition closing paragraph", "disposition": "RETAIN_VERBATIM", "reason": "Matches MISSION_AUTHORITY naming rule ('Aspose.3D — Enterprise Edition')."},
+    {"id": "U-DEVTEST", "unit": "Development and Testing section", "disposition": "RETAIN_VERBATIM", "reason": "Not independently re-executed this session (no npm); no contradicting evidence."},
+    {"id": "U-LICENSE", "unit": "License section", "disposition": "RETAIN_VERBATIM", "reason": "MIT license consistent with package.json's \"license\": \"MIT\"."}
+  ],
+  "summary": {
+    "total_units": 15,
+    "retain_verbatim": 15,
+    "retain_corrected": 0,
+    "supersede": 0,
+    "add": 0,
+    "omit": 0
+  }
+}

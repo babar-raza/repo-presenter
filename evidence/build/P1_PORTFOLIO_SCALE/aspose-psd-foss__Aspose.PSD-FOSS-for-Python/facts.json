@@ -1,0 +1,46 @@
+{
+  "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Python",
+  "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
+  "default_branch": "main",
+  "verified_at": "2026-10-21",
+  "method": "pip install aspose-psd-foss into an isolated venv (execution-backed for import/API-surface facts) plus PyPI JSON metadata and GitHub Contents/Trees API reads (source-reading facts). Repository has no setup.py/pyproject.toml/setup.cfg at any path -- packaging metadata is not in this repository, so PyPI's own published metadata is the only available authority for install-time requirements.",
+  "facts": [
+    {
+      "id": "F-PYTHON-VERSION-CONTRADICTION",
+      "claim": "Runs on Python 3.7+ (opening paragraph); Requires Python 3.7 or later (Installation section)",
+      "disposition": "CONTRADICTED",
+      "evidence": "https://pypi.org/pypi/aspose-psd-foss/json -> info.requires_python == '>=3.8', confirmed live 2026-10-21. pip itself will refuse to install this package on Python 3.7 given that metadata. No setup.py/pyproject.toml exists in the repository to cross-check the source-declared value against; PyPI's live metadata is the only available, and directly install-enforced, authority here.",
+      "severity": "A reader following this README's own instruction on Python 3.7 would have `pip install aspose-psd-foss` refuse to install."
+    },
+    {
+      "id": "F-PKG-VERSION",
+      "claim": "(implicit, from PyPI badge) current published version",
+      "disposition": "SUPPORTED",
+      "evidence": "PyPI JSON: version 26.10.0, consistent with the repository's own release-notes/aspose-psd-foss-for-python-26-10-release-notes.md filename."
+    },
+    {
+      "id": "F-IMPORTS-WORK",
+      "claim": "from aspose_psd_foss.psdimage import PsdImage; from aspose_psd_foss.layers.blendmode import BlendMode; from aspose_psd_foss.resources.imageresourceids import ImageResourceIds",
+      "disposition": "SUPPORTED",
+      "evidence": "Executed live: pip install aspose-psd-foss into an isolated venv, all three imports succeeded exactly as the README's own example code writes them."
+    },
+    {
+      "id": "F-PSDIMAGE-ATTRIBUTES",
+      "claim": "PsdImage exposes width, height, channels, bits_per_channel, color_mode, compression (among others)",
+      "disposition": "SUPPORTED",
+      "evidence": "Executed live: dir(PsdImage) confirms bits_per_channel, channels, channels_count, color_data_info, color_mode, compression, header, height among its public attributes. (version, is_psb, layer_count, resource_count, image_data_kind claimed in the README were not in the first 20 alphabetically-sorted attributes inspected and were not individually re-checked in this time-bounded pass -- not contradicted, simply not yet individually confirmed; flagged for a deeper follow-up pass, not asserted as false.)"
+    },
+    {
+      "id": "F-BLENDMODE-MULTIPLY",
+      "claim": "BlendMode.MULTIPLY exists, used in the 'Change layer blend mode' example",
+      "disposition": "SUPPORTED",
+      "evidence": "Executed live: hasattr(BlendMode, 'MULTIPLY') is True."
+    },
+    {
+      "id": "F-NO-PACKAGING-FILES-IN-REPO",
+      "claim": "(not a README claim; an observation relevant to future recheck capability)",
+      "disposition": "OBSERVATION",
+      "evidence": "No setup.py, pyproject.toml, or setup.cfg exists anywhere in the repository tree -- the published package's actual source-of-truth for python_requires and dependencies is not in this repository. A future automated recheck of this repository's Python-version claim must query PyPI live, not assume a local packaging file will ever exist to check against."
+    }
+  ]
+}

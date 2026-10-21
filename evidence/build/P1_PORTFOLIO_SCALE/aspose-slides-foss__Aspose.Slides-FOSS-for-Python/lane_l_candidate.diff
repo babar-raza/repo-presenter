@@ -1,0 +1,18 @@
+--- a/README.md (live, blob sha 1ef8931c915002b7a9ef23d83ad1b6e63537f8f4)
++++ b/README.md (lane_l_candidate.md)
+@@ -960,9 +960,12 @@
+ - **Presentation sections**: `Presentation.sections` does not exist.
+ - **Slide size**: there is no public API to read or change it, so a new deck is whatever the
+   bundled template says — 16:9, `12192000 × 6858000` EMU.
+-- Assigning to a property a shape or a formatting object does not have raises `AttributeError`
+-  rather than being silently accepted and discarded, so a misspelt property name fails where it
+-  is written; names beginning with an underscore are unaffected.
++- Assigning to a property a shape or a formatting object does not have is accepted silently: there
++  is no `__setattr__` override or `__slots__` restriction anywhere in the installed package, so the
++  unknown attribute is simply stored on the instance and reads back exactly as assigned — no
++  `AttributeError`, no validation, and nothing reported. A misspelt property name therefore fails
++  silently rather than being caught: the typo creates a harmless, unused extra attribute instead of
++  raising an error, and the shape or format's real state is left unchanged.
+ - The file name's extension and the `SaveFormat` passed to `save()` are independent — saving as
+   `SaveFormat.POTX` under a `.pptx` name writes a genuine template whose declared content type
+   disagrees with the extension, and PowerPoint will refuse to open it; give the file the

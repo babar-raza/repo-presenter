@@ -1,0 +1,22 @@
+{
+  "repository": "aspose-gis-foss/Aspose.GIS.FOSS-for-.Net",
+  "source_revision": "b9b8c9c760bf02f6e7f06438feeabb3d0e43c1e4",
+  "default_branch": "main",
+  "verified_at": "2026-10-21",
+  "method": "gh api readme check (404, confirmed no README/README.md/README.rst/etc. exists at root -- GitHub's own readme-detection endpoint). Real `git clone` + `dotnet build Aspose.GIS.FOSS.slnx -c Release` (.NET SDK 10.0.401) in an isolated scratch directory -- not source-reading alone.",
+  "facts": [
+    {
+      "id": "F-NO-README",
+      "claim": "N/A",
+      "disposition": "CONFIRMED_ABSENT",
+      "evidence": "gh api repos/aspose-gis-foss/Aspose.GIS.FOSS-for-.Net/readme returns HTTP 404. Repository root contents: .gitignore, Aspose.GIS.FOSS.Tests/, Aspose.GIS.FOSS.slnx, Aspose.GIS.FOSS/ -- no README file of any name."
+    },
+    {
+      "id": "F-SOURCE-INCOMPLETE-DOES-NOT-BUILD",
+      "claim": "N/A -- independent reproduction of the old repository's 2026-10-19 finding (docs/DECISION_LOG.md: 'incomplete upload: imported namespaces defined nowhere; dotnet build 369 errors'), not assumed true from that citation",
+      "disposition": "CONFIRMED_NON_PROCESSABLE",
+      "evidence": "Fresh `git clone --depth 1` of this exact repository followed by `dotnet build Aspose.GIS.FOSS.slnx -c Release` (full log: dotnet_build_log.txt, this directory) produces 381 compile errors (close to, not identical to, the old repo's cited 369 -- plausibly a different .NET SDK version or a few commits of drift; the core finding is the same). Representative error classes: CS0246 'type or namespace name could not be found' for Axis, GeometryType, Extent, BoundingBox, SpatialReferenceSystem, Unit, Projection, Identifier, GeographicDatum, Ellipsoid, PointsSequence, LayerIndices, LayerEvaluationRestrictions, MapInfoCoordinateValidationException/Error, WrapAttributesConverter -- all referenced throughout the main project (Geometries/, SpatialReferencing/, VectorLayer.cs, FeaturesSequence.cs) but defined nowhere in the uploaded source tree; plus CS0535/CS0534/CS0115/CS0508 interface/override mismatches consistent with the same missing-type root cause. The bundled test project (Aspose.GIS.FOSS.Tests/MainTests.cs) also fails to compile, referencing VectorLayer, Drivers, Dataset, GeoPackageDataset -- none resolvable. A stray Class1.cs (a `dotnet new classlib` default stub) is still present at the project root, consistent with an incomplete/placeholder upload rather than a finished product with a missing README."
+    }
+  ],
+  "disposition_for_both_lanes": "NON_PROCESSABLE. Neither Lane L nor Lane R may proceed: there is no README to correct (Lane L has nothing to anchor to), and composing a full from-scratch Lane R README for a product whose own source does not compile would require inventing capability claims, installation instructions, and working examples for code that does not exist in a working form -- explicitly forbidden by mission section 7 ('Handle weak/nonprocessable repositories honestly; no fabricated application, code examples, package versions, or publication claims'). This independently reproduces and confirms the old repository's own 2026-10-19 classification of this exact repository as blocked upstream, rather than inheriting it unverified."
+}

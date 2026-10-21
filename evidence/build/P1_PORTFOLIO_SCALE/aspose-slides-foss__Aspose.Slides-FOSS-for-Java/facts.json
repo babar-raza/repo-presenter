@@ -1,0 +1,22 @@
+{
+  "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Java",
+  "source_revision": "620a2614418854b4a18966a361e6907ddc88c7cb",
+  "default_branch": "main",
+  "verified_at": "2026-10-21",
+  "method": "Source-reading verification via GitHub Contents/Trees API. No local Java build performed (batch-pass depth).",
+  "facts": [
+    {
+      "id": "F-JAVA21",
+      "claim": "Java 21+ badge",
+      "disposition": "SUPPORTED",
+      "evidence": "pom.xml: <maven.compiler.release>21</maven.compiler.release>."
+    },
+    {
+      "id": "F-NO-RUNTIME-DEPS",
+      "claim": "No runtime dependencies at all -- the CycloneDX SBOM the build produces lists zero components",
+      "disposition": "SUPPORTED",
+      "evidence": "pom.xml has exactly 5 <dependency> entries (junit-jupiter-api, junit-jupiter-engine, junit-jupiter-params, assertj-core, org.apache.poi:poi-ooxml) and every single one is explicitly <scope>test</scope> -- none are compile/runtime scope. The claim is specifically about runtime dependencies, which this confirms are genuinely zero; the SBOM-is-empty claim itself was not independently re-run (no local Maven build performed this pass), but is consistent with the pom.xml evidence."
+    }
+  ],
+  "summary": "Lightweight batch-pass check, 2 claims verified, 0 contradicted. Full fixed-core structure present."
+}

@@ -1,0 +1,54 @@
+{
+  "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-.NET",
+  "source_revision": "52b0f00ebf28a0b4173921725ff170685ec2c502",
+  "lane": "L+R",
+  "reviewer_note": "Independent review performed in a fresh session; facts.json's claims were not trusted at face value -- the single most consequential CONTRADICTED fact (F-RVM-U3D-AMF-HTML5-UNREACHABLE) was re-derived from scratch by fetching FileFormat.cs and Scene.cs directly from the GitHub Contents/git API at the pinned source_revision and reading the dispatch path myself, independent of the composer's probe-console-app narration.",
+  "candidate": "lane_l_candidate.md",
+  "diff": "lane_l_candidate.diff",
+  "facts": "facts.json",
+  "checks": [
+    {
+      "id": "C1_EVERY_EDIT_TRACES_TO_A_FACT",
+      "result": "PASS",
+      "detail": "Ran `diff -u live_readme.md lane_l_candidate.md` myself; the output is byte-identical to the shipped lane_l_candidate.diff (confirmed with `diff -q`, no difference). All 7 hunks trace to the two CONTRADICTED facts: F-RVM-U3D-AMF-HTML5-UNREACHABLE (opening paragraph, both At-a-Glance hunks, Key Capabilities formats bullet+options, API Reference U3dLoadOptions/U3dSaveOptions rows) and F-SCOPE-RVM-CLAIM-CONTRADICTED (API Reference RvmFormat row, Scope and Limitations RVM bullet)."
+    },
+    {
+      "id": "C2_NO_FALSE_POSITIVE_UNVERIFIED_TREATED_AS_CONTRADICTED",
+      "result": "PASS",
+      "detail": "facts.json has exactly one UNVERIFIED fact (F-DEVTEST-COMMAND); the corresponding Development and Testing section is left untouched in the candidate (content_units.json U-DEVTEST: RETAIN_VERBATIM). No unverified claim was silently corrected."
+    },
+    {
+      "id": "C3_NO_FALSE_NEGATIVE_CONTRADICTED_LEFT_UNCORRECTED",
+      "result": "PASS",
+      "detail": "Both CONTRADICTED facts in facts.json (F-RVM-U3D-AMF-HTML5-UNREACHABLE, F-SCOPE-RVM-CLAIM-CONTRADICTED) are corrected in the candidate; no CONTRADICTED fact was left standing."
+    },
+    {
+      "id": "C4_DIFF_SCOPED_TO_EDIT_SPANS",
+      "result": "PASS",
+      "detail": "My independently-run diff shows exactly the same 7 hunks as the shipped diff -- 536 of 631 original lines untouched; no incidental reflow, reordering, or rewording outside the named spans (e.g. Quick Start, all other Additional Examples, Scope bullets 1-5/7/8, License, Documentation & Resources are all byte-identical)."
+    },
+    {
+      "id": "C5_INDEPENDENT_SPOT_CHECK_OF_MOST_CONSEQUENTIAL_FACT",
+      "result": "PASS",
+      "detail": "Re-derived F-RVM-U3D-AMF-HTML5-UNREACHABLE from scratch, independent of the composer's probe-app narration: fetched FileFormat.cs and Scene.cs directly from GitHub at source_revision 52b0f00e. Confirmed InitializeFormats() adds exactly 8 formats to the private _formats list (Obj/Stl/Gltf/Fbx/Microsoft3MF/Collada/Ply/Discreet3DS -- RVM/U3D/AMF/HTML5 absent); confirmed GetFormatByExtension() throws ArgumentException(\"Unsupported file format: {ext}\") when no entry matches; confirmed Scene.Save(string)/Scene.FromFile(string) both call FileFormat.GetFormatByExtension(Path.GetExtension(fileName)) as their first step (lines 230, 269, 417, 435 of Scene.cs); confirmed RvmText/RvmBinary (line 101-102), Universal3D (line 90), AMF (line 111), HTML5 (line 114) all exist as public static fields on FileFormat, exactly as claimed. This independently confirms -- via direct source reading rather than trusting the composer's build/run narration -- that .rvm/.u3d/.amf/.html paths are guaranteed to throw before any format-specific code runs, for every call site."
+    },
+    {
+      "id": "C6_UPSTREAM_ISSUE_CONSISTENT_AND_NOT_FILED",
+      "result": "PASS",
+      "detail": "draft_upstream_issue.md's repro snippet and impact section match facts.json and the candidate's corrections exactly; it is explicitly marked NOT FILED pending owner authorization (mission section 9), and its own dedup check (`gh issue list --repo ... --state all` = 0 issues) is a verifiable, falsifiable claim, not an assumption."
+    },
+    {
+      "id": "R1_LANE_R_PLAN_REASONING_HOLDS",
+      "result": "PASS",
+      "detail": "lane_r_plan.md classifies this as mission section 7 case (A) -- substantial, accurate live README needing only a narrow factual correction, not a rebuild. This matches content_units.json (26/31 units RETAIN_VERBATIM, 4 RETAIN_CORRECTED, 1 SUPERSEDE, 0 ADD/OMIT) -- a narrow, not wholesale, change set, consistent with the case-A classification."
+    },
+    {
+      "id": "R2_LANE_R_CANDIDATE_MATCHES_CLAIMED_CONVERGENCE",
+      "result": "PASS",
+      "detail": "lane_r_plan.md claims lane_r_candidate.md is byte-identical to lane_l_candidate.md. Ran `cmp lane_l_candidate.md lane_r_candidate.md` myself: files are identical (cmp produced no output / no difference reported)."
+    }
+  ],
+  "findings": [],
+  "verdict": "ACCEPT",
+  "verdict_rationale": "Every edit in the Lane L diff traces to one of exactly two CONTRADICTED facts, both independently re-derived here from the actual source files (FileFormat.cs, Scene.cs) rather than taken on the composer's narration; the diff is scoped precisely to the claimed spans with no collateral changes; the one UNVERIFIED fact is correctly left uncorrected; and Lane R's claimed byte-identical convergence with Lane L is independently confirmed. No false positive, no false negative, no structural problem found."
+}

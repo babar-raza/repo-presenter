@@ -1,0 +1,79 @@
+{
+  "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-.NET",
+  "provider_identity": {
+    "provider": "github"
+  },
+  "source_revision": "52b0f00ebf28a0b4173921725ff170685ec2c502",
+  "default_branch": "main",
+  "readme_blob_sha": "9f302430e36fd25bf3f8d68a8a7ebcf107709b60",
+  "verified_at": "2026-10-21",
+  "verification_note": "Full real-execution verification (dotnet 10.0.401 is available per the playbook's environment note). Cloned the repository at the exact pinned source_revision into an isolated scratchpad directory, added a throwaway probe console app with a ProjectReference to src/main/Aspose.ThreeD/Aspose.ThreeD.csproj, and ran Scene.Save() against every format extension the README's opening paragraph / Key Capabilities / At-a-Glance diagram / Scope-and-Limitations claim as supported. This is not code-reading-only verification for this repository, unlike the Java/TypeScript siblings in this batch.",
+  "facts": [
+    {
+      "id": "F-PKG-VERSION",
+      "claim": "NuGet package Aspose.3D.FOSS is at version 26.1.0, dotnet add package Aspose.3D.FOSS --version 26.1.0 is correct",
+      "disposition": "SUPPORTED",
+      "evidence": "src/main/Aspose.ThreeD/Aspose.ThreeD.csproj: <Version>26.1.0</Version>, <PackageId>Aspose.3D.FOSS</PackageId> (read directly via GitHub Contents API at source_revision)."
+    },
+    {
+      "id": "F-PKG-TARGETS",
+      "claim": "Library targets net6.0, net8.0, net10.0, and netcoreapp3.1 in Release builds",
+      "disposition": "SUPPORTED",
+      "evidence": "Aspose.ThreeD.csproj Release PropertyGroup: <TargetFrameworks>net10.0;net8.0;net6.0;netcoreapp3.1</TargetFrameworks> -- exact match."
+    },
+    {
+      "id": "F-PKG-NO-DEPS",
+      "claim": "No required third-party package dependencies",
+      "disposition": "SUPPORTED",
+      "evidence": "Aspose.ThreeD.csproj has zero <PackageReference> entries (only a <None> pack item for the README/logo)."
+    },
+    {
+      "id": "F-DISPATCH-GATEKEEPER",
+      "claim": "(derived from code, not a direct README quote) Scene.Save(string)/Scene.Open(string) both resolve a format solely through FileFormat.GetFormatByExtension(), which only recognizes extensions present in the private static FileFormat._formats list",
+      "disposition": "SUPPORTED",
+      "evidence": "FileFormat.cs: GetFormatByExtension() loops over the private static List<FileFormat> _formats and throws ArgumentException(\"Unsupported file format: {ext}\") if no entry matches; InitializeFormats() populates _formats with exactly 8 entries (the internal nested ObjFormat/StlFormat/GltfFormat/FbxFormat/Microsoft3MFFormat/ColladaFormat/PlyFormat/Discreet3DSFormat classes). Scene.Save(string fileName) and Scene.Open(string fileName) both call FileFormat.GetFormatByExtension(Path.GetExtension(fileName)) before ever reaching IOService."
+    },
+    {
+      "id": "F-RVM-U3D-AMF-HTML5-UNREACHABLE",
+      "claim": "The opening paragraph, Key Capabilities, and At-a-Glance diagram claim Scene can read/write U3D (Universal 3D) and that the library can convert '...plus Microsoft 3MF and AVEVA PDMS RVM models, AMF, and an HTML5/Aspose 3D Web viewer export'; the At-a-Glance diagram lists RVM and U3D as both inputs (i1/i3) and outputs (o1/o3), and AMF/HTML5 as output o4",
+      "disposition": "CONTRADICTED",
+      "evidence": "Reproduced live by cloning the repo at this exact source_revision, building a throwaway console app referencing Aspose.ThreeD.csproj directly (dotnet 10.0.401), and calling scene.Save(path) for each extension: .rvm -> ArgumentException: Unsupported file format: .rvm; .u3d -> ArgumentException: Unsupported file format: .u3d; .amf -> ArgumentException: Unsupported file format: .amf; .html -> ArgumentException: Unsupported file format: .html. Root cause confirmed by code reading (F-DISPATCH-GATEKEEPER): FileFormat.RvmText/RvmBinary (Formats.RvmFormat), FileFormat.Universal3D, FileFormat.AMF, and FileFormat.HTML5/Aspose3DWeb are all declared as public static readonly fields on FileFormat, giving the clear visual impression of registered, dispatchable formats, but none of them is added to the private _formats list that GetFormatByExtension actually searches. No RVM/U3D/AMF/HTML5 reader or writer class exists anywhere in the repository (confirmed via a recursive tree search for file names matching rvm|u3d|amf|html5 -- only option-class stub files exist: RvmLoadOptions.cs/RvmSaveOptions.cs, U3dLoadOptions.cs/U3dSaveOptions.cs, AmfSaveOptions.cs, Html5SaveOptions.cs; no RvmReader/RvmWriter/U3dReader/U3dWriter/AmfWriter/Html5Writer file exists, and no test file for any of these four formats exists in src/test/). These four formats are completely non-functional through the only entry point the README documents (Scene.Save()/Scene.Open()), not partially degraded."
+    },
+    {
+      "id": "F-SCOPE-RVM-CLAIM-CONTRADICTED",
+      "claim": "Scope and Limitations' own text: 'RvmFormat.LoadAttributes is not implemented -- core RVM geometry import/export works, RVM attribute data does not load'",
+      "disposition": "CONTRADICTED",
+      "evidence": "Same evidence as F-RVM-U3D-AMF-HTML5-UNREACHABLE: RVM 'core geometry import/export' does not work at all -- Scene.Save/Open never even reach RvmFormat-specific code because GetFormatByExtension(\".rvm\") throws first. The live text's self-disclosed limitation is itself wrong: it understates the defect (implies ~90% working, only metadata missing) when the true state is 0% functional through the public API."
+    },
+    {
+      "id": "F-OBJ-STL-3MF-DAE-PLY-3DS-EXPORT-WORK",
+      "claim": "Scene.Save() to .obj, .stl, .3mf, .dae (COLLADA), .ply, and .3ds all succeed",
+      "disposition": "SUPPORTED",
+      "evidence": "Same live probe run: scene.Save() for .obj/.stl/.3mf/.dae/.ply/.3ds all completed without exception and produced non-empty files, for a scene built the exact way the README's own Quick Start example builds one (Box primitive + LambertMaterial attached via RootNode.CreateChildNode). Notably, unlike this product family's Python sibling (aspose-3d-foss/Aspose.3D-FOSS-for-Python, see evidence/build/P1_VERTICAL_SLICE), OBJ export and COLLADA export both work correctly here -- this is a genuinely separate codebase/platform and its defects (or lack thereof) do not transfer from the Python findings."
+    },
+    {
+      "id": "F-3MF-METADATA-NOT-IMPLEMENTED",
+      "claim": "Microsoft3MFFormat's build-instruction metadata (IsBuildable, GetTransformForBuild, SetBuildable, object type accessors) is not implemented -- core 3MF geometry import/export works, production-extension metadata does not",
+      "disposition": "SUPPORTED",
+      "evidence": "Read Formats/Microsoft3MFFormat.cs directly: IsBuildable/GetTransformForBuild/SetBuildable/SetObjectType/GetObjectType all unconditionally throw NotImplementedException. Separately, core 3MF geometry import/export is confirmed working via the live probe (F-OBJ-STL-3MF-DAE-PLY-3DS-EXPORT-WORK) -- Scene.Save(\"x.3mf\") succeeds because the *dispatched* internal Aspose.ThreeD.Microsoft3MFFormat class (added to _formats, backed by a real Microsoft3MFReader/Microsoft3MFWriter) is a distinct type from the public Aspose.ThreeD.Formats.Microsoft3MFFormat metadata-stub class exposed as FileFormat.Microsoft3MF -- both claims in this README bullet are independently true and not in tension with each other."
+    },
+    {
+      "id": "F-PLY-DUAL-CLASS-CONFUSION",
+      "claim": "PLY import and export both work through Scene.Open()/Scene.Save(); the confusable PlyFormat class exposed as FileFormat.PLY is a separate, non-dispatched type whose own Encode/Decode methods do throw NotImplementedException",
+      "disposition": "SUPPORTED",
+      "evidence": "Confirmed by the live probe (Scene.Save(\"x.ply\") succeeds) plus code reading: the dispatched PlyFormat (internal, in FileFormat.cs, added to _formats) is backed by real PlyReader/PlyWriter classes used by IOService.CreateImporter/CreateExporter; the separate public Formats.PlyFormat class exposed as FileFormat.PLY has Encode()/Decode() methods that all throw NotImplementedException(\"PLY encoding/decoding not implemented in FOSS version\") -- exactly the same dual-class pattern the README's own Scope and Limitations section already discloses accurately for PLY, in contrast to its inaccurate disclosure for RVM."
+    },
+    {
+      "id": "F-DRACO-PDF-NOT-IMPLEMENTED",
+      "claim": "PdfFormat and DracoFormat have no reader/writer implementation anywhere in the codebase -- PDF and Google Draco import/export are genuinely not functional",
+      "disposition": "SUPPORTED",
+      "evidence": "Read Formats/DracoFormat.cs and Formats/PdfFormat.cs directly: every method (Decode/Encode for Draco; Extract/ExtractScene for Pdf) unconditionally throws NotImplementedException. Neither format appears in FileFormat._formats, consistent with the README's own claim."
+    },
+    {
+      "id": "F-DEVTEST-COMMAND",
+      "claim": "dotnet test src/test/Aspose.ThreeD.Tests/Aspose.ThreeD.Tests.csproj runs the test suite",
+      "disposition": "UNVERIFIED",
+      "evidence": "The project path was confirmed to exist in the repository tree listing, but the full test suite was not executed this session (only a standalone probe console app referencing the library directly was built and run, which was sufficient to answer the format-dispatch question above within the ~15-20 minute budget). Not asserted as SUPPORTED or CONTRADICTED."
+    }
+  ]
+}

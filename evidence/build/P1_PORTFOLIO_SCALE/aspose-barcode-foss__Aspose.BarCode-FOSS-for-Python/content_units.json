@@ -1,0 +1,33 @@
+{
+  "repository": "aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python",
+  "source_revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151",
+  "note": "Mission section 7 step 3 content-unit inventory. Empty-patch ACCEPT case: every unit retained verbatim, zero corrections -- every checked fact (facts.json, 10/10) came back SUPPORTED via real execution.",
+  "units": [
+    {"id": "U-H1", "unit": "H1 title + badge row + banner", "disposition": "RETAIN_VERBATIM", "reason": "Badge order and banner placement match the fixed-core contract."},
+    {"id": "U-OPENING", "unit": "Opening paragraph", "disposition": "RETAIN_VERBATIM", "reason": "Symbology list and dependency claim (Pillow for PNG only) both independently confirmed by real execution and pyproject.toml read."},
+    {"id": "U-NAV", "unit": "Navigation list", "disposition": "RETAIN_VERBATIM", "reason": "Matches fixed-core section set exactly."},
+    {"id": "U-GLANCE", "unit": "At a Glance diagram", "disposition": "RETAIN_VERBATIM", "reason": "Lists exactly the symbologies and outputs confirmed working this session; no over- or under-claim."},
+    {"id": "U-KEYCAP", "unit": "Key Capabilities bullets 1-7", "disposition": "RETAIN_VERBATIM", "reason": "Every specific claim (Code 128 code-set switching, Code 39 base/extended, EAN/UPC check-digit modes, QR versions/error-correction/encode-mode, generate() entry point, SVG/PNG/custom Renderer, RenderOptions fields) independently confirmed by real execution this session."},
+    {"id": "U-INSTALL", "unit": "Installation section", "disposition": "RETAIN_VERBATIM", "reason": "F-NOT-ON-PYPI and F-PKG-METADATA both SUPPORTED; this is the exact install path this session used successfully."},
+    {"id": "U-DEPS", "unit": "Dependencies section", "disposition": "RETAIN_VERBATIM", "reason": "F-PKG-METADATA SUPPORTED against pyproject.toml's dependencies list."},
+    {"id": "U-QUICKSTART", "unit": "Quick Start (code128 -> SVG + PNG)", "disposition": "RETAIN_VERBATIM", "reason": "F-CODE128-QR-CODE39-WORK: this exact pattern was executed live and produced real SVG/PNG output."},
+    {"id": "U-EXAMPLES-INTRO", "unit": "Additional Examples intro + examples/ directory pointer", "disposition": "RETAIN_VERBATIM", "reason": "Not independently re-verified (example script contents not read this session), but not contradicted by anything found."},
+    {"id": "U-EXAMPLES-GENERATE", "unit": "Additional Examples: generate() teaser", "disposition": "RETAIN_VERBATIM", "reason": "F-CODE128-QR-CODE39-WORK: generate(\"qr\", ...) executed live successfully."},
+    {"id": "U-EXAMPLES-QR-CODE39-RENDER", "unit": "Additional Examples: QR options, Code 39 check digit, RenderOptions, direct Renderer", "disposition": "RETAIN_VERBATIM", "reason": "F-CODE128-QR-CODE39-WORK and F-RENDEROPTIONS-WORK: every one of these four examples was executed live, verbatim, successfully."},
+    {"id": "U-APIREF-INTRO", "unit": "API Reference intro paragraph", "disposition": "RETAIN_VERBATIM", "reason": "Accurate description of Barcode as the central entry point, confirmed by every execution this session."},
+    {"id": "U-APIREF-TABLE", "unit": "API Reference table (Core + Internal classes, Enumerations)", "disposition": "RETAIN_VERBATIM", "reason": "PdfRenderer's inline caveat ('render() raises NotImplementedError') independently confirmed by both execution and source read (F-PDF-NOT-IMPLEMENTED); remaining rows not individually re-executed but consistent with every confirmed behavior."},
+    {"id": "U-DOCS-RESOURCES", "unit": "Documentation & Resources section", "disposition": "RETAIN_VERBATIM", "reason": "Links not independently re-verified for liveness this session; no contradicting evidence."},
+    {"id": "U-SCOPE-ALL", "unit": "Scope and Limitations section (all 4 bullets)", "disposition": "RETAIN_VERBATIM", "reason": "All four bullets independently confirmed this session: F-NO-DECODE, F-PDF-NOT-IMPLEMENTED, F-ECI-NOT-IMPLEMENTED, F-GS1-NOT-IMPLEMENTED -- every one SUPPORTED by real execution and/or direct source read."},
+    {"id": "U-ENTERPRISE-LINK", "unit": "Enterprise Edition closing paragraph", "disposition": "RETAIN_VERBATIM", "reason": "Matches MISSION_AUTHORITY naming rule ('Aspose.BarCode for Python — Enterprise Edition')."},
+    {"id": "U-DEVTEST", "unit": "Development and Testing section", "disposition": "RETAIN_VERBATIM", "reason": "Not independently re-executed (pytest suite not run this session, time budget spent on the broader API surface instead); no contradicting evidence."},
+    {"id": "U-LICENSE", "unit": "License section", "disposition": "RETAIN_VERBATIM", "reason": "MIT license consistent with pyproject.toml's license field."}
+  ],
+  "summary": {
+    "total_units": 18,
+    "retain_verbatim": 18,
+    "retain_corrected": 0,
+    "supersede": 0,
+    "add": 0,
+    "omit": 0
+  }
+}

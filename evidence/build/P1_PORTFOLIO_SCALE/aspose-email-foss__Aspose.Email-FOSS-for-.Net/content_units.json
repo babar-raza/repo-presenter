@@ -1,0 +1,32 @@
+{
+  "repository": "aspose-email-foss/Aspose.Email-FOSS-for-.Net",
+  "source_revision": "59125b4732df0eedbc4d4c2ab978698ed4348eb7",
+  "note": "Mission section 7 step 3 content-unit inventory. Case A (live README is a substantial, high-quality structural baseline). Each disposition derived from facts.json, not copied from the Lane L patch.",
+  "units": [
+    {"id": "U-H1", "unit": "H1 title + badge row + banner", "disposition": "RETAIN_VERBATIM", "reason": "Badge order (license, NuGet version, contributors) matches the fixed-core contract; NuGet badge target is live-verified (F-NUGET-PACKAGE-VERSION)."},
+    {"id": "U-OPENING", "unit": "Opening paragraph", "disposition": "RETAIN_VERBATIM", "reason": "General description of CFB/MSG/EML processing and zero required dependencies; F-ZERO-PACKAGE-REFERENCES SUPPORTED, no contradicting evidence."},
+    {"id": "U-NAV", "unit": "Navigation list", "disposition": "RETAIN_VERBATIM", "reason": "Matches the fixed-core section set exactly."},
+    {"id": "U-GLANCE", "unit": "At a Glance mermaid diagram", "disposition": "RETAIN_VERBATIM", "reason": "Three mother blocks already run left-to-right per docs/MISSION_AUTHORITY.md R7; no node makes the specific dev-workflow claim that was contradicted."},
+    {"id": "U-KEYCAP-ALL", "unit": "Key Capabilities bullets (CFB read/write, MSG read/write, MapiMessage high-level API, MAPI properties, recipients/attachments, EML<->MSG conversion, ValidationIssues)", "disposition": "RETAIN_VERBATIM", "reason": "F-MAPIMESSAGE-API-SURFACE SUPPORTED by direct execution (LoadFromEml, Body, HtmlBody, Attachments all confirmed working against real built library); the EML-conversion bullet describes the library's own parsing correctness, which is confirmed accurate (the CRLF finding is about test-fixture construction, not this capability)."},
+    {"id": "U-INSTALL", "unit": "Installation section", "disposition": "RETAIN_VERBATIM", "reason": "F-NUGET-PACKAGE-VERSION and F-TARGET-NET8-DOTNET8-SDK both SUPPORTED."},
+    {"id": "U-DEPS", "unit": "Dependencies section", "disposition": "RETAIN_VERBATIM", "reason": "F-ZERO-PACKAGE-REFERENCES SUPPORTED against the real .csproj; dev-dependency versions (xunit 2.5.3 etc.) not independently re-checked against the test .csproj this session but not contradicted by anything found."},
+    {"id": "U-QUICKSTART", "unit": "Quick Start example (read subject from MSG)", "disposition": "RETAIN_VERBATIM", "reason": "MapiMessage.FromStream and .Subject confirmed to exist and work via the example-project builds and passing MapiMessageTests/MsgReaderTests."},
+    {"id": "U-EXAMPLES-CREATE", "unit": "Additional Examples: Create and Save an MSG Message", "disposition": "RETAIN_VERBATIM", "reason": "F-EXAMPLES-COMPILE SUPPORTED (create_msg_and_eml.csproj builds with 0 errors)."},
+    {"id": "U-EXAMPLES-CONVERT", "unit": "Additional Examples: Convert EML to MSG", "disposition": "RETAIN_VERBATIM", "reason": "LoadFromEml/Save/SaveToEml confirmed to exist and to work correctly on well-formed (LF-sourced) input; unaffected by the CRLF test-fixture finding, which is specific to two unit tests' own fixture-construction code, not this example."},
+    {"id": "U-EXAMPLES-CFB", "unit": "Additional Examples: Inspect a CFB Container's Structure", "disposition": "RETAIN_VERBATIM", "reason": "CfbReader.FromFile/.SectorSize/.DirectoryEntryCount/.IterTree() all listed in the API Reference table and consistent with passing CfbRoundTripTests."},
+    {"id": "U-APIREF-INTRO", "unit": "API Reference intro paragraph (29 classes and enumerations)", "disposition": "RETAIN_VERBATIM", "reason": "F-29-CLASSES-ENUMS SUPPORTED by an exhaustive count of top-level public types in src/."},
+    {"id": "U-APIREF-TABLES", "unit": "API Reference core/enum tables + Detailed Member Reference", "disposition": "RETAIN_VERBATIM", "reason": "Row count (23 classes + 6 enums = 29) matches the independently-derived type count exactly; member lists (MapiMessage, CfbReader, MsgReader, etc.) consistent with methods exercised by the real execution this session (LoadFromEml, Save, AddRecipient, CfbReader.FromFile, IterTree)."},
+    {"id": "U-DOCS-RESOURCES", "unit": "Documentation & Resources section", "disposition": "RETAIN_VERBATIM", "reason": "Links not independently re-verified for liveness this session; '29 public types' cross-reference matches F-29-CLASSES-ENUMS."},
+    {"id": "U-SCOPE-LIMITATIONS", "unit": "Scope and Limitations section (existing 4 bullets + Enterprise Edition cross-link)", "disposition": "RETAIN_VERBATIM", "reason": "No IMAP/SMTP/POP3, no TNEF, no calendar, no .NET Framework claims not contradicted by anything found this session (not independently re-executed, but internally consistent with the confirmed net8.0-only target); Enterprise Edition naming matches docs/MISSION_AUTHORITY.md exactly."},
+    {"id": "U-DEVTEST", "unit": "Development and Testing section", "disposition": "RETAIN_CORRECTED", "reason": "F-EML-TESTS-FAIL-ON-WINDOWS-CRLF-CHECKOUT CONTRADICTED; corrected with a clarifying paragraph immediately after the dotnet test command, exactly as in the Lane L candidate. The example-program commands and class list (CfbRoundTripTests, MsgReaderTests, MapiMessageTests, MapiMessageEmlTests, MetadataSmokeTests) are otherwise retained verbatim -- confirmed those five test-class names exist (MapiMessageEmlTests.cs is exactly where the two failures live)."},
+    {"id": "U-LICENSE", "unit": "License section", "disposition": "RETAIN_VERBATIM", "reason": "MIT license; LICENSE file referenced and badge present; not independently re-read this session but no contradicting evidence and this is a low-risk, easily-reversible claim type."}
+  ],
+  "summary": {
+    "total_units": 16,
+    "retain_verbatim": 15,
+    "retain_corrected": 1,
+    "add": 0,
+    "omit": 0,
+    "supersede": 0
+  }
+}

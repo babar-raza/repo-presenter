@@ -1,0 +1,34 @@
+{
+  "repository": "aspose-html-foss/Aspose.HTML-FOSS-for-Python",
+  "source_revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11",
+  "default_branch": "main",
+  "verified_at": "2026-10-21",
+  "method": "Live GitHub Contents/Trees API reads + PyPI registry check. Source-reading verified, not execution-verified this pass.",
+  "facts": [
+    {
+      "id": "F-NOT-ON-PYPI-CORRECTLY-DISCLOSED",
+      "claim": "The package aspose-html-foss is not on PyPI; the README correctly avoids a PyPI badge or pip-install-from-PyPI instruction and instead documents a source-checkout install",
+      "disposition": "SUPPORTED",
+      "evidence": "https://pypi.org/pypi/aspose-html-foss/json returns HTTP 404 (confirmed not published). pyproject.toml at the pinned revision shows version 0.1.0 (pre-release). The README's own Installation section matches this reality exactly -- no overclaim found."
+    },
+    {
+      "id": "F-IMPORTS-REAL",
+      "claim": "`from aspose_html import HTMLDocument, serialise` works as shown in Quick Start",
+      "disposition": "SUPPORTED",
+      "evidence": "src/aspose_html/__init__.py confirmed: `from aspose_html.html_document import HTMLDocument` and `from aspose_html.serialiser import serialise`, both in __all__."
+    },
+    {
+      "id": "F-BADGE-ROW-HONEST",
+      "claim": "Badge row shows only License + Contributors (no package/build badges)",
+      "disposition": "SUPPORTED",
+      "evidence": "Consistent with F-NOT-ON-PYPI-CORRECTLY-DISCLOSED -- omitting a package badge for an unpublished package is correct per mission's 'badges may be omitted when their claims or targets are unavailable' rule, not a defect."
+    },
+    {
+      "id": "F-243-PUBLIC-TYPES-CLAIM-CONTRADICTED",
+      "claim": "\"The library exposes 243 public types in total\" (API Reference section, stated twice) is accurate, and the 243-row API Reference table lists only public types.",
+      "disposition": "CONTRADICTED",
+      "evidence": "Independently fetched src/aspose_html/dom/__init__.py at the pinned source_revision (bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11) via both the GitHub Contents API and raw.githubusercontent.com (byte-identical, sha 4bba7274fa40360fe3d94dc8ecaa2aee6a1a4100, 337 lines / 8548 bytes). Parsed its `__all__` list directly (not by line-counting the file): it contains exactly 171 names (170 classes/exception types + 1 function, `set_default_user_agent`). `BrowsingContext` and `WindowEventLoop` are NOT among those 171 names, confirming they are not part of the package's public import surface -- consistent with the table's own prose, which independently describes both as 'Internal' ('Internal owner of navigation lifecycle/document state'; 'Internal task-source scheduler used by Window/BrowsingContext'). The live/candidate table nonetheless counted both rows toward its '243 public types' headline. Independently counting the table's own rows (lines 211-560 of the pre-fix candidate) confirms exactly 243 rows, 2 of which are these non-exported, self-labeled-Internal names. Verified corrected count: 241 (243 - 2). Both rows removed from the table and both count mentions corrected to 241 in lane_l_candidate.md; see lane_l_candidate.diff."
+    }
+  ],
+  "note_on_scope": "4 claims checked this pass (install reality, 2 import claims, badge honesty), plus 1 claim added on re-review (the API Reference table's '243 public types' headline, independently re-verified against live source and found false -- corrected to 241; see F-243-PUBLIC-TYPES-CLAIM-CONTRADICTED). No contradiction found in anything else checked. Note for future passes: an external review pass (review.json) separately asserted dom/__init__.py's __all__ contains '337 names' -- this re-verification found that figure does not hold up (337 is the file's line count, not its __all__ entry count; the actual parsed __all__ has 171 entries). Only the DOM module's export list was independently re-parsed this pass; the other 9 API Reference sections' row counts were not cross-checked against their respective modules' __all__ lists (e.g. the CSS section lists 16 classes that appear to live in underscore-prefixed internal submodules not re-exported by aspose_html/css/__init__.py's two-function __all__) -- that broader audit remains the open MODERATE scope-thinness item and was intentionally left outside this pass's scope, which was bounded to the specific REJECT finding (the BrowsingContext/WindowEventLoop double-count) already raised in review.json. This repository's README already conforms to the fixed-core contract (badge row, banner, Navigation, At a Glance, standard section names) -- a stronger structural starting point than aspose-font-foss."
+}

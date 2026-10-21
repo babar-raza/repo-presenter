@@ -1,0 +1,43 @@
+{
+  "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-.NET",
+  "source_revision": "b6f778e926aa6249a26d3fba7480a663beb3cdfc",
+  "lane": "L+R",
+  "candidate": "lane_l_candidate.md",
+  "facts": "facts.json",
+  "checks": [
+    {
+      "id": "C1_EVERY_EDIT_TRACES_TO_A_FACT",
+      "result": "PASS",
+      "detail": "0 edits made. All 4 README-relevant facts are SUPPORTED (F-SAMPLES-EXIST, F-LAYER-PROPERTIES) or UNVERIFIED (F-TARGETFRAMEWORK, F-NOT-ON-NUGET); none is CONTRADICTED, so no correction is warranted."
+    },
+    {
+      "id": "C2_NO_FALSE_POSITIVE_UNVERIFIED_TREATED_AS_CONTRADICTED",
+      "result": "PASS",
+      "detail": "F-TARGETFRAMEWORK is correctly left UNVERIFIED rather than CONTRADICTED. Independently re-fetched src/Aspose.PSD.FOSS/Aspose.PSD.FOSS.csproj: it genuinely multi-targets netstandard2.1;net10.0, and no global.json exists anywhere in the tree to pin a build-time SDK requirement (only a false-positive grep hit on the unrelated file GlobalLayerMaskInfo.cs). The ambiguity the composer describes (build-time SDK need vs. runtime-consumer requirement) is real and genuinely unresolved from source alone -- UNVERIFIED is the correct disposition, not an invented leniency."
+    },
+    {
+      "id": "C3_DIFF_SCOPE_AGAINST_LIVE_README",
+      "result": "PASS",
+      "detail": "Independently re-fetched the live README via gh api (193 lines) and diffed against lane_l_candidate.md: zero differences. No lane_l_candidate.diff exists, consistent with zero edits."
+    },
+    {
+      "id": "C4_INDEPENDENT_SPOT_CHECK",
+      "result": "CONFIRMED",
+      "detail": "Most consequential claim here is the structural_observation itself (not a single fact row): 'this README has NO badge row, NO product banner, NO Navigation list, and NO At-a-Glance diagram.' Independently fetched and grepped the live README's headings/opening lines myself: confirmed -- the file opens directly with an H1 and a plain paragraph, no badges, no banner image/link, headings are Who This Project Is For / Common Workflows / Mental Model / Highlights / Requirements / Installation / Quick Start / Choosing Between... / Samples / Documentation / Supported Scope / Out of Scope / License -- none named 'Navigation' or 'At a Glance'. The structural gap is real, not overstated."
+    },
+    {
+      "id": "C5_LANE_R_BLOCKED_HANDLING",
+      "result": "PASS",
+      "detail": "lane_r_candidate.md is genuinely absent from the directory (confirmed via file listing) -- this matches the task's own pre-flagged list of repos where Lane R is incomplete. lane_r_plan.md explicitly documents why (structural gap requires authorship -- badge row, banner, Navigation, At a Glance -- not a Lane L minimal correction) and explicitly states 'Lane R candidate: Not produced this pass... do not fabricate one to fill the slot.' This is the correct, honest handling: BLOCKED and disclosed, not silently invented."
+    }
+  ],
+  "findings": [
+    {
+      "id": "F1_LANE_R_BLOCKED",
+      "severity": "informational, not a defect",
+      "detail": "Lane R is BLOCKED for this repository: lane_r_candidate.md does not exist. This was pre-disclosed by the composer and independently confirmed by this reviewer (directory listing + lane_r_plan.md's own explicit statement). Do not treat the absence of lane_r_candidate.md as an oversight -- it is a deliberate, documented deferral."
+    }
+  ],
+  "verdict": "ACCEPT",
+  "verdict_rationale": "Lane L: no correction was needed (0 CONTRADICTED facts) and none was made; verified byte-identical to the live README via fresh diff. The one UNVERIFIED-vs-CONTRADICTED judgment call (target framework) was independently re-checked from the csproj and is a genuinely ambiguous case, correctly left UNVERIFIED rather than forced into either disposition. The structural_observation (missing fixed-core apparatus) was independently reproduced and is accurate. Lane R is BLOCKED, exactly as pre-flagged by the composer and confirmed by this reviewer -- no lane_r_candidate.md exists, and lane_r_plan.md correctly refuses to fabricate one. Overall verdict reflects Lane L ACCEPT + Lane R honestly BLOCKED, not a full portfolio ACCEPT for this repository until a dedicated Lane R authorship pass is done."
+}

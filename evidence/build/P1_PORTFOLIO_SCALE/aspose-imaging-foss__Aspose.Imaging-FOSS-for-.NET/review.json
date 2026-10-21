@@ -1,0 +1,38 @@
+{
+  "repository": "aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET",
+  "source_revision": "d947d11cc6b282443231c2025ee43bf974a335dd",
+  "lane": "L+R (empty-patch; candidates byte-identical to each other and to live_readme.md)",
+  "candidate": "lane_l_candidate.md (== lane_r_candidate.md == live_readme.md)",
+  "facts": "facts.json",
+  "checks": [
+    {
+      "id": "C1_EMPTY_PATCH_VERIFIED",
+      "result": "PASS",
+      "detail": "`diff -u live_readme.md lane_l_candidate.md` and `diff -u lane_l_candidate.md lane_r_candidate.md` both produce zero output. Consistent with facts.json's 2 SUPPORTED, 0 CONTRADICTED facts."
+    },
+    {
+      "id": "C2_FACTS_JSON_THINNESS_RELATIVE_TO_README_SIZE",
+      "result": "FAIL",
+      "detail": "facts.json contains only 2 facts (NuGet-not-published disclosure, and ImageProbe method-signature existence) for a 306-line README whose single most load-bearing section (Key Capabilities, lines 54-113) makes a dense set of specific, falsifiable technical claims: a '14 image formats' count, an exact per-format capability table (Detect/Width-Height/Bit-depth/Frame-count for 14 formats), named DICOM transfer-syntax support, and named ISOBMFF brand strings for AVIF/HEIC detection (avif/avis, heic/heix/hevc/hevx/heim/heis/hevm/hevs, mif1/mif2) plus named box types (ispe/pitm/ipma/ipco). facts.json's own 'note_on_scope' admits none of this was independently re-executed ('the 14-format detection table, the DICOM/AVIF/HEIC brand-detection details... were not independently re-executed'). This is an honestly-disclosed gap, not a false claim, but it is a real coverage shortfall given how specific and checkable these claims are."
+    },
+    {
+      "id": "C3_INDEPENDENT_CHECK_OF_UNCOVERED_CLAIMS (required step 4, extended)",
+      "result": "PASS",
+      "detail": "Independently re-verified the two most consequential claims facts.json never touched, both from raw source at the pinned source_revision (confirmed current via `gh api .../commits/main --jq .sha` == d947d11cc6b282443231c2025ee43bf974a335dd, no drift): (1) '14 image formats' -- listed src/Aspose.Imaging.Foss/Formats/*FormatHandler.cs and counted exactly 14 files (Avif, Bmp, Dicom, DjVu, Emf, Gif, Heic, Ico, Jpeg, Png, Psd, Tiff, WebP, Wmf), matching both the prose claim and the table's 14 rows exactly. (2) The AVIF/HEIC brand-detection prose (a highly specific, easy-to-get-wrong claim) -- fetched AvifFormatHandler.cs, HeicFormatHandler.cs, and the shared src/Aspose.Imaging.Foss/Internal/IsoBaseMediaBox.cs, and found `HeicBrands = { heic, heix, hevc, hevx, heim, heis, hevm, hevs }` and `AvifBrands = { avif, avis }` defined verbatim, plus `ipco`/`pitm`/`ispe`/`ipma` box-type string literals all present exactly as the README describes (including the 'mif1/mif2 match only when no compatible avif brand is present' precedence rule, confirmed in HeicFormatHandler.cs's `!compatible.Exists(IsoBaseMediaBox.IsAvifBrand)` check). Both claims CONFIRMED exactly, substantially offsetting the C2 coverage gap for the claims actually tested."
+    },
+    {
+      "id": "C4_LANE_R_REASONING_HOLDS",
+      "result": "PASS",
+      "detail": "lane_r_plan.md's case-A convergence reasoning is confirmed by direct inspection of the live README's heading structure: Navigation, At a Glance, Key Capabilities, Installation, Dependencies, Quick Start, Additional Examples, API Reference, Documentation & Resources, Scope and Limitations, Development and Testing, License -- the complete fixed-core set, in order. The honest non-overclaiming badge row (no NuGet badge for an unpublished package, confirmed by `curl`-equivalent NuGet 404 lookup cited in facts.json) is a real, positive signal, not an oversight."
+    }
+  ],
+  "findings": [
+    {
+      "id": "F-FACTS-COVERAGE-THIN",
+      "severity": "MODERATE",
+      "detail": "facts.json's 2-fact coverage is thin relative to the README's actual claim density, particularly the per-format capability table and the DICOM/AVIF/HEIC technical detail paragraphs, none of which were checked before this review. This review's own C3 check closes two specific instances of that gap (format count, AVIF/HEIC brand detection) with exact confirmation, but the DICOM transfer-syntax claims (Implicit VR Little Endian, Explicit VR Little/Big Endian) and the per-cell ✅/— entries in the capability table (e.g. 'WEBP has no bit-depth or frame-count support', 'EMF width/height derived from bounds', 'WMF assumes 96 DPI') remain genuinely UNVERIFIED rather than contradicted. Recommend a follow-up pass that either runs the actual dotnet build/tests (not attempted in this portfolio-batch pass per facts.json's own note) or completes a systematic per-row source cross-check of the capability table, matching the depth already achieved for the sibling repositories in this same batch where execution was available."
+    }
+  ],
+  "verdict": "ACCEPT",
+  "verdict_rationale": "The empty-patch outcome is correct given what was checked, and this review's own independent extension of that check -- verifying the exact '14 formats' count against the actual FormatHandler source files, and the highly specific AVIF/HEIC ISOBMFF brand-detection logic against the actual parsing source -- both confirmed the README's claims exactly, including a subtle precedence rule (HEIC major brand beats a stray compatible AVIF brand) that would have been easy to get wrong if fabricated. This meaningfully supports extending 'no contradiction found' beyond facts.json's own narrow 2-fact scope. ACCEPT stands because no false claim was found anywhere this review or the original pass looked, and both facts.json and lane_r_plan.md are transparent about the claims that remain genuinely unchecked (DICOM transfer-syntax specifics, several capability-table cells) rather than silently presenting them as verified. The coverage-thinness finding is recorded as MODERATE so a future pass closes the remaining gap rather than treating this repository as fully verified."
+}

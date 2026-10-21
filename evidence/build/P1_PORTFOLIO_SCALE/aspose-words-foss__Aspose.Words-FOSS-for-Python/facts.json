@@ -1,0 +1,107 @@
+{
+  "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Python",
+  "provider_identity": {
+    "provider": "github",
+    "repository_id": 1199624632,
+    "node_id": "R_kgDOR4DRuA"
+  },
+  "source_revision": "2d2efee2787cb9e56d071d17f8d7b740dce8b784",
+  "default_branch": "main",
+  "readme_blob_sha": "158b566437a4f3407445525748d53e7b05aef7c2",
+  "verified_at": "2026-10-21",
+  "verification_note": "Live GitHub Contents/Trees/Commits API reads (gh CLI, authenticated) for README, full source tree, and a tarball snapshot of the pinned source_revision. Executable verification: pip installed the real published PyPI package aspose-words-foss==26.7.0 into an isolated venv (overriding its own <3.13 requires-python cap, since this host only has Python 3.13/3.15 available -- the import and every exercised codepath worked anyway on 3.13). Ran the README's Quick Start and Additional Examples verbatim against real fixture files pulled from this repo's own tests/data/input/ (DOCX, DOC, RTF, Markdown), including all five image-containing DOCX fixtures, converting to Markdown/PDF/TXT and inspecting output size and content (base64 image presence). Separately constructed a hand-written standard (plain-text, non-OLE2) .rtf file to test the RTF claim against real-world RTF, not just this repo's own synthetic test fixture. Cross-checked PdfSaveOptions/OoxmlSaveOptions field consumption by grepping the installed wheel's pdf_writer/ source (confirmed identical in shape to the live GitHub blobs read directly via Contents API). Ran gh issue list/search for dedup before concluding on the RTF finding.",
+  "method": "gh api reads of live GitHub state + a real pip install of the published PyPI wheel into an isolated venv, with the README's Quick Start/Additional Examples and several hand-constructed edge cases executed for real against real document fixtures.",
+  "facts": [
+    {
+      "id": "F-PKG-NAME-VERSION",
+      "claim": "PyPI package name is `aspose-words-foss`; `pip install aspose-words-foss>=26.5.0` installs a real published release",
+      "disposition": "SUPPORTED",
+      "evidence": "pypi.org/pypi/aspose-words-foss/json -> info.version == '26.7.0', releases include both '26.5.0' and '26.7.0'; repo's pyproject.toml at source_revision has name = \"aspose-words-foss\", version = \"26.7.0\", matching the published latest release exactly."
+    },
+    {
+      "id": "F-DEPS-MATCH",
+      "claim": "Required runtime dependencies are olefile>=0.46, fpdf2>=2.7.5, pydantic>=2.0.0",
+      "disposition": "SUPPORTED",
+      "evidence": "pyproject.toml [project] dependencies == [\"olefile>=0.46\", \"fpdf2>=2.7.5\", \"pydantic>=2.0.0\"], read directly from the repo at source_revision; identical to the README's Dependencies section."
+    },
+    {
+      "id": "F-PY-VERSION-CAP",
+      "claim": "Requires Python 3.10+, tested through 3.12, pyproject.toml caps at <3.13",
+      "disposition": "SUPPORTED",
+      "evidence": "pyproject.toml requires-python = \">=3.10,<3.13\" verbatim. (Separately noted: the installed wheel actually imports and runs correctly on Python 3.13 when the cap is overridden with --ignore-requires-python -- this is not a contradiction of the README's claim, which only states the declared/tested range, not that 3.13 fails.)"
+    },
+    {
+      "id": "F-QUICKSTART-DOCX-TO-MD",
+      "claim": "Quick Start: `aw.Document(\"report.docx\")` then `doc.save(\"report.md\", aw.SaveFormat.MARKDOWN)` produces Markdown output",
+      "disposition": "SUPPORTED",
+      "evidence": "Executed verbatim against tests/data/input/test_full_article.docx (renamed report.docx) in a fresh venv with aspose-words-foss==26.7.0: produced a 381-byte report.md."
+    },
+    {
+      "id": "F-QUICKSTART-DOCX-TO-PDF",
+      "claim": "Quick Start: the same Document can be saved to PDF with `aw.SaveFormat.PDF`",
+      "disposition": "SUPPORTED",
+      "evidence": "Executed verbatim: doc.save(\"report.pdf\", aw.SaveFormat.PDF) produced a 2143-byte PDF file."
+    },
+    {
+      "id": "F-GETTEXT-AND-TEXT-SAVE",
+      "claim": "`Document.get_text()` extracts plain text; `SaveFormat.TEXT` saves it directly",
+      "disposition": "SUPPORTED",
+      "evidence": "Executed: doc.get_text() returned 232 characters of real extracted body text from the DOCX fixture; doc.save(..., aw.SaveFormat.TEXT) succeeded."
+    },
+    {
+      "id": "F-ALL-INPUTS-TO-PDF",
+      "claim": "DOCX, DOC (via the repo's own .doc/.rtf OLE2 test fixtures), and RTF can each be opened and converted to PDF",
+      "disposition": "SUPPORTED",
+      "evidence": "Executed the README's 'Convert Every Input Format to PDF' example against tests/data/input/test_full_article.docx, test_bold.doc, and test_full_article.rtf: all three loaded and saved PDFs of plausible non-trivial size (2143, 1150, 2145 bytes respectively). Note: this repo's own .rtf test fixture is itself an OLE2 compound-file document (magic bytes D0 CF 11 E0), not a standard plain-text RTF -- see F-RTF-STANDARD-FAILS below."
+    },
+    {
+      "id": "F-STREAM-LOAD-MAGIC-BYTES",
+      "claim": "DOCX, DOC, and RTF are auto-detected from magic bytes when loading from a stream (`io.FileIO`)",
+      "disposition": "SUPPORTED",
+      "evidence": "Executed: `with io.FileIO(\"report.docx\") as stream: doc = aw.Document(stream)` succeeded with 1 section detected via ZIP magic bytes. (DOCX case only exercised directly; DOC/RTF magic-byte paths are supported by direct code read of `_detect_format_from_bytes()` in document.py, which checks ZIP/OLE2/`{\\rtf` prefixes in that order.)"
+    },
+    {
+      "id": "F-MARKDOWNLOADOPTIONS",
+      "claim": "`LoadOptions.load_format = aw.LoadFormat.MARKDOWN` is needed to disambiguate a Markdown stream (no magic bytes); `MarkdownLoadOptions` loads Markdown directly from bytes/stream",
+      "disposition": "SUPPORTED",
+      "evidence": "Executed both patterns from the README: generic LoadOptions with load_format=MARKDOWN against a .md file opened as io.FileIO succeeded and extracted correct text; io.BytesIO content loaded via aw.MarkdownLoadOptions() also succeeded."
+    },
+    {
+      "id": "F-SAVEFORMAT-DOC-NOT-IMPLEMENTED",
+      "claim": "`SaveFormat.DOC` is defined for API compatibility but `Document.save()` does not implement a DOC writer; saving with it raises `ValueError`",
+      "disposition": "SUPPORTED",
+      "evidence": "Read document.py: Document.save()'s format dispatch has no branch for SaveFormat.DOC, falling through to the final `else: raise ValueError(...)`. Executed: `doc.save(\"report.doc\", aw.SaveFormat.DOC)` raised exactly `ValueError: Unsupported save format: <SaveFormat.DOC: 10>. Supported formats: Markdown, Text, PDF, DOCX.`"
+    },
+    {
+      "id": "F-OOXML-STRICT-NOT-IMPLEMENTED",
+      "claim": "Saving DOCX with `OoxmlSaveOptions.compliance = OoxmlCompliance.ISO29500_2008_STRICT` raises `NotImplementedError`",
+      "disposition": "SUPPORTED",
+      "evidence": "Executed: setting ooxml_opts.compliance = saving.OoxmlCompliance.ISO29500_2008_STRICT and calling doc.save(...) raised `NotImplementedError: OoxmlCompliance.ISO29500_2008_STRICT is not supported by the FOSS writer; use ECMA376_2006 or ISO29500_2008_TRANSITIONAL.`, matching the README's Scope and Limitations claim exactly."
+    },
+    {
+      "id": "F-PDFOPTIONS-8-UNCONSUMED",
+      "claim": "Of PdfSaveOptions's 17 fields, exactly 8 (text_compression, embed_full_fonts, use_core_fonts, font_embedding_mode, page_mode, color_mode, preserve_form_fields, memory_optimization) are accepted but not yet consumed by the PDF writer",
+      "disposition": "SUPPORTED",
+      "evidence": "Counted PdfSaveOptions's __init__ attributes in saving.py: exactly 17 (compliance, export_document_structure, image_compression, jpeg_quality, text_compression, embed_full_fonts, use_core_fonts, font_embedding_mode, page_mode, color_mode, export_bookmarks_outline, outline_options, preserve_form_fields, memory_optimization, zoom_factor, zoom_behavior, display_doc_title). Grepped the full pdf_writer/ module tree (writer.py, paragraph_renderer.py, run_renderer.py, shape_renderer.py, table_renderer.py, font.py, color.py, text.py, page_bands.py, constants.py, _context.py) for all 8 named fields: zero matches anywhere. The remaining 9 fields (compliance, export_document_structure, image_compression, jpeg_quality, zoom_factor, zoom_behavior, export_bookmarks_outline, outline_options, display_doc_title) are each referenced and applied in writer.py/paragraph_renderer.py/shape_renderer.py."
+    },
+    {
+      "id": "F-IMAGE-DOCS-ALL-FORMATS",
+      "claim": "Inline images, captioned images, images in tables, and images in headers/footers all convert cleanly to Markdown (base64-embedded by default), PDF, and plain text",
+      "disposition": "SUPPORTED",
+      "evidence": "Executed the README's 'Convert Image-Containing Documents to Every Output Format' example verbatim against this repo's own 5 real fixtures (tests/data/input/simple_inline.docx, image_with_caption.docx, image_in_table.docx, image_in_header.docx, image_in_footer.docx): all 5 produced non-trivial .md (632-1500 bytes, each containing a literal 'data:image' base64 URI), .pdf (1816-2131 bytes), and .txt output with no exceptions."
+    },
+    {
+      "id": "F-RTF-STANDARD-FAILS",
+      "claim": "(Implicit in 'RTF documents through the same OLE2 delegation path' and 'DOCX, DOC, and RTF are auto-detected from magic bytes') -- that RTF support covers real-world RTF files",
+      "disposition": "CONTRADICTED",
+      "severity": "functional defect, not just a README wording gap",
+      "evidence": "Read rtf_reader.py: RtfFileReader.__init__ unconditionally does `self._delegate = DocFileReader()` and every method delegates to it; DocFileReader (doc_file_reader_core.py) requires `olefile`, i.e. an OLE2/Compound File container. Constructed a hand-written, byte-for-byte standard plain-text RTF file (`{\\rtf1\\ansi\\deff0{\\fonttbl{\\f0 Times New Roman;}}\\f0\\fs24 ...\\par}`) -- this is how virtually all real-world .rtf files are actually stored (RTF is specified as a plain-text tagged format, not an OLE2 container; this repo's own test_full_article.rtf fixture, confirmed via `file`/hex dump to start with OLE2 magic bytes D0 CF 11 E0, is itself a synthetic/non-standard case). Executed `aw.Document(\"plain_standard.rtf\")`: raised `olefile.NotOleFileError: not an OLE2 structured storage file`. Also executed the stream/magic-byte path (`io.FileIO` + `aw.Document(stream)`) against the same file: the magic-byte detector in document.py does correctly recognize the `{\\rtf` prefix and route to the RTF reader, but that reader still raises the identical NotOleFileError -- so the auto-detection claim is technically followed but the resulting load fails for standard RTF regardless of entry point. This is a known, already-reported upstream defect, not a new finding: `gh issue list --repo aspose-words-foss/Aspose.Words-FOSS-for-Python --state all --search rtf` found open issue #3 ('Chinese text is lost in PDF and text extraction; standard RTF fails to load'), whose reproduction and root-cause analysis (\"The RTF reader always delegates to the OLE/DOC reader... standard RTF fixture does not cover standard RTF\") independently matches this finding exactly. No draft_upstream_issue.md was written as a result -- it would be a duplicate of issue #3."
+    },
+    {
+      "id": "F-API-PUBLIC-TYPE-COUNT",
+      "claim": "The library ships 146 public types across the documented modules",
+      "disposition": "UNVERIFIED",
+      "evidence": "A raw `grep -rn '^class ' aspose/` across the full source tree at source_revision found 193 class definitions. This is consistent with a curated '146 public types' figure that excludes internal mixins/builders/protocols the README's own table already omits (e.g. DocTableBuilderMixin, LdmBuilderMixin, ShapeParserMixin, ReaderContext), but reproducing the exact 146 figure would require the same curation logic used to build the README's own table, which was not attempted here. Not contradicted, not independently confirmed."
+    }
+  ]
+}

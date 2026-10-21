@@ -1,0 +1,95 @@
+--- live_readme.md	2026-10-21 17:53:36.984549000 +0500
++++ lane_l_candidate.md	2026-10-21 17:58:25.299525400 +0500
+@@ -8,8 +8,8 @@
+ converting 3D scenes without any external 3D engine. It exposes an Aspose.3D-compatible API
+ surface — `Scene`, `Node`, `Mesh`, `Material` — for constructing scene graphs from primitive and
+ IFC-style profile geometry, assigning shading materials, animating hierarchies, and reading and
+-writing widely used interchange formats such as FBX, glTF, Wavefront OBJ, STL, COLLADA, and
+-Universal 3D, as pure managed code with no native dependencies.
++writing widely used interchange formats such as FBX, glTF, Wavefront OBJ, STL, COLLADA, and PLY,
++as pure managed code with no native dependencies.
+ 
+ ## Navigation
+ 
+@@ -31,9 +31,9 @@
+ flowchart TD
+   subgraph StartingPoints["Starting Points"]
+     direction TB
+-    i1["An existing FBX, COLLADA, OBJ, STL, PLY, or U3D file"]
++    i1["An existing FBX, COLLADA, OBJ, STL, or PLY file"]
+     i2["An existing glTF file (.gltf/.glb)"]
+-    i3["An existing 3MF or RVM file (Microsoft 3MF, AVEVA PDMS RVM)"]
++    i3["An existing 3MF file (Microsoft 3MF)"]
+   end
+   PRODUCT["Aspose.3D FOSS for .NET"]
+   subgraph Capabilities["Core Capabilities"]
+@@ -53,10 +53,9 @@
+   end
+   subgraph Outputs["Outputs"]
+     direction TB
+-    o1["FBX, COLLADA, OBJ, STL, PLY, or U3D file"]
++    o1["FBX, COLLADA, OBJ, STL, or PLY file"]
+     o2["glTF file (.gltf/.glb)"]
+-    o3["3MF or RVM file (Microsoft 3MF, AVEVA PDMS RVM)"]
+-    o4["AMF or HTML5 (Aspose 3D Web viewer) output"]
++    o3["3MF file (Microsoft 3MF)"]
+   end
+   StartingPoints --> PRODUCT --> Capabilities --> Outputs
+ ```
+@@ -79,13 +78,12 @@
+   animation is available through `MorphTargetDeformer` and `MorphTargetChannel`.
+ - Define NURBS curves and surfaces with `NurbsCurve` and `NurbsSurface`, specifying control
+   points, weights, and knot vectors directly.
+-- Convert 3D scenes by reading and writing FBX, glTF, Wavefront OBJ, STL, COLLADA, and Universal
+-  3D (U3D) — including FBX-to-OBJ and glTF-to-OBJ conversions — with full round-trip fidelity,
+-  plus Microsoft 3MF and AVEVA PDMS RVM models, AMF, and an HTML5/Aspose 3D Web viewer export,
+-  through `Scene.FromFile()`/`Scene.Save()` and the matching `FileFormat` constants.
++- Convert 3D scenes by reading and writing FBX, glTF, Wavefront OBJ, STL, COLLADA, and PLY —
++  including FBX-to-OBJ and glTF-to-OBJ conversions — with full round-trip fidelity, plus
++  Microsoft 3MF, through `Scene.FromFile()`/`Scene.Save()` and the matching `FileFormat` constants.
+ - Configure per-format load/save behavior through dedicated options types (`FbxLoadOptions`/
+   `FbxSaveOptions`, `GltfLoadOptions`/`GltfSaveOptions`, `ObjLoadOptions`/`ObjSaveOptions`,
+-  `StlLoadOptions`/`StlSaveOptions`, and their COLLADA/3MF/RVM/U3D counterparts).
++  `StlLoadOptions`/`StlSaveOptions`, and their COLLADA/3MF/PLY counterparts).
+ - Read and write per-vertex mesh data through a custom `VertexDeclaration` and `VertexElement`
+   subclasses — normals, UVs, vertex color, tangent/binormal, smoothing groups, and user data.
+ 
+@@ -379,7 +377,7 @@
+ | `Renderer` | Rendering context. |
+ | `RendererVariableManager` | Manages variables used during rendering. |
+ | `RevolvedAreaSolid` | A solid built by revolving a profile's cross-section around an axis. |
+-| `RvmFormat` | AVEVA PDMS RVM format registration — core geometry import/export works; attribute loading is not implemented (see Scope and Limitations). |
++| `RvmFormat` | AVEVA PDMS RVM format registration — not reachable through `Scene.Open()`/`Scene.Save()` in this FOSS build; `FileFormat.RvmText`/`RvmBinary` are not wired into format dispatch, so RVM import/export is not currently functional through the public API (see Scope and Limitations). |
+ | `RvmLoadOptions` | Load options for AVEVA PDMS RVM files. |
+ | `RvmSaveOptions` | Save options for AVEVA PDMS RVM files. |
+ | `SPIRVSource` | A shader compiled to SPIR-V. |
+@@ -419,8 +417,8 @@
+ | `TriMesh` | Raw GPU-ready mesh buffer representation — most conversion/read helpers throw in this FOSS build (see Scope and Limitations). |
+ | `TrialException` | Trial-related exception (not applicable to this open-source edition). |
+ | `TrimmedCurve` | A bounded curve trimmed from a basis curve at both ends. |
+-| `U3dLoadOptions` | Load options for Universal 3D (U3D). |
+-| `U3dSaveOptions` | Save options for Universal 3D (U3D). |
++| `U3dLoadOptions` | Load options for Universal 3D (U3D) — not reachable through `Scene.Open()`/`Scene.Save()` in this FOSS build (see Scope and Limitations). |
++| `U3dSaveOptions` | Save options for Universal 3D (U3D) — not reachable through `Scene.Open()`/`Scene.Save()` in this FOSS build (see Scope and Limitations). |
+ | `UShape` | IFC-compatible U-shape profile defined by parameters. |
+ | `UsdSaveOptions` | Save options for USD/USDZ (registered, not implemented in this FOSS build). |
+ | `Vertex` | Reads component vectors (e.g. `ReadVector3`) from a vertex field. |
+@@ -595,8 +593,16 @@
+ - `Microsoft3MFFormat`'s build-instruction metadata (`IsBuildable`, `GetTransformForBuild`,
+   `SetBuildable`, object type accessors) is not implemented — core 3MF geometry import/export
+   works, production-extension metadata does not.
+-- `RvmFormat.LoadAttributes` is not implemented — core RVM geometry import/export works, RVM
+-  attribute data does not load.
++- AVEVA PDMS RVM (`FileFormat.RvmText`/`RvmBinary`), Universal 3D (`FileFormat.Universal3D`),
++  AMF (`FileFormat.AMF`), and HTML5/Aspose 3D Web viewer export (`FileFormat.HTML5`) are declared
++  as public `FileFormat` static fields with option-class support (`RvmLoadOptions`/
++  `RvmSaveOptions`, `U3dLoadOptions`/`U3dSaveOptions`, `AmfSaveOptions`, `Html5SaveOptions`), but
++  none of them is wired into the format dispatcher that `Scene.Open()`/`Scene.Save()` use —
++  calling either method with a `.rvm`, `.u3d`, `.amf`, or `.html` path throws
++  `ArgumentException: Unsupported file format` before any format-specific code runs. No reader or
++  writer implementation exists for any of these four formats anywhere in the codebase. `RvmFormat`
++  additionally exposes a `LoadAttributes` method that throws `NotImplementedException`, but this
++  is secondary to the format being entirely unreachable through the public API.
+ - Text watermarking is not currently functional in this FOSS build.
+ - License and trial-management APIs (`License`, `Metered`) are present for API-surface
+   compatibility but are not applicable to this open-source edition.

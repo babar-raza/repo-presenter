@@ -1,0 +1,39 @@
+{
+  "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Java",
+  "source_revision": "3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3",
+  "note": "Mission section 7 step 3 content-unit inventory. This live README is unusually self-aware (already discloses its own narrow STL-only scope and silent-failure risks); units are dispositioned against facts.json.",
+  "units": [
+    {"id": "U-H1", "unit": "H1 title + badge row + banner", "disposition": "RETAIN_VERBATIM", "reason": "Badge order and banner placement match the fixed-core contract; Maven Central coordinates verified (F-PKG-VERSION)."},
+    {"id": "U-OPENING", "unit": "Opening paragraph (clean-room API-compatibility framing)", "disposition": "RETAIN_VERBATIM", "reason": "General positioning statement, not a specific checkable claim; not contradicted."},
+    {"id": "U-NAV", "unit": "Navigation list", "disposition": "RETAIN_VERBATIM", "reason": "Matches fixed-core section set exactly."},
+    {"id": "U-GLANCE", "unit": "At a Glance diagram (STL-only)", "disposition": "RETAIN_VERBATIM", "reason": "Already scoped to only the one format confirmed fully functional (F-STL-OBJ-GLTF-FBX-BRANCHES-EXIST); no over-claim to correct."},
+    {"id": "U-KEYCAP", "unit": "Key Capabilities bullets 1-7", "disposition": "RETAIN_VERBATIM", "reason": "Scene graph, primitives, materials, NURBS, math, and STL claims all independently checked and SUPPORTED (F-PRIMITIVES-BOX-SUPPORTED, F-NURBS-EVALUATE-THROWS consistent with the hedge already in bullet 5, F-STL-OBJ-GLTF-FBX-BRANCHES-EXIST)."},
+    {"id": "U-INSTALL", "unit": "Installation section (Maven/Gradle/other build tools)", "disposition": "RETAIN_VERBATIM", "reason": "F-PKG-VERSION SUPPORTED against pom.xml."},
+    {"id": "U-DEPS", "unit": "Dependencies section", "disposition": "RETAIN_VERBATIM", "reason": "F-PKG-NO-DEPS SUPPORTED."},
+    {"id": "U-QUICKSTART", "unit": "Quick Start (STL load/save, explicit format, save options)", "disposition": "RETAIN_VERBATIM", "reason": "STL round-trip confirmed functional by the dispatch-mechanism reading (F-STL-OBJ-GLTF-FBX-BRANCHES-EXIST); not independently re-executed (no JDK) but not contradicted."},
+    {"id": "U-EXAMPLES", "unit": "Additional Examples (primitive-to-STL, PBR material, NURBS control points, stream format detection, transform)", "disposition": "RETAIN_VERBATIM", "reason": "All examples use Box (confirmed working, F-PRIMITIVES-BOX-SUPPORTED), STL (confirmed working), or pure data-model APIs (NurbsCurve control points, Transform) not affected by any finding this session."},
+    {"id": "U-APIREF-INTRO", "unit": "API Reference intro paragraph", "disposition": "RETAIN_VERBATIM", "reason": "General Scene/FileFormat description, consistent with F-DISPATCH-MECHANISM."},
+    {"id": "U-APIREF-TABLE", "unit": "API Reference table (266-type public surface) + Detailed Member Reference", "disposition": "RETAIN_VERBATIM", "reason": "Not independently re-verified row-by-row this session beyond the specific classes checked (Box, Pyramid, Torus, RectangularTorus, Plane, PbrSpecularMaterial, License, NurbsCurve) -- all of which matched their table/prose descriptions; no contradicting evidence found for any row."},
+    {"id": "U-DOCS-RESOURCES", "unit": "Documentation & Resources section", "disposition": "RETAIN_VERBATIM", "reason": "Links not independently re-verified for liveness; no contradicting evidence. Includes an honest, already-correct pointer to FILE_FORMATS.md with its own caveat (F-FILE-FORMATS-MD-SELF-CONTRADICTORY)."},
+    {"id": "U-SCOPE-STL-ONLY", "unit": "Scope and Limitations bullet 1 (STL-only functional)", "disposition": "RETAIN_VERBATIM", "reason": "Independently confirmed accurate (F-DISPATCH-MECHANISM)."},
+    {"id": "U-SCOPE-OBJ-STALE", "unit": "Scope and Limitations bullet 2 (OBJ import stale in published artifact)", "disposition": "RETAIN_VERBATIM", "reason": "Could not be independently confirmed or refuted this session (no JDK to inspect the published jar's actual runtime behavior, F-OBJ-ARTIFACT-STALENESS UNVERIFIED) -- per mission section 7, an UNVERIFIED fact is never corrected as if false; the repository's own honest disclosure stands."},
+    {"id": "U-SCOPE-SILENT-FORMATS", "unit": "Scope and Limitations bullet 3 (formats fail silently)", "disposition": "RETAIN_VERBATIM", "reason": "General, honest risk disclosure; not contradicted, and in fact echoed by this session's own Plane finding (see U-SCOPE-PRIMITIVES)."},
+    {"id": "U-SCOPE-COMMERCIAL-FORMATS", "unit": "Scope and Limitations bullet 4 (additional formats are commercial)", "disposition": "RETAIN_VERBATIM", "reason": "Not independently re-executed; consistent with F-DISPATCH-MECHANISM."},
+    {"id": "U-SCOPE-PRIMITIVES", "unit": "Scope and Limitations bullet 5 (primitive mesh-conversion gaps)", "disposition": "RETAIN_CORRECTED", "reason": "F-PLANE-SILENT-EMPTY-MESH CONTRADICTED the bullet's implicit two-state model (works / throws) -- Plane.toMesh() is a third, previously undisclosed state (silently returns an empty Mesh). Corrected by extending the bullet, not replacing it: the Box/Cylinder/Sphere/Dish and Pyramid/Torus/RectangularTorus claims are retained verbatim (both independently confirmed, F-PRIMITIVES-BOX-SUPPORTED / F-PRIMITIVES-THROW-NOTIMPLEMENTED) and the Plane gap is appended."},
+    {"id": "U-SCOPE-NURBS", "unit": "Scope and Limitations bullet 6 (NURBS sampling)", "disposition": "RETAIN_VERBATIM", "reason": "F-NURBS-EVALUATE-THROWS SUPPORTED."},
+    {"id": "U-SCOPE-PBRSPECULAR", "unit": "Scope and Limitations bullet 7 (PbrSpecularMaterial)", "disposition": "RETAIN_VERBATIM", "reason": "F-PBRSPECULAR-THROWS SUPPORTED."},
+    {"id": "U-SCOPE-LICENSE", "unit": "Scope and Limitations bullet 8 (License/Metered/crypto/zip excluded)", "disposition": "RETAIN_VERBATIM", "reason": "F-LICENSE-THROWS SUPPORTED for License; Metered/crypto/zip not independently re-verified this session but consistent with the pattern."},
+    {"id": "U-SCOPE-RENDERING", "unit": "Scope and Limitations bullet 9 (rendering not implemented)", "disposition": "RETAIN_VERBATIM", "reason": "Not independently re-executed this session; no contradicting evidence found."},
+    {"id": "U-ENTERPRISE-LINK", "unit": "Enterprise Edition closing paragraph", "disposition": "RETAIN_VERBATIM", "reason": "Matches MISSION_AUTHORITY naming rule exactly ('Aspose.3D for Java — Enterprise Edition')."},
+    {"id": "U-DEVTEST", "unit": "Development and Testing section (Maven build/test, project status, CI workflow, test suite description)", "disposition": "RETAIN_VERBATIM", "reason": "Not independently re-executed this session (no mvn); TODO.md independently corroborates an active, evolving test suite consistent with this section's description."},
+    {"id": "U-LICENSE", "unit": "License section + Acknowledgments", "disposition": "RETAIN_VERBATIM", "reason": "MIT license consistent with pom.xml's <licenses> block; clean-room acknowledgment consistent with the opening paragraph."}
+  ],
+  "summary": {
+    "total_units": 22,
+    "retain_verbatim": 21,
+    "retain_corrected": 1,
+    "supersede": 0,
+    "add": 0,
+    "omit": 0
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-.NET",
+  "source_revision": "b6f778e926aa6249a26d3fba7480a663beb3cdfc",
+  "default_branch": "main",
+  "verified_at": "2026-10-21",
+  "method": "Source-reading verification via GitHub Contents/Trees API (gh CLI, authenticated). No local build or execution performed for this repository (.NET ecosystem, full build judged too expensive for this batch pass) -- all dispositions below are source-reading-level confidence, not execution-level. Recorded explicitly per fact, per this batch's instructed honesty rule.",
+  "structural_observation": {
+    "finding": "This README has NO badge row, NO product banner, NO Navigation list, and NO At-a-Glance diagram -- it does not follow the portfolio's fixed-core structural contract (docs/MISSION_AUTHORITY.md, distilled from idea.md) that the aspose-3d-foss/Aspose.3D-FOSS-for-Python precedent candidate fully satisfies. This is a structural-conformance gap, not a factual-accuracy defect: every claim checked below is accurate. Flagged for the supervisor as likely requiring Lane R-level document planning (new sections to author: badge row, banner, Navigation, At a Glance) rather than a Lane L minimal patch, since adding these from nothing is closer to authorship than correction. NOT attempted in this batch pass -- see lane_l_candidate.md for why no structural changes were made here."
+  },
+  "facts": [
+    {
+      "id": "F-TARGETFRAMEWORK",
+      "claim": "Requirements: .NET 10.0 SDK or later",
+      "disposition": "UNVERIFIED",
+      "evidence": "src/Aspose.PSD.FOSS/Aspose.PSD.FOSS.csproj actually multi-targets <TargetFrameworks>netstandard2.1;net10.0</TargetFrameworks> -- the built library is runtime-consumable far more broadly than 'net10.0 or later' would suggest. No global.json was found pinning a required SDK version. Whether a .NET 10.0 SDK is genuinely required just to BUILD this multi-target project (plausible, since building a net10.0 target typically needs that SDK installed) versus whether this claim overstates a runtime requirement that doesn't actually exist (since netstandard2.1 consumers need no such thing) was not resolved in this session -- flagged UNVERIFIED rather than asserted either way, since the two readings genuinely differ and neither was executed to confirm."
+    },
+    {
+      "id": "F-NOT-ON-NUGET",
+      "claim": "Aspose.PSD.FOSS is not published to NuGet yet",
+      "disposition": "UNVERIFIED",
+      "evidence": "Not checked against the real NuGet API this session (time-bounded batch pass); plausible given the README's own 'build the package locally' instructions, but not independently confirmed via nuget.org."
+    },
+    {
+      "id": "F-SAMPLES-EXIST",
+      "claim": "8 named sample projects exist (Aspose.PSD.FOSS.Samples.{Basic,Layers,StructuralEditing,Streams}, Aspose.PSD.NuGet.Samples.{Basic,Layers,StructuralEditing,Streams})",
+      "disposition": "SUPPORTED",
+      "evidence": "All 8 .csproj files confirmed present at their exact claimed paths via a full recursive tree listing."
+    },
+    {
+      "id": "F-LAYER-PROPERTIES",
+      "claim": "Layer exposes Name, Bounds-derived Left/Top/Right/Bottom, IsVisible, Opacity, Clipping, BlendModeKey as settable properties",
+      "disposition": "SUPPORTED",
+      "evidence": "src/Aspose.PSD.FOSS/Layers/Layer.cs: public properties Name (L43), Top (L78), Left (L93), Bottom (L108), Right (L123), IsVisible (L138), Opacity (L153, byte), Clipping (L168, byte), BlendModeKey (L194, BlendMode) all confirmed present by direct source read."
+    },
+    {
+      "id": "F-TEST-PROJECT-EXISTS",
+      "claim": "(implicit, not a README claim, but relevant to Development/Testing conventions)",
+      "disposition": "SUPPORTED",
+      "evidence": "src/Aspose.PSD.FOSS.Test/Aspose.PSD.FOSS.Test.csproj exists, though the README has no Development and Testing section describing how to run it -- noted as a possible Lane L augmentation (add a short section), not a correctness defect."
+    }
+  ]
+}

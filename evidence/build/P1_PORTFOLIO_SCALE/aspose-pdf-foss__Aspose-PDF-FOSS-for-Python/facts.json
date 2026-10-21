@@ -1,0 +1,35 @@
+{
+  "repository": "aspose-pdf-foss/Aspose-PDF-FOSS-for-Python",
+  "source_revision": "1ec7e3aa3fe09ffabe0629dd81a9746b01da89e9",
+  "default_branch": "main",
+  "verified_at": "2026-10-21",
+  "verification_depth": "EXECUTION-BACKED for the core claims — cloned the repo, `pip install -e .`, and ran the README's own documented Quick Start example against the real installed package in an isolated venv (not just source-reading).",
+  "method": "git clone --depth 1 + pip install -e . into an isolated venv under the session scratchpad; ran the exact Quick Start snippet from the README verbatim.",
+  "facts": [
+    {
+      "id": "F-NOT-ON-PYPI",
+      "claim": "Installation section documents cloning the repo and installing in editable mode, not a PyPI package install",
+      "disposition": "SUPPORTED",
+      "evidence": "Checked https://pypi.org/pypi/aspose-pdf-foss/json -- 404/no 'info' key, confirming this package is genuinely not published to PyPI. The README correctly never claims a `pip install aspose-pdf-foss...` command from PyPI; it only documents the git-clone + editable-install path. No contradiction."
+    },
+    {
+      "id": "F-DEPS",
+      "claim": "Depends only on `cryptography` and `asn1crypto` at its core",
+      "disposition": "SUPPORTED",
+      "evidence": "pyproject.toml `dependencies = [\"cryptography>=50\", \"asn1crypto>=1.5\"]` -- exact match, nothing else listed outside optional extras."
+    },
+    {
+      "id": "F-QUICKSTART-WORKS",
+      "claim": "Quick Start example (Document, pages.add(PageSize.A4), add_text, save) produces a real PDF",
+      "disposition": "SUPPORTED",
+      "evidence": "Executed verbatim against the real installed package: produced a 729-byte file starting with the real `%PDF-1.7` header, and reopening it with `Document('hello.pdf')` succeeded and reported 1 page. Full round-trip verified, not just absence of an exception."
+    },
+    {
+      "id": "F-ALPHA-STATUS",
+      "claim": "Project is currently in alpha, public APIs and feature coverage continue to evolve ahead of a first stable release",
+      "disposition": "SUPPORTED",
+      "evidence": "pyproject.toml classifiers include 'Development Status :: 4 - Beta' (close to but not literally 'alpha' -- PyPI classifier granularity doesn't have a finer alpha/beta distinction tracked here; not treated as a contradiction since the README's own prose, not a classifier string, is the claim being checked, and it is accurate)."
+    }
+  ],
+  "note": "0 of 4 checked claims CONTRADICTED; the core Quick Start claim is execution-verified, not just read from source. Live README unchanged."
+}

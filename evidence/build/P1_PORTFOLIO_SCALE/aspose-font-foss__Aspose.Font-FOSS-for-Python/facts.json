@@ -1,0 +1,35 @@
+{
+  "repository": "aspose-font-foss/Aspose.Font-FOSS-for-Python",
+  "source_revision": "53bdf4993ec49ed26b8b8b5f7ffc4e4f15ff7c0f",
+  "default_branch": "main",
+  "verified_at": "2026-10-21",
+  "method": "Live GitHub Contents/Trees API reads (gh CLI). PyPI metadata cross-checked via https://pypi.org/pypi/<name>/json. No local execution this pass (bounded portfolio-scale batch; see note) -- all dispositions below are source-reading / registry-reading based, not execution-verified. This is explicitly weaker evidence than the P1 pinned-repo precedent (aspose-3d-foss__Aspose.3D-FOSS-for-Python), which ran the real installed package; recorded honestly, not inflated.",
+  "facts": [
+    {
+      "id": "F-PKG-NAME-WRONG-IN-README",
+      "claim": "`pip install \"aspose-font[mcp]\"` (the README's only pip install line) installs a real package",
+      "disposition": "CONTRADICTED",
+      "evidence": "https://pypi.org/pypi/aspose-font/json returns HTTP 404 -- no such package exists. The real published package, confirmed live, is `aspose-font-foss` (https://pypi.org/pypi/aspose-font-foss/json returns HTTP 200, version 26.10.4, requires_python >=3.10), matching pyproject.toml's `name = \"aspose-font-foss\"` at the pinned source_revision. Additionally: this repository's README contains NO plain base-package installation instruction anywhere (no `pip install aspose-font-foss` line exists) -- the only install-shaped line in the entire document is the broken MCP-extra one. A reader following this README literally cannot install the package.",
+      "severity": "severe and confirmed -- the single most load-bearing claim in any README (how to install it) is both missing for the base case and wrong for the one variant shown"
+    },
+    {
+      "id": "F-IMPORTS-REAL",
+      "claim": "`from aspose_font import FontLoader, WebFontOptimizer` and `FontQaReporter`, `VariableInstanceBuilder` (used throughout Quick Start) are real, importable top-level names",
+      "disposition": "SUPPORTED",
+      "evidence": "Read src/aspose_font/__init__.py directly at the pinned revision: FontLoader (from .loader), WebFontOptimizer + WebFontOptimizerPackage (from .optimizer), FontQaReporter + FontQaPackage + FontQaReport (from .qa), VariableInstanceBuilder + VariableInstancePackage (from .instances) are all present in both the import statements and __all__."
+    },
+    {
+      "id": "F-LICENSE-FILE-EXISTS",
+      "claim": "License is MIT, file at ./LICENSE.txt",
+      "disposition": "SUPPORTED",
+      "evidence": "pyproject.toml license = \"MIT\" confirmed; LICENSE.txt confirmed present in the repository file tree at the pinned revision."
+    },
+    {
+      "id": "F-STRUCTURAL-NONCONFORMANCE",
+      "claim": "N/A -- this is a structural observation, not a single factual claim",
+      "disposition": "STRUCTURAL_GAP",
+      "evidence": "This README does not follow the portfolio's fixed-core contract (docs/MISSION_AUTHORITY.md, distilled from idea.md): no badge row (package/platform/build/license/contributors) in the standard order -- only one unrelated 'Workflow: Buyer Focused' badge exists; no product banner linking products.aspose.org; no standard Navigation list; no 'At a Glance' Mermaid diagram; no section literally named 'Installation', 'Key Capabilities', 'Scope and Limitations', or 'Development and Testing' (a 'Development' section exists but only shows test/lint/build commands, not a scope-and-limitations style disclosure); no Enterprise Edition cross-link anywhere. Instead it uses a persona/buyer-journey structure ('Three Buyer Workflows', 'Who Is This For?', 'Capability Snapshot', 'Variable-Font-First Workflows') that is clearly deliberate, detailed, and repository-specific -- genuinely valuable content, not boilerplate. Per mission section 7, this is closer to case (B) (a live README that, while not empty, is 'genuinely deficient' against the portfolio's own structural contract) than case (A)."
+    }
+  ],
+  "note_on_scope": "Only 2 of the README's many technical claims (CLI command shapes, exact class method signatures like SmartInstancer.suggest_axis_values, the full capability table) were checked this pass, given portfolio-batch time constraints. Everything else in this README is UNVERIFIED (neither confirmed nor contradicted) -- not silently treated as either true or false."
+}

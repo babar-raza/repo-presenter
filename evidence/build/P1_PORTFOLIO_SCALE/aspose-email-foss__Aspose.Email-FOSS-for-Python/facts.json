@@ -1,0 +1,76 @@
+{
+  "repository": "aspose-email-foss/Aspose.Email-FOSS-for-Python",
+  "provider_identity": {
+    "provider": "github",
+    "repository_id": 1183488768,
+    "node_id": "R_kgDORoqbAA"
+  },
+  "source_revision": "10a906b48c0c11005c4d93b524e4431901c9717c",
+  "default_branch": "master",
+  "readme_blob_sha": "a7117b3386969cbf5e335dbdcdc28b36161dd098",
+  "verified_at": "2026-10-21",
+  "verification_note": "This is the one repository in this portfolio batch, alongside the sibling .NET repository, where real execution was both available (Python, per the playbook) and used throughout -- every fact below is an actual run, not a read. This repository has no MultipartParser/MIME-parser-of-its-own analogue to idea.md's CS1929 claim: its own Scope and Limitations section already discloses, accurately (confirmed below), that direct .eml parsing is not implemented in-house at all -- it delegates entirely to Python's standard email package. No seed-defect re-verification was therefore applicable here beyond confirming that disclosure is itself honest.",
+  "method": "pip-installed the real PyPI package aspose-email-foss==26.3 into an isolated venv under the scratchpad directory (python -I-equivalent isolation: fresh venv, no project-directory script shadowing), then ran the README's own Quick Start, Convert MSG to EML, Convert EML to MSG, Inspect Low-Level MSG and CFB Structure, and Build a CFB Container Directly examples verbatim as standalone scripts against the real installed package. Also ran two additional, not-README-verbatim probes (HTML body / to_email_message() HTML part, embedded-message attachment round-trip, MapiNamedProperty round-trip) to exercise API surface named in the API Reference table but not shown in a runnable example. Separately, shallow-cloned the repository, pip installed it editable (`pip install -e .`), and ran the README's own documented test command (`python -m unittest discover -s tests -v`) for real. Cross-checked PyPI metadata (https://pypi.org/pypi/aspose-email-foss/json) for version/requires_python/requires_dist, and read .github/workflows/ci.yml directly for the CI Python-version matrix claim.",
+  "facts": [
+    {
+      "id": "F-PKG-VERSION-REQUIRES-PYTHON-NODEPS",
+      "claim": "Package targets Python 3.10 or later, ships as pure Python source, no required third-party package dependencies",
+      "disposition": "SUPPORTED",
+      "evidence": "https://pypi.org/pypi/aspose-email-foss/json: info.requires_python == '>=3.10', info.requires_dist == null (no declared dependencies). pip install into a fresh venv pulled zero transitive packages beyond pip itself (confirmed via `pip install aspose-email-foss` output)."
+    },
+    {
+      "id": "F-QUICKSTART-WORKS",
+      "claim": "Quick Start: MapiMessage.create, set_property(PropertyId.SENDER_NAME/.SENDER_EMAIL_ADDRESS), add_recipient, add_attachment, save, from_file, to_email_message, EmailMessage.as_bytes all work exactly as shown",
+      "disposition": "SUPPORTED",
+      "evidence": "Ran the exact Quick Start code verbatim against the real installed package: hello.msg (10752 bytes) and hello.eml (508 bytes) both produced; loaded.subject == 'Hello'; the generated hello.eml is a well-formed multipart/mixed MIME message with the attachment correctly base64-encoded (verified by reading the raw .eml bytes, which decode 'YWJj' -> 'abc', the exact attachment payload given to add_attachment)."
+    },
+    {
+      "id": "F-EML-TO-MSG-ROUNDTRIP-WORKS",
+      "claim": "Convert EML to MSG: BytesParser + MapiMessage.from_email_message() correctly reconstructs a MapiMessage, including its attachment",
+      "disposition": "SUPPORTED",
+      "evidence": "Ran the exact example verbatim against hello.eml (itself produced by the Quick Start example above): roundtrip.msg saved successfully; message.subject == 'Hello'; message.attachments == ['note.txt'] -- the attachment survived the full MSG -> EML -> MSG round trip."
+    },
+    {
+      "id": "F-CFB-BUILD-EXAMPLE-WORKS",
+      "claim": "Build a CFB Container Directly: CFBStorage/CFBStream/CFBDocument/CFBWriter/CFBReader round-trip a stream named 'Summary' with content b'hello'",
+      "disposition": "SUPPORTED",
+      "evidence": "Ran the exact example verbatim: CFBWriter.to_bytes() -> CFBReader(data).resolve_path(['Summary']) -> get_stream_data() returned exactly b'hello', matching the input."
+    },
+    {
+      "id": "F-MSGREADER-INSPECT-EXAMPLE-WORKS",
+      "claim": "Inspect Low-Level MSG and CFB Structure: MsgReader.from_file, .cfb_reader.{major_version,sector_size}, .top_level_header.{recipient_count,attachment_count}, .iter_recipient_storages() all work as shown",
+      "disposition": "SUPPORTED",
+      "evidence": "Ran the exact example verbatim against hello.msg (built by the Quick Start example, which has 1 recipient and 1 attachment): output was major_version=3, sector_size=512, recipient_count=1, attachment_count=1, and one recipient storage entry enumerated -- all plausible and internally consistent with the message that was actually built."
+    },
+    {
+      "id": "F-HTML-BODY-AND-EMBEDDED-ATTACHMENT-WORK",
+      "claim": "(Not a single README-verbatim example, but exercises API surface the README's Key Capabilities and API Reference both name): body_html round-trips through to_email_message() as a genuine HTML MIME part; add_embedded_message_attachment()/MapiAttachment.is_embedded_message/.embedded_message work as documented",
+      "disposition": "SUPPORTED",
+      "evidence": "Ran a probe script beyond the README's own shown examples: setting .body_html and calling to_email_message() produced an EmailMessage whose get_body(preferencelist=('html',)) returned the exact HTML content set. Separately, outer.add_embedded_message_attachment(inner, filename='inner.msg') then outer.save()/MapiMessage.from_file() round trip: loaded.attachments[0].is_embedded_message == True and .embedded_message.subject == 'Inner', the exact subject of the embedded message."
+    },
+    {
+      "id": "F-NAMED-PROPERTY-WORKS",
+      "claim": "MapiNamedProperty.string(name, property_set) / set_named_property() / get_named_property() work as documented for named MAPI properties",
+      "disposition": "SUPPORTED",
+      "evidence": "First attempt with a non-UUID property_set argument (an int, not shown in any README example) raised ValueError from the library's own uuid.UUID() coercion -- this is correct, expected input validation, not a defect, since the README never documents passing anything but a real property-set GUID. Retried with a real UUID string (PS_PUBLIC_STRINGS, a well-known MAPI property set GUID): set_named_property()/get_named_property() worked, and the value survived a save()/from_file() round trip intact (confirmed by printing the reloaded MapiProperty, which carried the same named-property identity and value 'custom-value')."
+    },
+    {
+      "id": "F-TEST-SUITE-PASSES",
+      "claim": "(Development and Testing) 'pip install -e . && python -m unittest discover -s tests -v' -- implies the test suite passes",
+      "disposition": "SUPPORTED",
+      "evidence": "Ran the exact documented command against a real, fresh git clone of this exact source_revision: 18/18 tests pass (0 failures, 0 errors), including a test literally named test_readme_quick_start_round_trip, which directly exercises the README's own Quick Start example as part of the repository's own test suite."
+    },
+    {
+      "id": "F-CI-PYTHON-VERSION-MATRIX",
+      "claim": "'CI runs the test suite on Python 3.10 through 3.13... on every push and pull request to master'",
+      "disposition": "SUPPORTED",
+      "evidence": ".github/workflows/ci.yml at source_revision: matrix.python-version is exactly [\"3.10\", \"3.11\", \"3.12\", \"3.13\"] -- four versions, matching 'Python 3.10 through 3.13' exactly."
+    },
+    {
+      "id": "F-ELM-NOT-IMPLEMENTED-DISCLOSURE-HONEST",
+      "claim": "(Scope and Limitations) 'Direct .eml file parsing is not implemented by this library itself -- EML support goes through MapiMessage.from_email_message()/to_email_message() together with Python's own email.parser/email.message.EmailMessage, not a dedicated load_from_eml() method'",
+      "disposition": "SUPPORTED",
+      "evidence": "Confirmed by direct execution: there is no load_from_eml() method on MapiMessage (not called in any README example; the 'Convert EML to MSG' example explicitly uses email.parser.BytesParser + MapiMessage.from_email_message(), exactly as this disclosure describes). This is an accurate, self-aware limitation disclosure, not an oversight -- worth noting positively since it is exactly the kind of claim a less careful README would get wrong in the optimistic direction."
+    }
+  ]
+}

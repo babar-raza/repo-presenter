@@ -1,0 +1,50 @@
+{
+  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET",
+  "source_revision": "10a363830fea952c29df20fdb37d35ad3a881433",
+  "lane": "L+R (converged, no correction required)",
+  "candidate": "lane_l_candidate.md",
+  "facts": "facts.json",
+  "content_units": "content_units.json",
+  "reviewer_note": "Independent review performed in a separate session from the composer. Re-fetched the live README fresh via `gh api repos/aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET/readme` and diffed it against lane_l_candidate.md byte-for-byte; confirmed current HEAD of main is still 10a363830fea952c29df20fdb37d35ad3a881433.",
+  "checks": [
+    {
+      "id": "C1_NO_EDIT_REQUIRED_IS_CORRECT",
+      "result": "PASS",
+      "detail": "facts.json records 0 CONTRADICTED facts among 2 claims checked (F-FORMAT-LIST-EXCLUSIONS SUPPORTED, F-WINDOWS-ONLY-MEMBERS UNVERIFIED). No diff file exists. Live-README re-fetch: 128705 bytes live vs 128705 bytes candidate, 0 differing lines -- byte-identical, independently confirmed."
+    },
+    {
+      "id": "C2_UNVERIFIED_NOT_TREATED_AS_FALSE_OR_TRUE",
+      "result": "PASS",
+      "detail": "F-WINDOWS-ONLY-MEMBERS is left UNVERIFIED rather than asserted; the corresponding System.Drawing platform-support claims are untouched in the candidate."
+    },
+    {
+      "id": "C3_INDEPENDENT_SPOTCHECK",
+      "result": "PASS, WITH A NOTED IMPRECISION",
+      "detail": "Picked the single most consequential checked claim, F-FORMAT-LIST-EXCLUSIONS (the Scope and Limitations claim that DOCX/EPUB/MHT/XPS/PCL/LaTeX/DJVU/OFD/CGM conversion are NOT included), and independently re-ran the underlying search from scratch rather than trusting the composer's reported result: pulled the full live git tree (`git/trees/<rev>?recursive=true`, 2761 paths) and grepped case-insensitively for docx|epub|mht|xps|pcl|latex|djvu|ofd|cgm. One path matched: `src/Text/Resources/DjVuDingbats.ttf` -- a font resource file, not a SaveOptions/Converter class, so it does NOT contradict the specific claim (which is about converter classes, not every substring in the tree). Re-ran the search narrowed to paths containing 'saveoptions' or 'converter' and got zero matches, confirming the composer's underlying conclusion holds. The composer's own facts.json phrasing ('zero matches') is slightly imprecise as literally stated (a bare case-insensitive substring search over the full tree does find one filename), though the claim it supports is accurate once correctly scoped to converter/SaveOptions classes."
+    },
+    {
+      "id": "C4_LANE_R_CONVERGENCE_HOLDS",
+      "result": "PASS",
+      "detail": "lane_r_plan.md states Case A, correctly discloses that only 2 of many possible claims were spot-checked given batch time budget and that this should be read as 'no contradiction found on a shallow pass,' not full verification. lane_r_candidate.md is byte-identical to lane_l_candidate.md (both 128705 bytes), independently confirmed."
+    },
+    {
+      "id": "C5_CONTENT_UNITS_COVERAGE",
+      "result": "PASS",
+      "detail": "content_units.json enumerates 7 whole-section units, all RETAIN_VERBATIM, 0 OMIT/SUPERSEDE."
+    },
+    {
+      "id": "C6_MISSION_NAMING_COMPLIANCE",
+      "result": "PASS",
+      "detail": "No banned substitute wording for the commercial product found via grep. Unlike every other repository in this batch, this candidate contains zero mentions of 'Enterprise Edition' -- checked whether the commercial Aspose.PDF for .NET product is referenced under a different, non-compliant name instead (e.g. 'full version', 'commercial', 'premium', 'upgrade'); it is not referenced at all (only incidental 'commercial use' language inside the MIT license text). This is a content-completeness observation, not a naming-rule violation: the rule governs how the product is named when referenced, and it is simply never referenced here, consistent with the live README's own pre-existing structure, which Lane L does not expand uninstructed."
+    },
+    {
+      "id": "C7_NEGATIVE_CONTROL",
+      "result": "PASS",
+      "detail": "Adversarial check: would a naive substring re-check have produced a false REJECT here by over-trusting a 'zero matches' literal reading? Caught and resolved: the DjVuDingbats.ttf match was investigated rather than either dismissed unchecked or escalated unchecked -- confirmed it is a font resource, not a converter, before accepting the claim."
+    }
+  ],
+  "findings": [],
+  "verdict": "ACCEPT",
+  "verdict_rationale": "The spot-checked claim holds once correctly scoped, and the independent re-derivation surfaced a minor imprecision in facts.json's own phrasing ('zero matches' vs. 'zero converter-class matches') without finding an actual contradiction -- recorded in C3 detail rather than suppressed, but not reject-worthy since the underlying substantive claim about format-conversion scope is accurate. No CONTRADICTED facts exist to correct and the candidate is correctly left unmodified.",
+  "structural_note": "This is the largest README in the batch (1889 lines / 128705 bytes) with only 2 claims spot-checked by the composer -- an honestly-disclosed but thin coverage ratio; a future deeper pass should prioritize this repository given its size. Otherwise no structural issues beyond the batch-wide content_units.json/live_readme.md asymmetry already raised for the Note/Page repositories in this review set."
+}

@@ -1,0 +1,64 @@
+{
+  "repository": "aspose-email-foss/Aspose.Email-FOSS-for-.Net",
+  "provider_identity": {
+    "provider": "github",
+    "repository_id": 1193864496,
+    "node_id": "R_kgDORyjtMA"
+  },
+  "source_revision": "59125b4732df0eedbc4d4c2ab978698ed4348eb7",
+  "default_branch": "main",
+  "readme_blob_sha": "f886f24a7797e4fb7aece95d71a8ce9b3dd7666c",
+  "verified_at": "2026-10-21",
+  "verification_note": "idea.md's known seed-defect claim for this family (CS1929 on MultipartParser.SequenceEqualAscii, byte[] vs ReadOnlySpan<byte> receiver mismatch, 'reportedly already fixed upstream as of 2026-09-17') was re-verified fresh in this session by real compilation, not by trusting either side of the prior claim. Shallow git-cloned the repository at this exact source_revision (pushed 2026-08-15, before the claimed 2026-09-17 fix date -- an inconsistency on its own) into an isolated scratch directory and ran `dotnet build` on src/Aspose.Email.Foss/Aspose.Email.Foss.csproj with dotnet 10.0.401 targeting its declared net8.0: build succeeded, 0 errors, 233 warnings (all CS1591 missing-XML-doc warnings, unrelated). No CS1929 anywhere in the output. Read MultipartParser.cs directly: SequenceEqualAscii is an extension method on `this ReadOnlySpan<byte>`, and its only two call sites pass a `byte[] line` receiver (from the EnumerateLines iterator's (byte[] Line, ...) tuple) -- this is a standard, compiler-supported implicit array-to-ReadOnlySpan<T> conversion and compiles cleanly; it would only be a CS1929 if the mismatch ran the other direction (an extension typed for byte[] called on a ReadOnlySpan<byte> receiver, which has no implicit conversion back). The claimed defect is not present in this source at all, in either form. While verifying by execution (this environment has dotnet, per the playbook's environment note), the real `dotnet test` run surfaced a second, independent, genuinely CONTRADICTED finding (test-suite fragility, not the originally-flagged defect) -- see F-EML-TESTS-FAIL-ON-WINDOWS-CRLF-CHECKOUT below.",
+  "method": "Shallow git clone (depth 1) of the live repository at its current head commit into an isolated scratchpad directory, then real `dotnet build`/`dotnet test`/`dotnet run` execution with the locally installed .NET 10.0.401 SDK (net8.0 target, as declared by the repository's own .csproj files) -- this is full execution-based verification for this repository (dotnet is available per the playbook's environment note), not code-reading-only. Also: live GitHub Contents/Trees API reads for the README and file tree; one HTTPS lookup against the public NuGet v3 flat-container API (https://api.nuget.org/v3-flatcontainer/aspose.email.foss/index.json) to cross-check the published package version; a `gh issue list --state all` dedup check against the live repository (returned zero issues of any kind) before drafting a new upstream issue.",
+  "facts": [
+    {
+      "id": "F-CS1929-MULTIPARTPARSER-NOT-PRESENT",
+      "claim": "idea.md's known seed defect: CS1929 compiler error on MultipartParser.SequenceEqualAscii's byte[] vs ReadOnlySpan<byte> receiver mismatch",
+      "disposition": "CONTRADICTED",
+      "evidence": "Re-verified fresh, not inherited: `dotnet build src/Aspose.Email.Foss/Aspose.Email.Foss.csproj` at source_revision 59125b47 succeeds with 0 errors (233 CS1591 doc-comment warnings only, none involving MultipartParser or CS1929). Direct source read of src/Aspose.Email.Foss/Msg/Mime/MultipartParser.cs confirms SequenceEqualAscii(this ReadOnlySpan<byte> value, string text) is called at lines 18 and 32 on a byte[]-typed `line` value -- byte[]-to-ReadOnlySpan<byte> is a standard implicit conversion the C# compiler honors for extension-method receivers, so this is not and could not be a CS1929 in the direction described. The claimed defect is absent from current source. Note: this exact source_revision was pushed 2026-08-15T07:29:41Z, before the claim's own cited 2026-09-17 fix date, so if the defect was ever real, it predates even the window the prior claim described -- not something this session can resolve further without the original defect report, which does not appear in this repository's issue tracker (zero issues of any kind, open or closed, confirmed via `gh issue list --state all`)."
+    },
+    {
+      "id": "F-EML-TESTS-FAIL-ON-WINDOWS-CRLF-CHECKOUT",
+      "claim": "(Development and Testing section) 'Clone the repository and run the xUnit test suite' -- implies dotnet test tests/Aspose.Email.Foss.Tests/Aspose.Email.Foss.Tests.csproj passes cleanly; MapiMessageEmlTests is listed as one of the suites covering 'EML round-trip conversion'",
+      "disposition": "CONTRADICTED",
+      "evidence": "Ran the README's own exact documented command, `dotnet test tests/Aspose.Email.Foss.Tests/Aspose.Email.Foss.Tests.csproj`, against a real git clone of this exact source_revision on this (Windows, git core.autocrlf=true -- the common Windows default, confirmed both locally and globally on this machine) environment: 2 of 20 tests FAIL, both in MapiMessageEmlTests -- LoadFromEmlHandlesFoldedHeadersAndBase64Text (expected 'Base64 body', got '') and LoadFromEmlHandlesMultipartRelatedInlineAttachment (expected HtmlBody to contain 'cid:inline-1', got null). Root-caused by direct experimentation, not by inspection alone: both tests build a synthetic EML via a C# raw string literal, then call `.Replace(\"\\n\", \"\\r\\n\", StringComparison.Ordinal)` on it. When the source .cs file itself has CRLF line endings (exactly what `core.autocrlf=true` produces on checkout -- confirmed via `file` on the actual checked-out MapiMessageEmlTests.cs, which reports 'CRLF line terminators'), the raw string literal's embedded line breaks are already CRLF, so that Replace call turns every '\\r\\n' into '\\r\\r\\n' (doubling the carriage return before each line), corrupting the synthetic MIME message's header folding and multipart boundaries before the real library ever sees it. Confirmed by direct reproduction: built an isolated console app with the identical literal + Replace logic referencing the real built library -- saved as a plain LF file it reproduces the test's intended (passing) behavior exactly (HtmlBody correctly decoded, 1 attachment found); re-saved byte-for-byte with CRLF line endings (matching what autocrlf=true produces), it reproduces the exact failure (HtmlBody empty, 0 attachments) with no other code changed. This is a test-authoring bug (checkout-line-ending-dependent, not a MIME/MultipartParser library defect -- the library's own parsing of a correctly-formed CRLF EML, confirmed separately via the passing 18/20 tests and the LF-sourced reproduction above, is accurate), but it is a real, deterministic, reproducible gap in exactly what this README's Development and Testing section tells a reader to do, on precisely the platform (Windows) this README's own Installation section advertises support for."
+    },
+    {
+      "id": "F-NUGET-PACKAGE-VERSION",
+      "claim": "Published NuGet package ID Aspose.Email.Foss, with the project-file example pinning Version=\"26.7.0\"",
+      "disposition": "SUPPORTED",
+      "evidence": "https://api.nuget.org/v3-flatcontainer/aspose.email.foss/index.json returns {\"versions\":[\"26.7.0\"]} -- exactly one published version, exactly matching the README's PackageReference example."
+    },
+    {
+      "id": "F-ZERO-PACKAGE-REFERENCES",
+      "claim": "'No required third-party package dependencies... declares zero <PackageReference> entries'",
+      "disposition": "SUPPORTED",
+      "evidence": "src/Aspose.Email.Foss/Aspose.Email.Foss.csproj at source_revision contains zero <PackageReference> elements (grep count 0); its only <ItemGroup> is a <None Include=\"..\\..\\README.md\" .../> for NuGet packaging, not a dependency."
+    },
+    {
+      "id": "F-29-CLASSES-ENUMS",
+      "claim": "'The public surface spans 29 classes and enumerations in a single module'",
+      "disposition": "SUPPORTED",
+      "evidence": "Enumerated every top-level public type declaration under src/Aspose.Email.Foss/**/*.cs: 23 classes/static-classes/records (CfbConstants, CfbDocument, CfbException, CfbNode, CfbReader, CfbStorage, CfbStream, CfbWriter, DirectoryEntry [a public sealed record, not a class -- initially missed by a class-only grep, then found explicitly], DirectoryEntryNameComparer, Header [also a public sealed record], MapiAttachment, MapiMessage [a public sealed partial class split across MapiMessage.cs/.Codec.cs/.Helpers.cs -- counted once], MapiProperty, MapiPropertyCollection, MapiRecipient, MsgConstants, MsgDocument, MsgException, MsgReader, MsgStorage, MsgStream, MsgWriter) + 6 enums (CommonMessagePropertyId, DirectoryColorFlag, DirectoryObjectType, MsgStorageRole, PropertyTypeCode, SectorMarker) = 29 exactly, matching both the prose claim and the API Reference table's own row count."
+    },
+    {
+      "id": "F-TARGET-NET8-DOTNET8-SDK",
+      "claim": "'The library targets .NET 8.0 or later... Requires the .NET 8.0 SDK (or later) to build, and the matching .NET 8.0 runtime (or later) to run'",
+      "disposition": "SUPPORTED",
+      "evidence": "src/Aspose.Email.Foss/Aspose.Email.Foss.csproj: <TargetFramework>net8.0</TargetFramework>; the real build (dotnet 10.0.401 SDK, which is >= 8.0) succeeded targeting net8.0, consistent with 'or later'."
+    },
+    {
+      "id": "F-EXAMPLES-COMPILE",
+      "claim": "Three runnable example programs (create_msg_and_eml.cs, msg_reader.cs, msg_summary.cs) live under examples/, each with its own project file",
+      "disposition": "SUPPORTED",
+      "evidence": "All three example .csproj files exist at the documented paths and each built successfully with 0 errors/0 warnings via `dotnet build` against the real source at source_revision."
+    },
+    {
+      "id": "F-MAPIMESSAGE-API-SURFACE",
+      "claim": "MapiMessage exposes LoadFromEml(path)/LoadFromEml(stream)/LoadFromEml(data), Save()/Save(path)/Save(stream), SaveToEml() family, AddRecipient/AddAttachment/AddEmbeddedMessageAttachment, SetProperty/GetPropertyValue, and Subject/Body/HtmlBody/SenderName/SenderEmailAddress/... properties",
+      "disposition": "SUPPORTED",
+      "evidence": "Confirmed by direct execution, not just reading: a debug console app referencing the real built library successfully called MapiMessage.LoadFromEml(byte[]) and read back .Body, .HtmlBody, and .Attachments (with .Filename/.ContentId/.MimeType/.Data) exactly as documented; the existing 18 passing unit tests in MapiMessageTests.cs and the 2 (corrupted-input, not library-fault) failing EML tests both exercise this same surface, consistent with it existing as documented."
+    }
+  ]
+}

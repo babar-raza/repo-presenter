@@ -1,0 +1,29 @@
+{
+  "repository": "aspose-note-foss/Aspose.Note-FOSS-for-Python",
+  "source_revision": "0fd1cf7bcadb279a6dd73ddcba3d5241376badd3",
+  "default_branch": "main",
+  "verified_at": "2026-10-21",
+  "method": "Live GitHub Contents/Trees API reads + PyPI registry check. Source-reading verified, not execution-verified this pass.",
+  "note": "idea.md names this repository's README the 'accepted-structure reference' for portfolio calibration. Checked rather than assumed: confirmed accurate on every claim this pass checked.",
+  "facts": [
+    {
+      "id": "F-PKG-REAL",
+      "claim": "pip install aspose-note-foss, version badge, Python >=3.10",
+      "disposition": "SUPPORTED",
+      "evidence": "https://pypi.org/pypi/aspose-note-foss/json: version 26.9.0, requires_python >=3.10 -- matches README exactly."
+    },
+    {
+      "id": "F-IMPORT-REAL",
+      "claim": "`from aspose.note import Document`",
+      "disposition": "SUPPORTED",
+      "evidence": "src/aspose/note/__init__.py confirmed: Document imported from .model and present in __all__."
+    },
+    {
+      "id": "F-CI-BADGE-PLAUSIBLE",
+      "claim": "CI badge links to a real workflow",
+      "disposition": "UNVERIFIED",
+      "evidence": "Not independently checked this pass whether .github/workflows/ci.yml exists and the badge resolves to a passing run -- plausible given the repository's overall accuracy on other claims, but not confirmed."
+    }
+  ],
+  "note_on_scope": "3 claims checked. Badge row, At a Glance diagram wording, and the full Key Capabilities/API surface were not independently re-executed. No contradiction found in anything checked; consistent with idea.md's own characterization of this README as the calibration reference."
+}

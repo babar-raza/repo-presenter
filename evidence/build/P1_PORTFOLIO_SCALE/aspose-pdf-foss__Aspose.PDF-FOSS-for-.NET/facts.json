@@ -1,0 +1,22 @@
+{
+  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET",
+  "source_revision": "10a363830fea952c29df20fdb37d35ad3a881433",
+  "default_branch": "main",
+  "verified_at": "2026-10-21",
+  "verification_depth": "SOURCE_READING_ONLY — no .NET build/execution performed this pass.",
+  "facts": [
+    {
+      "id": "F-FORMAT-LIST-EXCLUSIONS",
+      "claim": "Format converters are limited to PDF, HTML, SVG, Markdown, plain text, XML, and PostScript -- DOCX, EPUB, MHT, XPS, PCL, LaTeX, DJVU, OFD, and CGM conversion are not included",
+      "disposition": "SUPPORTED",
+      "evidence": "Full repository file tree (2619 files) searched case-insensitively for a SaveOptions or Converter class whose name matches docx|epub|mht|xps|pcl|latex|djvu|ofd|cgm -- zero matches. Negative check, not a positive execution of every listed included format."
+    },
+    {
+      "id": "F-WINDOWS-ONLY-MEMBERS",
+      "claim": "Members taking/returning System.Drawing images (ImageDevice.GetBitmap, StampInfo.Image, etc.) are Windows-only",
+      "disposition": "UNVERIFIED",
+      "evidence": "Not independently re-derived this pass (would require checking System.Drawing.Common's actual platform support surface against each named member); plausible on its face, not contradicted."
+    }
+  ],
+  "note": "0 of 2 checked claims CONTRADICTED. Live README unchanged."
+}

@@ -1,0 +1,30 @@
+{
+  "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-.NET",
+  "source_revision": "86c441b5d81e707f2ea9e01b197dbb6ff7a3859b",
+  "default_branch": "main",
+  "verified_at": "2026-10-21",
+  "method": "Source-reading verification via GitHub Contents/Trees API. No local .NET build performed (batch-pass depth).",
+  "structural_observation": {
+    "finding": "This README has badges and an At-a-Glance diagram, but no Navigation list and no product banner image/link, and uses its own section vocabulary ('What it can do'/'What it cannot do' rather than 'Key Capabilities'/'Scope and Limitations'). Partial fixed-core conformance, similar in kind to the PSD-.NET finding in this same batch but less severe. Not corrected this pass -- flagged for a dedicated Lane R structural task, same reasoning as lane_r_plan.md explains."
+  },
+  "facts": [
+    {
+      "id": "F-TARGETFRAMEWORKS",
+      "claim": "Target frameworks net8.0 and net10.0, both built/tested/shipped",
+      "disposition": "SUPPORTED",
+      "evidence": "src/Aspose.Slides.Foss/Aspose.Slides.Foss.csproj: <TargetFrameworks>net8.0;net10.0</TargetFrameworks>, with an explicit source comment warning future editors this must stay plural."
+    },
+    {
+      "id": "F-NO-PACKAGE-DEPS",
+      "claim": "Package dependencies: none — the library declares no PackageReference",
+      "disposition": "SUPPORTED",
+      "evidence": "Zero <PackageReference> elements found in the main .csproj by direct source read."
+    },
+    {
+      "id": "F-CI-OS-MATRIX",
+      "claim": "CI workflow builds and runs every test on ubuntu-latest, windows-latest, and macos-latest",
+      "disposition": "SUPPORTED",
+      "evidence": ".github/workflows/ci.yml: os: [ubuntu-latest, windows-latest, macos-latest] matrix confirmed by direct source read."
+    }
+  ]
+}

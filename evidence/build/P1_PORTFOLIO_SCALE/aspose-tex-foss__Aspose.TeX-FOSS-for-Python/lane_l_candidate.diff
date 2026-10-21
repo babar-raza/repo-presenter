@@ -1,0 +1,15 @@
+--- /c/Users/babar/AppData/Local/Temp/claude/c--Users-babar-Documents-GitHub-repo-presenter/242f4b80-0cb4-4279-bfdb-9b140760105b/scratchpad/live_readme_tex.md	2026-10-21 17:55:27.814750000 +0500
++++ C:\Users\babar\Documents\GitHub\repo-presenter\evidence\build\P1_PORTFOLIO_SCALE\aspose-tex-foss__Aspose.TeX-FOSS-for-Python/lane_l_candidate.md	2026-10-21 18:01:43.611519500 +0500
+@@ -317,6 +317,12 @@
+ 
+ ## Scope and Limitations
+ 
++- At this pinned revision, most of this repository's own Python source fails to parse: indentation
++  has collapsed to a single space per nesting level without increasing for nested `for`/`if`/`def`
++  bodies, so `import aspose_tex` raises `IndentationError` immediately (first hit in
++  `_input/catcode.py`), `pytest` cannot collect 67 of the 68 test modules, and none of the code
++  examples in this README currently run against a fresh `pip install -e .` from source — already
++  filed as [issue #2](https://github.com/aspose-tex-foss/Aspose.TeX-FOSS-for-Python/issues/2).
+ - This is a Pre-Alpha release: the core engine and public API are under active development, and
+   interfaces may change between releases.
+ - The default `load_format="plain"` option (`TeXOptions`) does not yet fully load Knuth's Plain

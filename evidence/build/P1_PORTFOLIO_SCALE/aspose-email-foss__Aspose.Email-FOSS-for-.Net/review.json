@@ -1,0 +1,49 @@
+{
+  "repository": "aspose-email-foss/Aspose.Email-FOSS-for-.Net",
+  "source_revision": "59125b4732df0eedbc4d4c2ab978698ed4348eb7",
+  "lane": "L+R",
+  "reviewer_note": "Independent review performed in a fresh session, with a full live reproduction (not code-reading only): shallow-cloned the repository at the exact pinned source_revision into an isolated scratch directory, confirmed this machine's git core.autocrlf is 'true' at both system and global scope, confirmed the checked-out MapiMessageEmlTests.cs genuinely has CRLF line terminators, and ran `dotnet test` myself end to end.",
+  "candidate": "lane_l_candidate.md",
+  "diff": "lane_l_candidate.diff",
+  "facts": "facts.json",
+  "checks": [
+    {
+      "id": "C1_EVERY_EDIT_TRACES_TO_A_FACT",
+      "result": "PASS",
+      "detail": "Ran `diff -u live_readme.md lane_l_candidate.md` myself; output is byte-identical to the shipped lane_l_candidate.diff. The single hunk (new paragraph in Development and Testing, after the dotnet test command) traces directly to F-EML-TESTS-FAIL-ON-WINDOWS-CRLF-CHECKOUT (CONTRADICTED)."
+    },
+    {
+      "id": "C2_SECOND_CONTRADICTED_FACT_CORRECTLY_REQUIRES_NO_EDIT",
+      "result": "PASS",
+      "detail": "facts.json also marks F-CS1929-MULTIPARTPARSER-NOT-PRESENT CONTRADICTED, but that fact is about an external prior claim (idea.md's historical seed-defect note), not a claim the live README itself makes anywhere -- there is no README text asserting a CS1929 error exists, so there is nothing to correct. Confirmed the live README makes no such claim (grepped for CS1929/MultipartParser in live_readme.md: no match). Correctly not an edit-site; not a missed correction."
+    },
+    {
+      "id": "C3_DIFF_SCOPED_TO_EDIT_SPAN",
+      "result": "PASS",
+      "detail": "Diff is a single hunk inserting one new paragraph; the surrounding dotnet test command, the five test-class names, and the rest of the 321-line document are untouched."
+    },
+    {
+      "id": "C4_INDEPENDENT_LIVE_REPRODUCTION_OF_MOST_CONSEQUENTIAL_FACT",
+      "result": "PASS",
+      "detail": "Independently reproduced F-EML-TESTS-FAIL-ON-WINDOWS-CRLF-CHECKOUT end to end, not from facts.json's narration: shallow-cloned the live repo fresh, checked out 59125b47 exactly, confirmed `git config --get core.autocrlf` is 'true' (both --system and plain, i.e. this is the actual Windows-default environment the README's Installation section advertises), confirmed via `file` that the checked-out MapiMessageEmlTests.cs has CRLF line terminators, then ran `dotnet test tests/Aspose.Email.Foss.Tests/Aspose.Email.Foss.Tests.csproj` myself. Result: 'Failed: 2, Passed: 18, Skipped: 0, Total: 20' -- the exact same two tests fail with the exact same assertion messages facts.json reports (LoadFromEmlHandlesFoldedHeadersAndBase64Text: expected 'Base64 body', got ''; LoadFromEmlHandlesMultipartRelatedInlineAttachment: 'cid:inline-1' not found in null). Also confirms the build itself succeeds with 0 compile errors (only CS1591 doc-comment warnings), consistent with F-CS1929-MULTIPARTPARSER-NOT-PRESENT."
+    },
+    {
+      "id": "C5_NO_FALSE_POSITIVE_UNVERIFIED_TREATED_AS_CONTRADICTED",
+      "result": "PASS",
+      "detail": "No UNVERIFIED facts exist in this repository's facts.json -- all 7 facts are dispositioned SUPPORTED or CONTRADICTED with direct execution/compilation evidence, so this check is vacuously satisfied."
+    },
+    {
+      "id": "R1_LANE_R_PLAN_REASONING_HOLDS",
+      "result": "PASS",
+      "detail": "lane_r_plan.md classifies this as case (A), a substantial accurate live README needing only the one execution-forced correction, placed exactly where the original claim lives. content_units.json confirms 15/16 units RETAIN_VERBATIM, 1 RETAIN_CORRECTED (Development and Testing), 0 ADD/OMIT/SUPERSEDE -- consistent with a narrow, fact-forced change."
+    },
+    {
+      "id": "R2_LANE_R_CANDIDATE_MATCHES_CLAIMED_CONVERGENCE",
+      "result": "PASS",
+      "detail": "lane_r_plan.md claims byte-identical convergence with Lane L. Ran `cmp lane_l_candidate.md lane_r_candidate.md` myself: files are identical."
+    }
+  ],
+  "findings": [],
+  "verdict": "ACCEPT",
+  "verdict_rationale": "This is the strongest-evidence repository in this batch: the single edit traces to a CONTRADICTED fact that was independently reproduced here end to end with a fresh clone and a real `dotnet test` run, not merely re-derived from source reading or trusted from facts.json's narration -- the exact same 2-of-20 failures with the exact same assertion messages were reproduced live. The second CONTRADICTED fact (the historical CS1929 claim) correctly required no edit because the live README never asserted it. The diff is minimally scoped to the one fact-forced correction, and Lane R's claimed byte-identical convergence with Lane L is independently confirmed. No false positive, no false negative, no structural problem found."
+}

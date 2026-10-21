@@ -1,0 +1,22 @@
+{
+  "repository": "aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET",
+  "source_revision": "d947d11cc6b282443231c2025ee43bf974a335dd",
+  "default_branch": "main",
+  "verified_at": "2026-10-21",
+  "method": "Live GitHub Contents/Trees API reads + NuGet registry check. Source-reading verified (not a full dotnet build/execution this pass, given portfolio-batch time constraints for a .NET repo).",
+  "facts": [
+    {
+      "id": "F-NOT-ON-NUGET-CORRECTLY-DISCLOSED",
+      "claim": "Package is not on NuGet; README correctly describes a source-clone-and-build install instead of a NuGet install command, and the badge row omits a package badge",
+      "disposition": "SUPPORTED",
+      "evidence": "https://api.nuget.org/v3-flatcontainer/aspose.imaging.foss/index.json returns 404 (not published). README's Installation section matches: 'Build and install from a clone of the repository' with a real dotnet build command, no NuGet claim anywhere."
+    },
+    {
+      "id": "F-API-SURFACE-REAL",
+      "claim": "ImageProbe.DetectFormat(), Probe(), ProbeFile(), ProbeAsync(), ProbeFileAsync() all exist as public static methods",
+      "disposition": "SUPPORTED",
+      "evidence": "src/Aspose.Imaging.Foss/ImageProbe.cs confirmed: all named methods present with matching signatures (Stream/byte[]/FileInfo overloads for DetectFormat and Probe; async variants for both Probe and ProbeFile)."
+    }
+  ],
+  "note_on_scope": "2 claims checked via source reading (no dotnet build run this pass). The 14-format detection table, the DICOM/AVIF/HEIC brand-detection details, and the full API reference were not independently re-executed. No contradiction found in anything checked."
+}

@@ -1,0 +1,42 @@
+{
+  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
+  "source_revision": "0436d74002fd677133b33d3bf06ecceb47bbbb36",
+  "lane": "L+R",
+  "candidate": "lane_l_candidate.md (== lane_r_candidate.md, byte-identical)",
+  "facts": "facts.json",
+  "checks": [
+    {
+      "id": "C1_EVERY_EDIT_TRACES_TO_A_FACT",
+      "result": "PASS",
+      "detail": "Vacuously true: 0 edits made. facts.json's one checked claim (F-ZERO-DEPENDENCY) is SUPPORTED, not CONTRADICTED."
+    },
+    {
+      "id": "C2_NO_FALSE_POSITIVE_UNVERIFIED_TREATED_AS_CONTRADICTED",
+      "result": "PASS",
+      "detail": "No UNVERIFIED fact exists to mis-treat; content_units.json marks U-EXAMPLES-ALL as 'confirmed correctly collapsed... not individually spot-checked for factual accuracy this pass' -- correctly left RETAIN_VERBATIM rather than flagged as contradicted or silently asserted accurate."
+    },
+    {
+      "id": "C3_DIFF_SCOPE_AGAINST_LIVE_README",
+      "result": "PASS",
+      "detail": "Independently re-fetched the live README via gh api (4663 lines, matches facts.json note) and diffed against lane_l_candidate.md: zero differences. lane_r_candidate.md is also byte-identical."
+    },
+    {
+      "id": "C4_INDEPENDENT_SPOT_CHECK",
+      "result": "CONFIRMED",
+      "detail": "Re-fetched package.json directly: no `dependencies` key exists at all (only devDependencies: @types/node, tsx, typescript, vitest), and the package's own `description` field independently says 'A zero-dependency TypeScript library...'. Matches F-ZERO-DEPENDENCY exactly."
+    },
+    {
+      "id": "C5_STRUCTURAL_SIZE_CLAIM_VERIFIED",
+      "result": "CONFIRMED",
+      "detail": "facts.json and lane_r_plan.md both claim 4 <details>/<summary> collapse points at Key Capabilities, Additional Examples, API Reference, and Scope and Limitations. Independently grepped the live README: exactly 4 <details> blocks at those 4 locations (lines 152, 341, 3382, 4485). This is a real structural check, not a line-count rationalization as claimed."
+    },
+    {
+      "id": "C6_LANE_R_PLAN_HOLDS",
+      "result": "PASS",
+      "detail": "lane_r_plan.md correctly classifies this as case A with 0 contradicted claims; lane_r_candidate.md is present and byte-identical to lane_l_candidate.md, consistent with the plan."
+    }
+  ],
+  "findings": [],
+  "verdict": "ACCEPT",
+  "verdict_rationale": "The one deeply-checked claim (zero-dependency) is independently confirmed, and this reviewer additionally re-verified the specific structural claim used to justify not flagging the README's unusual length (4 <details> collapses) rather than accepting that claim on the composer's word alone. No edits were needed or made; both candidates are byte-identical to the live README, confirmed via fresh diff."
+}

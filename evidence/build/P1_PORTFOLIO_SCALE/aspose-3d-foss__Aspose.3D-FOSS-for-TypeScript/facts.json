@@ -1,0 +1,55 @@
+{
+  "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript",
+  "provider_identity": {
+    "provider": "github"
+  },
+  "source_revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4",
+  "default_branch": "master",
+  "readme_blob_sha": "eeb5be58b6af0b1115a0ea76533f2bcc5c641e19",
+  "verified_at": "2026-10-21",
+  "verification_note": "No node/npm toolchain is available on this machine (confirmed: 'which node'/'which npm' both return nothing) -- per the playbook, verification for this repository is code-reading only, done via the GitHub Contents API against the pinned source_revision. This README is unusually detailed about its own defects (explicit 'Confirmed by direct testing' language throughout Scope and Limitations), so this session's code-reading focused on independently re-deriving the root cause of each claimed defect from source, rather than simply trusting the README's own self-report.",
+  "facts": [
+    {
+      "id": "F-OBJ-EXPORT-TRAVERSAL-BUG",
+      "claim": "ObjExporter writes Wavefront OBJ files, but only for geometry attached directly to scene.rootNode itself; geometry attached via the standard createChildNode() pattern is silently omitted",
+      "disposition": "SUPPORTED",
+      "evidence": "Read src/aspose/threed/formats/obj/ObjExporter.ts directly: _collectNodes(node, nodeMap, materialMap, nodeId) only adds `node` to nodeMap and recurses into `node.childNodes` INSIDE the `if (mesh !== undefined ...)` block -- when called with scene.rootNode (which carries no mesh entity in the standard createChildNode()-based construction pattern used throughout this README's own examples), the function returns immediately without visiting any child, so nodeMap stays empty. Same bug shape independently found in the Python sibling's ObjExporter (see evidence/build/P1_VERTICAL_SLICE) and the general-purpose aspose-3d-foss/Aspose.3D-FOSS-for-.NET facts.json does NOT reproduce this (that codebase's OBJ export works) -- this finding is this repository's own, independently re-derived from its own source, not copied across repositories."
+    },
+    {
+      "id": "F-GLB-RANGEERROR-ROOT-CAUSE",
+      "claim": "Binary GLB output (GltfSaveOptions.binaryMode: true) currently throws a RangeError for any non-empty mesh; the JSON/ASCII form is unaffected; binary GLB import is unaffected",
+      "disposition": "SUPPORTED",
+      "evidence": "Read src/aspose/threed/formats/gltf/GltfExporter.ts's _writeGlb() directly: `binaryBuffer: number[]` holds one array entry per float value (4 bytes each when written), but `binaryLength` is computed as `binaryBuffer.length + binaryPadding` -- i.e. in units of array entries, not bytes, undersizing the computed length by a factor of ~4. `totalLength`/`glbBuffer = Buffer.alloc(totalLength)` is sized from this undersized `binaryLength`, but the write loop immediately after calls `glbBuffer.writeFloatLE(binaryBuffer[i], offset)` with `offset += 4` for every entry in `binaryBuffer`, writing roughly 4x more bytes than were allocated for that section -- Node's Buffer.writeFloatLE throws a RangeError once `offset` exceeds the buffer's actual length. This reproduces for any mesh with at least one vertex (binaryBuffer.length > 0); an empty mesh (no geometry, binaryBuffer.length === 0) skips the vulnerable branch entirely, consistent with the README's 'for any non-empty mesh' qualifier."
+    },
+    {
+      "id": "F-3MF-ADM-ZIP-PACKAGING-DEFECT",
+      "claim": "A real npm packaging defect affects 3MF import/export -- a normal package install does not pull in a dependency the 3MF code path needs at runtime, so using it throws immediately",
+      "disposition": "SUPPORTED",
+      "evidence": "Read src/aspose/threed/formats/threemf/ThreeMfImporter.ts directly: line 53 calls `const AdmZip = require('adm-zip');` at runtime. package.json lists `adm-zip` only under `devDependencies`, not `dependencies` -- a production `npm install <package>` of this package (as opposed to cloning the repo and running `npm install` against the full package.json) would not install adm-zip, so this require() would throw a module-not-found error at runtime for any consumer who installs it as a dependency rather than building from a full clone."
+    },
+    {
+      "id": "F-PACKAGE-JSON-ENTRY-POINT-DEFECT",
+      "claim": "A real npm packaging defect affects this package's declared entry point -- the real build does not produce the file package.json points consumers at",
+      "disposition": "SUPPORTED",
+      "evidence": "package.json declares \"main\": \"dist/index.js\" and \"types\": \"dist/index.d.ts\". tsconfig.json sets rootDir: \"./src\", outDir: \"./dist\", include: [\"src/**/*\"]. The repository's source tree has no src/index.ts (confirmed via a tree search) -- only src/aspose/threed/index.ts exists. `tsc` compiling this project therefore produces dist/aspose/threed/index.js, never dist/index.js, so the package.json entry point resolves to a file the build never creates. Consistent with the README's own Quick Start/examples importing from './dist/aspose/threed' rather than the package name."
+    },
+    {
+      "id": "F-MESH-BOOLEAN-OPS-THROW",
+      "claim": "Mesh's Boolean operations (union, difference, intersect), optimize(), and isManifold() all throw Error('... is not implemented')",
+      "disposition": "SUPPORTED",
+      "evidence": "Read src/aspose/threed/entities/Mesh.ts directly: static union()/difference()/intersect(), instance optimize(), and instance isManifold() all unconditionally throw Error with the exact 'is not implemented' message pattern the README describes."
+    },
+    {
+      "id": "F-NODE-SELECT-THROW",
+      "claim": "Node.selectSingleObject()/selectObjects() throw Error('... is not implemented')",
+      "disposition": "SUPPORTED",
+      "evidence": "Read src/aspose/threed/Node.ts directly: both methods unconditionally throw Error('selectSingleObject is not implemented') / Error('selectObjects is not implemented')."
+    },
+    {
+      "id": "F-PKG-DEPS",
+      "claim": "xmldom ^0.6.0 is the one required runtime dependency; typescript/jest/ts-jest/eslint/adm-zip/@types/* are development-only",
+      "disposition": "SUPPORTED",
+      "evidence": "package.json: \"dependencies\": { \"xmldom\": \"^0.6.0\" } is the only production dependency; everything else listed in the README's Development Dependencies (typescript ^5.8.3, jest ^29.7.0, ts-jest ^29.3.4, eslint ^8.57.1, @typescript-eslint/* ^8.33.0, adm-zip ^0.5.16, @types/adm-zip ^0.5.7, @types/jest ^29.5.12, @types/node ^22.15.17) is under devDependencies -- exact match."
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Python",
+  "source_revision": "4e63447ba79d1c27a5192844847d9f872c5b92ad",
+  "lane": "L+R (combined review -- lane_l_candidate.md and lane_r_candidate.md are byte-identical)",
+  "reviewer_note": "Independent review performed fresh in this session, per docs/MISSION_AUTHORITY.md discipline: a finding stands unless it carries an explicit, deterministic refutation (no majority-vote or similarity-based demotion). A review.json already existed at this path from an apparent earlier pass with the same REJECT verdict and the same core finding (AttributeError-on-typo claim); this session did not take that on trust -- every check below, including that finding, was independently re-derived and re-reproduced from scratch (fresh venv, fresh pip install, fresh gh api fetch) before being accepted.",
+  "candidate": "lane_l_candidate.md (sha256-equivalent byte-identical to lane_r_candidate.md, 47277 bytes each)",
+  "diff": "NOT PRESENT in this repo's directory (no lane_l_candidate.diff, unlike the P1_VERTICAL_SLICE and aspose-cells-foss__...-Go reference repos). Reconstructed in-session: `gh api repos/aspose-slides-foss/Aspose.Slides-FOSS-for-Python/readme --jq '.content' | base64 -d` fetched fresh, `gh api .../commits/main --jq '.sha'` confirmed current HEAD == facts.json's source_revision (no drift), then `diff -u` and `md5sum` against lane_l_candidate.md.",
+  "facts": "facts.json",
+  "checks": [
+    {
+      "id": "C1_LIVE_README_REFETCH_AND_DIFF",
+      "result": "PASS",
+      "detail": "gh api .../commits/main --jq '.sha' == 4e63447ba79d1c27a5192844847d9f872c5b92ad, exactly matching facts.json's source_revision. `diff -u` between the freshly fetched live README and lane_l_candidate.md produced zero output; md5sum of the live fetch, lane_l_candidate.md, and lane_r_candidate.md are identical (152907dca317fded2570782e9de73187). The candidate makes literally no edits to the live README."
+    },
+    {
+      "id": "C2_EVERY_EDIT_TRACES_TO_A_FACT",
+      "result": "PASS (vacuous)",
+      "detail": "Zero edits exist to trace (see C1). facts.json lists 5 facts, all SUPPORTED, 0 CONTRADICTED -- nothing in facts.json required a correction. This passes only in the trivial sense that an empty edit set cannot contain an untraceable edit; it does not by itself establish the live README needed no correction anywhere (see F1)."
+    },
+    {
+      "id": "C3_NO_FALSE_POSITIVE_FALSE_NEGATIVE",
+      "result": "PASS (vacuous), but see F1",
+      "detail": "No UNVERIFIED fact is treated as CONTRADICTED (facts.json has zero UNVERIFIED entries -- all 5 are SUPPORTED). No CONTRADICTED fact is left uncorrected (there are zero). This check only covers facts.json's own 5-item scope, which does not cover every claim in a 1013-line README (see F1)."
+    },
+    {
+      "id": "C4_INDEPENDENT_REPRODUCTION_OF_FACTS",
+      "result": "PASS for all 5 facts.json claims",
+      "detail": "Fresh venv, `pip install aspose-slides-foss` (26.8.0), fresh process: ChartType=74 public members, TransitionType=57 public members, Flavor=24 public members incl. GITHUB, SaveFormat has PPTX/PPTM/PPSX/PPSM/POTX/POTM, import path `aspose.slides_foss` works. All 5 match facts.json exactly."
+    },
+    {
+      "id": "C5_INDEPENDENT_REPRODUCTION_BEYOND_FACTS_JSON_SCOPE",
+      "result": "FAIL on one additional claim -- see F1",
+      "detail": "No CONTRADICTED fact exists in facts.json to reproduce, so this review instead went past facts.json's 5-item scope into Scope and Limitations' own falsifiable sub-claims (per the task's instruction to reproduce the single most consequential checkable claim). Confirmed TRUE: `Presentation.sections` does not exist (hasattr == False); `ShapeType` has 189 members, matching '186 more' + the 3 named ones; saving `SaveFormat.PDF` and `SaveFormat.HTML` both raise `ValueError` naming the unsupported format, exactly as the README states. Confirmed FALSE: the claim 'Assigning to a property a shape or a formatting object does not have raises AttributeError rather than being silently accepted and discarded' does not hold -- reproduced twice, in two fresh processes, across three distinct object types (AutoShape/Shape, FillFormat, LineFormat): in every case, setting an arbitrary nonexistent attribute succeeded silently with no exception and read back the assigned value. Source inspection of the installed package (`grep -rn \"__setattr__|__slots__\"` across all 572 .py files under aspose/slides_foss/) found zero matches -- these are plain Python objects with an ordinary `__dict__`, no mechanism exists in the shipped code that could raise AttributeError on an unknown attribute name."
+    },
+    {
+      "id": "C6_ENTERPRISE_EDITION_NAMING",
+      "result": "PASS",
+      "detail": "Grepped lane_l_candidate.md and the live README for 'enterprise|commercial|paid version|full-featured' (case-insensitive). The commercial counterpart is named correctly and consistently: '[Aspose.Slides for Python — Enterprise Edition](https://products.aspose.com/slides/python-net/)' in Scope and Limitations, with no 'full-featured ... Enterprise Edition' prefix pattern (just 'adds full non-PPTX export ...'). The three other 'commercial' occurrences are not substitute naming for the product: (1) 'the commercial `aspose` package' describes a generic PyPI namespace-collision hazard (any Aspose commercial package sharing the `aspose` namespace, not specifically naming this product's counterpart), (2) 'commercial support' describes a support-tier feature the Enterprise Edition includes, not a name for the product itself, (3) 'commercial use' is unrelated MIT-license boilerplate. Both the Enterprise Edition link (products.aspose.com) and the FOSS product banner link (products.aspose.org) return HTTP 200 live. No naming-rule violation found."
+    },
+    {
+      "id": "C7_LANE_R_PLAN_REASONING",
+      "result": "PASS on the output, FLAGGED on process rigor -- see F2",
+      "detail": "lane_r_plan.md's reasoning ('Case A, no correction needed ... for the same reason as every other clean-pass repository in this batch') is internally consistent with facts.json (0/5 CONTRADICTED) and matches the convergence pattern the aspose-3d-foss reference review's J5/J6 checks explicitly flagged as a claim to be falsified against a weaker-README repository, not yet a general property. lane_r_candidate.md is confirmed byte-identical to lane_l_candidate.md (C1), so the final output is correct given facts.json's inputs. However, lane_r_plan.md is 7 lines of boilerplate reused verbatim across the batch ('the same reason as every other clean-pass repository'), with no content_units.json backing it (see F2) -- there is no artifact-level evidence that Lane R actually walked each section independently rather than assuming Lane L's conclusion."
+    },
+    {
+      "id": "C8_MISSING_ARTIFACTS",
+      "result": "FLAGGED -- see F2",
+      "detail": "This directory has only facts.json, lane_l_candidate.md, lane_r_candidate.md, and lane_r_plan.md -- no lane_l_candidate.diff and no content_units.json, unlike the P1_VERTICAL_SLICE (aspose-3d-foss) and aspose-cells-foss__...-Go reference repos this review was calibrated against. The diff gap was reconstructed in-session (C1) with no loss of rigor since the result (zero diff) is unambiguous. The content_units.json gap has no substitute: there is no per-section/per-claim disposition ledger to audit for silent omissions, which is part of why F1 (a false, never-dispositioned claim) could ship unnoticed through both lanes."
+    }
+  ],
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "REJECT-worthy",
+      "title": "Scope and Limitations' AttributeError-on-typo guarantee is false, independently reproduced, and was never checked by facts.json",
+      "detail": "The live README (and therefore both byte-identical candidates) states: 'Assigning to a property a shape or a formatting object does not have raises AttributeError rather than being silently accepted and discarded, so a misspelt property name fails where it is written; names beginning with an underscore are unaffected.' Independently reproduced against the installed PyPI package (aspose-slides-foss 26.8.0, the same release facts.json verified its other 5 claims against) to be false: assigning an arbitrary nonexistent attribute to a Shape/AutoShape instance, a FillFormat instance, and a LineFormat instance each succeeds silently with no exception, and the value reads back correctly afterward. Reproduced in two separate fresh Python processes with different attribute names across all three object types to rule out a fluke. Source inspection (no __setattr__ override, no __slots__, anywhere in the 572-file installed package tree) confirms the mechanism: there is no code path in the shipped package that could raise AttributeError on an unknown attribute name. facts.json's own summary states only '5 precise, independently checkable claims verified this pass' -- this claim was never one of the 5, so it reached both candidates completely unverified, under a disposition scheme (SUPPORTED/CONTRADICTED/UNVERIFIED) that mission authority requires for every claim. Per mission-authority's own rule, 'not verified' must never be silently presented as true; here a never-verified claim is not just presented as true but is demonstrably false. This is a specific, deterministic, twice-reproduced refutation, not a stylistic or coverage objection.",
+      "outcome": "fixed"
+    },
+    {
+      "id": "F2",
+      "severity": "notable gap, contributing cause of F1, not independently REJECT-worthy on its own",
+      "title": "Missing lane_l_candidate.diff and content_units.json relative to the better-resourced reference repos",
+      "detail": "Unlike evidence/build/P1_VERTICAL_SLICE/aspose-3d-foss__Aspose.3D-FOSS-for-Python and evidence/build/P1_PORTFOLIO_SCALE/aspose-cells-foss__Aspose.Cells-FOSS-for-Go, this directory ships no lane_l_candidate.diff (reconstructed in-session via a fresh gh api fetch, with no material loss since the diff turned out to be empty) and no content_units.json (no substitute was available; the per-unit completeness audit the reference reviews' J2/J4 checks perform could not be run at all here). Because the final document is byte-identical to the live README, the diff-scoping gap had negligible practical impact in this specific case. The content_units.json gap is more consequential: there is no artifact in this directory enumerating which README sections or individual claims were considered and dispositioned (vs. simply left alone by default), and the absence of such a ledger is plausibly why F1 -- a false, falsifiable claim sitting in the most safety-critical section of the README -- was never flagged by the pipeline that produced this candidate."
+    }
+  ],
+  "verdict": "ACCEPT",
+  "verdict_rationale": "F1 (the false AttributeError-on-typo guarantee in Scope and Limitations) was fixed by the supervisor session 2026-10-21, after independently re-reproducing the review's own finding once more from a fresh pip install (aspose-slides-foss 26.8.0 in a new venv) before touching anything: assigning an arbitrary unknown attribute to a Shape/AutoShape, a FillFormat, and a LineFormat instance each succeeded silently with no exception and read back correctly, in two separate fresh processes, with zero `__setattr__`/`__slots__` matches anywhere in the installed package tree -- this independently reconfirms F1's claim rather than merely trusting its prose. lane_l_candidate.md's Scope and Limitations bullet was corrected to state the true behavior: silent assignment, no validation or error of any kind, and a misspelt property name fails silently (creates a harmless unused attribute) rather than being caught. facts.json was updated to add this newly-confirmed fact (F-ATTRIBUTEERROR-ON-TYPO-FALSE, CONTRADICTED) -- it was never checked by the original composer's 5-fact pass. A `diff` against a freshly re-fetched live README (current main HEAD, matching source_revision, no drift) confirms lane_l_candidate.diff now accurately reflects exactly this one correction and nothing else. Verdict updated from REJECT to ACCEPT after the fix; this is not a retroactive downgrade of the finding -- F1 stands as correctly identified and is marked 'fixed', not erased, per this project's AGENTS.md re-reporting discipline. F2 (missing lane_l_candidate.diff / content_units.json) is partially addressed: lane_l_candidate.diff now exists for this repository; content_units.json remains absent and is still recommended, non-blocking. Enterprise Edition naming (C6) was already fully compliant and required no change."
+}

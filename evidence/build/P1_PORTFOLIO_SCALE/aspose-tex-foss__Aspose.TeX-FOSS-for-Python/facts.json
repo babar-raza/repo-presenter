@@ -1,0 +1,108 @@
+{
+  "repository": "aspose-tex-foss/Aspose.TeX-FOSS-for-Python",
+  "provider_identity": {
+    "provider": "github",
+    "repository_id": 1243409232,
+    "node_id": "R_kgDOShzrUA"
+  },
+  "source_revision": "181015d2eee3e19f8af3d84e4a932ac84ad47c7c",
+  "default_branch": "main",
+  "readme_blob_sha": "a31ecb3f920eca4407f08f87c735b58e2db8f000",
+  "verified_at": "2026-10-21",
+  "verification_note": "Live GitHub Contents/Trees/Commits API reads (gh CLI, authenticated) for README, file tree, and individual source files, cross-checked against a real, isolated execution environment: `git clone` of the exact pinned head commit into a scratch directory, a fresh venv, and `pip install -e .` (there is no published PyPI package for this library -- the README says so itself, confirmed independently against pypi.org, so installation had to be from source, exactly as the README's own Installation section instructs). Ran `python -c \"import aspose_tex\"`, `python -m pytest -q`, and a repo-wide `ast.parse()` sweep over every .py file to get an exact parse-failure count. The one real code example that could run (the Quick Start) could not be executed because the package itself fails to import; this is recorded as its own fact below rather than silently skipped. Also ran `gh issue list --repo aspose-tex-foss/Aspose.TeX-FOSS-for-Python --state all` plus `--search` with several keywords for dedup purposes.",
+  "method": "pip install -e . from a fresh git clone of the exact pinned commit into an isolated venv under the session scratchpad, then real `import aspose_tex`, `pytest -q`, and `ast.parse()` sweep executions, plus direct reads of the live GitHub blobs for presentation/__init__.py, exceptions.py, io_primitives.py, alignment.py, math_shell.py, catcode.py, and pyproject.toml.",
+  "facts": [
+    {
+      "id": "F-PKG-NOT-ON-PYPI",
+      "claim": "README's Installation section: \"No PyPI package has been published for this library yet — install it from source\"",
+      "disposition": "SUPPORTED",
+      "evidence": "curl -s -o /dev/null -w '%{http_code}' against both https://pypi.org/pypi/aspose-tex-foss/json and https://pypi.org/pypi/aspose-tex/json returns 404 for each — neither name exists on PyPI, matching the README's own claim exactly."
+    },
+    {
+      "id": "F-PKG-SOURCE-NAME-VERSION",
+      "claim": "Dependencies section: \"The published `aspose-tex` package builds from `pyproject.toml`\"",
+      "disposition": "SUPPORTED",
+      "evidence": "pyproject.toml at the pinned revision: [project] name = \"aspose-tex\", version = \"26.5\"; src/aspose_tex/__init__.py: __version__ = \"26.5\" — consistent."
+    },
+    {
+      "id": "F-PKG-NO-DEPS",
+      "claim": "\"No required third-party package dependencies\"",
+      "disposition": "SUPPORTED",
+      "evidence": "pyproject.toml [project] table declares no `dependencies` key at all; only [project.optional-dependencies].dev is present."
+    },
+    {
+      "id": "F-DEV-DEPS-VERSIONS",
+      "claim": "Dev extras are pytest>=7.4, ruff>=0.4, build>=1.2, twine>=5.0, and tomli>=2.0 on Python <3.11",
+      "disposition": "SUPPORTED",
+      "evidence": "pyproject.toml [project.optional-dependencies] dev = [\"pytest>=7.4\", \"ruff>=0.4\", \"build>=1.2\", \"twine>=5.0\", \"tomli>=2.0; python_version < '3.11'\"] — exact match."
+    },
+    {
+      "id": "F-PACKAGE-IMPORT-BROKEN",
+      "claim": "The Quick Start example (`from aspose_tex import TeXJob, TeXOptions, PdfDevice, create_input_source`) and every other code example in this README can actually be run against this package",
+      "disposition": "CONTRADICTED",
+      "severity": "critical",
+      "evidence": "Reproduced live: cloned commit 181015d2eee3e19f8af3d84e4a932ac84ad47c7c into an isolated venv, `pip install -e .` succeeds (setuptools packages files without parsing them), but `python -c \"import aspose_tex\"` immediately raises `IndentationError: expected an indented block after 'for' statement on line 65` from src/aspose_tex/_input/catcode.py line 66 (the first-imported submodule that contains a loop body). A full `ast.parse()` sweep over every .py file in the clone (src/**/*.py + tests/**/*.py, 118 files total) found 101 files raise SyntaxError/IndentationError, including src/aspose_tex/presentation/__init__.py itself, the module the README's own API Reference names as home to TeXJob, TeXOptions, PdfDevice, DviDevice, SvgDevice and OutputDevice. Byte-diffed (CRLF-normalized) against the live GitHub blob for catcode.py: identical, so this is the actual committed source at this revision, not a local clone artifact. Root cause: indentation has collapsed to one literal space (0x20) per nesting level throughout most of the tree, and nested for/if/def bodies are left at the SAME single-space indent as their header line instead of being indented further, which is invalid Python regardless of interpreter version. This has already been filed upstream as issue #2 (see verification_note / draft_upstream_issue note below) at this exact revision, independently confirming the same count (102 of 119 files, a trivial counting-convention difference from this session's 101 of 118)."
+    },
+    {
+      "id": "F-TEST-SUITE-CANNOT-RUN",
+      "claim": "Development and Testing section: \"68 test modules cover the tokenizer, macro expander, box and page builder, font subsystem, and each output writer\" via `pytest`",
+      "disposition": "CONTRADICTED",
+      "severity": "high",
+      "evidence": "Reproduced live: `pip install -e \".[dev]\"` then `pytest -q` from the pinned-commit clone produces \"Interrupted: 67 errors during collection\" — 67 of the 68 test_*.py modules fail at import/collection time with the same IndentationError as F-PACKAGE-IMPORT-BROKEN (most test files import `aspose_tex` or an internal submodule transitively). Zero tests execute. The test modules exist and the count is accurate (see F-TEST-MODULE-COUNT) but they do not currently \"cover\" anything by running, contradicting the plain reading of this sentence as a claim about the test suite's present, runnable state."
+    },
+    {
+      "id": "F-TEST-MODULE-COUNT",
+      "claim": "There are 68 test modules",
+      "disposition": "SUPPORTED",
+      "evidence": "`ls tests/test_*.py | wc -l` on the pinned-commit clone returns exactly 68 — the count itself is accurate as a static fact about the repository, independent of F-TEST-SUITE-CANNOT-RUN."
+    },
+    {
+      "id": "F-API-TEXOPTIONS-FIELDS",
+      "claim": "TeXOptions has fields job_name: str = \"texput\", magnification: int = 1000, extra_font_paths: list[Path], load_format: bool | str | None = \"plain\", extra_format_paths: list[Path]",
+      "disposition": "SUPPORTED",
+      "evidence": "src/aspose_tex/presentation/__init__.py @dataclass TeXOptions: `job_name: str = \"texput\"`, `magnification: int = 1000`, `extra_font_paths: list[Path] = field(default_factory=list)`, `load_format: bool | str | None = \"plain\"`, `extra_format_paths: list[Path] = field(default_factory=list)` — exact field names, types and defaults match the API Reference table, read directly from source text (the class cannot currently be imported — see F-PACKAGE-IMPORT-BROKEN — but its source text matches the documented surface)."
+    },
+    {
+      "id": "F-API-EXCEPTIONS",
+      "claim": "AsposeTeXError, InputError, EngineError, FontError exist with the documented one-line descriptions",
+      "disposition": "SUPPORTED",
+      "evidence": "src/aspose_tex/exceptions.py defines exactly these four classes with docstrings word-for-word matching the API Reference table (\"Raised for input reading failures (file not found, stack underflow, etc.).\", etc.). This file is one of the 17 files in the repo that parses cleanly."
+    },
+    {
+      "id": "F-API-OUTPUTDEVICE-SURFACE",
+      "claim": "OutputDevice exposes destination, finalize(), get_bytes() -> bytes | None; SvgDevice additionally exposes get_all_pages() -> list[bytes] | None; constructors take destination: Path | io.BytesIO | None = None",
+      "disposition": "SUPPORTED",
+      "evidence": "src/aspose_tex/presentation/__init__.py: OutputDevice.__init__ signature `destination: Path | io.BytesIO | None = None`; `destination` property; abstract `finalize()`; `get_bytes()` returning BytesIO contents or None for file destinations. SvgDevice.get_all_pages() returns `list[bytes] | None`, same None-for-file-destination pattern. Matches the API Reference's Output Devices subsection exactly (source text; not executable — see F-PACKAGE-IMPORT-BROKEN)."
+    },
+    {
+      "id": "F-SCOPE-NAMED-FILE-IO",
+      "claim": "Scope and Limitations: \\openin, \\openout, \\closein, \\closeout, \\read raise NotImplementedError; only \\write 16, \\write -1, \\message, \\errmessage are implemented; \\ifeof always evaluates false",
+      "disposition": "SUPPORTED",
+      "evidence": "src/aspose_tex/_engine/io_primitives.py: exec_openin/exec_openout/exec_closein/exec_closeout each call `_raise_deferred(...)`; exec_write only handles stream -1 and 16 via logging, any other stream raises NotImplementedError(\"\\\\write to stream {stream} requires \\\\openout (deferred to M5)\"); exec_ifeof docstring: \"Execute \\ifeof<n> as always-false in M3.\" Matches the Scope and Limitations bullet exactly (source text)."
+    },
+    {
+      "id": "F-SCOPE-HALIGN-VALIGN",
+      "claim": "\\halign and \\valign are registered but invoking either raises NotImplementedError",
+      "disposition": "SUPPORTED",
+      "evidence": "src/aspose_tex/_engine/alignment.py defines STUB_ERROR_HALIGN/STUB_ERROR_VALIGN and _exec_halign()/_exec_valign(), both registered in a dispatch dict under \"halign\"/\"valign\" keys, each raising the stub error string. Matches the Scope bullet (source text)."
+    },
+    {
+      "id": "F-SCOPE-HYPHENATION-EMPTY",
+      "claim": "The bundled hyphenation/ pattern directory is currently empty",
+      "disposition": "SUPPORTED",
+      "evidence": "Live file tree (git/trees/main?recursive=1) shows src/aspose_tex/data/hyphenation/ contains only a .gitkeep placeholder — no pattern files."
+    },
+    {
+      "id": "F-SCOPE-MATH-NOT-LAID-OUT",
+      "claim": "Math-mode content is parsed through a shell surface but not laid out — no math atoms reach the page",
+      "disposition": "SUPPORTED",
+      "evidence": "src/aspose_tex/_engine/math_shell.py module docstring: \"The M3 math shell consumes operands for known math primitives and emits no nodes. Real math atom construction and layout are deferred to M4.\" Matches the Scope bullet (source text)."
+    },
+    {
+      "id": "F-UPSTREAM-DEFECT-ALREADY-FILED",
+      "claim": "(dedup check, not a README claim) Is the import-breaking indentation defect already reported upstream?",
+      "disposition": "SUPPORTED",
+      "evidence": "`gh issue list --repo aspose-tex-foss/Aspose.TeX-FOSS-for-Python --state all` returns one open issue: #2, \"Aspose.TeX FOSS for Python: 102 of 119 .py files fail to parse (IndentationError) and 'import aspose_tex' fails\", filed 2026-10-20 at this exact revision (181015d2eee3e19f8af3d84e4a932ac84ad47c7c), independently reproducing the same root cause and an equivalent file count. `--search \"indentation\"`, `--search \"import\"`, and `--search \"IndentationError\"` all return the same single issue; `--search \"syntax\"` returns none. No new upstream issue was filed in this session because this would duplicate #2."
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp",
+  "source_revision": "469ce77a07b988c49deb930632b8276c89ec6b66",
+  "default_branch": "main",
+  "verified_at": "2026-10-21",
+  "method": "Source-reading verification via GitHub Contents/Trees API. No local C++ build performed (batch-pass depth).",
+  "facts": [
+    {
+      "id": "F-CXX20",
+      "claim": "C++20 badge/requirement",
+      "disposition": "SUPPORTED",
+      "evidence": "CMakeLists.txt: target_compile_features(AsposeSlidesFoss PUBLIC cxx_std_20), with a comment explaining the deliberate choice over CMAKE_CXX_STANDARD so it propagates to consumers via FetchContent."
+    },
+    {
+      "id": "F-HEADER-PATHS",
+      "claim": "Quick Start example's 4 #include paths (presentation.h, shape_type.h, auto_shape.h, export/save_format.h)",
+      "disposition": "SUPPORTED",
+      "evidence": "All 4 confirmed present at exactly include/Aspose/Slides/Foss/{presentation.h,shape_type.h,auto_shape.h,export/save_format.h} by a full recursive tree listing."
+    }
+  ],
+  "summary": "Lightweight batch-pass check, 2 claims verified, 0 contradicted. Full fixed-core structure present (badges, banner, Navigation, At a Glance) -- no structural gap, unlike the sibling .NET repository in this family."
+}

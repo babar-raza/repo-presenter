@@ -1,0 +1,58 @@
+{
+  "repository": "aspose-email-foss/Aspose.Email-FOSS-for-Cpp",
+  "provider_identity": {
+    "provider": "github",
+    "repository_id": 1193857039,
+    "node_id": "R_kgDORyjQDw"
+  },
+  "source_revision": "c844a467cf7f2503819b655f4d6ceaef91056c40",
+  "default_branch": "master",
+  "readme_blob_sha": "f4fd1a90e898e6772e36e88e5be4a4b5f3d4b9af",
+  "verified_at": "2026-10-21",
+  "verification_note": "CMake is NOT available in this environment (playbook-confirmed toolchain gap: 'java, node/npm, go, cargo, cmake, mvn' are all absent). Every disposition below is derived from reading the actual C++ header/source files and the real CMakeLists.txt build scripts at the pinned source_revision, not from a build or ctest run -- a materially shallower verification depth than the sibling .NET repository in this same portfolio batch, where dotnet was available and real execution caught a genuine test-suite defect. idea.md's CS1929 MultipartParser.SequenceEqualAscii claim is specific to the .NET repository's C# receiver-type system and has no direct C++ analogue (there is no equivalent language feature to misuse the same way); this repository's own multipart-splitting logic (src/msg/mime/mime_reader.cpp, internal, not part of the public API surface) was read directly and appears structurally sound, but was not compiled or executed, so it is not asserted as SUPPORTED beyond what reading alone establishes.",
+  "method": "Live GitHub Contents/Trees API reads (gh CLI, authenticated). Read the top-level CMakeLists.txt, tests/CMakeLists.txt, every public header under include/aspose/email/foss/**/*.hpp (26 files), and src/msg/mime/mime_reader.cpp/.hpp (internal MIME parsing, read for context only, not claimed as independently verified).",
+  "facts": [
+    {
+      "id": "F-CMAKE-CXX17-VERSION-FLOOR",
+      "claim": "CMake 3.26 or later -- the version floor set by the project's own cmake_minimum_required; a C++17 compiler -- CMAKE_CXX_STANDARD 17 with CMAKE_CXX_STANDARD_REQUIRED ON",
+      "disposition": "SUPPORTED",
+      "evidence": "Top-level CMakeLists.txt at source_revision: line 1 is exactly `cmake_minimum_required(VERSION 3.26)`; `set(CMAKE_CXX_STANDARD 17)` and `set(CMAKE_CXX_STANDARD_REQUIRED ON)` both present verbatim."
+    },
+    {
+      "id": "F-DEFAULT-PRESET-TESTS-ON-EXAMPLES-OFF",
+      "claim": "'default' CMake preset has tests on, examples off",
+      "disposition": "SUPPORTED",
+      "evidence": "Top-level CMakeLists.txt: `option(ASPOSE_EMAIL_FOSS_BUILD_TESTS \"Build public tests\" ON)` and `option(ASPOSE_EMAIL_FOSS_BUILD_EXAMPLES \"Build examples\" OFF)` -- exact default values match the README's claim about the default preset."
+    },
+    {
+      "id": "F-NO-FETCHED-DEPENDENCY",
+      "claim": "'No required third-party package dependencies'; 'no third-party dependency is fetched to build or test it'; test executables are 'written directly against the standard library with no external test framework fetched'",
+      "disposition": "SUPPORTED",
+      "evidence": "Grepped the full top-level CMakeLists.txt and tests/CMakeLists.txt for FetchContent/find_package/ExternalProject: zero matches in either file. The three test executables (tests/CMakeLists.txt) link only against the AsposeEmailFoss::AsposeEmailFoss target, nothing else."
+    },
+    {
+      "id": "F-THREE-TEST-EXECUTABLES",
+      "claim": "Three test executables registered with CTest: aspose_email_foss_cfb_tests (CFB layer), aspose_email_foss_msg_tests (MSG/mapi_message layer), aspose_email_foss_public_tests (generated constant/enum checks)",
+      "disposition": "SUPPORTED",
+      "evidence": "tests/CMakeLists.txt at source_revision defines exactly these three add_executable/add_test pairs, sourced from test_cfb.cpp, test_msg.cpp, and test_generated_headers.cpp respectively -- names and source-file mapping match the README's Development and Testing section exactly."
+    },
+    {
+      "id": "F-MAPI-MESSAGE-API-SIGNATURES",
+      "claim": "mapi_message exposes create(subject, body, unicode_strings), from_file/from_stream/from_msg_document, load_from_eml(path)/load_from_eml(stream), validation_issues(), add_embedded_message_attachment(message, filename, mime_type), save_to_eml() in three overloads, and recipient_type_cc/recipient_type_bcc constants",
+      "disposition": "SUPPORTED",
+      "evidence": "include/aspose/email/foss/msg/mapi_message.hpp at source_revision declares every one of these exactly as documented: `static constexpr int recipient_type_cc = 2;` / `recipient_type_bcc = 3;`, `static mapi_message create(std::string subject={}, std::string body={}, bool unicode_strings=true)`, `static mapi_message from_file(...)`, `static mapi_message from_stream(...)`, `static mapi_message from_msg_document(...)`, `static mapi_message load_from_eml(const std::filesystem::path&)` and the std::istream overload, `const std::vector<std::string>& validation_issues() const noexcept`, `mapi_attachment& add_embedded_message_attachment(mapi_message, std::string, std::string)`, and three save_to_eml() overloads (bytes/path/stream)."
+    },
+    {
+      "id": "F-26-PUBLIC-TYPES",
+      "claim": "'the complete, browsable reference for all 26 public types'",
+      "disposition": "SUPPORTED",
+      "evidence": "Enumerated every class/struct/enum declaration across all 26 files under include/aspose/email/foss/**/*.hpp (version.hpp excluded, no type declared there): 18 classes (cfb_document, cfb_exception, cfb_node, cfb_reader, cfb_storage, cfb_stream, cfb_writer, mapi_attachment, mapi_message, mapi_property, mapi_property_collection, mapi_recipient, msg_document, msg_exception, msg_reader, msg_storage, msg_stream, msg_writer) + 2 structs (directory_entry, header) + 6 enums (common_message_property_id, directory_color_flag, directory_object_type, msg_storage_role, property_type_code, sector_marker) = 26 exactly, matching both the Documentation & Resources claim and the API Reference table's own row count (18+2+6)."
+    },
+    {
+      "id": "F-MULTIPART-EML-PARSING-NOT-EXECUTED",
+      "claim": "MSG/EML interoperability: save_to_eml()/load_from_eml() round-trip through the library's own MIME engine, including multipart messages with attachments",
+      "disposition": "UNVERIFIED",
+      "evidence": "Read src/msg/mime/mime_reader.cpp's parse_entity() boundary-splitting loop directly: it locates each `--boundary` occurrence by linear std::string::find, extracts content between consecutive boundary positions, and detects the closing `--boundary--` via an explicit std::string::compare check -- the logic appears structurally correct on inspection (traced through by hand for a 2-part multipart/related body), but was not compiled or executed (no CMake/C++ toolchain available in this environment), so it is left UNVERIFIED rather than asserted SUPPORTED. This mirrors the .NET sibling repository's equivalent code path (MultipartParser.cs), which WAS executed this session and found accurate aside from one unrelated test-fixture issue -- the C++ logic was not independently exercised to the same depth and should not be assumed to share that same clean result without its own execution-based check."
+    }
+  ]
+}

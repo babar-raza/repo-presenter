@@ -1,0 +1,101 @@
+{
+  "repository": "aspose-words-foss/Aspose.Words-FOSS-for-.NET",
+  "provider_identity": {
+    "provider": "github",
+    "repository_id": 1159931799,
+    "node_id": "R_kgDORSMnlw"
+  },
+  "source_revision": "0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+  "default_branch": "master",
+  "readme_blob_sha": "9734548dac27935147746dc7ba9ed86759095d9a",
+  "verified_at": "2026-10-21",
+  "verification_note": "This repository was assessed by source-reading only: no `dotnet build`/`dotnet run` was executed anywhere in this session, per task instructions treating a full .NET build as too expensive for this slice. All facts below were established by reading the live GitHub blob content (via `gh api repos/.../contents/<path>?ref=master`) of the actual dispatch/registration code (RW/Factories/ReaderFactory.cs and WriterFactory.cs), the actual project/package metadata (Aspose.Words.csproj, Aspose.Foundation.csproj, Package/Aspose.Words.FOSS.nuspec), and specific field/signature implementation files (FieldNumPages.cs, DigitalSignatureUtil.cs, Document.cs), then diffing their real, concrete behavior against every specific, checkable claim in the live README. The README's own API Reference table (615 rows across Core API/Interfaces/Enumerations) was independently recounted by line-range grep against the fetched README blob, not taken on faith from the README's own summary sentence.",
+  "method": "Live GitHub Contents/Trees/Commits API reads via authenticated `gh api` (repo+workflow scopes), cross-checked against the live README blob fetched via `gh api repos/.../readme`; a `gh issue list`/`--search` dedup check was run against the live repo for the one genuine defect found. No code was compiled or executed.",
+  "facts": [
+    {
+      "id": "F-PACKAGE-ID",
+      "claim": "The NuGet package to install is `Aspose.Words.FOSS` (`dotnet add package Aspose.Words.FOSS`)",
+      "disposition": "SUPPORTED",
+      "evidence": "Package/Aspose.Words.FOSS.nuspec, <metadata><id>Aspose.Words.FOSS</id></metadata> (version 26.3.0 as packaged at this revision)."
+    },
+    {
+      "id": "F-ASSEMBLY-SINGLE",
+      "claim": "The package ships a single assembly, `Aspose.Words.FOSS.dll`, for all three targets",
+      "disposition": "SUPPORTED",
+      "evidence": "Aspose.Words/Aspose.Words.csproj: <AssemblyName>Aspose.Words.FOSS</AssemblyName> with <TargetFrameworks>net462;netstandard2.0;net8.0</TargetFrameworks>; Package/Aspose.Words.FOSS.nuspec <files> block ships `Aspose.Words.FOSS.dll`/`.xml` separately under lib\\net462, lib\\netstandard2.0, and lib\\net8.0 -- one assembly name across all three TFM folders."
+    },
+    {
+      "id": "F-NAMESPACE",
+      "claim": "The namespaces are `Aspose.Words.*`, the same as the commercial product, so existing Aspose.Words code compiles against it as is",
+      "disposition": "SUPPORTED",
+      "evidence": "Aspose.Words/Aspose.Words.csproj: <RootNamespace>Aspose.Words</RootNamespace>, with an explicit comment: 'The FOSS assembly is deliberately named differently from the commercial Aspose.Words.dll; namespaces stay Aspose.Words.* for source compatibility.'"
+    },
+    {
+      "id": "F-TARGETS",
+      "claim": "The library is managed C# shipping three targets -- .NET Framework 4.6.2, .NET Standard 2.0, and .NET 8",
+      "disposition": "SUPPORTED",
+      "evidence": "Aspose.Words/Aspose.Words.csproj and Aspose.Foundation/Aspose.Foundation/Aspose.Foundation.csproj both declare <TargetFrameworks>net462;netstandard2.0;net8.0</TargetFrameworks>."
+    },
+    {
+      "id": "F-DEPS-MATCH-CSPROJ",
+      "claim": "Required Package Dependencies are exactly: SkiaSharp 3.119.0 (netstandard2.0 + net8.0), BitMiracle.LibTiff.NET 2.4.649 (netstandard2.0 + net8.0), System.Text.Encoding.CodePages 7.0.0 (netstandard2.0 + net8.0), Microsoft.Win32.Registry 5.0.0 (netstandard2.0 only, not net462 or net8.0)",
+      "disposition": "SUPPORTED",
+      "evidence": "Aspose.Foundation/Aspose.Foundation/Aspose.Foundation.csproj: <ItemGroup Condition=\"'$(TargetFramework)' != 'net462'\"> contains PackageReference SkiaSharp 3.119.0, System.Text.Encoding.CodePages 7.0.0, BitMiracle.LibTiff.NET 2.4.649; a separate <ItemGroup Condition=\"'$(TargetFramework)' == 'netstandard2.0'\"> adds Microsoft.Win32.Registry 5.0.0. net462 gets none of these (SkiaSharp only conditionally in Debug/Test config, not Release/ship). Exact match to every version number and per-target scoping claim in the README's Dependencies section."
+    },
+    {
+      "id": "F-NUSPEC-CODEPAGES-GAP",
+      "claim": "(Derived, not a literal README sentence) Running the README's own Getting Started instruction, `dotnet add package Aspose.Words.FOSS`, transitively restores every package dependency the shipped assembly actually needs on the netstandard2.0 and net8.0 targets",
+      "disposition": "CONTRADICTED (nuspec-metadata gap only -- see corrected severity note; the runtime-failure consequence originally paired with this fact did NOT reproduce)",
+      "evidence": "Package/Aspose.Words.FOSS.nuspec's <dependencies> block for the '.NETStandard2.0' group lists only SkiaSharp, BitMiracle.LibTiff.NET, and Microsoft.Win32.Registry; the 'net8.0' group lists only SkiaSharp and BitMiracle.LibTiff.NET. Neither group declares System.Text.Encoding.CodePages, even though: (1) Aspose.Foundation.csproj's own PackageReference list (see F-DEPS-MATCH-CSPROJ) shows the compiled assembly for both of those TFMs is built against it; (2) Aspose.Foundation/Aspose.Foundation/Base/EncodingUtil.cs's RegisterEncodings() calls `Encoding.RegisterProvider(CodePagesEncodingProvider.Instance)` inside `#if NETSTANDARD || NET`, a type that lives only in the System.Text.Encoding.CodePages assembly; (3) Aspose.Words/Model/Document/Document.cs's static constructor (lines 179-183) calls `EncodingUtil.RegisterEncodings()` unconditionally -- meaning this code path runs the first time `Document` is touched by any consumer, including the README's own Quick Start example; (4) Aspose.Words.csproj's MergeFossAssembly build target explicitly comments 'SkiaSharp and the other NuGet dependencies stay external' -- confirming System.Text.Encoding.CodePages is not ILRepack-merged into the shipped Aspose.Words.FOSS.dll and so must come from NuGet restore. Net effect: a consumer on netstandard2.0 (e.g. .NET 6/8/10) or net8.0 who does nothing but `dotnet add package Aspose.Words.FOSS` per the README, exactly as documented, will not have System.Text.Encoding.CodePages restored by NuGet and risks a runtime load failure the first time Document's static constructor runs, unless they separately add that package reference themselves. CORRECTION (2026-10-21, independent re-verification by a downstream reviewer, itself independently re-confirmed before acting on it): the nuspec omission itself is real and reproduces exactly as described (confirmed again via a fresh `dotnet add package Aspose.Words.FOSS` into a brand-new net8.0 console app -- `obj/project.assets.json` contains no reference to System.Text.Encoding.CodePages). However, the claimed consequence -- a runtime load failure the first time Document's static constructor runs -- was tested directly and does NOT reproduce under any standard .NET SDK consumption path: (1) framework-dependent (`dotnet add package` + `dotnet run`, i.e. the README's own Quick Start) ran to completion with no exception; (2) a self-contained publish (`dotnet publish -r win-x64 --self-contained true`) still shipped System.Text.Encoding.CodePages.dll in the publish output and ran cleanly; (3) a trimmed self-contained publish (`-p:PublishTrimmed=true`) also still shipped the assembly and ran cleanly. Root cause confirmed in all three cases: the .NET SDK's implicit `Microsoft.NETCore.App` framework reference supplies `System.Text.Encoding.CodePages` for any net5.0+/netstandard2.0-via-net8.0 project regardless of whether the consumed package's nuspec declares it as a dependency, and the runtime-pack-based self-contained/trimmed publish paths bundle the same assembly as part of that framework distribution, not as a consequence of nuspec-declared dependencies. The nuspec gap is therefore a real, independently-confirmed packaging-metadata defect, but it is latent, not failing, for every standard .NET SDK consumption path tested (framework-dependent, self-contained, and trimmed self-contained). A genuinely failing consumer would have to be a non-SDK-style project system or a non-.NET-SDK runtime (e.g. an old-style, non-SDK netstandard2.0 class library, or a runtime lacking the .NET SDK's implicit BCL framework reference) -- this narrower scenario was not tested by this review or the original pass and should not be asserted as a confirmed failure; it remains unverified, not contradicted or supported.",
+      "severity": "Genuine, independently-reproduced nuspec dependency-metadata gap (drift from the real csproj PackageReference set), but NOT a runtime load failure risk for any of the three standard .NET SDK consumption paths tested (framework-dependent per the README's own Quick Start, self-contained publish, and trimmed self-contained publish -- all ran cleanly, confirmed 2026-10-21). The README's Dependencies section text is itself accurate per F-DEPS-MATCH-CSPROJ and is not edited. Per this project's own rule that upstream defect reporting is a separate effect path from README text changes, this is reported via draft_upstream_issue.md as a metadata-hygiene defect, re-scoped away from the overstated 'runtime load failure' framing that the original pass used."
+    },
+    {
+      "id": "F-FORMATS-LOAD",
+      "claim": "Supported formats table: Load column is checked (Yes) for DOCX/DOCM/DOTX/DOTM, Flat OPC (all variants), Markdown, and Plain text, and for nothing else",
+      "disposition": "SUPPORTED",
+      "evidence": "Aspose.Words/RW/Factories/ReaderFactory.cs, CreateReader(): returns a real reader (OpenXmlDocumentReader) only for LoadFormat.Docx/Docm/Dotx/Dotm/FlatOpc/FlatOpcMacroEnabled/FlatOpcTemplate/FlatOpcTemplateMacroEnabled, a real TxtReader for LoadFormat.Text, and a real MarkdownReader for LoadFormat.Markdown. Every other case explicitly throws `new NotSupportedException(\"FOSS\")` -- Doc/Dot/DocPreWord60, Html, Mhtml, Mobi, Azw3, Chm, Rtf, WordML, Odt/Ott, Pdf, Xml, MsWorks -- and the default case throws UnsupportedFileFormatException. Exact 1:1 match to the README's Supported Formats table, despite FileFormatDetector.cs (the format-sniffing layer) being able to *recognize* many more formats (Doc, Rtf, Html, Odt, Pdf, etc.) than the reader factory will actually load -- consistent with the README's own 'the engine underneath already knows how to handle far more' framing."
+    },
+    {
+      "id": "F-FORMATS-SAVE",
+      "claim": "Supported formats table: Save column is checked (Yes) for DOCX/DOCM/DOTX/DOTM, Flat OPC (all variants), Markdown, and Plain text, and for nothing else",
+      "disposition": "SUPPORTED",
+      "evidence": "Aspose.Words/RW/Factories/WriterFactory.cs, CreateWriter(): returns a real DocxWriter only for SaveFormat.Docx/Docm/Dotx/Dotm/FlatOpc/FlatOpcMacroEnabled/FlatOpcTemplate/FlatOpcTemplateMacroEnabled, a real TxtWriter for SaveFormat.Text, a real MarkdownWriter for SaveFormat.Markdown. Every other SaveFormat value present in the enum (Doc/Dot, Rtf, WordML, Pdf, Ps, Pcl, Xps/OpenXps, XamlFixed, Svg, HtmlFixed, Html, Mhtml, Odt/Ott, Epub, Azw3, Mobi, XamlFlow/XamlFlowPack, every raster/vector image format, Xlsx, Docling) explicitly throws `new NotSupportedException(\"FOSS\")`. Exact 1:1 match to the README's Supported Formats table Save column."
+    },
+    {
+      "id": "F-FIELD-NUMPAGES-ZERO",
+      "claim": "Values that depend on page layout (such as page numbers in a TOC) come out as placeholders; What's not included section specifically states layout-dependent field values 'evaluate to 0 rather than being computed'",
+      "disposition": "SUPPORTED",
+      "evidence": "Aspose.Words/Model/Fields/Fields/DocumentInformation/FieldNumPages.cs: the NUMPAGES field's result provider is hardcoded -- `// FOSS` followed by `return new Int32Constant(0);` -- unconditionally, regardless of the document's actual page count. The class comment even says 'Actually updated by the layout engine' (i.e. in the commercial product), confirming this is a deliberate FOSS-edition stub, not a bug."
+    },
+    {
+      "id": "F-SIGN-CREATE-DISABLED",
+      "claim": "'Creating new signatures is not included in this edition'",
+      "disposition": "SUPPORTED",
+      "evidence": "Aspose.Words/Model/DigitalSignatures/DigitalSignatureUtil.cs, SignStreams(): every single LoadFormat branch it handles (Doc/Dot; Docx/Dotx/Docm/Dotm; Odt/Ott) is marked `// FOSS` and unconditionally throws `new NotSupportedException(\"FOSS\")`, with no format left functional -- signing is completely disabled across the whole format surface, not just DOCX."
+    },
+    {
+      "id": "F-SIGN-VERIFY-REMOVE-WORK",
+      "claim": "'Verify digital signatures: check whether a DOCX is signed and untampered, inspect the certificates, or remove signatures'",
+      "disposition": "SUPPORTED",
+      "evidence": "Same file, DigitalSignatureUtil.LoadSignatures() has a real, non-stub implementation for LoadFormat.Doc/Dot/Docx/Dotx/Dotm/Docm/Odt/Ott (loads the document and returns its real DigitalSignatures collection); RemoveAllSignatures() has a real, format-specific implementation that physically removes the XML-DSig/CryptoAPI signature storage for Doc/Dot (structured-storage removal) and the signature parts + relationships for Docx/Dotx/Docm/Dotm (OPC package surgery), only throwing NotSupportedException for Odt/Ott removal specifically. Verification and removal are real working code paths, distinct from the universally-disabled Sign() path (F-SIGN-CREATE-DISABLED)."
+    },
+    {
+      "id": "F-APPENDDOCUMENT",
+      "claim": "Combine and reorganize documents: append, clone, and import content between documents (and the 'Merge Two Documents' example: `main.AppendDocument(appendix, ImportFormatMode.KeepSourceFormatting)`)",
+      "disposition": "SUPPORTED",
+      "evidence": "Aspose.Words/Model/Document/Document.cs lines 1243-1259: `public void AppendDocument(Document srcDoc, ImportFormatMode importFormatMode)` and the 3-argument overload both exist, with a real implementation delegating to `DocumentInserter.AppendDocument(srcDoc, importFormatMode, importFormatOptions)` -- not a stub."
+    },
+    {
+      "id": "F-ACCEPTALLREVISIONS",
+      "claim": "'Work with tracked changes: inspect, accept, or reject revisions' and the 'Accept All Tracked Changes' example: `doc.AcceptAllRevisions()`",
+      "disposition": "SUPPORTED",
+      "evidence": "Aspose.Words/Model/Document/Document.cs lines 1544-1547: `public void AcceptAllRevisions() { Revisions.AcceptAll(); }` -- exists exactly as documented, delegating to the real RevisionCollection.AcceptAll() implementation."
+    },
+    {
+      "id": "F-APITYPE-COUNT-SELFCONSISTENCY",
+      "claim": "The API Reference section states 'The full surface totals 615 public types across the Core API, interfaces, and enumerations', while the separate Documentation & Resources section states the Full API reference link covers 'all 617 public types' -- these are two different counts for the same stated quantity within the same document",
+      "disposition": "CONTRADICTED",
+      "evidence": "Independently recounted the README's own API Reference table rows from the fetched README blob (not taken on faith): Core API table rows = 379 (grep count of lines matching '^| `' across the Core API block), Interfaces table rows = 26, Enumerations table rows = 210. 379 + 26 + 210 = 615 exactly, matching the API Reference section's own '615 public types' sentence and NOT matching the Documentation & Resources section's '617 public types' sentence two sections later in the same file. This is an internal self-inconsistency within the live README, independently resolved in favor of 615 by directly counting the table the README itself presents as authoritative."
+    }
+  ]
+}

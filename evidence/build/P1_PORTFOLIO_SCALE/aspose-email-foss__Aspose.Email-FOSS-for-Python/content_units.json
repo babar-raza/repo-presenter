@@ -1,0 +1,33 @@
+{
+  "repository": "aspose-email-foss/Aspose.Email-FOSS-for-Python",
+  "source_revision": "10a906b48c0c11005c4d93b524e4431901c9717c",
+  "note": "Mission section 7 step 3 content-unit inventory. Case A. Zero CONTRADICTED facts this session; every unit below is RETAIN_VERBATIM.",
+  "units": [
+    {"id": "U-H1", "unit": "H1 title + badge row + banner", "disposition": "RETAIN_VERBATIM", "reason": "Badge order (PyPI version, Python versions, Build, license, contributors) matches the fixed-core contract; PyPI/Python-version badges consistent with F-PKG-VERSION-REQUIRES-PYTHON-NODEPS and F-CI-PYTHON-VERSION-MATRIX."},
+    {"id": "U-OPENING", "unit": "Opening paragraph", "disposition": "RETAIN_VERBATIM", "reason": "Pure-Python, CFB/MSG processing, two-way EmailMessage conversion -- all confirmed by direct execution this session."},
+    {"id": "U-NAV", "unit": "Navigation list", "disposition": "RETAIN_VERBATIM", "reason": "Matches the fixed-core section set exactly."},
+    {"id": "U-GLANCE", "unit": "At a Glance mermaid diagram", "disposition": "RETAIN_VERBATIM", "reason": "Starting Points run left-to-right, Capabilities/Outputs top-to-bottom within their own subgraphs, per docs/MISSION_AUTHORITY.md R7; to_email_message/from_email_message nodes both confirmed working by execution."},
+    {"id": "U-KEYCAP-ALL", "unit": "Key Capabilities bullets (CFB read/write, MSG low-level, MapiMessage high-level, attachments incl. embedded, EmailMessage bridge, Outlook compatibility defaults)", "disposition": "RETAIN_VERBATIM", "reason": "Every bullet traces to a SUPPORTED fact: F-CFB-BUILD-EXAMPLE-WORKS, F-MSGREADER-INSPECT-EXAMPLE-WORKS, F-QUICKSTART-WORKS, F-HTML-BODY-AND-EMBEDDED-ATTACHMENT-WORK. The 'Outlook-oriented compatibility defaults' bullet corresponds to the repository's own passing test test_new_messages_emit_minimal_outlook_compatibility_defaults (observed in the real test run), not independently re-derived from first principles but not contradicted either."},
+    {"id": "U-INSTALL", "unit": "Installation section", "disposition": "RETAIN_VERBATIM", "reason": "F-PKG-VERSION-REQUIRES-PYTHON-NODEPS SUPPORTED against live PyPI metadata."},
+    {"id": "U-DEPS", "unit": "Dependencies section", "disposition": "RETAIN_VERBATIM", "reason": "F-PKG-VERSION-REQUIRES-PYTHON-NODEPS SUPPORTED (requires_dist null, pure Python, no compiled extensions -- confirmed by a clean pip install producing no extra wheels)."},
+    {"id": "U-QUICKSTART", "unit": "Quick Start examples (read subject; create+save+convert)", "disposition": "RETAIN_VERBATIM", "reason": "F-QUICKSTART-WORKS SUPPORTED by direct, verbatim execution against the real installed package."},
+    {"id": "U-EXAMPLES-MSG-TO-EML", "unit": "Additional Examples: Convert MSG to EML", "disposition": "RETAIN_VERBATIM", "reason": "Exercised as part of F-QUICKSTART-WORKS (the Quick Start example itself performs this exact conversion); separately confirmed via the generated hello.eml's well-formed MIME structure."},
+    {"id": "U-EXAMPLES-EML-TO-MSG", "unit": "Additional Examples: Convert EML to MSG", "disposition": "RETAIN_VERBATIM", "reason": "F-EML-TO-MSG-ROUNDTRIP-WORKS SUPPORTED by direct, verbatim execution."},
+    {"id": "U-EXAMPLES-INSPECT", "unit": "Additional Examples: Inspect Low-Level MSG and CFB Structure", "disposition": "RETAIN_VERBATIM", "reason": "F-MSGREADER-INSPECT-EXAMPLE-WORKS SUPPORTED by direct, verbatim execution with plausible, internally-consistent output."},
+    {"id": "U-EXAMPLES-CFB-BUILD", "unit": "Additional Examples: Build a CFB Container Directly", "disposition": "RETAIN_VERBATIM", "reason": "F-CFB-BUILD-EXAMPLE-WORKS SUPPORTED by direct, verbatim execution -- round-tripped b'hello' exactly."},
+    {"id": "U-APIREF-INTRO", "unit": "API Reference intro paragraph", "disposition": "RETAIN_VERBATIM", "reason": "Describes the three-layer package structure (high-level MapiMessage, low-level MSG, low-level CFB), consistent with every example run this session."},
+    {"id": "U-APIREF-TABLES", "unit": "API Reference class/enum tables + Detailed Member Reference", "disposition": "RETAIN_VERBATIM", "reason": "MapiMessage, MapiAttachment, MapiNamedProperty, MsgReader, CFBReader/CFBWriter member signatures all exercised directly this session (create, from_file, set_property, add_recipient, add_attachment, add_embedded_message_attachment, to_email_message, from_email_message, set_named_property, get_named_property, CFBStorage/CFBStream/CFBDocument/CFBWriter/CFBReader) and all worked exactly as listed. Row counts not independently re-tallied against source this session (unlike the sibling .NET and C++ repositories, where the public-type count was independently recomputed) -- a future recheck could add that same cross-check here."},
+    {"id": "U-DOCS-RESOURCES", "unit": "Documentation & Resources section", "disposition": "RETAIN_VERBATIM", "reason": "Links not independently re-verified for liveness this session; '30 public types' count not independently re-tallied (see U-APIREF-TABLES note)."},
+    {"id": "U-SCOPE-LIMITATIONS", "unit": "Scope and Limitations section (4 bullets + Enterprise Edition cross-link)", "disposition": "RETAIN_VERBATIM", "reason": "F-ELM-NOT-IMPLEMENTED-DISCLOSURE-HONEST SUPPORTED by direct execution (no load_from_eml() method exists; the documented EML path genuinely goes through Python's email package). The other three bullets (no mail-server protocols, no TNEF, no calendar API) not independently re-executed but not contradicted by anything found, and consistent with the confirmed pure-Python/no-deps scope."},
+    {"id": "U-DEVTEST", "unit": "Development and Testing section", "disposition": "RETAIN_VERBATIM", "reason": "F-TEST-SUITE-PASSES and F-CI-PYTHON-VERSION-MATRIX both SUPPORTED by direct execution and direct source read respectively."},
+    {"id": "U-LICENSE", "unit": "License section", "disposition": "RETAIN_VERBATIM", "reason": "MIT license; LICENSE file referenced and badge present; not independently re-read this session but no contradicting evidence."}
+  ],
+  "summary": {
+    "total_units": 17,
+    "retain_verbatim": 17,
+    "retain_corrected": 0,
+    "add": 0,
+    "omit": 0,
+    "supersede": 0
+  }
+}

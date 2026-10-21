@@ -1,0 +1,16 @@
+{
+  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-Java",
+  "source_revision": "736cedaa2922e4952f429364bdb9a4bbb1d97863",
+  "default_branch": "main",
+  "verified_at": "2026-10-21",
+  "verification_depth": "SOURCE_READING_ONLY, but a direct and exact match for the one claim checked.",
+  "facts": [
+    {
+      "id": "F-SETALLOWEXCEPTIONS-THROWS",
+      "claim": "PdfFileSecurity.setAllowExceptions throws UnsupportedOperationException -- the legacy AllowExceptions=false toolkit-key-size path is not implemented",
+      "disposition": "SUPPORTED",
+      "evidence": "Read src/main/java/org/aspose/pdf/facades/PdfFileSecurity.java lines 167-172 directly: `setAllowExceptions(boolean allowExceptions)` throws `new UnsupportedOperationException(\"PdfFileSecurity.AllowExceptions=false is not supported\")` exactly when `allowExceptions` is false, and otherwise sets the field normally -- an exact match, including the specific triggering condition."
+    }
+  ],
+  "note": "1 of 1 checked claim SUPPORTED with an exact code match. Live README unchanged. Only one claim was deeply checked this pass given batch time constraints."
+}

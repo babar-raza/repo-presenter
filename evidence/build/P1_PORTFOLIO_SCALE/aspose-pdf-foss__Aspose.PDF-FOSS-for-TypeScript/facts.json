@@ -1,0 +1,16 @@
+{
+  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
+  "source_revision": "0436d74002fd677133b33d3bf06ecceb47bbbb36",
+  "default_branch": "main",
+  "verified_at": "2026-10-21",
+  "verification_depth": "SOURCE_READING_ONLY (package.json is a direct, authoritative source for the one claim checked; no Node.js execution performed this pass).",
+  "facts": [
+    {
+      "id": "F-ZERO-DEPENDENCY",
+      "claim": "Zero-dependency TypeScript library for reading, manipulating, and writing PDF files in Node.js",
+      "disposition": "SUPPORTED",
+      "evidence": "package.json parsed directly: `dependencies` key is entirely absent (None in Python's json.load, i.e. not present in the object at all); only `devDependencies` exist (@types/node, tsx, typescript, vitest -- all build/test tooling, not runtime dependencies). `description` field in package.json itself also independently says 'zero-dependency', consistent with the README."
+    }
+  ],
+  "note": "1 of 1 checked claim SUPPORTED. Live README unchanged. This is the largest README in the batch (4663 lines) -- investigated why: it has roughly 50 Additional-Examples subsections (lines ~344-3373) covering a genuinely broad feature surface (forms, annotations, AI integration, barcodes, tables, HTML/Markdown export, and more), not duplication. Confirmed the length is correctly managed per mission section 7's collapse rule: Key Capabilities, Additional Examples, API Reference, and Scope and Limitations are each wrapped in their own <details><summary> block (4 collapse points found), so the document stays navigable despite its size -- a structural check that passed, not just a line-count observation."
+}

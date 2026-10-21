@@ -1,0 +1,47 @@
+{
+  "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Python",
+  "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
+  "lane": "L+R",
+  "candidate": "lane_l_candidate.md (== lane_r_candidate.md, byte-identical)",
+  "facts": "facts.json",
+  "checks": [
+    {
+      "id": "C1_EVERY_EDIT_TRACES_TO_A_FACT",
+      "result": "PASS",
+      "detail": "Both hunks in lane_l_candidate.diff trace to the single CONTRADICTED fact, F-PYTHON-VERSION-CONTRADICTION: opening paragraph '...runs on Python 3.7+...' -> '3.8+', and Installation section 'Requires Python 3.7 or later.' -> 'Requires Python 3.8 or later.'. No other hunks exist."
+    },
+    {
+      "id": "C2_NO_NEW_UNVERIFIED_CLAIM_INTRODUCED",
+      "result": "PASS",
+      "detail": "The edit only changes a version number already present in the README to match PyPI's published metadata; it introduces no new claim."
+    },
+    {
+      "id": "C3_DIFF_SCOPED_TO_EDIT_SPANS",
+      "result": "PASS",
+      "detail": "Re-ran diff myself between the freshly fetched live README (gh api, 252 lines, matches facts.json) and lane_l_candidate.md: exactly 2 line changes, identical in content and location to lane_l_candidate.diff. No reflow, reordering, or incidental rewording anywhere else in the 252-line file."
+    },
+    {
+      "id": "C4_UNVERIFIED_CLAIMS_LEFT_UNTOUCHED",
+      "result": "PASS",
+      "detail": "F-PSDIMAGE-ATTRIBUTES notes 5 named attributes (version, is_psb, layer_count, resource_count, image_data_kind) were not individually confirmed this pass -- correctly left UNVERIFIED-but-unflagged rather than corrected or asserted. content_units.json's U-APIREF and U-SCOPE units are correctly left RETAIN_VERBATIM with an explicit 'not independently re-derived' caveat, not silently presented as verified."
+    },
+    {
+      "id": "C5_INDEPENDENT_SPOT_CHECK",
+      "result": "CONFIRMED",
+      "detail": "Independently queried https://pypi.org/pypi/aspose-psd-foss/json live: info.requires_python == '>=3.8', info.version == '26.10.0'. Exact match to facts.json's claim and to the corrected README text. This is the most consequential fact (a reader on Python 3.7 following the README's original instructions would have pip refuse the install) and it reproduces cleanly from scratch."
+    },
+    {
+      "id": "C6_LANE_R_PLAN_HOLDS",
+      "result": "PASS",
+      "detail": "lane_r_plan.md correctly classifies this as case A (full fixed-core apparatus already present, one narrow confirmed defect, not a structural gap) and lane_r_candidate.md is confirmed byte-identical to lane_l_candidate.md. The plan correctly notes it does NOT borrow structure from the sibling .NET repo's gap, avoiding cross-contamination between independently-assessed repos."
+    },
+    {
+      "id": "C7_UPSTREAM_ISSUE_HANDLING",
+      "result": "PASS",
+      "detail": "draft_upstream_issue.md is explicitly marked NOT FILED pending owner authorization per mission section 9, and includes its own dedup check (gh issue list, 2 unrelated existing issues, no match). Correctly treated as a separate effect path from the README correction itself, not conflated with it."
+    }
+  ],
+  "findings": [],
+  "verdict": "ACCEPT",
+  "verdict_rationale": "The sole CONTRADICTED fact is independently reproduced from live PyPI metadata (not reused from facts.json's own claim), the diff is proven byte-exact against a freshly re-fetched live README with no scope creep, and genuinely unverified sub-claims (several PsdImage attributes) are correctly left uncorrected rather than silently validated. Lane R's trivial-convergence claim is directly checked and holds (byte-identical candidates). The upstream defect report is correctly gated behind owner authorization rather than auto-filed."
+}

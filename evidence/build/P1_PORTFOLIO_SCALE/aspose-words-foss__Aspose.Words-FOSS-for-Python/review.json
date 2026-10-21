@@ -1,0 +1,54 @@
+{
+  "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Python",
+  "source_revision": "2d2efee2787cb9e56d071d17f8d7b740dce8b784",
+  "lane": "L+R",
+  "reviewer_note": "Independent review performed in this session, including a from-scratch reproduction of the critical RTF-loading defect (fresh pip install of the real published PyPI wheel, a hand-written standard plain-text RTF file different from the one in facts.json's own prose) and an independent re-run of the dedup search against the upstream issue tracker.",
+  "candidate": "lane_l_candidate.md",
+  "facts": "facts.json",
+  "checks": [
+    {
+      "id": "C1_EVERY_EDIT_TRACES_TO_A_FACT",
+      "result": "PASS",
+      "detail": "lane_l_candidate.diff shows exactly one hunk: a new 6-line bullet added to Scope and Limitations. Re-fetched the live README fresh via `gh api repos/aspose-words-foss/Aspose.Words-FOSS-for-Python/readme` and diffed it against lane_l_candidate.md myself (using --strip-trailing-cr, since the candidate file carries CRLF line endings the live blob does not -- a cosmetic difference only, not a content one): the only substantive difference is the same 6-line bullet, matching the .diff file exactly. Traces to F-RTF-STANDARD-FAILS (CONTRADICTED)."
+    },
+    {
+      "id": "C2_INDEPENDENT_REPRODUCTION_OF_THE_DEFECT",
+      "result": "PASS",
+      "detail": "Installed the real published PyPI wheel aspose-words-foss==26.7.0 fresh into an isolated venv (overriding the <3.13 requires-python cap, same as facts.json's own method). Constructed my own hand-written standard plain-text RTF file (different literal content from facts.json's example, same `{\\rtf1...}` tagged format), independent of any fixture in the repo. `aw.Document('plain_standard.rtf')` raised `olefile.olefile.NotOleFileError: not an OLE2 structured storage file`; the stream/magic-byte path (`io.FileIO` + `aw.Document(stream)`) raised the identical error. Both reproductions match facts.json's claimed failure mode exactly."
+    },
+    {
+      "id": "C3_DEDUP_CLAIM_INDEPENDENTLY_RE_VERIFIED",
+      "result": "PASS",
+      "detail": "Ran `gh issue list --repo aspose-words-foss/Aspose.Words-FOSS-for-Python --state all --search rtf` myself: returns one open issue, #3, 'Chinese text is lost in PDF and text extraction; standard RTF fails to load', filed by an external user (shenyankm), not by the repository-presenter pipeline itself. `gh issue view 3` confirms its body explicitly states 'Loading a standard RTF file raises NotOleFileError. The existing .rtf example fixture is actually an OLE/DOC file, so it does not cover standard RTF' -- matching facts.json's root-cause analysis almost verbatim. This is a stronger dedup confirmation than a self-filed issue would be, since it is independent third-party corroboration."
+    },
+    {
+      "id": "C4_NO_FALSE_POSITIVE_NEGATIVE",
+      "result": "PASS",
+      "detail": "F-API-PUBLIC-TYPE-COUNT (146 public types) is correctly left UNVERIFIED (raw grep found 193 raw class definitions, consistent with but not proving a curated 146 figure) rather than silently asserted true or false; content_units.json shows 10 UNVERIFIED_BUT_UNCHALLENGED units and the corresponding README sentence is left untouched. All other 13 checked facts are SUPPORTED and correctly left untouched; the one CONTRADICTED fact is the only edit made."
+    },
+    {
+      "id": "C5_LANE_R_REASONING_HOLDS",
+      "result": "PASS",
+      "detail": "lane_r_plan.md's Case-A classification and convergence claim were verified directly: `diff lane_l_candidate.md lane_r_candidate.md` produces no output -- byte-identical, as claimed."
+    },
+    {
+      "id": "C6_MISSION_AUTHORITY_ENTERPRISE_EDITION_NAMING",
+      "result": "FAIL",
+      "detail": "MISSION_AUTHORITY.md requires naming the commercial product 'Enterprise Edition' everywhere, with no substitute wording such as 'commercial'. The candidate gets this right once, at line 636 ('[Aspose.Words for Python — Enterprise Edition](https://products.aspose.com/words/python-net/)'), but elsewhere substitutes 'commercial' as the product's name instead: line 11 ('a compatible API shape... to the commercial Aspose.Words for Python', in the opening paragraph -- a visitor-facing identity position), line 615 ('API compatibility with the commercial product'), and line 625 ('API forward-compatibility with the commercial Aspose.Words API'). Contrast with the two precedent repositories read for this review (aspose-3d-foss Python and aspose-cells-foss Go), where 'commercial' appears only inside the one Enterprise Edition call-out sentence itself and in MIT license boilerplate -- never as a standalone substitute product name. Line 608-609 ('the commercial [`aspose-words`](...) package') is more defensible, since `aspose-words` there names a specific, different, technical package (the via-.NET bridge package used by ApiExamples/), which MISSION_AUTHORITY's package/identifier exception may cover -- but lines 11, 615, and 625 are plain visitor-facing identity references, not package identifiers."
+    }
+  ],
+  "findings": [
+    {
+      "id": "F1_ENTERPRISE_EDITION_NAMING_PARTIALLY_APPLIED",
+      "severity": "blocking",
+      "detail": "Three of four non-license 'commercial' usages in the candidate substitute that word for the required 'Enterprise Edition' naming, including in the README's own opening paragraph (line 11). This is the same category of finding independently raised in this session's review of aspose-words-foss/Aspose.Words-FOSS-for-.NET (zero compliant usages there; here, one compliant usage exists alongside three non-compliant ones, so the gap is partial rather than total but still fails the 'everywhere' requirement). Neither facts.json, content_units.json, nor lane_r_plan.md registers naming-standard compliance as a check dimension for this repository. Fix shape: line 11 -> '...to the commercial [Aspose.Words for Python — Enterprise Edition](https://products.aspose.com/words/python-net/).' (or equivalent phrasing using the full Enterprise Edition name); lines 615 and 625 similarly need the product's full name with the Enterprise Edition suffix in place of the bare word 'commercial'.",
+      "outcome": "fixed"
+    }
+  ],
+  "verdict": "ACCEPT",
+  "verdict_rationale": "F1 (partial Enterprise Edition naming gap) was fixed by the supervisor session 2026-10-21. The 3 non-compliant 'commercial'-as-name usages were corrected in lane_l_candidate.md: the opening paragraph (line 11, 'to the commercial Aspose.Words for Python' -> 'to Aspose.Words for Python — Enterprise Edition'), the SaveFormat.DOC bullet (line 615, 'API compatibility with the commercial product' -> 'API compatibility with Aspose.Words for Python — Enterprise Edition'), and the PdfSaveOptions bullet (line 625, 'forward-compatibility with the commercial Aspose.Words API' -> 'forward-compatibility with the Aspose.Words for Python — Enterprise Edition API'). The already-compliant Enterprise Edition reference (line 636) and the package-identifier usage (line 608-609, 'the commercial [`aspose-words`](...) package', which names a specific different technical package and falls under MISSION_AUTHORITY's identifier exception) were left untouched, exactly as the finding scoped them. The pre-existing, independently-reproduced RTF-loading defect fix (the new Scope and Limitations bullet citing issue #3) was left exactly as is, per instruction -- not re-verified again beyond this session's own re-confirmation that it is still present and unchanged. A fresh `diff -u --strip-trailing-cr` against a newly re-fetched live README (source_revision reconfirmed unchanged -- no drift) shows exactly these 3 naming corrections plus the pre-existing RTF bullet, and nothing else; lane_l_candidate.diff has been rewritten to cover all 4 hunks against the live blob. Verdict updated from REJECT to ACCEPT after the fix; this is not a retroactive downgrade of the finding -- F1 stands as correctly identified and is marked 'fixed', not erased, per this project's AGENTS.md re-reporting discipline. Everything else the original review found sound (the RTF defect reproduction, the independent dedup confirmation against issue #3, Lane R's byte-identical convergence, and the correctly-left-UNVERIFIED public-type-count fact) is unchanged and still holds.",
+  "rerun_proof": {
+    "status": "NOT_YET_PROVEN",
+    "note": "No automated no-op/rerun tooling exists yet for this repository. This review's reproduction was performed manually from a fresh pip install in this session; recorded honestly, not claimed as automated."
+  }
+}

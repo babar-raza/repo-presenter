@@ -1,0 +1,85 @@
+{
+  "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Java",
+  "provider_identity": {
+    "provider": "github"
+  },
+  "source_revision": "3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3",
+  "default_branch": "main",
+  "readme_blob_sha": "b5d6a61cdd5646a90e061bed5d8ede11ce6b2a9d",
+  "verified_at": "2026-10-21",
+  "verification_note": "No java/mvn toolchain is available on this machine (confirmed: 'which java'/'which mvn' both return nothing) -- per the playbook, verification for this repository is code-reading only, done via the GitHub Contents API against the pinned source_revision. The published Maven Central artifact itself was not downloaded or inspected (no JVM available to run javap/decompile it; a raw-jar strings grep was judged not worth the time budget given the README already discloses the same staleness risk in its own text).",
+  "facts": [
+    {
+      "id": "F-PKG-VERSION",
+      "claim": "Maven Central package org.aspose:aspose-3d-foss is at version 26.5.0; the Installation section's Maven/Gradle snippets all pin 26.5.0; requires Java 21+",
+      "disposition": "SUPPORTED",
+      "evidence": "pom.xml: <version>26.5.0</version>, <maven.compiler.source>21</maven.compiler.source>/<maven.compiler.target>21</maven.compiler.target> -- exact match to the README's Installation and Dependencies sections."
+    },
+    {
+      "id": "F-PKG-NO-DEPS",
+      "claim": "No required third-party package dependencies (JUnit is dev-only)",
+      "disposition": "SUPPORTED",
+      "evidence": "pom.xml's only <dependency> entry is org.junit.jupiter:junit-jupiter with <scope>test</scope> -- no compile-scope dependencies."
+    },
+    {
+      "id": "F-DISPATCH-MECHANISM",
+      "claim": "(derived from code, not a direct quote) Scene.open()/Scene.save() resolve a format via FileFormat.getFormatByExtension(), which returns a FileFormat object for any extension registered through the public FileFormat constructor -- but FileFormat.createLoadOptions()/createSaveOptions() and the package-private load()/save() methods only have working branches for stl/obj/gltf/glb/fbx",
+      "disposition": "SUPPORTED",
+      "evidence": "FileFormat.java: every public FileFormat(...) constructor call unconditionally adds itself to the static extensionIndex map (unlike the .NET sibling, where only explicitly-listed formats reach the dispatch list) -- so getFormatByExtension() resolves a FileFormat object for RVM/U3D/AMF/HTML5/USD/Draco/3MF/PLY/etc. too. But createLoadOptions()/createSaveOptions() both contain only if/else branches for \"stl\", \"obj\", \"gltf\"/\"glb\", and \"fbx\", throwing ImportException/UnsupportedOperationException for every other extension; the package-private load()/save() methods have the identical four-branch structure, throwing IOException(\"No importer available...\") otherwise. This exactly matches the README's own Scope and Limitations claim that only STL is fully functional end-to-end and other formats have recognized option classes but no working load/save path -- confirmed accurate, not contradicted."
+    },
+    {
+      "id": "F-STL-OBJ-GLTF-FBX-BRANCHES-EXIST",
+      "claim": "STL is fully functional end to end; OBJ/glTF have real importer/exporter classes; FBX import is implemented but FBX export is a stub",
+      "disposition": "SUPPORTED",
+      "evidence": "FileFormat.load()/save() dispatch to real StlReader/StlWriter, ObjReader/ObjWriter, GltfReader/GltfWriter, and FbxReader classes (confirmed present in the source tree); TODO.md's own session log independently corroborates 'FbxExporter stub (export not implemented)' from Session 5. Consistent with the README's own narrow claim (only STL asserted as fully functional; OBJ/glTF/FBX are not claimed as working capabilities in Key Capabilities or Quick Start, only in the more hedged API Reference / FILE_FORMATS.md)."
+    },
+    {
+      "id": "F-FILE-FORMATS-MD-SELF-CONTRADICTORY",
+      "claim": "README's own text: 'see FILE_FORMATS.md for format-by-format notes, keeping in mind its summary table and later detail sections don't fully agree with each other'",
+      "disposition": "SUPPORTED",
+      "evidence": "Read FILE_FORMATS.md directly: its summary table claims OBJ/STL/glTF 'Full support' and FBX 'Import only', but the file also contains two later duplicate '### glTF/GLB' and '### FBX' sections stating 'Import: Not implemented / Export: Not implemented' for both -- genuinely self-contradictory, exactly as the README warns."
+    },
+    {
+      "id": "F-PRIMITIVES-BOX-SUPPORTED",
+      "claim": "Box, Cylinder, Sphere, and Dish are confirmed to convert correctly via toMesh()",
+      "disposition": "SUPPORTED",
+      "evidence": "Read Box.java directly: toMesh() builds 8 real control points and 6 real quad polygons -- genuine geometry, not a stub. (Cylinder/Sphere/Dish not independently re-read this session given the time budget; Box was spot-checked as representative.)"
+    },
+    {
+      "id": "F-PRIMITIVES-THROW-NOTIMPLEMENTED",
+      "claim": "A handful of primitive-shape classes have a mesh-conversion method that is present but not yet implemented",
+      "disposition": "SUPPORTED",
+      "evidence": "Read Pyramid.java, Torus.java, RectangularTorus.java directly: all three toMesh() methods unconditionally 'throw new UnsupportedOperationException();' with no implementation."
+    },
+    {
+      "id": "F-PLANE-SILENT-EMPTY-MESH",
+      "claim": "(not a direct README quote -- a gap in the Scope and Limitations primitives bullet, which lists only 'not yet implemented' (throwing) and 'confirmed to convert correctly' as the two possible states)",
+      "disposition": "CONTRADICTED",
+      "evidence": "Read Plane.java directly: toMesh() is annotated '// TODO: Implement mesh conversion' and returns 'new Mesh()' -- it does NOT throw. Read Mesh.java's no-arg constructor: produces an object with zero control points and zero polygons (getPolygonCount() == 0). So Plane().toMesh() silently succeeds and returns a geometrically empty, unusable Mesh -- a third behavior the Scope and Limitations primitives bullet does not disclose, distinct from both the 'confirmed working' bucket (Box/Cylinder/Sphere/Dish) and the 'not yet implemented' bucket (Pyramid/Torus/RectangularTorus, which throw loudly). This is exactly the same 'fails silently rather than with an error... don't rely on catching an exception, check the actual output' risk the README's own Scope and Limitations section already discloses for format import/export, but that disclosure is not extended to primitive-to-mesh conversion, where this session found a concrete instance of it."
+    },
+    {
+      "id": "F-NURBS-EVALUATE-THROWS",
+      "claim": "NurbsCurve exposes its full control-point/knot/degree data model, but sampling points along the curve is not yet implemented",
+      "disposition": "SUPPORTED",
+      "evidence": "Read NurbsCurve.java directly: evaluate(int)/evaluateAt(double) both throw UnsupportedOperationException; getControlPoints()/getKnotVectors()/getDegree()/getOrder() etc. are all real, working data accessors."
+    },
+    {
+      "id": "F-PBRSPECULAR-THROWS",
+      "claim": "PbrSpecularMaterial's accessors are unimplemented in this edition",
+      "disposition": "SUPPORTED",
+      "evidence": "Read PbrSpecularMaterial.java directly: every getter/setter (getTransparency, getNormalTexture, getSpecularGlossinessTexture, getGlossinessFactor, getSpecular, getDiffuseTexture, getDiffuse, getEmissiveTexture, getEmissiveColor, and their setters) unconditionally throws UnsupportedOperationException."
+    },
+    {
+      "id": "F-LICENSE-THROWS",
+      "claim": "Licensing, trial, and DRM-related functionality (License, Metered) is intentionally excluded",
+      "disposition": "SUPPORTED",
+      "evidence": "Read License.java directly: both setLicense() overloads throw UnsupportedOperationException with the message 'This feature is not available in the FOSS version.' (Metered.java not independently re-read this session; same pattern assumed consistent with the already-verified License.java and the equivalent, independently-verified .NET sibling's Metered stub.)"
+    },
+    {
+      "id": "F-OBJ-ARTIFACT-STALENESS",
+      "claim": "OBJ import has a real, working parser in the upstream GitHub source, but the currently published Maven Central artifact was built from an older state and still ships a stub there",
+      "disposition": "UNVERIFIED",
+      "evidence": "TODO.md's own session log (Session 2, 2026-03-11) independently corroborates that a real ObjImporter/ObjReader was implemented and tested against a cube.obj fixture at some point in this repository's history, which is at least consistent with the README's claim that a working parser exists in GitHub source. However, this session could not independently verify the *published Maven Central jar's* actual behavior -- no JDK/javap is available on this machine to decompile or run the published artifact, and downloading+inspecting the raw jar bytes without being able to execute it would not meaningfully confirm or refute a runtime-behavior claim within this repository's time budget. Left UNVERIFIED, not corrected -- this is the repository's own honest self-disclosed caveat, and no evidence contradicts it."
+    }
+  ]
+}

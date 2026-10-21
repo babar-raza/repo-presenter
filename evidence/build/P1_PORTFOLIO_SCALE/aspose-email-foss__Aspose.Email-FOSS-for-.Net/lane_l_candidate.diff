@@ -1,0 +1,18 @@
+--- live_readme.md	2026-10-21 17:57:54.153597900 +0500
++++ lane_l_candidate.md	2026-10-21 18:03:25.133826300 +0500
+@@ -303,6 +303,15 @@
+ dotnet test tests/Aspose.Email.Foss.Tests/Aspose.Email.Foss.Tests.csproj
+ ```
+ 
++On a Windows checkout with Git's `core.autocrlf=true` (the common Windows default), 2 of
++these 20 tests currently fail — `MapiMessageEmlTests.LoadFromEmlHandlesFoldedHeadersAndBase64Text`
++and `MapiMessageEmlTests.LoadFromEmlHandlesMultipartRelatedInlineAttachment`. Both build their
++synthetic EML fixture from a raw string literal and then call `.Replace("\n", "\r\n")` on it;
++when the source file itself already has CRLF line endings (what `autocrlf=true` produces), this
++doubles each line's carriage return and corrupts the fixture before the library ever parses it.
++This is a test-fixture issue, not a defect in the library's own EML/MIME parsing — a checkout with
++`core.autocrlf=false` or `input`, or LF-normalized sources, does not trigger it.
++
+ The test project covers CFB round-trips, MSG reading, and EML round-trip conversion
+ (`CfbRoundTripTests`, `MsgReaderTests`, `MapiMessageTests`, `MapiMessageEmlTests`,
+ `MetadataSmokeTests`). Three runnable example programs — `create_msg_and_eml.cs`, `msg_reader.cs`,

@@ -1,0 +1,28 @@
+{
+  "repository": "aspose-page-foss/Aspose.Page-FOSS-for-Python",
+  "source_revision": "43cef367cd0b2cf00cc03064ca9d29d1ff507967",
+  "default_branch": "main",
+  "verified_at": "2026-10-21",
+  "method": "Live GitHub Contents/Trees API reads + PyPI registry check. Source-reading verified, not execution-verified this pass.",
+  "facts": [
+    {
+      "id": "F-PKG-REAL",
+      "claim": "pip install aspose-page-foss, version badge, Python >=3.10",
+      "disposition": "SUPPORTED",
+      "evidence": "https://pypi.org/pypi/aspose-page-foss/json: version 26.9.0, requires_python >=3.10 -- matches README exactly."
+    },
+    {
+      "id": "F-PSDOCUMENT-API-REAL",
+      "claim": "PsDocument.from_file()/from_bytes()/create()/save() exist",
+      "disposition": "SUPPORTED",
+      "evidence": "src/aspose/page/ps/document.py confirmed: class PsDocument with create, from_bytes, from_file, save methods all present."
+    },
+    {
+      "id": "F-XPSDOCUMENT-MODULE-EXISTS",
+      "claim": "XpsDocument exists for reading/authoring XPS packages",
+      "disposition": "UNVERIFIED",
+      "evidence": "src/aspose/page/xps/document.py confirmed to exist as a file; the exact XpsDocument class and its from_file/create methods were not individually read this pass (time-bounded batch) -- module presence is weak positive evidence, not confirmation of the exact API shape claimed."
+    }
+  ],
+  "note_on_scope": "3 claims checked (2 confirmed, 1 partially). RenderModelBuilder, PdfWriter, RasterRenderer, the MCP server tools, and the Scope and Limitations claims (e.g. XPS-to-image always needing Skia) were not independently re-executed."
+}

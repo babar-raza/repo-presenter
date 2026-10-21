@@ -1,0 +1,42 @@
+--- a/README.md (live, blob sha 158b566437a4f3407445525748d53e7b05aef7c2)
++++ b/README.md (lane_l_candidate.md)
+@@ -8,7 +8,7 @@
+ Word documents. It reads DOCX, DOC (Word 97-2003), RTF, Markdown, and plain-text files into a
+ shared Light Document Model, and exports that model to DOCX, Markdown, PDF, or plain text — all
+ without Microsoft Word or any COM/Office automation. It follows a compatible API shape (`Document`,
+-`SaveFormat`) to the commercial Aspose.Words for Python.
++`SaveFormat`) to Aspose.Words for Python — Enterprise Edition.
+
+ ## Navigation
+
+@@ -612,18 +612,24 @@
+
+ ## Scope and Limitations
+
+-- `SaveFormat.DOC` is defined as a save-format constant for API compatibility with the commercial
+-  product, but `Document.save()` does not implement a DOC writer — `.doc` files can be read, not
+-  written. Saving with an unsupported target raises `ValueError` (`Markdown`, `Text`, `PDF`, and
+-  `DOCX` are the four save formats actually implemented).
++- `SaveFormat.DOC` is defined as a save-format constant for API compatibility with Aspose.Words for
++  Python — Enterprise Edition, but `Document.save()` does not implement a DOC writer — `.doc` files
++  can be read, not written. Saving with an unsupported target raises `ValueError` (`Markdown`,
++  `Text`, `PDF`, and `DOCX` are the four save formats actually implemented).
+ - Saving DOCX with `OoxmlSaveOptions.compliance` set to `OoxmlCompliance.ISO29500_2008_STRICT` is
+   not implemented — the writer raises `NotImplementedError` rather than silently emitting
+   non-strict output. Use `ECMA376_2006` or `ISO29500_2008_TRANSITIONAL` instead, both of which this
+   edition treats as producing the same, compliant output.
+ - Of `PdfSaveOptions`'s 17 fields, 8 — `text_compression`, `embed_full_fonts`, `use_core_fonts`,
+   `font_embedding_mode`, `page_mode`, `color_mode`, `preserve_form_fields`, and
+-  `memory_optimization` — exist for API forward-compatibility with the commercial Aspose.Words
+-  API and are not yet consumed by the PDF writer.
++  `memory_optimization` — exist for API forward-compatibility with the Aspose.Words for Python —
++  Enterprise Edition API and are not yet consumed by the PDF writer.
++- RTF support only covers RTF content stored in an OLE2/Compound File container — `RtfFileReader`
++  unconditionally delegates to `DocFileReader`, the same `olefile`-backed reader used for `.doc`.
++  A standard, plain-text RTF file (the `{\rtf1 ...}` tagged format used by virtually all real-world
++  `.rtf` files, including RTF exported by Word) raises `olefile.NotOleFileError` when loaded, by
++  file path or by stream with magic-byte auto-detection alike. Tracked upstream as
++  [issue #3](https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python/issues/3).
+
+ For DOC writing, strict ISO 29500 compliance, and the additional load/save formats and page-layout
+ features beyond this edition's scope, see

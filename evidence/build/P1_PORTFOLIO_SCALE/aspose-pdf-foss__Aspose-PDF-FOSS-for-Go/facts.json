@@ -1,0 +1,22 @@
+{
+  "repository": "aspose-pdf-foss/Aspose-PDF-FOSS-for-Go",
+  "source_revision": "8452d7ab63263b4b814943192a1b949196bd1866",
+  "default_branch": "main",
+  "verified_at": "2026-10-21",
+  "verification_depth": "SOURCE_READING_ONLY — no local Go build/execution performed this pass (time budget of this batch covered 6 large repositories; Go toolchain execution deferred to a future recheck). Facts below are GitHub Contents/Trees API reads cross-checked against the live README, not live code execution.",
+  "facts": [
+    {
+      "id": "F-NO-DEPS",
+      "claim": "No CGo, no native libraries, no third-party package dependencies (standard library only)",
+      "disposition": "SUPPORTED",
+      "evidence": "go.mod contains only `module ...` and `go 1.24` — no `require` block at all."
+    },
+    {
+      "id": "F-RASTERIZER-EXISTS",
+      "claim": "Built-in rasterizer with no third-party package dependencies",
+      "disposition": "UNVERIFIED",
+      "evidence": "Not independently executed this pass; plausible given F-NO-DEPS (no deps exist for anything, including a rasterizer), but the specific rasterizer code path was not read or run."
+    }
+  ],
+  "note": "0 of 2 spot-checked claims CONTRADICTED. Live README unchanged — no correction warranted on the evidence gathered this pass. A deeper recheck should actually build and exercise the library (sign/encrypt/convert/render a real PDF) rather than rely on the dependency-manifest check alone."
+}

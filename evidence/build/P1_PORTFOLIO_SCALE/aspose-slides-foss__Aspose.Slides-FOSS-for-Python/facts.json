@@ -1,0 +1,46 @@
+{
+  "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Python",
+  "source_revision": "4e63447ba79d1c27a5192844847d9f872c5b92ad",
+  "default_branch": "main",
+  "verified_at": "2026-10-21",
+  "method": "pip install aspose-slides-foss (26.8.0) into an isolated venv; execution-backed verification of every precise, countable claim checked below. Note: the historical mission-document citation of a '2026-09-06 Slides-Python candidate' sealed under the old repo's now-fixed reviewer bug is NOT used as input here -- verified fresh, independent of that history (docs/history-reconstruction.md in this repo has the full context if needed).",
+  "facts": [
+    {
+      "id": "F-IMPORT-PATH",
+      "claim": "import aspose.slides_foss as slides",
+      "disposition": "SUPPORTED",
+      "evidence": "Executed live: the real top-level installed module is aspose.slides_foss (a namespace package under aspose.*), matching every import statement the README's own examples use."
+    },
+    {
+      "id": "F-SAVEFORMAT-VARIANTS",
+      "claim": "Save to .pptx (default) or .pptm, .ppsx, .ppsm, .potx, .potm",
+      "disposition": "SUPPORTED",
+      "evidence": "Executed live: SaveFormat has PPTX, PPTM, PPSX, PPSM, POTX, POTM all present."
+    },
+    {
+      "id": "F-CHARTTYPE-74",
+      "claim": "Charts with 74 chart types",
+      "disposition": "SUPPORTED",
+      "evidence": "Executed live: aspose.slides_foss.charts.ChartType has exactly 74 public members."
+    },
+    {
+      "id": "F-TRANSITIONTYPE-57",
+      "claim": "57 TransitionType slide transitions, including MorphTransition",
+      "disposition": "SUPPORTED",
+      "evidence": "Executed live: aspose.slides_foss.slideshow.TransitionType has exactly 57 public members; a morph-related member confirmed present. Note: the README's own import list does not show where TransitionType actually lives (it's under .slideshow, not the top-level or .animation) -- not a README defect (it never claims an import path for this one), just a note on where this session found it."
+    },
+    {
+      "id": "F-MARKDOWN-24-FLAVORS",
+      "claim": "Markdown export in 24 flavor dialects through SaveFormat.MD and MarkdownSaveOptions, with Flavor.GITHUB usable",
+      "disposition": "SUPPORTED",
+      "evidence": "Executed live: aspose.slides_foss.export.Flavor has exactly 24 public members, and Flavor.GITHUB exists exactly as the Additional Examples section uses it."
+    },
+    {
+      "id": "F-ATTRIBUTEERROR-ON-TYPO-FALSE",
+      "claim": "Assigning to a property a shape or a formatting object does not have raises AttributeError rather than being silently accepted and discarded (so a misspelt property name fails where it is written)",
+      "disposition": "CONTRADICTED",
+      "evidence": "Never checked by the original composer (not among the 5 facts above). Independently verified 2026-10-21 in a fresh venv (pip install aspose-slides-foss 26.8.0): assigning an arbitrary nonexistent attribute to a Shape/AutoShape instance, a FillFormat instance, and a LineFormat instance each succeeded silently with no exception, and the assigned value read back correctly afterward -- reproduced across two separate fresh Python processes and, in the second, also confirmed for an underscore-prefixed attribute name (same silent-success behavior, no special-casing). `grep -rn \"__setattr__|__slots__\"` across the entire installed package tree (all .py files under aspose/slides_foss/) found zero matches: these are plain Python objects with an ordinary __dict__, so no code path exists that could raise AttributeError on an unknown attribute name. The README's claim is false; corrected in lane_l_candidate.md to state the true behavior (silent assignment, no validation or error, typo fails silently rather than being caught)."
+    }
+  ],
+  "summary": "5 precise, independently checkable claims verified this pass, all SUPPORTED, all execution-backed (not merely source-read). A 6th fact (F-ATTRIBUTEERROR-ON-TYPO-FALSE) was added 2026-10-21 by an independent re-verification pass: the README's AttributeError-on-typo claim, never checked in the original pass, was found CONTRADICTED (silent assignment, no exception, confirmed across three object types and two fresh processes; no __setattr__/__slots__ anywhere in the installed package). lane_l_candidate.md has been corrected accordingly. This is the strongest-verified repository in this batch alongside the aspose-3d-foss/Aspose.3D-FOSS-for-Python precedent, now with one corrected defect."
+}

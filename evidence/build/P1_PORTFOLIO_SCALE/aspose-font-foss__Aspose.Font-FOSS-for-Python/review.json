@@ -1,0 +1,48 @@
+{
+  "repository": "aspose-font-foss/Aspose.Font-FOSS-for-Python",
+  "source_revision": "53bdf4993ec49ed26b8b8b5f7ffc4e4f15ff7c0f",
+  "lane": "L",
+  "candidate": "lane_l_candidate.md",
+  "diff": "lane_l_candidate.diff",
+  "facts": "facts.json",
+  "checks": [
+    {
+      "id": "C1_EVERY_EDIT_TRACES_TO_A_FACT",
+      "result": "PASS",
+      "detail": "Ran `diff -u live_readme.md lane_l_candidate.md` myself and it is byte-identical to the stored lane_l_candidate.diff (single hunk, +6/-1 around line 531-539). Every line changed traces to F-PKG-NAME-WRONG-IN-README (CONTRADICTED): a new '## Installation' section with `pip install aspose-font-foss`, plus fixing the MCP extra line from `pip install \"aspose-font[mcp]\"` to `pip install \"aspose-font-foss[mcp]\"`."
+    },
+    {
+      "id": "C2_DIFF_SCOPED_TO_EDIT_SPAN",
+      "result": "PASS",
+      "detail": "Exactly one hunk, no reflow or rewording elsewhere in the 559/565-line document; the large structural-nonconformance issue (F-STRUCTURAL-NONCONFORMANCE) was correctly NOT patched in Lane L since fixing that requires a full rebuild, not a minimal fact-driven edit -- consistent with Lane L's narrower mandate."
+    },
+    {
+      "id": "C3_NO_FALSE_POSITIVE_OR_NEGATIVE",
+      "result": "PASS",
+      "detail": "facts.json explicitly scopes itself ('note_on_scope': only 2 of many claims checked this pass, everything else left UNVERIFIED not silently true/false) and the candidate correspondingly touches nothing beyond the one CONTRADICTED fact. F-IMPORTS-REAL and F-LICENSE-FILE-EXISTS are SUPPORTED and correctly untouched."
+    },
+    {
+      "id": "C4_INDEPENDENT_SPOT_CHECK (required step 4)",
+      "result": "PASS",
+      "detail": "Reproduced F-PKG-NAME-WRONG-IN-README completely from scratch: `curl -s -o /dev/null -w '%{http_code}' https://pypi.org/pypi/aspose-font/json` returned 404 (package genuinely does not exist); `curl -s https://pypi.org/pypi/aspose-font-foss/json` returned version 26.10.4, requires_python >=3.10 (package genuinely exists). Also fetched pyproject.toml at the pinned source_revision via `gh api` and confirmed `name = \"aspose-font-foss\"` matches. Also confirmed via `grep -n \"pip install\" live_readme.md` that the live README contains exactly one pip-install line (the broken MCP-extra one) and no plain base-install line anywhere -- matching facts.json's claim that a reader cannot install the package at all as originally written. CONFIRMED, not contradicted."
+    },
+    {
+      "id": "C5_STRUCTURAL_NONCONFORMANCE_CLAIM_VERIFIED",
+      "result": "PASS",
+      "detail": "Independently read the top of live_readme.md: confirmed only one unrelated badge ('Workflow: Buyer Focused'), no banner, no standard Navigation list, no At a Glance diagram, and a persona/buyer-journey structure ('Three Buyer Workflows', 'Who Is This For?') in place of the fixed-core sections. F-STRUCTURAL-NONCONFORMANCE's description matches what is actually in the file."
+    },
+    {
+      "id": "C6_LANE_R_REASONING_AND_MISSING_CANDIDATE",
+      "result": "PASS",
+      "detail": "lane_r_plan.md explicitly declares status BLOCKED_NEEDS_FULL_REBUILD and gives a specific, named follow-up item (banner/badge sourcing, ~30-class capability spot-verification, fixed-core composition around the existing persona content) rather than silently omitting lane_r_candidate.md. This is NOT a structural gap in the review sense -- it is an honest, explained non-production of a Lane R candidate, consistent with the instruction that Lane R not merely re-wrap the Lane L patch to look more complete than it is. Absence of content_units.json is consistent with no full content-unit inventory having been attempted this pass."
+    },
+    {
+      "id": "C7_SOURCE_REVISION_CURRENCY",
+      "result": "PASS",
+      "detail": "`gh api repos/aspose-font-foss/Aspose.Font-FOSS-for-Python/commits/main --jq '.sha'` returns 53bdf4993ec49ed26b8b8b5f7ffc4e4f15ff7c0f, identical to facts.json's pinned source_revision -- no drift between composition and this review."
+    }
+  ],
+  "findings": [],
+  "verdict": "ACCEPT",
+  "verdict_rationale": "The Lane L patch is a minimal, exactly-scoped, independently-reproduced correction of the single most load-bearing defect in the document (how to install the package at all) -- confirmed from scratch via live PyPI lookups (aspose-font: 404, aspose-font-foss: real) and a direct pyproject.toml read, not trusted from facts.json's narration. The much larger structural-nonconformance issue is correctly left as an honestly-documented, explicitly-deferred Lane R follow-up rather than papered over with a misleadingly 'complete' Lane R candidate -- the missing lane_r_candidate.md and content_units.json are a deliberate, explained, and justified omission, not an unexplained gap."
+}

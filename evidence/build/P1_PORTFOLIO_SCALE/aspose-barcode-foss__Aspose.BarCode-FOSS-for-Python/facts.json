@@ -1,0 +1,73 @@
+{
+  "repository": "aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python",
+  "provider_identity": {
+    "provider": "github"
+  },
+  "source_revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151",
+  "default_branch": "main",
+  "readme_blob_sha": "03445fbc7b846b51c500a4a5e3d956c14a57b149",
+  "verified_at": "2026-10-21",
+  "verification_note": "Full real-execution verification, same method as the P1 vertical-slice worked example: cloned the repository at the exact pinned source_revision, created an isolated venv (python -m venv), ran `pip install .` against the source checkout (the README's own documented install path -- this package is not published to PyPI, confirmed independently below), and executed real code against every encoding/rendering/error-path claim this session had time to check.",
+  "facts": [
+    {
+      "id": "F-NOT-ON-PYPI",
+      "claim": "The package is not yet published to PyPI. Install it from a source checkout.",
+      "disposition": "SUPPORTED",
+      "evidence": "curl https://pypi.org/pypi/aspose-barcode-foss/json -> HTTP 404. `pip install .` against the cloned source_revision succeeded and is the only viable install path, exactly as the README documents."
+    },
+    {
+      "id": "F-PKG-METADATA",
+      "claim": "Distribution name aspose-barcode-foss, import package aspose_barcode_foss, requires Python 3.12+, requires Pillow >=10.1.0 as the one real runtime dependency",
+      "disposition": "SUPPORTED",
+      "evidence": "pyproject.toml: name = \"aspose-barcode-foss\", requires-python = \">=3.12\", dependencies = [\"Pillow>=10.1.0\"] -- exact match. `import aspose_barcode_foss` succeeded after installing into the venv."
+    },
+    {
+      "id": "F-PY-TYPED-MARKER",
+      "claim": "Ships a py.typed marker for full type-checker support",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: os.path.exists(os.path.join(os.path.dirname(aspose_barcode_foss.__file__), \"py.typed\")) == True in the installed venv."
+    },
+    {
+      "id": "F-CODE128-QR-CODE39-WORK",
+      "claim": "Quick Start (code128) and generate()/qr()/code39()/code39ext() all produce real SVG/PNG output",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: code128(\"Hello-World\").to_svg() -> real 2228-byte SVG string starting '<svg xmlns=...'; .to_png() -> real 793-byte PNG with the correct magic bytes (b'\\x89PNG\\r\\n\\x1a\\n'). generate(\"qr\", \"https://example.com\").to_png() -> 514-byte PNG. qr(\"PAYLOAD\", encode=QrOptions(error_correction_level=QrErrorCorrectionLevel.H, encoding_mode=QrEncodeMode.AUTO)) -> real SVG. code39(\"ABC-123\", encode=Code39Options(add_check_digit=True)) -> real SVG. code39ext(\"abc_123!\") -> real SVG."
+    },
+    {
+      "id": "F-EAN-UPC-WORK",
+      "claim": "EAN-13, EAN-8, UPC-A, and UPC-E retail barcodes support automatic check-digit computation or explicit check-digit validation via allow_check_digit_input",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: ean13(\"123456789012\"), ean8(\"1234567\"), upca(\"12345678901\") all produced real SVG output with automatic check-digit computation (11/7/11-digit inputs, one digit short of the full symbol, consistent with auto-computed check digits). upce(\"042100005264\", encode=UpceOptions(allow_check_digit_input=True)) succeeded (1841-byte SVG) with a full 12-digit input including an explicit check digit; the same call without allow_check_digit_input=True correctly raised InvalidInputError('12-digit input requires allow_check_digit_input=True') -- confirms both code paths the README describes."
+    },
+    {
+      "id": "F-RENDEROPTIONS-WORK",
+      "claim": "RenderOptions controls scale, DPI, module width/height, and a direct Renderer subclass (SvgRenderer) can be passed to Barcode.render()",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: code128(...).to_svg(options=RenderOptions(scale=2.0, show_text=True)) and .to_png(options=RenderOptions(dpi=300, module_width=3.0)) both succeeded. SvgRenderer() passed directly to barcode.render(renderer, options=RenderOptions(scale=3.0)) returned a RenderedArtifact with real .data content."
+    },
+    {
+      "id": "F-PDF-NOT-IMPLEMENTED",
+      "claim": "PDF rendering is not implemented -- Barcode.to_pdf() and PdfRenderer.render() both raise NotImplementedError. SVG and PNG rendering are implemented for every symbology.",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: barcode.to_pdf() raised NotImplementedError. Read src/aspose_barcode_foss/_internal/renderers/pdf.py directly: PdfRenderer.render() unconditionally 'raise NotImplementedError' with no implementation. SVG/PNG confirmed working for every symbology tested above (Code128, Code39, Code39Ext, EAN-13, EAN-8, UPC-A, UPC-E, QR)."
+    },
+    {
+      "id": "F-ECI-NOT-IMPLEMENTED",
+      "claim": "ECI (Extended Channel Interpretation) normalization and validation (EciHelper.normalize/.validate) are not implemented in this FOSS build",
+      "disposition": "SUPPORTED",
+      "evidence": "Read src/aspose_barcode_foss/_internal/standards/eci.py directly: EciHelper.normalize() and .validate() both unconditionally 'raise NotImplementedError' with no implementation body."
+    },
+    {
+      "id": "F-GS1-NOT-IMPLEMENTED",
+      "claim": "GS1 data parsing and validation (Gs1Helper.parse/.validate) are not implemented in this FOSS build",
+      "disposition": "SUPPORTED",
+      "evidence": "Read src/aspose_barcode_foss/_internal/standards/gs1.py directly: Gs1Helper.parse() and .validate() both unconditionally 'raise NotImplementedError' with no implementation body."
+    },
+    {
+      "id": "F-NO-DECODE",
+      "claim": "This library only generates (encodes) barcodes -- it does not read or decode existing barcode images for any symbology",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: the installed package's top-level module exposes no `decode`/`read` function (hasattr checks both False); the only public entry points are the encoding helpers and generate()."
+    }
+  ]
+}

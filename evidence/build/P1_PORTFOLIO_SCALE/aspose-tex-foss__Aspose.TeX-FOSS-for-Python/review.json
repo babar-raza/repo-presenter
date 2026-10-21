@@ -1,0 +1,72 @@
+{
+  "repository": "aspose-tex-foss/Aspose.TeX-FOSS-for-Python",
+  "source_revision": "181015d2eee3e19f8af3d84e4a932ac84ad47c7c",
+  "lane": "L+R (combined independent review; lane_l_candidate.md and lane_r_candidate.md are byte-identical, as the composer claims and this review independently confirms)",
+  "reviewer_note": "Independent re-review performed in this session: facts.json, lane_l_candidate.md, lane_l_candidate.diff, lane_r_candidate.md, lane_r_plan.md and content_units.json read in full; live README re-fetched fresh via gh api; defect reproduced from a brand-new git clone + fresh venv + pip install -e . (not trusted from facts.json prose); dedup search independently re-run against GitHub; Documentation & Resources links independently probed for liveness. Discipline applied per docs/MISSION_AUTHORITY.md: a finding stands unless it carries a specific deterministic refutation.",
+  "candidate": "lane_l_candidate.md (identical to lane_r_candidate.md)",
+  "diff": "lane_l_candidate.diff",
+  "facts": "facts.json",
+  "checks": [
+    {
+      "id": "C1_EVERY_EDIT_TRACES_TO_A_FACT",
+      "result": "PASS",
+      "detail": "The single edit hunk (one new Scope and Limitations bullet, 6 lines) traces directly to F-PACKAGE-IMPORT-BROKEN and F-TEST-SUITE-CANNOT-RUN, both CONTRADICTED in facts.json. No other claim in the README is edited."
+    },
+    {
+      "id": "C2_LIVE_README_REFETCH_AND_DIFF_VERIFICATION",
+      "result": "PASS",
+      "detail": "Re-fetched the live README fresh via `gh api repos/aspose-tex-foss/Aspose.TeX-FOSS-for-Python/readme --jq '.content' | base64 -d` (blob sha a31ecb3f920eca4407f08f87c735b58e2db8f000, matching facts.json's recorded readme_blob_sha exactly) and ran a real `diff -u` against lane_l_candidate.md. Result: exactly one hunk, @@ -317,6 +317,12 @@, 6 lines added, 0 lines changed or removed anywhere else in the 368-line document. This independently-produced diff matches lane_l_candidate.diff's shape and content exactly (same hunk header, same 6 added lines). No incidental reflow, reordering, or rewording outside the claimed edit span. Also confirmed via git checkout that commit 181015d2eee3e19f8af3d84e4a932ac84ad47c7c (facts.json's source_revision) is in fact the repository's current default-branch HEAD (gh api .../commits/main --jq .sha returns the identical sha), so the facts were not gathered against a stale revision."
+    },
+    {
+      "id": "C3_NO_FALSE_POSITIVE_FALSE_NEGATIVE",
+      "result": "PASS",
+      "detail": "All 11 README-facing facts other than the two defect facts are SUPPORTED and are independently spot-checked below (not merely re-read from facts.json prose): pyproject.toml (name=aspose-tex, version=26.5, no [project.dependencies], dev extras pytest>=7.4/ruff>=0.4/build>=1.2/twine>=5.0/tomli>=2.0 on <3.11, requires-python>=3.10) read directly from the fresh clone and matches facts.json verbatim; exceptions.py's four exception classes and docstrings match the API Reference table verbatim; presentation/__init__.py's TeXOptions dataclass fields (job_name, magnification, extra_font_paths, load_format, extra_format_paths with exact types/defaults) confirmed by direct grep of the source. None of these SUPPORTED facts is mistakenly left uncorrected, and none of the 4 UNVERIFIED_BUT_UNCHALLENGED content units (U-KEYCAP-1/2/3/7) is treated as CONTRADICTED or silently asserted as confirmed -- they are explicitly disclosed as unverified in content_units.json, consistent with the mission's two-directional 'never turn unverified into false or true' rule."
+    },
+    {
+      "id": "C4_SEVERE_DEFECT_INDEPENDENT_REPRODUCTION",
+      "result": "PASS",
+      "detail": "Reproduced F-PACKAGE-IMPORT-BROKEN completely from scratch, not from facts.json prose: fresh `git clone` of the repo into an isolated scratch directory, `git checkout 181015d2eee3e19f8af3d84e4a932ac84ad47c7c` (confirmed exact match), new venv, `pip install -e .` (succeeds -- setuptools packages files without parsing them). `python -c \"import aspose_tex\"` raised, verbatim: `IndentationError: expected an indented block after 'for' statement on line 65` at src/aspose_tex/_input/catcode.py line 66 -- character-for-character the same error facts.json reports. A from-scratch `ast.parse()` sweep over every src/**/*.py + tests/**/*.py file (118 files) found exactly 101 SyntaxError/IndentationError failures, matching facts.json's count exactly. `pip install -e \".[dev]\"` then `pytest -q` produced 'Interrupted: 67 errors during collection' against exactly 68 test_*.py files (`ls tests/test_*.py | wc -l` = 68), matching F-TEST-SUITE-CANNOT-RUN and F-TEST-MODULE-COUNT exactly. Additionally independently resolved the 101/118-vs-102/119 discrepancy the composer flagged as a 'trivial counting-convention difference': run_hello.py at the repo root (outside src/ and tests/, so excluded by this session's glob) also fails to parse with the same IndentationError pattern -- confirmed directly -- fully accounting for the 1-file gap in both the file-count and fail-count. The reproduction is complete, exact, and leaves no unexplained discrepancy."
+    },
+    {
+      "id": "C5_UPSTREAM_DEDUP_RECHECK",
+      "result": "PASS",
+      "detail": "Independently re-ran the dedup search with fresh gh calls (not trusting facts.json's report of having run it): `gh issue list --repo aspose-tex-foss/Aspose.TeX-FOSS-for-Python --state all` returns exactly one issue, #2, OPEN, titled 'Aspose.TeX FOSS for Python: 102 of 119 .py files fail to parse (IndentationError) and import aspose_tex fails', created 2026-10-20T08:53:23Z. Re-ran `--search \"indentation\"`, `--search \"import\"`, and `--search \"IndentationError\"` -- all three return the identical single issue #2; `--search \"syntax\"` returns none, matching facts.json's report exactly. Read the full issue body via `gh issue view 2 --json body`: it is pinned to the same commit (181015d2eee3e19f8af3d84e4a932ac84ad47c7c), describes the identical root cause (indentation collapsed to one space per nesting level), cites the identical first-failure location and error text (catcode.py line 66, 'expected an indented block after \\'for\\' statement on line 65'), and the identical file-count methodology (102 of 119, broken down by src/ vs tests/). This is a genuine same-defect match, not a superficially similar title -- CONFIRMED. One fact the composer's framing (\"independently confirming ... rather than a one-off local artifact\") does not make explicit: issue #2's author is `app/repository-presenter` -- i.e. this same tooling/project's own bot, not an unaffiliated third party or the upstream maintainer. This does not change whether re-filing would be a duplicate (it would), but it means the issue should not be read as independent external corroboration beyond this project's own prior run; flagged as a non-blocking finding below."
+    },
+    {
+      "id": "C6_LANE_R_REASONING_AND_CONTENT_UNITS_COMPLETENESS",
+      "result": "PASS",
+      "detail": "lane_r_plan.md's Case-A reasoning (substantial, already-accurate live README converges Lane R onto Lane L) holds: content_units.json enumerates 32 units covering every heading-level section and sub-bullet of the 368-line live README (H1/badges, Navigation, At a Glance, 7 Key Capabilities bullets, Installation, 3 Dependencies subsections, 2 Quick Start examples, 5 Additional Examples subsections, 5 API Reference units, Documentation & Resources, 7 Scope bullets including the new one, Enterprise Edition link, Development and Testing, License) -- 0 OMIT, 0 SUPERSEDE, 27 RETAIN_VERBATIM, 1 ADD, 4 UNVERIFIED_BUT_UNCHALLENGED, each with an evidence-based reason citing a specific fact id or an explicit 'not independently inspected' disclosure. lane_r_candidate.md is confirmed byte-identical to lane_l_candidate.md (diffed directly). Documentation & Resources links (all 3 docs.aspose.org/kb.aspose.org/reference.aspose.org links plus the Enterprise Edition and product-banner links) independently probed with curl: all return HTTP 200, so U-DOCS-RESOURCES's RETAIN_VERBATIM holds even though content_units.json itself only flagged it as not independently re-verified rather than labeling it UNVERIFIED_BUT_UNCHALLENGED (a minor labeling inconsistency vs. the sibling units -- see findings)."
+    }
+  ],
+  "findings": [
+    {
+      "category": "evidence-framing",
+      "severity": "minor",
+      "summary": "facts.json's F-UPSTREAM-DEFECT-ALREADY-FILED frames issue #2 as 'independently confirming' the defect without disclosing that its author is this same project's own bot (app/repository-presenter), not an unaffiliated third party.",
+      "detail": "Confirmed via `gh issue view 2 --json author`: author is app/repository-presenter. The dedup conclusion itself is still correct (re-filing would duplicate #2, and #2 genuinely covers the identical defect at the identical commit), so this does not change the verdict. But a reader of facts.json alone could mistake 'independently confirming the same root cause' for third-party corroboration rather than this project's own prior finding. Non-blocking; recommend a one-clause disclosure in facts.json's evidence field on a future pass."
+    },
+    {
+      "category": "content-unit-labeling-consistency",
+      "severity": "minor",
+      "summary": "U-DOCS-RESOURCES is labeled RETAIN_VERBATIM in content_units.json while its own reason text says the links were 'not independently re-verified for liveness this session,' which is the same epistemic status the other 4 units use the UNVERIFIED_BUT_UNCHALLENGED label for.",
+      "detail": "Does not affect the candidate document itself (the action -- retain as-is -- is correct either way, and this session's own live curl check of all 5 referenced URLs confirms all return HTTP 200). Flagged only as a minor internal labeling inconsistency in content_units.json, not a defect in the candidate README."
+    }
+  ],
+  "verdict": "ACCEPT",
+  "verdict_rationale": "Every element of the composer's claim was independently reproduced from scratch rather than trusted: the live README diff is exactly the one claimed hunk and nothing else (re-fetched and re-diffed fresh); the severe defect (collapsed indentation breaking import, test collection, and every code example) was reproduced in a brand-new clone/venv with the identical IndentationError, the identical 101/118 ast.parse failure count, and the identical 67/68 pytest collection-error count, with the one count discrepancy (101/118 vs 102/119) independently explained by run_hello.py; and the dedup re-check independently confirms issue #2 is open, at the correct commit, and genuinely describes the same root cause, not a superficially similar title. Two minor, non-blocking findings are recorded for framing/labeling precision; neither affects the correctness of the candidate document, the diff's scope, or the dedup conclusion.",
+  "dedup_recheck": {
+    "exact_commands_run": [
+      "gh issue list --repo aspose-tex-foss/Aspose.TeX-FOSS-for-Python --state all",
+      "gh issue list --repo aspose-tex-foss/Aspose.TeX-FOSS-for-Python --search \"indentation\" --state all",
+      "gh issue list --repo aspose-tex-foss/Aspose.TeX-FOSS-for-Python --search \"import\" --state all",
+      "gh issue list --repo aspose-tex-foss/Aspose.TeX-FOSS-for-Python --search \"IndentationError\" --state all",
+      "gh issue list --repo aspose-tex-foss/Aspose.TeX-FOSS-for-Python --search \"syntax\" --state all",
+      "gh issue view 2 --repo aspose-tex-foss/Aspose.TeX-FOSS-for-Python --json number,title,state,body,createdAt,author"
+    ],
+    "claimed_issue_number": 2,
+    "claimed_state": "OPEN",
+    "independently_observed_state": "OPEN",
+    "independently_observed_match": true,
+    "note": "Confirms composer's claim. Non-blocking caveat: issue #2 was filed by this project's own bot (app/repository-presenter), not an unaffiliated third party -- recorded as a minor finding above, not a refutation."
+  }
+}
