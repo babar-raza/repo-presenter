@@ -36,6 +36,7 @@ from gatectl import (
     die,
     dump_yaml,
     git,
+    git_porcelain_status,
     load_schema,
     load_yaml,
     matches_any,
@@ -129,7 +130,7 @@ def cmd_commit_guard(args) -> int:
     worker's product files into an unrelated supervisor commit (foss-mcp
     TC-018 incident, ops/SUPERVISOR.md)."""
     intended = args.paths if args.paths else SUPERVISOR_OWNED
-    rc, out, err = git("status", "--porcelain")
+    rc, out, err = git_porcelain_status()
     if rc != 0:
         die(f"git status failed: {err}")
     offenders = []
@@ -155,13 +156,23 @@ def cmd_commit_guard(args) -> int:
 # --------------------------------------------------------------------------
 def cmd_instruct(args) -> int:
     rc, head, _ = git("rev-parse", "HEAD")
+    issue_rev = args.issue_rev or (head if rc == 0 else "NONE")
+    if issue_rev != "NONE":
+        # A supervisor typing an abbreviated SHA must not reach the schema as
+        # one -- resolve to the full 40-hex form, same discipline as verify's
+        # resolve_rev (foss-mcp lesson: an abbreviated SHA in a receipt failed
+        # validation after the work was already verified).
+        rrc, full, rerr = git("rev-parse", "--verify", f"{issue_rev}^{{commit}}")
+        if rrc != 0:
+            die(f"instruct: cannot resolve --issue-rev {issue_rev!r}: {rerr}")
+        issue_rev = full
     line = {
         "ts": now_utc(),
         "target_card": args.target_card,
         "kind": args.kind,
         "instruction": args.instruction,
         "card_sha256": args.card_sha256 or "NONE",
-        "issue_rev": args.issue_rev or (head if rc == 0 else "NONE"),
+        "issue_rev": issue_rev,
         "attempt": args.attempt,
     }
     if args.successor:
@@ -246,7 +257,7 @@ def cmd_doctor(args) -> int:
         problems.append("project/state.yaml is missing")
     if not (OPS / "SUPERVISOR.md").exists():
         problems.append("ops/SUPERVISOR.md is missing")
-    rc, out, _ = git("status", "--porcelain", "--", *SUPERVISOR_OWNED)
+    rc, out, _ = git_porcelain_status("--", *SUPERVISOR_OWNED)
     if rc == 0 and out.strip():
         problems.append("uncommitted supervisor-owned paths:\n    " + out.strip().replace("\n", "\n    "))
     cards = all_cards()
@@ -348,6 +359,14 @@ def build_parser():
 
 
 def main(argv=None) -> int:
+    # This machine defaults to cp1252; gatecli's own stdout must not mangle an
+    # em-dash or curly quote from a YAML/Markdown file it is only printing,
+    # not writing (the written files are already read/written as UTF-8).
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8")
+        except (AttributeError, ValueError):
+            pass
     args = build_parser().parse_args(argv)
     return args.func(args)
 

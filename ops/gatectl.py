@@ -168,6 +168,21 @@ def git(*args, cwd=None):
     return rc, out.strip(), err.strip()
 
 
+def git_porcelain_status(*extra_args, cwd=None):
+    """`git status --porcelain`, output NOT globally .strip()'d.
+
+    git()'s strip() is safe for one-line output, but porcelain status is a
+    fixed-column format (`XY path`) and strip() on the whole multi-line blob
+    eats only the first line's leading space -- desyncing column 0 for that
+    one line only (found 2026-10-21 self-testing commit-guard: " M ops/x.py"
+    became "M ops/x.py" after a whole-string strip, so line[3:] sliced one
+    character too many and reported "ps/x.py"). Only rstrip trailing
+    newline/whitespace here; never strip leading content.
+    """
+    rc, out, err = run(["git", "status", "--porcelain", *extra_args], cwd=cwd)
+    return rc, out.rstrip("\n"), err.strip()
+
+
 def die(msg: str, code: int = EXIT_FAIL):
     print(f"FAIL: {msg}", file=sys.stderr)
     sys.exit(code)
