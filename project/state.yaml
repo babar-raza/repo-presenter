@@ -98,32 +98,84 @@ accepted_gates:
   - P1_PORTFOLIO_SCALE
 
 active_work_item:
-  id: P2_GENERALIZE_AND_HARDEN
-  status: READY
+  id: P2_REAL_ENGINE_SALVAGE
+  status: IN_PROGRESS
   purpose: >
-    Mission section 12, P2: generalize by failure class, not anecdote. With portfolio breadth
-    now proven (36/36), the next work is depth and automation, not more repositories:
-    (1) turn the manual/agent-driven composition process into a deterministic, repeatable
-    tool (src/repo_presenter/ currently only has the issues/github/authorization slice --
-    facts-extraction, Lane L correction, Lane R composition, and the independent reviewer
-    exist only as this session's own reasoning, not as code); (2) wire gateverify.py to
-    actually re-run/no-op-prove portfolio candidates; (3) find or construct a genuinely
-    weak/missing-README repository to test real Lane R divergence (falsify the convergence
-    pattern seen in all 36 repos so far); (4) add the Enterprise Edition naming check to the
-    standard fact checklist; (5) decide, with the owner, which of the 5 remaining drafted/
-    findable upstream issues to file next.
+    Owner correction, 2026-10-21 (overrides the P2 framing below this entry replaced): the
+    issues system was never the priority -- the mission is making Lane L and Lane R work,
+    equally, for every candidate, via real salvaged code. Two deep-read research passes
+    confirmed the old repo already has the right architecture (one shared Fact model, one
+    7-ecosystem extraction layer, two lane engines both consuming it) and five parallel
+    porting passes pulled it into this repo for real, independently re-verified by the
+    supervisor after every report (never trusted from self-report alone).
+  done:
+    - "core/facts.py (shared Fact/FactsDocument/Polarity model) -- REUSE, ported, tested."
+    - "readme/correction/ (Lane L engine): model/engine/apply (confinement-proof architecture,
+       demonstrated live rejecting both a forged-span and an out-of-bounds edit), 4
+       self-contained detectors (links/examples/gaps/structure), plus 2 NEW detectors this
+       mission needed and the old repo never had -- an Enterprise-Edition naming auto-fixer
+       (generalized from the 3 real portfolio corrections made by hand in P1_PORTFOLIO_SCALE)
+       and a format/capability over-claim finder (closes the exact defect class the original
+       aspose-3d-foss OBJ-export bug and the 3D-.NET format over-claims both belong to)."
+    - "readme/bundle/{recheck,evaluation,invalidation}.py -- the consumed-scope invalidation
+       contract (mission non-negotiable #5), proven against a REAL candidate
+       (aspose-3d-foss/Python): an unrelated fact change leaves it CURRENT, a consumed fact
+       change correctly triggers recheck."
+    - "extractors/ -- all 7 ecosystems (python, net, java, cpp, go, rust, typescript, plus
+       nodejs), the vendored tree-sitter surface engine, and the real example-execution
+       runner (core/execution.py, toolchains.py, git_safety/ -- found after two prior research
+       passes missed it; host subprocess execution, secret-scrubbed, toolchain-absence
+       degrades to NOT_VERIFIED, never a false CONTRADICTED)."
+    - "readme/composition/ + reconciliation/dispositions.py (Lane R engine): the full staged
+       pipeline (planning -> authoring -> dispositions -> placement -> renderer -> coherence),
+       LLM call boundary (core/llm/jobs.py) ported mechanism-complete and confirmed pluggable."
+    - "Closed 2 integration gaps the parallel porting surfaced: core/registry/loader.py (the
+       allow-list gate) and a real pyproject.toml/requirements-lock.txt (neither existed)."
+    - "data/registry.json converted to the strict schema the ported RegistryEntry model
+       validates (extra=\"forbid\"); observational fields (archived, pushed_at,
+       live_identity_match, etc.) moved to data/registry_observations.json, since those were
+       never part of the authorization allow-list contract."
+  verification: >
+    876 passed, 11 skipped (honest toolchain-absence skips), 0 failed
+    (`python -m pytest tests/`), independently re-run by the supervisor after every
+    porting agent's report and after every integration fix -- not trusted from any
+    agent's self-reported pass count.
+  honestly_not_done_yet:
+    - "Lane R's authoring.py has no real prompts/*.yaml content to fire a live LLM call with
+       yet (this environment genuinely carries GPT_OSS_API_KEY/GPT_OSS_ENDPOINT -- the same
+       gateway the old repo targets -- so the mechanism can fire for real once prompt content
+       exists, which it does not today)."
+    - "dispositions.py's S4 job-wiring half and the Lane L chain.py/verify.py sandboxed
+       build-test runner (the add_dev_commands detector's backing) are deferred, not ported."
+    - "The static format-wiring extractor can prove a capability is REGISTERED but not that it
+       WORKS -- the exact OBJ-export/COLLADA-export blind spot this whole mission started
+       from. Execution verification (the example-execution runner, now ported) is the only
+       real check for that class of defect; the static extractor alone cannot close it."
+    - "The 35 portfolio candidates from P1_PORTFOLIO_SCALE were produced by agent reasoning,
+       NOT by this newly-ported code. Re-running even one real candidate end-to-end through
+       the actual ported pipeline (extractors -> correction/composition -> bundle recheck)
+       has not been done yet -- this is the next concrete proof needed, not another
+       composition sweep."
   prerequisites:
     - P1_PORTFOLIO_SCALE accepted (DONE)
 
 next_ready_items:
-  - id: BUILD_REPEATABLE_PIPELINE
+  - id: RUN_PIPELINE_END_TO_END_ON_REAL_REPO
+    status: READY
+    priority: highest
+    purpose: >
+      Wire the ported extractors + readme/correction + readme/bundle into one real CLI path
+      and run it against the pinned aspose-3d-foss/Aspose.3D-FOSS-for-Python repository,
+      end to end, no agent-reasoning shortcuts. Compare its output against the hand-verified
+      P1_VERTICAL_SLICE facts.json/candidate -- this is the proof that the salvaged engine,
+      not just its unit tests, actually works on a real repository.
+  - id: WRITE_PROMPTS_FOR_AUTHORING
     status: READY
     purpose: >
-      Turn docs/PORTFOLIO_SCALE_PLAYBOOK.md's human/agent-followed steps into actual
-      deterministic code under src/repo_presenter/ (facts extraction, Lane L apply, Lane R
-      compose, reviewer checks) so P2/P3 do not require dispatching fresh agents per
-      repository by hand.
-    priority: high
+      authoring.py's run_job mechanism is ported and pluggable but has no real
+      prompts/*.yaml manifest content to call the (confirmed-present) GPT_OSS gateway with.
+      Write the governed prompt content Lane R needs for at least one section to prove a
+      real, live-fired composition call end to end.
   - id: WIRE_GATEVERIFY_TO_PORTFOLIO
     status: READY
     purpose: >
