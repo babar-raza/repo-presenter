@@ -208,3 +208,174 @@ entries:
       candidate — never imported as "already accepted" work.
     next_step: when this repo's own independent reviewer exists, run it against
       a sample of these old candidates as holdout fixtures, not as seed content.
+
+  - component: "core/facts.py (shared Fact/FactsDocument/Polarity data model)"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    behavior: >
+      Typed, frozen-dataclass fact records (id, kind, value, evidence, polarity
+      SUPPORTED/CONTRADICTED/UNRESOLVED, confidence, attributes) with deterministic
+      canonical ordering and JSON serialization (write_facts/read_facts), and a
+      bounded_records() packet-sizing function (symbol/link/example caps, each cap
+      justified by a measured historical portfolio maximum, not a guess).
+    evidence: >
+      Read in full 2026-10-21 (349 lines). Confirmed shared by both Lane L
+      (readme_correction/) and Lane R (composition/, reconciliation/) in the old
+      repo per two independent read-only research passes this session.
+    disposition: REUSE
+    reason: >
+      Small (349 lines), self-contained (stdlib only), carefully hardened
+      (validation in __post_init__, duplicate-ID rejection, deterministic
+      sort-keys JSON for byte-identical reruns). This is the correct foundation
+      for making Lane L and Lane R share one fact model, per owner direction
+      2026-10-21 ("make those lanes work equally for all candidates").
+    target_module: src/repo_presenter/core/facts.py
+    smallest_first_integration_test: >
+      tests/core/test_facts.py — fact_id + write/read roundtrip, duplicate-ID
+      rejection. Both pass (2026-10-21).
+    portfolio_consumers: both lanes, every candidate, going forward.
+    invalidation_impact: >
+      None yet — no other module in this repo consumes it yet. Once the
+      extraction layer and both lane engines are ported onto it, a change to
+      this schema reopens every candidate (mission §8 — track carefully).
+
+  - component: "readme_correction/ (Lane L engine: model.py, engine.py, apply.py, 8 self-contained detectors, chain.py+verify.py sandboxed build/test runner)"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    behavior: >
+      Deterministic correction pipeline: Context (README text + FactsDocument) ->
+      engine.collect() runs auto-discovered Detector functions -> Edit objects
+      (6 closed kinds, shape-validated in __post_init__ so an out-of-bounds edit
+      cannot be constructed) -> apply.apply_edits() pure substring splice ->
+      apply.confinement_violations() proves every byte outside edit spans is
+      untouched -> engine.is_stable() proves determinism+idempotency by actually
+      re-running correction and comparing bytes. chain.py+verify.py is a real
+      sandboxed (host-first, Docker-fallback across 6+ toolchains) build/test
+      runner backing the add_dev_commands detector.
+    evidence: >
+      Read-only research pass 2026-10-21 (fork report, full file reads of
+      model.py/engine.py/apply.py/all detectors/chain.py/verify.py). See
+      docs/history-reconstruction.md for citation; full report not re-filed here.
+    disposition: ADAPT (REUSE for apply.py specifically)
+    reason: >
+      model.py/engine.py: ADAPT — sound confinement-proof architecture, needs
+      Fact/FactsDocument dependency resolved against src/repo_presenter/core/facts.py
+      (now ported, same shape). apply.py: REUSE — 87 lines, zero dependencies
+      beyond model.Edit. 8 detectors (links/examples/gaps/structure/sections/
+      stale/diagram/additions): ADAPT — self-contained over Context/Fact, no
+      old-repo entanglement found. claims.py/statements.py detectors: ADAPT,
+      but pull the shared BC-14 claim-recognizer logic they depend on too, not
+      duplicate it. chain.py+verify.py: ADAPT, high value — the single most
+      sophisticated asset found in this component; heavier dependency surface
+      (core/git_safety, core/toolchains, core/secrets) but worth the pull.
+    target_module: src/repo_presenter/readme/correction/ (planned)
+    smallest_first_integration_test: >
+      Port model.py + apply.py + engine.py first with one detector (broken_link,
+      the simplest), prove confinement_violations() catches a deliberately
+      out-of-span edit (the exact negative control this architecture is built for).
+    portfolio_consumers: Lane L, every candidate.
+    invalidation_impact: not yet pulled.
+    known_gap: >
+      No detector here checks format/capability OVER-claiming (README claims a
+      format works but the dispatch/registration code doesn't wire it up — the
+      3D-.NET U3D/RVM/AMF/HTML5 case and the original 3D-Python OBJ-export case).
+      report_gaps only catches UNDER-claiming. A new detector is needed, not
+      salvageable from this component. Also: no detector AUTO-FIXES the
+      Enterprise Edition naming violation (BC-06 in the old repo's validation/
+      layer only REJECTS it) — a new, small FALSE_CLAIM_FIX-kind detector is
+      needed here, informed by this session's own 3-repo finding.
+
+  - component: "readme/composition/ + reconciliation/dispositions.py (Lane R engine)"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    behavior: >
+      Staged pipeline: planning.py -> authoring.py (per-section LLM calls through
+      core/llm/jobs.py::run_job, a clean deterministic/agentic boundary with
+      content-addressed caching, re-judging a cached reply under CURRENT rules on
+      every reuse, not blind reuse) -> reconciliation/dispositions.py (folds what
+      deterministic code can't place; coverage_findings() self-audits for the
+      historical "OMIT_UNSUPPORTED with no cited fact" defect class) -> placement.py
+      -> renderer.py (pure function, LLM never writes Markdown) -> coherence.py
+      (one bounded revision pass over LLM-owned prose only).
+    evidence: >
+      Read-only research pass 2026-10-21 (fork report: full reads of authoring.py
+      2957 lines, dispositions.py 2859 lines, bundle/recheck.py 1005 lines,
+      core/llm/jobs.py's run_job; docstring/structural reads of the rest).
+      Confirms the SAME FactsDocument/Fact/Polarity types core/facts.py now
+      carries are what both authoring.py and dispositions.py already consume in
+      the old repo — this repo's own facts.py port is the correct shared base.
+    disposition: ADAPT
+    reason: >
+      Clean separation at the LLM boundary; large (~12-20k lines across
+      composition+reconciliation+core/llm, not a "small" pull by the mission's
+      own standard) but not hopelessly entangled — imports only sibling readme/
+      modules and core/facts, core/llm. dispositions.py flagged higher-risk:
+      likely locus of the historical 389/746-unit defect
+      (docs/history-reconstruction.md); port coverage_findings() WITH normalize(),
+      never separately, so the self-audit travels with the logic it checks.
+    target_module: src/repo_presenter/readme/composition/ (planned)
+    smallest_first_integration_test: not yet attempted.
+    portfolio_consumers: Lane R, every candidate.
+    invalidation_impact: not yet pulled.
+    known_gap: >
+      The actual subprocess-execution runner for "example" facts (verified vs.
+      failed code examples) was NOT found under extractors/ in this pass —
+      core/examples.py only defines the receipt data model (EXECUTED/FAILED/
+      TIMED_OUT/NEEDS_INPUT/NOT_VERIFIED). Must be located (possibly under
+      components/execution/ or a container-isolated runner) before Lane R's
+      example-verification path can be ported end to end.
+
+  - component: "readme/bundle/recheck.py + evaluation.py + invalidation.py"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    behavior: >
+      Per-scope (presentation/authoring/validator/reviewer/extraction) recheck
+      with currency states CURRENT/RECHECKED_CURRENT/UPDATE_OPTIONAL/
+      UPDATE_REQUIRED/UNVERIFIED — almost verbatim the state vocabulary mission
+      §8 specifies, with a RECHECKS table mapping exactly which scope reopens on
+      which kind of upstream change (never a global reseal).
+    evidence: >
+      Read-only research pass 2026-10-21. 37/37 existing tests in this module
+      pass (run read-only, no files modified).
+    disposition: REUSE
+    reason: >
+      Directly implements mission §8's consumed-scope invalidation contract —
+      this is the strongest single salvage candidate found across both research
+      passes. Real, passing tests. Maps near-verbatim onto the mission's own
+      state vocabulary, which was almost certainly itself derived from reading
+      this exact module historically.
+    target_module: src/repo_presenter/readme/bundle/ (planned)
+    smallest_first_integration_test: >
+      Port the three files + their 656-line test file verbatim first; confirm
+      37/37 still pass unmodified before adapting anything.
+    portfolio_consumers: both lanes — this is the shared invalidation layer.
+    invalidation_impact: not yet pulled.
+
+  - component: "extractors/platforms/* (7-ecosystem fact extraction: cpp, go, java, net, nodejs, python, rust, typescript)"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    behavior: >
+      Per-ecosystem extraction of package/install/public-API/format/example facts
+      (~11,316 lines across 34 files). Each platform has its own *_examples.py
+      sibling for that ecosystem's code-fence candidate selection. Feeds the
+      SAME FactsDocument/Fact model both lanes consume.
+    evidence: >
+      Read-only research pass 2026-10-21 (structural map + docstrings, not full
+      line-by-line — out of scope depth for that pass; a dedicated porting pass
+      needs its own full read per ecosystem before porting).
+    disposition: REUSE/ADAPT per-platform (verdict TBD per ecosystem until a
+      full read happens)
+    reason: >
+      Single highest-leverage salvage target for "make the lanes work equally
+      for all candidates" (owner direction 2026-10-21) — every ecosystem in the
+      registry already has real extraction code here, far more complete than
+      this session's own manual, Python-only, single-repository fact-gathering.
+    target_module: src/repo_presenter/extractors/ (planned)
+    smallest_first_integration_test: not yet attempted.
+    portfolio_consumers: both lanes, every candidate, every ecosystem.
+    invalidation_impact: not yet pulled.
+    known_gap: >
+      The real subprocess-execution runner for example verification was not
+      located in this tree (see Lane R entry above) — needs to be found before
+      the example_facts() pipeline can run for real rather than against
+      pre-computed receipts.
