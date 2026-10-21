@@ -1,0 +1,24 @@
+--- live_readme.md	2026-10-21 17:51:11.476197100 +0500
++++ lane_l_candidate.md	2026-10-21 18:08:29.133139800 +0500
+@@ -85,8 +85,10 @@
+   conditional formatting — cell-value, expression, color-scale, data-bar, and icon-set
+   rules — through `FormatCondition` and `ConditionalFormattingCollection`.
+ - Build charts through `ChartType` on a worksheet's chart collection — column, line, bar,
+-  area, pie, doughnut, scatter, radar, bubble, and stock families, plus their stacked and
+-  3D variants, each rendered as real OOXML chart markup.
++  area, pie, doughnut, scatter, radar, bubble, stock, cone, conical bar, cylinder,
++  cylindrical bar, pyramid, surface, box-and-whisker, funnel, sunburst, treemap, waterfall,
++  histogram, and map families, plus their stacked and 3D variants (86 `ChartType` values in
++  total), each rendered as real OOXML chart markup.
+ - Embed pictures with `Picture` and drawing shapes with `Shape` / `AutoShapeType`
+   (rectangles, stars, arrows, and other preset geometries).
+ - Build structured Excel tables with `ListObject` (table styles, totals), auto-filters
+@@ -701,7 +703,7 @@
+ CI ([`ci.yml`](.github/workflows/ci.yml)) runs `fmt`, `check`, `clippy`, `test`, the three
+ samples above as smoke tests, and `cargo bench` on Linux x64, Windows x64, macOS ARM, and
+ macOS x64. The `samples/` directory demonstrates every feature area — `basic.rs`,
+-`styles.rs`, `worksheet_settings.rs`, `validations.rs`, `conditional_formatting.rs`,
++`loading.rs`, `styles.rs`, `worksheet_settings.rs`, `validations.rs`, `conditional_formatting.rs`,
+ `hyperlinks_and_names.rs`, `pagesetup.rs`, `comments.rs`, `charts.rs`, `list_objects.rs`,
+ `pictures.rs`, `shapes.rs`, and `document_properties.rs` (see
+ [`samples/README.md`](samples/README.md) for the full overview). Generate local API docs

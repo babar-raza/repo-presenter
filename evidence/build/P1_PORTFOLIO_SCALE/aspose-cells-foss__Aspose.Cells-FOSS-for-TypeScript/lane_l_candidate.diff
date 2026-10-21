@@ -1,0 +1,25 @@
+--- live_readme.md	2026-10-21 17:53:29.113338300 +0500
++++ lane_l_candidate.md	2026-10-21 17:56:23.168324400 +0500
+@@ -158,6 +158,11 @@
+ 
+ ### Export a Workbook to HTML
+ 
++Saving to a `.html` path writes a Microsoft-Excel-style HTML frameset: the given
++file plus a companion `output_files/` directory (per-sheet `.htm` files, a
++stylesheet, and supporting XML) that must stay alongside it. For a single,
++self-contained HTML string instead, use `toHtml()`.
++
+ ```typescript
+ import { Workbook } from "./aspose_cells";
+ 
+@@ -318,6 +323,10 @@
+ - Text export is available as a returned string, not as a direct file-write helper — pass
+   the result of `toCsv()`, `toJson()`, or `toMarkdown()` to your own file-writing code.
+ - Text export is one-way — there is no corresponding import path back into a `Workbook`.
++- `save()` to a `.html` path writes an Excel-style HTML frameset — the target file
++  plus a companion `<name>_files/` directory of per-sheet HTML, CSS, and XML support
++  files — not a single portable HTML document; use `toHtml()` when a single
++  self-contained HTML string is what's needed.
+ 
+ This limitation does not apply to
+ [Aspose.Cells for .NET — Enterprise Edition](https://products.aspose.com/cells/), which adds

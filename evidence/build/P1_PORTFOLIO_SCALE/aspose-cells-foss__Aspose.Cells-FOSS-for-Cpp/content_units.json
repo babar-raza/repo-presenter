@@ -1,0 +1,34 @@
+{
+  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp",
+  "source_revision": "9f852d0ff1cfdad2d661556d6b87a8eff8c063a2",
+  "note": "Mission section 7 step 3 content-unit inventory. A prior session's leftover live_readme.md-only directory was treated as stale and re-fetched fresh (see lane_r_plan.md).",
+  "units": [
+    {"id": "U-H1", "unit": "H1 title + badge row + banner", "disposition": "RETAIN_VERBATIM", "reason": "Badge order and banner placement match the fixed-core contract; NuGet package existence/version independently confirmed (F-NUGET-PACKAGE-EXISTS)."},
+    {"id": "U-OPENING", "unit": "Opening paragraph", "disposition": "RETAIN_VERBATIM", "reason": "General description (dependency-free, header-and-source C++17 library), not contradicted by anything found."},
+    {"id": "U-NAV", "unit": "Navigation list", "disposition": "RETAIN_VERBATIM", "reason": "Matches fixed-core section set exactly (note: no separate Dependencies section in this README's own skeleton, folded into Installation instead -- an inherited-addition variance, not an error)."},
+    {"id": "U-GLANCE", "unit": "At a Glance diagram", "disposition": "RETAIN_VERBATIM", "reason": "Not contradicted by anything found this session."},
+    {"id": "U-KEYCAP", "unit": "Key Capabilities bullets 1-9", "disposition": "RETAIN_VERBATIM", "reason": "Not independently re-executed (no C++ toolchain), but every specific class/method name cited (Workbook, Cell.PutValue/GetValue/SetFormula, Style, Cells.Merge, Worksheet protection/view settings, ConditionalFormattings/Validations, Hyperlinks/DefinedNames, PageSetup, WorkbookProperties) is confirmed present in the API Reference table and header search this session performed; no contradicting evidence."},
+    {"id": "U-INSTALL", "unit": "Installation section (NuGet, MSBuild, CMake-on-Windows, build-from-source)", "disposition": "RETAIN_VERBATIM", "reason": "Every specific claim here independently confirmed against the real, currently-published NuGet artifact: F-NUGET-PACKAGE-EXISTS, F-WINDOWS-ONLY-LIBS, F-CMAKE-CONFIG-EXISTS all SUPPORTED."},
+    {"id": "U-QUICKSTART", "unit": "Quick Start (create workbook, populate cells, style, save)", "disposition": "RETAIN_VERBATIM", "reason": "Not independently re-executed (no C++ toolchain); every API surface used (Workbook, Worksheet, Cell.PutValue/SetFormula, Style, Font, Color) confirmed present in the API Reference table."},
+    {"id": "U-EXAMPLES", "unit": "Additional Examples (load+read, conditional formatting, data validation, hyperlink, page setup, defined name)", "disposition": "RETAIN_VERBATIM", "reason": "Not independently re-executed; API surface used in each example confirmed present in the API Reference table and Detailed Member Reference; no contradicting evidence."},
+    {"id": "U-APIREF-INTRO", "unit": "API Reference intro paragraph", "disposition": "RETAIN_VERBATIM", "reason": "General description, not contradicted."},
+    {"id": "U-APIREF-TABLE", "unit": "API Reference table (197 public types) + Detailed Member Reference", "disposition": "RETAIN_CORRECTED", "reason": "The DefinedName and Workbook/WorkbookProperties rows are accurate as far as checked; the broader claim structure interacts with the two corrected Scope and Limitations bullets (LoadFormat member count, Comment field count) -- no table row itself needed editing, but the table's accuracy is what grounds both corrections, so this unit is marked corrected-by-association rather than purely verbatim."},
+    {"id": "U-DOCS-RESOURCES", "unit": "Documentation & Resources section", "disposition": "RETAIN_VERBATIM", "reason": "Links not independently re-verified for liveness this session; no contradicting evidence."},
+    {"id": "U-SCOPE-XLSX-ONLY", "unit": "Scope and Limitations bullet 1 (XLSX-only load/save)", "disposition": "RETAIN_CORRECTED", "reason": "F-LOADFORMAT-MEMBER-COUNT-WRONG CONTRADICTED the 'LoadFormat...declare a single Xlsx member' sub-claim; corrected to state LoadFormat's actual two members while retaining the SaveFormat claim (independently confirmed accurate) and the UnsupportedFeatureException message (F-UNSUPPORTEDFEATURE-SAVE-MESSAGE SUPPORTED, exact text match)."},
+    {"id": "U-SCOPE-LEGACY-XML", "unit": "Scope and Limitations bullet 2 (legacy SpreadsheetML mappers)", "disposition": "RETAIN_VERBATIM", "reason": "F-LEGACY-XML-MAPPERS-THROW SUPPORTED via direct source read of all four named classes."},
+    {"id": "U-SCOPE-COMMENTS", "unit": "Scope and Limitations bullet 3 (cell comments not modeled)", "disposition": "RETAIN_CORRECTED", "reason": "F-COMMENT-FIELD-CLAIM-INCOMPLETE CONTRADICTED the 'only...belongs to DefinedName' phrasing -- DocumentProperties.Comments is a second, independent Comment field. Corrected to name both while retaining the bullet's core substance (neither is a cell note/threaded comment)."},
+    {"id": "U-SCOPE-CONDFORMAT", "unit": "Scope and Limitations bullet 4 (conditional-formatting rule drop)", "disposition": "RETAIN_VERBATIM", "reason": "F-CONDITIONAL-FORMATTING-DROP-WARNING SUPPORTED via direct source read, exact message match."},
+    {"id": "U-SCOPE-AUTOFILTER", "unit": "Scope and Limitations bullet 5 (AutoFilter date-group rejection)", "disposition": "RETAIN_VERBATIM", "reason": "F-AUTOFILTER-DATE-GROUP-REJECTED UNVERIFIED (not independently re-checked this session, time budget); per mission section 7, an UNVERIFIED fact is never corrected as if false."},
+    {"id": "U-ENTERPRISE-LINK", "unit": "Enterprise Edition closing paragraph", "disposition": "RETAIN_VERBATIM", "reason": "Matches MISSION_AUTHORITY naming rule ('Aspose.Cells for C++ — Enterprise Edition')."},
+    {"id": "U-DEVTEST", "unit": "Development and Testing section (GTest suite, samples/ build)", "disposition": "RETAIN_VERBATIM", "reason": "Not independently re-executed (no C++ toolchain); no contradicting evidence."},
+    {"id": "U-LICENSE", "unit": "License section", "disposition": "RETAIN_VERBATIM", "reason": "MIT license; file path License/LICENSE.txt matches the badge link and an existing, unrelated open GitHub issue (#6) about this exact path, which this session did not need to act on."}
+  ],
+  "summary": {
+    "total_units": 18,
+    "retain_verbatim": 15,
+    "retain_corrected": 3,
+    "supersede": 0,
+    "add": 0,
+    "omit": 0
+  }
+}

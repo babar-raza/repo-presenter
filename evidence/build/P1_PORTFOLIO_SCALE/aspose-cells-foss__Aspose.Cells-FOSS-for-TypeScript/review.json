@@ -1,0 +1,41 @@
+{
+  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript",
+  "source_revision": "fc186507e5b7124f4664aa6035f25cfd3112367d",
+  "lanes_reviewed": ["L", "R"],
+  "shared_review_note": "Lane R converges to Lane L's output (lane_r_candidate.md is byte-identical to lane_l_candidate.md per lane_r_plan.md); one combined review covers both lanes since the review logic is identical.",
+  "checks": [
+    {
+      "id": "C1_EDITS_TRACE_TO_A_FACT",
+      "result": "PASS",
+      "detail": "Both edits (new sentence before the 'Export a Workbook to HTML' code block, and a new Scope and Limitations bullet) trace directly to F-SAVE-HTML-IS-FRAMESET-NOT-SINGLE-DOC (CONTRADICTED): workbook.ts's save() branches to HtmlExporter.saveAsHtmlFrameset() for .html targets, which writes a frameset file plus a companion <name>_files/ directory of 5 support files, not the single self-contained document the example's plain reading implies."
+    },
+    {
+      "id": "C2_BYTE_PRESERVATION_OUTSIDE_EDIT_SPANS",
+      "result": "PASS",
+      "detail": "diff shows exactly two hunks, both additive (no existing line altered or removed); nothing else in the README touched."
+    },
+    {
+      "id": "C3_NO_UNVERIFIED_CLAIM_CORRECTED",
+      "result": "PASS",
+      "detail": "F-NODE-TS-VERSION-REQUIREMENT (Node 18 / TypeScript 5 floor) is UNVERIFIED (no engines field, no Node-API trace performed); the corresponding Dependencies claim is left untouched, not silently accepted or rejected."
+    },
+    {
+      "id": "C4_NEGATIVE_CONTROL",
+      "result": "PASS",
+      "detail": "Adversarial check: read htmlExporter.ts's saveAsHtmlFrameset() and generateFramesetHtml() in full to confirm the companion directory's file references actually match what gets written (filelist.xml, stylesheet.css, tabstrip.htm, sheetNNN.htm per sheet, editdata.mso, oledata.mso) rather than inferring a frameset from the directory-creation code alone -- confirmed internally consistent, not a crash, which is why the correction is framed as a disclosure gap rather than a broken-feature claim."
+    },
+    {
+      "id": "C5_SMALL_REPO_SIZE_NOT_TREATED_AS_DEFICIENCY",
+      "result": "PASS",
+      "detail": "This repo's file tree is notably smaller than its .NET/Python siblings; investigated directly rather than inferred from size alone -- the claimed feature surface matches the actual TypeScript source (one AutoFilter API-table row spot-checked and held; see content_units.json). Not treated as a case-B README deficiency."
+    },
+    {
+      "id": "C6_API_TABLE_SPOT_CHECK_NOT_EXHAUSTIVE",
+      "result": "PASS",
+      "detail": "Only 1 of the API Reference table's ~115 rows was independently reflected against source (AutoFilter); facts.json and content_units.json both record this honestly as a spot-check, not a claim of exhaustive table verification."
+    }
+  ],
+  "findings": [],
+  "verdict": "ACCEPT",
+  "verdict_rationale": "The one real, deterministic finding (save()-to-HTML produces a multi-file frameset, not a single document) is corrected with two small, additive, fact-traceable edits; every other independently checked claim in the README held up against the actual TypeScript source, and unverified claims were left untouched rather than resolved by inference."
+}

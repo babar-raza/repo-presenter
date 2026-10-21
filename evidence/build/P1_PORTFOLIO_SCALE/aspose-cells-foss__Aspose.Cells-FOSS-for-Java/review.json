@@ -1,0 +1,36 @@
+{
+  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Java",
+  "source_revision": "c65329e7257b1311abb9686d7e4957a8cc002955",
+  "lanes_reviewed": ["L", "R"],
+  "shared_review_note": "Lane L and Lane R both output the unchanged live README for the same reason (zero CONTRADICTED facts, no deficiency found); one combined review covers both lanes as the playbook permits.",
+  "checks": [
+    {
+      "id": "C1_EVERY_CLAIM_CHECKED_TRACES_TO_REPRODUCTION",
+      "result": "PASS",
+      "detail": "All 7 facts cite a specific source read, an enum/method inspection, or a live Maven Central registry query; none asserted from inference alone."
+    },
+    {
+      "id": "C2_HARD_NUMERIC_CLAIMS_SPECIFICALLY_PROBED",
+      "result": "PASS",
+      "detail": "The two hardest claims to get right by accident (18-of-25 ChartType, 38 AutoShapeType) were independently counted from the actual enum source and cross-checked against ChartCollection.add()'s exact reject-list, not just read off the README and trusted."
+    },
+    {
+      "id": "C3_COMPLETENESS_CHECK_PERFORMED_NOT_SKIPPED",
+      "result": "PASS",
+      "detail": "Given the Go sibling in this family turned up a large undocumented-feature gap, this repository's Key Capabilities/API Reference/Project Structure were specifically checked for the same failure mode (e.g. confirming the disclosed XML-mapper dead code is truly unreferenced from the real save/load path) rather than assuming this repo's README style implies completeness."
+    },
+    {
+      "id": "C4_UNVERIFIED_LEFT_UNVERIFIED",
+      "result": "PASS",
+      "detail": "F-DEV-DEPS-VERSIONS (exact JUnit/POI pinned numbers) is UNVERIFIED; the corresponding Development Dependencies bullet is left untouched, not silently accepted or corrected."
+    },
+    {
+      "id": "C5_NEGATIVE_CONTROL",
+      "result": "PASS",
+      "detail": "Adversarial check: deliberately tried to falsify the Maven-package-exists claim by querying the live registry rather than trusting the README's own version string; got real metadata with the exact pinned version present as <release>, not a 404."
+    }
+  ],
+  "findings": [],
+  "verdict": "ACCEPT",
+  "verdict_rationale": "README is accurate against the actual Java source and a live Maven Central check across every concrete, checkable claim, including unusually specific partial-support counts and a self-disclosed dead-code limitation; empty-patch is correct for both lanes."
+}

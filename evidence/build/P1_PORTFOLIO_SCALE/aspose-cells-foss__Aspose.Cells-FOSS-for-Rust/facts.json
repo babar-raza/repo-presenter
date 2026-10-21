@@ -1,0 +1,58 @@
+{
+  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Rust",
+  "source_revision": "1a6004af47b1ef15385f9d36d381a8172428cc7e",
+  "default_branch": "master",
+  "readme_blob_sha": "6b6c014b69a1afeb29393d5c3a2326fbd153a91e",
+  "verified_at": "2026-10-21",
+  "method": "No cargo/Rust toolchain available on this machine (playbook-confirmed) -- code-reading only, via a shallow `git clone --depth 1` (git itself is available, distinct from `cargo build`/`cargo test`) to grep the full source tree efficiently. Read Cargo.toml, ChartType.rs, ChartCollection.rs directly. One live external check: queried crates.io's API for aspose-cells-foss-rust to confirm the README's 'not yet published to crates.io' claim.",
+  "facts": [
+    {
+      "id": "F-CRATESIO-NOT-PUBLISHED",
+      "claim": "Not yet published to crates.io",
+      "disposition": "SUPPORTED",
+      "evidence": "Live query https://crates.io/api/v1/crates/aspose-cells-foss-rust returned {\"errors\":[{\"detail\":\"crate `aspose-cells-foss-rust` does not exist\"}]} -- the exact package name from Cargo.toml's [package] name field has no published crate."
+    },
+    {
+      "id": "F-CARGO-DEPS-MATCH",
+      "claim": "Dependencies section: zip 0.6, roxmltree 0.20, chrono 0.4, sha2 0.10, base64 0.22, getrandom 0.3, serde_json 1",
+      "disposition": "SUPPORTED",
+      "evidence": "Cargo.toml [dependencies] block at source_revision: chrono=\"0.4\", zip=\"0.6\", sha2=\"0.10\", base64=\"0.22\", serde_json=\"1\", roxmltree=\"0.20\", getrandom=\"0.3\" -- matches every name and version exactly."
+    },
+    {
+      "id": "F-PACKAGE-LIB-NAME-MATCH",
+      "claim": "Package name is aspose-cells-foss-rust; imported as aspose_cells_foss_rust",
+      "disposition": "SUPPORTED",
+      "evidence": "Cargo.toml: [package] name = \"aspose-cells-foss-rust\"; [lib] name = \"aspose_cells_foss_rust\", path = \"src/lib.rs\" -- matches exactly."
+    },
+    {
+      "id": "F-ZERO-TESTS",
+      "claim": "No automated test suite ships yet (cargo test --all-targets currently reports 0 tests)",
+      "disposition": "SUPPORTED",
+      "evidence": "grep -rl '#\\[test\\]' across src/ and samples/ at source_revision returns zero matches -- no #[test]-annotated function exists anywhere in the crate, consistent with 0 tests (not independently run via `cargo test` since no Rust toolchain is available here, but the absence of any #[test] attribute in source is itself conclusive)."
+    },
+    {
+      "id": "F-CHARTTYPE-FAMILY-LIST-INCOMPLETE",
+      "claim": "Key Capabilities: 'Build charts through ChartType ... column, line, bar, area, pie, doughnut, scatter, radar, bubble, and stock families, plus their stacked and 3D variants'",
+      "disposition": "CONTRADICTED",
+      "evidence": "ChartType.rs's enum has 86 variants total (85 real + Unknown sentinel), spanning far more families than the 10 named: also Cone/ConeStacked/Cone100PercentStacked, ConicalBar (+Stacked/100PercentStacked), ConicalColumn3D, Cylinder (+Stacked/100PercentStacked), CylindricalBar (+Stacked/100PercentStacked), CylindricalColumn3D, Pyramid (+Stacked/100PercentStacked), PyramidBar (+Stacked/100PercentStacked), PyramidColumn3D, Surface3D/SurfaceWireframe3D/SurfaceContour/SurfaceContourWireframe, BoxAndWhisker/BoxWhisker, Funnel, ParetoLine, Sunburst, Treemap, Waterfall, Histogram, and Map -- roughly 14 additional chart-type families the bullet's enumeration omits. ChartCollection::add() (line 60) only rejects ChartType::Unknown, so every one of these additional families is in fact creatable, not merely round-tripped -- the bullet undercounts the library's own real breadth rather than overclaiming it."
+    },
+    {
+      "id": "F-DEVTEST-SAMPLES-LIST-OMITS-LOADING",
+      "claim": "Development and Testing: 'The samples/ directory demonstrates every feature area — basic.rs, styles.rs, worksheet_settings.rs, validations.rs, conditional_formatting.rs, hyperlinks_and_names.rs, pagesetup.rs, comments.rs, charts.rs, list_objects.rs, pictures.rs, shapes.rs, and document_properties.rs'",
+      "disposition": "CONTRADICTED",
+      "evidence": "samples/ at source_revision contains loading.rs in addition to the 13 named files (plus common.rs, a shared helper module reasonably omitted from a feature-area list). loading.rs is a real feature-area sample -- it is the exact file behind `cargo run --bin sample_loading`, which this same Development and Testing section's own code block lists as one of only 3 core smoke-test samples one section above the 'every feature area' list that omits it. This is a narrow, one-line prose gap, not a hidden capability (loading is otherwise documented in Quick Start and the 'Load XLSX Files With Repair Options' Additional Example)."
+    },
+    {
+      "id": "F-API-TABLE-SELF-CONSISTENT-213",
+      "claim": "'The public API surface includes 213 public types, summarized in the module-grouped table below'",
+      "disposition": "SUPPORTED",
+      "evidence": "Counted the table's own rows directly from the README: 177 Core API struct rows + 35 Enumeration rows + 1 Trait row = 213, matching the stated total exactly (internal self-consistency; not an independent re-count of every row against the actual .rs files)."
+    },
+    {
+      "id": "F-REMOVE-LAST-WORKSHEET-GUARDED",
+      "claim": "A workbook must always keep at least one worksheet: WorksheetsMut::remove_at returns a CellsError::Unsupported error when asked to remove the last remaining worksheet",
+      "disposition": "UNVERIFIED",
+      "evidence": "Not independently traced through WorksheetCollection.rs's remove_at implementation this session; plausible given CellsError::Unsupported(&'static str) exists as a documented enum member elsewhere in the API Reference table, but not directly confirmed by reading the guard logic itself. Left UNVERIFIED rather than asserted."
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Go",
+  "source_revision": "99c789e9175f2b12ad82bafeeba148ddcc1367fb",
+  "lane": "L",
+  "candidate": "lane_l_candidate.md",
+  "diff": "lane_l_candidate.diff",
+  "facts": "facts.json",
+  "checks": [
+    {
+      "id": "C1_EVERY_EDIT_TRACES_TO_A_FACT",
+      "result": "PASS",
+      "detail": "All 4 edit hunks trace to F-FORMULA-ENGINE-UNDERSTATED (At-a-Glance node c3, Key Capabilities bullet 3, Scope bullet 2) or F-PUBLIC-TYPE-COUNT-WRONG (Documentation & Resources bullet), both CONTRADICTED in facts.json."
+    },
+    {
+      "id": "C2_NO_NEW_UNVERIFIED_CLAIM_INTRODUCED",
+      "result": "PASS",
+      "detail": "The corrected formula-function list (21 named functions) and type count (28) are both directly reproduced from source in facts.json, not inferred. The added Scope sentence naming Chart/ConditionalFormatting/PivotTable/VBAProject as real-but-undocumented is independently SUPPORTED by F-CHART-REAL-AND-WIRED, F-CONDITIONALFORMAT-REAL-AND-WIRED, F-PIVOTTABLE-REAL-AND-WIRED, and F-MACRO-STORAGE-ONLY."
+    },
+    {
+      "id": "C3_DIFF_SCOPED_TO_EDIT_SPANS",
+      "result": "PASS",
+      "detail": "diff shows exactly 4 hunks touching only the 4 named claim locations; no reflow or rewording elsewhere (e.g. the Formulas and the Calculation Engine code example, which only demonstrates SUM/AVERAGE and was correctly left untouched since it never claims those are the only supported functions)."
+    },
+    {
+      "id": "C4_UNVERIFIED_CLAIM_LEFT_UNTOUCHED",
+      "result": "PASS",
+      "detail": "F-SETVALIDATION-DATATYPES is UNVERIFIED (cell-value type coverage not exhaustively read); the corresponding Key Capabilities bullet 1 claim is left exactly as written."
+    },
+    {
+      "id": "C5_INITIAL_FALSE_FACT_CAUGHT_AND_RETRACTED_BEFORE_SHIPPING",
+      "result": "PASS",
+      "detail": "A draft finding claiming the Quick Start's `cells_foss.LoadWorkbook(...)` call does not exist (checked only workbook.go) was re-verified against every source file individually before finalizing facts.json; LoadWorkbook is real, defined in xmlloader.go. The draft CONTRADICTED fact was corrected to SUPPORTED (F-QUICKSTART-API-SHAPE) before this candidate was produced -- no false correction reached the candidate."
+    },
+    {
+      "id": "C6_NEGATIVE_CONTROL",
+      "result": "PASS",
+      "detail": "Adversarial check: re-grepped formula_engine.go's switch statement a second time, counting case labels directly (21, matching the doc comment, not just trusting the comment), before accepting F-FORMULA-ENGINE-UNDERSTATED as CONTRADICTED rather than UNVERIFIED."
+    }
+  ],
+  "findings": [],
+  "verdict": "ACCEPT",
+  "verdict_rationale": "Both CONTRADICTED facts are corrected with the smallest possible precise edits, each traceable to independently reproduced source evidence; the undocumented-capabilities note is factually supported and added without expanding scope into a full new documentation section (left to a genuine Lane R completeness pass per lane_r_plan.md)."
+}

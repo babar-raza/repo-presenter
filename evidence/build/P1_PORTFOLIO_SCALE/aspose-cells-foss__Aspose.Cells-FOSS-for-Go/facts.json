@@ -1,0 +1,64 @@
+{
+  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Go",
+  "source_revision": "99c789e9175f2b12ad82bafeeba148ddcc1367fb",
+  "default_branch": "main",
+  "readme_blob_sha": "da807f5a1d51f2998e31c173c5a65c96a36352e8",
+  "verified_at": "2026-10-21",
+  "method": "No go toolchain available on this machine (playbook-confirmed) -- code-reading only, but did a shallow `git clone --depth 1` (git itself is available, distinct from `go build`/`go test`) to grep the full source tree efficiently rather than fetching files one at a time via the Contents API. Ran `grep -rhoE '^type [A-Z][A-Za-z0-9_]*' aspose/cells_foss/*.go` to enumerate every exported type, and traced each undocumented feature's wiring into Worksheet/Workbook fields and the XML save path (xmlsaver.go, xml_feature_saver.go) to confirm these are live, saved features, not dead code. F-FORMULA-ENGINE-UNDERSTATED corrects an error made earlier in this same session: an initial grep for only SUM/AVERAGE/MAX/MIN-related patterns missed formula_engine.go's first switch statement entirely (17 more functions); re-verified by reading the full function body before finalizing this file.",
+  "facts": [
+    {
+      "id": "F-TYPE-COUNT-UNDERSTATED",
+      "claim": "Documentation & Resources: 'the complete, browsable reference for all 14 public types'; API Reference table lists exactly 14 types",
+      "disposition": "CONTRADICTED",
+      "evidence": "grep -rhoE '^type [A-Z][A-Za-z0-9_]*' across all of aspose/cells_foss/*.go at this source_revision returns 28 distinct exported types, not 14: the 14 the README's table lists (Alignment, Border, Cell, Cells, DataValidation, Fill, Font, Picture, RowCallback, StreamingReader, Style, Table, Workbook, Worksheet) plus 14 more it omits entirely (CellNotFoundError, Chart, ChartAnchor, ChartSeries, ChartType, ConditionalFormatting, ConditionalFormattingRule, FormulaError, InvalidRefError, PivotDataField, PivotTable, SheetNotFoundError, StreamOptions, VBAProject)."
+    },
+    {
+      "id": "F-CHART-SUPPORT-UNDOCUMENTED",
+      "claim": "(absence) Key Capabilities, At a Glance, Quick Start, Additional Examples, Project Structure, and API Reference make no mention of chart support anywhere in the README",
+      "disposition": "CONTRADICTED",
+      "evidence": "aspose/cells_foss/chart.go (117 lines) defines Chart/ChartType/ChartSeries/ChartAnchor and Worksheet.AddChart()/RemoveChart(); Worksheet struct has a `Charts []*Chart` field; xmlsaver.go and xml_feature_saver.go both serialize ws.Charts into real chart XML parts and content-type overrides on save (confirmed by direct grep of the save path, not just the type definitions). Three dedicated test files exist: tests/chart_test.go (121 lines), tests/chart_load_test.go (195 lines), tests/chart_pivot_save_test.go (104 lines) -- this is a real, tested, saved feature, completely absent from every section of the README that enumerates capabilities."
+    },
+    {
+      "id": "F-PIVOTTABLE-SUPPORT-UNDOCUMENTED",
+      "claim": "(absence) same sections make no mention of pivot table support",
+      "disposition": "CONTRADICTED",
+      "evidence": "aspose/cells_foss/pivot_table.go (104 lines) defines PivotTable/PivotDataField and Worksheet.AddPivotTable()/RemovePivotTable(); Worksheet struct has a `PivotTables []*PivotTable` field; xmlsaver.go and xml_feature_saver.go serialize ws.PivotTables on save. Two dedicated test files: tests/pivot_table_test.go (123 lines), tests/pivot_table_load_test.go (84 lines) -- real, tested, saved, and undocumented."
+    },
+    {
+      "id": "F-CONDITIONALFORMAT-SUPPORT-UNDOCUMENTED",
+      "claim": "(absence) same sections make no mention of conditional formatting support",
+      "disposition": "CONTRADICTED",
+      "evidence": "aspose/cells_foss/conditional_format.go (118 lines) defines ConditionalFormatting/ConditionalFormattingRule with 5 rule types and 7 operators, and Worksheet.AddConditionalFormatting()/RemoveConditionalFormatting(); Worksheet struct has a `ConditionalFormattings []*ConditionalFormatting` field; xml_feature_saver.go's buildConditionalFormattings() serializes them on save. Two dedicated test files: tests/conditional_format_test.go (146 lines), tests/conditional_format_dxf_test.go (116 lines) -- real, tested, saved, and undocumented. (Note: the .NET, C++, and TypeScript siblings in this family do document conditional formatting as a core capability -- its complete absence here is specific to this repository's own README, not a family-wide omission being newly noticed.)"
+    },
+    {
+      "id": "F-VBA-MACRO-STORAGE-UNDOCUMENTED",
+      "claim": "(absence) same sections make no mention of VBA/macro project storage",
+      "disposition": "CONTRADICTED",
+      "evidence": "aspose/cells_foss/macro.go (57 lines) defines VBAProject and Workbook.SetVBAProject()/GetVBAProject()/HasVBAProject()/ClearVBAProject(), with its own doc comments explicitly scoping it as round-trip-only storage (no VBA compiler/execution -- the code's own comment already states this limitation precisely). tests/macro_test.go (81 lines) exercises it. This is a real, tested, intentionally-scoped feature entirely absent from the README's Key Capabilities, Scope and Limitations, and Project Structure sections."
+    },
+    {
+      "id": "F-PROJECT-STRUCTURE-TREE-INCOMPLETE",
+      "claim": "Project Structure section's file tree lists the contents of aspose/cells_foss/ and examples/",
+      "disposition": "CONTRADICTED",
+      "evidence": "The README's tree under aspose/cells_foss/ lists 15 files but omits 7 real source files that exist at this source_revision: chart.go, conditional_format.go, errors.go, macro.go, olecfb.go, pivot_table.go, test_helpers.go. The examples/ list omits examples/typed_access/main.go, which exists in the tree (confirmed via `gh api .../git/trees/main?recursive=1`)."
+    },
+    {
+      "id": "F-QUICKSTART-BASIC-API",
+      "claim": "Quick Start snippets (NewWorkbook, Worksheets[0], Cells().Set/Get, Save, LoadWorkbook) use real API shapes",
+      "disposition": "SUPPORTED",
+      "evidence": "workbook.go defines NewWorkbook()/LoadWorkbook(); worksheet.go's Worksheet exposes Cells() returning *Cells with Set/Get methods matching the signatures used in every Quick Start and Additional Examples snippet read."
+    },
+    {
+      "id": "F-FORMULA-ENGINE-UNDERSTATED",
+      "claim": "Key Capabilities bullet 3 / At a Glance node c3 / Scope bullet 2: 'CalculateFormula supports only SUM, AVERAGE, MAX, and MIN; any other formula returns an error rather than being evaluated'",
+      "disposition": "CONTRADICTED",
+      "evidence": "Read aspose/cells_foss/formula_engine.go's CalculateFormula() in full (lines 41-150): it has TWO switch statements on the upper-cased function name, not one. The first (string/logic functions, lines 66-102) dispatches CONCAT, IF, COUNTIF, VLOOKUP, ROUND, ABS, POWER, SQRT, LEN, LEFT, RIGHT, MID, UPPER, LOWER, AND, OR, NOT -- 17 functions, each calling a real, separately-defined implementation (concatFunc, ifFunc, countIfFunc, vlookupFunc, roundFunc, absFunc, powerFunc, sqrtFunc, lenFunc, leftFunc, rightFunc, midFunc, upperFunc, lowerFunc, andFunc, orFunc, notFunc -- all confirmed to exist via `grep -n '^func'`, not stubs). The second switch (numeric aggregation, lines 128-150) adds SUM, AVERAGE, MAX, MIN, COUNT -- 5 more. Total: 22 real, evaluated functions, not 4. Only a function name outside all 22 falls through to the final `default: return nil, fmt.Errorf(\"formula: unsupported function %q\", funcName)` -- this is correctly the error path, but it is reached for far fewer function names than the README's claim implies, and the Scope section's specific claim that 'any other formula returns an error rather than being evaluated' is false for 17 of the 18 functions beyond SUM/AVERAGE/MAX/MIN (COUNT is a 5th that also evaluates successfully). This CONTRADICTED finding supersedes an earlier draft pass in this same session that marked this fact SUPPORTED based on an incomplete grep pattern that missed the first switch statement entirely; re-verified independently via a full file read before finalizing."
+    },
+    {
+      "id": "F-NO-THIRD-PARTY-DEPS",
+      "claim": "Depends only on the Go standard library — no third-party modules",
+      "disposition": "SUPPORTED",
+      "evidence": "go.mod at source_revision has no `require` block for any non-stdlib module (module path and go directive only); go.sum is correspondingly absent of third-party checksums."
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Python",
+  "source_revision": "952317cad8db1880ed85be9814c24e9303930d49",
+  "lane": "R",
+  "candidate": "lane_r_candidate.md",
+  "diverges_from_lane_l": true,
+  "diverges_structurally_not_factually": true,
+  "checks": [
+    {
+      "id": "C1_EVERY_ADDITION_TRACES_TO_A_FACT_OR_SIBLING_PATTERN",
+      "result": "PASS",
+      "detail": "The Navigation list, At a Glance diagram, and Enterprise Edition cross-link all trace to F-STRUCTURAL-SKELETON-DIVERGES-FROM-FAMILY; the At a Glance diagram's content is built only from already-SUPPORTED facts (Features bullets, Supported-formats table), not invented capabilities; the cross-link's target URL was independently confirmed live (HTTP 200)."
+    },
+    {
+      "id": "C2_NO_CONTENT_DROPPED_OR_REWORDED",
+      "result": "PASS",
+      "detail": "content_units.json's per-unit ledger shows every pre-existing bullet/section is RETAIN_VERBATIM or RETAIN_VERBATIM_RENAMED (heading text only); zero units are SUPERSEDE or OMIT. This is a structural normalization to the family's own heading skeleton, not a content rewrite."
+    },
+    {
+      "id": "C3_UNVERIFIED_CLAIM_LEFT_UNTOUCHED",
+      "result": "PASS",
+      "detail": "The Scope bullet corresponding to F-XLS-ODS-XLSB-UNSUPPORTED (UNVERIFIED) is retained verbatim, consistent with Lane L's treatment."
+    },
+    {
+      "id": "C4_DIVERGENCE_FROM_LANE_L_IS_DELIBERATE_AND_FLAGGED",
+      "result": "PASS",
+      "detail": "lane_r_plan.md explicitly states this candidate is NOT byte-identical to lane_l_candidate.md or the live README, and explains why (structural skeleton gap against all 6 siblings, not a content error)."
+    }
+  ],
+  "findings": [],
+  "verdict": "ACCEPT",
+  "verdict_rationale": "A genuine, narrow structural divergence (missing Navigation/At a Glance/Enterprise-link sections present in every sibling) corrected by composing the family's standard skeleton around the same, already-verified content -- no new capability claims, no dropped content."
+}

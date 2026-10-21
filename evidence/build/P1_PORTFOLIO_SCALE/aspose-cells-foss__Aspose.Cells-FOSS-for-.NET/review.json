@@ -1,0 +1,31 @@
+{
+  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-.NET",
+  "source_revision": "941814fd138dc28cf47123d48194f329f283498d",
+  "lanes_reviewed": ["L", "R"],
+  "shared_review_note": "Lane L and Lane R both output the unchanged live README for the same reason (zero CONTRADICTED facts, no deficiency to reconstruct around); one combined review covers both lanes as the playbook permits.",
+  "checks": [
+    {
+      "id": "C1_EVERY_CLAIM_CHECKED_TRACES_TO_REPRODUCTION",
+      "result": "PASS",
+      "detail": "All 12 SUPPORTED facts cite a specific `dotnet build`/`dotnet run` reproduction or a direct csproj/reflection read; none asserted from inference alone."
+    },
+    {
+      "id": "C2_NO_CONTRADICTED_FACT_EXISTS",
+      "result": "PASS",
+      "detail": "Zero facts carry disposition CONTRADICTED, including both negative Scope claims (no formula engine, XLSX-only load), which were specifically probed and held."
+    },
+    {
+      "id": "C3_API_TABLE_SPOT_CHECK_NOT_EXHAUSTIVE",
+      "result": "PASS",
+      "detail": "Only 14 of the table's ~80 listed names were individually reflected over; facts.json records this as a spot-check, not a claim of exhaustive verification of every row -- an honest scope limit, not an overclaim."
+    },
+    {
+      "id": "C4_NEGATIVE_CONTROL",
+      "result": "PASS",
+      "detail": "Adversarial check: deliberately tried to break the XLSX-only load claim with a crafted legacy-OLE2-magic file rather than just reading the Scope section and trusting it; got the expected InvalidFileFormatException, not a silent pass-through."
+    }
+  ],
+  "findings": [],
+  "verdict": "ACCEPT",
+  "verdict_rationale": "README is accurate against the actual build/run of this source_revision across every concrete, checkable claim including its own stated limitations; empty-patch is correct for both lanes."
+}

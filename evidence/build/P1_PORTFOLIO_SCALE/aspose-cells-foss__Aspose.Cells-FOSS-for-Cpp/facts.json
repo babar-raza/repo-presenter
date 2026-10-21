@@ -1,0 +1,68 @@
+{
+  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp",
+  "provider_identity": {
+    "provider": "github"
+  },
+  "source_revision": "9f852d0ff1cfdad2d661556d6b87a8eff8c063a2",
+  "default_branch": "main",
+  "readme_blob_sha": "ea03e3174625af40736efe4e780edbbe79841b3d",
+  "verified_at": "2026-10-21",
+  "verification_note": "A prior session in this build directory left only a live_readme.md file with no other evidence -- that file was treated as stale/unverified per instruction and re-fetched fresh here (new source_revision/readme_blob_sha recorded above; both GitHub API reads were re-run in this session). No C++ compiler/CMake toolchain is available on this machine, so source-level verification is code-reading only via the GitHub Contents API and GitHub code search. However, the README's Installation section makes specific, falsifiable claims about the *published NuGet package's own contents* (not just the repository source) -- this session downloaded the real, currently-published aspose.cells.cpp.foss.26.4.1.nupkg from api.nuget.org (a real artifact, not fabricated) and inspected its contents directly with Python's zipfile module (no execution of any code from the package, only archive-listing and text extraction), which is real verification against the actual published artifact, not just the repository source tree -- notably, this repository's own git history contains no NuGet-packaging files (.nuspec, .targets, lib/win_x86 binaries) at all, so this cross-check against the live NuGet artifact was necessary to confirm the Installation section's claims could not be verified from source alone."
+  ,
+  "facts": [
+    {
+      "id": "F-NUGET-PACKAGE-EXISTS",
+      "claim": "Aspose.Cells FOSS for C++ is published on NuGet as Aspose.Cells.Cpp.FOSS, version 26.4.1",
+      "disposition": "SUPPORTED",
+      "evidence": "GET https://api.nuget.org/v3-flatcontainer/aspose.cells.cpp.foss/index.json -> {\"versions\": [\"26.4.0\", \"26.4.1\"]}, HTTP 200. Downloaded aspose.cells.cpp.foss.26.4.1.nupkg directly (25,536,573 bytes) and read its Aspose.Cells.Cpp.FOSS.nuspec: <id>Aspose.Cells.Cpp.FOSS</id><version>26.4.1</version> -- exact match."
+    },
+    {
+      "id": "F-WINDOWS-ONLY-LIBS",
+      "claim": "The package ships prebuilt static libraries for Windows only (lib/win_x86, lib/win_x86_64) built with the MSVC v14x toolset; its own bundled aspose.cells.cpp.foss.targets file errors the build for any other toolset or platform. There are no Linux/macOS binaries in the package.",
+      "disposition": "SUPPORTED",
+      "evidence": "Listed all 201 entries in the downloaded nupkg (a zip archive) directly: the only .lib files present are build/native/Aspose.Cells.Cpp.FOSS/lib/win_x86/{Debug,Release}/aspose_cells_foss.lib and lib/win_x86_64/{Debug,Release}/aspose_cells_foss.lib -- no linux/macos/arm/.a/.so/.dylib entries anywhere in the archive. Read build/native/Aspose.Cells.Cpp.FOSS/aspose.cells.cpp.foss.targets directly from the nupkg: its PlatformCheck MSBuild target contains `<Error Condition=\"!$(PlatformToolset.Contains('v14'))\" Text=\"Aspose.Cells.Cpp.FOSS Library error: Only 'v14x' toolset is supported.\" />` and `<Error Condition=\"'$(Platform)' != 'x64' And '$(Platform)' != 'Win32'\" Text=\"...Only 'x64' and 'Win32' platforms are supported...\" />` -- exact match to the README's claim, down to the quoted toolset name."
+    },
+    {
+      "id": "F-CMAKE-CONFIG-EXISTS",
+      "claim": "A CMake project on Windows can point at the package's own bundled config, which defines an Aspose.Cells.Cpp.FOSS imported target",
+      "disposition": "SUPPORTED",
+      "evidence": "Confirmed build/native/Aspose.Cells.Cpp.FOSS/aspose.cells.cpp.foss-config.cmake exists in the downloaded nupkg's file listing, at the exact path the README's CMake snippet references (build/native/Aspose.Cells.Cpp.FOSS)."
+    },
+    {
+      "id": "F-LOADFORMAT-MEMBER-COUNT-WRONG",
+      "claim": "LoadFormat and SaveFormat each declare a single Xlsx member",
+      "disposition": "CONTRADICTED",
+      "evidence": "Read Aspose.Cells.Foss.Cpp/include/aspose/cells_foss/LoadFormat.h directly: `enum class LoadFormat { Auto = 0, Xlsx = 1 };` -- LoadFormat declares TWO members (Auto and Xlsx), not a single Xlsx member. SaveFormat.h does declare exactly one member (`enum class SaveFormat { Xlsx = 0 };`), so the claim is accurate for SaveFormat but factually wrong for LoadFormat."
+    },
+    {
+      "id": "F-UNSUPPORTEDFEATURE-SAVE-MESSAGE",
+      "claim": "saving to any other format throws UnsupportedFeatureException(\"Only XLSX save is supported.\")",
+      "disposition": "SUPPORTED",
+      "evidence": "Read Aspose.Cells.Foss.Cpp/src/aspose/cells_foss/XlsxWorkbookSerializer.cpp directly, line 738-739: `if (options.GetSaveFormat() != SaveFormat::Xlsx) { throw UnsupportedFeatureException(\"Only XLSX save is supported.\"); }` -- exact message match. (Given SaveFormat's single-member enum, this branch is effectively unreachable through normal public API use, but the code and message exist exactly as claimed.)"
+    },
+    {
+      "id": "F-LEGACY-XML-MAPPERS-THROW",
+      "claim": "Legacy SpreadsheetML mapper classes (WorkbookXmlMapper, WorksheetXmlMapper, StylesheetXmlMapper, SharedStringTableXmlMapper) exist in source but their read/write methods unconditionally throw UnsupportedFeatureException",
+      "disposition": "SUPPORTED",
+      "evidence": "GitHub code search confirmed UnsupportedFeatureException is referenced in all four files (WorkbookXmlMapper.cpp, WorksheetXmlMapper.cpp, StylesheetXmlMapper.cpp, SharedStringTableXmlMapper.cpp). Read WorkbookXmlMapper.cpp directly: both its methods unconditionally `throw UnsupportedFeatureException(...)` with no implementation body."
+    },
+    {
+      "id": "F-COMMENT-FIELD-CLAIM-INCOMPLETE",
+      "claim": "Cell-level comments/notes are not modeled as a distinct object. The only Comment field in the public API belongs to DefinedName — a description string on a named range, not an Excel cell note or threaded comment.",
+      "disposition": "CONTRADICTED",
+      "evidence": "Read DefinedName.h directly: confirms GetComment()/SetComment() exist there, matching half the claim. However, a GitHub code search for 'Comment' under the include/ directory also found DocumentProperties.h, which defines a second, distinct Comment-named field: `GetComments()`/`SetComments()`, mapped to the OOXML core.xml 'Description' property via `_model.GetCore().SetDescription(...)`. This is document-level metadata, not a cell note either, so the underlying substance of the bullet (no Excel cell-level comment/note object exists) is not falsified -- but the specific, falsifiable phrase 'The only Comment field in the public API belongs to DefinedName' is literally false: DocumentProperties::Comments is a second one."
+    },
+    {
+      "id": "F-CONDITIONAL-FORMATTING-DROP-WARNING",
+      "claim": "An unsupported [conditional formatting] rule type is dropped with a WarningInfo diagnostic rather than failing the load outright",
+      "disposition": "SUPPORTED",
+      "evidence": "Read Aspose.Cells.Foss.Cpp/src/aspose/cells_foss/XlsxWorkbookConditionalFormatting.cpp directly, line 419: constructs a WarningInfo with the message \"An unsupported conditional formatting rule was dropped during load.\" -- confirms the claim precisely."
+    },
+    {
+      "id": "F-AUTOFILTER-DATE-GROUP-REJECTED",
+      "claim": "AutoFilter date-group filters using certain patterns are rejected as unsupported during load rather than approximated",
+      "disposition": "UNVERIFIED",
+      "evidence": "Not independently re-verified this session within the time budget -- XlsxWorkbookAutoFilter.cpp was not read in detail. No contradicting evidence found; left UNVERIFIED rather than re-asserted as confirmed."
+    }
+  ]
+}

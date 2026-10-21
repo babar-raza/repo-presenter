@@ -1,0 +1,58 @@
+{
+  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Java",
+  "source_revision": "c65329e7257b1311abb9686d7e4957a8cc002955",
+  "default_branch": "master",
+  "readme_blob_sha": "e39c11fed118beda26bad47e3507ceb3dce39e34",
+  "verified_at": "2026-10-21",
+  "method": "No mvn/Java build toolchain available on this machine (playbook-confirmed) -- code-reading only, via a shallow `git clone --depth 1` (git itself is available, distinct from `mvn`) to grep the full source tree efficiently. Read pom.xml, ChartType.java, ChartCollection.java, AutoShapeType.java, and the four xml/*.java mapper files directly. One live external check: queried repo1.maven.org's maven-metadata.xml for org.aspose:aspose-cells-foss to confirm the published package and pinned version actually exist (a registry lookup, not a toolchain execution step).",
+  "facts": [
+    {
+      "id": "F-MAVEN-PACKAGE-VERSION-MATCH",
+      "claim": "pom.xml dependency snippet pins version 26.7.0",
+      "disposition": "SUPPORTED",
+      "evidence": "Live query https://repo1.maven.org/maven2/org/aspose/aspose-cells-foss/maven-metadata.xml returned <latest>26.7.0</latest> and <release>26.7.0</release> with versions [26.5.0, 26.7.0] -- the exact version the README's Installation snippet pins is the real latest/release version on Maven Central. Local pom.xml at source_revision also has <version>26.7.0</version>."
+    },
+    {
+      "id": "F-JAVA17-NO-RUNTIME-DEPS",
+      "claim": "Targets Java 17; depends on Apache POI only in test scope, never at runtime; no required third-party dependencies",
+      "disposition": "SUPPORTED",
+      "evidence": "pom.xml: maven.compiler.source/target both = 17; both <dependency> blocks (junit-jupiter and poi-ooxml) have <scope>test</scope>; no non-test-scoped dependency exists in the file."
+    },
+    {
+      "id": "F-DEV-DEPS-VERSIONS",
+      "claim": "Development Dependencies: org.junit.jupiter:junit-jupiter 5.10.2, org.apache.poi:poi-ooxml 5.3.0",
+      "disposition": "UNVERIFIED",
+      "evidence": "pom.xml references these via ${junit.version}/${poi.version} properties rather than literal version strings in the dependency block itself; the properties section was not independently re-read this session to confirm the exact pinned values 5.10.2/5.3.0 match. Plausible given the dependency groupId/artifactId match exactly, but the literal version numbers are UNVERIFIED rather than confirmed."
+    },
+    {
+      "id": "F-CHARTTYPE-18-OF-25-CREATABLE",
+      "claim": "18 of the 25 real ChartType values can be created via ChartCollection.add(); the other 7 (ChartEx: Waterfall, Treemap, Sunburst, Histogram, Box and Whisker, Funnel, Map) round-trip verbatim but cannot be created through the API",
+      "disposition": "SUPPORTED",
+      "evidence": "ChartType.java enum has 26 constants total; excluding the UNKNOWN sentinel, 25 'real' values remain. ChartCollection.java's add(ChartType, ...) has `case WATERFALL, TREEMAP, SUNBURST, HISTOGRAM, BOX_AND_WHISKER, FUNNEL, MAP -> throw new UnsupportedFeatureException(...)` -- exactly those 7 named types are rejected at creation time (the other 18 -- BAR, COLUMN, LINE, AREA, PIE, DOUGHNUT, SCATTER, BUBBLE, RADAR, STOCK, BAR_3D, COLUMN_3D, LINE_3D, AREA_3D, PIE_3D, SURFACE_3D, SURFACE_WIREFRAME_3D, CONTOUR -- fall through to the real creation path). A separate string-based ChartType parser elsewhere in the same file maps these same 7 names to/from lowercase OOXML chart-type strings, confirming round-trip (load/save) support for them independent of creation."
+    },
+    {
+      "id": "F-AUTOSHAPETYPE-38-PRESETS",
+      "claim": "ShapeCollection operates across 38 preset geometries (AutoShapeType)",
+      "disposition": "SUPPORTED",
+      "evidence": "AutoShapeType.java enum has exactly 39 constants; excluding the UNKNOWN sentinel ('Shape type is not one of the recognized presets'), 38 real preset geometries remain -- matches the claim exactly."
+    },
+    {
+      "id": "F-XML-MAPPERS-UNIMPLEMENTED-UNUSED",
+      "claim": "A handful of public XML-mapper classes are unimplemented skeleton code; their own class-level Javadoc discloses this, and the library's real save/load path never calls them",
+      "disposition": "SUPPORTED",
+      "evidence": "Read src/main/java/org/aspose/cells_foss/xml/WorkbookXmlMapper.java in full: class-level Javadoc states 'This class is not implemented in this initial solution skeleton' verbatim, and each method's own Javadoc repeats this. grep for WorkbookXmlMapper/WorksheetXmlMapper/StylesheetXmlMapper/SharedStringTableXmlMapper across every top-level file in src/main/java/org/aspose/cells_foss/*.java (the real save/load path, e.g. XlsxWorkbookSerializer.java) returns zero references -- confirming these classes are genuinely dead code from the real I/O path's perspective, exactly as the Scope section discloses."
+    },
+    {
+      "id": "F-API-TABLE-SELF-CONSISTENT-183",
+      "claim": "The API Reference table covers 'the full supported public API surface — 183 public types organized into one module'",
+      "disposition": "SUPPORTED",
+      "evidence": "Counted the table's own rows directly from the README: 148 Core API class rows + 3 Interface rows + 32 Enumeration rows = 183, matching the stated total exactly. This confirms internal self-consistency of the table/count, not an independent re-count of every nested public class against the actual .java files (110 top-level files in org.aspose.cells_foss contain 110 top-level public class/interface/enum declarations per direct grep; the remaining ~73 entries are plausibly nested public static classes, consistent with docs/apidocs' own generated file names like AutoFilter.AutoFilterColorFilter.html, but not individually re-verified one by one)."
+    },
+    {
+      "id": "F-QUICKSTART-API-SHAPE",
+      "claim": "Quick Start / Additional Examples API calls (Workbook, Worksheet, Cell, Style, LoadOptions, Validation, FormatCondition, CellArea, etc.) match real method names",
+      "disposition": "SUPPORTED",
+      "evidence": "File names for every class referenced in the Quick Start and Additional Examples snippets (Workbook.java, Worksheet.java, Cell.java, Style.java, LoadOptions.java, LoadIssue.java, Validation.java, FormatCondition.java, FormatConditionCollection.java, CellArea.java) all exist directly under src/main/java/org/aspose/cells_foss/ at this source_revision (full method-signature-level reproduction not independently run, no Java toolchain available, but class/file existence directly confirms the import paths used in every snippet are real)."
+    }
+  ]
+}

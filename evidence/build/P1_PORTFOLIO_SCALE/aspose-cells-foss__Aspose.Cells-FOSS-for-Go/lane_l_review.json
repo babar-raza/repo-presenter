@@ -1,0 +1,42 @@
+{
+  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Go",
+  "source_revision": "99c789e9175f2b12ad82bafeeba148ddcc1367fb",
+  "lane": "L",
+  "candidate": "lane_l_candidate.md",
+  "diff": "lane_l_candidate.diff",
+  "checks": [
+    {
+      "id": "C1_EVERY_EDIT_TRACES_TO_A_FACT",
+      "result": "PASS",
+      "detail": "6 hunks trace to 6 CONTRADICTED facts: F-FORMULA-ENGINE-UNDERSTATED (At-a-Glance node c3, Key Capabilities bullet 3, Scope bullet 2 -- 3 of the 6 hunks), F-PROJECT-STRUCTURE-TREE-INCOMPLETE (Project Structure tree), F-TYPE-COUNT-UNDERSTATED (Documentation & Resources sentence), and F-CHART-SUPPORT-UNDOCUMENTED/F-PIVOTTABLE-SUPPORT-UNDOCUMENTED/F-CONDITIONALFORMAT-SUPPORT-UNDOCUMENTED/F-VBA-MACRO-STORAGE-UNDOCUMENTED together (one new Scope bullet)."
+    },
+    {
+      "id": "C2_MOST_SEVERE_FINDING_GIVEN_PROMINENCE",
+      "result": "PASS",
+      "detail": "F-FORMULA-ENGINE-UNDERSTATED is the most severe finding in this repository -- not an absence but an explicit, false claim ('any other formula returns an error rather than being evaluated' is false for 17 of 18 non-SUM/AVERAGE/MAX/MIN functions) -- and is corrected in all 3 locations that stated it (diagram, capability bullet, scope bullet), not just one."
+    },
+    {
+      "id": "C3_SELF_CORRECTION_DOCUMENTED_HONESTLY",
+      "result": "PASS",
+      "detail": "facts.json's method note and F-FORMULA-ENGINE-UNDERSTATED's evidence both explicitly record that an earlier pass in this session mis-marked this fact SUPPORTED due to an incomplete grep, and that it was re-verified by reading the full function body before this file was finalized -- not silently corrected without a trace."
+    },
+    {
+      "id": "C4_NO_UNVERIFIED_CLAIM_CORRECTED",
+      "result": "PASS",
+      "detail": "No fact in facts.json is UNVERIFIED for this repository; F-QUICKSTART-BASIC-API and F-NO-THIRD-PARTY-DEPS are both SUPPORTED and their corresponding README text is left untouched."
+    },
+    {
+      "id": "C5_BYTE_PRESERVATION_OUTSIDE_EDIT_SPANS",
+      "result": "PASS",
+      "detail": "diff shows exactly 6 hunks; the Additional Examples 'Formulas and the Calculation Engine' code sample (which only demonstrates SUM/AVERAGE) is correctly left untouched since it never claims those are the only supported functions."
+    },
+    {
+      "id": "C6_NEGATIVE_CONTROL",
+      "result": "PASS",
+      "detail": "Adversarial check: re-read formula_engine.go's CalculateFormula() a second time end-to-end (not re-grepped with the same flawed pattern) before finalizing the 22-function count, and independently confirmed each of the 17 additional functions calls a real, separately-defined implementation (not a stub) via `grep -n '^func'`."
+    }
+  ],
+  "findings": [],
+  "verdict": "ACCEPT",
+  "verdict_rationale": "Six precise, fact-traceable corrections, including a self-caught and corrected methodological error on the most severe finding (an explicit false claim, not merely an absence); nothing outside the named claims was touched."
+}

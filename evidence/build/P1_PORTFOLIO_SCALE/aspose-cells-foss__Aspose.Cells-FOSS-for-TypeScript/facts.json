@@ -1,0 +1,70 @@
+{
+  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript",
+  "provider_identity": {
+    "provider": "github",
+    "repository_id": 1224468949,
+    "node_id": "R_kgDOSPvp1Q"
+  },
+  "source_revision": "fc186507e5b7124f4664aa6035f25cfd3112367d",
+  "default_branch": "master",
+  "readme_blob_sha": "cc9dcb94e7b0cbe41c41ab4573082377096fa053",
+  "verified_at": "2026-10-21",
+  "verification_note": "Prior attempt in this output directory left only a stale live_readme.md with no further files; that file has been re-fetched fresh in this session via the GitHub Contents API (new blob read, confirmed against the current head commit) rather than trusted as-is. Node.js/npm/tsx are NOT available in this environment (playbook-confirmed toolchain gap), so verification here is code-reading only, not execution-based -- every disposition below is derived from reading the actual TypeScript source at the pinned source_revision, not from running it. No test suite exists in this repository (file tree has no tests/ or *.spec.ts/*.test.ts), so there was also no existing test output to cross-check against.",
+  "method": "Live GitHub Contents/Trees API reads (gh CLI, authenticated). Read package.json, tsconfig.json, aspose_cells/workbook.ts (full Workbook class: load/save/detectFormat/toHtml), aspose_cells/cell.ts, aspose_cells/worksheet.ts, aspose_cells/autofilter.ts, aspose_cells/html/{index.ts,htmlWriter.ts,htmlExporter.ts}, License/LICENSE.txt. One external, non-toolchain check: queried the public npm registry (https://registry.npmjs.org/<name>) over HTTPS for the most plausible package names (aspose_cells, aspose-cells-foss, excel-cells -- the last being package.json's own \"name\" field) to cross-check the README's 'npm package has not been published yet' claim; this is a network lookup, not a Node/npm execution step.",
+  "facts": [
+    {
+      "id": "F-PKG-DEPS-MATCH",
+      "claim": "Required package dependencies are @zip.js/zip.js ^2.8.21, @xmldom/xmldom ^0.8.10, adm-zip ^0.5.16; dev dependencies @types/node ^25.3.3, typescript ^5.9.3, ts-node ^10.9.2, tsx ^4.21.0",
+      "disposition": "SUPPORTED",
+      "evidence": "package.json at source_revision: dependencies block is exactly {\"@zip.js/zip.js\":\"^2.8.21\",\"@xmldom/xmldom\":\"^0.8.10\",\"adm-zip\":\"^0.5.16\"}; devDependencies block is exactly {\"@types/node\":\"^25.3.3\",\"ts-node\":\"^10.9.2\",\"tsx\":\"^4.21.0\",\"typescript\":\"^5.9.3\"} -- README's version strings match package.json verbatim."
+    },
+    {
+      "id": "F-NPM-NOT-PUBLISHED",
+      "claim": "\"A npm package has not been published yet. Install from source.\"",
+      "disposition": "SUPPORTED",
+      "evidence": "Queried https://registry.npmjs.org/ for the three most plausible package names: package.json's own \"name\" field (\"excel-cells\") -> 404; \"aspose-cells-foss\" -> 404; \"aspose_cells\" (the import root used throughout the README's own examples) -> 404. No live npm package found under any name a reader would plausibly guess from this repository, consistent with the claim. Not an exhaustive search of every conceivable package name."
+    },
+    {
+      "id": "F-LOAD-HTML-AUTODETECT",
+      "claim": "Workbook.load(filePath) auto-detects .html/.htm files and converts them into a workbook object",
+      "disposition": "SUPPORTED",
+      "evidence": "aspose_cells/workbook.ts:52-67, Workbook.load(): checks filePath extension, and for 'html'/'htm' calls HtmlDocument.load(filePath) then htmlDoc.toWorkbook(), returning the resulting Workbook -- exactly as the opening paragraph and Key Capabilities bullet 7 describe."
+    },
+    {
+      "id": "F-TOHTML-SINGLE-STRING",
+      "claim": "toHtml() renders a workbook to a styled HTML document (implying a single self-contained document/string)",
+      "disposition": "SUPPORTED",
+      "evidence": "aspose_cells/workbook.ts:433-435, toHtml() returns workbookToHtmlFull(this); aspose_cells/html/htmlWriter.ts:78, workbookToHtmlFull(workbook): string -- returns a single HTML string (verified by reading its full body, which builds one <html> document with embedded <style> and one <table> per sheet, not a multi-file structure)."
+    },
+    {
+      "id": "F-CELL-PUTVALUE-SETFORMULA",
+      "claim": "Cell.putValue()/Cell.setFormula() exist as documented; Worksheet.getCell2()/getCell() exist as documented",
+      "disposition": "SUPPORTED",
+      "evidence": "aspose_cells/cell.ts:50 putValue(value: CellValue), aspose_cells/cell.ts:63 setFormula(formula: string); aspose_cells/worksheet.ts:66 getCell(row,col): Cell|undefined, aspose_cells/worksheet.ts:74 getCell2(key: string): Cell -- all four methods exist with the signatures the README's examples use."
+    },
+    {
+      "id": "F-SAVE-HTML-IS-FRAMESET-NOT-SINGLE-DOC",
+      "claim": "The Additional Examples section's \"Export a Workbook to HTML\" example (`await workbook.save(\"output.html\", { saveFormat: undefined })`) produces a single HTML document at the given path",
+      "disposition": "CONTRADICTED",
+      "evidence": "aspose_cells/workbook.ts:390-422, save(): when the resolved format is SaveFormat.HTML it does NOT write a single document -- it constructs htmlDir = <dir>/<fileName>_files, creates that directory, and calls HtmlExporter.saveAsHtmlFrameset(filePath, htmlDir, fileName). Reading aspose_cells/html/htmlExporter.ts:18-58, saveAsHtmlFrameset() writes SEVEN things: the frameset HTML at filePath itself (a Microsoft-Office XHTML-Frameset-DTD shell, not a standalone viewable document), plus inside the companion <fileName>_files/ directory: filelist.xml, stylesheet.css, tabstrip.htm, one sheetNNN.htm per worksheet, editdata.mso, and oledata.mso. Running the README's own documented example exactly as written (`save('output.html', ...)`) therefore leaves the reader with a frameset file that is broken/unviewable if separated from its companion directory -- a materially different and larger result than 'export a workbook to HTML' implies, and inconsistent with toHtml()'s genuinely single-document output (F-TOHTML-SINGLE-STRING) which this example does not use. This is a disclosure gap in the example/claim, not a crash: the code runs without error and the files are internally consistent (verified by reading generateFramesetHtml()'s reference hrefs, which point at the exact filenames saveAsHtmlFrameset() writes)."
+    },
+    {
+      "id": "F-AUTOFILTER-SHAPE",
+      "claim": "AutoFilter is 'Class with 5 methods and 2 properties'",
+      "disposition": "SUPPORTED",
+      "evidence": "aspose_cells/autofilter.ts: constructor, addFilterColumn(), removeFilterColumn(), clear(), toXml() = 5 callable members if the generator counts the constructor as a method (consistent with this table's own generation convention seen elsewhere); get/set range (one property) + get columns (one property) = 2 properties. Not independently re-derived for the table's other ~115 rows -- this is one spot-check, not a full-table reverification (see content_units.json)."
+    },
+    {
+      "id": "F-LICENSE-MIT",
+      "claim": "Project is licensed under the MIT License",
+      "disposition": "SUPPORTED",
+      "evidence": "License/LICENSE.txt at source_revision begins 'The MIT License (MIT)\\nCopyright (c) 2001-2025 Aspose Pty Ltd' -- a real MIT license file, matching the README's badge and License section."
+    },
+    {
+      "id": "F-NODE-TS-VERSION-REQUIREMENT",
+      "claim": "Requires Node.js 18 or later and TypeScript 5 or later",
+      "disposition": "UNVERIFIED",
+      "evidence": "package.json has no \"engines\" field constraining a Node version, and tsconfig.json's compilerOptions (target ES2020, lib [ES2020, dom]) do not by themselves prove a Node-18-specific minimum (no Node-only API usage was traced through the codebase to confirm the floor). The TypeScript >=5 claim is plausible given devDependencies pin \"typescript\": \"^5.9.3\", but a project can often compile with other major versions too. Not independently confirmed either way in the time available -- left UNVERIFIED rather than asserted."
+    }
+  ]
+}

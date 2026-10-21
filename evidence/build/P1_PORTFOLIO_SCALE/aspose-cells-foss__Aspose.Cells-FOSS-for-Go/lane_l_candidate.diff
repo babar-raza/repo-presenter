@@ -1,0 +1,85 @@
+--- live_readme.md	2026-10-21 17:51:02.379955100 +0500
++++ lane_l_candidate.md	2026-10-21 18:14:03.094884100 +0500
+@@ -56,7 +56,7 @@
+       direction TB
+       c1["Cell read and write (A1-style references)"]
+       c2["Font, fill, alignment, and border styling"]
+-      c3["Formulas with a built-in SUM/AVERAGE/MAX/MIN engine"]
++      c3["Formulas with a built-in 22-function calculation engine"]
+       c4["Data validation, tables, and picture embedding"]
+     end
+     subgraph capr[" "]
+@@ -81,7 +81,10 @@
+ - Font, fill, alignment, and borders combine into a `Style` applied to any cell via
+   `Cell.SetStyle`, with automatic deduplication of identical styles during save.
+ - Formulas are stored with `Cell.SetFormula` and evaluated by the built-in `CalculateFormula`
+-  engine, which supports `SUM`, `AVERAGE`, `MAX`, and `MIN` over single cells or A1-style ranges.
++  engine, which supports 22 functions — `SUM`, `AVERAGE`, `MAX`, `MIN`, `COUNT`,
++  `CONCAT`, `IF`, `COUNTIF`, `VLOOKUP`, `ROUND`, `ABS`, `POWER`, `SQRT`, `LEN`, `LEFT`,
++  `RIGHT`, `MID`, `UPPER`, `LOWER`, `AND`, `OR`, and `NOT` — over single cells or
++  A1-style ranges.
+ - Data validation rules (`DataValidation`) restrict a range to dropdown lists or whole/decimal
+   ranges with custom error messages and error styles; structured `Table` ranges add header rows
+   and auto-filters; `Picture` objects (PNG or JPEG) embed images. All three attach to a
+@@ -401,7 +404,14 @@
+ │   ├── xmlsaver.go           #   XML saving
+ │   ├── xml_feature_loader.go #   Style/table/picture loading
+ │   ├── xml_feature_saver.go  #   Style/table/picture/validation saving
+-│   └── xml_sharedstrings_loader.go  # Shared strings
++│   ├── xml_sharedstrings_loader.go  # Shared strings
++│   ├── chart.go              #   Charts (bar/line/pie)
++│   ├── pivot_table.go        #   Pivot tables
++│   ├── conditional_format.go #   Conditional formatting rules
++│   ├── macro.go              #   VBA project storage (round-trip only)
++│   ├── olecfb.go             #   OLE compound-file handling (encryption container)
++│   ├── errors.go             #   Typed error values
++│   └── test_helpers.go       #   Internal test support
+ ├── tests/                    # Integration tests (public API)
+ ├── examples/                 # Runnable example programs
+ │   ├── basic/                #   Create and save
+@@ -414,6 +424,7 @@
+ │   ├── csv_export/           #   CSV export
+ │   ├── csv_import/           #   CSV import
+ │   ├── streaming/            #   Streaming large data
++│   ├── typed_access/         #   Typed cell-value access
+ │   └── go.mod                #   Separate module for examples (see Development and Testing)
+ ├── docs/                     # Documentation
+ │   └── usage.md              #   Detailed usage guide
+@@ -464,8 +475,9 @@
+ - **[How-to guides & FAQ](https://kb.aspose.org/cells/go/)** — Go knowledge base for Aspose.Cells
+   FOSS: how-to articles, FAQ, and troubleshooting guides.
+ - **[Full API reference](https://reference.aspose.org/cells/go/)** — the complete, browsable
+-  reference for all 14 public types (the [API reference](#api-reference) section above covers the
+-  essentials).
++  reference for the module's public types (the [API reference](#api-reference) section above
++  covers the 14 most commonly used ones; see Scope and Limitations below for additional public
++  types not walked through in this README).
+ - **[AGENTS.md](AGENTS.md)** — the repository's own contribution guide for AI-assisted
+   development, covering source-of-truth conventions and areas to avoid changing without review.
+ - Found a bug or have a feature request?
+@@ -475,8 +487,8 @@
+ 
+ - Cell references are A1-style strings only (`"A1"`, `"B2"`); tuple/array indices (e.g. `[0, 0]`)
+   are not supported.
+-- `CalculateFormula` supports only `SUM`, `AVERAGE`, `MAX`, and `MIN`; any other formula returns
+-  an error rather than being evaluated.
++- `CalculateFormula` supports the 22 functions named in Key Capabilities above; any formula
++  naming a function outside that list returns an error rather than being evaluated.
+ - CSV import (`ImportFromCSV`/`FromCSV`) stores every field as a Go `string` — it does not infer
+   numeric or boolean types the way `Cells().Set` does when called directly with typed values.
+ - On save, unmodified content is reused verbatim from the original XML byte-for-byte, and only
+@@ -484,6 +496,14 @@
+   full re-serialization of every part.
+ - Generated XML follows ECMA-376's own element ordering; this preserves round-trip compatibility
+   but isn't independently configurable.
++- This README's Key Capabilities, Quick Start, and Additional Examples walk through the 14 types
++  in the API Reference table above. The module also exports `Chart`/`ChartSeries`/`ChartAnchor`
++  (bar/line/pie charts via `Worksheet.AddChart`), `PivotTable`/`PivotDataField`
++  (`Worksheet.AddPivotTable`), `ConditionalFormatting`/`ConditionalFormattingRule`
++  (`Worksheet.AddConditionalFormatting`), and `VBAProject` (round-trip-only macro storage via
++  `Workbook.SetVBAProject` — this library does not compile or execute VBA). All four are real,
++  tested, and serialized on save; see their doc comments in `aspose/cells_foss/` and the
++  corresponding `tests/*_test.go` files for usage, as this README does not yet walk through them.
+ 
+ These limitations don't apply to
+ [Aspose.Cells for Go Enterprise Edition](https://products.aspose.com/cells/go-cpp/), which adds

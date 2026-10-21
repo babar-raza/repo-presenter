@@ -1,0 +1,93 @@
+{
+  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-.NET",
+  "provider_identity": {
+    "provider": "github",
+    "repository_id": 1203447266,
+    "node_id": "R_kgDOR7sl4g"
+  },
+  "source_revision": "941814fd138dc28cf47123d48194f329f283498d",
+  "default_branch": "master",
+  "readme_blob_sha": "29625189c4d9565855b2187fda2683d20e8aef1f",
+  "verified_at": "2026-10-21",
+  "method": "Live GitHub Contents/Trees API reads (gh CLI) plus a shallow git clone to a short path (C:/cpnet, to avoid Windows MAX_PATH issues) and real `dotnet build`/`dotnet run` (dotnet 10.0.401) against the actual src/ library and samples/ projects, plus a standalone console project exercising every Quick Start / Additional Examples snippet verbatim and reflecting over the built assembly's exported types.",
+  "facts": [
+    {
+      "id": "F-MULTITARGET",
+      "claim": "Pure managed code, multi-targets netstandard2.0 and net8.0",
+      "disposition": "SUPPORTED",
+      "evidence": "src/Aspose.Cells_FOSS/Aspose.Cells_FOSS.csproj: <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>; `dotnet build src/Aspose.Cells_FOSS/Aspose.Cells_FOSS.csproj -c Debug` (the README's exact command) succeeded, producing both Aspose.Cells.FOSS.dll outputs (netstandard2.0 and net8.0)."
+    },
+    {
+      "id": "F-PACKAGE-VERSION",
+      "claim": "Installation section lists <PackageReference Include=\"Aspose.Cells.FOSS\" Version=\"26.9.0.0\" />",
+      "disposition": "SUPPORTED",
+      "evidence": "csproj: <Version>26.9.0.0</Version>, matching the README's installation snippet exactly."
+    },
+    {
+      "id": "F-NAMESPACE",
+      "claim": "Public namespace is Aspose.Cells_FOSS (underscore), distinct from the NuGet package id Aspose.Cells.FOSS (dots)",
+      "disposition": "SUPPORTED",
+      "evidence": "Reflected over the built assembly: typeof(Workbook).Namespace == \"Aspose.Cells_FOSS\"; package id in csproj PackageId/AssemblyName is Aspose.Cells.FOSS."
+    },
+    {
+      "id": "F-QUICKSTART-CREATE-STYLE-FORMULA",
+      "claim": "Quick Start 'create a workbook, write and format cells' snippet (PutValue, GetStyle/SetStyle, Font/FillPattern, Formula) works",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: README's first Quick Start snippet run verbatim, produced a 2531-byte products.xlsx with no exception; sheet.Cells[\"B4\"].Formula read back as \"=SUM(B2:B3)\" (stored as string, not evaluated, consistent with the Scope section's no-calculation-engine claim)."
+    },
+    {
+      "id": "F-QUICKSTART-LOADOPTIONS",
+      "claim": "LoadOptions{TryRepairPackage, TryRepairXml, StrictMode} and workbook.LoadDiagnostics.HasDataLossRisk work as documented",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: README's second Quick Start snippet run verbatim against the previously-saved products.xlsx; HasDataLossRisk read without exception (false, as expected for a clean file); re-save to updated.xlsx succeeded (2534 bytes)."
+    },
+    {
+      "id": "F-QUICKSTART-PDF",
+      "claim": "PageSetup.PaperSize/Orientation plus Save(path, new PdfSaveOptions{OnePagePerSheet=true}) exports PDF",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: README's third Quick Start snippet run verbatim, produced a 20308-byte report.pdf; also ran the shipped samples/Aspose.Cells_FOSS.Samples.PdfConversion project unmodified via `dotnet run --project ...`, which converted samples/files/sample.xlsx to sample.pdf successfully."
+    },
+    {
+      "id": "F-BASIC-SAMPLE-RUNS",
+      "claim": "Development and Testing section's exact `dotnet run --project samples\\Aspose.Cells_FOSS.Samples.Basic\\...` command runs",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: ran unmodified, printed Hello/Int32/Boolean/Decimal/DateTime/formula-result lines with no exception, confirming multi-type PutValue (string/int/bool/decimal/DateTime) and formula storage."
+    },
+    {
+      "id": "F-TABLE-TOTALS-SNIPPET",
+      "claim": "'Build a Table With Totals' snippet (ListObjects.Add, TableStyleType, ShowTotals) works",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: snippet run verbatim, produced a 3270-byte products-table.xlsx with no exception."
+    },
+    {
+      "id": "F-API-REFERENCE-TYPES-EXIST",
+      "claim": "API Reference table's listed classes/interfaces/structs/enums exist in the public surface (spot-checked: CellsException, FormulaException, UnsupportedFeatureException, StyleException, WorkbookLoadException, WorkbookSaveException, InvalidFileFormatException, IWarningCallback, CellArea, Color, LoadIssue, DiagnosticSeverity, ImageType, TargetModeType)",
+      "disposition": "SUPPORTED",
+      "evidence": "Reflected over the built assembly's GetExportedTypes() (98 total exported types): all 14 spot-checked names found, all in namespace Aspose.Cells_FOSS as documented."
+    },
+    {
+      "id": "F-PUTVALUE-OVERLOADS",
+      "claim": "Cell.PutValue(value), PutValue(value, isConverted), PutValue(value, isConverted, setStyle) overloads exist",
+      "disposition": "SUPPORTED",
+      "evidence": "Reflected over Cell type's methods named PutValue: overload parameter-counts found were {1,1,1,1,1,1,2,3,1} -- includes a 1-arg form (multiple, for different value types), a 2-arg form, and a 3-arg form, matching the three documented signatures."
+    },
+    {
+      "id": "F-SCOPE-NO-FORMULA-ENGINE",
+      "claim": "Cell.Formula stores the formula as a string; library does not parse/evaluate/recalculate",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: after setting B4.Formula = \"=SUM(B2:B3)\" and saving/reading back, the value is the literal formula string, not a computed 4.98; no recalculation API was exercised or found in the reflected type surface."
+    },
+    {
+      "id": "F-SCOPE-NO-XLS-LOAD",
+      "claim": "Load support is limited to XLSX; legacy XLS is not loaded",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: wrote a file with the legacy OLE2/XLS magic bytes (D0 CF 11 E0 A1 B1 1A E1) and attempted new Workbook(\"fake.xls\"); raised InvalidFileFormatException: 'The workbook is not a valid XLSX zip package.' -- consistent with the documented XLSX-only load scope."
+    },
+    {
+      "id": "F-SAMPLE-PROJECTS-LISTED-EXIST",
+      "claim": "All 15 sample project names listed under 'View All Sample Projects' exist as real .csproj files under samples/",
+      "disposition": "SUPPORTED",
+      "evidence": "git tree listing at source_revision confirms all 15 named .csproj files exist under samples/, one per listed project name, plus src/Aspose.Cells_FOSS/Aspose.Cells_FOSS.csproj for the library itself."
+    }
+  ]
+}

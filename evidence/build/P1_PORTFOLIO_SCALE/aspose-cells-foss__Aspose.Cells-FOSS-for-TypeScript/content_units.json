@@ -1,0 +1,36 @@
+{
+  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript",
+  "source_revision": "fc186507e5b7124f4664aa6035f25cfd3112367d",
+  "note": "Mission section 7 step 3 content-unit inventory. Case A (live README is a substantial, high-quality structural baseline). Each disposition derived from facts.json, not copied from the Lane L patch.",
+  "units": [
+    {"id": "U-H1", "unit": "H1 title + badge row + banner", "disposition": "RETAIN_VERBATIM", "reason": "Badge order (license, contributors) and banner placement already match the fixed-core contract; no package/version badge exists because no package is published (F-NPM-NOT-PUBLISHED), which is itself consistent."},
+    {"id": "U-OPENING", "unit": "Opening paragraph", "disposition": "RETAIN_VERBATIM", "reason": "Describes Workbook/Worksheet/Cell/Style API surface and HTML/CSV/JSON/Markdown I/O at a level general enough not to be contradicted by F-SAVE-HTML-IS-FRAMESET-NOT-SINGLE-DOC (which is about a specific example's disclosure, not this paragraph's claim)."},
+    {"id": "U-NAV", "unit": "Navigation list", "disposition": "RETAIN_VERBATIM", "reason": "Matches the fixed-core section set exactly."},
+    {"id": "U-GLANCE", "unit": "At a Glance mermaid diagram", "disposition": "RETAIN_VERBATIM", "reason": "Three mother blocks already run left-to-right per docs/MISSION_AUTHORITY.md R7; no node claims specifically the single-document HTML-export behavior that was contradicted, so no diagram edit is forced."},
+    {"id": "U-KEYCAP-1-6", "unit": "Key Capabilities bullets 1-6 (load/save xlsx, cell values/formulas, styles, worksheet settings, hyperlinks/validation, images/shapes)", "disposition": "RETAIN_VERBATIM", "reason": "F-CELL-PUTVALUE-SETFORMULA and F-PKG-DEPS-MATCH support the underlying API surface; no contradicting evidence found for these bullets specifically."},
+    {"id": "U-KEYCAP-7", "unit": "Key Capabilities bullet 7 (HTML import/export via toHtml())", "disposition": "RETAIN_VERBATIM", "reason": "F-LOAD-HTML-AUTODETECT and F-TOHTML-SINGLE-STRING both SUPPORTED; this bullet specifically names toHtml(), not save(), so it is unaffected by the frameset finding."},
+    {"id": "U-KEYCAP-8", "unit": "Key Capabilities bullet 8 (toCsv/toJson/toMarkdown)", "disposition": "RETAIN_VERBATIM", "reason": "Not independently re-executed (no Node runtime available) but no contradicting evidence found from reading workbook.ts's toCsv/toJson/toMarkdown method bodies."},
+    {"id": "U-INSTALL", "unit": "Installation section", "disposition": "RETAIN_VERBATIM", "reason": "F-NPM-NOT-PUBLISHED SUPPORTED via live npm registry lookup."},
+    {"id": "U-DEPS", "unit": "Dependencies section", "disposition": "RETAIN_VERBATIM", "reason": "F-PKG-DEPS-MATCH SUPPORTED against package.json verbatim. Node/TypeScript version floor claim left UNVERIFIED (F-NODE-TS-VERSION-REQUIREMENT) but not contradicted, so retained as-is per mission rule that unverified is never presented as false."},
+    {"id": "U-QUICKSTART-1", "unit": "Quick Start example 1 (create workbook, formula, style, save xlsx)", "disposition": "RETAIN_VERBATIM", "reason": "Targets .xlsx, not .html; unaffected by the HTML-frameset finding. Cell/Style API calls confirmed to exist (F-CELL-PUTVALUE-SETFORMULA)."},
+    {"id": "U-QUICKSTART-2", "unit": "Quick Start example 2 (load, update cell, save)", "disposition": "RETAIN_VERBATIM", "reason": "Targets .xlsx; Workbook.load/save and Cell.putValue confirmed to exist."},
+    {"id": "U-EXAMPLES-HTML", "unit": "Additional Examples: Export a Workbook to HTML", "disposition": "RETAIN_CORRECTED", "reason": "F-SAVE-HTML-IS-FRAMESET-NOT-SINGLE-DOC CONTRADICTED; corrected with a clarifying sentence before the code block, exactly as in the Lane L candidate."},
+    {"id": "U-EXAMPLES-TABLE", "unit": "Additional Examples details table (9 rows)", "disposition": "RETAIN_VERBATIM", "reason": "Not independently re-executed row-by-row (no Node runtime); no contradicting evidence found for any specific row's description."},
+    {"id": "U-APIREF-INTRO", "unit": "API Reference intro paragraph", "disposition": "RETAIN_VERBATIM", "reason": "Describes Workbook/Worksheet/Cell/Style relationships generally; unaffected by the one specific finding."},
+    {"id": "U-APIREF-TABLE", "unit": "API Reference table (~115 rows)", "disposition": "RETAIN_VERBATIM", "reason": "One row (AutoFilter) spot-checked against autofilter.ts and found consistent (F-AUTOFILTER-SHAPE). The remaining ~114 rows were not independently re-verified this session -- recorded as retained-by-default, not re-asserted as newly confirmed; a future recheck should sample further rows, especially the larger Chart/ChartCollection/ShapeInfo entries."},
+    {"id": "U-DOCS-RESOURCES", "unit": "Documentation & Resources section", "disposition": "RETAIN_VERBATIM", "reason": "Links not independently re-verified for liveness this session (no contradicting evidence; a future recheck should fetch each URL and confirm 200 status)."},
+    {"id": "U-SCOPE-EXISTING", "unit": "Scope and Limitations section (existing 2 bullets)", "disposition": "RETAIN_VERBATIM", "reason": "Both existing bullets (text export as string not file-write; text export one-way) are about toCsv/toJson/toMarkdown, not contradicted by anything found this session."},
+    {"id": "U-SCOPE-NEW-HTML", "unit": "New Scope and Limitations bullet (save() HTML frameset)", "disposition": "ADD", "reason": "Required by F-SAVE-HTML-IS-FRAMESET-NOT-SINGLE-DOC; no prior bullet covered this, so this is a genuine addition, placed after the two existing text-export bullets to keep the section's per-feature grouping."},
+    {"id": "U-ENTERPRISE-LINK", "unit": "Enterprise Edition cross-link paragraph", "disposition": "RETAIN_VERBATIM", "reason": "Matches docs/MISSION_AUTHORITY.md's naming rule exactly ('Aspose.Cells for .NET — Enterprise Edition')."},
+    {"id": "U-DEVTEST", "unit": "Development and Testing section", "disposition": "RETAIN_VERBATIM", "reason": "Build/type-check commands only (npm install, npx tsc --noEmit); matches package.json and tsconfig.json; no test-count or test-coverage claim is made that could be contradicted (the repository genuinely has no test files, and the README does not claim otherwise)."},
+    {"id": "U-LICENSE", "unit": "License section", "disposition": "RETAIN_VERBATIM", "reason": "F-LICENSE-MIT SUPPORTED against the real LICENSE.txt file."}
+  ],
+  "summary": {
+    "total_units": 20,
+    "retain_verbatim": 17,
+    "retain_corrected": 1,
+    "add": 1,
+    "omit": 0,
+    "supersede": 0
+  }
+}

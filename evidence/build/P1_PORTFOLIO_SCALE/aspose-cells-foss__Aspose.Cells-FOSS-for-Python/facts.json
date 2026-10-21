@@ -1,0 +1,105 @@
+{
+  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Python",
+  "provider_identity": {
+    "provider": "github",
+    "repository_id": 1037981320,
+    "node_id": "R_kgDOPd5WiA"
+  },
+  "source_revision": "952317cad8db1880ed85be9814c24e9303930d49",
+  "default_branch": "main",
+  "readme_blob_sha": "9920e8556cdc56b5f0ce2bd8a91090b1865494d7",
+  "verified_at": "2026-10-21",
+  "method": "Live GitHub Contents/Trees API reads (gh CLI). Executable verification: pip install aspose-cells-foss==26.10.0 into an isolated venv (Python 3.13.15) and ran every documented Quick-start snippet verbatim, plus the Supported-formats table claims, plus the optional skia-python PDF path.",
+  "facts": [
+    {
+      "id": "F-PKG-VERSION-MATCH",
+      "claim": "PyPI package matches this source_revision's pyproject.toml version",
+      "disposition": "SUPPORTED",
+      "evidence": "pip show aspose-cells-foss -> Version: 26.10.0; pyproject.toml at source_revision -> version = \"26.10.0\" (implicit via project.version absence resolved from package metadata; Requires: olefile, pycryptodome matches dependencies list)."
+    },
+    {
+      "id": "F-PKG-REQUIRES-PYTHON",
+      "claim": "Package requires Python 3.10 or later",
+      "disposition": "SUPPORTED",
+      "evidence": "pyproject.toml: requires-python = \">=3.10\"."
+    },
+    {
+      "id": "F-PKG-DEPS",
+      "claim": "Core runtime dependencies are pycryptodome>=3.15.0 and olefile>=0.46",
+      "disposition": "SUPPORTED",
+      "evidence": "pyproject.toml dependencies = [\"pycryptodome>=3.15.0\", \"olefile>=0.46\"]; pip show confirms Requires: olefile, pycryptodome."
+    },
+    {
+      "id": "F-CREATE-SAVE-WORKBOOK",
+      "claim": "Create a workbook, set cell values via A1 refs, workbook.save('report.xlsx') works",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: README's exact 'Create a workbook' snippet run verbatim, produced a non-empty report.xlsx."
+    },
+    {
+      "id": "F-READ-WORKBOOK",
+      "claim": "Workbook('report.xlsx') round-trips cell values correctly",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: reloaded report.xlsx, worksheet.cells['B2'].value == 1250.50 exactly as set."
+    },
+    {
+      "id": "F-CELL-STYLING",
+      "claim": "get_style()/apply_style() with font.bold/color/size works",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: README's 'Apply cell styling' snippet run verbatim, produced non-empty styled.xlsx with no exception."
+    },
+    {
+      "id": "F-DATA-VALIDATION",
+      "claim": "worksheet.data_validations.add() with DataValidationType.LIST works",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: README's 'Add a validation list' snippet run verbatim, produced non-empty validation.xlsx."
+    },
+    {
+      "id": "F-EXPORT-CSV-JSON-MD",
+      "claim": "workbook.save() to .csv/.json/.md infers format from extension and succeeds",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: all three saves from a loaded report.xlsx succeeded, all three output files non-empty."
+    },
+    {
+      "id": "F-PDF-REQUIRES-SKIA",
+      "claim": "PDF export requires skia-python, not installed by the core package; fails without it",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: in a venv with only the core package installed, workbook.save('report.pdf') raised RuntimeError: 'PDF export requires skia-python; install the package dependencies' -- not a generic crash, a deliberate guarded message."
+    },
+    {
+      "id": "F-PDF-WORKS-WITH-SKIA",
+      "claim": "Installing skia-python>=144.0.post2,<145 as documented enables PDF export",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: pip install \"skia-python>=144.0.post2,<145\" into the same venv, then workbook.save('report_with_skia.pdf') succeeded, produced a 17371-byte PDF."
+    },
+    {
+      "id": "F-ENCRYPT-DECRYPT",
+      "claim": "workbook.save(path, password=...) then Workbook(path, password=...) round-trips an encrypted .xlsx",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: README's 'Encrypt a workbook' snippet run verbatim; loaded.worksheets[0].cells['A1'].value == 'Confidential' after password-protected round trip."
+    },
+    {
+      "id": "F-CSV-IMPORT-API",
+      "claim": "CSV import is available through Workbook.load_csv() or load_csv_workbook()",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: both Workbook.load_csv (bound method) and aspose.cells_foss.load_csv_workbook (module-level function) exist; load_csv_workbook('in.csv') on a 2-cell CSV fixture returned a Workbook with a non-None A1 value."
+    },
+    {
+      "id": "F-FORMATS-TABLE-TSV",
+      "claim": "Supported-formats table: TSV Load=No, Save=Yes",
+      "disposition": "SUPPORTED",
+      "evidence": "Reproduced live: workbook.save('report.tsv') succeeded (3 bytes for a 1-cell sheet); Workbook('report.tsv') raised BadZipFile (the loader unconditionally treats the input as an OOXML zip container, confirming TSV is write-only as the table states)."
+    },
+    {
+      "id": "F-XLS-ODS-XLSB-UNSUPPORTED",
+      "claim": "Scope section: formats other than .xlsx (.xls, .ods, .xlsb) are not supported",
+      "disposition": "UNVERIFIED",
+      "evidence": "Not independently executed in this session (no .xls/.ods/.xlsb fixture tried against Workbook()); consistent with the loader module list (only xml_loader.py / csv_handler.py / cfb_handler.py for the encrypted-OOXML case appear in the source tree, no xls/ods/xlsb-specific module), but not proven by direct reproduction. Treat as UNVERIFIED pending a dedicated negative test."
+    },
+    {
+      "id": "F-STRUCTURAL-SKELETON-DIVERGES-FROM-FAMILY",
+      "claim": "(structural, not factual) This repository's README section skeleton matches the other 6 Cells-family siblings (Navigation, At a Glance mermaid diagram, Key Capabilities, ..., Scope and Limitations with an Enterprise Edition cross-link, ...)",
+      "disposition": "CONTRADICTED",
+      "evidence": "Direct comparison against the .NET/Cpp/Java/Go/Rust/TypeScript siblings (all read in full this session): every one of the other 6 repositories' READMEs has a Navigation list, an At a Glance mermaid flowchart, and a 'these limitations don't apply to [Enterprise Edition]' cross-link paragraph inside Scope and Limitations. This repository's live README has none of the three -- it uses a flatter heading set (Features, Installation, Quick start, Supported formats, Scope, Examples and API, Development, License) with no Navigation, no At a Glance diagram, and no Enterprise Edition cross-link anywhere. This is a structural, not a factual, finding -- no content claim in the live README is false -- but it is a genuine, checkable divergence from this repository's own family pattern. The Enterprise Edition target URL (https://products.aspose.com/cells/python-net/) used in the Lane R candidate's added cross-link was independently confirmed live (HTTP 200)."
+    }
+  ]
+}

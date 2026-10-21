@@ -1,0 +1,28 @@
+--- live_readme.md	2026-10-21 18:11:58.592130200 +0500
++++ lane_l_candidate.md	2026-10-21 18:15:58.368457000 +0500
+@@ -544,17 +544,20 @@
+ 
+ To keep this edition free, this library implements a focused subset of Excel spreadsheet features:
+ 
+-- **Only `.xlsx` (OOXML) is supported for load and save.** `LoadFormat` and `SaveFormat` each
+-  declare a single `Xlsx` member; saving to any other format throws
++- **Only `.xlsx` (OOXML) is supported for load and save.** `SaveFormat` declares a single `Xlsx`
++  member; `LoadFormat` declares two (`Auto` and `Xlsx`, both ultimately resolving to XLSX parsing
++  in this FOSS build). Saving to any other format throws
+   `UnsupportedFeatureException("Only XLSX save is supported.")`. There is no `.xls`, `.xlsb`,
+   `.ods`, or `.csv` read/write support.
+ - **Legacy SpreadsheetML (the pre-OOXML Excel 2003 XML dialect) is not implemented.** The mapper
+   classes for it (`WorkbookXmlMapper`, `WorksheetXmlMapper`, `StylesheetXmlMapper`,
+   `SharedStringTableXmlMapper`) exist in source but their read/write methods unconditionally
+   throw `UnsupportedFeatureException`.
+-- **Cell-level comments/notes are not modeled as a distinct object.** The only `Comment` field in
+-  the public API belongs to `DefinedName` — a description string on a named range, not an Excel
+-  cell note or threaded comment.
++- **Cell-level comments/notes are not modeled as a distinct object.** Two unrelated `Comment`
++  fields exist in the public API instead: `DefinedName.GetComment()`/`SetComment()` (a description
++  string on a named range) and `DocumentProperties.GetComments()`/`SetComments()` (document-level
++  metadata, mapped to the OOXML core-properties description field). Neither is an Excel cell note
++  or threaded comment.
+ - **Some advanced conditional-formatting rule types are recognized on load but not preserved.**
+   An unsupported rule type is dropped with a `WarningInfo` diagnostic rather than failing the
+   load outright.

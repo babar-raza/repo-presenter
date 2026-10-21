@@ -1,0 +1,31 @@
+{
+  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Python",
+  "source_revision": "952317cad8db1880ed85be9814c24e9303930d49",
+  "lane": "L",
+  "candidate": "lane_l_candidate.md",
+  "checks": [
+    {
+      "id": "C1_EVERY_CLAIM_CHECKED_TRACES_TO_REPRODUCTION",
+      "result": "PASS",
+      "detail": "All 12 content facts cite a specific live reproduction (venv install + exact README snippet run verbatim) or a direct pyproject.toml/pip-show read; none asserted from inference alone."
+    },
+    {
+      "id": "C2_NO_UNVERIFIED_CLAIM_TREATED_AS_FALSE",
+      "result": "PASS",
+      "detail": "F-XLS-ODS-XLSB-UNSUPPORTED is UNVERIFIED; the candidate leaves the corresponding Scope bullet untouched rather than silently accepting or rejecting it."
+    },
+    {
+      "id": "C3_NO_CONTRADICTED_CONTENT_FACT_EXISTS",
+      "result": "PASS",
+      "detail": "Zero content facts carry disposition CONTRADICTED, so an empty-patch Lane L is the correct outcome. The one CONTRADICTED fact in facts.json (F-STRUCTURAL-SKELETON-DIVERGES-FROM-FAMILY) is explicitly structural, not a content claim -- Lane L correctly does not restructure headings or add new sections; that is Lane R's job."
+    },
+    {
+      "id": "C4_NEGATIVE_CONTROL",
+      "result": "PASS",
+      "detail": "Adversarial check: re-ran the PDF-without-skia case a second time in a fresh venv state before accepting -- got the identical guarded RuntimeError both times, not accepted on a single run alone."
+    }
+  ],
+  "findings": [],
+  "verdict": "ACCEPT",
+  "verdict_rationale": "README's prose is accurate against the installed package across every concrete, checkable content claim; empty-patch is the correct Lane L output. (This verdict is revised from an earlier combined-review draft that also claimed Lane R converges to this output -- it does not; see lane_r_review.json.)"
+}
