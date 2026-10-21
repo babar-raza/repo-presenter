@@ -254,76 +254,199 @@ entries:
       runner backing the add_dev_commands detector.
     evidence: >
       Read-only research pass 2026-10-21 (fork report, full file reads of
-      model.py/engine.py/apply.py/all detectors/chain.py/verify.py). See
-      docs/history-reconstruction.md for citation; full report not re-filed here.
-    disposition: ADAPT (REUSE for apply.py specifically)
-    reason: >
-      model.py/engine.py: ADAPT — sound confinement-proof architecture, needs
-      Fact/FactsDocument dependency resolved against src/repo_presenter/core/facts.py
-      (now ported, same shape). apply.py: REUSE — 87 lines, zero dependencies
-      beyond model.Edit. 8 detectors (links/examples/gaps/structure/sections/
-      stale/diagram/additions): ADAPT — self-contained over Context/Fact, no
-      old-repo entanglement found. claims.py/statements.py detectors: ADAPT,
-      but pull the shared BC-14 claim-recognizer logic they depend on too, not
-      duplicate it. chain.py+verify.py: ADAPT, high value — the single most
-      sophisticated asset found in this component; heavier dependency surface
-      (core/git_safety, core/toolchains, core/secrets) but worth the pull.
-    target_module: src/repo_presenter/readme/correction/ (planned)
+      model.py/engine.py/apply.py/all detectors/chain.py/verify.py; see
+      docs/history-reconstruction.md). Superseded 2026-10-21 by a real porting
+      pass: model.py, engine.py, apply.py, detectors/__init__.py (the
+      @detector/load_detectors registry), and 4 of the 8 old-repo detectors
+      (links.py/broken_link, examples.py/failing_example, gaps.py/report_gaps,
+      structure.py/second_h1+unclosed_details+stray_fence) ported near-verbatim
+      -- only import paths changed, confirmed genuinely self-contained on a full
+      re-read. Two small ported utility slices, not whole modules: fence_scan.py
+      (REUSE, verbatim: just the `scan`/`Line` fence-state scanner out of the old
+      repo's components/readme/review/acceptance/text_checks.py -- NOT its
+      validator predicates, e.g. single_h1/edition_name, which stay out of scope
+      per this file's BC-04/BC-14 restriction) and text_gate.py (REUSE, verbatim:
+      just the narration phrase list out of components/readme/validation/
+      registry.py::narration_patterns, which engine.collect's
+      _without_narration needs). Test result in this repository: 52/52 passing
+      (`python -m pytest tests/readme/correction -q`), composed of ported tests
+      (test_apply.py + 4 detector test files, adapted only in import paths and a
+      local RegistryEntryStub fixture) plus a new, smaller test_engine.py (this
+      repo's roster is 8 detectors, not the old repo's 21) and the two new
+      detectors' own test files below.
+    disposition: >
+      REUSE: apply.py, detectors/__init__.py, fence_scan.py (narrow slice),
+      text_gate.py (narrow slice). ADAPT, ported this pass: model.py, engine.py,
+      detectors/links.py, examples.py, gaps.py, structure.py -- all 6 confirmed
+      genuinely self-contained on a full read (only `repository_presenter.*` ->
+      `repo_presenter.*` import paths changed, plus model.py's two resolved
+      dependencies below). DEFERRED, NOT ADAPT as this entry previously
+      recorded -- corrected on re-read: detectors/sections.py, additions.py,
+      stale.py, diagram.py are NOT self-contained the way links/examples/gaps/
+      structure are. sections.py and additions.py import
+      readme.composition.{renderer,components.shell}, readme.extractors.
+      platforms.registry, core.ecosystems, core.package_registry,
+      readme_correction.{chain,commands,docs,augment}; stale.py imports
+      extractors.platforms.registry, core.ecosystems, readme.validation.claims;
+      diagram.py imports the whole readme_diagram package (contract/lint/model/
+      parse/rebuild). None of those modules exist in this repository yet
+      (composition/, the ecosystem-spec layer, readme_diagram/ all have their
+      own not-yet-pulled entries or no entry at all) -- porting these four now
+      would mean porting several thousand lines of unrelated, unevaluated
+      machinery sight unseen to satisfy one import graph, which is exactly what
+      this project's own reuse discipline refuses. chain.py+verify.py (the
+      sandboxed build/test runner): DEFERRED for the same reason -- additions.py
+      is its only caller among the detectors, and additions.py is itself
+      deferred; chain.py/verify.py were not even read in this pass (time
+      budget went to the 4 ported detectors + the 2 new ones instead, per this
+      taskcard's own priority).
+    target_module: >
+      src/repo_presenter/readme/correction/{model,engine,apply,text_gate,
+      fence_scan}.py, src/repo_presenter/readme/correction/detectors/
+      {__init__,links,examples,gaps,structure,enterprise_edition,
+      format_overclaim}.py (all present, not planned). Two resolved
+      dependencies model.py needed: `repository_presenter.core.registry.
+      models.RegistryEntry` -> `repo_presenter.core.registry_entry_stub.
+      RegistryEntryStub` (a documented placeholder, NOT a port of the real
+      pydantic RegistryEntry -- see that stub's own docstring; replace it in
+      one pass the day a ported detector needs more than `.ecosystem`), and
+      `...readme.review.acceptance.text_checks.scan` -> `...fence_scan.scan`
+      (see above).
     smallest_first_integration_test: >
-      Port model.py + apply.py + engine.py first with one detector (broken_link,
-      the simplest), prove confinement_violations() catches a deliberately
-      out-of-span edit (the exact negative control this architecture is built for).
+      Done 2026-10-21: ported model.py + apply.py + engine.py with one detector
+      (broken_link) first, then the other 3 self-contained detectors and the 2
+      new ones; confirmed confinement_violations() catches a deliberately
+      out-of-span edit two ways -- a forged span whose quoted `original` the
+      real document does not hold at that offset ("quotes text the original
+      lacks"), and a single-line, shape-valid edit whose span runs past the
+      document's own length ("overlaps or leaves the text") -- both run live
+      (not just asserted in pytest) and both rejected, exactly the negative
+      control this architecture is built for.
     portfolio_consumers: Lane L, every candidate.
-    invalidation_impact: not yet pulled.
+    invalidation_impact: >
+      Pulled for model.py/engine.py/apply.py and 6 of 8 detectors (4 ported +
+      2 new). A change to Edit's shape rules or to confinement_violations
+      reopens every correction this repository has made with them (none sealed
+      yet -- this is the first pull). sections.py/additions.py/stale.py/
+      diagram.py/chain.py/verify.py: not pulled, so no invalidation surface yet.
     known_gap: >
-      No detector here checks format/capability OVER-claiming (README claims a
-      format works but the dispatch/registration code doesn't wire it up — the
-      3D-.NET U3D/RVM/AMF/HTML5 case and the original 3D-Python OBJ-export case).
-      report_gaps only catches UNDER-claiming. A new detector is needed, not
-      salvageable from this component. Also: no detector AUTO-FIXES the
-      Enterprise Edition naming violation (BC-06 in the old repo's validation/
-      layer only REJECTS it) — a new, small FALSE_CLAIM_FIX-kind detector is
-      needed here, informed by this session's own 3-repo finding.
+      Both gaps this entry previously recorded are now closed in this pass.
+      (1) Format/capability OVER-claiming: new detector
+      detectors/format_overclaim.py (Finding-only -- confirming an over-claim
+      needs a human-reviewable fact citation, not blind auto-correction), with
+      a positive case (a table row marked supported with no backing fact),
+      a CONTRADICTED-fact case, and two negative controls (a correctly-
+      caveated row, and a row a SUPPORTED fact actually backs). Stated
+      limitation: only reads markdown table rows (the shape measured on the
+      portfolio's own format-support tables), not free prose claims --
+      broadening to prose is future work, not attempted, to avoid a regex
+      fragile enough to itself over-claim what it detects.
+      (2) Enterprise Edition naming: new detector
+      detectors/enterprise_edition.py (FALSE_CLAIM_FIX-kind, auto-edits),
+      generalized from the 3 real portfolio fixes this session made manually
+      (evidence/build/P1_PORTFOLIO_SCALE/{aspose-slides-foss__Aspose.Slides-
+      FOSS-for-Java,aspose-words-foss__Aspose.Words-FOSS-for-.NET,
+      aspose-words-foss__Aspose.Words-FOSS-for-Python}/lane_l_candidate.diff).
+      Auto-fixes only when the product name+platform is already spelled out on
+      the same physical line (a markdown link, or plain text) AND a
+      link_target:product.enterprise fact is on record to cite as the edit's
+      evidence; a bare "the commercial product" with no name on its line, or a
+      naming violation split across a hard line-wrap, is reported as a Finding
+      instead of guessed -- 2 of the 5 real occurrences across those 3 diffs
+      fall into this reported-not-guessed category, stated honestly rather
+      than silently matched by inventing a product name from elsewhere in the
+      document. "commercial" describing something other than the product's own
+      name (e.g. "the commercial codebase") is correctly left untouched, per a
+      real precedent in the .NET diff.
 
-  - component: "readme/composition/ + reconciliation/dispositions.py (Lane R engine)"
+  - component: "readme/composition/ + reconciliation/ (Lane R engine)"
     source: old-repository-presenter
     evaluated_at_shas: []
     behavior: >
-      Staged pipeline: planning.py -> authoring.py (per-section LLM calls through
-      core/llm/jobs.py::run_job, a clean deterministic/agentic boundary with
-      content-addressed caching, re-judging a cached reply under CURRENT rules on
-      every reuse, not blind reuse) -> reconciliation/dispositions.py (folds what
-      deterministic code can't place; coverage_findings() self-audits for the
-      historical "OMIT_UNSUPPORTED with no cited fact" defect class) -> placement.py
-      -> renderer.py (pure function, LLM never writes Markdown) -> coherence.py
-      (one bounded revision pass over LLM-owned prose only).
+      Staged pipeline: planning.py -> authoring.py (per-section LLM job wiring: packet/schema
+      builders, the unit_checks guard, and a family of deterministic recover= corrections --
+      NOT itself an LLM caller; the real call happens one layer up, in an orchestrator not
+      ported here) -> reconciliation/dispositions.py (folds what deterministic code can't
+      place; coverage_findings() self-audits for the historical "OMIT_UNSUPPORTED with no
+      cited fact" defect class) -> placement.py -> renderer.py (pure function, confirmed:
+      no LLM call anywhere in it) -> coherence.py (one bounded revision pass over LLM-owned
+      prose only). core/llm/jobs.py::run_job is the actual deterministic/agentic boundary:
+      content-addressed caching, re-judging a cached reply under CURRENT rules on every reuse
+      (never blind reuse), a bounded one universal re-ask, an optional narrow()/recover() path.
     evidence: >
-      Read-only research pass 2026-10-21 (fork report: full reads of authoring.py
-      2957 lines, dispositions.py 2859 lines, bundle/recheck.py 1005 lines,
-      core/llm/jobs.py's run_job; docstring/structural reads of the rest).
-      Confirms the SAME FactsDocument/Fact/Polarity types core/facts.py now
-      carries are what both authoring.py and dispositions.py already consume in
-      the old repo — this repo's own facts.py port is the correct shared base.
+      Full taskcard pull, 2026-10-21 (this entry supersedes the prior read-only research pass):
+      every file in the behavior line above read in full from the old repository and ported,
+      with real ported/adapted tests run via `python -m pytest tests/readme tests/core -q`
+      (308 passed, 0 failed, repo-wide; 47 of those are this taskcard's own new tests across
+      tests/readme/composition/{test_pipeline,test_siblings,test_authoring}.py,
+      tests/readme/reconciliation/test_dispositions.py, tests/core/llm/{test_jobs,
+      test_binding}.py, tests/core/test_config.py). An 8-failure block in
+      tests/test_grammar_pins.py is unrelated pre-existing breakage from a concurrent
+      taskcard's missing pyproject.toml, not touched or caused by this pull.
     disposition: ADAPT
     reason: >
-      Clean separation at the LLM boundary; large (~12-20k lines across
-      composition+reconciliation+core/llm, not a "small" pull by the mission's
-      own standard) but not hopelessly entangled — imports only sibling readme/
-      modules and core/facts, core/llm. dispositions.py flagged higher-risk:
-      likely locus of the historical 389/746-unit defect
-      (docs/history-reconstruction.md); port coverage_findings() WITH normalize(),
-      never separately, so the self-audit travels with the logic it checks.
-    target_module: src/repo_presenter/readme/composition/ (planned)
-    smallest_first_integration_test: not yet attempted.
+      PORTED (near-complete, faithful): composition/{components/shell.py, components/
+      ecosystems.py, components/identity.py, components/terminology.py, policy.py,
+      link_budget.py, list_coverage.py, coverage.py, source_topics.py, audience.py,
+      output_bounds.py, text_hygiene.py, planning.py, placement.py, renderer.py,
+      coherence.py, authoring.py (all REUSE-grade, verbatim apart from import paths, except
+      authoring.py's own three bundle-reconstruction functions, deferred below)};
+      reconciliation/destinations.py (REUSE, verbatim); reconciliation/dispositions.py
+      (PARTIAL -- normalize() + coverage_findings() + _omission_gap() ported together, per
+      this entry's own prior instruction, with their full supporting network); core/{
+      ecosystems.py, examples.py, hashing.py, probes.py, retry.py, config.py,
+      registry/{models.py, naming.py} (NEW, separate from the existing readme/correction/
+      registry_entry_stub.py -- Lane L is untouched), llm/{transport.py, ledger.py,
+      fallback.py, narrowing.py, binding.py, prompts.py, jobs.py} (all REUSE-grade)};
+      readme/evidence/facts/{links.py, product_pages.py, commands.py, assets.py,
+      registry_lag.py} (TRIMMED/ADAPT -- pure composition-side functions and fact-ID
+      constants only; the live-fetching/tree-scanning extraction-time halves of these same
+      old-repo modules are explicitly out of scope, tracked under the separate "extraction,
+      package ownership..." and "extractors/platforms/*" entries below); composition/
+      components/glance.py (ADAPTED, NOT a port -- a deliberately simplified local Mermaid
+      diagram/title-length stand-in; the old repo's own ``components/readme_diagram``
+      subsystem -- a measured-font-width, browser-verified geometry engine -- was never read
+      or ported and remains future work, named explicitly in the module's own docstring).
+      DEFERRED, with reasons, inside authoring.py: reconstructed_task_output/
+      _reconstruction_lineage_holds/write_raw_calls (a sealed-bundle replay mechanism needing
+      a bundle/seal directory layout this repository does not have). DEFERRED inside
+      dispositions.py: the S4 job-wiring half (reconciliation_packet/_schema/_batches/
+      _narrowing/merge_dispositions -- needs real prompts/*.yaml content, a separate
+      not-yet-done taskcard) and the refusal/repair layer built on the self-audit
+      (placement_errors, dangling_pointers, coordinate_neighbor_promises,
+      recover_uncited_prose_omits -- these also need composition/references.py, not ported).
+      core/llm/jobs.py's run_job finding: the old repo targets one owner-provided,
+      OpenAI-*compatible* HTTP endpoint (GPT_OSS_ENDPOINT/GPT_OSS_API_KEY, read by
+      core/config.py) via the official openai SDK -- never api.openai.com, never Anthropic.
+      This environment DOES carry both variables (confirmed by name only, 2026-10-21; values
+      never read or logged) -- but this repository has no prompts/*.yaml content yet, so there
+      is no real LoadedManifest to fire a live call with. The port is mechanism-complete and
+      the call-site (core/llm/jobs.py::transport.build_client) is unmodified/real; this
+      taskcard's own tests exercise the caching/re-ask/recover machinery hermetically against
+      a hand-built PromptManifest with a fake transport (never a live network call), which is
+      honest given no real manifest exists to call with yet.
+    target_module: >
+      src/repo_presenter/readme/composition/ (present, not planned),
+      src/repo_presenter/readme/reconciliation/ (present, not planned),
+      src/repo_presenter/readme/evidence/facts/ (present, not planned),
+      src/repo_presenter/core/llm/ (present, not planned)
+    smallest_first_integration_test: >
+      tests/readme/composition/test_pipeline.py -- a synthetic FactsDocument/RegistryEntry/plan/
+      units/dispositions run end to end through plan_checks -> placements -> render_readme,
+      asserting the rendered README's shape and that a rerun on the same inputs is
+      byte-identical (the renderer's own purity contract). Passes.
     portfolio_consumers: Lane R, every candidate.
-    invalidation_impact: not yet pulled.
+    invalidation_impact: >
+      Now pulled: a change to the ported planning/placement/renderer/coherence/authoring/
+      dispositions logic reopens every Lane R candidate composed with it (mission §8).
     known_gap: >
-      The actual subprocess-execution runner for "example" facts (verified vs.
-      failed code examples) was NOT found under extractors/ in this pass —
-      core/examples.py only defines the receipt data model (EXECUTED/FAILED/
-      TIMED_OUT/NEEDS_INPUT/NOT_VERIFIED). Must be located (possibly under
-      components/execution/ or a container-isolated runner) before Lane R's
-      example-verification path can be ported end to end.
+      The actual subprocess-execution runner for "example" facts (verified vs. failed code
+      examples) was NOT found under extractors/ in the prior research pass and is still not
+      part of this pull -- core/examples.py only ports the receipt data model (EXECUTED/
+      FAILED/TIMED_OUT/NEEDS_INPUT/NOT_VERIFIED) and printed_example(), both pure. The real
+      diagram-geometry engine (components/readme_diagram) and the S4/S6 job-wiring halves
+      that build real LLM packets are the two largest remaining gaps before Lane R can run
+      end to end against a live provider; see "reason" above for the precise function list.
 
   - component: "readme/bundle/recheck.py + evaluation.py + invalidation.py"
     source: old-repository-presenter
@@ -335,21 +458,69 @@ entries:
       §8 specifies, with a RECHECKS table mapping exactly which scope reopens on
       which kind of upstream change (never a global reseal).
     evidence: >
-      Read-only research pass 2026-10-21. 37/37 existing tests in this module
-      pass (run read-only, no files modified).
-    disposition: REUSE
+      Read-only research pass 2026-10-21 found 37/37 existing tests passing
+      read-only in the old repo. Ported 2026-10-21: invalidation.py and
+      evaluation.py pulled near-verbatim (only the PresenterError import path
+      changed) — fully self-contained, no gap. recheck.py pulled PARTIALLY:
+      the currency-state data model (Recheck/ScopeResult/CURRENCY_STATES/
+      COUNTING), classify(), the RECHECKS/RECHECK_FAMILIES/SCOPE_ORDER tables,
+      recheck_scope(), the receipt cache (receipt_key/read_receipt/
+      write_receipt, with canonical_hash inlined from core/llm/ledger.py — a
+      2-line function), and the patch round-trip (reverse_apply/
+      original_readme, with render_patch inlined from
+      composition/renderer.py — 8 lines of stdlib difflib) are all ported and
+      tested. recheck_bundle()/recheck_portfolio() and the five per-scope
+      runners (_recheck_presentation/_authoring/_validator/_reviewer/
+      _extraction) are NOT ported: they transitively need core/candidates.py
+      (bundle manifest format, verify_bundle), core/registry/, core/llm/
+      prompts.py, composition/authoring.py + the rest of renderer.py,
+      evidence/facts/inherited.py, extractors/platforms/registry.py,
+      review/independent/review.py and validation/registry.py — none of
+      which this repository has pulled or evaluated (no reuse-manifest entry
+      of their own yet). They now raise NotImplementedError naming the exact
+      missing modules rather than silently stubbing a fake result. Test
+      result in this repository: 93/93 passing (`python -m pytest tests/`),
+      composed of the 35 pre-existing tests plus 54 ported/adapted bundle
+      tests (tests/readme/bundle/test_invalidation.py,
+      test_evaluation.py, test_recheck.py — every old-repo test that did not
+      require seal.py/dry_run.py/core.llm.prompts/core.toolchains was ported;
+      the rest were dropped with the reason stated in each file's docstring,
+      not silently skipped) plus 4 new integration tests
+      (test_consumed_scope_real_candidate.py) proving mission §8's own
+      adversarial proof against the real aspose-3d-foss P1_VERTICAL_SLICE
+      candidate's actual facts.json/content_units.json: an unconsumed fact
+      change leaves it recheck.CURRENT / routing.state None; the real
+      CONTRADICTED F-OBJ-EXPORT-BROKEN fact (which its own content units do
+      cite) changing reopens EXTRACTING and routes INVALIDATED.
+    disposition: REUSE (invalidation.py, evaluation.py — full); PARTIAL (recheck.py
+      — currency model, classification and receipt mechanics only; the bundle
+      I/O orchestration is a separate, larger, not-yet-evaluated pull)
     reason: >
       Directly implements mission §8's consumed-scope invalidation contract —
       this is the strongest single salvage candidate found across both research
-      passes. Real, passing tests. Maps near-verbatim onto the mission's own
+      passes. Real, passing tests, now reproduced in this repository rather than
+      only read-only in the old one. Maps near-verbatim onto the mission's own
       state vocabulary, which was almost certainly itself derived from reading
-      this exact module historically.
-    target_module: src/repo_presenter/readme/bundle/ (planned)
+      this exact module historically. The part left out (recheck_bundle's
+      bundle-I/O orchestration) is honestly a different, larger component —
+      forcing it in now would have meant first porting core/candidates.py,
+      core/registry/ and core/llm/prompts.py sight unseen, none of which has
+      its own disposition yet.
+    target_module: >
+      src/repo_presenter/readme/bundle/ (ported 2026-10-21: invalidation.py,
+      evaluation.py, recheck.py — see evidence above for the exact boundary)
     smallest_first_integration_test: >
-      Port the three files + their 656-line test file verbatim first; confirm
-      37/37 still pass unmodified before adapting anything.
+      Done: ported the three files' self-contained surface + adapted tests
+      first, confirmed pass, then added test_consumed_scope_real_candidate.py
+      against this repository's own real candidate data before touching
+      anything further.
     portfolio_consumers: both lanes — this is the shared invalidation layer.
-    invalidation_impact: not yet pulled.
+    invalidation_impact: >
+      Pulled for invalidation.py/evaluation.py (full) and recheck.py's
+      currency/classification surface; recheck_bundle/recheck_portfolio's
+      orchestration (what a `recheck` CLI command would actually call) is not
+      pulled — core/candidates.py is the next dependency to evaluate before
+      that can be attempted.
 
   - component: "extractors/platforms/* (7-ecosystem fact extraction: cpp, go, java, net, nodejs, python, rust, typescript)"
     source: old-repository-presenter
@@ -361,21 +532,273 @@ entries:
       SAME FactsDocument/Fact model both lanes consume.
     evidence: >
       Read-only research pass 2026-10-21 (structural map + docstrings, not full
-      line-by-line — out of scope depth for that pass; a dedicated porting pass
-      needs its own full read per ecosystem before porting).
-    disposition: REUSE/ADAPT per-platform (verdict TBD per ecosystem until a
-      full read happens)
+      line-by-line) superseded 2026-10-21 by a full-read porting pass for the
+      C++/Go/Rust/TypeScript quarter (Python/.NET/Java are a separate,
+      parallel taskcard's lane; see that lane's own evidence for their
+      disposition). Full read, ported and test-run this pass:
+      extractors/platforms/{cpp,go,rust,typescript}.py and their
+      *_examples.py siblings + typescript_barrel.py; the shared base every
+      ecosystem (including Python/.NET/Java) implements against
+      (extractors/platforms/registry.py's PlatformPlugin Protocol +
+      registry_observers.py); the shared facade layer under extractors/surface/
+      (extractor.py, manifest.py, registry.py, doc_text.py, npm_build.py,
+      npm_package.py) and the vendored tree-sitter surface engine under
+      extractors/surface/_vendor/aspose_extraction/ (api_surface.py,
+      tree_helpers.py, package_manifest.py, package_root.py,
+      publication_probe.py, lang/* for all 7 languages since lang/__init__.py
+      imports them as one unit, package_registries/*); and the core/
+      scaffolding none of this runs without: core/ecosystems.py,
+      core/examples.py, core/probes.py, core/package_registry.py,
+      core/grammars.py (tree-sitter parser pins), core/execution.py +
+      core/toolchains.py + core/git_safety/process.py (the bounded-subprocess
+      runner — see the known_gap this entry previously carried, now resolved
+      below), and a trimmed core/secrets.py (redact() only; see that file's
+      own docstring for what was cut and why).
+    disposition: >
+      REUSE/ADAPT, pulled this pass: cpp, go, rust, typescript plugins and the
+      full shared base (registry.py Protocol, surface/ facade,
+      _vendor/aspose_extraction engine, the core/ scaffolding above) — all
+      near-verbatim with only the import-path rewrite
+      (repository_presenter.components.readme.extractors -> repo_presenter.extractors,
+      repository_presenter.core -> repo_presenter.core) the old repo's own
+      "ADAPT" entries elsewhere in this manifest use for the same kind of
+      move. python, net, java, nodejs plugins: PENDING_REVIEW, a separate
+      taskcard's lane (not touched here; their own *_examples.py and
+      python_surface.py/python_registry.py/python_setup_py.py/
+      python_formats.py/python_format_declarations.py siblings are untouched).
     reason: >
       Single highest-leverage salvage target for "make the lanes work equally
       for all candidates" (owner direction 2026-10-21) — every ecosystem in the
       registry already has real extraction code here, far more complete than
       this session's own manual, Python-only, single-repository fact-gathering.
-    target_module: src/repo_presenter/extractors/ (planned)
-    smallest_first_integration_test: not yet attempted.
+      The shared base (registry.py Protocol, surface/ facade, vendored
+      tree-sitter engine, core/ecosystems+examples+probes+package_registry)
+      is REQUIRED by every ecosystem, not only this pass's four, so it is
+      pulled whole rather than split — exactly the "whichever lands first"
+      sharing this manifest's own P1 taskcard anticipated.
+    target_module: >
+      src/repo_presenter/extractors/ (platforms/{registry,registry_observers,
+      cpp,cpp_examples,go,go_examples,rust,rust_examples,typescript,
+      typescript_barrel,typescript_examples}.py; surface/{extractor,manifest,
+      registry,doc_text,npm_build,npm_package}.py;
+      surface/_vendor/aspose_extraction/**); src/repo_presenter/core/
+      {ecosystems,examples,probes,package_registry,grammars,execution,
+      toolchains,retry,secrets}.py; src/repo_presenter/core/git_safety/
+      {__init__,process}.py
+    smallest_first_integration_test: >
+      Done: ported tests/extractors/{platforms,surface}/* (the cpp/go/rust/
+      typescript + shared-base test files) and tests/core/{test_ecosystems,
+      test_examples,test_execution,test_package_registry,test_probes,
+      test_retry,test_toolchains,test_grammar_pins}.py +
+      tests/core/git_safety/test_process.py, plus a minimal tests/support.py
+      (REPO_ROOT + the self-contained fake_npm/npm_calls test double) in
+      place of the old repo's own support.py (too heavy a dependency closure
+      to pull whole for this). Result: `python -m pytest tests -q` —
+      633 passed, 11 skipped (all skips are honest host-toolchain-absence
+      skips this code is designed to produce: no MSVC registered on this
+      machine for cpp_examples, no node/tsc on PATH for
+      typescript_examples — never a false EXECUTED), 1 failed
+      (test_package_registry.py's Python-registers-its-observer test —
+      ModuleNotFoundError for extractors/platforms/python_registry.py,
+      the separate Python-lane taskcard's file, not this one's). 8 further
+      pre-existing test_grammar_pins.py cases fail/are not run because this
+      repository has no pyproject.toml/requirements-lock.txt yet (a
+      project-wide packaging gap, unrelated to any of the four ecosystems
+      ported here) — tree-sitter-{cpp,go,rust,typescript,c-sharp,java,python}
+      and tree-sitter==0.26.0 are pip-installed at the pins core/grammars.py
+      names, so the parse-correctness half of that suite (test_each_grammar_
+      parses_offline et al.) passes; only the "is it pinned in pyproject.toml"
+      half needs that file to exist. 3 tests ported but not run in this
+      pass's count (test_registry.py, test_registry_observers.py,
+      surface/test_parity.py) exercise registry.py/python_surface.py together
+      with the Python plugin and will pass once that lane's own files land;
+      left in place rather than deleted.
     portfolio_consumers: both lanes, every candidate, every ecosystem.
-    invalidation_impact: not yet pulled.
+    invalidation_impact: >
+      None yet — nothing downstream of extraction (readme/composition/,
+      readme/correction/) has been pointed at this port yet. Once it is, a
+      change to EXTRACTOR_VERSION (extractors/surface/extractor.py) or to any
+      plugin's own facts reopens EXTRACTING for every candidate of that
+      ecosystem (mission §8).
+    known_gap_RESOLVED_this_pass: >
+      The previous entry here read: "The real subprocess-execution runner for
+      example verification was not located in this tree ... needs to be
+      found before the example_facts() pipeline can run for real rather than
+      against pre-computed receipts." Found this pass, by reading inside the
+      *_examples.py siblings the earlier structural-only pass did not open:
+      core/execution.py (execute()/ExecutionResult/secret_free_environment/
+      profile_environment, ~162 lines) + core/toolchains.py (resolve_tool()/
+      toolchain_fingerprint(), per-tool PATH/registry/installed-root
+      precedence, ~399 lines) + core/git_safety/process.py (run_bounded(),
+      ~91 lines: no shell, closed stdin, hard timeout, whole-process-tree
+      kill via taskkill /T /F on Windows or killpg+SIGKILL on POSIX) +
+      core/secrets.py's redact(). Architecture: pure host subprocess
+      execution, NOT container-based — there is no Docker/container fallback
+      anywhere on this path (confirmed by reading execution.py's own
+      docstring: "Container isolation for hosted runs arrives at G4; there is
+      no OS-level sandbox today, and this module does not claim to be one" —
+      the only "docker"/"container" hits a repo-wide grep returns near this
+      component are that one documentary sentence plus unrelated hits in
+      readme_correction/chain.py+verify.py, which this manifest's Lane L
+      entry already separately documents as ADAPT, a DIFFERENT runner for a
+      DIFFERENT purpose — the add_dev_commands detector's build/test check,
+      not README example verification). Each ecosystem's own
+      extractors/platforms/*_examples.py (go_examples.py read in full this
+      pass; cpp_examples.py/rust_examples.py/typescript_examples.py ported
+      and their tests pass) calls execute()+profile_environment() directly:
+      a toolchain absent on the host degrades to NOT_VERIFIED/
+      BLOCKED_TOOLCHAIN (never a false CONTRADICTED), every toolchain cache/
+      credential directory is redirected under a disposable workspace, and
+      every credential-shaped environment variable is stripped before the
+      child process starts and redacted again from its captured output. This
+      is a real, working, tested runner today (not a gap to build fresh);
+      its only absence is a container/VM isolation layer, which the module's
+      own docstring already names as future (G4) work, not a missing
+      component.
+
+  - component: "extractors/platforms/{python,net,java}.py + their own siblings (Python/.NET/Java lane of the 7-ecosystem fact extraction, see the shared entry above for cpp/go/rust/typescript)"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    behavior: >
+      Per-ecosystem package/install/public-API/format extraction for the three ecosystems this
+      taskcard owns, feeding the same Fact/FactsDocument model every lane and every other
+      ecosystem's plugin feeds.
+    evidence: >
+      Full read (not structural-only) and ported this pass: extractors/platforms/python.py (461
+      lines) plus its five siblings python_surface.py (534), python_examples.py (733, read but
+      NOT ported, see disposition), python_formats.py (149), python_registry.py (139),
+      python_setup_py.py (200), python_format_declarations.py (233); extractors/platforms/net.py
+      (423) and java.py (631); the shared extractors/platforms/registry.py Protocol (confirmed
+      already present, reused as is); extractors/surface/manifest.py plus
+      _vendor/aspose_extraction/{package_manifest.py,package_root.py} (vendored, unmodified,
+      regex/XML/JSON only, no tree-sitter dependency); extractors/surface/registry.py (542
+      lines) plus _vendor/aspose_extraction/{publication_probe.py,package_registries/*} (the
+      PyPI/NuGet/npm/crates.io/Go-proxy/Maven-Central publication probe, stdlib urllib only, no
+      new dependency); core/ecosystems.py (387, ported fresh, not present from the parallel pull
+      at the time this lane needed it) and core/retry.py, core/errors.py, core/probes.py,
+      core/examples.py, core/package_registry.py (all four found already present, authored
+      compatibly by the concurrent C++/Go/Rust/TypeScript taskcard against the same old-repo
+      source; verified field for field compatible with what this lane needs before reusing them
+      as is, and restored in full once after a race where a third, composition-lane taskcard had
+      concurrently trimmed core/package_registry.py down to only the two fact-ID constants it
+      reads, see that file's own docstring for the three-way shared-ownership note this
+      produced). Net new test fixtures copied from the old repo's own tests directory:
+      tests/extractors/platforms/fixtures/{aspose_html_py,segment_geospatial,commons_lang,
+      petclinic,manifests/{java,net}}/ and tests/extractors/surface/fixtures/registry/
+      pypi-{aspose-3d-foss,aspose-page}.json.
+
+      Mid-pass, the concurrent C++/Go/Rust/TypeScript taskcard landed the full tree-sitter
+      surface engine this lane had initially deferred (extractors/surface/extractor.py plus
+      _vendor/aspose_extraction/{api_surface.py,tree_helpers.py,lang/*} and the toolchain/
+      grammar scaffolding core/grammars.py, core/execution.py, core/toolchains.py,
+      core/git_safety/process.py, core/secrets.py), confirmed importable and working for both
+      csharp and java grammars (get_parser for each constructs a real tree_sitter.Parser
+      instance). This let net.py's and java.py's surface_facts be wired for real, a few lines
+      restoring the surface_symbols() call each had originally made, not a fresh port, rather
+      than left as the honest-empty-list stub first written; verified against a live C# fixture
+      (5 real public_symbol facts: a namespace, a class, a method, a property).
+
+      Test run: pytest over tests/extractors/platforms/test_python.py, test_python_formats.py,
+      test_python_setup_py.py, test_python_registry.py, test_python_surface.py,
+      test_python_format_declarations.py, test_net.py, test_java.py: 100 passed, 0 failed, 0
+      skipped. Confirmed this did not regress the pre-existing suite: pytest over tests/core,
+      tests/github, tests/issues, tests/test_version.py: 184 passed, unchanged.
+
+      End-to-end proof against a real repository (this taskcard's own requirement): cloned
+      aspose-3d-foss/Aspose.3D-FOSS-for-Python fresh at its current HEAD and ran the ported
+      PythonPlugin directly against the checkout (406 files). manifest_facts: package:name
+      "aspose-3d-foss", package:version "26.1.0", package:python_requires ">=3.7",
+      dependency:none SUPPORTED, all four independently match the hand-verified
+      evidence/build/P1_VERTICAL_SLICE/aspose-3d-foss__Aspose.3D-FOSS-for-Python/facts.json's
+      F-PKG-VERSION/F-PKG-REQUIRES-PYTHON/F-PKG-NO-DEPS facts (SUPPORTED, same values).
+      surface_facts: 1564 public_symbol facts, no crash on a real roughly-400-file SDK tree.
+      format_declarations: independently rediscovered exactly 6 registered formats: OBJ, STL,
+      glTF (both the .gltf and .glb extensions of one GltfFormat), 3MF, FBX (input direction
+      only, the extractor's stub-detection correctly read FbxExporter's save()/save_to_stream()
+      as raising nothing but NotImplementedError and emitted no output registration for it), and
+      COLLADA (.dae), matching the ground truth's F-FORMATS-REGISTERED fact's format list and
+      count exactly, from independent static analysis, not by reading the old finding first.
+
+      Genuine, honestly reported limitation found by this proof (the task's own ask): the
+      extractor's format_declarations() DOES emit a registration entry for .obj output (ObjPlugin
+      wired to a non-stub ObjExporter class), which is the raw signal a later stage would turn
+      into a SUPPORTED format or capability fact for OBJ export. This directly conflicts with the
+      hand-verified ground truth's F-OBJ-EXPORT-BROKEN (CONTRADICTED): real execution of
+      Scene.save(".obj") fails with a TypeError (ObjExporter.py line 50 writes a str to a stream
+      opened in binary mode) plus a second, independent root cause. The static detector's "is
+      this a stub" check (every statement in the entry method raises NotImplementedError) cannot
+      and does not detect "is this implementation merely buggy": a class with real, non-stub code
+      that is still broken at runtime reads identically to working code under static analysis
+      alone. The same gap reproduces for COLLADA export: the extractor reports it registered
+      (correct, statically, ColladaExporter is not a stub), but the ground truth's
+      F-COLLADA-EXPORT-UNREACHABLE finding is a dispatch-order bug (IOService's exporter lookup
+      hits the unimplemented FbxExporter.supports_format() before ever reaching ColladaExporter),
+      which is runtime control flow this static pass has no way to see either. Both are the same
+      root limitation stated once: format_declarations() verifies that a format is wired up,
+      never that it works, and the latter needs the execution-backed verifier
+      (verify_examples/python_examples.py) this pass did NOT port (see disposition below); a
+      downstream stage must not read a registration entry alone as proof a format is usable.
+    disposition: >
+      REUSE/ADAPT, pulled this pass: python.py manifest_facts, registry_facts, surface_facts,
+      format_claims, format_declarations and all five siblings except python_examples.py (near
+      verbatim, import-path rewrite only); net.py and java.py manifest_facts, registry_facts,
+      surface_facts (near verbatim; net.py's surface_facts additionally needed restoring the
+      surface_symbols() wiring once the shared tree-sitter engine landed mid-pass); java.py's
+      _javadoc_prose/_resolve_inline_tags/_inline_tag_text (ported alongside surface_facts, which
+      now calls it). NOT pulled, explicitly: python_examples.py, net_examples.py, java_examples.py
+      (the three ecosystems' execution/toolchain-backed example verifiers), each plugin's
+      verify_examples returns an honest NOT_VERIFIED receipt per candidate instead, naming the
+      unported module in the receipt's own detail string, never a fabricated EXECUTED or FAILED.
+      NetPlugin/JavaPlugin also define no verify_build, so extractors/platforms/registry.py's
+      verify_build() answers "not attempted" for both, which that module's own test already
+      covers.
+    reason: >
+      Manifest and registry facts are what every Installation section actually needs and were
+      fully portable without any new infrastructure; Python's surface and format-declaration
+      readers are pure-ast, zero dependency, and directly answer this taskcard's own end-to-end
+      proof requirement. net.py's and java.py's surface_facts were initially scoped out as
+      needing a roughly 6,000-line vendored tree-sitter engine this taskcard judged too large to
+      duplicate-port alongside a parallel C++/Go/Rust/TypeScript taskcard already pulling it;
+      once that taskcard landed it mid-pass, finishing the wiring here cost a few lines, not a
+      re-port, so it was finished rather than left stubbed. The three *_examples.py execution
+      verifiers were left unported even though their own toolchain runner
+      (core/execution.py/core/toolchains.py) is now also present: wiring three more non-trivial
+      per-ecosystem compile and run pipelines (733 plus 378 plus 544 lines) was judged a
+      distinct, separately sizeable pull from this taskcard's own scope (manifest, registry,
+      surface, and format facts), not a required dependency for the specific end-to-end proof
+      this taskcard was asked to produce (format and capability facts, not example-execution
+      facts), left as a clearly named next step, not silently dropped.
+    target_module: >
+      src/repo_presenter/extractors/platforms/{python,python_surface,python_formats,
+      python_registry,python_setup_py,python_format_declarations,net,java}.py;
+      src/repo_presenter/extractors/surface/manifest.py; src/repo_presenter/extractors/surface/
+      registry.py; src/repo_presenter/extractors/surface/_vendor/aspose_extraction/
+      {package_manifest,package_root,publication_probe}.py plus
+      package_registries/{__init__,pypi,nuget,npm,cargo,go}.py; src/repo_presenter/core/
+      ecosystems.py (core/retry, errors, probes, examples, package_registry.py reused from the
+      concurrent taskcard's compatible port, not re-authored)
+    smallest_first_integration_test: >
+      Done: ported tests/extractors/platforms/{test_python,test_python_formats,
+      test_python_setup_py,test_python_registry,test_python_surface,
+      test_python_format_declarations,test_net,test_java}.py (100 tests, all passing) plus the
+      fixture directories they read. Beyond the smallest-first bar: a real end-to-end run of the
+      ported PythonPlugin against a fresh clone of aspose-3d-foss/Aspose.3D-FOSS-for-Python,
+      cross-checked fact by fact against this repository's own hand-verified
+      evidence/build/P1_VERTICAL_SLICE/.../facts.json (see evidence above).
+    portfolio_consumers: both lanes, every Python, .NET, and Java candidate.
+    invalidation_impact: >
+      None yet, nothing downstream of extraction has been pointed at this port yet. Once it is,
+      a change to this plugin's own facts (or, once pulled, EXTRACTOR_VERSION) reopens EXTRACTING
+      for every candidate of that ecosystem, same as the cpp/go/rust/typescript entry above.
     known_gap: >
-      The real subprocess-execution runner for example verification was not
-      located in this tree (see Lane R entry above) — needs to be found before
-      the example_facts() pipeline can run for real rather than against
-      pre-computed receipts.
+      python_examples.py, net_examples.py, java_examples.py (execution-backed example
+      verification) remain unported; every candidate's example facts for these three ecosystems
+      are NOT_VERIFIED until that pull happens, even though the toolchain runner they would use
+      already exists in this repository (core/execution.py, core/toolchains.py,
+      core/git_safety/process.py, landed by the concurrent C++/Go/Rust/TypeScript taskcard).
+      Separately, and load bearing for any future reconciliation or composition stage that reads
+      format_declarations() output: a registration entry proves a format is wired up, never that
+      it works at runtime, see the OBJ and COLLADA finding in the evidence above. A downstream
+      stage must independently verify (via an executed example, or a future dedicated runtime
+      probe) before promoting a registration-only signal to a SUPPORTED format or capability
+      fact.

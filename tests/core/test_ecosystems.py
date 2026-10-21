@@ -1,0 +1,383 @@
+"""An ecosystem declares its own vocabulary; shared code never branches on its name."""
+
+from __future__ import annotations
+
+import pytest
+
+from repo_presenter.core.ecosystems import (
+    CLONE_PREFIX,
+    NET,
+    PYTHON,
+    SPECS,
+    EcosystemSpec,
+    spec_for,
+)
+from repo_presenter.core.errors import ConfigError
+from repo_presenter.core.execution import MAX_TIMEOUT_SECONDS
+from repo_presenter.core.facts import (
+    SOURCE_CHECKOUT_COMMAND_ATTRIBUTE,
+    SOURCE_CHECKOUT_UNVERIFIED_ATTRIBUTE,
+    Evidence,
+    Fact,
+)
+
+
+def test_the_python_spec_carries_what_the_renderer_used_to_hard_code() -> None:
+    spec = spec_for("python")
+    assert spec is PYTHON
+    assert spec.fence == "python" and spec.registry == "PyPI"
+    assert spec.install_fact_id == "install_command:pip"
+    assert spec.badge("aspose-3d-foss") == (
+        "[![PyPI](https://img.shields.io/pypi/v/aspose-3d-foss.svg)]"
+        "(https://pypi.org/project/aspose-3d-foss/)"
+    )
+    assert spec.verify_command.format(module="aspose.threed") == 'python -c "import aspose.threed"'
+    # The spec owns the verifier's clock too; core.execution's ceiling still bounds it.
+    assert spec.example_timeout_seconds == 120.0 and spec.install_timeout_seconds == 300.0
+    assert spec.example_timeout_seconds <= MAX_TIMEOUT_SECONDS
+
+
+def test_an_ecosystem_with_no_registry_prints_no_badge() -> None:
+    """C++ has no package registry (section 29.6 E3), so its spec leaves the template empty."""
+    spec = EcosystemSpec(
+        ecosystem="cpp",
+        language="C++",
+        fence="cpp",
+        registry="no package registry",
+        install_fact_id="install_command:cmake",
+    )
+    assert spec.badge("anything") == ""
+
+
+def test_a_two_segment_registry_coordinate_splits_for_its_own_badge_url() -> None:
+    """G4-W17 arrival item 13. shields.io's Maven Central endpoint takes two path segments,
+    img.shields.io/maven-central/v/{groupId}/{artifactId}, while Java's package:name fact is the
+    colon-joined coordinate a build file actually declares (org.aspose:aspose-3d-foss) - no
+    single {package} token fits it. {group} and {artifact} are offered beside {package} so a
+    two-segment template can use them without a fact of its own."""
+    maven = EcosystemSpec(
+        ecosystem="java",
+        language="Java",
+        fence="java",
+        registry="Maven Central",
+        install_fact_id="install_command:maven",
+        version_badge=(
+            "[![Maven Central](https://img.shields.io/maven-central/v/{group}/{artifact}.svg)]"
+            "(https://central.sonatype.com/artifact/{group}/{artifact})"
+        ),
+    )
+    assert maven.badge("org.aspose:aspose-3d-foss") == (
+        "[![Maven Central](https://img.shields.io/maven-central/v/org.aspose/aspose-3d-foss.svg)]"
+        "(https://central.sonatype.com/artifact/org.aspose/aspose-3d-foss)"
+    )
+    # A coordinate with no colon (every other ecosystem) leaves a one-segment template exactly as
+    # it read before this item: {package} alone, unaffected by the new placeholders' existence.
+    assert PYTHON.badge("aspose-3d-foss") == (
+        "[![PyPI](https://img.shields.io/pypi/v/aspose-3d-foss.svg)]"
+        "(https://pypi.org/project/aspose-3d-foss/)"
+    )
+
+
+def test_a_spec_names_every_fence_a_reader_may_write_its_examples_in() -> None:
+    """A reader writes csharp, cs or c#; a table in shared code knew only python.
+
+    Measured 2026-09-06: because the example extractor held that table, every C# block in the
+    .NET cohort's six READMEs was invisible and each repository reached planning with zero
+    example candidates (section 29.2 F6).
+    """
+    assert NET.example_fences == frozenset({"csharp", "cs", "c#"})
+    assert PYTHON.example_fences == frozenset({"python", "py", "python3"})
+    # A spec that declares no aliases still marks its own fence, so C++ needs no entry.
+    minimal = EcosystemSpec(
+        ecosystem="cpp",
+        language="C++",
+        fence="cpp",
+        registry="no package registry",
+        install_fact_id="install_command:cmake",
+    )
+    assert minimal.example_fences == frozenset({"cpp"})
+
+
+def test_an_unregistered_ecosystem_fails_closed() -> None:
+    """A document rendered with guessed vocabulary is worse than no document."""
+    with pytest.raises(ConfigError, match="no ecosystem spec registered for 'klingon'"):
+        spec_for("klingon")
+
+
+def test_a_spec_is_registered_by_name_and_nothing_else_is_needed(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Adding an ecosystem is one spec: section 29.6 E3's whole point."""
+    added = EcosystemSpec(
+        ecosystem="net",
+        language="C#",
+        fence="csharp",
+        registry="NuGet",
+        install_fact_id="install_command:dotnet",
+    )
+    monkeypatch.setitem(SPECS, "net", added)
+    assert spec_for("net") is added
+
+
+def test_a_lane_registers_its_own_spec_without_editing_the_shared_dict() -> None:
+    """G4-W17 arrival item 3. Every lane platform module (typescript.py, java.py, go.py, rust.py,
+    cpp.py) registers its own EcosystemSpec by calling ``SPECS.setdefault(ecosystem, spec)`` at
+    import time, never by adding a line to this file's SPECS literal - core/ecosystems.py's own
+    docstring says adding an ecosystem is a spec, a verifier and a negative-control test, never an
+    edit to a shared file, which a literal dict assignment cannot honour for a path core/ does not
+    own. SPECS is annotated dict[str, EcosystemSpec] and deliberately not Final so setdefault
+    works; this pins that it does, and that a second registration for the same key - a duplicate
+    import, or two lanes racing - never overwrites the first, exactly setdefault's own contract
+    and the one every lane already depends on."""
+    first = EcosystemSpec(
+        ecosystem="cobol",
+        language="COBOL",
+        fence="cobol",
+        registry="none",
+        install_fact_id="install_command:cobol",
+    )
+    second = EcosystemSpec(
+        ecosystem="cobol",
+        language="COBOL",
+        fence="cobol",
+        registry="none",
+        install_fact_id="install_command:cobol",
+        source_install="true",
+    )
+    assert "cobol" not in SPECS
+    try:
+        SPECS.setdefault("cobol", first)
+        SPECS.setdefault("cobol", second)
+        assert spec_for("cobol") is first
+    finally:
+        del SPECS["cobol"]
+
+
+def test_the_source_checkout_command_is_the_ecosystems_own() -> None:
+    """Measured 2026-09-06: `_installation` hard-coded `pip install .` for every ecosystem with
+    an executed example, so Aspose.Cells and Aspose.3D for .NET - both sealed - told a reader to
+    run `pip install .` against a C# project. The command is the ecosystem's own to name."""
+    assert PYTHON.clone_and_build("org/Widget-Python", "Widget-Python") == (
+        "git clone https://github.com/org/Widget-Python.git\ncd Widget-Python\npip install ."
+    )
+    assert NET.clone_and_build("org/Widget-NET", "Widget-NET") == (
+        "git clone https://github.com/org/Widget-NET.git\ncd Widget-NET\ndotnet build"
+    )
+    # A spec that declares no source install (C++, until it has one) renders nothing at all.
+    silent = EcosystemSpec(
+        ecosystem="cpp",
+        language="C++",
+        fence="cpp",
+        registry="no package registry",
+        install_fact_id="install_command:cmake",
+    )
+    assert silent.clone_and_build("org/Widget-CPP", "Widget-CPP") == ""
+
+
+def test_measured_build_steps_follow_the_checkout_every_template_spells() -> None:
+    """G4-W17 arrival item 50: a verifier that drove the manifest's own build hands the exact
+    steps it proved to the fact, and they follow the one checkout prefix the templates spell -
+    so a measured command and a templated one read the same to a reader and to BC-02."""
+    assert NET.clone_and_run("org/Widget-NET", "Widget-NET", "npm install\nnpm run build") == (
+        "git clone https://github.com/org/Widget-NET.git\ncd Widget-NET\nnpm install\nnpm run build"
+    )
+    # A spec that declares no template can still carry a measured command: the prefix is shared.
+    silent = EcosystemSpec(
+        ecosystem="typescript",
+        language="TypeScript",
+        fence="typescript",
+        registry="npm",
+        install_fact_id="install_command:npm",
+    )
+    assert (
+        silent.clone_and_run("org/W", "W", "npm install")
+        == CLONE_PREFIX.format(repository="org/W", name="W") + "npm install"
+    )
+    for spec in (PYTHON, NET):
+        assert spec.source_install.startswith(CLONE_PREFIX), spec.ecosystem
+
+
+def test_the_reference_command_adds_source_roots_to_the_path_never_a_build_step() -> None:
+    """G4-W17 arrival item 126: a repository where no build/install command ever succeeds still
+    has an honest fallback - adding the directories an executed example already imported the
+    package from to the interpreter's path. Never a build command, since none was proven."""
+    assert PYTHON.clone_and_reference("org/Widget-Python", "Widget-Python", ("src", ".")) == (
+        "git clone https://github.com/org/Widget-Python.git\ncd Widget-Python\n"
+        'export PYTHONPATH="src:.:$PYTHONPATH"'
+    )
+    # No roots to name: nothing to admit, exactly like a spec with no source_install template.
+    assert PYTHON.clone_and_reference("org/Widget-Python", "Widget-Python", ()) == ""
+    # .NET declares no source_reference template - a build/install failure means something
+    # different for a compiled language - so it renders nothing even with roots in hand.
+    assert NET.clone_and_reference("org/Widget-NET", "Widget-NET", ("src",)) == ""
+
+
+# --- the runtime badge: plans/idea.md "platform/runtime" slot, one per ecosystem from its spec ---
+
+
+def _spec(floor_fact_id: str, label: str, minimum: bool) -> EcosystemSpec:
+    return EcosystemSpec(
+        ecosystem="x",
+        language="X",
+        fence="x",
+        registry="Reg",
+        install_fact_id="install_command:x",
+        floor_fact_id=floor_fact_id,
+        floor_label=label,
+        floor_is_minimum=minimum,
+    )
+
+
+@pytest.mark.parametrize(
+    ("spec", "floor", "expected"),
+    [
+        (PYTHON, ">=3.10", "![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)"),
+        # A range is its lower bound, never the whole range glued to a plus sign.
+        (PYTHON, ">=3.10,<3.13", "![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)"),
+        (NET, "net8.0", "![.NET](https://img.shields.io/badge/.net-net8.0-blue.svg)"),
+        (
+            NET,
+            "netstandard2.0",
+            "![.NET](https://img.shields.io/badge/.net-netstandard2.0-blue.svg)",
+        ),
+        (
+            _spec("package:java_release", "Java", True),
+            "21",
+            "![Java](https://img.shields.io/badge/java-21%2B-blue.svg)",
+        ),
+        (
+            _spec("package:cxx_standard", "C++", False),
+            "17",
+            "![C++](https://img.shields.io/badge/c%2B%2B-17-blue.svg)",
+        ),
+        (
+            _spec("package:rust_edition", "Rust edition", False),
+            "2021",
+            "![Rust edition](https://img.shields.io/badge/rust_edition-2021-blue.svg)",
+        ),
+        (
+            _spec("package:node_engine", "Node.js", True),
+            ">=18.0.0",
+            "![Node.js](https://img.shields.io/badge/node.js-18.0.0%2B-blue.svg)",
+        ),
+        (
+            _spec("package:go_version", "Go", True),
+            "1.24.5",
+            "![Go](https://img.shields.io/badge/go-1.24.5%2B-blue.svg)",
+        ),
+    ],
+)
+def test_each_ecosystem_states_its_own_floor(
+    spec: EcosystemSpec, floor: str, expected: str
+) -> None:
+    assert spec.runtime_badge(floor) == expected
+
+
+@pytest.mark.parametrize("floor", ["", "^18 || ^20", "latest (see docs)", "  "])
+def test_a_floor_with_no_single_printable_value_yields_no_badge(floor: str) -> None:
+    assert _spec("package:node_engine", "Node.js", True).runtime_badge(floor) == ""
+
+
+def test_an_ecosystem_declaring_no_floor_has_no_runtime_badge() -> None:
+    assert _spec("", "", False).runtime_badge("3.10") == ""
+    assert _spec("package:x", "", False).runtime_badge("3.10") == ""
+
+
+def test_shields_separators_in_a_floor_are_escaped() -> None:
+    badge = _spec("package:x", "My_Runtime-Name", False).runtime_badge("1-rc_2")
+    assert (
+        badge
+        == "![My_Runtime-Name](https://img.shields.io/badge/my__runtime--name-1--rc__2-blue.svg)"
+    )
+
+
+# --- TC-TST-01 ---
+
+
+def _install(**attributes: str) -> Fact:
+    return Fact(
+        "install_command:dotnet",
+        "install_command",
+        "dotnet add package Widget",
+        (Evidence("Widget.csproj", "manifest"),),
+        attributes=attributes or None,
+    )
+
+
+def test_the_source_checkout_block_is_what_the_facts_proved_never_the_template_alone() -> None:
+    measured = (
+        "git clone https://github.com/org/Widget-NET.git\ncd Widget-NET\n"
+        "dotnet build src/Widget/Widget.csproj"
+    )
+    proven = _install(**{SOURCE_CHECKOUT_COMMAND_ATTRIBUTE: measured})
+    assert NET.source_checkout_command(proven, "org/Widget-NET", "Widget-NET") == measured
+    refused = _install(**{SOURCE_CHECKOUT_UNVERIFIED_ATTRIBUTE: "no build exited 0"})
+    assert NET.source_checkout_command(refused, "org/Widget-NET", "Widget-NET") == ""
+    # A refusal outranks a command: the record never states both.
+    both = _install(
+        **{
+            SOURCE_CHECKOUT_COMMAND_ATTRIBUTE: measured,
+            SOURCE_CHECKOUT_UNVERIFIED_ATTRIBUTE: "no build exited 0",
+        }
+    )
+    assert NET.source_checkout_command(both, "org/Widget-NET", "Widget-NET") == ""
+
+
+def test_a_fact_extracted_before_the_record_existed_keeps_the_template() -> None:
+    template = NET.clone_and_build("org/Widget-NET", "Widget-NET")
+    assert template.endswith("dotnet build")
+    assert NET.source_checkout_command(_install(), "org/Widget-NET", "Widget-NET") == template
+    assert NET.source_checkout_command(None, "org/Widget-NET", "Widget-NET") == template
+
+
+def test_a_spec_with_no_template_offers_no_block_without_a_record() -> None:
+    silent = EcosystemSpec(
+        ecosystem="typescript",
+        language="TypeScript",
+        fence="typescript",
+        registry="npm",
+        install_fact_id="install_command:npm",
+    )
+    assert silent.source_checkout_command(None, "org/W", "W") == ""
+
+
+@pytest.mark.parametrize(
+    ("path", "text", "expected"),
+    [
+        ("tests/test_scene.py", "", True),
+        ("tests/scene_test.py", "", True),
+        ("tests/conftest.py", "", False),
+        ("tests/__init__.py", "", False),
+        ("tests/helpers.py", "def test_like_name(): pass\n", False),
+    ],
+)
+def test_python_tells_a_pytest_module_by_its_file_name(
+    path: str, text: str, expected: bool
+) -> None:
+    rule = PYTHON.suite_files
+    assert rule is not None
+    assert (rule.accepts_name(path) and rule.accepts_text(text)) is expected
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("[Fact]\npublic void A() { }", True),
+        ("[Theory]\n[InlineData(1)]\npublic void A(int n) { }", True),
+        ('[Test, Category("io")]\npublic void A() { }', True),
+        ("[TestCase(1)]\npublic void A(int n) { }", True),
+        ("[TestMethod]\npublic void A() { }", True),
+        ("[DataTestMethod]\npublic void A() { }", True),
+        ("[TestClass]\npublic static class Loader { }", False),
+        ("[TestFixture]\npublic class Base { }", False),
+        ("public class Helper { public string Path(string n) => n; }", False),
+    ],
+)
+def test_dotnet_tells_a_test_by_the_attribute_a_test_method_carries(
+    text: str, expected: bool
+) -> None:
+    rule = NET.suite_files
+    assert rule is not None
+    assert rule.accepts_name("Tests.cs") and not rule.accepts_name("Tests.csproj")
+    assert not rule.accepts_name("test.log")
+    assert rule.accepts_text(text) is expected

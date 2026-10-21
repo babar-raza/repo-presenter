@@ -1,0 +1,646 @@
+"""`-fsyntax-only` proves the example's calls exist; a broken header leaves it unchecked."""
+
+from __future__ import annotations
+
+import os
+from pathlib import Path
+
+import pytest
+
+from repo_presenter.extractors.platforms import cpp_examples
+from repo_presenter.core.examples import ExampleCandidate
+from repo_presenter.core.execution import MAX_TIMEOUT_SECONDS, ExecutionResult
+
+CMAKELISTS = """
+cmake_minimum_required(VERSION 3.16)
+project(Widget VERSION 1.0.0 LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+add_library(widget STATIC src/widget.cpp)
+target_include_directories(widget PUBLIC include)
+"""
+HEADER = """
+#pragma once
+#include <string>
+namespace Aspose {
+namespace Widget {
+class Shape {
+public:
+  void Save(const std::string& path);
+};
+}
+}
+"""
+# A public header a consumer cannot compile: it includes a third party's header that is not on
+# the include path, exactly as Aspose.Slides for C++'s `shape_collection.h` includes pugixml's.
+# The compiler stops at that line, so it files no diagnostic about the example at all.
+BROKEN_HEADER = """
+#pragma once
+#include <rp_no_such_dependency.hpp>
+namespace Aspose {
+namespace Widget {
+class Shape {
+public:
+  void Save(const char* path);
+};
+}
+}
+"""
+GOOD = (
+    '#include "widget/shape.h"\n'
+    "using namespace Aspose::Widget;\n"
+    "Shape shape;\n"
+    'shape.Save("out.bin");\n'
+)
+BAD = (
+    '#include "widget/shape.h"\n'
+    "using namespace Aspose::Widget;\n"
+    "Shape shape;\n"
+    'shape.Explode("out.bin");\n'
+)
+PROGRAM = (
+    '#include "widget/shape.h"\n'
+    "int main() {\n"
+    "  Aspose::Widget::Shape shape;\n"
+    '  shape.Save("out.bin");\n'
+    "  return 0;\n"
+    "}\n"
+)
+
+compiler = cpp_examples.cpp_compiler()
+needs_compiler = pytest.mark.skipif(compiler is None, reason="no C++ compiler on this machine")
+
+
+def _repository(root: Path, header: str = HEADER) -> Path:
+    (root / "CMakeLists.txt").write_text(CMAKELISTS, encoding="utf-8", newline="\n")
+    headers = root / "include" / "widget"
+    headers.mkdir(parents=True)
+    (headers / "shape.h").write_text(header, encoding="utf-8", newline="\n")
+    (root / "src").mkdir()
+    (root / "src" / "widget.cpp").write_text(
+        '#include "widget/shape.h"\n'
+        "void Aspose::Widget::Shape::Save(const std::string& path) { (void)path; }\n",
+        encoding="utf-8",
+        newline="\n",
+    )
+    return root / "CMakeLists.txt"
+
+
+def _candidates(*sources: str) -> list[ExampleCandidate]:
+    return [
+        ExampleCandidate(
+            ordinal=index + 1,
+            language="cpp",
+            code=source,
+            source_path="README.md",
+            start_line=1,
+            end_line=9,
+            unit_id=f"inherited_unit:{index + 1:03d}.code_block",
+        )
+        for index, source in enumerate(sources)
+    ]
+
+
+def test_a_body_is_given_a_main_and_its_preamble_stays_at_file_scope() -> None:
+    """C++ has no top-level statements: six of Aspose.Cells for C++'s seven README examples,
+    nine of Aspose.Slides' ten and eight of Aspose.PDF's eleven are bodies, not programs."""
+    wrapped = cpp_examples.wrap_example(
+        "#include <memory>\n"
+        "// a comment\n"
+        "namespace pdf = Aspose::Pdf;\n"
+        "using namespace Aspose;\n"
+        "pdf::Document doc;\n"
+        'doc.Save("out.pdf");\n'
+    )
+    lines = wrapped.splitlines()
+    assert lines[0] == "#include <memory>"
+    assert "namespace pdf = Aspose::Pdf;" in lines[:4]
+    assert "using namespace Aspose;" in lines[:5]
+    assert "int main() {" in lines
+    body = lines[lines.index("int main() {") :]
+    assert "    pdf::Document doc;" in body
+    assert '    doc.Save("out.pdf");' in body
+    assert body[-2:] == ["    return 0;", "}"]
+
+
+def test_a_snippet_that_is_already_a_program_is_compiled_as_it_stands() -> None:
+    assert cpp_examples.wrap_example(PROGRAM) == PROGRAM
+    assert cpp_examples.wrap_example("int main(int argc, char** argv) { return 0; }\n").startswith(
+        "int main("
+    )
+
+
+def test_the_example_diagnostics_are_separated_from_every_other_file() -> None:
+    output = (
+        "example_003.cpp:4:7: error: 'Explode' is not a member of 'Shape'\n"
+        "include/widget/shape.h:7:15: error: 'NoSuchType' was not declared in this scope\n"
+        "C:/tools/gcc/include/c++/16.2.0/bits/unique_ptr.h:90:23: error: invalid application\n"
+        "example_003.cpp:4:7: note: suggested alternative\n"
+    )
+    mine, theirs = cpp_examples.split_diagnostics(output, "example_003.cpp")
+    assert len(mine) == 1 and "Explode" in mine[0]
+    assert len(theirs) == 2
+    # A note is not an error and decides nothing.
+    assert not any("note:" in line for line in mine + theirs)
+
+
+def test_only_unbound_identifiers_make_a_fence_an_excerpt_rather_than_a_falsehood() -> None:
+    """Live-verified 2026-09-10 against the real repository's current source: five of Aspose.
+    Cells-FOSS-for-Cpp's seven examples open on names their README establishes in an earlier,
+    un-inherited section (Taskcard C; the same class rust_examples.py's unbound_values() already
+    excludes for Rust's own E0425). GCC raises two diagnostic shapes for this - "was not
+    declared in this scope" for a bare identifier (`sheet`), "has not been declared" for one used
+    to its own left of `::` (`CellArea::CreateCellArea`, example:003's own real shape)."""
+    lines = [
+        "example_003.cpp:3:25: error: 'sheet' was not declared in this scope",
+        "example_003.cpp:5:24: error: 'CellArea' has not been declared",
+        "example_007.cpp:3:17: error: 'workbook' was not declared in this scope",
+    ]
+    assert cpp_examples.unbound_identifiers(lines) == ["sheet", "CellArea", "workbook"]
+
+
+def test_unicode_curly_quotes_are_matched_the_same_as_ascii_ones() -> None:
+    """GCC's own diagnostic quote style follows the build's locale, not the compiler's own
+    identity - a real, previously-red hosted-CI incident (2026-09-10): this machine's own GCC
+    quotes with plain ASCII apostrophes, but the hosted Ubuntu CI runner's GCC quoted the exact
+    same diagnostic with Unicode curly quotes (U+2018/U+2019), which the first two fix attempts
+    for Taskcard C did not account for since they were never checked against the real hosted
+    output. Real captured hosted stderr, not synthesized: `gh api .../jobs/102908743096/logs`."""
+    hosted = [
+        "example_001.cpp:3:5: error: \u2018sheet\u2019 was not declared in this scope",
+        "example_001.cpp:4:5: error: \u2018Missing\u2019 has not been declared",
+    ]
+    assert cpp_examples.unbound_identifiers(hosted) == ["sheet", "Missing"]
+
+
+def test_a_fence_that_names_something_the_library_lacks_is_not_an_excerpt() -> None:
+    """A real type mismatch is a real defect, and must not be excused as missing context -
+    Aspose.Cells-FOSS-for-Cpp's own example:002."""
+    real_bug = [
+        "example_002.cpp:10:48: error: no match for 'operator[]' (operand types are "
+        "'Aspose::Cells_FOSS::WorksheetCollection' and 'const char [9]')"
+    ]
+    assert cpp_examples.unbound_identifiers(real_bug) == []
+    mixed = [
+        "example_003.cpp:3:25: error: 'sheet' was not declared in this scope",
+        "example_003.cpp:4:1: error: 'Missing' was not declared in this scope",
+        "example_003.cpp:5:1: error: no match for 'operator[]' (operand types are 'int' and 'int')",
+    ]
+    assert cpp_examples.unbound_identifiers(mixed) == []
+
+
+def test_the_toolchain_reaches_the_subprocess_path_and_never_the_process_one() -> None:
+    """Loop-prompt section 1.3: nothing this lane provisions is on the user or system PATH."""
+    before = os.environ.get("PATH", "")
+    path = cpp_examples.toolchain_path("/tools/gcc/bin/g++", "/tools/ninja/ninja", None)
+    assert path.split(os.pathsep)[:2] == [
+        str(Path("/tools/gcc/bin")),
+        str(Path("/tools/ninja")),
+    ]
+    assert path.endswith(before)
+    assert os.environ.get("PATH", "") == before
+
+
+def test_a_dependency_the_configure_step_fetched_becomes_an_include_root(tmp_path: Path) -> None:
+    """Aspose.Slides for C++'s public `shape_collection.h` opens with `#include <pugixml.hpp>`,
+    and pugixml's own header lives in `src/`, not `include/`."""
+    (tmp_path / "_deps" / "pugixml-src" / "src").mkdir(parents=True)
+    (tmp_path / "_deps" / "miniz-src" / "include").mkdir(parents=True)
+    (tmp_path / "_deps" / "pugixml-build").mkdir()
+    found = cpp_examples.fetched_includes(tmp_path)
+    assert [path.relative_to(tmp_path).as_posix() for path in found] == [
+        "_deps/miniz-src/include",
+        "_deps/pugixml-src/src",
+    ]
+
+
+def test_nothing_is_verified_without_a_manifest(tmp_path: Path) -> None:
+    receipts = cpp_examples.verify_cpp_examples(
+        tmp_path, None, tmp_path, "17", _candidates(GOOD), tmp_path / "run", 60.0
+    )
+    assert [receipt.outcome for receipt in receipts] == ["NOT_VERIFIED"]
+    assert "nothing to resolve" in receipts[0].detail
+
+
+def test_no_candidates_means_no_receipts(tmp_path: Path) -> None:
+    manifest = _repository(tmp_path)
+    assert (
+        cpp_examples.verify_cpp_examples(
+            tmp_path, manifest, tmp_path / "include", "17", [], tmp_path / "run", 60.0
+        )
+        == []
+    )
+
+
+@needs_compiler
+def test_a_true_example_compiles_and_a_false_one_does_not(tmp_path: Path) -> None:
+    """The negative control: nothing the verifier stages can make a member that is not there
+    appear, so a false claim about the library still fails (section 29.6 E5)."""
+    manifest = _repository(tmp_path)
+    receipts = cpp_examples.verify_cpp_examples(
+        tmp_path,
+        manifest,
+        tmp_path / "include",
+        "17",
+        _candidates(GOOD, BAD, PROGRAM),
+        tmp_path / "run",
+        120.0,
+    )
+    assert [receipt.outcome for receipt in receipts] == ["EXECUTED", "FAILED", "EXECUTED"]
+    assert "-fsyntax-only" in receipts[0].detail
+    assert "Explode" in receipts[1].detail
+    # A receipt becomes a fact's evidence, so no absolute path of this machine may survive in it.
+    for receipt in receipts:
+        assert str(tmp_path) not in receipt.detail + receipt.stdout + receipt.stderr
+
+
+@needs_compiler
+def test_an_undeclared_binding_is_not_verified_but_a_real_type_error_still_fails(
+    tmp_path: Path,
+) -> None:
+    """Taskcard C, end to end with the real compiler: a fence opening on names its README
+    established elsewhere - both GCC's diagnostic shapes at once, matching Aspose.Cells-FOSS-
+    for-Cpp's own real example:003 (`sheet` was not declared in this scope; `Missing` has not
+    been declared) - is incomplete, not false. `BAD` (a real, genuinely wrong member call) still
+    fails alongside it in the same run, so the relabeling never excuses an actual defect."""
+    manifest = _repository(tmp_path)
+    unbound = 'sheet.Save("out.bin");\nMissing::Create();\n'
+    receipts = cpp_examples.verify_cpp_examples(
+        tmp_path,
+        manifest,
+        tmp_path / "include",
+        "17",
+        _candidates(unbound, BAD),
+        tmp_path / "run",
+        120.0,
+    )
+    outcomes = [receipt.outcome for receipt in receipts]
+    assert outcomes == ["NOT_VERIFIED", "FAILED"], (
+        f"outcomes={outcomes}\n"
+        f"receipts[0].detail={receipts[0].detail!r}\n"
+        f"receipts[0].stdout={receipts[0].stdout!r}\n"
+        f"receipts[0].stderr={receipts[0].stderr!r}"
+    )
+    assert receipts[0].detail == (
+        "the fence uses `sheet`, `Missing` without binding it; the README establishes it in an "
+        "earlier section"
+    )
+    assert "Explode" in receipts[1].detail
+
+
+@needs_compiler
+def test_a_header_that_stops_the_compiler_leaves_the_example_unchecked(tmp_path: Path) -> None:
+    """A "could not check" is not a "checked and it is false" (section 29.6 E5). Measured
+    2026-09-06 on Aspose.PDF for C++: two of its eleven examples include a facade header whose
+    `unique_ptr<Document>` over an incomplete type stops the compiler before any call of
+    theirs."""
+    manifest = _repository(tmp_path, BROKEN_HEADER)
+    receipts = cpp_examples.verify_cpp_examples(
+        tmp_path,
+        manifest,
+        tmp_path / "include",
+        "17",
+        _candidates(GOOD),
+        tmp_path / "run",
+        120.0,
+    )
+    assert receipts[0].outcome == "NOT_VERIFIED"
+    assert receipts[0].detail.startswith("BLOCKED_TOOLCHAIN: no diagnostic in the example itself")
+
+
+@needs_compiler
+def test_a_syntax_only_pass_does_not_claim_the_library_itself_builds(tmp_path: Path) -> None:
+    """TB-01, external review D1, 2026-09-08: `-fsyntax-only` only compiles the example file,
+    which includes the header, never `src/widget.cpp` - a broken implementation still lets a
+    correct example syntax-check EXECUTED while the real `cmake --build` fails. Measured on
+    Aspose.Cells for C++: the sealed README called `cmake -S . -B build` "verified against this
+    revision" while its own examples.json recorded the CMake build failing. `build_verified` must
+    be False here so extract.py never promotes the advertised build command from this receipt."""
+    manifest = _repository(tmp_path)
+    (tmp_path / "src" / "widget.cpp").write_text(
+        "this is not valid C++ and cmake --build must fail\n", encoding="utf-8", newline="\n"
+    )
+    receipts = cpp_examples.verify_cpp_examples(
+        tmp_path, manifest, tmp_path / "include", "17", _candidates(GOOD), tmp_path / "run", 120.0
+    )
+    assert receipts[0].outcome == "EXECUTED"
+    assert "CMake build failed" in receipts[0].detail
+    assert receipts[0].build_verified is False
+
+
+@needs_compiler
+def test_a_genuinely_successful_build_still_marks_the_receipt_verified(tmp_path: Path) -> None:
+    """The no-regression case: an EXECUTED receipt whose CMake build genuinely succeeded keeps
+    build_verified True, exactly as every EXECUTED receipt behaved before TB-01."""
+    manifest = _repository(tmp_path)
+    receipts = cpp_examples.verify_cpp_examples(
+        tmp_path, manifest, tmp_path / "include", "17", _candidates(GOOD), tmp_path / "run", 120.0
+    )
+    assert receipts[0].outcome == "EXECUTED"
+    assert "CMake build succeeded" in receipts[0].detail
+    assert receipts[0].build_verified is True
+
+
+def test_a_machine_without_a_compiler_verifies_nothing(tmp_path: Path, monkeypatch) -> None:  # type: ignore[no-untyped-def]
+    manifest = _repository(tmp_path)
+    monkeypatch.setattr(cpp_examples, "cpp_compiler", lambda: None)
+    receipts = cpp_examples.verify_cpp_examples(
+        tmp_path, manifest, tmp_path / "include", "17", _candidates(GOOD), tmp_path / "run", 60.0
+    )
+    assert [receipt.outcome for receipt in receipts] == ["NOT_VERIFIED"]
+    assert receipts[0].detail == "BLOCKED_TOOLCHAIN: no C++ compiler on this machine"
+
+
+def test_the_toolchain_registry_is_read_by_absolute_path(tmp_path: Path, monkeypatch) -> None:  # type: ignore[no-untyped-def]
+    """Every tool this lane provisioned is recorded there and nowhere else (LANE-B-00)."""
+    tool = tmp_path / "g++.exe"
+    tool.write_text("", encoding="utf-8", newline="\n")
+    registry = tmp_path / "TOOLCHAIN_PATHS.txt"
+    registry.write_text(
+        f"gxx={tool}\nninja={tmp_path / 'absent.exe'}\n", encoding="utf-8", newline="\n"
+    )
+    monkeypatch.setenv(cpp_examples._REGISTRY_VARIABLE, str(registry))
+    assert cpp_examples.recorded_tool("gxx") == str(tool)
+    # A recorded path that no longer exists is no tool at all.
+    assert cpp_examples.recorded_tool("ninja") is None
+    assert cpp_examples.recorded_tool("cargo") is None
+
+
+def _configure_stopping(build_holder: list[Path], *, timed_out: bool) -> object:
+    """A fake `execute` whose configure writes one fetched dependency and then stops."""
+
+    def fake(argv, workspace, timeout_seconds, extra_environment):  # type: ignore[no-untyped-def]
+        build = Path(argv[argv.index("-B") + 1])
+        build_holder.append(build)
+        (build / "_deps" / "pugixml-src" / "src").mkdir(parents=True, exist_ok=True)
+        return ExecutionResult(
+            argv=tuple(argv),
+            return_code=1,
+            stdout="-- pugixml: fetched v1.14",
+            stderr="",
+            timed_out=timed_out,
+        )
+
+    return fake
+
+
+def test_a_configure_cut_off_still_hands_back_what_it_already_fetched(
+    tmp_path: Path, monkeypatch
+) -> None:  # type: ignore[no-untyped-def]
+    """Measured 2026-09-16 on Aspose.Slides for C++: the configure stopped after pugixml and
+    before miniz, and returning `[]` cost all ten examples their verdict - `shape_collection.h`
+    could not find `pugixml.hpp`, which was on disk the whole time."""
+    holder: list[Path] = []
+    monkeypatch.setattr(cpp_examples, "execute", _configure_stopping(holder, timed_out=True))
+    product, fetched = cpp_examples.build_product(
+        tmp_path, tmp_path / "ws", "PATH", "cmake", "ninja"
+    )
+    # Not "failed": nothing failed, the step was cut off - and not "succeeded", so a receipt
+    # built on it keeps `build_verified` false (TB-01).
+    assert product == "configure timed out"
+    assert [path.relative_to(holder[0]).as_posix() for path in fetched] == ["_deps/pugixml-src/src"]
+
+
+def test_a_configure_that_genuinely_failed_says_so_and_keeps_its_fetches(
+    tmp_path: Path, monkeypatch
+) -> None:  # type: ignore[no-untyped-def]
+    holder: list[Path] = []
+    monkeypatch.setattr(cpp_examples, "execute", _configure_stopping(holder, timed_out=False))
+    product, fetched = cpp_examples.build_product(
+        tmp_path, tmp_path / "ws", "PATH", "cmake", "ninja"
+    )
+    assert product == "configure failed"
+    assert product != "succeeded"
+    assert len(fetched) == 1
+
+
+def test_the_configure_ceiling_clears_the_measured_download_spread() -> None:
+    """The configure step downloads and the build step compiles, so the ceiling that must be
+    generous is the configure's. Measured 2026-09-16, three cold configures of Aspose.Slides for
+    C++ on one machine: 57.8 s, 71.7 s, 141.7 s, with the run before them cut off at 180 s. The
+    boundary refuses anything past `MAX_TIMEOUT_SECONDS`, so this is as generous as it gets."""
+    assert cpp_examples._TIMEOUT_CONFIGURE >= cpp_examples._TIMEOUT_BUILD
+    assert cpp_examples._TIMEOUT_CONFIGURE > 2 * 141.7
+    assert cpp_examples._TIMEOUT_CONFIGURE == MAX_TIMEOUT_SECONDS
+
+
+# ---------------------------------------------------------------------------
+# The MSVC fallback (docs/DECISION_LOG.md, 2026-09-27: the Cells-Cpp trigraph finding). Every test
+# here injects a fake `execute`/`msvc_toolchain` - none makes a live vcvarsall/cl.exe call.
+# ---------------------------------------------------------------------------
+
+
+def _fake_execute_by_phase(*, msvc_configure_ok: bool, msvc_build_ok: bool):  # type: ignore[no-untyped-def]
+    """A fake `execute` whose primary `cmake --build` always fails - the exact shape this
+    fallback exists for - and whose MSVC configure/build outcomes are set by the caller."""
+
+    def fake(argv, workspace, timeout_seconds, extra_environment):  # type: ignore[no-untyped-def]
+        is_build_step = "--build" in argv
+        is_msvc = any("cmake-build-msvc" in str(a) for a in argv)
+        if is_build_step:
+            ok = msvc_build_ok if is_msvc else False
+        else:
+            ok = msvc_configure_ok if is_msvc else True
+        return ExecutionResult(
+            argv=tuple(argv), return_code=0 if ok else 1, stdout="", stderr="", timed_out=False
+        )
+
+    return fake
+
+
+def test_msvc_fallback_rescues_a_build_the_primary_toolchain_cannot(
+    tmp_path: Path, monkeypatch
+) -> None:  # type: ignore[no-untyped-def]
+    """The target's own CMakeLists.txt/toolchain-detect.cmake is never patched - `build_product`
+    just tries a second, real compiler once the primary one's own `cmake --build` genuinely fails,
+    the exact trigraph shape."""
+    monkeypatch.setattr(
+        cpp_examples,
+        "execute",
+        _fake_execute_by_phase(msvc_configure_ok=True, msvc_build_ok=True),
+    )
+    monkeypatch.setattr(
+        cpp_examples,
+        "msvc_toolchain",
+        lambda workspace: cpp_examples.MsvcToolchain(
+            cl="C:/fake/cl.exe",
+            environment={"INCLUDE": "x", "LIB": "y", "LIBPATH": "z", "PATH": "C:/fake"},
+            version="19.44 for x64",
+        ),
+    )
+
+    product, _fetched = cpp_examples.build_product(
+        tmp_path, tmp_path / "ws", "PATH", "cmake", "ninja"
+    )
+
+    assert product.startswith("succeeded (MSVC")
+    assert "19.44 for x64" in product
+    assert "after the primary toolchain's own build failed" in product
+
+
+def test_no_msvc_recorded_on_this_machine_still_reports_failed_cleanly(
+    tmp_path: Path, monkeypatch
+) -> None:  # type: ignore[no-untyped-def]
+    """A machine with no second toolchain recorded (`msvc_toolchain` returns ``None``) behaves
+    exactly as before this fallback existed - never an exception, never a guessed success."""
+    monkeypatch.setattr(
+        cpp_examples, "execute", _fake_execute_by_phase(msvc_configure_ok=True, msvc_build_ok=True)
+    )
+    monkeypatch.setattr(cpp_examples, "msvc_toolchain", lambda workspace: None)
+
+    product, _fetched = cpp_examples.build_product(
+        tmp_path, tmp_path / "ws", "PATH", "cmake", "ninja"
+    )
+
+    assert product == "failed"
+
+
+def test_msvc_configure_failure_also_reports_failed_not_a_guessed_success(
+    tmp_path: Path, monkeypatch
+) -> None:  # type: ignore[no-untyped-def]
+    """The fallback's own configure step can fail too (a genuinely broken source, not just a
+    GCC/Clang-specific diagnostic) - that must still report plain ``"failed"``, never a partial or
+    guessed success."""
+    monkeypatch.setattr(
+        cpp_examples,
+        "execute",
+        _fake_execute_by_phase(msvc_configure_ok=False, msvc_build_ok=True),
+    )
+    monkeypatch.setattr(
+        cpp_examples,
+        "msvc_toolchain",
+        lambda workspace: cpp_examples.MsvcToolchain(cl="C:/fake/cl.exe", environment={}),
+    )
+
+    product, _fetched = cpp_examples.build_product(
+        tmp_path, tmp_path / "ws", "PATH", "cmake", "ninja"
+    )
+
+    assert product == "failed"
+
+
+def test_msvc_build_failure_also_reports_failed(tmp_path: Path, monkeypatch) -> None:  # type: ignore[no-untyped-def]
+    """MSVC configuring cleanly but also failing to build (a genuine, non-GCC-specific defect)
+    must still report plain ``"failed"``."""
+    monkeypatch.setattr(
+        cpp_examples,
+        "execute",
+        _fake_execute_by_phase(msvc_configure_ok=True, msvc_build_ok=False),
+    )
+    monkeypatch.setattr(
+        cpp_examples,
+        "msvc_toolchain",
+        lambda workspace: cpp_examples.MsvcToolchain(cl="C:/fake/cl.exe", environment={}),
+    )
+
+    product, _fetched = cpp_examples.build_product(
+        tmp_path, tmp_path / "ws", "PATH", "cmake", "ninja"
+    )
+
+    assert product == "failed"
+
+
+def test_a_primary_build_that_already_succeeds_never_consults_msvc_at_all(
+    tmp_path: Path, monkeypatch
+) -> None:  # type: ignore[no-untyped-def]
+    """A repository whose primary (GCC/Clang) build already succeeds is completely unaffected -
+    `msvc_toolchain` must never even be called."""
+    calls = {"count": 0}
+
+    def exploding_msvc_toolchain(workspace: Path) -> cpp_examples.MsvcToolchain | None:
+        calls["count"] += 1
+        raise AssertionError("msvc_toolchain must not be consulted when the primary build succeeds")
+
+    def fake_execute(argv, workspace, timeout_seconds, extra_environment):  # type: ignore[no-untyped-def]
+        return ExecutionResult(
+            argv=tuple(argv), return_code=0, stdout="", stderr="", timed_out=False
+        )
+
+    monkeypatch.setattr(cpp_examples, "execute", fake_execute)
+    monkeypatch.setattr(cpp_examples, "msvc_toolchain", exploding_msvc_toolchain)
+
+    product, _fetched = cpp_examples.build_product(
+        tmp_path, tmp_path / "ws", "PATH", "cmake", "ninja"
+    )
+
+    assert product == "succeeded"
+    assert calls["count"] == 0
+
+
+def test_msvc_toolchain_is_none_without_a_recorded_vcvarsall(tmp_path: Path, monkeypatch) -> None:  # type: ignore[no-untyped-def]
+    """No `vcvarsall` key in the toolchain registry (the common case on any machine other than
+    this one, and on every hosted CI runner, which is Linux) - `None`, never an exception, never a
+    subprocess spawned."""
+    registry = tmp_path / "empty_registry.txt"
+    registry.write_text("", encoding="utf-8", newline="\n")
+    monkeypatch.setenv(cpp_examples._REGISTRY_VARIABLE, str(registry))
+    assert cpp_examples.msvc_toolchain(tmp_path / "ws") is None
+
+
+needs_msvc = pytest.mark.skipif(
+    cpp_examples.recorded_tool("vcvarsall") is None,
+    reason="no MSVC toolchain recorded on this machine (TOOLCHAIN_PATHS.txt vcvarsall key)",
+)
+
+
+@needs_msvc
+def test_msvc_toolchain_activates_for_real_on_this_machine(tmp_path: Path) -> None:
+    """The one production-shaped proof this fallback needs: a real `vcvarsall.bat` activation,
+    on the machine that just had MSVC installed for the trigraph finding (docs/DECISION_LOG.md,
+    2026-09-27)."""
+    toolchain = cpp_examples.msvc_toolchain(tmp_path / "ws")
+    assert toolchain is not None
+    assert Path(toolchain.cl).name.lower() == "cl.exe"
+    assert Path(toolchain.cl).is_file()
+    assert set(toolchain.environment) == {"INCLUDE", "LIB", "LIBPATH", "PATH"}
+    assert all(toolchain.environment[name] for name in toolchain.environment)
+
+
+@needs_compiler
+@needs_msvc
+def test_msvc_fallback_builds_the_real_trigraph_shape_that_defeats_gcc_and_clang(
+    tmp_path: Path,
+) -> None:
+    """Reproduces the exact `aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp` shape end to end through
+    the real `build_product`: a target-owned `toolchain-detect.cmake` that turns
+    `-Wall -Wextra -Werror` on for every non-MSVC compiler, and a source file whose real Excel
+    number-format literal contains a C++ trigraph (`# ??/??`) - GCC/Clang's own `-Werror=trigraphs`
+    rejects it outright (docs/DECISION_LOG.md, 2026-09-10/09-23), while MSVC raises no such
+    diagnostic (trigraphs are grammar-removed under the C++17 this project declares, and MSVC's own
+    `/W4` has no equivalent check). Never patches this synthetic target's own toolchain-detect.cmake
+    - `build_product` is called exactly as `verify_cpp_examples` calls it."""
+    (tmp_path / "cmake").mkdir()
+    (tmp_path / "cmake" / "toolchain-detect.cmake").write_text(
+        "if(MSVC)\n"
+        "    add_compile_options(/W4 /WX)\n"
+        "else()\n"
+        "    add_compile_options(-Wall -Wextra -Werror)\n"
+        "endif()\n",
+        encoding="utf-8",
+        newline="\n",
+    )
+    (tmp_path / "CMakeLists.txt").write_text(
+        "cmake_minimum_required(VERSION 3.16)\n"
+        "project(trigraph_probe LANGUAGES CXX)\n"
+        "set(CMAKE_CXX_STANDARD 17)\n"
+        "set(CMAKE_CXX_STANDARD_REQUIRED ON)\n"
+        "include(cmake/toolchain-detect.cmake)\n"
+        "add_library(trigraph_probe STATIC src/probe.cpp)\n",
+        encoding="utf-8",
+        newline="\n",
+    )
+    (tmp_path / "src").mkdir()
+    (tmp_path / "src" / "probe.cpp").write_text(
+        '#include <utility>\nstd::pair<int, const char*> fraction_format{13, "# ??/??"};\n',
+        encoding="utf-8",
+        newline="\n",
+    )
+
+    product, _fetched = cpp_examples.build_product(
+        tmp_path,
+        tmp_path / "ws",
+        cpp_examples.toolchain_path(compiler, cpp_examples.ninja_executable()),
+        cpp_examples.cmake_executable(),
+        cpp_examples.ninja_executable(),
+    )
+
+    assert product.startswith("succeeded (MSVC")

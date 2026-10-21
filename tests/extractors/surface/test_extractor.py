@@ -1,0 +1,424 @@
+"""The façade turns tree-sitter node types into the contract's vocabulary, for every language."""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+import pytest
+
+from repo_presenter.extractors.surface._vendor.aspose_extraction import (
+    api_surface,
+)
+from repo_presenter.extractors.surface.extractor import (
+    SurfaceSymbol,
+    slug_safe,
+    surface_symbols,
+    symbol_kind,
+)
+from repo_presenter.core.facts import slug
+from repo_presenter.core.grammars import get_parser
+
+CSHARP = """
+namespace Aspose.Widget
+{
+    /// <summary>A widget.</summary>
+    public class Widget
+    {
+        public string Name { get; set; }
+        public void Save(string path) { }
+        private void Hidden() { }
+    }
+
+    public enum Mode { Fast, Slow }
+
+    internal class NotPublic { }
+}
+"""
+
+
+def _package(root: Path, name: str, source: str) -> Path:
+    package = root / "src" / "Aspose.Widget"
+    package.mkdir(parents=True)
+    (package / name).write_text(source, encoding="utf-8")
+    return package
+
+
+def test_a_csharp_package_yields_types_and_their_members(tmp_path: Path) -> None:
+    package = _package(tmp_path, "Widget.cs", CSHARP)
+    symbols = surface_symbols(get_parser("csharp"), "csharp", package, tmp_path, "widget")
+    by_value = {symbol.value: symbol for symbol in symbols}
+
+    widget = by_value["Aspose.Widget.Widget"]
+    assert widget.symbol_kind == "class" and widget.doc == "A widget."
+    assert widget.source_path.endswith("Widget.cs") and widget.line == 5
+    assert by_value["Aspose.Widget.Mode"].symbol_kind == "enum"
+    save = by_value["Aspose.Widget.Widget.Save"]
+    assert save.symbol_kind == "method" and save.signature == "Save(string path)"
+    assert by_value["Aspose.Widget.Widget.Name"].signature == "string"
+    # Visibility is the engine's to judge, and it judged: nothing private or internal is here.
+    assert "Aspose.Widget.Widget.Hidden" not in by_value
+    assert not any("NotPublic" in value for value in by_value)
+
+
+def test_every_value_the_facade_emits_is_a_legal_fact_id_slug(tmp_path: Path) -> None:
+    """Section 29.2 F8: a symbol that cannot be slugged cannot become a fact."""
+    package = _package(tmp_path, "Widget.cs", CSHARP)
+    symbols = surface_symbols(get_parser("csharp"), "csharp", package, tmp_path, "widget")
+    assert symbols
+    for symbol in symbols:
+        assert slug(symbol.value), symbol.value
+
+
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        ("Aspose::ThreeD::Scene", "Aspose.ThreeD.Scene"),
+        ("Outer+Inner", "Outer.Inner"),
+        ("List<Widget>", "List"),
+        ("Dictionary<string, List<int>>", "Dictionary"),
+        ("crate::module::Type", "crate.module.Type"),
+        ("pkg/sub.Type", "pkg.sub.Type"),
+        ("Has Space", "Has.Space"),
+        ("..Leading.And.Trailing..", "Leading.And.Trailing"),
+    ],
+)
+def test_a_language_separator_becomes_a_dot_and_a_generic_is_dropped(
+    raw: str, expected: str
+) -> None:
+    """A fact names the type, not the instantiation: List<Widget> and List<Mode> are one symbol."""
+    assert slug_safe(raw) == expected
+    assert slug(slug_safe(raw))
+
+
+def test_an_unmapped_node_type_is_unknown_rather_than_invented() -> None:
+    assert symbol_kind("class_declaration") == "class"
+    assert symbol_kind("enum_item") == "enum"
+    assert symbol_kind("method_definition") == "method"
+    assert symbol_kind("something_the_grammar_added_last_week") == "unknown"
+
+
+def test_gos_type_declaration_and_every_languages_literal_function_are_known() -> None:
+    """G4-W17 arrival item 9. The vendored engine names a Go type `type_spec` (inside a
+    `type_declaration`) and names a top-level function of any language by the literal string
+    `function`, set in `api_surface.py` rather than read from a tree-sitter node type - neither
+    was a key here, so every Go type and Rust free function rendered `unknown` and the Core API
+    table had nothing to show for them (measured 2026-09-06: 109 and 1,467 public symbols across
+    the two Go repositories, 30 and 352 of them `unknown`, 0 `class`)."""
+    assert symbol_kind("type_spec") == "class"
+    assert symbol_kind("type_declaration") == "class"
+    assert symbol_kind("function") == "function"
+
+
+def test_an_internal_directory_symbol_the_engine_already_tagged_is_never_published(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """G4-W17 arrival item 19. The vendored engine already knows a vendor/private-directory
+    class is not public (H-04d, `_vendor_files`) and tags it `visibility: "internal"` rather than
+    dropping it, kept in its own output only for diagnostics - the façade discarded the tag
+    entirely, so every ecosystem published what the engine already marked internal. Measured
+    2026-09-06: Aspose.PDF for C++ published 393 of 2,044 symbols this way (`include/internal/`),
+    Aspose.Slides 401 of 3,243 (`include/Aspose/Slides/Foss/_internal/`) - the same repositories
+    a lane's own directory-name heuristic worked around in its own plugin, now redundant rather
+    than a second, parallel filter."""
+    from repo_presenter.extractors.surface import extractor
+
+    def fake_extract(*args: object, **kwargs: object) -> tuple[list[dict[str, object]]]:
+        return (
+            [
+                {
+                    "name": "Widget",
+                    "kind": "class_specifier",
+                    "file": "include/widget.h",
+                    "visibility": "public",
+                },
+                {
+                    "name": "Hidden",
+                    "kind": "class_specifier",
+                    "file": "include/internal/hidden.h",
+                    "visibility": "internal",
+                },
+            ],
+        )
+
+    monkeypatch.setattr(api_surface, "extract_api_surface", fake_extract)
+    symbols = extractor.surface_symbols(get_parser("cpp"), "cpp", tmp_path, tmp_path, "widget")
+    values = {symbol.value for symbol in symbols}
+    assert values == {"Widget"}
+
+
+def test_an_abstract_class_is_a_class_not_unknown() -> None:
+    """G4-W17 arrival item 4. TypeScript's grammar names an abstract class declaration
+    differently from a plain one; Aspose.3D for TypeScript declares 8, 2 of them public, and
+    before this entry every one of them was `unknown` - understating the renderer's public-type
+    count by 2 for a repository the lane cannot fix, since the raw node type is gone by the time
+    a `SurfaceSymbol` reaches a plugin."""
+    assert symbol_kind("abstract_class_declaration") == "class"
+
+
+def test_the_facade_is_a_dataclass_the_contract_can_carry() -> None:
+    symbol = SurfaceSymbol("A.B", "class", "src/a.cs", 3)
+    assert symbol.doc == "" and symbol.signature == ""
+    with pytest.raises(AttributeError):
+        symbol.value = "changed"  # type: ignore[misc]
+
+
+OVERLOADED = """
+namespace P
+{
+    public class Cell
+    {
+        public Cell() { }
+        public Cell(int index) { }
+        public string GetStyle() { return null; }
+        public string GetStyle(int index) { return null; }
+        public void PutValue(int v) { }
+        public void PutValue(string v) { }
+    }
+}
+"""
+
+
+def test_an_overloaded_member_is_one_symbol_not_several(tmp_path: Path) -> None:
+    """A fact ID must be unique, and the API Reference lists a member once.
+
+    Measured 2026-09-06: Aspose.Cells and Aspose.Email for .NET both died at the facts stage with
+    "duplicate fact IDs" naming Cell.GetStyle, Cell.PutValue and CfbDocument.CfbDocument - C#
+    overloads a method by signature and names a constructor after its type, which Python never
+    does, so the defect could not appear until the second ecosystem arrived.
+    """
+    package = tmp_path / "src" / "P"
+    package.mkdir(parents=True)
+    (package / "Cell.cs").write_text(OVERLOADED, encoding="utf-8")
+    symbols = surface_symbols(get_parser("csharp"), "csharp", package, tmp_path, "p")
+    values = [symbol.value for symbol in symbols]
+    assert len(values) == len(set(values)), sorted(v for v in values if values.count(v) > 1)
+    assert "P.Cell.GetStyle" in values and "P.Cell.PutValue" in values
+    # The first declaration wins: the no-argument overload, whose signature carries no
+    # parameters. The engine leaves return_type empty for this shape, so the signature is the
+    # call alone - measured, not assumed.
+    by_value = {symbol.value: symbol for symbol in symbols}
+    assert by_value["P.Cell.GetStyle"].signature == "GetStyle()"
+
+
+def test_a_member_the_grammar_gives_no_line_for_is_kept_at_line_zero(tmp_path: Path) -> None:
+    """A null line is not a missing key, so a dictionary default never applied.
+
+    Measured 2026-09-06 on Aspose.PDF and Aspose.Slides for .NET, where converting it raised a
+    TypeError and took the whole facts stage down.
+    """
+    from repo_presenter.extractors.surface.extractor import _line
+
+    assert _line({"line": 12}) == 12
+    assert _line({"line": None}) == 0
+    assert _line({}) == 0
+    assert _line({"line": ""}) == 0
+    assert _line({"line": "7"}) == 7
+
+
+CASED = """
+namespace P
+{
+    public class Spec
+    {
+        public string MimeType { get; set; }
+        public string MIMEType { get; set; }
+        public void FindField(string name) { }
+        public void findField(string name) { }
+    }
+}
+"""
+
+
+def test_two_members_differing_only_in_case_both_survive(tmp_path: Path) -> None:
+    """A fact ID is lowercased and C# is not; dropping either would delete a public member.
+
+    Measured 2026-09-06 on Aspose.PDF for .NET: seven pairs like MimeType/MIMEType and
+    FindField/findField, every one two real members - usually an alias kept for compatibility.
+    The reference the contract requires must be complete (loop-prompt section 6 rule 8), so the
+    later one takes a numbered identifier and keeps its own name.
+    """
+    package = tmp_path / "src" / "P"
+    package.mkdir(parents=True)
+    (package / "Spec.cs").write_text(CASED, encoding="utf-8")
+    symbols = surface_symbols(get_parser("csharp"), "csharp", package, tmp_path, "p")
+    values = {symbol.value for symbol in symbols}
+    assert {"P.Spec.MimeType", "P.Spec.MIMEType"} <= values
+    assert {"P.Spec.FindField", "P.Spec.findField"} <= values
+    # Every fact ID source is unique once slugged, which is the constraint downstream.
+    slugs = [slug(symbol.fact_slug) for symbol in symbols]
+    assert len(slugs) == len(set(slugs))
+    # The name a reader sees is untouched; only the identifier moves.
+    numbered = [s for s in symbols if s.fact_slug != s.value]
+    assert numbered and all(s.fact_slug == f"{s.value}-2" for s in numbered)
+
+
+NESTED = """
+namespace Aspose.Widget.Shapes
+{
+    public class Outline
+    {
+        public class Segment { }
+        public void Draw() { }
+    }
+}
+"""
+
+
+def test_a_namespace_is_a_symbol_the_way_a_python_module_is(tmp_path: Path) -> None:
+    """Measured 2026-09-06 on Aspose.PDF for .NET: `repository_investigation` was rejected twice
+    for citing `public_symbol:aspose.pdf.comparison` - a namespace that really does hold public
+    types - and the repository produced nothing. The Python extractor emits 52 module symbols
+    for the canary, so the gap was this surface's, not the job's."""
+    package = tmp_path / "src" / "Aspose.Widget"
+    package.mkdir(parents=True)
+    (package / "Outline.cs").write_text(NESTED, encoding="utf-8")
+    symbols = surface_symbols(get_parser("csharp"), "csharp", package, tmp_path, "widget")
+    modules = {s.value: s for s in symbols if s.symbol_kind == "module"}
+
+    assert set(modules) == {"Aspose", "Aspose.Widget", "Aspose.Widget.Shapes"}
+    # A namespace spans files, so it is evidenced where the first symbol inside it is declared.
+    shapes = modules["Aspose.Widget.Shapes"]
+    assert shapes.source_path.endswith("Outline.cs") and shapes.line == 4
+    # A type keeps the kind it was read with, and its members are not namespaces.
+    kinds = {s.value: s.symbol_kind for s in symbols}
+    assert kinds["Aspose.Widget.Shapes.Outline"] == "class"
+    assert kinds["Aspose.Widget.Shapes.Outline.Draw"] == "method"
+    # Namespaces come first and in sorted order, so the grammar's traversal cannot move them.
+    leading = [s.value for s in symbols[:3]]
+    assert leading == ["Aspose", "Aspose.Widget", "Aspose.Widget.Shapes"]
+
+
+# The shapes below are the real ones from Aspose.Cells-FOSS-for-TypeScript fc186507 `workbook.ts`
+# (wave-3 triage U10): a type literal in a PRIVATE method's return type (line 905), in a public
+# method's options parameter (line 392), in a local `type XfEntry = {...}` (line 1100), in an array
+# element type (line 1087), and in a nested generic. The class's own members are the control.
+TS_NESTED_LITERALS = """
+export class Workbook {
+  private _sheets: string[] = [];
+  note: string = "";
+
+  get worksheets(): string[] {
+    return this._sheets;
+  }
+
+  async save(
+    filePath: string,
+    options?: { password?: string; saveFormat?: string },
+  ) {
+    return filePath;
+  }
+
+  private getAnchorForPositionEMU(
+    xEmu: number,
+  ): { col: number; colOff: number; row: number; rowOff: number } {
+    return { col: 0, colOff: xEmu, row: 0, rowOff: 0 };
+  }
+
+  toJson(): string {
+    const numFmtEntries: { id: number; code: string }[] = [];
+    type XfEntry = {
+      fontId: number;
+      fillId: number;
+      style: string;
+    };
+    const cellXfEntries: XfEntry[] = [];
+    class Local {
+      localMethod(): void {}
+    }
+    return JSON.stringify([numFmtEntries, cellXfEntries]);
+  }
+}
+
+export interface Placement {
+  anchor: { col: number; row: number };
+  label: string;
+  describe(): { text: string };
+}
+
+export type Pair = { left: number; right: { depth: number } };
+
+export type Both = { a: number } & { b: string };
+"""
+
+
+def _ts_values(tmp_path: Path, source: str) -> dict[str, SurfaceSymbol]:
+    package = tmp_path / "src" / "widget"
+    package.mkdir(parents=True)
+    (package / "workbook.ts").write_text(source, encoding="utf-8")
+    symbols = surface_symbols(get_parser("typescript"), "typescript", package, tmp_path, "widget")
+    return {symbol.value: symbol for symbol in symbols}
+
+
+def test_a_type_literal_nested_in_a_signature_adds_no_member_to_the_class(tmp_path: Path) -> None:
+    """Measured 2026-10-11: the deep walk read the properties of every nested object type as
+    members of the class, so `Workbook.rowOff` and `Workbook.fontId` were SUPPORTED public symbols
+    and the API reference published members that do not exist (BC-10 REJECT_FACTUAL, 9 findings)."""
+    values = _ts_values(tmp_path, TS_NESTED_LITERALS)
+    members = {value.rsplit(".", 1)[-1] for value in values if ".Workbook." in f".{value}."}
+
+    # The class's own members survive.
+    assert {"note", "worksheets", "save", "toJson"} <= members
+    # A private method's return literal, a parameter's options literal, a local alias, an array
+    # element literal and a method of a class declared in a method body belong to none of them.
+    bogus = {
+        "col", "colOff", "row", "rowOff", "password", "saveFormat", "id", "code",
+        "fontId", "fillId", "style", "localMethod",
+    }  # fmt: skip
+    assert not (members & bogus), members & bogus
+
+
+def test_an_interface_and_a_type_alias_keep_their_own_properties_but_not_nested_ones(
+    tmp_path: Path,
+) -> None:
+    """Negative control for the fix: the owner's own literal body is still its member list, for
+    an interface, a `type X = {...}` and an intersection of literals, while a literal one level
+    down (a property's type, a method's return type) is not."""
+    values = set(_ts_values(tmp_path, TS_NESTED_LITERALS))
+
+    def has(owner: str, member: str) -> bool:
+        return any(value.endswith(f"{owner}.{member}") for value in values)
+
+    assert has("Placement", "anchor") and has("Placement", "label") and has("Placement", "describe")
+    assert not any(has("Placement", nested) for nested in ("col", "row", "text"))
+    assert has("Pair", "left") and has("Pair", "right") and not has("Pair", "depth")
+    assert has("Both", "a") and has("Both", "b")
+
+
+JS_EXPORTED = """
+/**
+ * A widget that tints things.
+ */
+export class Widget {
+  /** Save the widget. */
+  save(path) {}
+  _private() {}
+}
+
+/** Build a widget. */
+export function makeWidget() {}
+"""
+
+
+def test_a_jsdoc_block_before_an_exported_javascript_declaration_is_its_description(
+    tmp_path: Path,
+) -> None:
+    """The engine finds a doc comment through the language's adapter, and registers one for
+    TypeScript only; the façade registers it for JavaScript too. Without it every `export class`
+    reads as undocumented, because the comment sits before the `export_statement` around it
+    (measured 2026-10-11 on Aspose.JMAP-FOSS-for-Node.js: 30 of 30 exported classes)."""
+    package = tmp_path / "src"
+    package.mkdir()
+    (package / "widget.js").write_text(JS_EXPORTED, encoding="utf-8")
+    symbols = surface_symbols(get_parser("typescript"), "javascript", package, tmp_path, "widget")
+    docs = {symbol.value: symbol.doc for symbol in symbols}
+    assert docs["Widget"] == "A widget that tints things."
+    assert docs["Widget.save"] == "Save the widget."
+    assert docs["makeWidget"] == "Build a widget."
+    # Negative control: a private-by-convention member is not part of the surface.
+    assert "Widget._private" not in docs
+
+
+def test_the_javascript_adapter_is_registered_without_displacing_typescripts() -> None:
+    lang = api_surface.lang
+    assert lang.get("javascript") is lang.get("typescript")
+    assert lang.get("typescript") is lang.typescript

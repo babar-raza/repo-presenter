@@ -1,0 +1,362 @@
+"""What one ecosystem declares about itself, so shared code never asks which one it is.
+
+A plugin is a declarative composition: the fence language, the badges, the Installation block and
+the registry's display name read from the spec rather than from a branch on the ecosystem name.
+Adding an ecosystem is a spec, a verifier, and a negative-control test - never an edit to a shared
+file.
+
+This lives in `core/` because both sides need it and neither may import the other: an extractor
+imports only `core/` and its own module, and no stage after facts imports an extractor at all.
+
+Ported (REUSE, near-verbatim) from the old repository-presenter project's ``core/ecosystems.py``
+per migration/reuse-manifest.yaml; only import paths are adapted.
+"""
+
+from __future__ import annotations
+
+import re
+from collections.abc import Sequence
+from dataclasses import dataclass, field
+from typing import Final
+from urllib.parse import quote
+
+from repo_presenter.core.errors import ConfigError
+from repo_presenter.core.facts import (
+    SOURCE_CHECKOUT_COMMAND_ATTRIBUTE,
+    SOURCE_CHECKOUT_UNVERIFIED_ATTRIBUTE,
+    Fact,
+)
+
+# The checkout every source install starts from. An ecosystem's own build steps follow it, whether
+# a spec's ``source_install`` template spells them or a verifier's receipt names the exact steps it
+# proved for one repository; the templates below spell this same prefix.
+CLONE_PREFIX: Final = "git clone https://github.com/{repository}.git\ncd {name}\n"
+
+
+# A manifest's runtime floor, as the runtime badge may state it: the first ``>=`` bound of a range
+# (``>=3.10,<3.13`` is a floor of 3.10), else a plain version or framework token (``21``,
+# ``net8.0``, ``2021``). Anything else (a union, a caret range, a multi-target list) has no single
+# floor to print, and the badge is omitted rather than guessed.
+_FLOOR_BOUND = re.compile(r">=\s*(\d+(?:\.\d+)*)")
+_PLAIN_FLOOR = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*")
+
+
+@dataclass(frozen=True)
+class SuiteFileRule:
+    """How one ecosystem tells a test source from what sits beside it in a test directory.
+
+    ``name`` is a regex over the file's base name; ``marker`` is a regex over its text, empty
+    when the name alone settles it. A file is a test source when its name matches and, if a
+    marker is declared, its text carries one.
+    """
+
+    name: str
+    marker: str = ""
+
+    def accepts_name(self, path: str) -> bool:
+        return re.search(self.name, path.rsplit("/", 1)[-1]) is not None
+
+    def accepts_text(self, text: str) -> bool:
+        return not self.marker or re.search(self.marker, text) is not None
+
+
+@dataclass(frozen=True)
+class EcosystemSpec:
+    """One ecosystem's presentation and identity vocabulary.
+
+    ``version_badge`` is a template over ``{package}``; ``source_install`` over ``{repository}``
+    and ``{name}``. A spec that needs none leaves them empty and the renderer prints nothing,
+    which is what a registry-less ecosystem (C++) requires.
+    """
+
+    ecosystem: str
+    language: str
+    fence: str
+    registry: str
+    install_fact_id: str
+    version_badge: str = ""
+    source_install: str = ""
+    # The verb phrase that completes "To work from a source checkout instead, {...}:" - carried
+    # apart from the command itself only so Python's sealed wording never moves a single byte.
+    source_install_lead: str = ""
+    # The step that fetches a checkout's dependencies before the repository's own build command,
+    # for a toolchain whose build command does not do it. Prepended only where the build command
+    # is READ from the repository's files rather than measured.
+    source_dependencies: str = ""
+    # A template over {repository}, {name} and {paths} for an ecosystem where a build/install
+    # command can fail identically for every possible invocation: `clone_and_reference` fills it
+    # with the checkout and the source directories `_source_roots` already found an executed
+    # example import from, uninstalled - never a build step, since by definition none succeeded.
+    # Empty means the ecosystem has no such fallback vocabulary; only Python declares one today.
+    source_reference: str = ""
+    verify_command: str = ""
+    # Whether an executed example's own source actually names a given import_path fact, so the
+    # renderer knows which module to plug into verify_command - a template over {module}, matched
+    # against one line of the example. The default is Python's own shape (also TypeScript's or
+    # Java's plain `import x`); an ecosystem whose examples name a module differently (a quoted
+    # specifier after `from`, C++'s `#include`, Rust's `use`) names its own here instead of the
+    # renderer guessing a syntax that will never match.
+    import_pattern: str = r"(?m)^\s*(?:import|from)\s+{module}\b"
+    # Per-ecosystem, up to core.execution's ceiling: an interpreted example returns in seconds, a
+    # compiled one pays for a restore and a build first.
+    example_timeout_seconds: float = 120.0
+    install_timeout_seconds: float = 300.0
+    symbol_separator: str = "."
+    # The fence languages a README may write an example in. Empty means the fence itself,
+    # which is right for python and wrong for C#, where readers write csharp, cs and c#.
+    fence_aliases: frozenset[str] = field(default_factory=frozenset)
+    # The runtime floor the Dependencies row reports: which fact carries it, what to call the
+    # runtime, and what the manifest calls the declaration. An ecosystem that declares no floor
+    # leaves these empty and the renderer prints no requirement, which is honest.
+    floor_fact_id: str = ""
+    floor_label: str = ""
+    # The manifest field the floor sentence names, ecosystem-wide - the fallback for a repository
+    # whose floor fact carries no more precise one of its own in its
+    # `attributes["floor_declaration"]`. A POM may declare `maven.compiler.release`, `.target` or
+    # `.source`; naming any single property here would cite one some repositories do not declare -
+    # a fabricated citation, not a generic-but-honest one.
+    floor_declaration: str = ""
+    # Whether the floor fact names a minimum the runtime may exceed (a Python, Java, Go, or Node
+    # version) or an exact standard or framework target (a .NET target framework, a C++ standard,
+    # a Rust edition); the runtime badge appends "+" only to the former.
+    floor_is_minimum: bool = False
+    # The build tool's own lowest version, reported beside the floor in the Dependencies row: which
+    # fact carries it, what to call the tool, and the manifest declaration the sentence names. An
+    # ecosystem whose build tool states no minimum leaves these empty and the renderer prints
+    # nothing.
+    build_tool_fact_id: str = ""
+    build_tool_label: str = ""
+    build_tool_declaration: str = ""
+    # Whether the manifest's `package:name` names a distribution a registry can be asked about.
+    # A CMake `project()` is a build target, not a package (C++): nothing observed what any
+    # registry lists under it, so the Installation row never says it is "not yet published" -
+    # that negative has no observation behind it. What a registry confirmed arrives as a
+    # `package:distribution.<id>` fact instead, and the row states exactly that.
+    manifest_names_distribution: bool = True
+    manifest_globs: tuple[str, ...] = ()
+    source_suffixes: frozenset[str] = field(default_factory=frozenset)
+    # Other declarations of the same published package a reader of this ecosystem uses besides the
+    # install command (a Maven POM entry, a Gradle line): `(lead, fence, template)` over
+    # `{group}`, `{artifact}` and `{version}`, derived only from the verified package coordinate
+    # and the version the registry or manifest names - never authored. Empty means none.
+    install_alternatives: tuple[tuple[str, str, str], ...] = ()
+    # What makes a file under a test directory a test. ``None`` means the ecosystem cannot tell,
+    # and a suite size is then never stated rather than guessed.
+    suite_files: SuiteFileRule | None = None
+
+    @property
+    def example_fences(self) -> frozenset[str]:
+        """Every fence language that marks an example of this ecosystem."""
+        return self.fence_aliases or frozenset({self.fence})
+
+    def badge(self, package: str) -> str:
+        """The registry's version badge for this package, or an empty string when it has none.
+
+        ``{package}`` is the coordinate exactly as ``package:name`` spells it. A registry whose
+        badge URL takes two path segments, not one, splits it on its own separator instead: a
+        Maven Central badge is one path segment per fact ID, and shields.io's endpoint is
+        ``img.shields.io/maven-central/v/{groupId}/{artifactId}`` - two segments - while Java's
+        `package:name` is the colon-joined coordinate a build file actually declares
+        (`org.aspose:aspose-3d-foss`), which no single `{package}` token fits. `{group}` and
+        `{artifact}` are offered alongside `{package}` for a template that needs them; an
+        ecosystem whose coordinate carries no colon leaves `{artifact}` equal to `{package}`, so a
+        one-segment template naming only `{package}` is unaffected.
+        """
+        if not self.version_badge:
+            return ""
+        group, _, artifact = package.partition(":")
+        return self.version_badge.format(package=package, group=group, artifact=artifact or group)
+
+    def install_alternative_blocks(self, package: str, version: str) -> list[tuple[str, str, str]]:
+        """``(lead, fence, body)`` for each alternative declaration of ``package`` at ``version``.
+
+        Empty when the ecosystem declares none or the coordinate has no group to name
+        (``{group}`` is the part before the colon, as `badge` reads it).
+        """
+        if not self.install_alternatives or not version:
+            return []
+        group, _, artifact = package.partition(":")
+        if not artifact:
+            return []
+        return [
+            (lead, fence, template.format(group=group, artifact=artifact, version=version))
+            for lead, fence, template in self.install_alternatives
+        ]
+
+    def runtime_badge(self, floor: str) -> str:
+        """The language-or-runtime badge for the manifest ``floor`` this ecosystem's floor fact
+        carries, or an empty string when the ecosystem declares no floor or ``floor`` has no
+        single printable value. Shields.io escapes: ``-`` is ``--``, ``_`` is ``__``, a space is
+        ``_``."""
+        if not self.floor_fact_id or not self.floor_label:
+            return ""
+        bound = _FLOOR_BOUND.search(floor)
+        text = bound.group(1) if bound else floor.strip()
+        # A project may target several frameworks (`net8.0;net10.0`): the fact lists them all,
+        # `;`-separated, and the badge names each rather than only the first.
+        parts = [part.strip() for part in text.split(";")] if bound is None else [text]
+        if len(parts) > 1 and all(_PLAIN_FLOOR.fullmatch(part) for part in parts):
+            text = " | ".join(parts)
+        elif bound is None and _PLAIN_FLOOR.fullmatch(text) is None:
+            return ""
+        if self.floor_is_minimum:
+            text += "+"
+
+        def escape(part: str) -> str:
+            return quote(part.replace("-", "--").replace("_", "__").replace(" ", "_"), safe="_")
+
+        return (
+            f"![{self.floor_label}]"
+            f"(https://img.shields.io/badge/{escape(self.floor_label.lower())}-{escape(text)}"
+            "-blue.svg)"
+        )
+
+    def clone_and_build(self, repository: str, name: str) -> str:
+        """The shell commands that build this ecosystem's package from a source checkout, or an
+        empty string when the ecosystem declares none.
+
+        The command is the ecosystem's own to name; shared code only ever fills in the repository
+        and its checkout directory name.
+        """
+        if not self.source_install:
+            return ""
+        return self.source_install.format(repository=repository, name=name)
+
+    def source_checkout_command(self, install: Fact | None, repository: str, name: str) -> str:
+        """The clone-and-build block the Installation section may offer beside a registry
+        install, or an empty string when none may be stated.
+
+        The template ``clone_and_build`` spells is the ecosystem's guess at a command that works
+        from the checkout root. The facts stage may instead record on the install fact either the
+        exact command a build proved from the checkout root, or why none did; this method reads
+        that record. A fact carrying neither keeps the template, so a sealed candidate re-renders
+        to its own bytes.
+        """
+        attributes = (install.attributes or {}) if install is not None else {}
+        if attributes.get(SOURCE_CHECKOUT_UNVERIFIED_ATTRIBUTE):
+            return ""
+        return attributes.get(SOURCE_CHECKOUT_COMMAND_ATTRIBUTE) or self.clone_and_build(
+            repository, name
+        )
+
+    def clone_and_run(self, repository: str, name: str, steps: str) -> str:
+        """The checkout, then the ``steps`` a verifier drove and proved for this repository.
+
+        A receipt names the exact steps that exited 0 against one repository, and those outrank
+        the ecosystem-wide template. The same prefix as every template, so a measured command and
+        a templated one read alike to a reader.
+        """
+        if not steps:
+            raise ValueError("a measured source build names at least one step")
+        return CLONE_PREFIX.format(repository=repository, name=name) + steps
+
+    def clone_and_reference(self, repository: str, name: str, roots: Sequence[str]) -> str:
+        """The checkout, then adding its own source directories to the interpreter's path -
+        never a build command.
+
+        For a repository where every build/install attempt fails identically - a broken
+        build-backend, not broken code - an example that ran via the source-tree fallback still
+        proves the code imports and runs. ``roots`` are the paths `_source_roots` already found
+        it running from, uninstalled: relative to the checkout, nearest first, ``"."`` meaning
+        the checkout root itself. An ecosystem that declares no ``source_reference`` template or
+        a caller with no roots to name returns an empty string, so the fact this backs stays
+        untouched rather than admitting a placeholder nobody measured.
+        """
+        if not self.source_reference or not roots:
+            return ""
+        return self.source_reference.format(repository=repository, name=name, paths=":".join(roots))
+
+
+PYTHON: Final = EcosystemSpec(
+    ecosystem="python",
+    language="Python",
+    fence="python",
+    registry="PyPI",
+    install_fact_id="install_command:pip",
+    version_badge=(
+        "[![PyPI](https://img.shields.io/pypi/v/{package}.svg)]"
+        "(https://pypi.org/project/{package}/)"
+    ),
+    source_install="git clone https://github.com/{repository}.git\ncd {name}\npip install .",
+    source_install_lead="install the clone with pip",
+    # PYTHONPATH is the honest fallback when no build/install command ever succeeds: a
+    # colon-joined list of the directories an executed example already imported the package from,
+    # uninstalled - never a build step, since none was proven.
+    source_reference=(
+        "git clone https://github.com/{repository}.git\n"
+        "cd {name}\n"
+        'export PYTHONPATH="{paths}:$PYTHONPATH"'
+    ),
+    verify_command='python -c "import {module}"',
+    fence_aliases=frozenset({"python", "py", "python3"}),
+    floor_fact_id="package:python_requires",
+    floor_label="Python",
+    floor_declaration="python_requires",
+    floor_is_minimum=True,
+    manifest_globs=("pyproject.toml", "setup.cfg", "setup.py"),
+    source_suffixes=frozenset({".py"}),
+    # pytest's own collection rule (`python_files = test_*.py *_test.py`): a conftest, an
+    # `__init__`, and a data file beside the tests are not tests.
+    suite_files=SuiteFileRule(name=r"^(?:test_.+|.+_test)\.py$"),
+)
+
+NET: Final = EcosystemSpec(
+    ecosystem="net",
+    language="C#",
+    fence="csharp",
+    registry="NuGet",
+    install_fact_id="install_command:dotnet",
+    version_badge=(
+        "[![NuGet](https://img.shields.io/nuget/v/{package}.svg)]"
+        "(https://www.nuget.org/packages/{package}/)"
+    ),
+    # There is no single-line "install into your own project" step without knowing the
+    # consumer's own setup; a build is the honest claim - it proves the source compiles, which is
+    # what "work from a source checkout" can mean for .NET.
+    source_install="git clone https://github.com/{repository}.git\ncd {name}\ndotnet build",
+    source_install_lead="build the clone with dotnet build",
+    # `dotnet list package` needs a project; `--include-transitive` is the form that reports a
+    # reference added by `dotnet add package` without one.
+    verify_command="dotnet list package --include-transitive | findstr {module}",
+    # A restore and a build cost far more than an interpreted example: the ceiling in
+    # core.execution is 300 seconds and a cold restore has been seen to use most of it.
+    example_timeout_seconds=300.0,
+    install_timeout_seconds=300.0,
+    fence_aliases=frozenset({"csharp", "cs", "c#"}),
+    floor_fact_id="package:target_framework",
+    floor_label=".NET",
+    floor_declaration="TargetFramework",
+    manifest_globs=("*.csproj", "*.fsproj", "Directory.Build.props"),
+    source_suffixes=frozenset({".cs"}),
+    # A .cs file in a test project is a test only when it declares a test method: the project
+    # file, the run log, the fixture loader, and the helper classes beside the tests are not.
+    # xUnit `[Fact]`/`[Theory]`, NUnit `[Test]`/`[TestCase]`/`[TestCaseSource]`, MSTest
+    # `[TestMethod]`/`[DataTestMethod]`; a word boundary after the name keeps `[TestClass]` and
+    # `[TestFixture]`, which mark a class and not a test, out.
+    suite_files=SuiteFileRule(
+        name=r"\.cs$",
+        marker=r"\[\s*(?:Fact|Theory|Test|TestCase|TestCaseSource|TestMethod|DataTestMethod)\b",
+    ),
+)
+
+# Deliberately a plain, mutable dict and not Final, unlike PYTHON and NET beside it: this file
+# owns only the two built-in specs above; an ecosystem outside it (a platform lane owns) registers
+# its own by calling ``SPECS.setdefault(ecosystem, spec)`` from its own ``platforms/<ecosystem>.py``
+# module at import time, never by adding a line here - core/ may not import an extractor, so the
+# mirror of registry.py's PLUGIN discovery a lane would otherwise expect is not implementable from
+# this side of that boundary. `plugin_for(ecosystem)` (extractors/platforms/registry.py) already
+# imports that module before any stage asks `spec_for` for the same ecosystem in every path that
+# exists today, so registration is in place by the time it is needed without this file ever
+# crossing the boundary to guarantee it itself.
+SPECS: dict[str, EcosystemSpec] = {PYTHON.ecosystem: PYTHON, NET.ecosystem: NET}
+
+
+def spec_for(ecosystem: str) -> EcosystemSpec:
+    """The spec for ``ecosystem``; an unregistered one is a configuration failure, as it is for a
+    plugin - a document rendered with guessed vocabulary would be worse than no document."""
+    spec = SPECS.get(ecosystem)
+    if spec is None:
+        raise ConfigError(
+            f"no ecosystem spec registered for {ecosystem!r} (known: {', '.join(sorted(SPECS))})"
+        )
+    return spec

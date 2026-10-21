@@ -1,0 +1,446 @@
+"""Type-check each README example against the repository's own sources, in an isolated workspace.
+
+`RESEARCH_AND_GUIDELINES.md` §29.6 E5 and `docs/EXECUTION_STATE_MACHINE.md`'s mandatory-truth
+table: TypeScript's bar is a *type-checking* example, not an executed one. `tsc --noEmit` proves
+exactly what the contract claims - the example's imports resolve, and its types and calls exist
+and check against this revision.
+
+Three rules the outcome respects. A toolchain this machine lacks is `NOT_VERIFIED`, which the
+facts stage records as `UNRESOLVED` - never `CONTRADICTED`, because "we could not check" is not
+"we checked and it is false". Every cache and credential store is redirected into the run
+directory, and the compiler is called by its resolved absolute path with nothing added to the
+user's `PATH`. And the verdict is read from the diagnostics raised *in the example's own file*:
+a diagnostic in the library's sources is a fact about the library's build environment, not about
+whether the README's snippet is true, and letting one condemn the other would fail every example
+of a package whose sources reference Node globals it does not declare types for (measured
+2026-09-06: 37 such diagnostics on Aspose.3D for TypeScript, 45 on Aspose.Cells, none of them in
+an example).
+"""
+
+from __future__ import annotations
+
+import re
+import shutil
+from collections.abc import Sequence
+from pathlib import Path
+from typing import Any
+
+from repo_presenter.extractors.platforms.typescript_barrel import (
+    compiler_options,
+)
+
+# The npm half of every verifier - an `npm`, a clean run directory, a build of the package in a
+# copy, receipts free of this machine's paths - is shared with the Node.js plugin.
+from repo_presenter.extractors.surface.npm_build import (
+    PRODUCT_DIRECTORY,
+    blocked,
+    build_product,
+    clip,
+    fresh_workspace,
+    npm_executable,
+    scrub,
+    verify_package_build,
+)
+from repo_presenter.extractors.surface.npm_package import (
+    IGNORED_DIRECTORIES,
+    read_json,
+)
+from repo_presenter.core.examples import (
+    ExampleCandidate,
+    ExampleReceipt,
+    MeasuredBuild,
+)
+from repo_presenter.core.execution import ExecutionResult, execute, profile_environment
+from repo_presenter.core.toolchains import REGISTRY_VARIABLE, resolve_tool
+
+_REGISTRY_VARIABLE = REGISTRY_VARIABLE  # the name the registry tests set (core/toolchains.py)
+_PRODUCT_DIRECTORY = PRODUCT_DIRECTORY  # where the build runs (surface/npm_build.py)
+
+# `<file>(<line>,<column>): error TSxxxx: <message>` is the only diagnostic shape tsc prints
+# without `--pretty`, which is off by default when stdout is not a terminal.
+_DIAGNOSTIC = re.compile(r"^(?P<file>[^(]+)\((?P<line>\d+),(?P<column>\d+)\): error (?P<rest>.+)$")
+# Toolchains are resolved by `core/toolchains.py` (the machine's registry, then PATH, per tool).
+# What a snippet is checked under. Not the package's own `strict` settings: the contract's claim
+# is that the example's types and calls exist at this revision, and a README snippet is not
+# required to satisfy the library's own lint policy to prove that.
+_BASE_FLAGS = (
+    "--noEmit",
+    "--skipLibCheck",
+    "--esModuleInterop",
+    "--allowSyntheticDefaultImports",
+    "--resolveJsonModule",
+)
+_DEFAULT_TARGET = "ES2020"
+# A README snippet may await at top level, which only an ES module allows; the package's own
+# `module` setting governs how it emits, not how a consumer's script is checked.
+_DEFAULT_MODULE = "es2022"
+_DEFAULT_RESOLUTION = "node"
+# `bundler` resolution has no companion-module constraint - `--module esnext --moduleResolution
+# bundler` is a normal, accepted pairing (measured 2026-09-16). `node16` and `nodenext` do: tsc's
+# own TS5110 refuses any `module` value that is not exactly the resolution's own name when
+# `moduleResolution` is one of them - measured on aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript,
+# whose tsconfig.json declares `moduleResolution: "NodeNext"`, where treating it like `bundler`
+# (emitting `--module esnext`) made every one of 96 examples fail closed with `error TS5110:
+# Option 'module' must be set to 'NodeNext' when option 'moduleResolution' is set to 'NodeNext'.`
+# - a configuration refusal, not a fact about any example's own code.
+_BUNDLER_RESOLUTION = "bundler"
+_NODE_PAIRED_RESOLUTIONS = frozenset({"node16", "nodenext"})
+# TypeScript ships these declarations; `DOM` is what declares `console`, `Element` and `Document`,
+# which a package targeting `lib: ["ES2020"]` alone does not have (measured 2026-09-06: three of
+# Aspose.3D for TypeScript's nine examples failed on `console` alone).
+_HOST_LIBRARY = "DOM"
+_HOST_DECLARATIONS = "rp_host_environment.d.ts"
+# A configuration file beside a file named on the command line is `error TS5112` on TypeScript 7,
+# and the compiler then reports nothing else at all. Its options are read from the clone instead.
+_CONFIG_FILES = frozenset({"tsconfig.json", "jsconfig.json"})
+# A repository's own `build` script commonly names a narrower config than its `typecheck` script
+# does - PDF's package.json runs `tsc -p tsconfig.build.json` for `build` but `tsc -p
+# tsconfig.json --noEmit` for `typecheck`, and only the former's `rootDir`/`outDir` describe what
+# `dist/` actually is.
+_BUILD_CONFIG = "tsconfig.build.json"
+# The runtime a README script runs in, and the modules it may import from it. Declared as a
+# shorthand ambient module - a name with no body, whose imports are `any` - so a missing
+# `@types/node` cannot make a true example look false. The claim the contract makes about an
+# example is that its calls into *the package* exist at this revision; the host's own surface is
+# not that claim, and no assertion here can make a package's member appear.
+_NODE_MODULES = (
+    "assert",
+    "buffer",
+    "child_process",
+    "crypto",
+    "events",
+    "fs",
+    "fs/promises",
+    "http",
+    "https",
+    "os",
+    "path",
+    "process",
+    "stream",
+    "stream/promises",
+    "url",
+    "util",
+    "zlib",
+)
+_HOST_SOURCE = "\n".join(
+    [
+        "// Written by the TypeScript verifier, never by the repository: the Node host surface a",
+        "// README script assumes, so that a missing @types/node is not read as a false example.",
+        "declare var require: any;",
+        "declare var process: any;",
+        "declare var Buffer: any;",
+        "declare var __dirname: string;",
+        "declare var __filename: string;",
+        "declare namespace NodeJS { type Timeout = any; type ReadableStream = any; }",
+        *[f"declare module '{name}';" for name in _NODE_MODULES],
+        *[f"declare module 'node:{name}';" for name in _NODE_MODULES],
+        "",
+    ]
+)
+
+
+def typescript_compiler() -> str | None:
+    """`tsc` as this machine offers it, or None when it offers none.
+
+    Registry before `PATH` - the reverse of `cpp_examples.py`'s own `cpp_compiler`/
+    `cmake_executable` precedent, deliberately, not by oversight. Their PATH-first choice rests on
+    a PATH tool being at least as capable as the registry's own (a hosted runner's system CMake
+    has a real certificate bundle the winlibs one lacks; any GCC/Clang on PATH compiles the same
+    C++ the repository's own sources assume). `tsc` breaks that assumption: this repository's own
+    `tsconfig.json` may declare a `moduleResolution` this machine's PATH compiler no longer
+    accepts at all - measured 2026-09-24, `TS5108` on a global `tsc@7.0.2` refusing the
+    `"node"`/`node10` alias a registry-recorded, `probe_compiler`-proven-compatible `tsc@5.9.3`
+    still accepts - so here PATH is the one that can silently regress a repository's own declared
+    config, and a registry entry, once recorded, is trusted first. Falls back to `PATH`, then its
+    `.cmd` shim, only when the registry has nothing for `tsc`, so a hosted runner with no registry
+    file resolves exactly as before (`evidence/build/lanes/lane-b/LANE-B-00.json`).
+    """
+    return resolve_tool("tsc")
+
+
+def _staging_options(root: Path) -> dict[str, Any]:
+    """The compiler options that actually govern what `outDir` is built from.
+
+    `_flags` checks examples under `tsconfig.json` - the repository's own `typecheck` script's
+    config - but a repository whose `typecheck` config deliberately widens `rootDir` to check its
+    whole tree (tests, examples, scripts alongside `src`) does not thereby widen what its `build`
+    script actually emits. Measured 2026-09-16 on aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript:
+    `tsconfig.json` declares `rootDir: "."`, but `package.json`'s own `build` script runs `tsc -p
+    tsconfig.build.json`, which overrides `rootDir` to `"src"` - the config that actually produces
+    `dist/index.js`, the file `package.json`'s own `main` names. Staging from the typecheck
+    config's `rootDir: "."` would copy `test/`, `examples/` and `scripts/` into `dist/` alongside
+    `src/`, one directory level too deep for `dist/index.ts` to exist at all.
+    """
+    build = read_json(root / _BUILD_CONFIG).get("compilerOptions")
+    if isinstance(build, dict) and (build.get("rootDir") or build.get("outDir")):
+        return build
+    return compiler_options(root)
+
+
+def stage_sources(root: Path, workspace: Path) -> None:
+    """Copy the repository's sources beside the examples, with the build output it declares.
+
+    A README's example imports the package by a path relative to the checkout - `./aspose_cells`
+    on Cells, `./dist/aspose/threed` on 3D - so the snippet only resolves from a directory shaped
+    like the checkout. The clone itself is read-only and must stay that way, so the sources are
+    copied rather than written into.
+
+    `dist/` is the case worth naming. Aspose.3D for TypeScript's README imports `./dist/...`, a
+    directory the repository never contains because it is build output; `tsconfig.json` declares
+    `rootDir: ./src` and `outDir: ./dist`, which says exactly which sources that output is built
+    from. Copying `src` to `dist` is that declared mapping, so the example is checked against the
+    sources its import names - not against a guess, and not against nothing.
+
+    The host declarations go in beside them, for the reason `_HOST_SOURCE` records. The
+    repository's own `tsconfig.json` does not come along: its options are read from the clone and
+    passed as flags, and a configuration file sitting beside a file named on the command line is
+    `error TS5112` on TypeScript 7 - measured 2026-09-06 on the hosted runner, whose `tsc` is
+    7.0.2, where it made the compiler refuse to run and report nothing at all.
+    """
+    ignore = shutil.ignore_patterns(*sorted(IGNORED_DIRECTORIES))
+    for child in root.iterdir():
+        if child.name in IGNORED_DIRECTORIES or child.name in _CONFIG_FILES:
+            continue
+        if child.is_dir():
+            shutil.copytree(child, workspace / child.name, ignore=ignore, dirs_exist_ok=True)
+        elif child.is_file():
+            shutil.copy2(child, workspace / child.name)
+    options = _staging_options(root)
+    out_dir = str(options.get("outDir", "")).strip().lstrip("./").rstrip("/")
+    root_dir_raw = str(options.get("rootDir", "")).strip()
+    # `str.lstrip("./")` strips a *character set*, not a prefix: on `rootDir: "."` - a real,
+    # measured convention (PDF-TS's own tsconfig maps its whole checkout to `outDir: "dist"` this
+    # way) - it stripped the lone `.` down to `""`, which the next line then read as "no rootDir
+    # declared" and skipped staging `dist` entirely, so no example - by name or by relative path -
+    # had anything to resolve against. `.` means the workspace itself, not "absent".
+    if root_dir_raw == ".":
+        source: Path | None = workspace
+    elif root_dir_raw:
+        source = workspace / root_dir_raw.lstrip("./").rstrip("/")
+    else:
+        source = None
+    if out_dir and source is not None and source.is_dir() and not (workspace / out_dir).exists():
+        shutil.copytree(source, workspace / out_dir)
+    _stage_self_reference(workspace, out_dir)
+    (workspace / _HOST_DECLARATIONS).write_text(_HOST_SOURCE, encoding="utf-8", newline="\n")
+
+
+def _stage_self_reference(workspace: Path, out_dir: str) -> None:
+    """A `node_modules` entry mapping the package's own name to its staged build output.
+
+    A README example may import the package by its published name - `@asposefoss/pdf` on PDF, not
+    a relative path, exactly as a real consumer writes it after `npm install`. Node's own
+    self-referencing feature (resolving a package's own name from inside its source tree) needs an
+    `exports` field in `package.json`; PDF's declares only `main`/`types`, so `nodenext`/`node16`
+    resolution cannot find it that way. This mirrors what `npm install` actually gives a consumer -
+    a `node_modules/<name>` entry whose `main`/`types` resolve normally - rather than depending on
+    a Node feature the package opted out of.
+
+    Measured 2026-09-16 on aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript: all 96 examples import
+    `@asposefoss/pdf` by name, none by relative path, so without this every one reads `error
+    TS2307: Cannot find module '@asposefoss/pdf' or its corresponding type declarations.` Scoped
+    to the measured case - a manifest declaring `outDir` - because that is what staged a
+    resolvable build output to copy; a manifest with no build step is unchanged from before.
+    """
+    manifest = read_json(workspace / "package.json")
+    name = manifest.get("name")
+    if not out_dir or not isinstance(name, str) or not name.strip():
+        return
+    if not (workspace / out_dir).is_dir():
+        return
+    target = workspace / "node_modules"
+    for part in name.strip("/").split("/"):
+        target = target / part
+    if target.exists():
+        return
+    target.mkdir(parents=True)
+    shutil.copy2(workspace / "package.json", target / "package.json")
+    shutil.copytree(workspace / out_dir, target / out_dir)
+
+
+def _flags(root: Path) -> list[str]:
+    """The compiler flags for this package: its own language level, an ES module, its resolution.
+
+    `target` and `moduleResolution` are the package's own declarations, because a snippet is
+    checked against the library the way the library is built. `module` is mostly not: a README
+    snippet may `await` at top level, which CommonJS forbids and every published consumer of these
+    packages is free to use, so the default is an ES module regardless of what the package emits.
+    The one exception is forced by the compiler itself, not chosen here: `node16` and `nodenext`
+    resolution each refuse every `module` value except their own name (TS5110), so a package
+    declaring one of them gets `module` set to match it verbatim - never the ES-module default,
+    and never `bundler`'s `esnext` either, which is the one resolution this constraint does not
+    apply to.
+    """
+    options = compiler_options(root)
+    target = str(options.get("target", "") or _DEFAULT_TARGET)
+    resolution = str(options.get("moduleResolution", "") or _DEFAULT_RESOLUTION)
+    lowered = resolution.lower()
+    if lowered in _NODE_PAIRED_RESOLUTIONS:
+        module = resolution
+    elif lowered == _BUNDLER_RESOLUTION:
+        module = "esnext"
+    else:
+        module = _DEFAULT_MODULE
+    flags = [*_BASE_FLAGS, "--target", target, "--module", module]
+    flags.extend(["--moduleResolution", resolution])
+    declared = options.get("lib")
+    library = [str(item) for item in declared] if isinstance(declared, list) else [target]
+    if not any(item.lower() == _HOST_LIBRARY.lower() for item in library):
+        library.append(_HOST_LIBRARY)
+    flags.extend(["--lib", ",".join(library)])
+    return flags
+
+
+def split_diagnostics(output: str, example: str) -> tuple[list[str], list[str]]:
+    """The compiler's diagnostics, separated into the example's own and the library's.
+
+    The example's decide the outcome. The library's are counted into the detail so a reader of the
+    receipt can see the check ran against a tree that does not fully compile on its own, which is
+    a fact about the repository worth carrying rather than hiding.
+    """
+    mine: list[str] = []
+    theirs: list[str] = []
+    for line in output.splitlines():
+        match = _DIAGNOSTIC.match(line.strip())
+        if match is None:
+            continue
+        where = match.group("file").replace("\\", "/").lstrip("./")
+        (mine if where == example else theirs).append(line.strip())
+    return (mine, theirs)
+
+
+def probe_compiler(compiler: str, workspace: Path, flags: Sequence[str]) -> str:
+    """Empty when this compiler accepts these flags and checks a trivial file; else what it said.
+
+    A version string is not enough. The hosted runner's `tsc` is 7.0.2 and this machine's is
+    5.9.3, and a flag one accepts the other can refuse outright - a refusal that exits non-zero
+    with no filed diagnostic, which is indistinguishable from a clean run if only diagnostics are
+    read. So the compiler is driven once, on a file that cannot fail, with exactly the flags the
+    examples will use: a compiler that cannot check *this* verifies nothing, and every candidate
+    is `NOT_VERIFIED` with what it said, rather than silently passed or falsely failed.
+    """
+    directory = workspace / "rp_compiler_probe"
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / "probe.ts").write_text(
+        "export const rp: number = 1;\n", encoding="utf-8", newline="\n"
+    )
+    result = execute(
+        [compiler, *flags, "probe.ts"],
+        workspace=directory,
+        timeout_seconds=120.0,
+        extra_environment=profile_environment(directory),
+    )
+    if result.return_code == 0:
+        return ""
+    said = (result.stdout + "\n" + result.stderr).strip().splitlines()
+    return said[0][:300] if said else f"exited {result.return_code} and said nothing"
+
+
+def _version(compiler: str, workspace: Path) -> str:
+    result = execute(
+        [compiler, "--version"],
+        workspace=workspace,
+        timeout_seconds=60.0,
+        extra_environment=profile_environment(workspace),
+    )
+    return result.stdout.strip() if result.return_code == 0 else ""
+
+
+def verify_typescript_build(
+    package: Path, workspace: Path, timeout_seconds: float
+) -> MeasuredBuild:
+    """The package's own npm build, measured whether or not any README example exists.
+
+    The one rule for an npm install claim the registry does not confirm
+    (`evidence/facts/extract.py`); the measurement itself is the shared `npm_build` one.
+    """
+    return verify_package_build(package, workspace, npm_executable(), timeout_seconds)
+
+
+def verify_typescript_examples(
+    root: Path,
+    barrel: Path | None,
+    candidates: Sequence[ExampleCandidate],
+    workspace: Path,
+    timeout_seconds: float,
+    install_timeout_seconds: float = 300.0,
+) -> list[ExampleReceipt]:
+    """One receipt per candidate: type-checked, failed to type-check, or not verified at all.
+
+    Every receipt also carries what the package's own build proved (`build_product`), because a
+    type-checked snippet proves nothing about that and `_source_build_fact` must not read it as
+    if it did (G4-W17 arrival item 50).
+    """
+    if not candidates:
+        return []
+    if barrel is None:
+        return blocked(candidates, "no package entry point to check against; nothing to resolve")
+    compiler = typescript_compiler()
+    if compiler is None:
+        return blocked(candidates, "BLOCKED_TOOLCHAIN: no tsc on this machine")
+    fresh = fresh_workspace(workspace)
+    if fresh is None:
+        return blocked(candidates, "BLOCKED_TOOLCHAIN: no clean workspace to type-check in")
+    workspace = fresh
+    version = _version(compiler, workspace)
+    if not version:
+        return blocked(candidates, "BLOCKED_TOOLCHAIN: tsc did not report a version")
+    try:
+        stage_sources(root, workspace)
+    except OSError as error:
+        return blocked(candidates, f"BLOCKED_TOOLCHAIN: the sources would not stage ({error})")
+
+    flags = _flags(root)
+    refusal = probe_compiler(compiler, workspace, flags)
+    if refusal:
+        return blocked(candidates, f"BLOCKED_TOOLCHAIN: this tsc refuses these options - {refusal}")
+    product = build_product(root, workspace, npm_executable(), install_timeout_seconds)
+    receipts: list[ExampleReceipt] = []
+    for candidate in candidates:
+        name = f"example_{candidate.ordinal:03d}.ts"
+        (workspace / name).write_text(candidate.code, encoding="utf-8", newline="\n")
+        result: ExecutionResult = execute(
+            [compiler, *flags, _HOST_DECLARATIONS, name],
+            workspace=workspace,
+            timeout_seconds=timeout_seconds,
+            extra_environment=profile_environment(workspace),
+        )
+        stdout = scrub(result.stdout, workspace)
+        stderr = scrub(result.stderr, workspace)
+        mine, theirs = split_diagnostics(stdout + "\n" + stderr, name)
+        aside = f"; {len(theirs)} in the package's own sources" if theirs else ""
+        outcome: Any
+        if result.timed_out:
+            outcome, detail = "TIMED_OUT", f"no exit within {timeout_seconds:g}s"
+        elif mine:
+            outcome, detail = "FAILED", mine[0][:400]
+        elif result.return_code != 0 and not theirs:
+            # The compiler refused, and named no file: nothing was checked, so nothing is proven
+            # either way. Measured 2026-09-06 on the hosted runner, whose tsc is 7.0.2: a
+            # `tsconfig.json` beside the file raised `TS5112` and the run exited 1 with no filed
+            # diagnostic at all, which the two branches above would have read as a pass.
+            said = (stdout + "\n" + stderr).strip().splitlines()
+            outcome = "NOT_VERIFIED"
+            detail = "BLOCKED_TOOLCHAIN: " + (
+                said[0][:300] if said else f"tsc exited {result.return_code} and said nothing"
+            )
+        else:
+            outcome = "EXECUTED"
+            detail = (
+                f"type-checked against {root.name} with {version.strip()} --noEmit{aside}; "
+                f"the package's own npm build {product.summary}"
+            )
+        receipts.append(
+            ExampleReceipt(
+                ordinal=candidate.ordinal,
+                outcome=outcome,
+                return_code=result.return_code,
+                stdout=clip(stdout),
+                stderr=clip(stderr),
+                detail=detail,
+                fixtures=(),
+                build_verified=product.verified,
+                build_command=product.command,
+            )
+        )
+    return receipts

@@ -1,0 +1,467 @@
+"""The Rust plugin supplies what is Rust's own and leaves the rest to the shared façades."""
+
+from __future__ import annotations
+
+import re
+from functools import partial
+from pathlib import Path
+from typing import Any
+
+from repo_presenter.extractors.platforms import rust
+from repo_presenter.extractors.platforms.registry import (
+    known_ecosystems,
+    plugin_for,
+)
+from repo_presenter.core.ecosystems import EcosystemSpec, spec_for
+from repo_presenter.core.facts import Fact, slug
+
+
+def _names_module(pattern: str, text: str, *, module: str) -> bool:
+    """Exactly what `composition/renderer.py::_installation` asks of an example's own source."""
+    return re.search(pattern.format(module=re.escape(module)), text) is not None
+
+
+CARGO_TOML = """[package]
+name = "aspose-widget-foss-rust"
+version = "26.7.0"
+edition = "2021"
+license = "MIT"
+
+[lib]
+name = "aspose_widget_foss_rust"
+path = "src/lib.rs"
+
+[dependencies]
+chrono = "0.4"
+"""
+LIB = """//! The widget library.
+
+pub mod widget;
+
+pub use widget::Widget;
+"""
+WIDGET = """/// A widget.
+pub struct Widget {
+    /// The widget's name.
+    pub name: String,
+}
+
+impl Widget {
+    /// Creates a widget.
+    pub fn new() -> Self {
+        Widget { name: String::new() }
+    }
+}
+
+/// The kind of a widget.
+pub enum WidgetKind {
+    Round,
+    Square,
+}
+"""
+
+
+def _repository(root: Path) -> list[str]:
+    (root / "Cargo.toml").write_text(CARGO_TOML, encoding="utf-8", newline="\n")
+    source = root / "src"
+    source.mkdir()
+    (source / "lib.rs").write_text(LIB, encoding="utf-8", newline="\n")
+    (source / "widget.rs").write_text(WIDGET, encoding="utf-8", newline="\n")
+    tests = root / "tests"
+    tests.mkdir()
+    (tests / "integration.rs").write_text(
+        WIDGET.replace("Widget", "TestOnlyWidget"), encoding="utf-8", newline="\n"
+    )
+    return ["Cargo.toml", "src/lib.rs", "src/widget.rs", "tests/integration.rs"]
+
+
+def test_the_plugin_is_discovered_by_module_name_and_registers_its_spec() -> None:
+    assert plugin_for("rust") is rust.PLUGIN
+    assert "rust" in known_ecosystems()
+    # §29.6 E3/E4: the renderer reads the vocabulary from the spec, never from a branch on the
+    # ecosystem name, and the plugin's own module is where Rust's spec is declared.
+    assert spec_for("rust") is rust.RUST
+    assert spec_for("rust").registry == "crates.io"
+    assert spec_for("rust").floor_fact_id == "package:rust_edition"
+
+
+def test_the_verify_command_needs_no_module_and_survives_formatting() -> None:
+    """README_CONTRACT §2 row 8: Rust's idiomatic verify line takes no import path."""
+    assert rust.RUST.verify_command.format(module="aspose_widget_foss_rust") == "cargo check"
+
+
+def test_the_source_checkout_commands_are_cargos_own_and_never_pips() -> None:
+    """§28.12 G4-W17 item 0: the source-build path renders the ecosystem's own commands.
+
+    Shared code fills in the repository and its checkout directory and nothing else, so a Rust
+    reader is never told to run `pip install .` and never told to `cargo add` a crate crates.io
+    does not carry. Measured against the real crate at `1a6004af`: `cargo build` exits 0.
+    """
+    command = rust.RUST.clone_and_build(
+        "aspose-cells-foss/Aspose.Cells-FOSS-for-Rust", "Aspose.Cells-FOSS-for-Rust"
+    )
+    assert command == (
+        "git clone https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Rust.git\n"
+        "cd Aspose.Cells-FOSS-for-Rust\n"
+        "cargo build"
+    )
+    assert "pip install" not in command
+    assert "cargo add" not in command
+    assert rust.RUST.source_install_lead
+
+
+def test_the_import_pattern_is_rusts_use_and_not_pythons_import() -> None:
+    """§28.12 G4-W17 items 5 and 11: the Verify-the-install match is the spec's own.
+
+    The renderer asks whether an executed example names the import path, with
+    `spec.import_pattern.format(module=re.escape(value))`. Rust writes `use crate::…`, which the
+    inherited Python-shaped default never matches - the reason no Rust candidate has rendered the
+    block. The fence below is the opening line of this crate's own Quick Start.
+    """
+    module = "aspose_cells_foss_rust"
+    fence = "use aspose_cells_foss_rust::{CellValue, Workbook};\nuse std::error::Error;\n"
+    matches = partial(_names_module, module=module)
+    assert matches(rust.RUST.import_pattern, fence)
+    # The bug this replaces, reproduced directly: Python's shape sees nothing here.
+    assert not matches(EcosystemSpec("x", "X", "x", "x", "x").import_pattern, fence)
+    # A re-export at the top of a fence reads the same way; so does the 2015-edition spelling.
+    assert matches(rust.RUST.import_pattern, "pub use aspose_cells_foss_rust::Workbook;\n")
+    assert matches(rust.RUST.import_pattern, "extern crate aspose_cells_foss_rust;\n")
+    # A different crate with the same prefix is not this module.
+    assert not matches(rust.RUST.import_pattern, "use aspose_cells_foss_rust_extra::Workbook;\n")
+    # The name mentioned in prose, or in a `[dependencies]` entry, is not an import either.
+    assert not matches(rust.RUST.import_pattern, "let x = aspose_cells_foss_rust::Workbook::new();")
+
+
+def test_the_governing_manifest_is_the_outermost_cargo_file(tmp_path: Path) -> None:
+    _repository(tmp_path)
+    for ignored in ("target", ".cargo"):
+        nested = tmp_path / ignored / "member"
+        nested.mkdir(parents=True)
+        (nested / "Cargo.toml").write_text("[package]\nname = 'x'\n", encoding="utf-8")
+    member = tmp_path / "fuzz"
+    member.mkdir()
+    (member / "Cargo.toml").write_text("[package]\nname = 'fuzz'\n", encoding="utf-8")
+    manifest = rust.PLUGIN.detect_manifest(tmp_path)
+    assert manifest is not None
+    assert manifest.relative_to(tmp_path).as_posix() == "Cargo.toml"
+
+
+def test_a_repository_with_no_manifest_has_no_manifest_and_no_surface(tmp_path: Path) -> None:
+    assert rust.PLUGIN.detect_manifest(tmp_path) is None
+    assert rust.PLUGIN.surface_facts(tmp_path, []) == []
+
+
+def test_the_import_path_is_the_library_name_not_the_crate_name(tmp_path: Path) -> None:
+    """§29.12: Cargo publishes hyphens and Rust imports underscores; they are two strings."""
+    tree = _repository(tmp_path)
+    manifest = rust.PLUGIN.detect_manifest(tmp_path)
+    assert manifest is not None
+    facts = {fact.id: fact for fact in rust.PLUGIN.manifest_facts(tmp_path, manifest, tree)}
+    assert facts["package:name"].value == "aspose-widget-foss-rust"
+    assert facts["install_command:cargo"].value == "cargo add aspose-widget-foss-rust"
+    assert facts["package:version"].value == "26.7.0"
+    imports = [fact for fact in facts.values() if fact.kind == "import_path"]
+    assert [fact.value for fact in imports] == ["aspose_widget_foss_rust"]
+
+
+def test_the_declared_floor_is_the_edition_when_no_compiler_version_is_declared(
+    tmp_path: Path,
+) -> None:
+    """The manifest's own vocabulary, not a version invented for it (§29.12)."""
+    _repository(tmp_path)
+    manifest = rust.PLUGIN.detect_manifest(tmp_path)
+    assert manifest is not None
+    facts = {fact.id: fact for fact in rust.PLUGIN.manifest_facts(tmp_path, manifest, [])}
+    assert facts["package:rust_edition"].value == "2021"
+    assert "package:rust_version" not in facts
+    manifest.write_text(
+        CARGO_TOML.replace('edition = "2021"', 'edition = "2021"\nrust-version = "1.74"'),
+        encoding="utf-8",
+        newline="\n",
+    )
+    with_floor = {fact.id: fact for fact in rust.PLUGIN.manifest_facts(tmp_path, manifest, [])}
+    assert with_floor["package:rust_version"].value == "1.74"
+    assert with_floor["package:rust_edition"].value == "2021"
+
+
+def test_a_requirement_carries_its_version_in_either_spelling(tmp_path: Path) -> None:
+    """README_CONTRACT §2 row 9: a reader installs a version, not a name."""
+    _repository(tmp_path)
+    manifest = tmp_path / "Cargo.toml"
+    manifest.write_text(
+        CARGO_TOML + '\nzip = { version = "0.6", optional = true }\n'
+        'local = { path = "../local" }\n\n[dev-dependencies]\ncriterion = "0.5"\n',
+        encoding="utf-8",
+        newline="\n",
+    )
+    facts = {
+        fact.id: fact
+        for fact in rust.PLUGIN.manifest_facts(tmp_path, manifest, [])
+        if fact.kind == "dependency"
+    }
+    assert facts["dependency:chrono"].value == "chrono 0.4"
+    assert facts[f"dependency:{slug('optional.zip')}"].value == "zip 0.6"
+    # A requirement with a source and no version says so rather than claiming a version.
+    assert facts[f"dependency:{slug('local')}"].value == "local (path)"
+    assert facts[f"dependency:{slug('development.criterion')}"].value == "criterion 0.5"
+    assert "dependency:none" not in facts
+
+
+def test_the_dependency_snapshot_is_emitted_in_the_order_a_bundle_stores_it(
+    tmp_path: Path,
+) -> None:
+    """A sealed README must render again from its own bundle (`tests/test_sealed_bytes.py`).
+
+    `FactsDocument.to_dict` writes facts sorted by ID and the renderer lists the dependency bucket
+    in the facts' own order, so emitting requirements in `Cargo.toml`'s table order sealed bytes
+    that could not be reproduced: measured 2026-09-07 on Aspose.Cells for Rust, the re-render put
+    the seven requirements in alphabetical order where the sealed README had the manifest's.
+    """
+    _repository(tmp_path)
+    manifest = tmp_path / "Cargo.toml"
+    manifest.write_text(
+        CARGO_TOML + '\nzip = "0.6"\nbase64 = "0.22"\nsha2 = "0.10"\n',
+        encoding="utf-8",
+        newline="\n",
+    )
+    emitted = [
+        fact.id
+        for fact in rust.PLUGIN.manifest_facts(tmp_path, manifest, [])
+        if fact.kind == "dependency"
+    ]
+    assert emitted == sorted(emitted)
+    assert emitted[:2] == ["dependency:base64", "dependency:chrono"]
+
+
+def test_a_crate_with_no_dependencies_proves_a_verified_zero(tmp_path: Path) -> None:
+    """README_CONTRACT §2 row 9: the marker cites the clause, it is never an empty row."""
+    _repository(tmp_path)
+    manifest = tmp_path / "Cargo.toml"
+    manifest.write_text(CARGO_TOML.split("[dependencies]")[0], encoding="utf-8", newline="\n")
+    facts = {fact.id: fact for fact in rust.PLUGIN.manifest_facts(tmp_path, manifest, [])}
+    marker = facts["dependency:none"]
+    assert marker.value == "none"
+    assert "dependencies" in (marker.evidence[0].detail or "")
+
+
+def test_a_manifest_that_will_not_parse_declares_no_requirement(tmp_path: Path) -> None:
+    _repository(tmp_path)
+    manifest = tmp_path / "Cargo.toml"
+    manifest.write_text("[package\nname =", encoding="utf-8", newline="\n")
+    assert list(rust.requirements(manifest)) == []
+
+
+def test_a_file_cargo_builds_as_its_own_target_is_no_part_of_the_surface() -> None:
+    """Cargo's own target rules: a test, a bench or an example is not reachable by `use`."""
+    assert rust.importable("src/widget.rs")
+    assert rust.importable("src/format/xlsx.rs")
+    assert not rust.importable("tests/integration.rs")
+    assert not rust.importable("benches/throughput.rs")
+    assert not rust.importable("examples/basic.rs")
+    assert not rust.importable("samples/basic.rs")
+    assert not rust.importable("build.rs")
+
+
+def test_surface_facts_come_from_the_shared_extractor_and_skip_separate_targets(
+    tmp_path: Path,
+) -> None:
+    tree = _repository(tmp_path)
+    facts = rust.PLUGIN.surface_facts(tmp_path, tree)
+    values = {fact.value for fact in facts}
+    kinds = {fact.value: (fact.attributes or {})["symbol_kind"] for fact in facts}
+    # The module path is derived from the crate's source root, never from the manifest's own
+    # directory: `src` is not a Rust module and no consumer writes `src::widget::Widget`.
+    assert "widget.Widget" in values
+    assert not any(value.startswith("src") for value in values)
+    assert kinds["widget.Widget"] == "class"
+    assert "widget.WidgetKind" in values and kinds["widget.WidgetKind"] == "enum"
+    # The `tests/` target beside it declares TestOnlyWidget and no consumer can reach it.
+    assert not any(value.startswith("TestOnlyWidget") for value in values)
+    for fact in facts:
+        assert slug(fact.value), fact.value
+        assert fact.evidence[0].detail and "line " in fact.evidence[0].detail
+
+
+def test_an_unreadable_registry_leaves_the_install_claim_unresolved(
+    monkeypatch: Any, tmp_path: Path
+) -> None:
+    """Silence is not absence: a probe that cannot read must not contradict the claim."""
+    tree = _repository(tmp_path)
+    manifest = rust.PLUGIN.detect_manifest(tmp_path)
+    assert manifest is not None
+    facts = rust.PLUGIN.manifest_facts(tmp_path, manifest, tree)
+
+    def unreadable(*args: Any, **kwargs: Any) -> Any:
+        from repo_presenter.extractors.surface.registry import (
+            RegistryObservation,
+        )
+
+        return RegistryObservation("cargo", "crate", None, True, None, None, "offline")
+
+    monkeypatch.setattr(rust, "observe", unreadable)
+    resolved, probes = rust.PLUGIN.registry_facts(facts)
+    assert [fact.polarity for fact in resolved] == ["UNRESOLVED"]
+    assert probes and probes[0].outcome == "UNRESOLVED"
+
+
+def test_a_crate_the_registry_does_not_carry_contradicts_the_install_claim(
+    monkeypatch: Any, tmp_path: Path
+) -> None:
+    """Measured 2026-09-06: crates.io answers 404 for `aspose-cells-foss-rust`.
+
+    The reading is conclusive, so the fact says so. README_CONTRACT §2 row 8 requires the
+    Installation section to state an unpublished package plainly rather than print a command
+    the registry contradicts, and the renderer already does; BC-02 does not yet allow it
+    (PROPOSAL P5, docs/RESEARCH_LANE_D.md).
+    """
+    tree = _repository(tmp_path)
+    manifest = rust.PLUGIN.detect_manifest(tmp_path)
+    assert manifest is not None
+    facts = rust.PLUGIN.manifest_facts(tmp_path, manifest, tree)
+
+    def absent(*args: Any, **kwargs: Any) -> Any:
+        from repo_presenter.extractors.surface.registry import (
+            RegistryObservation,
+        )
+
+        return RegistryObservation(
+            "cargo",
+            "crate",
+            False,
+            False,
+            "https://crates.io/api/v1/crates/crate",
+            "crates-io-api",
+            "live_probe",
+        )
+
+    monkeypatch.setattr(rust, "observe", absent)
+    resolved, probes = rust.PLUGIN.registry_facts(facts)
+    assert [fact.polarity for fact in resolved] == ["CONTRADICTED"]
+    assert "distribution not found" in (resolved[0].evidence[-1].detail or "")
+    assert probes and probes[0].outcome == "CONTRADICTED"
+
+
+def test_a_published_crate_supports_the_install_claim(monkeypatch: Any, tmp_path: Path) -> None:
+    tree = _repository(tmp_path)
+    manifest = rust.PLUGIN.detect_manifest(tmp_path)
+    assert manifest is not None
+    facts = rust.PLUGIN.manifest_facts(tmp_path, manifest, tree)
+
+    def published(*args: Any, **kwargs: Any) -> Any:
+        from repo_presenter.extractors.surface.registry import (
+            RegistryObservation,
+        )
+
+        return RegistryObservation(
+            "cargo",
+            "crate",
+            True,
+            False,
+            "https://crates.io/api/v1/crates/crate",
+            "crates-io-api",
+            "live_probe",
+            repository_matched=True,
+        )
+
+    monkeypatch.setattr(rust, "observe", published)
+    resolved, _ = rust.PLUGIN.registry_facts(facts)
+    assert [fact.polarity for fact in resolved] == ["SUPPORTED"]
+    # BC-02 reads the evidence for both readings by name.
+    details = " ".join(evidence.detail or "" for evidence in resolved[0].evidence)
+    assert "manifest" in details and "package registry" in details
+
+
+def test_a_missing_manifest_reports_not_verified_rather_than_failure(tmp_path: Path) -> None:
+    """§29.6 E5: a check this plugin cannot run is UNRESOLVED, never CONTRADICTED."""
+    from repo_presenter.core.examples import ExampleCandidate
+
+    candidates = [ExampleCandidate(1, "rust", "let w = Widget::new();", "README.md", 1, 3, "u:1")]
+    receipts = rust.PLUGIN.verify_examples(tmp_path, [], candidates, tmp_path / "run")
+    assert [receipt.outcome for receipt in receipts] == ["NOT_VERIFIED"]
+    assert "no Cargo.toml" in (receipts[0].detail or "")
+
+
+def test_the_plugin_imports_no_sibling_ecosystem() -> None:
+    """Layout §2.1: core, the shared façades, and its own file - nothing else."""
+    import ast
+
+    source = Path(rust.__file__).read_text("utf-8")
+    imported = {
+        node.module
+        for node in ast.walk(ast.parse(source))
+        if isinstance(node, ast.ImportFrom) and node.module
+    }
+    siblings = [name.rsplit(".", 1)[-1] for name in imported if ".platforms." in name]
+    assert siblings and all(name.startswith("rust") for name in siblings), siblings
+    assert all(
+        name.startswith(
+            (
+                "repo_presenter.core",
+                "repo_presenter.extractors.surface",
+                "collections",
+                "pathlib",
+                "typing",
+                "__future__",
+                "repo_presenter.extractors.platforms.rust",
+            )
+        )
+        for name in imported
+    ), sorted(imported)
+
+
+def test_every_fact_the_plugin_emits_is_typed_as_a_fact(tmp_path: Path) -> None:
+    tree = _repository(tmp_path)
+    manifest = rust.PLUGIN.detect_manifest(tmp_path)
+    assert manifest is not None
+    for fact in [
+        *rust.PLUGIN.manifest_facts(tmp_path, manifest, tree),
+        *rust.PLUGIN.surface_facts(tmp_path, tree),
+    ]:
+        assert isinstance(fact, Fact)
+
+
+# TC-EXT-01 (G3-W08 cut 2): the engine's `reachable` flag was discarded, so a `pub` item inside a
+# private module was published. Trimmed real crate: dtolnay/ryu at 75f9e707 (`mod common;` holds
+# `pub fn decimal_length9`; `mod buffer;` holds the public `Buffer` and `Float` it re-exports and
+# the sealed-trait plumbing it does not; `pub mod raw` re-exports `format64`).
+def test_a_pub_item_in_a_private_module_the_crate_root_never_exposes_is_not_public(
+    tmp_path: Path,
+) -> None:
+    import shutil
+
+    crate = tmp_path / "ryu"
+    shutil.copytree(Path(__file__).parent / "fixtures" / "ryu_crate", crate)
+    tree = sorted(p.relative_to(crate).as_posix() for p in crate.rglob("*") if p.is_file())
+    values = {fact.value for fact in rust.PLUGIN.surface_facts(crate, tree)}
+    # What the crate root exposes stays, `pub mod raw`'s re-export included.
+    assert {"buffer.Buffer", "buffer.Float", "format64"} <= values, values
+    # `pub fn decimal_length9` in private `mod common` and the sealed-trait plumbing that
+    # `lib.rs` never names are not importable, so they are not public symbols.
+    assert not any("decimal_length9" in value or "Sealed" in value for value in values), values
+    assert not any(value.startswith("common") for value in values), values
+
+
+def test_the_unreachable_mark_alone_never_removes_a_symbol_lib_rs_defines_or_names(
+    tmp_path: Path,
+) -> None:
+    """Measured on semver and aho-corasick: the engine called `semver::Version` (defined in
+    `lib.rs`) and `AhoCorasick` (re-exported through nested braces) unreachable."""
+    (tmp_path / "Cargo.toml").write_text(
+        '[package]\nname = "x"\nversion = "1.0.0"\nedition = "2021"\n', encoding="utf-8"
+    )
+    src = tmp_path / "src"
+    src.mkdir()
+    (src / "lib.rs").write_text(
+        "mod engine;\npub use crate::engine::{Engine, Kind};\npub struct Version;\n"
+        "// Named is re-exported by a macro the scan cannot see.\n",
+        encoding="utf-8",
+    )
+    (src / "engine.rs").write_text(
+        "pub struct Engine;\npub struct Kind;\npub struct Named;\npub struct Hidden;\n",
+        encoding="utf-8",
+    )
+    tree = ["Cargo.toml", "src/lib.rs", "src/engine.rs"]
+    values = {fact.value for fact in rust.PLUGIN.surface_facts(tmp_path, tree)}
+    assert {"Version", "engine.Engine", "engine.Kind", "engine.Named"} <= values, values
+    assert not any(value.endswith("Hidden") for value in values), values

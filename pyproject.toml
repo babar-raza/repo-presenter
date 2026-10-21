@@ -1,0 +1,49 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "repo-presenter"
+dynamic = ["version"]
+description = "Autonomous, GitHub-native README presentation for authorized product repositories."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+dependencies = [
+    "httpx>=0.27",
+    "jsonschema>=4.23",
+    "markdown-it-py>=3.0",
+    "openai>=3.7",
+    "packaging>=24.0",
+    "pydantic>=2.10",
+    "tenacity>=9.0",
+    "pyyaml>=6.0.2",
+    # The vendored surface extractor parses languages through tree-sitter. Pinned exactly, not by
+    # floor: a grammar release changes node types, and a node type is what a symbol_kind is read
+    # from, so an unpinned bump would move facts under a sealed candidate. One wheel per language,
+    # installed from the lock and loaded by core/grammars.py.
+    "tree-sitter==0.26.0",
+    "tree-sitter-c-sharp==0.23.5",
+    "tree-sitter-cpp==0.23.4",
+    "tree-sitter-go==0.25.0",
+    "tree-sitter-java==0.23.5",
+    "tree-sitter-python==0.23.6",
+    "tree-sitter-rust==0.24.2",
+    "tree-sitter-typescript==0.23.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "mypy>=1.14",
+    "pytest>=8.3",
+    "ruff>=0.9",
+]
+
+[tool.hatch.version]
+path = "src/repo_presenter/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/repo_presenter"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
