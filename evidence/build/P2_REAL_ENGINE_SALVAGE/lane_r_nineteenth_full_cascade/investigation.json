@@ -1,0 +1,226 @@
+{
+  "audience": {
+    "fact_ids": [
+      "package:target_framework"
+    ],
+    "text": "Developers building .NET applications that require PDF document processing, including those targeting .NET Framework 4.8, .NET Standard 2.0, or .NET 8+."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.pdf.document",
+        "public_symbol:aspose.pdf.pagecollection",
+        "public_symbol:aspose.pdf.outlinecollection",
+        "public_symbol:aspose.pdf.pagelabelcollection",
+        "public_symbol:aspose.pdf.nameddestinationcollection",
+        "public_symbol:aspose.pdf.xmpmetadata",
+        "public_symbol:aspose.pdf.optionalcontentgroup"
+      ],
+      "text": "Create new PDFs or open existing ones, add/delete/reorder pages, and preserve bookmarks, outlines, page labels, named destinations, XMP metadata, and optional content layers on save.",
+      "title": "Document creation and manipulation"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.pdf.text",
+        "public_symbol:aspose.pdf.textstamp",
+        "public_symbol:aspose.pdf.text",
+        "public_symbol:aspose.pdf.text"
+      ],
+      "text": "Extract text with absorbers, build new text with fragments and segments, support Bidi/RTL, ligatures, and AGL Unicode mapping, and perform find-and-replace across pages.",
+      "title": "Text handling and extraction"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.pdf.forms",
+        "public_symbol:aspose.pdf.acroformdata",
+        "public_symbol:aspose.pdf.exportfieldstojsonoptions"
+      ],
+      "text": "Read, fill, and flatten AcroForm fields including text, checkbox, radio, choice, button, signature, date, rich text, file-select, and barcode fields; export/import form data as JSON or XFDF.",
+      "title": "Form processing"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.pdf.devices",
+        "public_symbol:aspose.pdf.svgsaveoptions",
+        "public_symbol:aspose.pdf.renderingoptions"
+      ],
+      "text": "Render pages to PNG, JPEG, BMP, TIFF, or SVG using pluggable IPageRenderer; extract vector graphics to SVG with SvgExtractor.",
+      "title": "Rendering and export"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.pdf.security",
+        "public_symbol:aspose.pdf.signatures",
+        "public_symbol:aspose.pdf.cryptoalgorithm"
+      ],
+      "text": "Encrypt with RC4-40/128 and AES-128/256; sign with PKCS#1 and PKCS#7/CMS detached signatures including DocMDP, RFC 3161 timestamps, and external signing callbacks.",
+      "title": "Security and signing"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.pdf.tagged",
+        "public_symbol:aspose.pdf.logicalstructure",
+        "public_symbol:aspose.pdf.autotaggingsettings"
+      ],
+      "text": "Build or inspect tagged content structure, set language and alternate text, and auto-tag documents for PDF/UA-1 compliance using AutoTaggingSettings.",
+      "title": "Accessibility and tagging"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.pdf.comparison",
+        "public_symbol:aspose.pdf.signaturescompromisedetector",
+        "public_symbol:aspose.pdf.sanitization"
+      ],
+      "text": "Compare documents visually or structurally, detect forged signatures with SignaturesCompromiseDetector, and sanitize content with HiddenDataSanitizer.",
+      "title": "Comparison and validation"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.pdf.facades"
+      ],
+      "text": "Use task-oriented facades like PdfFileEditor, PdfBookmarkEditor, PdfContentEditor, PdfFileStamp, and PdfFileSanitization for common workflows.",
+      "title": "Facades and high-level tools"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "text": "Members that accept or return System.Drawing images (e.g., ImageDevice.GetBitmap, StampInfo.Image) are Windows-only and throw PlatformNotSupportedException on Linux/macOS."
+    },
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "text": "PdfViewer printing works only on Windows with an installed printer; print-to-file with .pdf target bypasses this requirement."
+    },
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "text": "OCSP and CRL revocation checks are not implemented; ValidationOptions.ValidationMethod for these reports undefined results."
+    },
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "text": "DocumentCollection.GetEnumerator() is not implemented and throws NotImplementedException."
+    },
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "text": "Rendering is not pixel-identical across platforms due to differences between GDI+ and managed renderers."
+    },
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "text": "Auto-tagging infers structure from layout and may require manual correction for unusual documents."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "install_command:dotnet",
+        "package:name"
+      ],
+      "text": "Enables programmatic PDF creation, editing, and conversion without requiring Adobe Acrobat or other proprietary software."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.pdf.document",
+        "public_symbol:aspose.pdf.annotations",
+        "public_symbol:aspose.pdf.text"
+      ],
+      "text": "Supports common PDF tasks such as form filling, annotation management, text extraction, and document security through a unified object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.pdf.tagged",
+        "public_symbol:aspose.pdf.logicalstructure"
+      ],
+      "text": "Provides accessibility compliance via tagged PDF support and automatic structure inference for PDF/UA-1 conversion."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.pdf.comparison"
+      ],
+      "text": "Facilitates document comparison and validation with side-by-side, text-based, and graphical comparison tools."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:repository",
+      "package:name",
+      "package:target_framework",
+      "package:version"
+    ],
+    "text": "Aspose.PDF.FOSS for .NET is a free, open-source .NET library for reading, creating, modifying, and converting PDF documents across .NET Framework 4.8, .NET Standard 2.0, and .NET 8+ runtimes."
+  },
+  "uncertainties": [
+    "The exact behavior of DocumentCollection.GetEnumerator() when called is not specified beyond throwing NotImplementedException.",
+    "Whether PdfViewer supports printing to non-default printers beyond the default printer's settings is unclear.",
+    "The scope of XFA field authoring limitations beyond high-level operations is not detailed.",
+    "The exact behavior of PDF3DAnnotation rendering and regeneration on save is not fully specified.",
+    "Whether the managed renderer supports all shading types mentioned (mesh types 4-7) is not explicitly confirmed.",
+    "The exact behavior of side-by-side comparison when text is identical but layout differs is implied but not explicitly stated.",
+    "Whether all public symbols listed (983 types) are fully implemented across all targets is not confirmed.",
+    "The exact behavior of PDF/A conversion when content cannot be repaired (e.g., missing glyphs) is limited to logging rather than fixing."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.pdf.document",
+        "public_symbol:aspose.pdf.page",
+        "public_symbol:aspose.pdf.saveformat"
+      ],
+      "name": "Create and save PDF",
+      "text": "Create a new PDF document using the Document class, add pages, insert text or images, and save to file or stream."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.pdf.text",
+        "public_symbol:aspose.pdf.forms",
+        "public_symbol:aspose.pdf.table"
+      ],
+      "name": "Extract text and forms",
+      "text": "Use TextAbsorber, TextFragmentAbsorber, or TableAbsorber to extract content; use Form to read or fill interactive form fields."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.pdf.security",
+        "public_symbol:aspose.pdf.signatures",
+        "public_symbol:aspose.pdf.validationissue"
+      ],
+      "name": "Apply security and signing",
+      "text": "Encrypt documents using RC4 or AES, sign with PKCS#1 or PKCS#7 signatures, and verify signatures using ValidationOptions."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.pdf.htmldocumenttype",
+        "public_symbol:aspose.pdf.mdloadoptions",
+        "public_symbol:aspose.pdf.pdfformatconversionoptions"
+      ],
+      "name": "Convert between formats",
+      "text": "Load HTML, Markdown, SVG, TXT, PS, or XML files into PDF, or export to HTML, SVG, Markdown, or PDF/A and PDF/UA formats."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.pdf.annotations",
+        "public_symbol:aspose.pdf.stamp",
+        "public_symbol:aspose.pdf.textstamp"
+      ],
+      "name": "Stamp and annotate",
+      "text": "Add text, image, or page-number stamps; insert link, text, highlight, redaction, and other annotation types with appearance control."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.pdf.comparison"
+      ],
+      "name": "Compare documents",
+      "text": "Use SideBySidePdfComparer, TextPdfComparer, or GraphicalPdfComparer to generate visual or structured differences between documents."
+    }
+  ]
+}
