@@ -1014,3 +1014,40 @@ entries:
       this reader's patterns. Still NOT proven for rust/typescript -- each needs its own
       real-source investigation before a reader is written.
     invalidation_impact: not yet pulled into any other ecosystem.
+
+  - component: "extractors/platforms/rust_format_declarations.py"
+    source: "new engineering -- the old repo has the identical return-[] format_declarations
+      stub for rust.py too"
+    evaluated_at_shas: []
+    behavior: >
+      Structurally close to the C++ reader -- a plain enum LoadFormat/SaveFormat with no
+      extension string literal, and a qualified reference (LoadFormat::Xlsx) as the
+      registration signal -- but independently investigated against this product's own real
+      source, not assumed to generalize from the C++ sibling. Two real differences confirmed:
+      Rust enums cannot be forward-declared without a body (no forward-declaration false
+      positive to guard against, unlike C++), and Rust's exhaustiveness checking means a match
+      over an enum must name every variant to compile at all, so a future match widened with a
+      wildcard arm rather than an explicit variant name would still be caught as
+      declared-but-unregistered by this design.
+    evidence: >
+      Designed against the REAL live source of aspose-cells-foss/Aspose.Cells-FOSS-for-Rust
+      (2026-10-22), read directly before writing any pattern-matching code (LoadFormat.rs,
+      SaveFormat.rs, the real exhaustive match gates in Workbook.rs). 5 new unit tests
+      (test_rust_format_declarations.py). Real end-to-end result: both input.xlsx and
+      output.xlsx come out SUPPORTED, matching the live README's one claim, zero findings of
+      any kind in this run -- a correct, clean result. See
+      evidence/build/P2_REAL_ENGINE_SALVAGE/aspose-cells-foss__Aspose.Cells-FOSS-for-Rust/.
+    disposition: "ADD (not REUSE/ADAPT -- genuinely new code, no old-repo equivalent exists)"
+    reason: >
+      Fifth of six remaining ecosystems toward "lanes work equally for all candidates." Even
+      where a reader's shape is structurally close to an existing one (C++), this repository's
+      own source was read directly rather than assuming the sibling reader's shape transfers --
+      confirmed to matter here (Rust's exhaustiveness checking changed which direction
+      corroborates).
+    target_module: src/repo_presenter/extractors/platforms/rust_format_declarations.py
+    smallest_first_integration_test: tests/extractors/platforms/test_rust_format_declarations.py
+      -- all green, plus the real end-to-end proof above.
+    portfolio_consumers: Lane L, the one Rust candidate (dry_run mode; no full-mode Rust entry
+      exists yet). Still NOT proven for typescript, the last remaining ecosystem -- needs its
+      own real-source investigation before a reader is written.
+    invalidation_impact: not yet pulled into any other ecosystem.

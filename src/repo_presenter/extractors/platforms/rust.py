@@ -32,6 +32,9 @@ from collections.abc import Callable, Iterator, Sequence
 from pathlib import Path, PurePosixPath
 from typing import Any
 
+from repo_presenter.extractors.platforms.rust_format_declarations import (
+    format_declarations as rust_format_declarations,
+)
 from repo_presenter.extractors.platforms.rust_examples import (
     verify_rust_examples,
 )
@@ -491,8 +494,10 @@ class RustPlugin:
         return []
 
     def format_declarations(self, root: Path, tree_paths: list[str]) -> Sequence[FormatDeclaration]:
-        """Not yet built; the vendored format reader lands with the cohort that needs it."""
-        return []
+        """Static LoadFormat/SaveFormat enum + qualified-reference reading; see
+        rust_format_declarations.py's own docstring for how this ecosystem's exhaustive
+        match-arm checking differs from C++'s sibling reader."""
+        return rust_format_declarations(root, tree_paths)
 
 
 PLUGIN: Any = RustPlugin()
