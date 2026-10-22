@@ -1372,3 +1372,49 @@ entries:
     portfolio_consumers: any future Lane R cascade run against an ecosystem other than
       python/net.
     invalidation_impact: none -- a pure bug fix to scripts not yet relied on by anything else.
+
+  - component: "scripts/run_lane_r_coherence.py (new) -- fires readme/composition/coherence.py
+      (stage S8), already fully ported but never fired before this"
+    source: "new engineering (orchestration script); the coherence.py module itself was
+      already REUSE-ported earlier this session, see its own prior manifest entry"
+    evaluated_at_shas: []
+    behavior: >
+      Renders the pre-coherence README from the accepted content_units.json, builds
+      coherence_packet/coherence_schema per coherence_batches() batch (coherence only
+      revises non-batch authoring tasks), fires a real section_authoring call in
+      "coherence" mode per batch with coherence_checks as the checks= callback and
+      coherence.py's own recover_coherence_regressions as the recover= callback (the exact
+      callable repair/rounds.py's real S8 call site passes), applies each batch's accepted
+      revision with apply_coherence, and re-renders the final document.
+    evidence: >
+      Fired for real against aspose-cells-foss/Aspose.Cells-FOSS-for-Go (same repository as
+      lane_r_second_full_cascade/). This was fired SPECIFICALLY to test a hypothesis --
+      dispositions.py's own docstring names "BC-10 coherence-gap" as the real mechanism for
+      the duplicate-opening-paragraph defect both full cascade runs measured -- and the
+      hypothesis was FALSIFIED by firing it, not confirmed by inspection: README.coherent.md
+      still carries the duplicate byte-for-byte; the coherence batch covering "opening"
+      made no revision. S8 revises wording of LLM-owned units only, by its own docstring,
+      and cannot touch a separately-disposed PRESERVED unit sitting beside one. One real bug
+      found and fixed before trusting this result: the first attempt crashed (JobError,
+      rejected twice) because the script omitted run_job's recover= parameter; wiring in
+      coherence.py's own recover_coherence_regressions fixed it, and a real reject->recover
+      ->accept cycle then fired correctly on a genuine content-loss rejection (the model's
+      revision of scope_limitations/scope silently dropped content tied to the License
+      heading; the deterministic recovery repaired it). 4 real coherence batches, 5 total
+      provider calls (1+1+1+2), one real revision applied
+      (scope_limitations/limitation:4). 1040/1040 whole-repo tests pass. See
+      evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_first_coherence_pass/.
+    disposition: "ADD (new orchestration script; the underlying coherence.py module is
+      REUSE, already recorded in its own prior entry)"
+    reason: >
+      Rules out a plausible hypothesis for the one known Lane R defect by actually firing the
+      real mechanism, rather than leaving an untested guess in the record. The real fix (if
+      one exists in the shipped system) is now known to be in a part of the pipeline not yet
+      found or ported -- repair/rounds.py (not ported) is the orchestration layer both this
+      and the earlier S4 refusal/repair half came from, and the next place to look.
+    target_module: scripts/run_lane_r_coherence.py
+    smallest_first_integration_test: the real end-to-end re-verification above (no unit test
+      -- an orchestration script, not library code with its own test suite).
+    portfolio_consumers: any future Lane R cascade run that wants a coherence-revised final
+      README. Fired against one repository so far.
+    invalidation_impact: none -- new script, not yet relied on by anything else.

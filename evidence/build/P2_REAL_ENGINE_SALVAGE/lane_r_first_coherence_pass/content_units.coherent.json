@@ -1,0 +1,533 @@
+{
+  "coherence": {
+    "applied": true,
+    "revised": [
+      "scope_limitations/limitation:4"
+    ]
+  },
+  "omitted": [
+    {
+      "fact_id": "inherited_unit:027.heading",
+      "reason": "Rendered by the deterministic renderer; not prose to write.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:028.paragraph",
+      "reason": "Rendered by the deterministic renderer; not prose to write.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:029.heading",
+      "reason": "Rendered by the deterministic renderer; not prose to write.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:030.code_block",
+      "reason": "Rendered by the deterministic renderer; not prose to write.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:032.heading",
+      "reason": "Rendered by the deterministic renderer; not prose to write.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:033.code_block",
+      "reason": "Rendered by the deterministic renderer; not prose to write.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:036.heading",
+      "reason": "Rendered by the deterministic renderer; not prose to write.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:037.code_block",
+      "reason": "Rendered by the deterministic renderer; not prose to write.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:038.heading",
+      "reason": "Rendered by the deterministic renderer; not prose to write.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:039.code_block",
+      "reason": "Rendered by the deterministic renderer; not prose to write.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:048.heading",
+      "reason": "Inherited heading text is rendered by the deterministic renderer and not part of prose units.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:049.paragraph",
+      "reason": "Inherited paragraph text is rendered by the deterministic renderer and not part of prose units.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:051.heading",
+      "reason": "Inherited heading text is rendered by the deterministic renderer and not part of prose units.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:052.table",
+      "reason": "Inherited table is rendered by the deterministic renderer and not part of prose units.",
+      "section": "api_reference"
+    }
+  ],
+  "schema_version": 1,
+  "units": [
+    {
+      "fact_ids": [
+        "dependency:none",
+        "format:input.csv",
+        "format:input.xlsx",
+        "format:output.csv",
+        "format:output.xlsx",
+        "identity:repository",
+        "inherited_unit:004.paragraph",
+        "package:name",
+        "public_symbol:alignment",
+        "public_symbol:calculateformula",
+        "public_symbol:cell.setformula",
+        "public_symbol:cell.setstyle",
+        "public_symbol:cell.value",
+        "public_symbol:cells.get",
+        "public_symbol:cells.set",
+        "public_symbol:datavalidation",
+        "public_symbol:fill",
+        "public_symbol:font",
+        "public_symbol:newstreamingreader",
+        "public_symbol:newtable",
+        "public_symbol:streamingreader.processrows",
+        "public_symbol:style",
+        "public_symbol:table.hasheaderrow",
+        "public_symbol:workbook.exporttocsv",
+        "public_symbol:workbook.importfromcsv",
+        "public_symbol:workbook.setpassword",
+        "public_symbol:workbook.verifypassword",
+        "public_symbol:worksheet.adddatavalidation",
+        "public_symbol:worksheet.addtable"
+      ],
+      "section": "opening",
+      "slot": "opening",
+      "text": "Aspose.Cells FOSS for Go reads and writes Excel workbooks in ECMA-376 Office Open XML .xlsx format, and imports and exports .csv files. It supports cell data and A1-style addressing, visual formatting with Style, Font, Fill, and Alignment, a built-in formula engine that evaluates formulas via CalculateFormula, data validation via DataValidation and Worksheet.AddDataValidation, structured tables via NewTable, Worksheet.AddTable, and Table.HasHeaderRow, low-memory row streaming for large files via NewStreamingReader and StreamingReader.ProcessRows, and password-based workbook encryption via Workbook.SetPassword and Workbook.VerifyPassword."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "example:003",
+        "public_symbol:cell.value",
+        "public_symbol:cells.get",
+        "public_symbol:cells.set"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "Cell data read/write operations use Cells.Get and Cells.Set with A1-style references to access Cell.Value for string, float64, int, and bool types."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:calculateformula",
+        "public_symbol:cell.setformula"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:2",
+      "text": "Formula evaluation stores formulas via Cell.SetFormula and computes results using CalculateFormula for SUM, AVERAGE, MAX, and MIN over single cells or A1-style ranges."
+    },
+    {
+      "fact_ids": [
+        "example:008",
+        "public_symbol:alignment",
+        "public_symbol:cell.setstyle",
+        "public_symbol:fill",
+        "public_symbol:font",
+        "public_symbol:style"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "Styling and formatting combine Font, Fill, Alignment, and borders into a Style applied to any cell via Cell.SetStyle, with automatic deduplication of identical styles during save."
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "public_symbol:datavalidation",
+        "public_symbol:worksheet.adddatavalidation"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:4",
+      "text": "Data validation rules restrict ranges to dropdown lists or numeric ranges with custom error messages and styles, attached to a Worksheet via Worksheet.AddDataValidation."
+    },
+    {
+      "fact_ids": [
+        "example:009",
+        "public_symbol:newtable",
+        "public_symbol:table.hasheaderrow",
+        "public_symbol:worksheet.addtable"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "Structured tables created with NewTable and attached via Worksheet.AddTable support header rows indicated by Table.HasHeaderRow and built-in auto-filters."
+    },
+    {
+      "fact_ids": [
+        "example:010",
+        "format:input.csv",
+        "format:output.csv",
+        "public_symbol:workbook.exporttocsv",
+        "public_symbol:workbook.importfromcsv"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:6",
+      "text": "CSV import and export move data to and from .csv files using Workbook.ImportFromCSV and Workbook.ExportToCSV with a caller-supplied delimiter."
+    },
+    {
+      "fact_ids": [
+        "example:007",
+        "public_symbol:newstreamingreader",
+        "public_symbol:streamingreader.processrows"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:7",
+      "text": "Streaming large files uses NewStreamingReader and StreamingReader.ProcessRows to process rows one at a time without building the full Workbook model, keeping memory proportional to one row's width."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook.setpassword",
+        "public_symbol:workbook.verifypassword"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:8",
+      "text": "Password-based encryption secures workbooks using Workbook.SetPassword and Workbook.VerifyPassword with ECMA-376 Agile Encryption (SHA-512 key derivation, AES-256-CBC)."
+    },
+    {
+      "fact_ids": [
+        "example:002"
+      ],
+      "section": "quick_start",
+      "slot": "lead_in",
+      "text": "Create a new workbook, write values to cells A1 and B1, and save the file as hello.xlsx."
+    },
+    {
+      "fact_ids": [
+        "example:003"
+      ],
+      "section": "quick_start",
+      "slot": "lead_in:2",
+      "text": "Load an existing workbook, read the value in cell A1, update it, and save the changes to output.xlsx."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "example:005",
+        "example:007",
+        "example:008",
+        "example:009",
+        "example:010"
+      ],
+      "section": "additional_examples",
+      "slot": "preview",
+      "text": "The following workflows demonstrate key capabilities: formulas with the calculation engine, data validation, streaming large files, styling, tables, and CSV import."
+    },
+    {
+      "fact_ids": [
+        "example:004"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:004",
+      "text": "Create a sales table and evaluate SUM and AVERAGE formulas."
+    },
+    {
+      "fact_ids": [
+        "example:005"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:005",
+      "text": "Apply list-type data validation to a cell range."
+    },
+    {
+      "fact_ids": [
+        "example:007"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:007",
+      "text": "Stream rows from an Excel file and compute totals."
+    },
+    {
+      "fact_ids": [
+        "example:008"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:008",
+      "text": "Apply bold and solid-fill styles to header cells."
+    },
+    {
+      "fact_ids": [
+        "example:009"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:009",
+      "text": "Create a styled table from a data range."
+    },
+    {
+      "fact_ids": [
+        "example:010"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:010",
+      "text": "Import a CSV file into a new Excel workbook."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:go_version",
+        "package:name",
+        "public_symbol:workbook",
+        "public_symbol:worksheet",
+        "public_symbol:worksheet.cells"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "Aspose.Cells FOSS for Go provides the Workbook class as the top-level object representing an Excel workbook and the Worksheet class as a single sheet within a workbook, with Worksheet.Cells exposing a Cells collection for cell-level operations."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:go_version",
+        "package:name",
+        "public_symbol:workbook",
+        "public_symbol:workbook.save",
+        "public_symbol:workbook.importfromcsv",
+        "public_symbol:workbook.exporttocsv",
+        "public_symbol:workbook.setpassword",
+        "public_symbol:workbook.verifypassword"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:workbook",
+      "text": "The Workbook class represents an Excel workbook and supports loading from and saving to files via Workbook.Save, importing from CSV via Workbook.ImportFromCSV, exporting to CSV via Workbook.ExportToCSV, and password protection via Workbook.SetPassword and Workbook.VerifyPassword."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:go_version",
+        "package:name",
+        "public_symbol:worksheet",
+        "public_symbol:worksheet.cells",
+        "public_symbol:worksheet.addtable",
+        "public_symbol:worksheet.adddatavalidation",
+        "public_symbol:worksheet.addpicture"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:worksheet",
+      "text": "The Worksheet class represents a single sheet within a workbook and provides access to its cell collection via Worksheet.Cells, as well as methods to add structured tables via Worksheet.AddTable, data validation rules via Worksheet.AddDataValidation, and embedded pictures via Worksheet.AddPicture."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:go_version",
+        "package:name",
+        "public_symbol:cells",
+        "public_symbol:cells.get",
+        "public_symbol:cells.set",
+        "public_symbol:cells.remove"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:cells",
+      "text": "The Cells collection is indexed by A1-style string references and supports retrieving cell values via Cells.Get, setting cell values via Cells.Set, and removing cells via Cells.Remove."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:go_version",
+        "package:name",
+        "public_symbol:cell",
+        "public_symbol:cell.value",
+        "public_symbol:cell.setformula",
+        "public_symbol:cell.getformula",
+        "public_symbol:cell.setstyle"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:cell",
+      "text": "The Cell class represents a single cell in a worksheet grid and exposes its value via Cell.Value, supports formula operations via Cell.SetFormula and Cell.GetFormula, and allows formatting via Cell.SetStyle."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:go_version",
+        "package:name",
+        "public_symbol:style",
+        "public_symbol:style.font",
+        "public_symbol:style.fill",
+        "public_symbol:style.alignment",
+        "public_symbol:style.border"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:style",
+      "text": "The Style class groups font, fill, alignment, and border settings into a named formatting record and exposes its components via Style.Font, Style.Fill, Style.Alignment, and Style.Border."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:go_version",
+        "package:name",
+        "public_symbol:datavalidation",
+        "public_symbol:datavalidation.ref",
+        "public_symbol:datavalidation.type",
+        "public_symbol:datavalidation.formula1"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:datavalidation",
+      "text": "The DataValidation class represents a single data-validation rule applied to a range of cells and defines its scope via DataValidation.Ref, its validation type via DataValidation.Type, and its validation expression via DataValidation.Formula1."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:go_version",
+        "package:name",
+        "public_symbol:table",
+        "public_symbol:table.range",
+        "public_symbol:table.hasheaderrow",
+        "public_symbol:table.stylename"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:table",
+      "text": "The Table class represents a structured range of data with optional header row and built-in auto-filter and exposes its range via Table.Range, its header row setting via Table.HasHeaderRow, and its formatting style via Table.StyleName."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:go_version",
+        "package:name",
+        "public_symbol:newstreamingreader",
+        "public_symbol:streamingreader",
+        "public_symbol:streamingreader.processrows"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:streamingreader",
+      "text": "The StreamingReader class reads an .xlsx workbook row by row without loading the entire sheet XML into memory and processes each row by invoking a callback via StreamingReader.ProcessRows, created using NewStreamingReader."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:go_version",
+        "package:name",
+        "public_symbol:calculateformula",
+        "public_symbol:formulaerror"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:calculateformula",
+      "text": "The CalculateFormula function evaluates Excel formulas and returns the result, with FormulaError indicating when a formula cannot be evaluated."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:go_version",
+        "package:name",
+        "public_symbol:font",
+        "public_symbol:font.bold",
+        "public_symbol:font.color",
+        "public_symbol:font.size"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:font",
+      "text": "The Font class describes the typographic properties applied to cell text and exposes its bold setting via Font.Bold, its color via Font.Color, and its size via Font.Size."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:go_version",
+        "package:name",
+        "public_symbol:fill",
+        "public_symbol:fill.type",
+        "public_symbol:fill.color"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:fill",
+      "text": "The Fill class describes the background appearance of a cell and exposes its fill type via Fill.Type and its color via Fill.Color."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:go_version",
+        "package:name",
+        "public_symbol:border",
+        "public_symbol:border.top",
+        "public_symbol:border.bottom",
+        "public_symbol:border.left",
+        "public_symbol:border.right"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:border",
+      "text": "The Border class defines which sides of a cell have a visible rule and the colour of those rules and exposes its top, bottom, left, and right settings via Border.Top, Border.Bottom, Border.Left, and Border.Right."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "example:010",
+        "identity:repository",
+        "inherited_unit:056.heading",
+        "inherited_unit:057.list",
+        "inherited_unit:074.heading",
+        "inherited_unit:075.paragraph",
+        "install_command:go",
+        "package:go_version",
+        "package:name",
+        "public_symbol:calculateformula",
+        "public_symbol:workbook.importfromcsv",
+        "public_symbol:workbook.sourcexml",
+        "public_symbol:workbook.stylesxml"
+      ],
+      "section": "scope_limitations",
+      "slot": "scope",
+      "text": "Aspose.Cells FOSS for Go reads and writes Excel files, supports formula calculation with SUM, AVERAGE, MAX, and MIN, and imports data from CSV files using A1-style cell references."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "inherited_unit:057.list",
+        "public_symbol:calculateformula"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:1",
+      "text": "CalculateFormula supports only SUM, AVERAGE, MAX, and MIN; any other formula returns an error rather than being evaluated, and cell references must be A1-style strings only."
+    },
+    {
+      "fact_ids": [
+        "example:010",
+        "inherited_unit:057.list",
+        "public_symbol:workbook.importfromcsv"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:2",
+      "text": "Workbook.ImportFromCSV stores every field as a Go string and does not infer numeric or boolean types the way Cells().Set does when called directly with typed values."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:057.list",
+        "public_symbol:workbook.sourcexml",
+        "public_symbol:workbook.stylesxml"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:3",
+      "text": "Workbook.SourceXML and Workbook.StylesXML expose raw XML content, and on save unmodified content is reused verbatim from the original XML byte-for-byte, and only content touched since load is regenerated."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "example:010",
+        "inherited_unit:056.heading",
+        "inherited_unit:057.list",
+        "inherited_unit:074.heading",
+        "public_symbol:calculateformula",
+        "public_symbol:workbook.importfromcsv",
+        "public_symbol:workbook.sourcexml",
+        "public_symbol:workbook.stylesxml"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:4",
+      "text": "Generated XML follows ECMA-376's own element ordering; this preserves round-trip compatibility but isn't independently configurable. CalculateFormula supports only SUM, AVERAGE, MAX, and MIN; any other formula returns an error rather than being evaluated. Workbook.ImportFromCSV stores every field as a Go string and does not infer numeric or boolean types the way Cells().Set does when called directly with typed values. Workbook.SourceXML and Workbook.StylesXML expose raw XML content, and on save unmodified content is reused verbatim from the original XML byte-for-byte, and only content touched since load is regenerated."
+    }
+  ]
+}

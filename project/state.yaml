@@ -446,11 +446,36 @@ next_ready_items:
       "opening" is LLM-authored/placeable, so a VERIFIED_PRESERVE into it was never in scope
       for either check, by design (TC-DSP-01: reconciliation runs before planning and may
       only claim what IT can prove -- whether an authored slot will duplicate a preserved
-      unit's content is only knowable after authoring, a later stage). The real fix belongs
-      downstream (likely renderer.py's own `_section_body`, or a cross-stage check once
-      authoring's output is known), not in this ported subset -- stated honestly, not
-      claimed closed. reconciliation_narrowing (S4's partial-rejection repair path) is still
-      not ported.
+      unit's content is only knowable after authoring, a later stage).
+      Found the REAL mechanism, not a guess: checked the old repo's own renderer.py's
+      trailing `placed` loop (the exact code that prints the duplicate) -- byte-for-byte
+      identical to this repository's own already-ported copy, confirming this gap is the
+      real, shipped production architecture's own behavior, not something this session's
+      porting introduced or could unilaterally "fix" at render time without risking breaking
+      the sections (scope_limitations, documentation_resources) that legitimately mix
+      authored content with placed/preserved units by design. coordinate_neighbor_promises'
+      own docstring names BC-10 coherence as the real catch for defects of this general
+      shape, so readme/composition/coherence.py (stage S8, already fully ported but never
+      fired) was built into a new scripts/run_lane_r_coherence.py and fired for real --
+      RESULT, CHECKED DIRECTLY, NOT ASSUMED: S8 does NOT fix this specific defect.
+      README.coherent.md still carries the duplicate opening paragraph byte-for-byte; the
+      coherence batch covering "opening" reported no revision. S8 is scoped to revising the
+      WORDING of units the LLM already owns ("only... prose the LLM already owned," its own
+      docstring) -- it cannot remove or reconcile against a separately-disposed PRESERVED
+      unit sitting beside one. Both placement_errors and coherence are now ruled out by
+      firing them for real, not by inspection alone. The real fix, if the production system
+      has one at all, is in a part of the pipeline not yet found or ported here (repair/
+      rounds.py, not ported, is the orchestration layer both this and the earlier S4 fix
+      came from -- a likely place to look next), or this is a lived-with risk of the real
+      architecture. One real, separate bug WAS found and fixed while firing S8: the first
+      attempt crashed (JobError, output rejected twice) because the new script omitted
+      run_job's recover= parameter; coherence.py's own recover_coherence_regressions (the
+      exact callable repair/rounds.py's real S8 call site passes, confirmed against that
+      file before adding this) fixed it, and a real reject->recover->accept cycle then fired
+      correctly (a genuine content-loss rejection, caught and deterministically repaired).
+      1040/1040 whole-repo tests pass. Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_first_coherence_pass/.
+      reconciliation_narrowing (S4's partial-rejection repair path) is also still not ported.
     purpose: >
       Follow-on to WRITE_PROMPTS_FOR_AUTHORING's real first call: fire a real
       presentation_planning job against the real aspose-3d-foss/Python facts to get a real
