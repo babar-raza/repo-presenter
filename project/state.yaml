@@ -556,6 +556,18 @@ next_ready_items:
       ops/gateverify.py's do_verify/rebuild_state exist (P0) but have never been run
       against a P1_PORTFOLIO_SCALE candidate. Define what "no-op, zero new provider calls"
       means for a README candidate and wire a real check.
+    blocked_on_same_dependency_2026_10_22: >
+      Checked before attempting: this depends on readme/bundle/recheck.py's own
+      recheck_bundle/recheck_portfolio (the real "is this candidate still current, zero new
+      calls" runners) -- and that module's OWN docstring already states, explicitly, that
+      those two functions and their five per-scope runners were deliberately NOT ported
+      (PARTIAL PORT) because they transitively need review/independent/review.py and
+      validation/registry.py -- the exact same unported subsystem just sized and deferred
+      above (11,364 lines). This is not a separate, smaller task sharing a name with that
+      one; it is blocked on the identical dependency wall. A stub standing in for either
+      module "would not prove anything real" (recheck.py's own words) and was correctly
+      refused rather than faked when recheck.py was first ported. Nothing new to do here
+      until that subsystem exists.
   - id: ENTERPRISE_EDITION_NAMING_CHECK
     status: DONE
     purpose: >
