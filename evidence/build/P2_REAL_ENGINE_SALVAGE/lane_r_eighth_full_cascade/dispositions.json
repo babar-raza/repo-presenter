@@ -1,0 +1,499 @@
+{
+  "dispositions": [
+    {
+      "destination_section": "identity",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:repository"
+      ],
+      "rationale": "The H1 product name is rendered deterministically from the identity fact.",
+      "unit_id": "inherited_unit:001.heading"
+    },
+    {
+      "destination_section": "badges",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "package:license"
+      ],
+      "rationale": "The license badge row is rendered deterministically from the package license fact.",
+      "unit_id": "inherited_unit:002.badge_row"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a product illustration or homepage link; the banner condition does not hold.",
+      "unit_id": "inherited_unit:003.badge_row"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "identity:repository",
+        "package:license",
+        "package:name",
+        "package:version",
+        "package:python_requires",
+        "dependency:pillow-10.1.0",
+        "public_symbol:aspose_barcode_foss.code128",
+        "public_symbol:aspose_barcode_foss.code39",
+        "public_symbol:aspose_barcode_foss.ean13",
+        "public_symbol:aspose_barcode_foss.ean8",
+        "public_symbol:aspose_barcode_foss.upca",
+        "public_symbol:aspose_barcode_foss.upce",
+        "public_symbol:aspose_barcode_foss.qr",
+        "public_symbol:aspose_barcode_foss.generate",
+        "public_symbol:aspose_barcode_foss.barcode.to_svg",
+        "public_symbol:aspose_barcode_foss.barcode.to_png"
+      ],
+      "rationale": "The paragraph's substance is supported by multiple facts and fits the opening section's requirements.",
+      "unit_id": "inherited_unit:004.paragraph"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Navigation heading is rendered by the deterministic navigation section.",
+      "unit_id": "inherited_unit:005.heading"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The navigation list is rendered deterministically by the navigation section.",
+      "unit_id": "inherited_unit:006.list"
+    },
+    {
+      "destination_section": "at_a_glance",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The At a Glance heading is rendered by the deterministic at_a_glance section.",
+      "unit_id": "inherited_unit:007.heading"
+    },
+    {
+      "destination_section": "at_a_glance",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Mermaid diagram for At a Glance is rendered deterministically by the at_a_glance section.",
+      "unit_id": "inherited_unit:008.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The Key Capabilities heading is required and placeable; the list content is re-authored from facts.",
+      "unit_id": "inherited_unit:009.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose_barcode_foss.code128",
+        "public_symbol:aspose_barcode_foss.code39",
+        "public_symbol:aspose_barcode_foss.code39ext",
+        "public_symbol:aspose_barcode_foss.ean13",
+        "public_symbol:aspose_barcode_foss.ean8",
+        "public_symbol:aspose_barcode_foss.upca",
+        "public_symbol:aspose_barcode_foss.upce",
+        "public_symbol:aspose_barcode_foss.qr",
+        "public_symbol:aspose_barcode_foss.generate",
+        "public_symbol:aspose_barcode_foss.barcode.to_svg",
+        "public_symbol:aspose_barcode_foss.barcode.to_png",
+        "public_symbol:aspose_barcode_foss.renderoptions"
+      ],
+      "rationale": "The Key Capabilities list is re-authored deterministically from the capabilities facts.",
+      "unit_id": "inherited_unit:010.list"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Installation heading is rendered deterministically by the installation section.",
+      "unit_id": "inherited_unit:011.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "CORRECT_WITH_EVIDENCE",
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "rationale": "The paragraph states the package is not on PyPI, but the install_command fact contradicts pip install aspose-barcode-foss; the content is moved to Additional.",
+      "unit_id": "inherited_unit:012.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "rationale": "The source checkout install command is supported and placed in Additional Examples.",
+      "unit_id": "inherited_unit:013.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:name",
+        "import_path:aspose_barcode_foss",
+        "package:python_requires",
+        "dependency:pillow-10.1.0"
+      ],
+      "rationale": "The package name, import path, Python requirement, and Pillow dependency are supported and placed in Additional.",
+      "unit_id": "inherited_unit:014.paragraph"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Dependencies heading is rendered deterministically by the dependencies section.",
+      "unit_id": "inherited_unit:015.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Required Package Dependencies subsection is rendered deterministically by the dependencies section.",
+      "unit_id": "inherited_unit:016.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:pillow-10.1.0"
+      ],
+      "rationale": "The Pillow dependency is supported and placed in Additional Examples as it is not part of the required dependencies subsection.",
+      "unit_id": "inherited_unit:017.list"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Native and System Requirements subsection is rendered deterministically by the dependencies section.",
+      "unit_id": "inherited_unit:018.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:python_requires"
+      ],
+      "rationale": "The Python requirement is supported and placed in Additional Examples as it is not part of the required dependencies subsection.",
+      "unit_id": "inherited_unit:019.list"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Development Dependencies subsection is rendered deterministically by the dependencies section.",
+      "unit_id": "inherited_unit:020.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No facts support development dependencies; the claim is unsupported.",
+      "unit_id": "inherited_unit:021.list"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The Quick Start heading is required and placeable; the example is supported.",
+      "unit_id": "inherited_unit:022.heading"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "The Quick Start lead-in sentence is supported by the example fact.",
+      "unit_id": "inherited_unit:023.paragraph"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "The Code 128 example is supported and placed in Quick Start.",
+      "unit_id": "inherited_unit:024.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The Additional Examples heading is required and placeable; further examples are supported.",
+      "unit_id": "inherited_unit:025.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The paragraph about runnable examples is supported and placed in Additional Examples.",
+      "unit_id": "inherited_unit:026.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "The generate() example lead-in is supported and placed in Additional Examples.",
+      "unit_id": "inherited_unit:027.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "The generate() QR example is supported and placed in Additional Examples.",
+      "unit_id": "inherited_unit:028.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "NON_CONTENT",
+      "fact_ids": [],
+      "rationale": "The HTML details tag is a non-content separator.",
+      "unit_id": "inherited_unit:029.html_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "The QR options example lead-in is supported and placed in Additional Examples.",
+      "unit_id": "inherited_unit:030.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "The QR options example is supported and placed in Additional Examples.",
+      "unit_id": "inherited_unit:031.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:004"
+      ],
+      "rationale": "The Code 39 check digit example lead-in is supported and placed in Additional Examples.",
+      "unit_id": "inherited_unit:032.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:004"
+      ],
+      "rationale": "The Code 39 check digit example is supported and placed in Additional Examples.",
+      "unit_id": "inherited_unit:033.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:005"
+      ],
+      "rationale": "The RenderOptions example lead-in is supported and placed in Additional Examples.",
+      "unit_id": "inherited_unit:034.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:005"
+      ],
+      "rationale": "The RenderOptions example is supported and placed in Additional Examples.",
+      "unit_id": "inherited_unit:035.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:006"
+      ],
+      "rationale": "The custom renderer example lead-in is supported and placed in Additional Examples.",
+      "unit_id": "inherited_unit:036.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:006"
+      ],
+      "rationale": "The custom renderer example is supported and placed in Additional Examples.",
+      "unit_id": "inherited_unit:037.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "NON_CONTENT",
+      "fact_ids": [],
+      "rationale": "The closing HTML details tag is a non-content separator.",
+      "unit_id": "inherited_unit:038.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The API Reference heading is required and placeable; the public surface is supported.",
+      "unit_id": "inherited_unit:039.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_barcode_foss",
+        "public_symbol:aspose_barcode_foss.barcode",
+        "public_symbol:aspose_barcode_foss.generate",
+        "public_symbol:aspose_barcode_foss.code128",
+        "public_symbol:aspose_barcode_foss.qr"
+      ],
+      "rationale": "The Barcode entry point description is supported and placed in API Reference.",
+      "unit_id": "inherited_unit:040.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The opening <details> tag for the API surface is redundant with the API Reference section, which is rendered from facts.",
+      "unit_id": "inherited_unit:041.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Core API' heading is redundant with the API Reference section, which is rendered from facts.",
+      "unit_id": "inherited_unit:042.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Barcode' class table row is redundant with the API Reference section, which is rendered from facts.",
+      "unit_id": "inherited_unit:043.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Internal' heading is redundant with the API Reference section, which is rendered from facts.",
+      "unit_id": "inherited_unit:044.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The internal classes table is redundant with the API Reference section, which is rendered from facts.",
+      "unit_id": "inherited_unit:045.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Enumerations' heading is redundant with the API Reference section, which is rendered from facts.",
+      "unit_id": "inherited_unit:046.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The enumerations table is redundant with the API Reference section, which is rendered from facts.",
+      "unit_id": "inherited_unit:047.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The closing </details> tag is redundant with the API Reference section, which is rendered from facts.",
+      "unit_id": "inherited_unit:048.html_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Documentation & Resources' heading and its list items are unsupported; no verified documentation links exist in facts.",
+      "unit_id": "inherited_unit:049.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The list of documentation links is unsupported; no verified documentation links exist in facts.",
+      "unit_id": "inherited_unit:050.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Scope and Limitations' heading is supported by the inherited unit and matches the section's purpose.",
+      "unit_id": "inherited_unit:051.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_barcode_foss.barcode.to_pdf",
+        "public_symbol:aspose_barcode_foss.encodeoptions"
+      ],
+      "rationale": "The list of limitations is supported by facts about PDF rendering and ECI/GS1 features.",
+      "unit_id": "inherited_unit:052.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Enterprise Edition link is unsupported; no verified aspose.com product target exists per policy.",
+      "unit_id": "inherited_unit:053.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Development and Testing' heading is unsupported; no build or test assets exist per the condition.",
+      "unit_id": "inherited_unit:054.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph about running tests is unsupported; no build or test assets exist per the condition.",
+      "unit_id": "inherited_unit:055.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The test command code block is unsupported; no build or test assets exist per the condition.",
+      "unit_id": "inherited_unit:056.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The examples README link is unsupported; no build or test assets exist per the condition.",
+      "unit_id": "inherited_unit:057.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Scope and Limitations' heading is supported by the inherited unit and matches the section's purpose.",
+      "unit_id": "inherited_unit:058.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:license"
+      ],
+      "rationale": "The license paragraph is supported by the license fact and matches the section's purpose.",
+      "unit_id": "inherited_unit:059.paragraph"
+    }
+  ]
+}

@@ -496,11 +496,22 @@ next_ready_items:
       mechanism that reliably catches or fixes this defect either way. 1040/1040 whole-repo
       tests pass (no src changes this round). Evidence:
       evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_seventh_full_cascade/.
+    eighth_cascade_2026_10_22: >
+      DONE: fired the full cascade (S3-S8) against an eighth repository
+      (aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python), the first run aimed at
+      portfolio-scale coverage rather than ecosystem-first coverage (a second Python
+      repository, different product family from aspose-3d-foss/Aspose.Cells-FOSS-for-
+      Python). S3-S6 all accepted on the first attempt. S8 coherence revised 9 units
+      across key_capabilities, quick_start, api_reference, and scope_limitations (its
+      heaviest revision load yet) but again left "opening" untouched. The known
+      duplicate-opening-paragraph defect repeated an eighth time (eighth for eighth).
+      1040/1040 whole-repo tests pass (no src changes this round). Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_eighth_full_cascade/.
     remaining: >
-      7 of 36 repositories now have a full real cascade run, one per ecosystem (python, go,
-      net, java, cpp, rust, typescript) -- every supported ecosystem has now been exercised
-      at least once, but the portfolio as a whole (36 repositories) is still far from fully
-      covered. Lane L format detection is already proven for all of them independently.
+      8 of 36 repositories now have a full real cascade run. All 7 ecosystems have been
+      exercised at least once (python x2, go, net, java, cpp, rust, typescript); the
+      portfolio as a whole (36 repositories) is still far from fully covered. Lane L
+      format detection is already proven for all of them independently.
       placement_errors IS now ported (2026-10-22, with references.py and the rest of the
       refusal/repair half -- dangling_pointers, uncited_omit_candidates, unprinted_commands,
       coordinate_neighbor_promises, reconcile_checks). But it does NOT, on its own, fix the
