@@ -1,0 +1,239 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:repository",
+      "package:name",
+      "package:version"
+    ],
+    "text": "Developers building Node.js applications in TypeScript who need to generate, modify, and export spreadsheet data in Excel-compatible formats."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:workbook.load",
+        "public_symbol:workbook.save",
+        "format:input.html"
+      ],
+      "text": "Load existing .xlsx files and HTML files using Workbook.load() and save workbooks back to .xlsx using Workbook.save().",
+      "title": "Load and save Excel workbooks"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cell.putvalue",
+        "public_symbol:cell.setformula",
+        "public_symbol:cell.setsharedstrings"
+      ],
+      "text": "Read and write cell values, formulas, and shared strings using Cell.putValue(), Cell.setFormula(), and Cell.setSharedStrings().",
+      "title": "Cell data manipulation"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:style",
+        "public_symbol:font",
+        "public_symbol:fill",
+        "public_symbol:border",
+        "public_symbol:alignment"
+      ],
+      "text": "Apply comprehensive formatting including font, fill, border, alignment, number formats, and protection through Style, Font, Fill, Border, and Alignment objects.",
+      "title": "Full cell and range styling"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheet.setcolumnwidth",
+        "public_symbol:worksheet.setrowheight",
+        "public_symbol:worksheet.mergecells",
+        "public_symbol:worksheet.setautofilter",
+        "public_symbol:worksheet.setrowhidden"
+      ],
+      "text": "Configure column widths, row heights, merged cells, auto filters, hidden rows, and default dimensions using Worksheet methods.",
+      "title": "Worksheet configuration"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:datavalidation.addarea",
+        "public_symbol:conditionalformat.addrule",
+        "public_symbol:colorscalerule",
+        "public_symbol:databarrule",
+        "public_symbol:iconsetrule"
+      ],
+      "text": "Apply data validation rules and conditional formatting including color scales, data bars, and icon sets to cell ranges.",
+      "title": "Data validation and conditional formatting"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheet.addhyperlink",
+        "public_symbol:worksheet.addcomment",
+        "public_symbol:hyperlinkcollection.add",
+        "public_symbol:commentcollection.add"
+      ],
+      "text": "Add hyperlinks and comments to cells using Worksheet.addHyperlink() and Worksheet.addComment() with corresponding collection management.",
+      "title": "Hyperlink and comment support"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook.tocsv",
+        "public_symbol:workbook.tojson",
+        "public_symbol:workbook.tomarkdown"
+      ],
+      "text": "Export workbook data to CSV, JSON, and Markdown formats using Workbook.toCsv(), Workbook.toJson(), and Workbook.toMarkdown().",
+      "title": "Text export formats"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook.load",
+        "public_symbol:workbook.tohtml",
+        "format:input.html",
+        "format:output.html"
+      ],
+      "text": "Import HTML files into workbooks using Workbook.load() and export styled HTML documents using Workbook.toHtml().",
+      "title": "HTML import and export"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "public_symbol:workbook.tocsv",
+        "public_symbol:workbook.tojson",
+        "public_symbol:workbook.tomarkdown"
+      ],
+      "text": "Text export (CSV, JSON, Markdown) returns strings only; no direct file-writing helpers are provided."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook.tocsv",
+        "public_symbol:workbook.tojson",
+        "public_symbol:workbook.tomarkdown"
+      ],
+      "text": "Text export is one-way; there is no corresponding import path to load CSV, JSON, or Markdown back into a Workbook."
+    },
+    {
+      "fact_ids": [
+        "package:name",
+        "package:version"
+      ],
+      "text": "The package has not been published to npm; installation must be performed from source."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:version"
+      ],
+      "text": "Enables programmatic Excel workbook creation and modification in TypeScript/Node.js environments without Microsoft Excel installed."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook",
+        "public_symbol:worksheet",
+        "public_symbol:cell",
+        "public_symbol:style"
+      ],
+      "text": "Provides a familiar API surface for developers experienced with Aspose.Cells, supporting Workbook, Worksheet, Cell, and Style objects."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook.tocsv",
+        "public_symbol:workbook.tojson",
+        "public_symbol:workbook.tomarkdown"
+      ],
+      "text": "Supports exporting workbook data to common text-based formats (CSV, JSON, Markdown) for reporting and data interchange."
+    },
+    {
+      "fact_ids": [
+        "format:input.html",
+        "format:output.html",
+        "public_symbol:workbook.load",
+        "public_symbol:workbook.tohtml"
+      ],
+      "text": "Allows importing HTML files and exporting workbooks as styled HTML documents for web-based reporting."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:repository",
+      "package:name",
+      "package:version"
+    ],
+    "text": "Aspose.Cells FOSS for TypeScript is a free, open-source TypeScript library for creating, loading, editing, and saving Excel .xlsx workbooks without requiring Microsoft Excel."
+  },
+  "uncertainties": [
+    "The repository does not specify minimum Node.js version requirements beyond TypeScript 5 or later being required.",
+    "Support for embedded charts, pivot tables, and other advanced Excel features is not confirmed by the available public symbols.",
+    "The exact scope of Excel formula calculation support is not evident from the available symbols.",
+    "Whether the library supports password-protected or encrypted workbooks is not specified in the public symbols.",
+    "The behavior of Workbook.load() when auto-detecting HTML files is not detailed beyond the format fact.",
+    "The extent of image and shape support beyond Workbook.images and Worksheet.shapes collections is not detailed.",
+    "The library's handling of multiple worksheets beyond basic collection operations is not fully evident.",
+    "Whether conditional formatting rules support custom formulas beyond the documented types is not confirmed."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "public_symbol:workbook.constructor",
+        "public_symbol:worksheet.cells",
+        "public_symbol:worksheet.putvalue",
+        "public_symbol:cell.setstyle",
+        "public_symbol:workbook.save"
+      ],
+      "name": "Create and save workbook",
+      "text": "Instantiate a Workbook, add data to cells using Worksheet.getCell2() or Worksheet.putValue(), apply styles via Cell.setStyle(), and save as .xlsx using Workbook.save()."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook.load",
+        "public_symbol:worksheet.getcellbyref",
+        "public_symbol:worksheet.getcell",
+        "public_symbol:cell.putvalue",
+        "public_symbol:cell.setformula",
+        "public_symbol:workbook.save"
+      ],
+      "name": "Load and modify existing workbook",
+      "text": "Load an existing .xlsx file using Workbook.load(), access cells via Worksheet.getCellByRef() or Worksheet.getCell(), update values or formulas, and save changes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:style.constructor",
+        "public_symbol:font",
+        "public_symbol:fill",
+        "public_symbol:border",
+        "public_symbol:alignment",
+        "public_symbol:cell.setstyle",
+        "public_symbol:worksheet.setcellstyle"
+      ],
+      "name": "Apply formatting and styling",
+      "text": "Create Style objects with Font, Fill, Border, and Alignment properties, then assign them to cells using Cell.setStyle() or Worksheet.setCellStyle()."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook.tocsv",
+        "public_symbol:workbook.tojson",
+        "public_symbol:workbook.tomarkdown"
+      ],
+      "name": "Export to text formats",
+      "text": "Call Workbook.toCsv(), Workbook.toJson(), or Workbook.toMarkdown() to obtain string representations of workbook data for external processing or file writing."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheet.setcolumnwidth",
+        "public_symbol:worksheet.setrowheight",
+        "public_symbol:worksheet.mergecells",
+        "public_symbol:worksheet.setautofilter",
+        "public_symbol:worksheet.setrowhidden"
+      ],
+      "name": "Configure worksheet features",
+      "text": "Set column widths, row heights, merged cells, auto filters, and hidden rows using Worksheet methods like setColumnWidth(), setRowHeight(), mergeCells(), and setAutoFilter()."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:datavalidation.addarea",
+        "public_symbol:conditionalformat.addarea",
+        "public_symbol:worksheet.adddatavalidation",
+        "public_symbol:worksheet.addconditionalformat"
+      ],
+      "name": "Add data validation and conditional formatting",
+      "text": "Create DataValidation and ConditionalFormat objects, add them to Worksheet.dataValidations and Worksheet.conditionalFormats collections, and apply rules to cell ranges."
+    }
+  ]
+}

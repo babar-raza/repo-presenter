@@ -1,0 +1,421 @@
+{
+  "dispositions": [
+    {
+      "destination_section": "identity",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:version"
+      ],
+      "rationale": "The H1 product name is rendered deterministically from identity and package facts.",
+      "unit_id": "inherited_unit:001.heading"
+    },
+    {
+      "destination_section": "badges",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:version"
+      ],
+      "rationale": "The badge row is rendered deterministically from identity and package facts.",
+      "unit_id": "inherited_unit:002.badge_row"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a product illustration or homepage link; the banner condition is not met.",
+      "unit_id": "inherited_unit:003.badge_row"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:version",
+        "public_symbol:workbook",
+        "public_symbol:worksheet",
+        "public_symbol:cell",
+        "public_symbol:style",
+        "format:input.html",
+        "format:output.html",
+        "public_symbol:workbook.tocsv",
+        "public_symbol:workbook.tojson",
+        "public_symbol:workbook.tomarkdown"
+      ],
+      "rationale": "The paragraph's substance is supported by facts about product identity, API surface, and supported formats.",
+      "unit_id": "inherited_unit:004.paragraph"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Navigation heading is rendered deterministically by the navigation section.",
+      "unit_id": "inherited_unit:005.heading"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The navigation list is rendered deterministically by the navigation section.",
+      "unit_id": "inherited_unit:006.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The At a Glance section is not rendered because the Mermaid diagram condition is not met (no public_symbol facts for Workbook.load or Workbook.save are provided",
+      "unit_id": "inherited_unit:007.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Mermaid diagram is unsupported because no public_symbol facts for Workbook.load or Workbook.save are provided in the facts list.",
+      "unit_id": "inherited_unit:008.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:workbook",
+        "public_symbol:worksheet",
+        "public_symbol:cell",
+        "public_symbol:style",
+        "format:input.html",
+        "format:output.html",
+        "public_symbol:workbook.tocsv",
+        "public_symbol:workbook.tojson",
+        "public_symbol:workbook.tomarkdown"
+      ],
+      "rationale": "The heading is supported by facts about key capabilities and is placed in the key_capabilities section.",
+      "unit_id": "inherited_unit:009.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:workbook",
+        "public_symbol:worksheet",
+        "public_symbol:cell",
+        "public_symbol:style",
+        "format:input.html",
+        "format:output.html",
+        "public_symbol:workbook.tocsv",
+        "public_symbol:workbook.tojson",
+        "public_symbol:workbook.tomarkdown"
+      ],
+      "rationale": "The list items are supported by facts about key capabilities and are placed in the key_capabilities section.",
+      "unit_id": "inherited_unit:010.list"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Installation heading is rendered deterministically by the installation section.",
+      "unit_id": "inherited_unit:011.heading"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:name",
+        "package:version"
+      ],
+      "rationale": "The paragraph about npm not being published is supported by package facts and is placed in the opening section.",
+      "unit_id": "inherited_unit:012.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "install_command:npm",
+        "package:name",
+        "package:version"
+      ],
+      "rationale": "The installation code block is supported by facts about installation from source and is placed in the opening section.",
+      "unit_id": "inherited_unit:013.code_block"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Dependencies heading is rendered deterministically by the dependencies section.",
+      "unit_id": "inherited_unit:014.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Required Package Dependencies heading is rendered deterministically by the dependencies section.",
+      "unit_id": "inherited_unit:015.heading"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:adm-zip",
+        "dependency:xmldom-xmldom",
+        "dependency:zip.js-zip.js"
+      ],
+      "rationale": "The list of required dependencies is supported by facts and is placed in the opening section.",
+      "unit_id": "inherited_unit:016.list"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Native and System Requirements heading is rendered deterministically by the dependencies section.",
+      "unit_id": "inherited_unit:017.heading"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:name",
+        "package:version"
+      ],
+      "rationale": "The list about Node.js and TypeScript requirements is supported by package facts and is placed in the opening section.",
+      "unit_id": "inherited_unit:018.list"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Development Dependencies heading is rendered deterministically by the dependencies section.",
+      "unit_id": "inherited_unit:019.heading"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:development.ts-node",
+        "dependency:development.tsx",
+        "dependency:development.types-node",
+        "dependency:development.typescript"
+      ],
+      "rationale": "The list of development dependencies is supported by facts and is placed in the opening section.",
+      "unit_id": "inherited_unit:020.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Quick Start section is not rendered because no example is verified to execute in isolation.",
+      "unit_id": "inherited_unit:021.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Quick Start lead-in is unsupported because the Quick Start section is not rendered.",
+      "unit_id": "inherited_unit:022.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Quick Start example is unsupported because the Quick Start section is not rendered.",
+      "unit_id": "inherited_unit:023.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The second Quick Start lead-in is unsupported because the Quick Start section is not rendered.",
+      "unit_id": "inherited_unit:024.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The second Quick Start example is unsupported because the Quick Start section is not rendered.",
+      "unit_id": "inherited_unit:025.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Additional Examples section is not rendered because no further verified example is available.",
+      "unit_id": "inherited_unit:026.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Additional Examples lead-in is unsupported because the Additional Examples section is not rendered.",
+      "unit_id": "inherited_unit:027.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Export to HTML heading is unsupported because the Additional Examples section is not rendered.",
+      "unit_id": "inherited_unit:028.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Export to HTML example is unsupported because the Additional Examples section is not rendered.",
+      "unit_id": "inherited_unit:029.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Additional Examples details block is unsupported because the Additional Examples section is not rendered.",
+      "unit_id": "inherited_unit:030.html_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Additional Examples table is unsupported because the Additional Examples section is not rendered.",
+      "unit_id": "inherited_unit:031.table"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Additional Examples closing details block is unsupported because the Additional Examples section is not rendered.",
+      "unit_id": "inherited_unit:032.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:workbook",
+        "public_symbol:worksheet",
+        "public_symbol:cell",
+        "public_symbol:style"
+      ],
+      "rationale": "The API Reference heading is supported by facts about public symbols and is placed in the api_reference section.",
+      "unit_id": "inherited_unit:033.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:workbook",
+        "public_symbol:worksheet",
+        "public_symbol:cell",
+        "public_symbol:style"
+      ],
+      "rationale": "The API Reference intro is supported by facts about public symbols and is placed in the api_reference section.",
+      "unit_id": "inherited_unit:034.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The API Reference details block is unsupported because the full API table is not verified.",
+      "unit_id": "inherited_unit:035.html_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Core API heading is unsupported because the full API table is not verified.",
+      "unit_id": "inherited_unit:036.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Core API table is unsupported because the full API table is not verified.",
+      "unit_id": "inherited_unit:037.table"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The API Reference closing details block is unsupported because the full API table is not verified.",
+      "unit_id": "inherited_unit:038.html_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Documentation & Resources section is not rendered because no verified documentation targets exist.",
+      "unit_id": "inherited_unit:039.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Documentation & Resources list is unsupported because the Documentation & Resources section is not rendered.",
+      "unit_id": "inherited_unit:040.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading '## Scope and Limitations' is superseded by the deterministic section 'scope_limitations' which renders its own heading.",
+      "unit_id": "inherited_unit:041.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:workbook.tocsv",
+        "public_symbol:workbook.tojson",
+        "public_symbol:workbook.tomarkdown"
+      ],
+      "rationale": "The list items about text export being string-only and one-way are directly supported by the public symbols for toCsv, toJson, and toMarkdown.",
+      "unit_id": "inherited_unit:042.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about Aspose.Cells for .NET — Enterprise Edition; the condition for enterprise_relationship is not met.",
+      "unit_id": "inherited_unit:043.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading '## Development and Testing' is superseded by the deterministic section 'development_testing', but that section is not rendered because its required",
+      "unit_id": "inherited_unit:044.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph about build and type-check commands is unsupported because the condition for development_testing (build or test assets exist) does not hold at the",
+      "unit_id": "inherited_unit:045.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The code block is unsupported because the condition for development_testing (build or test assets exist) does not hold at the revision.",
+      "unit_id": "inherited_unit:046.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph referencing AGENTS.md is unsupported because the condition for development_testing (build or test assets exist) does not hold at the revision.",
+      "unit_id": "inherited_unit:047.paragraph"
+    },
+    {
+      "destination_section": "license",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading '## License' is superseded by the deterministic section 'license' which renders its own heading.",
+      "unit_id": "inherited_unit:048.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The license paragraph is not supported by any fact, but its content is generic and matches the license fact's substance; however, license is deterministic and",
+      "unit_id": "inherited_unit:049.paragraph"
+    }
+  ]
+}

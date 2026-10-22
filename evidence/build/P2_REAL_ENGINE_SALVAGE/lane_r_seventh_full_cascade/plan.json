@@ -1,0 +1,345 @@
+{
+  "additional_example_ids": [],
+  "api_hubs": [
+    {
+      "fact_ids": [
+        "public_symbol:workbook.load",
+        "public_symbol:workbook.save",
+        "public_symbol:workbook.worksheets",
+        "public_symbol:workbook.tohtml",
+        "public_symbol:workbook.tocsv",
+        "public_symbol:workbook.tojson",
+        "public_symbol:workbook.tomarkdown"
+      ],
+      "symbol_fact_id": "public_symbol:workbook"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheet.cells",
+        "public_symbol:worksheet.name",
+        "public_symbol:worksheet.getcell",
+        "public_symbol:worksheet.getcell2",
+        "public_symbol:worksheet.getcellbyref",
+        "public_symbol:worksheet.putvalue",
+        "public_symbol:worksheet.setcellstyle"
+      ],
+      "symbol_fact_id": "public_symbol:worksheet"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cell.putvalue",
+        "public_symbol:cell.setformula",
+        "public_symbol:cell.setstyle",
+        "public_symbol:cell.style",
+        "public_symbol:cell.value",
+        "public_symbol:cell.formula",
+        "public_symbol:cell.hyperlink"
+      ],
+      "symbol_fact_id": "public_symbol:cell"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:style.font",
+        "public_symbol:style.fill",
+        "public_symbol:style.border",
+        "public_symbol:style.alignment",
+        "public_symbol:style.numberformat",
+        "public_symbol:style.protection",
+        "public_symbol:style.constructor"
+      ],
+      "symbol_fact_id": "public_symbol:style"
+    }
+  ],
+  "at_a_glance": {
+    "capability_titles": [
+      "Load and save Excel workbooks",
+      "Cell data manipulation",
+      "Full cell and range styling",
+      "Worksheet configuration",
+      "Data validation and conditional formatting",
+      "Hyperlink and comment support",
+      "Text export formats",
+      "HTML import and export"
+    ],
+    "input_format_ids": [
+      "format:input.html"
+    ],
+    "output_format_ids": [
+      "format:output.html"
+    ]
+  },
+  "core_capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:workbook.load",
+        "public_symbol:workbook.save",
+        "format:input.html"
+      ],
+      "shared_fact_ids": [
+        "format:input.html",
+        "public_symbol:workbook.load"
+      ],
+      "title": "Load and save Excel workbooks"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cell.putvalue",
+        "public_symbol:cell.setformula",
+        "public_symbol:cell.setsharedstrings"
+      ],
+      "shared_fact_ids": [],
+      "title": "Cell data manipulation"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:style",
+        "public_symbol:font",
+        "public_symbol:fill",
+        "public_symbol:border",
+        "public_symbol:alignment"
+      ],
+      "shared_fact_ids": [],
+      "title": "Full cell and range styling"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheet.setcolumnwidth",
+        "public_symbol:worksheet.setrowheight",
+        "public_symbol:worksheet.mergecells",
+        "public_symbol:worksheet.setautofilter",
+        "public_symbol:worksheet.setrowhidden"
+      ],
+      "shared_fact_ids": [],
+      "title": "Worksheet configuration"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:datavalidation.addarea",
+        "public_symbol:conditionalformat.addrule",
+        "public_symbol:colorscalerule",
+        "public_symbol:databarrule",
+        "public_symbol:iconsetrule"
+      ],
+      "shared_fact_ids": [],
+      "title": "Data validation and conditional formatting"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheet.addhyperlink",
+        "public_symbol:worksheet.addcomment",
+        "public_symbol:hyperlinkcollection.add",
+        "public_symbol:commentcollection.add"
+      ],
+      "shared_fact_ids": [],
+      "title": "Hyperlink and comment support"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook.tocsv",
+        "public_symbol:workbook.tojson",
+        "public_symbol:workbook.tomarkdown"
+      ],
+      "shared_fact_ids": [],
+      "title": "Text export formats"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook.load",
+        "public_symbol:workbook.tohtml",
+        "format:input.html",
+        "format:output.html"
+      ],
+      "shared_fact_ids": [
+        "format:input.html",
+        "public_symbol:workbook.load"
+      ],
+      "title": "HTML import and export"
+    }
+  ],
+  "deviations": [
+    {
+      "fact_ids": [
+        "inherited_unit:007.heading",
+        "inherited_unit:008.code_block"
+      ],
+      "section_id": "at_a_glance",
+      "text": "The Mermaid diagram condition is not met because the required public_symbol facts for Workbook.load and Workbook.save are not provided in the facts list."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:021.heading",
+        "inherited_unit:022.paragraph",
+        "inherited_unit:023.code_block",
+        "inherited_unit:024.paragraph",
+        "inherited_unit:025.code_block"
+      ],
+      "section_id": "quick_start",
+      "text": "No example is verified to execute in isolation; the Quick Start section is omitted."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:026.heading",
+        "inherited_unit:027.paragraph",
+        "inherited_unit:028.heading",
+        "inherited_unit:029.code_block",
+        "inherited_unit:030.html_block",
+        "inherited_unit:031.table",
+        "inherited_unit:032.html_block"
+      ],
+      "section_id": "additional_examples",
+      "text": "No further verified example is available; the Additional Examples section is omitted."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:035.html_block",
+        "inherited_unit:036.heading",
+        "inherited_unit:037.table",
+        "inherited_unit:038.html_block"
+      ],
+      "section_id": "api_reference",
+      "text": "The full API table is not verified; only the Core API heading and table are omitted."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:039.heading",
+        "inherited_unit:040.list"
+      ],
+      "section_id": "documentation_resources",
+      "text": "No verified documentation targets exist; the Documentation & Resources section is omitted."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:044.heading",
+        "inherited_unit:045.paragraph",
+        "inherited_unit:046.code_block",
+        "inherited_unit:047.paragraph"
+      ],
+      "section_id": "development_testing",
+      "text": "The condition for development_testing (build or test assets exist) does not hold at the revision; the Development and Testing section is omitted."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:043.paragraph"
+      ],
+      "section_id": "enterprise_relationship",
+      "text": "No fact supports the claim about Aspose.Cells for .NET — Enterprise Edition; the condition for enterprise_relationship is not met."
+    }
+  ],
+  "flagship_example_id": null,
+  "links": [],
+  "material_limitations": [
+    {
+      "fact_ids": [
+        "public_symbol:workbook.tocsv",
+        "public_symbol:workbook.tojson",
+        "public_symbol:workbook.tomarkdown"
+      ],
+      "unit_ids": [
+        "inherited_unit:042.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "package:name",
+        "package:version"
+      ],
+      "unit_ids": [
+        "inherited_unit:012.paragraph"
+      ]
+    }
+  ],
+  "quick_start_example_id": null,
+  "second_quick_start_example_id": null,
+  "sections": [
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "identity"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "badges"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "banner"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "opening"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "navigation"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "at_a_glance"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "key_capabilities"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "installation"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "dependencies"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "quick_start"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "additional_examples"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "api_reference"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "documentation_resources"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "scope_limitations"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "development_testing"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "third_party_notices"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "license"
+    }
+  ]
+}

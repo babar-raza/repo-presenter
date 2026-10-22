@@ -483,11 +483,24 @@ next_ready_items:
       alike). Sixth for sixth: every cascade fired this session shows this defect class.
       1040/1040 whole-repo tests pass (11 skipped, no src changes this round). Evidence:
       evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_sixth_full_cascade/.
+    seventh_cascade_2026_10_22: >
+      DONE: fired the full cascade (S3-S8) against a seventh repository/ecosystem
+      (aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript), the last untried ecosystem --
+      every supported ecosystem has now had a full real cascade run at least once. S4 and
+      S6 accepted on the first attempt; S8 coherence's second batch needed one real
+      reject->accept cycle, revising two scope_limitations units (not opening). The known
+      duplicate-opening-paragraph defect repeated a seventh time (seventh for seventh,
+      across all seven ecosystems). This run's coherence pass left "opening" untouched,
+      unlike the sixth (rust) run where it worsened the same unit -- confirming coherence's
+      revise/no-revise choice for "opening" is incidental to its batching logic, not a
+      mechanism that reliably catches or fixes this defect either way. 1040/1040 whole-repo
+      tests pass (no src changes this round). Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_seventh_full_cascade/.
     remaining: >
-      6 of 36 repositories now have a full real cascade run (python, go, net, java, cpp,
-      rust); not yet at portfolio scale, and typescript is the only ecosystem still
-      untried for the full cascade (Lane L format detection is already proven for all of
-      them independently).
+      7 of 36 repositories now have a full real cascade run, one per ecosystem (python, go,
+      net, java, cpp, rust, typescript) -- every supported ecosystem has now been exercised
+      at least once, but the portfolio as a whole (36 repositories) is still far from fully
+      covered. Lane L format detection is already proven for all of them independently.
       placement_errors IS now ported (2026-10-22, with references.py and the rest of the
       refusal/repair half -- dangling_pointers, uncited_omit_candidates, unprinted_commands,
       coordinate_neighbor_promises, reconcile_checks). But it does NOT, on its own, fix the
