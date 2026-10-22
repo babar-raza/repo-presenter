@@ -1,0 +1,8 @@
+{
+  "attempt": 1,
+  "content": "{\n  \"units\": [\n    {\n      \"section\": \"opening\",\n      \"slot\": \"opening\",\n      \"text\": \"Aspose.Page FOSS for Python reads .eps, .pdf, .png, .ps, and .xps input formats. It converts .ps, .eps, and .xps documents to .pdf output and renders them to raster formats such as .png. It builds page content programmatically through its render model and writes PDF or raster output without Ghostscript or Adobe tooling. Raster output uses the free skia-python package, which has native components.\",\n      \"fact_ids\": [\n        \"format:input.eps\",\n        \"format:input.pdf\",\n        \"format:input.png\",\n        \"format:input.ps\",\n        \"format:input.xps\",\n        \"example:001\",\n        \"example:002\",\n        \"example:003\",\n        \"example:004\",\n        \"example:005\",\n        \"example:006\",\n        \"example:007\",\n        \"dependency:skia-python\",\n        \"inherited_unit:004.paragraph\"\n      ]\n    }\n  ],\n  \"omitted\": []\n}",
+  "job": "section_authoring",
+  "rejection": [
+    "unit opening: restates the inherited paragraph the renderer already preserves verbatim right beside \"opening\"'s own unit; state only what that paragraph does not already say (name the specific classes, methods, or actions the facts carry), never the product's identity, license, or dependency-freedom again"
+  ]
+}

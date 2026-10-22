@@ -55,3 +55,20 @@ finding; report observations, not claims of progress) -- a halted cascade that s
 problem is strictly better than a completed one that silently ships a duplicate. This cascade
 (aspose-email-foss/Aspose.Email-FOSS-for-.Net) is left incomplete, not forced through with a
 workaround; the twelfth full cascade this session fires against a different repository instead.
+
+## Second confirmed instance: aspose-page-foss/Aspose.Page-FOSS-for-Python
+
+The identical pattern recurred while attempting a fourteenth-cascade repository. The live
+README's preserved paragraph states: "is a free, open-source, MIT-licensed, pure-Python library
+for working with PostScript, Encapsulated PostScript (EPS), and XPS documents. It reads and
+authors PS/EPS and XPS content directly, builds page content programmatically through its own
+render model, and writes PDF or raster ... output without Ghostscript or Adobe tooling." Both of
+S6's attempts for "opening" (`page_foss_attempt_1_rejected.json`,
+`page_foss_attempt_2_rejected.json`) restated the same formats, the same render-model mechanism,
+and the same "without Ghostscript or Adobe tooling" claim in different words; the second attempt
+again dropped most other citable facts rather than reach for genuinely distinguishing ones. The
+check correctly rejected both; recovery found nothing salvageable; the job failed closed. This
+repository's cascade is also left incomplete, not forced through. Two independent repositories
+have now shown this exact fail-closed pattern (an unusually comprehensive/well-written preserved
+README paragraph leaves the model nothing non-redundant to say for "opening"), reinforcing that
+it is a real, repeatable consequence of this fix's correct behavior, not a one-off fluke.
