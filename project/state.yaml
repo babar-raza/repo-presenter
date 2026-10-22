@@ -537,9 +537,20 @@ next_ready_items:
       much either side chooses to restate, not with anything in the unported catching
       layer. 1040/1040 whole-repo tests pass (no src changes this round). Evidence:
       evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_tenth_full_cascade/.
+    eleventh_cascade_2026_10_22: >
+      DONE: fired the full cascade (S3-S8) against an eleventh repository
+      (aspose-email-foss/Aspose.Email-FOSS-for-Python), a fourth Python repository, and the
+      first cascade fired with CLOSE_DUPLICATE_OPENING_PARAGRAPH_PARTIAL's fix wired in from
+      the start rather than retrofitted. S3-S6 all accepted on the first attempt.
+      coherence#2 needed one real reject->accept cycle; the final accepted output matches
+      the pre-coherence text exactly (no revision). The known duplicate-opening defect
+      repeated an eleventh time in its mild-to-moderate form (not near-total duplication),
+      which this fix does not target -- still correctly not caught, as scoped. 1052/1052
+      whole-repo tests pass (no src changes this round). Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_eleventh_full_cascade/.
     remaining: >
-      10 of 36 repositories now have a full real cascade run. All 7 ecosystems have been
-      exercised at least once (python x3, go, net, java, cpp, rust, typescript x2); the
+      11 of 36 repositories now have a full real cascade run. All 7 ecosystems have been
+      exercised at least once (python x4, go, net, java, cpp, rust, typescript x2); the
       portfolio as a whole (36 repositories) is still far from fully covered. Lane L
       format detection is already proven for all of them independently.
       placement_errors IS now ported (2026-10-22, with references.py and the rest of the

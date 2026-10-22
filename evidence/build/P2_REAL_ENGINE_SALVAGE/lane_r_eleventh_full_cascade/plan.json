@@ -1,0 +1,341 @@
+{
+  "additional_example_ids": [
+    "example:003",
+    "example:004",
+    "example:006"
+  ],
+  "api_hubs": [
+    {
+      "fact_ids": [
+        "public_symbol:email_foss.msg.mapi_message",
+        "public_symbol:email_foss.msg.mapimessage"
+      ],
+      "symbol_fact_id": "public_symbol:email_foss.msg.mapimessage"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:email_foss.msg.msgreader"
+      ],
+      "symbol_fact_id": "public_symbol:email_foss.msg.msgreader"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:email_foss.msg.msgwriter"
+      ],
+      "symbol_fact_id": "public_symbol:email_foss.msg.msgwriter"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:email_foss.cfb.cfbreader"
+      ],
+      "symbol_fact_id": "public_symbol:email_foss.cfb.cfbreader"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:email_foss.cfb.cfbwriter"
+      ],
+      "symbol_fact_id": "public_symbol:email_foss.cfb.cfbwriter"
+    }
+  ],
+  "at_a_glance": {
+    "capability_titles": [
+      "Read and write MSG files",
+      "Convert between MSG and EML",
+      "Low-level CFB processing",
+      "Low-level MSG property access",
+      "Add attachments and recipients",
+      "Set and get MAPI properties"
+    ],
+    "input_format_ids": [
+      "format:input.eml",
+      "format:input.msg"
+    ],
+    "output_format_ids": [
+      "format:output.msg"
+    ]
+  },
+  "core_capabilities": [
+    {
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "public_symbol:email_foss.msg.mapi_message",
+        "public_symbol:email_foss.msg.mapimessage",
+        "public_symbol:email_foss.msg.msgreader",
+        "public_symbol:email_foss.msg.msgwriter"
+      ],
+      "shared_fact_ids": [
+        "example:002",
+        "public_symbol:email_foss.msg.mapi_message",
+        "public_symbol:email_foss.msg.msgreader"
+      ],
+      "title": "Read and write MSG files"
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "example:004",
+        "format:input.eml",
+        "format:input.msg",
+        "format:output.msg",
+        "public_symbol:email_foss.msg.mapi_message"
+      ],
+      "shared_fact_ids": [
+        "public_symbol:email_foss.msg.mapi_message"
+      ],
+      "title": "Convert between MSG and EML"
+    },
+    {
+      "fact_ids": [
+        "example:006",
+        "public_symbol:email_foss.cfb",
+        "public_symbol:email_foss.cfb.cfbreader",
+        "public_symbol:email_foss.cfb.cfbwriter",
+        "public_symbol:email_foss.cfb.cfbstorage",
+        "public_symbol:email_foss.cfb.cfbstream"
+      ],
+      "shared_fact_ids": [],
+      "title": "Low-level CFB processing"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:email_foss.msg.msgreader",
+        "public_symbol:email_foss.msg.msgdocument",
+        "public_symbol:email_foss.msg.mapi_message"
+      ],
+      "shared_fact_ids": [
+        "public_symbol:email_foss.msg.mapi_message",
+        "public_symbol:email_foss.msg.msgreader"
+      ],
+      "title": "Low-level MSG property access"
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "public_symbol:email_foss.msg.mapi_message",
+        "public_symbol:email_foss.msg.mapiattachment",
+        "public_symbol:email_foss.msg.mapirecipient"
+      ],
+      "shared_fact_ids": [
+        "example:002",
+        "public_symbol:email_foss.msg.mapi_message"
+      ],
+      "title": "Add attachments and recipients"
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "public_symbol:email_foss.msg.mapi_message",
+        "public_symbol:email_foss.msg.property_id",
+        "public_symbol:email_foss.msg.mapinamedproperty"
+      ],
+      "shared_fact_ids": [
+        "example:002",
+        "public_symbol:email_foss.msg.mapi_message"
+      ],
+      "title": "Set and get MAPI properties"
+    }
+  ],
+  "deviations": [
+    {
+      "fact_ids": [
+        "inherited_unit:003.badge_row"
+      ],
+      "section_id": "banner",
+      "text": "No product illustration or homepage link is supported by facts; the banner is omitted."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:008.code_block"
+      ],
+      "section_id": "at_a_glance",
+      "text": "The Mermaid diagram from the inherited README is omitted; the section is rendered as a deterministic table of inputs, outputs, and capabilities."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:051.heading",
+        "inherited_unit:053.001.list",
+        "inherited_unit:053.002.list",
+        "inherited_unit:053.003.list",
+        "inherited_unit:053.004.list",
+        "inherited_unit:053.005.list",
+        "inherited_unit:053.006.list",
+        "inherited_unit:055.001.list",
+        "inherited_unit:055.002.list",
+        "inherited_unit:055.003.list",
+        "inherited_unit:055.004.list",
+        "inherited_unit:055.005.list"
+      ],
+      "section_id": "api_reference",
+      "text": "Detailed member reference tables are omitted; the section is rendered as a deterministic public symbol inventory."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:063.heading",
+        "inherited_unit:064.list"
+      ],
+      "section_id": "documentation_resources",
+      "text": "The Documentation & Resources section is omitted because no verified relevant targets exist."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:067.paragraph"
+      ],
+      "section_id": "enterprise_relationship",
+      "text": "The Enterprise Edition relationship is omitted because no verified aspose.com product target exists."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:068.heading",
+        "inherited_unit:069.paragraph",
+        "inherited_unit:070.code_block",
+        "inherited_unit:071.paragraph",
+        "inherited_unit:072.code_block",
+        "inherited_unit:073.paragraph"
+      ],
+      "section_id": "development_testing",
+      "text": "The Development and Testing section is omitted because build or test assets are not verified."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:074.heading"
+      ],
+      "section_id": "third_party_notices",
+      "text": "The Third-Party Notices section is omitted because the file is not verified."
+    }
+  ],
+  "flagship_example_id": "example:003",
+  "links": [],
+  "material_limitations": [
+    {
+      "fact_ids": [
+        "install_command:pip",
+        "package:name"
+      ],
+      "unit_ids": [
+        "inherited_unit:066.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "install_command:pip",
+        "package:name"
+      ],
+      "unit_ids": [
+        "inherited_unit:066.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "install_command:pip",
+        "package:name"
+      ],
+      "unit_ids": [
+        "inherited_unit:066.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "install_command:pip",
+        "package:name"
+      ],
+      "unit_ids": [
+        "inherited_unit:066.list"
+      ]
+    }
+  ],
+  "quick_start_example_id": "example:001",
+  "second_quick_start_example_id": "example:002",
+  "sections": [
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "identity"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "badges"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "banner"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "opening"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "navigation"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "at_a_glance"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "key_capabilities"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "installation"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "dependencies"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "quick_start"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "additional_examples"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "api_reference"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "documentation_resources"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "scope_limitations"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "development_testing"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "third_party_notices"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "license"
+    }
+  ]
+}
