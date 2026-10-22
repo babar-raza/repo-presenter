@@ -1,0 +1,737 @@
+"""Run the README's Python examples against the repository's own package, in isolation.
+
+A disposable, pip-less virtual environment is created under a short workspace from the
+interpreter the manifest's ``requires-python`` admits - the presenter's own whenever it does,
+else a pinned toolchain under ``runs/verify`` (G4-W17 arrival item 52) - the pinned clone is
+installed by the presenter's pip, run under that interpreter, into a target directory that only
+that environment sees, and every candidate runs as its own process under the bounded secret-free
+execution boundary with a fresh working directory.
+Input files an example opens are staged from repository-owned files of the same name or
+extension when the tree has one, and the receipt names what was staged. An example that fails
+is recorded as failed; nothing is explained away.
+
+Ported (REUSE, near-verbatim) from the old repository-presenter project's
+``components/readme/extractors/platforms/python_examples.py`` per migration/reuse-manifest.yaml;
+only import paths are adapted.
+"""
+
+from __future__ import annotations
+
+import ast
+import os
+import re
+import shutil
+import sys
+import tomllib
+from collections.abc import Callable, Sequence
+from dataclasses import dataclass, replace
+from pathlib import Path
+
+from packaging.specifiers import InvalidSpecifier, SpecifierSet
+from packaging.version import InvalidVersion, Version
+
+from repo_presenter.core.ecosystems import PYTHON
+from repo_presenter.core.examples import ExampleCandidate, ExampleReceipt, FixtureBinding
+from repo_presenter.core.execution import ExecutionResult, execute, profile_environment
+from repo_presenter.core.toolchains import installed_pythons
+
+# The spec owns the numbers; these names keep the module readable and the failure message
+# honest about what it waited for (RESEARCH_AND_GUIDELINES.md section 29.6 E5).
+EXAMPLE_TIMEOUT_SECONDS = PYTHON.example_timeout_seconds
+INSTALL_TIMEOUT_SECONDS = PYTHON.install_timeout_seconds
+_MAX_OUTPUT_CHARS = 4000
+_FILE_LITERAL = re.compile(r"^[\w./-]+\.[A-Za-z0-9]{1,5}$")
+_ERROR_LINE = re.compile(r"^(\w+(?:\.\w+)*(?:Error|Exception|Warning))(?::|$)", re.MULTILINE)
+# The path an example's own FileNotFoundError names (G4-W17 arrival item 53): `open()` reprs the
+# name it was handed, so the quotes are repr's and a Windows separator arrives doubled.
+_MISSING_PATH = re.compile(r"No such file or directory: (['\"])(.+?)\1\s*$", re.MULTILINE)
+# The top-level module an example's own ModuleNotFoundError names (G4-W17 arrival item 70).
+_MISSING_MODULE = re.compile(r"No module named ['\"]([\w.]+)['\"]")
+# A requirement string's own package name, the part pip resolves against (`reportlab` from
+# `reportlab>=3.6`, `some-pkg` from `some-pkg[extra]>=1`); stops at the first specifier, marker,
+# or extras-bracket character.
+_REQUIREMENT_NAME = re.compile(r"^[A-Za-z0-9_.-]+")
+# Where the pinned interpreters live when not beside the workspace (G4-W17 arrival item 52): the
+# same override shape typescript_examples gives its toolchain registry, never a PATH edit.
+PYTHON_TOOLCHAINS_VARIABLE = "RP_PYTHON_TOOLCHAINS"
+# uv writes `version_info = 3.12` into every venv it creates; the stock `venv` writes `version`.
+_VERSION_INFO = re.compile(r"^version(?:_info)?\s*=\s*(\S+)", re.MULTILINE)
+# Same constant, same value, as java_examples.py/net_examples.py's own copies (§7.4 forbids one
+# platform's extractor importing another's, so the small helper below is duplicated, not shared).
+_WORKSPACE_ATTEMPTS = 5
+
+
+def _venv_python(venv: Path) -> Path:
+    scripts = venv / ("Scripts" if sys.platform == "win32" else "bin")
+    return scripts / ("python.exe" if sys.platform == "win32" else "python")
+
+
+def _fresh_workspace(workspace: Path) -> Path | None:
+    """An empty workspace, even when Windows will not let the last one go.
+
+    This checkout is on OneDrive, which holds handles: measured 2026-09-27 on
+    `aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python`, the top-of-function
+    `shutil.rmtree(workspace)` this replaced raised `PermissionError: [WinError 32] ... being used
+    by another process` on the *workspace directory itself* (not a file inside it - all of
+    `venv`/`site`/`cache`/`home`/`example_NNN` had already been removed by the time the final
+    `os.rmdir` ran), reproducing byte-for-byte on a second, independent `--fresh` draw immediately
+    after. Confirmed transient, not a permissions defect: the identical directory removed cleanly
+    moments later with no code change, once whatever held it (OneDrive sync, antivirus scanning
+    the just-created venv's own `python.exe`/DLLs, or contention from this same machine's other
+    concurrent worktrees) let go. `java_examples.py`/`net_examples.py` already carry this exact
+    fix for the same OneDrive symptom under WinError 145 (a stale build's own locked file); this
+    is the identical class one Windows error code over, on Python's own top-level reset instead of
+    a nested build artifact. A run that cannot have the directory back can always have the next
+    one; failing to clean scratch space must never cost a repository its candidate. `None` means
+    every attempt was refused.
+    """
+    for suffix in range(_WORKSPACE_ATTEMPTS):
+        candidate = workspace if suffix == 0 else workspace.with_name(f"{workspace.name}-{suffix}")
+        shutil.rmtree(candidate, ignore_errors=True)
+        if candidate.exists():
+            continue
+        candidate.mkdir(parents=True)
+        return candidate
+    return None
+
+
+def _clip(text: str) -> str:
+    return text if len(text) <= _MAX_OUTPUT_CHARS else text[-_MAX_OUTPUT_CHARS:]
+
+
+# The receipt is sealed in the bundle, so it carries nothing that depends on where the run
+# happened: a traceback names the disposable workspace by absolute path, and two machines - or
+# two projects on one machine - would then seal different bytes for the same verification
+# (docs/README_CONTRACT.md section 7; RESEARCH_AND_GUIDELINES.md 27.2 RC4).
+WORKSPACE_TOKEN = "<workspace>"
+
+
+def _redact(text: str, workspace: Path) -> str:
+    """The run's own absolute path replaced by a stable token, in either separator."""
+    literal = str(workspace)
+    return text.replace(literal, WORKSPACE_TOKEN).replace(
+        literal.replace("\\", "/"), WORKSPACE_TOKEN
+    )
+
+
+def _string_literals(code: str) -> list[str]:
+    try:
+        tree = ast.parse(code)
+    except SyntaxError:
+        return []
+    return [
+        node.value
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Constant) and isinstance(node.value, str)
+    ]
+
+
+# Files an executed example wrote, by lower-case suffix, in the order they were produced: an
+# example that reads a model can be given one the README's own examples made, when the repository
+# ships no sample data of its own (docs/RESEARCH_AND_GUIDELINES.md 27.2 RC6).
+ProducedFiles = dict[str, list[tuple[int, Path]]]
+
+# A fuzzing corpus is sample data's opposite: every file in it exists to be malformed, and they
+# are the smallest files of their type in the tree precisely because a crash seed is truncated -
+# so the by-extension fallback below, which takes the smallest match, picked one every time.
+# Measured 2026-09-07 on Aspose.PDF for Python: `fuzz/corpus/cos/truncated.pdf` (35 bytes) was
+# staged as `input.pdf` for eight of thirteen examples, each of which then raised
+# `PdfParseException` and was recorded FAILED, while `tests/fixtures_4pages.pdf` (707 bytes), a
+# valid document the repository ships for exactly this purpose, sat unused. These are the
+# directory names libFuzzer, AFL and Atheris write by convention.
+_NEGATIVE_ASSET_PARTS = frozenset({"fuzz", "fuzzing", "corpus", "corpora", "crashes", "seeds"})
+
+
+def _representative(path: str) -> bool:
+    """Whether a repository file may stand in as an example's input at all."""
+    return not any(part.lower() in _NEGATIVE_ASSET_PARTS for part in Path(path).parts)
+
+
+def stage_fixtures(
+    code: str,
+    root: Path,
+    tree_paths: Sequence[str],
+    workspace: Path,
+    produced: ProducedFiles | None = None,
+    opened: Sequence[str] = (),
+) -> list[FixtureBinding]:
+    """Stage a file under each file-like literal the example names, then under each path in
+    ``opened``.
+
+    A repository-owned file of that name, then one of that extension, then - only when the tree
+    offers neither - the earliest output an executed example of this same README wrote with that
+    extension. The receipt names which, so a reader sees a fixture is the product's own output
+    and not something invented here.
+
+    ``opened`` (G4-W17 arrival item 53) is what the example was *measured* to open and never
+    spelled - the path its own FileNotFoundError named, read by `missing_input_path` - so an
+    example that builds its input path at run time is served under exactly that path, by the
+    same order of preference, and a static scan of its literals is no longer the only way in.
+    """
+    bindings: list[FixtureBinding] = []
+    representative = [path for path in tree_paths if _representative(path)]
+    by_name = {Path(path).name.lower(): path for path in sorted(representative)}
+    literals = [
+        literal
+        for literal in _string_literals(code)
+        if _FILE_LITERAL.match(literal) and "/" not in literal
+    ]
+    for wanted in [*literals, *opened]:
+        binding = _stage_one(wanted, root, representative, by_name, workspace, produced or {})
+        if binding is not None:
+            bindings.append(binding)
+    return bindings
+
+
+def _stage_one(
+    wanted: str,
+    root: Path,
+    representative: Sequence[str],
+    by_name: dict[str, str],
+    workspace: Path,
+    produced: ProducedFiles,
+) -> FixtureBinding | None:
+    """One fixture under ``wanted`` from the tree by name, by suffix, or from the pool; or none."""
+    target = workspace / wanted
+    if target.exists():
+        return None
+    suffix = Path(wanted).suffix.lower()
+    source = by_name.get(Path(wanted).name.lower())
+    if source is None:
+        same_suffix = sorted(
+            (path for path in representative if Path(path).suffix.lower() == suffix),
+            key=lambda path: ((root / path).stat().st_size, path),
+        )
+        source = same_suffix[0] if same_suffix else None
+    if source is not None:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(root / source, target)
+        return FixtureBinding(wanted, source)
+    made = produced.get(suffix) or []
+    if not made:
+        return None
+    ordinal, path = made[0]
+    target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(path, target)
+    return FixtureBinding(wanted, path.name, produced_by=ordinal)
+
+
+def _classify(result: ExecutionResult, code: str) -> tuple[str, str]:
+    """Outcome and detail for one run, read from the exit status and the traceback."""
+    if result.timed_out:
+        return "TIMED_OUT", f"no exit within {EXAMPLE_TIMEOUT_SECONDS:g}s"
+    if result.return_code == 0:
+        return "EXECUTED", "exit 0"
+    error = _ERROR_LINE.findall(result.stderr)
+    last = error[-1] if error else f"exit {result.return_code}"
+    if last in {"FileNotFoundError", "IsADirectoryError", "PermissionError"} or (
+        "No such file" in result.stderr
+        and any(_FILE_LITERAL.match(s) for s in _string_literals(code))
+    ):
+        return "NEEDS_INPUT", f"{last}: the example opens an input the repository does not provide"
+    return "FAILED", last
+
+
+def missing_input_path(stderr: str, run_dir: Path) -> str | None:
+    """The path an example's own FileNotFoundError names, relative to its run directory.
+
+    G4-W17 arrival item 53, measured 2026-09-07 on Aspose.Font for Python (G3 second pass): three
+    of eight candidates spell no file literal at all and build the path they open at run time,
+    and five more open a second input they never spelled - a static scan of literals cannot see
+    either, while the traceback names the path exactly. An absolute path is admitted only inside
+    the run directory, and one that climbs out of it is never staged.
+    """
+    matches = _MISSING_PATH.findall(stderr)
+    if not matches:
+        return None
+    raw = matches[-1][1].replace("\\\\", "/").replace("\\", "/")
+    path = Path(raw)
+    if path.is_absolute():
+        try:
+            path = path.resolve().relative_to(run_dir.resolve())
+        except (ValueError, OSError):
+            return None
+    relative = path.as_posix()
+    if not relative or relative.startswith("/") or ".." in path.parts or relative == ".":
+        return None
+    return relative
+
+
+def missing_module_name(stderr: str) -> str | None:
+    """The top-level module an example's own ``ModuleNotFoundError`` names, or None.
+
+    G4-W17 arrival item 70, measured on Aspose.Note for Python: two examples that exercise PDF
+    export fail with ``ModuleNotFoundError: No module named 'reportlab'`` - a declared
+    ``[project.optional-dependencies] pdf`` extra ``_declared_dependencies`` never reads (it reads
+    ``project.dependencies`` only), so the extra is never installed and ``format:output.pdf`` goes
+    UNRESOLVED for a reason unrelated to whether the format is genuinely supported. A dotted
+    submodule (``a.b.c``) names its own top-level package, the one an extra's requirement installs.
+    """
+    match = _MISSING_MODULE.search(stderr)
+    return match.group(1).split(".", 1)[0] if match else None
+
+
+def _declared_extras(root: Path) -> dict[str, list[str]]:
+    """The manifest's ``[project.optional-dependencies]`` extras, by name, each a list of
+    requirement strings - read without building anything, the same shape
+    ``_declared_dependencies`` reads the required list in."""
+    manifest = root / "pyproject.toml"
+    if not manifest.is_file():
+        return {}
+    try:
+        data = tomllib.loads(manifest.read_text(encoding="utf-8-sig", errors="replace"))
+    except tomllib.TOMLDecodeError:
+        return {}
+    project = data.get("project")
+    extras = project.get("optional-dependencies", {}) if isinstance(project, dict) else {}
+    if not isinstance(extras, dict):
+        return {}
+    return {
+        str(name): [item for item in reqs if isinstance(item, str) and item.strip()]
+        for name, reqs in extras.items()
+        if isinstance(reqs, list)
+    }
+
+
+def _extra_requirements_for(module: str, extras: dict[str, list[str]]) -> list[str] | None:
+    """The declared extra's own requirements that plausibly provide ``module``: a case-insensitive,
+    hyphen/underscore-normalised match of a requirement's package name against the module name -
+    the shape pip's own import name usually takes (``reportlab`` provides ``reportlab``). Not a
+    general import-name resolver (a mismatched pair such as ``Pillow``/``PIL`` is not served) -
+    item 70's own measured case is narrower and better-precedented than that: the same
+    fold-not-reject retry ``verify_python_examples`` already runs for ``NEEDS_INPUT``, applied to
+    the one concrete shape lane E measured, not a speculative general one.
+    """
+    wanted = module.lower().replace("_", "-")
+    for requirements in extras.values():
+        for requirement in requirements:
+            match = _REQUIREMENT_NAME.match(requirement)
+            if match and match.group(0).lower().replace("_", "-") == wanted:
+                return requirements
+    return None
+
+
+def _servable(wanted: str, tree_paths: Sequence[str], produced: ProducedFiles) -> bool:
+    """Whether `stage_fixtures` could serve ``wanted`` at all: a representative repository file of
+    that name or that suffix, or a produced file of that suffix."""
+    representative = [path for path in tree_paths if _representative(path)]
+    name, suffix = Path(wanted).name.lower(), Path(wanted).suffix.lower()
+    if any(Path(path).name.lower() == name for path in representative):
+        return True
+    if suffix and any(Path(path).suffix.lower() == suffix for path in representative):
+        return True
+    return bool(suffix and produced.get(suffix))
+
+
+@dataclass(frozen=True)
+class Interpreter:
+    """The Python an example runs under: its executable, its version, and - when it is a pinned
+    toolchain rather than the presenter's own - that toolchain's directory name (empty otherwise,
+    so the default path's receipts read exactly as before)."""
+
+    executable: Path
+    version: str
+    label: str
+
+
+def _declared_requires_python(root: Path) -> str:
+    """The manifest's ``requires-python``, or an empty string when it declares none."""
+    manifest = root / "pyproject.toml"
+    if not manifest.is_file():
+        return ""
+    try:
+        data = tomllib.loads(manifest.read_text(encoding="utf-8-sig", errors="replace"))
+    except tomllib.TOMLDecodeError:
+        return ""
+    project = data.get("project")
+    declared = project.get("requires-python", "") if isinstance(project, dict) else ""
+    return declared.strip() if isinstance(declared, str) else ""
+
+
+def pinned_interpreters(verify_root: Path) -> list[tuple[str, Path]]:
+    """The interpreters provisioned beside the verifier's workspaces, lowest version first.
+
+    Loop-prompt section 1.5 puts them under ``runs/verify/py3NN`` as uv venvs, each naming its
+    version in ``pyvenv.cfg`` (``version_info = 3.12``); a directory with no readable version or
+    no interpreter file is not one. Read from the file, never by running each interpreter: the
+    read is free and identical on every call.
+    """
+    if not verify_root.is_dir():
+        return []
+    found: list[tuple[Version, str, Path]] = []
+    for venv in sorted(verify_root.iterdir()):
+        cfg = venv / "pyvenv.cfg"
+        python = _venv_python(venv)
+        if not cfg.is_file() or not python.is_file():
+            continue
+        match = _VERSION_INFO.search(cfg.read_text(encoding="utf-8", errors="replace"))
+        if match is None:
+            continue
+        try:
+            found.append((Version(match.group(1)), match.group(1), python))
+        except InvalidVersion:
+            continue
+    return [(version, python) for _, version, python in sorted(found, key=lambda f: f[0])]
+
+
+def select_interpreter(
+    requires_python: str,
+    verify_root: Path,
+    machine: Callable[[], list[tuple[str, Path]]] | None = None,
+) -> Interpreter | None:
+    """The interpreter to verify under: the presenter's own whenever the declaration admits it (or
+    there is none), else the highest pinned toolchain that does, else the highest interpreter the
+    machine already has that does, else None.
+
+    G4-W17 arrival item 52, measured 2026-09-07 on Aspose.Words for Python (G3 second pass): the
+    venv came from ``sys.executable`` (3.13.2) while the manifest declares ``>=3.10,<3.13``, so
+    pip refused before any example ran and all twelve read NOT_VERIFIED - a repository blocked by
+    an interpreter choice, not by its code. A declaration nothing can parse constrains nothing
+    here; pip reports it in its own words.
+
+    The resolution order is the toolchain resolver's (``core/toolchains.py``): what this run was
+    provisioned with (the presenter's own, then ``runs/verify``) before what the machine merely
+    has (the ``py`` launcher's record, the conventional install directories, versioned
+    ``python3.N`` commands). A lane worktree without ``runs/verify`` therefore still finds the
+    ``py -3.12`` the machine carries (measured 2026-10-11, Words-Python in a lane worktree).
+    """
+    running = ".".join(str(part) for part in sys.version_info[:3])
+    presenter = Interpreter(Path(sys.executable), running, "")
+    if not requires_python:
+        return presenter
+    try:
+        wanted = SpecifierSet(requires_python)
+    except InvalidSpecifier:
+        return presenter
+    if wanted.contains(running, prereleases=True):
+        return presenter
+    for version, python in reversed(pinned_interpreters(verify_root)):
+        if wanted.contains(version, prereleases=True):
+            return Interpreter(python, version, python.parent.parent.name)
+    for version, python in reversed((machine or installed_pythons)()):
+        if wanted.contains(version, prereleases=True):
+            return Interpreter(python, version, f"machine-py{version.replace('.', '')}")
+    return None
+
+
+def no_interpreter_reason(
+    requires_python: str,
+    verify_root: Path,
+    machine: Callable[[], list[tuple[str, Path]]] | None = None,
+) -> str:
+    """The typed BLOCKED_TOOLCHAIN reason when no interpreter satisfies ``requires_python``.
+
+    Names the declaration, the presenter's own Python (and that it is outside the range), and
+    every pinned and machine interpreter that was looked at, so the reader of a receipt sees what
+    to provision - never a silent NOT_VERIFIED.
+    """
+    running = ".".join(str(part) for part in sys.version_info[:3])
+    pinned = ", ".join(version for version, _ in pinned_interpreters(verify_root)) or "none"
+    installed = ", ".join(version for version, _ in (machine or installed_pythons)()) or "none"
+    return (
+        f"BLOCKED_TOOLCHAIN: no interpreter satisfies requires-python {requires_python!r}: the "
+        f"presenter runs Python {running}, which is outside it, the pinned toolchains offer "
+        f"{pinned}, and the machine's installed interpreters are {installed}"
+    )
+
+
+def _toolchains_root(workspace: Path) -> Path:
+    """Where the pinned interpreters live: ``RP_PYTHON_TOOLCHAINS`` when set, else the workspace's
+    parent - ``runs/verify``, where loop-prompt section 1.5 provisions them."""
+    override = os.environ.get(PYTHON_TOOLCHAINS_VARIABLE, "").strip()
+    return Path(override) if override else workspace.parent
+
+
+def verify_python_examples(
+    root: Path,
+    tree_paths: Sequence[str],
+    candidates: Sequence[ExampleCandidate],
+    workspace: Path,
+) -> list[ExampleReceipt]:
+    """Install the clone into a fresh venv and run every candidate; one receipt each."""
+    if not candidates:
+        return []
+    fresh = _fresh_workspace(workspace)
+    if fresh is None:
+        return _all_not_verified(
+            candidates, "no clean workspace to verify examples in (every attempt was refused)"
+        )
+    workspace = fresh
+    venv = workspace / "venv"
+    site = workspace / "site"
+    # Redirected into the workspace like the per-example run below: bootstrap and install are
+    # exactly the pip/venv activity profile_environment's own docstring names, and leaving them
+    # unredirected read and wrote the developer's real account (TB-08, external review D8,
+    # 2026-09-08).
+    install_environment = profile_environment(workspace)
+    # G4-W17 arrival item 52: the interpreter the manifest's requires-python admits - the
+    # presenter's own unless it is excluded, then a pinned toolchain, else an honest refusal.
+    declared = _declared_requires_python(root)
+    toolchains = _toolchains_root(workspace)
+    interpreter = select_interpreter(declared, toolchains)
+    if interpreter is None:
+        return _all_not_verified(candidates, no_interpreter_reason(declared, toolchains))
+    bootstrap = execute(
+        [str(interpreter.executable), "-m", "venv", "--without-pip", str(venv)],
+        workspace=workspace,
+        timeout_seconds=INSTALL_TIMEOUT_SECONDS,
+        extra_environment=install_environment,
+    )
+    if bootstrap.return_code != 0:
+        return _all_not_verified(candidates, f"venv creation failed: {_clip(bootstrap.stderr)}")
+    python = _venv_python(venv)
+    pip = [sys.executable, "-m", "pip"]
+    if interpreter.label:
+        # The presenter's pip, run under the chosen interpreter: wheels resolve for that Python
+        # and its requires-python check reads the version the examples will actually run on.
+        pip.extend(["--python", str(python.resolve())])
+    install = execute(
+        [
+            *pip,
+            "install",
+            "--disable-pip-version-check",
+            "--quiet",
+            "--target",
+            str(site),
+            str(root),
+        ],
+        workspace=workspace,
+        timeout_seconds=INSTALL_TIMEOUT_SECONDS,
+        extra_environment=install_environment,
+    )
+    import_roots = [site]
+    source_note = ""
+    source_roots: tuple[str, ...] = ()
+    if install.return_code != 0:
+        # A package that will not build is not a repository whose code does not work, and the
+        # two were being conflated: every example went NOT_VERIFIED, the Quick Start row lost
+        # its evidence, and the whole candidate was blocked by its packaging. Measured
+        # 2026-09-07 on Aspose.BarCode for Python, reproducibly on a clean tree - setuptools'
+        # own `install_egg_info` step fails building the wheel - while the package itself is
+        # pure Python and imports fine from `src/`. So the examples run against the
+        # repository's own source tree instead, and every receipt says so: the run proves the
+        # code, never the distribution, exactly as a verified source build is admitted as a
+        # *source* install kind and never as a registry command (section 27.9 item (0)/(24)).
+        fallback = _source_roots(root, tree_paths)
+        if not fallback:
+            return _all_not_verified(candidates, f"package install failed: {_clip(install.stderr)}")
+        # The build carried the dependency resolution with it, so the source tree alone is a
+        # library with none of what it imports: every Aspose.BarCode example then failed with
+        # `ModuleNotFoundError: No module named 'PIL'` (2026-09-07), an honest failure of a
+        # question nobody asked. The manifest already declares them, so install those and keep
+        # the repository's own packages ahead of the installed set on the path.
+        requirements = _declared_dependencies(root)
+        if requirements:
+            execute(
+                [
+                    *pip,
+                    "install",
+                    "--disable-pip-version-check",
+                    "--quiet",
+                    "--target",
+                    str(site),
+                    *requirements,
+                ],
+                workspace=workspace,
+                timeout_seconds=INSTALL_TIMEOUT_SECONDS,
+                extra_environment=install_environment,
+            )
+        import_roots = [*fallback, site]
+        source_note = "ran against the repository source tree; the package would not build"
+        # RESEARCH_LANE_E.md's documented-PYTHONPATH-source-install observation: named relative
+        # to the checkout, never as an absolute path a sealed receipt must not carry (same rule
+        # the interpreter label follows below) - "." for the checkout root itself, exactly what a
+        # reader would type after `cd` into it.
+        source_roots = tuple(
+            "." if candidate == root else candidate.relative_to(root).as_posix()
+            for candidate in fallback
+        )
+
+    def run(
+        candidate: ExampleCandidate, produced: ProducedFiles, opened: Sequence[str] = ()
+    ) -> tuple[ExampleReceipt, tuple[Path, ...], str | None]:
+        """The receipt, the files the example wrote, and - when it needed an input - the path its
+        own failure named, so the retry below can stage exactly that."""
+        run_dir = workspace / f"example_{candidate.ordinal:03d}"
+        if run_dir.exists():
+            shutil.rmtree(run_dir)
+        run_dir.mkdir()
+        script = run_dir / "example.py"
+        script.write_bytes(candidate.code.encode("utf-8"))
+        fixtures = stage_fixtures(candidate.code, root, tree_paths, run_dir, produced, opened)
+        before = {path.name for path in run_dir.iterdir()}
+        result = execute(
+            [str(python), "-s", "-X", "utf8", str(script)],
+            workspace=run_dir,
+            timeout_seconds=EXAMPLE_TIMEOUT_SECONDS,
+            # The example is the repository's own code: it runs with its caches and its
+            # home redirected into the run directory, so it can neither read state a
+            # previous run left in the developer's account nor leave any there
+            # (RESEARCH_AND_GUIDELINES.md section 29.6 E5). The install above keeps the
+            # shared package cache: no repository code runs there that this does not.
+            extra_environment={
+                **profile_environment(run_dir),
+                "PYTHONPATH": os.pathsep.join(str(path) for path in import_roots),
+                "PYTHONNOUSERSITE": "1",
+            },
+        )
+        outcome, detail = _classify(result, candidate.code)
+        if source_note:
+            detail = f"{detail}; {source_note}"
+        if interpreter.label:
+            # Which Python verified this example, by the toolchain's directory name and version -
+            # never an absolute path, which would differ per machine inside a sealed receipt.
+            detail = (
+                f"{detail}; ran under Python {interpreter.version} ({interpreter.label}, chosen by "
+                f"requires-python {declared!r})"
+            )
+        receipt = ExampleReceipt(
+            ordinal=candidate.ordinal,
+            outcome=outcome,  # type: ignore[arg-type]
+            return_code=result.return_code,
+            stdout=_redact(_clip(result.stdout), workspace),
+            stderr=_redact(_clip(result.stderr), workspace),
+            detail=detail,
+            fixtures=tuple(fixtures),
+            # `source_note` is set only when the real package install failed and this example ran
+            # against the repository's own source tree instead (TB-01, external review D1,
+            # 2026-09-08): the example running proves the code, never the distribution, so an
+            # EXECUTED outcome here must not promote the registry install command as verified.
+            build_verified=not source_note,
+            source_roots=source_roots,
+        )
+        written = sorted(
+            path for path in run_dir.iterdir() if path.is_file() and path.name not in before
+        )
+        missing = missing_input_path(result.stderr, run_dir) if outcome == "NEEDS_INPUT" else None
+        return receipt, tuple(written), missing
+
+    produced: ProducedFiles = {}
+    receipts: list[ExampleReceipt] = []
+    unspelled: dict[int, str | None] = {}
+    for candidate in candidates:
+        receipt, written, missing = run(candidate, produced)
+        receipts.append(receipt)
+        unspelled[candidate.ordinal] = missing
+        # Only an example that ran to completion has output worth handing on: a failed run may
+        # have left a file half written, as this canary's ObjExporter does.
+        if receipt.outcome == "EXECUTED":
+            for path in written:
+                produced.setdefault(path.suffix.lower(), []).append((candidate.ordinal, path))
+    # A producer may appear after its consumer, so the examples that lacked an input are given
+    # one more attempt against the complete pool. Order is the ordinals', so the pass is
+    # deterministic; an example the pool cannot serve is not run again. The same single attempt
+    # serves the path the example's own failure named (G4-W17 arrival item 53): an input it built
+    # at run time, or a second one it never spelled, staged only when the tree or the pool can
+    # actually provide it - never a third run, never a guess.
+    by_ordinal = {candidate.ordinal: candidate for candidate in candidates}
+    for index, receipt in enumerate(receipts):
+        if receipt.outcome != "NEEDS_INPUT":
+            continue
+        candidate = by_ordinal[receipt.ordinal]
+        missing = unspelled.get(receipt.ordinal)
+        opened = (missing,) if missing and _servable(missing, tree_paths, produced) else ()
+        if not opened and not _serviceable(candidate.code, root, tree_paths, produced):
+            continue
+        retried, _, _ = run(candidate, produced, opened)
+        receipts[index] = retried
+    # G4-W17 arrival item 70: an example that FAILED on a ModuleNotFoundError the manifest's own
+    # optional-dependency extras would resolve is given the same one-more-attempt discipline as a
+    # NEEDS_INPUT retry above - the extra that names the missing module installed once, then every
+    # example it could serve retried once. An extra with no matching module is never installed
+    # (this manifest's other extras, `test-pdf` and `dev`, are never touched by this repository's
+    # own PDF examples); a module no extra names is left FAILED exactly as before this item.
+    extras = _declared_extras(root)
+    installed_extras: set[str] = set()
+    for index, receipt in enumerate(receipts):
+        if receipt.outcome != "FAILED":
+            continue
+        module = missing_module_name(receipt.stderr)
+        extra_requirements = _extra_requirements_for(module, extras) if module else None
+        if module is None or extra_requirements is None:
+            continue
+        if module not in installed_extras:
+            execute(
+                [
+                    *pip,
+                    "install",
+                    "--disable-pip-version-check",
+                    "--quiet",
+                    "--target",
+                    str(site),
+                    *extra_requirements,
+                ],
+                workspace=workspace,
+                timeout_seconds=INSTALL_TIMEOUT_SECONDS,
+                extra_environment=install_environment,
+            )
+            installed_extras.add(module)
+        candidate = by_ordinal[receipt.ordinal]
+        retried, written, _ = run(candidate, produced)
+        receipts[index] = replace(
+            retried,
+            detail=f"{retried.detail}; retried after installing declared extra "
+            f"providing {module!r} ({', '.join(extra_requirements)})",
+        )
+        if retried.outcome == "EXECUTED":
+            for path in written:
+                produced.setdefault(path.suffix.lower(), []).append((candidate.ordinal, path))
+    return receipts
+
+
+def _serviceable(code: str, root: Path, tree_paths: Sequence[str], produced: ProducedFiles) -> bool:
+    """Whether the pool now holds an extension this example opens and the tree never had."""
+    suffixes = {Path(path).suffix.lower() for path in tree_paths}
+    wanted = {
+        Path(literal).suffix.lower()
+        for literal in _string_literals(code)
+        if _FILE_LITERAL.match(literal) and "/" not in literal
+    }
+    return any(suffix in produced for suffix in wanted - suffixes)
+
+
+def _declared_dependencies(root: Path) -> list[str]:
+    """The runtime requirements the manifest states, read without building anything."""
+    manifest = root / "pyproject.toml"
+    if not manifest.is_file():
+        return []
+    try:
+        data = tomllib.loads(manifest.read_text(encoding="utf-8-sig", errors="replace"))
+    except tomllib.TOMLDecodeError:
+        return []
+    project = data.get("project")
+    declared = project.get("dependencies", []) if isinstance(project, dict) else []
+    return [item for item in declared if isinstance(item, str) and item.strip()]
+
+
+def _source_roots(root: Path, tree_paths: Sequence[str]) -> list[Path]:
+    """Directories an interpreter can import the repository's own packages from, uninstalled.
+
+    A top-level package is one whose parent directory is not itself a package. Every directory
+    from that parent up to the repository root is a path entry, nearest first, so a ``src``
+    layout (``src/aspose_barcode_foss``) and a namespace one (``aspose/threed``, with no
+    ``aspose/__init__.py``, imported as ``aspose.threed``) are both importable. A tree with no
+    package at all yields nothing, and the caller records every candidate NOT_VERIFIED as before
+    - a repository whose code cannot be imported has not been checked, and is never guessed at.
+    """
+    packages = {
+        Path(path).parent.as_posix() for path in tree_paths if Path(path).name == "__init__.py"
+    }
+    tops = {package for package in packages if Path(package).parent.as_posix() not in packages}
+    ordered: list[Path] = []
+    for package in sorted(tops):
+        current = (root / package).parent
+        while True:
+            if current not in ordered and current.is_dir():
+                ordered.append(current)
+            if current == root or root not in current.parents:
+                break
+            current = current.parent
+    return ordered
+
+
+def _all_not_verified(candidates: Sequence[ExampleCandidate], detail: str) -> list[ExampleReceipt]:
+    return [
+        ExampleReceipt(candidate.ordinal, "NOT_VERIFIED", None, "", "", detail)
+        for candidate in candidates
+    ]

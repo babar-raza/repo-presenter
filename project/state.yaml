@@ -135,11 +135,28 @@ active_work_item:
        validates (extra=\"forbid\"); observational fields (archived, pushed_at,
        live_identity_match, etc.) moved to data/registry_observations.json, since those were
        never part of the authorization allow-list contract."
+    - "RUN_PIPELINE_END_TO_END_ON_REAL_REPO, DONE 2026-10-22: scripts/run_lane_l.py wires
+       extractors/platforms/python.py -> core/facts.py -> readme/correction/ for real, no
+       agent reasoning anywhere in the path. Ported 2 more small converter modules it needed
+       (readme/evidence/facts/{examples,formats}.py) and python_examples.py (the real
+       execution-backed example verifier -- pip install + run each README code fence against
+       the real installed package). Running it against the real, live
+       aspose-3d-foss/Aspose.3D-FOSS-for-Python repository automatically rediscovers the
+       exact OBJ-export defect this whole mission started from (example:008 CONTRADICTED,
+       real captured TypeError at ObjExporter.py:50), with the failing_example detector
+       correctly surfacing it -- zero hand-authored facts, same bug a human/agent found by
+       hand in P1_VERTICAL_SLICE, now found by the salvaged pipeline on its own. Evidence:
+       evidence/build/P2_REAL_ENGINE_SALVAGE/aspose-3d-foss__Aspose.3D-FOSS-for-Python/.
+       Running it also surfaced and fixed a real bug of its own: format_overclaim's marker
+       check was a substring search, flagging API-reference prose containing the word
+       \"supported\" as a false format-overclaim -- fixed to require the full cell content,
+       with a regression test."
   verification: >
-    876 passed, 11 skipped (honest toolchain-absence skips), 0 failed
+    905 passed, 11 skipped (honest toolchain-absence skips), 0 failed
     (`python -m pytest tests/`), independently re-run by the supervisor after every
     porting agent's report and after every integration fix -- not trusted from any
-    agent's self-reported pass count.
+    agent's self-reported pass count. (Count rose from 876 as python_examples.py's 28
+    tests and one new regression test landed.)
   honestly_not_done_yet:
     - "Lane R's authoring.py has no real prompts/*.yaml content to fire a live LLM call with
        yet (this environment genuinely carries GPT_OSS_API_KEY/GPT_OSS_ENDPOINT -- the same
@@ -147,22 +164,28 @@ active_work_item:
        exists, which it does not today)."
     - "dispositions.py's S4 job-wiring half and the Lane L chain.py/verify.py sandboxed
        build-test runner (the add_dev_commands detector's backing) are deferred, not ported."
-    - "The static format-wiring extractor can prove a capability is REGISTERED but not that it
-       WORKS -- the exact OBJ-export/COLLADA-export blind spot this whole mission started
-       from. Execution verification (the example-execution runner, now ported) is the only
-       real check for that class of defect; the static extractor alone cannot close it."
-    - "The 35 portfolio candidates from P1_PORTFOLIO_SCALE were produced by agent reasoning,
-       NOT by this newly-ported code. Re-running even one real candidate end-to-end through
-       the actual ported pipeline (extractors -> correction/composition -> bundle recheck)
-       has not been done yet -- this is the next concrete proof needed, not another
-       composition sweep."
+    - "scripts/run_lane_l.py proves Lane L only, for one ecosystem (Python), on one
+       repository. The .NET/Java/C++/Go/Rust/TypeScript/nodejs extractors are ported and
+       unit-tested but none has been run through this same real end-to-end CLI path yet.
+       Lane R (composition) was not exercised in this run at all."
+    - "The other 34 of 36 portfolio candidates from P1_PORTFOLIO_SCALE were produced by agent
+       reasoning, not this newly-ported code. Only the pinned repository has a real,
+       pipeline-produced result now."
   prerequisites:
     - P1_PORTFOLIO_SCALE accepted (DONE)
 
 next_ready_items:
-  - id: RUN_PIPELINE_END_TO_END_ON_REAL_REPO
+  - id: RUN_PIPELINE_ON_MORE_ECOSYSTEMS
     status: READY
     priority: highest
+    purpose: >
+      scripts/run_lane_l.py is Python-only and single-repository. Generalize it (or add
+      sibling scripts) to run the real pipeline for .NET/Java/C++/Go/Rust/TypeScript against
+      at least one real repository each -- proving the extractors already ported actually
+      work end to end, not just pass their own unit tests, per mission section 12 P2
+      ("generalize by failure class, not anecdote... representative cross-ecosystem cohort").
+  - id: RUN_PIPELINE_END_TO_END_ON_REAL_REPO
+    status: DONE
     purpose: >
       Wire the ported extractors + readme/correction + readme/bundle into one real CLI path
       and run it against the pinned aspose-3d-foss/Aspose.3D-FOSS-for-Python repository,

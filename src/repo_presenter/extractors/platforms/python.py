@@ -8,15 +8,12 @@ Import paths come from the packages the manifest declares or, failing that, from
 directories the tree inventory proves.
 
 Ported (REUSE, near-verbatim) from the old repository-presenter project's
-``components/readme/extractors/platforms/python.py`` per migration/reuse-manifest.yaml, with one
-deliberate trim: ``verify_examples`` does not port the old repo's execution/toolchain-backed
-``python_examples.py`` (which drives a real pip install + subprocess run of each README code
-fence under ``core/execution.py``/``core/toolchains.py`` - a sandboxed-build dependency this pass
-did not pull; see migration/reuse-manifest.yaml's "extractors/platforms/*" entry). Calling it here
-honestly reports NOT_VERIFIED for every candidate rather than silently fabricating EXECUTED
-receipts. manifest_facts, surface_facts, registry_facts, format_claims, and format_declarations -
-the facts this taskcard's end-to-end proof actually exercises - are otherwise unmodified beyond
-import-path adaptation.
+``components/readme/extractors/platforms/python.py`` per migration/reuse-manifest.yaml.
+``verify_examples`` now calls the ported execution/toolchain-backed ``python_examples.py``
+(itself ported from the old repo), which drives a real pip install and subprocess run of each
+README code fence under ``core/execution.py``/``core/toolchains.py`` and classifies each
+candidate EXECUTED/FAILED/TIMED_OUT/NEEDS_INPUT/NOT_VERIFIED from what actually happened -
+never a fabricated receipt.
 """
 
 from __future__ import annotations
@@ -31,6 +28,9 @@ from typing import Any
 
 from packaging.requirements import InvalidRequirement, Requirement
 
+from repo_presenter.extractors.platforms.python_examples import (
+    verify_python_examples,
+)
 from repo_presenter.extractors.platforms.python_format_declarations import (
     format_declarations,
 )
@@ -356,27 +356,14 @@ class PythonPlugin:
         candidates: Sequence[ExampleCandidate],
         workspace: Path,
     ) -> list[ExampleReceipt]:
-        """NOT_VERIFIED for every candidate: this pull did not port the old repo's
-        execution/toolchain-backed verifier (``python_examples.py`` + ``core/execution.py`` +
-        ``core/toolchains.py``), which drives a real ``pip install`` and subprocess run of each
-        README code fence in a disposable profile. "Not verified" is the honest answer a caller
-        must get instead of a fabricated receipt - see this module's own docstring and
-        migration/reuse-manifest.yaml.
+        """Install the clone into a fresh venv and run every README example against it.
+
+        Delegates to ``python_examples.verify_python_examples``: a real ``pip install`` and a
+        real subprocess run of each candidate in a disposable profile, classified from what
+        actually happened (EXECUTED/FAILED/TIMED_OUT/NEEDS_INPUT/NOT_VERIFIED) - never a
+        fabricated receipt.
         """
-        return [
-            ExampleReceipt(
-                ordinal=candidate.ordinal,
-                outcome="NOT_VERIFIED",
-                return_code=None,
-                stdout="",
-                stderr="",
-                detail=(
-                    "example execution was not ported in this pull (no sandboxed build/toolchain "
-                    "runner); this plugin only ever reports NOT_VERIFIED here"
-                ),
-            )
-            for candidate in candidates
-        ]
+        return verify_python_examples(root, tree_paths, candidates, workspace)
 
     def format_claims(self, code: str) -> Sequence[FormatClaim]:
         return format_claims(code)
