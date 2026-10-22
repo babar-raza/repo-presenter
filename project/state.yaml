@@ -610,10 +610,20 @@ next_ready_items:
       convergence that stays within the fix's correctly-scoped tolerance. 1052/1052
       whole-repo tests pass (no src changes this round). Evidence:
       evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_fifteenth_full_cascade/.
+    sixteenth_cascade_2026_10_22: >
+      DONE: fired the full cascade (S3-S8) against a sixteenth repository
+      (aspose-words-foss/Aspose.Words-FOSS-for-Python), an eighth Python repository. S3-S6
+      all accepted on the first attempt. coherence#1 and coherence#2 both revised a unit
+      ("opening" and "api_reference/intro" respectively) and both were accepted on the first
+      attempt. The known duplicate-opening defect repeated a sixteenth time; coherence's
+      revision of "opening" showed another mild convergence (like the fifteenth cascade),
+      correctly staying under the guard's full-containment threshold. 1052/1052 whole-repo
+      tests pass (no src changes this round). Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_sixteenth_full_cascade/.
     remaining: >
-      15 of 36 repositories now have a FULL real cascade run through S8 (plus one,
+      16 of 36 repositories now have a FULL real cascade run through S8 (plus one,
       aspose-html-foss/Python, with S3-S6+render only). All 7 ecosystems have been exercised
-      at least once (python x7, go, net, java, cpp, rust, typescript x2); the portfolio as a
+      at least once (python x8, go, net, java, cpp, rust, typescript x2); the portfolio as a
       whole (36 repositories) is still far from fully covered. Lane L format detection is
       already proven for all of them independently. Two unrelated pre-existing S6/S8 rough
       edges (the "TrueType" identifier rejection and the "cites facts outside this section's
