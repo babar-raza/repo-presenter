@@ -210,11 +210,12 @@ next_ready_items:
       P1_VERTICAL_SLICE facts.json/candidate -- this is the proof that the salvaged engine,
       not just its unit tests, actually works on a real repository.
   - id: BUILD_FORMAT_DETECTION_FOR_NON_PYTHON_ECOSYSTEMS
-    status: IN_PROGRESS
+    status: DONE
     priority: high
     purpose: >
-      The single biggest "lanes don't yet work equally" gap found in this session. 5 of 6
-      remaining ecosystems done (.NET, Java, C++, Go, Rust); only typescript still stubbed.
+      DONE 2026-10-22. The single biggest "lanes don't yet work equally" gap found in this
+      session. All 6 non-Python ecosystems (.NET, Java, C++, Go, Rust, TypeScript) now have a
+      real, independently-investigated format-declarations reader.
     done_net: >
       DONE 2026-10-22, clean (zero false positives after one found-and-fixed): new
       extractors/platforms/net_format_declarations.py (class-declaration + dispatch-switch
@@ -300,15 +301,42 @@ next_ready_items:
       input.xlsx and output.xlsx SUPPORTED, matching the live README's one claim, zero findings
       of any kind in this run. 935/935 whole-repo tests pass. Evidence:
       evidence/build/P2_REAL_ENGINE_SALVAGE/aspose-cells-foss__Aspose.Cells-FOSS-for-Rust/.
-    remaining: >
-      typescript format_claims/format_declarations is the last ecosystem still stubbed (return
-      []) -- confirmed it is the old repo's own unfinished state too, same as the five done so
-      far. Five ecosystems in, the correlation key has diverged three times (.NET: identifier
-      via dispatch-arm; Java: extension string; C++/Rust: identifier via qualified enum
-      reference; Go: no second signal at all) -- confirms the discipline that matters is "read
-      the real dispatch idiom before writing a reader," never "reuse an existing reader's
-      shape," and that the two-source design itself is not guaranteed to transfer. TypeScript
-      needs its own investigation against real source before a reader is written.
+    done_typescript: >
+      DONE 2026-10-22, against aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript (the only
+      mode:full typescript registry entry). A sixth idiom -- a string-valued SaveFormat enum
+      (member value IS the extension, like Java's constructor-argument literal) plus a
+      detectFormat() helper that references every member without performing any I/O. A naive
+      reader treating any SaveFormat.X reference anywhere as "registered" would have been
+      fooled by detectFormat() into falsely corroborating CSV/JSON/MARKDOWN -- this reader is
+      scoped to read qualified references only from inside save()'s/load()'s own body. This
+      investigation surfaced a REAL latent bug in the product's own code (not the README):
+      save() special-cases only SaveFormat.HTML and silently writes XLSX/ZIP bytes for
+      CSV/JSON/MARKDOWN paths too, despite declaring and detecting them -- confirmed the live
+      README is careful enough to document CSV/JSON/MARKDOWN only via the separate, genuinely-
+      working toCsv()/toJson()/toMarkdown() text methods, never via save(), so no README
+      over-claim exists to flag; the product bug itself is out of this tool's scope to fix.
+      One real bug caught and fixed in this reader before it could be trusted: the first
+      version's fixed-size line window (the .NET/Java readers' approach) measurably bled past
+      save()'s real end into the unrelated detectFormat() method on a dense fixture, which
+      would have hidden exactly the gap this reader exists to catch -- replaced with real
+      paren/brace-depth counting before any result was trusted. Real end-to-end result: only
+      input.html/output.html SUPPORTED, matching the live README's one direct claim, zero
+      findings of any kind. 940/940 whole-repo tests pass. Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/aspose-cells-foss__Aspose.Cells-FOSS-for-TypeScript/.
+    summary: >
+      All six non-Python ecosystems now have a real format-declarations reader, each
+      independently investigated against that ecosystem's own live source, never assumed from
+      another reader's shape. The correlation key diverged across all six: .NET (identifier via
+      dispatch-arm), Java (extension string), C++/Rust (identifier via qualified enum
+      reference, with Rust's exhaustiveness checking changing which direction corroborates), Go
+      (no second signal at all -- the two-source design itself did not transfer), TypeScript
+      (a signal that exists but must be scoped to the right method body, not any reference in
+      the tree). Across the six, real bugs were found and fixed in the readers themselves
+      before being trusted (the .NET/Java readers' assumptions, the C++ forward-declaration
+      false positive, the TypeScript window-overflow false corroboration), and real findings
+      were surfaced in the live repositories measured: .NET's U3D/RVM/AMF/HTML5 over-claim,
+      Java's GLB dispatched-but-stub gap, Go's real compiler-caught broken example, and
+      TypeScript's real save()-vs-declared-formats product bug (correctly not a README defect).
   - id: WRITE_PROMPTS_FOR_AUTHORING
     status: DONE
     purpose: >

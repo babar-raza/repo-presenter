@@ -1051,3 +1051,50 @@ entries:
       exists yet). Still NOT proven for typescript, the last remaining ecosystem -- needs its
       own real-source investigation before a reader is written.
     invalidation_impact: not yet pulled into any other ecosystem.
+
+  - component: "extractors/platforms/typescript_format_declarations.py"
+    source: "new engineering -- the old repo has the identical return-[] format_declarations
+      stub for typescript.py too"
+    evaluated_at_shas: []
+    behavior: >
+      A sixth idiom: a string-valued SaveFormat enum (the member's value IS the extension,
+      like Java's constructor-argument literal) plus a detectFormat() helper that references
+      every member purely to GUESS which format a path implies, without performing any I/O.
+      Scoped deliberately: qualified SaveFormat.X references are read only from inside
+      save()'s own body (output) and bare extension-string comparisons only from inside
+      load()'s own body (input) -- not any reference anywhere in the tree -- because
+      detectFormat() references every member and would otherwise falsely corroborate formats
+      save() never actually writes.
+    evidence: >
+      Designed against the REAL live source of aspose-cells-foss/Aspose.Cells-FOSS-for-
+      TypeScript (2026-10-22), read directly before writing any pattern-matching code
+      (types.ts's SaveFormat enum, workbook.ts's real save()/load()/detectFormat()). This
+      investigation surfaced a real latent bug in the PRODUCT's own code (not its README):
+      save() special-cases only SaveFormat.HTML and silently writes XLSX/ZIP bytes for
+      CSV/JSON/MARKDOWN paths too, despite declaring and detecting them -- confirmed the live
+      README avoids this by documenting CSV/JSON/MARKDOWN only via the separate, genuinely-
+      working toCsv()/toJson()/toMarkdown() text methods, so no README over-claim exists to
+      flag; the product bug itself is out of this tool's scope. One real bug caught and fixed
+      in this reader before being trusted: the first version's fixed-size line window (the
+      .NET/Java readers' approach) measurably bled past save()'s real end into the unrelated
+      detectFormat() method on a dense fixture (caught by this module's own unit tests) --
+      replaced with real paren/brace-depth counting. 5 new unit tests
+      (test_typescript_format_declarations.py). Real end-to-end result: only input.html/
+      output.html SUPPORTED, matching the live README's one direct claim, zero findings. See
+      evidence/build/P2_REAL_ENGINE_SALVAGE/aspose-cells-foss__Aspose.Cells-FOSS-for-TypeScript/.
+    disposition: "ADD (not REUSE/ADAPT -- genuinely new code, no old-repo equivalent exists)"
+    reason: >
+      Sixth and final ecosystem toward "lanes work equally for all candidates." Closes
+      BUILD_FORMAT_DETECTION_FOR_NON_PYTHON_ECOSYSTEMS. The recurring lesson held one more
+      time: a signal that exists (SaveFormat.X references) is not automatically the RIGHT
+      signal unless scoped to the method that actually performs the I/O being claimed.
+    target_module: src/repo_presenter/extractors/platforms/typescript_format_declarations.py
+    smallest_first_integration_test:
+      tests/extractors/platforms/test_typescript_format_declarations.py -- all green, plus the
+      real end-to-end proof above.
+    portfolio_consumers: Lane L, every TypeScript candidate. Only measured against the one
+      mode:full TypeScript registry entry (Cells) so far -- the dry_run 3D/PDF TypeScript repos
+      have not been checked against this reader's patterns.
+    invalidation_impact: not yet pulled into any other ecosystem. This was the last ecosystem
+      in BUILD_FORMAT_DETECTION_FOR_NON_PYTHON_ECOSYSTEMS; see project/state.yaml's summary
+      field on that card for the portfolio-wide retrospective across all six readers.

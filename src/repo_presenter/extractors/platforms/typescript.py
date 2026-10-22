@@ -32,6 +32,9 @@ from repo_presenter.extractors.platforms.typescript_examples import (
     verify_typescript_build,
     verify_typescript_examples,
 )
+from repo_presenter.extractors.platforms.typescript_format_declarations import (
+    format_declarations as typescript_format_declarations,
+)
 from repo_presenter.extractors.surface import npm_package
 from repo_presenter.extractors.surface.extractor import surface_symbols
 from repo_presenter.extractors.surface.npm_package import (
@@ -203,8 +206,11 @@ class TypeScriptPlugin:
         return []
 
     def format_declarations(self, root: Path, tree_paths: list[str]) -> Sequence[FormatDeclaration]:
-        """Not yet built; the vendored format reader lands with the cohort that needs it."""
-        return []
+        """Static SaveFormat enum + save()/load()-scoped reference reading; see
+        typescript_format_declarations.py's own docstring for why the registration signal must
+        be scoped to the real write/read dispatch method, not any reference anywhere in the
+        tree."""
+        return typescript_format_declarations(root, tree_paths)
 
 
 PLUGIN: Any = TypeScriptPlugin()
