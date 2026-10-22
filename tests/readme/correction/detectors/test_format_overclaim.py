@@ -133,6 +133,46 @@ def test_an_ordinary_word_in_a_mermaid_node_is_not_mistaken_for_a_format(
     assert result.findings == ()
 
 
+def test_a_cross_edition_feature_comparison_table_is_not_mistaken_for_a_format_table(
+    make_context: Any, make_facts: Any
+) -> None:
+    """Regression: the exact real false positive measured against aspose-slides-foss's own
+    live .NET and Java READMEs (2026-10-22) -- a table comparing what each EDITION of the
+    library supports ("| | .NET | Java | C++ | Python |"), with plain "yes"/"no" cells, is not
+    a format-support table. Its row labels are feature sentences or Title-Case English words
+    ("Create, open, round-trip, save", "Charts", "Themes", "Hyperlinks"), never the all-caps-
+    acronym or dotted-extension shape a real format name has."""
+    readme = (
+        "# P\n\n## Choosing an edition\n\n"
+        "| | .NET | Java | C++ | Python |\n"
+        "|---|---|---|---|---|\n"
+        "| Create, open, round-trip, save | yes | yes | yes | yes |\n"
+        "| Charts | no | no | no | yes |\n"
+        "| Themes | no | no | no | yes |\n"
+        "| Hyperlinks | no | no | no | yes |\n"
+    )
+    facts = make_facts()  # no backing facts for any of these feature labels
+    result = format_overclaim(make_context(readme, facts))
+    assert result.findings == ()
+
+
+def test_a_real_format_table_row_is_still_flagged_alongside_the_feature_table_fix(
+    make_context: Any, make_facts: Any
+) -> None:
+    """Positive control, same pass: a genuine all-caps format label in an ordinary table row is
+    unaffected by the cross-edition-table fix above."""
+    readme = (
+        "# P\n\n## Supported Formats\n\n"
+        "| Format | Read |\n"
+        "|---|---|\n"
+        "| PPTX | yes |\n"
+    )
+    facts = make_facts()
+    result = format_overclaim(make_context(readme, facts))
+    (finding,) = result.findings
+    assert "'PPTX'" in finding.reason
+
+
 def test_an_api_reference_row_whose_prose_merely_contains_the_word_supported_is_not_flagged(
     make_context: Any, make_facts: Any
 ) -> None:

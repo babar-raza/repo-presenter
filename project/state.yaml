@@ -193,11 +193,39 @@ next_ready_items:
       SUPERSEDED by BUILD_FORMAT_DETECTION_FOR_NON_PYTHON_ECOSYSTEMS: format/capability
       over- and under-claim detection is no longer Python-only. See that card's own summary
       for the full per-ecosystem retrospective.
+    portfolio_scale_done_2026_10_22: >
+      DONE: ran scripts/run_lane_l.py against all 29 remaining registry repositories (36 total
+      minus the 7 already covered above), each a fresh shallow clone, dispatched as 4 parallel
+      scope-locked worker agents (AGENTS.md discipline: a worker's own report is not trusted
+      as acceptance -- a sample was independently spot-checked afterward, see below). 28 of 29
+      succeeded cleanly; 1 confirmed real external failure, not a pipeline bug
+      (aspose-gis-foss/Aspose.GIS.FOSS-for-.Net has no README file at all on its default
+      branch at this revision -- confirmed independently via a second, direct `gh api`
+      call, not just trusted from the worker's report). Every repository's own
+      evidence/build/P2_REAL_ENGINE_SALVAGE/<repo>/{facts.json,README.md} records its real,
+      directly-captured findings -- nothing inferred or narrated. Real, portfolio-wide
+      findings surfaced, not exhaustively listed here (see each repository's own evidence
+      directory): multiple genuine `failing_example` catches (real compiler/interpreter
+      errors in live README code blocks: aspose-pdf-foss-cpp, aspose-email-foss-cpp,
+      aspose-slides-foss-cpp, aspose-font-foss-python, aspose-cells-foss-python, and others),
+      a real undefined-variable bug in aspose-email-foss-python's own live README (`msg_path`
+      referenced but never assigned anywhere in the document -- confirmed directly against
+      the live README text, not a verifier artifact), a real auto-applied STRUCTURE_FIX in
+      aspose-psd-foss-python (a dangling closing fence), and a real transient environment
+      fragility in python_examples.py's `pinned_interpreters()` (no `try/except OSError`
+      around a directory scan, surfaced by an unrelated stale system temp file -- worked
+      around live via the code's own documented `RP_PYTHON_TOOLCHAINS` escape hatch, not
+      patched, and flagged in that repository's own evidence as a real, pre-existing
+      fragility worth a future fix).
+      One real, portfolio-wide format_overclaim false-positive class was found during
+      independent review of the batch results (not by a worker) and fixed the same day --
+      see the "format_overclaim cross-edition-table fix" entry below.
     remaining: >
-      Each ecosystem's result above is from exactly one repository (the one real, mode:full
-      or best-available candidate per ecosystem) -- not yet run across the REST of the
-      portfolio (the other ~30 registry repositories). "Lanes work equally for all
-      candidates" is proven per-ecosystem, not yet at full portfolio scale.
+      "Lanes work equally for all candidates" is now proven at full portfolio scale for
+      Lane L (all 36 registry repositories have a real, evidence-backed run). The Lane R full
+      cascade (S3-S6+render) is still proven for exactly one candidate
+      (WIRE_PRESENTATION_PLANNING_AND_REAL_UNIT_CHECKS) -- that is the real remaining gap, not
+      Lane L coverage.
   - id: RUN_PIPELINE_END_TO_END_ON_REAL_REPO
     status: DONE
     purpose: >
@@ -388,9 +416,21 @@ next_ready_items:
       New scripts, one per stage: scripts/run_lane_r_{investigation,reconciliation,planning,
       authoring_real,render}.py.
     remaining: >
-      Verified against one repository only; reconciliation_narrowing (S4's partial-rejection
-      repair path) and placement_errors (the mechanism that would fix the one measured defect
-      above) are still not ported. Not yet run at portfolio scale.
+      Verified against one repository only; not yet run at portfolio scale.
+      placement_errors IS now ported (2026-10-22, with references.py and the rest of the
+      refusal/repair half -- dangling_pointers, uncited_omit_candidates, unprinted_commands,
+      coordinate_neighbor_promises, reconcile_checks). But it does NOT, on its own, fix the
+      duplicate-opening-paragraph defect above: traced it precisely and found
+      coverage_findings()'s own gap-check (which placement_errors' tail folds into) only
+      fires for SUPERSEDE_REDUNDANT or a PLACING disposition into a *deterministic* section;
+      "opening" is LLM-authored/placeable, so a VERIFIED_PRESERVE into it was never in scope
+      for either check, by design (TC-DSP-01: reconciliation runs before planning and may
+      only claim what IT can prove -- whether an authored slot will duplicate a preserved
+      unit's content is only knowable after authoring, a later stage). The real fix belongs
+      downstream (likely renderer.py's own `_section_body`, or a cross-stage check once
+      authoring's output is known), not in this ported subset -- stated honestly, not
+      claimed closed. reconciliation_narrowing (S4's partial-rejection repair path) is still
+      not ported.
     purpose: >
       Follow-on to WRITE_PROMPTS_FOR_AUTHORING's real first call: fire a real
       presentation_planning job against the real aspose-3d-foss/Python facts to get a real

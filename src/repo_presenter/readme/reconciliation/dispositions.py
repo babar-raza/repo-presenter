@@ -48,7 +48,7 @@ import hashlib
 import json
 import re
 from collections import Counter
-from collections.abc import Mapping, Sequence
+from collections.abc import Collection, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -74,16 +74,22 @@ from repo_presenter.readme.composition.authoring import (
     inherited_unit_named_symbols,
 )
 from repo_presenter.readme.composition.components.shell import (
+    SEMANTIC_SHELL,
+    SUBSECTION_HEADINGS,
     placeable_section_ids,
     section_ids,
     shell_packet,
 )
 from repo_presenter.readme.composition.coverage import unversioned
-from repo_presenter.readme.composition.placement import renderer_fact_ids
+from repo_presenter.readme.composition.placement import (
+    renderer_fact_ids,
+    resolve_intra_document_anchors,
+)
 from repo_presenter.readme.composition.planning import section_conditions
 from repo_presenter.readme.composition.policy import DEFAULT_POLICY, PlanningPolicy
+from repo_presenter.readme.composition.references import dangling_references
 from repo_presenter.readme.composition.source_topics import path_topic, root_heading, source_heading
-from repo_presenter.readme.evidence.facts.links import extract_links
+from repo_presenter.readme.evidence.facts.links import extract_links, heading_slug
 from repo_presenter.readme.evidence.facts.product_pages import (
     BANNER_FACT_ID,
     ENTERPRISE_FACT_ID,
@@ -95,6 +101,7 @@ from repo_presenter.readme.evidence.facts.registry_lag import REGISTRY_LAG_FACT_
 from repo_presenter.readme.reconciliation.destinations import (
     disposition_variants,
     holdable_sections,
+    nearest_holdable,
     rehomed,
 )
 
@@ -278,6 +285,9 @@ NOT_NAVIGATION = "not_navigation"
 OMIT_UNRESOLVED_EXAMPLE = "omit_unresolved_example"
 OMIT_VERIFIED_EXAMPLE = "omit_verified_example"
 OMIT_NAMES_SUPPORTED = "omit_names_supported"
+UNCOVERED_SUPERSESSION = "uncovered_supersession"
+DANGLING_POINTER = "dangling_pointer"
+SUPPORTED_OMISSION = "supported_omission"
 OMIT_VERSION_SKEW = "omit_version_skew"
 
 _SKEW_WARNING = re.compile(
@@ -1435,3 +1445,504 @@ def write_dispositions(output: dict[str, Any], path: Path) -> str:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_bytes(data)
     return hashlib.sha256(data).hexdigest()
+
+
+# Refusal/repair half, ported later still (2026-10-22, found live): render_readme() produced a
+# real README for aspose-3d-foss/Aspose.3D-FOSS-for-Python with a duplicate opening paragraph --
+# a VERIFIED_PRESERVE into "opening" (an LLM-authored section, not a deterministic one) that
+# coverage_findings()'s own self-audit does not check (its gap-check only fires for
+# SUPERSEDE_REDUNDANT or a PLACING disposition into a *deterministic* section). This is exactly
+# the gap this module's own earlier docstring predicted placement_errors() would need to close.
+# Ports coordinate_neighbor_promises (settles a lead-in/payload pair across batches, after
+# merge_dispositions), uncited_omit_candidates + _coverage_errors (the typed, repairable refusal
+# messages), unprinted_commands (BC-08 mirror), dangling_pointers (BC-07 mirror, needs the
+# just-ported composition/references.py), and placement_errors itself (the job's own checks,
+# combined with normalize() as reconcile_checks does in the old repo).
+
+
+def coordinate_neighbor_promises(
+    dispositions: dict[str, Any], facts: FactsDocument
+) -> dict[str, Any]:
+    """Keep a lead-in and the block it introduces one thing: the same fate and the same section.
+
+    A lead-in (a paragraph or list ending ``:``) is never carried alone and never leaves its
+    block behind. Its payload is the next code block, list or table, and the pair is settled from
+    both sides, whichever of the two the reconciler got wrong. Runs once, after
+    ``merge_dispositions()`` folds every batch into one flat document -- the one point a
+    neighbor's own final disposition is visible regardless of which batch produced it.
+    """
+    units_by_id = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
+    entries_by_id = {
+        str(entry.get("unit_id", "?")): entry for entry in dispositions.get("dispositions", [])
+    }
+    examples = _example_status(facts)
+    for entry in dispositions.get("dispositions", []):
+        unit = str(entry.get("unit_id", "?"))
+        if unit.rsplit(".", 1)[-1] not in {"paragraph", "list"}:
+            continue
+        unit_fact = units_by_id.get(unit)
+        if unit_fact is None or not unit_fact.value.rstrip().endswith(":"):
+            continue
+        payload = _payload_of(unit, units_by_id)
+        neighbor = entries_by_id.get(payload) if payload is not None else None
+        if payload is None or neighbor is None:
+            continue
+        _settle_lead_in(entry, unit_fact, neighbor, payload, examples)
+    return dispositions
+
+
+def _settle_lead_in(
+    entry: dict[str, Any],
+    lead: Fact,
+    neighbor: dict[str, Any],
+    payload: str,
+    examples: Mapping[str, tuple[str, str]],
+) -> None:
+    """One lead-in settled against its payload's disposition (``coordinate_neighbor_promises``)."""
+    state = entry.get("disposition")
+    block = neighbor.get("disposition")
+    if block == "OMIT_UNSUPPORTED":
+        if state in PLACING or state == "DEFER_UNRESOLVED":
+            _omit_lead_in(entry, neighbor, payload)
+        return
+    if block == "DEFER_UNRESOLVED":
+        if state in PLACING:
+            entry["disposition"] = "DEFER_UNRESOLVED"
+            entry["destination_section"] = None
+        return
+    kind = _unit_kind(payload)
+    target = neighbor.get("destination_section")
+    verified_example = kind == "code_block" and examples.get(payload, ("", ""))[0] == "SUPPORTED"
+    if state == "DEFER_UNRESOLVED":
+        if verified_example and target in _EXAMPLE_SECTIONS and block in _KEPT_OR_COVERED:
+            _supersede_lead_in(entry, str(target))
+        elif (
+            kind == "code_block"
+            and block in PLACING
+            and target in placeable_section_ids()
+            and _bare_lead_in(lead.value)
+        ):
+            entry["disposition"] = "VERIFIED_PRESERVE"
+            entry["destination_section"] = target
+            entry["rationale"] = _LEAD_IN_KEPT_RATIONALE
+        state = entry.get("disposition")
+    if state not in PLACING:
+        return
+    destination = entry.get("destination_section")
+    if verified_example:
+        section = next(
+            (s for s in (destination, target) if s in _EXAMPLE_SECTIONS),
+            None,
+        )
+        if section is not None and block in _KEPT_OR_COVERED:
+            _supersede_lead_in(entry, section)
+            return
+    if (
+        kind == "list"
+        and _unit_kind(str(entry.get("unit_id"))) == "paragraph"
+        and destination in _CARRY_SECTIONS
+        and block in PLACING
+        and target == destination
+    ):
+        _supersede_lead_in(entry, str(destination))
+        return
+    if block in PLACING and target in placeable_section_ids() and target != destination:
+        entry["destination_section"] = target
+        entry["rationale"] = _LEAD_IN_FOLLOWED_RATIONALE
+
+
+def _omit_lead_in(entry: dict[str, Any], neighbor: Mapping[str, Any], payload: str) -> None:
+    """Omit a lead-in with the block it introduces. An omission names what shows the claim
+    unsupported (``placement_errors``' own rule for prose), which for a lead-in is its block: the
+    block's own citations, or the block itself when it cited none."""
+    entry["disposition"] = "OMIT_UNSUPPORTED"
+    entry["destination_section"] = None
+    entry["fact_ids"] = sorted(set(neighbor.get("fact_ids") or [])) or [payload]
+    entry["rationale"] = _LEAD_IN_OMITTED_RATIONALE.format(block=payload)
+
+
+_KEPT_OR_COVERED = PLACING | {"SUPERSEDE_REDUNDANT"}
+_LEAD_IN_OMITTED_RATIONALE = (
+    "Lead-in of the omitted block that follows ({block}): withheld with it, never alone."
+)
+_LEAD_IN_KEPT_RATIONALE = "Lead-in of the kept block that follows: placed with it, never alone."
+_LEAD_IN_FOLLOWED_RATIONALE = "Lead-in of the block that follows: kept in its section, with it."
+_BARE_LEAD_IN_WORDS = 14
+_CLAIM_WORDS = re.compile(
+    r"\b(?:install\w*|publish\w*|releas\w*|version\w*|registry|pypi|npm|nuget|maven|crates?|"
+    r"cargo|pip|supports?|requires?|compatible|works?)\b",
+    re.IGNORECASE,
+)
+_SENTENCE_BREAK = re.compile(r"[.!?]\s+\S")
+
+
+def _bare_lead_in(text: str) -> bool:
+    """Whether a colon-ending sentence only introduces what follows (``_CLAIM_WORDS``)."""
+    body = " ".join(text.split()).rstrip(":").strip()
+    return (
+        bool(body)
+        and len(body.split()) <= _BARE_LEAD_IN_WORDS
+        and not any(mark in body for mark in ("`", "](", "://"))
+        and not any(character.isdigit() for character in body)
+        and _SENTENCE_BREAK.search(body) is None
+        and _CLAIM_WORDS.search(body) is None
+    )
+
+
+_PAYLOAD_KINDS = frozenset({"code_block", "list", "table"})
+_EXAMPLE_SECTIONS = frozenset({"quick_start", "additional_examples"})
+_LEAD_IN_RATIONALE = "Lead-in of the block that follows: carried together with it, never alone."
+
+
+def _payload_of(unit_id: str, units: Mapping[str, Fact]) -> str | None:
+    """The block that immediately follows ``unit_id`` in the source README when it is the kind of
+    block a colon introduces (a code block, a list or a table), else ``None``."""
+    ordinal = _unit_ordinal(unit_id)
+    if ordinal is None:
+        return None
+    following = sorted(
+        (other, nxt)
+        for other in units
+        if (nxt := _unit_ordinal(other)) is not None and nxt > ordinal
+    )
+    if not following:
+        return None
+    first = min(following, key=lambda pair: (pair[1], pair[0]))
+    return first[0] if _unit_kind(first[0]) in _PAYLOAD_KINDS else None
+
+
+def lead_in_of(unit_id: str, units: Mapping[str, Fact]) -> str | None:
+    """The sentence that introduces ``unit_id`` in the source README - a paragraph or list ending
+    ``:`` right before a code block, list or table - or ``None``. The inverse of ``_payload_of``."""
+    if _unit_kind(unit_id) not in _PAYLOAD_KINDS:
+        return None
+    ordinal = _unit_ordinal(unit_id)
+    if ordinal is None:
+        return None
+    before = [
+        (other_ordinal, other)
+        for other in units
+        if (other_ordinal := _unit_ordinal(other)) is not None and other_ordinal < ordinal
+    ]
+    if not before:
+        return None
+    nearest = max(ordinal_ for ordinal_, _ in before)
+    for _, candidate in sorted((o, u) for o, u in before if o == nearest):
+        if _unit_kind(candidate) in {"paragraph", "list"} and units[
+            candidate
+        ].value.rstrip().endswith(":"):
+            return candidate
+    return None
+
+
+def _supersede_lead_in(entry: dict[str, Any], destination: str) -> None:
+    entry["disposition"] = "SUPERSEDE_REDUNDANT"
+    entry["destination_section"] = destination
+    entry["rationale"] = _LEAD_IN_RATIONALE
+
+
+UNCITED_PROSE_OMIT = "uncited_prose_omit"
+_PROSE_UNIT_KINDS = frozenset({"paragraph", "list"})
+
+
+def uncited_omit_candidates(unit_text: str, facts: FactsDocument) -> list[str]:
+    """SUPPORTED fact IDs the refused unit's own text already spells, sorted - a deterministic
+    candidate list the ``uncited_prose_omit`` re-ask can name, so the model has somewhere
+    concrete to look rather than only being told to "try harder"."""
+    return sorted(inherited_unit_named_symbols(facts, unit_text))
+
+
+_OMISSION_ACTION = {
+    OMIT_UNRESOLVED_EXAMPLE: "Choose DEFER_UNRESOLVED: an example the facts neither support nor "
+    "contradict is withheld and listed, never called unsupported",
+    OMIT_VERIFIED_EXAMPLE: "Supersede it into quick_start or additional_examples (the plan "
+    "renders every verified example there) or place it; do not omit a verified example",
+    OMIT_NAMES_SUPPORTED: "Cite the facts that support it and place it, or choose "
+    "DEFER_UNRESOLVED if no fact settles its claim",
+    OMIT_VERSION_SKEW: "The warning is the maintainers' own and true: keep it "
+    "(VERIFIED_PRESERVE or VERIFIED_MOVE into scope_limitations, where the limits of the "
+    "registry release belong) so a reader who installs from the registry is told what that "
+    "release lacks; do not omit it",
+}
+_QUOTE_LIMIT = 600
+
+
+def _coverage_errors(
+    gaps: Sequence[CoverageGap],
+    unit_text: Mapping[str, str],
+    holdable: Sequence[str],
+    nearest: Mapping[str, str | None] | None = None,
+) -> list[str]:
+    """One typed, repairable refusal per disposition that claims more than the stage can prove,
+    quoting the unit's exact text and naming the sections that can hold it, nearest first."""
+    errors: list[str] = []
+    for gap in gaps:
+        kind = _unit_kind(gap.unit_id).replace("_", " ")
+        text = json.dumps(unit_text.get(gap.unit_id, "(text not in the facts)"), ensure_ascii=False)
+        if len(text) > _QUOTE_LIMIT:
+            text = text[:_QUOTE_LIMIT] + "..."
+        if gap.disposition == "OMIT_UNSUPPORTED":
+            errors.append(
+                f"{gap.unit_id}: {SUPPORTED_OMISSION}: OMIT_UNSUPPORTED claims no fact supports "
+                f"this {kind}, but {gap.detail}. {_OMISSION_ACTION[gap.reason]}; the unit's exact "
+                f"text is {text}"
+            )
+            continue
+        home = (nearest or {}).get(gap.unit_id)
+        advice = f" The nearest section that can hold it is {home}." if home is not None else ""
+        errors.append(
+            f"{gap.unit_id}: {UNCOVERED_SUPERSESSION}: {gap.disposition} treats "
+            f"{gap.destination or 'no section'} as carrying this {kind}, but {gap.detail}. A unit "
+            "is superseded only when something that renders takes its place: place it "
+            "(VERIFIED_PRESERVE or VERIFIED_MOVE) into a section that can hold it "
+            f"({', '.join(holdable)}) or choose DEFER_UNRESOLVED.{advice} The unit's exact text "
+            f"is {text}"
+        )
+    return errors
+
+
+_PRINTED_AS_WRITTEN = frozenset({"VERIFIED_PRESERVE", "VERIFIED_MOVE"})
+_COMMAND_LINE = re.compile(
+    r"^\s*(?:[$>]\s*)?(?:pip3?|python3?(?:\s+-m)?|npm|npx|yarn|pnpm|dotnet|mvn|gradle|go|"
+    r"cargo|cmake|make|git)\b(?!-)",
+    re.IGNORECASE,
+)
+UNPRINTED_COMMAND = "unprinted_command"
+
+
+def unprinted_commands(text: str, facts: FactsDocument) -> list[str]:
+    """The command lines of a code block that no verified section prints: not the Installation
+    row's lines (``_rendered_commands``) and not a build or test command the repository records.
+    BC-08 holds every command of a kept block to the finished README, so a block that is
+    corrected or rewritten (and so never printed as written) must have none."""
+    printed = set(_rendered_commands(facts))
+    for fact in facts.by_kind("build_test_asset"):
+        if fact.polarity == "SUPPORTED":
+            printed.update(_command_lines(fact.value))
+    return [
+        raw.strip()
+        for raw in text.splitlines()
+        if _COMMAND_LINE.match(raw) and (_command_lines(raw) or [""])[0] not in printed
+    ]
+
+
+_POINTER_REFERENTS = frozenset({"paragraph", "list", "table", "blockquote"})
+_POINTER_BATCH_TAIL = 3
+_POINTS_UP = re.compile(r"precedes it|ends with a colon|' section this README does not have")
+_NAMED_SECTION = re.compile(r"refers to a '([^']+)' section this README does not have")
+_TOP_HEADING = re.compile(r"^#{1,2}\s+(.*?)\s*#*\s*$")
+
+
+def _unanswerable_section(reason: str, former: Collection[str]) -> bool:
+    """Whether a "refers to a 'N' section this README does not have" reason names a section no
+    heading can answer: one pointed at as "below" (kept units print after their section's
+    content, and a heading is the shell's), or one the old README had at the top level and the
+    shell does not print (``former``)."""
+    match = _NAMED_SECTION.search(reason)
+    if match is None:
+        return False
+    name = match.group(1)
+    return name.lower().endswith((" below", " above")) or heading_slug(name) in former
+
+
+def dangling_pointers(
+    output: Mapping[str, Any], facts: FactsDocument
+) -> list[tuple[str, str, str]]:
+    """``(unit_id, sentence, reason)`` for each kept-as-written paragraph or list that points
+    forward ("the table below", "the following example") at something no unit kept after it in
+    the same section provides (BC-07, composition/references.py)."""
+    inherited = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
+    tail = set(list(inherited)[-_POINTER_BATCH_TAIL:])
+    commands = command_block_units(facts)
+    placeable = placeable_section_ids()
+    shell_slugs = frozenset(
+        heading_slug(section.heading) for section in SEMANTIC_SHELL if section.heading
+    )
+    printed = shell_slugs | {heading_slug(title) for title in SUBSECTION_HEADINGS}
+    former = {
+        heading_slug(match.group(1))
+        for fact in inherited.values()
+        if fact.id.endswith(".heading") and (match := _TOP_HEADING.match(fact.value.strip()))
+    } - printed
+    kept: dict[str, list[tuple[str, str]]] = {}
+    for entry in output.get("dispositions", []):
+        unit = str(entry.get("unit_id", "?"))
+        destination = entry.get("destination_section")
+        fact = inherited.get(unit)
+        if (
+            fact is None
+            or entry.get("disposition") not in {"VERIFIED_PRESERVE", "VERIFIED_MOVE"}
+            or destination not in placeable
+        ):
+            continue
+        if _unit_kind(unit) in _POINTER_REFERENTS or unit in commands:
+            text = resolve_intra_document_anchors(fact.value, shell_slugs)
+            kept.setdefault(str(destination), []).append((unit, text))
+    found: list[tuple[str, str, str]] = []
+    for destination, units in kept.items():
+        document = "\n\n".join([f"## {destination}", *(text.strip("\n") for _, text in units)])
+        for reference in dangling_references(document):
+            reasons = [
+                reason
+                for reason in reference.reason.split("; ")
+                if not _POINTS_UP.search(reason) or _unanswerable_section(reason, former)
+            ]
+            if not reasons:
+                continue
+            sentence = " ".join(reference.sentence.split())
+            owner = next(
+                (
+                    unit_id
+                    for unit_id, text in units
+                    if unit_id not in tail
+                    and _unit_kind(unit_id) in {"paragraph", "list"}
+                    and sentence in " ".join(text.split())
+                ),
+                None,
+            )
+            if owner is not None:
+                found.append((owner, sentence, "; ".join(reasons)))
+    return found
+
+
+def placement_errors(output: dict[str, Any], facts: FactsDocument) -> list[str]:
+    """Why the dispositions may not be used, beyond schema and binding; empty when they hold.
+
+    An OMIT_UNSUPPORTED on a paragraph or list must cite at least one fact ID as its reason (the
+    facts that show the claim unsupported), or be placed instead. When the unit's own text
+    already spells a SUPPORTED fact's identifier, the refusal also names that fact ID as a
+    candidate (``uncited_omit_candidates``) - the model still decides whether it truly supports
+    the claim; this never assigns a disposition on its own.
+    """
+    placeable = placeable_section_ids()
+    holdable = holdable_sections(facts)
+    contradicted = contradicted_code_units(facts)
+    commands = command_block_units(facts)
+    unpublished = unpublished_registry_blocks(facts)
+    inherited = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
+    unit_text = {unit_id: fact.value for unit_id, fact in inherited.items()}
+    build_facts = sorted(
+        fact.id
+        for fact in facts.facts
+        if fact.kind in {"build_test_asset", "install_command"} and fact.polarity == "SUPPORTED"
+    )
+    errors: list[str] = []
+    for entry in output.get("dispositions", []):
+        unit = entry.get("unit_id", "?")
+        disposition = entry.get("disposition")
+        destination = entry.get("destination_section")
+        cited = entry.get("fact_ids") or []
+        if (
+            disposition == "OMIT_UNSUPPORTED"
+            and not cited
+            and unit.rsplit(".", 1)[-1] in _PROSE_UNIT_KINDS
+        ):
+            kind = unit.rsplit(".", 1)[-1]
+            raw_text = unit_text.get(unit, "(text not in the facts)")
+            text = json.dumps(raw_text, ensure_ascii=False)
+            candidates = uncited_omit_candidates(raw_text, facts)
+            candidate_clause = (
+                " This unit's own text already spells these SUPPORTED facts: "
+                f"{', '.join(candidates)}. Cite whichever of them actually support the claim "
+                "(SUPERSEDE_REDUNDANT or CORRECT_WITH_EVIDENCE), or OMIT_UNSUPPORTED with a "
+                "cited reason if none of them truly apply."
+                if candidates
+                else ""
+            )
+            errors.append(
+                f"{unit}: {UNCITED_PROSE_OMIT}: OMIT_UNSUPPORTED on a {kind} needs at least one "
+                "fact ID that shows the claim unsupported, or the unit must be placed in a section "
+                f"the shell can hold; the unit's exact text is {text}.{candidate_clause} Cite the "
+                "supporting fact IDs or place the unit; do not omit it without a cited reason"
+            )
+        if (
+            disposition == "OMIT_UNSUPPORTED"
+            and unit in commands
+            and build_facts
+            and unit not in unpublished
+        ):
+            errors.append(
+                f"{unit}: a command block is never OMIT_UNSUPPORTED while build or install "
+                f"facts exist ({', '.join(build_facts)}); choose VERIFIED_PRESERVE into "
+                "development_testing, or SUPERSEDE_REDUNDANT by installation for an install "
+                "command"
+            )
+        if disposition in PLACING:
+            if destination not in placeable:
+                errors.append(
+                    f"{unit}: {disposition} needs a destination the shell can hold "
+                    f"({', '.join(holdable)}); got {destination!r}"
+                )
+            if unit in contradicted:
+                errors.append(f"{unit}: its example is CONTRADICTED and cannot be placed")
+        elif disposition == "SUPERSEDE_REDUNDANT":
+            if destination is None and not cited:
+                errors.append(
+                    f"{unit}: SUPERSEDE_REDUNDANT names the section whose content renders or "
+                    "covers the unit in destination_section, or cites at least one fact ID"
+                )
+        elif destination is not None:
+            errors.append(f"{unit}: {disposition} takes no destination; got {destination!r}")
+        if disposition == "CORRECT_WITH_EVIDENCE" and not cited:
+            errors.append(f"{unit}: CORRECT_WITH_EVIDENCE needs at least one fact ID as evidence")
+    pointers: dict[str, list[str]] = {}
+    for unit, sentence, reason in dangling_pointers(output, facts):
+        pointers.setdefault(unit, []).append(f"{json.dumps(sentence, ensure_ascii=False)} {reason}")
+    for unit, said in pointers.items():
+        kept = next(e for e in output.get("dispositions", []) if e.get("unit_id") == unit)
+        errors.append(
+            f"{unit}: {DANGLING_POINTER}: {kept.get('disposition')} keeps it as written in "
+            f"{kept.get('destination_section')}, but its sentence "
+            f"{'; and '.join(said)[:_QUOTE_LIMIT]}. Kept units print after the section's own "
+            "content, so a pointer to what follows is answered only by a unit kept right after it "
+            "in the same section: keep that unit there too, or choose VERIFIED_REWRITE (the "
+            "wording is re-authored from facts, without the pointer), or OMIT_UNSUPPORTED citing "
+            "the fact that shows the claim unsupported"
+        )
+    verified_blocks = _example_status(facts)
+    for entry in output.get("dispositions", []):
+        unit = str(entry.get("unit_id", "?"))
+        if (
+            entry.get("disposition") not in {"CORRECT_WITH_EVIDENCE", "VERIFIED_REWRITE"}
+            or not unit.endswith(".code_block")
+            or unit in verified_blocks
+            or unit not in inherited
+        ):
+            continue
+        unprinted = unprinted_commands(unit_text[unit], facts)
+        if unprinted:
+            keep = (
+                "keep it as written (VERIFIED_PRESERVE or VERIFIED_MOVE into a section that can "
+                "hold it), or SUPERSEDE_REDUNDANT by installation if the Installation row prints it"
+                if unit in commands and build_facts
+                else "keep it as written (VERIFIED_PRESERVE or VERIFIED_MOVE), or withhold it "
+                "(OMIT_UNSUPPORTED citing the fact that shows it unsupported, or DEFER_UNRESOLVED)"
+            )
+            errors.append(
+                f"{unit}: {UNPRINTED_COMMAND}: {entry.get('disposition')} edits a code block the "
+                "README prints only as written, and BC-08 holds every command in it to the "
+                f"finished README, where no verified section prints {', '.join(unprinted[:3])!r}. "
+                f"Choose: {keep}"
+            )
+    unfolded = [
+        gap
+        for gap in coverage_findings(output, facts)
+        if not (gap.disposition == "SUPERSEDE_REDUNDANT" and gap.destination in placeable)
+        and gap.reason != OMIT_UNRESOLVED_EXAMPLE
+    ]
+    root = root_heading(list(inherited.values()))
+    nearest = {
+        gap.unit_id: nearest_holdable(
+            gap.unit_id, source_heading(inherited.get(gap.unit_id)), holdable, root
+        )
+        for gap in unfolded
+    }
+    errors.extend(_coverage_errors(unfolded, unit_text, holdable, nearest))
+    return errors
+
+
+def reconcile_checks(
+    output: dict[str, Any], facts: FactsDocument, policy: PlanningPolicy = DEFAULT_POLICY
+) -> list[str]:
+    """The job's own checks for the runner: normalise, then judge what remains."""
+    return normalize(output, facts, policy) + placement_errors(output, facts)

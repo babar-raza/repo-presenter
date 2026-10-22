@@ -1237,3 +1237,100 @@ entries:
     portfolio_consumers: the complete Lane R cascade for any repository with real facts.json +
       a clone to read the live README from. Verified against one repository so far.
     invalidation_impact: not yet pulled into any running pipeline; no invalidation surface yet.
+
+  - component: "readme/composition/references.py + dispositions.py's refusal/repair half
+      (coordinate_neighbor_promises, uncited_omit_candidates, dangling_pointers,
+      unprinted_commands, placement_errors, reconcile_checks)"
+    source: "old repo's own components/readme/composition/references.py (264 lines) and the
+      remaining ~550 lines of dispositions.py (the refusal/repair half flagged as deferred in
+      this module's own earlier manifest entry)"
+    evaluated_at_shas: []
+    behavior: >
+      references.py's dangling_references() finds a prose sentence that points at a table,
+      list, example or section not actually present (BC-07's own mechanical check, reading
+      only the finished README). dispositions.py's refusal/repair half builds on it:
+      coordinate_neighbor_promises keeps a lead-in sentence and the block it introduces one
+      fate across S4 batches; uncited_omit_candidates gives an OMIT_UNSUPPORTED re-ask a
+      concrete SUPPORTED-fact candidate list instead of "try harder"; dangling_pointers finds
+      a kept unit whose forward reference nothing kept after it answers; unprinted_commands
+      mirrors BC-08 (a corrected/rewritten code block's commands must still be printed
+      somewhere real); placement_errors is the job's own checks function, folding all of the
+      above plus structural rules (a PLACING disposition needs a holdable destination, a
+      SUPERSEDE_REDUNDANT needs a destination or citation, etc.); reconcile_checks =
+      normalize() + placement_errors(), the old repo's own wiring.
+    evidence: >
+      REUSE, verbatim except import paths (references.py) and verbatim with three new
+      module-level constants restored (UNCOVERED_SUPERSESSION, DANGLING_POINTER,
+      SUPPORTED_OMISSION -- gap-reason labels the already-ported coverage_findings() half
+      didn't need but this half's own error messages do). 9 new tests for references.py
+      (tests/readme/composition/test_references.py, verbatim from the old repo) + 19 new
+      tests for the dispositions.py half (tests/readme/reconciliation/test_placement_errors.py
+      -- NOT a port of the old repo's own archived-fixture test_s4_coordination.py, which
+      needs validation/deferrals.py's review_deferrals and recover_uncited_prose_omits,
+      neither ported; self-contained fixtures instead, covering the same real defect classes
+      the old docstrings name). Found live while tracing the duplicate-opening-paragraph
+      defect from the first full Lane R cascade run: placement_errors does NOT close that
+      specific defect (its own scope is narrower than that gap -- see
+      WIRE_PRESENTATION_PLANNING_AND_REAL_UNIT_CHECKS's own updated remaining field for the
+      precise reason), but is a real, independently valuable verification layer on its own
+      terms, covering three distinct, separately-documented real defect classes (BC-05, BC-07,
+      BC-08) this repository had no coverage for at all until now. 1040/1040 whole-repo tests
+      pass (1010 before this port + 9 + 19 + 2 from the format_overclaim fix below).
+    disposition: "REUSE (verbatim except import paths, plus the three restored constants)"
+    reason: >
+      Completes the S4 job's own checks function (reconcile_checks), the last major
+      undelivered piece of dispositions.py's module docstring's own two-part split (self-audit
+      ported earlier; refusal/repair half deferred, now ported). Not yet wired into any of the
+      scripts/run_lane_r_*.py scripts as a checks= callback -- ported and tested, not yet
+      exercised in a live S4 call.
+    target_module: src/repo_presenter/readme/composition/references.py,
+      src/repo_presenter/readme/reconciliation/dispositions.py (extended)
+    smallest_first_integration_test: tests/readme/composition/test_references.py (9),
+      tests/readme/reconciliation/test_placement_errors.py (19) -- both green.
+    portfolio_consumers: any future real S4 call that wires reconcile_checks as its checks=
+      callback (scripts/run_lane_r_reconciliation.py does not yet do this).
+    invalidation_impact: not yet pulled into any running pipeline; no invalidation surface yet.
+
+  - component: "readme/correction/detectors/format_overclaim.py (cross-edition-table fix)"
+    source: "new engineering against this repository's own already-salvaged detector,
+      prompted by a real false positive found during independent review of the 29-repo
+      portfolio batch run above"
+    evaluated_at_shas: []
+    behavior: >
+      _table_claims() now requires a table row's label to look like a format/capability NAME
+      (_TABLE_LABEL_SHAPE: an all-caps acronym, or a dotted lowercase extension) before its
+      truthy marker cells are read as a format claim at all -- not merely that the label is
+      non-empty, the previous rule.
+    evidence: >
+      Real, measured false positive: aspose-slides-foss's own .NET and Java READMEs (the
+      identical table, shared across the family) both carry a cross-EDITION feature-
+      comparison table ("| | .NET | Java | C++ | Python |", rows like "Create, open,
+      round-trip, save" / "Charts" / "Themes" / "Hyperlinks"), whose plain "yes"/"no" cells
+      satisfied the existing truthy-marker rule regardless of what the row's label actually
+      named. 14 false positives on .NET, 10 on Java -- found independently (not by either
+      worker agent that ran these two repositories; both correctly reported the symptom as an
+      observation without touching src/, per their own scope lock) while reviewing the 29-
+      repo portfolio batch's real results. Fixed and re-verified live against both real
+      repositories: .NET's findings dropped from 22 to 8, Java's from 14 to 4, with the real,
+      correctly-targeted PPTX/PPSX/POTX findings (from the Mermaid diagram, not this table)
+      unaffected on both. 2 new regression tests
+      (tests/readme/correction/detectors/test_format_overclaim.py). See the updated
+      evidence/build/P2_REAL_ENGINE_SALVAGE/aspose-slides-foss__Aspose.Slides-FOSS-for-{.NET,Java}/
+      (both superseded in place, second-run facts.json and README.md).
+    disposition: "a correction to existing salvaged code, not a new disposition"
+    reason: >
+      A false positive degrades trust in the whole over-claim detector the same way a missed
+      real defect does; found and fixed the same day it was discovered, following the exact
+      discipline every other false positive this session found (AVEVA/PDMS, ASCII) was fixed
+      under.
+    target_module: src/repo_presenter/readme/correction/detectors/format_overclaim.py
+    smallest_first_integration_test:
+      tests/readme/correction/detectors/test_format_overclaim.py -- 11/11 green, plus the real
+      end-to-end re-verification above.
+    portfolio_consumers: every format_overclaim run across the whole portfolio; confirmed to
+      affect at least 2 of 36 repositories directly (both Slides repos share the table), likely
+      more among the other 2 Slides-family repos (C++, Python) not yet re-checked against
+      this specific table shape.
+    invalidation_impact: every sealed candidate whose format_overclaim findings were computed
+      before this fix should be treated as stale if its README has a multi-column comparison
+      table of any kind -- not yet swept portfolio-wide to confirm how many are affected.

@@ -16,6 +16,13 @@ a bare "Yes", a bare "Supported") naming a format or capability in its first cel
 shape of a format-support table like the 3D-.NET one the owner's ruling names. A row marked with a
 falsy cell (a cross mark, "No", "Not supported") is a correctly-caveated claim and is never
 flagged; a row whose claim a SUPPORTED fact backs is a correct claim and is never flagged either.
+The row's own label must also look like a format/capability NAME (``_TABLE_LABEL_SHAPE``), not
+just be non-empty: a real false positive measured 2026-10-22 (aspose-slides-foss's .NET and Java
+READMEs, both) is a cross-EDITION feature-comparison table ("Create, open, round-trip, save",
+"Charts", "Themes", "Hyperlinks" -- each edition's own "yes"/"no" column, not a format-support
+marker at all) whose plain "yes" cells satisfy the truthy-marker rule on a label that is a
+sentence or a Title-Case English word, never the all-caps-acronym or dotted-extension shape every
+real format name measured across the portfolio actually has.
 
 Because confirming an over-claim needs a human-reviewable fact citation, not blind auto-correction,
 this detector never edits -- every result is a report-only ``Finding``, even when a CONTRADICTED
@@ -70,6 +77,17 @@ _ACRONYM = re.compile(r"\b(?=[A-Z0-9]*[A-Z])[A-Z0-9]{2,6}\b")
 # reads `"An existing STL file (binary or ASCII)"` -- a content-encoding qualifier of the STL
 # claim right next to it, not a second file-format claim.
 _NOT_A_FORMAT = frozenset({"AN", "OR", "A", "3D", "2D", "ID", "IO", "AVEVA", "PDMS", "ASCII"})
+# A table row's first cell must look like a format/capability NAME to be a claim at all, not any
+# non-empty label -- real false positive measured 2026-10-22, aspose-slides-foss's own .NET and
+# Java READMEs: a cross-EDITION feature-comparison table ("| | .NET | Java | C++ | Python |",
+# rows like "Create, open, round-trip, save" / "Charts" / "Themes" / "Hyperlinks") has plain
+# "yes"/"no" cells -- a truthy marker by this detector's own rule -- but the row label is a
+# feature description or a single Title-Case English word, never a format name. Every real
+# format/extension name measured across the portfolio (STL, OBJ, AMF, PPTX, PPSX, POTX, 3MF) is
+# either an all-caps acronym or a lowercase dotted extension; a Title-Case word like "Charts" or
+# a comma-separated sentence is neither shape, so this gate rejects both without needing to know
+# what the table is actually comparing.
+_TABLE_LABEL_SHAPE = re.compile(r"^\.?[A-Z0-9]{2,10}$|^\.[a-z0-9]{1,10}$")
 
 
 def _table_claims(ctx: Context) -> list[tuple[int, str, str]]:
@@ -85,6 +103,9 @@ def _table_claims(ctx: Context) -> list[tuple[int, str, str]]:
             continue
         label = cells[0]
         if not label or _SEPARATOR_CELL.match(label) or all(_SEPARATOR_CELL.match(c) for c in cells):
+            continue
+        shape = _STRIP_MARKUP.sub("", label).strip()
+        if not _TABLE_LABEL_SHAPE.match(shape):
             continue
         if any(_TRUTHY.match(_STRIP_MARKUP.sub("", cell).strip()) for cell in cells[1:]):
             claims.append((line.number, label, line.text))
