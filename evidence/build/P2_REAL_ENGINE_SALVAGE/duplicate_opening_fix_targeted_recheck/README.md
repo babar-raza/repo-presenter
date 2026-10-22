@@ -40,11 +40,31 @@ Compare this to the original ninth-cascade result
 (`evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_ninth_full_cascade/README.coherent.md`), where
 coherence's revision was a near word-for-word copy of the preserved paragraph.
 
+## Second targeted recheck: the sixth cascade's repository (rust)
+
+Re-fired the same way against `aspose-cells-foss/Aspose.Cells-FOSS-for-Rust`, the sixth cascade's
+own repository and the other case this session observed where S8 coherence's revision worsened
+the duplicate (there, a close paraphrase rather than a near-verbatim copy).
+
+S6 (authoring), re-fired: accepted on the first attempt, equivalent to the original run (opening
+already distinct from the preserved paragraph at this stage, as it was originally).
+
+S8 (coherence), re-fired: `coherence#1` again needed 2 calls (originally 1) -- the model's first
+attempt to revise "opening" was rejected, and on retry it left the unit's text unchanged rather
+than forcing a revision that would again violate the check (`revised: (none)`). The final
+`opening` text stayed the genuinely distinct pre-coherence version (naming `Workbook.load_xlsx`,
+`LoadOptions.try_repair_package`, and the specific methods/fields it supports) beside the
+preserved paragraph (naming its own distinct crates: `zip`, `roxmltree`, `chrono`, etc.) --
+exactly the pairing the original (pre-fix) sixth-cascade run showed before coherence pushed them
+together into a paraphrase. See `after_fix.rust.README.coherent.md`.
+
 ## Conclusion
 
-The fix holds under a live re-run, not just the unit tests already committed with it: on this
-repository, coherence's own tendency to push "opening" toward the preserved paragraph was caught
-and corrected on retry, not merely detected in a synthetic fixture. This is one targeted
-recheck, not a global one -- the sixth cascade's repository (the other worsened case) has not yet
-been re-fired, and the fix's own card already states it is partial (catches near-total
-duplication only, not the milder structural redundancy most cascades showed).
+The fix holds under a live re-run on both of the two repositories this session observed S8
+coherence actually worsening the duplicate on -- not just the unit tests already committed with
+it. In both cases, coherence's own first attempt to revise "opening" was rejected, and the retry
+either produced genuinely distinct text (ninth cascade, typescript) or simply kept the already-
+distinct text unchanged (sixth cascade, rust) rather than forcing a revision that would violate
+the check. This is two targeted rechecks, not a global one, and the fix's own card already states
+it is partial (catches near-total duplication only, not the milder structural redundancy most of
+the ten cascades actually showed).

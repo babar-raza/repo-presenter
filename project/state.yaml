@@ -730,6 +730,16 @@ next_ready_items:
       near word-for-word copy the original run produced. The fix holds under a live re-run,
       not only in the unit tests. Evidence:
       evidence/build/P2_REAL_ENGINE_SALVAGE/duplicate_opening_fix_targeted_recheck/.
+      Second recheck, same day: re-fired S6+S8 against aspose-cells-foss/Aspose.Cells-FOSS-
+      for-Rust (the sixth cascade's own repository, the other case coherence worsened). S6
+      unaffected again. S8's coherence#1 again needed 2 calls (originally 1): the model's
+      first attempt to revise "opening" was rejected, and the retry left the unit's text
+      unchanged (revised: (none)) rather than forcing a revision that would again violate the
+      check -- the final opening text stayed the genuinely distinct pre-coherence version
+      beside the preserved paragraph, not the paraphrase the original run produced. Both
+      repositories this session observed coherence actually worsening the duplicate on have
+      now been independently re-verified live. Same evidence directory, after_fix.rust.*
+      files.
     remaining: >
       Partial fix only, honestly scoped: catches near-total duplication (states_all() full
       containment, either direction) but not the milder structural redundancy most of the ten
@@ -737,8 +747,9 @@ next_ready_items:
       wording but still both introduce the product). That broader question -- whether "opening"
       should ever carry a whole separately preserved paragraph alongside a freshly authored one
       at all -- is unchanged and still needs the deferred validation/review/repair subsystem.
-      The targeted recheck above covers the ninth cascade's repository only; the sixth
-      cascade's repository (the other worsened case, rust) has not yet been re-fired.
+      Both repositories where coherence worsened the duplicate (ninth/typescript, sixth/rust)
+      are now live-reverified; the other eight cascade repositories have not been re-fired
+      (lower priority -- coherence did not worsen the duplicate on any of them originally).
   - id: WIRE_GATEVERIFY_TO_PORTFOLIO
     status: READY
     purpose: >
