@@ -1,0 +1,169 @@
+{
+  "audience": {
+    "fact_ids": [
+      "import_path:aspose_tex",
+      "public_symbol:aspose_tex"
+    ],
+    "text": "Python developers and researchers who need to process TeX/LaTeX documents programmatically without installing system-wide TeX engines."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "import_path:aspose_tex.engine",
+        "public_symbol:aspose_tex"
+      ],
+      "text": "The library parses real TeX/LaTeX source through its own interpreter, handling tokenizer, macro expansion, and mode-machine dispatch for control sequences, groups, and paragraph text.",
+      "title": "Parse and interpret TeX/LaTeX source"
+    },
+    {
+      "fact_ids": [
+        "import_path:aspose_tex.output",
+        "public_symbol:aspose_tex"
+      ],
+      "text": "Output devices `PdfDevice`, `DviDevice`, and `SvgDevice` produce finished pages; `SvgDevice` embeds glyph outlines directly as `<path>` elements.",
+      "title": "Generate PDF, DVI, and SVG output"
+    },
+    {
+      "fact_ids": [
+        "import_path:aspose_tex.fonts",
+        "public_symbol:aspose_tex"
+      ],
+      "text": "Font metrics and glyph outlines are resolved from bundled `.tfm` and `.pfb` files, independent of the target output format.",
+      "title": "Resolve bundled Computer Modern fonts"
+    },
+    {
+      "fact_ids": [
+        "import_path:aspose_tex",
+        "public_symbol:aspose_tex"
+      ],
+      "text": "Job behavior is configured via `TeXOptions`, supporting `job_name`, `magnification`, `extra_font_paths`, `extra_format_paths`, and format loading.",
+      "title": "Configure job options"
+    },
+    {
+      "fact_ids": [
+        "import_path:aspose_tex.input",
+        "public_symbol:aspose_tex"
+      ],
+      "text": "Input sources are created from `Path`, `str`, or `bytes` using `create_input_source`, supporting both file and string inputs.",
+      "title": "Handle input sources flexibly"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_tex.exceptions",
+        "public_symbol:aspose_tex.exceptions.asposetexerror",
+        "public_symbol:aspose_tex.exceptions.inputerror",
+        "public_symbol:aspose_tex.exceptions.engineerror",
+        "public_symbol:aspose_tex.exceptions.fonterror"
+      ],
+      "text": "Exceptions `AsposeTeXError`, `InputError`, `EngineError`, and `FontError` enable targeted error handling for different failure modes.",
+      "title": "Provide structured exception handling"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "identity:repository"
+      ],
+      "text": "Pre-Alpha release: core engine and public API are under active development, and interfaces may change between releases."
+    },
+    {
+      "fact_ids": [
+        "import_path:aspose_tex"
+      ],
+      "text": "Default `load_format='plain'` does not fully load Knuth's Plain TeX macro cascade; examples use `load_format=False` for runnable documents."
+    },
+    {
+      "fact_ids": [
+        "import_path:aspose_tex"
+      ],
+      "text": "Math-mode content (`$...$`, `$$...$$`) is parsed but not laid out; no math atoms, fractions, or radicals reach the page."
+    },
+    {
+      "fact_ids": [
+        "import_path:aspose_tex"
+      ],
+      "text": "Table alignment (`halign`, `valign`) is registered but not implemented and raises `NotImplementedError`."
+    },
+    {
+      "fact_ids": [
+        "import_path:aspose_tex"
+      ],
+      "text": "Automatic hyphenation is inactive: `patterns` and `hyphenation` are parsed and discarded, and the bundled hyphenation directory is empty."
+    },
+    {
+      "fact_ids": [
+        "import_path:aspose_tex"
+      ],
+      "text": "Named file-stream I/O (`openin`, `openout`, `closein`, `closeout`, `read`) raises `NotImplementedError`; only `write 16`, `write -1`, `message`, and `errmessage` are implemented."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:name"
+      ],
+      "text": "Enables TeX/LaTeX processing in pure Python without external dependencies like MiKTeX or TeX Live."
+    },
+    {
+      "fact_ids": [
+        "import_path:aspose_tex.fonts",
+        "import_path:aspose_tex.engine"
+      ],
+      "text": "Provides bundled Computer Modern fonts and metrics, allowing output generation without external font files."
+    },
+    {
+      "fact_ids": [
+        "import_path:aspose_tex.output",
+        "public_symbol:aspose_tex"
+      ],
+      "text": "Supports in-memory and file-based output for PDF, DVI, and SVG formats through a unified API."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:repository",
+      "package:name",
+      "package:version",
+      "package:license"
+    ],
+    "text": "Aspose.TeX FOSS for Python is a free, open-source, pure-Python library for TeX/LaTeX processing that parses real source and produces PDF, DVI, or SVG output without requiring an external TeX installation."
+  },
+  "uncertainties": [
+    "The exact set of supported TeX primitives beyond those explicitly documented is not fully specified.",
+    "Whether future releases will support full Plain TeX macro loading without requiring `load_format=False` is unclear.",
+    "The behavior of `TeXOptions.extra_format_paths` relative to working directory precedence is described but not exhaustively tested.",
+    "The completeness of the bundled Computer Modern font set (e.g., all variants and encodings) is not detailed.",
+    "The scope of `TeXJob.messages`—whether it includes all possible diagnostic types—is not fully enumerated.",
+    "The threading or concurrency safety of `TeXJob` instances is not stated.",
+    "The long-term support plan for this FOSS release versus the Enterprise Edition is not detailed.",
+    "Whether additional output formats beyond PDF, DVI, and SVG are planned is not indicated."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "import_path:aspose_tex.input",
+        "import_path:aspose_tex.output",
+        "public_symbol:aspose_tex"
+      ],
+      "name": "Create and run a TeX job",
+      "text": "Create an input source using `create_input_source`, configure options with `TeXOptions`, instantiate `TeXJob` with a device (`PdfDevice`, `DviDevice`, or `SvgDevice`), and call `run()` to generate output."
+    },
+    {
+      "fact_ids": [
+        "example:010",
+        "public_symbol:aspose_tex"
+      ],
+      "name": "Collect run diagnostics",
+      "text": "Access `TeXJob.messages` after running to retrieve diagnostic messages, and configure Python logging for engine output."
+    },
+    {
+      "fact_ids": [
+        "import_path:aspose_tex.output",
+        "public_symbol:aspose_tex"
+      ],
+      "name": "Write output to file or memory",
+      "text": "Pass a `Path` to output devices to write directly to disk, or leave it empty to retrieve `bytes` from `get_bytes()` or `get_all_pages()`."
+    }
+  ]
+}

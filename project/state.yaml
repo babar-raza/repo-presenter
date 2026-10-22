@@ -597,10 +597,23 @@ next_ready_items:
       "opening" produced an unambiguous improvement. 1052/1052 whole-repo tests pass (no src
       changes this round). Evidence:
       evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_fourteenth_full_cascade/.
+    fifteenth_cascade_2026_10_22: >
+      DONE: fired the full cascade (S3-S8) against a fifteenth repository
+      (aspose-tex-foss/Aspose.TeX-FOSS-for-Python), a seventh Python repository. S3-S6 all
+      accepted on the first attempt. coherence#1 revised "opening" and was accepted on the
+      first attempt (no rejection) -- the duplicate-opening guard correctly did not need to
+      fire, but worth reporting precisely: the revision made "opening" somewhat MORE similar
+      to the preserved paragraph (now naming "its own interpreter" and "Computer Modern
+      fonts," both already in the preserved text) without crossing the guard's
+      full-containment threshold. A third, nuanced outcome class alongside the sixth/ninth
+      cascades' clear worsening and the fourteenth cascade's clear improvement -- partial
+      convergence that stays within the fix's correctly-scoped tolerance. 1052/1052
+      whole-repo tests pass (no src changes this round). Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_fifteenth_full_cascade/.
     remaining: >
-      14 of 36 repositories now have a FULL real cascade run through S8 (plus one,
+      15 of 36 repositories now have a FULL real cascade run through S8 (plus one,
       aspose-html-foss/Python, with S3-S6+render only). All 7 ecosystems have been exercised
-      at least once (python x6, go, net, java, cpp, rust, typescript x2); the portfolio as a
+      at least once (python x7, go, net, java, cpp, rust, typescript x2); the portfolio as a
       whole (36 repositories) is still far from fully covered. Lane L format detection is
       already proven for all of them independently. Two unrelated pre-existing S6/S8 rough
       edges (the "TrueType" identifier rejection and the "cites facts outside this section's
