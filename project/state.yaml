@@ -259,8 +259,19 @@ next_ready_items:
       run the REAL readme/composition/authoring.py::unit_checks as run_job's checks callback
       instead of the deliberately-simplified stand-in. Then run placement.py + renderer.py on
       the accepted units to get one real, fully rendered Lane R section of an actual README --
-      the next concrete milestone toward "Lane R produces a real document; not just a section
+      the next concrete milestone toward "Lane R produces a real document; not just a document
       or a seal" (mission section 12, P1).
+    discovered_cascade: >
+      Read prompts/presentation_planning.yaml's packet fully (2026-10-22): it needs
+      "investigation" (the accepted REAL repository_investigation job S3 output) and
+      "dispositions" (the accepted REAL source_reconciliation job S4 output) as inputs --
+      both separate, not-yet-fired LLM calls with their own prompt manifests, not facts this
+      session already has. "shell" (the semantic shell + condition_holds) and "policy" look
+      deterministic (readme/composition/components/shell.py, policy.py, already ported) and
+      may not need a call. Firing the full S3->S4->S5->S6 cascade for real is larger than one
+      sitting; deferred in favor of BUILD_FORMAT_DETECTION_FOR_NON_PYTHON_ECOSYSTEMS, which
+      more directly serves the owner's explicit priority ("make the lanes work equally for
+      all candidates") and does not have this cascading-call cost.
   - id: WIRE_GATEVERIFY_TO_PORTFOLIO
     status: READY
     purpose: >
