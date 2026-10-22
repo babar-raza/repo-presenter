@@ -1,0 +1,351 @@
+{
+  "dispositions": [
+    {
+      "destination_section": "identity",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:repository",
+        "package:name"
+      ],
+      "rationale": "The H1 product name is rendered deterministically by the identity section.",
+      "unit_id": "inherited_unit:001.heading"
+    },
+    {
+      "destination_section": "badges",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "package:license",
+        "package:version",
+        "package:python_requires"
+      ],
+      "rationale": "The badge row is rendered deterministically by the badges section.",
+      "unit_id": "inherited_unit:002.badge_row"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a product illustration or homepage link; the banner condition is not met.",
+      "unit_id": "inherited_unit:003.badge_row"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:license",
+        "install_command:pip",
+        "package:python_requires"
+      ],
+      "rationale": "The paragraph matches the product summary and is supported by identity, package, and install facts.",
+      "unit_id": "inherited_unit:004.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Features' heading is superseded by the key_capabilities section, which re-authors the same content.",
+      "unit_id": "inherited_unit:005.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:003",
+        "example:004",
+        "example:006",
+        "public_symbol:aspose.cells_foss.workbook",
+        "public_symbol:aspose.cells_foss.cell",
+        "public_symbol:aspose.cells_foss.style",
+        "public_symbol:aspose.cells_foss.datavalidation",
+        "public_symbol:aspose.cells_foss.chart",
+        "public_symbol:aspose.cells_foss.pdfsaveoptions"
+      ],
+      "rationale": "The features list is superseded by the key_capabilities section, which re-authors the same capabilities.",
+      "unit_id": "inherited_unit:006.list"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Installation' heading is rendered by the deterministic installation section.",
+      "unit_id": "inherited_unit:007.heading"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "rationale": "The paragraph introduces the installation command and is supported by the install_command fact.",
+      "unit_id": "inherited_unit:008.paragraph"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "rationale": "The install command code block is supported by the install_command fact and belongs with the quick start.",
+      "unit_id": "inherited_unit:009.code_block"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:python_requires",
+        "dependency:olefile-0.46",
+        "dependency:pycryptodome-3.15.0"
+      ],
+      "rationale": "The runtime dependency information is supported by the package and dependency facts.",
+      "unit_id": "inherited_unit:010.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'PDF support' heading is superseded by the scope_limitations section, which covers PDF rendering.",
+      "unit_id": "inherited_unit:011.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose.cells_foss.skiapdfrenderer"
+      ],
+      "rationale": "The PDF renderer dependency is a verified limitation and supported by the skia-python symbol fact.",
+      "unit_id": "inherited_unit:012.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The PDF renderer install command is not supported by any fact and is omitted.",
+      "unit_id": "inherited_unit:013.code_block"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Quick start' heading is rendered by the deterministic quick_start section.",
+      "unit_id": "inherited_unit:014.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "The 'Create a workbook' heading introduces a verified example and belongs in additional_examples.",
+      "unit_id": "inherited_unit:015.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "The example code block is supported by the example:001 fact and belongs with the 'Create a workbook' heading.",
+      "unit_id": "inherited_unit:016.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "The 'Read a workbook' heading introduces a verified example and belongs in additional_examples.",
+      "unit_id": "inherited_unit:017.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "The example code block is supported by the example:002 fact and belongs with the 'Read a workbook' heading.",
+      "unit_id": "inherited_unit:018.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "The 'Apply cell styling' heading introduces a verified example and belongs in additional_examples.",
+      "unit_id": "inherited_unit:019.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "The example code block is supported by the example:003 fact and belongs with the 'Apply cell styling' heading.",
+      "unit_id": "inherited_unit:020.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:004"
+      ],
+      "rationale": "The 'Add a validation list' heading introduces a verified example and belongs in additional_examples.",
+      "unit_id": "inherited_unit:021.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:004"
+      ],
+      "rationale": "The example code block is supported by the example:004 fact and belongs with the 'Add a validation list' heading.",
+      "unit_id": "inherited_unit:022.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:005"
+      ],
+      "rationale": "The 'Export a workbook' heading introduces an example, but the code block is CONTRADICTED.",
+      "unit_id": "inherited_unit:023.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph introduces the example:005 code block, which is CONTRADICTED; the pair is omitted.",
+      "unit_id": "inherited_unit:024.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "example:005"
+      ],
+      "rationale": "The code block is CONTRADICTED by example:005 and is omitted.",
+      "unit_id": "inherited_unit:025.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:006"
+      ],
+      "rationale": "The 'Encrypt a workbook' heading introduces a verified example and belongs in additional_examples.",
+      "unit_id": "inherited_unit:026.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:006"
+      ],
+      "rationale": "The example code block is supported by the example:006 fact and belongs with the 'Encrypt a workbook' heading.",
+      "unit_id": "inherited_unit:027.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Supported formats' heading is superseded by the scope_limitations section, which covers format support.",
+      "unit_id": "inherited_unit:028.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The table is superseded by the scope_limitations section, which covers format support.",
+      "unit_id": "inherited_unit:029.table"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The CSV import paragraph is superseded by the scope_limitations section, which covers format support.",
+      "unit_id": "inherited_unit:030.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Scope' heading is rendered by the deterministic scope_limitations section.",
+      "unit_id": "inherited_unit:031.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:olefile-0.46",
+        "dependency:pycryptodome-3.15.0",
+        "format:input.xlsx",
+        "format:output.xlsx",
+        "public_symbol:aspose.cells_foss.skiapdfrenderer"
+      ],
+      "rationale": "The list items are covered by the scope_limitations section, which re-authors the same limitations from facts.",
+      "unit_id": "inherited_unit:032.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this heading; the examples and API content is covered under additional_examples and api_reference.",
+      "unit_id": "inherited_unit:033.heading"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The list items are covered by the documentation_resources section, which is rendered from facts about documentation targets.",
+      "unit_id": "inherited_unit:034.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this heading; the development content is covered under development_testing, which is not rendered at this revision.",
+      "unit_id": "inherited_unit:035.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this paragraph; the development workflow is covered under development_testing, which is not rendered at this revision.",
+      "unit_id": "inherited_unit:036.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The code block is unsupported because example:005 is CONTRADICTED and no other dev install or test commands are verified.",
+      "unit_id": "inherited_unit:037.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this paragraph; output file paths are not documented in facts.",
+      "unit_id": "inherited_unit:038.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading '## License' is not placeable under scope_limitations, but license is a deterministic section; this heading is retained as non-content.",
+      "unit_id": "inherited_unit:039.heading"
+    },
+    {
+      "destination_section": "license",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "package:license"
+      ],
+      "rationale": "The license paragraph is rendered by the license section from the package:license fact.",
+      "unit_id": "inherited_unit:040.paragraph"
+    }
+  ]
+}

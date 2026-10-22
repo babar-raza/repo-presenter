@@ -523,9 +523,23 @@ next_ready_items:
       than away from it -- its remit is cross-unit consistency, not duplicate detection.
       1040/1040 whole-repo tests pass (no src changes this round). Evidence:
       evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_ninth_full_cascade/.
+    tenth_cascade_2026_10_22: >
+      DONE: fired the full cascade (S3-S8) against a tenth repository
+      (aspose-cells-foss/Aspose.Cells-FOSS-for-Python), a third Python repository (different
+      product family from aspose-3d-foss/Python and aspose-barcode-foss/Python). S3-S6 all
+      accepted on the first attempt. S8 coherence's third batch revised two unrelated
+      scope_limitations units, leaving "opening" untouched. The known duplicate-opening
+      defect repeated a tenth time, but this is its MILDEST instance yet: the authored
+      "opening" unit is a single short sentence restating the preserved paragraph's
+      substance compactly, not a full restated paragraph. Across 10 runs the defect's
+      severity now ranges from this single-sentence overlap up to the ninth run's
+      near-verbatim paragraph duplication -- confirming the defect's size scales with how
+      much either side chooses to restate, not with anything in the unported catching
+      layer. 1040/1040 whole-repo tests pass (no src changes this round). Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_tenth_full_cascade/.
     remaining: >
-      9 of 36 repositories now have a full real cascade run. All 7 ecosystems have been
-      exercised at least once (python x2, go, net, java, cpp, rust, typescript x2); the
+      10 of 36 repositories now have a full real cascade run. All 7 ecosystems have been
+      exercised at least once (python x3, go, net, java, cpp, rust, typescript x2); the
       portfolio as a whole (36 repositories) is still far from fully covered. Lane L
       format detection is already proven for all of them independently.
       placement_errors IS now ported (2026-10-22, with references.py and the rest of the
