@@ -1,13 +1,17 @@
 """Run the real, salvaged Lane L pipeline end-to-end against one real repository.
 
 Usage:
-    python scripts/run_lane_l.py <owner>/<repo> <clone_path>
+    python scripts/run_lane_l.py <owner>/<repo> <ecosystem> [clone_path]
 
-Wires: the ported Python extractor (extractors/platforms/python.py) -> the shared fact
-model (core/facts.py) -> the Lane L correction engine (readme/correction/). No agent
-reasoning anywhere in this path -- every fact and every edit is produced by the ported
-code itself, independently re-run after every change per this repo's own AGENTS.md
-discipline (never trust a worker's or an agent's self-report).
+``<ecosystem>`` is one of: python, net, java, cpp, go, rust, typescript, nodejs --
+whichever ``extractors/platforms/<ecosystem>.py`` names (``registry.plugin_for``
+discovers it by module name, same as the production code).
+
+Wires: the ported platform extractor -> the shared fact model (core/facts.py) -> the
+Lane L correction engine (readme/correction/). No agent reasoning anywhere in this
+path -- every fact and every edit is produced by the ported code itself, independently
+re-run after every change per this repo's own AGENTS.md discipline (never trust a
+worker's or an agent's self-report).
 
 This is deliberately NOT the old repo's full ``extract_facts`` orchestrator (468 lines,
 pulling in ~10 more modules: license/asset/link/registry-lag facts, the full README
@@ -16,10 +20,12 @@ components"), this script wires only what Lane L's ported detectors actually rea
 manifest facts, surface facts, registry facts, format facts, and example facts. A
 richer orchestrator is future work if Lane R's content-unit-preservation proof needs it.
 
-The one honest gap this script surfaces rather than hides: the Python plugin's
-``verify_examples()`` is either still the NOT_VERIFIED stub (pre-python_examples.py port)
-or the real execution-backed verifier (post-port) -- this script reports which one ran
-and does not pretend the result is more verified than it is.
+The one honest gap this script surfaces rather than hides: a plugin's
+``verify_examples()`` may still be a NOT_VERIFIED stub for ecosystems whose
+``<ecosystem>_examples.py`` has not been ported yet (as of 2026-10-22: python is real;
+net/java/cpp/go/rust/typescript/nodejs's execution-backed verifiers have not been
+individually proven through this script) -- this script reports the real outcome
+counts and does not pretend a stub result is more verified than it is.
 """
 
 from __future__ import annotations
@@ -33,34 +39,40 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
+from repo_presenter.core.ecosystems import spec_for
 from repo_presenter.core.examples import ExampleCandidate, collapse_blank_runs
 from repo_presenter.core.facts import Evidence, Fact, FactsDocument, fact_id
 from repo_presenter.core.registry_entry_stub import RegistryEntryStub
-from repo_presenter.extractors.platforms.python import PLUGIN as python_plugin
+from repo_presenter.extractors.platforms.registry import plugin_for
 from repo_presenter.readme.correction.engine import correct
 from repo_presenter.readme.correction.model import Context
 from repo_presenter.readme.evidence.facts.examples import example_facts
 from repo_presenter.readme.evidence.facts.formats import format_facts
 
 _FENCE = re.compile(
-    r"^```(?P<lang>\w*)\n(?P<body>.*?)\n```", re.MULTILINE | re.DOTALL
+    r"^```(?P<lang>\S*)\n(?P<body>.*?)\n```", re.MULTILINE | re.DOTALL
 )
 
 
-def select_python_examples(readme_text: str, source_path: str) -> list[ExampleCandidate]:
-    """Minimal fence extractor: every ```python fenced block, once each (by normalized body).
+def select_examples(
+    readme_text: str, source_path: str, ecosystem: str
+) -> list[ExampleCandidate]:
+    """Minimal fence extractor: every fenced block in ``ecosystem``'s own fence languages
+    (``core.ecosystems.spec_for(ecosystem).example_fences`` -- the same vocabulary the real
+    extractors key on), once each by normalized body.
 
-    Deliberately simpler than the old repo's ``selection.py`` (which depends on the
-    full README content-unit inventory, ``evidence/facts/inherited.py`` -- not yet
-    ported). This is sufficient for Lane L's ``failing_example``/``format_overclaim``
-    detectors, which only read ``example``/``format`` facts, not content-unit IDs.
+    Deliberately simpler than the old repo's ``selection.py`` (which depends on the full
+    README content-unit inventory, ``evidence/facts/inherited.py`` -- not yet ported). This
+    is sufficient for Lane L's ``failing_example``/``format_overclaim`` detectors, which only
+    read ``example``/``format`` facts, not content-unit IDs.
     """
+    aliases = spec_for(ecosystem).example_fences
     candidates: list[ExampleCandidate] = []
     seen: set[str] = set()
     ordinal = 0
     for match in _FENCE.finditer(readme_text):
         lang = match.group("lang").lower()
-        if lang not in ("python", "py"):
+        if lang not in aliases:
             continue
         body = match.group("body") + "\n"
         normalized = "\n".join(line.rstrip() for line in body.splitlines() if line.strip())
@@ -73,7 +85,7 @@ def select_python_examples(readme_text: str, source_path: str) -> list[ExampleCa
         candidates.append(
             ExampleCandidate(
                 ordinal=ordinal,
-                language="python",
+                language=lang,
                 code=collapse_blank_runs(body),
                 source_path=source_path,
                 start_line=start_line,
@@ -110,8 +122,10 @@ def clone(repository: str, dest: Path) -> None:
     )
 
 
-def build_facts(repository: str, root: Path, tree_paths: list[str], readme_text: str) -> FactsDocument:
-    plugin = python_plugin
+def build_facts(
+    repository: str, root: Path, tree_paths: list[str], readme_text: str, ecosystem: str
+) -> tuple[FactsDocument, list]:
+    plugin = plugin_for(ecosystem)
     manifest = plugin.detect_manifest(root)
     identity = Fact(
         fact_id("identity", "repository"),
@@ -127,7 +141,7 @@ def build_facts(repository: str, root: Path, tree_paths: list[str], readme_text:
         facts.extend(resolved_by_id.get(f.id, f) for f in manifest_facts)
     facts.extend(plugin.surface_facts(root, tree_paths))
 
-    candidates = select_python_examples(readme_text, "README.md")
+    candidates = select_examples(readme_text, "README.md", ecosystem)
     workspace = Path(tempfile.mkdtemp(prefix="rp_examples_"))
     receipts = plugin.verify_examples(root, tree_paths, candidates, workspace)
     facts.extend(example_facts(candidates, receipts, "receipts.json"))
@@ -144,10 +158,15 @@ def build_facts(repository: str, root: Path, tree_paths: list[str], readme_text:
 
 
 def main() -> None:
-    repository = sys.argv[1] if len(sys.argv) > 1 else "aspose-3d-foss/Aspose.3D-FOSS-for-Python"
-    clone_path = Path(sys.argv[2]) if len(sys.argv) > 2 else Path(tempfile.mkdtemp(prefix="rp_clone_"))
+    if len(sys.argv) < 3:
+        print(f"usage: python {sys.argv[0]} <owner>/<repo> <ecosystem> [clone_path]")
+        print("  ecosystem: python, net, java, cpp, go, rust, typescript, nodejs")
+        sys.exit(2)
+    repository = sys.argv[1]
+    ecosystem = sys.argv[2]
+    clone_path = Path(sys.argv[3]) if len(sys.argv) > 3 else Path(tempfile.mkdtemp(prefix="rp_clone_"))
 
-    print(f"[1/5] cloning {repository} -> {clone_path}")
+    print(f"[1/5] cloning {repository} ({ecosystem}) -> {clone_path}")
     if not clone_path.exists() or not any(clone_path.iterdir()):
         clone_path.mkdir(parents=True, exist_ok=True)
         clone(repository, clone_path)
@@ -160,7 +179,7 @@ def main() -> None:
     print(f"      {len(readme_text.splitlines())} lines")
 
     print("[3/5] building facts (manifest + surface + registry + examples + formats)")
-    document, receipts = build_facts(repository, clone_path, tree_paths, readme_text)
+    document, receipts = build_facts(repository, clone_path, tree_paths, readme_text, ecosystem)
     print(f"      {len(document.facts)} facts, {len(receipts)} example receipts")
     outcome_counts: dict[str, int] = {}
     for r in receipts:
@@ -187,7 +206,7 @@ def main() -> None:
     if not findings:
         print("      (none)")
 
-    out_dir = Path("scripts") / "_lane_l_output"
+    out_dir = Path("scripts") / "_lane_l_output" / repository.replace("/", "__")
     out_dir.mkdir(exist_ok=True)
     (out_dir / "facts.json").write_text(document.to_json(), encoding="utf-8")
     (out_dir / "corrected.md").write_text(result.corrected, encoding="utf-8")

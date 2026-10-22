@@ -176,14 +176,31 @@ active_work_item:
 
 next_ready_items:
   - id: RUN_PIPELINE_ON_MORE_ECOSYSTEMS
-    status: READY
+    status: IN_PROGRESS
     priority: highest
     purpose: >
-      scripts/run_lane_l.py is Python-only and single-repository. Generalize it (or add
-      sibling scripts) to run the real pipeline for .NET/Java/C++/Go/Rust/TypeScript against
-      at least one real repository each -- proving the extractors already ported actually
-      work end to end, not just pass their own unit tests, per mission section 12 P2
-      ("generalize by failure class, not anecdote... representative cross-ecosystem cohort").
+      scripts/run_lane_l.py generalized 2026-10-22 (ecosystem is now a CLI argument via
+      extractors/platforms/registry.py's plugin_for(), same dynamic discovery the production
+      code uses -- not a per-ecosystem copy of the script). Run against 3 of 7 ecosystems so
+      far, each with a real, honest result (evidence/build/P2_REAL_ENGINE_SALVAGE/):
+        - python (aspose-3d-foss/Python): automatically rediscovers the known OBJ-export bug.
+        - net (aspose-3d-foss/.NET): 3590 facts, 293 real public symbols extracted; did NOT
+          catch the known U3D/RVM/AMF/HTML5 over-claim -- checked why directly, two honest
+          reasons (the claim is in prose/Mermaid, not a table the detector parses; .NET has
+          zero format facts at all since format_claims/format_declarations are stubbed).
+        - java (aspose-3d-foss/Java): 5136 facts, real symbol extraction; found a genuinely
+          NEW Enterprise Edition naming violation (line 634, "the commercial Aspose.3D for
+          Java") that no earlier pass in this project had caught for this repository --
+          proof the detector works on fresh real data, not just its own test fixtures.
+      cpp/go/rust/typescript not yet run through this script.
+    major_finding: >
+      Format/capability over- and under-claim detection -- the exact defect class this whole
+      mission started from -- is Python-only today. format_claims/format_declarations are
+      stubbed (return []) for net/java/cpp/go/rust/typescript, confirmed to be the OLD REPO's
+      OWN unfinished state (identical stub + docstring in E:\...\repository-presenter), not
+      something this session's porting broke. Closing this for "make the lanes work equally
+      for all candidates" needs new engineering per ecosystem (an ecosystem-specific format-
+      declaration reader, mirroring python_format_declarations.py), not a salvage/port task.
   - id: RUN_PIPELINE_END_TO_END_ON_REAL_REPO
     status: DONE
     purpose: >
@@ -192,6 +209,20 @@ next_ready_items:
       end to end, no agent-reasoning shortcuts. Compare its output against the hand-verified
       P1_VERTICAL_SLICE facts.json/candidate -- this is the proof that the salvaged engine,
       not just its unit tests, actually works on a real repository.
+  - id: BUILD_FORMAT_DETECTION_FOR_NON_PYTHON_ECOSYSTEMS
+    status: READY
+    priority: high
+    purpose: >
+      The single biggest "lanes don't yet work equally" gap found in this session
+      (RUN_PIPELINE_ON_MORE_ECOSYSTEMS's major_finding): format_claims/format_declarations
+      are stubbed for net/java/cpp/go/rust/typescript, so format/capability over- and
+      under-claim detection -- the exact defect class the mission's own seed example (OBJ
+      export) belongs to -- only exists for Python. Needs new, ecosystem-specific source-
+      pattern readers (not a port; the old repo never built these either), starting with
+      .NET (known real target: aspose-3d-foss/.NET's U3D/RVM/AMF/HTML5 over-claim, already
+      independently confirmed by hand and ready to re-verify once this lands) and/or
+      extending format_overclaim.py to parse prose/Mermaid claims, not just markdown tables
+      (also needed for the same .NET case; it is currently table-only by design).
   - id: WRITE_PROMPTS_FOR_AUTHORING
     status: READY
     purpose: >
