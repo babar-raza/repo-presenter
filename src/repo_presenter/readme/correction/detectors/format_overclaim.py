@@ -36,7 +36,13 @@ from repo_presenter.readme.correction.model import Context, DetectorResult, Find
 
 DETECTOR = "format_overclaim"
 _CLAIMED_KINDS = frozenset({"format", "capability"})
-_TRUTHY = re.compile(r"✅|✔|\bYes\b|\bSupported\b|:heavy_check_mark:", re.IGNORECASE)
+# The cell's FULL content (after markup/whitespace stripping) must be one of these -- not a
+# substring search. A substring search over an arbitrary-length prose cell (as in an API
+# Reference table's description column, e.g. "...is supported by this importer.") produced real
+# false positives against aspose-3d-foss/Aspose.3D-FOSS-for-Python's live README (measured
+# 2026-10-22, lines 430/460/507/560: ColladaImporter/EntityRendererFeatures/Importer/Plugin all
+# flagged purely because their description cell contains the word "supported" in prose).
+_TRUTHY = re.compile(r"^(?:✅|✔|yes|supported|:heavy_check_mark:)$", re.IGNORECASE)
 _SEPARATOR_CELL = re.compile(r"^:?-{3,}:?$")
 _STRIP_MARKUP = re.compile(r"[`*_]")
 
@@ -55,7 +61,7 @@ def _table_claims(ctx: Context) -> list[tuple[int, str, str]]:
         label = cells[0]
         if not label or _SEPARATOR_CELL.match(label) or all(_SEPARATOR_CELL.match(c) for c in cells):
             continue
-        if any(_TRUTHY.search(cell) for cell in cells[1:]):
+        if any(_TRUTHY.match(_STRIP_MARKUP.sub("", cell).strip()) for cell in cells[1:]):
             claims.append((line.number, label, line.text))
     return claims
 

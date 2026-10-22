@@ -1,0 +1,125 @@
+"""``format`` facts: the extensions the product reads or writes, corroborated two ways.
+
+A format claim lives in an example's code and the platform plugin reads it from the syntax tree;
+an extension an executed example loaded or saved is SUPPORTED, and a repository file staged for an
+executed example proves its extension as input. A claim no executed example makes is SUPPORTED
+only when two independent static sources agree: the product's format declarations state the
+extension and a registered, non-stub importer or exporter implements that direction. One source
+alone, or a failed or unverified example alone, leaves the fact UNRESOLVED; nothing is inferred
+from prose. Direction is part of the ID: ``format:input.obj``, ``format:output.stl``.
+
+Ported (REUSE, near-verbatim) from the old repository-presenter project's
+``evidence/facts/formats.py`` per migration/reuse-manifest.yaml.
+"""
+
+from __future__ import annotations
+
+from collections.abc import Callable, Sequence
+from pathlib import Path
+
+from repo_presenter.core.examples import (
+    ExampleCandidate,
+    ExampleOutcome,
+    ExampleReceipt,
+    FormatClaim,
+    FormatDeclaration,
+)
+from repo_presenter.core.facts import Evidence, Fact, fact_id
+
+
+def format_facts(
+    candidates: Sequence[ExampleCandidate],
+    receipts: Sequence[ExampleReceipt],
+    claims_for: Callable[[str], Sequence[FormatClaim]],
+    receipts_path: str,
+    declarations: Sequence[FormatDeclaration] = (),
+) -> list[Fact]:
+    """One fact per (direction, extension) across the examples and the static sources."""
+    by_ordinal = {receipt.ordinal: receipt for receipt in receipts}
+    evidence: dict[tuple[str, str], list[Evidence]] = {}
+    executed: set[tuple[str, str]] = set()
+    for candidate in candidates:
+        receipt = by_ordinal.get(candidate.ordinal)
+        outcome: ExampleOutcome = receipt.outcome if receipt else "NOT_VERIFIED"
+        detail = receipt.detail if receipt else "no verification receipt"
+        claimed_directions: dict[str, set[str]] = {}
+        claims = list(claims_for(candidate.code))
+        for claim in claims:
+            key: tuple[str, str] = (claim.direction, claim.extension)
+            line = candidate.start_line + claim.line
+            evidence.setdefault(key, []).extend(
+                (
+                    Evidence(
+                        candidate.source_path,
+                        f"line {line}; example {candidate.ordinal}: {claim.direction} "
+                        f"{claim.extension}",
+                    ),
+                    Evidence(receipts_path, f"example {candidate.ordinal}: {outcome}; {detail}"),
+                )
+            )
+            if outcome == "EXECUTED":
+                executed.add(key)
+            claimed_directions.setdefault(claim.extension, set()).add(claim.direction)
+        if receipt is None or outcome != "EXECUTED":
+            continue
+        for binding in receipt.fixtures:
+            extension = Path(binding.literal).suffix.lower()
+            if not extension:
+                continue
+            if "output" in claimed_directions.get(extension, ()):
+                saved = {
+                    literal
+                    for claim in claims
+                    if claim.direction == "output" and claim.extension == extension
+                    for literal in claim.literals
+                }
+                if not saved or binding.literal in saved:
+                    continue
+            key = ("input", extension)
+            evidence.setdefault(key, []).append(
+                Evidence(
+                    binding.source_path,
+                    f"staged as {binding.literal}; example {candidate.ordinal} read it: EXECUTED",
+                )
+            )
+            executed.add(key)
+    declared: dict[str, list[FormatDeclaration]] = {}
+    registered: dict[tuple[str, str], list[FormatDeclaration]] = {}
+    for declaration in declarations:
+        if declaration.kind == "declaration":
+            declared.setdefault(declaration.extension, []).append(declaration)
+        elif declaration.direction is not None:
+            registered.setdefault((declaration.direction, declaration.extension), []).append(
+                declaration
+            )
+    corroborated: set[tuple[str, str]] = set()
+    for key, registrations in sorted(registered.items()):
+        direction, extension = key
+        entries = evidence.setdefault(key, [])
+        for statement in declared.get(extension, []):
+            entries.append(
+                Evidence(statement.source_path, f"line {statement.line}; {statement.detail}")
+            )
+        for registration in registrations:
+            entries.append(
+                Evidence(
+                    registration.source_path, f"line {registration.line}; {registration.detail}"
+                )
+            )
+        if extension in declared:
+            corroborated.add(key)
+    supported = executed | corroborated
+    facts: list[Fact] = []
+    for key in sorted(evidence):
+        direction, extension = key
+        facts.append(
+            Fact(
+                fact_id("format", direction, extension.lstrip(".")),
+                "format",
+                extension,
+                tuple(evidence[key]),
+                polarity="SUPPORTED" if key in supported else "UNRESOLVED",
+                confidence=1.0 if key in supported else 0.5,
+            )
+        )
+    return facts

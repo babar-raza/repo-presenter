@@ -64,3 +64,22 @@ def test_a_correctly_caveated_row_marked_unsupported_is_not_flagged(
     facts = make_facts()  # no format:amf fact of any polarity
     result = format_overclaim(make_context(TABLE_README, facts))
     assert all("AMF" not in finding.text for finding in result.findings)
+
+
+def test_an_api_reference_row_whose_prose_merely_contains_the_word_supported_is_not_flagged(
+    make_context: Any, make_facts: Any
+) -> None:
+    """Regression: measured live against aspose-3d-foss/Aspose.3D-FOSS-for-Python's real README
+    (2026-10-22) -- an API Reference table row whose DESCRIPTION cell happens to contain the word
+    "supported" in prose (e.g. "...returns true if the specified file format is supported by this
+    importer.") is not a format/capability support-marker row, and must not be flagged. The
+    marker check requires the cell's entire (markup-stripped) content to be a truthy token, not a
+    substring match anywhere in an arbitrary-length prose cell."""
+    readme = (
+        "# P\n\n### Core API\n\n| Class | Description |\n|---|---|\n"
+        "| `ColladaImporter` | ColladaImporter.supports_format returns true if the specified "
+        "file format is supported by this importer. |\n"
+    )
+    facts = make_facts()  # no format/capability facts at all
+    result = format_overclaim(make_context(readme, facts))
+    assert result.findings == ()
