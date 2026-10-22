@@ -476,6 +476,20 @@ next_ready_items:
       1040/1040 whole-repo tests pass. Evidence:
       evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_first_coherence_pass/.
       reconciliation_narrowing (S4's partial-rejection repair path) is also still not ported.
+      FOUND where the real mechanism actually lives, precisely, not by further guessing:
+      "BC-10" (the label every reference to this defect class uses) is a VALIDATION/REVIEW-
+      stage check, not a deterministic composition-time fix -- grepped the old repo for
+      every file mentioning it and found it concentrated in `validation/registry.py` and
+      `review/independent/review.py`, an INDEPENDENT LLM REVIEW of the finished document
+      (able to REJECT_PRESENTATION) feeding a TARGETED repair round (`repair/rounds.py`,
+      which both S4's and S8's real production call sites were already traced to earlier).
+      None of `readme/validation/`, `readme/review/`, or `readme/repair/` exist in this
+      repository at all (confirmed: no such directories under src/repo_presenter/readme/) --
+      this is a whole additional, unported subsystem, not a missing function call. The
+      prompts for it (independent_review.yaml, targeted_repair.yaml) were already copied
+      verbatim early this session, content only, no code. Porting and firing it for real is
+      correctly scoped as its own future task, not squeezed into this one -- it is
+      comparable in size to everything ported for S3-S8 combined, not a quick addition.
     purpose: >
       Follow-on to WRITE_PROMPTS_FOR_AUTHORING's real first call: fire a real
       presentation_planning job against the real aspose-3d-foss/Python facts to get a real
