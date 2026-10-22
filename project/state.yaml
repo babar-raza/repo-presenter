@@ -469,10 +469,25 @@ next_ready_items:
       repeated a fifth time (the simple one-extra-unit shape this time). 1040/1040
       whole-repo tests pass. Evidence:
       evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_fifth_full_cascade/.
+    sixth_cascade_2026_10_22: >
+      DONE: fired the full cascade (S3-S8) against a sixth repository/ecosystem
+      (aspose-cells-foss/Aspose.Cells-FOSS-for-Rust). S4 needed two real reject->accept
+      cycles (batches 1 and 3 of 3; batch 2 accepted first try). S8 coherence revised two
+      units in its first batch (opening/opening, key_capabilities/capability:1); the other
+      two batches made no revisions. A new sub-finding, not a new defect class: S8's own
+      revision of the authored "opening" unit did not differentiate it from the preserved
+      duplicate paragraph beside it -- it moved the authored text CLOSER to the preserved
+      paragraph, nearly paraphrasing it line-for-line. This confirms coherence cannot be the
+      fix for this defect (its remit is cross-unit consistency, not duplicate detection;
+      asking it to make the document "sound consistent" can make a duplication read MORE
+      alike). Sixth for sixth: every cascade fired this session shows this defect class.
+      1040/1040 whole-repo tests pass (11 skipped, no src changes this round). Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_sixth_full_cascade/.
     remaining: >
-      5 of 36 repositories now have a full real cascade run (python, go, net, java, cpp);
-      not yet at portfolio scale, and rust/typescript still untried for the full cascade
-      (Lane L format detection is already proven for all of them independently).
+      6 of 36 repositories now have a full real cascade run (python, go, net, java, cpp,
+      rust); not yet at portfolio scale, and typescript is the only ecosystem still
+      untried for the full cascade (Lane L format detection is already proven for all of
+      them independently).
       placement_errors IS now ported (2026-10-22, with references.py and the rest of the
       refusal/repair half -- dangling_pointers, uncited_omit_candidates, unprinted_commands,
       coordinate_neighbor_promises, reconcile_checks). But it does NOT, on its own, fix the

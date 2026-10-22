@@ -1,0 +1,473 @@
+{
+  "additional_example_ids": [],
+  "api_hubs": [
+    {
+      "fact_ids": [
+        "public_symbol:cell",
+        "public_symbol:cellmut",
+        "public_symbol:cellvalue",
+        "public_symbol:cellvaluetype"
+      ],
+      "symbol_fact_id": "public_symbol:cell"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cells",
+        "public_symbol:cellsmut",
+        "public_symbol:cellarea",
+        "public_symbol:cellsmut.merge"
+      ],
+      "symbol_fact_id": "public_symbol:cells"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cellstyle",
+        "public_symbol:font",
+        "public_symbol:fill",
+        "public_symbol:borders",
+        "public_symbol:border"
+      ],
+      "symbol_fact_id": "public_symbol:cellstyle"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:chart",
+        "public_symbol:chartcollection",
+        "public_symbol:charttype"
+      ],
+      "symbol_fact_id": "public_symbol:chart"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:autofilter",
+        "public_symbol:autofilter.get_range",
+        "public_symbol:autofilter.set_range",
+        "public_symbol:autofilter.get_sort_state"
+      ],
+      "symbol_fact_id": "public_symbol:autofilter"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:listobject",
+        "public_symbol:listobjectcollection",
+        "public_symbol:listobject.show_totals"
+      ],
+      "symbol_fact_id": "public_symbol:listobject"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:picture",
+        "public_symbol:picturecollection"
+      ],
+      "symbol_fact_id": "public_symbol:picture"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:shape",
+        "public_symbol:shapecollection"
+      ],
+      "symbol_fact_id": "public_symbol:shape"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:sparklinegroup",
+        "public_symbol:sparklinegroupcollection"
+      ],
+      "symbol_fact_id": "public_symbol:sparklinegroup"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:hyperlink",
+        "public_symbol:hyperlinkcollection"
+      ],
+      "symbol_fact_id": "public_symbol:hyperlink"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:definedname",
+        "public_symbol:definednamecollection"
+      ],
+      "symbol_fact_id": "public_symbol:definedname"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:comment",
+        "public_symbol:commentcollection"
+      ],
+      "symbol_fact_id": "public_symbol:comment"
+    }
+  ],
+  "at_a_glance": {
+    "capability_titles": [
+      "XLSX file I/O with repair support",
+      "Cell value management",
+      "Styling and formatting",
+      "Worksheet organization",
+      "Data validation and conditional formatting",
+      "Charts, shapes, and sparklines",
+      "Structured tables and filters",
+      "Document properties and protection"
+    ],
+    "input_format_ids": [
+      "format:input.xlsx"
+    ],
+    "output_format_ids": [
+      "format:output.xlsx"
+    ]
+  },
+  "core_capabilities": [
+    {
+      "fact_ids": [
+        "format:input.xlsx",
+        "format:output.xlsx",
+        "public_symbol:workbook.load_xlsx",
+        "public_symbol:workbook.load_xlsx_from_bytes",
+        "public_symbol:workbook.load_xlsx_from_stream",
+        "public_symbol:workbook.save_xlsx",
+        "public_symbol:workbook.save_xlsx_to_bytes",
+        "public_symbol:workbook.save_xlsx_to_stream",
+        "public_symbol:loadoptions.try_repair_package",
+        "public_symbol:loadoptions.try_repair_xml",
+        "public_symbol:workbook.get_load_diagnostics"
+      ],
+      "shared_fact_ids": [],
+      "title": "XLSX file I/O with repair support"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cell.get_string_value",
+        "public_symbol:cell.get_double_value",
+        "public_symbol:cell.get_bool_value",
+        "public_symbol:cell.get_date_time_value",
+        "public_symbol:cellmut.put_value_string",
+        "public_symbol:cellmut.put_value_i32",
+        "public_symbol:cellmut.put_value_bool",
+        "public_symbol:cellmut.put_value_date_time",
+        "public_symbol:cellmut.put_formula_with_cached_value"
+      ],
+      "shared_fact_ids": [],
+      "title": "Cell value management"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cellstyle.font",
+        "public_symbol:cellstyle.fill",
+        "public_symbol:cellstyle.borders",
+        "public_symbol:cellstyle.number_format",
+        "public_symbol:cellstyle.horizontal_alignment",
+        "public_symbol:cellstyle.vertical_alignment",
+        "public_symbol:cellstyle.wrap_text",
+        "public_symbol:font.set_color",
+        "public_symbol:font.set_is_bold",
+        "public_symbol:font.set_is_italic",
+        "public_symbol:font.set_underline"
+      ],
+      "shared_fact_ids": [],
+      "title": "Styling and formatting"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheetsmut.add",
+        "public_symbol:worksheet.set_name",
+        "public_symbol:worksheet.set_visibility_type",
+        "public_symbol:worksheet.freeze_panes",
+        "public_symbol:worksheet.unfreeze_panes",
+        "public_symbol:worksheet.set_column_width",
+        "public_symbol:worksheet.set_row_height",
+        "public_symbol:worksheet.protect",
+        "public_symbol:worksheet.unprotect"
+      ],
+      "shared_fact_ids": [],
+      "title": "Worksheet organization"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:validationcollection.add",
+        "public_symbol:validation.set_type",
+        "public_symbol:validation.set_operator",
+        "public_symbol:conditionalformattingcollection.add",
+        "public_symbol:formatcondition.set_type",
+        "public_symbol:formatcondition.set_style"
+      ],
+      "shared_fact_ids": [],
+      "title": "Data validation and conditional formatting"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:chartcollection.add",
+        "public_symbol:chart.chart_type",
+        "public_symbol:picturecollection.add",
+        "public_symbol:shapecollection.add",
+        "public_symbol:sparklinegroupcollection.add",
+        "public_symbol:sparklinegroup.sparkline_type"
+      ],
+      "shared_fact_ids": [],
+      "title": "Charts, shapes, and sparklines"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:listobjectcollection.add",
+        "public_symbol:listobject.show_totals",
+        "public_symbol:worksheet.auto_filter",
+        "public_symbol:autofilter.set_range",
+        "public_symbol:autofilter.get_sort_state",
+        "public_symbol:autofiltersortstate.get_sort_conditions"
+      ],
+      "shared_fact_ids": [],
+      "title": "Structured tables and filters"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:documentproperties.get_author",
+        "public_symbol:documentproperties.set_title",
+        "public_symbol:extendeddocumentproperties.get_company",
+        "public_symbol:workbook.protection",
+        "public_symbol:workbookprotection.get_is_protected",
+        "public_symbol:workbook.protect",
+        "public_symbol:workbook.unprotect"
+      ],
+      "shared_fact_ids": [],
+      "title": "Document properties and protection"
+    }
+  ],
+  "deviations": [
+    {
+      "fact_ids": [
+        "inherited_unit:008.code_block"
+      ],
+      "section_id": "at_a_glance",
+      "text": "The Mermaid diagram from the inherited README was omitted because no fact supports its rendering in the at_a_glance section."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:025.paragraph",
+        "inherited_unit:026.code_block"
+      ],
+      "section_id": "quick_start",
+      "text": "The Quick Start section is omitted because no example fact is verified."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:027.heading",
+        "inherited_unit:028.paragraph",
+        "inherited_unit:029.heading",
+        "inherited_unit:030.paragraph",
+        "inherited_unit:031.code_block",
+        "inherited_unit:032.html_block",
+        "inherited_unit:033.heading",
+        "inherited_unit:034.code_block",
+        "inherited_unit:035.heading",
+        "inherited_unit:036.code_block",
+        "inherited_unit:037.heading",
+        "inherited_unit:038.code_block"
+      ],
+      "section_id": "additional_examples",
+      "text": "The Additional Examples section is omitted because no example fact is verified."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:072.list"
+      ],
+      "section_id": "documentation_resources",
+      "text": "External links (docs.aspose.org, kb.aspose.org, reference.aspose.org, samples/README.md, AGENTS.md, GitHub issues) are omitted because no fact supports them."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:075.paragraph"
+      ],
+      "section_id": "enterprise_relationship",
+      "text": "The Enterprise Edition reference is omitted because no enterprise relationship link is verified."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:077.paragraph",
+        "inherited_unit:078.code_block",
+        "inherited_unit:079.paragraph"
+      ],
+      "section_id": "development_testing",
+      "text": "The cargo test claim and CI details are omitted because no fact supports them."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:081.paragraph"
+      ],
+      "section_id": "license",
+      "text": "The MIT License text is omitted because no fact confirms it."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:044.heading",
+        "inherited_unit:045.paragraph",
+        "inherited_unit:046.code_block"
+      ],
+      "section_id": "api_reference",
+      "text": "The Project Structure section is omitted because it is redundant with the API Reference section."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:057.heading"
+      ],
+      "section_id": "api_reference",
+      "text": "The 'Detailed Member Reference' heading and its content are omitted because they are not part of the verified API reference structure."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:049.html_block",
+        "inherited_unit:070.html_block"
+      ],
+      "section_id": "api_reference",
+      "text": "The closing HTML details tag is omitted because no evidence confirms its matching opening tag."
+    }
+  ],
+  "flagship_example_id": null,
+  "links": [],
+  "material_limitations": [
+    {
+      "fact_ids": [
+        "format:input.xlsx",
+        "format:output.xlsx"
+      ],
+      "unit_ids": [
+        "inherited_unit:074.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheetsmut.remove_at"
+      ],
+      "unit_ids": [
+        "inherited_unit:074.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "package:name",
+        "package:version"
+      ],
+      "unit_ids": [
+        "inherited_unit:074.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "package:name",
+        "package:version"
+      ],
+      "unit_ids": [
+        "inherited_unit:074.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "package:name",
+        "package:version"
+      ],
+      "unit_ids": [
+        "inherited_unit:074.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "package:name",
+        "package:version"
+      ],
+      "unit_ids": [
+        "inherited_unit:074.list"
+      ]
+    }
+  ],
+  "quick_start_example_id": null,
+  "second_quick_start_example_id": null,
+  "sections": [
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "identity"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "badges"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "banner"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "opening"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "navigation"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "at_a_glance"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "key_capabilities"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "installation"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "dependencies"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "quick_start"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "additional_examples"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "api_reference"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "documentation_resources"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "scope_limitations"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "development_testing"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "third_party_notices"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "license"
+    }
+  ]
+}

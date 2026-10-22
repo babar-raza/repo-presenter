@@ -1,0 +1,868 @@
+{
+  "dispositions": [
+    {
+      "destination_section": "identity",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:version"
+      ],
+      "rationale": "The H1 product name is rendered deterministically by the identity section.",
+      "unit_id": "inherited_unit:001.heading"
+    },
+    {
+      "destination_section": "badges",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "package:rust_edition"
+      ],
+      "rationale": "The badge row is rendered deterministically by the badges section; edition badge is supported.",
+      "unit_id": "inherited_unit:002.badge_row"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a product illustration or homepage link; the banner condition is not met.",
+      "unit_id": "inherited_unit:003.badge_row"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:version",
+        "import_path:aspose_cells_foss_rust",
+        "format:input.xlsx",
+        "format:output.xlsx",
+        "dependency:base64",
+        "dependency:chrono",
+        "dependency:getrandom",
+        "dependency:roxmltree",
+        "dependency:serde_json",
+        "dependency:sha2",
+        "dependency:zip"
+      ],
+      "rationale": "The paragraph describes the product, its problems solved, and audience; facts support all claims.",
+      "unit_id": "inherited_unit:004.paragraph"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Navigation heading is owned by the deterministic navigation section.",
+      "unit_id": "inherited_unit:005.heading"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The navigation list is rendered deterministically by the navigation section.",
+      "unit_id": "inherited_unit:006.list"
+    },
+    {
+      "destination_section": "at_a_glance",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The At a Glance heading is owned by the deterministic at_a_glance section.",
+      "unit_id": "inherited_unit:007.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Mermaid diagram condition requires at least three verified core capabilities and a verified input format; while input format is supported, the diagram is a ",
+      "unit_id": "inherited_unit:008.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:workbook",
+        "public_symbol:worksheet",
+        "public_symbol:cells",
+        "public_symbol:cell",
+        "public_symbol:cellmut",
+        "public_symbol:cellvalue",
+        "public_symbol:cellstyle",
+        "public_symbol:font",
+        "public_symbol:fill",
+        "public_symbol:borders",
+        "public_symbol:numberformat",
+        "public_symbol:charttype",
+        "public_symbol:chart",
+        "public_symbol:picture",
+        "public_symbol:shape",
+        "public_symbol:autofilter"
+      ],
+      "rationale": "The Key Capabilities heading is placeable and supported by verified public symbols.",
+      "unit_id": "inherited_unit:009.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:workbook",
+        "public_symbol:worksheet",
+        "public_symbol:cells",
+        "public_symbol:cell",
+        "public_symbol:cellmut",
+        "public_symbol:cellvalue",
+        "public_symbol:cellstyle",
+        "public_symbol:font",
+        "public_symbol:fill",
+        "public_symbol:borders",
+        "public_symbol:numberformat",
+        "public_symbol:charttype",
+        "public_symbol:chart",
+        "public_symbol:picture",
+        "public_symbol:shape",
+        "public_symbol:autofilter"
+      ],
+      "rationale": "The list items are grounded in verified public symbols and match the capabilities inventory.",
+      "unit_id": "inherited_unit:010.list"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Installation heading is owned by the deterministic installation section.",
+      "unit_id": "inherited_unit:011.heading"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "CORRECT_WITH_EVIDENCE",
+      "fact_ids": [
+        "install_command:cargo"
+      ],
+      "rationale": "The paragraph states the package is not yet published to crates.io, which is contradicted by the install_command:cargo fact indicating a cargo add command isnot",
+      "unit_id": "inherited_unit:012.paragraph"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The installation code block is rendered deterministically by the installation section.",
+      "unit_id": "inherited_unit:013.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports path dependency instructions; the installation section renders only the Git dependency.",
+      "unit_id": "inherited_unit:014.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports path dependency instructions; the installation section renders only the Git dependency.",
+      "unit_id": "inherited_unit:015.code_block"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:name",
+        "import_path:aspose_cells_foss_rust",
+        "package:rust_edition"
+      ],
+      "rationale": "The paragraph states the package name, import path, and Rust edition requirement; facts support all claims.",
+      "unit_id": "inherited_unit:016.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports building the library directly from a clone; the installation section covers Git dependency.",
+      "unit_id": "inherited_unit:017.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports building the library directly from a clone; the installation section covers Git dependency.",
+      "unit_id": "inherited_unit:018.code_block"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Dependencies heading is owned by the deterministic dependencies section.",
+      "unit_id": "inherited_unit:019.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Required Package Dependencies heading is owned by the deterministic dependencies section.",
+      "unit_id": "inherited_unit:020.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:base64",
+        "dependency:chrono",
+        "dependency:getrandom",
+        "dependency:roxmltree",
+        "dependency:serde_json",
+        "dependency:sha2",
+        "dependency:zip"
+      ],
+      "rationale": "The dependency list is rendered deterministically by the dependencies section.",
+      "unit_id": "inherited_unit:021.list"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Native and System Requirements heading is owned by the deterministic dependencies section.",
+      "unit_id": "inherited_unit:022.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "package:rust_edition"
+      ],
+      "rationale": "The Rust toolchain requirement is rendered deterministically by the dependencies section.",
+      "unit_id": "inherited_unit:023.list"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Quick Start heading is owned by the deterministic quick_start section.",
+      "unit_id": "inherited_unit:024.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the Quick Start example; the quick_start section is not rendered.",
+      "unit_id": "inherited_unit:025.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the Quick Start example; the quick_start section is not rendered.",
+      "unit_id": "inherited_unit:026.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Additional Examples heading is owned by the deterministic additional_examples section.",
+      "unit_id": "inherited_unit:027.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the Additional Examples section; the additional_examples section is not rendered.",
+      "unit_id": "inherited_unit:028.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the Load XLSX Files With Repair Options example; the additional_examples section is not rendered.",
+      "unit_id": "inherited_unit:029.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the Load XLSX Files With Repair Options example; the additional_examples section is not rendered.",
+      "unit_id": "inherited_unit:030.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the Load XLSX Files With Repair Options example; the additional_examples section is not rendered.",
+      "unit_id": "inherited_unit:031.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the Additional Examples details block; the additional_examples section is not rendered.",
+      "unit_id": "inherited_unit:032.html_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the Add Charts From Data Ranges example; the additional_examples section is not rendered.",
+      "unit_id": "inherited_unit:033.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the Add Charts From Data Ranges example; the additional_examples section is not rendered.",
+      "unit_id": "inherited_unit:034.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the Apply Conditional Formatting Rules example; the additional_examples section is not rendered.",
+      "unit_id": "inherited_unit:035.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the Apply Conditional Formatting Rules example; the additional_examples section is not rendered.",
+      "unit_id": "inherited_unit:036.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the Enforce Data Validation Rules example; the additional_examples section is not rendered.",
+      "unit_id": "inherited_unit:037.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the Enforce Data Validation Rules example; the additional_examples section is not rendered.",
+      "unit_id": "inherited_unit:038.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the Build a Structured Excel Table example; the additional_examples section is not rendered.",
+      "unit_id": "inherited_unit:039.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the Build a Structured Excel Table example; the additional_examples section is not rendered.",
+      "unit_id": "inherited_unit:040.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific heading or its content; it is not part of the verified API reference structure.",
+      "unit_id": "inherited_unit:041.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The code block is unsupported: no example fact exists for hyperlinks and defined names at this revision.",
+      "unit_id": "inherited_unit:042.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "This closing HTML tag is unsupported and has no corresponding opening tag in the facts.",
+      "unit_id": "inherited_unit:043.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:version",
+        "import_path:aspose_cells_foss_rust"
+      ],
+      "rationale": "The 'Project Structure' heading and its content are redundant with the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:044.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:version",
+        "import_path:aspose_cells_foss_rust"
+      ],
+      "rationale": "The paragraph describing project structure is redundant with the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:045.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:version",
+        "import_path:aspose_cells_foss_rust"
+      ],
+      "rationale": "The directory tree is redundant with the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:046.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:version",
+        "import_path:aspose_cells_foss_rust"
+      ],
+      "rationale": "The 'API Reference' heading is supported by the API Reference section and matches the section heading.",
+      "unit_id": "inherited_unit:047.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:workbook",
+        "public_symbol:worksheets",
+        "public_symbol:worksheetsmut",
+        "public_symbol:worksheet",
+        "public_symbol:cells",
+        "public_symbol:cellsmut",
+        "public_symbol:cell",
+        "public_symbol:cellmut"
+      ],
+      "rationale": "The paragraph describing the primary entry point and cell accessors is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:048.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The opening HTML details block is unsupported; no evidence confirms its matching closing tag or usage in the API Reference.",
+      "unit_id": "inherited_unit:049.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:cell",
+        "public_symbol:cells",
+        "public_symbol:workbook",
+        "public_symbol:worksheet"
+      ],
+      "rationale": "The 'Core API' heading is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:050.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:cell",
+        "public_symbol:cells",
+        "public_symbol:workbook",
+        "public_symbol:worksheet"
+      ],
+      "rationale": "The 'Structs' heading is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:051.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:cell",
+        "public_symbol:cells",
+        "public_symbol:workbook",
+        "public_symbol:worksheet",
+        "public_symbol:cellmut",
+        "public_symbol:cellsmut",
+        "public_symbol:workbookloadexception",
+        "public_symbol:workbooksaveexception",
+        "public_symbol:cellserror",
+        "public_symbol:cellsexception",
+        "public_symbol:formulaexception",
+        "public_symbol:styleexception",
+        "public_symbol:invalidfileformatexception",
+        "public_symbol:unsupportedfeatureexception",
+        "public_symbol:loadoptions",
+        "public_symbol:saveoptions"
+      ],
+      "rationale": "The table of structs is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:052.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:cell",
+        "public_symbol:cells",
+        "public_symbol:workbook",
+        "public_symbol:worksheet"
+      ],
+      "rationale": "The 'Enumerations' heading is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:053.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:cell",
+        "public_symbol:cells",
+        "public_symbol:workbook",
+        "public_symbol:worksheet",
+        "public_symbol:cellvalue",
+        "public_symbol:cellvaluetype",
+        "public_symbol:charttype",
+        "public_symbol:validationtype",
+        "public_symbol:formatconditiontype"
+      ],
+      "rationale": "The table of enumerations is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:054.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:iwarningcallback"
+      ],
+      "rationale": "The 'Traits' heading is supported by the public symbol IWarningCallback and matches the API Reference structure.",
+      "unit_id": "inherited_unit:055.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:iwarningcallback"
+      ],
+      "rationale": "The table of traits is supported by the public symbol IWarningCallback and matches the API Reference structure.",
+      "unit_id": "inherited_unit:056.table"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this heading or its content; it is not part of the verified API reference structure.",
+      "unit_id": "inherited_unit:057.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:workbook",
+        "public_symbol:worksheets",
+        "public_symbol:worksheetsmut",
+        "public_symbol:worksheet"
+      ],
+      "rationale": "The 'Workbook and Worksheets' heading is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:058.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:workbook",
+        "public_symbol:workbookloadexception",
+        "public_symbol:workbooksaveexception"
+      ],
+      "rationale": "The list of Workbook methods is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:059.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:worksheets",
+        "public_symbol:worksheetsmut"
+      ],
+      "rationale": "The list of Worksheets methods is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:059.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:worksheet"
+      ],
+      "rationale": "The list of Worksheet methods is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:059.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:cell",
+        "public_symbol:cells",
+        "public_symbol:cellmut",
+        "public_symbol:cellsmut"
+      ],
+      "rationale": "The 'Cells, Values, and Formulas' heading is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:060.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:cells",
+        "public_symbol:cellsmut"
+      ],
+      "rationale": "The list of Cells methods is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:061.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:cell",
+        "public_symbol:cellmut"
+      ],
+      "rationale": "The list of Cell methods is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:061.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:cellstyle",
+        "public_symbol:font",
+        "public_symbol:color"
+      ],
+      "rationale": "The 'Styling' heading is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:062.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:cellstyle"
+      ],
+      "rationale": "The list of CellStyle methods is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:063.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:font"
+      ],
+      "rationale": "The list of Font methods is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:063.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:color"
+      ],
+      "rationale": "The list of Color methods is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:063.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:pagesetup"
+      ],
+      "rationale": "The list of PageSetup methods is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:063.004.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:loadoptions",
+        "public_symbol:saveoptions"
+      ],
+      "rationale": "The 'Load and Save Options' heading is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:064.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:loadoptions"
+      ],
+      "rationale": "The list of LoadOptions fields is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:065.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:saveoptions"
+      ],
+      "rationale": "The list of SaveOptions fields is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:065.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:validation",
+        "public_symbol:validationcollection",
+        "public_symbol:formatcondition",
+        "public_symbol:conditionalformattingcollection"
+      ],
+      "rationale": "The 'Validation and Conditional Formatting' heading is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:066.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:validation",
+        "public_symbol:validationcollection"
+      ],
+      "rationale": "The list of Validation methods is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:067.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:formatcondition",
+        "public_symbol:conditionalformattingcollection"
+      ],
+      "rationale": "The list of FormatCondition methods is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:067.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:conditionalformattingcollection"
+      ],
+      "rationale": "The list of ConditionalFormattingCollection methods is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:067.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:cellserror",
+        "public_symbol:cellsexception",
+        "public_symbol:workbookloadexception",
+        "public_symbol:workbooksaveexception",
+        "public_symbol:formulaexception",
+        "public_symbol:styleexception",
+        "public_symbol:invalidfileformatexception",
+        "public_symbol:unsupportedfeatureexception"
+      ],
+      "rationale": "The 'Exceptions' heading is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:068.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:cellserror"
+      ],
+      "rationale": "The list of CellsError variants is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:069.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:workbookloadexception",
+        "public_symbol:workbooksaveexception",
+        "public_symbol:cellsexception",
+        "public_symbol:formulaexception",
+        "public_symbol:styleexception",
+        "public_symbol:invalidfileformatexception",
+        "public_symbol:unsupportedfeatureexception"
+      ],
+      "rationale": "The list of exception types is supported by the public symbols and matches the API Reference structure.",
+      "unit_id": "inherited_unit:069.002.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "This closing HTML tag is unsupported and has no corresponding opening tag in the facts.",
+      "unit_id": "inherited_unit:070.html_block"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Documentation & Resources' heading is superseded by the deterministic 'Documentation & Resources' section, which is not placeable and renders from facts.",
+      "unit_id": "inherited_unit:071.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the external links (docs.aspose.org, kb.aspose.org, reference.aspose.org, samples/README.md, AGENTS.md, GitHub issues) listed; none are present",
+      "unit_id": "inherited_unit:072.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Scope and Limitations' heading is placeable and matches the deterministic section; no facts contradict it.",
+      "unit_id": "inherited_unit:073.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "format:input.xlsx",
+        "format:output.xlsx",
+        "public_symbol:worksheetsmut.remove_at",
+        "package:name",
+        "package:version"
+      ],
+      "rationale": "All list items are supported by facts: XLSX-only support, single-worksheet requirement, incomplete feature parity, no test suite, and no crates.io publication.",
+      "unit_id": "inherited_unit:074.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The reference to Aspose.Cells — Enterprise Edition and its features is promotional and unsupported by any fact; no enterprise relationship link is verified.",
+      "unit_id": "inherited_unit:075.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Development and Testing' heading is superseded by the deterministic 'Development and Testing' section, which is not placeable and renders from facts.",
+      "unit_id": "inherited_unit:076.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The claim that `cargo test --all-targets` reports 0 tests is contradicted by the absence of any test-related fact; no fact supports this specific assertion.",
+      "unit_id": "inherited_unit:077.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the specific code block commands or their execution; the section is not placeable and renders from facts, but the block itself is unsupported.",
+      "unit_id": "inherited_unit:078.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph references CI workflows, sample files, and GitHub Pages deployment not supported by any fact; none of these are verified.",
+      "unit_id": "inherited_unit:079.paragraph"
+    },
+    {
+      "destination_section": "license",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'License' heading is superseded by the deterministic 'License' section, which is not placeable and renders from facts.",
+      "unit_id": "inherited_unit:080.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact in the Facts list confirms the MIT License text or its copyright notice; the license statement is unsupported.",
+      "unit_id": "inherited_unit:081.paragraph"
+    }
+  ]
+}

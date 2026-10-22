@@ -1,0 +1,1327 @@
+--- a/README.md
++++ b/README.md
+@@ -1,717 +1,607 @@
+-# Aspose.Cells FOSS for Rust
+-
+-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.txt) [![Rust Edition](https://img.shields.io/badge/Rust-2021%20edition-orange.svg)](Cargo.toml)
+-
+-[![Aspose.Cells FOSS for Rust](https://products.aspose.org/media/cells/rust/banner-readme.png)](https://products.aspose.org/cells/rust/)
+-
+-Aspose.Cells FOSS for Rust is a free, open-source, pure-Rust library for creating,
+-loading, editing, and saving Excel `.xlsx` (Office Open XML / SpreadsheetML) workbooks.
+-It exposes an API modeled after Aspose.Cells, so
+-the familiar `Workbook` / `Worksheet` / `Cells` object model is available to Rust
+-programs with no proprietary runtime, no Microsoft Office installation, and no external
+-Aspose dependency. The OOXML packaging — ZIP container, relationships, shared strings,
+-styles, worksheet XML, and charts — is implemented from scratch on top of a small set of
+-general-purpose crates: `zip` (package container), `roxmltree` (XML parsing), `chrono`
+-(date/time), `sha2` / `base64` / `getrandom` (protection hashing), and `serde_json`.
+-
+-## Navigation
+-
+-- [At a Glance](#at-a-glance)
+-- [Key Capabilities](#key-capabilities)
+-- [Installation](#installation)
+-- [Dependencies](#dependencies)
+-- [Quick Start](#quick-start)
+-- [Additional Examples](#additional-examples)
+-- [Project Structure](#project-structure)
+-- [API Reference](#api-reference)
+-- [Documentation & Resources](#documentation--resources)
+-- [Scope and Limitations](#scope-and-limitations)
+-- [Development and Testing](#development-and-testing)
+-- [License](#license)
+-
+-## At a Glance
+-
+-```mermaid
+-flowchart TD
+-  subgraph StartingPoints["Starting Points"]
+-    direction TB
+-    i1["An existing .xlsx workbook"]
+-  end
+-  PRODUCT["Aspose.Cells FOSS for Rust"]
+-  subgraph Capabilities["Core Capabilities"]
+-    direction LR
+-    subgraph capl[" "]
+-      direction TB
+-      c1["Workbook and worksheet management"]
+-      c2["Cell values and formulas"]
+-      c3["Styling: fonts, fills, borders, number formats"]
+-      c4["Rows, columns, and merged ranges"]
+-      c5["Data validation and conditional formatting"]
+-    end
+-    subgraph capr[" "]
+-      direction TB
+-      c6["Charts via ChartType"]
+-      c7["Pictures and shapes"]
+-      c8["List objects, auto-filters, and sparklines"]
+-      c9["Hyperlinks, defined names, and comments"]
+-      c10["Document properties and page setup"]
+-    end
+-  end
+-  subgraph Outputs["Outputs"]
+-    direction TB
+-    o1[".xlsx workbook (file path, binary stream, or in-memory Vec<u8>)"]
+-  end
+-  StartingPoints --> PRODUCT --> Capabilities --> Outputs
+-```
+-
+-## Key Capabilities
+-
+-- Create a new `Workbook` with `Workbook::new` (starts with one sheet, `"Sheet1"`), or
+-  load an existing `.xlsx` file from a path (`Workbook::load_xlsx`), a stream
+-  (`load_xlsx_from_stream`), or in-memory bytes (`load_xlsx_from_bytes`) — with defensive
+-  repair options via `LoadOptions` (`try_repair_package`, `try_repair_xml`) and structured
+-  `LoadDiagnostics` for the issues found along the way.
+-- Manage worksheets through `WorksheetsMut` / `Worksheets` (add, look up by index or
+-  name, active-sheet state) and `Worksheet` (name, visibility, tab color, gridlines,
+-  zoom, right-to-left layout, and protection).
+-- Read and write typed cell values through `Cell` / `CellMut` — `put_value_string`,
+-  `put_value_i32`, `put_value_bool`, `put_value_decimal`, `put_value_date_time` —
+-  addressed by A1 name (`get`) or row/column index (`get_by_index`), and enter formulas
+-  with cached results via `put_formula_with_cached_value`.
+-- Apply cell styling through `CellStyle` with `Font`, `Fill`, and `Borders`, targeted
+-  updates via `StyleFlag`, and custom `NumberFormat` strings.
+-- Size and organize rows, columns, and merged cell areas through `Rows` / `Columns` and `Cells`.
+-- Enforce data validation rules (`Validation`, `ValidationType`, `OperatorType`) and apply
+-  conditional formatting — cell-value, expression, color-scale, data-bar, and icon-set
+-  rules — through `FormatCondition` and `ConditionalFormattingCollection`.
+-- Build charts through `ChartType` on a worksheet's chart collection — column, line, bar,
+-  area, pie, doughnut, scatter, radar, bubble, and stock families, plus their stacked and
+-  3D variants, each rendered as real OOXML chart markup.
+-- Embed pictures with `Picture` and drawing shapes with `Shape` / `AutoShapeType`
+-  (rectangles, stars, arrows, and other preset geometries).
+-- Build structured Excel tables with `ListObject` (table styles, totals), auto-filters
+-  with `AutoFilter`, and compact in-cell trend charts with `SparklineGroup`.
+-- Attach hyperlinks (`Hyperlink`), workbook- and sheet-scoped defined names
+-  (`DefinedName`), and cell comments (`Comment`) with author, note, and visibility
+-  control.
+-- Read and write core and extended document properties (`DocumentProperties`,
+-  `ExtendedDocumentProperties`) and configure print and page layout through `PageSetup`
+-  (paper size, orientation, margins, page breaks) and `FreezePane`.
+-- Save back to `.xlsx` — to a file path (`save` / `save_xlsx`), a stream
+-  (`save_xlsx_to_stream`), or in-memory bytes (`save_xlsx_to_bytes`) — with `SaveOptions`.
+-
+-## Installation
+-
+-Aspose.Cells FOSS for Rust is not yet published to [crates.io](https://crates.io/) (see
+-[Scope and Limitations](#scope-and-limitations)). Once the repository is live at its real
+-GitHub location, add it as a Git dependency in `Cargo.toml`:
+-
+-```toml
+-[dependencies]
+-aspose-cells-foss-rust = { git = "https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Rust" }
+-```
+-
+-For local development against a cloned copy, use a path dependency instead:
+-
+-```toml
+-[dependencies]
+-aspose-cells-foss-rust = { path = "../Aspose.Cells-FOSS-for-Rust" }
+-```
+-
+-The package name is `aspose-cells-foss-rust`; the library is imported as
+-`aspose_cells_foss_rust`. Requires a recent stable Rust toolchain (2021 edition or later).
+-No proprietary Aspose runtime and no Microsoft Office installation is required.
+-
+-To build the library directly from a clone:
+-
+-```bash
+-git clone https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Rust.git
+-cd Aspose.Cells-FOSS-for-Rust
+-cargo build
+-```
+-
+-## Dependencies
+-
+-### Required Package Dependencies
+-
+-- `zip` 0.6 — reads and writes the XLSX ZIP container.
+-- `roxmltree` 0.20 — parses the OOXML part XML (relationships, shared strings, styles,
+-  worksheet XML).
+-- `chrono` 0.4 — date/time handling for cell values and formulas.
+-- `sha2` 0.10, `base64` 0.22, `getrandom` 0.3 — hashing and encoding used by document
+-  protection features.
+-- `serde_json` 1 — JSON support for diagnostics and serialization helpers.
+-
+-### Native and System Requirements
+-
+-- Requires a recent stable Rust toolchain (2021 edition or later).
+-
+-## Quick Start
+-
+-Create a workbook, write typed values and a formula with a cached result, save it as
+-XLSX, and load it back:
+-
+-```rust
+-use aspose_cells_foss_rust::{CellValue, Workbook};
+-use std::error::Error;
+-
+-fn main() -> Result<(), Box<dyn Error>> {
+-    // Create a new workbook (starts with one sheet, "Sheet1").
+-    let mut workbook = Workbook::new();
+-    {
+-        let mut worksheets = workbook.get_worksheets_mut();
+-        let sheet = worksheets.get(0)?;
+-        let mut cells = sheet.get_cells_mut();
+-
+-        cells.get("A1")?.put_value_string("Hello")?;
+-        cells.get("B1")?.put_value_i32(123)?;
+-        cells.get("C1")?.put_value_bool(true)?;
+-        cells.get("D1")?.put_value_decimal(12.5)?;
+-        cells.get("F1")?.put_value_i32(10)?;
+-        cells.get("G1")?
+-            .put_formula_with_cached_value("=F1*2", CellValue::Number(20.0))?;
+-    }
+-    workbook.save("hello.xlsx")?;
+-
+-    // Load it back.
+-    let loaded = Workbook::load_xlsx("hello.xlsx")?;
+-    let sheet = loaded.worksheet("Sheet1")?;
+-    let cells = sheet.get_cells();
+-    println!("A1 = {}", cells.get("A1")?.display_string_value());
+-
+-    Ok(())
+-}
+-```
+-
+-## Additional Examples
+-
+-More real, runnable examples are collected below — see [`samples/`](samples/) and
+-[`samples/README.md`](samples/README.md) for the complete set.
+-
+-### Load XLSX Files With Repair Options
+-
+-Open workbooks defensively with `LoadOptions` repair flags and inspect structured load
+-diagnostics:
+-
+-```rust
+-let options = LoadOptions {
+-    try_repair_package: true,
+-    try_repair_xml: true,
+-    ..LoadOptions::default()
+-};
+-
+-let loaded = Workbook::load_xlsx_with_options(&valid_path, &options)?;
+-let sheet = loaded.worksheet("Sheet1")?;
+-let cells = sheet.get_cells();
+-
+-println!(
+-    "Loaded workbook with {} worksheet(s) and {} diagnostic issue(s).",
+-    loaded.get_worksheets().count(),
+-    loaded.get_load_diagnostics().issues().len()
+-);
+-```
+-
+-<details>
+-<summary>View Additional Examples</summary>
+-
+-### Add Charts From Data Ranges
+-
+-```rust
+-let mut charts = sheet.get_charts();
+-charts.add(
+-    ChartType::Column,
+-    "Charts!$B$1:$B$13".to_string(),
+-    0, 4, 18, 8,
+-)?;
+-charts.add(
+-    ChartType::Line,
+-    "Charts!$C$1:$C$13".to_string(),
+-    0, 9, 18, 13,
+-)?;
+-
+-let chart_count = charts.count();
+-let first = charts.get(0).expect("chart");
+-println!("Chart count: {}", chart_count);
+-println!("First chart type: {:?}", first.get_chart_type());
+-```
+-
+-### Apply Conditional Formatting Rules
+-
+-```rust
+-let mut collections = sheet.get_conditional_formattings();
+-
+-let between_index = collections.add();
+-let mut between = collections.get(between_index).expect("collection should exist");
+-between.add_area(CellArea::create_cell_area_a1("A1", "A10")?)?;
+-let rule_index = between.add_condition_with_details(
+-    FormatConditionType::CellValue,
+-    OperatorType::Between,
+-    "3",
+-    "7",
+-);
+-let mut rule = between.get(rule_index).expect("rule should exist");
+-rule.set_priority(1)?;
+-let mut style = rule.get_style();
+-style.pattern = FillPattern::Solid;
+-style.fill_color = Some("FFFFC7CE".to_string());
+-rule.set_style(style);
+-```
+-
+-### Enforce Data Validation Rules
+-
+-```rust
+-let mut validations = sheet.get_validations();
+-let list_index = validations.add(CellArea::create_cell_area_a1("A1", "A3")?)?;
+-let mut list_validation = validations.get(list_index).expect("validation should exist");
+-list_validation.set_type(ValidationType::List);
+-list_validation.set_formula1("\"Open,Closed\"");
+-list_validation.set_in_cell_drop_down(true);
+-list_validation.set_show_error(true);
+-list_validation.set_error_title("Invalid");
+-list_validation.set_error_message("Choose from the list");
+-```
+-
+-### Build a Structured Excel Table (ListObject)
+-
+-```rust
+-let mut tables = sheet.get_list_objects();
+-let table_index = tables.add_a1("A1", "D5", true)?;
+-let mut table = tables.get(table_index as usize).expect("table should exist");
+-table.set_display_name("Products")?;
+-table.set_table_style_type(TableStyleType::TableStyleMedium2);
+-table.set_show_totals(true);
+-
+-let mut columns = table.get_list_columns();
+-columns.get(3).expect("quantity column").set_totals_calculation(TotalsCalculation::Sum);
+-```
+-
+-### Hyperlinks and Defined Names
+-
+-```rust
+-let mut hyperlinks = links_sheet.get_hyperlinks();
+-let external_index = hyperlinks.add("A1", 1, 1, "https://example.com/docs?q=1")?;
+-let mut external_link = hyperlinks.get(external_index).expect("hyperlink should exist");
+-external_link.set_text_to_display("Docs");
+-external_link.set_screen_tip("External docs");
+-
+-let mut defined_names = workbook.get_defined_names();
+-let global_index = defined_names.add("GlobalRange", "='Links'!$A$1:$D$5")?;
+-defined_names.get(global_index).expect("defined name should exist").set_hidden(true);
+-```
+-
+-</details>
+-
+-## Project Structure
+-
+-The library source lives under `src/Aspose.Cells_FOSS/`, one module per public type, with
+-runnable samples alongside it at the repository root:
+-
+-```
+-├── src/
+-│   ├── lib.rs                      # Crate root; re-exports the public API
+-│   └── Aspose.Cells_FOSS/
+-│       ├── api.rs                  # Wires the modules together
+-│       ├── Core/                   # Internal data models
+-│       ├── Packaging/              # OOXML package (ZIP) reading/writing
+-│       ├── Xml/                    # SpreadsheetML XML mappers
+-│       ├── Validation/             # Workbook validation
+-│       ├── ChartDefaults/          # Default chart XML templates
+-│       ├── Workbook.rs             #   Workbook entry point
+-│       ├── Worksheet.rs            #   Worksheet model
+-│       ├── Cell.rs / Cells.rs      #   Cell model and collection
+-│       ├── Style.rs                #   Styles (font, fill, alignment, border)
+-│       ├── Validation.rs           #   Data validation
+-│       ├── Chart.rs / ChartLive.rs #   Charts
+-│       └── ...                     # One module per public type (Comment, Hyperlink, ListObject, ...)
+-├── samples/                        # Runnable feature examples
+-│   ├── basic.rs
+-│   ├── styles.rs
+-│   ├── charts.rs
+-│   ├── ...                         # One sample per feature area
+-│   └── README.md                   # Sample overview
+-├── License/LICENSE.txt             # MIT license (also mirrored at the repository root)
+-├── AGENTS.md                       # AI-assisted development guide
+-├── Cargo.toml
+-└── README.md
+-```
+-
+-## API Reference
+-
+-The primary entry point is `Workbook`, which owns a `Worksheets` / `WorksheetsMut`
+-collection of `Worksheet` objects. Each `Worksheet` exposes its cells through
+-`get_cells()` / `get_cells_mut()`, returning a `Cells` / `CellsMut` accessor used for
+-individual `Cell` / `CellMut` access, row/column collections, and merged ranges. The
+-public API surface includes 213 public types, summarized in the module-grouped table
+-below.
+-
+-<details>
+-<summary>View the Complete Public API Surface</summary>
+-
+-### Core API
+-
+-#### Structs
+-
+-| Struct | Description |
+-|---|---|
+-| `AlignmentValue` | Struct with 1 method. |
+-| `AutoFilter` | Represents auto filter. |
+-| `AutoFilterColorFilter` | Represents auto filter color filter. |
+-| `AutoFilterColorFilterModel` | Struct with 1 method. |
+-| `AutoFilterCustomFilter` | Represents auto filter custom filter. |
+-| `AutoFilterCustomFilterCollection` | Represents a collection of auto filter custom filter objects. |
+-| `AutoFilterCustomFilterModel` | Struct extending Default. |
+-| `AutoFilterDynamicFilter` | Represents auto filter dynamic filter. |
+-| `AutoFilterDynamicFilterModel` | Struct with 1 method. |
+-| `AutoFilterModel` | Struct with 2 methods. |
+-| `AutoFilterSortCondition` | Represents auto filter sort condition. |
+-| `AutoFilterSortConditionCollection` | Represents a collection of auto filter sort condition objects. |
+-| `AutoFilterSortConditionModel` | Struct extending Default. |
+-| `AutoFilterSortState` | Represents auto filter sort state. |
+-| `AutoFilterSortStateModel` | Struct with 2 methods. |
+-| `AutoFilterTop10` | Represents auto filter top10. |
+-| `AutoFilterTop10Model` | Struct with 1 method. |
+-| `Border` | Represents border. |
+-| `BorderSideValue` | Struct with 1 method. |
+-| `Borders` | Represents borders. |
+-| `BordersValue` | Struct with 1 method. |
+-| `CalculationProperties` | Represents calculation properties. |
+-| `CalculationPropertiesModel` | Struct with 2 methods. |
+-| `Cell` | Represents a single worksheet cell and exposes value, formula, and style operations. |
+-| `CellArea` | Represents cell area. |
+-| `CellFormatValue` | Struct extending Default. |
+-| `CellMut` | Represents a single worksheet cell and exposes value, formula, and style operations. |
+-| `CellRange` | Struct with 2 properties. |
+-| `CellRecord` | Struct extending Default. |
+-| `CellRef` | Struct with 2 properties. |
+-| `CellStyle` | Represents a mutable cell style facade that can be applied to one or more cells. |
+-| `Cells` | Provides access to worksheet cells, rows, columns, and merged ranges. |
+-| `CellsException` | Represents an error that occurs during cells. |
+-| `CellsMut` | Provides access to worksheet cells, rows, columns, and merged ranges. |
+-| `Chart` | Represents a chart embedded in a worksheet. |
+-| `ChartCollection` | Represents collection of charts on a worksheet. |
+-| `ChartCompanionFile` | Struct extending Default. |
+-| `ChartModel` | Struct extending Default. |
+-| `ChartXmlTemplates` | Struct with 24 methods. |
+-| `Color` | Represents color. |
+-| `ColorValue` | Struct with 2 methods and 4 properties. |
+-| `Column` | Represents column. |
+-| `ColumnMut` | Represents column. |
+-| `ColumnProperties` | Encapsulates a single worksheet and its supported v0.1 worksheet features. |
+-| `ColumnRangeModel` | Struct extending Default. |
+-| `Columns` | Represents a collection of column objects. |
+-| `ColumnsMut` | Represents a collection of column objects. |
+-| `Comment` | Represents a worksheet comment (legacy note) anchored to a single cell. |
+-| `CommentCollection` | Represents the collection of comments (legacy notes) on a worksheet. |
+-| `CommentModel` | Struct extending Default. |
+-| `ConditionalFormattingCollection` | Represents a collection of conditional formatting objects. |
+-| `ConditionalFormattingModel` | Struct extending Debug. |
+-| `CoreDocumentProperties` | Represents core document properties. |
+-| `CoreDocumentPropertiesModel` | Struct with 2 methods. |
+-| `DefinedName` | Represents defined name. |
+-| `DefinedNameCollection` | Represents a collection of defined name objects. |
+-| `DefinedNameModel` | Struct extending Default. |
+-| `DefinedNameUtility` | Struct with 5 methods. |
+-| `DiagnosticBag` | Struct with 1 method and 1 property. |
+-| `DiagnosticEntry` | Struct extending Default. |
+-| `DisplayFormatSectionInfo` | Struct extending Default. |
+-| `DisplayTextDateFormatSupport` | Struct with 17 methods. |
+-| `DisplayTextFormatter` | Struct with 2 methods. |
+-| `DisplayTextFormatterSupport` | Struct with 16 methods. |
+-| `DisplayTextLocaleSupport` | Struct with 4 methods. |
+-| `DocumentProperties` | Represents document properties. |
+-| `DocumentPropertiesModel` | Struct with 2 methods. |
+-| `ExtendedDocumentProperties` | Represents extended document properties. |
+-| `ExtendedDocumentPropertiesModel` | Struct with 2 methods. |
+-| `ExternalLinkModel` | Struct extending Default. |
+-| `Fill` | Represents a mutable cell style facade that can be applied to one or more cells. |
+-| `FillValue` | Struct extending Default. |
+-| `FilterColumn` | Represents filter column. |
+-| `FilterColumnCollection` | Represents a collection of filter column objects. |
+-| `FilterColumnModel` | Struct with 2 methods. |
+-| `FilterValueCollection` | Represents a collection of filter value objects. |
+-| `Font` | Represents font. |
+-| `FontValue` | Struct with 1 method. |
+-| `FormatCondition` | Represents format condition. |
+-| `FormatConditionCollection` | Represents a collection of format condition objects. |
+-| `FormatConditionModel` | Struct with 1 method. |
+-| `FormulaException` | Represents an error that occurs during formula. |
+-| `FreezePane` | Encapsulates a single worksheet and its supported v0.1 worksheet features. |
+-| `Hyperlink` | Represents hyperlink. |
+-| `HyperlinkCollection` | Encapsulates the hyperlinks defined for a worksheet. |
+-| `HyperlinkModel` | Struct extending Default. |
+-| `IListObjectOwner` | Struct extending Default. |
+-| `IPackageReader` | Struct extending Default. |
+-| `IPackageWriter` | Struct extending Default. |
+-| `InvalidFileFormatException` | Represents an error that occurs during invalid file format. |
+-| `ListColumn` | Represents a single column in an Excel table. |
+-| `ListColumnCollection` | Represents the ordered collection of columns in an Excel table. |
+-| `ListColumnModel` | Struct extending Default. |
+-| `ListObject` | Represents an Excel table (structured reference / ListObject). |
+-| `ListObjectCollection` | Represents the collection of Excel tables on a worksheet. |
+-| `ListObjectModel` | Struct extending Default. |
+-| `ListObjectSupport` | Struct with 12 methods. |
+-| `LoadDiagnostics` | Represents load diagnostics. |
+-| `LoadIssue` | Represents load issue. |
+-| `LoadOptions` | Specifies how a workbook should be loaded. |
+-| `MergeRegion` | Struct extending Default. |
+-| `MissingPartException` | Struct extending Default. |
+-| `NumberFormat` | Provides number format operations. |
+-| `NumberFormatValue` | Struct with 1 method. |
+-| `PackageLoadContext` | Struct extending Default. |
+-| `PackageModel` | Struct extending Default. |
+-| `PackagePartDescriptor` | Struct extending Default. |
+-| `PackageStructureException` | Struct extending Default. |
+-| `PackagingConventions` | Struct extending Default. |
+-| `PageSetup` | Represents worksheet print and page-layout settings. |
+-| `Picture` | Represents a picture (image) anchored to a worksheet. |
+-| `PictureCollection` | Represents collection of pictures anchored to a worksheet. |
+-| `PictureModel` | Struct extending Default. |
+-| `ProtectionValue` | Struct with 1 method. |
+-| `RelationshipDescriptor` | Struct extending Default. |
+-| `RelationshipResolutionException` | RelationshipResolutionException is thrown when the library cannot resolve a package relationship during load or save. |
+-| `Row` | Represents row. |
+-| `RowModel` | Struct extending Default. |
+-| `RowMut` | Represents row. |
+-| `RowProperties` | Encapsulates a single worksheet and its supported v0.1 worksheet features. |
+-| `Rows` | Represents a collection of row objects. |
+-| `RowsMut` | Represents a collection of row objects. |
+-| `SaveOptions` | Specifies how a workbook should be saved. |
+-| `Shape` | Represents a drawing object (auto shape) anchored to a worksheet. |
+-| `ShapeCollection` | Represents collection of drawing objects (shapes) on a worksheet. |
+-| `ShapeImageModel` | Struct extending Default. |
+-| `ShapeModel` | Struct extending Default. |
+-| `SharedStringRepository` | Struct with 3 methods and 2 properties. |
+-| `SharedStringTableXmlMapper` | Struct with 2 methods. |
+-| `SparklineGroup` | A sparkline group contains sparkline items that share type and settings. |
+-| `SparklineGroupCollection` | Represents a collection of sparkline groups on a worksheet. |
+-| `StyleException` | Represents an error that occurs during style. |
+-| `StyleFlag` | Represents flags which indicate applied formatting properties. |
+-| `StyleRepository` | Struct with 1 method. |
+-| `StyleValue` | Struct with 1 method. |
+-| `StyleValueSanitizer` | Struct with 3 methods. |
+-| `StylesheetLoadContext` | Struct extending Default. |
+-| `StylesheetSaveContext` | Struct with 2 methods and 2 properties. |
+-| `StylesheetXmlMapper` | Struct with 2 methods. |
+-| `UnsupportedFeatureException` | Represents an error that occurs during unsupported feature. |
+-| `Validation` | Represents validation. |
+-| `ValidationCollection` | Represents a collection of validation objects. |
+-| `ValidationMessage` | Struct extending Default. |
+-| `ValidationModel` | Struct with 1 method and 14 properties. |
+-| `WarningInfo` | Represents warning info. |
+-| `Workbook` | Represents the root spreadsheet object used to create, load, modify, and save an XLSX workbook. |
+-| `WorkbookLoadException` | Represents an error that occurs during workbook load. |
+-| `WorkbookModel` | Struct extending Default. |
+-| `WorkbookProperties` | Represents workbook properties. |
+-| `WorkbookPropertiesModel` | Struct with 2 methods. |
+-| `WorkbookProtection` | Represents workbook protection. |
+-| `WorkbookProtectionModel` | Struct with 2 methods. |
+-| `WorkbookSaveException` | Represents an error that occurs during workbook save. |
+-| `WorkbookSettings` | Represents workbook-level settings that affect date handling and display formatting. |
+-| `WorkbookSettingsModel` | Struct extending Default. |
+-| `WorkbookValidator` | Struct with 1 method. |
+-| `WorkbookView` | Represents workbook view. |
+-| `WorkbookViewModel` | Struct with 2 methods. |
+-| `WorkbookXmlMapper` | Struct with 2 methods. |
+-| `Worksheet` | Encapsulates a single worksheet and its supported v0.1 worksheet features. |
+-| `WorksheetDefinedNamesState` | Struct extending Default. |
+-| `WorksheetModel` | Struct extending Default. |
+-| `WorksheetProtection` | Represents worksheet protection. |
+-| `WorksheetProtectionModel` | Struct with 2 methods. |
+-| `WorksheetViewModel` | Struct extending Default. |
+-| `WorksheetXmlMapper` | Struct with 2 methods. |
+-| `Worksheets` | Encapsulates the workbook's worksheets and active-sheet state. |
+-| `WorksheetsMut` | Encapsulates the workbook's worksheets and active-sheet state. |
+-| `XlsxWorkbookCommentsLoader` | Struct with 10 methods. |
+-| `XlsxWorkbookDefinedNames` | Struct with 9 methods. |
+-| `XlsxWorkbookPicturesLoader` | Struct with 40 methods. |
+-| `XlsxWorkbookProperties` | Struct with 13 methods. |
+-| `XlsxWorkbookStylesValueHelpers` | Struct with 9 methods. |
+-| `XlsxWorkbookStylesXml` | Struct with 31 methods. |
+-| `XlsxWorkbookWorksheetProtection` | Struct with 6 methods. |
+-| `XlsxWorkbookWorksheetViews` | Struct with 12 methods. |
+-| `XmlParsingException` | Struct extending Default. |
+-
+-#### Enumerations
+-
+-| Enumeration | Description |
+-|---|---|
+-| `AutoShapeType` | Specifies the type of an auto shape (preset geometry). |
+-| `BorderLineStyle` | Represents border. |
+-| `BorderStyle` | Enum with 14 members. |
+-| `BorderStyleType` | Specifies border style type. |
+-| `CellObjectValue` | Enum with 14 methods and 5 members. |
+-| `CellValue` | Enum with 8 methods and 7 members. |
+-| `CellValueKind` | Enum with 7 members. |
+-| `CellValueType` | Specifies cell value type. |
+-| `CellsError` | Enum with 9 methods and 10 members. |
+-| `ChartType` | Specifies the chart type. |
+-| `DateSystem` | Enum with 2 members. |
+-| `DiagnosticSeverity` | Enum with 4 members. |
+-| `FillPattern` | Specifies fill pattern. |
+-| `FillPatternKind` | Enum with 18 members. |
+-| `FilterOperatorType` | Represents FilterOperatorType. |
+-| `FontUnderlineType` | Enumerates font underline types. |
+-| `FormatConditionType` | Specifies format condition type. |
+-| `HorizontalAlignment` | Enum with 8 members. |
+-| `ImageType` | Represents the format of an image stored in a worksheet. |
+-| `LoadFormat` | Specifies load format. |
+-| `OperatorType` | Specifies operator type. |
+-| `PageOrientation` | Enum with 1 method and 3 members. |
+-| `PageOrientationType` | Specifies page orientation type. |
+-| `PaperSizeType` | Specifies paper size type. |
+-| `SaveFormat` | Specifies save format. |
+-| `SheetVisibility` | SheetVisibility enum defines three visibility states: Visible, Hidden, and VeryHidden. |
+-| `SparklineType` | Represents SparklineType. |
+-| `TableStyleType` | Represents the built-in Excel table style types. |
+-| `TargetModeType` | Specifies target mode type. |
+-| `TotalsCalculation` | Represents the aggregation function shown in a table totals row cell. |
+-| `ValidationAlertType` | Specifies validation alert type. |
+-| `ValidationMessageSeverity` | Enum with 3 members. |
+-| `ValidationType` | Specifies validation type. |
+-| `VerticalAlignment` | Enum with 5 members. |
+-| `VisibilityType` | Specifies visibility type. |
+-
+-#### Traits
+-
+-| Class | Description |
+-|---|---|
+-| `IWarningCallback` | Defines a callback that receives load warnings. |
+-
+----
+-
+-#### Detailed Member Reference
+-
+-### Workbook and Worksheets
+-
+-- `Workbook`
+-  - `new() -> Workbook` / `load_xlsx(path)` / `load_xlsx_from_stream(reader)` / `load_xlsx_from_bytes(bytes)`
+-  - `load_xlsx_with_options(path, &LoadOptions)`
+-  - `get_worksheets() -> Worksheets` / `get_worksheets_mut() -> WorksheetsMut`
+-  - `worksheet(name) -> Result<Worksheet, CellsError>`
+-  - `get_settings() -> WorkbookSettings`, `get_properties() -> WorkbookProperties`
+-  - `get_document_properties() -> DocumentProperties`
+-  - `get_defined_names() -> DefinedNameCollection`
+-  - `get_load_diagnostics() -> LoadDiagnostics`
+-  - `save(path)` / `save_xlsx(path)` / `save_with_format(path, format)`
+-  - `save_xlsx_to_stream(writer)` / `save_xlsx_to_bytes() -> Vec<u8>`
+-- `WorksheetsMut` / `Worksheets`
+-  - `count() -> usize`, `add(name) -> usize`
+-  - `get(index)` / `get_by_name(name)`
+-  - `remove_at(index)` — returns `CellsError::Unsupported` if it is the sole remaining worksheet
+-- `Worksheet`
+-  - `get_name()` / `set_name(value)`, `get_visibility_type()` / `set_visibility_type(value)`
+-  - `get_tab_color()` / `set_tab_color(value)`
+-  - `get_show_gridlines()`, `get_show_row_column_headers()`, `get_right_to_left()`
+-  - `get_cells() -> Cells` / `get_cells_mut() -> CellsMut`
+-  - `get_hyperlinks()`, `get_validations()`, `get_conditional_formattings()`, `get_auto_filter()`
+-  - `get_page_setup_mut() -> PageSetup`, `get_charts() -> ChartCollection`
+-  - `get_pictures()`, `get_shapes()`, `get_list_objects()`, `get_sparkline_groups()`
+-
+-### Cells, Values, and Formulas
+-
+-- `Cells` / `CellsMut`
+-  - `get(a1_address) -> Result<Cell, CellsError>` / `get_by_index(row, column)`
+-  - `get_rows() -> Rows`, `get_columns() -> Columns`
+-- `Cell` / `CellMut`
+-  - `put_value_string(value)`, `put_value_i32(value)`, `put_value_f64(value)`,
+-    `put_value_bool(value)`, `put_value_decimal(value)`, `put_value_date_time(value)`
+-  - `put_formula_with_cached_value(formula, CellValue)`
+-  - `display_string_value() -> String`, `value_type() -> CellValueType`
+-  - `get_style() -> CellStyle` / `set_style(style)`
+-
+-### Styling
+-
+-- `CellStyle`
+-  - `get_font_mut() -> &mut Font`, `pattern: FillPattern`, `fill_color: Option<String>`
+-- `Font`
+-  - `set_color(value)`, `set_is_bold(value)`, `set_is_italic(value)`, `set_underline(value)`
+-- `Color`
+-  - `from_argb(a, r, g, b) -> Color`
+-- `PageSetup`
+-  - `set_left_margin_inch(value)`, `set_right_margin_inch(value)`
+-
+-### Load and Save Options
+-
+-- `LoadOptions`
+-  - `try_repair_package: bool`, `try_repair_xml: bool` (`..LoadOptions::default()`)
+-- `SaveOptions` — passed to `save_with_options` / `save_xlsx_to_stream_with_options`
+-
+-### Validation and Conditional Formatting
+-
+-- `Validation` — `set_type(ValidationType)`, `set_formula1(value)`, `set_formula2(value)`,
+-  `set_operator(OperatorType)`, `set_show_error(value)`, `set_error_title(value)`
+-- `FormatCondition` — `set_priority(value)`, `set_stop_if_true(value)`, `get_style()` / `set_style(style)`
+-- `ConditionalFormattingCollection` — `add()`, `add_condition_with_details(FormatConditionType, OperatorType, formula1, formula2)`
+-
+-### Exceptions
+-
+-- `CellsError` (enum, 10 members including `Unsupported(&'static str)`, `Io(String)`)
+-- `WorkbookLoadException`, `WorkbookSaveException`, `CellsException`, `FormulaException`,
+-  `StyleException`, `InvalidFileFormatException`, `UnsupportedFeatureException`
+-
+-</details>
+-
+-## Documentation & Resources
+-
+-- **[Getting started guide](https://docs.aspose.org/cells/rust/)** — installation, walkthroughs, and feature guides for this library.
+-- **[How-to guides & FAQ](https://kb.aspose.org/cells/rust/)** — task-focused answers for common spreadsheet-processing questions.
+-- **[Full API reference](https://reference.aspose.org/cells/rust/)** — the complete, browsable reference for the public API surface (the [API reference](#api-reference) section above covers the essentials).
+-- **[Samples overview](samples/README.md)** — every runnable example, one per feature area.
+-- **[Contributor guide](AGENTS.md)** — architecture notes, module wiring, and conventions for contributors.
+-- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Rust/issues) on GitHub.
+-
+-## Scope and Limitations
+-
+-- Reads and writes `.xlsx` (OOXML/SpreadsheetML) only — no legacy `.xls` (BIFF), ODS, or CSV.
+-- A workbook must always keep at least one worksheet: `WorksheetsMut::remove_at` returns
+-  a `CellsError::Unsupported` error when asked to remove the last remaining worksheet.
+-- The public API surface is broad but, by the repository's own account, not a complete
+-  match for Aspose.Cells — some features are still partial, and the crate is early-stage
+-  and evolving.
+-- No automated test suite ships yet (`cargo test --all-targets` currently reports 0
+-  tests) — see [Development and Testing](#development-and-testing) for how correctness is
+-  exercised today.
+-- Not yet published to crates.io — see [Installation](#installation) for the current
+-  git-dependency workaround.
+-
+-These limitations don't apply to
+-[Aspose.Cells — Enterprise Edition](https://products.aspose.com/cells/), which adds
+-broader format coverage (including legacy XLS, CSV, and ODS), full feature completeness,
+-and commercial support.
+-
+-## Development and Testing
+-
+-The repository currently has no unit or integration test suite —
+-`cargo test --all-targets` reports 0 tests. The `samples/` directory is the de-facto
+-verification suite instead: each sample creates a workbook, saves it under
+-`output/samples/`, loads it back, and prints what it read. After a change that touches
+-the read/write path, run the core samples and confirm they still round-trip:
+-
+-```bash
+-cargo build
+-cargo check --all-targets
+-cargo fmt --all --check
+-cargo clippy --all-targets
+-cargo test --all-targets
+-cargo run --bin sample_basic
+-cargo run --bin sample_loading
+-cargo run --bin sample_styles
+-```
+-
+-CI ([`ci.yml`](.github/workflows/ci.yml)) runs `fmt`, `check`, `clippy`, `test`, the three
+-samples above as smoke tests, and `cargo bench` on Linux x64, Windows x64, macOS ARM, and
+-macOS x64. The `samples/` directory demonstrates every feature area — `basic.rs`,
+-`styles.rs`, `worksheet_settings.rs`, `validations.rs`, `conditional_formatting.rs`,
+-`hyperlinks_and_names.rs`, `pagesetup.rs`, `comments.rs`, `charts.rs`, `list_objects.rs`,
+-`pictures.rs`, `shapes.rs`, and `document_properties.rs` (see
+-[`samples/README.md`](samples/README.md) for the full overview). Generate local API docs
+-with `cargo doc --no-deps --open`; published API docs are deployed by GitHub Pages
+-through [`pages.yml`](.github/workflows/pages.yml) — enabling
+-`Settings -> Pages -> GitHub Actions` on the repository makes pushes to `main`
+-automatically rebuild and publish the rustdoc site.
+-
+-## License
+-
+-This project is licensed under the [MIT License](LICENSE.txt). The MIT License permits
+-use, copying, modification, distribution, sublicensing, and commercial use, provided its
+-copyright and permission notice are retained. The software is provided without warranty.
++# Aspose.Cells FOSS for Rust
++
++![Rust edition](https://img.shields.io/badge/rust_edition-2021-blue.svg)
++
++Aspose.Cells FOSS for Rust reads and writes Excel `.xlsx` workbooks. It loads workbooks from files, byte arrays, or streams using `Workbook.load_xlsx`, `Workbook.load_xlsx_from_bytes`, or `Workbook.load_xlsx_from_stream`, and saves them using `Workbook.save_xlsx`, `Workbook.save_xlsx_to_bytes`, or `Workbook.save_xlsx_to_stream`. It provides methods to inspect and repair damaged packages via `LoadOptions.try_repair_package` and `LoadOptions.try_repair_xml`, and exposes diagnostics through `Workbook.get_load_diagnostics`. The library implements the OOXML packaging format from scratch on top of general-purpose crates, with no proprietary runtime, no Microsoft Office installation, and no external Aspose dependency.
++
++Aspose.Cells FOSS for Rust is a free, open-source, pure-Rust library for creating,
++loading, editing, and saving Excel `.xlsx` (Office Open XML / SpreadsheetML) workbooks.
++It exposes an API modeled after Aspose.Cells, so
++the familiar `Workbook` / `Worksheet` / `Cells` object model is available to Rust
++programs with no proprietary runtime, no Microsoft Office installation, and no external
++Aspose dependency. The OOXML packaging — ZIP container, relationships, shared strings,
++styles, worksheet XML, and charts — is implemented from scratch on top of a small set of
++general-purpose crates: `zip` (package container), `roxmltree` (XML parsing), `chrono`
++(date/time), `sha2` / `base64` / `getrandom` (protection hashing), and `serde_json`.
++
++The package name is `aspose-cells-foss-rust`; the library is imported as
++`aspose_cells_foss_rust`. Requires a recent stable Rust toolchain (2021 edition or later).
++No proprietary Aspose runtime and no Microsoft Office installation is required.
++
++## Navigation
++
++- [At a Glance](#at-a-glance)
++- [Key Capabilities](#key-capabilities)
++- [Installation](#installation)
++- [Dependencies](#dependencies)
++- [API Reference](#api-reference)
++- [Scope and Limitations](#scope-and-limitations)
++
++## At a Glance
++
++```mermaid
++flowchart LR
++Start["An existing XLSX file"]
++Start --> Product["Aspose.Cells FOSS for Rust"]
++Product["Aspose.Cells FOSS for Rust"] --> Cap1["XLSX file I/O with repair support"]
++Cap2["Cell value management"]
++Cap3["Styling and formatting"]
++Cap4["Worksheet organization"]
++Cap5["Data validation and conditional formatting"]
++Cap6["Charts, shapes, and sparklines"]
++Cap7["Structured tables and filters"]
++Cap8["Document properties and protection"]
++Product["Aspose.Cells FOSS for Rust"] --> Cap2["Cell value management"]
++Product["Aspose.Cells FOSS for Rust"] --> Cap3["Styling and formatting"]
++Product["Aspose.Cells FOSS for Rust"] --> Cap4["Worksheet organization"]
++Product["Aspose.Cells FOSS for Rust"] --> Cap5["Data validation and conditional formatting"]
++Product["Aspose.Cells FOSS for Rust"] --> Cap6["Charts, shapes, and sparklines"]
++Product["Aspose.Cells FOSS for Rust"] --> Cap7["Structured tables and filters"]
++Product["Aspose.Cells FOSS for Rust"] --> Cap8["Document properties and protection"]
++Cap1["XLSX file I/O with repair support"] --> Output["XLSX file"]
++Cap2["Cell value management"] --> Output["XLSX file"]
++Cap3["Styling and formatting"] --> Output["XLSX file"]
++Cap4["Worksheet organization"] --> Output["XLSX file"]
++Cap5["Data validation and conditional formatting"] --> Output["XLSX file"]
++Cap6["Charts, shapes, and sparklines"] --> Output["XLSX file"]
++Cap7["Structured tables and filters"] --> Output["XLSX file"]
++Cap8["Document properties and protection"] --> Output["XLSX file"]
++```
++
++## Key Capabilities
++
++- **XLSX file I/O with repair support.** It reads and writes `.xlsx` files from a path, a stream, or in-memory bytes, with repair options via `LoadOptions.try_repair_package` and `LoadOptions.try_repair_xml`, and exposes structured diagnostics through `Workbook.get_load_diagnostics`.
++- **Cell value management.** It reads typed cell values—string, double, boolean, and date-time—via `Cell.get_string_value`, `Cell.get_double_value`, `Cell.get_bool_value`, and `Cell.get_date_time_value`, and writes values and formulas with cached results using `CellMut.put_value_string`, `CellMut.put_value_i32`, `CellMut.put_value_bool`, `CellMut.put_value_date_time`, and `CellMut.put_formula_with_cached_value`.
++- **Styling and formatting.** It applies styling through `CellStyle.font`, `CellStyle.fill`, `CellStyle.borders`, `CellStyle.number_format`, `CellStyle.horizontal_alignment`, `CellStyle.vertical_alignment`, and `CellStyle.wrap_text`, with `Font.set_color`, `Font.set_is_bold`, `Font.set_is_italic`, and `Font.set_underline` for font-level control.
++- **Worksheet organization.** It manages worksheets by adding them with `WorksheetsMut.add`, renaming with `Worksheet.set_name`, controlling visibility via `Worksheet.set_visibility_type`, freezing and unfreezing panes with `Worksheet.freeze_panes` and `Worksheet.unfreeze_panes`, and sizing rows and columns using `Worksheet.set_row_height` and `Worksheet.set_column_width`, while protecting and unprotecting sheets via `Worksheet.protect` and `Worksheet.unprotect`.
++- **Data validation and conditional formatting.** It enforces data validation rules with `ValidationCollection.add`, `Validation.set_type`, and `Validation.set_operator`, and applies conditional formatting through `ConditionalFormattingCollection.add`, `FormatCondition.set_type`, and `FormatCondition.set_style` for cell-value, expression, color-scale, data-bar, and icon-set rules.
++- **Charts, shapes, and sparklines.** It creates charts with `ChartCollection.add` and `Chart.chart_type`, embeds pictures via `PictureCollection.add`, inserts drawing shapes using `ShapeCollection.add`, and builds sparkline groups with `SparklineGroupCollection.add` and `SparklineGroup.sparkline_type`.
++- **Structured tables and filters.** It builds structured tables with `ListObjectCollection.add` and `ListObject.show_totals`, applies auto-filters via `Worksheet.auto_filter` and `AutoFilter.set_range`, and retrieves sort state details through `AutoFilter.get_sort_state` and `AutoFilterSortState.get_sort_conditions`.
++- **Document properties and protection.** It reads core document properties like `DocumentProperties.get_author` and `ExtendedDocumentProperties.get_company`, sets properties such as `DocumentProperties.set_title`, and manages workbook protection using `Workbook.protection`, `WorkbookProtection.get_is_protected`, `Workbook.protect`, and `Workbook.unprotect`.
++
++- Create a new `Workbook` with `Workbook::new` (starts with one sheet, `"Sheet1"`), or
++  load an existing `.xlsx` file from a path (`Workbook::load_xlsx`), a stream
++  (`load_xlsx_from_stream`), or in-memory bytes (`load_xlsx_from_bytes`) — with defensive
++  repair options via `LoadOptions` (`try_repair_package`, `try_repair_xml`) and structured
++  `LoadDiagnostics` for the issues found along the way.
++- Manage worksheets through `WorksheetsMut` / `Worksheets` (add, look up by index or
++  name, active-sheet state) and `Worksheet` (name, visibility, tab color, gridlines,
++  zoom, right-to-left layout, and protection).
++- Read and write typed cell values through `Cell` / `CellMut` — `put_value_string`,
++  `put_value_i32`, `put_value_bool`, `put_value_decimal`, `put_value_date_time` —
++  addressed by A1 name (`get`) or row/column index (`get_by_index`), and enter formulas
++  with cached results via `put_formula_with_cached_value`.
++- Apply cell styling through `CellStyle` with `Font`, `Fill`, and `Borders`, targeted
++  updates via `StyleFlag`, and custom `NumberFormat` strings.
++- Size and organize rows, columns, and merged cell areas through `Rows` / `Columns` and `Cells`.
++- Enforce data validation rules (`Validation`, `ValidationType`, `OperatorType`) and apply
++  conditional formatting — cell-value, expression, color-scale, data-bar, and icon-set
++  rules — through `FormatCondition` and `ConditionalFormattingCollection`.
++- Build charts through `ChartType` on a worksheet's chart collection — column, line, bar,
++  area, pie, doughnut, scatter, radar, bubble, and stock families, plus their stacked and
++  3D variants, each rendered as real OOXML chart markup.
++- Embed pictures with `Picture` and drawing shapes with `Shape` / `AutoShapeType`
++  (rectangles, stars, arrows, and other preset geometries).
++- Build structured Excel tables with `ListObject` (table styles, totals), auto-filters
++  with `AutoFilter`, and compact in-cell trend charts with `SparklineGroup`.
++- Attach hyperlinks (`Hyperlink`), workbook- and sheet-scoped defined names
++  (`DefinedName`), and cell comments (`Comment`) with author, note, and visibility
++  control.
++- Read and write core and extended document properties (`DocumentProperties`,
++  `ExtendedDocumentProperties`) and configure print and page layout through `PageSetup`
++  (paper size, orientation, margins, page breaks) and `FreezePane`.
++- Save back to `.xlsx` — to a file path (`save` / `save_xlsx`), a stream
++  (`save_xlsx_to_stream`), or in-memory bytes (`save_xlsx_to_bytes`) — with `SaveOptions`.
++
++## Installation
++
++The package `aspose-cells-foss-rust` is not yet published on crates.io (package registry: distribution not found on cargo).
++
++## Dependencies
++
++### Required Package Dependencies
++
++- `base64 0.22`
++- `chrono 0.4`
++- `getrandom 0.3`
++- `roxmltree 0.20`
++- `serde_json 1`
++- `sha2 0.10`
++- `zip 0.6`
++
++### Native and System Requirements
++
++- Requires Rust edition `2021` (`edition` in `Cargo.toml`).
++
++## API Reference
++
++The primary entry point is `Workbook`, which owns a `Worksheets` / `WorksheetsMut` collection of `Worksheet` objects. Each `Worksheet` exposes its cells through `get_cells()` / `get_cells_mut()`, returning a `Cells` / `CellsMut` accessor used for individual `Cell` / `CellMut` access, row/column collections, and merged ranges.
++
++The verified public surface has 115 types.
++
++<details>
++<summary>View the Complete Public API Surface</summary>
++
++### Core API
++
++| Class | Description |
++| --- | --- |
++| `AutoFilter` | Represents auto filter. |
++| `AutoFilterColorFilter` | Represents auto filter color filter. |
++| `AutoFilterCustomFilter` | Represents auto filter custom filter. |
++| `AutoFilterCustomFilterCollection` | Represents a collection of auto filter custom filter objects. |
++| `AutoFilterDynamicFilter` | Represents auto filter dynamic filter. |
++| `AutoFilterSortCondition` | Represents auto filter sort condition. |
++| `AutoFilterSortConditionCollection` | Represents a collection of auto filter sort condition objects. |
++| `AutoFilterSortState` | Represents auto filter sort state. |
++| `AutoFilterTop10` | Represents auto filter top10. |
++| `Border` | Represents border. |
++| `Borders` | Represents borders. |
++| `CalculationProperties` | Represents calculation properties. |
++| `Cell` | Represents a single worksheet cell and exposes value, formula, and style operations. |
++| `CellArea` | Represents cell area. |
++| `CellMut` | Represents a single worksheet cell and exposes value, formula, and style operations. |
++| `CellStyle` | Represents a mutable cell style facade that can be applied to one or more cells. |
++| `Cells` | Provides access to worksheet cells, rows, columns, and merged ranges. |
++| `CellsException` | Represents an error that occurs during cells. |
++| `CellsMut` | Provides access to worksheet cells, rows, columns, and merged ranges. |
++| `Chart` | Represents a chart embedded in a worksheet. |
++| `ChartCollection` | Represents collection of charts on a worksheet. |
++| `Color` | Represents color. |
++| `Column` | Represents column. |
++| `ColumnMut` | Represents column. |
++| `ColumnProperties` | Encapsulates a single worksheet and its supported v0.1 worksheet features. |
++| `Columns` | Represents a collection of column objects. |
++| `ColumnsMut` | Represents a collection of column objects. |
++| `Comment` | Represents a worksheet comment (legacy note) anchored to a single cell. |
++| `CommentCollection` | Represents the collection of comments (legacy notes) on a worksheet. |
++| `ConditionalFormattingCollection` | Represents a collection of conditional formatting objects. |
++| `CoreDocumentProperties` | Represents core document properties. |
++| `DefinedName` | Represents defined name. |
++| `DefinedNameCollection` | Represents a collection of defined name objects. |
++| `DocumentProperties` | Represents document properties. |
++| `ExtendedDocumentProperties` | Represents extended document properties. |
++| `Fill` | Represents a mutable cell style facade that can be applied to one or more cells. |
++| `FilterColumn` | Represents filter column. |
++| `FilterColumnCollection` | Represents a collection of filter column objects. |
++| `FilterValueCollection` | Represents a collection of filter value objects. |
++| `Font` | Represents font. |
++| `FormatCondition` | Represents format condition. |
++| `FormatConditionCollection` | Represents a collection of format condition objects. |
++| `FormulaException` | Represents an error that occurs during formula. |
++| `FreezePane` | Encapsulates a single worksheet and its supported v0.1 worksheet features. |
++| `Hyperlink` | Represents hyperlink. |
++| `HyperlinkCollection` | Encapsulates the hyperlinks defined for a worksheet. |
++| `IWarningCallback` | Defines a callback that receives load warnings. |
++| `InvalidFileFormatException` | Represents an error that occurs during invalid file format. |
++| `ListColumn` | Represents a single column in an Excel table. |
++| `ListColumnCollection` | Represents the ordered collection of columns in an Excel table. |
++| `ListObject` | Represents an Excel table (structured reference / ListObject). |
++| `ListObjectCollection` | Represents the collection of Excel tables on a worksheet. |
++| `LoadDiagnostics` | Represents load diagnostics. |
++| `LoadIssue` | Represents load issue. |
++| `LoadOptions` | Specifies how a workbook should be loaded. |
++| `NumberFormat` | Provides number format operations. |
++| `PageSetup` | Represents worksheet print and page-layout settings. |
++| `Picture` | Represents a picture (image) anchored to a worksheet. |
++| `PictureCollection` | Represents collection of pictures anchored to a worksheet. |
++| `Row` | Represents row. |
++| `RowMut` | Represents row. |
++| `RowProperties` | Encapsulates a single worksheet and its supported v0.1 worksheet features. |
++| `Rows` | Represents a collection of row objects. |
++| `RowsMut` | Represents a collection of row objects. |
++| `SaveOptions` | Specifies how a workbook should be saved. |
++| `Shape` | Represents a drawing object (auto shape) anchored to a worksheet. |
++| `ShapeCollection` | Represents collection of drawing objects (shapes) on a worksheet. |
++| `SparklineGroup` | A sparkline group contains sparkline items that share type and settings. |
++| `SparklineGroupCollection` | Represents a collection of sparkline groups on a worksheet. |
++| `StyleException` | Represents an error that occurs during style. |
++| `StyleFlag` | Represents flags which indicate applied formatting properties. |
++| `UnsupportedFeatureException` | Represents an error that occurs during unsupported feature. |
++| `Validation` | Represents validation. |
++| `ValidationCollection` | Represents a collection of validation objects. |
++| `WarningInfo` | Represents warning info. |
++| `Workbook` | Represents the root spreadsheet object used to create, load, modify, and save an XLSX workbook. |
++| `WorkbookLoadException` | Represents an error that occurs during workbook load. |
++| `WorkbookProperties` | Represents workbook properties. |
++| `WorkbookProtection` | Represents workbook protection. |
++| `WorkbookSaveException` | Represents an error that occurs during workbook save. |
++| `WorkbookSettings` | Represents workbook-level settings that affect date handling and display formatting. |
++| `WorkbookView` | Represents workbook view. |
++| `Worksheet` | Encapsulates a single worksheet and its supported v0.1 worksheet features. |
++| `WorksheetProtection` | Represents worksheet protection. |
++| `Worksheets` | Encapsulates the workbook's worksheets and active-sheet state. |
++| `WorksheetsMut` | Encapsulates the workbook's worksheets and active-sheet state. |
++
++#### Enumerations
++
++| Enumeration | Description |
++| --- | --- |
++| `AutoShapeType` | Specifies the type of an auto shape (preset geometry). |
++| `BorderLineStyle` | Represents border. |
++| `BorderStyleType` | Specifies border style type. |
++| `CellObjectValue` | CellObjectValue represents the type of value stored in a cell. |
++| `CellValue` | CellValue represents the actual data stored in a cell, such as a string, number, boolean, or decimal. |
++| `CellValueType` | Specifies cell value type. |
++| `CellsError` | CellsError indicates an error condition encountered while processing cell data. |
++| `ChartType` | Specifies the chart type. |
++| `DateSystem` | DateSystem specifies the date system used for date calculations in a workbook. |
++| `DiagnosticSeverity` | DiagnosticSeverity indicates the severity level of a diagnostic issue found during workbook loading. |
++| `FillPattern` | Specifies fill pattern. |
++| `FilterOperatorType` | Represents FilterOperatorType. |
++| `FontUnderlineType` | Enumerates font underline types. |
++| `FormatConditionType` | Specifies format condition type. |
++| `HorizontalAlignment` | HorizontalAlignment specifies the horizontal alignment of text within a cell. |
++| `ImageType` | Represents the format of an image stored in a worksheet. |
++| `LoadFormat` | Specifies load format. |
++| `OperatorType` | Specifies operator type. |
++| `PageOrientationType` | Specifies page orientation type. |
++| `PaperSizeType` | Specifies paper size type. |
++| `SaveFormat` | Specifies save format. |
++| `SparklineType` | Represents SparklineType. |
++| `TableStyleType` | Represents the built-in Excel table style types. |
++| `TargetModeType` | Specifies target mode type. |
++| `TotalsCalculation` | Represents the aggregation function shown in a table totals row cell. |
++| `ValidationAlertType` | Specifies validation alert type. |
++| `ValidationType` | Specifies validation type. |
++| `VerticalAlignment` | VerticalAlignment specifies the vertical alignment of text within a cell. |
++| `VisibilityType` | Specifies visibility type. |
++
++#### Detailed Member Reference
++
++### Cell
++
++The `Cell` and `CellMut` types represent a single worksheet cell and expose value, formula, and style operations, with `CellValue` and `CellValueType` enumerations defining the kinds of values a cell can hold.
++
++- `bool_value`: Gets the associated value.
++- `border`: Gets the associated value.
++- `column`: Gets the associated value.
++- `date_time_value`: Gets the associated value.
++- `display_string_value`: Gets the display text generated from the cell value, style, and workbook culture.
++- `double_value`: Gets the associated value.
++- `formatted_string_value`: Gets the associated value.
++- `formula_cached_value`: Gets the associated value.
++- `get_bool_value`: Gets the associated value.
++- `get_border`: Gets the associated value.
++- `get_column`: Gets the associated value.
++- `get_date_time_value`: Gets the associated value.
++- `get_display_string_value`: Gets the display text generated from the cell value, style, and workbook culture.
++- `get_double_value`: Gets the associated value.
++- `get_formatted_string_value`: Gets the associated value.
++- `get_formula_cached_value`: Gets the associated value.
++- `get_int_value`: Gets the associated value.
++- `get_long_value`: Gets the associated value.
++- `get_name`: Gets the associated value.
++- `get_raw_string_value`: Gets the associated value.
++- `get_row`: Gets the associated value.
++- `get_string_value`: Gets a stable string representation of the cell value without applying style-based display formatting.
++- `get_style`: Gets the associated value.
++- `get_style_with_borders`: Gets the associated value.
++- `get_type`: Gets the current logical cell value type.
++- `get_value`: Gets the logical cell value.
++- `int_value`: Gets the associated value.
++- `long_value`: Gets the associated value.
++- `name`: Gets the associated value.
++- `raw_string_value`: Gets the associated value.
++- `row`: Gets the associated value.
++- `string_value`: Gets a stable string representation of the cell value without applying style-based display formatting.
++- `style`: Gets the associated value.
++- `value`: Gets the logical cell value.
++- `value_type`: Gets the current logical cell value type.
++
++### Cells
++
++The `Cells` and `CellsMut` types provide access to worksheet cells, rows, columns, and merged ranges, with `CellArea` identifying ranges and `CellsMut.merge` supporting range merging operations.
++
++- `check_cell`: Returns whether the specified A1-style cell currently exists.
++- `check_cell_or_cells_exception`: Returns whether the specified A1-style cell currently exists, wrapping failures in CellsException.
++- `columns`: Gets column-level settings for the worksheet.
++- `count`: Gets the number of items.
++- `get`: Gets the item from the collection.
++- `get_by_index`: Gets the associated value.
++- `get_columns`: Gets column-level settings for the worksheet.
++- `get_count`: Gets the number of items.
++- `get_merged_cells`: Gets the current merged-cell regions in worksheet order.
++- `get_or_cells_exception`: Gets the associated value.
++- `get_rows`: Gets row-level settings for the worksheet.
++- `get_style`: Gets the default style of the worksheet cells scope.
++- `item`: Gets the item from the collection.
++- `item_by_index`: Gets the item from the collection.
++- `merged_cells`: Gets the current merged-cell regions in worksheet order.
++- `rows`: Gets row-level settings for the worksheet.
++- `style`: Gets the default style of the worksheet cells scope.
++
++### CellStyle
++
++The `CellStyle` type represents a mutable cell style facade that can be applied to one or more cells, with `Font`, `Fill`, `Borders`, and `Border` types defining font, fill pattern, and border properties.
++
++- `borders`: Gets border settings.
++- `clear_horizontal_alignment`: Clears horizontal alignment.
++- `clear_number_format`: Clears number format.
++- `clear_vertical_alignment`: Clears vertical alignment.
++- `copy`: Copies data from another style object.
++- `copy_from`: Copies all style values from another style instance.
++- `fill`: Gets the associated value.
++- `font`: Gets the font settings.
++- `get_borders`: Gets border settings.
++- `get_borders_mut`: Gets mutable border settings, so that borders can be changed in place: style.get_borders_mut().top_mut().set_color("FFFF0000").
++- `get_custom`: Gets the custom number format code.
++- `get_fill`: Gets the associated value.
++- `get_font`: Gets the font settings.
++- `get_font_mut`: Gets mutable font settings, so that font properties can be changed in place: style.get_font_mut().set_size(14.0).
++- `get_horizontal_alignment`: Gets the horizontal alignment.
++- `get_indent_level`: Gets the indentation level.
++- `get_is_hidden`: Gets whether the cell formula is hidden when worksheet protection is enabled.
++- `get_is_locked`: Gets whether the cell is locked when worksheet protection is enabled.
++- `get_is_text_wrapped`: Gets the associated value.
++- `get_number`: Gets the numeric format identifier.
++- `get_number_format`: Gets the resolved number format string.
++- `get_quote_prefix`: Gets whether the cell value starts with a single quote mark.
++- `get_reading_order`: Gets the reading order.
++- `get_relative_indent`: Gets the relative indent.
++- `get_shrink_to_fit`: Gets whether the cell content shrinks to fit.
++- `get_text_rotation`: Gets the text rotation.
++- `get_vertical_alignment`: Gets the vertical alignment.
++- `new`: Initializes a new instance.
++- `set_borders`: Sets border settings.
++- `set_custom`: Sets the custom number format code.
++- `set_fill`: Sets the associated value.
++- `set_font`: Sets the font settings.
++- `set_horizontal_alignment`: Sets the horizontal alignment.
++- `set_indent_level`: Sets the indentation level.
++- `set_is_hidden`: Sets whether the cell formula is hidden when worksheet protection is enabled.
++- `set_is_locked`: Sets whether the cell is locked when worksheet protection is enabled.
++- `set_is_text_wrapped`: Sets the associated value.
++- `set_number`: Sets the numeric format identifier.
++- `set_number_format`: Sets the resolved number format string.
++- `set_quote_prefix`: Sets whether the cell value starts with a single quote mark.
++- `set_reading_order`: Sets the reading order.
++- `set_relative_indent`: Sets the relative indent.
++- `set_shrink_to_fit`: Sets whether the cell content shrinks to fit.
++- `set_text_rotation`: Sets the text rotation.
++- `set_vertical_alignment`: Sets the vertical alignment.
++
++### Chart
++
++The `Chart` type represents a chart embedded in a worksheet, with `ChartCollection` managing multiple charts and `ChartType` specifying the chart type.
++
++- `chart_type`: Gets the chart type.
++- `data_range`: Gets the chart data range formula.
++- `delete`: Deletes the chart from its owning worksheet.
++- `get_chart_type`: Gets the chart type.
++- `get_data_range`: Gets the chart data range formula.
++- `get_extent_cx`: Gets the width extent in EMU.
++- `get_extent_cy`: Gets the height extent in EMU.
++- `get_lower_right_column`: Gets the zero-based lower-right column of the chart anchor.
++- `get_lower_right_row`: Gets the zero-based lower-right row of the chart anchor.
++- `get_name`: Gets the chart display name.
++- `get_upper_left_column`: Gets the zero-based upper-left column of the chart anchor.
++- `get_upper_left_row`: Gets the zero-based upper-left row of the chart anchor.
++- `lower_right_column`: Gets the zero-based lower-right column of the chart anchor.
++- `lower_right_row`: Gets the zero-based lower-right row of the chart anchor.
++- `name`: Gets the chart display name.
++- `set_name`: Sets the chart display name.
++- `upper_left_column`: Gets the zero-based upper-left column of the chart anchor.
++- `upper_left_row`: Gets the zero-based upper-left row of the chart anchor.
++
++### AutoFilter
++
++The `AutoFilter` type represents auto filter functionality, with `AutoFilter.get_range`, `AutoFilter.set_range`, and `AutoFilter.get_sort_state` methods supporting range configuration and sort state retrieval.
++
++- `clear`: Clears the current state.
++- `filter_columns`: Gets the filter columns.
++- `get_filter_columns`: Gets the filter columns.
++- `get_range`: Gets the range.
++- `get_sort_state`: Gets the sort state.
++- `range`: Gets the range.
++- `set_range`: Sets the range.
++- `sort_state`: Gets the sort state.
++
++### ListObject
++
++The `ListObject` type represents an Excel table (structured reference / `ListObject`), with `ListObjectCollection` managing multiple tables and `ListObject.show_totals` controlling totals row visibility.
++
++- `comment`: Gets an optional comment for the table.
++- `convert_to_range`: Removes the table structure, leaving the cell data in place.
++- `data_range`: Gets the table range in A1 notation.
++- `display_name`: Gets the user-visible table name.
++- `end_column`: Gets the zero-based column index of the last column.
++- `end_row`: Gets the zero-based row index of the last row.
++- `get_comment`: Gets an optional comment for the table.
++- `get_data_range`: Gets the table range in A1 notation.
++- `get_display_name`: Gets the user-visible table name.
++- `get_end_column`: Gets the zero-based column index of the last column.
++- `get_end_row`: Gets the zero-based row index of the last row.
++- `get_list_columns`: Gets the collection of columns in this table.
++- `get_show_auto_filter`: Gets whether the header row shows auto-filter drop-down buttons.
++- `get_show_header_row`: Gets whether the first row of the table range is a header row.
++- `get_show_table_style_column_stripes`: Gets whether alternating column stripes are shown.
++- `get_show_table_style_first_column`: Gets whether the first column receives highlight formatting.
++- `get_show_table_style_last_column`: Gets whether the last column receives highlight formatting.
++- `get_show_table_style_row_stripes`: Gets whether alternating row stripes are shown.
++- `get_show_totals`: Gets whether the last row of the table range is a totals row.
++- `get_start_column`: Gets the zero-based column index of the first column.
++- `get_start_row`: Gets the zero-based row index of the first row.
++- `get_table_style_name`: Gets the raw table style name stored in SpreadsheetML.
++- `get_table_style_type`: Gets the built-in table style type.
++- `list_columns`: Gets the collection of columns in this table.
++- `remove_auto_filter`: Hides the auto-filter drop-down buttons from the table header row.
++- `resize`: Resizes the table to the specified range.
++- `set_comment`: Sets an optional comment for the table.
++- `set_display_name`: Sets the user-visible table name.
++- `set_show_header_row`: Sets whether the first row of the table range is a header row.
++- `set_show_table_style_column_stripes`: Sets whether alternating column stripes are shown.
++- `set_show_table_style_first_column`: Sets whether the first column receives highlight formatting.
++- `set_show_table_style_last_column`: Sets whether the last column receives highlight formatting.
++- `set_show_table_style_row_stripes`: Sets whether alternating row stripes are shown.
++- `set_show_totals`: Sets whether the last row of the table range is a totals row.
++- `set_table_style_name`: Sets the raw table style name stored in SpreadsheetML.
++- `set_table_style_type`: Sets the built-in table style type.
++- `show_auto_filter`: Shows the auto-filter drop-down buttons on the table header row.
++- `show_auto_filter_enabled`: Gets whether the header row shows auto-filter drop-down buttons.
++- `show_header_row`: Gets whether the first row of the table range is a header row.
++- `show_table_style_column_stripes`: Gets whether alternating column stripes are shown.
++- `show_table_style_first_column`: Gets whether the first column receives highlight formatting.
++- `show_table_style_last_column`: Gets whether the last column receives highlight formatting.
++- `show_table_style_row_stripes`: Gets whether alternating row stripes are shown.
++- `show_totals`: Gets whether the last row of the table range is a totals row.
++- `start_column`: Gets the zero-based column index of the first column.
++- `start_row`: Gets the zero-based row index of the first row.
++- `table_style_name`: Gets the raw table style name stored in SpreadsheetML.
++- `table_style_type`: Gets the built-in table style type.
++
++### Picture
++
++The `Picture` type represents a picture (image) anchored to a worksheet, with `PictureCollection` managing multiple pictures.
++
++- `data`: Gets the raw binary bytes of the image.
++- `delete`: Deletes this item from its owning collection.
++- `extension`: Gets the associated value.
++- `get_data`: Gets the raw binary bytes of the image.
++- `get_extension`: Gets the associated value.
++- `get_image_type`: Gets the image format derived from the file extension.
++- `get_lower_right_column`: Gets the zero-based column index of the lower-right anchor cell.
++- `get_lower_right_row`: Gets the zero-based row index of the lower-right anchor cell.
++- `get_name`: Gets the display name of the picture.
++- `get_upper_left_column`: Gets the zero-based column index of the upper-left anchor cell.
++- `get_upper_left_row`: Gets the zero-based row index of the upper-left anchor cell.
++- `image_type`: Gets the image format derived from the file extension.
++- `lower_right_column`: Gets the zero-based column index of the lower-right anchor cell.
++- `lower_right_row`: Gets the zero-based row index of the lower-right anchor cell.
++- `name`: Gets the display name of the picture.
++- `set_data`: Sets the raw binary bytes of the image.
++- `set_lower_right_column`: Sets the zero-based column index of the lower-right anchor cell.
++- `set_lower_right_row`: Sets the zero-based row index of the lower-right anchor cell.
++- `set_name`: Sets the display name of the picture.
++- `set_upper_left_column`: Sets the zero-based column index of the upper-left anchor cell.
++- `set_upper_left_row`: Sets the zero-based row index of the upper-left anchor cell.
++- `upper_left_column`: Gets the zero-based column index of the upper-left anchor cell.
++- `upper_left_row`: Gets the zero-based row index of the upper-left anchor cell.
++
++### Shape
++
++The `Shape` type represents a drawing object (auto shape) anchored to a worksheet, with `ShapeCollection` managing multiple shapes.
++
++- `auto_shape_type`: Gets the shape type.
++- `auto_shape_type_to_geometry`: Converts an auto shape type to its DrawingML geometry name.
++- `delete`: Deletes this item from its owning collection.
++- `geometry_to_auto_shape_type`: Converts a DrawingML geometry name to an auto shape type.
++- `get_auto_shape_type`: Gets the shape type.
++- `get_lower_right_column`: Gets the zero-based column index of the lower-right anchor cell.
++- `get_lower_right_row`: Gets the zero-based row index of the lower-right anchor cell.
++- `get_name`: Gets the display name of the shape.
++- `get_upper_left_column`: Gets the zero-based column index of the upper-left anchor cell.
++- `get_upper_left_row`: Gets the zero-based row index of the upper-left anchor cell.
++- `lower_right_column`: Gets the zero-based column index of the lower-right anchor cell.
++- `lower_right_row`: Gets the zero-based row index of the lower-right anchor cell.
++- `name`: Gets the display name of the shape.
++- `set_auto_shape_type`: Sets the shape type.
++- `set_lower_right_column`: Sets the zero-based column index of the lower-right anchor cell.
++- `set_lower_right_row`: Sets the zero-based row index of the lower-right anchor cell.
++- `set_name`: Sets the display name of the shape.
++- `set_upper_left_column`: Sets the zero-based column index of the upper-left anchor cell.
++- `set_upper_left_row`: Sets the zero-based row index of the upper-left anchor cell.
++- `upper_left_column`: Gets the zero-based column index of the upper-left anchor cell.
++- `upper_left_row`: Gets the zero-based row index of the upper-left anchor cell.
++
++### SparklineGroup
++
++The `SparklineGroup` type represents a sparkline group containing sparkline items that share type and settings, with `SparklineGroupCollection` managing multiple sparkline groups.
++
++- `data_range`: Gets the data range for the sparkline group.
++- `get_data_range`: Gets the data range for the sparkline group.
++- `get_location_range`: Gets the location range where sparkline cells are placed.
++- `get_sparkline_type`: Gets the sparkline type.
++- `location_range`: Gets the location range where sparkline cells are placed.
++- `remove`: Removes this sparkline group from its owning worksheet.
++- `set_data_range`: Sets the data range for the sparkline group.
++- `set_location_range`: Sets the location range where sparkline cells are placed.
++- `set_sparkline_type`: Sets the sparkline type.
++- `sparkline_type`: Gets the sparkline type.
++
++### Hyperlink
++
++The `Hyperlink` type represents a hyperlink, with `HyperlinkCollection` managing hyperlinks defined for a worksheet.
++
++- `address`: Gets the address.
++- `area`: Gets the area.
++- `delete`: Performs delete.
++- `get_address`: Gets the address.
++- `get_area`: Gets the area.
++- `get_screen_tip`: Gets the screen tip.
++- `get_text_to_display`: Gets the text to display.
++- `screen_tip`: Gets the screen tip.
++- `set_address`: Sets the address.
++- `set_screen_tip`: Sets the screen tip.
++- `set_text_to_display`: Sets the text to display.
++- `text_to_display`: Gets the text to display.
++
++### DefinedName
++
++The `DefinedName` type represents a defined name, with `DefinedNameCollection` managing defined names at workbook or worksheet scope.
++
++- `get_comment`: Gets the comment.
++- `get_formula`: Gets the formula.
++- `get_local_sheet_index`: Gets the local sheet index.
++- `get_name`: Gets the name.
++- `is_hidden`: Returns whether hidden.
++- `set_comment`: Sets the comment.
++- `set_formula`: Sets the formula.
++- `set_hidden`: Sets a value indicating whether hidden.
++- `set_local_sheet_index`: Sets the local sheet index.
++- `set_name`: Sets the name.
++
++### Comment
++
++The `Comment` type represents a worksheet comment (legacy note) anchored to a single cell, with `CommentCollection` managing comments on a worksheet.
++
++- `author`: Gets the comment author name.
++- `cell_name`: Gets the associated value.
++- `column`: Gets the zero-based column index of the annotated cell.
++- `delete`: Deletes this item from its owning collection.
++- `get_author`: Gets the comment author name.
++- `get_cell_name`: Gets the associated value.
++- `get_column`: Gets the zero-based column index of the annotated cell.
++- `get_height`: Gets the comment box height in pixels.
++- `get_is_visible`: Gets whether the comment box is always shown (true) or hidden until hover (false).
++- `get_note`: Gets the plain-text note content of the comment.
++- `get_row`: Gets the zero-based row index of the annotated cell.
++- `get_width`: Gets the comment box width in pixels.
++- `height`: Gets the comment box height in pixels.
++- `is_visible`: Gets whether the comment box is always shown (true) or hidden until hover (false).
++- `note`: Gets the plain-text note content of the comment.
++- `row`: Gets the zero-based row index of the annotated cell.
++- `set_author`: Sets the comment author name.
++- `set_height`: Sets the comment box height in pixels.
++- `set_is_visible`: Sets whether the comment box is always shown (true) or hidden until hover (false).
++- `set_note`: Sets the plain-text note content of the comment.
++- `set_width`: Sets the comment box width in pixels.
++- `visible`: Gets whether the comment box is always shown (true) or hidden until hover (false).
++- `width`: Gets the comment box width in pixels.
++
++The
++public API surface includes 213 public types, summarized in the module-grouped table
++below.
++
++</details>
++
++## Scope and Limitations
++
++Aspose.Cells FOSS for Rust reads and writes `.xlsx` (OOXML/`SpreadsheetML`) workbooks and provides a Rust API to manipulate worksheets, cells, formulas, and formatting.
++
++- It supports only the `.xlsx` format for input and output, with no support for legacy .xls (BIFF), ODS, or CSV, and the public API surface is broad but not a complete match for Aspose.Cells — some features are still partial, and the crate is early-stage and evolving.
++- A workbook must always keep at least one worksheet: `WorksheetsMut.remove_at` returns a `CellsError`::Unsupported error when asked to remove the last remaining worksheet.
++- No automated test suite ships yet (cargo test --all-targets currently reports 0 tests).
++- The crate is not yet published to crates.io.
++- Installation requires a git-dependency workaround.
++- The package uses Rust edition 2021 and version 26.7.0.

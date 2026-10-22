@@ -1,0 +1,286 @@
+{
+  "audience": {
+    "fact_ids": [
+      "package:name",
+      "package:version",
+      "import_path:aspose_cells_foss_rust"
+    ],
+    "text": "Rust developers building applications that require reading, writing, and manipulating Excel .xlsx files without relying on Microsoft Office or Aspose.Cells Enterprise Edition."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "format:input.xlsx",
+        "format:output.xlsx",
+        "public_symbol:workbook.load_xlsx",
+        "public_symbol:workbook.load_xlsx_from_bytes",
+        "public_symbol:workbook.load_xlsx_from_stream",
+        "public_symbol:workbook.save_xlsx",
+        "public_symbol:workbook.save_xlsx_to_bytes",
+        "public_symbol:workbook.save_xlsx_to_stream",
+        "public_symbol:loadoptions.try_repair_package",
+        "public_symbol:loadoptions.try_repair_xml",
+        "public_symbol:workbook.get_load_diagnostics"
+      ],
+      "text": "Load and save Excel .xlsx files from paths, streams, or in-memory bytes with optional repair of corrupted packages and structured diagnostics reporting.",
+      "title": "XLSX file I/O with repair support"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cell.get_string_value",
+        "public_symbol:cell.get_double_value",
+        "public_symbol:cell.get_bool_value",
+        "public_symbol:cell.get_date_time_value",
+        "public_symbol:cellmut.put_value_string",
+        "public_symbol:cellmut.put_value_i32",
+        "public_symbol:cellmut.put_value_bool",
+        "public_symbol:cellmut.put_value_date_time",
+        "public_symbol:cellmut.put_formula_with_cached_value"
+      ],
+      "text": "Read and write typed cell values including strings, numbers, booleans, dates, and formulas with cached results through Cell and CellMut interfaces.",
+      "title": "Cell value management"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cellstyle.font",
+        "public_symbol:cellstyle.fill",
+        "public_symbol:cellstyle.borders",
+        "public_symbol:cellstyle.number_format",
+        "public_symbol:cellstyle.horizontal_alignment",
+        "public_symbol:cellstyle.vertical_alignment",
+        "public_symbol:cellstyle.wrap_text",
+        "public_symbol:font.set_color",
+        "public_symbol:font.set_is_bold",
+        "public_symbol:font.set_is_italic",
+        "public_symbol:font.set_underline"
+      ],
+      "text": "Apply comprehensive cell styling including fonts, fills, borders, alignment, number formats, and text wrapping through CellStyle and StyleFlag APIs.",
+      "title": "Styling and formatting"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheetsmut.add",
+        "public_symbol:worksheet.set_name",
+        "public_symbol:worksheet.set_visibility_type",
+        "public_symbol:worksheet.freeze_panes",
+        "public_symbol:worksheet.unfreeze_panes",
+        "public_symbol:worksheet.set_column_width",
+        "public_symbol:worksheet.set_row_height",
+        "public_symbol:worksheet.protect",
+        "public_symbol:worksheet.unprotect"
+      ],
+      "text": "Manage worksheets including adding, renaming, hiding, reordering, and protecting sheets with freeze panes, page setup, and visibility controls.",
+      "title": "Worksheet organization"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:validationcollection.add",
+        "public_symbol:validation.set_type",
+        "public_symbol:validation.set_operator",
+        "public_symbol:conditionalformattingcollection.add",
+        "public_symbol:formatcondition.set_type",
+        "public_symbol:formatcondition.set_style"
+      ],
+      "text": "Enforce data validation rules and apply conditional formatting including color scales, data bars, icon sets, and formula-based rules.",
+      "title": "Data validation and conditional formatting"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:chartcollection.add",
+        "public_symbol:chart.chart_type",
+        "public_symbol:picturecollection.add",
+        "public_symbol:shapecollection.add",
+        "public_symbol:sparklinegroupcollection.add",
+        "public_symbol:sparklinegroup.sparkline_type"
+      ],
+      "text": "Create charts with multiple types, embed pictures, add drawing shapes, and generate sparkline trend charts within worksheets.",
+      "title": "Charts, shapes, and sparklines"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:listobjectcollection.add",
+        "public_symbol:listobject.show_totals",
+        "public_symbol:worksheet.auto_filter",
+        "public_symbol:autofilter.set_range",
+        "public_symbol:autofilter.get_sort_state",
+        "public_symbol:autofiltersortstate.get_sort_conditions"
+      ],
+      "text": "Build Excel tables with ListObject including totals and table styles, and configure auto-filters with complex sorting and filtering conditions.",
+      "title": "Structured tables and filters"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:documentproperties.get_author",
+        "public_symbol:documentproperties.set_title",
+        "public_symbol:extendeddocumentproperties.get_company",
+        "public_symbol:workbook.protection",
+        "public_symbol:workbookprotection.get_is_protected",
+        "public_symbol:workbook.protect",
+        "public_symbol:workbook.unprotect"
+      ],
+      "text": "Read and write core and extended document properties, manage workbook and worksheet protection with password hashing and encryption settings.",
+      "title": "Document properties and protection"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "format:input.xlsx",
+        "format:output.xlsx"
+      ],
+      "text": "Supports only .xlsx format; no legacy .xls, ODS, or CSV file format handling is implemented."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheetsmut.remove_at"
+      ],
+      "text": "A workbook must always contain at least one worksheet; removing the last worksheet returns an Unsupported error."
+    },
+    {
+      "fact_ids": [
+        "package:name",
+        "package:version"
+      ],
+      "text": "The public API surface is broad but not a complete match for Aspose.Cells Enterprise Edition; some features remain partial or incomplete."
+    },
+    {
+      "fact_ids": [
+        "package:name",
+        "package:version"
+      ],
+      "text": "No automated test suite ships yet; correctness is verified through samples that perform round-trip load-save-load operations."
+    },
+    {
+      "fact_ids": [
+        "package:name",
+        "package:version"
+      ],
+      "text": "Not yet published to crates.io; installation requires Git dependency or local path dependency configuration."
+    },
+    {
+      "fact_ids": [
+        "package:name",
+        "package:version"
+      ],
+      "text": "The library is early-stage and evolving; API stability and feature completeness may change between versions."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "package:name",
+        "package:version",
+        "import_path:aspose_cells_foss_rust"
+      ],
+      "text": "Enables pure-Rust Excel file processing without requiring Microsoft Office installation or proprietary Aspose runtime dependencies."
+    },
+    {
+      "fact_ids": [
+        "package:name",
+        "package:version",
+        "import_path:aspose_cells_foss_rust"
+      ],
+      "text": "Provides a familiar object model (Workbook/Worksheet/Cells) for developers experienced with Aspose.Cells while maintaining a fully open-source implementation."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:loadoptions.try_repair_package",
+        "public_symbol:loadoptions.try_repair_xml",
+        "public_symbol:workbook.get_load_diagnostics"
+      ],
+      "text": "Supports robust loading of potentially corrupted XLSX files through repair options and structured diagnostics reporting."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:repository",
+      "package:name",
+      "package:version",
+      "import_path:aspose_cells_foss_rust"
+    ],
+    "text": "Aspose.Cells FOSS for Rust is a pure-Rust library for creating, loading, editing, and saving Excel .xlsx workbooks without external dependencies or proprietary runtimes."
+  },
+  "uncertainties": [
+    "The exact set of supported chart types beyond those explicitly named in public symbols is unclear.",
+    "Whether all AutoFilter features including dynamic filters, top 10 filters, and custom filters are fully implemented is not fully evident from the symbol list alone.",
+    "The completeness of formula calculation support beyond caching is not specified in the available facts.",
+    "Whether all page setup options including headers/footers with complex formatting are fully supported is uncertain.",
+    "The extent of support for advanced validation types beyond basic list and date validation is unclear.",
+    "Whether sparkline styling options beyond basic type and range configuration are fully exposed is uncertain.",
+    "The behavior of protection features when using different hash algorithms or password lengths is not detailed.",
+    "Whether document properties beyond core and extended sets are supported is not specified."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "public_symbol:workbook.load_xlsx",
+        "public_symbol:workbook.load_xlsx_from_bytes",
+        "public_symbol:workbook.load_xlsx_from_stream",
+        "public_symbol:workbook.save_xlsx",
+        "public_symbol:workbook.save_xlsx_to_bytes",
+        "public_symbol:workbook.save_xlsx_to_stream"
+      ],
+      "name": "Load and save XLSX files",
+      "text": "Load an XLSX file from path, stream, or bytes using Workbook::load_xlsx variants, then save back to file, stream, or bytes using Workbook::save_xlsx variants."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cells.get",
+        "public_symbol:cells.get_by_index",
+        "public_symbol:cellmut.put_value_string",
+        "public_symbol:cellmut.put_value_i32",
+        "public_symbol:cellmut.put_value_bool",
+        "public_symbol:cellmut.put_value_date_time",
+        "public_symbol:cellmut.put_formula_with_cached_value"
+      ],
+      "name": "Edit cell values and formulas",
+      "text": "Access cells via Cells::get or Cells::get_by_index, write typed values using CellMut::put_value_* methods, and set formulas with cached results using CellMut::put_formula_with_cached_value."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cellmut.apply_bold",
+        "public_symbol:cellmut.apply_fill_color",
+        "public_symbol:cellmut.apply_font",
+        "public_symbol:cellmut.apply_number_format",
+        "public_symbol:cellmut.set_style",
+        "public_symbol:cellstyle.font",
+        "public_symbol:cellstyle.fill",
+        "public_symbol:cellstyle.borders"
+      ],
+      "name": "Apply cell styling",
+      "text": "Modify cell appearance using CellMut::apply_* methods for common styles or CellMut::set_style with CellStyle containing Font, Fill, and Borders configurations."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheet.set_visibility_type",
+        "public_symbol:worksheet.set_tab_color",
+        "public_symbol:worksheet.set_show_gridlines",
+        "public_symbol:worksheet.set_zoom",
+        "public_symbol:worksheet.protect",
+        "public_symbol:worksheet.unprotect"
+      ],
+      "name": "Configure worksheet layout and protection",
+      "text": "Manage worksheet visibility, tab color, gridlines, zoom, and protection state through Worksheet properties and methods like set_visibility_type, set_tab_color, and protect/unprotect."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:chartcollection.add",
+        "public_symbol:sparklinegroupcollection.add",
+        "public_symbol:chart.data_range",
+        "public_symbol:sparklinegroup.data_range"
+      ],
+      "name": "Build charts and sparklines",
+      "text": "Create charts using ChartCollection::add with specified ChartType and data range, and add sparkline groups using SparklineGroupCollection::add with location and data ranges."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:validationcollection.add",
+        "public_symbol:conditionalformattingcollection.add",
+        "public_symbol:validation.set_type",
+        "public_symbol:formatcondition.set_type"
+      ],
+      "name": "Enforce data validation and conditional formatting",
+      "text": "Add validation rules using ValidationCollection::add with ValidationType and operator settings, and apply conditional formatting via ConditionalFormattingCollection::add_condition_with_details."
+    }
+  ]
+}
