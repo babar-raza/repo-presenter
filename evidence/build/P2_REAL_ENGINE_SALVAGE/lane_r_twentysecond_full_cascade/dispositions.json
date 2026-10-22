@@ -1,0 +1,898 @@
+{
+  "dispositions": [
+    {
+      "destination_section": "identity",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:repository",
+        "package:name"
+      ],
+      "rationale": "The H1 product name is rendered deterministically from identity and package facts.",
+      "unit_id": "inherited_unit:001.heading"
+    },
+    {
+      "destination_section": "badges",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The badge row is rendered deterministically in the badges section.",
+      "unit_id": "inherited_unit:002.badge_row"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "identity:repository"
+      ],
+      "rationale": "The linked product illustration is supported by the repository identity and belongs in the opening.",
+      "unit_id": "inherited_unit:003.badge_row"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "import_path:github.com-aspose-pdf-foss-aspose-pdf-foss-for-go",
+        "package:go_version",
+        "dependency:none",
+        "public_symbol:document",
+        "public_symbol:page",
+        "public_symbol:ai"
+      ],
+      "rationale": "Describes what the library does, its pure-Go nature, and supported operations, supported by import path, Go version, dependency, and public symbols.",
+      "unit_id": "inherited_unit:004.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "import_path:github.com-aspose-pdf-foss-aspose-pdf-foss-for-go",
+        "public_symbol:document",
+        "public_symbol:flow"
+      ],
+      "rationale": "Clarifies the API mirrors Aspose.PDF for .NET and uses ISO 32000 references, supported by import path and public symbols.",
+      "unit_id": "inherited_unit:005.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:repository"
+      ],
+      "rationale": "The Navigation heading is not a placeable section; its list is superseded by the navigation section.",
+      "unit_id": "inherited_unit:006.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:repository"
+      ],
+      "rationale": "The navigation list is superseded by the navigation section rendered from facts.",
+      "unit_id": "inherited_unit:007.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:repository"
+      ],
+      "rationale": "The At a Glance heading is not placeable; its diagram is superseded by the at_a_glance section.",
+      "unit_id": "inherited_unit:008.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:repository"
+      ],
+      "rationale": "The Mermaid diagram is superseded by the at_a_glance section rendered from facts.",
+      "unit_id": "inherited_unit:009.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "identity:repository"
+      ],
+      "rationale": "The Key Capabilities heading is placeable and supported by the capabilities section.",
+      "unit_id": "inherited_unit:010.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:001",
+        "example:003",
+        "public_symbol:document.split",
+        "public_symbol:document.append",
+        "public_symbol:document.setencryption",
+        "public_symbol:document.sign",
+        "public_symbol:flow",
+        "public_symbol:table",
+        "public_symbol:form"
+      ],
+      "rationale": "The first capabilities list is superseded by the key_capabilities section, which re-authors the same capabilities from facts.",
+      "unit_id": "inherited_unit:011.001.list"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:006",
+        "public_symbol:document.validatepdfa",
+        "public_symbol:document.renderimage",
+        "public_symbol:document.savehtml",
+        "public_symbol:graphicalpdfcomparer",
+        "public_symbol:ai.summarycopilot"
+      ],
+      "rationale": "The second capabilities list is superseded by the key_capabilities section, which re-authors the same capabilities from facts.",
+      "unit_id": "inherited_unit:011.002.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "DEFER_UNRESOLVED",
+      "fact_ids": [],
+      "rationale": "The third capabilities list contains capabilities not fully supported by the provided facts; some symbols cited are not in the Facts list.",
+      "unit_id": "inherited_unit:011.003.list"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:go"
+      ],
+      "rationale": "The Installation heading is rendered deterministically in the installation section.",
+      "unit_id": "inherited_unit:012.heading"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:go"
+      ],
+      "rationale": "The install command is rendered deterministically in the installation section.",
+      "unit_id": "inherited_unit:013.code_block"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:go_version",
+        "dependency:none"
+      ],
+      "rationale": "States Go 1.24+ requirement and zero transitive dependencies, which is a material limitation.",
+      "unit_id": "inherited_unit:014.paragraph"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:none"
+      ],
+      "rationale": "The Dependencies heading is rendered deterministically in the dependencies section.",
+      "unit_id": "inherited_unit:015.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:none"
+      ],
+      "rationale": "The Required Package Dependencies heading is rendered deterministically in the dependencies section.",
+      "unit_id": "inherited_unit:016.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:none"
+      ],
+      "rationale": "The zero third-party dependencies statement is rendered deterministically in the dependencies section.",
+      "unit_id": "inherited_unit:017.paragraph"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "package:go_version"
+      ],
+      "rationale": "The Native and System Requirements heading is rendered deterministically in the dependencies section.",
+      "unit_id": "inherited_unit:018.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "package:go_version"
+      ],
+      "rationale": "The Go version requirement is rendered deterministically in the dependencies section.",
+      "unit_id": "inherited_unit:019.list"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "The Quick Start heading is placeable and supported by the example:001 fact.",
+      "unit_id": "inherited_unit:020.heading"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "The Quick Start code block is the example:001 fact and is placed as-is.",
+      "unit_id": "inherited_unit:021.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "Points to further examples and pkg.go.dev, supported by the example:001 fact.",
+      "unit_id": "inherited_unit:022.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:repository"
+      ],
+      "rationale": "The Feature Showcase heading is not placeable; its content is superseded by the additional_examples section.",
+      "unit_id": "inherited_unit:023.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:repository"
+      ],
+      "rationale": "The Feature Showcase badge row is not placeable; its content is superseded by the additional_examples section.",
+      "unit_id": "inherited_unit:024.badge_row"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:repository"
+      ],
+      "rationale": "The Feature Showcase paragraph is not placeable; its content is superseded by the additional_examples section.",
+      "unit_id": "inherited_unit:025.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "The Additional Examples heading is placeable and supported by the example:002 fact.",
+      "unit_id": "inherited_unit:026.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "Introduces the Flow layout engine example, supported by the example:002 fact.",
+      "unit_id": "inherited_unit:027.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "The Content Authoring With the Flow Layout Engine heading is placeable and supported by the example:002 fact.",
+      "unit_id": "inherited_unit:028.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "The Flow layout code block is the example:002 fact and is placed as-is.",
+      "unit_id": "inherited_unit:029.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "Explains the Flow layout example, supported by the example:002 fact.",
+      "unit_id": "inherited_unit:030.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:repository"
+      ],
+      "rationale": "The HTML block is not placeable and unsupported by any fact.",
+      "unit_id": "inherited_unit:031.html_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "The Encrypt a Document heading is placeable and supported by the example:003 fact.",
+      "unit_id": "inherited_unit:032.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "The encryption code block is the example:003 fact and is placed as-is.",
+      "unit_id": "inherited_unit:033.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "The Digitally Sign and Verify heading is placeable and supported by the example:003 fact.",
+      "unit_id": "inherited_unit:034.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "The signing code block is the example:003 fact and is placed as-is.",
+      "unit_id": "inherited_unit:035.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:005"
+      ],
+      "rationale": "The Build a Table heading is placeable and supported by the example:005 fact.",
+      "unit_id": "inherited_unit:036.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:005"
+      ],
+      "rationale": "The table code block is the example:005 fact and is placed as-is.",
+      "unit_id": "inherited_unit:037.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:006"
+      ],
+      "rationale": "The Render a Page to an Image heading is placeable and supported by the example:006 fact.",
+      "unit_id": "inherited_unit:038.heading"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:006"
+      ],
+      "rationale": "The code block duplicates the verified Quick Start example example:006 and is rendered from facts under quick_start.",
+      "unit_id": "inherited_unit:039.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The closing </details> tag has no matching opening tag in the inherited README and no supporting fact; it is unsupported.",
+      "unit_id": "inherited_unit:040.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading '## API Reference' is superseded by the deterministic api_reference section heading.",
+      "unit_id": "inherited_unit:041.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:document",
+        "public_symbol:open",
+        "public_symbol:openstream",
+        "public_symbol:document",
+        "public_symbol:document",
+        "public_symbol:page",
+        "public_symbol:ai"
+      ],
+      "rationale": "The paragraph accurately describes the root package structure, Document centrality, stream methods, and the ai subpackage; facts support every claim.",
+      "unit_id": "inherited_unit:042.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The opening <details> tag has no matching closing tag in the inherited README and no supporting fact; it is unsupported.",
+      "unit_id": "inherited_unit:043.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading '### Core API' is superseded by the deterministic api_reference section heading.",
+      "unit_id": "inherited_unit:044.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table of public symbols is superseded by the deterministic api_reference section, which renders the complete verified public surface.",
+      "unit_id": "inherited_unit:045.table"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The heading '#### Detailed Member Reference' introduces no content and is unsupported by facts.",
+      "unit_id": "inherited_unit:046.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:encryptionoptions",
+        "public_symbol:permissions",
+        "public_symbol:document.setencryption",
+        "public_symbol:openwithpassword",
+        "public_symbol:sign",
+        "public_symbol:signatureverification"
+      ],
+      "rationale": "The heading '### Encryption and Signing' is moved to api_reference where its content is supported by facts.",
+      "unit_id": "inherited_unit:047.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:permissions",
+        "public_symbol:encryptionoptions",
+        "public_symbol:document.setencryption",
+        "public_symbol:openwithpassword",
+        "public_symbol:sign",
+        "public_symbol:signatureverification"
+      ],
+      "rationale": "The list accurately describes encryption and signing behavior; every claim is supported by facts.",
+      "unit_id": "inherited_unit:048.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:form",
+        "public_symbol:barcodefield",
+        "public_symbol:formfieldtype"
+      ],
+      "rationale": "The heading '### Forms (AcroForm)' is moved to api_reference where its content is supported by facts.",
+      "unit_id": "inherited_unit:049.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:form",
+        "public_symbol:barcodefield",
+        "public_symbol:formfieldtype"
+      ],
+      "rationale": "The list accurately describes form field capabilities; every claim is supported by facts.",
+      "unit_id": "inherited_unit:050.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:outlineitemcollection",
+        "public_symbol:nameddestinations",
+        "public_symbol:tocentry"
+      ],
+      "rationale": "The heading '### Outlines, Named Destinations, and Table of Contents' is moved to api_reference where its content is supported by facts.",
+      "unit_id": "inherited_unit:051.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:outlineitemcollection",
+        "public_symbol:nameddestinations",
+        "public_symbol:tocentry"
+      ],
+      "rationale": "The list accurately describes outline, destination, and TOC functionality; every claim is supported by facts.",
+      "unit_id": "inherited_unit:052.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:embeddedfiles",
+        "public_symbol:collection"
+      ],
+      "rationale": "The heading '### Attachments and Portfolios' is moved to api_reference where its content is supported by facts.",
+      "unit_id": "inherited_unit:053.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:embeddedfiles",
+        "public_symbol:collection"
+      ],
+      "rationale": "The list accurately describes embedded file and portfolio management; every claim is supported by facts.",
+      "unit_id": "inherited_unit:054.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:javascriptcollection",
+        "public_symbol:javascriptaction"
+      ],
+      "rationale": "The heading '### Document JavaScript and Open Actions' is moved to api_reference where its content is supported by facts.",
+      "unit_id": "inherited_unit:055.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:javascriptcollection",
+        "public_symbol:javascriptaction"
+      ],
+      "rationale": "The list accurately describes JavaScript and OpenAction behavior; every claim is supported by facts.",
+      "unit_id": "inherited_unit:056.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:document",
+        "public_symbol:page"
+      ],
+      "rationale": "The heading '### Deleting Pages and Inserting Blank Pages' is moved to api_reference where its content is supported by facts.",
+      "unit_id": "inherited_unit:057.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:document",
+        "public_symbol:page"
+      ],
+      "rationale": "The list accurately describes page deletion and blank page insertion; every claim is supported by facts.",
+      "unit_id": "inherited_unit:058.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:textstyle",
+        "public_symbol:font"
+      ],
+      "rationale": "The heading '### Text Drawing and Right-to-Left / Arabic Shaping' is moved to api_reference where its content is supported by facts.",
+      "unit_id": "inherited_unit:059.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:textstyle",
+        "public_symbol:font"
+      ],
+      "rationale": "The list accurately describes text drawing and shaping behavior; every claim is supported by facts.",
+      "unit_id": "inherited_unit:060.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:svg",
+        "public_symbol:svgfontresolver"
+      ],
+      "rationale": "The heading '### Vector Graphics and SVG Import' is moved to api_reference where its content is supported by facts.",
+      "unit_id": "inherited_unit:061.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:svg",
+        "public_symbol:svgfontresolver"
+      ],
+      "rationale": "The list accurately describes SVG import capabilities; every claim is supported by facts.",
+      "unit_id": "inherited_unit:062.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:annotation",
+        "public_symbol:annotationcollection"
+      ],
+      "rationale": "The heading '### Annotations' is moved to api_reference where its content is supported by facts.",
+      "unit_id": "inherited_unit:063.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:annotation",
+        "public_symbol:annotationcollection"
+      ],
+      "rationale": "The list accurately describes annotation support; every claim is supported by facts.",
+      "unit_id": "inherited_unit:064.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:stamp",
+        "public_symbol:textstamp",
+        "public_symbol:imagestamp",
+        "public_symbol:pagenumberstamp",
+        "public_symbol:pdfpagestamp"
+      ],
+      "rationale": "The heading '### Stamps' is moved to api_reference where its content is supported by facts.",
+      "unit_id": "inherited_unit:065.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:stamp",
+        "public_symbol:textstamp",
+        "public_symbol:imagestamp",
+        "public_symbol:pagenumberstamp",
+        "public_symbol:pdfpagestamp"
+      ],
+      "rationale": "The list accurately describes stamp functionality; every claim is supported by facts.",
+      "unit_id": "inherited_unit:066.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:validate",
+        "public_symbol:pdfaformat",
+        "public_symbol:pdfuaissue",
+        "public_symbol:taggedcontent"
+      ],
+      "rationale": "The heading '### Validation: Structural, PDF/A, and PDF/UA' is moved to api_reference where its content is supported by facts.",
+      "unit_id": "inherited_unit:067.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:validate",
+        "public_symbol:pdfaformat",
+        "public_symbol:pdfuaissue",
+        "public_symbol:taggedcontent"
+      ],
+      "rationale": "The list accurately describes validation and conversion behavior; every claim is supported by facts.",
+      "unit_id": "inherited_unit:068.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:taggedcontent",
+        "public_symbol:structelement"
+      ],
+      "rationale": "The heading '### Tagged PDF Authoring' is moved to api_reference where its content is supported by facts.",
+      "unit_id": "inherited_unit:069.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:taggedcontent",
+        "public_symbol:structelement"
+      ],
+      "rationale": "The list accurately describes Tagged PDF authoring; every claim is supported by facts.",
+      "unit_id": "inherited_unit:070.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:document",
+        "public_symbol:document"
+      ],
+      "rationale": "The heading '### Rendering to Images' is moved to api_reference where its content is supported by facts.",
+      "unit_id": "inherited_unit:071.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:document",
+        "public_symbol:document"
+      ],
+      "rationale": "The list accurately describes rendering capabilities; every claim is supported by facts.",
+      "unit_id": "inherited_unit:072.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:document",
+        "public_symbol:document",
+        "public_symbol:document"
+      ],
+      "rationale": "The heading '### HTML, SVG, and Markdown Conversion' is moved to api_reference where its content is supported by facts.",
+      "unit_id": "inherited_unit:073.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:document",
+        "public_symbol:document",
+        "public_symbol:document"
+      ],
+      "rationale": "The list accurately describes format conversion capabilities; every claim is supported by facts.",
+      "unit_id": "inherited_unit:074.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:ai.summarycopilot",
+        "public_symbol:ai.chatcopilot",
+        "public_symbol:ai.ocrcopilot",
+        "public_symbol:ai.imagedescriptioncopilot"
+      ],
+      "rationale": "The heading '### AI Copilots' is moved to api_reference where its content is supported by facts.",
+      "unit_id": "inherited_unit:075.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:ai.summarycopilot",
+        "public_symbol:ai.chatcopilot",
+        "public_symbol:ai.ocrcopilot",
+        "public_symbol:ai.imagedescriptioncopilot"
+      ],
+      "rationale": "The list accurately describes AI copilot functionality; every claim is supported by facts.",
+      "unit_id": "inherited_unit:076.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:document",
+        "public_symbol:document",
+        "public_symbol:embeddedfiles",
+        "public_symbol:imageinfo"
+      ],
+      "rationale": "The heading '### Text Extraction, Search, and Images' is moved to api_reference where its content is supported by facts.",
+      "unit_id": "inherited_unit:077.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:document",
+        "public_symbol:document",
+        "public_symbol:embeddedfiles",
+        "public_symbol:imageinfo"
+      ],
+      "rationale": "The list accurately describes text extraction, search, and image handling; every claim is supported by facts.",
+      "unit_id": "inherited_unit:078.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "NON_CONTENT",
+      "fact_ids": [],
+      "rationale": "Trailing HTML comment fragment with no semantic content.",
+      "unit_id": "inherited_unit:079.html_block"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Documentation & Resources' heading is superseded because the section is not rendered at this revision (condition: verified relevant targets exist).",
+      "unit_id": "inherited_unit:080.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The list items under 'Documentation & Resources' are unsupported because the section is not rendered at this revision (condition: verified relevant targets do不存",
+      "unit_id": "inherited_unit:081.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Scope and Limitations' heading is supported and matches the section ID.",
+      "unit_id": "inherited_unit:082.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The list items under 'Scope and Limitations' are supported by the inherited unit and match the limitations in the accepted investigation.",
+      "unit_id": "inherited_unit:083.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph about Enterprise Edition is unsupported because the enterprise_relationship section is not rendered at this revision (condition: verified aspose",
+      "unit_id": "inherited_unit:084.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Development and Testing' heading is superseded because the section is not rendered at this revision (condition: build or test assets exist).",
+      "unit_id": "inherited_unit:085.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The code block under 'Development and Testing' is unsupported because the section is not rendered at this revision (condition: build or test assets do not exist",
+      "unit_id": "inherited_unit:086.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph about example programs is unsupported because the section is not rendered at this revision (condition: build or test assets do not exist",
+      "unit_id": "inherited_unit:087.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Third-Party Notices' heading is supported and matches the section ID.",
+      "unit_id": "inherited_unit:088.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The paragraph about third-party notices is supported by the inherited unit and matches the third_party_notices section.",
+      "unit_id": "inherited_unit:089.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'License' heading is supported and matches the section ID.",
+      "unit_id": "inherited_unit:090.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The paragraph about the MIT License is supported by the inherited unit and matches the license section.",
+      "unit_id": "inherited_unit:091.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The paragraph about bundled fonts is supported by the inherited unit and matches the license section.",
+      "unit_id": "inherited_unit:092.paragraph"
+    }
+  ]
+}

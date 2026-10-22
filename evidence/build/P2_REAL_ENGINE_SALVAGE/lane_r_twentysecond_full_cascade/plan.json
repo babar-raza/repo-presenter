@@ -1,0 +1,358 @@
+{
+  "additional_example_ids": [
+    "example:002",
+    "example:003",
+    "example:005",
+    "example:006"
+  ],
+  "api_hubs": [
+    {
+      "fact_ids": [
+        "public_symbol:document",
+        "public_symbol:open",
+        "public_symbol:openstream",
+        "public_symbol:document",
+        "public_symbol:document",
+        "public_symbol:page",
+        "public_symbol:ai"
+      ],
+      "symbol_fact_id": "public_symbol:document"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:flow",
+        "public_symbol:flow.addparagraph",
+        "public_symbol:flow.addtable",
+        "public_symbol:flow.addlist",
+        "public_symbol:flow.render"
+      ],
+      "symbol_fact_id": "public_symbol:flow"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:form",
+        "public_symbol:textboxfield",
+        "public_symbol:checkboxfield",
+        "public_symbol:comboboxfield",
+        "public_symbol:barcodefield"
+      ],
+      "symbol_fact_id": "public_symbol:form"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:annotation",
+        "public_symbol:annotationcollection",
+        "public_symbol:linkannotation",
+        "public_symbol:textstamp",
+        "public_symbol:imagestamp"
+      ],
+      "symbol_fact_id": "public_symbol:annotation"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:encryptionoptions",
+        "public_symbol:permissions",
+        "public_symbol:document.setencryption",
+        "public_symbol:openwithpassword",
+        "public_symbol:sign"
+      ],
+      "symbol_fact_id": "public_symbol:encryptionoptions"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:ai.summarycopilot",
+        "public_symbol:ai.chatcopilot",
+        "public_symbol:ai.ocrcopilot",
+        "public_symbol:ai.imagedescriptioncopilot"
+      ],
+      "symbol_fact_id": "public_symbol:ai.summarycopilot"
+    }
+  ],
+  "at_a_glance": {
+    "capability_titles": [
+      "Page operations and metadata",
+      "Encryption and digital signatures",
+      "Content authoring with Flow layout",
+      "Tables and vector graphics",
+      "AcroForms and annotations",
+      "PDF/A and accessibility validation",
+      "Rendering and format conversion",
+      "Document comparison and AI copilots"
+    ],
+    "input_format_ids": [],
+    "output_format_ids": []
+  },
+  "core_capabilities": [
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:document.split",
+        "public_symbol:document.append",
+        "public_symbol:document.rotate",
+        "public_symbol:document.reorder",
+        "public_symbol:document.setpagelabels",
+        "public_symbol:document.info",
+        "public_symbol:document.xmp"
+      ],
+      "shared_fact_ids": [],
+      "title": "Page operations and metadata"
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "public_symbol:document.setencryption",
+        "public_symbol:document.sign",
+        "public_symbol:document.verifysignatures",
+        "public_symbol:encryptionoptions"
+      ],
+      "shared_fact_ids": [],
+      "title": "Encryption and digital signatures"
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "public_symbol:flow",
+        "public_symbol:flow.addparagraph",
+        "public_symbol:flow.addtable",
+        "public_symbol:flow.addlist",
+        "public_symbol:flow.render"
+      ],
+      "shared_fact_ids": [],
+      "title": "Content authoring with Flow layout"
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "public_symbol:table",
+        "public_symbol:page.drawrectangle",
+        "public_symbol:page.drawcircle",
+        "public_symbol:page.drawpath",
+        "public_symbol:gradient"
+      ],
+      "shared_fact_ids": [],
+      "title": "Tables and vector graphics"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:form",
+        "public_symbol:textboxfield",
+        "public_symbol:checkboxfield",
+        "public_symbol:comboboxfield",
+        "public_symbol:barcodefield",
+        "public_symbol:annotation",
+        "public_symbol:stampannotation"
+      ],
+      "shared_fact_ids": [],
+      "title": "AcroForms and annotations"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.validatepdfa",
+        "public_symbol:document.validatepdfua",
+        "public_symbol:document.converttopdfa",
+        "public_symbol:taggedcontent",
+        "public_symbol:document.taggedcontent"
+      ],
+      "shared_fact_ids": [],
+      "title": "PDF/A and accessibility validation"
+    },
+    {
+      "fact_ids": [
+        "example:006",
+        "public_symbol:document.renderimage",
+        "public_symbol:document.savelinearized",
+        "public_symbol:document.savehtml",
+        "public_symbol:document.savesvg",
+        "public_symbol:document.savemarkdown",
+        "public_symbol:document.savedocx"
+      ],
+      "shared_fact_ids": [],
+      "title": "Rendering and format conversion"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:graphicalpdfcomparer",
+        "public_symbol:comparisonresult",
+        "public_symbol:ai.summarycopilot",
+        "public_symbol:ai.chatcopilot",
+        "public_symbol:ai.ocrcopilot",
+        "public_symbol:ai.imagedescriptioncopilot"
+      ],
+      "shared_fact_ids": [],
+      "title": "Document comparison and AI copilots"
+    }
+  ],
+  "deviations": [
+    {
+      "fact_ids": [
+        "identity:repository"
+      ],
+      "section_id": "banner",
+      "text": "No product illustration or homepage URL is verified; the banner section is omitted."
+    },
+    {
+      "fact_ids": [
+        "import_path:github.com-aspose-pdf-foss-aspose-pdf-foss-for-go"
+      ],
+      "section_id": "documentation_resources",
+      "text": "No verified documentation or reference links are present; the section is omitted."
+    },
+    {
+      "fact_ids": [
+        "identity:repository"
+      ],
+      "section_id": "enterprise_relationship",
+      "text": "No verified aspose.com product target exists; the section is omitted."
+    },
+    {
+      "fact_ids": [
+        "package:go_version"
+      ],
+      "section_id": "development_testing",
+      "text": "No build or test assets are verified; the section is omitted."
+    },
+    {
+      "fact_ids": [
+        "import_path:github.com-aspose-pdf-foss-aspose-pdf-foss-for-go"
+      ],
+      "section_id": "third_party_notices",
+      "text": "The Third-Party Notices section is omitted because no file existence fact is verified."
+    }
+  ],
+  "flagship_example_id": "example:002",
+  "links": [],
+  "material_limitations": [
+    {
+      "fact_ids": [
+        "install_command:go"
+      ],
+      "unit_ids": []
+    },
+    {
+      "fact_ids": [
+        "public_symbol:encryptionoptions.recipients"
+      ],
+      "unit_ids": []
+    },
+    {
+      "fact_ids": [
+        "public_symbol:font"
+      ],
+      "unit_ids": []
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.converttopdfa",
+        "public_symbol:document.flattentransparency"
+      ],
+      "unit_ids": []
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.searchtext",
+        "public_symbol:document.replacetext"
+      ],
+      "unit_ids": []
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.renderimage"
+      ],
+      "unit_ids": []
+    }
+  ],
+  "quick_start_example_id": "example:001",
+  "second_quick_start_example_id": null,
+  "sections": [
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "identity"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "badges"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "banner"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "opening"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "navigation"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "at_a_glance"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "key_capabilities"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "installation"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "dependencies"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "quick_start"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "additional_examples"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "api_reference"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "documentation_resources"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "scope_limitations"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "development_testing"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "third_party_notices"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "license"
+    }
+  ]
+}

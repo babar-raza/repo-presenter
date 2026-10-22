@@ -1,0 +1,254 @@
+{
+  "audience": {
+    "fact_ids": [
+      "import_path:github.com-aspose-pdf-foss-aspose-pdf-foss-for-go",
+      "package:go_version",
+      "dependency:none"
+    ],
+    "text": "Go developers building server-side or cross-platform applications that require PDF processing without native dependencies."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:document.split",
+        "public_symbol:document.append",
+        "public_symbol:document.rotate",
+        "public_symbol:document.reorder",
+        "public_symbol:document.setpagelabels",
+        "public_symbol:document.info",
+        "public_symbol:document.xmp"
+      ],
+      "text": "Split, merge, extract, rotate, reorder, and insert pages; manage page labels, Info and XMP metadata, and page geometry boxes.",
+      "title": "Page operations and metadata"
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "public_symbol:document.setencryption",
+        "public_symbol:document.sign",
+        "public_symbol:document.verifysignatures",
+        "public_symbol:encryptionoptions"
+      ],
+      "text": "Password-protect documents with AES-128/256 or RC4, set granular permissions, sign with PKCS#7/PAdES/timestamps, verify signatures, and support certificate-based encryption.",
+      "title": "Encryption and digital signatures"
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "public_symbol:flow",
+        "public_symbol:flow.addparagraph",
+        "public_symbol:flow.addtable",
+        "public_symbol:flow.addlist",
+        "public_symbol:flow.render"
+      ],
+      "text": "Lay out paragraphs, headings, images, tables, and lists top-to-bottom with automatic pagination, floating boxes, and multi-column support.",
+      "title": "Content authoring with Flow layout"
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "public_symbol:table",
+        "public_symbol:page.drawrectangle",
+        "public_symbol:page.drawcircle",
+        "public_symbol:page.drawpath",
+        "public_symbol:gradient"
+      ],
+      "text": "Build multi-page tables with repeating headers, cell merging, and styling; draw lines, rectangles, circles, paths, gradients, and tiling patterns.",
+      "title": "Tables and vector graphics"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:form",
+        "public_symbol:textboxfield",
+        "public_symbol:checkboxfield",
+        "public_symbol:comboboxfield",
+        "public_symbol:barcodefield",
+        "public_symbol:annotation",
+        "public_symbol:stampannotation"
+      ],
+      "text": "Create and edit text, checkbox, radio, combo, list, push button, password, file select, rich text, number, date, and barcode fields; manage annotations and stamps.",
+      "title": "AcroForms and annotations"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.validatepdfa",
+        "public_symbol:document.validatepdfua",
+        "public_symbol:document.converttopdfa",
+        "public_symbol:taggedcontent",
+        "public_symbol:document.taggedcontent"
+      ],
+      "text": "Validate structural integrity, PDF/A-1/2/3 conformance, and PDF/UA-1 accessibility; convert documents toward conformance; build Tagged PDF structure trees.",
+      "title": "PDF/A and accessibility validation"
+    },
+    {
+      "fact_ids": [
+        "example:006",
+        "public_symbol:document.renderimage",
+        "public_symbol:document.savelinearized",
+        "public_symbol:document.savehtml",
+        "public_symbol:document.savesvg",
+        "public_symbol:document.savemarkdown",
+        "public_symbol:document.savedocx"
+      ],
+      "text": "Render pages to PNG, JPEG, GIF, BMP, and TIFF; convert to/from HTML, SVG, Markdown, DOCX, XLSX, and EPUB; extract text and images with layout.",
+      "title": "Rendering and format conversion"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:graphicalpdfcomparer",
+        "public_symbol:comparisonresult",
+        "public_symbol:ai.summarycopilot",
+        "public_symbol:ai.chatcopilot",
+        "public_symbol:ai.ocrcopilot",
+        "public_symbol:ai.imagedescriptioncopilot"
+      ],
+      "text": "Compare documents page-by-page or flat, generate markup highlights, use AI copilots for summarization, OCR, chat, and alt-text generation over OpenAI-compatible endpoints.",
+      "title": "Document comparison and AI copilots"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "install_command:go"
+      ],
+      "text": "Linearization cannot be combined with encryption or digital signing in the same document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:encryptionoptions.recipients"
+      ],
+      "text": "Certificate-based encryption accepts RSA recipients only; elliptic curve recipients and legacy RC4 sub-filters are not written."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:font"
+      ],
+      "text": "OpenType shaping covers Arabic-family, Hebrew, and simple scripts; Indic, Khmer, Myanmar, and Hangul reordering shapers and vertical text are not implemented."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.converttopdfa",
+        "public_symbol:document.flattentransparency"
+      ],
+      "text": "ConvertToPDFA does not flatten transparency; call FlattenTransparency separately before converting to PDF/A-1."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.searchtext",
+        "public_symbol:document.replacetext"
+      ],
+      "text": "SearchText and ReplaceText match within a single text line only; queries that straddle line breaks are not found."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.renderimage"
+      ],
+      "text": "The built-in renderer does not support mesh shadings (PDF shading types 4-7)."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "import_path:github.com-aspose-pdf-foss-aspose-pdf-foss-for-go",
+        "dependency:none"
+      ],
+      "text": "Enables PDF creation, editing, and conversion in pure Go without CGo, native libraries, or third-party dependencies."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:ai.chatcopilot",
+        "public_symbol:ai.llmocrengine",
+        "public_symbol:ai.imagedescriptioncopilot"
+      ],
+      "text": "Provides document comparison, OCR, and AI copilots for summarization, chat, and alt-text generation over OpenAI-compatible endpoints."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "public_symbol:document.validatepdfa",
+        "public_symbol:document.sign",
+        "public_symbol:document.setencryption"
+      ],
+      "text": "Supports PDF/A and PDF/UA validation and conversion, digital signatures (PKCS#7, PAdES, timestamps), and encryption (AES-128/256, certificate-based)."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "example:005",
+        "public_symbol:flow",
+        "public_symbol:tableabsorber",
+        "public_symbol:document.savelinearized"
+      ],
+      "text": "Offers layout engines (Flow), table detection, and conversion to HTML, SVG, Markdown, DOCX, XLSX, and EPUB."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:repository",
+      "import_path:github.com-aspose-pdf-foss-aspose-pdf-foss-for-go",
+      "package:name",
+      "package:go_version",
+      "dependency:none"
+    ],
+    "text": "Aspose.PDF FOSS for Go is a pure Go library for creating, editing, converting, and validating PDF documents without CGo or external dependencies."
+  },
+  "uncertainties": [
+    "The exact set of supported PDF/A-1/2/3 subtypes and validation rules for PDF/UA-1 is not fully detailed beyond basic conformance checks.",
+    "Whether the AI copilots support non-English languages beyond the OcrOptions.Font and SummaryOptions.Language settings is unclear.",
+    "The behavior of Table when RowSpan groups split across page breaks is not specified.",
+    "Whether content-driven auto-fit column widths are supported in Table is not confirmed.",
+    "The exact set of unsupported SVG features beyond textPath, vertical writing, external images, Gaussian blur, and em/ex/% units is not listed.",
+    "Whether the renderer handles isolated/knockout transparency groups is not confirmed.",
+    "The exact behavior of ConvertToPDFA for fonts with embedding restrictions is not detailed.",
+    "Whether the TableAbsorber detects borderless tables in complex layouts is not specified."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "example:001"
+      ],
+      "name": "Split and merge PDFs",
+      "text": "Open a PDF with pdf.Open, call doc.Split() to create per-page documents, or use doc.Append(b) to merge documents in place, then save results."
+    },
+    {
+      "fact_ids": [
+        "example:002"
+      ],
+      "name": "Create documents with Flow layout",
+      "text": "Call pdf.NewDocumentFromFormat, create a flow with doc.NewFlow, add headings, paragraphs, lists, and tables, then call flow.Render() to paginate."
+    },
+    {
+      "fact_ids": [
+        "example:003"
+      ],
+      "name": "Encrypt and sign documents",
+      "text": "Set encryption with doc.SetEncryption, write to a buffer, and verify opening returns ErrEncrypted; sign with doc.Sign using a crypto.Signer and certificate."
+    },
+    {
+      "fact_ids": [
+        "example:006"
+      ],
+      "name": "Render pages to images",
+      "text": "Call doc.RenderImage(pageIndex, opts) to render a page to an image, or use page.RenderPNG/RenderJPEG/etc. for direct format output."
+    },
+    {
+      "fact_ids": [
+        "example:005"
+      ],
+      "name": "Build and render tables",
+      "text": "Create a table with pdf.NewTable, set column widths, borders, margins, and cell styles, add rows and cells, then add it to a page with page.AddTable."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:ai.summarycopilot",
+        "public_symbol:ai.chatcopilot",
+        "public_symbol:ai.ocrcopilot",
+        "public_symbol:ai.imagedescriptioncopilot"
+      ],
+      "name": "Use AI copilots",
+      "text": "Initialize ai.NewSummaryCopilot, ai.NewChatCopilot, ai.NewOcrCopilot, or ai.NewImageDescriptionCopilot, configure options, and call their methods over an OpenAI-compatible endpoint."
+    }
+  ]
+}

@@ -1,0 +1,556 @@
+{
+  "coherence": {
+    "applied": true,
+    "revised": []
+  },
+  "omitted": [
+    {
+      "fact_id": "inherited_unit:003.badge_row",
+      "reason": "Badge row is not prose and belongs in a different slot; the renderer handles it.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:005.paragraph",
+      "reason": "Inherited unit repeats platform and dependency claims already covered by the dependency:none fact and package:name; the opening unit already states the product is a pure Go library via the dependency and package facts.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "example:004",
+      "reason": "Unresolved example; not cited in accepted_facts and excluded by do_not_claim.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:042.paragraph",
+      "reason": "The inherited unit provides background context but does not introduce new identifiers or capabilities beyond those already covered by the fact-cited units; its content is already reflected in the fact-based prose.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:047.heading",
+      "reason": "The heading label is not a capability or identifier; the renderer handles section structure, and the content is covered by public_symbol:encryptionoptions and public_symbol:sign facts.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:048.list",
+      "reason": "The list details implementation specifics (e.g., bit mappings, password handling) that are not required for a high-level API reference overview and are already implied by the cited fact symbols.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:049.heading",
+      "reason": "The heading label is not a capability; the renderer handles section structure, and the content is covered by the public_symbol:form and field facts.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:050.list",
+      "reason": "The list describes field behavior and rendering details beyond the scope of a concise API reference; the core identifiers and actions are already covered by the public_symbol:form and field facts.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:051.heading",
+      "reason": "The heading label is not a capability; the renderer handles section structure, and the content is not covered by any of the fact IDs in the current slot set.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:052.list",
+      "reason": "The list describes outline and TOC features not covered by the fact IDs in the current slot set; including it would introduce unsupported claims.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:053.heading",
+      "reason": "The heading label is not a capability; the renderer handles section structure, and the content is not covered by any of the fact IDs in the current slot set.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:054.list",
+      "reason": "The list describes attachments and portfolios not covered by the fact IDs in the current slot set; including it would introduce unsupported claims.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:055.heading",
+      "reason": "The heading label is not a capability; the renderer handles section structure, and the content is not covered by any of the fact IDs in the current slot set.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:056.list",
+      "reason": "The list describes JavaScript and Open Actions not covered by the fact IDs in the current slot set; including it would introduce unsupported claims.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:057.heading",
+      "reason": "The heading label is not a capability; the renderer handles section structure, and the content is not covered by any of the fact IDs in the current slot set.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:058.list",
+      "reason": "The list describes page deletion and insertion not covered by the fact IDs in the current slot set; including it would introduce unsupported claims.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:059.heading",
+      "reason": "The heading label is not a capability; the renderer handles section structure, and the content is not covered by any of the fact IDs in the current slot set.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:060.list",
+      "reason": "The list describes text drawing and RTL shaping not covered by the fact IDs in the current slot set; including it would introduce unsupported claims.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:061.heading",
+      "reason": "The heading label is not a capability; the renderer handles section structure, and the content is not covered by any of the fact IDs in the current slot set.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:062.list",
+      "reason": "The list describes SVG import not covered by the fact IDs in the current slot set; including it would introduce unsupported claims.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:063.heading",
+      "reason": "The heading label is not a capability; the renderer handles section structure, and the content is not covered by any of the fact IDs in the current slot set.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:064.list",
+      "reason": "The list describes annotation subtypes and properties not covered by the fact IDs in the current slot set; including it would introduce unsupported claims.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:065.heading",
+      "reason": "The heading label is not a capability; the renderer handles section structure, and the content is not covered by any of the fact IDs in the current slot set.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:066.list",
+      "reason": "The list describes stamp types and options not covered by the fact IDs in the current slot set; including it would introduce unsupported claims.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:067.heading",
+      "reason": "The heading label is not a capability; the renderer handles section structure, and the content is not covered by any of the fact IDs in the current slot set.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:068.list",
+      "reason": "The list describes validation and PDF/A/UA features not covered by the fact IDs in the current slot set; including it would introduce unsupported claims.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:069.heading",
+      "reason": "The heading label is not a capability; the renderer handles section structure, and the content is not covered by any of the fact IDs in the current slot set.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:070.list",
+      "reason": "The list describes Tagged PDF authoring not covered by the fact IDs in the current slot set; including it would introduce unsupported claims.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:071.heading",
+      "reason": "The heading label is not a capability; the renderer handles section structure, and the content is not covered by any of the fact IDs in the current slot set.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:072.list",
+      "reason": "The list describes rendering to images not covered by the fact IDs in the current slot set; including it would introduce unsupported claims.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:073.heading",
+      "reason": "The heading label is not a capability; the renderer handles section structure, and the content is not covered by any of the fact IDs in the current slot set.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:074.list",
+      "reason": "The list describes HTML, SVG, and Markdown conversion not covered by the fact IDs in the current slot set; including it would introduce unsupported claims.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:075.heading",
+      "reason": "The heading label is not a capability; the renderer handles section structure, and the content is not covered by any of the fact IDs in the current slot set.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:076.list",
+      "reason": "The list describes AI copilot methods and endpoints not covered by the fact IDs in the current slot set; including it would introduce unsupported claims.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:077.heading",
+      "reason": "The heading label is not a capability; the renderer handles section structure, and the content is not covered by any of the fact IDs in the current slot set.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:078.list",
+      "reason": "The list describes text extraction, search, and image handling not covered by the fact IDs in the current slot set; including it would introduce unsupported claims.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "example:004",
+      "reason": "The example is unresolved and not part of the accepted facts; it is excluded per the do_not_claim directive.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:083.list",
+      "reason": "The list item for ConvertToPDFA and FlattenTransparency is already covered in limitation:4; the remaining list items do not map to the required limitation slots and are not cited by any slot.",
+      "section": "scope_limitations"
+    }
+  ],
+  "schema_version": 1,
+  "units": [
+    {
+      "fact_ids": [
+        "inherited_unit:004.paragraph",
+        "public_symbol:document.split",
+        "public_symbol:document.append",
+        "public_symbol:document.rotate",
+        "public_symbol:document.reorder",
+        "public_symbol:document.setencryption",
+        "public_symbol:document.sign",
+        "public_symbol:document.validatepdfa",
+        "public_symbol:document.converttopdfa",
+        "public_symbol:document.validatepdfua",
+        "public_symbol:taggedcontent",
+        "public_symbol:document.taggedcontent",
+        "public_symbol:tableabsorber",
+        "public_symbol:ai.chatcopilot",
+        "public_symbol:ai.llmocrengine",
+        "public_symbol:ai.imagedescriptioncopilot",
+        "public_symbol:ai.summarycopilot",
+        "public_symbol:ai.ocrcopilot",
+        "public_symbol:document.savehtml",
+        "public_symbol:document.savesvg",
+        "public_symbol:document.savemarkdown",
+        "public_symbol:document.renderimage"
+      ],
+      "section": "opening",
+      "slot": "opening",
+      "text": "Aspose.PDF FOSS for Go reads and writes PDF documents, converts them to and from Markdown, HTML, and SVG, and renders pages to images. It splits, merges, rotates, and reorders pages, encrypts documents with user and owner passwords, and signs them with digital signatures. It validates and converts documents to PDF/A and PDF/UA, creates accessible Tagged PDF, and extracts text or tables using built-in tools. It also provides AI copilots over any OpenAI-compatible endpoint for chat, OCR, image description, and summarization."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:document.append",
+        "public_symbol:document.info",
+        "public_symbol:document.reorder",
+        "public_symbol:document.rotate",
+        "public_symbol:document.setpagelabels",
+        "public_symbol:document.split",
+        "public_symbol:document.xmp"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "It splits a document into per-page documents using Document.Split, appends another document in place with Document.Append, rotates pages with Document.Rotate, reorders pages with Document.Reorder, sets page labels with Document.SetPageLabels, reads document metadata with Document.Info, and accesses XMP metadata with Document.XMP."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "public_symbol:document.setencryption",
+        "public_symbol:document.sign",
+        "public_symbol:document.verifysignatures",
+        "public_symbol:encryptionoptions"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:2",
+      "text": "It encrypts a document using Document.SetEncryption with EncryptionOptions specifying user and owner passwords, permissions, and the AES128 algorithm, signs a document with Document.Sign, and verifies signatures with Document.VerifySignatures."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "public_symbol:flow",
+        "public_symbol:flow.addlist",
+        "public_symbol:flow.addparagraph",
+        "public_symbol:flow.addtable",
+        "public_symbol:flow.render"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "It creates content using Flow layout by adding paragraphs with Flow.AddParagraph, tables with Flow.AddTable, and lists with Flow.AddList, then renders the flow to pages with Flow.Render."
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "public_symbol:gradient",
+        "public_symbol:page.drawcircle",
+        "public_symbol:page.drawpath",
+        "public_symbol:page.drawrectangle",
+        "public_symbol:table"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:4",
+      "text": "It draws vector graphics on a page using Page.DrawRectangle, Page.DrawCircle, and Page.DrawPath, supports gradients via Gradient, and adds tables to a page using Table with configurable columns, borders, margins, and cell styles."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:annotation",
+        "public_symbol:barcodefield",
+        "public_symbol:checkboxfield",
+        "public_symbol:comboboxfield",
+        "public_symbol:form",
+        "public_symbol:stampannotation",
+        "public_symbol:textboxfield"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "It creates AcroForms with Form and adds interactive fields including text boxes with TextBoxField, checkboxes with CheckboxField, combo boxes with ComboBoxField, and barcodes with BarcodeField, and adds annotations such as StampAnnotation and generic Annotation."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.converttopdfa",
+        "public_symbol:document.taggedcontent",
+        "public_symbol:document.validatepdfa",
+        "public_symbol:document.validatepdfua",
+        "public_symbol:taggedcontent"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:6",
+      "text": "It validates PDF/A compliance with Document.ValidatePDFA, validates PDF/UA accessibility with Document.ValidatePDFUA, converts documents to PDF/A using Document.ConvertToPDFA, and manages tagged content with TaggedContent and Document.TaggedContent."
+    },
+    {
+      "fact_ids": [
+        "example:006",
+        "public_symbol:document.renderimage",
+        "public_symbol:document.savedocx",
+        "public_symbol:document.savehtml",
+        "public_symbol:document.savelinearized",
+        "public_symbol:document.savemarkdown",
+        "public_symbol:document.savesvg"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:7",
+      "text": "It renders a page to an image using Document.RenderImage, saves documents in linearized format with Document.SaveLinearized, exports to HTML with Document.SaveHTML, SVG with Document.SaveSVG, Markdown with Document.SaveMarkdown, and DOCX with Document.SaveDocx."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:ai.chatcopilot",
+        "public_symbol:ai.imagedescriptioncopilot",
+        "public_symbol:ai.ocrcopilot",
+        "public_symbol:ai.summarycopilot",
+        "public_symbol:comparisonresult",
+        "public_symbol:graphicalpdfcomparer"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:8",
+      "text": "It compares PDFs graphically using GraphicalPdfComparer and returns results via ComparisonResult, and provides AI copilots including SummaryCopilot for generating and saving summaries, ChatCopilot for conversational queries, OcrCopilot for text recognition and searchable PDF creation, and ImageDescriptionCopilot for describing images and filling alt text."
+    },
+    {
+      "fact_ids": [
+        "example:001"
+      ],
+      "section": "quick_start",
+      "slot": "lead_in",
+      "text": "This example opens a PDF, splits it into per-page documents, and merges two PDFs into one using Aspose.PDF FOSS for Go."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "example:003",
+        "example:005",
+        "example:006"
+      ],
+      "section": "additional_examples",
+      "slot": "preview",
+      "text": "Create documents from scratch, encrypt them, build tables, and render pages to images."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "identity:repository",
+        "package:go_version",
+        "package:name"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:002",
+      "text": "Build a document with the Flow layout engine."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "identity:repository",
+        "package:go_version",
+        "package:name"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:003",
+      "text": "Encrypt a document with AES-128 and passwords."
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "identity:repository",
+        "package:go_version",
+        "package:name"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:005",
+      "text": "Build a table with custom borders and margins."
+    },
+    {
+      "fact_ids": [
+        "example:006",
+        "identity:repository",
+        "package:go_version",
+        "package:name"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:006",
+      "text": "Render a page to an image at 96 DPI."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:go_version",
+        "package:name",
+        "public_symbol:ai",
+        "public_symbol:document",
+        "public_symbol:open",
+        "public_symbol:openstream",
+        "public_symbol:page"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "Aspose.PDF FOSS for Go provides a Go API for working with PDF documents, centered on the Document class opened via Open, OpenStream, or OpenWithPassword and serialized via Document.WriteTo. The ai subpackage hosts AI copilots for summarization, chat, OCR, and image description, while Flow, Form, Annotation, and EncryptionOptions provide dedicated APIs for layout, forms, annotations, and security."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:ai",
+        "public_symbol:document",
+        "public_symbol:open",
+        "public_symbol:openstream",
+        "public_symbol:page"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:document",
+      "text": "The Document class is opened via Open, OpenStream, or OpenWithPassword and exposes Pages() to access live *Page views; it supports mutation in place for rotation, reorder, metadata, and passwords, with Split and Extract returning fresh independent *Document instances."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:flow",
+        "public_symbol:flow.addlist",
+        "public_symbol:flow.addparagraph",
+        "public_symbol:flow.addtable",
+        "public_symbol:flow.render"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:flow",
+      "text": "The Flow API provides a builder-style interface for creating documents from scratch, with Flow.AddParagraph, Flow.AddTable, and Flow.AddList to populate content, and Flow.Render to produce a Document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:barcodefield",
+        "public_symbol:checkboxfield",
+        "public_symbol:comboboxfield",
+        "public_symbol:form",
+        "public_symbol:textboxfield"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:form",
+      "text": "The Form API manages AcroForm fields including TextBoxField, CheckboxField, ComboBoxField, and BarcodeField, with methods to add, read, and write field values and export/import in JSON, FDF, and XFDF formats."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:annotation",
+        "public_symbol:annotationcollection",
+        "public_symbol:imagestamp",
+        "public_symbol:linkannotation",
+        "public_symbol:textstamp"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:annotation",
+      "text": "The Annotation API supports LinkAnnotation, TextStamp, and ImageStamp via AnnotationCollection, with methods to add, list, and delete annotations on a page."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.setencryption",
+        "public_symbol:encryptionoptions",
+        "public_symbol:openwithpassword",
+        "public_symbol:permissions",
+        "public_symbol:sign"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:encryptionoptions",
+      "text": "The EncryptionOptions class configures document encryption and signing via Document.SetEncryption, with Permissions controlling access bits, OpenWithPassword handling Standard and public-key security handlers, and Sign applying PKCS#7-detached signatures with PAdES, Certify, and TimestampURL options."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:ai.chatcopilot",
+        "public_symbol:ai.imagedescriptioncopilot",
+        "public_symbol:ai.ocrcopilot",
+        "public_symbol:ai.summarycopilot"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:ai.summarycopilot",
+      "text": "The ai.SummaryCopilot produces plain-text or Markdown summaries, ai.ChatCopilot supports conversation history with Ask, History, and Reset, ai.OcrCopilot recognizes text via GetTextRecognition and makes documents searchable with MakeSearchable, and ai.ImageDescriptionCopilot fills missing alt text with Describe and FillAltTexts."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "inherited_unit:014.paragraph",
+        "inherited_unit:082.heading",
+        "inherited_unit:083.list",
+        "install_command:go",
+        "package:go_version",
+        "package:name",
+        "public_symbol:document.converttopdfa",
+        "public_symbol:document.flattentransparency",
+        "public_symbol:document.renderimage",
+        "public_symbol:document.replacetext",
+        "public_symbol:document.searchtext",
+        "public_symbol:encryptionoptions.recipients",
+        "public_symbol:font"
+      ],
+      "section": "scope_limitations",
+      "slot": "scope",
+      "text": "Aspose.PDF FOSS for Go reads and writes PDF documents, supports PDF/A conversion, text search and replacement, and image rendering, using Go 1.24 or newer with no transitive dependencies."
+    },
+    {
+      "fact_ids": [
+        "install_command:go"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:1",
+      "text": "Installation requires Go 1.24 or newer and the command go get github.com/aspose-pdf-foss/aspose-pdf-foss-for-go."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:encryptionoptions.recipients"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:2",
+      "text": "EncryptionOptions.Recipients accepts RSA recipients only (PKCS#1 v1.5 key transport); elliptic curve recipients (key agreement) and the legacy RC4 sub-filters are not written."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:font"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:3",
+      "text": "Font support covers Arabic-family, Hebrew, and simple (Latin, Cyrillic, Greek) scripts; the Indic, Khmer, Myanmar, and Hangul reordering shapers and vertical text are not implemented."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.converttopdfa",
+        "public_symbol:document.flattentransparency"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:4",
+      "text": "Document.ConvertToPDFA embeds a font only when a face is available through AddFontFile or AddFontFolder, does not flatten transparency itself (call Document.FlattenTransparency before converting to PDF/A-1), and does not draw appearances for icon annotations."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.replacetext",
+        "public_symbol:document.searchtext"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:5",
+      "text": "Document.SearchText and Document.ReplaceText match within a single text line only — a query that straddles a line break is not found."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.renderimage"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:6",
+      "text": "Document.RenderImage renders whole pages and does not support mesh shadings (PDF shading types 4-7); other shading types, patterns, and blend modes render normally."
+    }
+  ]
+}
