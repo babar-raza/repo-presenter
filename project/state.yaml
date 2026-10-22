@@ -488,8 +488,15 @@ next_ready_items:
       this is a whole additional, unported subsystem, not a missing function call. The
       prompts for it (independent_review.yaml, targeted_repair.yaml) were already copied
       verbatim early this session, content only, no code. Porting and firing it for real is
-      correctly scoped as its own future task, not squeezed into this one -- it is
-      comparable in size to everything ported for S3-S8 combined, not a quick addition.
+      correctly scoped as its own future task, not squeezed into this one -- measured, not
+      guessed: the old repo's own validation/ + review/ + repair/ packages are 11,364 lines
+      total (validation/registry.py alone 2,731; review/independent/review.py alone 2,996;
+      repair/rounds.py 1,187; repair/targeted.py 1,010; several more files beyond those
+      four), larger than every module ported into this repository across the whole of this
+      session combined. A deliberate decision, not an oversight: this is multi-session-scale
+      work, and attempting a rushed partial port risks the exact "worse than no document"
+      failure mode core/ecosystems.py's own docstring already names for a different corner
+      of this same codebase.
     purpose: >
       Follow-on to WRITE_PROMPTS_FOR_AUTHORING's real first call: fire a real
       presentation_planning job against the real aspose-3d-foss/Python facts to get a real
