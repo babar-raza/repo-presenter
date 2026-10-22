@@ -451,11 +451,22 @@ next_ready_items:
       against a P1_PORTFOLIO_SCALE candidate. Define what "no-op, zero new provider calls"
       means for a README candidate and wire a real check.
   - id: ENTERPRISE_EDITION_NAMING_CHECK
-    status: READY
+    status: DONE
     purpose: >
-      3 of 36 repos had this violation and it was caught only by one independent reviewer's
-      choice to check it, not by the standard fact pipeline. Make it a standard, non-optional
-      check.
+      DONE (confirmed 2026-10-22; this card was stale -- the work had already landed earlier
+      in this session's salvage, before the context-compaction summary, and was never marked).
+      readme/correction/detectors/enterprise_edition.py is a standard registered detector
+      module (readme/correction/detectors/__init__.py's load_detectors() dynamically imports
+      every module in the package -- a registry, never a central if/elif allowlist), and
+      readme/correction/engine.py's correct() runs every detector load_detectors() returns,
+      unconditionally, for every repository. No ecosystem gating in the detector itself.
+      Confirmed firing for real, automatically, with no special invocation, during this
+      session's own real scripts/run_lane_l.py runs against both aspose-3d-foss/Python and
+      aspose-3d-foss/Java (the Java run's finding is this session's own proof: line 634's
+      "the commercial Aspose.3D for Java" naming substitution, caught on fresh real data the
+      detector had never seen, not just its own test fixtures). This is now a standard,
+      non-optional, always-on check for every candidate the pipeline processes, closing the
+      3-of-36 "caught only by one reviewer's choice" gap this card named.
   - id: FIND_CASE_B_REPOSITORY
     status: READY
     purpose: >
