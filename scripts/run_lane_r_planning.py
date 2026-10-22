@@ -28,6 +28,7 @@ from repo_presenter.core.llm.jobs import CallStore, JobContext, run_job
 from repo_presenter.core.llm.ledger import Ledger
 from repo_presenter.core.llm.prompts import load_manifests
 from repo_presenter.core.registry.loader import load_registry, require_listed
+from repo_presenter.extractors.platforms.registry import plugin_for
 from repo_presenter.readme.composition.planning import (
     plan_checks,
     planning_packet,
@@ -50,6 +51,15 @@ def main() -> None:
     repository, ecosystem, clone_path_arg = sys.argv[1], sys.argv[2], sys.argv[3]
     clone_path = Path(clone_path_arg)
     repo_dir = repository.replace("/", "__")
+    # Every ecosystem's EcosystemSpec self-registers into core.ecosystems.SPECS only when its
+    # own platforms/<ecosystem>.py module is imported (core/ may not import an extractor
+    # itself, so it cannot do this for us). The real production pipeline already triggers this
+    # via plugin_for() before any stage asks spec_for() for the same ecosystem; this script
+    # reads only pre-built facts.json and never touches the extractor layer otherwise, so it
+    # must trigger the same import itself -- real bug hit live (2026-10-22, ecosystem="go"):
+    # planning.plan_checks() -> placement.placements() -> renders_verbatim() -> spec_for("go")
+    # raised ConfigError because nothing had imported platforms/go.py yet in this process.
+    plugin_for(ecosystem)
     facts_path = Path("evidence/build/P2_REAL_ENGINE_SALVAGE") / repo_dir / "facts.json"
     out_dir = Path("scripts/_lane_r_output") / repo_dir
 

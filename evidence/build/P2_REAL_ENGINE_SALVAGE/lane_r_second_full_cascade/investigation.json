@@ -1,0 +1,231 @@
+{
+  "audience": {
+    "fact_ids": [
+      "package:go_version",
+      "install_command:go",
+      "import_path:github.com-aspose-cells-foss-aspose.cells-foss-for-go-v26-aspose-cells_foss"
+    ],
+    "text": "Go developers building applications that need to generate, read, or modify Excel spreadsheets without external native dependencies."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "example:002",
+        "example:003",
+        "public_symbol:cell.value",
+        "public_symbol:cells.get",
+        "public_symbol:cells.set"
+      ],
+      "text": "Read and write cell values using A1-style references with Cells.Get and Cells.Set, supporting string, float64, int, and bool types.",
+      "title": "Cell data read/write"
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:cell.setformula",
+        "public_symbol:calculateformula"
+      ],
+      "text": "Store formulas with Cell.SetFormula and evaluate them using the built-in CalculateFormula engine for SUM, AVERAGE, MAX, and MIN.",
+      "title": "Formula evaluation"
+    },
+    {
+      "fact_ids": [
+        "example:008",
+        "public_symbol:style",
+        "public_symbol:cell.setstyle",
+        "public_symbol:font",
+        "public_symbol:fill",
+        "public_symbol:alignment"
+      ],
+      "text": "Apply visual formatting via Style objects that support font, fill, alignment, and border settings, with automatic style deduplication on save.",
+      "title": "Styling and formatting"
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "public_symbol:datavalidation",
+        "public_symbol:worksheet.adddatavalidation"
+      ],
+      "text": "Restrict cell input with DataValidation rules for dropdown lists or numeric ranges, including custom error messages and styles.",
+      "title": "Data validation"
+    },
+    {
+      "fact_ids": [
+        "example:009",
+        "public_symbol:newtable",
+        "public_symbol:worksheet.addtable",
+        "public_symbol:table.hasheaderrow"
+      ],
+      "text": "Create Excel tables with headers and auto-filters using Worksheet.AddTable and Table objects.",
+      "title": "Structured tables"
+    },
+    {
+      "fact_ids": [
+        "example:010",
+        "format:input.csv",
+        "format:output.csv",
+        "public_symbol:workbook.importfromcsv",
+        "public_symbol:workbook.exporttocsv"
+      ],
+      "text": "Import data from CSV files using Workbook.ImportFromCSV and export to CSV using Workbook.ExportToCSV with configurable delimiters.",
+      "title": "CSV import and export"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook.setpassword",
+        "public_symbol:workbook.verifypassword"
+      ],
+      "text": "Protect workbooks with ECMA-376 Agile Encryption using Workbook.SetPassword and Workbook.VerifyPassword.",
+      "title": "Password-based encryption"
+    },
+    {
+      "fact_ids": [
+        "example:007",
+        "public_symbol:newstreamingreader",
+        "public_symbol:streamingreader.processrows"
+      ],
+      "text": "Process large Excel files with StreamingReader to handle row-by-row data without loading the entire workbook into memory.",
+      "title": "Streaming large files"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "install_command:go",
+        "install_command:go"
+      ],
+      "text": "Cell references are A1-style strings only; tuple/array indices are not supported."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:calculateformula"
+      ],
+      "text": "CalculateFormula supports only SUM, AVERAGE, MAX, and MIN; other formulas return an error."
+    },
+    {
+      "fact_ids": [
+        "example:010",
+        "public_symbol:workbook.importfromcsv"
+      ],
+      "text": "CSV import stores every field as a Go string and does not infer numeric or boolean types."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook.sourcexml",
+        "public_symbol:workbook.stylesxml"
+      ],
+      "text": "Round-trip fidelity depends on reusing original XML for unmodified content and regenerating only modified parts."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "dependency:none",
+        "package:go_version",
+        "format:input.xlsx",
+        "format:output.xlsx"
+      ],
+      "text": "Enables programmatic Excel file creation and editing in Go using only the standard library, avoiding external system dependencies."
+    },
+    {
+      "fact_ids": [
+        "example:007",
+        "public_symbol:newstreamingreader",
+        "public_symbol:streamingreader.processrows"
+      ],
+      "text": "Supports low-memory processing of large Excel files via streaming row access, reducing peak memory usage."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:calculateformula"
+      ],
+      "text": "Provides a built-in formula engine to evaluate common spreadsheet calculations like SUM and AVERAGE without external tools."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook.setpassword",
+        "public_symbol:workbook.verifypassword"
+      ],
+      "text": "Allows secure handling of Excel files with password-based encryption using ECMA-376 Agile Encryption."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:repository",
+      "format:input.xlsx",
+      "format:output.xlsx",
+      "dependency:none"
+    ],
+    "text": "Aspose.Cells FOSS for Go is a pure-Go library for creating, reading, and writing Excel workbooks (.xlsx) with no third-party dependencies."
+  },
+  "uncertainties": [
+    "The exact set of supported chart types is not explicitly listed in the fact dossier.",
+    "The behavior of streaming when encountering malformed rows or unexpected data types is not documented in the examples.",
+    "Whether pivot tables support complex aggregations beyond basic data fields is not confirmed by the available facts.",
+    "The scope of formula error reporting (e.g., specific error codes or reasons) is not detailed beyond FormulaError.",
+    "The handling of merged cells or complex cell ranges is not demonstrated in the examples.",
+    "Whether conditional formatting supports multiple rules per cell or interaction between rules is not specified.",
+    "The maximum file size or row count tested for streaming is not provided in the examples.",
+    "The exact encryption algorithm parameters (e.g., iteration count) for password protection are not listed in the facts."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "example:002",
+        "public_symbol:newworkbook",
+        "public_symbol:cells.set",
+        "public_symbol:workbook.save"
+      ],
+      "name": "Create and save a new workbook",
+      "text": "Create a new workbook with NewWorkbook, write values to cells via Cells.Set, and save to disk with Workbook.Save."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "public_symbol:loadworkbook",
+        "public_symbol:cells.get",
+        "public_symbol:cells.set",
+        "public_symbol:workbook.save"
+      ],
+      "name": "Load, edit, and save an existing workbook",
+      "text": "Load an existing workbook with LoadWorkbook, read or update cell values using Cells.Get and Cells.Set, then save the modified file."
+    },
+    {
+      "fact_ids": [
+        "example:007",
+        "public_symbol:newstreamingreader",
+        "public_symbol:streamingreader.processrows"
+      ],
+      "name": "Process large files with streaming",
+      "text": "Use StreamingReader.ProcessRows to iterate over rows in a large file without loading the entire workbook into memory."
+    },
+    {
+      "fact_ids": [
+        "example:008",
+        "public_symbol:newstyle",
+        "public_symbol:cell.setstyle"
+      ],
+      "name": "Apply styling to cells",
+      "text": "Create a Style with font, fill, alignment, and border settings, then apply it to a cell using Cell.SetStyle."
+    },
+    {
+      "fact_ids": [
+        "example:010",
+        "public_symbol:workbook.importfromcsv"
+      ],
+      "name": "Import data from CSV",
+      "text": "Import a CSV file into a new workbook using Workbook.ImportFromCSV, specifying the delimiter."
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "public_symbol:datavalidation",
+        "public_symbol:worksheet.adddatavalidation"
+      ],
+      "name": "Add data validation rules",
+      "text": "Define a DataValidation with type, formula, and error settings, then attach it to a cell range using Worksheet.AddDataValidation."
+    }
+  ]
+}

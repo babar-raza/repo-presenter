@@ -1334,3 +1334,41 @@ entries:
     invalidation_impact: every sealed candidate whose format_overclaim findings were computed
       before this fix should be treated as stale if its README has a multi-column comparison
       table of any kind -- not yet swept portfolio-wide to confirm how many are affected.
+
+  - component: "scripts/run_lane_r_{planning,authoring_real,render}.py (plugin_for fix)"
+    source: "new engineering -- a bug in this session's own new scripts, found live by
+      running the real Lane R cascade against a second repository"
+    evaluated_at_shas: []
+    behavior: >
+      Each of the three scripts now calls plugin_for(ecosystem) at the start of main(),
+      before anything that might resolve spec_for(ecosystem) deeper in the call stack
+      (planning.plan_checks -> placement.placements -> renders_verbatim -> spec_for, the
+      real path that crashed).
+    evidence: >
+      Real crash, not hypothetical: firing the full cascade against aspose-cells-foss/
+      Aspose.Cells-FOSS-for-Go (the second repository this cascade was ever tried against)
+      raised ConfigError "no ecosystem spec registered for 'go'" at S5. Traced precisely:
+      core.ecosystems.SPECS only gains an ecosystem's EcosystemSpec when that ecosystem's own
+      platforms/<ecosystem>.py module is imported (platforms/go.py already self-registers
+      correctly via SPECS.setdefault() at its own import time -- confirmed not an
+      architecture bug), and these three scripts read only pre-built facts.json, never
+      triggering that import themselves, unlike the real production pipeline
+      (scripts/run_lane_l.py), which always calls plugin_for() first. The first cascade run
+      (aspose-3d-foss/Python) never hit this because python/net are the two ecosystems
+      core.ecosystems.py builds in directly, independent of any platform module import.
+      Fixed and re-verified live: the full cascade completed for aspose-cells-foss/
+      Aspose.Cells-FOSS-for-Go after the fix, 10 of 10 provider calls accepted on the first
+      attempt. See evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_second_full_cascade/.
+    disposition: "a correction to this session's own new scripts, not a new disposition"
+    reason: >
+      Without this fix, the Lane R cascade scripts only work for the two ecosystems
+      core.ecosystems.py happens to special-case directly (python, net) -- exactly the "lanes
+      must work equally for all candidates" gap the whole mission is about, caught before it
+      could silently narrow Lane R's own reach back down to two ecosystems.
+    target_module: scripts/run_lane_r_planning.py, scripts/run_lane_r_authoring_real.py,
+      scripts/run_lane_r_render.py
+    smallest_first_integration_test: the real end-to-end re-verification above (no unit test
+      -- these are orchestration scripts, not library code with their own test suite).
+    portfolio_consumers: any future Lane R cascade run against an ecosystem other than
+      python/net.
+    invalidation_impact: none -- a pure bug fix to scripts not yet relied on by anything else.

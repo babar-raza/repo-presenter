@@ -1,0 +1,396 @@
+{
+  "additional_example_ids": [
+    "example:004",
+    "example:005",
+    "example:007",
+    "example:008",
+    "example:009",
+    "example:010"
+  ],
+  "api_hubs": [
+    {
+      "fact_ids": [
+        "public_symbol:workbook",
+        "public_symbol:workbook.save",
+        "public_symbol:workbook.importfromcsv",
+        "public_symbol:workbook.exporttocsv",
+        "public_symbol:workbook.setpassword",
+        "public_symbol:workbook.verifypassword"
+      ],
+      "symbol_fact_id": "public_symbol:workbook"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheet",
+        "public_symbol:worksheet.cells",
+        "public_symbol:worksheet.addtable",
+        "public_symbol:worksheet.adddatavalidation",
+        "public_symbol:worksheet.addpicture"
+      ],
+      "symbol_fact_id": "public_symbol:worksheet"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cells",
+        "public_symbol:cells.get",
+        "public_symbol:cells.set",
+        "public_symbol:cells.remove"
+      ],
+      "symbol_fact_id": "public_symbol:cells"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cell",
+        "public_symbol:cell.value",
+        "public_symbol:cell.setformula",
+        "public_symbol:cell.getformula",
+        "public_symbol:cell.setstyle"
+      ],
+      "symbol_fact_id": "public_symbol:cell"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:style",
+        "public_symbol:style.font",
+        "public_symbol:style.fill",
+        "public_symbol:style.alignment",
+        "public_symbol:style.border"
+      ],
+      "symbol_fact_id": "public_symbol:style"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:datavalidation",
+        "public_symbol:datavalidation.type",
+        "public_symbol:datavalidation.formula1",
+        "public_symbol:datavalidation.ref"
+      ],
+      "symbol_fact_id": "public_symbol:datavalidation"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:table",
+        "public_symbol:table.hasheaderrow",
+        "public_symbol:table.stylename",
+        "public_symbol:table.range"
+      ],
+      "symbol_fact_id": "public_symbol:table"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:streamingreader",
+        "public_symbol:streamingreader.processrows",
+        "public_symbol:newstreamingreader"
+      ],
+      "symbol_fact_id": "public_symbol:streamingreader"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:calculateformula",
+        "public_symbol:formulaerror"
+      ],
+      "symbol_fact_id": "public_symbol:calculateformula"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:font",
+        "public_symbol:font.bold",
+        "public_symbol:font.color",
+        "public_symbol:font.size"
+      ],
+      "symbol_fact_id": "public_symbol:font"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fill",
+        "public_symbol:fill.type",
+        "public_symbol:fill.color"
+      ],
+      "symbol_fact_id": "public_symbol:fill"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:border",
+        "public_symbol:border.top",
+        "public_symbol:border.bottom",
+        "public_symbol:border.left",
+        "public_symbol:border.right"
+      ],
+      "symbol_fact_id": "public_symbol:border"
+    }
+  ],
+  "at_a_glance": {
+    "capability_titles": [
+      "Cell data read/write",
+      "Formula evaluation",
+      "Styling and formatting",
+      "Data validation",
+      "Structured tables",
+      "CSV import and export",
+      "Streaming large files",
+      "Password-based encryption"
+    ],
+    "input_format_ids": [
+      "format:input.csv",
+      "format:input.xlsx"
+    ],
+    "output_format_ids": [
+      "format:output.csv",
+      "format:output.xlsx"
+    ]
+  },
+  "core_capabilities": [
+    {
+      "fact_ids": [
+        "example:002",
+        "example:003",
+        "public_symbol:cell.value",
+        "public_symbol:cells.get",
+        "public_symbol:cells.set"
+      ],
+      "shared_fact_ids": [],
+      "title": "Cell data read/write"
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:cell.setformula",
+        "public_symbol:calculateformula"
+      ],
+      "shared_fact_ids": [],
+      "title": "Formula evaluation"
+    },
+    {
+      "fact_ids": [
+        "example:008",
+        "public_symbol:style",
+        "public_symbol:cell.setstyle",
+        "public_symbol:font",
+        "public_symbol:fill",
+        "public_symbol:alignment"
+      ],
+      "shared_fact_ids": [],
+      "title": "Styling and formatting"
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "public_symbol:datavalidation",
+        "public_symbol:worksheet.adddatavalidation"
+      ],
+      "shared_fact_ids": [],
+      "title": "Data validation"
+    },
+    {
+      "fact_ids": [
+        "example:009",
+        "public_symbol:newtable",
+        "public_symbol:worksheet.addtable",
+        "public_symbol:table.hasheaderrow"
+      ],
+      "shared_fact_ids": [],
+      "title": "Structured tables"
+    },
+    {
+      "fact_ids": [
+        "example:010",
+        "format:input.csv",
+        "format:output.csv",
+        "public_symbol:workbook.importfromcsv",
+        "public_symbol:workbook.exporttocsv"
+      ],
+      "shared_fact_ids": [],
+      "title": "CSV import and export"
+    },
+    {
+      "fact_ids": [
+        "example:007",
+        "public_symbol:newstreamingreader",
+        "public_symbol:streamingreader.processrows"
+      ],
+      "shared_fact_ids": [],
+      "title": "Streaming large files"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook.setpassword",
+        "public_symbol:workbook.verifypassword"
+      ],
+      "shared_fact_ids": [],
+      "title": "Password-based encryption"
+    }
+  ],
+  "deviations": [
+    {
+      "fact_ids": [
+        "inherited_unit:008.code_block"
+      ],
+      "section_id": "at_a_glance",
+      "text": "The Mermaid diagram from the inherited README is omitted because no diagram fact exists; the section is retained as a table-free capability summary."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:034.heading",
+        "inherited_unit:035.code_block"
+      ],
+      "section_id": "additional_examples",
+      "text": "The Picture Embedding example is omitted because it is marked CONTRADICTED and not citable."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:040.heading",
+        "inherited_unit:042.heading"
+      ],
+      "section_id": "additional_examples",
+      "text": "The Structured Tables and CSV Import headings are omitted because they are not listed in the inherited facts; their code blocks are superseded by verified examples."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:050.html_block",
+        "inherited_unit:053.html_block"
+      ],
+      "section_id": "api_reference",
+      "text": "The HTML details wrapper around the API table is omitted because no supporting fact exists."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:058.paragraph"
+      ],
+      "section_id": "scope_limitations",
+      "text": "The Enterprise Edition paragraph is omitted because it is unsupported by facts."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:072.heading",
+        "inherited_unit:073.list"
+      ],
+      "section_id": "scope_limitations",
+      "text": "The duplicate Constraints section heading and list are omitted; limitations are consolidated under Scope and Limitations."
+    }
+  ],
+  "flagship_example_id": "example:004",
+  "links": [],
+  "material_limitations": [
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:calculateformula"
+      ],
+      "unit_ids": [
+        "inherited_unit:057.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "example:010",
+        "public_symbol:workbook.importfromcsv"
+      ],
+      "unit_ids": [
+        "inherited_unit:057.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook.sourcexml",
+        "public_symbol:workbook.stylesxml"
+      ],
+      "unit_ids": [
+        "inherited_unit:057.list"
+      ]
+    }
+  ],
+  "quick_start_example_id": "example:002",
+  "second_quick_start_example_id": "example:003",
+  "sections": [
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "identity"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "badges"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "banner"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "opening"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "navigation"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "at_a_glance"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "key_capabilities"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "installation"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "dependencies"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "quick_start"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "additional_examples"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "api_reference"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "documentation_resources"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "scope_limitations"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "development_testing"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "third_party_notices"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "license"
+    }
+  ]
+}

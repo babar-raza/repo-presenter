@@ -26,6 +26,7 @@ from repo_presenter.core.llm.jobs import CallStore, JobContext, run_job
 from repo_presenter.core.llm.ledger import Ledger
 from repo_presenter.core.llm.prompts import load_manifests
 from repo_presenter.core.registry.loader import load_registry, require_listed
+from repo_presenter.extractors.platforms.registry import plugin_for
 from repo_presenter.readme.composition.authoring import (
     authoring_schema,
     authoring_tasks,
@@ -49,6 +50,7 @@ def main() -> None:
     repository, ecosystem, clone_path_arg = sys.argv[1], sys.argv[2], sys.argv[3]
     clone_path = Path(clone_path_arg)
     repo_dir = repository.replace("/", "__")
+    plugin_for(ecosystem)  # see run_lane_r_planning.py's own comment on this exact real bug
     facts_path = Path("evidence/build/P2_REAL_ENGINE_SALVAGE") / repo_dir / "facts.json"
     out_dir = Path("scripts/_lane_r_output") / repo_dir
 

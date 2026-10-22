@@ -415,8 +415,28 @@ next_ready_items:
       pass. Evidence: evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_first_full_cascade/.
       New scripts, one per stage: scripts/run_lane_r_{investigation,reconciliation,planning,
       authoring_real,render}.py.
+    second_cascade_2026_10_22: >
+      DONE: fired the identical full cascade against a second repository, deliberately a
+      different ecosystem and family (aspose-cells-foss/Aspose.Cells-FOSS-for-Go, not
+      aspose-3d-foss/Python), to test whether the machinery generalizes. A real bug surfaced
+      and was fixed before trusting the run: scripts/run_lane_r_{planning,authoring_real,
+      render}.py read only pre-built facts.json and never trigger platforms/<ecosystem>.py's
+      own self-registration of its EcosystemSpec into core.ecosystems.SPECS (by design,
+      core/ may not import an extractor itself; the real production pipeline triggers this
+      via plugin_for() before any such need, these new scripts did not) -- S5 crashed with
+      "no ecosystem spec registered for 'go'" on the first attempt. Confirmed this is a bug
+      in these new scripts, not core architecture (platforms/go.py already self-registers
+      correctly); fixed by calling plugin_for(ecosystem) at the start of all three scripts'
+      main(). Real result after the fix: 10 of 10 provider calls (1 S3, 2 S4 batches/75
+      units, 1 S5 with the real plan_checks, 6 S6 tasks with the real unit_checks) accepted
+      on the FIRST attempt -- the same clean result as the first cascade. The Mermaid
+      diagram rendered correctly (confirming the glance.py bracket fix generalizes). The
+      SAME duplicate-opening-paragraph defect repeated exactly, on an unrelated repository's
+      own facts and dispositions -- confirming it is a systemic gap in the ported subset,
+      not a fluke tied to the first repository. 1040/1040 whole-repo tests pass. Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_second_full_cascade/.
     remaining: >
-      Verified against one repository only; not yet run at portfolio scale.
+      Still only 2 of 36 repositories, not yet run at portfolio scale.
       placement_errors IS now ported (2026-10-22, with references.py and the rest of the
       refusal/repair half -- dangling_pointers, uncited_omit_candidates, unprinted_commands,
       coordinate_neighbor_promises, reconcile_checks). But it does NOT, on its own, fix the
