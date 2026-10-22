@@ -1,0 +1,176 @@
+"""The bounded fact dossier the repository_investigation job receives, and its artifact.
+
+Bounding is deterministic and recorded in code, not in the prompt: only SUPPORTED facts of the
+kinds the manifest admits enter, public symbols bounded as core/facts.py documents; inherited
+units enter as headings, paragraphs, and lists only, capped in document order. Nothing here
+reads prose or decides what the product is.
+
+Ported (REUSE, verbatim except import paths) from the old repository-presenter project's
+``components/readme/investigation/dossier.py`` per migration/reuse-manifest.yaml.
+"""
+
+from __future__ import annotations
+
+import copy
+import hashlib
+import json
+from pathlib import Path
+from typing import Any
+
+from repo_presenter.core.facts import FactsDocument, bounded_records
+from repo_presenter.core.llm.prompts import LoadedManifest, PromptManifest
+from repo_presenter.core.registry.models import RegistryEntry
+
+INVESTIGATION_FILENAME = "investigation.json"
+# The same shape as core/facts.py's SYMBOL_CAP (G4-W17 arrival item 27), found while checking
+# whether it was also silently truncating: capped in document order, so a long original README's
+# later headings, paragraphs and lists never reach investigation at all. Measured 2026-09-06:
+# aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript carries 272 of these three types, and
+# aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp already exceeded the old 80 at 83 - the smallest
+# overflow measured this session, not the largest. Raised with headroom over the observed
+# maximum, the same threshold rule (section 27.10 follow-up 3) item 27 already applied.
+UNIT_CAP = 400
+_UNIT_TYPES = ("heading", "paragraph", "list")
+
+
+def investigation_packet(
+    entry: RegistryEntry, facts: FactsDocument, manifest: PromptManifest
+) -> dict[str, Any]:
+    """The packet for one repository: dossier and inherited units bounded as documented."""
+    units: list[dict[str, str]] = []
+    for fact in facts.by_kind("inherited_unit"):
+        unit_type = fact.id.rsplit(".", 1)[-1]
+        if unit_type not in _UNIT_TYPES or len(units) >= UNIT_CAP:
+            continue
+        units.append({"id": fact.id, "type": unit_type, "text": fact.value})
+    return {
+        "repository": entry.repository,
+        "ecosystem": entry.ecosystem,
+        "fact_dossier": bounded_records(facts, manifest.packet.fact_kinds),
+        "inherited_units": units,
+    }
+
+
+# Per-call caps on how many fact IDs one investigation array may carry. The schema bound was the
+# dossier's own size (hundreds to thousands), and the constrained decoder cannot enforce
+# uniqueness (the gateway answers HTTP 400 to uniqueItems, probed live 2026-10-05), so a live S3
+# draw on aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript repeated example:005 about 171 times and
+# example:006 about 169 times inside `workflows` until the 3000-token budget cut the reply
+# (d929af221130.rejected-1.json). Each cap is the observed maximum across the 38 sealed
+# investigation.json files, so no sealed output is over one. The caps apply to this per-call
+# schema only: run_job re-judges a stored output under the manifest's static schema and never
+# call_schema (core/llm/jobs.py), so sealed replay is unchanged.
+_STATEMENT_FACT_ID_CAP = (
+    14  # product_summary, audience, problems_solved, limitations ($defs.statement)
+)
+_WORKFLOW_FACT_ID_CAP = 14
+_CAPABILITY_FACT_ID_CAP = 11
+
+
+def investigation_schema(loaded: LoadedManifest, facts: FactsDocument) -> dict[str, Any]:
+    """The investigation schema specialised for this repository: every ``fact_ids`` array a
+    statement, workflow, or capability writes is pinned to an enum of the packet's own
+    ``fact_dossier`` - the same IDs ``investigation_packet`` shows, computed the same way.
+
+    G4-W17 arrival item 105 (E22): ``repository_investigation`` (S3) was the one fact-citing job
+    with no ``call_schema`` at all, unlike ``source_reconciliation``/``presentation_planning``/
+    ``section_authoring``, which all pin their ``fact_ids`` arrays via ``_pin_fact_id_arrays`` -
+    so a hallucinated fact ID cost a live provider call before ``core/llm/binding.py``'s post-hoc
+    ``binding_errors`` ever caught it, spending the job's one re-ask budget before anything
+    narrower could help. Measured on Words-Python: two live calls against a byte-identical
+    request (temperature 0, seed 1) produced two different hallucinations, both real evidenced
+    claims cited under the wrong exact ID.
+
+    S3 is the first fact-citing job: there is no investigation or dispositions output yet to
+    build a narrower ``citable_fact_ids``-style set from (``planning_schema``'s own set widens
+    with exactly those two), so the enum here is the packet's own ``fact_dossier`` -
+    ``bounded_records`` bounded the same way ``investigation_packet`` already bounds it, nothing
+    wider.
+
+    ``product_summary``, ``audience``, every ``problems_solved`` item, and every ``limitations``
+    item all share the one ``$defs.statement`` schema via ``$ref``, so pinning it once pins all
+    four; ``workflows`` and ``capabilities`` each carry their own inline ``fact_ids`` field and
+    are pinned directly, the same shape ``_pin_fact_id_arrays`` already uses for a top-level
+    array of objects.
+    """
+    schema = copy.deepcopy(loaded.manifest.output.schema_)
+    dossier_ids = sorted(
+        record["id"] for record in bounded_records(facts, loaded.manifest.packet.fact_kinds)
+    )
+    defs = schema.setdefault("$defs", {})
+    if dossier_ids:
+        defs["citable_fact_id"] = {"type": "string", "enum": dossier_ids}
+
+    def _pin(field_properties: dict[str, Any], cap: int) -> None:
+        if "fact_ids" not in field_properties:
+            return
+        if dossier_ids:
+            field_properties["fact_ids"]["items"] = {"$ref": "#/$defs/citable_fact_id"}
+            field_properties["fact_ids"]["maxItems"] = min(len(dossier_ids), cap)
+        else:
+            field_properties["fact_ids"] = {"type": "array", "maxItems": 0}
+
+    _pin(defs.get("statement", {}).get("properties", {}), _STATEMENT_FACT_ID_CAP)
+    properties = schema["properties"]
+    _pin(
+        properties.get("workflows", {}).get("items", {}).get("properties", {}),
+        _WORKFLOW_FACT_ID_CAP,
+    )
+    _pin(
+        properties.get("capabilities", {}).get("items", {}).get("properties", {}),
+        _CAPABILITY_FACT_ID_CAP,
+    )
+    return schema
+
+
+# S3 output budget. The manifest's max_output_tokens is a ceiling derived from the schema, not a
+# measured average: output_chars_bound() is the longest reply the per-call schema admits, and a
+# test holds it, at this rate, inside the budget. 4.0 sits under every rate measured on
+# identifier-dense JSON (4.36 on Aspose.Font-FOSS-for-Python's truncated reply, 4.2 on the S4
+# reply, 4.6 on the largest sealed investigation). Without the string and list bounds the schema
+# admitted an infinite reply and the 3000-token budget cut Font-Python's (2026-10-10).
+OUTPUT_CHARS_PER_TOKEN = 4.0
+
+
+class _UnboundedError(Exception):
+    """A field the schema leaves open: the longest reply is infinite."""
+
+
+def _longest_value(node: dict[str, Any], defs: dict[str, Any]) -> Any:
+    """The value that serializes longest under ``node``; ``_UnboundedError`` if none does."""
+    if "$ref" in node:
+        return _longest_value(defs[node["$ref"].rsplit("/", 1)[-1]], defs)
+    if "enum" in node:
+        return max(node["enum"], key=lambda value: len(json.dumps(value, ensure_ascii=False)))
+    kind = node.get("type")
+    if kind == "string":
+        if "maxLength" not in node:
+            raise _UnboundedError
+        return "x" * int(node["maxLength"])
+    if kind == "array":
+        if "maxItems" not in node:
+            raise _UnboundedError
+        return [_longest_value(node.get("items", {}), defs)] * int(node["maxItems"])
+    if kind == "object":
+        return {key: _longest_value(value, defs) for key, value in node["properties"].items()}
+    raise _UnboundedError
+
+
+def output_chars_bound(schema: dict[str, Any]) -> int | None:
+    """The longest reply, in characters, that ``schema`` admits (pretty-printed, the wider of the
+    forms a model writes); ``None`` when a string or list it leaves open makes the bound infinite.
+    Computed from the schema the job is decoded under, so it tracks that schema; it is a bound only
+    to the extent the decoder enforces it."""
+    try:
+        reply = _longest_value(schema, schema.get("$defs", {}))
+    except _UnboundedError:
+        return None
+    return len(json.dumps(reply, indent=2, ensure_ascii=False))
+
+
+def write_investigation(output: dict[str, Any], path: Path) -> str:
+    """Write the accepted output as deterministic JSON; returns its SHA-256."""
+    data = (json.dumps(output, indent=2, sort_keys=True, ensure_ascii=False) + "\n").encode("utf-8")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(data)
+    return hashlib.sha256(data).hexdigest()

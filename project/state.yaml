@@ -398,9 +398,27 @@ next_ready_items:
       ``readme/reconciliation/dispositions.py::uncited_omit_candidates``, which the Lane R
       porting pass earlier this session did not carry over (dispositions.py is PARTIAL, see its
       own migration/reuse-manifest.yaml entry) -- a second, separate small port, not yet done,
-      needed only for that one test, not for inherited.py's own correctness. S3 can now be fired
-      for real with a genuine inherited_units packet field; S4's own needs have not yet been
-      re-examined with this gap closed.
+      needed only for that one test, not for inherited.py's own correctness.
+    s3_fired_for_real_2026_10_22: >
+      DONE: ported readme/investigation/dossier.py (REUSE, verbatim except import paths) --
+      the bounded packet builder and, critically, investigation_schema(), which pins every
+      fact_ids array in the per-call schema to an enum of the packet's own dossier IDs, so a
+      hallucinated fact ID is refused by the decoder itself rather than costing a live
+      provider call. 13 new tests (2 old tests ported in full except one that globs a
+      30+-sealed-candidate corpus this repository has no copy of -- stated, not hidden). Then
+      fired the REAL S3 call end-to-end (scripts/run_lane_r_investigation.py, new) against the
+      real aspose-3d-foss/Python facts + 77 real inherited units built from the live README:
+      1 provider call, accepted on the FIRST attempt, no rejection/re-ask needed -- a stronger
+      proof than the earlier section_authoring stand-in call, which did need one. Every
+      fact_ids array cites only real, dossier-present IDs, spot-checked directly against
+      facts.json. 991/991 whole-repo tests pass. Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_first_s3_investigation/.
+      S3 can now be fired for real with a genuine inherited_units packet field. S4
+      (source_reconciliation), S5 (presentation_planning), and a real SectionTask-driven S6
+      with full unit_checks are NOT fired -- the cascade is one stage deep, not six. S3's own
+      output has no semantic-correctness check (S4/S5/S6's job): one limitation's citation in
+      the real output is a real ID paired weakly with its claim -- the "citation exists vs.
+      citation supports" gap the mission names, visible and stated in the evidence, not hidden.
   - id: WIRE_GATEVERIFY_TO_PORTFOLIO
     status: READY
     purpose: >
