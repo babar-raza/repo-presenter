@@ -224,12 +224,43 @@ next_ready_items:
       extending format_overclaim.py to parse prose/Mermaid claims, not just markdown tables
       (also needed for the same .NET case; it is currently table-only by design).
   - id: WRITE_PROMPTS_FOR_AUTHORING
-    status: READY
+    status: DONE
     purpose: >
-      authoring.py's run_job mechanism is ported and pluggable but has no real
-      prompts/*.yaml manifest content to call the (confirmed-present) GPT_OSS gateway with.
-      Write the governed prompt content Lane R needs for at least one section to prove a
-      real, live-fired composition call end to end.
+      DONE 2026-10-22: ported the real prompts/*.yaml (6 governed manifests, pure content,
+      no code -- copied verbatim from the old repo, not authored by this session) and fired
+      the first real, live section_authoring call through the confirmed-live GPT_OSS gateway
+      (model qwen3-next, confirmed in the gateway's own catalog). scripts/run_lane_r_authoring.py.
+    major_finding: >
+      Attempt 1 (real provider call): the model hallucinated 4 format claims (OBJ/STL/U3D/A3DW)
+      not present in any cited fact's value, despite citing the correct fact_ids -- exactly the
+      "entailment vs citation existence" gap mission section 7 step 5 warns about. A deliberately
+      simple stand-in check (scripts/run_lane_r_authoring.py::simple_citation_check -- NOT the
+      real readme/composition/authoring.py::unit_checks, which needs a full SectionTask not yet
+      built) caught it and triggered run_job's real rejection/re-ask cycle (the manifest's own
+      rejection_template, not written by this session). Attempt 2 (second real provider call):
+      the model self-corrected to "reads and writes 3D files" -- says less, but only what the 2
+      accepted facts actually support. 2 total provider calls, model_served=qwen3-next. Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_first_live_call/. This is the strongest single
+      proof in this session that deterministic validation is load-bearing, not optional
+      scaffolding -- removing the checks callback would have silently shipped the hallucination.
+    honestly_not_done: >
+      presentation_planning (the job that would normally produce the packet this script hand-
+      built) is not wired. placement.py/renderer.py were not run on this output -- this proves
+      the authoring call fires correctly, not a fully rendered Lane R README. The real
+      unit_checks (fuller validation: title restatement, cross-slot leakage, edition-name
+      substitution, more) needs a real SectionTask built from a real plan -- not yet done.
+  - id: WIRE_PRESENTATION_PLANNING_AND_REAL_UNIT_CHECKS
+    status: READY
+    priority: high
+    purpose: >
+      Follow-on to WRITE_PROMPTS_FOR_AUTHORING's real first call: fire a real
+      presentation_planning job against the real aspose-3d-foss/Python facts to get a real
+      plan (not hand-built), build the real SectionTask authoring_tasks() needs from it, and
+      run the REAL readme/composition/authoring.py::unit_checks as run_job's checks callback
+      instead of the deliberately-simplified stand-in. Then run placement.py + renderer.py on
+      the accepted units to get one real, fully rendered Lane R section of an actual README --
+      the next concrete milestone toward "Lane R produces a real document; not just a section
+      or a seal" (mission section 12, P1).
   - id: WIRE_GATEVERIFY_TO_PORTFOLIO
     status: READY
     purpose: >

@@ -802,3 +802,44 @@ entries:
       stage must independently verify (via an executed example, or a future dedicated runtime
       probe) before promoting a registration-only signal to a SUPPORTED format or capability
       fact.
+
+  - component: "prompts/*.yaml (6 governed job manifests: repository_investigation,
+      source_reconciliation, presentation_planning, section_authoring, independent_review,
+      targeted_repair)"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    behavior: >
+      Pure content (system/user prompt text, packet field declarations, output JSON-schema
+      contracts, sampling parameters, rejection template) -- no code. Each manifest's
+      model_route names a specific model (all 6 currently route to "qwen3-next") on the
+      owner-provided GPT_OSS gateway.
+    evidence: >
+      Copied verbatim 2026-10-22 (1184 lines total across 6 files, no adaptation needed --
+      pure YAML content, no import paths). Loaded successfully through the already-ported
+      core/llm/prompts.py::load_manifests(); all 6 routes independently validated against the
+      REAL, live gateway's own model catalog (validate_routes(), confirmed "qwen3-next" is
+      listed). Fired a real section_authoring call for real -- see
+      evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_first_live_call/.
+    disposition: REUSE
+    reason: >
+      These are the real, governed prompt engineering artifacts the old project iterated on
+      (section_authoring is at "version 20" per its own header) -- re-deriving equivalent
+      prompt content from scratch would discard real, tested work for no benefit per mission
+      section 3's own salvage discipline (reuse proven assets, independently re-verify their
+      actual output rather than trusting old acceptance history). The FIRST real call fired
+      through this exact content hallucinated a claim (see lane_r_first_live_call evidence) --
+      confirming independent re-verification is still required per candidate output, exactly
+      as mission section 2 demands ("do not assert... just because it was sealed, green, or
+      accepted"); the prompt content itself is not thereby disqualified, since the hallucination
+      was caught and corrected by the validation layer exactly as designed.
+    target_module: prompts/ (this repository's root, matching the old repo's own layout)
+    smallest_first_integration_test: >
+      scripts/run_lane_r_authoring.py -- a real, live-fired section_authoring call, with
+      a (deliberately simplified) entailment check demonstrating the reject/re-ask cycle.
+    portfolio_consumers: Lane R, every candidate, once presentation_planning and the full
+      authoring_tasks()/unit_checks pipeline are wired (not yet done).
+    invalidation_impact: >
+      A change to any manifest's schema/system/user_template changes its sha256, which
+      changes every future request_sha256 built from it -- per mission section 8, this
+      correctly reopens only the jobs that actually consumed the changed manifest, never a
+      global reseal. Not yet exercised against a second manifest version to prove this live.
