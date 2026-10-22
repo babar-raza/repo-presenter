@@ -1,0 +1,276 @@
+{
+  "audience": {
+    "fact_ids": [
+      "example:003",
+      "example:004",
+      "example:011",
+      "example:012",
+      "example:015",
+      "example:016",
+      "example:018",
+      "example:022",
+      "example:023",
+      "example:027",
+      "example:028",
+      "example:031",
+      "example:032",
+      "example:034"
+    ],
+    "text": "Python developers building applications that process PDF documents, including batch workflows, document validation, text extraction, and conversion to other formats."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "example:003",
+        "example:004",
+        "example:016",
+        "example:031",
+        "public_symbol:aspose_pdf.document.pages",
+        "public_symbol:aspose_pdf.page.add_text",
+        "public_symbol:aspose_pdf.page.draw_path",
+        "public_symbol:aspose_pdf.page.add_image",
+        "public_symbol:aspose_pdf.page.add_table",
+        "public_symbol:aspose_pdf.page.add_stamp"
+      ],
+      "text": "Create pages of arbitrary size, draw paths with full stroke state, add text with Unicode and font substitution, and place stamps, images, tables, and lists.",
+      "title": "Create and edit PDF content"
+    },
+    {
+      "fact_ids": [
+        "example:011",
+        "example:012",
+        "example:015",
+        "example:022",
+        "example:023",
+        "example:028",
+        "example:034",
+        "public_symbol:aspose_pdf.document.extract_text",
+        "public_symbol:aspose_pdf.document.extract_words",
+        "public_symbol:aspose_pdf.document.extract_tables",
+        "public_symbol:aspose_pdf.document.save_as_html"
+      ],
+      "text": "Extract text, words, tables, and annotations; convert to HTML, Markdown, SVG, TIFF, PNG, or WebP; export attachments and images as ZIP.",
+      "title": "Extract and convert content"
+    },
+    {
+      "fact_ids": [
+        "example:027",
+        "example:036",
+        "example:037",
+        "example:038",
+        "example:040",
+        "example:042",
+        "public_symbol:aspose_pdf.document.validate_links",
+        "public_symbol:aspose_pdf.document.validate_pdfa",
+        "public_symbol:aspose_pdf.document.sanitize"
+      ],
+      "text": "Validate internal links, bookmarks, form fields, and conformance to PDF/A, PDF/UA, PDF/X; sanitize metadata, scripts, attachments, and hidden layers.",
+      "title": "Validate and sanitize documents"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_pdf.document.encrypt",
+        "public_symbol:aspose_pdf.document.sign",
+        "public_symbol:aspose_pdf.document.decrypt",
+        "public_symbol:aspose_pdf.pdfsignature.validate"
+      ],
+      "text": "Apply password or certificate-based encryption, sign with PAdES-LTA, generate visible signature appearances, and manage permissions.",
+      "title": "Secure and sign documents"
+    },
+    {
+      "fact_ids": [
+        "example:016",
+        "example:018",
+        "public_symbol:aspose_pdf.document.font_substitution",
+        "public_symbol:aspose_pdf.document.embed_fonts",
+        "public_symbol:aspose_pdf.document.render_page"
+      ],
+      "text": "Substitute fonts for non-embedded ones, embed fonts for PDF/A compliance, and render pages with full glyph outlines, shadings, and blend modes.",
+      "title": "Manage fonts and rendering"
+    },
+    {
+      "fact_ids": [
+        "example:028",
+        "public_symbol:aspose_pdf.annotationcollection.add_highlight",
+        "public_symbol:aspose_pdf.annotationcollection.export_json",
+        "public_symbol:aspose_pdf.form.add_text_field",
+        "public_symbol:aspose_pdf.form.validate"
+      ],
+      "text": "Add, read, edit, and export annotations of many subtypes; create, fill, flatten, and validate AcroForm fields.",
+      "title": "Work with annotations and forms"
+    },
+    {
+      "fact_ids": [
+        "example:040",
+        "public_symbol:aspose_pdf.document.compare_visual",
+        "public_symbol:aspose_pdf.document.optimize"
+      ],
+      "text": "Compare page views or extracted text between versions; optimize resources, deduplicate images, and subset fonts.",
+      "title": "Compare and optimize documents"
+    },
+    {
+      "fact_ids": [
+        "example:042",
+        "public_symbol:aspose_pdf.pdfloadlimits",
+        "public_symbol:aspose_pdf.pdfresourcelimitexception"
+      ],
+      "text": "Bound input size, object counts, decoded-stream bytes, and image pixels when loading untrusted PDFs to prevent hangs or crashes.",
+      "title": "Apply resource limits for untrusted input"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose_pdf.document.render_page",
+        "public_symbol:aspose_pdf.page.render"
+      ],
+      "text": "Page rendering is a best-effort rasterizer, not a certification-grade visual engine: overprint support is a composite RGB preview and complete PDF 2.0 imaging semantics are not implemented."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_pdf.document.validate_pdfa",
+        "public_symbol:aspose_pdf.document.validate_pdfua"
+      ],
+      "text": "PDF/A and PDF/UA validation are heuristic checks against document structure, not certification-grade validation; use a dedicated validator such as veraPDF for formal compliance."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_pdf.document.replace_text",
+        "public_symbol:aspose_pdf.document.redact_text"
+      ],
+      "text": "OCR and layout reflow are not implemented; text replacement and redaction rewrite matched runs in place but never reflow the surrounding layout."
+    },
+    {
+      "fact_ids": [
+        "example:015",
+        "public_symbol:aspose_pdf.page.save_as_svg"
+      ],
+      "text": "SVG export writes polylines rather than curves and text as glyph outlines, which renders exactly but is not selectable; blend modes and transparency groups are not expressed."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_pdf.document.encrypt_for_recipients"
+      ],
+      "text": "Public-key encryption covers RSA recipients only; key-agreement, password, and KEK recipient types, and RC2-encrypted envelopes, are rejected explicitly."
+    },
+    {
+      "fact_ids": [
+        "dependency:optional.woff2.brotli-1.2",
+        "dependency:optional.text-layout.uharfbuzz-0.37"
+      ],
+      "text": "WOFF2 decoding and complex-text shaping each need an optional extra; without them these paths fall back to file-name metadata or fail explicitly."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "example:012",
+        "example:022",
+        "example:023",
+        "example:034"
+      ],
+      "text": "Extract text, words, tables, and annotations from PDFs for reporting, indexing, or data processing."
+    },
+    {
+      "fact_ids": [
+        "example:011",
+        "example:015",
+        "example:031"
+      ],
+      "text": "Convert PDFs to HTML, Markdown, SVG, TIFF, PNG, or WebP for web publishing, review, or archival."
+    },
+    {
+      "fact_ids": [
+        "example:027",
+        "example:036",
+        "example:037",
+        "example:038",
+        "example:040",
+        "example:042"
+      ],
+      "text": "Validate PDF structure, internal links, form fields, and conformance to PDF/A, PDF/UA, or PDF/X standards."
+    },
+    {
+      "fact_ids": [
+        "example:016",
+        "public_symbol:aspose_pdf.document.encrypt",
+        "public_symbol:aspose_pdf.document.sign"
+      ],
+      "text": "Secure documents with password or certificate-based encryption, digital signatures, and sanitization."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:repository",
+      "package:license",
+      "package:name",
+      "package:python_requires"
+    ],
+    "text": "Aspose.PDF FOSS for Python is an open-source, MIT-licensed Python library for creating, reading, editing, rendering, and validating PDF documents, targeting Python 3.11+."
+  },
+  "uncertainties": [
+    "The exact set of supported annotation subtypes for import via import_annotations_json is not explicitly listed in the facts.",
+    "Whether the bundled JPEG 2000 decoder supports all ISO 15444-1 parts beyond packed packet headers and progression order changes is not detailed.",
+    "The behavior of Document.compare_text when one document has a text layer and the other does not is not specified.",
+    "Whether font substitution affects text extraction or editing (not just rendering) is not clarified beyond rendering-only statements.",
+    "The exact set of resources excluded from export_images_zip (e.g., inline images, annotation appearances) is stated, but inclusion of nested Form resources is ambiguous.",
+    "Whether Document.validate_links checks for cycles in action chains is not explicitly confirmed.",
+    "The exact set of fields and limits covered by PdfLoadLimits beyond max_input_bytes, max_decoded_stream_bytes, and max_image_pixels is not fully enumerated.",
+    "Whether the low-code plugins support streaming inputs/outputs beyond FileDataSource and ByteArrayDataSource is not detailed."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "example:003",
+        "example:018"
+      ],
+      "name": "Load and inspect a PDF",
+      "text": "Open a PDF with Document, inspect page count, version, info, fonts, and embedded files."
+    },
+    {
+      "fact_ids": [
+        "example:011",
+        "example:012",
+        "example:023",
+        "example:028"
+      ],
+      "name": "Extract and export content",
+      "text": "Extract tables as CSV, text with clipping, or annotations as JSON for downstream processing."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "example:016",
+        "example:031"
+      ],
+      "name": "Render pages to images",
+      "text": "Rasterize pages to PNG, TIFF, or WebP with configurable DPI, clipping, and background."
+    },
+    {
+      "fact_ids": [
+        "example:032",
+        "example:036",
+        "example:037",
+        "example:038"
+      ],
+      "name": "Split and merge documents",
+      "text": "Split by blank pages, bookmarks, or text markers; merge or interleave pages from multiple files."
+    },
+    {
+      "fact_ids": [
+        "example:040"
+      ],
+      "name": "Compare documents visually or textually",
+      "text": "Compare page views or extracted text between versions, with optional difference images."
+    },
+    {
+      "fact_ids": [
+        "example:031",
+        "public_symbol:aspose_pdf.lowcode.converter",
+        "public_symbol:aspose_pdf.lowcode.rotator"
+      ],
+      "name": "Batch workflows via low-code plugins",
+      "text": "Use Merger, Splitter, Optimizer, Converter, Rotator, Stamper, and FormFlattener with DataSource interfaces."
+    }
+  ]
+}
