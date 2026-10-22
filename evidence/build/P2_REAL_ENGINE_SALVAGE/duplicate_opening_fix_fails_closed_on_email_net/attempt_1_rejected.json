@@ -1,0 +1,9 @@
+{
+  "attempt": 1,
+  "content": "{\n  \"units\": [\n    {\n      \"section\": \"opening\",\n      \"slot\": \"opening\",\n      \"text\": \"Aspose.Email FOSS for .Net is a free, open source email library for .NET — a C# toolkit for deterministic binary and message processing: reading, creating, and inspecting Outlook .msg files, Compound File Binary (CFB) containers, and EML message data. It reads Outlook .msg files, Compound File Binary (CFB) containers, and EML message data, creates new .msg files, and inspects their contents. It writes .msg files and EML message data, and reads and writes CFB containers. It ships with no required third-party package dependencies and needs no Microsoft Outlook installation, making it a lightweight fit for services, desktop tools, and command-line utilities that work with mailbox data directly.\",\n      \"fact_ids\": [\n        \"identity:repository\",\n        \"package:name\",\n        \"package:target_framework\",\n        \"package:version\",\n        \"dependency:none\",\n        \"public_symbol:aspose.email.foss\",\n        \"inherited_unit:004.paragraph\"\n      ]\n    }\n  ],\n  \"omitted\": []\n}",
+  "job": "section_authoring",
+  "rejection": [
+    "unit opening: restates the inherited paragraph the renderer already preserves verbatim right beside \"opening\"'s own unit; state only what that paragraph does not already say (name the specific classes, methods, or actions the facts carry), never the product's identity, license, or dependency-freedom again",
+    "unit opening: text contains a Markdown heading ('#')"
+  ]
+}

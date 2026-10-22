@@ -761,6 +761,26 @@ next_ready_items:
       Both repositories where coherence worsened the duplicate (ninth/typescript, sixth/rust)
       are now live-reverified; the other eight cascade repositories have not been re-fired
       (lower priority -- coherence did not worsen the duplicate on any of them originally).
+    new_consequence_observed_2026_10_22: >
+      Firing a twelfth cascade against aspose-email-foss/Aspose.Email-FOSS-for-.Net (not one of
+      the ten already-run repositories) hit a real, new consequence of this fix: S6's "opening"
+      task failed closed (JobError: output rejected twice) because this repository's preserved
+      paragraph is unusually comprehensive, and the model's two attempts both leaned on citing
+      that same preserved unit rather than the dossier's own more specific, genuinely
+      differentiating facts (CfbWriter, SetProperty(), EML MIME-variant support -- all named in
+      investigation.json's own uncertainties). recover_opening_duplicates_preserved() correctly
+      found nothing salvageable in the second attempt and returned None rather than fabricate
+      text, so the job failed closed exactly as designed -- not a bug in the check, a correct
+      refusal with no automatic path forward. This is the first hard failure the fix has caused;
+      every other cascade either passed cleanly or resolved via reject->accept/reject->unchanged.
+      Judged NOT to be a false positive (the model had better facts available and did not reach
+      for them) and NOT silently worked around: this repository's cascade is left incomplete,
+      and the twelfth full cascade fires against a different repository instead. Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/duplicate_opening_fix_fails_closed_on_email_net/.
+      This is itself evidence for why the general fix still needs the deferred subsystem: a
+      smarter retry (steering the re-ask toward the dossier's specific facts, not just rejecting)
+      is exactly the kind of judgment call that subsystem would need to make and this partial
+      fix deliberately does not attempt.
   - id: WIRE_GATEVERIFY_TO_PORTFOLIO
     status: READY
     purpose: >
