@@ -1,0 +1,792 @@
+{
+  "coherence": {
+    "applied": true,
+    "revised": [
+      "scope_limitations/limitation:1",
+      "scope_limitations/limitation:2",
+      "scope_limitations/limitation:3"
+    ]
+  },
+  "omitted": [
+    {
+      "fact_id": "example:001",
+      "reason": "example:001 is contradicted and excluded per do_not_claim.",
+      "section": "opening"
+    }
+  ],
+  "schema_version": 1,
+  "units": [
+    {
+      "fact_ids": [
+        "format:input.one",
+        "format:output.pdf",
+        "public_symbol:aspose.note.documentvisitor",
+        "public_symbol:aspose.note.page",
+        "public_symbol:aspose.note.richtext",
+        "public_symbol:aspose.note.image",
+        "public_symbol:aspose.note.attachedfile",
+        "public_symbol:aspose.note.table",
+        "public_symbol:aspose.note.outlineelement",
+        "public_symbol:aspose.note.notetag",
+        "public_symbol:aspose.note.numberlist"
+      ],
+      "section": "opening",
+      "slot": "opening",
+      "text": "It reads Microsoft OneNote .one files and writes .pdf files, supporting extraction of pages, rich text, images, attachments, tables, tags, and numbered lists, and allows custom processing via the DocumentVisitor pattern."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "example:003",
+        "example:004",
+        "format:input.one",
+        "public_symbol:aspose.note.attachedfile",
+        "public_symbol:aspose.note.document",
+        "public_symbol:aspose.note.image",
+        "public_symbol:aspose.note.outlineelement",
+        "public_symbol:aspose.note.page",
+        "public_symbol:aspose.note.richtext",
+        "public_symbol:aspose.note.table"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "It reads .one files from a file path or binary stream into a document object model, supporting Document with Page, OutlineElement, RichText, Image, Table, and AttachedFile nodes without requiring Microsoft OneNote or COM automation."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "example:004",
+        "example:005",
+        "public_symbol:aspose.note.attachedfile",
+        "public_symbol:aspose.note.documentvisitor",
+        "public_symbol:aspose.note.image",
+        "public_symbol:aspose.note.node",
+        "public_symbol:aspose.note.outlineelement",
+        "public_symbol:aspose.note.page",
+        "public_symbol:aspose.note.richtext",
+        "public_symbol:aspose.note.table"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:2",
+      "text": "It traverses the parsed document tree using CompositeNode.GetChildNodes() for type-based node retrieval or the DocumentVisitor pattern to visit Page, Outline, OutlineElement, RichText, Image, Table, and AttachedFile nodes in order."
+    },
+    {
+      "fact_ids": [
+        "example:009",
+        "example:011",
+        "public_symbol:aspose.note.paragraphstyle",
+        "public_symbol:aspose.note.richtext",
+        "public_symbol:aspose.note.textrun",
+        "public_symbol:aspose.note.textstyle"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "It extracts rich text content and per-run formatting through TextRun with TextStyle properties such as bold, italic, underline, strikethrough, superscript, subscript, font, color, and hyperlinks, plus paragraph-level styling via ParagraphStyle."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "example:010",
+        "format:output.pdf",
+        "public_symbol:aspose.note.saveformat",
+        "public_symbol:aspose.note.saving"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:4",
+      "text": "It exports pages to .pdf files using SaveFormat.Pdf or PdfSaveOptions to tune JPEG quality and compression settings, supporting both direct path output and stream-based saving."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "example:006",
+        "public_symbol:aspose.note.attachedfile",
+        "public_symbol:aspose.note.image"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "It extracts embedded images and attached files by accessing their bytes, file names, and metadata, enabling direct saving to disk using Image.Bytes and AttachedFile.Bytes."
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "example:007",
+        "example:012",
+        "public_symbol:aspose.note.notetag",
+        "public_symbol:aspose.note.numberlist",
+        "public_symbol:aspose.note.table",
+        "public_symbol:aspose.note.tablecell",
+        "public_symbol:aspose.note.tablerow"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:6",
+      "text": "It inspects tables through Table, TableRow, and TableCell to access rows, cells, and their rich text content; OneNote tags via NoteTag with labels and statuses attached to text, images, and tables; and numbered lists through NumberList with format, number format, and restart settings."
+    },
+    {
+      "fact_ids": [
+        "example:002"
+      ],
+      "section": "quick_start",
+      "slot": "lead_in",
+      "text": "The example loads a OneNote file and converts it to PDF by creating a Document from SimpleTable.one and calling Save with SaveFormat.Pdf."
+    },
+    {
+      "fact_ids": [
+        "example:004"
+      ],
+      "section": "quick_start",
+      "slot": "lead_in:2",
+      "text": "The example opens a OneNote file in binary mode, constructs a Document from the file handle, and prints its DisplayName and page count."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "example:005",
+        "example:006",
+        "example:007",
+        "example:008",
+        "example:009",
+        "example:010",
+        "example:011",
+        "example:012"
+      ],
+      "section": "additional_examples",
+      "slot": "preview",
+      "text": "The following workflows demonstrate reading embedded images, extracting tables, saving attached files, inspecting tags, counting document elements, exporting to PDF, and analyzing numbered lists."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "identity:repository",
+        "package:license",
+        "package:name",
+        "package:python_requires",
+        "package:version"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:003",
+      "text": "Save embedded images to disk."
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "identity:repository",
+        "package:license",
+        "package:name",
+        "package:python_requires",
+        "package:version"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:005",
+      "text": "Traverse tables and extract cell text."
+    },
+    {
+      "fact_ids": [
+        "example:006",
+        "identity:repository",
+        "package:license",
+        "package:name",
+        "package:python_requires",
+        "package:version"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:006",
+      "text": "Extract attached files from a document."
+    },
+    {
+      "fact_ids": [
+        "example:007",
+        "identity:repository",
+        "package:license",
+        "package:name",
+        "package:python_requires",
+        "package:version"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:007",
+      "text": "Inspect tag labels and statuses."
+    },
+    {
+      "fact_ids": [
+        "example:008",
+        "identity:repository",
+        "package:license",
+        "package:name",
+        "package:python_requires",
+        "package:version"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:008",
+      "text": "Count pages, rich text, and images."
+    },
+    {
+      "fact_ids": [
+        "example:009",
+        "identity:repository",
+        "package:license",
+        "package:name",
+        "package:python_requires",
+        "package:version"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:009",
+      "text": "Extract plain text from rich text nodes."
+    },
+    {
+      "fact_ids": [
+        "example:010",
+        "identity:repository",
+        "package:license",
+        "package:name",
+        "package:python_requires",
+        "package:version"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:010",
+      "text": "Export to PDF with custom JPEG quality."
+    },
+    {
+      "fact_ids": [
+        "example:011",
+        "identity:repository",
+        "package:license",
+        "package:name",
+        "package:python_requires",
+        "package:version"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:011",
+      "text": "Identify hyperlinks and their addresses."
+    },
+    {
+      "fact_ids": [
+        "example:012",
+        "identity:repository",
+        "package:license",
+        "package:name",
+        "package:python_requires",
+        "package:version"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:012",
+      "text": "Inspect numbered list formatting properties."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.document",
+        "public_symbol:aspose.note.saving",
+        "public_symbol:aspose.note.model.pdfsaveoptions",
+        "format:input.one",
+        "format:output.pdf"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "Aspose.Note FOSS for Python reads and writes .one files and converts them to .pdf. The primary entry point is aspose.note.Document, which loads a .one file and exposes its pages as a tree of Page, Outline, OutlineElement, RichText, Image, Table, and AttachedFile nodes; Document.Save() is the sole write path, currently limited to PDF via PdfSaveOptions. The supported public entry points are aspose.note and aspose.note.saving."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "example:004",
+        "format:input.one",
+        "public_symbol:aspose.note.document"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.note.document",
+      "text": "The aspose.note.Document class loads a .one file or stream and exposes its pages as a tree of child nodes; it provides Document.Save() to export to .pdf and Document.GetPageHistory() to access page revision history."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.page",
+        "public_symbol:aspose.note.title"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.note.page",
+      "text": "The aspose.note.Page class represents a single OneNote page and provides access to its Title, author, timestamps, and child nodes; Page.Clone() creates a copy of the page."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.richtext",
+        "public_symbol:aspose.note.textrun",
+        "public_symbol:aspose.note.textstyle"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.note.richtext",
+      "text": "The aspose.note.RichText class holds formatted text content with alignment, tags, and a list of TextRun objects; each TextRun carries its own TextStyle with character-level formatting options."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "public_symbol:aspose.note.image"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.note.image",
+      "text": "The aspose.note.Image class exposes embedded image bytes, file name, dimensions, alignment, and OneNote tags; Image.Replace() updates the image content."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.table",
+        "public_symbol:aspose.note.tablecell",
+        "public_symbol:aspose.note.tablerow"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.note.table",
+      "text": "The aspose.note.Table class represents a table on a page with columns, border visibility, and tags; it contains TableRow objects, each holding TableCell nodes with rich text or other content."
+    },
+    {
+      "fact_ids": [
+        "example:006",
+        "public_symbol:aspose.note.attachedfile"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.note.attachedfile",
+      "text": "The aspose.note.AttachedFile class exposes a file attached to a page with its raw bytes, file name, and tags; it is accessible via Document.GetChildNodes(AttachedFile)."
+    },
+    {
+      "fact_ids": [
+        "example:008",
+        "public_symbol:aspose.note.documentvisitor"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.note.documentvisitor",
+      "text": "The aspose.note.DocumentVisitor class provides a base for traversing the document tree via VisitPageStart, VisitRichTextStart, VisitImageStart, and other callback methods; subclasses implement custom traversal logic."
+    },
+    {
+      "fact_ids": [
+        "example:010",
+        "format:output.pdf",
+        "public_symbol:aspose.note.saveformat"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.note.saveformat",
+      "text": "The aspose.note.SaveFormat enumeration specifies the output format accepted by Document.Save(); currently only .pdf is supported."
+    },
+    {
+      "fact_ids": [
+        "example:007",
+        "public_symbol:aspose.note.notetag"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.note.notetag",
+      "text": "The aspose.note.NoteTag class represents a OneNote tag attached to text, images, or tables, exposing its label, status, icon, and creation or completion time."
+    },
+    {
+      "fact_ids": [
+        "example:012",
+        "public_symbol:aspose.note.numberlist"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.note.numberlist",
+      "text": "The aspose.note.NumberList class defines numbered-list formatting applied to an OutlineElement, including format, number format, font settings, and restart behavior."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.exceptions",
+        "public_symbol:aspose.note.filecorruptedexception",
+        "public_symbol:aspose.note.incorrectpasswordexception",
+        "public_symbol:aspose.note.unsupportedfileformatexception",
+        "public_symbol:aspose.note.unsupportedsaveformatexception"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.note.exceptions",
+      "text": "The aspose.note.exceptions module provides exception classes for error handling, including FileCorruptedException for malformed source files, IncorrectPasswordException for password-protected documents, UnsupportedFileFormatException for unrecognized formats, and UnsupportedSaveFormatException for unsupported output formats."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.model.pdfsaveoptions",
+        "public_symbol:aspose.note.saving"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.note.saving",
+      "text": "The aspose.note.saving module provides save-related classes such as PdfSaveOptions for configuring PDF export options including image compression and JPEG quality."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "inherited_unit:082.heading",
+        "inherited_unit:083.list",
+        "inherited_unit:100.heading",
+        "inherited_unit:101.paragraph",
+        "install_command:pip",
+        "package:license",
+        "package:name",
+        "package:python_requires",
+        "package:version",
+        "public_symbol:aspose.note.document",
+        "public_symbol:aspose.note.fileformat",
+        "public_symbol:aspose.note.incorrectpasswordexception",
+        "public_symbol:aspose.note.license",
+        "public_symbol:aspose.note.loadoptions",
+        "public_symbol:aspose.note.metered",
+        "public_symbol:aspose.note.saveformat",
+        "public_symbol:aspose.note.unsupportedsaveformatexception"
+      ],
+      "section": "scope_limitations",
+      "slot": "scope",
+      "text": "Aspose.Note FOSS for Python reads OneNote files and exports them to PDF. It supports the aspose.note.SaveFormat.Pdf export target and raises aspose.note.UnsupportedSaveFormatException for any other format or options object."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:083.list",
+        "public_symbol:aspose.note.saveformat",
+        "public_symbol:aspose.note.unsupportedsaveformatexception"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:1",
+      "text": "Writing back to .one files is not implemented — this library only reads OneNote files. SaveFormat currently declares only Pdf, so Document.Save() raises UnsupportedSaveFormatException for any other format or options object."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:083.list",
+        "public_symbol:aspose.note.incorrectpasswordexception",
+        "public_symbol:aspose.note.loadoptions"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:2",
+      "text": "LoadOptions.DocumentPassword and encrypted documents are not supported — supplying a password raises IncorrectPasswordException."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:083.list",
+        "public_symbol:aspose.note.license",
+        "public_symbol:aspose.note.metered"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:3",
+      "text": "License.SetLicense() and Metered.SetMeteredKey() are present for API-shape compatibility with the commercial product but are no-ops in this edition — no license is required to use this library."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:083.list",
+        "public_symbol:aspose.note.document"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:4",
+      "text": "DetectLayoutChanges() is a compatibility stub and performs no layout computation."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:083.list",
+        "public_symbol:aspose.note.fileformat"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:5",
+      "text": "FileFormat is present for API-shape compatibility but provides no additional functionality beyond what Document.FileFormat exposes."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "inherited_unit:083.list",
+        "package:license",
+        "package:name",
+        "package:python_requires",
+        "package:version",
+        "public_symbol:aspose.note.document",
+        "public_symbol:aspose.note.fileformat",
+        "public_symbol:aspose.note.incorrectpasswordexception",
+        "public_symbol:aspose.note.license",
+        "public_symbol:aspose.note.loadoptions",
+        "public_symbol:aspose.note.metered",
+        "public_symbol:aspose.note.saveformat",
+        "public_symbol:aspose.note.unsupportedsaveformatexception"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:6",
+      "text": "This library only reads OneNote files and does not support writing back to .one files, encrypted documents, or any export format other than PDF."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.attachedfile"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.attachedfile",
+      "text": "The aspose.note.AttachedFile class represents an attached file node in a document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.document"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.document",
+      "text": "The aspose.note.Document class represents a document that can be loaded, modified, and saved."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.documentvisitor"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.documentvisitor",
+      "text": "The aspose.note.DocumentVisitor class provides methods to traverse and process document nodes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.filecorruptedexception"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.filecorruptedexception",
+      "text": "The aspose.note.FileCorruptedException class represents an error thrown when a file is corrupted."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.fileformat"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.fileformat",
+      "text": "The aspose.note.FileFormat class specifies supported file formats for documents."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.horizontalalignment"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.horizontalalignment",
+      "text": "The aspose.note.HorizontalAlignment class specifies horizontal alignment options."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.image"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.image",
+      "text": "The aspose.note.Image class represents an image node in a document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.incorrectdocumentstructureexception"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.incorrectdocumentstructureexception",
+      "text": "The aspose.note.IncorrectDocumentStructureException class represents an error thrown when a document structure is incorrect."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.incorrectpasswordexception"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.incorrectpasswordexception",
+      "text": "The aspose.note.IncorrectPasswordException class represents an error thrown when a document password is incorrect."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.license"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.license",
+      "text": "The aspose.note.License class allows setting a license for the product."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.loadoptions"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.loadoptions",
+      "text": "The aspose.note.LoadOptions class specifies options for loading a document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.metered"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.metered",
+      "text": "The aspose.note.Metered class allows setting metered key for usage tracking."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.node"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.node",
+      "text": "The aspose.note.Node class is the base class for all document nodes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.nodetype"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.nodetype",
+      "text": "The aspose.note.NodeType class specifies node types in a document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.notetag"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.notetag",
+      "text": "The aspose.note.NoteTag class represents a note tag with an icon and status."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.numberlist"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.numberlist",
+      "text": "The aspose.note.NumberList class defines a numbered list with formatting options."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.outline"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.outline",
+      "text": "The aspose.note.Outline class represents an outline node in a document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.outlineelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.outlineelement",
+      "text": "The aspose.note.OutlineElement class represents an outline element node in a document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.page"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.page",
+      "text": "The aspose.note.Page class represents a page node in a document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.pagehistory"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.pagehistory",
+      "text": "The aspose.note.PageHistory class manages the history of page versions."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.paragraphstyle"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.paragraphstyle",
+      "text": "The aspose.note.ParagraphStyle class defines paragraph formatting options."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.richtext"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.richtext",
+      "text": "The aspose.note.RichText class represents rich text content in a document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.saveformat"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.saveformat",
+      "text": "The aspose.note.SaveFormat class specifies supported save formats for documents."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.table"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.table",
+      "text": "The aspose.note.Table class represents a table node in a document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.tablecell"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.tablecell",
+      "text": "The aspose.note.TableCell class represents a table cell node in a document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.tablecolumn"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.tablecolumn",
+      "text": "The aspose.note.TableColumn class defines a table column."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.tablerow"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.tablerow",
+      "text": "The aspose.note.TableRow class represents a table row node in a document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.tagstatus"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.tagstatus",
+      "text": "The aspose.note.TagStatus class specifies the status of a note tag."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.textrun"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.textrun",
+      "text": "The aspose.note.TextRun class represents a run of text with consistent formatting."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.textstyle"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.textstyle",
+      "text": "The aspose.note.TextStyle class defines text formatting options."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.title"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.title",
+      "text": "The aspose.note.Title class represents a title node in a document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.unsupportedfileformatexception"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.unsupportedfileformatexception",
+      "text": "The aspose.note.UnsupportedFileFormatException class represents an error thrown when a file format is unsupported."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.unsupportedsaveformatexception"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.unsupportedsaveformatexception",
+      "text": "The aspose.note.UnsupportedSaveFormatException class represents an error thrown when a save format is unsupported."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.exceptions.asposenoteerror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.exceptions.asposenoteerror",
+      "text": "The aspose.note.exceptions.AsposeNoteError class is the base exception for Aspose.Note errors."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.model.compositenode"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.model.compositenode",
+      "text": "The aspose.note.model.CompositeNode class represents a node that can contain child nodes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.model.pdfsaveoptions"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.model.pdfsaveoptions",
+      "text": "The aspose.note.model.PdfSaveOptions class specifies options for saving a document as PDF."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.model.saveoptions"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.note.model.saveoptions",
+      "text": "The aspose.note.model.SaveOptions class specifies options for saving a document."
+    }
+  ]
+}

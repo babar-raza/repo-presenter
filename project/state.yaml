@@ -562,7 +562,7 @@ next_ready_items:
       noted not fixed). Evidence: evidence/build/P2_REAL_ENGINE_SALVAGE/
       lane_r_twelfth_full_cascade/ and duplicate_opening_fix_fails_closed_on_email_net/ (for
       the font-foss note, folded into the earlier entry rather than duplicated).
-    remaining: >
+    remaining_after_twelfth_cascade_2026_10_22: >
       11 of 36 repositories have a FULL real cascade run through S8; a twelfth
       (aspose-html-foss/Python) has S3-S6+render but not S8, for an unrelated reason. All 7
       ecosystems have been exercised at least once (python x4, go, net, java, cpp, rust,
@@ -570,7 +570,25 @@ next_ready_items:
       covered. Lane L format detection is already proven for all of them independently. Two
       unrelated pre-existing S6/S8 rough edges (the "TrueType" identifier rejection and the
       "cites facts outside this section's set" rejection) surfaced on larger/more complex
-      repositories this round and remain unfixed, out of this card's scope.
+      repositories this round and remain unfixed, out of this card's scope. (Superseded by
+      this card's own bottom-level `remaining:` field, kept here only as a dated snapshot.)
+    thirteenth_cascade_2026_10_22: >
+      DONE: fired the full cascade (S3-S8) against a thirteenth repository
+      (aspose-note-foss/Aspose.Note-FOSS-for-Python), a fifth Python repository, different
+      product family from the other four (3D, BarCode, Cells, Email). S3-S6 all accepted on
+      the first attempt. coherence#3 needed one real reject->accept cycle; coherence#4
+      revised three scope_limitations units; "opening" untouched throughout. The known
+      duplicate-opening defect repeated a thirteenth time. 1052/1052 whole-repo tests pass
+      (no src changes this round). Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_thirteenth_full_cascade/.
+    remaining: >
+      13 of 36 repositories now have a FULL real cascade run through S8 (plus one,
+      aspose-html-foss/Python, with S3-S6+render only). All 7 ecosystems have been exercised
+      at least once (python x5, go, net, java, cpp, rust, typescript x2); the portfolio as a
+      whole (36 repositories) is still far from fully covered. Lane L format detection is
+      already proven for all of them independently. Two unrelated pre-existing S6/S8 rough
+      edges (the "TrueType" identifier rejection and the "cites facts outside this section's
+      set" rejection) remain unfixed, out of this card's scope.
       placement_errors IS now ported (2026-10-22, with references.py and the rest of the
       refusal/repair half -- dangling_pointers, uncited_omit_candidates, unprinted_commands,
       coordinate_neighbor_promises, reconcile_checks). But it does NOT, on its own, fix the
