@@ -213,8 +213,8 @@ next_ready_items:
     status: IN_PROGRESS
     priority: high
     purpose: >
-      The single biggest "lanes don't yet work equally" gap found in this session. 2 of 6
-      remaining ecosystems done (.NET, Java); cpp/go/rust/typescript still stubbed.
+      The single biggest "lanes don't yet work equally" gap found in this session. 3 of 6
+      remaining ecosystems done (.NET, Java, C++); go/rust/typescript still stubbed.
     done_net: >
       DONE 2026-10-22, clean (zero false positives after one found-and-fixed): new
       extractors/platforms/net_format_declarations.py (class-declaration + dispatch-switch
@@ -248,14 +248,33 @@ next_ready_items:
       (ASCII, a content-encoding qualifier of the adjacent STL claim, mistaken for a second
       format name) with a regression test. 917/917 whole-repo tests pass. Evidence:
       evidence/build/P2_REAL_ENGINE_SALVAGE/aspose-3d-foss__Aspose.3D-FOSS-for-Java/.
+    done_cpp: >
+      DONE 2026-10-22, against aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp (the only mode:full
+      cpp registry entry). A third, again-different idiom: no extension string literal exists
+      anywhere in source, just a plain enum class LoadFormat/SaveFormat, so the reader
+      normalizes the enumerator name itself (Xlsx -> .xlsx) -- a stated heuristic, not a literal
+      read. One real bug found and fixed before any result could be trusted: this repository's
+      own Workbook.h forward-declares the enum (`enum class SaveFormat;`, no body) before using
+      it in method signatures, and the first regex version's `[^{]*` gap skipped past that
+      semicolon and greedily matched the next unrelated brace block, reading ordinary method
+      parameter names as five garbage "declared formats" -- fixed (`[^{;]*`) with a regression
+      test. Real end-to-end result: this repository's declared and registered surfaces are
+      already consistent -- no over-claim, no under-claim for format at all (output.xlsx
+      SUPPORTED, matching the live README's one real claim). Honest limitation surfaced, not
+      hidden: input.xlsx comes out UNRESOLVED even though loading obviously works, because the
+      real source never writes a qualified `LoadFormat::Xlsx` reference anywhere (only
+      `LoadFormat::Auto` is referenced) -- the mirror image of Java's dispatched-but-stub gap:
+      there a signal fired for something that doesn't work, here something that works produces
+      no signal. 924/924 whole-repo tests pass. Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/aspose-cells-foss__Aspose.Cells-FOSS-for-Cpp/.
     remaining: >
-      cpp/go/rust/typescript format_claims/format_declarations are still stubbed (return
-      []) -- confirmed each is the old repo's own unfinished state too, same as .NET/Java were.
-      Two ecosystems in and the pattern already diverged once (.NET: identifier-correlated
-      switch; Java: extension-string-correlated equals-chain) -- confirms the discipline that
-      matters is "read the real dispatch idiom before writing a reader," not "reuse the .NET
-      reader's shape." Each remaining ecosystem needs its own investigation against real source
-      first.
+      go/rust/typescript format_claims/format_declarations are still stubbed (return []) --
+      confirmed each is the old repo's own unfinished state too, same as .NET/Java/C++ were.
+      Three ecosystems in and the correlation key has already diverged twice (.NET: identifier;
+      Java: extension string; C++: identifier again, but via a qualified enum reference, not a
+      dispatch-arm) -- confirms the discipline that matters is "read the real dispatch idiom
+      before writing a reader," never "reuse an existing reader's shape." Each remaining
+      ecosystem needs its own investigation against real source first.
   - id: WRITE_PROMPTS_FOR_AUTHORING
     status: DONE
     purpose: >

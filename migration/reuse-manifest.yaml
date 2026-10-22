@@ -926,3 +926,47 @@ entries:
     portfolio_consumers: Lane L, every Java candidate. Still NOT proven for cpp/go/rust/
       typescript -- each needs its own real-source investigation before a reader is written.
     invalidation_impact: not yet pulled into any other ecosystem.
+
+  - component: "extractors/platforms/cpp_format_declarations.py"
+    source: "new engineering -- the old repo has the identical return-[] format_declarations
+      stub for cpp.py too"
+    evaluated_at_shas: []
+    behavior: >
+      A third, again-different correlation idiom. This product states formats as a plain enum
+      class LoadFormat/SaveFormat with no extension string literal anywhere in source, so the
+      reader normalizes the enumerator name itself to an extension (a stated heuristic, not a
+      literal read). Registration is any fully-qualified reference to a member
+      (LoadFormat::X / SaveFormat::X) outside the enum's own declaration block, correlated by
+      enumerator name. Sentinel members (Auto, Unknown, None, Default, Custom) are excluded from
+      the declared set entirely -- they name no real format.
+    evidence: >
+      Designed against the REAL live source of aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp
+      (2026-10-22), read directly before writing any pattern-matching code (LoadFormat.h,
+      SaveFormat.h, the real gate in XlsxWorkbookSerializer.cpp). One real bug found and fixed
+      before any result could be trusted -- a forward declaration (enum class SaveFormat; with
+      no body) in this repository's own Workbook.h caused the first regex version to skip past
+      the semicolon and greedily swallow an unrelated later brace block, reading method
+      parameter names as five garbage declared formats; fixed by excluding the semicolon from
+      the pre-brace gap, with a regression test reproducing the exact shape. 6 new unit tests
+      (test_cpp_format_declarations.py). Real end-to-end result: this repository's declared and
+      registered surfaces are already consistent (no over- or under-claim for format at all) --
+      a correct clean result, plus one honestly-stated limitation (input.xlsx comes out
+      UNRESOLVED despite genuinely working, because the real source never writes a qualified
+      LoadFormat::Xlsx reference anywhere). See
+      evidence/build/P2_REAL_ENGINE_SALVAGE/aspose-cells-foss__Aspose.Cells-FOSS-for-Cpp/.
+    disposition: "ADD (not REUSE/ADAPT -- genuinely new code, no old-repo equivalent exists)"
+    reason: >
+      Third of five remaining ecosystems toward "lanes work equally for all candidates." The
+      correlation key has now diverged twice across three readers (.NET: identifier via a
+      dispatch-arm; Java: extension string; C++: identifier via a qualified reference) --
+      further evidence that the two-source DESIGN generalizes but no single reader's shape
+      does; each remaining ecosystem still needs its own real-source investigation.
+    target_module: src/repo_presenter/extractors/platforms/cpp_format_declarations.py
+    smallest_first_integration_test: tests/extractors/platforms/test_cpp_format_declarations.py
+      -- all green, plus the real end-to-end proof above.
+    portfolio_consumers: Lane L, every C++ candidate. Only measured against the one mode:full
+      C++ registry entry (Cells) so far -- the dry_run Email/PDF/Slides C++ repos may have
+      larger declared surfaces this reader has not yet been run against. Still NOT proven for
+      go/rust/typescript -- each needs its own real-source investigation before a reader is
+      written.
+    invalidation_impact: not yet pulled into any other ecosystem.

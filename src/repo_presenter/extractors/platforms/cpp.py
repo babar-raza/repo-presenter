@@ -27,6 +27,9 @@ from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
+from repo_presenter.extractors.platforms.cpp_format_declarations import (
+    format_declarations as cpp_format_declarations,
+)
 from repo_presenter.extractors.platforms.cpp_examples import (
     measured_cpp_build,
     verify_cpp_examples,
@@ -723,8 +726,11 @@ class CppPlugin:
         return []
 
     def format_declarations(self, root: Path, tree_paths: list[str]) -> Sequence[FormatDeclaration]:
-        """Not yet built; the vendored format reader lands with the cohort that needs it."""
-        return []
+        """Static LoadFormat/SaveFormat enum + qualified-reference reading; see
+        cpp_format_declarations.py's own docstring for why this ecosystem's correlation key
+        (enumerator name, since no extension string literal exists in source) differs from
+        both .NET's and Java's."""
+        return cpp_format_declarations(root, tree_paths)
 
 
 PLUGIN: Any = CppPlugin()
