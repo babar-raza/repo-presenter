@@ -176,31 +176,28 @@ active_work_item:
 
 next_ready_items:
   - id: RUN_PIPELINE_ON_MORE_ECOSYSTEMS
-    status: IN_PROGRESS
+    status: DONE
     priority: highest
     purpose: >
-      scripts/run_lane_l.py generalized 2026-10-22 (ecosystem is now a CLI argument via
-      extractors/platforms/registry.py's plugin_for(), same dynamic discovery the production
-      code uses -- not a per-ecosystem copy of the script). Run against 3 of 7 ecosystems so
-      far, each with a real, honest result (evidence/build/P2_REAL_ENGINE_SALVAGE/):
-        - python (aspose-3d-foss/Python): automatically rediscovers the known OBJ-export bug.
-        - net (aspose-3d-foss/.NET): 3590 facts, 293 real public symbols extracted; did NOT
-          catch the known U3D/RVM/AMF/HTML5 over-claim -- checked why directly, two honest
-          reasons (the claim is in prose/Mermaid, not a table the detector parses; .NET has
-          zero format facts at all since format_claims/format_declarations are stubbed).
-        - java (aspose-3d-foss/Java): 5136 facts, real symbol extraction; found a genuinely
-          NEW Enterprise Edition naming violation (line 634, "the commercial Aspose.3D for
-          Java") that no earlier pass in this project had caught for this repository --
-          proof the detector works on fresh real data, not just its own test fixtures.
-      cpp/go/rust/typescript not yet run through this script.
+      DONE 2026-10-22 (this card was stale -- written when 3 of 7 ecosystems were done;
+      BUILD_FORMAT_DETECTION_FOR_NON_PYTHON_ECOSYSTEMS's own work ran scripts/run_lane_l.py
+      against all remaining ecosystems as part of building/verifying each one's format
+      reader, closing this card's own open item without a separate pass). All 7 ecosystems
+      now have a real, honest scripts/run_lane_l.py result in
+      evidence/build/P2_REAL_ENGINE_SALVAGE/: python (OBJ-export bug), net (U3D/RVM/AMF/HTML5
+      over-claim), java (Enterprise Edition naming + GLB dispatched-but-stub), cpp (clean,
+      honest no-finding result), go (2 structure fixes + 1 compiler-caught broken example),
+      rust (clean, both directions corroborated), typescript (a real latent product bug in
+      save(), correctly not inherited into a README over-claim).
     major_finding: >
-      Format/capability over- and under-claim detection -- the exact defect class this whole
-      mission started from -- is Python-only today. format_claims/format_declarations are
-      stubbed (return []) for net/java/cpp/go/rust/typescript, confirmed to be the OLD REPO's
-      OWN unfinished state (identical stub + docstring in E:\...\repository-presenter), not
-      something this session's porting broke. Closing this for "make the lanes work equally
-      for all candidates" needs new engineering per ecosystem (an ecosystem-specific format-
-      declaration reader, mirroring python_format_declarations.py), not a salvage/port task.
+      SUPERSEDED by BUILD_FORMAT_DETECTION_FOR_NON_PYTHON_ECOSYSTEMS: format/capability
+      over- and under-claim detection is no longer Python-only. See that card's own summary
+      for the full per-ecosystem retrospective.
+    remaining: >
+      Each ecosystem's result above is from exactly one repository (the one real, mode:full
+      or best-available candidate per ecosystem) -- not yet run across the REST of the
+      portfolio (the other ~30 registry repositories). "Lanes work equally for all
+      candidates" is proven per-ecosystem, not yet at full portfolio scale.
   - id: RUN_PIPELINE_END_TO_END_ON_REAL_REPO
     status: DONE
     purpose: >
