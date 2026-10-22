@@ -1,0 +1,1079 @@
+{
+  "coherence": {
+    "applied": true,
+    "revised": []
+  },
+  "omitted": [
+    {
+      "fact_id": "inherited_unit:009.heading",
+      "reason": "This is an inherited unit providing the section heading, not a capability fact; it is rendered by the deterministic renderer and not part of the prose units.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:010.list",
+      "reason": "This is an inherited unit listing multiple capabilities; it is not a capability fact itself and is not cited by any single capability slot.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:017.list",
+      "reason": "inherited_unit:017.list is a dependency list item not cited by any unit's facts and not part of the required API reference scope",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:019.list",
+      "reason": "inherited_unit:019.list is a test and tooling dependency list not cited by any unit's facts and not part of the required API reference scope",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:035.heading",
+      "reason": "inherited_unit:035.heading is a rendered heading label, not a fact about product capabilities",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:036.paragraph",
+      "reason": "inherited_unit:036.paragraph is a rendered summary, not a fact about product capabilities",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:038.heading",
+      "reason": "inherited_unit:038.heading is a rendered heading label, not a fact about product capabilities",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:039.table",
+      "reason": "inherited_unit:039.table is a rendered table, not a fact about product capabilities",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:040.heading",
+      "reason": "inherited_unit:040.heading is a rendered heading label, not a fact about product capabilities",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "example:001",
+      "reason": "example:001 is an example code snippet, not a fact about product capabilities",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "example:002",
+      "reason": "example:002 is an example code snippet, not a fact about product capabilities",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "example:003",
+      "reason": "example:003 is an example code snippet, not a fact about product capabilities",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "example:004",
+      "reason": "example:004 is an example code snippet, not a fact about product capabilities",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "install_command:npm",
+      "reason": "install_command:npm is an install command, not a fact about product capabilities",
+      "section": "api_reference"
+    }
+  ],
+  "schema_version": 1,
+  "units": [
+    {
+      "fact_ids": [
+        "inherited_unit:004.paragraph"
+      ],
+      "section": "opening",
+      "slot": "opening",
+      "text": "Aspose.3D FOSS for TypeScript is a free, open-source, MIT-licensed TypeScript/JavaScript library for building and converting 3D scenes in Node.js. It exposes an Aspose.3D-compatible scene-graph API — Scene, Node, Mesh, Material — for constructing scenes from meshes and vertex attribute data, assigning shading materials, animating node hierarchies with keyframes, and reading and writing widely used interchange formats such as glTF, OBJ, STL, FBX, and COLLADA, as pure TypeScript with no native bindings."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:entity",
+        "public_symbol:node",
+        "public_symbol:node.addchildnode",
+        "public_symbol:node.addentity",
+        "public_symbol:node.createchildnode",
+        "public_symbol:scene"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "Scene graph construction uses the Scene class as the root container, with Node instances holding a Transform, an optional Entity (Mesh, Camera, or Light), and child nodes accessible through childNodes; nodes are added via Node.addChildNode, Node.addEntity, or Node.createChildNode."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:geometry",
+        "public_symbol:mesh",
+        "public_symbol:mesh.addcontrolpoint",
+        "public_symbol:mesh.createpolygon",
+        "public_symbol:vertexelementnormal",
+        "public_symbol:vertexelementuv"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:2",
+      "text": "Mesh geometry creation relies on the Mesh class with control points managed via Mesh.addControlPoint and polygons created with Mesh.createPolygon; per-vertex attribute channels such as normals (VertexElementNormal) and UVs (VertexElementUV) are attached through the VertexElement hierarchy."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:lambertmaterial",
+        "public_symbol:material.gettexture",
+        "public_symbol:material.settexture",
+        "public_symbol:pbrmaterial",
+        "public_symbol:phongmaterial"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "Material assignment supports LambertMaterial (diffuse-only), PhongMaterial (adds specular and shininess), and PbrMaterial (metallic/roughness mapping directly to the glTF 2.0 PBR model), with textures managed through Material.getTexture and Material.setTexture."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:camera",
+        "public_symbol:camera.fieldofview",
+        "public_symbol:camera.projectiontype",
+        "public_symbol:light",
+        "public_symbol:light.direction",
+        "public_symbol:light.lighttype"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:4",
+      "text": "Camera and light entities are placed as scene nodes, with Camera exposing projectionType and fieldOfView, and Light supporting POINT, DIRECTIONAL, SPOT, AREA, and VOLUME types via lightType, plus direction for directional and spot lights."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:animationchannel",
+        "public_symbol:animationclip",
+        "public_symbol:animationnode",
+        "public_symbol:keyframe.interpolation",
+        "public_symbol:keyframesequence"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "Animation support uses AnimationClip to group AnimationNode tracks, each containing AnimationChannel instances with KeyframeSequence time/value samples and configurable interpolation behavior via KeyFrame.interpolation."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fileformat",
+        "public_symbol:filesystem",
+        "public_symbol:scene.fromfile",
+        "public_symbol:scene.open",
+        "public_symbol:scene.save"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:6",
+      "text": "Format I/O reads glTF 2.0 (JSON and binary GLB) and Wavefront OBJ scenes and writes STL (ASCII and binary), FBX (ASCII), COLLADA (.dae), and glTF 2.0 JSON scenes through Scene.fromFile, Scene.open, and Scene.save, with behavior configured via dedicated options types."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fvector2",
+        "public_symbol:fvector3",
+        "public_symbol:fvector4",
+        "public_symbol:mathutils",
+        "public_symbol:matrix4",
+        "public_symbol:quaternion"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:7",
+      "text": "Math utilities provide FVector2, FVector3, and FVector4 vector types, Matrix4 for 4x4 transformations, Quaternion for rotation, and MathUtils for common operations."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:a3dobject.findproperty",
+        "public_symbol:a3dobject.setproperty",
+        "public_symbol:property",
+        "public_symbol:propertycollection"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:8",
+      "text": "The property system exposes A3DObject.findProperty and A3DObject.setProperty to access and modify named properties, with Property and PropertyCollection managing the underlying storage and metadata."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:version",
+        "public_symbol:scene",
+        "public_symbol:scene.open",
+        "public_symbol:scene.openfrombuffer",
+        "public_symbol:scene.fromfile",
+        "public_symbol:scene.save",
+        "public_symbol:scene.savetobuffer",
+        "public_symbol:scene.rootnode"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "Aspose.3D FOSS for TypeScript provides the @aspose/3d package (version 24.12.0) with Scene as the primary entry point for loading, saving, and manipulating 3D scenes. Scene.open, Scene.openFromBuffer, and Scene.fromFile load content, Scene.save and Scene.saveToBuffer write output, and Scene.rootNode exposes the node hierarchy."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:scene",
+        "public_symbol:scene.animationclips",
+        "public_symbol:scene.createanimationclip",
+        "public_symbol:scene.fromfile",
+        "public_symbol:scene.getanimationclip",
+        "public_symbol:scene.open",
+        "public_symbol:scene.openfrombuffer",
+        "public_symbol:scene.rootnode",
+        "public_symbol:scene.save",
+        "public_symbol:scene.savetobuffer"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:scene",
+      "text": "Scene serves as the root container for a 3D scene: Scene.open and Scene.openFromBuffer load a file or buffer with auto-detected format, Scene.save writes output, Scene.fromFile loads a file in a single call, Scene.rootNode exposes the node hierarchy, and Scene.animationClips, Scene.createAnimationClip, and Scene.getAnimationClip manage scene-level animation clips."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:node",
+        "public_symbol:node.addchildnode",
+        "public_symbol:node.addentity",
+        "public_symbol:node.childnodes",
+        "public_symbol:node.createchildnode",
+        "public_symbol:node.entities",
+        "public_symbol:node.entity",
+        "public_symbol:node.globaltransform",
+        "public_symbol:node.material",
+        "public_symbol:node.transform"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:node",
+      "text": "Node represents a named node in the scene tree, holding a transform and zero or more child nodes accessible via childNodes, with Node.addChildNode, Node.createChildNode, and Node.addEntity managing the hierarchy, and Node.globalTransform, Node.transform, and Node.material exposing its spatial and material properties."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mesh",
+        "public_symbol:mesh.addcontrolpoint",
+        "public_symbol:mesh.controlpoints",
+        "public_symbol:mesh.createpolygon",
+        "public_symbol:mesh.getvertexelementofuv",
+        "public_symbol:mesh.triangulate",
+        "public_symbol:mesh.vertexelements"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:mesh",
+      "text": "Mesh provides geometry data with Mesh.controlPoints and Mesh.vertexElements, supports polygon construction via Mesh.addControlPoint and Mesh.createPolygon, exposes UV vertex elements through Mesh.getVertexElementOfUV, and can triangulate polygons via Mesh.triangulate."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:lambertmaterial",
+        "public_symbol:material",
+        "public_symbol:material.gettexture",
+        "public_symbol:material.settexture",
+        "public_symbol:pbrmaterial",
+        "public_symbol:phongmaterial"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:material",
+      "text": "Material, LambertMaterial, PhongMaterial, and PbrMaterial provide surface appearance definitions, with Material.getTexture and Material.setTexture managing texture assignments."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:animationchannel",
+        "public_symbol:animationclip",
+        "public_symbol:animationnode",
+        "public_symbol:keyframe",
+        "public_symbol:keyframesequence"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:animationclip",
+      "text": "AnimationClip, AnimationNode, AnimationChannel, KeyframeSequence, and KeyFrame define animation data structures, supporting keyframe-based animation of transforms and properties."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fileformat",
+        "public_symbol:fileformat.canexport",
+        "public_symbol:fileformat.canimport",
+        "public_symbol:fileformat.getformatbyextension",
+        "public_symbol:fileformat.registerformat"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:fileformat",
+      "text": "FileFormat supports format detection and conversion with FileFormat.canImport, FileFormat.canExport, FileFormat.getFormatByExtension, and FileFormat.registerFormat."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:camera",
+        "public_symbol:camera.farplane",
+        "public_symbol:camera.fieldofview",
+        "public_symbol:camera.nearplane",
+        "public_symbol:camera.projectiontype"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:camera",
+      "text": "Camera defines projection parameters with Camera.projectionType, Camera.fieldOfView, Camera.nearPlane, and Camera.farPlane."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:light",
+        "public_symbol:light.direction",
+        "public_symbol:light.fieldofview",
+        "public_symbol:light.lighttype"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:light",
+      "text": "Light defines illumination with Light.lightType, Light.direction, and Light.fieldOfView."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:quaternion",
+        "public_symbol:quaternion.normalize",
+        "public_symbol:quaternion.slerp",
+        "public_symbol:quaternion.tostring"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:quaternion",
+      "text": "Quaternion provides 3D rotation operations with Quaternion.normalize, Quaternion.slerp, and Quaternion.toString."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:matrix4",
+        "public_symbol:matrix4.concatenate",
+        "public_symbol:matrix4.identity",
+        "public_symbol:matrix4.inverse"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:matrix4",
+      "text": "Matrix4 provides 4x4 transformation operations with Matrix4.identity, Matrix4.concatenate, and Matrix4.inverse."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:a3dobject.findproperty",
+        "public_symbol:a3dobject.setproperty",
+        "public_symbol:property",
+        "public_symbol:propertycollection"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:property",
+      "text": "Property and PropertyCollection support custom metadata via A3DObject.findProperty and A3DObject.setProperty."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:filesystem",
+        "public_symbol:filesystem.readfile",
+        "public_symbol:filesystem.writefile"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:filesystem",
+      "text": "FileSystem provides file I/O with FileSystem.readFile and FileSystem.writeFile."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "inherited_unit:074.list",
+        "package:name",
+        "package:version"
+      ],
+      "section": "scope_limitations",
+      "slot": "scope",
+      "text": "Aspose.3D FOSS for TypeScript reads and writes 3D scenes using formats such as OBJ, STL, GLTF, and others, and provides basic scene construction and traversal capabilities."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:074.list",
+        "public_symbol:scene.render"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:1",
+      "text": "Rendering is not implemented in this FOSS build — Scene.render() throws an error, and a real npm packaging defect affects 3MF import/export so that using it throws immediately."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:074.list",
+        "public_symbol:mesh.difference",
+        "public_symbol:mesh.intersect",
+        "public_symbol:mesh.ismanifold",
+        "public_symbol:mesh.optimize",
+        "public_symbol:mesh.union"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:2",
+      "text": "Mesh's Boolean operations (union, difference, intersect), optimize(), and isManifold() all throw Error('... is not implemented') in this FOSS build, and the Mesh height-map constructor path is also not implemented."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:074.list",
+        "public_symbol:vertexelement.clear",
+        "public_symbol:vertexelement.setindices"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:3",
+      "text": "VertexElement.setIndices() and VertexElement.clear() throw Error('... is not implemented') in this FOSS build."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:074.list",
+        "public_symbol:node.selectobjects",
+        "public_symbol:node.selectsingleobject"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:4",
+      "text": "Node.selectSingleObject() and Node.selectObjects() throw Error('... is not implemented') in this FOSS build."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:074.list",
+        "public_symbol:filesystem.createdummyfilesystem",
+        "public_symbol:filesystem.createlocalfilesystem",
+        "public_symbol:filesystem.createzipfilesystem",
+        "public_symbol:filesystem.readfile",
+        "public_symbol:filesystem.writefile"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:5",
+      "text": "The FileSystem virtualization abstraction (readFile, writeFile, createZipFileSystem, createLocalFileSystem, createDummyFileSystem) is entirely unimplemented in this FOSS build — every method throws, though ordinary scene.open() and scene.save() usage remains unaffected."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:074.list",
+        "public_symbol:scene.save"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:6",
+      "text": "Text watermarking is not currently functional in this FOSS build, and OBJ export only writes geometry attached at the very top of the scene graph, omitting geometry attached via standard child-node construction."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:a3dobject"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:a3dobject",
+      "text": "A3DObject represents the base class for all 3D objects in Aspose.3D FOSS for TypeScript."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:animationchannel"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:animationchannel",
+      "text": "AnimationChannel defines a single animation channel that controls how animation data is applied over time."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:animationclip"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:animationclip",
+      "text": "AnimationClip holds a collection of animation channels that together represent a complete animation sequence."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:animationnode"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:animationnode",
+      "text": "AnimationNode represents a node in the animation system that can be animated and participate in animation blending."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aperturemode"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aperturemode",
+      "text": "ApertureMode specifies the method used to control the camera aperture in rendering."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:assetinfo"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:assetinfo",
+      "text": "AssetInfo stores metadata about a 3D asset such as author, creation date, and units."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:bindpoint"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:bindpoint",
+      "text": "BindPoint defines a specific location where a mesh can be attached to a skeleton for skinning."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:booleanoperation"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:booleanoperation",
+      "text": "BooleanOperation performs geometric operations such as union, intersection, and difference on 3D shapes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:boundingbox"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:boundingbox",
+      "text": "BoundingBox encloses a 3D object using minimum and maximum coordinates in three-dimensional space."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:boundingbox2d"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:boundingbox2d",
+      "text": "BoundingBox2D encloses a 2D object using minimum and maximum coordinates in a plane."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:boundingboxextent"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:boundingboxextent",
+      "text": "BoundingBoxExtent describes the size and position of a bounding box relative to its center."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:camera"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:camera",
+      "text": "Camera defines a viewing frustum used to render a 3D scene from a specific perspective."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:composeorder"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:composeorder",
+      "text": "ComposeOrder specifies the sequence in which transformations are applied during rendering."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:customobject"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:customobject",
+      "text": "CustomObject allows users to define and manage their own custom 3D entities within the scene."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:entity"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:entity",
+      "text": "Entity is a base class for all objects that can appear in a 3D scene, such as meshes and lights."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:extrapolation"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:extrapolation",
+      "text": "Extrapolation determines how animation values are computed outside the defined keyframe range."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:extrapolationtype"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:extrapolationtype",
+      "text": "ExtrapolationType enumerates the possible methods for extending animation beyond its keyframe range."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fmatrix4"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:fmatrix4",
+      "text": "FMatrix4 represents a 4x4 matrix of single-precision floating-point numbers used for transformations."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fvector2"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:fvector2",
+      "text": "FVector2 represents a two-dimensional vector of single-precision floating-point numbers."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fvector3"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:fvector3",
+      "text": "FVector3 represents a three-dimensional vector of single-precision floating-point numbers."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fvector4"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:fvector4",
+      "text": "FVector4 represents a four-dimensional vector of single-precision floating-point numbers."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fileformat"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:fileformat",
+      "text": "FileFormat identifies the format of a 3D file such as OBJ, STL, or GLTF."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:filesystem"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:filesystem",
+      "text": "FileSystem provides an abstraction layer for reading and writing files in Aspose.3D FOSS for TypeScript."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:geometry"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:geometry",
+      "text": "Geometry defines the shape of a 3D object through its vertices, normals, and texture coordinates."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:globaltransform"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:globaltransform",
+      "text": "GlobalTransform stores the complete transformation matrix that positions an object in world space."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:iindexedvertexelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:iindexedvertexelement",
+      "text": "IIndexedVertexElement represents a single vertex element with an index into a vertex buffer."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:inamedobject"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:inamedobject",
+      "text": "INamedObject is an interface for objects that can be assigned a human-readable name."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:ioextension"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:ioextension",
+      "text": "IOExtension provides support for reading and writing 3D files through format-specific plugins."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:imagerenderoptions"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:imagerenderoptions",
+      "text": "ImageRenderOptions controls how a 3D scene is rendered to an image file."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:interpolation"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:interpolation",
+      "text": "Interpolation defines the method used to calculate intermediate values between keyframes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:keyframe"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:keyframe",
+      "text": "KeyFrame stores a value at a specific point in time for animation purposes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:keyframesequence"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:keyframesequence",
+      "text": "KeyframeSequence groups a series of keyframes that define how a property changes over time."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:lambertmaterial"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:lambertmaterial",
+      "text": "LambertMaterial defines a simple diffuse material based on the Lambertian reflectance model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:light"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:light",
+      "text": "Light represents a light source in a 3D scene that affects the appearance of objects."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:lighttype"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:lighttype",
+      "text": "LightType specifies the kind of light source such as point, directional, or spot."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mappingmode"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:mappingmode",
+      "text": "MappingMode determines how texture coordinates are applied to a 3D surface."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:material"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:material",
+      "text": "Material defines the visual properties of a 3D object such as color, shininess, and texture."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mathutils"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:mathutils",
+      "text": "MathUtils provides utility functions for common mathematical operations used in 3D graphics."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:matrix4"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:matrix4",
+      "text": "Matrix4 represents a 4x4 matrix of double-precision floating-point numbers used for transformations."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mesh"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:mesh",
+      "text": "Mesh represents a polygonal 3D object composed of vertices, edges, and faces."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:node"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:node",
+      "text": "Node represents an object in a scene hierarchy that can hold geometry and other entities."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:parseexception"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:parseexception",
+      "text": "ParseException indicates an error that occurred while parsing a 3D file format."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:pbrmaterial"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:pbrmaterial",
+      "text": "PbrMaterial defines a physically based rendering material with properties such as base color, metallic, and roughness."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:phongmaterial"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:phongmaterial",
+      "text": "PhongMaterial defines a Phong shading material with ambient, diffuse, and specular color properties."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:polygonmodifier"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:polygonmodifier",
+      "text": "PolygonModifier provides utilities for modifying polygonal geometry, such as triangulation."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:projectiontype"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:projectiontype",
+      "text": "ProjectionType specifies the type of projection used in a camera, such as perspective or orthographic."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:property"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:property",
+      "text": "Property represents a named value that can be attached to scene objects for metadata."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:propertycollection"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:propertycollection",
+      "text": "PropertyCollection is a container for a set of properties associated with a scene object."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:quaternion"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:quaternion",
+      "text": "Quaternion represents a four-dimensional vector used to describe 3D rotations."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:rect"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:rect",
+      "text": "Rect defines a rectangle using left, top, width, and height values."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:referencemode"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:referencemode",
+      "text": "ReferenceMode specifies how a reference to another object is interpreted during import or export."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:relativerectangle"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:relativerectangle",
+      "text": "RelativeRectangle defines a rectangle using relative coordinates and dimensions."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:rotationmode"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:rotationmode",
+      "text": "RotationMode specifies the method used to interpret rotation values, such as axis-angle or Euler angles."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:rotationorder"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:rotationorder",
+      "text": "RotationOrder defines the sequence in which rotations around the X, Y, and Z axes are applied."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:scene"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:scene",
+      "text": "Scene represents a complete 3D scene containing objects, lights, cameras, and animations."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:sceneobject"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:sceneobject",
+      "text": "SceneObject is the base class for all objects that can be part of a 3D scene."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:semanticattribute"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:semanticattribute",
+      "text": "SemanticAttribute defines the meaning of a vertex attribute, such as position, normal, or texture coordinate."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:splitmeshpolicy"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:splitmeshpolicy",
+      "text": "SplitMeshPolicy specifies how a mesh should be split during export, such as by material or by smoothing groups."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:stepmode"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:stepmode",
+      "text": "StepMode defines how animation keyframes are interpolated between time steps."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:texturemapping"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:texturemapping",
+      "text": "TextureMapping specifies how a texture is mapped onto a surface, such as planar, cylindrical, or spherical."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:transform"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:transform",
+      "text": "Transform represents a 3D transformation including translation, rotation, and scaling."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:transformbuilder"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:transformbuilder",
+      "text": "TransformBuilder provides a fluent interface for constructing complex transformations."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:vector2"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:vector2",
+      "text": "Vector2 represents a two-dimensional vector with X and Y components."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:vector3"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:vector3",
+      "text": "Vector3 represents a three-dimensional vector with X, Y, and Z components."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:vector4"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:vector4",
+      "text": "Vector4 represents a four-dimensional vector with X, Y, Z, and W components."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:vertex"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:vertex",
+      "text": "Vertex represents a single point in 3D space with associated attributes such as position, normal, and texture coordinates."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:vertexdeclaration"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:vertexdeclaration",
+      "text": "VertexDeclaration describes the layout of vertex data for rendering."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:vertexelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:vertexelement",
+      "text": "VertexElement is the base class for individual components of a vertex, such as position or normal."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:vertexelementfvector"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:vertexelementfvector",
+      "text": "VertexElementFVector represents a vertex element containing floating-point vector data."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:vertexelementintstemplate"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:vertexelementintstemplate",
+      "text": "VertexElementIntsTemplate represents a vertex element containing integer data."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:vertexelementnormal"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:vertexelementnormal",
+      "text": "VertexElementNormal represents a vertex element containing normal vector data."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:vertexelementsmoothinggroup"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:vertexelementsmoothinggroup",
+      "text": "VertexElementSmoothingGroup represents a vertex element containing smoothing group information."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:vertexelementtangent"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:vertexelementtangent",
+      "text": "VertexElementTangent represents a vertex element containing tangent vector data."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:vertexelementtype"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:vertexelementtype",
+      "text": "VertexElementType specifies the data type of a vertex element, such as float or integer."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:vertexelementuv"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:vertexelementuv",
+      "text": "VertexElementUV represents a vertex element containing texture coordinate data."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:vertexelementvertexcolor"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:vertexelementvertexcolor",
+      "text": "VertexElementVertexColor represents a vertex element containing vertex color data."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:vertexfield"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:vertexfield",
+      "text": "VertexField defines a named field within a vertex declaration that holds a specific type of data."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:vertexfielddatatype"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:vertexfielddatatype",
+      "text": "VertexFieldDataType specifies the data type used for a vertex field, such as float32 or int32."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:vertexfieldsemantic"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:vertexfieldsemantic",
+      "text": "VertexFieldSemantic defines the semantic meaning of a vertex field, such as position or normal."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:watermark"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:watermark",
+      "text": "Watermark represents a visible or invisible mark that can be embedded in exported 3D files."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:weightedmode"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:weightedmode",
+      "text": "WeightedMode represents a weighting strategy for mesh operations in Aspose.3D FOSS for TypeScript."
+    }
+  ]
+}

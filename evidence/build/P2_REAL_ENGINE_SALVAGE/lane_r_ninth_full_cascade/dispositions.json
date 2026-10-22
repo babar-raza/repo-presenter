@@ -1,0 +1,665 @@
+{
+  "dispositions": [
+    {
+      "destination_section": "identity",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:repository",
+        "package:name"
+      ],
+      "rationale": "The H1 product name is rendered deterministically from identity and package facts.",
+      "unit_id": "inherited_unit:001.heading"
+    },
+    {
+      "destination_section": "badges",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "Badge row is rendered deterministically in the badges section.",
+      "unit_id": "inherited_unit:002.badge_row"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a product illustration or homepage link; the banner condition does not hold.",
+      "unit_id": "inherited_unit:003.badge_row"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:version",
+        "import_path:aspose-3d",
+        "public_symbol:scene",
+        "public_symbol:node",
+        "public_symbol:mesh",
+        "public_symbol:material",
+        "public_symbol:camera",
+        "public_symbol:light",
+        "public_symbol:fileformat",
+        "public_symbol:animationclip"
+      ],
+      "rationale": "The paragraph's substance matches the product summary and problems solved facts and fits the opening section.",
+      "unit_id": "inherited_unit:004.paragraph"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "Navigation heading is rendered deterministically in the navigation section.",
+      "unit_id": "inherited_unit:005.heading"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "Navigation list is rendered deterministically in the navigation section.",
+      "unit_id": "inherited_unit:006.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'At a Glance' section is not placeable (placeable: false) and its condition does not hold.",
+      "unit_id": "inherited_unit:007.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'At a Glance' section is not placeable and its condition does not hold; the diagram is unsupported.",
+      "unit_id": "inherited_unit:008.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:scene",
+        "public_symbol:node",
+        "public_symbol:entity",
+        "public_symbol:mesh",
+        "public_symbol:material",
+        "public_symbol:camera",
+        "public_symbol:light",
+        "public_symbol:animationclip",
+        "public_symbol:fileformat",
+        "public_symbol:polygonmodifier"
+      ],
+      "rationale": "The heading matches the key_capabilities section and the list below is supported by capabilities and workflows.",
+      "unit_id": "inherited_unit:009.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:scene",
+        "public_symbol:node",
+        "public_symbol:entity",
+        "public_symbol:mesh",
+        "public_symbol:material",
+        "public_symbol:camera",
+        "public_symbol:light",
+        "public_symbol:animationclip",
+        "public_symbol:fileformat",
+        "public_symbol:polygonmodifier",
+        "public_symbol:vertexelementuv",
+        "public_symbol:vertexelementnormal"
+      ],
+      "rationale": "The list items are grounded in capabilities and public symbols and fit the key_capabilities section.",
+      "unit_id": "inherited_unit:010.list"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "Installation heading is rendered deterministically in the installation section.",
+      "unit_id": "inherited_unit:011.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The installation section is deterministic and the paragraph is redundant; no fact supports this prose.",
+      "unit_id": "inherited_unit:012.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The installation section is deterministic; the code block is redundant and unsupported as a separate unit.",
+      "unit_id": "inherited_unit:013.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The installation section is deterministic; this paragraph is redundant and unsupported.",
+      "unit_id": "inherited_unit:014.paragraph"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "Dependencies heading is rendered deterministically in the dependencies section.",
+      "unit_id": "inherited_unit:015.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "Dependencies subsection heading is rendered deterministically in the dependencies section.",
+      "unit_id": "inherited_unit:016.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:xmldom"
+      ],
+      "rationale": "The dependency list is supported by facts and belongs in the API reference section as a reference to required packages.",
+      "unit_id": "inherited_unit:017.list"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "Dependencies subsection heading is rendered deterministically in the dependencies section.",
+      "unit_id": "inherited_unit:018.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:development.typescript",
+        "dependency:development.jest",
+        "dependency:development.ts-jest",
+        "dependency:development.eslint",
+        "dependency:development.typescript-eslint-eslint-plugin",
+        "dependency:development.typescript-eslint-parser",
+        "dependency:development.adm-zip",
+        "dependency:development.types-adm-zip",
+        "dependency:development.types-jest",
+        "dependency:development.types-node"
+      ],
+      "rationale": "The development dependencies list is supported by facts and belongs in the API reference section as a reference to development packages.",
+      "unit_id": "inherited_unit:019.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Quick Start' section is not placeable (placeable: false) and its condition does not hold.",
+      "unit_id": "inherited_unit:020.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Quick Start' section is not placeable and its condition does not hold.",
+      "unit_id": "inherited_unit:021.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Quick Start' section is not placeable and its condition does not hold.",
+      "unit_id": "inherited_unit:022.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Additional Examples' section is not placeable (placeable: false) and its condition does not hold.",
+      "unit_id": "inherited_unit:023.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Additional Examples' section is not placeable and its condition does not hold.",
+      "unit_id": "inherited_unit:024.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Additional Examples' section is not placeable and its condition does not hold.",
+      "unit_id": "inherited_unit:025.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Additional Examples' section is not placeable and its condition does not hold.",
+      "unit_id": "inherited_unit:026.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Additional Examples' section is not placeable and its condition does not hold.",
+      "unit_id": "inherited_unit:027.html_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Additional Examples' section is not placeable and its condition does not hold.",
+      "unit_id": "inherited_unit:028.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Additional Examples' section is not placeable and its condition does not hold.",
+      "unit_id": "inherited_unit:029.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Additional Examples' section is not placeable and its condition does not hold.",
+      "unit_id": "inherited_unit:030.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Additional Examples' section is not placeable and its condition does not hold.",
+      "unit_id": "inherited_unit:031.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Additional Examples' section is not placeable and its condition does not hold.",
+      "unit_id": "inherited_unit:032.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Additional Examples' section is not placeable and its condition does not hold.",
+      "unit_id": "inherited_unit:033.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Additional Examples' section is not placeable and its condition does not hold.",
+      "unit_id": "inherited_unit:034.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The API Reference heading matches the api_reference section and is placeable.",
+      "unit_id": "inherited_unit:035.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:scene",
+        "public_symbol:node",
+        "public_symbol:entity"
+      ],
+      "rationale": "The paragraph introduces the API reference and is supported by public symbols.",
+      "unit_id": "inherited_unit:036.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The details block is unsupported and the section is not placeable.",
+      "unit_id": "inherited_unit:037.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The API Reference subsection heading matches the api_reference section and is placeable.",
+      "unit_id": "inherited_unit:038.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:scene",
+        "public_symbol:node",
+        "public_symbol:entity",
+        "public_symbol:sceneobject",
+        "public_symbol:a3dobject"
+      ],
+      "rationale": "The table is supported by public symbols and fits the API reference section.",
+      "unit_id": "inherited_unit:039.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The API Reference subsection heading matches the api_reference section and is placeable.",
+      "unit_id": "inherited_unit:040.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table of core classes is superseded by the API Reference section, which will list all verified public symbols.",
+      "unit_id": "inherited_unit:041.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading 'Transform and Spatial' is superseded by the API Reference section, which will group symbols by kind.",
+      "unit_id": "inherited_unit:042.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table of Transform and Spatial classes is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:043.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading 'Materials' is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:044.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table of Material classes is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:045.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading 'Camera and Lighting' is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:046.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table of Camera and Light classes is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:047.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading 'Math Utilities' is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:048.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table of Math utility classes is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:049.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading 'Animation' is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:050.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table of Animation classes is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:051.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading 'Format I/O' is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:052.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table of Format I/O classes is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:053.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading 'OBJ Format' is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:054.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table of OBJ format classes is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:055.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading 'GLTF Format' is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:056.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table of glTF format classes is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:057.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading 'STL Format' is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:058.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table of STL format classes is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:059.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading '3MF Format' is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:060.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table of 3MF format classes is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:061.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading 'FBX Format' is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:062.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table of FBX format classes is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:063.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading 'COLLADA Format' is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:064.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table of COLLADA format classes is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:065.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading 'Properties System' is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:066.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table of Properties classes is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:067.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading 'Asset Info' is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:068.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table of AssetInfo and ImageRenderOptions is superseded by the API Reference section.",
+      "unit_id": "inherited_unit:069.table"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The closing </details> HTML tag is unsupported and non-semantic in this context.",
+      "unit_id": "inherited_unit:070.html_block"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading 'Documentation & Resources' is superseded by the Documentation & Resources section, which will be rendered from verified links.",
+      "unit_id": "inherited_unit:071.heading"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The list of documentation links is superseded by the Documentation & Resources section.",
+      "unit_id": "inherited_unit:072.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading 'Scope and Limitations' is preserved as the section heading for the scope_limitations section.",
+      "unit_id": "inherited_unit:073.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:scene.render",
+        "public_symbol:mesh.union",
+        "public_symbol:mesh.difference",
+        "public_symbol:mesh.intersect",
+        "public_symbol:mesh.optimize",
+        "public_symbol:mesh.ismanifold",
+        "public_symbol:vertexelement.setindices",
+        "public_symbol:vertexelement.clear",
+        "public_symbol:node.selectsingleobject",
+        "public_symbol:node.selectobjects",
+        "public_symbol:filesystem.readfile",
+        "public_symbol:filesystem.writefile",
+        "public_symbol:filesystem.createzipfilesystem",
+        "public_symbol:filesystem.createlocalfilesystem",
+        "public_symbol:filesystem.createdummyfilesystem",
+        "public_symbol:scene.save"
+      ],
+      "rationale": "The list of limitations is supported by verified public symbols and inherited facts.",
+      "unit_id": "inherited_unit:074.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph about Enterprise Edition is unsupported because no enterprise relationship link or policy target is verified.",
+      "unit_id": "inherited_unit:075.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading 'Development and Testing' is preserved as the section heading for the development_testing section, but the section itself is not rendered.",
+      "unit_id": "inherited_unit:076.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph about development setup is unsupported because the development_testing section is not rendered at this revision.",
+      "unit_id": "inherited_unit:077.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The code block for development setup is unsupported because the development_testing section is not rendered.",
+      "unit_id": "inherited_unit:078.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph about type-checking and linting is unsupported because the development_testing section is not rendered.",
+      "unit_id": "inherited_unit:079.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The code block for type-checking and linting is unsupported because the development_testing section is not rendered.",
+      "unit_id": "inherited_unit:080.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the existence or relevance of AGENTS.md in the repository root.",
+      "unit_id": "inherited_unit:081.paragraph"
+    },
+    {
+      "destination_section": "license",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The '## License' heading is superseded by the deterministic 'License' section (id: license) which renders from facts.",
+      "unit_id": "inherited_unit:082.heading"
+    },
+    {
+      "destination_section": "license",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The license paragraph's substance is rendered by the deterministic 'License' section (id: license) which uses the license fact; no additional detail is present.",
+      "unit_id": "inherited_unit:083.paragraph"
+    }
+  ]
+}

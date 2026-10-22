@@ -507,9 +507,25 @@ next_ready_items:
       duplicate-opening-paragraph defect repeated an eighth time (eighth for eighth).
       1040/1040 whole-repo tests pass (no src changes this round). Evidence:
       evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_eighth_full_cascade/.
+    ninth_cascade_2026_10_22: >
+      DONE: fired the full cascade (S3-S8) against a ninth repository
+      (aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript), a second TypeScript repository
+      (different product family from aspose-cells-foss/TypeScript). An earlier attempt in
+      this round mistakenly re-ran S3/S4 against aspose-3d-foss/Aspose.3D-FOSS-for-.NET,
+      which the third cascade had already covered this session -- caught before S5 and
+      discarded (not committed), then retargeted to the actually-uncovered TypeScript repo.
+      S3-S6 all accepted on the first attempt. S8 coherence revised "opening" in its first
+      batch -- and produced the WORST instance of the known defect observed yet: the
+      revised "opening" unit is a near word-for-word copy of the preserved duplicate
+      paragraph beside it (only backtick formatting and line-wrap differ; the re-render
+      grew by exactly one character, 20070->20071). This strengthens the sixth (rust)
+      finding that coherence's revision of "opening" moves it toward the duplicate rather
+      than away from it -- its remit is cross-unit consistency, not duplicate detection.
+      1040/1040 whole-repo tests pass (no src changes this round). Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_ninth_full_cascade/.
     remaining: >
-      8 of 36 repositories now have a full real cascade run. All 7 ecosystems have been
-      exercised at least once (python x2, go, net, java, cpp, rust, typescript); the
+      9 of 36 repositories now have a full real cascade run. All 7 ecosystems have been
+      exercised at least once (python x2, go, net, java, cpp, rust, typescript x2); the
       portfolio as a whole (36 repositories) is still far from fully covered. Lane L
       format detection is already proven for all of them independently.
       placement_errors IS now ported (2026-10-22, with references.py and the rest of the

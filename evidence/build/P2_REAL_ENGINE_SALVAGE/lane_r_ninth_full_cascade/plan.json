@@ -1,0 +1,484 @@
+{
+  "additional_example_ids": [],
+  "api_hubs": [
+    {
+      "fact_ids": [
+        "public_symbol:scene",
+        "public_symbol:scene.open",
+        "public_symbol:scene.save",
+        "public_symbol:scene.fromfile",
+        "public_symbol:scene.openfrombuffer",
+        "public_symbol:scene.savetobuffer",
+        "public_symbol:scene.rootnode",
+        "public_symbol:scene.animationclips",
+        "public_symbol:scene.createanimationclip",
+        "public_symbol:scene.getanimationclip"
+      ],
+      "symbol_fact_id": "public_symbol:scene"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:node",
+        "public_symbol:node.addchildnode",
+        "public_symbol:node.addentity",
+        "public_symbol:node.createchildnode",
+        "public_symbol:node.childnodes",
+        "public_symbol:node.entities",
+        "public_symbol:node.entity",
+        "public_symbol:node.globaltransform",
+        "public_symbol:node.transform",
+        "public_symbol:node.material"
+      ],
+      "symbol_fact_id": "public_symbol:node"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mesh",
+        "public_symbol:mesh.addcontrolpoint",
+        "public_symbol:mesh.createpolygon",
+        "public_symbol:mesh.controlpoints",
+        "public_symbol:mesh.vertexelements",
+        "public_symbol:mesh.getvertexelementofuv",
+        "public_symbol:mesh.triangulate"
+      ],
+      "symbol_fact_id": "public_symbol:mesh"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:material",
+        "public_symbol:lambertmaterial",
+        "public_symbol:phongmaterial",
+        "public_symbol:pbrmaterial",
+        "public_symbol:material.gettexture",
+        "public_symbol:material.settexture"
+      ],
+      "symbol_fact_id": "public_symbol:material"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:animationclip",
+        "public_symbol:animationnode",
+        "public_symbol:animationchannel",
+        "public_symbol:keyframesequence",
+        "public_symbol:keyframe"
+      ],
+      "symbol_fact_id": "public_symbol:animationclip"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fileformat",
+        "public_symbol:fileformat.canimport",
+        "public_symbol:fileformat.canexport",
+        "public_symbol:fileformat.getformatbyextension",
+        "public_symbol:fileformat.registerformat"
+      ],
+      "symbol_fact_id": "public_symbol:fileformat"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:camera",
+        "public_symbol:camera.projectiontype",
+        "public_symbol:camera.fieldofview",
+        "public_symbol:camera.nearplane",
+        "public_symbol:camera.farplane"
+      ],
+      "symbol_fact_id": "public_symbol:camera"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:light",
+        "public_symbol:light.lighttype",
+        "public_symbol:light.direction",
+        "public_symbol:light.fieldofview"
+      ],
+      "symbol_fact_id": "public_symbol:light"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:quaternion",
+        "public_symbol:quaternion.normalize",
+        "public_symbol:quaternion.slerp",
+        "public_symbol:quaternion.tostring"
+      ],
+      "symbol_fact_id": "public_symbol:quaternion"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:matrix4",
+        "public_symbol:matrix4.identity",
+        "public_symbol:matrix4.concatenate",
+        "public_symbol:matrix4.inverse"
+      ],
+      "symbol_fact_id": "public_symbol:matrix4"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:property",
+        "public_symbol:propertycollection",
+        "public_symbol:a3dobject.findproperty",
+        "public_symbol:a3dobject.setproperty"
+      ],
+      "symbol_fact_id": "public_symbol:property"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:filesystem",
+        "public_symbol:filesystem.readfile",
+        "public_symbol:filesystem.writefile"
+      ],
+      "symbol_fact_id": "public_symbol:filesystem"
+    }
+  ],
+  "at_a_glance": {
+    "capability_titles": [
+      "Scene graph construction",
+      "Mesh geometry creation",
+      "Material assignment",
+      "Camera and light entities",
+      "Animation support",
+      "Format I/O",
+      "Math utilities",
+      "Property system"
+    ],
+    "input_format_ids": [],
+    "output_format_ids": []
+  },
+  "core_capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:scene",
+        "public_symbol:node",
+        "public_symbol:entity",
+        "public_symbol:node.addchildnode",
+        "public_symbol:node.addentity",
+        "public_symbol:node.createchildnode"
+      ],
+      "shared_fact_ids": [],
+      "title": "Scene graph construction"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mesh",
+        "public_symbol:geometry",
+        "public_symbol:mesh.addcontrolpoint",
+        "public_symbol:mesh.createpolygon",
+        "public_symbol:vertexelementuv",
+        "public_symbol:vertexelementnormal"
+      ],
+      "shared_fact_ids": [],
+      "title": "Mesh geometry creation"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:lambertmaterial",
+        "public_symbol:phongmaterial",
+        "public_symbol:pbrmaterial",
+        "public_symbol:material.gettexture",
+        "public_symbol:material.settexture"
+      ],
+      "shared_fact_ids": [],
+      "title": "Material assignment"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:camera",
+        "public_symbol:light",
+        "public_symbol:camera.projectiontype",
+        "public_symbol:light.lighttype",
+        "public_symbol:camera.fieldofview",
+        "public_symbol:light.direction"
+      ],
+      "shared_fact_ids": [],
+      "title": "Camera and light entities"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:animationclip",
+        "public_symbol:animationnode",
+        "public_symbol:animationchannel",
+        "public_symbol:keyframesequence",
+        "public_symbol:keyframe.interpolation"
+      ],
+      "shared_fact_ids": [],
+      "title": "Animation support"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fileformat",
+        "public_symbol:scene.fromfile",
+        "public_symbol:scene.open",
+        "public_symbol:scene.save",
+        "public_symbol:filesystem"
+      ],
+      "shared_fact_ids": [],
+      "title": "Format I/O"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fvector2",
+        "public_symbol:fvector3",
+        "public_symbol:fvector4",
+        "public_symbol:matrix4",
+        "public_symbol:quaternion",
+        "public_symbol:mathutils"
+      ],
+      "shared_fact_ids": [],
+      "title": "Math utilities"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:property",
+        "public_symbol:propertycollection",
+        "public_symbol:a3dobject.findproperty",
+        "public_symbol:a3dobject.setproperty"
+      ],
+      "shared_fact_ids": [],
+      "title": "Property system"
+    }
+  ],
+  "deviations": [
+    {
+      "fact_ids": [
+        "inherited_unit:007.heading",
+        "inherited_unit:008.code_block"
+      ],
+      "section_id": "at_a_glance",
+      "text": "The 'At a Glance' section is omitted because the condition for its inclusion (at least three verified core capabilities with verified input/output formats) does not hold — no verified input or output format facts are present."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:020.heading",
+        "inherited_unit:021.paragraph",
+        "inherited_unit:022.code_block"
+      ],
+      "section_id": "quick_start",
+      "text": "The 'Quick Start' section is omitted because no verified example facts are present — the examples field lists no selectable IDs."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:023.heading",
+        "inherited_unit:024.paragraph",
+        "inherited_unit:025.paragraph",
+        "inherited_unit:026.code_block",
+        "inherited_unit:027.html_block",
+        "inherited_unit:028.heading",
+        "inherited_unit:029.paragraph",
+        "inherited_unit:030.code_block",
+        "inherited_unit:031.heading",
+        "inherited_unit:032.paragraph",
+        "inherited_unit:033.code_block",
+        "inherited_unit:034.html_block"
+      ],
+      "section_id": "additional_examples",
+      "text": "The 'Additional Examples' section is omitted because no verified example facts are present — the examples field lists no selectable IDs."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:075.paragraph"
+      ],
+      "section_id": "enterprise_relationship",
+      "text": "The Enterprise Edition relationship is omitted because no verified aspose.com product target exists in policy."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:076.heading",
+        "inherited_unit:077.paragraph",
+        "inherited_unit:078.code_block",
+        "inherited_unit:079.paragraph",
+        "inherited_unit:080.code_block",
+        "inherited_unit:081.paragraph"
+      ],
+      "section_id": "development_testing",
+      "text": "The 'Development and Testing' section is omitted because no build or test assets are verified."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:071.heading",
+        "inherited_unit:072.list"
+      ],
+      "section_id": "documentation_resources",
+      "text": "The 'Documentation & Resources' section is omitted because no verified relevant targets exist."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:003.badge_row"
+      ],
+      "section_id": "banner",
+      "text": "The banner image is omitted because no verified product illustration and homepage link exist."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:037.html_block",
+        "inherited_unit:038.heading",
+        "inherited_unit:039.table",
+        "inherited_unit:040.heading",
+        "inherited_unit:041.table",
+        "inherited_unit:042.heading",
+        "inherited_unit:043.table",
+        "inherited_unit:044.heading",
+        "inherited_unit:045.table",
+        "inherited_unit:046.heading",
+        "inherited_unit:047.table",
+        "inherited_unit:048.heading"
+      ],
+      "section_id": "api_reference",
+      "text": "The inherited table-based API reference is omitted in favor of the deterministic API Reference section, which lists all verified public symbols."
+    }
+  ],
+  "flagship_example_id": null,
+  "links": [],
+  "material_limitations": [
+    {
+      "fact_ids": [
+        "public_symbol:scene.render"
+      ],
+      "unit_ids": [
+        "inherited_unit:074.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mesh.union",
+        "public_symbol:mesh.difference",
+        "public_symbol:mesh.intersect",
+        "public_symbol:mesh.optimize",
+        "public_symbol:mesh.ismanifold"
+      ],
+      "unit_ids": [
+        "inherited_unit:074.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "public_symbol:vertexelement.setindices",
+        "public_symbol:vertexelement.clear"
+      ],
+      "unit_ids": [
+        "inherited_unit:074.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "public_symbol:node.selectsingleobject",
+        "public_symbol:node.selectobjects"
+      ],
+      "unit_ids": [
+        "inherited_unit:074.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "public_symbol:filesystem.readfile",
+        "public_symbol:filesystem.writefile",
+        "public_symbol:filesystem.createzipfilesystem",
+        "public_symbol:filesystem.createlocalfilesystem",
+        "public_symbol:filesystem.createdummyfilesystem"
+      ],
+      "unit_ids": [
+        "inherited_unit:074.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "public_symbol:scene.save"
+      ],
+      "unit_ids": [
+        "inherited_unit:074.list"
+      ]
+    }
+  ],
+  "quick_start_example_id": null,
+  "second_quick_start_example_id": null,
+  "sections": [
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "identity"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "badges"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "banner"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "opening"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "navigation"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "at_a_glance"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "key_capabilities"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "installation"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "dependencies"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "quick_start"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "additional_examples"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "api_reference"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "documentation_resources"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "scope_limitations"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "development_testing"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "third_party_notices"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "license"
+    }
+  ]
+}
