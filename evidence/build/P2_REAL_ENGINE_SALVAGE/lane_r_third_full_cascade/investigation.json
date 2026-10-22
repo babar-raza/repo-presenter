@@ -1,0 +1,202 @@
+{
+  "audience": {
+    "fact_ids": [
+      "package:target_framework",
+      "install_command:dotnet"
+    ],
+    "text": "Developers building .NET applications targeting netcoreapp3.1, net6.0, net8.0, or net10.0 who need to programmatically create, modify, and convert 3D scenes."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.scene",
+        "public_symbol:aspose.threed.node",
+        "public_symbol:aspose.threed.sceneobject"
+      ],
+      "text": "Build and manage 3D scene graphs using Scene and Node classes, supporting hierarchical organization with root and child nodes.",
+      "title": "Scene graph construction"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.entities"
+      ],
+      "text": "Construct primitive shapes like Box, Cylinder, Sphere, and IFC-compatible 2D profiles such as LShape, TShape, and RectangleShape.",
+      "title": "Primitive and profile geometry"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.shading"
+      ],
+      "text": "Assign shading materials including LambertMaterial, PhongMaterial, PbrMaterial, and ShaderMaterial to nodes.",
+      "title": "Material assignment"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.animation",
+        "public_symbol:aspose.threed.bonepose",
+        "public_symbol:aspose.threed.deformers"
+      ],
+      "text": "Animate scenes using AnimationClip, AnimationChannel, KeyFrame, Bone, Skeleton, SkinDeformer, and MorphTargetDeformer.",
+      "title": "Animation support"
+    },
+    {
+      "fact_ids": [
+        "format:input.fbx",
+        "format:output.fbx",
+        "format:input.gltf",
+        "format:output.gltf",
+        "format:input.obj",
+        "format:output.obj",
+        "format:input.stl",
+        "format:output.stl",
+        "format:input.dae",
+        "format:output.dae",
+        "format:input.3mf"
+      ],
+      "text": "Convert 3D scenes between FBX, glTF, OBJ, STL, COLLADA, 3MF, PLY, and other supported formats using Scene.FromFile() and Scene.Save().",
+      "title": "Format conversion"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.profiles"
+      ],
+      "text": "Define NURBS curves and surfaces using NurbsCurve and NurbsSurface with control points, weights, and knot vectors.",
+      "title": "NURBS support"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.entities"
+      ],
+      "text": "Read and write per-vertex mesh data including normals, UVs, vertex color, tangent/binormal, smoothing groups, and user data.",
+      "title": "Vertex data handling"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "text": "Rendering is not implemented; Scene.Render and related APIs throw NotImplementedException."
+    },
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "text": "PolygonModifier and most TriMesh helpers throw NotImplementedException; mesh post-processing utilities are not functional."
+    },
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "text": "NURBS evaluation and surface-to-mesh conversion throw NotImplementedException despite data construction support."
+    },
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "text": "PLY import/export works via Scene.Open/Save but direct use of PLYFormat class throws NotImplementedException."
+    },
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "text": "PDF and Google Draco import/export are not functional; no reader/writer implementations exist."
+    },
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "text": "3MF build metadata and RVM attribute loading are not implemented despite core geometry support."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "dependency:none",
+        "install_command:dotnet"
+      ],
+      "text": "Enables programmatic construction and conversion of 3D scenes using pure managed code with no native dependencies."
+    },
+    {
+      "fact_ids": [
+        "format:input.fbx",
+        "format:output.fbx",
+        "format:input.gltf",
+        "format:output.gltf",
+        "format:input.obj",
+        "format:output.obj",
+        "format:input.stl",
+        "format:output.stl",
+        "format:input.dae",
+        "format:output.dae",
+        "format:input.3mf",
+        "format:output.3mf",
+        "format:input.ply",
+        "format:output.ply"
+      ],
+      "text": "Supports reading and writing multiple 3D interchange formats including FBX, glTF, OBJ, STL, COLLADA, 3MF, and PLY."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.scene",
+        "public_symbol:aspose.threed.node",
+        "public_symbol:aspose.threed.entities"
+      ],
+      "text": "Provides a consistent API surface compatible with Aspose.3D for .NET Enterprise Edition for code portability."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:repository",
+      "package:name",
+      "install_command:dotnet"
+    ],
+    "text": "Aspose.3D FOSS for .NET is a free, open-source MIT-licensed .NET library for building, traversing, and converting 3D scenes without external 3D engines."
+  },
+  "uncertainties": [
+    "The exact scope of 'production-extension metadata' in 3MF support is not specified beyond IsBuildable and related methods.",
+    "Whether USD/Draco/JT formats have partial or no implementation beyond option types is unclear from available facts.",
+    "The behavior of Scene.Render when called in different contexts is not detailed beyond throwing NotImplementedException.",
+    "The completeness of vertex declaration support beyond normals, UVs, and color is not fully specified.",
+    "Whether all public symbols listed in the dossier are fully functional in this FOSS build is not explicitly confirmed.",
+    "The exact runtime behavior of License and Metered APIs in this FOSS edition is not detailed beyond being non-applicable.",
+    "The status of AMF and HTML5/Web viewer export beyond being mentioned in the README is not confirmed by public_symbol facts.",
+    "The version compatibility of the package across all listed target frameworks is not explicitly verified beyond package:target_framework."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.scene",
+        "public_symbol:aspose.threed.node",
+        "public_symbol:aspose.threed.entities",
+        "format:output.fbx"
+      ],
+      "name": "Build a scene from primitives",
+      "text": "Create a scene with a root node, add child nodes with primitive geometry like Box or Cylinder, assign materials, and save to FBX."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.scene",
+        "format:input.gltf",
+        "format:output.obj"
+      ],
+      "name": "Load and convert between formats",
+      "text": "Load an existing scene using Scene.FromFile() and save it in another format like OBJ using Scene.Save() with appropriate FileFormat constants."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.scene",
+        "public_symbol:aspose.threed.node"
+      ],
+      "name": "Traverse node hierarchy",
+      "text": "Access and iterate through the node hierarchy of a loaded scene starting from RootNode."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.shading"
+      ],
+      "name": "Assign and convert materials",
+      "text": "Assign shading materials such as LambertMaterial, PhongMaterial, or PbrMaterial to nodes independently of geometry."
+    }
+  ]
+}

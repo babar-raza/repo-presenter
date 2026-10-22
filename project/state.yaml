@@ -435,8 +435,22 @@ next_ready_items:
       own facts and dispositions -- confirming it is a systemic gap in the ported subset,
       not a fluke tied to the first repository. 1040/1040 whole-repo tests pass. Evidence:
       evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_second_full_cascade/.
+    third_cascade_2026_10_22: >
+      DONE: fired the identical full cascade, including S8 coherence this time, against a
+      third repository and third ecosystem (aspose-3d-foss/Aspose.3D-FOSS-for-.NET, after
+      Python and Go). 11 of 11 real provider calls (1 S3, 2 S4 batches/70 units, 1 S5, 5 S6
+      tasks, 2 S8 batches) accepted on the FIRST attempt -- no rejections anywhere, the
+      cleanest run of the three. The same duplicate-opening-paragraph defect repeated a
+      THIRD time, on a third unrelated repository -- 100% occurrence across every cascade
+      run fired so far, strong real confirmation it is systemic to the ported subsystem's
+      own design (the real fix lives in the unported validation/review/repair subsystem,
+      already precisely located and sized above), not a fluke. 1040/1040 whole-repo tests
+      pass (no src changes this round). Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_third_full_cascade/.
     remaining: >
-      Still only 2 of 36 repositories, not yet run at portfolio scale.
+      3 of 36 repositories now have a full real cascade run (python, go, net); not yet at
+      portfolio scale, and java/cpp/rust/typescript still untried for the full cascade
+      (Lane L format detection is already proven for all of them independently).
       placement_errors IS now ported (2026-10-22, with references.py and the rest of the
       refusal/repair half -- dangling_pointers, uncited_omit_candidates, unprinted_commands,
       coordinate_neighbor_promises, reconcile_checks). But it does NOT, on its own, fix the

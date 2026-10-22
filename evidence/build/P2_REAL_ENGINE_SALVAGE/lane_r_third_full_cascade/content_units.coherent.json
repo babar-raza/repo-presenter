@@ -1,0 +1,647 @@
+{
+  "coherence": {
+    "applied": true,
+    "revised": []
+  },
+  "omitted": [
+    {
+      "fact_id": "install_command:dotnet",
+      "reason": "The install command is handled by a separate deterministic code block slot and is not part of the opening prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "package:version",
+      "reason": "The version number is used only in the install command block and does not appear in the opening description.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:012.paragraph",
+      "reason": "This is an instruction to install the package and belongs to a separate section, not the opening.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:013.code_block",
+      "reason": "This is a deterministic code block slot and is rendered separately; it is not part of the opening prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:014.paragraph",
+      "reason": "This describes project structure and build targets, which belongs in a separate technical details section, not the opening.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:017.paragraph",
+      "reason": "This describes dependency status and project structure, which belongs in a separate technical details section, not the opening.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:019.list",
+      "reason": "This is a list of runtime targets and belongs in a separate technical details section, not the opening.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "example:001",
+      "reason": "Examples are not used in the opening; they belong in a separate examples or usage section.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "example:002",
+      "reason": "Examples are not used in the opening; they belong in a separate examples or usage section.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "example:003",
+      "reason": "Examples are not used in the opening; they belong in a separate examples or usage section.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "example:004",
+      "reason": "Examples are not used in the opening; they belong in a separate examples or usage section.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "example:005",
+      "reason": "Examples are not used in the opening; they belong in a separate examples or usage section.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "example:006",
+      "reason": "Examples are not used in the opening; they belong in a separate examples or usage section.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "example:007",
+      "reason": "Examples are not used in the opening; they belong in a separate examples or usage section.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:060.heading",
+      "reason": "The renderer prints this heading; it is not prose and must not be written.",
+      "section": "scope_limitations"
+    },
+    {
+      "fact_id": "inherited_unit:070.paragraph",
+      "reason": "The renderer prints this paragraph; it is not prose and must not be written.",
+      "section": "scope_limitations"
+    }
+  ],
+  "schema_version": 1,
+  "units": [
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "format:input.fbx",
+        "format:output.fbx",
+        "format:input.gltf",
+        "format:output.gltf",
+        "format:input.obj",
+        "format:output.obj",
+        "format:input.stl",
+        "format:output.stl",
+        "format:input.dae",
+        "format:output.dae",
+        "format:input.3mf",
+        "format:output.3mf",
+        "format:input.ply",
+        "format:output.ply",
+        "format:input.3ds",
+        "format:output.3ds",
+        "public_symbol:aspose.threed.scene",
+        "public_symbol:aspose.threed.node",
+        "public_symbol:aspose.threed.entities",
+        "public_symbol:aspose.threed.shading",
+        "public_symbol:aspose.threed.animation",
+        "public_symbol:aspose.threed.bonepose",
+        "public_symbol:aspose.threed.deformers",
+        "public_symbol:aspose.threed.profiles",
+        "package:target_framework",
+        "dependency:none",
+        "inherited_unit:004.paragraph"
+      ],
+      "section": "opening",
+      "slot": "opening",
+      "text": "Aspose.3D FOSS for .NET reads and writes 3D scene data in formats including .fbx, .gltf, .obj, .stl, .dae, .3mf, .ply, and .3ds. It converts scenes between these formats and constructs scene graphs using Aspose.ThreeD.Scene, Aspose.ThreeD.Node, Aspose.ThreeD.Entities, Aspose.ThreeD.Shading, Aspose.ThreeD.Animation, and related types. The library operates as pure managed code with no native dependencies and supports .NET Core 3.1, .NET 6, .NET 8, and .NET 10 runtimes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.node",
+        "public_symbol:aspose.threed.scene",
+        "public_symbol:aspose.threed.sceneobject"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "Build, traverse, and manage a 3D scene graph with Scene and Node — every Scene starts with a RootNode, and Node.CreateChildNode() or AddChildNode() attach child nodes carrying entities, transforms, and materials."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.entities"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:2",
+      "text": "Construct primitive and CAD-style profile geometry directly — Box, Cylinder, Sphere, Dish, Torus, Pyramid, Plane, and IFC-compatible 2D profiles including LShape, TShape, UShape, ZShape, CShape, HShape, CircleShape, and RectangleShape — which can be extruded or revolved into solids via LinearExtrusion, RevolvedAreaSolid, and SweptAreaSolid."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.shading"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "Assign shading materials through Material subclasses including LambertMaterial, PhongMaterial, PbrMaterial, PbrSpecularMaterial, and ShaderMaterial — each attaches to a Node independently of the entity it carries."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.animation",
+        "public_symbol:aspose.threed.bonepose",
+        "public_symbol:aspose.threed.deformers"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:4",
+      "text": "Animate scenes with AnimationClip and AnimationChannel, keyed by KeyFrame or KeyframeSequence, and skin meshes with Bone, Skeleton, and SkinDeformer; morph-target animation is available through MorphTargetDeformer and MorphTargetChannel."
+    },
+    {
+      "fact_ids": [
+        "format:input.3mf",
+        "format:input.dae",
+        "format:input.fbx",
+        "format:input.gltf",
+        "format:input.obj",
+        "format:input.stl",
+        "format:output.3mf",
+        "format:output.dae",
+        "format:output.fbx",
+        "format:output.gltf",
+        "format:output.obj",
+        "format:output.stl"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "Convert 3D scenes by reading and writing FBX, glTF, Wavefront OBJ, STL, COLLADA, and Universal 3D (U3D) — including FBX-to-OBJ and glTF-to-OBJ conversions — with full round-trip fidelity, plus Microsoft 3MF and AVEVA PDMS RVM models, AMF, and an HTML5/Aspose 3D Web viewer export, through Scene.FromFile() or Scene.Save() and the matching FileFormat constants."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.profiles"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:6",
+      "text": "Define NURBS curves and surfaces with NurbsCurve and NurbsSurface, specifying control points, weights, and knot vectors directly."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.entities"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:7",
+      "text": "Read and write per-vertex mesh data through a custom VertexDeclaration and VertexElement subclasses including normals, UVs, vertex color, tangent/binormal, smoothing groups, and user data."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "inherited_unit:047.paragraph",
+        "public_symbol:aspose.threed.fileformat",
+        "public_symbol:aspose.threed.node",
+        "public_symbol:aspose.threed.scene"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "Aspose.3D FOSS for .NET provides core 3D scene management through the Scene class, which owns a hierarchy of Node objects and supports loading and saving via the FileFormat registry."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:target_framework",
+        "package:version",
+        "public_symbol:aspose.threed.fileformat",
+        "public_symbol:aspose.threed.node",
+        "public_symbol:aspose.threed.scene"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.threed.scene",
+      "text": "The Scene class serves as the top-level container for nodes, geometries, materials, textures, animation, and poses, with static FromFile and FromStream methods for format-aware loading and an instance Save method for exporting, while its RootNode property provides access to the scene's node hierarchy."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:target_framework",
+        "package:version",
+        "public_symbol:aspose.threed.entities"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.threed.entities",
+      "text": "The Entities namespace provides the base classes Entity, Geometry, and Mesh that represent renderable geometric objects, along with primitives such as Box, Cylinder, and Sphere that inherit from Primitive and can be added to nodes."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:target_framework",
+        "package:version",
+        "public_symbol:aspose.threed.shading"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.threed.shading",
+      "text": "The Shading namespace defines material classes such as LambertMaterial, PhongMaterial, and PbrMaterial that control the visual appearance of geometry through properties like diffuse color, specular highlights, and physically based rendering parameters."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:target_framework",
+        "package:version",
+        "public_symbol:aspose.threed.animation",
+        "public_symbol:aspose.threed.bonepose",
+        "public_symbol:aspose.threed.deformers"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.threed.animation",
+      "text": "The Animation namespace supports skeletal animation through classes such as AnimationClip, AnimationChannel, and BonePose, while Deformers includes SkinDeformer and MorphTargetDeformer for vertex-level animation techniques."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:target_framework",
+        "package:version",
+        "public_symbol:aspose.threed.profiles"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.threed.profiles",
+      "text": "The Profiles namespace provides 2D profile classes such as CircleShape, RectangleShape, and custom profiles like ArbitraryProfile and CenterLineProfile that can be extruded or revolved into 3D solids."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "inherited_unit:061.list",
+        "inherited_unit:069.heading",
+        "inherited_unit:070.paragraph",
+        "install_command:dotnet",
+        "package:name",
+        "package:target_framework",
+        "package:version"
+      ],
+      "section": "scope_limitations",
+      "slot": "scope",
+      "text": "Aspose.3D FOSS for .NET reads and writes 3D scenes using standard Scene.Open and Scene.Save APIs for supported formats including PLY, FBX, GLTF, OBJ, STL, and others; it supports netcoreapp3.1, net6.0, net8.0, and net10.0 targets in version 26.1.0."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:061.list",
+        "install_command:dotnet"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:1",
+      "text": "Rendering is not implemented — Scene.Render, RenderFactory, and the IRenderTarget/IRenderWindow rendering pipeline all throw NotImplementedException."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:061.list",
+        "install_command:dotnet"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:2",
+      "text": "PolygonModifier operations (triangulation, normal/UV generation, mesh merge, boolean operations via BooleanOperand/BooleanOperator) and most TriMesh raw-buffer conversion helpers throw NotImplementedException."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:061.list",
+        "install_command:dotnet"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:3",
+      "text": "NURBS evaluation and conversion are not functional — NurbsCurve.Evaluate/EvaluateAt and NurbsSurface.ToMesh throw NotImplementedException."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:061.list",
+        "install_command:dotnet"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:4",
+      "text": "Microsoft 3MF production-extension metadata (IsBuildable, GetTransformForBuild, SetBuildable, object type accessors) is not implemented, though core 3MF geometry import/export works."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:061.list",
+        "install_command:dotnet"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:5",
+      "text": "RVM attribute data does not load — RvmFormat.LoadAttributes is not implemented, though core RVM geometry import/export works."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:061.list",
+        "install_command:dotnet"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:6",
+      "text": "Text watermarking is not currently functional, and License and Metered APIs are present for API-surface compatibility but are not applicable to this open-source edition."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.animation.animationchannel"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.animation.animationchannel",
+      "text": "Aspose.ThreeD.Animation.AnimationChannel represents an animation channel that controls a property over time using a sequence of keyframes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.animation.extrapolation"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.animation.extrapolation",
+      "text": "Aspose.ThreeD.Animation.Extrapolation defines how animation values are extended beyond the defined keyframe range."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.animation.keyframe"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.animation.keyframe",
+      "text": "Aspose.ThreeD.Animation.KeyFrame represents a single keyframe in an animation sequence with time, value, and interpolation parameters."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.animation.keyframesequence"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.animation.keyframesequence",
+      "text": "Aspose.ThreeD.Animation.KeyframeSequence represents a collection of keyframes that define an animation sequence for a specific property."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.entities.booleanoperator"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.entities.booleanoperator",
+      "text": "Aspose.ThreeD.Entities.BooleanOperator performs boolean operations on geometric entities."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.entities.polygonmodifier"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.entities.polygonmodifier",
+      "text": "Aspose.ThreeD.Entities.PolygonModifier provides functionality to modify polygonal mesh data."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.entities.skeletontype"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.entities.skeletontype",
+      "text": "Aspose.ThreeD.Entities.SkeletonType specifies the type of skeleton used in skeletal animation."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.entities.vertexelementbinormal"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.entities.vertexelementbinormal",
+      "text": "Aspose.ThreeD.Entities.VertexElementBinormal stores binormal data for each vertex in a mesh."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.entities.vertexelementnormal"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.entities.vertexelementnormal",
+      "text": "Aspose.ThreeD.Entities.VertexElementNormal stores normal vectors for each vertex in a mesh."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.entities.vertexelementtangent"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.entities.vertexelementtangent",
+      "text": "Aspose.ThreeD.Entities.VertexElementTangent stores tangent vectors for each vertex in a mesh."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.formats.gltf.enumtype"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.formats.gltf.enumtype",
+      "text": "Aspose.ThreeD.Formats.GLTF.EnumType defines the type of an enumeration in a GLTF asset."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.formats.gltf.enumvalue"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.formats.gltf.enumvalue",
+      "text": "Aspose.ThreeD.Formats.GLTF.EnumValue represents a single value within a GLTF enumeration."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.formats.gltf.property"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.formats.gltf.property",
+      "text": "Aspose.ThreeD.Formats.GLTF.Property defines a property in a GLTF asset."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.formats.gltf.propertytable"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.formats.gltf.propertytable",
+      "text": "Aspose.ThreeD.Formats.GLTF.PropertyTable groups related properties for a GLTF asset."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.formats.microsoft3mfsaveoptions"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.formats.microsoft3mfsaveoptions",
+      "text": "Aspose.ThreeD.Formats.Microsoft3MFSaveOptions specifies options for saving scenes to the Microsoft 3MF format."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.formats.plyloadoptions"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.formats.plyloadoptions",
+      "text": "Aspose.ThreeD.Formats.PlyLoadOptions specifies options for loading scenes from the PLY format."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.formats.plysaveoptions"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.formats.plysaveoptions",
+      "text": "Aspose.ThreeD.Formats.PlySaveOptions specifies options for saving scenes to the PLY format."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.render.pixelmapmode"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.render.pixelmapmode",
+      "text": "Aspose.ThreeD.Render.PixelMapMode defines how pixel maps are applied during rendering."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.render.pixelmapping"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.render.pixelmapping",
+      "text": "Aspose.ThreeD.Render.PixelMapping specifies how texture coordinates map to pixel locations."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.boundingbox2d"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.boundingbox2d",
+      "text": "Aspose.ThreeD.Utilities.BoundingBox2D represents a two-dimensional bounding box."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.fmatrix4"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.fmatrix4",
+      "text": "Aspose.ThreeD.Utilities.FMatrix4 represents a 4x4 matrix of single-precision floating-point numbers."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.fvector2"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.fvector2",
+      "text": "Aspose.ThreeD.Utilities.FVector2 represents a two-dimensional vector of single-precision floating-point numbers."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.fvector4"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.fvector4",
+      "text": "Aspose.ThreeD.Utilities.FVector4 represents a four-dimensional vector of single-precision floating-point numbers."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.ioextension"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.ioextension",
+      "text": "Aspose.ThreeD.Utilities.IOExtension provides utility methods for input and output operations."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.mathutils"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.mathutils",
+      "text": "Aspose.ThreeD.Utilities.MathUtils provides common mathematical utility functions."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.matrix4"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.matrix4",
+      "text": "Aspose.ThreeD.Utilities.Matrix4 represents a 4x4 matrix of double-precision floating-point numbers."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.parseexception"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.parseexception",
+      "text": "Aspose.ThreeD.Utilities.ParseException is thrown when parsing of input data fails."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.rect"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.rect",
+      "text": "Aspose.ThreeD.Utilities.Rect represents a rectangle with floating-point coordinates."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.relativerectangle"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.relativerectangle",
+      "text": "Aspose.ThreeD.Utilities.RelativeRectangle represents a rectangle defined by relative coordinates."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.semanticattribute"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.semanticattribute",
+      "text": "Aspose.ThreeD.Utilities.SemanticAttribute defines semantic attributes for vertex data."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.transformbuilder"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.transformbuilder",
+      "text": "Aspose.ThreeD.Utilities.TransformBuilder provides methods to construct transformation matrices."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.vector2"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.vector2",
+      "text": "Aspose.ThreeD.Utilities.Vector2 represents a two-dimensional vector of double-precision floating-point numbers."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.vector3"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.vector3",
+      "text": "Aspose.ThreeD.Utilities.Vector3 represents a three-dimensional vector of double-precision floating-point numbers."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.vector4"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.vector4",
+      "text": "Aspose.ThreeD.Utilities.Vector4 represents a four-dimensional vector of double-precision floating-point numbers."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.vertex"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.vertex",
+      "text": "Aspose.ThreeD.Utilities.Vertex represents a single vertex in a mesh with associated attributes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.vertexdeclaration"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.vertexdeclaration",
+      "text": "Aspose.ThreeD.Utilities.VertexDeclaration describes the layout of vertex data in a mesh."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.vertexfield"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.vertexfield",
+      "text": "Aspose.ThreeD.Utilities.VertexField defines a single field within a vertex declaration."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.watermark"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.watermark",
+      "text": "Aspose.ThreeD.Utilities.Watermark represents a watermark that can be applied to 3D scenes."
+    }
+  ]
+}
