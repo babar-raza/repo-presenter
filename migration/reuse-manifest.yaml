@@ -843,3 +843,40 @@ entries:
       changes every future request_sha256 built from it -- per mission section 8, this
       correctly reopens only the jobs that actually consumed the changed manifest, never a
       global reseal. Not yet exercised against a second manifest version to prove this live.
+
+  - component: "extractors/platforms/net_format_declarations.py + format_overclaim.py Mermaid
+      claim extension"
+    source: "new engineering (confirmed -- the old repo has the identical return-[]
+      format_declarations stub for net.py too)"
+    evaluated_at_shas: []
+    behavior: >
+      net_format_declarations.py: two independent static C# sources, mirroring Python's own
+      two-source design -- a nested `class X : FileFormat` with a `base(".ext", ...)`
+      constructor call (declaration), and a dispatch switch arm matching `FileFormat.X` inside
+      an Importer/Exporter-named method (registration, direction from the method name).
+      format_overclaim.py: a second, bounded claim source reading Mermaid At a Glance
+      `i\d+`/`o\d+` node labels for acronym-shaped tokens, alongside the existing table-row
+      check.
+    evidence: >
+      Designed against the REAL live source of aspose-3d-foss/Aspose.3D-FOSS-for-.NET
+      (2026-10-22), read directly before writing any pattern-matching code (IOService.cs's
+      real CreateImporter/CreateExporter switch, FileFormat.cs's real nested format classes).
+      4 new unit tests (test_net_format_declarations.py) plus 3 new format_overclaim tests
+      (Mermaid positive case, ordinary-word negative control, the real AVEVA/PDMS false-
+      positive regression). Real end-to-end result against the live repository: all 4 known
+      over-claimed formats (U3D/RVM/AMF/HTML5) caught, zero false positives after the AVEVA/
+      PDMS fix. See evidence/build/P2_REAL_ENGINE_SALVAGE/aspose-3d-foss__Aspose.3D-FOSS-for-.NET/.
+    disposition: ADD (not REUSE/ADAPT -- genuinely new code, no old-repo equivalent exists)
+    reason: >
+      Closes the single biggest "lanes work equally for all candidates" gap for the .NET
+      ecosystem specifically. The two-source design is deliberately simple (text/regex, not a
+      full C# parse) and fails closed (finds nothing on a regex miss, never silently wrong).
+    target_module: src/repo_presenter/extractors/platforms/net_format_declarations.py,
+      src/repo_presenter/readme/correction/detectors/format_overclaim.py (extended)
+    smallest_first_integration_test: >
+      scripts/run_lane_l.py aspose-3d-foss/Aspose.3D-FOSS-for-.NET net -- the real end-to-end
+      proof above.
+    portfolio_consumers: Lane L, every .NET candidate. The declaration+registration pattern is
+      NOT yet proven for java/cpp/go/rust/typescript -- each needs its own real-source
+      investigation before a reader is written for it (do not assume this one generalizes).
+    invalidation_impact: not yet pulled into any other ecosystem.

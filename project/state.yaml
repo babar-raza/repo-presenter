@@ -210,19 +210,32 @@ next_ready_items:
       P1_VERTICAL_SLICE facts.json/candidate -- this is the proof that the salvaged engine,
       not just its unit tests, actually works on a real repository.
   - id: BUILD_FORMAT_DETECTION_FOR_NON_PYTHON_ECOSYSTEMS
-    status: READY
+    status: IN_PROGRESS
     priority: high
     purpose: >
-      The single biggest "lanes don't yet work equally" gap found in this session
-      (RUN_PIPELINE_ON_MORE_ECOSYSTEMS's major_finding): format_claims/format_declarations
-      are stubbed for net/java/cpp/go/rust/typescript, so format/capability over- and
-      under-claim detection -- the exact defect class the mission's own seed example (OBJ
-      export) belongs to -- only exists for Python. Needs new, ecosystem-specific source-
-      pattern readers (not a port; the old repo never built these either), starting with
-      .NET (known real target: aspose-3d-foss/.NET's U3D/RVM/AMF/HTML5 over-claim, already
-      independently confirmed by hand and ready to re-verify once this lands) and/or
-      extending format_overclaim.py to parse prose/Mermaid claims, not just markdown tables
-      (also needed for the same .NET case; it is currently table-only by design).
+      The single biggest "lanes don't yet work equally" gap found in this session. 1 of 6
+      remaining ecosystems done (.NET); java/cpp/go/rust/typescript still stubbed.
+    done_net: >
+      DONE 2026-10-22, clean (zero false positives after one found-and-fixed): new
+      extractors/platforms/net_format_declarations.py (class-declaration + dispatch-switch
+      reading, verified directly against aspose-3d-foss/.NET's real IOService.cs: finds
+      exactly its real 8 registered formats, correctly finds none for U3D/RVM/AMF/HTML5) +
+      format_overclaim.py extended with a second, bounded claim source (Mermaid At a Glance
+      i\d+/o\d+ node labels, not general prose parsing). Real end-to-end result: all 4 known
+      over-claimed formats (U3D, RVM, AMF, HTML5) caught automatically, at every node they
+      appear in, plus a correct complementary under-claim finding (COLLADA registered and
+      working but never mentioned). One real false positive found and fixed along the way
+      (AVEVA/PDMS, a vendor+product-suite name mistaken for format names) with a regression
+      test. 912/912 whole-repo tests pass. Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/aspose-3d-foss__Aspose.3D-FOSS-for-.NET/.
+    remaining: >
+      java/cpp/go/rust/typescript format_claims/format_declarations are still stubbed (return
+      []) -- confirmed each is the old repo's own unfinished state too, same as .NET was. The
+      .NET reader's two-source design (declaration class + dispatch-switch registration) is a
+      template, not a guarantee -- each ecosystem's real dispatch idiom needs its own
+      investigation against real source before writing a reader, the same way this session
+      read aspose-3d-foss/.NET's real IOService.cs before designing net_format_declarations.py,
+      rather than guessing a pattern and hoping it generalizes.
   - id: WRITE_PROMPTS_FOR_AUTHORING
     status: DONE
     purpose: >

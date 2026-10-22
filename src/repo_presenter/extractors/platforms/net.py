@@ -28,6 +28,9 @@ from pathlib import Path
 from typing import Any
 from xml.etree import ElementTree
 
+from repo_presenter.extractors.platforms.net_format_declarations import (
+    format_declarations as net_format_declarations,
+)
 from repo_presenter.extractors.surface.extractor import surface_symbols
 from repo_presenter.extractors.surface.manifest import (
     PackageIdentity,
@@ -404,8 +407,10 @@ class NetPlugin:
         return []
 
     def format_declarations(self, root: Path, tree_paths: list[str]) -> Sequence[FormatDeclaration]:
-        """Not yet built; the vendored format reader lands with the cohort that needs it."""
-        return []
+        """Static class-declaration + dispatch-switch reading; see net_format_declarations.py's
+        own module docstring (new engineering, 2026-10-22, not a port -- the old repository
+        never built this for .NET either)."""
+        return net_format_declarations(root, tree_paths)
 
 
 PLUGIN: Any = NetPlugin()

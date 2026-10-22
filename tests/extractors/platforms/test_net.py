@@ -326,9 +326,11 @@ def test_a_project_with_no_package_id_takes_the_msbuild_default_name(tmp_path: P
 
 
 def test_the_plugin_imports_only_core_and_the_shared_surface_facades(tmp_path: Path) -> None:
-    """This pull's net.py imports only core/, the shared surface facades, and stdlib - no
-    sibling platform module, and (unlike the old repo) no tree-sitter grammars or execution
-    toolchain, since surface_facts/verify_examples were deliberately not ported this pass."""
+    """This pull's net.py imports only core/, the shared surface facades, stdlib, and its own
+    net_format_declarations.py sibling (added 2026-10-22, same pattern as python.py's own
+    python_format_declarations.py sibling) - no OTHER sibling platform module, and (unlike the
+    old repo) no tree-sitter grammars or execution toolchain, since surface_facts/verify_examples
+    were deliberately not ported this pass."""
     import ast
 
     source = Path(net.__file__).read_text("utf-8")
@@ -337,7 +339,11 @@ def test_the_plugin_imports_only_core_and_the_shared_surface_facades(tmp_path: P
         for node in ast.walk(ast.parse(source))
         if isinstance(node, ast.ImportFrom) and node.module
     }
-    assert not any(".platforms." in name and not name.endswith(".net") for name in imported)
+    allowed_sibling = "repo_presenter.extractors.platforms.net_format_declarations"
+    assert not any(
+        ".platforms." in name and not name.endswith(".net") and name != allowed_sibling
+        for name in imported
+    )
     assert all(
         name.startswith(
             (
@@ -350,6 +356,7 @@ def test_the_plugin_imports_only_core_and_the_shared_surface_facades(tmp_path: P
                 "xml.etree",
             )
         )
+        or name == allowed_sibling
         for name in imported
     ), sorted(imported)
 

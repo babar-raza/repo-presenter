@@ -1,4 +1,4 @@
-"""Format/capability OVER-claiming: a README asserts a format or capability works, with nothing
+r"""Format/capability OVER-claiming: a README asserts a format or capability works, with nothing
 confirming it is actually wired up or reachable.
 
 ``migration/reuse-manifest.yaml``'s readme_correction/ entry records this as a ``known_gap``: the
@@ -21,10 +21,21 @@ Because confirming an over-claim needs a human-reviewable fact citation, not bli
 this detector never edits -- every result is a report-only ``Finding``, even when a CONTRADICTED
 fact makes the over-claim certain.
 
-Known limitation, stated plainly rather than silently extended: this detector only reads table
-rows. A prose sentence ("this library also exports OBJ files") makes the same over-claim in a
-shape this detector does not parse; broadening to prose is future work, not attempted here, to
-avoid a regex fragile enough to itself over-claim what it detects.
+Second claim source, added 2026-10-22: the Mermaid "At a Glance" diagram's Starting
+Points/Outputs node labels (``i\d+["..."]``/``o\d+["..."]`` inside a ```mermaid fence), the
+exact shape the known aspose-3d-foss/Aspose.3D-FOSS-for-.NET U3D/RVM/AMF/HTML5 over-claim
+actually lives in (confirmed live: that README's claim is in this diagram and in prose, never a
+table, so the table-only check never fired against it). Still deliberately bounded, not general
+prose parsing: only acronym-shaped tokens (``[A-Z0-9]{2,6}`` with at least one letter, so "3MF"
+and "HTML5" both match but ordinary words like "An"/"existing" cannot, since they are not
+all-caps) inside these two specific node-ID prefixes, which this project's own README contract
+(``docs/MISSION_AUTHORITY.md``) already fixes as "Starting Points"/"Outputs" by convention --
+not a regex let loose on arbitrary prose.
+
+Known limitation, stated plainly rather than silently extended: a prose sentence outside a
+table or the At a Glance diagram ("this library also exports OBJ files" in a plain paragraph)
+still makes the same over-claim in a shape neither check parses; broadening further is future
+work, not attempted here, to avoid a regex fragile enough to itself over-claim what it detects.
 """
 
 from __future__ import annotations
@@ -45,6 +56,17 @@ _CLAIMED_KINDS = frozenset({"format", "capability"})
 _TRUTHY = re.compile(r"^(?:✅|✔|yes|supported|:heavy_check_mark:)$", re.IGNORECASE)
 _SEPARATOR_CELL = re.compile(r"^:?-{3,}:?$")
 _STRIP_MARKUP = re.compile(r"[`*_]")
+# Mermaid At a Glance node: `    o3["3MF or RVM file (Microsoft 3MF, AVEVA PDMS RVM)"]`.
+_MERMAID_IO_NODE = re.compile(r'^\s*[io]\d+\["([^"]+)"\]\s*$')
+# An acronym-shaped token: 2-6 chars, all uppercase letters/digits, at least one letter (so "3MF"
+# and "HTML5" both match; a bare number or an ordinary capitalized word like "An" does not).
+_ACRONYM = re.compile(r"\b(?=[A-Z0-9]*[A-Z])[A-Z0-9]{2,6}\b")
+# Short acronym-shaped words that are not format/capability names and would otherwise false-
+# positive inside a Starting-Points/Outputs node label's ordinary English. AVEVA/PDMS are a real
+# measured false positive (2026-10-22): aspose-3d-foss/Aspose.3D-FOSS-for-.NET's own node label
+# reads `"3MF or RVM file (Microsoft 3MF, AVEVA PDMS RVM)"` -- a vendor name and a product suite
+# name clarifying what RVM is, not a second and third file-format claim.
+_NOT_A_FORMAT = frozenset({"AN", "OR", "A", "3D", "2D", "ID", "IO", "AVEVA", "PDMS"})
 
 
 def _table_claims(ctx: Context) -> list[tuple[int, str, str]]:
@@ -66,6 +88,25 @@ def _table_claims(ctx: Context) -> list[tuple[int, str, str]]:
     return claims
 
 
+def _mermaid_claims(ctx: Context) -> list[tuple[int, str, str]]:
+    """``(line number, claimed label, raw line)`` for every acronym-shaped token named inside a
+    Mermaid At a Glance Starting-Points/Outputs node, one claim per token (a node naming two
+    formats, "3MF or RVM file", yields two separate claims so each is checked on its own)."""
+    claims: list[tuple[int, str, str]] = []
+    for line in ctx.lines:
+        if not line.in_fence:
+            continue
+        match = _MERMAID_IO_NODE.match(line.text)
+        if match is None:
+            continue
+        label_text = match.group(1)
+        for token in _ACRONYM.findall(label_text):
+            if token in _NOT_A_FORMAT:
+                continue
+            claims.append((line.number, token, line.text))
+    return claims
+
+
 def _normalize(label: str) -> str:
     return _STRIP_MARKUP.sub("", label).strip().lower().lstrip(".")
 
@@ -81,7 +122,11 @@ def _matches(token: str, fact_value: str) -> bool:
 def format_overclaim(ctx: Context) -> DetectorResult:
     relevant = [fact for fact in ctx.facts.facts if fact.kind in _CLAIMED_KINDS]
     findings: list[Finding] = []
-    for number, label, raw in _table_claims(ctx):
+    seen: set[tuple[int, str]] = set()
+    for number, label, raw in [*_table_claims(ctx), *_mermaid_claims(ctx)]:
+        if (number, label) in seen:
+            continue  # the same node/row naming the same token twice is one claim, not two
+        seen.add((number, label))
         token = _normalize(label)
         if len(token) < 2:
             continue

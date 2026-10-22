@@ -66,6 +66,58 @@ def test_a_correctly_caveated_row_marked_unsupported_is_not_flagged(
     assert all("AMF" not in finding.text for finding in result.findings)
 
 
+MERMAID_README = (
+    "# P\n\n```mermaid\n"
+    "flowchart TD\n"
+    '  i1["An existing 3MF or RVM file"]\n'
+    '  o1["3MF or RVM file"]\n'
+    "```\n"
+)
+
+
+def test_a_mermaid_output_node_naming_an_unsupported_format_is_flagged(
+    make_context: Any, make_facts: Any, make_fact: Any
+) -> None:
+    """The real shape of the aspose-3d-foss/Aspose.3D-FOSS-for-.NET U3D/RVM/AMF/HTML5
+    over-claim (2026-10-22): the claim lives in the Mermaid At a Glance diagram's Outputs node,
+    never a table."""
+    facts = make_facts(make_fact("format:output.3mf", ".3mf", evidence=(("io.cs", None),)))
+    result = format_overclaim(make_context(MERMAID_README, facts))
+    # RVM has no backing fact at all: flagged, once per node it appears in (both the Starting
+    # Points and the Outputs node here). 3MF is backed by a SUPPORTED fact: never flagged, on
+    # either node.
+    reasons = [f.reason for f in result.findings]
+    assert len(result.findings) == 2
+    assert all("RVM" in reason for reason in reasons)
+    assert not any("3MF" in reason for reason in reasons)
+
+
+def test_a_vendor_and_product_suite_name_clarifying_a_real_format_is_not_flagged(
+    make_context: Any, make_facts: Any, make_fact: Any
+) -> None:
+    """Regression: the exact real false positive measured against aspose-3d-foss/
+    Aspose.3D-FOSS-for-.NET's own live README (2026-10-22) -- 'AVEVA PDMS RVM' names a vendor
+    and product suite clarifying what RVM is, not two more format claims."""
+    readme = (
+        '# P\n\n```mermaid\nflowchart TD\n'
+        '  o3["3MF or RVM file (Microsoft 3MF, AVEVA PDMS RVM)"]\n```\n'
+    )
+    facts = make_facts()  # no backing facts for RVM, 3MF, AVEVA, or PDMS
+    result = format_overclaim(make_context(readme, facts))
+    reasons = [f.reason for f in result.findings]
+    assert any("RVM" in reason for reason in reasons)  # the real format claim is still flagged
+    assert not any("AVEVA" in reason or "PDMS" in reason for reason in reasons)
+
+
+def test_an_ordinary_word_in_a_mermaid_node_is_not_mistaken_for_a_format(
+    make_context: Any, make_facts: Any
+) -> None:
+    readme = '# P\n\n```mermaid\nflowchart TD\n  i1["An existing input file"]\n```\n'
+    facts = make_facts()
+    result = format_overclaim(make_context(readme, facts))
+    assert result.findings == ()
+
+
 def test_an_api_reference_row_whose_prose_merely_contains_the_word_supported_is_not_flagged(
     make_context: Any, make_facts: Any
 ) -> None:
