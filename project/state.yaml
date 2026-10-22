@@ -384,8 +384,23 @@ next_ready_items:
       deterministic (readme/composition/components/shell.py, policy.py, already ported) and
       may not need a call. Firing the full S3->S4->S5->S6 cascade for real is larger than one
       sitting; deferred in favor of BUILD_FORMAT_DETECTION_FOR_NON_PYTHON_ECOSYSTEMS, which
-      more directly serves the owner's explicit priority ("make the lanes work equally for
-      all candidates") and does not have this cascading-call cost.
+      more directly served the owner's explicit priority ("make the lanes work equally for
+      all candidates") and did not have this cascading-call cost.
+    blocker_cleared_2026_10_22: >
+      S3's own packet needs "inherited_units" (readme/evidence/facts/inherited.py), which this
+      session's own earlier audit found was never ported at all -- the real blocker for firing
+      S3 for real, not just a missing call. Now ported (REUSE, verbatim except import paths),
+      along with its own dependency repository_files.py and schemas/facts.schema.json (also
+      never ported -- found only by trying to port inherited.py's own test file, which
+      validates every inherited_unit fact against this exact schema). 38 new/moved tests, all
+      green; 978/978 whole-repo tests pass. One test NOT ported, stated not hidden:
+      ``test_an_oversized_list_reduces_the_uncited_omit_candidate_count_per_sub_unit`` needs
+      ``readme/reconciliation/dispositions.py::uncited_omit_candidates``, which the Lane R
+      porting pass earlier this session did not carry over (dispositions.py is PARTIAL, see its
+      own migration/reuse-manifest.yaml entry) -- a second, separate small port, not yet done,
+      needed only for that one test, not for inherited.py's own correctness. S3 can now be fired
+      for real with a genuine inherited_units packet field; S4's own needs have not yet been
+      re-examined with this gap closed.
   - id: WIRE_GATEVERIFY_TO_PORTFOLIO
     status: READY
     purpose: >

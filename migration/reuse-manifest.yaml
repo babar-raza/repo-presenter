@@ -1098,3 +1098,49 @@ entries:
     invalidation_impact: not yet pulled into any other ecosystem. This was the last ecosystem
       in BUILD_FORMAT_DETECTION_FOR_NON_PYTHON_ECOSYSTEMS; see project/state.yaml's summary
       field on that card for the portfolio-wide retrospective across all six readers.
+
+  - component: "readme/evidence/facts/inherited.py + repository_files.py +
+      schemas/facts.schema.json"
+    source: "old repo's components/readme/evidence/facts/{inherited.py,repository_files.py}
+      and schemas/facts.schema.json -- found missing only by trying to port
+      WIRE_PRESENTATION_PLANNING_AND_REAL_UNIT_CHECKS's own S3 packet dependency"
+    evaluated_at_shas: []
+    behavior: >
+      inherited.py inventories the existing README as one inherited_unit fact per top-level
+      CommonMark block (heading, paragraph, badge row, list, code block, table, html block,
+      blockquote), on a real markdown-it-py token stream, with two splitting rules for an
+      oversized or member-reference-shaped list (RC-06 and the oversized-list chunker; both
+      documented at length in the module's own docstring, carried over verbatim).
+      repository_files.py (its one real dependency) resolves a file or project name a unit's
+      own text spells against the pinned tree, recorded in attributes["repository_files"] so
+      authoring's identifier rule can admit it. facts.schema.json is the JSON Schema every
+      FactsDocument validates against; it did not exist in this repository at all before this
+      entry, discovered only because inherited.py's own tests validate every fact they produce
+      against it.
+    evidence: >
+      REUSE, verbatim except import paths (repository_presenter.components.readme.evidence.facts
+      -> repo_presenter.readme.evidence.facts). Both source files and the schema ported
+      byte-for-byte otherwise. 38 of 39 old tests ported and passing
+      (tests/readme/evidence/facts/{test_inherited.py,test_repository_files.py}); the one NOT
+      ported, test_an_oversized_list_reduces_the_uncited_omit_candidate_count_per_sub_unit,
+      needs readme/reconciliation/dispositions.py::uncited_omit_candidates, which this
+      session's earlier dispositions.py port (PARTIAL, see its own entry) did not carry over --
+      stated in both this entry and the new test file's own module docstring, not silently
+      dropped. 978/978 whole-repo tests pass (940 before this port + 38 new).
+    disposition: "REUSE (verbatim except import paths); facts.schema.json is ADD in the sense
+      that it did not exist in this repository before, though its content is REUSE from the
+      old repo's own schema"
+    reason: >
+      Direct blocker for WIRE_PRESENTATION_PLANNING_AND_REAL_UNIT_CHECKS: the real
+      repository_investigation (S3) prompt packet needs "inherited_units" as an input field,
+      and this was the one genuinely missing piece, not a missing LLM call. Firing S3 for real
+      is now unblocked by this port specifically (S4's own needs were not re-examined here).
+    target_module: src/repo_presenter/readme/evidence/facts/inherited.py,
+      src/repo_presenter/readme/evidence/facts/repository_files.py, schemas/facts.schema.json
+    smallest_first_integration_test: tests/readme/evidence/facts/{test_inherited.py,
+      test_repository_files.py} -- 38/38 green, full suite 978/978 green.
+    portfolio_consumers: Lane R's S3 repository_investigation packet (once fired for real);
+      any future consumer of inherited_unit facts. Not yet wired into scripts/run_lane_l.py or
+      any production pipeline call site -- ported and tested, not yet integrated into a
+      running cascade.
+    invalidation_impact: not yet pulled into any running pipeline; no invalidation surface yet.
