@@ -717,15 +717,28 @@ next_ready_items:
       Revert the four src/scripts files and the two test files in one commit; dispositions=
       defaults to None everywhere it was added, so no other caller's behaviour depends on this
       change existing.
+    targeted_recheck_2026_10_22: >
+      DONE for one of the two worsened repositories: re-fired S6 and S8 live (not just the
+      committed unit tests) against aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript (the ninth
+      cascade's own repository, the single worst instance this session observed), reusing the
+      same accepted investigation.json/dispositions.json/plan.json -- S3/S4/S5 not re-fired.
+      S6 was unaffected, as expected (the original defect there was never in S6's own
+      pre-coherence output for this repository). S8's coherence#1 batch needed 2 calls this
+      time (originally 1): the new check rejected the model's first attempt, and the re-ask
+      produced a genuinely distinct "opening" unit (naming Scene.fromFile/openFromBuffer/save/
+      saveToBuffer and the Scene/Node/Mesh/Material/Camera/Light object model) instead of the
+      near word-for-word copy the original run produced. The fix holds under a live re-run,
+      not only in the unit tests. Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/duplicate_opening_fix_targeted_recheck/.
     remaining: >
       Partial fix only, honestly scoped: catches near-total duplication (states_all() full
       containment, either direction) but not the milder structural redundancy most of the ten
       cascades actually showed (two adjacent "what this product is" paragraphs that differ in
       wording but still both introduce the product). That broader question -- whether "opening"
       should ever carry a whole separately preserved paragraph alongside a freshly authored one
-      at all -- is unchanged and still needs the deferred validation/review/repair subsystem. A
-      targeted recheck (re-firing the cascade against the sixth and ninth cascades' own
-      repositories) is the natural next verification step, not yet done as of this card.
+      at all -- is unchanged and still needs the deferred validation/review/repair subsystem.
+      The targeted recheck above covers the ninth cascade's repository only; the sixth
+      cascade's repository (the other worsened case, rust) has not yet been re-fired.
   - id: WIRE_GATEVERIFY_TO_PORTFOLIO
     status: READY
     purpose: >
