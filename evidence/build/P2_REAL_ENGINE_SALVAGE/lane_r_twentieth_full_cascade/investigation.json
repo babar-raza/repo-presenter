@@ -1,0 +1,185 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:repository"
+    ],
+    "text": "Developers who need to generate or modify PowerPoint presentations on a server or in a build pipeline without installing PowerPoint or using COM interop."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.slides.foss",
+        "public_symbol:aspose.slides"
+      ],
+      "text": "Create new presentations, open existing ones from paths or streams, save to paths or streams, and save subsets of slides.",
+      "title": "Create and edit presentations"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.slides.foss",
+        "public_symbol:aspose.slides"
+      ],
+      "text": "Add, insert, remove, clone, and hide slides; enumerate masters and layouts; and clone masters.",
+      "title": "Slide manipulation"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.slides.foss",
+        "public_symbol:aspose.slides"
+      ],
+      "text": "Support for 187 of 189 ShapeType values including AutoShapes, picture frames, tables, and connectors with z-order reordering.",
+      "title": "Shape rendering"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.slides.foss",
+        "public_symbol:aspose.slides"
+      ],
+      "text": "Text frames, paragraphs, portions with character and paragraph formatting including bold, italic, underline, alignment, bullets, and text-frame properties.",
+      "title": "Text formatting"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.slides.foss",
+        "public_symbol:aspose.slides"
+      ],
+      "text": "Solid, gradient, pattern, picture, and no-fill options for shapes, lines, text portions, and table cells; line properties including width, dash style, and arrowheads.",
+      "title": "Fill and line styling"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.slides.foss",
+        "public_symbol:aspose.slides"
+      ],
+      "text": "Write notes slides with masters, footer text, slide number visibility, and classic comment authors and comments with timestamps.",
+      "title": "Notes and comments"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.slides.foss",
+        "public_symbol:aspose.slides"
+      ],
+      "text": "Write core, extended, and custom document properties to docProps/core.xml, docProps/app.xml, and docProps/custom.xml.",
+      "title": "Document properties"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.slides.foss",
+        "public_symbol:aspose.slides"
+      ],
+      "text": "Carry through parts the library does not model unchanged during load and save operations.",
+      "title": "Unknown parts preservation"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.slides.foss",
+        "public_symbol:aspose.slides"
+      ],
+      "text": "Does not support saving to formats other than .pptx, .ppsx, and .potx; other SaveFormat values raise NotSupportedException."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.slides.foss",
+        "public_symbol:aspose.slides"
+      ],
+      "text": "Does not support charts, animations, transitions, themes, backgrounds, group shapes, or hyperlinks."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.slides.foss",
+        "public_symbol:aspose.slides"
+      ],
+      "text": "Does not write modern threaded comments; only classic comment lists are supported."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.slides.foss",
+        "public_symbol:aspose.slides"
+      ],
+      "text": "Does not include language attributes in generated presentations; PowerPoint uses the authoring machine's default language."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.slides.foss",
+        "public_symbol:aspose.slides"
+      ],
+      "text": "No API to change slide size; new presentations use a fixed 4:3 screen size."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.slides.foss",
+        "public_symbol:aspose.slides"
+      ],
+      "text": "Picture embedding requires reading bytes manually; no overload accepts a file path directly."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "identity:repository",
+        "dependency:none"
+      ],
+      "text": "Enables server-side PowerPoint generation and modification without requiring a native PowerPoint installation or COM dependencies."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "dependency:none"
+      ],
+      "text": "Provides a pure .NET implementation that builds the Office Open XML package directly, avoiding native dependencies."
+    },
+    {
+      "fact_ids": [
+        "package:target_framework",
+        "dependency:none"
+      ],
+      "text": "Supports .NET 8 and .NET 10 with no NuGet dependencies, simplifying deployment and reducing attack surface."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:repository",
+      "package:name",
+      "dependency:none"
+    ],
+    "text": "Aspose.Slides.FOSS for .NET is an MIT-licensed .NET library that creates, reads, and edits PowerPoint .pptx presentations by directly building the Office Open XML package without any external dependencies."
+  },
+  "uncertainties": [
+    "Whether the library supports 3-D properties beyond what is listed in the README.",
+    "Whether the library supports SmartArt or OLE objects despite the README stating they are not supported.",
+    "Whether the library supports macro-enabled presentations (.pptm) despite the README not mentioning them.",
+    "Whether the library supports reading presentations with modern threaded comments even if it cannot write them.",
+    "Whether the library supports custom slide sizes via undocumented APIs.",
+    "Whether the library supports image rendering or conversion to formats like PDF or images despite the README stating it does not.",
+    "Whether the library supports animation or transition properties beyond what is explicitly listed.",
+    "Whether the library supports background styling beyond what is explicitly listed."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.slides.foss",
+        "public_symbol:aspose.slides"
+      ],
+      "name": "Create presentation from scratch",
+      "text": "Instantiate a new Presentation object, add shapes, text, tables, and other elements, then save to a .pptx file using the Save method."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.slides.foss",
+        "public_symbol:aspose.slides"
+      ],
+      "name": "Load and modify existing presentation",
+      "text": "Open a .pptx file via a path or Stream, modify slides, shapes, or text, and save the updated presentation."
+    },
+    {
+      "fact_ids": [
+        "install_command:dotnet",
+        "package:name"
+      ],
+      "name": "Install via dotnet CLI",
+      "text": "Run dotnet add package Aspose.Slides.FOSS to add the library to a .NET project."
+    }
+  ]
+}

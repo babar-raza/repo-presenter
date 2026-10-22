@@ -643,10 +643,23 @@ next_ready_items:
       characters pre-coherence, the largest rendered README this session). 1052/1052
       whole-repo tests pass (no src changes this round). Evidence:
       evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_nineteenth_full_cascade/.
+    twentieth_cascade_2026_10_22: >
+      DONE: fired the full cascade (S3-S8) against a twentieth repository
+      (aspose-slides-foss/Aspose.Slides-FOSS-for-.NET), a third .NET repository. S3-S6 all
+      accepted on the first attempt, including "opening." Both S8 coherence batches accepted
+      on the first attempt, no revisions anywhere. Real new finding: the authored "opening"
+      unit's FIRST sentence is a near word-for-word restatement of the preserved paragraph,
+      but its 2nd/3rd sentences add genuinely new content, so states_all()'s whole-unit
+      full-containment test correctly did not fire (it is not scoped to catch partial,
+      sentence-level duplication within an otherwise-adequate unit). This is the clearest
+      real evidence yet of CLOSE_DUPLICATE_OPENING_PARAGRAPH_PARTIAL's own documented scope
+      limit, not a new bug -- recorded in full in its own card. 1052/1052 whole-repo tests
+      pass (no src changes this round). Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_twentieth_full_cascade/.
     remaining: >
-      19 of 36 repositories now have a FULL real cascade run through S8 (plus one,
+      20 of 36 repositories now have a FULL real cascade run through S8 (plus one,
       aspose-html-foss/Python, with S3-S6+render only). All 7 ecosystems have been exercised
-      at least once (python x9, go, net x2, java, cpp, rust, typescript x2); the portfolio as
+      at least once (python x9, go, net x3, java, cpp, rust, typescript x2); the portfolio as
       a whole (36 repositories) is still far from fully covered. Lane L format detection is
       already proven for all of them independently. Two unrelated pre-existing S6/S8 rough
       edges (the "TrueType" identifier rejection and the "cites facts outside this section's
@@ -860,6 +873,19 @@ next_ready_items:
       Both repositories where coherence worsened the duplicate (ninth/typescript, sixth/rust)
       are now live-reverified; the other eight cascade repositories have not been re-fired
       (lower priority -- coherence did not worsen the duplicate on any of them originally).
+      Three independent repositories (email-foss/.NET, page-foss/Python, imaging-foss/.NET)
+      have confirmed the guard can fail S6 closed when the preserved paragraph is unusually
+      comprehensive and the model will not reach for more specific facts on retry -- see this
+      card's own new_consequence_observed_2026_10_22 entry.
+      A real, newly observed scope limit (twentieth cascade, aspose-slides-foss/.NET,
+      2026-10-22): the guard tests whole-unit full containment (states_all()); it does not
+      catch a unit whose FIRST sentence is a near word-for-word duplicate of the preserved
+      paragraph while its other sentences add genuinely new content -- the whole-unit test
+      correctly does not fire since the unit as a whole is not fully redundant. Detection
+      (whole-unit) and recovery (uncovered(), already per-sentence) are asymmetric; extending
+      detection to per-sentence granularity is the next well-specified improvement if this
+      work continues, not attempted in this card. Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_twentieth_full_cascade/.
     new_consequence_observed_2026_10_22: >
       Firing a twelfth cascade against aspose-email-foss/Aspose.Email-FOSS-for-.Net (not one of
       the ten already-run repositories) hit a real, new consequence of this fix: S6's "opening"
