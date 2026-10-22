@@ -508,13 +508,24 @@ next_ready_items:
       non-optional, always-on check for every candidate the pipeline processes, closing the
       3-of-36 "caught only by one reviewer's choice" gap this card named.
   - id: FIND_CASE_B_REPOSITORY
-    status: READY
+    status: DONE
     purpose: >
-      Every repository in this 36-repo sweep was case (A) (substantial live README) or
-      NON_PROCESSABLE (aspose-gis-foss, no README/broken build). Zero were case (B)
-      (deficient-but-present README) where Lane R should genuinely diverge from Lane L.
-      Either confirm none exist in this portfolio (a real, reportable finding) or find one
-      among newly-discovered repositories (mission section 5 discovery, not yet attempted).
+      DONE 2026-10-22: confirmed none exist in this portfolio, a real reportable finding, not
+      an abandoned search. Directly fetched the real live README of all 36 registry
+      repositories (`gh api repos/<repo>/readme`, independent of and in addition to the Lane
+      L batch run's own evidence) and counted lines. Excluding the one confirmed
+      NON_PROCESSABLE repository (aspose-gis-foss/Aspose.GIS.FOSS-for-.Net, HTTP 404 -- no
+      README file at all on its default branch, categorically different from "deficient-but-
+      present"), the SHORTEST real README in the whole portfolio is 183 lines
+      (aspose-cells-foss/Aspose.Cells-FOSS-for-Python), and the full distribution climbs
+      smoothly from there (193, 252, 262, 306, 320, ... up to 4663 for the longest). Every
+      real, processable repository's README is case (A): substantial, well-developed,
+      clearly not a stub or placeholder. Zero case (B) repositories (deficient-but-present,
+      where Lane R should genuinely diverge from Lane L) exist in the current 36-repo
+      portfolio. This does not mean Lane R's divergence-from-Lane-L behavior is untestable
+      forever -- only that it cannot be exercised against a REAL case (B) candidate from
+      this portfolio as it stands today; a synthetic or newly-discovered repository would be
+      needed to test that path, which is future work, not blocked by this finding.
   - id: DECIDE_NEXT_ISSUE_FILINGS
     status: BLOCKED_EXTERNAL
     blocked_on: owner decision
