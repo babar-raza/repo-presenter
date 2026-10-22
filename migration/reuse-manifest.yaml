@@ -880,3 +880,49 @@ entries:
       NOT yet proven for java/cpp/go/rust/typescript -- each needs its own real-source
       investigation before a reader is written for it (do not assume this one generalizes).
     invalidation_impact: not yet pulled into any other ecosystem.
+
+  - component: "extractors/platforms/java_format_declarations.py + format_overclaim.py ASCII
+      exclusion"
+    source: "new engineering -- the old repo has the identical return-[] format_declarations
+      stub for java.py too"
+    evaluated_at_shas: []
+    behavior: >
+      java_format_declarations.py reads every .java file for two independent static sources,
+      correlated by extension STRING directly rather than by a format identifier (unlike the
+      .NET reader) -- Java's own dispatch chain tests the raw extension literal
+      (ext.equals("stl")) inside load/save/createLoadOptions/createSaveOptions methods, never
+      names a FileFormat constant the way the .NET switch does, so there is no identifier to
+      join declaration and registration on. Declaration: a new FileFormat(...) or subclass
+      super(...) constructor call's extension argument. Registration: an equals(...) dispatch
+      arm inside a load- or save-named method, direction from the method name. Also handles a
+      wrinkle .NET did not have -- every declared FileFormat hardcodes canImport/canExport true
+      regardless of whether any dispatch arm reaches it, so those two booleans are deliberately
+      never read as a signal. format_overclaim.py additionally gets one more entry in its
+      evidence-based _NOT_A_FORMAT exclusion list (ASCII), the same discipline as the earlier
+      AVEVA/PDMS fix.
+    evidence: >
+      Designed against the REAL live source of aspose-3d-foss/Aspose.3D-FOSS-for-Java
+      (2026-10-22), read directly before writing any pattern-matching code (FileFormat.java's
+      real constructor-call and subclass-super shapes, its real load/save/createLoadOptions/
+      createSaveOptions dispatch chains). 5 new unit tests
+      (test_java_format_declarations.py) plus 1 new format_overclaim test (the real ASCII
+      false-positive regression). Real end-to-end result against the live repository: the
+      live README does not over-claim (unlike .NET's sibling finding) -- the real, measured gap
+      is report_gaps correctly finding GLB registered-but-unmentioned, with a stated, not
+      hidden, limitation that GLB's own handler is itself an unimplemented stub. See
+      evidence/build/P2_REAL_ENGINE_SALVAGE/aspose-3d-foss__Aspose.3D-FOSS-for-Java/.
+    disposition: "ADD (not REUSE/ADAPT -- genuinely new code, no old-repo equivalent exists)"
+    reason: >
+      Second of five remaining ecosystems toward "lanes work equally for all candidates." The
+      extension-string correlation (vs. the .NET reader's identifier correlation) is new
+      evidence that the two-source DESIGN (declaration + dispatch registration) generalizes
+      but the correlation KEY does not -- each remaining ecosystem still needs its own
+      real-source investigation, not a copy of either existing reader.
+    target_module: src/repo_presenter/extractors/platforms/java_format_declarations.py,
+      src/repo_presenter/readme/correction/detectors/format_overclaim.py (extended)
+    smallest_first_integration_test: tests/extractors/platforms/test_java_format_declarations.py,
+      tests/readme/correction/detectors/test_format_overclaim.py -- both green, plus the real
+      end-to-end proof above.
+    portfolio_consumers: Lane L, every Java candidate. Still NOT proven for cpp/go/rust/
+      typescript -- each needs its own real-source investigation before a reader is written.
+    invalidation_impact: not yet pulled into any other ecosystem.

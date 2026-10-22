@@ -109,6 +109,21 @@ def test_a_vendor_and_product_suite_name_clarifying_a_real_format_is_not_flagged
     assert not any("AVEVA" in reason or "PDMS" in reason for reason in reasons)
 
 
+def test_a_content_encoding_qualifier_clarifying_a_real_format_is_not_flagged(
+    make_context: Any, make_facts: Any, make_fact: Any
+) -> None:
+    """Regression: the exact real false positive measured against aspose-3d-foss/
+    Aspose.3D-FOSS-for-Java's own live README (2026-10-22) -- 'binary or ASCII' qualifies the
+    STL claim right next to it (its content encoding), not a second format claim."""
+    readme = (
+        '# P\n\n```mermaid\nflowchart TD\n'
+        '  i1["An existing STL file (binary or ASCII)"]\n```\n'
+    )
+    facts = make_facts(make_fact("format:input.stl", ".stl", evidence=(("io.java", None),)))
+    result = format_overclaim(make_context(readme, facts))
+    assert all("ASCII" not in finding.reason for finding in result.findings)
+
+
 def test_an_ordinary_word_in_a_mermaid_node_is_not_mistaken_for_a_format(
     make_context: Any, make_facts: Any
 ) -> None:

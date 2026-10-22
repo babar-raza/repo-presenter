@@ -213,8 +213,8 @@ next_ready_items:
     status: IN_PROGRESS
     priority: high
     purpose: >
-      The single biggest "lanes don't yet work equally" gap found in this session. 1 of 6
-      remaining ecosystems done (.NET); java/cpp/go/rust/typescript still stubbed.
+      The single biggest "lanes don't yet work equally" gap found in this session. 2 of 6
+      remaining ecosystems done (.NET, Java); cpp/go/rust/typescript still stubbed.
     done_net: >
       DONE 2026-10-22, clean (zero false positives after one found-and-fixed): new
       extractors/platforms/net_format_declarations.py (class-declaration + dispatch-switch
@@ -228,14 +228,34 @@ next_ready_items:
       (AVEVA/PDMS, a vendor+product-suite name mistaken for format names) with a regression
       test. 912/912 whole-repo tests pass. Evidence:
       evidence/build/P2_REAL_ENGINE_SALVAGE/aspose-3d-foss__Aspose.3D-FOSS-for-.NET/.
+    done_java: >
+      DONE 2026-10-22, clean (zero false positives after one found-and-fixed): new
+      extractors/platforms/java_format_declarations.py. Different idiom than .NET's, confirmed
+      by reading the real source first (FileFormat.java, IOService.java): Java's dispatch chain
+      tests the raw extension string literal directly (`ext.equals("stl")`) inside
+      load/save/createLoadOptions/createSaveOptions methods, never a format identifier the way
+      .NET's switch does -- so declaration and registration are correlated by extension string,
+      not by name. Also found and worked around a real wrinkle the .NET reader didn't have:
+      every declared FileFormat hardcodes canImport/canExport true regardless of whether any
+      dispatch arm reaches it, so those booleans are noise, not a usable signal. Real end-to-end
+      result: this repository's live README does not over-claim (only claims STL, which really
+      is registered); the real, measured gap is the opposite direction -- report_gaps correctly
+      finds GLB registered-but-unmentioned. Honest limitation surfaced and stated, not hidden:
+      GLB's dispatch arm exists but its handler (GltfReader.load/GltfWriter.save) is itself an
+      unimplemented TODO stub -- "a dispatch arm matches" is not the same as "the matched code
+      actually works," and this reader cannot tell the two apart (recorded as a known
+      limitation, not silently papered over). One real false positive found and fixed
+      (ASCII, a content-encoding qualifier of the adjacent STL claim, mistaken for a second
+      format name) with a regression test. 917/917 whole-repo tests pass. Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/aspose-3d-foss__Aspose.3D-FOSS-for-Java/.
     remaining: >
-      java/cpp/go/rust/typescript format_claims/format_declarations are still stubbed (return
-      []) -- confirmed each is the old repo's own unfinished state too, same as .NET was. The
-      .NET reader's two-source design (declaration class + dispatch-switch registration) is a
-      template, not a guarantee -- each ecosystem's real dispatch idiom needs its own
-      investigation against real source before writing a reader, the same way this session
-      read aspose-3d-foss/.NET's real IOService.cs before designing net_format_declarations.py,
-      rather than guessing a pattern and hoping it generalizes.
+      cpp/go/rust/typescript format_claims/format_declarations are still stubbed (return
+      []) -- confirmed each is the old repo's own unfinished state too, same as .NET/Java were.
+      Two ecosystems in and the pattern already diverged once (.NET: identifier-correlated
+      switch; Java: extension-string-correlated equals-chain) -- confirms the discipline that
+      matters is "read the real dispatch idiom before writing a reader," not "reuse the .NET
+      reader's shape." Each remaining ecosystem needs its own investigation against real source
+      first.
   - id: WRITE_PROMPTS_FOR_AUTHORING
     status: DONE
     purpose: >

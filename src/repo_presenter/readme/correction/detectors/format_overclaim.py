@@ -65,8 +65,11 @@ _ACRONYM = re.compile(r"\b(?=[A-Z0-9]*[A-Z])[A-Z0-9]{2,6}\b")
 # positive inside a Starting-Points/Outputs node label's ordinary English. AVEVA/PDMS are a real
 # measured false positive (2026-10-22): aspose-3d-foss/Aspose.3D-FOSS-for-.NET's own node label
 # reads `"3MF or RVM file (Microsoft 3MF, AVEVA PDMS RVM)"` -- a vendor name and a product suite
-# name clarifying what RVM is, not a second and third file-format claim.
-_NOT_A_FORMAT = frozenset({"AN", "OR", "A", "3D", "2D", "ID", "IO", "AVEVA", "PDMS"})
+# name clarifying what RVM is, not a second and third file-format claim. ASCII is a second real
+# measured false positive (2026-10-22): aspose-3d-foss/Aspose.3D-FOSS-for-Java's own node label
+# reads `"An existing STL file (binary or ASCII)"` -- a content-encoding qualifier of the STL
+# claim right next to it, not a second file-format claim.
+_NOT_A_FORMAT = frozenset({"AN", "OR", "A", "3D", "2D", "ID", "IO", "AVEVA", "PDMS", "ASCII"})
 
 
 def _table_claims(ctx: Context) -> list[tuple[int, str, str]]:

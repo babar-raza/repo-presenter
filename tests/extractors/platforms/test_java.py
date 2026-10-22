@@ -256,7 +256,11 @@ def test_the_plugin_imports_only_core_and_the_shared_surface_facades(tmp_path: P
         for node in ast.walk(ast.parse(source))
         if isinstance(node, ast.ImportFrom) and node.module
     }
-    assert not any(".platforms." in name and not name.endswith(".java") for name in imported)
+    allowed_sibling = "repo_presenter.extractors.platforms.java_format_declarations"
+    assert not any(
+        ".platforms." in name and not name.endswith(".java") and name != allowed_sibling
+        for name in imported
+    )
     assert all(
         name.startswith(
             (
@@ -269,6 +273,7 @@ def test_the_plugin_imports_only_core_and_the_shared_surface_facades(tmp_path: P
                 "xml.etree",
             )
         )
+        or name == allowed_sibling
         for name in imported
     ), sorted(imported)
 

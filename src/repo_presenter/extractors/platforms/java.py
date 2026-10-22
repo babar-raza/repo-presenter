@@ -23,6 +23,9 @@ from pathlib import Path
 from typing import Any, Final
 from xml.etree import ElementTree
 
+from repo_presenter.extractors.platforms.java_format_declarations import (
+    format_declarations as java_format_declarations,
+)
 from repo_presenter.extractors.surface.extractor import surface_symbols
 from repo_presenter.extractors.surface.manifest import (
     read_identity,
@@ -575,8 +578,11 @@ class JavaPlugin:
         return []
 
     def format_declarations(self, root: Path, tree_paths: list[str]) -> Sequence[FormatDeclaration]:
-        """Not yet built; the vendored format reader lands with the cohort that needs it."""
-        return []
+        """Static constructor-call + load/save dispatch reading; see
+        java_format_declarations.py's own docstring for the real defect shape it exists to
+        surface (every declared FileFormat hardcodes canImport/canExport true regardless of
+        whether any dispatch arm actually reaches it)."""
+        return java_format_declarations(root, tree_paths)
 
 
 PLUGIN: Any = JavaPlugin()
