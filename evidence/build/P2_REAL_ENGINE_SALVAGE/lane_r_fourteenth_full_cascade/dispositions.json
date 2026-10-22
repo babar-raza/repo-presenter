@@ -1,0 +1,1154 @@
+{
+  "dispositions": [
+    {
+      "destination_section": "identity",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:repository",
+        "package:name"
+      ],
+      "rationale": "The H1 product name is rendered deterministically from identity and package facts.",
+      "unit_id": "inherited_unit:001.heading"
+    },
+    {
+      "destination_section": "badges",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "package:license",
+        "package:version",
+        "package:python_requires"
+      ],
+      "rationale": "The badge row is rendered deterministically from package facts in the badges section.",
+      "unit_id": "inherited_unit:002.badge_row"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the linked product illustration or homepage; the banner condition does not hold.",
+      "unit_id": "inherited_unit:003.badge_row"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:license",
+        "package:version",
+        "package:python_requires",
+        "import_path:aspose.slides_foss",
+        "public_symbol:slides_foss"
+      ],
+      "rationale": "The paragraph describes what the library does, problems it solves, and who uses it, supported by identity, package, import, and symbol facts.",
+      "unit_id": "inherited_unit:004.paragraph"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Navigation heading is rendered by deterministic code; the list that follows is superseded.",
+      "unit_id": "inherited_unit:005.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The list is a navigation aid superseded by the deterministic navigation section.",
+      "unit_id": "inherited_unit:006.list"
+    },
+    {
+      "destination_section": "at_a_glance",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The At a Glance heading is rendered by deterministic code; the diagram that follows is superseded.",
+      "unit_id": "inherited_unit:007.heading"
+    },
+    {
+      "destination_section": "at_a_glance",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Mermaid diagram is rendered deterministically in the at_a_glance section.",
+      "unit_id": "inherited_unit:008.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The Key Capabilities heading is placeable and supported by the capabilities section.",
+      "unit_id": "inherited_unit:009.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_REWRITE",
+      "fact_ids": [
+        "example:002",
+        "example:003",
+        "example:004",
+        "example:012",
+        "example:013",
+        "example:008",
+        "example:011",
+        "public_symbol:slides_foss.export.saveformat"
+      ],
+      "rationale": "The list items are grounded in verified examples and public symbols; the substance is re-authored to match the capabilities section.",
+      "unit_id": "inherited_unit:010.list"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Installation heading is rendered deterministically; the following content is superseded.",
+      "unit_id": "inherited_unit:011.heading"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "rationale": "The install command paragraph is rendered deterministically from the install_command fact.",
+      "unit_id": "inherited_unit:012.paragraph"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "rationale": "The install command code block is rendered deterministically from the install_command fact.",
+      "unit_id": "inherited_unit:013.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph about version mismatch and from-source install is unsupported; the PyPI release version is verified.",
+      "unit_id": "inherited_unit:014.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The from-source install command is unsupported; the PyPI install is the verified command.",
+      "unit_id": "inherited_unit:015.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The warning about shared namespace is unsupported; no fact contradicts the import path.",
+      "unit_id": "inherited_unit:016.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The from-source install command is unsupported; the PyPI install is the verified command.",
+      "unit_id": "inherited_unit:017.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The warning about shared namespace is unsupported; no fact contradicts the import path.",
+      "unit_id": "inherited_unit:018.paragraph"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Dependencies heading is rendered deterministically; the following subsections are superseded.",
+      "unit_id": "inherited_unit:019.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Required Package Dependencies subsection is rendered deterministically.",
+      "unit_id": "inherited_unit:020.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:lxml-4.9"
+      ],
+      "rationale": "The lxml dependency is verified; the list is moved to Additional Examples as a dependency detail.",
+      "unit_id": "inherited_unit:021.list"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Native and System Requirements subsection is rendered deterministically.",
+      "unit_id": "inherited_unit:022.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:python_requires"
+      ],
+      "rationale": "The Python version requirement is verified; the list is moved to Additional Examples as a system detail.",
+      "unit_id": "inherited_unit:023.list"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Development Dependencies subsection is rendered deterministically.",
+      "unit_id": "inherited_unit:024.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:development.test.pytest-7",
+        "dependency:development.test.python-pptx-1.0"
+      ],
+      "rationale": "The development dependencies are verified; the list is moved to Additional Examples as a test detail.",
+      "unit_id": "inherited_unit:025.list"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The Quick Start heading is placeable and supported by the workflows section.",
+      "unit_id": "inherited_unit:026.heading"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "The paragraph introduces the Quick Start example, which is verified by example:002.",
+      "unit_id": "inherited_unit:027.paragraph"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "The Quick Start code block is verified by example:002.",
+      "unit_id": "inherited_unit:028.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The Additional Examples heading is placeable and supported by the workflows section.",
+      "unit_id": "inherited_unit:029.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "The Add a Shape With Text heading is placeable and supported by example:003.",
+      "unit_id": "inherited_unit:030.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "The Add a Shape With Text code block is verified by example:003.",
+      "unit_id": "inherited_unit:031.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The HTML details block is unsupported; the Additional Examples section is rendered deterministically.",
+      "unit_id": "inherited_unit:032.html_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:004"
+      ],
+      "rationale": "The Format Text heading is placeable and supported by example:004.",
+      "unit_id": "inherited_unit:033.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:004"
+      ],
+      "rationale": "The Format Text code block is verified by example:004.",
+      "unit_id": "inherited_unit:034.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Add a Table' heading and its code block are superseded by the 'Additional Examples' section which re-authors examples from facts.",
+      "unit_id": "inherited_unit:035.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Add a Table' code block is superseded by the 'Additional Examples' section which re-authors examples from facts.",
+      "unit_id": "inherited_unit:036.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Connect Two Shapes' heading and its code block are superseded by the 'Additional Examples' section which re-authors examples from facts.",
+      "unit_id": "inherited_unit:037.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Connect Two Shapes' code block is superseded by the 'Additional Examples' section which re-authors examples from facts.",
+      "unit_id": "inherited_unit:038.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Fill a Shape' heading and its code block are superseded by the 'Additional Examples' section which re-authors examples from facts.",
+      "unit_id": "inherited_unit:039.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Fill a Shape' code block is superseded by the 'Additional Examples' section which re-authors examples from facts.",
+      "unit_id": "inherited_unit:040.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Embed an Image' heading and its code block are superseded by the 'Additional Examples' section which re-authors examples from facts.",
+      "unit_id": "inherited_unit:041.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Embed an Image' paragraph and its code block are superseded by the 'Additional Examples' section which re-authors examples from facts.",
+      "unit_id": "inherited_unit:042.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Embed an Image' code block is superseded by the 'Additional Examples' section which re-authors examples from facts.",
+      "unit_id": "inherited_unit:043.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Add Speaker Notes' heading and its code block are superseded by the 'Additional Examples' section which re-authors examples from facts.",
+      "unit_id": "inherited_unit:044.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Add Speaker Notes' code block is superseded by the 'Additional Examples' section which re-authors examples from facts.",
+      "unit_id": "inherited_unit:045.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Add a Threaded Comment' heading and its code block are superseded by the 'Additional Examples' section which re-authors examples from facts.",
+      "unit_id": "inherited_unit:046.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Add a Threaded Comment' code block is superseded by the 'Additional Examples' section which re-authors examples from facts.",
+      "unit_id": "inherited_unit:047.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Set Document Properties' heading and its code block are superseded by the 'Additional Examples' section which re-authors examples from facts.",
+      "unit_id": "inherited_unit:048.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Set Document Properties' code block is superseded by the 'Additional Examples' section which re-authors examples from facts.",
+      "unit_id": "inherited_unit:049.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Build a Chart From Scratch' heading and its code block are superseded by the 'Additional Examples' section which re-authors examples from facts.",
+      "unit_id": "inherited_unit:050.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Build a Chart From Scratch' paragraph and its code block are superseded by the 'Additional Examples' section which re-authors examples from facts.",
+      "unit_id": "inherited_unit:051.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Build a Chart From Scratch' code block is superseded by the 'Additional Examples' section which re-authors examples from facts.",
+      "unit_id": "inherited_unit:052.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Build a Chart From Scratch' trailing paragraph is superseded by the 'Additional Examples' section which re-authors examples from facts.",
+      "unit_id": "inherited_unit:053.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Apply a Slide Transition' heading and its code block are superseded by the 'Additional Examples' section which re-authors examples from facts.",
+      "unit_id": "inherited_unit:054.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Apply a Slide Transition' code block is superseded by the 'Additional Examples' section which re-authors examples from facts.",
+      "unit_id": "inherited_unit:055.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Group Shapes' heading and its code block are superseded by the 'Additional Examples' section which re-authors examples from facts.",
+      "unit_id": "inherited_unit:056.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Group Shapes' code block is superseded by the 'Additional Examples' section which re-authors examples from facts.",
+      "unit_id": "inherited_unit:057.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "example:015"
+      ],
+      "rationale": "The 'Export to Markdown' heading and its code block are unsupported because example:015 is CONTRADICTED.",
+      "unit_id": "inherited_unit:058.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "example:015"
+      ],
+      "rationale": "The 'Export to Markdown' code block is unsupported because example:015 is CONTRADICTED.",
+      "unit_id": "inherited_unit:059.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "example:015"
+      ],
+      "rationale": "The 'Export to Markdown' paragraph is unsupported because example:015 is CONTRADICTED.",
+      "unit_id": "inherited_unit:060.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "NON_CONTENT",
+      "fact_ids": [],
+      "rationale": "The HTML comment </details> is non-content and omitted.",
+      "unit_id": "inherited_unit:061.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'API Reference' heading is preserved as the section is placeable and the heading matches the section.",
+      "unit_id": "inherited_unit:062.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'API Reference' paragraph is preserved as it introduces the core API surface and matches the section.",
+      "unit_id": "inherited_unit:063.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "NON_CONTENT",
+      "fact_ids": [],
+      "rationale": "The HTML comment <details> is non-content and omitted.",
+      "unit_id": "inherited_unit:064.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Core API' heading is preserved as the section is placeable and the heading matches the section.",
+      "unit_id": "inherited_unit:065.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Core API' table is preserved as the section is placeable and the table matches the section.",
+      "unit_id": "inherited_unit:066.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Enumerations' heading is preserved as the section is placeable and the heading matches the section.",
+      "unit_id": "inherited_unit:067.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Enumerations' table is preserved as the section is placeable and the table matches the section.",
+      "unit_id": "inherited_unit:068.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Animation' heading is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:069.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Animation classes table is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:070.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Enumerations' heading under Animation is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:071.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Animation enumerations table is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:072.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Charts' heading is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:073.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Charts classes table is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:074.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Enumerations' heading under Charts is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:075.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Charts enumerations table is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:076.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Drawing' heading is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:077.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Drawing classes table is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:078.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Effects' heading is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:079.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Effects classes table is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:080.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Export' heading is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:081.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Export enumerations table is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:082.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Slideshow' heading is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:083.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Slideshow classes table is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:084.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Theme' heading is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:085.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Theme classes table is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:086.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Detailed Member Reference' heading is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:087.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Presentation and Slides' heading is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:088.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Presentation and Slides member list is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:089.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The SlideCollection member list is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:089.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The BaseSlide member list is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:089.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Slide member list is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:089.004.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Shapes' heading is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:090.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The ShapeCollection member list is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:091.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Shape member list is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:091.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The AutoShape member list is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:091.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Text' heading is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:092.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The TextFrame member list is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:093.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Paragraph member list is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:093.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The ParagraphFormat member list is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:093.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Portion member list is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:093.004.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The PortionFormat member list is superseded by the API Reference section which renders the public surface from facts.",
+      "unit_id": "inherited_unit:093.005.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Charts' heading is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:094.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Chart' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:095.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'ChartData' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:095.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'ChartDataWorkbook' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:095.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'ChartSeries' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:095.004.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Animation' heading is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:096.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Sequence' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:097.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'BehaviorFactory' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:097.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'MotionPath' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:097.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Slide Transitions' heading is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:098.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'SlideShowTransition' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:099.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'MorphTransition' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:099.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Styling' heading is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:100.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'FillFormat' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:101.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'LineFormat' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:101.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'EffectFormat' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:101.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Theme' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:101.004.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'ColorScheme' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:101.005.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'FontScheme' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:101.006.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'FormatScheme' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:101.007.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'MasterThemeManager' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:101.008.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The '3D' heading is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:102.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'ThreeDFormat' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:103.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Document Properties, Notes, and Comments' heading is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:104.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'DocumentProperties' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:105.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'NotesSlideManager' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:105.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'NotesSlide' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:105.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'CommentAuthorCollection' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:105.004.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'CommentAuthor' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:105.005.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'CommentCollection' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:105.006.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Images' heading is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:106.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Images' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:107.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'ImageCollection' entry is superseded by the API Reference section which renders the complete public surface.",
+      "unit_id": "inherited_unit:107.002.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Enums' heading has no supporting facts and is not rendered in the plan.",
+      "unit_id": "inherited_unit:108.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:slides_foss.export.saveformat"
+      ],
+      "rationale": "The list item about SaveFormat values is superseded by the scope_limitations section, which is rendered from facts about SaveFormat behavior.",
+      "unit_id": "inherited_unit:109.001.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the specific count of 186 ShapeType values; the exact number is not stated in facts.",
+      "unit_id": "inherited_unit:109.002.list"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:012",
+        "public_symbol:slides_foss.charts.charttype"
+      ],
+      "rationale": "The 74 ChartType values are supported by example:012 and public_symbol:slides_foss.charts.charttype, and this item fits the key_capabilities section.",
+      "unit_id": "inherited_unit:109.003.list"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:013",
+        "public_symbol:slides_foss.slideshow.transitiontype"
+      ],
+      "rationale": "The 57 TransitionType values are supported by example:013 and public_symbol:slides_foss.slideshow.transitiontype, and this item fits the key_capabilitiessection",
+      "unit_id": "inherited_unit:109.004.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "NON_CONTENT",
+      "fact_ids": [],
+      "rationale": "The closing </details> tag is a non-content HTML fragment.",
+      "unit_id": "inherited_unit:110.html_block"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Documentation & Resources' heading is superseded because the documentation_resources section is not rendered at this revision (its condition does not hold)",
+      "unit_id": "inherited_unit:111.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The list items reference external links (KB, contributor guide, etc.) that are not verified by facts; no fact supports their inclusion.",
+      "unit_id": "inherited_unit:112.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Scope and Limitations' heading is required and placeable in scope_limitations; the section is rendered from facts and inherited limitations.",
+      "unit_id": "inherited_unit:113.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The paragraph introducing limitations is supported by the inherited unit and fits the scope_limitations section.",
+      "unit_id": "inherited_unit:114.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:slides_foss.export.saveformat"
+      ],
+      "rationale": "The list of limitations is supported by facts about SaveFormat and other limitations; each item aligns with the limitations in the accepted investigation.",
+      "unit_id": "inherited_unit:115.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The paragraph about unknown XML parts is supported by the inherited unit and fits the scope_limitations section.",
+      "unit_id": "inherited_unit:116.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The reference to Enterprise Edition is promotional and not supported by a verified aspose.com product target in policy (enterprise_relationship condition does不行",
+      "unit_id": "inherited_unit:117.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Development and Testing' heading is superseded because the development_testing section is not rendered at this revision (its condition does not hold)",
+      "unit_id": "inherited_unit:118.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph about editable install and pytest is not supported by facts about build/test assets (development_testing condition does not hold).",
+      "unit_id": "inherited_unit:119.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The code block is unsupported because the development_testing section is not rendered (its condition does not hold).",
+      "unit_id": "inherited_unit:120.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph about CI workflows is unsupported because the development_testing section is not rendered (its condition does not hold).",
+      "unit_id": "inherited_unit:121.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph about agents.md, CONTRIBUTING.md, etc. is unsupported because the development_testing section is not rendered (its condition does not hold).",
+      "unit_id": "inherited_unit:122.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Scope and Limitations' heading is required and placeable in scope_limitations; the section is rendered from facts and inherited limitations.",
+      "unit_id": "inherited_unit:123.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:license"
+      ],
+      "rationale": "The license paragraph is supported by package:license and fits the scope_limitations section as a required license declaration.",
+      "unit_id": "inherited_unit:124.paragraph"
+    }
+  ]
+}

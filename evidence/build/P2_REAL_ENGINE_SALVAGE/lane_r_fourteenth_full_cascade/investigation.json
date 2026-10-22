@@ -1,0 +1,267 @@
+{
+  "audience": {
+    "fact_ids": [
+      "example:001",
+      "example:002",
+      "example:003",
+      "example:004",
+      "example:005",
+      "example:006",
+      "example:007",
+      "example:008",
+      "example:009",
+      "example:010",
+      "example:011",
+      "example:012",
+      "example:013",
+      "example:014"
+    ],
+    "text": "Python developers building automation tools, reporting systems, or presentation generators that need to manipulate PowerPoint files programmatically."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "example:002",
+        "format:input.pptx",
+        "format:output.pptx",
+        "public_symbol:slides_foss.slidecollection.add_empty_slide",
+        "public_symbol:slides_foss.slidecollection.add_clone",
+        "public_symbol:slides_foss.slidecollection.remove_at"
+      ],
+      "text": "Create new presentations from scratch or open existing .pptx files, add or remove slides, clone slides, and save to multiple Office Open XML formats.",
+      "title": "Presentation creation and editing"
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "example:005",
+        "example:006",
+        "example:007",
+        "public_symbol:slides_foss.shapecollection.add_auto_shape",
+        "public_symbol:slides_foss.shapecollection.add_table",
+        "public_symbol:slides_foss.shapecollection.add_connector"
+      ],
+      "text": "Add and position shapes including auto shapes, picture frames, tables, connectors, and group shapes; manage shape properties like fill, line, effects, and 3D formatting.",
+      "title": "Shape and content modeling"
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:slides_foss.baseportionformat.font_height",
+        "public_symbol:slides_foss.baseportionformat.font_bold",
+        "public_symbol:slides_foss.paragraphformat.bullet",
+        "public_symbol:slides_foss.nullablebool"
+      ],
+      "text": "Format text at portion, paragraph, and text frame levels with font properties, bullet styles, alignment, and fill formats; support for tri-state booleans via NullableBool.",
+      "title": "Text formatting and styling"
+    },
+    {
+      "fact_ids": [
+        "example:012",
+        "public_symbol:slides_foss.charts.charttype",
+        "public_symbol:slides_foss.charts.chartdataworkbook",
+        "public_symbol:slides_foss.charts.chartseries"
+      ],
+      "text": "Create charts with 74 types, embed an XLSX workbook for series and category data, add trendlines, error bars, legends, titles, and data labels.",
+      "title": "Chart creation and data binding"
+    },
+    {
+      "fact_ids": [
+        "example:013",
+        "public_symbol:slides_foss.slideshow.transitiontype",
+        "public_symbol:slides_foss.slideshow.morphtransition",
+        "public_symbol:slides_foss.animation.sequence"
+      ],
+      "text": "Apply 57 transition types including Morph transitions, configure timing and triggers, and build animation sequences with motion paths and effects.",
+      "title": "Slide transitions and animations"
+    },
+    {
+      "fact_ids": [
+        "example:008",
+        "format:input.png",
+        "public_symbol:slides_foss.images.from_file",
+        "public_symbol:slides_foss.images.from_stream",
+        "public_symbol:slides_foss.imagecollection.add_image"
+      ],
+      "text": "Embed images from file paths, streams, or bytes using Images.from_file or Images.from_stream, and add them as picture frames to slides.",
+      "title": "Image and media embedding"
+    },
+    {
+      "fact_ids": [
+        "example:011",
+        "public_symbol:slides_foss.documentproperties.title",
+        "public_symbol:slides_foss.documentproperties.author",
+        "public_symbol:slides_foss.documentproperties.set_custom_property_value"
+      ],
+      "text": "Set built-in and custom document properties such as title, author, keywords, and custom key-value pairs.",
+      "title": "Document properties and metadata"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:slides_foss.export.saveformat",
+        "public_symbol:slides_foss.export.markdownsaveoptions"
+      ],
+      "text": "Export presentation text content to Markdown format with support for text frames, tables, lists, headings, comments, and chart data.",
+      "title": "Export to Markdown"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "install_command:pip",
+        "public_symbol:slides_foss.export.saveformat"
+      ],
+      "text": "No rendering or conversion to PDF, HTML, XPS, or image formats is supported; the library only writes OOXML and Markdown."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:slides_foss.export.saveformat"
+      ],
+      "text": "Reading is limited to .pptx; other SaveFormat values such as Ppt, Pdf, Xps, Odp, Html, Swf, Otp raise ValueError at save time."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:slides_foss.export.saveformat"
+      ],
+      "text": "SmartArt, OLE objects, mathematical text, VBA macros, and digital signatures are not implemented and raise NotImplementedError."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:slides_foss.export.saveformat"
+      ],
+      "text": "Presentation sections are not implemented; there is no public API to read or change slide size."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:slides_foss.export.saveformat"
+      ],
+      "text": "Comment threads are written using only the classic comment-list schema; modern thread format features are not represented."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:slides_foss.export.saveformat"
+      ],
+      "text": "TextAnimation.add_effect is explicitly stubbed and raises NotImplementedError."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "install_command:pip",
+        "package:python_requires",
+        "format:input.pptx",
+        "format:output.pptx"
+      ],
+      "text": "Enables programmatic creation and modification of PowerPoint presentations using pure Python, eliminating dependency on Microsoft Office or COM interop."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "example:005",
+        "example:006",
+        "example:007",
+        "example:008",
+        "example:009"
+      ],
+      "text": "Supports embedding images, tables, charts, shapes, connectors, and speaker notes into presentations through a consistent object model."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:slides_foss.baseportionformat.font_height",
+        "public_symbol:slides_foss.baseportionformat.font_bold",
+        "public_symbol:slides_foss.paragraphformat.bullet"
+      ],
+      "text": "Provides full control over text formatting, bullet styles, and paragraph structure at the portion level."
+    },
+    {
+      "fact_ids": [
+        "example:012",
+        "example:013",
+        "public_symbol:slides_foss.charts.chart",
+        "public_symbol:slides_foss.slideshow.transitiontype"
+      ],
+      "text": "Allows embedding and manipulating charts with embedded workbook data and applying slide transitions and animations."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:repository",
+      "package:name",
+      "package:license",
+      "package:version",
+      "package:python_requires"
+    ],
+    "text": "Aspose.Slides FOSS for Python is an open-source Python library for creating, reading, and editing PowerPoint .pptx presentations without requiring Microsoft Office."
+  },
+  "uncertainties": [
+    "Whether the library supports reading or writing .ppt (legacy PowerPoint format) is not explicitly stated.",
+    "The exact set of chart types supported beyond the 74 named in ChartType is unclear.",
+    "Whether 3D shapes beyond basic extrusion and bevel are fully supported is not detailed.",
+    "The behavior of saving to unknown XML parts when round-tripping is described but not quantified.",
+    "Whether threaded comments preserve all reply metadata in modern formats is uncertain.",
+    "The exact set of supported Markdown export flavors beyond 24 is not specified.",
+    "Whether custom dash patterns for lines are fully supported is not detailed.",
+    "The exact set of supported image formats beyond .png is not specified."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "example:002",
+        "format:input.pptx",
+        "format:output.pptx",
+        "public_symbol:slides_foss.presentation.save"
+      ],
+      "name": "Open and save presentation",
+      "text": "Open an existing .pptx file using Presentation as a context manager, inspect slides, and save changes back to .pptx format."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "example:004",
+        "public_symbol:slides_foss.autoshape.add_text_frame",
+        "public_symbol:slides_foss.baseportionformat.font_height"
+      ],
+      "name": "Add shapes and text",
+      "text": "Create new presentations, add auto shapes with text frames, and format text at portion level with font properties and fill colors."
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "example:008",
+        "public_symbol:slides_foss.images.from_file",
+        "public_symbol:slides_foss.imagecollection.add_image"
+      ],
+      "name": "Embed images and build tables",
+      "text": "Add images from file handles or bytes to the image collection and insert them as picture frames; create tables with rows and columns and populate cells."
+    },
+    {
+      "fact_ids": [
+        "example:012",
+        "public_symbol:slides_foss.charts.chartdataworkbook",
+        "public_symbol:slides_foss.charts.chartseries"
+      ],
+      "name": "Build charts with embedded data",
+      "text": "Add charts to slides, access the embedded workbook, define series and categories, and populate data points for bar, line, and other chart types."
+    },
+    {
+      "fact_ids": [
+        "example:013",
+        "public_symbol:slides_foss.slideshow.transitiontype",
+        "public_symbol:slides_foss.animation.behaviorfactory"
+      ],
+      "name": "Apply transitions and animations",
+      "text": "Configure slide show transitions with type, timing, and triggers; add animation sequences and effects to shapes using behavior factories."
+    },
+    {
+      "fact_ids": [
+        "example:009",
+        "example:010",
+        "public_symbol:slides_foss.notesslidemanager.add_notes_slide",
+        "public_symbol:slides_foss.commentauthorcollection.add_author"
+      ],
+      "name": "Manage comments and notes",
+      "text": "Add speaker notes to slides and create threaded comments with authors, positions, and timestamps."
+    }
+  ]
+}
