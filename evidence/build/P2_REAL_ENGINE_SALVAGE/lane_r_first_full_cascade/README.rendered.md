@@ -1,0 +1,1036 @@
+# Aspose.3D FOSS for Python
+
+![Python](https://img.shields.io/badge/python-3.7%2B-blue.svg)
+
+Aspose.3D FOSS for Python is a pure-Python, MIT-licensed library for loading, constructing, and exporting 3D scenes. It reads OBJ, STL, glTF, GLB, COLLADA, 3MF, and FBX files, and writes OBJ, STL, glTF, GLB, 3MF, and COLLADA files through a `Scene`, `Node`, and `Mesh` object graph, with no native runtime or external SDK to install.
+
+Aspose.3D FOSS for Python is a pure-Python, MIT-licensed library for loading, constructing,
+and exporting 3D scenes. It reads and writes OBJ, STL, glTF/GLB, COLLADA, and 3MF files, plus
+imports FBX, through a `Scene`/`Node`/`Mesh` object graph, with no native runtime or external
+SDK to install.
+
+## Navigation
+
+- [At a Glance](#at-a-glance)
+- [Key Capabilities](#key-capabilities)
+- [Installation](#installation)
+- [Dependencies](#dependencies)
+- [Quick Start](#quick-start)
+- [Additional Examples](#additional-examples)
+- [API Reference](#api-reference)
+- [Scope and Limitations](#scope-and-limitations)
+
+## At a Glance
+
+```mermaid
+flowchart LR
+Start["An existing 3MF, COLLADA, FBX, GLB, glTF, OBJ, or STL file"]
+Start --> Product["Aspose.3D FOSS for Python"]
+Product["Aspose.3D FOSS for Python"] --> Cap1["Load multiple 3D formats"]
+Cap2["Export to multiple 3D formats"]
+Cap3["Build and traverse scene graphs"]
+Cap4["Create and edit mesh geometry"]
+Cap5["Assign materials to entities"]
+Cap6["Support keyframe animation"]
+Cap7["Triangulate arbitrary polygons"]
+Product["Aspose.3D FOSS for Python"] --> Cap2["Export to multiple 3D formats"]
+Product["Aspose.3D FOSS for Python"] --> Cap3["Build and traverse scene graphs"]
+Product["Aspose.3D FOSS for Python"] --> Cap4["Create and edit mesh geometry"]
+Product["Aspose.3D FOSS for Python"] --> Cap5["Assign materials to entities"]
+Product["Aspose.3D FOSS for Python"] --> Cap6["Support keyframe animation"]
+Product["Aspose.3D FOSS for Python"] --> Cap7["Triangulate arbitrary polygons"]
+Cap1["Load multiple 3D formats"] --> Output["3MF, COLLADA, GLB, glTF, OBJ, or STL file"]
+Cap2["Export to multiple 3D formats"] --> Output["3MF, COLLADA, GLB, glTF, OBJ, or STL file"]
+Cap3["Build and traverse scene graphs"] --> Output["3MF, COLLADA, GLB, glTF, OBJ, or STL file"]
+Cap4["Create and edit mesh geometry"] --> Output["3MF, COLLADA, GLB, glTF, OBJ, or STL file"]
+Cap5["Assign materials to entities"] --> Output["3MF, COLLADA, GLB, glTF, OBJ, or STL file"]
+Cap6["Support keyframe animation"] --> Output["3MF, COLLADA, GLB, glTF, OBJ, or STL file"]
+Cap7["Triangulate arbitrary polygons"] --> Output["3MF, COLLADA, GLB, glTF, OBJ, or STL file"]
+```
+
+## Key Capabilities
+
+- **Load multiple 3D formats.** It reads `.obj`, `.stl`, `.gltf`, `.glb`, `.dae`, and `.3mf` files using `Scene.open()` with automatic format detection from the file extension or an explicit `FileFormat`.
+- **Export to multiple 3D formats.** It exports scenes to `.obj`, `.stl`, `.gltf`, `.glb`, and `.3mf` using `Scene.save()` with format-specific `SaveOptions` subclasses for coordinate flipping, unit scaling, and compression settings.
+- **Build and traverse scene graphs.** It builds and traverses scene graphs using `Node.create_child_node()`, `Node.add_entity()`, and `Node.child_nodes`, where each node carries its own `Transform` (translation, rotation, scale, and pivots) independent of attached entities or materials.
+- **Create and edit mesh geometry.** It creates and edits mesh geometry through `Mesh.control_points` and `Mesh.create_polygon()`, or by converting parameterized primitives like `Box` and `Sphere` using their `to_mesh()` method.
+- **Assign materials to entities.** It assigns `LambertMaterial`, `PhongMaterial`, or `PbrMaterial` to nodes, setting diffuse, specular, emissive, and PBR albedo/metallic/roughness color and factor properties directly.
+- **Support keyframe animation.** It supports keyframe animation using `AnimationClip`, `AnimationNode`, and `KeyframeSequence`, and stores skeletal bind-pose data with `BonePose` and `Pose`.
+- **Triangulate arbitrary polygons.** It triangulates arbitrary polygons into triangle fans using `PolygonBuilder` and `Geometry`.
+
+## Installation
+
+The package `aspose-3d-foss` could not be confirmed on PyPI (package registry: a distribution of this name exists, but ownership not confirmed: the registry's project URLs point at another repository).
+
+To work from a source checkout instead, install the clone with pip:
+
+```bash
+git clone https://github.com/aspose-3d-foss/Aspose.3D-FOSS-for-Python.git
+cd Aspose.3D-FOSS-for-Python
+pip install .
+```
+
+Verify the install:
+
+```bash
+python -c "import aspose.threed"
+```
+
+The package supports Python 3.7, 3.8, 3.9, 3.10, 3.11, and 3.12 and declares `python_requires` as `>=3.7`.
+
+## Dependencies
+
+### Required Package Dependencies
+
+No required third-party package dependencies; in `setup.py`, the `install_requires` list is empty.
+
+### Native and System Requirements
+
+- Requires Python 3.7 or later (`python_requires=">=3.7"` in `setup.py`).
+
+### Development Dependencies
+
+- `pytest>=7.0.0` (extra `dev`)
+
+## Quick Start
+
+This example opens a GLTF file and prints the scene hierarchy by walking each node's child nodes starting from the root node.
+
+```python
+from aspose.threed import Scene
+
+scene = Scene()
+scene.open("model.gltf")
+
+def walk(node, depth=0):
+    print("  " * depth + (node.name or "(unnamed)"))
+    for child in node.child_nodes:
+        walk(child, depth + 1)
+
+walk(scene.root_node)
+```
+
+This example creates a box entity with a Lambert material, adds it as a child node named Crate, and saves the scene as a GLTF file.
+
+```python
+from aspose.threed import Scene
+from aspose.threed.entities import Box
+from aspose.threed.shading import LambertMaterial
+from aspose.threed.utilities import Vector3
+
+scene = Scene()
+box = Box(length=2.0, width=1.0, height=1.0)
+material = LambertMaterial()
+material.diffuse_color = Vector3(0.2, 0.6, 0.9)
+
+scene.root_node.create_child_node("Crate", entity=box.to_mesh(), material=material)
+scene.save("crate.gltf")
+```
+
+## Additional Examples
+
+The following workflows demonstrate creating scenes, converting meshes, and saving to various formats.
+
+### Build a Mesh with PBR Material and Export to Text-Based glTF
+
+```python
+import io
+import json
+from aspose.threed import Scene, FileFormat
+from aspose.threed.entities import Mesh
+from aspose.threed.utilities import Vector3, Vector4
+from aspose.threed.formats.gltf import GltfSaveOptions
+from aspose.threed.shading import PbrMaterial
+
+scene = Scene()
+mesh = Mesh("TestMesh")
+mesh.control_points.add(Vector4(0.0, 0.0, 0.0, 1.0))
+mesh.control_points.add(Vector4(1.0, 0.0, 0.0, 1.0))
+mesh.control_points.add(Vector4(0.0, 1.0, 0.0, 1.0))
+mesh.create_polygon(0, 1, 2)
+
+albedo = Vector3(0.8, 0.2, 0.3)
+material = PbrMaterial("RedMaterial", albedo)
+material.metallic_factor = 0.5
+material.roughness_factor = 0.7
+
+node = scene.root_node.create_child_node("TestNode")
+node.entity = mesh
+node.material = material
+
+stream = io.BytesIO()
+# Pass the detected FileFormat into the constructor explicitly: unlike
+# StlFormat, GltfFormat.create_save_options() does not set file_format on the
+# options it returns, and a bare stream (no filename) gives scene.save()
+# nothing else to detect the format from.
+options = GltfSaveOptions(FileFormat.get_format_by_extension(".gltf"))
+options.binary_mode = False
+scene.save(stream, options)
+
+stream.seek(0)
+gltf_data = json.loads(stream.read().decode("utf-8"))
+print(gltf_data["materials"][0]["pbrMetallicRoughness"])
+```
+
+<details>
+<summary>View Additional Examples</summary>
+
+### Create a Sphere with PBR Material and Save as STL
+
+```python
+from aspose.threed import Scene
+from aspose.threed.entities import Sphere
+from aspose.threed.shading import PbrMaterial
+from aspose.threed.utilities import Vector3
+
+scene = Scene()
+sphere = Sphere()
+material = PbrMaterial(albedo=Vector3(0.8, 0.1, 0.1))
+material.metallic_factor = 0.9
+material.roughness_factor = 0.2
+
+scene.root_node.create_child_node("Ball", entity=sphere.to_mesh(), material=material)
+scene.save("ball.stl")
+```
+
+### Generate a Triangle Mesh and Save as ASCII STL
+
+```python
+import io
+from aspose.threed import Scene, FileFormat
+from aspose.threed.entities import Mesh
+from aspose.threed.utilities import Vector4
+
+scene = Scene()
+mesh = Mesh("triangle")
+mesh.control_points.add(Vector4(0.0, 0.0, 0.0, 1.0))
+mesh.control_points.add(Vector4(1.0, 0.0, 0.0, 1.0))
+mesh.control_points.add(Vector4(1.0, 1.0, 0.0, 1.0))
+mesh.create_polygon(0, 1, 2)
+
+node = scene.root_node.create_child_node("triangle_node")
+node.entity = mesh
+
+stream = io.StringIO()
+# Use FileFormat.get_format_by_extension(...).create_save_options() rather than
+# StlSaveOptions() directly: a default-constructed options object has no
+# file_format set, and scene.save() cannot infer the format from a bare stream
+# (only filename-based saves fall back to extension detection).
+options = FileFormat.get_format_by_extension(".stl").create_save_options()
+options.binary_mode = False
+scene.save(stream, options)
+print(stream.getvalue())
+```
+
+### Convert a `Box` Entity to a Mesh and Count Control Points
+
+```python
+from aspose.threed.entities import Box
+
+box = Box(10, 20, 30)
+mesh = box.to_mesh()
+print(f"Control points: {len(mesh.control_points)}")
+```
+
+### Construct a Cube Mesh and Save as Uncompressed 3MF
+
+```python
+import io
+from aspose.threed import Scene
+from aspose.threed.entities import Mesh
+from aspose.threed.utilities import Vector4
+from aspose.threed.formats import ThreeMfSaveOptions
+
+scene = Scene()
+mesh = Mesh("cube")
+for point in [
+    Vector4(0, 0, 0, 1), Vector4(1, 0, 0, 1), Vector4(1, 1, 0, 1), Vector4(0, 1, 0, 1),
+    Vector4(0, 0, 1, 1), Vector4(1, 0, 1, 1), Vector4(1, 1, 1, 1), Vector4(0, 1, 1, 1),
+]:
+    mesh.control_points.add(point)
+
+mesh.create_polygon(0, 1, 2)
+mesh.create_polygon(0, 2, 3)
+mesh.create_polygon(4, 7, 6)
+mesh.create_polygon(4, 6, 5)
+mesh.create_polygon(0, 4, 5)
+mesh.create_polygon(0, 5, 1)
+mesh.create_polygon(2, 6, 7)
+mesh.create_polygon(2, 7, 3)
+mesh.create_polygon(0, 3, 7)
+mesh.create_polygon(0, 7, 4)
+mesh.create_polygon(1, 5, 6)
+mesh.create_polygon(1, 6, 2)
+
+node = scene.root_node.create_child_node("cube")
+node.entity = mesh
+
+stream = io.BytesIO()
+options = ThreeMfSaveOptions()
+options.enable_compression = False
+scene.save(stream, options)
+```
+
+Build a scene from scratch and export it to glTF:
+
+More real, verified snippets are collected below, each demonstrating one operation without
+obscuring the primary installation and quick-start path.
+
+</details>
+
+## API Reference
+
+Aspose.3D FOSS for Python provides the `aspose.threed.Scene` class as the primary entry point for loading and saving 3D scenes, and the `aspose.threed.FileFormat` class for format detection and options. `Scene` instances hold a hierarchy of `Node` objects, each of which can contain `Mesh` entities and `Material` instances.
+
+The verified public surface has 337 types.
+
+<details>
+<summary>View the Complete Public API Surface</summary>
+
+### Core API
+
+| Class | Description |
+| --- | --- |
+| `A3DObject` | A3DObject represents a base object that holds a name and a collection of properties. |
+| `AnimationChannel` | AnimationChannel represents a channel that stores keyframe data for a specific animation component. |
+| `AnimationClip` | AnimationClip represents a container for animation data with a defined start and stop time. |
+| `AnimationNode` | AnimationNode represents a node in an animation hierarchy that can hold bind points and sub-animations. |
+| `ArrayListAdapter` | Adapter class that wraps List[T] and implements IArrayList[T]. |
+| `AssetInfo` | AssetInfo holds metadata about a 3D asset such as author, creation time, and coordinate system. |
+| `Axis` | The coordinate axis. |
+| `AxisSystem` | Axis system is an combination of coordinate system, up vector and front vector. |
+| `BindPoint` | BindPoint represents a binding point that connects animation channels to a specific property. |
+| `BonePose` | BonePose represents the pose of a bone in local or global space. |
+| `BoundingBox2D` | The axis-aligned bounding box for Vector2 |
+| `BoundingBoxExtent` | The extent of the bounding box |
+| `Box` | Box represents a box primitive with configurable dimensions and segmentation. |
+| `Camera` | Camera represents a camera entity used for rendering 3D scenes. |
+| `Circle` | Circle represents a circle primitive defined in 3D space. |
+| `ComposeOrder` | The order to compose transform matrix |
+| `CoordinateSystem` | The left handed or right handed coordinate system. |
+| `Curve` | Curve represents a curve entity in a 3D scene. |
+| `CustomObject` | CustomObject represents a user-defined object that extends A3DObject. |
+| `Cylinder` | Cylinder represents a cylinder primitive with configurable height and segmentation. |
+| `Dish` | Dish represents a dish primitive, a portion of a sphere. |
+| `Ellipse` | Ellipse represents an ellipse primitive in 3D space. |
+| `Entity` | Entity represents a renderable object in a scene, such as a mesh or geometry. |
+| `ExportException` | Exceptions when Aspose.3D failed to export the scene to file. |
+| `Extrapolation` | Extrapolation represents settings for how animation values are extrapolated beyond keyframes. |
+| `FMatrix4` | Matrix 4x4 with all component in float type |
+| `FileContentType` | File content type |
+| `FileFormat` | FileFormat represents supported 3D file formats and provides format detection by extension. |
+| `FileFormatType` | File format type |
+| `Frustum` | Frustum represents a frustum primitive used for viewing volumes. |
+| `Geometry` | Geometry represents a geometric entity that can be rendered in a scene. |
+| `GlobalTransform` | GlobalTransform represents a global transformation matrix applied to an object. |
+| `Group` | A Group represents the logical relationships of Node. |
+| `INamedObject` | INamedObject represents an object that can be identified by a name. |
+| `IOExtension` | Utilities to write matrix/vector to binary writer |
+| `ImageRenderOptions` | ImageRenderOptions holds settings for rendering a scene to an image. |
+| `ImportException` | Exception when Aspose.3D failed to open the specified source. |
+| `KeyFrame` | KeyFrame represents a single keyframe with a time and value. |
+| `KeyframeSequence` | KeyframeSequence represents a sequence of keyframes for animation. |
+| `Light` | Light represents a light entity that illuminates objects in a scene. |
+| `LinearExtrusion` | LinearExtrusion represents a linear extrusion of a profile along a direction. |
+| `MathUtils` | A set of useful mathematical utilities. |
+| `Mesh` | Mesh represents a mesh geometry composed of vertices and polygons. |
+| `Node` | Node represents a transformable object in a scene hierarchy. |
+| `ParseException` | Exception when Aspose.3D failed to parse the input. |
+| `Plane` | Plane represents a plane primitive in 3D space. |
+| `PolygonBuilder` | PolygonBuilder provides utilities for constructing polygonal meshes. |
+| `Pose` | Pose represents a pose configuration for a node in a scene. |
+| `Primitive` | Primitive represents a basic geometric shape such as a box, cylinder, or sphere. |
+| `Property` | Property represents a named value that can be attached to an object. |
+| `PropertyCollection` | PropertyCollection represents a collection of properties attached to an object. |
+| `PropertyFlags` | Property's flags |
+| `Rect` | A class to represent the rectangle |
+| `RelativeRectangle` | Relative rectangle |
+| `RotationOrder` | The order controls which rx ry rz are applied in the transformation matrix. |
+| `Scene` | Scene represents a complete 3D scene containing nodes, entities, and animations. |
+| `SceneObject` | SceneObject represents an object that belongs to a scene and can be part of the scene hierarchy. |
+| `SemanticAttribute` | Allow user to use their own structure for static declaration of VertexDeclaration |
+| `Sphere` | The Sphere class represents a sphere primitive in Aspose.3D FOSS for Python. |
+| `Transform` | The Transform class represents a transformation matrix and its components such as translation, rotation, and scaling in Aspose.3D FOSS for Python. |
+| `TransformBuilder` | The TransformBuilder is used to build transform matrix by a chain of transformations. |
+| `TrialException` | This is raised in Scene.Open/Scene.Save when no licenses are applied. |
+| `Vertex` | Vertex reference, used to access the raw vertex in TriMesh. |
+| `VertexDeclaration` | The declaration of a custom defined vertex's structure |
+| `VertexField` | Vertex's field memory layout description. |
+| `VertexFieldDataType` | Vertex field's data type |
+| `VertexFieldSemantic` | The semantic of the vertex field |
+| `Bone` | The Bone class represents a bone used in skeletal animation in Aspose.3D FOSS for Python. |
+| `BoneLinkMode` | The BoneLinkMode class defines the bone link mode enumeration for skinning in Aspose.3D FOSS for Python. |
+| `Deformer` | The Deformer class is the base class for mesh deformation operators in Aspose.3D FOSS for Python. |
+| `MorphTargetChannel` | The MorphTargetChannel class represents a channel that controls the influence of morph targets in Aspose.3D FOSS for Python. |
+| `MorphTargetDeformer` | The MorphTargetDeformer class applies morph target animations to a mesh in Aspose.3D FOSS for Python. |
+| `SkinDeformer` | The SkinDeformer class applies skeletal animation to a mesh in Aspose.3D FOSS for Python. |
+| `ApertureMode` | Camera aperture modes. |
+| `BooleanOperand` | This class encapsulates the transformed mesh as Boolean operation's operand. |
+| `BooleanOperation` | The BooleanOperation class defines the boolean operation types for 3D operations in Aspose.3D FOSS for Python. |
+| `BooleanOperator` | Boolean operator allows you to apply Boolean operation on two IMeshConvertible instances. |
+| `CompositeCurve` | A CompositeCurve is consisting of several curve segments. |
+| `CurveDimension` | The CurveDimension class defines the dimension type of a curve in Aspose.3D FOSS for Python. |
+| `EndPoint` | The end point to trim the curve, can be a parameter value or a Cartesian point. |
+| `HalfSpace` | HalfSpace represents a infinity space which is split by a plane, this can be used with BooleanOperator |
+| `IIndexedVertexElement` | The IIndexedVertexElement class represents an indexed vertex element in Aspose.3D FOSS for Python. |
+| `IMeshConvertible` | Entities that implemented this interface can be converted to Mesh |
+| `IOrientable` | Orientable entities shall implement this interface. |
+| `LightType` | Light types. |
+| `Line` | A polyline is a path defined by a set of points with control_points, and connected by segments. |
+| `MappingMode` | The MappingMode class defines the mapping mode for texture coordinates in Aspose.3D FOSS for Python. |
+| `NurbsCurve` | The NurbsCurve class represents a NURBS curve in Aspose.3D FOSS for Python. |
+| `NurbsDirection` | The NurbsDirection class defines the properties of a NURBS direction in Aspose.3D FOSS for Python. |
+| `NurbsSurface` | The NurbsSurface class represents a NURBS surface in Aspose.3D FOSS for Python. |
+| `NurbsType` | The NurbsType class defines the type of a NURBS curve or surface in Aspose.3D FOSS for Python. |
+| `Patch` | The Patch class represents a patch geometry in Aspose.3D FOSS for Python. |
+| `PatchDirection` | The PatchDirection class defines the direction of a patch in Aspose.3D FOSS for Python. |
+| `PatchDirectionType` | The PatchDirectionType class defines the type of a patch direction in Aspose.3D FOSS for Python. |
+| `PointCloud` | The PointCloud class represents a point cloud entity in Aspose.3D FOSS for Python. |
+| `InvalidOperationException` | The InvalidOperationException class is raised when an invalid operation is performed during polygon building in Aspose.3D FOSS for Python. |
+| `PolygonModifier` | The PolygonModifier class provides methods to modify polygonal meshes in Aspose.3D FOSS for Python. |
+| `ProjectionType` | Camera's projection types. |
+| `Pyramid` | Parameterized pyramid. |
+| `RectangularTorus` | Parameterized rectangular torus entity. |
+| `ReferenceMode` | The ReferenceMode class defines the reference mode for animation channels in Aspose.3D FOSS for Python. |
+| `RevolvedAreaSolid` | RevolvedAreaSolid entity. |
+| `RotationMode` | The frustum's rotation mode. |
+| `Shape` | Base class for all shape entities. |
+| `Skeleton` | The Skeleton is mainly used by CAD software to help designer to manipulate the transformation of skeletal structure, it's usually useless outside the CAD softwares. |
+| `SkeletonType` | Skeleton type enum. |
+| `SplitMeshPolicy` | Share vertex/control point data between sub-meshes or each sub-mesh has its own compacted data. |
+| `SweptAreaSolid` | SweptAreaSolid entity. |
+| `TextureMapping` | The TextureMapping class represents a texture mapping in Aspose.3D FOSS for Python. |
+| `Torus` | Parameterized torus entity. |
+| `TransformedCurve` | TransformedCurve entity. |
+| `TriMesh` | TriMesh is a triangle mesh that stores triangles. |
+| `TrimmedCurve` | TrimmedCurve entity. |
+| `VertexElement` | The VertexElement class is the base class for vertex element definitions in Aspose.3D FOSS for Python. |
+| `VertexElementBinormal` | The VertexElementBinormal class represents a binormal vertex element in Aspose.3D FOSS for Python. |
+| `VertexElementDoublesTemplate` | A helper class for defining concrete implementations. |
+| `VertexElementEdgeCrease` | Defines the edge crease values for specified components. |
+| `VertexElementFVector` | The VertexElementFVector class represents a floating-point vector vertex element in Aspose.3D FOSS for Python. |
+| `VertexElementHole` | Defines the hole information for specified components. |
+| `VertexElementIntsTemplate` | A helper class for defining concrete implementations with int data. |
+| `VertexElementMaterial` | Defines the material for specified components. |
+| `VertexElementNormal` | The VertexElementNormal class represents a normal vertex element in Aspose.3D FOSS for Python. |
+| `VertexElementPolygonGroup` | Defines the polygon group for specified components. |
+| `VertexElementSmoothingGroup` | The VertexElementSmoothingGroup class represents a smoothing group vertex element in Aspose.3D FOSS for Python. |
+| `VertexElementSpecular` | Defines the specular color for specified components. |
+| `VertexElementTangent` | The VertexElementTangent class represents a tangent vertex element in Aspose.3D FOSS for Python. |
+| `VertexElementTemplate` | A helper class for defining concrete implementations of vertex elements with typed data. |
+| `VertexElementType` | The VertexElementType class defines the type of a vertex element in Aspose.3D FOSS for Python. |
+| `VertexElementUV` | The VertexElementUV class represents a UV coordinate vertex element in Aspose.3D FOSS for Python. |
+| `VertexElementUserData` | Defines the user data for specified components. |
+| `VertexElementVector4` | Defines the vector4 data for specified components. |
+| `VertexElementVertexColor` | The VertexElementVertexColor class represents a vertex color vertex element in Aspose.3D FOSS for Python. |
+| `VertexElementVertexCrease` | Defines the vertex crease values for specified components. |
+| `VertexElementVisibility` | Defines the visibility for specified components. |
+| `VertexElementWeight` | Defines the weight for specified components. |
+| `A3dwSaveOptions` | Save options for A3DW |
+| `AmfSaveOptions` | Save options for AMF |
+| `BasicLoadOptions` | Simple LoadOptions subclass for basic loading options. |
+| `ColladaLoadOptions` | Load options for Collada |
+| `ColladaSaveOptions` | Save options for collada |
+| `ColladaTransformStyle` | The node's transformation style of node |
+| `Discreet3dsLoadOptions` | Load options for Discreet 3DS |
+| `Discreet3dsSaveOptions` | Save options for Discreet 3DS |
+| `DracoCompressionLevel` | Compression level for draco file |
+| `DracoFormat` | Google Draco format |
+| `DracoSaveOptions` | Save options for Draco |
+| `Exporter` | The Exporter class provides methods to export scenes to various 3D formats in Aspose.3D FOSS for Python. |
+| `FbxLoadOptions` | Load options for FBX |
+| `FbxSaveOptions` | Save options for FBX |
+| `FormatDetector` | The FormatDetector class detects the format of a 3D file in Aspose.3D FOSS for Python. |
+| `GltfEmbeddedImageFormat` | Embedded image format for GLTF |
+| `formats.GltfLoadOptions` | Load options for glTF |
+| `formats.GltfSaveOptions` | Save options for glTF |
+| `Html5SaveOptions` | Save options for HTML5 |
+| `IOConfig` | The IOConfig class holds input/output configuration options for file operations in Aspose.3D FOSS for Python. |
+| `IOService` | The IOService class provides low-level input and output services in Aspose.3D FOSS for Python. |
+| `Importer` | The Importer class provides methods to import scenes from various 3D formats in Aspose.3D FOSS for Python. |
+| `JtLoadOptions` | Load options for JT |
+| `LoadOptions` | LoadOptions configures how 3D scenes are loaded from files or streams. |
+| `Microsoft3MFFormat` | Microsoft 3MF format |
+| `Microsoft3MFSaveOptions` | Save options for Microsoft 3MF |
+| `formats.ObjLoadOptions` | Load options for OBJ |
+| `formats.ObjSaveOptions` | Save options for OBJ |
+| `PdfFormat` | Adobe's Portable Document Format |
+| `PdfLightingScheme` | Lighting scheme for PDF export |
+| `PdfLoadOptions` | Load options for PDF |
+| `PdfRenderMode` | Render mode for PDF export |
+| `PdfSaveOptions` | Save options for PDF |
+| `Plugin` | Plugin is an abstract base class for format plugins that provide import, export, and format detection capabilities. |
+| `PlyFormat` | PLY format |
+| `PlyLoadOptions` | Load options for PLY |
+| `PlySaveOptions` | Save options for PLY |
+| `RvmFormat` | RVM format |
+| `RvmLoadOptions` | Load options for RVM |
+| `RvmSaveOptions` | Save options for RVM |
+| `SaveOptions` | SaveOptions configures how 3D scenes are saved to files or streams. |
+| `formats.StlLoadOptions` | Load options for STL |
+| `formats.StlSaveOptions` | Save options for STL |
+| `ThreeMfFormat` | ThreeMfFormat represents the 3MF file format and provides methods to detect, import, and export 3MF files. |
+| `ThreeMfLoadOptions` | ThreeMfLoadOptions provides configuration options specific to loading 3MF files. |
+| `ThreeMfSaveOptions` | ThreeMfSaveOptions provides configuration options specific to saving 3MF files. |
+| `U3dLoadOptions` | Load options for U3D |
+| `U3dSaveOptions` | Save options for U3D |
+| `UsdSaveOptions` | Save options for USD |
+| `XLoadOptions` | Load options for X format |
+| `ColladaExporter` | ColladaExporter writes 3D scenes to COLLADA files. |
+| `ColladaFormat` | ColladaFormat represents the COLLADA file format and provides methods to detect, import, and export COLLADA files. |
+| `ColladaFormatDetector` | ColladaFormatDetector identifies COLLADA files by their content. |
+| `ColladaImporter` | ColladaImporter reads 3D scenes from COLLADA files. |
+| `ColladaPlugin` | ColladaPlugin provides import, export, and format detection for COLLADA files. |
+| `FbxExporter` | FbxExporter writes 3D scenes to FBX files. |
+| `FbxFormat` | FbxFormat represents the FBX file format and provides methods to detect, import, and export FBX files. |
+| `FbxFormatDetector` | FbxFormatDetector identifies FBX files by their content. |
+| `FbxImporter` | FbxImporter reads 3D scenes from FBX files. |
+| `FbxPlugin` | FbxPlugin provides import, export, and format detection for FBX files. |
+| `BinaryTokenizer` | BinaryTokenizer parses binary FBX files into tokens. |
+| `binary_tokenizer.Token` | Token represents a single parsed element from a binary FBX file. |
+| `binary_tokenizer.TokenType` | TokenType defines the kinds of tokens that can appear in a binary FBX file. |
+| `FbxElement` | FbxElement represents a parsed element in an FBX file. |
+| `FbxParser` | FbxParser reads and interprets the structure of FBX files. |
+| `FbxScope` | FbxScope defines a scope within an FBX file's hierarchical structure. |
+| `FbxTokenizer` | FbxTokenizer parses text-based FBX files into tokens. |
+| `tokenizer.Token` | Token represents a single parsed element from a text-based FBX file. |
+| `tokenizer.TokenType` | TokenType defines the kinds of tokens that can appear in a text-based FBX file. |
+| `GltfExporter` | GltfExporter writes 3D scenes to glTF files. |
+| `GltfFormat` | GltfFormat represents the glTF file format and provides methods to detect, import, and export glTF files. |
+| `GltfFormatDetector` | GltfFormatDetector identifies glTF files by their content. |
+| `GltfImporter` | GltfImporter reads 3D scenes from glTF files. |
+| `gltf.GltfLoadOptions` | GltfLoadOptions provides configuration options specific to loading glTF files. |
+| `GltfPlugin` | GltfPlugin provides import, export, and format detection for glTF files. |
+| `gltf.GltfSaveOptions` | GltfSaveOptions provides configuration options specific to saving glTF files. |
+| `ObjExporter` | ObjExporter writes 3D scenes to OBJ files. |
+| `ObjFormat` | ObjFormat represents the OBJ file format and provides methods to detect, import, and export OBJ files. |
+| `ObjFormatDetector` | ObjFormatDetector identifies OBJ files by their content. |
+| `ObjImporter` | ObjImporter reads 3D scenes from OBJ files. |
+| `obj.ObjLoadOptions` | ObjLoadOptions provides configuration options specific to loading OBJ files. |
+| `ObjPlugin` | ObjPlugin provides import, export, and format detection for OBJ files. |
+| `obj.ObjSaveOptions` | ObjSaveOptions provides configuration options specific to saving OBJ files. |
+| `StlExporter` | StlExporter writes 3D scenes to STL files. |
+| `StlFormat` | StlFormat represents the STL file format and provides methods to detect, import, and export STL files. |
+| `StlFormatDetector` | StlFormatDetector identifies whether a file is in the STL format by inspecting its content. |
+| `StlImporter` | StlImporter reads and imports geometry data from STL files into a scene. |
+| `stl.StlLoadOptions` | StlLoadOptions configures how STL files are loaded, including coordinate system flipping and scaling. |
+| `StlPlugin` | StlPlugin provides access to the importer, exporter, format detector, and load/save options for the STL format. |
+| `stl.StlSaveOptions` | StlSaveOptions controls how STL files are saved, including binary mode, coordinate system flipping, and scaling. |
+| `ThreeMfExporter` | ThreeMfExporter writes 3D scenes to the 3MF file format. |
+| `ThreeMfFormatDetector` | ThreeMfFormatDetector determines whether a file is in the 3MF format by examining its content. |
+| `ThreeMfImporter` | ThreeMfImporter imports geometry and scene data from 3MF files. |
+| `ThreeMfPlugin` | ThreeMfPlugin offers utilities to work with the 3MF format, including importing, exporting, and format detection. |
+| `ArbitraryProfile` | This class allows you to construct a 2D profile directly from arbitrary curve. |
+| `CShape` | IFC compatible C-shape profile that defined by parameters. |
+| `CenterLineProfile` | IFC compatible center line profile. |
+| `CircleShape` | IFC compatible circle profile. |
+| `EllipseShape` | IFC compatible ellipse profile. |
+| `FontFile` | Font file contains definitions for glyphs, this is used to create text profile. |
+| `HShape` | IFC compatible H-shape profile. |
+| `HollowCircleShape` | IFC compatible hollow circle profile. |
+| `HollowRectangleShape` | IFC compatible hollow rectangular shape with both inner/outer rounding corners. |
+| `LShape` | IFC compatible L-shape profile that defined by parameters. |
+| `MirroredProfile` | IFC compatible mirror profile. |
+| `ParameterizedProfile` | The base class of all parameterized profiles. |
+| `Profile` | 2D Profile in xy plane. |
+| `RectangleShape` | IFC compatible rectangle profile. |
+| `TShape` | IFC compatible T-shape defined by parameters. |
+| `Text` | Text profile, this profile describes contours using font and text. |
+| `TrapeziumShape` | IFC compatible Trapezium shape defined by parameters. |
+| `UShape` | IFC compatible U-shape defined by parameters. |
+| `ZShape` | IFC compatible Z-shape profile that defined by parameters. |
+| `BlendFactor` | Blend factor specify pixel arithmetic. |
+| `CompareFunction` | Compare function for depth/stencil testing. |
+| `CubeFace` | Cube face enumeration. |
+| `CullFaceMode` | Cull face mode for face culling. |
+| `DescriptorSetUpdater` | Descriptor set updater for shader resources. |
+| `DrawOperation` | Draw operation type. |
+| `DriverException` | Exception thrown when rendering driver fails. |
+| `EntityRenderer` | Base class for rendering entities. |
+| `EntityRendererFeatures` | Features supported by an entity renderer. |
+| `EntityRendererKey` | The key of registered entity renderer. |
+| `FrontFace` | Front face winding order. |
+| `GLSLSource` | GLSL shader source. |
+| `IBuffer` | Interface for vertex/index buffer. |
+| `ICommandList` | Interface for command list. |
+| `IDescriptorSet` | Interface for descriptor set. |
+| `IIndexBuffer` | Interface for index buffer. |
+| `IPipeline` | Interface for graphics pipeline. |
+| `IRenderQueue` | Interface for render queue. |
+| `IRenderTarget` | Interface for render target. |
+| `IRenderTexture` | Interface for render texture. |
+| `IRenderWindow` | Interface for render window. |
+| `ITexture1D` | Interface for 1D texture. |
+| `ITexture2D` | Interface for 2D texture. |
+| `ITextureCodec` | Interface for texture codec. |
+| `ITextureCubemap` | Interface for cubemap texture. |
+| `ITextureDecoder` | Interface for texture decoder. |
+| `ITextureEncoder` | Interface for texture encoder. |
+| `ITextureUnit` | Interface for texture unit. |
+| `IVertexBuffer` | Interface for vertex buffer. |
+| `IndexDataType` | Data type for indices. |
+| `InitializationException` | Exception thrown when rendering initialization fails. |
+| `PixelFormat` | Pixel format for render targets. |
+| `PixelMapMode` | Pixel mapping mode. |
+| `PixelMapping` | Pixel mapping configuration. |
+| `PolygonMode` | Polygon rendering mode. |
+| `PostProcessing` | Post-processing effect. |
+| `PresetShaders` | Predefined shaders. |
+| `PushConstant` | Push constant for shaders. |
+| `RenderFactory` | RenderFactory creates all resources that represented in rendering pipeline. |
+| `RenderParameters` | Parameters for rendering. |
+| `RenderQueueGroupId` | Render queue group ID. |
+| `RenderResource` | Base class for render resources. |
+| `RenderStage` | Render stage in the pipeline. |
+| `RenderState` | Render state configuration. |
+| `Renderer` | The context about renderer. |
+| `RendererVariableManager` | Manages renderer variables. |
+| `SPIRVSource` | SPIRV shader source. |
+| `ShaderException` | Exception thrown when shader compilation/linking fails. |
+| `ShaderProgram` | Shader program. |
+| `ShaderSet` | Set of shaders for rendering. |
+| `ShaderSource` | Shader source code. |
+| `ShaderStage` | Shader stage. |
+| `ShaderVariable` | Shader variable. |
+| `StencilAction` | Stencil action. |
+| `StencilState` | Stencil state configuration. |
+| `TextureCodec` | Texture codec. |
+| `TextureData` | Texture data. |
+| `TextureType` | Texture type. |
+| `Viewport` | Viewport for rendering. |
+| `WindowHandle` | Window handle for render window. |
+| `AlphaSource` | Source of alpha channel for textures. |
+| `LambertMaterial` | LambertMaterial defines a simple shading model with ambient, diffuse, emissive, and transparency properties. |
+| `Material` | Material represents a surface appearance definition that can be applied to 3D entities. |
+| `PbrMaterial` | PbrMaterial implements physically based rendering with albedo, metallic, roughness, and emissive properties. |
+| `PbrSpecularMaterial` | Material for physically based rendering based on diffuse color/specular/glossiness. |
+| `PhongMaterial` | PhongMaterial extends LambertMaterial with specular reflection properties for shiny surface effects. |
+| `ShaderMaterial` | A shader material allows to describe the material by external rendering engine or shader language. |
+| `ShaderTechnique` | A technique in shader material describes the concrete rendering details. |
+| `Texture` | This class defines the texture from an external file. |
+| `TextureBase` | Base class for all texture types. |
+| `TextureFilter` | Texture filter type. |
+| `TextureSlot` | Texture slot name. |
+| `WrapMode` | Wrap mode for texture coordinates. |
+| `BoundingBox` | BoundingBox describes the axis-aligned bounding volume of a 3D object. |
+| `FVector2` | FVector2 represents a two-dimensional vector of single-precision floating-point numbers. |
+| `FVector3` | FVector3 represents a three-dimensional vector of single-precision floating-point numbers. |
+| `FVector4` | FVector4 represents a four-dimensional vector of single-precision floating-point numbers. |
+| `FileSystem` | File system encapsulation. |
+| `Matrix4` | Matrix4 represents a 4x4 matrix used for 3D transformations. |
+| `Quaternion` | Quaternion represents a four-element vector used to describe 3D rotations. |
+| `Vector2` | Vector2 represents a two-dimensional vector of double-precision floating-point numbers. |
+| `Vector3` | Vector3 represents a three-dimensional vector of double-precision floating-point numbers. |
+| `Vector4` | Vector4 represents a four-dimensional vector of double-precision floating-point numbers. |
+| `Watermark` | Utility to encode/decode blind watermark to/from a mesh. |
+
+#### Enumerations
+
+| Enumeration | Description |
+| --- | --- |
+| `ExtrapolationType` | ExtrapolationType defines how animation values are extrapolated outside the keyframe range. |
+| `Interpolation` | Interpolation defines the method used to interpolate between keyframes. |
+| `PoseType` | PoseType defines the type of pose, such as bind pose or animation pose. |
+| `StepMode` | The StepMode class defines the step mode enumeration for animation interpolation in Aspose.3D FOSS for Python. |
+| `WeightedMode` | The WeightedMode class defines the weighted mode enumeration for animation blending in Aspose.3D FOSS for Python. |
+
+#### Detailed Member Reference
+
+### Scene
+
+The `Scene` class supports opening and saving 3D content via `Scene.open()` and `Scene.save()`, and provides access to the scene hierarchy through `Scene.root_node`, `Scene.child_nodes`, and `Scene.sub_scenes`; it also manages animation via `Scene.animation_clips` and `Scene.current_animation_clip`.
+
+### Mesh
+
+The `Mesh` class provides control point geometry and polygon construction via `Mesh.control_points` and `Mesh.create_polygon`, and supports boolean operations through `Mesh.do_boolean`; `Box` and `Sphere` primitives convert to `Mesh` via their `to_mesh()` methods.
+
+### shading
+
+The shading module exposes `Light` and `Camera` classes for scene illumination and view frustum configuration, with `Light` providing `near_plane`, `far_plane`, and aspect properties, and `Camera` offering `near_plane`, `far_plane`, and projection settings.
+
+### animation
+
+The animation module provides `AnimationClip` and `AnimationNode` classes for keyframe-based animation, where `AnimationClip.create_animation_node` creates new nodes for animating scene objects, and `AnimationNode.find_bind_point` locates animation targets.
+
+`Scene` is the primary entry point: `Scene.open()`/`Scene.save()` load and write a scene graph
+built from `Node` objects, each of which holds a `Transform`, an optional `Mesh`-derived
+`Entity`, and zero or more `Material` instances. The full public class index is listed below by
+module.
+
+| Class | Description |
+|---|---|
+| `A3DObject` | A3DObject.find_property returns the property object matching the given name if it exists. |
+| `A3dwSaveOptions` | Save options for A3DW. |
+| `AlphaSource` | Source of alpha channel for textures. |
+| `AmfSaveOptions` | Save options for AMF. |
+| `AnimationChannel` | AnimationChannel.component_type specifies the data type of the animated component. |
+| `AnimationClip` | AnimationClip.create_animation_node creates a new AnimationNode for the given node name. |
+| `AnimationNode` | AnimationNode.find_bind_point returns the BindPoint matching the given target object and name. |
+| `ApertureMode` | Camera aperture modes. |
+| `ArbitraryProfile` | This class allows you to construct a 2D profile directly from arbitrary curve. |
+| `ArrayListAdapter` | Adapter class that wraps List[T] and implements IArrayList[T]. |
+| `AssetInfo` | AssetInfo.title stores the title of the 3D asset. |
+| `Axis` | The coordinate axis. |
+| `AxisSystem` | Axis system is an combination of coordinate system, up vector and front vector. |
+| `BasicLoadOptions` | Simple LoadOptions subclass for basic loading options. |
+| `BinaryTokenizer` | BinaryTokenizer.tokenize() parses the binary data stream and advances the cursor accordingly. |
+| `BindPoint` | BindPoint.add_channel adds a new animation channel with the specified name, value and type, returning True on success. |
+| `BlendFactor` | Blend factor specify pixel arithmetic. |
+| `Bone` | Bone objects expose weight management via get_weight and set_weight methods, enabling skinning calculations. |
+| `BoneLinkMode` | Enum with 3 members: `NORMALIZE`, `ADDITIVE`, `TOTAL_ONE`, describing how a bone's skinning weight is combined with others on the same vertex. |
+| `BonePose` | Records one bone's world and local transform matrices inside a `Pose`, added via `Pose.add_bone_pose()`. |
+| `BooleanOperand` | This class encapsulates the transformed mesh as Boolean operation's operand. |
+| `BooleanOperation` | BooleanOperation.ADD represents a union boolean operation that adds geometry. |
+| `BooleanOperator` | Boolean operator allows you to apply Boolean operation on two IMeshConvertible instances. |
+| `BoundingBox` | BoundingBox.merge() can combine multiple bounding boxes or geometry to expand the box to include all elements. |
+| `BoundingBox2D` | The axis-aligned bounding box for Vector2. |
+| `BoundingBoxExtent` | The extent of the bounding box. |
+| `Box` | Box.to_mesh() converts the parameterized box primitive into a Mesh for further processing. |
+| `CShape` | IFC compatible C-shape profile that defined by parameters. |
+| `Camera` | Camera properties near_plane and far_plane define the depth range for the view frustum calculations. |
+| `CenterLineProfile` | IFC compatible center line profile. |
+| `Circle` | Circle.to_mesh() converts the parameterized circle primitive into a Mesh for further processing. |
+| `CircleShape` | IFC compatible circle profile. |
+| `ColladaExporter` | ColladaExporter.supports_format returns true if the exporter can handle the given file format. |
+| `ColladaFormat` | ColladaFormat.create_load_options creates and returns a Collada load options object for importing. |
+| `ColladaFormatDetector` | ColladaFormatDetector.detect determines the 3D file format of a stream, optionally using the file name. |
+| `ColladaImporter` | ColladaImporter.supports_format returns True if the specified file format is supported by this importer. |
+| `ColladaLoadOptions` | ColladaLoadOptions.flip_coordinate_system determines whether the Y and Z axes are swapped during import. |
+| `ColladaPlugin` | ColladaPlugin supplies factory methods to obtain the ColladaFormat, its importer, exporter, and format detector for seamless integration. |
+| `ColladaSaveOptions` | ColladaSaveOptions.flip_coordinate_system determines whether the Y and Z axes are swapped when saving. |
+| `ColladaTransformStyle` | The node's transformation style of node. |
+| `CompareFunction` | Compare function for depth/stencil testing. |
+| `ComposeOrder` | The order to compose transform matrix. |
+| `CompositeCurve` | A CompositeCurve is consisting of several curve segments. |
+| `CoordinateSystem` | The left handed or right handed coordinate system. |
+| `CubeFace` | Cube face enumeration. |
+| `CullFaceMode` | Cull face mode for face culling. |
+| `Curve` | Base class for curve entities, extended by `CompositeCurve`, `NurbsCurve`, `TrimmedCurve`, and `TransformedCurve`. |
+| `CurveDimension` | Enum with 2 members, `TWO_DIMENSIONAL` and `THREE_DIMENSIONAL`, describing a curve's coordinate space. |
+| `CustomObject` | Stores arbitrary user-defined data as a named `A3DObject`-derived scene object. |
+| `Cylinder` | Cylinder.to_mesh() converts the cylinder primitive into a Mesh object for further processing. |
+| `Deformer` | Base class for mesh deformers, extended by `SkinDeformer` and `MorphTargetDeformer`. |
+| `DescriptorSetUpdater` | Descriptor set updater for shader resources. |
+| `Discreet3dsLoadOptions` | Load options for Discreet 3DS. |
+| `Discreet3dsSaveOptions` | Save options for Discreet 3DS. |
+| `Dish` | Dish.to_mesh() creates a Mesh from a dish primitive, and its radius and height properties control its size. |
+| `DracoCompressionLevel` | Compression level for draco file. |
+| `DracoFormat` | Google Draco format. |
+| `DracoSaveOptions` | Save options for Draco. |
+| `DrawOperation` | Draw operation type. |
+| `DriverException` | Exception thrown when rendering driver fails. |
+| `Ellipse` | Ellipse.to_mesh() converts an ellipse primitive into a Mesh object that can be added to a scene. |
+| `EllipseShape` | IFC compatible ellipse profile. |
+| `EndPoint` | The end point to trim the curve, can be a parameter value or a Cartesian point. |
+| `Entity` | Entity objects expose get_bounding_box() for spatial queries and a full set of property‑management methods (find_property, get_property, set_property, remove_property). |
+| `EntityRenderer` | Base class for rendering entities. |
+| `EntityRendererFeatures` | Features supported by an entity renderer. |
+| `EntityRendererKey` | The key of registered entity renderer. |
+| `ExportException` | Exceptions when Aspose.3D failed to export the scene to file. |
+| `Exporter` | Exporter objects let you verify format support with supports_format() before calling export() to write a scene to a stream. |
+| `Extrapolation` | Extrapolation.type represents the extrapolation mode applied to animation curves. |
+| `FMatrix4` | Matrix 4x4 with all component in float type. |
+| `FVector2` | FVector2.normalize returns a new FVector2 with the same direction and unit length. |
+| `FVector3` | FVector3.zero returns a vector with all components set to 0. |
+| `FVector4` | FVector4.x represents the X component of the 4‑dimensional vector. |
+| `FbxElement` | FbxElement.add_token adds the given token to the element's token collection. |
+| `FbxExporter` | FbxExporter.save saves the given Scene to a file path using specified FbxSaveOptions. |
+| `FbxFormat` | FbxFormat.detect(stream, file_name) returns the detected file format, enabling dynamic handling of unknown input files. |
+| `FbxFormatDetector` | FbxFormatDetector.detect determines the FBX format of the provided stream, optionally using the file name. |
+| `FbxImporter` | FbxImporter.supports_format returns True if the given file format is supported for import. |
+| `FbxLoadOptions` | FbxLoadOptions exposes properties such as keep_builtin_global_settings, compatible_mode, file_format, encoding, file_system, lookup_paths, and file_name to customize FBX import behavior. |
+| `FbxParser` | FbxParser.parse_value parses the provided token and returns its evaluated value. |
+| `FbxPlugin` | FbxPlugin.get_file_format returns the identifier or name of the FBX file format handled by the plugin. |
+| `FbxSaveOptions` | FbxSaveOptions provides export_textures, embed_textures, export_legacy_material_properties, and other flags to control how FBX files are written. |
+| `FbxScope` | FbxScope.add_element(element) adds a new element to the scope, and get_elements(key) retrieves all elements of the specified type. |
+| `FbxTokenizer` | FbxTokenizer.tokenize() returns a list of internal lexical-token objects representing the elements of an FBX file. |
+| `FileContentType` | File content type. |
+| `FileFormat` | Class with 9 methods and 8 properties and 49 members. |
+| `FileFormatType` | File format type. |
+| `FileSystem` | File system encapsulation. |
+| `FontFile` | Font file contains definitions for glyphs, this is used to create text profile. |
+| `FormatDetector` | FormatDetector.detect detects the file format of the provided stream, using the optional file name, and returns a FileFormat. |
+| `FrontFace` | Front face winding order. |
+| `Frustum` | Frustum.to_mesh() generates a Mesh representation of a viewing frustum, useful for visual debugging of camera volumes. |
+| `GLSLSource` | GLSL shader source. |
+| `Geometry` | Geometry.create_element creates a VertexElement of the given type, mapping and reference modes. |
+| `GlobalTransform` | The GlobalTransform class exposes translation, scale, euler_angles, rotation, and transform_matrix properties for direct manipulation of an entity’s world transform. |
+| `GltfEmbeddedImageFormat` | Embedded image format for GLTF. |
+| `GltfExporter` | GltfExporter can export a scene to the glTF format and first checks support with supports_format(file_format). |
+| `GltfFormat` | GltfFormat.create_load_options creates a GLTF-specific load options object for importing scenes. |
+| `GltfFormatDetector` | GltfFormatDetector.detect determines the FileFormat of the provided stream, optionally using the file name. |
+| `GltfImporter` | GltfImporter.supports_format returns true when the specified file format can be imported. |
+| `GltfLoadOptions` | GltfLoadOptions.flip_tex_coord_v indicates whether to invert the V component of texture coordinates during GLTF import. |
+| `GltfPlugin` | GltfPlugin.get_file_format returns the GltfFormat object representing the GLTF file format. |
+| `GltfSaveOptions` | GltfSaveOptions.file_format specifies the output file format for saving, using the FileFormat enum. |
+| `Group` | A Group represents the logical relationships of Node. |
+| `HShape` | IFC compatible H-shape profile. |
+| `HalfSpace` | HalfSpace represents a infinity space which is split by a plane, this can be used with BooleanOperator. |
+| `HollowCircleShape` | IFC compatible hollow circle profile. |
+| `HollowRectangleShape` | IFC compatible hollow rectangular shape with both inner/outer rounding corners. |
+| `Html5SaveOptions` | Save options for HTML5. |
+| `ImageRenderOptions` | ImageRenderOptions lets you configure rendering parameters such as background_color, enable_shadows, and asset_directories before passing the options to a renderer. |
+| `ImportException` | Exception when Aspose.3D failed to open the specified source. |
+| `Importer` | Importer.supports_format(file_format) returns true when the specified FileFormat is supported for import. |
+| `IndexDataType` | Data type for indices. |
+| `InitializationException` | Exception thrown when rendering initialization fails. |
+| `InvalidOperationException` | Class extending Exception. |
+| `JtLoadOptions` | Load options for JT. |
+| `KeyFrame` | KeyFrame.time represents the timestamp of the keyframe in seconds. |
+| `KeyframeSequence` | KeyframeSequence lets developers create animation curves with per‑keyframe interpolation and tangent control. |
+| `LShape` | IFC compatible L-shape profile that defined by parameters. |
+| `LambertMaterial` | The LambertMaterial class provides a full material system, allowing you to set emissive, ambient, diffuse, and transparent colors, as well as assign textures to predefined slots such as MAP_DIFFUSE and MAP_NORMAL. |
+| `Light` | The Light class lets you configure lighting parameters such as near_plane, far_plane, aspect, ortho_height, and up direction for scene illumination. |
+| `LightType` | Light types. |
+| `Line` | A polyline is a path defined by a set of points with control_points, and connected by segments. |
+| `LinearExtrusion` | Extrudes a 2D `Profile` into a solid entity along a linear direction; its `to_mesh()` conversion raises `NotImplementedError` in this FOSS build. |
+| `LoadOptions` | Base class for every format-specific load-options type, holding a shared `file_name` and `file_system`. |
+| `MappingMode` | MappingMode.CONTROL_POINT represents mapping based on each mesh control point individually. |
+| `Material` | Material class lets you manage texture maps and custom properties, supporting specular, diffuse, emissive, ambient, and normal maps. |
+| `MathUtils` | A set of useful mathematical utilities. |
+| `Matrix4` | Matrix4.get_identity() returns a new identity Matrix4 instance that can be used as a starting point for building transformation chains. |
+| `Mesh` | Mesh.create_polygon creates a new polygon and returns its index. |
+| `Microsoft3MFFormat` | Microsoft 3MF format. |
+| `Microsoft3MFSaveOptions` | Save options for Microsoft 3MF. |
+| `MirroredProfile` | IFC compatible mirror profile. |
+| `MorphTargetChannel` | MorphTargetChannel.get_weight(target) returns the current weight for the specified morph target, and set_weight(target, weight) updates it. |
+| `MorphTargetDeformer` | MorphTargetDeformer.get_weight/set_weight (via its channels) control per-target blend weights for shape-key style animation. |
+| `Node` | Node.add_entity adds the given Entity to this node's entity collection. |
+| `NurbsCurve` | Represents a NURBS curve via control points, knot vectors, and degree; its `evaluate()`/`evaluate_at()` sampling methods raise `NotImplementedError` in this FOSS build. |
+| `NurbsDirection` | Describes the knot vector, order, degree, and NURBS type along one parametric direction (U or V) of a `NurbsSurface`. |
+| `NurbsSurface` | Represents a NURBS surface via control points and per-direction `NurbsDirection` data; its `to_mesh()` conversion raises `NotImplementedError` in this FOSS build. |
+| `NurbsType` | Enum with 3 members, `OPEN`, `CLOSED`, and `PERIODIC`, classifying a NURBS curve or surface direction. |
+| `ObjExporter` | ObjExporter.export writes the given Scene to Wavefront OBJ, including per-node materials. |
+| `ObjFormat` | ObjFormat.create_load_options creates and returns an ObjLoadOptions instance for importing OBJ files. |
+| `ObjFormatDetector` | ObjFormatDetector.detect inspects a stream and reports whether its content is Wavefront OBJ. |
+| `ObjImporter` | ObjImporter.import_scene loads OBJ data from a stream into a Scene using ObjLoadOptions. |
+| `ObjLoadOptions` | ObjLoadOptions.flip_coordinate_system swaps the Y and Z axes when loading an OBJ file. |
+| `ObjPlugin` | ObjPlugin.get_file_format returns the ObjFormat object representing the OBJ file format. |
+| `ObjSaveOptions` | ObjSaveOptions.apply_unit_scale applies the scene's unit scaling when saving to OBJ. |
+| `ParameterizedProfile` | The base class of all parameterized profiles. |
+| `ParseException` | Exception when Aspose.3D failed to parse the input. |
+| `Patch` | Patch objects allow creation of custom vertex elements via create_element and create_element_uv methods. |
+| `PatchDirection` | Describes the knot vector, degree, and `PatchDirectionType` along one parametric direction of a `Patch`. |
+| `PatchDirectionType` | Enum with 5 members: `BEZIER`, `QUADRATIC_BEZIER`, `CARDINAL_SPLINE`, `BASIS_SPLINE`, `LINEAR`. |
+| `PbrMaterial` | PbrMaterial supplies a full physically based rendering workflow with albedo, metallic, roughness, occlusion, and emissive textures. |
+| `PbrSpecularMaterial` | Material for physically based rendering based on diffuse color/specular/glossiness. |
+| `PdfFormat` | Adobe's Portable Document Format. |
+| `PdfLightingScheme` | Lighting scheme for PDF export. |
+| `PdfLoadOptions` | Load options for PDF. |
+| `PdfRenderMode` | Render mode for PDF export. |
+| `PdfSaveOptions` | Save options for PDF. |
+| `PhongMaterial` | PhongMaterial.specular_color defines the RGB color of the specular highlight. |
+| `PixelFormat` | Pixel format for render targets. |
+| `PixelMapMode` | Pixel mapping mode. |
+| `PixelMapping` | Pixel mapping configuration. |
+| `Plane` | The Plane class can be converted to a Mesh by calling its to_mesh() method, enabling further mesh processing. |
+| `Plugin` | Plugin.get_exporter() returns an Exporter object that can be used to write supported 3D formats. |
+| `PlyFormat` | PLY format. |
+| `PlyLoadOptions` | Load options for PLY. |
+| `PlySaveOptions` | Save options for PLY. |
+| `PointCloud` | Stores unconnected 3D points as a scene entity; its `from_geometry()`/`from_geometry_with_density()` factory methods raise `NotImplementedError` in this FOSS build. |
+| `PolygonBuilder` | The PolygonBuilder class lets you construct polygon vertex indices by calling begin(), add_vertex(index) for each vertex, and end() to finalize the polygon. |
+| `PolygonMode` | Polygon rendering mode. |
+| `PolygonModifier` | PolygonModifier.triangulate can return None, a Mesh object, or a list of triangle index arrays, giving developers flexibility in handling polygon data. |
+| `Pose` | Pose.add_bone_pose(node, matrix, local_matrix) records a bone transformation for skeletal animation within a Pose object. |
+| `PostProcessing` | Post-processing effect. |
+| `PresetShaders` | Predefined shaders. |
+| `Primitive` | Base class for parameterized shape entities (`Box`, `Sphere`, `Cylinder`, and similar); the base `to_mesh()` itself raises `NotImplementedError` and is overridden by each real subclass. |
+| `Profile` | 2D Profile in xy plane. |
+| `ProjectionType` | Camera's projection types. |
+| `Property` | Property.get_extra returns the extra attribute identified by the given name. |
+| `PropertyCollection` | PropertyCollection.find_property returns the property object matching the given name or None. |
+| `PropertyFlags` | Property's flags. |
+| `PushConstant` | Push constant for shaders. |
+| `Pyramid` | Parameterized pyramid. |
+| `Quaternion` | Quaternion.slerp(t, v1, v2) returns an interpolated quaternion for smooth rotation animations. |
+| `Rect` | A class to represent the rectangle. |
+| `RectangleShape` | IFC compatible rectangle profile. |
+| `RectangularTorus` | Parameterized rectangular torus entity. |
+| `ReferenceMode` | ReferenceMode.DIRECT represents a reference mode where vertex data is stored directly without indexing. |
+| `RelativeRectangle` | Relative rectangle The formula between relative component to absolute value is: Scale * (Reference Width) + offset So if we want it to represent an absolute value, leave all scale fields zero, and use offset fields instead. |
+| `RenderFactory` | RenderFactory creates all resources that represented in rendering pipeline. |
+| `RenderParameters` | Parameters for rendering. |
+| `RenderQueueGroupId` | Render queue group ID. |
+| `RenderResource` | Base class for render resources. |
+| `RenderStage` | Render stage in the pipeline. |
+| `RenderState` | Render state configuration. |
+| `Renderer` | The context about renderer. |
+| `RendererVariableManager` | Manages renderer variables. |
+| `RevolvedAreaSolid` | RevolvedAreaSolid entity. |
+| `RotationMode` | The frustum's rotation mode. |
+| `RotationOrder` | The order controls which rx ry rz are applied in the transformation matrix. |
+| `RvmFormat` | RVM format. |
+| `RvmLoadOptions` | Load options for RVM. |
+| `RvmSaveOptions` | Save options for RVM. |
+| `SPIRVSource` | SPIRV shader source. |
+| `SaveOptions` | SaveOptions.export_textures determines if textures are included in the exported file. |
+| `Scene` | The Scene class provides a high‑level API for loading, saving, rendering, and animating 3D content. |
+| `SceneObject` | SceneObject provides find_property, get_property, and set_property methods to manage custom metadata attached to any scene object. |
+| `SemanticAttribute` | Allow user to use their own structure for static declaration of VertexDeclaration. |
+| `ShaderException` | Exception thrown when shader compilation/linking fails. |
+| `ShaderMaterial` | A shader material allows to describe the material by external rendering engine or shader language. |
+| `ShaderProgram` | Shader program. |
+| `ShaderSet` | Set of shaders for rendering. |
+| `ShaderSource` | Shader source code. |
+| `ShaderStage` | Shader stage. |
+| `ShaderTechnique` | A technique in shader material describes the concrete rendering details. |
+| `ShaderVariable` | Shader variable. |
+| `Shape` | Base class for all shape entities. |
+| `Skeleton` | The Skeleton is mainly used by CAD software to help designer to manipulate the transformation of skeletal structure, it's usually useless outside the CAD softwares. |
+| `SkeletonType` | Skeleton type enum. |
+| `SkinDeformer` | Binds a `Skeleton`'s bones to mesh vertices for skeletal-animation skinning. |
+| `Sphere` | Sphere.to_mesh() converts the parameterized sphere primitive into a Mesh for further processing. |
+| `SplitMeshPolicy` | Share vertex/control point data between sub-meshes or each sub-mesh has its own compacted data. |
+| `StencilAction` | Stencil action. |
+| `StencilState` | Stencil state configuration. |
+| `StlExporter` | StlExporter.supports_format returns True if the given file format is supported for STL export. |
+| `StlFormat` | StlFormat.create_load_options creates an STL-specific load options object. |
+| `StlFormatDetector` | StlFormatDetector.detect returns the detected FileFormat for a stream (optional file name) or None. |
+| `StlImporter` | StlImporter.supports_format returns true when the specified file format can be handled by this importer. |
+| `StlLoadOptions` | Load options for STL import, including `flip_coordinate_system` and unit-scale settings. |
+| `StlPlugin` | StlPlugin.get_file_format returns the StlFormat object representing the STL file format. |
+| `StlSaveOptions` | StlSaveOptions.scale specifies a uniform scaling factor applied to all coordinates during STL export. |
+| `SweptAreaSolid` | SweptAreaSolid entity. |
+| `TShape` | IFC compatible T-shape defined by parameters. |
+| `Text` | Text profile, this profile describes contours using font and text. |
+| `Texture` | This class defines the texture from an external file. |
+| `TextureBase` | Base class for all texture types. |
+| `TextureCodec` | Texture codec. |
+| `TextureData` | Texture data. |
+| `TextureFilter` | Texture filter type. |
+| `TextureMapping` | TextureMapping.AMBIENT represents the ambient texture mapping channel. |
+| `TextureSlot` | Texture slot name. |
+| `TextureType` | Texture type. |
+| `ThreeMfExporter` | ThreeMfExporter.export writes the provided Scene to the given stream using optional export settings. |
+| `ThreeMfFormat` | ThreeMfFormat.is_buildable(node) returns a boolean indicating whether a node can be used as a printable build object. |
+| `ThreeMfFormatDetector` | ThreeMfFormatDetector.detect determines the 3MF file format from a stream and optional file name, returning a FileFormat. |
+| `ThreeMfImporter` | ThreeMfImporter.import_scene(scene, stream, options) reads a 3MF file from a stream and populates the given Scene instance. |
+| `ThreeMfLoadOptions` | ThreeMfLoadOptions.flip_coordinate_system swaps Y and Z coordinates when loading a 3MF file. |
+| `ThreeMfPlugin` | ThreeMfPlugin.get_file_format returns the ThreeMfFormat object that identifies the 3MF file format. |
+| `ThreeMfSaveOptions` | ThreeMfSaveOptions.enable_compression enables compression of the exported 3MF file. |
+| `Token` | A single lexical token produced by the FBX tokenizers, exposing its `value`, `text`, and `type`. |
+| `TokenType` | The FBX token kinds (`OPEN_BRACKET`, `CLOSE_BRACKET`, `DATA`, `COMMA`, `KEY`); `TokenType.to_string(t)` names a kind. |
+| `Torus` | Parameterized torus entity. |
+| `Transform` | Transform.set_translation sets the translation components (tx, ty, tz) and returns the Transform. |
+| `TransformBuilder` | The TransformBuilder is used to build transform matrix by a chain of transformations. |
+| `TransformedCurve` | TransformedCurve entity. |
+| `TrapeziumShape` | IFC compatible Trapezium shape defined by parameters. |
+| `TriMesh` | TriMesh is a triangle mesh that stores triangles. |
+| `TrialException` | This is raised in Scene.Open/Scene.Save when no licenses are applied. |
+| `TrimmedCurve` | TrimmedCurve entity. |
+| `U3dLoadOptions` | Load options for U3D. |
+| `U3dSaveOptions` | Save options for U3D. |
+| `UShape` | IFC compatible U-shape defined by parameters. |
+| `UsdSaveOptions` | Save options for USD. |
+| `Vector2` | Vector2.set sets the vector's x and y components to the provided float values. |
+| `Vector3` | Vector3 supports inner and cross products, normalization, angle calculation, and component-wise trigonometric functions. |
+| `Vector4` | Vector4.set assigns new component values to the vector's x, y, z, and w fields. |
+| `Vertex` | Vertex reference, used to access the raw vertex in TriMesh. |
+| `VertexDeclaration` | The declaration of a custom defined vertex's structure. |
+| `VertexElement` | VertexElement.set_indices sets the element's index list to the provided integer list. |
+| `VertexElementBinormal` | Per-vertex binormal-vector element, storing tangent-space binormal data for each polygon vertex. |
+| `VertexElementDoublesTemplate` | A helper class for defining concrete implementations. |
+| `VertexElementEdgeCrease` | Defines the edge crease values for specified components. |
+| `VertexElementFVector` | VertexElementFVector.set_data replaces the element's data list with the provided FVector4 collection. |
+| `VertexElementHole` | Defines the hole information for specified components. |
+| `VertexElementIntsTemplate` | A helper class for defining concrete implementations with int data. |
+| `VertexElementMaterial` | Defines the material for specified components. |
+| `VertexElementNormal` | Per-vertex normal-vector element, storing shading normals for each polygon vertex. |
+| `VertexElementPolygonGroup` | Defines the polygon group for specified components. |
+| `VertexElementSmoothingGroup` | Per-polygon smoothing-group element, used to control normal generation across adjacent faces. |
+| `VertexElementSpecular` | Defines the specular color for specified components. |
+| `VertexElementTangent` | VertexElementTangent.set_data(data) assigns tangent vectors to the specified vertices, while set_indices() can map them to polygon vertices when needed. |
+| `VertexElementTemplate` | A helper class for defining concrete implementations of vertex elements with typed data. |
+| `VertexElementType` | VertexElementType.BINORMAL represents the per-vertex binormal vector used for tangent space calculations. |
+| `VertexElementUV` | VertexElementUV.texture_mapping gets or sets the texture mapping mode for the UV element. |
+| `VertexElementUserData` | Defines the user data for specified components. |
+| `VertexElementVector4` | Defines the vector4 data for specified components. |
+| `VertexElementVertexColor` | Per-vertex color element, storing an RGBA color for each polygon vertex. |
+| `VertexElementVertexCrease` | Defines the vertex crease values for specified components. |
+| `VertexElementVisibility` | Defines the visibility for specified components. |
+| `VertexElementWeight` | Defines the weight for specified components. |
+| `VertexField` | Vertex's field memory layout description. |
+| `VertexFieldDataType` | Vertex field's data type. |
+| `VertexFieldSemantic` | The semantic of the vertex field. |
+| `Viewport` | Viewport for rendering. |
+| `Watermark` | Utility to encode/decode blind watermark to/from a mesh. |
+| `WindowHandle` | Window handle for render window. |
+| `WrapMode` | Wrap mode for texture coordinates. |
+| `XLoadOptions` | Load options for X format. |
+| `ZShape` | IFC compatible Z-shape profile that defined by parameters. |
+
+| Class | Description |
+|---|---|
+| `ExtrapolationType` | ExtrapolationType.CONSTANT represents a constant extrapolation that holds the last keyframe value. |
+| `Interpolation` | Interpolation.CONSTANT represents a constant interpolation where values do not change over time. |
+| `PoseType` | Enum with 2 members, `BIND_POSE` and `SNAPSHOT`, identifying how a `Pose` was captured. |
+| `StepMode` | StepMode.PREVIOUS_VALUE represents a step mode that selects the previous value in a sequence. |
+| `WeightedMode` | WeightedMode enum values NONE, OUT_WEIGHT, NEXT_IN_WEIGHT, and BOTH let developers specify how vertex weights are applied during mesh processing. |
+
+</details>
+
+## Scope and Limitations
+
+Aspose.3D FOSS for Python reads and writes COLLADA (`.dae`) files and provides a subset of mesh and curve APIs for geometry manipulation. It supports Python 3.7 and later, with no required third-party dependencies.
+
+- COLLADA (`.dae`) import works, but COLLADA export is not reachable through `Scene.save()` because the exporter lookup fails before reaching the working `ColladaExporter`.
+- FBX (`.fbx`) import is experimental and lightly verified, while FBX export is not implemented and raises NotImplementedError.
+- The `aspose.threed.render` module, including `Scene.render()` and related classes, raises NotImplementedError — this library does not render scenes to images.
+- `Texture` and `TextureBase` raise NotImplementedError on construction, so an image-backed texture cannot be created, though material color and factor properties work independently.
+- `Mesh` Boolean operations (`do_boolean`, union, difference, intersect) raise NotImplementedError, even though `BooleanOperator` and `BooleanOperand` exist as configuration holders.
+- NURBS curve evaluation and conversion to `Mesh` are not implemented — `NurbsCurve.evaluate()` and `NurbsSurface.to_mesh()` raise NotImplementedError.
+
+- `pytest` `>=7.0.0` — test runner installed via the optional `dev` extra
+  (`pip install -e ".[dev]"`); the bundled test suite itself is written against the
+  standard-library `unittest` framework (see
+  Development and Testing).
+
+- No file format registers an importer or exporter for PDF, PLY, RVM, U3D, JT, AMF, HTML5,
+  A3DW, USD, or Draco in this build — `PdfSaveOptions`, `PlyLoadOptions`, `DracoSaveOptions`,
+  and similar option classes exist as public types, but `Scene.open()`/`Scene.save()` cannot
+  detect or dispatch any of these extensions, and raise a `RuntimeError` if you try.
+- FBX support is experimental. `FbxImporter` has a real, working ASCII/binary tokenizer and
+  parser, but no bundled test opens a real `.fbx` fixture through it — the only FBX tests
+  exercise the tokenizer directly against hand-written snippets — so treat FBX import as
+  lightly verified rather than production-hardened. `FbxExporter.save()`/`save_to_stream()`
+  both raise `NotImplementedError` outright, so FBX is import-only at best.
+- COLLADA import works, but COLLADA export is not reachable through `Scene.save()`:
+  `IOService`'s exporter lookup walks its registered exporters in order and reaches
+  `FbxExporter` (whose `supports_format()` is unimplemented and raises unconditionally) before
+  it ever reaches `ColladaExporter`, so the lookup itself fails before a real, working
+  `ColladaExporter` is ever consulted — reproduced directly against this build.
+- Always import a format's load/save options class from its own format submodule (as every
+  example in this README does), never from the shared top-level `aspose.threed.formats`
+  package — for OBJ, STL, glTF, and COLLADA specifically, the top-level package name resolves
+  to a broken duplicate with no working base class, which format detection silently rejects.
+  3MF and FBX are unaffected. Import COLLADA classes by their exact file path
+  (`aspose.threed.formats.collada.ColladaLoadOptions`, and so on) — that submodule has no
+  package-init re-export, so the shorter package-style import used for other formats resolves
+  to a module object instead of the class you want.
+- `Scene.render()` and the entire `aspose.threed.render` module (`Renderer`, `RenderFactory`,
+  `Viewport`, and related classes) raise `NotImplementedError` — this library does not render
+  scenes to images.
+- `Texture` and `TextureBase` raise `NotImplementedError` on construction, so an image-backed
+  texture cannot be created; material color and factor properties (`diffuse_color`,
+  `albedo`, `metallic_factor`, and similar) work independently of texture assignment.
+- `Watermark.encode_watermark()`/`decode_watermark()` and every `TransformBuilder` method raise
+  `NotImplementedError` — build node transforms through `Transform`'s own translation,
+  rotation, and scaling properties instead of the fluent `TransformBuilder` chain.
+- `Mesh.do_boolean()`, `union()`, `difference()`, and `intersect()` raise `NotImplementedError`
+  — Boolean/CSG mesh operations are not implemented, even though `BooleanOperator` and
+  `BooleanOperand` exist as configuration holders.
+- `NurbsCurve.evaluate()`/`evaluate_at()` and `NurbsSurface.to_mesh()` raise
+  `NotImplementedError` — NURBS curves and surfaces can be configured but not sampled or
+  converted to a `Mesh`.
+- `PointCloud.from_geometry()`/`from_geometry_with_density()` raise `NotImplementedError`, and
+  `AxisSystem` raises `NotImplementedError` on every method, including construction.
+
+These limitations don't apply to
+[Aspose.3D for Python — Enterprise Edition](https://products.aspose.com/3d/python-net/), which adds the
+broader proprietary-format support (PDF, PLY, USD, and more), rendering, and advanced mesh
+operations that this FOSS build leaves unimplemented.
+
+This project is licensed under the [MIT License](LICENSE). The MIT License permits use,
+copying, modification, distribution, sublicensing, and commercial use, provided its copyright
+and permission notice are retained. The software is provided without warranty.

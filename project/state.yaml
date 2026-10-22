@@ -364,8 +364,36 @@ next_ready_items:
       unit_checks (fuller validation: title restatement, cross-slot leakage, edition-name
       substitution, more) needs a real SectionTask built from a real plan -- not yet done.
   - id: WIRE_PRESENTATION_PLANNING_AND_REAL_UNIT_CHECKS
-    status: READY
+    status: DONE
     priority: high
+    done_2026_10_22: >
+      DONE: the full S3->S4->S5->S6->render cascade fired for real, end to end, against
+      aspose-3d-foss/Aspose.3D-FOSS-for-Python -- the first complete, real Lane R README this
+      repository has produced. Two real blockers closed first: (1) dispositions.py had no S4
+      job-wiring at all (reconciliation_packet/schema/batches/merge/write, ~400 lines, ported
+      verbatim + 12 new tests including both real retained rejected-call fixtures); (2) a real
+      bug in composition/components/glance.py, found only once a real diagram was rendered and
+      read -- _label() never wrapped a node's text in the `[...]` Mermaid needs, so every node
+      came out unparseable (`NodeID"text"` instead of `NodeID["text"]`); this module had NO
+      test file before this session. Fixed, 7 new tests. planning.py (S5) and authoring.py
+      (S6) and renderer.py were already fully ported from earlier this session but never once
+      exercised against a real cascade before now.
+      Real result: 15 of 15 provider calls across S3 (1), S4 (3 batches, 77 units), S5 (1,
+      with the REAL plan_checks), S6 (10 tasks, with the REAL unit_checks) were accepted on
+      their FIRST attempt -- zero rejections, zero re-asks, anywhere. render_readme() (pure
+      deterministic code) then produced a 73,072-character, 1,037-line real README.
+      One real, measured defect left in the output, not hidden: a duplicate opening paragraph,
+      traced to a disposition (VERIFIED_PRESERVE instead of SUPERSEDE_REDUNDANT -> opening)
+      that coverage_findings()'s self-audit does not catch because "opening" is LLM-authored,
+      not deterministic -- exactly the gap dispositions.py's own docstring already predicted
+      placement_errors() (still not ported) would need to close. 1010/1010 whole-repo tests
+      pass. Evidence: evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_first_full_cascade/.
+      New scripts, one per stage: scripts/run_lane_r_{investigation,reconciliation,planning,
+      authoring_real,render}.py.
+    remaining: >
+      Verified against one repository only; reconciliation_narrowing (S4's partial-rejection
+      repair path) and placement_errors (the mechanism that would fix the one measured defect
+      above) are still not ported. Not yet run at portfolio scale.
     purpose: >
       Follow-on to WRITE_PROMPTS_FOR_AUTHORING's real first call: fire a real
       presentation_planning job against the real aspose-3d-foss/Python facts to get a real

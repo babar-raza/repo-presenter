@@ -70,9 +70,16 @@ def label_height(label: str, capability_count: int = 1) -> int:
 
 
 def _label(text: str) -> str:
-    """A Mermaid node label, quoted and with characters Mermaid's own bracket syntax would
-    otherwise misread stripped out."""
-    return '"' + _UNSAFE_LABEL.sub("", text).strip() + '"'
+    """A Mermaid node's full shape-plus-label syntax (square brackets around a quoted string),
+    with characters Mermaid's own bracket syntax would otherwise misread stripped out.
+
+    Real bug, found live (2026-10-22) the first time this module was ever exercised end to end:
+    this returned only the quoted text (``"label"``), never wrapped in the ``[...]`` a Mermaid
+    node declaration needs (``NodeID["label"]``) -- every node in a rendered diagram came out as
+    bare, unparseable ``NodeID"label"``. No test had ever rendered a real diagram and inspected
+    its Mermaid syntax before this.
+    """
+    return '["' + _UNSAFE_LABEL.sub("", text).strip() + '"]'
 
 
 def draw_at_a_glance(

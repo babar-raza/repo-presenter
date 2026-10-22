@@ -1184,3 +1184,56 @@ entries:
     portfolio_consumers: the Lane R S3 stage for any repository with real facts.json +
       inherited units built. S4/S5/S6 are not yet wired to consume S3's own output.
     invalidation_impact: not yet pulled into any running pipeline; no invalidation surface yet.
+
+  - component: "readme/reconciliation/dispositions.py (S4 job-wiring half) +
+      readme/composition/components/glance.py (bug fix) + the full S3-S6+render cascade"
+    source: "dispositions.py S4 half: old repo's own module (lines ~200-720, ~400 lines);
+      glance.py fix: new engineering against this repository's own already-adapted stand-in"
+    evaluated_at_shas: []
+    behavior: >
+      Adds reconciliation_packet/reconciliation_schema/reconciliation_batches/
+      reconciliation_batch_facts/units_per_reply/merge_dispositions/summarize/
+      write_dispositions to dispositions.py (the self-audit half, coverage_findings+normalize,
+      was already ported) -- the S4 packet builder, the per-batch schema that pins fact_ids to
+      a citable enum and unit_id to the batch's own units, and the output-budget-driven
+      batching that splits many inherited units across several calls, each sized so its
+      longest admissible reply still fits max_output_tokens.
+      Separately, fixes a real bug in glance.py's _label(): it returned a bare quoted string
+      ("text") instead of a full Mermaid node declaration (["text"]), so every node in a
+      rendered At a Glance diagram came out syntactically broken. This module had no test file
+      before this session.
+    evidence: >
+      dispositions.py S4 half: REUSE, verbatim except import paths. 12 new tests
+      (tests/readme/reconciliation/test_output_budget.py), including both real retained
+      rejected-call fixtures (PDF-TypeScript's citation runaway, Imaging-.NET's
+      truncated-reply-that-cannot-close) copied byte for byte. glance.py fix: 7 new tests
+      (tests/readme/composition/components/test_glance.py), the module's first ever.
+      Real, live end-to-end proof, the reason this was built: fired the complete
+      repository_investigation -> source_reconciliation -> presentation_planning ->
+      section_authoring -> render_readme cascade for real against aspose-3d-foss/
+      Aspose.3D-FOSS-for-Python. 15 of 15 real provider calls (1 S3, 3 S4 batches covering 77
+      units, 1 S5 with the real plan_checks, 10 S6 tasks with the real unit_checks) accepted
+      on the FIRST attempt -- zero rejections anywhere. render_readme() then produced a real,
+      73,072-character, 1,037-line README. One real, measured defect found and left honestly
+      documented, not hidden: a duplicate opening paragraph traced to a disposition
+      coverage_findings() cannot catch because "opening" is LLM-authored, not deterministic --
+      confirmed to be exactly the gap dispositions.py's own docstring already named
+      placement_errors() (still not ported) as needing to close. 1010/1010 whole-repo tests
+      pass. See evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_first_full_cascade/.
+    disposition: "dispositions.py S4 half: REUSE (verbatim except import paths); glance.py
+      fix: a correction to existing ADAPT code, not a new disposition"
+    reason: >
+      Closes WIRE_PRESENTATION_PLANNING_AND_REAL_UNIT_CHECKS: the first complete, real Lane R
+      README this repository has produced, proving planning.py/authoring.py/renderer.py
+      (already fully ported earlier this session but never exercised against a real cascade)
+      actually work together, and that the schema-pinning discipline built across S3-S6 holds
+      under a real, sequential, multi-stage run, not just single-stage unit tests.
+    target_module: src/repo_presenter/readme/reconciliation/dispositions.py,
+      src/repo_presenter/readme/composition/components/glance.py,
+      scripts/run_lane_r_{investigation,reconciliation,planning,authoring_real,render}.py
+    smallest_first_integration_test: tests/readme/reconciliation/test_output_budget.py (12),
+      tests/readme/composition/components/test_glance.py (7) -- both green, plus the full
+      real end-to-end cascade proof above.
+    portfolio_consumers: the complete Lane R cascade for any repository with real facts.json +
+      a clone to read the live README from. Verified against one repository so far.
+    invalidation_impact: not yet pulled into any running pipeline; no invalidation surface yet.

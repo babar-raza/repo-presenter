@@ -21,38 +21,63 @@ coverage``, ``code_units_by_polarity``, ``contradicted_code_units``/``contradict
 ``rendering_fact_ids``, ``is_version_skew_warning``, ``edition_labels``, ``example_fences``, every
 constant and gap-reason label these use).
 
-**Deferred** (not ported, with the reason): the S4 job-wiring half -- ``reconciliation_packet``/
-``reconciliation_schema``/``reconciliation_batches``/``reconciliation_narrowing``/
-``merge_dispositions`` (builds the actual LLM packet/schema/narrowed-ask for ``source_
-reconciliation``; needs ``core.llm.prompts.PromptManifest`` plumbing this repository's own prompt
-content has not been authored for yet, mirroring ``core/llm/prompts.py``'s own module docstring);
-``placement_errors``, ``dangling_pointers``, ``coordinate_neighbor_promises``, ``recover_uncited_
-prose_omits`` and their own supporting functions (the refusal/repair half that reacts to what
-``coverage_findings`` reports, rather than the self-audit itself -- these also need ``composition/
-references.py``'s ``dangling_references``, not ported). This split follows the manifest's own
-instruction precisely: the self-audit (what counts as provable) travels with ``normalize`` intact;
-the separate refusal-message/repair layer built on top of it does not.
+**Ported later** (2026-10-22, once ``core/llm/prompts.py``'s plumbing and the real
+``prompts/source_reconciliation.yaml`` content both existed): the S4 job-wiring half --
+``reconciliation_packet``/``reconciliation_schema``/``reconciliation_batches``/
+``reconciliation_batch_facts``/``units_per_reply``/``merge_dispositions``/``summarize``/
+``write_dispositions`` and their own supporting functions (``_packet_fact_records``,
+``citable_fact_ids``, ``_sections_packet``, ``output_chars_bound``/``_longest``/``_reply_chars``/
+``_variant_chars``/``_batch_size``). This is what builds and fires one real
+``source_reconciliation`` call; see ``scripts/run_lane_r_reconciliation.py``.
+
+**Still deferred** (not ported, with the reason): ``reconciliation_narrowing`` (the narrowed
+re-ask repair path for a partially-rejected batch), ``placement_errors``, ``dangling_pointers``,
+``coordinate_neighbor_promises``, ``recover_uncited_prose_omits`` and their own supporting
+functions (the refusal-message/repair half that reacts to what ``coverage_findings`` reports,
+rather than the self-audit itself -- these also need ``composition/references.py``'s
+``dangling_references``, not ported). This split follows the manifest's own instruction
+precisely: the self-audit (what counts as provable) travels with ``normalize`` intact; the
+separate refusal-message/repair layer built on top of it does not, and firing one real call does
+not need it either.
 """
 
 from __future__ import annotations
 
+import copy
+import hashlib
+import json
 import re
-from collections.abc import Mapping
+from collections import Counter
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 from markdown_it import MarkdownIt
 
 from repo_presenter.core.ecosystems import EcosystemSpec, spec_for
 from repo_presenter.core.errors import ConfigError
-from repo_presenter.core.facts import REGISTRY_COMMAND_ATTRIBUTE, Fact, FactsDocument
+from repo_presenter.core.facts import (
+    DECLARED_SYMBOL_KINDS,
+    REGISTRY_COMMAND_ATTRIBUTE,
+    Fact,
+    FactsDocument,
+    bounded_records,
+)
+from repo_presenter.core.llm.binding import collect_ids
+from repo_presenter.core.llm.prompts import LoadedManifest, PromptManifest
 from repo_presenter.core.package_registry import DISTRIBUTION_FACT_PREFIX, PUBLISHED_VERSION_FACT_ID
+from repo_presenter.core.registry.models import RegistryEntry
 from repo_presenter.readme.composition.authoring import (
     _CARRY_SECTIONS,
     edition_substitutes,
     inherited_unit_named_symbols,
 )
-from repo_presenter.readme.composition.components.shell import placeable_section_ids, section_ids
+from repo_presenter.readme.composition.components.shell import (
+    placeable_section_ids,
+    section_ids,
+    shell_packet,
+)
 from repo_presenter.readme.composition.coverage import unversioned
 from repo_presenter.readme.composition.placement import renderer_fact_ids
 from repo_presenter.readme.composition.planning import section_conditions
@@ -67,7 +92,11 @@ from repo_presenter.readme.evidence.facts.product_pages import (
     enterprise_target,
 )
 from repo_presenter.readme.evidence.facts.registry_lag import REGISTRY_LAG_FACT_ID
-from repo_presenter.readme.reconciliation.destinations import holdable_sections, rehomed
+from repo_presenter.readme.reconciliation.destinations import (
+    disposition_variants,
+    holdable_sections,
+    rehomed,
+)
 
 DISPOSITIONS_FILENAME = "dispositions.json"
 PLACING = frozenset(
@@ -80,6 +109,33 @@ _INSTALL_COMMAND = re.compile(
     r"^\s*(?:[$>]\s*)?(?:python3?\s+-m\s+)?(?:pip3?\s+install|npm\s+install|dotnet\s+add|"
     r"cargo\s+add|go\s+get|git\s+clone)\b",
     re.IGNORECASE | re.MULTILINE,
+)
+
+_RECONCILIATION_BATCH = 40
+# S4 output budget. A reply is bounded by construction, not by a measured average: the schema
+# caps each disposition's fact_ids at RECONCILIATION_FACT_IDS_PER_DISPOSITION, and a batch is
+# only as large as the longest reply the schema admits still fits max_output_tokens, counted at
+# OUTPUT_CHARS_PER_TOKEN_FLOOR characters per token. The defect this closes (PDF-TypeScript,
+# 2026-10-04): one 40-unit reply reached finish_reason length at 32,000 tokens, and the same
+# request then answered 4,666. A disposition's citations were bounded only by the batch's citable
+# set (739 IDs there), so a repeating list could run to the whole budget. The same class ran away
+# on Cells-Go (2026-09-11, 1,047 repeated IDs) and PDF-.NET (F27).
+RECONCILIATION_FACT_IDS_PER_DISPOSITION = 16
+# The healthy 40-unit reply measured 4.2 characters per token (19,616 characters, 4,666 tokens,
+# qwen3-next). Identifier-dense JSON packs fewer, so the bound uses this floor, never that average.
+OUTPUT_CHARS_PER_TOKEN_FLOOR = 2.5
+# The rationale's maxLength and the disposition enum, as the manifest states them; a test holds
+# both to the manifest so the bound below can never drift from the schema it is computed for.
+_RATIONALE_MAX_CHARS = 160
+_DISPOSITIONS = (
+    "VERIFIED_PRESERVE",
+    "VERIFIED_REWRITE",
+    "VERIFIED_MOVE",
+    "CORRECT_WITH_EVIDENCE",
+    "SUPERSEDE_REDUNDANT",
+    "OMIT_UNSUPPORTED",
+    "DEFER_UNRESOLVED",
+    "NON_CONTENT",
 )
 
 
@@ -1077,3 +1133,305 @@ def normalize(
         entry["fact_ids"] = sorted(set(entry.get("fact_ids") or []) | named)
     _prune_incidental_coverage(output, coverage)
     return errors
+
+
+# S4 job-wiring half, ported later than the rest of this module (2026-10-22): builds the actual
+# LLM packet/schema/batching for ``source_reconciliation``, now that core/llm/prompts.py's
+# plumbing and the real prompts/source_reconciliation.yaml content both exist in this repository.
+# ``reconciliation_narrowing`` (the narrowed re-ask repair path), ``placement_errors``,
+# ``dangling_pointers``, ``coordinate_neighbor_promises``, and ``recover_uncited_prose_omits`` are
+# still NOT ported -- the refusal-message/repair layer built on top of ``coverage_findings``,
+# needed only once a real rejection or repair round is being driven, not to fire one real call.
+
+
+def _longest(node: Mapping[str, Any]) -> int | None:
+    """The longest serialized value a schema node admits, JSON quotes included; ``None`` if open."""
+    if "enum" in node:
+        return max(len(json.dumps(value, ensure_ascii=False)) for value in node["enum"])
+    for key in ("oneOf", "anyOf"):
+        if key in node:
+            known = [
+                size for size in (_longest(option) for option in node[key]) if size is not None
+            ]
+            return max(known) if len(known) == len(node[key]) else None
+    if node.get("type") == "null":
+        return len("null")
+    if node.get("type") == "string" and "maxLength" in node:
+        return int(node["maxLength"]) + 2
+    return None
+
+
+def _reply_chars(
+    records: int,
+    *,
+    unit_chars: int,
+    disposition_chars: int,
+    destination_chars: int,
+    fact_id_chars: int,
+    citations: int,
+    rationale_chars: int,
+) -> int:
+    """Characters of the longest reply of ``records`` dispositions: every value at the given
+    serialized length, every citation list full, pretty-printed (the wider of the two forms a
+    model writes, so compact output is bounded too)."""
+    record = {
+        "unit_id": "u" * (unit_chars - 2),
+        "disposition": "d" * (disposition_chars - 2),
+        "destination_section": "s" * (destination_chars - 2),
+        "fact_ids": ["f" * (fact_id_chars - 2)] * citations,
+        "rationale": "r" * (rationale_chars - 2),
+    }
+    return len(json.dumps({"dispositions": [record] * records}, indent=2, ensure_ascii=False))
+
+
+def output_chars_bound(schema: Mapping[str, Any]) -> int | None:
+    """The longest reply, in characters, that ``schema`` admits; ``None`` when a field it leaves
+    open makes the bound infinite. Computed from the schema the job is decoded under, so it tracks
+    the schema rather than a separate estimate; it is a bound only to the extent the decoder
+    enforces that schema, which the live proof checks against a real reply."""
+    dispositions = schema["properties"]["dispositions"]
+    items = dispositions["items"]
+    bounds = [
+        _variant_chars(dispositions, variant["properties"])
+        for variant in items.get("anyOf", [items])
+    ]
+    return None if None in bounds else max(bound for bound in bounds if bound is not None)
+
+
+def _variant_chars(dispositions: Mapping[str, Any], props: Mapping[str, Any]) -> int | None:
+    """The longest reply one shape of the disposition object admits (see ``output_chars_bound``)."""
+    fact_ids = props["fact_ids"]
+    sizes = {
+        "unit_chars": _longest(props["unit_id"]),
+        "disposition_chars": _longest(props["disposition"]),
+        "destination_chars": _longest(props["destination_section"]),
+        "rationale_chars": _longest(props["rationale"]),
+        "citations": fact_ids.get("maxItems"),
+    }
+    if None in sizes.values() or "maxItems" not in dispositions:
+        return None
+    fact_chars = _longest(fact_ids["items"]) if "items" in fact_ids else 0
+    if fact_chars is None:
+        return None
+    return _reply_chars(
+        dispositions["maxItems"],
+        **{k: v for k, v in sizes.items() if k != "citations"},
+        fact_id_chars=fact_chars,
+        citations=sizes["citations"],
+    )
+
+
+def _batch_size(facts: FactsDocument, max_output_tokens: int) -> int:
+    """The largest batch, up to _RECONCILIATION_BATCH units, whose longest reply the schema
+    admits still fits the budget. Sized from the repository's own longest identifiers, so it
+    holds for any citable set the packet can show: every ID a batch could cite is in ``facts``."""
+    units = list(facts.by_kind("inherited_unit"))
+    if not units:
+        return _RECONCILIATION_BATCH
+    budget = max_output_tokens * OUTPUT_CHARS_PER_TOKEN_FLOOR
+    sizes = {
+        "unit_chars": max(len(json.dumps(unit.id)) for unit in units),
+        "disposition_chars": max(len(json.dumps(name)) for name in _DISPOSITIONS),
+        "destination_chars": max(len(json.dumps(name)) for name in section_ids()),
+        "rationale_chars": _RATIONALE_MAX_CHARS + 2,
+        "fact_id_chars": max(len(json.dumps(fact.id)) for fact in facts.facts),
+        "citations": RECONCILIATION_FACT_IDS_PER_DISPOSITION,
+    }
+
+    def fits(size: int) -> bool:
+        return _reply_chars(size, **sizes) <= budget
+
+    size = min(_RECONCILIATION_BATCH, len(units))
+    while size > 1 and not fits(size):
+        size -= 1
+    if not fits(size):
+        raise ConfigError(
+            f"one unit's longest reply ({_reply_chars(1, **sizes)} characters) exceeds the "
+            f"source_reconciliation budget ({budget:.0f} characters); lower "
+            "RECONCILIATION_FACT_IDS_PER_DISPOSITION or raise max_output_tokens"
+        )
+    return size
+
+
+def units_per_reply(facts: FactsDocument, max_output_tokens: int) -> int:
+    """How many dispositions the longest reply the schema admits can hold within
+    ``max_output_tokens``: the same bound that sizes a batch, for a caller asking about a different
+    budget (the repair of a disposition answers under the repair prompt's, not this job's)."""
+    return _batch_size(facts, max_output_tokens)
+
+
+def reconciliation_batches(
+    facts: FactsDocument, max_output_tokens: int
+) -> list[tuple[str, list[Fact]]]:
+    """Every inherited unit, split into batches in document (ordinal) order - one
+    ``(batch_id, units)`` pair per ``source_reconciliation`` call this round makes. A batch holds
+    at most _RECONCILIATION_BATCH units, and fewer when its longest reply would not fit
+    ``max_output_tokens`` (see _batch_size). No unit is ever dropped.
+
+    Ordinal order, not grouped by ``.section``: a batch boundary may occasionally fall inside one
+    heading's own units, but preserves the document's own unit ordering exactly, which
+    ``merge_dispositions()`` and every downstream reader already assume - grouping by section
+    first would need to interleave document order back in afterward for no real benefit, since
+    ``reconcile_checks`` judges each disposition independently of its neighbours anyway.
+    """
+    units = list(facts.by_kind("inherited_unit"))
+    size = _batch_size(facts, max_output_tokens)
+    return [
+        (f"reconciliation#{index // size + 1}", units[index : index + size])
+        for index in range(0, len(units), size)
+    ]
+
+
+def reconciliation_batch_facts(facts: FactsDocument, batch_units: Sequence[Fact]) -> FactsDocument:
+    """``facts``, with its own ``inherited_unit`` facts narrowed to exactly ``batch_units``.
+
+    Real bug this closes, found live against Cells-Rust (not assumed): ``core/llm/binding.py``'s
+    ``binding_errors`` recomputes its own "every inherited unit expected" set directly from
+    ``facts.by_kind("inherited_unit")`` - the whole ``FactsDocument`` passed as the job's own
+    ``facts=`` argument - independent of whatever the packet or schema for one particular call
+    were scoped to. Passing the same, unscoped ``facts`` for every batch's own call made
+    ``binding_errors`` demand full coverage from each individual batch reply, rejecting every
+    batch but the last on "no disposition for inherited units: ...". A batch's own call must see -
+    and be judged against - only its own units; every other fact kind is untouched, so
+    ``bounded_records()`` and every other check reading this document still see the real, whole
+    repository.
+    """
+    keep = frozenset(fact.id for fact in batch_units)
+    return FactsDocument(
+        facts.repository,
+        facts.source_revision,
+        tuple(fact for fact in facts.facts if fact.kind != "inherited_unit" or fact.id in keep),
+        facts.schema_version,
+    )
+
+
+def _packet_fact_records(facts: FactsDocument, manifest: PromptManifest) -> list[dict[str, str]]:
+    """The fact records the reconciliation packet shows - one function, so the packet and the
+    schema's citable set can never drift apart (the planning schema's own lesson)."""
+    kinds = [kind for kind in manifest.packet.fact_kinds if kind != "inherited_unit"]
+    return bounded_records(
+        facts, kinds, ("SUPPORTED", "CONTRADICTED"), symbol_kinds=DECLARED_SYMBOL_KINDS
+    )
+
+
+def citable_fact_ids(
+    facts: FactsDocument,
+    manifest: PromptManifest,
+    batch_units: Sequence[Fact],
+    investigation: Mapping[str, Any],
+) -> list[str]:
+    """Every ID the job may *write* in this batch, sorted: the packet's own fact records, the
+    facts the accepted investigation cites (the prompt lets the job copy those one by one, and
+    the investigation travels in the packet, so each is an ID the job can actually see), and this
+    batch's own inherited units. Nothing the packet never showed is in it, so an UNRESOLVED fact
+    is absent - ``normalize`` adds one by code where a rule calls for it.
+    """
+    known = {fact.id for fact in facts.facts}
+    shown = {record["id"] for record in _packet_fact_records(facts, manifest)}
+    cited = {fact_id for fact_id in collect_ids(investigation).fact_ids if fact_id in known}
+    return sorted(shown | cited | {fact.id for fact in batch_units})
+
+
+def reconciliation_schema(
+    manifest: LoadedManifest,
+    batch_units: Sequence[Fact],
+    facts: FactsDocument,
+    investigation: Mapping[str, Any],
+) -> dict[str, Any]:
+    """The reconciliation schema specialised for one batch: its units, and the IDs it may cite.
+
+    Every inherited unit in this batch needs one disposition and no other unit is in this batch,
+    which the code knows exactly, so the schema says so rather than letting the job invent a unit
+    and be rejected for it. ``fact_ids`` gets the same enum-plus-``maxItems`` treatment as
+    ``unit_id``, for the same reason: the IDs a disposition may cite are known here exactly
+    (``citable_fact_ids``), so the schema lists them, and no single disposition can legitimately
+    cite more distinct facts than exist in its own packet.
+    """
+    schema = copy.deepcopy(manifest.manifest.output.schema_)
+    dispositions = schema["properties"]["dispositions"]
+    item = dispositions["items"]
+    citable = citable_fact_ids(facts, manifest.manifest, batch_units, investigation)
+    item["properties"]["destination_section"] = {
+        "oneOf": [{"type": "null"}, {"type": "string", "enum": list(section_ids())}]
+    }
+    if citable:
+        item["properties"]["fact_ids"]["items"] = {"type": "string", "enum": citable}
+        item["properties"]["fact_ids"]["maxItems"] = min(
+            len(citable), RECONCILIATION_FACT_IDS_PER_DISPOSITION
+        )
+    else:
+        item["properties"]["fact_ids"] = {"type": "array", "maxItems": 0}
+    units = [fact.id for fact in batch_units]
+    if units:
+        item["properties"]["unit_id"] = {"type": "string", "enum": units}
+    dispositions["items"] = {"anyOf": disposition_variants(item, holdable_sections(facts))}
+    if not units:
+        return schema
+    dispositions["maxItems"] = len(units)
+    return schema
+
+
+def reconciliation_packet(
+    entry: RegistryEntry,
+    facts: FactsDocument,
+    investigation: dict[str, Any],
+    manifest: PromptManifest,
+    batch_units: Sequence[Fact],
+) -> dict[str, Any]:
+    """One batch's own packet: ``inherited_units`` is exactly ``batch_units``, not every
+    inherited unit in the repository. ``facts`` (bounded, non-``inherited_unit`` kinds) is
+    shared context every batch needs, already capped by ``bounded_records()``."""
+    units = [
+        {"id": fact.id, "type": fact.id.rsplit(".", 1)[-1], "text": fact.value}
+        for fact in batch_units
+    ]
+    return {
+        "repository": entry.repository,
+        "inherited_units": units,
+        "facts": _packet_fact_records(facts, manifest),
+        "investigation": investigation,
+        "sections": _sections_packet(facts),
+    }
+
+
+def _sections_packet(facts: FactsDocument) -> list[dict[str, Any]]:
+    """The shell as the job sees it: ``placeable`` is true exactly where a placing disposition may
+    send a unit in this repository (``destinations.holdable_sections``), the same set the schema's
+    destination enum is cut from. A section the shell lets the LLM write but that cannot hold a
+    kept unit here says why in ``unavailable``, so the packet and the decoder never disagree."""
+    holdable = set(holdable_sections(facts))
+    sections = []
+    for record in shell_packet():
+        shown = dict(record)
+        if record["placeable"] and record["id"] not in holdable:
+            shown["unavailable"] = (
+                "holds one diagram and nothing else"
+                if record["id"] == "at_a_glance"
+                else "its condition does not hold at this revision, so the section is not rendered"
+            )
+        shown["placeable"] = record["id"] in holdable
+        sections.append(shown)
+    return sections
+
+
+def merge_dispositions(outputs: Sequence[dict[str, Any]]) -> dict[str, Any]:
+    """Every batch's own accepted dispositions, concatenated in batch order into one flat
+    document. Simpler than composition's ``merge_units()``: a disposition is never rendered in
+    shell order the way an authored unit is, so nothing here needs re-sorting by section - batch
+    order already is document order (``reconciliation_batches()``'s own contract)."""
+    dispositions: list[dict[str, Any]] = []
+    for output in outputs:
+        dispositions.extend(output.get("dispositions", []))
+    return {"dispositions": dispositions}
+
+
+def summarize(output: dict[str, Any]) -> Counter[str]:
+    return Counter(entry["disposition"] for entry in output.get("dispositions", []))
+
+
+def write_dispositions(output: dict[str, Any], path: Path) -> str:
+    """Write the accepted dispositions as deterministic JSON; returns the SHA-256."""
+    data = (json.dumps(output, indent=2, sort_keys=True, ensure_ascii=False) + "\n").encode("utf-8")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(data)
+    return hashlib.sha256(data).hexdigest()
