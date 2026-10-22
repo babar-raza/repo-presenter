@@ -656,15 +656,23 @@ next_ready_items:
       limit, not a new bug -- recorded in full in its own card. 1052/1052 whole-repo tests
       pass (no src changes this round). Evidence:
       evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_twentieth_full_cascade/.
+    twentyfirst_cascade_2026_10_22: >
+      DONE: fired the full cascade (S3-S8) against a twenty-first repository
+      (aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp), a second aspose-pdf-foss repository and a
+      third C++ repository this session. S3-S6 all accepted on the first attempt. Both S8
+      coherence batches accepted on the first attempt, no revisions anywhere. The known
+      duplicate-opening defect repeated a twenty-first time. 1052/1052 whole-repo tests pass
+      (no src changes this round). Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_twentyfirst_full_cascade/.
     remaining: >
-      20 of 36 repositories now have a FULL real cascade run through S8 (plus one,
+      21 of 36 repositories now have a FULL real cascade run through S8 (plus one,
       aspose-html-foss/Python, with S3-S6+render only). All 7 ecosystems have been exercised
-      at least once (python x9, go, net x3, java, cpp, rust, typescript x2); the portfolio as
-      a whole (36 repositories) is still far from fully covered. Lane L format detection is
-      already proven for all of them independently. Two unrelated pre-existing S6/S8 rough
-      edges (the "TrueType" identifier rejection and the "cites facts outside this section's
-      set" rejection, plus a third -- a title-restatement rejection, now observed twice)
-      remain unfixed, out of this card's scope.
+      at least once (python x9, go, net x3, java, cpp x3, rust, typescript x2); the portfolio
+      as a whole (36 repositories) is still far from fully covered. Lane L format detection
+      is already proven for all of them independently. Two unrelated pre-existing S6/S8
+      rough edges (the "TrueType" identifier rejection and the "cites facts outside this
+      section's set" rejection, plus a third -- a title-restatement rejection, now observed
+      twice) remain unfixed, out of this card's scope.
       placement_errors IS now ported (2026-10-22, with references.py and the rest of the
       refusal/repair half -- dangling_pointers, uncited_omit_candidates, unprinted_commands,
       coordinate_neighbor_promises, reconcile_checks). But it does NOT, on its own, fix the

@@ -1,0 +1,169 @@
+{
+  "audience": {
+    "fact_ids": [
+      "package:cxx_standard",
+      "package:cmake_minimum",
+      "dependency:none"
+    ],
+    "text": "C++ developers building desktop, server, or embedded applications that require PDF document processing without external runtime dependencies."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "example:004",
+        "example:005",
+        "example:007"
+      ],
+      "text": "Open existing PDFs, including password-protected ones, and save changes with incremental metadata updates or full round-trips.",
+      "title": "Open and modify PDFs"
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "example:005"
+      ],
+      "text": "Extract full text using TextAbsorber and read/write document metadata via DocumentInfo and Metadata.",
+      "title": "Extract text and metadata"
+    },
+    {
+      "fact_ids": [
+        "example:002"
+      ],
+      "text": "Render pages to PNG, JPEG, BMP, or multi-page TIFF using PngDevice, JpegDevice, BmpDevice, and TiffDevice.",
+      "title": "Render pages to images"
+    },
+    {
+      "fact_ids": [
+        "example:007"
+      ],
+      "text": "Apply encryption with AES-256, AES-128, RC4-128, or RC4-40 using Document::Encrypt and Permissions flags.",
+      "title": "Encrypt and secure documents"
+    },
+    {
+      "fact_ids": [
+        "example:002"
+      ],
+      "text": "Build documents with positioned text, tables, vector shapes, watermarks, annotations, and AcroForm fields.",
+      "title": "Create content from scratch"
+    },
+    {
+      "fact_ids": [
+        "example:002"
+      ],
+      "text": "Add annotations (Highlight, Text, Link, etc.) and interactive AcroForm fields (TextBoxField, CheckboxField, etc.).",
+      "title": "Support for annotations and forms"
+    },
+    {
+      "fact_ids": [
+        "example:002"
+      ],
+      "text": "Use Facades classes like PdfConverter, PdfExtractor, PdfFileSignature, PdfFileEditor, and PdfFileStamp for common tasks.",
+      "title": "Facades API for legacy workflows"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "package:version"
+      ],
+      "text": "Standard-14 font fallback covers 12 of 14 fonts; Symbol and ZapfDingbats have no bundled fallback."
+    },
+    {
+      "fact_ids": [
+        "package:version"
+      ],
+      "text": "XmpValue type-checking helpers (IsDateTime, IsField, etc.) are stubs that always return false."
+    },
+    {
+      "fact_ids": [
+        "package:version"
+      ],
+      "text": "Setting metadata on a from-scratch document and saving throws because there is no /Info object to patch."
+    },
+    {
+      "fact_ids": [
+        "example:007"
+      ],
+      "text": "Permissions set via encryption are enforced by the consuming PDF viewer, not by this library."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "example:002",
+        "example:004",
+        "example:005",
+        "example:007"
+      ],
+      "text": "Enables reading, writing, and modifying PDF documents in C++ without relying on commercial or third-party PDF libraries."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "example:007",
+        "dependency:none"
+      ],
+      "text": "Provides text extraction, page rendering, and document encryption using only the C++ standard library."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "example:005",
+        "example:007"
+      ],
+      "text": "Supports building PDFs from scratch with text, tables, graphics, annotations, and forms using a consistent API."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:repository",
+      "package:distribution.aspose.pdf.cpp.foss",
+      "package:name",
+      "package:version",
+      "package:cxx_standard"
+    ],
+    "text": "Aspose.PDF FOSS for C++ is a free, open-source C++20 library for creating, editing, and processing PDF documents with no runtime dependencies."
+  },
+  "uncertainties": [
+    "The exact set of supported AcroForm field types beyond those explicitly listed in examples is unclear.",
+    "Whether all Facades classes support all features of the commercial edition is not fully specified.",
+    "The behavior of TiffDevice with custom IIndexBitmapConverter is not detailed beyond signature.",
+    "The scope of 'byte-verbatim round-trips' for encrypted or signed documents is not clarified.",
+    "The exact set of supported PDF/A or PDF/UA features is not stated.",
+    "The handling of right-to-left or complex script text is not described.",
+    "Whether embedded font subsets beyond Standard-14 are supported is not stated.",
+    "The behavior of Document::Encrypt when called on an already encrypted document is not specified."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "example:002",
+        "example:004",
+        "example:005"
+      ],
+      "name": "Open and inspect a PDF",
+      "text": "Load a PDF file, count pages, read metadata, and check encryption status using Document, PageCollection, and DocumentInfo."
+    },
+    {
+      "fact_ids": [
+        "example:002"
+      ],
+      "name": "Extract text and render pages",
+      "text": "Use TextAbsorber to extract text and PngDevice or TiffDevice to render pages to raster images."
+    },
+    {
+      "fact_ids": [
+        "example:007"
+      ],
+      "name": "Encrypt or sign a document",
+      "text": "Apply encryption with Document::Encrypt using AES-256 or sign with Facades::PdfFileSignature."
+    },
+    {
+      "fact_ids": [
+        "example:002"
+      ],
+      "name": "Build a document from scratch",
+      "text": "Create a new Document, add content via Paragraphs, Tables, Drawing::Graph, and annotations, then save."
+    }
+  ]
+}
