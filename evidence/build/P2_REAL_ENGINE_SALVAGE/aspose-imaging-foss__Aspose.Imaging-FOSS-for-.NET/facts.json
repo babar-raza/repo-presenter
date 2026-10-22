@@ -1,0 +1,438 @@
+{
+  "facts": [
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "no `PackageReference` a consumer would install is declared",
+          "path": "src/Aspose.Imaging.Foss/Aspose.Imaging.Foss.csproj"
+        }
+      ],
+      "id": "dependency:none",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "none"
+    },
+    {
+      "attributes": null,
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "lines 158-168; csharp fence; unit inherited_unit:001.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 1: NOT_VERIFIED; example compilation was not ported in this pull (no sandboxed dotnet build runner); this plugin only ever reports NOT_VERIFIED here",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:001",
+      "kind": "example",
+      "polarity": "UNRESOLVED",
+      "value": "using Aspose.Imaging.Foss;\n\n// From a file path\nvar info = ImageProbe.ProbeFile(\"photo.jpg\");\nConsole.WriteLine($\"{info.Format}: {info.Width}x{info.Height}, {info.BitDepth}-bit\");\n\n// From a stream (seekable or not) or a byte array\nvar format = ImageProbe.DetectFormat(bytes);\nvar info2 = ImageProbe.Probe(stream);\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "lines 184-189; csharp fence; unit inherited_unit:002.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 2: NOT_VERIFIED; example compilation was not ported in this pull (no sandboxed dotnet build runner); this plugin only ever reports NOT_VERIFIED here",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:002",
+      "kind": "example",
+      "polarity": "UNRESOLVED",
+      "value": "using Aspose.Imaging.Foss;\n\nvar info = await ImageProbe.ProbeFileAsync(\"upload.png\", cancellationToken);\nConsole.WriteLine($\"{info.Format}: {info.Width}x{info.Height}\");\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "lines 197-202; csharp fence; unit inherited_unit:003.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 3: NOT_VERIFIED; example compilation was not ported in this pull (no sandboxed dotnet build runner); this plugin only ever reports NOT_VERIFIED here",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:003",
+      "kind": "example",
+      "polarity": "UNRESOLVED",
+      "value": "using Aspose.Imaging.Foss;\n\nvar info = ImageProbe.ProbeFile(\"animation.gif\");\nConsole.WriteLine($\"{info.Format}: {info.FrameCount} frame(s)\");\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "lines 209-214; csharp fence; unit inherited_unit:004.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 4: NOT_VERIFIED; example compilation was not ported in this pull (no sandboxed dotnet build runner); this plugin only ever reports NOT_VERIFIED here",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:004",
+      "kind": "example",
+      "polarity": "UNRESOLVED",
+      "value": "using Aspose.Imaging.Foss;\n\nusing var networkStream = GetUploadStream(); // CanSeek == false\nvar format = ImageProbe.DetectFormat(networkStream);\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "admitted registry entry",
+          "path": "data/registry.json"
+        }
+      ],
+      "id": "identity:repository",
+      "kind": "identity",
+      "polarity": "SUPPORTED",
+      "value": "aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "install command for the package id declared by the manifest",
+          "path": "src/Aspose.Imaging.Foss/Aspose.Imaging.Foss.csproj"
+        },
+        {
+          "detail": "package registry: distribution not found on nuget",
+          "path": "https://api.nuget.org/v3-flatcontainer/aspose.imaging.foss/index.json"
+        }
+      ],
+      "id": "install_command:dotnet",
+      "kind": "install_command",
+      "polarity": "CONTRADICTED",
+      "value": "dotnet add package Aspose.Imaging.Foss"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package id declared by the project file",
+          "path": "src/Aspose.Imaging.Foss/Aspose.Imaging.Foss.csproj"
+        }
+      ],
+      "id": "package:name",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss"
+    },
+    {
+      "attributes": {
+        "floor_declaration": "TargetFrameworks"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "target frameworks the project declares",
+          "path": "src/Aspose.Imaging.Foss/Aspose.Imaging.Foss.csproj"
+        }
+      ],
+      "id": "package:target_framework",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "netstandard2.0;net8.0"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; module; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageFormat.cs"
+        }
+      ],
+      "id": "public_symbol:aspose",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; module; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageFormat.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; module; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageFormat.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; enum; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageFormat.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageformat",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageFormat"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageInfo.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageinfo",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageInfo"
+    },
+    {
+      "attributes": {
+        "signature": "int?",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 8; method; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageInfo.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageinfo.bitdepth",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageInfo.BitDepth"
+    },
+    {
+      "attributes": {
+        "signature": "ImageFormat",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 5; method; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageInfo.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageinfo.format",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageInfo.Format"
+    },
+    {
+      "attributes": {
+        "signature": "int?",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 9; method; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageInfo.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageinfo.framecount",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageInfo.FrameCount"
+    },
+    {
+      "attributes": {
+        "signature": "int?",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 7; method; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageInfo.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageinfo.height",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageInfo.Height"
+    },
+    {
+      "attributes": {
+        "signature": "ImageInfo(ImageFormat format, int? width, int? height, int? bitDepth, int? frameCount)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 11; method; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageInfo.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageinfo.imageinfo",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageInfo.ImageInfo"
+    },
+    {
+      "attributes": {
+        "signature": "int?",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; method; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageInfo.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageinfo.width",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageInfo.Width"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 10; class; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageprobe",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageProbe"
+    },
+    {
+      "attributes": {
+        "signature": "DetectFormat(Stream stream)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 32; method; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageprobe.detectformat",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageProbe.DetectFormat"
+    },
+    {
+      "attributes": {
+        "signature": "Probe(Stream stream)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 41; method; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageprobe.probe",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageProbe.Probe"
+    },
+    {
+      "attributes": {
+        "signature": "ProbeAsync(Stream stream, CancellationToken cancellationToken)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 89; method; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageprobe.probeasync",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageProbe.ProbeAsync"
+    },
+    {
+      "attributes": {
+        "signature": "ProbeFile(string path)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 83; method; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageprobe.probefile",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageProbe.ProbeFile"
+    },
+    {
+      "attributes": {
+        "signature": "ProbeFileAsync(string path, CancellationToken cancellationToken)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 115; method; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageprobe.probefileasync",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageProbe.ProbeFileAsync"
+    }
+  ],
+  "repository": "aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET",
+  "schema_version": 1,
+  "source_revision": "HEAD"
+}

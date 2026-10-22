@@ -1,0 +1,3726 @@
+{
+  "facts": [
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "extra 'dev' declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "dependency:development.dev.build-1.2",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "build>=1.2"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "extra 'dev' declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "dependency:development.dev.twine-5.0",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "twine>=5.0"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "the `project.dependencies` list is empty",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "dependency:none",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "none"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "extra 'pdf' declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "dependency:optional.pdf.reportlab-3.6",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "reportlab>=3.6"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "extra 'test-pdf' declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "dependency:optional.test-pdf.pillow-10.0",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "Pillow>=10.0"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "extra 'test-pdf' declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "dependency:optional.test-pdf.pymupdf-1.25",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "PyMuPDF>=1.25"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "extra 'test-pdf' declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "dependency:optional.test-pdf.pypdf-5.3",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "pypdf>=5.3"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 104-111; python fence; unit inherited_unit:001.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 1: FAILED; AttributeError",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "staged as SimpleTable.one",
+          "path": "testfiles/SimpleTable.one"
+        }
+      ],
+      "id": "example:001",
+      "kind": "example",
+      "polarity": "CONTRADICTED",
+      "value": "from aspose.note import Document\n\ndoc = Document(\"SimpleTable.one\")\nprint(doc.DisplayName)\nfor page in doc:\n    print(page.Title.TitleText.Text)\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 115-120; python fence; unit inherited_unit:002.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 2: EXECUTED; exit 0; retried after installing declared extra providing 'reportlab' (reportlab>=3.6)",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "staged as SimpleTable.one",
+          "path": "testfiles/SimpleTable.one"
+        },
+        {
+          "detail": "staged as out.pdf",
+          "path": "tests/goldens/pdf/page_with_subpage.pdf"
+        }
+      ],
+      "id": "example:002",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose.note import Document, SaveFormat\n\ndoc = Document(\"SimpleTable.one\")\ndoc.Save(\"out.pdf\", SaveFormat.Pdf)\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 129-140; python fence; unit inherited_unit:003.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 3: EXECUTED; exit 0",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "staged as 3ImagesWithDifferentAlignment.one",
+          "path": "testfiles/3ImagesWithDifferentAlignment.one"
+        }
+      ],
+      "id": "example:003",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from pathlib import Path\nfrom aspose.note import Document, Image\n\nout_dir = Path(\"out_images\")\nout_dir.mkdir(exist_ok=True)\n\ndoc = Document(\"3ImagesWithDifferentAlignment.one\")\nfor i, img in enumerate(doc.GetChildNodes(Image), start=1):\n    name = img.FileName or f\"image_{i}.png\"\n    (out_dir / name).write_bytes(img.Bytes)\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 147-153; python fence; unit inherited_unit:004.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 4: EXECUTED; exit 0",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "staged as SimpleTable.one",
+          "path": "testfiles/SimpleTable.one"
+        }
+      ],
+      "id": "example:004",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose.note import Document\n\nwith open(\"SimpleTable.one\", \"rb\") as f:\n    doc = Document(f)\nprint(doc.DisplayName, len(list(doc)))\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 157-166; python fence; unit inherited_unit:005.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 5: EXECUTED; exit 0",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "staged as SimpleTable.one",
+          "path": "testfiles/SimpleTable.one"
+        }
+      ],
+      "id": "example:005",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose.note import Document, Table, TableRow, TableCell, RichText\n\ndoc = Document(\"SimpleTable.one\")\nfor table in doc.GetChildNodes(Table):\n    for row in table.GetChildNodes(TableRow):\n        cells = row.GetChildNodes(TableCell)\n        values = [\" \".join(rt.Text for rt in cell.GetChildNodes(RichText)) for cell in cells]\n        print(values)\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 170-178; python fence; unit inherited_unit:006.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 6: EXECUTED; exit 0",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "staged as OnePageWithFile.one",
+          "path": "testfiles/OnePageWithFile.one"
+        }
+      ],
+      "id": "example:006",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from pathlib import Path\nfrom aspose.note import Document, AttachedFile\n\ndoc = Document(\"OnePageWithFile.one\")\nfor i, af in enumerate(doc.GetChildNodes(AttachedFile), start=1):\n    name = af.FileName or f\"attachment_{i}.bin\"\n    Path(name).write_bytes(af.Bytes)\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 182-189; python fence; unit inherited_unit:007.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 7: EXECUTED; exit 0",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "staged as TagSizes.one",
+          "path": "testfiles/TagSizes.one"
+        }
+      ],
+      "id": "example:007",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose.note import Document, RichText\n\ndoc = Document(\"TagSizes.one\")\nfor rt in doc.GetChildNodes(RichText):\n    for tag in rt.Tags:\n        print(tag.Label, tag.Status)\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 193-215; python fence; unit inherited_unit:008.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 8: EXECUTED; exit 0",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "staged as 3ImagesWithDifferentAlignment.one",
+          "path": "testfiles/3ImagesWithDifferentAlignment.one"
+        }
+      ],
+      "id": "example:008",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose.note import Document, DocumentVisitor, Page, Image, RichText\n\nclass Counter(DocumentVisitor):\n    def __init__(self):\n        self.pages = 0\n        self.rich_texts = 0\n        self.images = 0\n\n    def VisitPageStart(self, page: Page) -> None:\n        self.pages += 1\n\n    def VisitRichTextStart(self, rich_text: RichText) -> None:\n        self.rich_texts += 1\n\n    def VisitImageStart(self, image: Image) -> None:\n        self.images += 1\n\ndoc = Document(\"3ImagesWithDifferentAlignment.one\")\ncounter = Counter()\ndoc.Accept(counter)\nprint(counter.pages, counter.rich_texts, counter.images)\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 219-225; python fence; unit inherited_unit:009.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 9: EXECUTED; exit 0",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "staged as FormattedRichText.one",
+          "path": "testfiles/FormattedRichText.one"
+        }
+      ],
+      "id": "example:009",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose.note import Document, RichText\n\ndoc = Document(\"FormattedRichText.one\")\ntexts = [rt.Text for rt in doc.GetChildNodes(RichText)]\nprint(\"\\n\".join(texts))\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 229-236; python fence; unit inherited_unit:010.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 10: EXECUTED; exit 0; retried after installing declared extra providing 'reportlab' (reportlab>=3.6)",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "staged as TagSizes.one",
+          "path": "testfiles/TagSizes.one"
+        },
+        {
+          "detail": "staged as out.pdf",
+          "path": "tests/goldens/pdf/page_with_subpage.pdf"
+        }
+      ],
+      "id": "example:010",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose.note import Document, SaveFormat\nfrom aspose.note.saving import PdfSaveOptions\n\ndoc = Document(\"TagSizes.one\")\nopts = PdfSaveOptions(JpegQuality=90)\ndoc.Save(\"out.pdf\", opts)\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 240-248; python fence; unit inherited_unit:011.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 11: EXECUTED; exit 0",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "staged as FormattedRichText.one",
+          "path": "testfiles/FormattedRichText.one"
+        }
+      ],
+      "id": "example:011",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose.note import Document, RichText\n\ndoc = Document(\"FormattedRichText.one\")\nfor rt in doc.GetChildNodes(RichText):\n    for run in rt.TextRuns:\n        if run.Style.IsHyperlink and run.Style.HyperlinkAddress:\n            print(run.Text, \"->\", run.Style.HyperlinkAddress)\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 252-261; python fence; unit inherited_unit:012.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 12: EXECUTED; exit 0",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "staged as NumberedListWithTags.one",
+          "path": "testfiles/NumberedListWithTags.one"
+        }
+      ],
+      "id": "example:012",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose.note import Document, OutlineElement\n\ndoc = Document(\"NumberedListWithTags.one\")\nfor oe in doc.GetChildNodes(OutlineElement):\n    nl = oe.NumberList\n    if nl is None:\n        continue\n    print(\"format=\", nl.Format, \"number_format=\", nl.NumberFormat, \"restart=\", nl.Restart)\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "staged as SimpleTable.one; example 2 read it: EXECUTED",
+          "path": "testfiles/SimpleTable.one"
+        },
+        {
+          "detail": "staged as 3ImagesWithDifferentAlignment.one; example 3 read it: EXECUTED",
+          "path": "testfiles/3ImagesWithDifferentAlignment.one"
+        },
+        {
+          "detail": "line 150; example 4: input .one",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 4: EXECUTED; exit 0",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "staged as SimpleTable.one; example 4 read it: EXECUTED",
+          "path": "testfiles/SimpleTable.one"
+        },
+        {
+          "detail": "staged as SimpleTable.one; example 5 read it: EXECUTED",
+          "path": "testfiles/SimpleTable.one"
+        },
+        {
+          "detail": "staged as OnePageWithFile.one; example 6 read it: EXECUTED",
+          "path": "testfiles/OnePageWithFile.one"
+        },
+        {
+          "detail": "staged as TagSizes.one; example 7 read it: EXECUTED",
+          "path": "testfiles/TagSizes.one"
+        },
+        {
+          "detail": "staged as 3ImagesWithDifferentAlignment.one; example 8 read it: EXECUTED",
+          "path": "testfiles/3ImagesWithDifferentAlignment.one"
+        },
+        {
+          "detail": "staged as FormattedRichText.one; example 9 read it: EXECUTED",
+          "path": "testfiles/FormattedRichText.one"
+        },
+        {
+          "detail": "staged as TagSizes.one; example 10 read it: EXECUTED",
+          "path": "testfiles/TagSizes.one"
+        },
+        {
+          "detail": "staged as FormattedRichText.one; example 11 read it: EXECUTED",
+          "path": "testfiles/FormattedRichText.one"
+        },
+        {
+          "detail": "staged as NumberedListWithTags.one; example 12 read it: EXECUTED",
+          "path": "testfiles/NumberedListWithTags.one"
+        }
+      ],
+      "id": "format:input.one",
+      "kind": "format",
+      "polarity": "SUPPORTED",
+      "value": ".one"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 119; example 2: output .pdf",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 2: EXECUTED; exit 0; retried after installing declared extra providing 'reportlab' (reportlab>=3.6)",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "line 235; example 10: output .pdf",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 10: EXECUTED; exit 0; retried after installing declared extra providing 'reportlab' (reportlab>=3.6)",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "format:output.pdf",
+      "kind": "format",
+      "polarity": "SUPPORTED",
+      "value": ".pdf"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "admitted registry entry",
+          "path": "data/registry.json"
+        }
+      ],
+      "id": "identity:repository",
+      "kind": "identity",
+      "polarity": "SUPPORTED",
+      "value": "aspose-note-foss/Aspose.Note-FOSS-for-Python"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package dir",
+          "path": "src/aspose/__init__.py"
+        }
+      ],
+      "id": "import_path:aspose",
+      "kind": "import_path",
+      "polarity": "SUPPORTED",
+      "value": "aspose"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package dir",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "import_path:aspose.note",
+      "kind": "import_path",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "distribution name declared by the manifest",
+          "path": "pyproject.toml"
+        },
+        {
+          "detail": "package registry: found; manifest version published",
+          "path": "https://pypi.org/pypi/aspose-note-foss/json"
+        }
+      ],
+      "id": "install_command:pip",
+      "kind": "install_command",
+      "polarity": "SUPPORTED",
+      "value": "pip install aspose-note-foss"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "license declared by the manifest",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "package:license",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "LicenseRef-Aspose-Split"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "distribution name declared by the manifest",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "package:name",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "aspose-note-foss"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "python_requires declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "package:python_requires",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": ">=3.10"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "version declared by the manifest",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "package:version",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "26.9.0"
+    },
+    {
+      "attributes": {
+        "docstring": "Aspose namespace package (Python).",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.AttachedFile",
+        "public_paths": "aspose.note.model.AttachedFile",
+        "signature": "class AttachedFile(Node)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1085; class; public by __all__",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 11; re-exported as aspose.note.AttachedFile",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.attachedfile",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.AttachedFile"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.AttachedFile.Bytes",
+        "signature": "def Bytes(self) -> bytes",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1105; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.attachedfile.bytes",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.AttachedFile.Bytes"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.AttachedFile.FileName",
+        "signature": "def FileName(self) -> str | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1101; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.attachedfile.filename",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.AttachedFile.FileName"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.AttachedFile.Tags",
+        "signature": "def Tags(self) -> list[NoteTag]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1109; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.attachedfile.tags",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.AttachedFile.Tags"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Document",
+        "public_paths": "aspose.note.model.Document",
+        "signature": "class Document(CompositeNode)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1257; class; public by __all__",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 11; re-exported as aspose.note.Document",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.document",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Document"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Document.DetectLayoutChanges",
+        "signature": "def DetectLayoutChanges(self) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1289; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.document.detectlayoutchanges",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Document.DetectLayoutChanges"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Document.FileFormat",
+        "signature": "def FileFormat(self) -> FileFormat",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1286; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.document.fileformat",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Document.FileFormat"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Document.GetPageHistory",
+        "signature": "def GetPageHistory(self, page: Page) -> PageHistory",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1292; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.document.getpagehistory",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Document.GetPageHistory"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Document.Save",
+        "signature": "def Save(self, target: str | Path | BinaryIO, format_or_options: SaveFormat | SaveOptions | None=None) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1295; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.document.save",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Document.Save"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.DocumentVisitor",
+        "public_paths": "aspose.note.model.DocumentVisitor",
+        "signature": "class DocumentVisitor",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 68; class; public by __all__",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 11; re-exported as aspose.note.DocumentVisitor",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.documentvisitor",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.DocumentVisitor"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.DocumentVisitor.VisitDocumentEnd",
+        "signature": "def VisitDocumentEnd(self, document: Document) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 77; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.documentvisitor.visitdocumentend",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.DocumentVisitor.VisitDocumentEnd"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.DocumentVisitor.VisitDocumentStart",
+        "signature": "def VisitDocumentStart(self, document: Document) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 74; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.documentvisitor.visitdocumentstart",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.DocumentVisitor.VisitDocumentStart"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.DocumentVisitor.VisitImageEnd",
+        "signature": "def VisitImageEnd(self, image: Image) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 113; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.documentvisitor.visitimageend",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.DocumentVisitor.VisitImageEnd"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.DocumentVisitor.VisitImageStart",
+        "signature": "def VisitImageStart(self, image: Image) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 110; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.documentvisitor.visitimagestart",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.DocumentVisitor.VisitImageStart"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.DocumentVisitor.VisitOutlineElementEnd",
+        "signature": "def VisitOutlineElementEnd(self, outline_element: OutlineElement) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 101; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.documentvisitor.visitoutlineelementend",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.DocumentVisitor.VisitOutlineElementEnd"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.DocumentVisitor.VisitOutlineElementStart",
+        "signature": "def VisitOutlineElementStart(self, outline_element: OutlineElement) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 98; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.documentvisitor.visitoutlineelementstart",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.DocumentVisitor.VisitOutlineElementStart"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.DocumentVisitor.VisitOutlineEnd",
+        "signature": "def VisitOutlineEnd(self, outline: Outline) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 95; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.documentvisitor.visitoutlineend",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.DocumentVisitor.VisitOutlineEnd"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.DocumentVisitor.VisitOutlineStart",
+        "signature": "def VisitOutlineStart(self, outline: Outline) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 92; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.documentvisitor.visitoutlinestart",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.DocumentVisitor.VisitOutlineStart"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.DocumentVisitor.VisitPageEnd",
+        "signature": "def VisitPageEnd(self, page: Page) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 83; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.documentvisitor.visitpageend",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.DocumentVisitor.VisitPageEnd"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.DocumentVisitor.VisitPageStart",
+        "signature": "def VisitPageStart(self, page: Page) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 80; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.documentvisitor.visitpagestart",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.DocumentVisitor.VisitPageStart"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.DocumentVisitor.VisitRichTextEnd",
+        "signature": "def VisitRichTextEnd(self, rich_text: RichText) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 107; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.documentvisitor.visitrichtextend",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.DocumentVisitor.VisitRichTextEnd"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.DocumentVisitor.VisitRichTextStart",
+        "signature": "def VisitRichTextStart(self, rich_text: RichText) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 104; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.documentvisitor.visitrichtextstart",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.DocumentVisitor.VisitRichTextStart"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.DocumentVisitor.VisitTitleEnd",
+        "signature": "def VisitTitleEnd(self, title: Title) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 89; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.documentvisitor.visittitleend",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.DocumentVisitor.VisitTitleEnd"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.DocumentVisitor.VisitTitleStart",
+        "signature": "def VisitTitleStart(self, title: Title) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 86; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.documentvisitor.visittitlestart",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.DocumentVisitor.VisitTitleStart"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose/note/enums.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.enums",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.enums"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose/note/exceptions.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.exceptions",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.exceptions"
+    },
+    {
+      "attributes": {
+        "signature": "class AsposeNoteError(Exception)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 25; class; public by name",
+          "path": "src/aspose/note/exceptions.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.exceptions.asposenoteerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.exceptions.AsposeNoteError"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.exceptions.FileCorruptedException",
+        "public_paths": "aspose.note.exceptions.FileCorruptedException",
+        "signature": "class FileCorruptedException(AsposeNoteError)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 29; class; public by name",
+          "path": "src/aspose/note/exceptions.py"
+        },
+        {
+          "detail": "line 4; re-exported as aspose.note.FileCorruptedException",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.filecorruptedexception",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.FileCorruptedException"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.enums.FileFormat",
+        "public_paths": "aspose.note.enums.FileFormat",
+        "signature": "class FileFormat(Enum)",
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 10; enum; public by name",
+          "path": "src/aspose/note/enums.py"
+        },
+        {
+          "detail": "line 3; re-exported as aspose.note.FileFormat",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.fileformat",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.FileFormat"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.enums.HorizontalAlignment",
+        "public_paths": "aspose.note.enums.HorizontalAlignment",
+        "signature": "class HorizontalAlignment(Enum)",
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 17; enum; public by name",
+          "path": "src/aspose/note/enums.py"
+        },
+        {
+          "detail": "line 3; re-exported as aspose.note.HorizontalAlignment",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.horizontalalignment",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.HorizontalAlignment"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Image",
+        "public_paths": "aspose.note.model.Image",
+        "signature": "class Image(CompositeNode)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 962; class; public by __all__",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 11; re-exported as aspose.note.Image",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.image",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Image"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Image.Alignment",
+        "signature": "def Alignment(self) -> HorizontalAlignment | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1052; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.image.alignment",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Image.Alignment"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Image.Bytes",
+        "signature": "def Bytes(self) -> bytes",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1036; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.image.bytes",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Image.Bytes"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Image.FileName",
+        "signature": "def FileName(self) -> str | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1024; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.image.filename",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Image.FileName"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Image.FilePath",
+        "signature": "def FilePath(self) -> str | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1028; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.image.filepath",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Image.FilePath"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Image.Format",
+        "signature": "def Format(self) -> str | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1032; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.image.format",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Image.Format"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Image.OriginalHeight",
+        "signature": "def OriginalHeight(self) -> float | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1044; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.image.originalheight",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Image.OriginalHeight"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Image.OriginalWidth",
+        "signature": "def OriginalWidth(self) -> float | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1040; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.image.originalwidth",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Image.OriginalWidth"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Image.Replace",
+        "signature": "def Replace(self, image: Image) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1059; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.image.replace",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Image.Replace"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Image.Tags",
+        "signature": "def Tags(self) -> list[NoteTag]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1048; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.image.tags",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Image.Tags"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.exceptions.IncorrectDocumentStructureException",
+        "public_paths": "aspose.note.exceptions.IncorrectDocumentStructureException",
+        "signature": "class IncorrectDocumentStructureException(AsposeNoteError)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 33; class; public by name",
+          "path": "src/aspose/note/exceptions.py"
+        },
+        {
+          "detail": "line 4; re-exported as aspose.note.IncorrectDocumentStructureException",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.incorrectdocumentstructureexception",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.IncorrectDocumentStructureException"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.exceptions.IncorrectPasswordException",
+        "public_paths": "aspose.note.exceptions.IncorrectPasswordException",
+        "signature": "class IncorrectPasswordException(AsposeNoteError)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 37; class; public by name",
+          "path": "src/aspose/note/exceptions.py"
+        },
+        {
+          "detail": "line 4; re-exported as aspose.note.IncorrectPasswordException",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.incorrectpasswordexception",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.IncorrectPasswordException"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.License",
+        "public_paths": "aspose.note.model.License",
+        "signature": "class License",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 117; class; public by __all__",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 11; re-exported as aspose.note.License",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.license",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.License"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.License.SetLicense",
+        "signature": "def SetLicense(self, license_path_or_stream: Any) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 118; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.license.setlicense",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.License.SetLicense"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.LoadOptions",
+        "public_paths": "aspose.note.model.LoadOptions",
+        "signature": "class LoadOptions",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 128; class; public by __all__",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 11; re-exported as aspose.note.LoadOptions",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.loadoptions",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.LoadOptions"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Metered",
+        "public_paths": "aspose.note.model.Metered",
+        "signature": "class Metered",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 122; class; public by __all__",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 11; re-exported as aspose.note.Metered",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.metered",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Metered"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Metered.SetMeteredKey",
+        "signature": "def SetMeteredKey(self, public_key: str, private_key: str) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 123; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.metered.setmeteredkey",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Metered.SetMeteredKey"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.model",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.model"
+    },
+    {
+      "attributes": {
+        "signature": "class CompositeNode(Node)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 169; class; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.model.compositenode",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.model.CompositeNode"
+    },
+    {
+      "attributes": {
+        "signature": "def AppendChildFirst(self, node: TNode) -> TNode",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 190; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.model.compositenode.appendchildfirst",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.model.CompositeNode.AppendChildFirst"
+    },
+    {
+      "attributes": {
+        "signature": "def AppendChildLast(self, node: TNode) -> TNode",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 185; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.model.compositenode.appendchildlast",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.model.CompositeNode.AppendChildLast"
+    },
+    {
+      "attributes": {
+        "signature": "def FirstChild(self) -> Node | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 178; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.model.compositenode.firstchild",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.model.CompositeNode.FirstChild"
+    },
+    {
+      "attributes": {
+        "signature": "def GetChildNodes(self, node_type: type[TNode]) -> list[TNode]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 210; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.model.compositenode.getchildnodes",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.model.CompositeNode.GetChildNodes"
+    },
+    {
+      "attributes": {
+        "signature": "def GetEnumerator(self) -> Iterator[Node]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 204; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.model.compositenode.getenumerator",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.model.CompositeNode.GetEnumerator"
+    },
+    {
+      "attributes": {
+        "signature": "def InsertChild(self, index: int, node: TNode) -> TNode",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 195; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.model.compositenode.insertchild",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.model.CompositeNode.InsertChild"
+    },
+    {
+      "attributes": {
+        "signature": "def LastChild(self) -> Node | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 182; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.model.compositenode.lastchild",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.model.CompositeNode.LastChild"
+    },
+    {
+      "attributes": {
+        "signature": "def RemoveChild(self, node: Node) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 200; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.model.compositenode.removechild",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.model.CompositeNode.RemoveChild"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.saving.options.PdfSaveOptions",
+        "public_paths": "aspose.note.saving.options.PdfSaveOptions, aspose.note.saving.PdfSaveOptions",
+        "signature": "class PdfSaveOptions(SaveOptions)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 31; class; public by name",
+          "path": "src/aspose/note/saving/options.py"
+        },
+        {
+          "detail": "line 12; re-exported as aspose.note.model.PdfSaveOptions",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 3; re-exported as aspose.note.saving.PdfSaveOptions",
+          "path": "src/aspose/note/saving/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.model.pdfsaveoptions",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.model.PdfSaveOptions"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.saving.options.SaveOptions",
+        "public_paths": "aspose.note.saving.options.SaveOptions, aspose.note.saving.SaveOptions",
+        "signature": "class SaveOptions",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 8; class; public by name",
+          "path": "src/aspose/note/saving/options.py"
+        },
+        {
+          "detail": "line 12; re-exported as aspose.note.model.SaveOptions",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 3; re-exported as aspose.note.saving.SaveOptions",
+          "path": "src/aspose/note/saving/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.model.saveoptions",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.model.SaveOptions"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.saving.options.SaveOptions.SaveFormat",
+        "signature": "def SaveFormat(self) -> SaveFormat",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 27; method; public by name",
+          "path": "src/aspose/note/saving/options.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.model.saveoptions.saveformat",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.model.SaveOptions.SaveFormat"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Node",
+        "public_paths": "aspose.note.model.Node",
+        "signature": "class Node",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 134; class; public by __all__",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 11; re-exported as aspose.note.Node",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.node",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Node"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Node.Accept",
+        "signature": "def Accept(self, visitor: DocumentVisitor) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 161; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.node.accept",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Node.Accept"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Node.Document",
+        "signature": "def Document(self) -> Document | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 153; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.node.document",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Node.Document"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Node.ParentNode",
+        "signature": "def ParentNode(self) -> Node | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 146; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.node.parentnode",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Node.ParentNode"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.enums.NodeType",
+        "public_paths": "aspose.note.enums.NodeType",
+        "signature": "class NodeType(Enum)",
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 29; enum; public by name",
+          "path": "src/aspose/note/enums.py"
+        },
+        {
+          "detail": "line 3; re-exported as aspose.note.NodeType",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.nodetype",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.NodeType"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.NoteTag",
+        "public_paths": "aspose.note.model.NoteTag",
+        "signature": "class NoteTag",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 220; class; public by __all__",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 11; re-exported as aspose.note.NoteTag",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.notetag",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.NoteTag"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.NoteTag.CompletedTime",
+        "signature": "def CompletedTime(self) -> datetime | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 312; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.notetag.completedtime",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.NoteTag.CompletedTime"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.NoteTag.CreateMusicalNote",
+        "signature": "def CreateMusicalNote(label: str | None=None) -> NoteTag",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 336; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.notetag.createmusicalnote",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.NoteTag.CreateMusicalNote"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.NoteTag.CreateQuestionMark",
+        "signature": "def CreateQuestionMark(label: str | None=None) -> NoteTag",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 332; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.notetag.createquestionmark",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.NoteTag.CreateQuestionMark"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.NoteTag.CreateYellowStar",
+        "signature": "def CreateYellowStar(label: str | None=None) -> NoteTag",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 328; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.notetag.createyellowstar",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.NoteTag.CreateYellowStar"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.NoteTag.CreationTime",
+        "signature": "def CreationTime(self) -> datetime | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 304; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.notetag.creationtime",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.NoteTag.CreationTime"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.NoteTag.FontColor",
+        "signature": "def FontColor(self) -> int | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 316; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.notetag.fontcolor",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.NoteTag.FontColor"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.NoteTag.Highlight",
+        "signature": "def Highlight(self) -> int | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 296; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.notetag.highlight",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.NoteTag.Highlight"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.NoteTag.Icon",
+        "signature": "def Icon(self) -> int | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 282; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.notetag.icon",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.NoteTag.Icon"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.NoteTag.Label",
+        "signature": "def Label(self) -> str | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 274; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.notetag.label",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.NoteTag.Label"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.NoteTag.Status",
+        "signature": "def Status(self) -> TagStatus",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 290; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.notetag.status",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.NoteTag.Status"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.NumberList",
+        "public_paths": "aspose.note.model.NumberList",
+        "signature": "class NumberList",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 913; class; public by __all__",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 11; re-exported as aspose.note.NumberList",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.numberlist",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.NumberList"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.NumberList.GetNumberedListHeader",
+        "signature": "def GetNumberedListHeader(self, number: int) -> str",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 924; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.numberlist.getnumberedlistheader",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.NumberList.GetNumberedListHeader"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Outline",
+        "public_paths": "aspose.note.model.Outline",
+        "signature": "class Outline(CompositeNode)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 944; class; public by __all__",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 11; re-exported as aspose.note.Outline",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.outline",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Outline"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.OutlineElement",
+        "public_paths": "aspose.note.model.OutlineElement",
+        "signature": "class OutlineElement(CompositeNode)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 933; class; public by __all__",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 11; re-exported as aspose.note.OutlineElement",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.outlineelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.OutlineElement"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Page",
+        "public_paths": "aspose.note.model.Page",
+        "signature": "class Page(CompositeNode)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1156; class; public by __all__",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 11; re-exported as aspose.note.Page",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.page",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Page"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Page.Clone",
+        "signature": "def Clone(self, cloneHistory: bool=False, **kwargs: Any) -> Page",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1169; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.page.clone",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Page.Clone"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.PageHistory",
+        "public_paths": "aspose.note.model.PageHistory",
+        "signature": "class PageHistory",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1186; class; public by __all__",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 11; re-exported as aspose.note.PageHistory",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.pagehistory",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.PageHistory"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.PageHistory.Add",
+        "signature": "def Add(self, page: Page) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1205; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.pagehistory.add",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.PageHistory.Add"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.PageHistory.AddRange",
+        "signature": "def AddRange(self, pages: list[Page]) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1208; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.pagehistory.addrange",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.PageHistory.AddRange"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.PageHistory.Clear",
+        "signature": "def Clear(self) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1211; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.pagehistory.clear",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.PageHistory.Clear"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.PageHistory.Contains",
+        "signature": "def Contains(self, page: Page) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1214; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.pagehistory.contains",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.PageHistory.Contains"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.PageHistory.CopyTo",
+        "signature": "def CopyTo(self, target: list[Page], index: int) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1217; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.pagehistory.copyto",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.PageHistory.CopyTo"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.PageHistory.Count",
+        "signature": "def Count(self) -> int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1194; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.pagehistory.count",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.PageHistory.Count"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.PageHistory.Current",
+        "signature": "def Current(self) -> Page",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1198; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.pagehistory.current",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.PageHistory.Current"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.PageHistory.GetEnumerator",
+        "signature": "def GetEnumerator(self) -> Iterator[Page]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1220; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.pagehistory.getenumerator",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.PageHistory.GetEnumerator"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.PageHistory.IndexOf",
+        "signature": "def IndexOf(self, page: Page) -> int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1223; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.pagehistory.indexof",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.PageHistory.IndexOf"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.PageHistory.Insert",
+        "signature": "def Insert(self, index: int, page: Page) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1229; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.pagehistory.insert",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.PageHistory.Insert"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.PageHistory.IsReadOnly",
+        "signature": "def IsReadOnly(self) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1202; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.pagehistory.isreadonly",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.PageHistory.IsReadOnly"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.PageHistory.Remove",
+        "signature": "def Remove(self, page: Page) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1232; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.pagehistory.remove",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.PageHistory.Remove"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.PageHistory.RemoveAt",
+        "signature": "def RemoveAt(self, index: int) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1238; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.pagehistory.removeat",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.PageHistory.RemoveAt"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.PageHistory.RemoveRange",
+        "signature": "def RemoveRange(self, index: int, count: int) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1241; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.pagehistory.removerange",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.PageHistory.RemoveRange"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.ParagraphStyle",
+        "public_paths": "aspose.note.model.ParagraphStyle",
+        "signature": "class ParagraphStyle",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 340; class; public by __all__",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 11; re-exported as aspose.note.ParagraphStyle",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.paragraphstyle",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.ParagraphStyle"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.ParagraphStyle.Default",
+        "signature": "def Default(cls) -> ParagraphStyle",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 393; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.paragraphstyle.default",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.ParagraphStyle.Default"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.ParagraphStyle.FontStyle",
+        "signature": "def FontStyle(self) -> int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 380; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.paragraphstyle.fontstyle",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.ParagraphStyle.FontStyle"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.RichText",
+        "public_paths": "aspose.note.model.RichText",
+        "signature": "class RichText(Node)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 627; class; public by __all__",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 11; re-exported as aspose.note.RichText",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.richtext",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.RichText"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.RichText.Alignment",
+        "signature": "def Alignment(self) -> HorizontalAlignment | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 714; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.richtext.alignment",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.RichText.Alignment"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.RichText.Append",
+        "signature": "def Append(self, text: str, style: TextStyle | None=None) -> RichText",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 733; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.richtext.append",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.RichText.Append"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.RichText.AppendFront",
+        "signature": "def AppendFront(self, text: str, style: TextStyle | None=None) -> RichText",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 745; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.richtext.appendfront",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.RichText.AppendFront"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.RichText.Clear",
+        "signature": "def Clear(self) -> RichText",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 748; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.richtext.clear",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.RichText.Clear"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.RichText.GetEnumerator",
+        "signature": "def GetEnumerator(self) -> Iterator[str]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 753; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.richtext.getenumerator",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.RichText.GetEnumerator"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.RichText.IndexOf",
+        "signature": "def IndexOf(self, value: str, startIndex: int=0, count: int | None=None, comparison: str | None=None) -> int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 756; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.richtext.indexof",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.RichText.IndexOf"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.RichText.Insert",
+        "signature": "def Insert(self, index: int, text: str, style: TextStyle | None=None) -> RichText",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 771; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.richtext.insert",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.RichText.Insert"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.RichText.IsTitleDate",
+        "signature": "def IsTitleDate(self) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 726; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.richtext.istitledate",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.RichText.IsTitleDate"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.RichText.IsTitleText",
+        "signature": "def IsTitleText(self) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 722; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.richtext.istitletext",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.RichText.IsTitleText"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.RichText.IsTitleTime",
+        "signature": "def IsTitleTime(self) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 730; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.richtext.istitletime",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.RichText.IsTitleTime"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.RichText.Length",
+        "signature": "def Length(self) -> int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 710; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.richtext.length",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.RichText.Length"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.RichText.ParagraphStyle",
+        "signature": "def ParagraphStyle(self) -> ParagraphStyle",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 697; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.richtext.paragraphstyle",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.RichText.ParagraphStyle"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.RichText.Remove",
+        "signature": "def Remove(self, start: int, count: int | None=None) -> RichText",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 780; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.richtext.remove",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.RichText.Remove"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.RichText.Replace",
+        "signature": "def Replace(self, old_value: str, new_value: str, style: TextStyle | None=None) -> RichText",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 793; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.richtext.replace",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.RichText.Replace"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.RichText.Tags",
+        "signature": "def Tags(self) -> list[NoteTag]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 706; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.richtext.tags",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.RichText.Tags"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.RichText.Text",
+        "signature": "def Text(self) -> str",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 677; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.richtext.text",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.RichText.Text"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.RichText.TextRuns",
+        "signature": "def TextRuns(self) -> list[TextRun]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 693; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.richtext.textruns",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.RichText.TextRuns"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.RichText.Trim",
+        "signature": "def Trim(self) -> RichText",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 807; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.richtext.trim",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.RichText.Trim"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.RichText.TrimEnd",
+        "signature": "def TrimEnd(self) -> RichText",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 823; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.richtext.trimend",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.RichText.TrimEnd"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.RichText.TrimStart",
+        "signature": "def TrimStart(self) -> RichText",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 815; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.richtext.trimstart",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.RichText.TrimStart"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.enums.SaveFormat",
+        "public_paths": "aspose.note.enums.SaveFormat",
+        "signature": "class SaveFormat(Enum)",
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; enum; public by name",
+          "path": "src/aspose/note/enums.py"
+        },
+        {
+          "detail": "line 3; re-exported as aspose.note.SaveFormat",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.saveformat",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.SaveFormat"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose/note/saving/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.saving",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.saving"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose/note/saving/options.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.saving.options",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.saving.options"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose/note/saving/pdf_writer.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.saving.pdf_writer",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.saving.pdf_writer"
+    },
+    {
+      "attributes": {
+        "signature": "def write_pdf(document, options: PdfSaveOptions) -> bytes",
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1743; function; public by name",
+          "path": "src/aspose/note/saving/pdf_writer.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.saving.pdf_writer.write_pdf",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.saving.pdf_writer.write_pdf"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Table",
+        "public_paths": "aspose.note.model.Table",
+        "signature": "class Table(CompositeNode)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1129; class; public by __all__",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 11; re-exported as aspose.note.Table",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.table",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Table"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Table.Columns",
+        "signature": "def Columns(self) -> list[TableColumn]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1151; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.table.columns",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Table.Columns"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Table.Tags",
+        "signature": "def Tags(self) -> list[NoteTag]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1147; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.table.tags",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Table.Tags"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TableCell",
+        "public_paths": "aspose.note.model.TableCell",
+        "signature": "class TableCell(CompositeNode)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1114; class; public by __all__",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 11; re-exported as aspose.note.TableCell",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.tablecell",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TableCell"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TableColumn",
+        "public_paths": "aspose.note.model.TableColumn",
+        "signature": "class TableColumn",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1124; class; public by __all__",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 11; re-exported as aspose.note.TableColumn",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.tablecolumn",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TableColumn"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TableRow",
+        "public_paths": "aspose.note.model.TableRow",
+        "signature": "class TableRow(CompositeNode)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1119; class; public by __all__",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 11; re-exported as aspose.note.TableRow",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.tablerow",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TableRow"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.enums.TagStatus",
+        "public_paths": "aspose.note.enums.TagStatus",
+        "signature": "class TagStatus(Enum)",
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 23; enum; public by name",
+          "path": "src/aspose/note/enums.py"
+        },
+        {
+          "detail": "line 3; re-exported as aspose.note.TagStatus",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.tagstatus",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TagStatus"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TextRun",
+        "public_paths": "aspose.note.model.TextRun",
+        "signature": "class TextRun",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 622; class; public by __all__",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 11; re-exported as aspose.note.TextRun",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.textrun",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TextRun"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TextStyle",
+        "public_paths": "aspose.note.model.TextStyle",
+        "signature": "class TextStyle",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 397; class; public by __all__",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 11; re-exported as aspose.note.TextStyle",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.textstyle",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TextStyle"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TextStyle.Default",
+        "signature": "def Default(cls) -> TextStyle",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 585; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.textstyle.default",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TextStyle.Default"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TextStyle.DefaultMsOneNoteTitleDateStyle",
+        "signature": "def DefaultMsOneNoteTitleDateStyle(cls) -> TextStyle",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 593; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.textstyle.defaultmsonenotetitledatestyle",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TextStyle.DefaultMsOneNoteTitleDateStyle"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TextStyle.DefaultMsOneNoteTitleTextStyle",
+        "signature": "def DefaultMsOneNoteTitleTextStyle(cls) -> TextStyle",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 589; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.textstyle.defaultmsonenotetitletextstyle",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TextStyle.DefaultMsOneNoteTitleTextStyle"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TextStyle.DefaultMsOneNoteTitleTimeStyle",
+        "signature": "def DefaultMsOneNoteTitleTimeStyle(cls) -> TextStyle",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 597; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.textstyle.defaultmsonenotetitletimestyle",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TextStyle.DefaultMsOneNoteTitleTimeStyle"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TextStyle.FontColor",
+        "signature": "def FontColor(self) -> int | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 484; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.textstyle.fontcolor",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TextStyle.FontColor"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TextStyle.FontName",
+        "signature": "def FontName(self) -> str | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 468; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.textstyle.fontname",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TextStyle.FontName"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TextStyle.FontSize",
+        "signature": "def FontSize(self) -> float | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 476; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.textstyle.fontsize",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TextStyle.FontSize"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TextStyle.FontStyle",
+        "signature": "def FontStyle(self) -> int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 572; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.textstyle.fontstyle",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TextStyle.FontStyle"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TextStyle.Highlight",
+        "signature": "def Highlight(self) -> int | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 492; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.textstyle.highlight",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TextStyle.Highlight"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TextStyle.HyperlinkAddress",
+        "signature": "def HyperlinkAddress(self) -> str | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 460; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.textstyle.hyperlinkaddress",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TextStyle.HyperlinkAddress"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TextStyle.IsBold",
+        "signature": "def IsBold(self) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 508; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.textstyle.isbold",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TextStyle.IsBold"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TextStyle.IsHidden",
+        "signature": "def IsHidden(self) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 556; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.textstyle.ishidden",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TextStyle.IsHidden"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TextStyle.IsHyperlink",
+        "signature": "def IsHyperlink(self) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 452; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.textstyle.ishyperlink",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TextStyle.IsHyperlink"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TextStyle.IsItalic",
+        "signature": "def IsItalic(self) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 516; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.textstyle.isitalic",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TextStyle.IsItalic"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TextStyle.IsMathFormatting",
+        "signature": "def IsMathFormatting(self) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 564; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.textstyle.ismathformatting",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TextStyle.IsMathFormatting"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TextStyle.IsStrikethrough",
+        "signature": "def IsStrikethrough(self) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 532; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.textstyle.isstrikethrough",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TextStyle.IsStrikethrough"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TextStyle.IsSubscript",
+        "signature": "def IsSubscript(self) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 548; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.textstyle.issubscript",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TextStyle.IsSubscript"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TextStyle.IsSuperscript",
+        "signature": "def IsSuperscript(self) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 540; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.textstyle.issuperscript",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TextStyle.IsSuperscript"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TextStyle.IsUnderline",
+        "signature": "def IsUnderline(self) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 524; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.textstyle.isunderline",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TextStyle.IsUnderline"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.TextStyle.Language",
+        "signature": "def Language(self) -> int | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 500; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.textstyle.language",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.TextStyle.Language"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Title",
+        "public_paths": "aspose.note.model.Title",
+        "signature": "class Title(Node)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 836; class; public by __all__",
+          "path": "src/aspose/note/model.py"
+        },
+        {
+          "detail": "line 11; re-exported as aspose.note.Title",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.title",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Title"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Title.GetChildNodes",
+        "signature": "def GetChildNodes(self, node_type: type[TNode]) -> list[TNode]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 896; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.title.getchildnodes",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Title.GetChildNodes"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Title.GetEnumerator",
+        "signature": "def GetEnumerator(self) -> Iterator[Node]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 888; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.title.getenumerator",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Title.GetEnumerator"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Title.TitleDate",
+        "signature": "def TitleDate(self) -> RichText | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 873; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.title.titledate",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Title.TitleDate"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Title.TitleText",
+        "signature": "def TitleText(self) -> RichText | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 865; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.title.titletext",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Title.TitleText"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.model.Title.TitleTime",
+        "signature": "def TitleTime(self) -> RichText | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 881; method; public by __all__",
+          "path": "src/aspose/note/model.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.title.titletime",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.Title.TitleTime"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.exceptions.UnsupportedFileFormatException",
+        "public_paths": "aspose.note.exceptions.UnsupportedFileFormatException",
+        "signature": "class UnsupportedFileFormatException(AsposeNoteError)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 41; class; public by name",
+          "path": "src/aspose/note/exceptions.py"
+        },
+        {
+          "detail": "line 4; re-exported as aspose.note.UnsupportedFileFormatException",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.unsupportedfileformatexception",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.UnsupportedFileFormatException"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.exceptions.UnsupportedFileFormatException.FileFormat",
+        "signature": "def FileFormat(self) -> FileFormat",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 53; method; public by name",
+          "path": "src/aspose/note/exceptions.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.unsupportedfileformatexception.fileformat",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.UnsupportedFileFormatException.FileFormat"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose.note.exceptions.UnsupportedSaveFormatException",
+        "public_paths": "aspose.note.exceptions.UnsupportedSaveFormatException",
+        "signature": "class UnsupportedSaveFormatException(AsposeNoteError)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 57; class; public by name",
+          "path": "src/aspose/note/exceptions.py"
+        },
+        {
+          "detail": "line 4; re-exported as aspose.note.UnsupportedSaveFormatException",
+          "path": "src/aspose/note/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose.note.unsupportedsaveformatexception",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.UnsupportedSaveFormatException"
+    }
+  ],
+  "repository": "aspose-note-foss/Aspose.Note-FOSS-for-Python",
+  "schema_version": 1,
+  "source_revision": "HEAD"
+}

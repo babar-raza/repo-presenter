@@ -1,0 +1,3767 @@
+{
+  "facts": [
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "no `project.dependencies` is declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "dependency:none",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "none"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 109-114; python fence; unit inherited_unit:001.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 1: EXECUTED; exit 0",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "staged as sample.msg from example 2's output hello.msg",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:001",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose.email_foss import msg\n\nwith msg.MapiMessage.from_file(\"sample.msg\") as message:\n    print(message.subject)\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 118-132; python fence; unit inherited_unit:002.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 2: EXECUTED; exit 0",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "staged as note.txt",
+          "path": "llms.txt"
+        }
+      ],
+      "id": "example:002",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose.email_foss import msg\n\nmessage = msg.MapiMessage.create(\"Hello\", \"Body\")\nmessage.set_property(msg.PropertyId.SENDER_NAME, \"Alice\")\nmessage.set_property(msg.PropertyId.SENDER_EMAIL_ADDRESS, \"alice@example.com\")\nmessage.add_recipient(\"bob@example.com\", display_name=\"Bob\")\nmessage.add_attachment(\"note.txt\", b\"abc\", mime_type=\"text/plain\")\nmessage.save(\"hello.msg\")\n\nwith msg.MapiMessage.from_file(\"hello.msg\") as loaded:\n    email_message = loaded.to_email_message()\n    with open(\"hello.eml\", \"wb\") as target:\n        target.write(email_message.as_bytes())\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 141-149; python fence; unit inherited_unit:003.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 3: EXECUTED; exit 0",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "staged as message.msg from example 2's output hello.msg",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "staged as message.eml from example 2's output hello.eml",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:003",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose.email_foss import msg\n\nwith msg.MapiMessage.from_file(\"message.msg\") as message:\n    email_message = message.to_email_message()\n\nwith open(\"message.eml\", \"wb\") as target:\n    target.write(email_message.as_bytes())\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 156-167; python fence; unit inherited_unit:004.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 4: EXECUTED; exit 0",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "staged as message.msg from example 2's output hello.msg",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "staged as message.eml from example 2's output hello.eml",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:004",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from email import policy\nfrom email.parser import BytesParser\n\nfrom aspose.email_foss import msg\n\nwith open(\"message.eml\", \"rb\") as source:\n    email_message = BytesParser(policy=policy.default).parse(source)\n\nmessage = msg.MapiMessage.from_email_message(email_message)\nmessage.save(\"message.msg\")\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 174-186; python fence; unit inherited_unit:005.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 5: FAILED; NameError",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:005",
+      "kind": "example",
+      "polarity": "CONTRADICTED",
+      "value": "from aspose.email_foss import msg\n\nwith msg.MsgReader.from_file(msg_path) as reader:\n    cfb = reader.cfb_reader\n    print(f\"major_version={cfb.major_version} sector_size={cfb.sector_size}\")\n\n    header = reader.top_level_header\n    print(f\"recipient_count={header.recipient_count} attachment_count={header.attachment_count}\")\n\n    for entry in reader.iter_recipient_storages():\n        print(f\"recipient storage: {entry.name}\")\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 193-203; python fence; unit inherited_unit:006.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 6: EXECUTED; exit 0",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:006",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose.email_foss.cfb import CFBDocument, CFBReader, CFBStorage, CFBStream, CFBWriter, ROOT_ENTRY_NAME\n\nroot = CFBStorage(ROOT_ENTRY_NAME)\nroot.add_stream(CFBStream(\"Summary\", b\"hello\"))\n\ndata = CFBWriter.to_bytes(CFBDocument(root=root, major_version=3))\nreader = CFBReader(data)\nentry = reader.resolve_path([\"Summary\"])\nprint(reader.get_stream_data(entry.stream_id))\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 130; example 2: input .eml",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 2: EXECUTED; exit 0",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "line 147; example 3: input .eml",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 3: EXECUTED; exit 0",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "staged as message.eml; example 3 read it: EXECUTED",
+          "path": "hello.eml"
+        },
+        {
+          "detail": "line 162; example 4: input .eml",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 4: EXECUTED; exit 0",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "staged as message.eml; example 4 read it: EXECUTED",
+          "path": "hello.eml"
+        }
+      ],
+      "id": "format:input.eml",
+      "kind": "format",
+      "polarity": "SUPPORTED",
+      "value": ".eml"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "staged as sample.msg; example 1 read it: EXECUTED",
+          "path": "hello.msg"
+        },
+        {
+          "detail": "staged as message.msg; example 3 read it: EXECUTED",
+          "path": "hello.msg"
+        }
+      ],
+      "id": "format:input.msg",
+      "kind": "format",
+      "polarity": "SUPPORTED",
+      "value": ".msg"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "staged as note.txt; example 2 read it: EXECUTED",
+          "path": "llms.txt"
+        }
+      ],
+      "id": "format:input.txt",
+      "kind": "format",
+      "polarity": "SUPPORTED",
+      "value": ".txt"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 126; example 2: output .msg",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 2: EXECUTED; exit 0",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "line 166; example 4: output .msg",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 4: EXECUTED; exit 0",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "format:output.msg",
+      "kind": "format",
+      "polarity": "SUPPORTED",
+      "value": ".msg"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "admitted registry entry",
+          "path": "data/registry.json"
+        }
+      ],
+      "id": "identity:repository",
+      "kind": "identity",
+      "polarity": "SUPPORTED",
+      "value": "aspose-email-foss/Aspose.Email-FOSS-for-Python"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "import_path:aspose.email_foss",
+      "kind": "import_path",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email_foss"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "distribution name declared by the manifest",
+          "path": "pyproject.toml"
+        },
+        {
+          "detail": "package registry: found; manifest version published",
+          "path": "https://pypi.org/pypi/aspose-email-foss/json"
+        }
+      ],
+      "id": "install_command:pip",
+      "kind": "install_command",
+      "polarity": "SUPPORTED",
+      "value": "pip install aspose-email-foss"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "license declared by the manifest",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "package:license",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "MIT"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "distribution name declared by the manifest",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "package:name",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "aspose-email-foss"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "python_requires declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "package:python_requires",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": ">=3.10"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "version declared by the manifest",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "package:version",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "26.3"
+    },
+    {
+      "attributes": {
+        "docstring": "Aspose.Email FOSS for Python public namespace.",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "aspose/email_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; module; public by reexport; re-export of email_foss.cfb",
+          "path": "aspose/email_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 20; unknown; public by reexport; re-export of email_foss.cfb.types.BYTE_ORDER_LITTLE_ENDIAN",
+          "path": "aspose/email_foss/cfb/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.byte_order_little_endian",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.cfb.BYTE_ORDER_LITTLE_ENDIAN"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.writer.CFBDocument",
+        "docstring": "Mutable Compound File Binary (CFB) document description.",
+        "public_paths": "email_foss.cfb.writer.CFBDocument",
+        "signature": "class CFBDocument",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 58; class; public by name",
+          "path": "aspose/email_foss/cfb/writer.py"
+        },
+        {
+          "detail": "line 13; re-exported as email_foss.cfb.CFBDocument",
+          "path": "aspose/email_foss/cfb/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbdocument",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBDocument"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.writer.CFBDocument.from_file",
+        "signature": "def from_file(cls, path: Path | str) -> 'CFBDocument'",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 101; method; public by name",
+          "path": "aspose/email_foss/cfb/writer.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbdocument.from_file",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBDocument.from_file"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.writer.CFBDocument.from_reader",
+        "signature": "def from_reader(cls, reader: CFBReader) -> 'CFBDocument'",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; method; public by name",
+          "path": "aspose/email_foss/cfb/writer.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbdocument.from_reader",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBDocument.from_reader"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.CFBError",
+        "docstring": "Raised for malformed or unsupported Compound File Binary (CFB) content.",
+        "public_paths": "email_foss.cfb.reader.CFBError",
+        "signature": "class CFBError(Exception)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 117; class; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        },
+        {
+          "detail": "line 7; re-exported as email_foss.cfb.CFBError",
+          "path": "aspose/email_foss/cfb/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfberror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBError"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.CFBReader",
+        "docstring": "Reusable reader for Compound File Binary (CFB) containers.",
+        "public_paths": "email_foss.cfb.reader.CFBReader",
+        "signature": "class CFBReader",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 121; class; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        },
+        {
+          "detail": "line 7; re-exported as email_foss.cfb.CFBReader",
+          "path": "aspose/email_foss/cfb/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbreader",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBReader"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.CFBReader.close",
+        "signature": "def close(self) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 187; method; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbreader.close",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBReader.close"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.CFBReader.data_size",
+        "signature": "def data_size(self) -> int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 202; method; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbreader.data_size",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBReader.data_size"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.CFBReader.directory_entry_count",
+        "signature": "def directory_entry_count(self) -> int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 222; method; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbreader.directory_entry_count",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBReader.directory_entry_count"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.CFBReader.fat_sector_count",
+        "signature": "def fat_sector_count(self) -> int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 218; method; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbreader.fat_sector_count",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBReader.fat_sector_count"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.CFBReader.file_size",
+        "signature": "def file_size(self) -> int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 230; method; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbreader.file_size",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBReader.file_size"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.CFBReader.find_child_by_name",
+        "signature": "def find_child_by_name(self, storage_stream_id: StreamId, name: str) -> Optional[DirectoryEntry]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 273; method; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbreader.find_child_by_name",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBReader.find_child_by_name"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.CFBReader.from_file",
+        "signature": "def from_file(cls, path: Path | str) -> 'CFBReader'",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 181; method; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbreader.from_file",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBReader.from_file"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.CFBReader.get_entry",
+        "signature": "def get_entry(self, stream_id: StreamId) -> DirectoryEntry",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 233; method; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbreader.get_entry",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBReader.get_entry"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.CFBReader.get_stream_data",
+        "signature": "def get_stream_data(self, stream_id: StreamId) -> bytes",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 236; method; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbreader.get_stream_data",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBReader.get_stream_data"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.CFBReader.iter_children",
+        "signature": "def iter_children(self, storage_stream_id: StreamId) -> Iterator[DirectoryEntry]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 254; method; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbreader.iter_children",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBReader.iter_children"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.CFBReader.iter_storages",
+        "signature": "def iter_storages(self) -> Iterator[DirectoryEntry]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 244; method; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbreader.iter_storages",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBReader.iter_storages"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.CFBReader.iter_streams",
+        "signature": "def iter_streams(self) -> Iterator[DirectoryEntry]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 249; method; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbreader.iter_streams",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBReader.iter_streams"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.CFBReader.iter_tree",
+        "docstring": "Yield a depth-first tree traversal as `(depth, entry)` tuples.",
+        "signature": "def iter_tree(self, start_stream_id: StreamId=ROOT_STREAM_ID) -> Iterator[Tuple[int, DirectoryEntry]]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 261; method; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbreader.iter_tree",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBReader.iter_tree"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.CFBReader.major_version",
+        "signature": "def major_version(self) -> int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 206; method; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbreader.major_version",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBReader.major_version"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.CFBReader.materialized_stream_count",
+        "signature": "def materialized_stream_count(self) -> int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 226; method; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbreader.materialized_stream_count",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBReader.materialized_stream_count"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.CFBReader.mini_sector_size",
+        "signature": "def mini_sector_size(self) -> int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 214; method; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbreader.mini_sector_size",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBReader.mini_sector_size"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.CFBReader.resolve_path",
+        "docstring": "Resolve a storage/stream path by exact directory-entry names.",
+        "signature": "def resolve_path(self, names: Iterable[str], start_stream_id: StreamId=ROOT_STREAM_ID) -> Optional[DirectoryEntry]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 279; method; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbreader.resolve_path",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBReader.resolve_path"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.CFBReader.sector_size",
+        "signature": "def sector_size(self) -> int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 210; method; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbreader.sector_size",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBReader.sector_size"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.writer.CFBStorage",
+        "docstring": "Mutable storage node used by the CFB writer.",
+        "public_paths": "email_foss.cfb.writer.CFBStorage",
+        "signature": "class CFBStorage",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 38; class; public by name",
+          "path": "aspose/email_foss/cfb/writer.py"
+        },
+        {
+          "detail": "line 13; re-exported as email_foss.cfb.CFBStorage",
+          "path": "aspose/email_foss/cfb/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbstorage",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBStorage"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.writer.CFBStorage.add_storage",
+        "signature": "def add_storage(self, storage: 'CFBStorage') -> 'CFBStorage'",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 48; method; public by name",
+          "path": "aspose/email_foss/cfb/writer.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbstorage.add_storage",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBStorage.add_storage"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.writer.CFBStorage.add_stream",
+        "signature": "def add_stream(self, stream: CFBStream) -> CFBStream",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 52; method; public by name",
+          "path": "aspose/email_foss/cfb/writer.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbstorage.add_stream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBStorage.add_stream"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.writer.CFBStream",
+        "docstring": "Mutable stream node used by the CFB writer.",
+        "public_paths": "email_foss.cfb.writer.CFBStream",
+        "signature": "class CFBStream",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 26; class; public by name",
+          "path": "aspose/email_foss/cfb/writer.py"
+        },
+        {
+          "detail": "line 13; re-exported as email_foss.cfb.CFBStream",
+          "path": "aspose/email_foss/cfb/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbstream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBStream"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.writer.CFBWriter",
+        "docstring": "Deterministic serializer for Compound File Binary (CFB) containers.",
+        "public_paths": "email_foss.cfb.writer.CFBWriter",
+        "signature": "class CFBWriter",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 123; class; public by name",
+          "path": "aspose/email_foss/cfb/writer.py"
+        },
+        {
+          "detail": "line 13; re-exported as email_foss.cfb.CFBWriter",
+          "path": "aspose/email_foss/cfb/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbwriter",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBWriter"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.writer.CFBWriter.to_bytes",
+        "signature": "def to_bytes(cls, document: CFBDocument) -> bytes",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 127; method; public by name",
+          "path": "aspose/email_foss/cfb/writer.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbwriter.to_bytes",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBWriter.to_bytes"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.writer.CFBWriter.write_file",
+        "signature": "def write_file(cls, document: CFBDocument, path: Path | str) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 131; method; public by name",
+          "path": "aspose/email_foss/cfb/writer.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.cfbwriter.write_file",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.CFBWriter.write_file"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.writer.compare_directory_entry_names",
+        "docstring": "Compare names using the [MS-CFB] sibling ordering rules.",
+        "public_paths": "email_foss.cfb.writer.compare_directory_entry_names",
+        "signature": "def compare_directory_entry_names(left: str, right: str) -> int",
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 106; function; public by name",
+          "path": "aspose/email_foss/cfb/writer.py"
+        },
+        {
+          "detail": "line 13; re-exported as email_foss.cfb.compare_directory_entry_names",
+          "path": "aspose/email_foss/cfb/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.compare_directory_entry_names",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.compare_directory_entry_names"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.types.DirectoryColorFlag",
+        "docstring": "Stores the red-black tree color used by directory sibling links.",
+        "public_paths": "email_foss.cfb.types.DirectoryColorFlag",
+        "signature": "class DirectoryColorFlag(IntEnum)",
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 56; enum; public by name",
+          "path": "aspose/email_foss/cfb/types.py"
+        },
+        {
+          "detail": "line 20; re-exported as email_foss.cfb.DirectoryColorFlag",
+          "path": "aspose/email_foss/cfb/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.directorycolorflag",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.DirectoryColorFlag"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.DirectoryEntry",
+        "docstring": "Fixed-size directory record for one storage/stream object and its tree links.",
+        "public_paths": "email_foss.cfb.reader.DirectoryEntry",
+        "signature": "class DirectoryEntry",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 75; class; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        },
+        {
+          "detail": "line 7; re-exported as email_foss.cfb.DirectoryEntry",
+          "path": "aspose/email_foss/cfb/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.directoryentry",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.DirectoryEntry"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.DirectoryEntry.is_root",
+        "signature": "def is_root(self) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 113; method; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.directoryentry.is_root",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.DirectoryEntry.is_root"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.DirectoryEntry.is_storage",
+        "signature": "def is_storage(self) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 107; method; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.directoryentry.is_storage",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.DirectoryEntry.is_storage"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.DirectoryEntry.is_stream",
+        "signature": "def is_stream(self) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 110; method; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.directoryentry.is_stream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.DirectoryEntry.is_stream"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.types.DirectoryObjectType",
+        "docstring": "Classifies the directory entry payload as unallocated, storage, stream, or root storage.",
+        "public_paths": "email_foss.cfb.types.DirectoryObjectType",
+        "signature": "class DirectoryObjectType(IntEnum)",
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 43; enum; public by name",
+          "path": "aspose/email_foss/cfb/types.py"
+        },
+        {
+          "detail": "line 20; re-exported as email_foss.cfb.DirectoryObjectType",
+          "path": "aspose/email_foss/cfb/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.directoryobjecttype",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.DirectoryObjectType"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 20; unknown; public by reexport; re-export of email_foss.cfb.types.FileTime",
+          "path": "aspose/email_foss/cfb/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.filetime",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.cfb.FileTime"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.Header",
+        "docstring": "Header record at file offset 0 defining Compound File Binary (CFB) geometry and allocation chain entry points.",
+        "public_paths": "email_foss.cfb.reader.Header",
+        "signature": "class Header",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 25; class; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        },
+        {
+          "detail": "line 7; re-exported as email_foss.cfb.Header",
+          "path": "aspose/email_foss/cfb/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.header",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.Header"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.Header.mini_sector_size",
+        "signature": "def mini_sector_size(self) -> int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 70; method; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.header.mini_sector_size",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.Header.mini_sector_size"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.reader.Header.sector_size",
+        "signature": "def sector_size(self) -> int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 66; method; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.header.sector_size",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.Header.sector_size"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 20; unknown; public by reexport; re-export of email_foss.cfb.types.MAXREGSECT",
+          "path": "aspose/email_foss/cfb/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.maxregsect",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.cfb.MAXREGSECT"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 20; unknown; public by reexport; re-export of email_foss.cfb.types.MAXREGSID",
+          "path": "aspose/email_foss/cfb/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.maxregsid",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.cfb.MAXREGSID"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 20; unknown; public by reexport; re-export of email_foss.cfb.types.MINI_STREAM_CUTOFF_SIZE",
+          "path": "aspose/email_foss/cfb/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.mini_stream_cutoff_size",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.cfb.MINI_STREAM_CUTOFF_SIZE"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 20; unknown; public by reexport; re-export of email_foss.cfb.types.NOSTREAM",
+          "path": "aspose/email_foss/cfb/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.nostream",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.cfb.NOSTREAM"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "aspose/email_foss/cfb/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.reader",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.reader"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 20; unknown; public by reexport; re-export of email_foss.cfb.types.ROOT_ENTRY_NAME",
+          "path": "aspose/email_foss/cfb/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.root_entry_name",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.cfb.ROOT_ENTRY_NAME"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 20; unknown; public by reexport; re-export of email_foss.cfb.types.ROOT_STREAM_ID",
+          "path": "aspose/email_foss/cfb/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.root_stream_id",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.cfb.ROOT_STREAM_ID"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.cfb.types.SectorMarker",
+        "docstring": "Special FAT marker values reserved for sector allocation metadata.",
+        "public_paths": "email_foss.cfb.types.SectorMarker",
+        "signature": "class SectorMarker(IntEnum)",
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 30; enum; public by name",
+          "path": "aspose/email_foss/cfb/types.py"
+        },
+        {
+          "detail": "line 20; re-exported as email_foss.cfb.SectorMarker",
+          "path": "aspose/email_foss/cfb/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.sectormarker",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.SectorMarker"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 20; unknown; public by reexport; re-export of email_foss.cfb.types.SectorNumber",
+          "path": "aspose/email_foss/cfb/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.sectornumber",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.cfb.SectorNumber"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 20; unknown; public by reexport; re-export of email_foss.cfb.types.StreamId",
+          "path": "aspose/email_foss/cfb/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.streamid",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.cfb.StreamId"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "aspose/email_foss/cfb/types.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.types",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.types"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "aspose/email_foss/cfb/writer.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.cfb.writer",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.cfb.writer"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; module; public by reexport; re-export of email_foss.msg",
+          "path": "aspose/email_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 8; unknown; public by reexport; re-export of email_foss.msg.mapi_message.ATTACH_METHOD_BY_VALUE",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.attach_method_by_value",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.ATTACH_METHOD_BY_VALUE"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 8; unknown; public by reexport; re-export of email_foss.msg.mapi_message.ATTACH_METHOD_EMBEDDED",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.attach_method_embedded",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.ATTACH_METHOD_EMBEDDED"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 8; unknown; public by reexport; re-export of email_foss.msg.mapi_message.ATTACH_METHOD_STORAGE",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.attach_method_storage",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.ATTACH_METHOD_STORAGE"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 45; unknown; public by reexport; re-export of email_foss.msg.writer.ATTACHMENT_ROLE",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.attachment_role",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.ATTACHMENT_ROLE"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 29; unknown; public by reexport; re-export of email_foss.msg.types.ATTACHMENT_STORAGE_PREFIX",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.attachment_storage_prefix",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.ATTACHMENT_STORAGE_PREFIX"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.property_tags.CommonMessagePropertyId",
+        "docstring": "Common MAPI property identifiers used by the MSG reader/writer for core message semantics.",
+        "public_paths": "email_foss.msg.property_tags.CommonMessagePropertyId",
+        "signature": "class CommonMessagePropertyId(IntEnum)",
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; enum; public by name",
+          "path": "aspose/email_foss/msg/property_tags.py"
+        },
+        {
+          "detail": "line 27; re-exported as email_foss.msg.CommonMessagePropertyId",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.commonmessagepropertyid",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.CommonMessagePropertyId"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 45; unknown; public by reexport; re-export of email_foss.msg.writer.CUSTOM_ATTACHMENT_ROLE",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.custom_attachment_role",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.CUSTOM_ATTACHMENT_ROLE"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 8; unknown; public by reexport; re-export of email_foss.msg.mapi_message.DEFAULT_PROPERTY_FLAGS",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.default_property_flags",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.DEFAULT_PROPERTY_FLAGS"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 45; unknown; public by reexport; re-export of email_foss.msg.writer.EMBEDDED_MESSAGE_ROLE",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.embedded_message_role",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.EMBEDDED_MESSAGE_ROLE"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 29; unknown; public by reexport; re-export of email_foss.msg.types.EMBEDDED_MESSAGE_STORAGE_NAME",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.embedded_message_storage_name",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.EMBEDDED_MESSAGE_STORAGE_NAME"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 45; unknown; public by reexport; re-export of email_foss.msg.writer.GENERIC_ROLE",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.generic_role",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.GENERIC_ROLE"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapi_message",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.mapi_message"
+    },
+    {
+      "attributes": {
+        "signature": "class MapiPropertyCollection",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 189; class; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapi_message.mapipropertycollection",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.mapi_message.MapiPropertyCollection"
+    },
+    {
+      "attributes": {
+        "signature": "def add(self, property_id: int | CommonMessagePropertyId | PropertyId, property_type: int | PropertyTypeCode, value: Any, *, flags: int=DEFAULT_PROPERTY_FLAGS, named: MapiNamedProperty | None=None) -> MapiProperty",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 197; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapi_message.mapipropertycollection.add",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.mapi_message.MapiPropertyCollection.add"
+    },
+    {
+      "attributes": {
+        "signature": "def get(self, property_id: int | CommonMessagePropertyId | PropertyId, property_type: int | None=None) -> MapiProperty | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 221; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapi_message.mapipropertycollection.get",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.mapi_message.MapiPropertyCollection.get"
+    },
+    {
+      "attributes": {
+        "signature": "def iter_properties(self) -> Iterator[MapiProperty]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 252; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapi_message.mapipropertycollection.iter_properties",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.mapi_message.MapiPropertyCollection.iter_properties"
+    },
+    {
+      "attributes": {
+        "signature": "def remove(self, property_id: int | CommonMessagePropertyId | PropertyId, property_type: int | None=None) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 239; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapi_message.mapipropertycollection.remove",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.mapi_message.MapiPropertyCollection.remove"
+    },
+    {
+      "attributes": {
+        "signature": "def set(self, property: MapiProperty) -> MapiProperty",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 193; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapi_message.mapipropertycollection.set",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.mapi_message.MapiPropertyCollection.set"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiAttachment",
+        "docstring": "Mutable attachment object.",
+        "public_paths": "email_foss.msg.mapi_message.MapiAttachment, email_foss.msg.MutableMapiAttachment",
+        "signature": "class MapiAttachment",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 284; class; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        },
+        {
+          "detail": "line 8; re-exported as email_foss.msg.MapiAttachment",
+          "path": "aspose/email_foss/msg/__init__.py"
+        },
+        {
+          "detail": "line 8; re-exported as email_foss.msg.MutableMapiAttachment",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapiattachment",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiAttachment"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiAttachment.embedded_storage_name",
+        "signature": "def embedded_storage_name(self) -> str | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 314; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapiattachment.embedded_storage_name",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiAttachment.embedded_storage_name"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiAttachment.from_bytes",
+        "signature": "def from_bytes(cls, filename: str, data: bytes, *, mime_type: str | None=None, content_id: str | None=None) -> 'MapiAttachment'",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 320; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapiattachment.from_bytes",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiAttachment.from_bytes"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiAttachment.from_embedded_message",
+        "signature": "def from_embedded_message(cls, message: 'MapiMessage', *, filename: str | None=None, mime_type: str | None=None) -> 'MapiAttachment'",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 331; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapiattachment.from_embedded_message",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiAttachment.from_embedded_message"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiAttachment.is_embedded_message",
+        "signature": "def is_embedded_message(self) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 306; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapiattachment.is_embedded_message",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiAttachment.is_embedded_message"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiAttachment.is_storage_attachment",
+        "signature": "def is_storage_attachment(self) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 310; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapiattachment.is_storage_attachment",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiAttachment.is_storage_attachment"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiAttachment.set_property",
+        "signature": "def set_property(self, property_id: int | CommonMessagePropertyId | PropertyId, property_type_or_value: int | PropertyTypeCode | Any, value: Any=_MISSING, *, flags: int=DEFAULT_PROPERTY_FLAGS) -> MapiProperty",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 345; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapiattachment.set_property",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiAttachment.set_property"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiAttachment.storage_name",
+        "signature": "def storage_name(self) -> str | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 300; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapiattachment.storage_name",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiAttachment.storage_name"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage",
+        "docstring": "Mutable high-level MSG object with MSG and EmailMessage conversion support.",
+        "public_paths": "email_foss.msg.mapi_message.MapiMessage",
+        "signature": "class MapiMessage",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 486; class; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        },
+        {
+          "detail": "line 8; re-exported as email_foss.msg.MapiMessage",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.add_attachment",
+        "signature": "def add_attachment(self, filename: str, data: bytes, *, mime_type: str | None=None, content_id: str | None=None) -> MapiAttachment",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 881; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.add_attachment",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.add_attachment"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.add_embedded_message_attachment",
+        "signature": "def add_embedded_message_attachment(self, message: 'MapiMessage', *, filename: str | None=None, mime_type: str | None=None) -> MapiAttachment",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 894; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.add_embedded_message_attachment",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.add_embedded_message_attachment"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.add_recipient",
+        "signature": "def add_recipient(self, email_address: str, *, display_name: str | None=None, recipient_type: int=RECIPIENT_TYPE_TO) -> MapiRecipient",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 869; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.add_recipient",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.add_recipient"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.body",
+        "signature": "def body(self) -> str | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 747; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.body",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.body"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.body_html",
+        "signature": "def body_html(self) -> str | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 763; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.body_html",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.body_html"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.close",
+        "signature": "def close(self) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 990; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.close",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.close"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.create",
+        "signature": "def create(cls, subject: str='', body: str='', *, unicode_strings: bool=True) -> 'MapiMessage'",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 716; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.create",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.create"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.from_email_message",
+        "signature": "def from_email_message(cls, email_message: EmailMessage, *, unicode_strings: bool=True) -> 'MapiMessage'",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 619; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.from_email_message",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.from_email_message"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.from_file",
+        "signature": "def from_file(cls, path: Path | str, *, strict: bool=False) -> 'MapiMessage'",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 567; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.from_file",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.from_file"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.from_msg_document",
+        "signature": "def from_msg_document(cls, document: MsgDocument) -> 'MapiMessage'",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 575; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.from_msg_document",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.from_msg_document"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.get_named_property",
+        "signature": "def get_named_property(self, named_property: MapiNamedProperty, property_type: int | None=None) -> MapiProperty | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 863; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.get_named_property",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.get_named_property"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.get_property",
+        "signature": "def get_property(self, property_id: int | CommonMessagePropertyId | PropertyId, property_type: int | None=None, *, storage_stream_id: int | None=None, decode: bool | None=None) -> MapiProperty | Any | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 800; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.get_property",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.get_property"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.get_property_value",
+        "signature": "def get_property_value(self, property_id: int | CommonMessagePropertyId | PropertyId, property_type: int | None=None, *, storage_stream_id: int=0, decode: bool=True) -> Any | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 817; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.get_property_value",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.get_property_value"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.iter_attachments_info",
+        "signature": "def iter_attachments_info(self) -> Iterator[MapiAttachment]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 986; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.iter_attachments_info",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.iter_attachments_info"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.iter_properties",
+        "signature": "def iter_properties(self) -> Iterator[MapiProperty]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 776; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.iter_properties",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.iter_properties"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.iter_property_keys",
+        "signature": "def iter_property_keys(self, storage_stream_id: int=0) -> Iterator[tuple[int, int]]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 779; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.iter_property_keys",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.iter_property_keys"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.message_class",
+        "signature": "def message_class(self) -> str | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 755; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.message_class",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.message_class"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.msg_reader",
+        "signature": "def msg_reader(self) -> MsgReader",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 725; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.msg_reader",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.msg_reader"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.save",
+        "signature": "def save(self, path: Path | str) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 902; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.save",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.save"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.set_named_property",
+        "signature": "def set_named_property(self, named_property: MapiNamedProperty, property_type: int | PropertyTypeCode, value: Any, *, flags: int=DEFAULT_PROPERTY_FLAGS) -> MapiProperty",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 852; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.set_named_property",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.set_named_property"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.set_property",
+        "signature": "def set_property(self, property_id: int | CommonMessagePropertyId | PropertyId, property_type_or_value: int | PropertyTypeCode | Any, value: Any=_MISSING, *, flags: int=DEFAULT_PROPERTY_FLAGS) -> MapiProperty",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 784; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.set_property",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.set_property"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.subject",
+        "signature": "def subject(self) -> str | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 739; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.subject",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.subject"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.to_bytes",
+        "signature": "def to_bytes(self) -> bytes",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 905; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.to_bytes",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.to_bytes"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.to_email_bytes",
+        "signature": "def to_email_bytes(self, *args, **kwargs) -> bytes",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 980; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.to_email_bytes",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.to_email_bytes"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.to_email_message",
+        "signature": "def to_email_message(self) -> EmailMessage",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 908; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.to_email_message",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.to_email_message"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.to_email_string",
+        "signature": "def to_email_string(self, *args, **kwargs) -> str",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 983; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.to_email_string",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.to_email_string"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.to_msg_document",
+        "signature": "def to_msg_document(self) -> MsgDocument",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1006; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.to_msg_document",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.to_msg_document"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiMessage.validation_issues",
+        "signature": "def validation_issues(self) -> tuple[str, ...]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 733; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapimessage.validation_issues",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiMessage.validation_issues"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiNamedProperty",
+        "docstring": "Identifier for a named MAPI property.",
+        "public_paths": "email_foss.msg.mapi_message.MapiNamedProperty",
+        "signature": "class MapiNamedProperty",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 139; class; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        },
+        {
+          "detail": "line 8; re-exported as email_foss.msg.MapiNamedProperty",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapinamedproperty",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiNamedProperty"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiNamedProperty.numeric",
+        "signature": "def numeric(cls, lid: int, property_set: uuid.UUID | str) -> 'MapiNamedProperty'",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 153; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapinamedproperty.numeric",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiNamedProperty.numeric"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiNamedProperty.string",
+        "signature": "def string(cls, name: str, property_set: uuid.UUID | str=PS_PUBLIC_STRINGS) -> 'MapiNamedProperty'",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 149; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapinamedproperty.string",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiNamedProperty.string"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiProperty",
+        "docstring": "Logical MAPI property with optional named-property identity.",
+        "public_paths": "email_foss.msg.mapi_message.MapiProperty",
+        "signature": "class MapiProperty",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 158; class; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        },
+        {
+          "detail": "line 8; re-exported as email_foss.msg.MapiProperty",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapiproperty",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiProperty"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiProperty.clear_raw",
+        "signature": "def clear_raw(self) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 180; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapiproperty.clear_raw",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiProperty.clear_raw"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiProperty.clone",
+        "signature": "def clone(self) -> 'MapiProperty'",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 177; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapiproperty.clone",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiProperty.clone"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiProperty.property_tag",
+        "signature": "def property_tag(self) -> int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 174; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapiproperty.property_tag",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiProperty.property_tag"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiRecipient",
+        "docstring": "Mutable recipient object.",
+        "public_paths": "email_foss.msg.mapi_message.MapiRecipient",
+        "signature": "class MapiRecipient",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 258; class; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        },
+        {
+          "detail": "line 8; re-exported as email_foss.msg.MapiRecipient",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapirecipient",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiRecipient"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.mapi_message.MapiRecipient.set_property",
+        "signature": "def set_property(self, property_id: int | CommonMessagePropertyId | PropertyId, property_type_or_value: int | PropertyTypeCode | Any, value: Any=_MISSING, *, flags: int=DEFAULT_PROPERTY_FLAGS) -> MapiProperty",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 271; method; public by name",
+          "path": "aspose/email_foss/msg/mapi_message.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.mapirecipient.set_property",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MapiRecipient.set_property"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 29; unknown; public by reexport; re-export of email_foss.msg.types.MAX_ATTACHMENT_STORAGES",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.max_attachment_storages",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.MAX_ATTACHMENT_STORAGES"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 29; unknown; public by reexport; re-export of email_foss.msg.types.MAX_RECIPIENT_STORAGES",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.max_recipient_storages",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.MAX_RECIPIENT_STORAGES"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 45; unknown; public by reexport; re-export of email_foss.msg.writer.MESSAGE_ROLE",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.message_role",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.MESSAGE_ROLE"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.writer.MsgDocument",
+        "docstring": "Mutable MSG document model that can be serialized through the CFB writer.",
+        "public_paths": "email_foss.msg.writer.MsgDocument",
+        "signature": "class MsgDocument",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 100; class; public by name",
+          "path": "aspose/email_foss/msg/writer.py"
+        },
+        {
+          "detail": "line 45; re-exported as email_foss.msg.MsgDocument",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgdocument",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgDocument"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.writer.MsgDocument.from_file",
+        "signature": "def from_file(cls, path: Path | str, *, strict: bool=False) -> 'MsgDocument'",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 163; method; public by name",
+          "path": "aspose/email_foss/msg/writer.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgdocument.from_file",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgDocument.from_file"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.writer.MsgDocument.from_reader",
+        "signature": "def from_reader(cls, reader: MsgReader) -> 'MsgDocument'",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 110; method; public by name",
+          "path": "aspose/email_foss/msg/writer.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgdocument.from_reader",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgDocument.from_reader"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.writer.MsgDocument.to_cfb_document",
+        "signature": "def to_cfb_document(self) -> CFBDocument",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 167; method; public by name",
+          "path": "aspose/email_foss/msg/writer.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgdocument.to_cfb_document",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgDocument.to_cfb_document"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.reader.MsgError",
+        "docstring": "Raised for malformed or unsupported MSG structures.",
+        "public_paths": "email_foss.msg.reader.MsgError",
+        "signature": "class MsgError(Exception)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 25; class; public by name",
+          "path": "aspose/email_foss/msg/reader.py"
+        },
+        {
+          "detail": "line 7; re-exported as email_foss.msg.MsgError",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgError"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.reader.MsgReader",
+        "docstring": "Normative top-level MSG containment and stream requirements for container traversal.",
+        "public_paths": "email_foss.msg.reader.MsgReader",
+        "signature": "class MsgReader",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 39; class; public by name",
+          "path": "aspose/email_foss/msg/reader.py"
+        },
+        {
+          "detail": "line 7; re-exported as email_foss.msg.MsgReader",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgreader",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgReader"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.reader.MsgReader.cfb_reader",
+        "signature": "def cfb_reader(self) -> CFBReader",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 78; method; public by name",
+          "path": "aspose/email_foss/msg/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgreader.cfb_reader",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgReader.cfb_reader"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.reader.MsgReader.close",
+        "signature": "def close(self) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 95; method; public by name",
+          "path": "aspose/email_foss/msg/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgreader.close",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgReader.close"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.reader.MsgReader.from_file",
+        "signature": "def from_file(cls, path: Path | str, *, strict: bool=False) -> 'MsgReader'",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 74; method; public by name",
+          "path": "aspose/email_foss/msg/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgreader.from_file",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgReader.from_file"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.reader.MsgReader.iter_attachment_storages",
+        "signature": "def iter_attachment_storages(self) -> Iterator[DirectoryEntry]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 118; method; public by name",
+          "path": "aspose/email_foss/msg/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgreader.iter_attachment_storages",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgReader.iter_attachment_storages"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.reader.MsgReader.iter_recipient_storages",
+        "signature": "def iter_recipient_storages(self) -> Iterator[DirectoryEntry]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 114; method; public by name",
+          "path": "aspose/email_foss/msg/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgreader.iter_recipient_storages",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgReader.iter_recipient_storages"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.reader.MsgReader.iter_top_level_fixed_length_properties",
+        "signature": "def iter_top_level_fixed_length_properties(self) -> Iterator[PropertyEntryFixedLength]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 110; method; public by name",
+          "path": "aspose/email_foss/msg/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgreader.iter_top_level_fixed_length_properties",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgReader.iter_top_level_fixed_length_properties"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.reader.MsgReader.parse_message_property_stream",
+        "docstring": "Read the property stream in the top level or an embedded-message storage.",
+        "signature": "def parse_message_property_stream(self, storage_stream_id: int=ROOT_STREAM_ID) -> Tuple[PropertyStreamHeaderTopLevel, List[PropertyEntryFixedLength]]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 122; method; public by name",
+          "path": "aspose/email_foss/msg/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgreader.parse_message_property_stream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgReader.parse_message_property_stream"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.reader.MsgReader.parse_subobject_property_stream",
+        "docstring": "Read the property stream in recipient/attachment storage and decode fixed-length entries.",
+        "signature": "def parse_subobject_property_stream(self, storage_stream_id: int) -> Tuple[PropertyStreamHeaderSubobject, List[PropertyEntryFixedLength]]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 133; method; public by name",
+          "path": "aspose/email_foss/msg/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgreader.parse_subobject_property_stream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgReader.parse_subobject_property_stream"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.reader.MsgReader.parse_subobject_property_stream_data",
+        "docstring": "Decode recipient/attachment property stream header and fixed-length entries.",
+        "signature": "def parse_subobject_property_stream_data(cls, data: bytes) -> Tuple[PropertyStreamHeaderSubobject, List[PropertyEntryFixedLength]]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 170; method; public by name",
+          "path": "aspose/email_foss/msg/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgreader.parse_subobject_property_stream_data",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgReader.parse_subobject_property_stream_data"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.reader.MsgReader.parse_top_level_property_stream",
+        "docstring": "Decode top-level property stream header and fixed-length entries.",
+        "signature": "def parse_top_level_property_stream(cls, data: bytes) -> Tuple[PropertyStreamHeaderTopLevel, List[PropertyEntryFixedLength]]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 142; method; public by name",
+          "path": "aspose/email_foss/msg/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgreader.parse_top_level_property_stream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgReader.parse_top_level_property_stream"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.reader.MsgReader.storage_layout",
+        "signature": "def storage_layout(self) -> StorageLayout",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 84; method; public by name",
+          "path": "aspose/email_foss/msg/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgreader.storage_layout",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgReader.storage_layout"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.reader.MsgReader.strict",
+        "signature": "def strict(self) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 88; method; public by name",
+          "path": "aspose/email_foss/msg/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgreader.strict",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgReader.strict"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.reader.MsgReader.validation_issues",
+        "signature": "def validation_issues(self) -> Tuple[str, ...]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 92; method; public by name",
+          "path": "aspose/email_foss/msg/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgreader.validation_issues",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgReader.validation_issues"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.writer.MsgStorage",
+        "docstring": "Mutable MSG storage node with role classification and parsed property-stream metadata.",
+        "public_paths": "email_foss.msg.writer.MsgStorage",
+        "signature": "class MsgStorage",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 54; class; public by name",
+          "path": "aspose/email_foss/msg/writer.py"
+        },
+        {
+          "detail": "line 45; re-exported as email_foss.msg.MsgStorage",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgstorage",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgStorage"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.writer.MsgStorage.add_storage",
+        "signature": "def add_storage(self, storage: 'MsgStorage') -> 'MsgStorage'",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 74; method; public by name",
+          "path": "aspose/email_foss/msg/writer.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgstorage.add_storage",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgStorage.add_storage"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.writer.MsgStorage.add_stream",
+        "signature": "def add_stream(self, stream: MsgStream) -> MsgStream",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 70; method; public by name",
+          "path": "aspose/email_foss/msg/writer.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgstorage.add_stream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgStorage.add_stream"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.writer.MsgStorage.find_storage",
+        "signature": "def find_storage(self, name: str) -> 'MsgStorage' | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 92; method; public by name",
+          "path": "aspose/email_foss/msg/writer.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgstorage.find_storage",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgStorage.find_storage"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.writer.MsgStorage.find_stream",
+        "signature": "def find_stream(self, name: str) -> MsgStream | None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 86; method; public by name",
+          "path": "aspose/email_foss/msg/writer.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgstorage.find_stream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgStorage.find_stream"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.writer.MsgStorage.iter_storages",
+        "signature": "def iter_storages(self) -> Iterator['MsgStorage']",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; method; public by name",
+          "path": "aspose/email_foss/msg/writer.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgstorage.iter_storages",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgStorage.iter_storages"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.writer.MsgStorage.iter_streams",
+        "signature": "def iter_streams(self) -> Iterator[MsgStream]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 78; method; public by name",
+          "path": "aspose/email_foss/msg/writer.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgstorage.iter_streams",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgStorage.iter_streams"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.writer.MsgStream",
+        "docstring": "Mutable MSG stream node with raw bytes and CFB metadata.",
+        "public_paths": "email_foss.msg.writer.MsgStream",
+        "signature": "class MsgStream",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 42; class; public by name",
+          "path": "aspose/email_foss/msg/writer.py"
+        },
+        {
+          "detail": "line 45; re-exported as email_foss.msg.MsgStream",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgstream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgStream"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.writer.MsgWriter",
+        "docstring": "Serializer that writes a MsgDocument into a CFB-backed .msg payload.",
+        "public_paths": "email_foss.msg.writer.MsgWriter",
+        "signature": "class MsgWriter",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 177; class; public by name",
+          "path": "aspose/email_foss/msg/writer.py"
+        },
+        {
+          "detail": "line 45; re-exported as email_foss.msg.MsgWriter",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgwriter",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgWriter"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.writer.MsgWriter.to_bytes",
+        "signature": "def to_bytes(cls, document: MsgDocument) -> bytes",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 181; method; public by name",
+          "path": "aspose/email_foss/msg/writer.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgwriter.to_bytes",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgWriter.to_bytes"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.writer.MsgWriter.write_file",
+        "signature": "def write_file(cls, document: MsgDocument, path: Path | str) -> None",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 185; method; public by name",
+          "path": "aspose/email_foss/msg/writer.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.msgwriter.write_file",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.MsgWriter.write_file"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 45; unknown; public by reexport; re-export of email_foss.msg.writer.NAMED_PROPERTY_MAPPING_ROLE",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.named_property_mapping_role",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.NAMED_PROPERTY_MAPPING_ROLE"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 29; unknown; public by reexport; re-export of email_foss.msg.types.NAMED_PROPERTY_MAPPING_STORAGE_NAME",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.named_property_mapping_storage_name",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.NAMED_PROPERTY_MAPPING_STORAGE_NAME"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 29; unknown; public by reexport; re-export of email_foss.msg.types.PROPATTR_MANDATORY",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.propattr_mandatory",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.PROPATTR_MANDATORY"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 29; unknown; public by reexport; re-export of email_foss.msg.types.PROPATTR_READABLE",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.propattr_readable",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.PROPATTR_READABLE"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 29; unknown; public by reexport; re-export of email_foss.msg.types.PROPATTR_WRITABLE",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.propattr_writable",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.PROPATTR_WRITABLE"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "aspose/email_foss/msg/property_id.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.property_id",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.property_id"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 29; unknown; public by reexport; re-export of email_foss.msg.types.PROPERTY_STREAM_NAME",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.property_stream_name",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.PROPERTY_STREAM_NAME"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "aspose/email_foss/msg/property_tags.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.property_tags",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.property_tags"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "aspose/email_foss/msg/property_types.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.property_types",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.property_types"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 29; unknown; public by reexport; re-export of email_foss.msg.types.PROPERTY_VALUE_STREAM_PREFIX",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.property_value_stream_prefix",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.PROPERTY_VALUE_STREAM_PREFIX"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.types.PropertyEntryFixedLength",
+        "docstring": "Fixed-length property stream entry containing property tag, flags, and inline 8-byte value payload.",
+        "public_paths": "email_foss.msg.types.PropertyEntryFixedLength",
+        "signature": "class PropertyEntryFixedLength",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 57; class; public by name",
+          "path": "aspose/email_foss/msg/types.py"
+        },
+        {
+          "detail": "line 29; re-exported as email_foss.msg.PropertyEntryFixedLength",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.propertyentryfixedlength",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.PropertyEntryFixedLength"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.types.PropertyEntryFixedLength.is_mandatory",
+        "signature": "def is_mandatory(self) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; method; public by name",
+          "path": "aspose/email_foss/msg/types.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.propertyentryfixedlength.is_mandatory",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.PropertyEntryFixedLength.is_mandatory"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.types.PropertyEntryFixedLength.is_readable",
+        "signature": "def is_readable(self) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 70; method; public by name",
+          "path": "aspose/email_foss/msg/types.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.propertyentryfixedlength.is_readable",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.PropertyEntryFixedLength.is_readable"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.types.PropertyEntryFixedLength.is_writable",
+        "signature": "def is_writable(self) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 73; method; public by name",
+          "path": "aspose/email_foss/msg/types.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.propertyentryfixedlength.is_writable",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.PropertyEntryFixedLength.is_writable"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.property_id.PropertyId",
+        "docstring": "Common property identifiers paired with their default MAPI property types.",
+        "public_paths": "email_foss.msg.property_id.PropertyId",
+        "signature": "class PropertyId(IntEnum)",
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 9; enum; public by name",
+          "path": "aspose/email_foss/msg/property_id.py"
+        },
+        {
+          "detail": "line 26; re-exported as email_foss.msg.PropertyId",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.propertyid",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.PropertyId"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.types.PropertyStreamHeaderSubobject",
+        "docstring": "Property stream header used in recipient and attachment storages, containing only reserved bytes.",
+        "public_paths": "email_foss.msg.types.PropertyStreamHeaderSubobject",
+        "signature": "class PropertyStreamHeaderSubobject",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 49; class; public by name",
+          "path": "aspose/email_foss/msg/types.py"
+        },
+        {
+          "detail": "line 29; re-exported as email_foss.msg.PropertyStreamHeaderSubobject",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.propertystreamheadersubobject",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.PropertyStreamHeaderSubobject"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.types.PropertyStreamHeaderTopLevel",
+        "docstring": "Top-level property stream header containing next-id counters and counts for recipients and attachments.",
+        "public_paths": "email_foss.msg.types.PropertyStreamHeaderTopLevel",
+        "signature": "class PropertyStreamHeaderTopLevel",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 31; class; public by name",
+          "path": "aspose/email_foss/msg/types.py"
+        },
+        {
+          "detail": "line 29; re-exported as email_foss.msg.PropertyStreamHeaderTopLevel",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.propertystreamheadertoplevel",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.PropertyStreamHeaderTopLevel"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.property_types.PropertyTypeCode",
+        "docstring": "MAPI property type codes used in MSG property tags and value stream names.",
+        "public_paths": "email_foss.msg.property_types.PropertyTypeCode",
+        "signature": "class PropertyTypeCode(IntEnum)",
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; enum; public by name",
+          "path": "aspose/email_foss/msg/property_types.py"
+        },
+        {
+          "detail": "line 28; re-exported as email_foss.msg.PropertyTypeCode",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.propertytypecode",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.PropertyTypeCode"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 8; unknown; public by reexport; re-export of email_foss.msg.mapi_message.PS_MAPI",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.ps_mapi",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.PS_MAPI"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 8; unknown; public by reexport; re-export of email_foss.msg.mapi_message.PS_PUBLIC_STRINGS",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.ps_public_strings",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.PS_PUBLIC_STRINGS"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "aspose/email_foss/msg/reader.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.reader",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.reader"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 45; unknown; public by reexport; re-export of email_foss.msg.writer.RECIPIENT_ROLE",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.recipient_role",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.RECIPIENT_ROLE"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 29; unknown; public by reexport; re-export of email_foss.msg.types.RECIPIENT_STORAGE_PREFIX",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.recipient_storage_prefix",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.RECIPIENT_STORAGE_PREFIX"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 8; unknown; public by reexport; re-export of email_foss.msg.mapi_message.RECIPIENT_TYPE_BCC",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.recipient_type_bcc",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.RECIPIENT_TYPE_BCC"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 8; unknown; public by reexport; re-export of email_foss.msg.mapi_message.RECIPIENT_TYPE_CC",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.recipient_type_cc",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.RECIPIENT_TYPE_CC"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 8; unknown; public by reexport; re-export of email_foss.msg.mapi_message.RECIPIENT_TYPE_TO",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.recipient_type_to",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.RECIPIENT_TYPE_TO"
+    },
+    {
+      "attributes": {
+        "defined_at": "email_foss.msg.reader.StorageLayout",
+        "docstring": "Naming and containment rules for recipient, attachment, embedded message, and nameid storages.",
+        "public_paths": "email_foss.msg.reader.StorageLayout",
+        "signature": "class StorageLayout",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 30; class; public by name",
+          "path": "aspose/email_foss/msg/reader.py"
+        },
+        {
+          "detail": "line 7; re-exported as email_foss.msg.StorageLayout",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.storagelayout",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.StorageLayout"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 8; unknown; public by reexport; re-export of email_foss.msg.mapi_message.STORE_UNICODE_OK",
+          "path": "aspose/email_foss/msg/__init__.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.store_unicode_ok",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "email_foss.msg.STORE_UNICODE_OK"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "aspose/email_foss/msg/types.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.types",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.types"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "aspose/email_foss/msg/writer.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.writer",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.writer"
+    },
+    {
+      "attributes": {
+        "signature": "def hash_payload(data: bytes) -> str",
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 285; function; public by name",
+          "path": "aspose/email_foss/msg/writer.py"
+        }
+      ],
+      "id": "public_symbol:email_foss.msg.writer.hash_payload",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "email_foss.msg.writer.hash_payload"
+    }
+  ],
+  "repository": "aspose-email-foss/Aspose.Email-FOSS-for-Python",
+  "schema_version": 1,
+  "source_revision": "HEAD"
+}

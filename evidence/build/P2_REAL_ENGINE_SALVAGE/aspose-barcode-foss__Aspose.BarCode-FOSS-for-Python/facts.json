@@ -1,0 +1,1463 @@
+{
+  "facts": [
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "install requirement declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "dependency:pillow-10.1.0",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "Pillow>=10.1.0"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 100-106; python fence; unit inherited_unit:001.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 1: EXECUTED; exit 0",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:001",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose_barcode_foss import code128\n\nbarcode = code128(\"Hello-World\")\nsvg = barcode.to_svg()   # -> str\npng = barcode.to_png()   # -> bytes\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 116-121; python fence; unit inherited_unit:002.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 2: EXECUTED; exit 0",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:002",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose_barcode_foss import generate\n\nbarcode = generate(\"qr\", \"https://example.com\")\npng = barcode.to_png()\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 127-137; python fence; unit inherited_unit:003.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 3: EXECUTED; exit 0",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:003",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose_barcode_foss import qr, QrOptions, QrErrorCorrectionLevel, QrEncodeMode\n\nbarcode = qr(\n    \"PAYLOAD\",\n    encode=QrOptions(\n        error_correction_level=QrErrorCorrectionLevel.H,\n        encoding_mode=QrEncodeMode.AUTO,\n    ),\n)\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 141-145; python fence; unit inherited_unit:004.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 4: EXECUTED; exit 0",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:004",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose_barcode_foss import code39, Code39Options\n\nbarcode = code39(\"ABC-123\", encode=Code39Options(add_check_digit=True))\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 149-155; python fence; unit inherited_unit:005.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 5: EXECUTED; exit 0",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:005",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose_barcode_foss import code128, RenderOptions\n\nbarcode = code128(\"Hello-World\")\nsvg = barcode.to_svg(options=RenderOptions(scale=2.0, show_text=True))\npng = barcode.to_png(options=RenderOptions(dpi=300, module_width=3.0))\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 159-166; python fence; unit inherited_unit:006.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 6: EXECUTED; exit 0",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:006",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose_barcode_foss import code128, SvgRenderer, RenderOptions\n\nrenderer = SvgRenderer()\nbarcode = code128(\"Hello-World\")\nartifact = barcode.render(renderer, options=RenderOptions(scale=3.0))\nsvg = artifact.data\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "admitted registry entry",
+          "path": "data/registry.json"
+        }
+      ],
+      "id": "identity:repository",
+      "kind": "identity",
+      "polarity": "SUPPORTED",
+      "value": "aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package dir",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "import_path:aspose_barcode_foss",
+      "kind": "import_path",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package dir",
+          "path": "src/aspose_barcode_foss/_internal/__init__.py"
+        }
+      ],
+      "id": "import_path:aspose_barcode_foss.internal",
+      "kind": "import_path",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss._internal"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "distribution name declared by the manifest",
+          "path": "pyproject.toml"
+        },
+        {
+          "detail": "package registry: distribution not found",
+          "path": "https://pypi.org/pypi/aspose-barcode-foss/json"
+        }
+      ],
+      "id": "install_command:pip",
+      "kind": "install_command",
+      "polarity": "CONTRADICTED",
+      "value": "pip install aspose-barcode-foss"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "license declared by the manifest",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "package:license",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "MIT"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "distribution name declared by the manifest",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "package:name",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "aspose-barcode-foss"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "python_requires declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "package:python_requires",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": ">=3.12"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "version declared by the manifest",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "package:version",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "0.1.0"
+    },
+    {
+      "attributes": {
+        "docstring": "Public package interface for the barcode library.",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss"
+    },
+    {
+      "attributes": {
+        "docstring": "Public API entry points.",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose_barcode_foss/api.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.api",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.api"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose_barcode_foss.result.Barcode",
+        "docstring": "Public barcode object returned by the high-level API.",
+        "public_paths": "aspose_barcode_foss.result.Barcode",
+        "signature": "class Barcode",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 20; class; public by name",
+          "path": "src/aspose_barcode_foss/result.py"
+        },
+        {
+          "detail": "line 30; re-exported as aspose_barcode_foss.Barcode",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.barcode",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.Barcode"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose_barcode_foss.result.Barcode.render",
+        "docstring": "Render the barcode with the provided renderer.",
+        "signature": "def render(self, renderer: Renderer, *, options: RenderOptions | None=None) -> RenderedArtifact",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 27; method; public by name",
+          "path": "src/aspose_barcode_foss/result.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.barcode.render",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.Barcode.render"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose_barcode_foss.result.Barcode.to_pdf",
+        "docstring": "Render the barcode as PDF when the backend is available.",
+        "signature": "def to_pdf(self, *, options: RenderOptions | None=None) -> bytes",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 86; method; public by name",
+          "path": "src/aspose_barcode_foss/result.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.barcode.to_pdf",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.Barcode.to_pdf"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose_barcode_foss.result.Barcode.to_png",
+        "docstring": "Render the barcode as PNG.",
+        "signature": "def to_png(self, *, options: RenderOptions | None=None) -> bytes",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 74; method; public by name",
+          "path": "src/aspose_barcode_foss/result.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.barcode.to_png",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.Barcode.to_png"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose_barcode_foss.result.Barcode.to_svg",
+        "docstring": "Render the barcode as SVG.",
+        "signature": "def to_svg(self, *, options: RenderOptions | None=None) -> str",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 62; method; public by name",
+          "path": "src/aspose_barcode_foss/result.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.barcode.to_svg",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.Barcode.to_svg"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 4; class; public by reexport; re-export of aspose_barcode_foss.exceptions.BarcodeError",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.barcodeerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.BarcodeError"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose_barcode_foss.api.code128",
+        "docstring": "Create a Code 128 barcode.",
+        "public_paths": "aspose_barcode_foss.api.code128",
+        "signature": "def code128(data: str | bytes, *, encode: Code128Options | None=None, render: RenderOptions | None=None) -> Barcode",
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 45; function; public by name",
+          "path": "src/aspose_barcode_foss/api.py"
+        },
+        {
+          "detail": "line 3; re-exported as aspose_barcode_foss.code128",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.code128",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.code128"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; enum; public by reexport; re-export of aspose_barcode_foss.options.Code128EncodeMode",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.code128encodemode",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.Code128EncodeMode"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; class; public by reexport; re-export of aspose_barcode_foss.options.Code128Options",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.code128options",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.Code128Options"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose_barcode_foss.api.code39",
+        "docstring": "Create a Code 39 (base, 43-character set) barcode.",
+        "public_paths": "aspose_barcode_foss.api.code39",
+        "signature": "def code39(data: str | bytes, *, encode: Code39Options | None=None, render: RenderOptions | None=None) -> Barcode",
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 55; function; public by name",
+          "path": "src/aspose_barcode_foss/api.py"
+        },
+        {
+          "detail": "line 3; re-exported as aspose_barcode_foss.code39",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.code39",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.code39"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; enum; public by reexport; re-export of aspose_barcode_foss.options.Code39EncodeMode",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.code39encodemode",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.Code39EncodeMode"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose_barcode_foss.api.code39ext",
+        "docstring": "Create an Extended / Full-ASCII Code 39 barcode.",
+        "public_paths": "aspose_barcode_foss.api.code39ext",
+        "signature": "def code39ext(data: str | bytes, *, encode: Code39Options | None=None, render: RenderOptions | None=None) -> Barcode",
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 65; function; public by name",
+          "path": "src/aspose_barcode_foss/api.py"
+        },
+        {
+          "detail": "line 3; re-exported as aspose_barcode_foss.code39ext",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.code39ext",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.code39ext"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; class; public by reexport; re-export of aspose_barcode_foss.options.Code39Options",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.code39options",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.Code39Options"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose_barcode_foss.api.ean13",
+        "docstring": "Create an EAN-13 barcode.",
+        "public_paths": "aspose_barcode_foss.api.ean13",
+        "signature": "def ean13(data: str | bytes, *, encode: Ean13Options | None=None, render: RenderOptions | None=None) -> Barcode",
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 75; function; public by name",
+          "path": "src/aspose_barcode_foss/api.py"
+        },
+        {
+          "detail": "line 3; re-exported as aspose_barcode_foss.ean13",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.ean13",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.ean13"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; class; public by reexport; re-export of aspose_barcode_foss.options.Ean13Options",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.ean13options",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.Ean13Options"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose_barcode_foss.api.ean8",
+        "docstring": "Create an EAN-8 barcode.",
+        "public_paths": "aspose_barcode_foss.api.ean8",
+        "signature": "def ean8(data: str | bytes, *, encode: Ean8Options | None=None, render: RenderOptions | None=None) -> Barcode",
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 85; function; public by name",
+          "path": "src/aspose_barcode_foss/api.py"
+        },
+        {
+          "detail": "line 3; re-exported as aspose_barcode_foss.ean8",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.ean8",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.ean8"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; class; public by reexport; re-export of aspose_barcode_foss.options.Ean8Options",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.ean8options",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.Ean8Options"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; class; public by reexport; re-export of aspose_barcode_foss.options.EncodeOptions",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.encodeoptions",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.EncodeOptions"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 4; class; public by reexport; re-export of aspose_barcode_foss.exceptions.EncodingError",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.encodingerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.EncodingError"
+    },
+    {
+      "attributes": {
+        "docstring": "Public exception types.",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose_barcode_foss/exceptions.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.exceptions",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.exceptions"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_barcode_foss._internal.exceptions.BarcodeError",
+          "path": "src/aspose_barcode_foss/exceptions.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.exceptions.barcodeerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.exceptions.BarcodeError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_barcode_foss._internal.exceptions.EncodingError",
+          "path": "src/aspose_barcode_foss/exceptions.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.exceptions.encodingerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.exceptions.EncodingError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_barcode_foss._internal.exceptions.InvalidInputError",
+          "path": "src/aspose_barcode_foss/exceptions.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.exceptions.invalidinputerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.exceptions.InvalidInputError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_barcode_foss._internal.exceptions.RenderingError",
+          "path": "src/aspose_barcode_foss/exceptions.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.exceptions.renderingerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.exceptions.RenderingError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_barcode_foss._internal.exceptions.SymbologyNotFoundError",
+          "path": "src/aspose_barcode_foss/exceptions.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.exceptions.symbologynotfounderror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.exceptions.SymbologyNotFoundError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_barcode_foss._internal.exceptions.UnsupportedCapabilityError",
+          "path": "src/aspose_barcode_foss/exceptions.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.exceptions.unsupportedcapabilityerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.exceptions.UnsupportedCapabilityError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_barcode_foss._internal.exceptions.UnsupportedFeatureError",
+          "path": "src/aspose_barcode_foss/exceptions.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.exceptions.unsupportedfeatureerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.exceptions.UnsupportedFeatureError"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose_barcode_foss.api.generate",
+        "docstring": "Create a barcode for the requested symbology.",
+        "public_paths": "aspose_barcode_foss.api.generate",
+        "signature": "def generate(symbology: str, data: str | bytes, *, encode: EncodeOptions | None=None, render: RenderOptions | None=None) -> Barcode",
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 29; function; public by name",
+          "path": "src/aspose_barcode_foss/api.py"
+        },
+        {
+          "detail": "line 3; re-exported as aspose_barcode_foss.generate",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.generate",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.generate"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 4; class; public by reexport; re-export of aspose_barcode_foss.exceptions.InvalidInputError",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.invalidinputerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.InvalidInputError"
+    },
+    {
+      "attributes": {
+        "docstring": "Public option types.",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose_barcode_foss/options.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.options",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.options"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; enum; public by reexport; re-export of aspose_barcode_foss._internal.models.options.Code128EncodeMode",
+          "path": "src/aspose_barcode_foss/options.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.options.code128encodemode",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.options.Code128EncodeMode"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_barcode_foss._internal.models.options.Code128Options",
+          "path": "src/aspose_barcode_foss/options.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.options.code128options",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.options.Code128Options"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; enum; public by reexport; re-export of aspose_barcode_foss._internal.models.options.Code39EncodeMode",
+          "path": "src/aspose_barcode_foss/options.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.options.code39encodemode",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.options.Code39EncodeMode"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_barcode_foss._internal.models.options.Code39Options",
+          "path": "src/aspose_barcode_foss/options.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.options.code39options",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.options.Code39Options"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_barcode_foss._internal.models.options.Ean13Options",
+          "path": "src/aspose_barcode_foss/options.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.options.ean13options",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.options.Ean13Options"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_barcode_foss._internal.models.options.Ean8Options",
+          "path": "src/aspose_barcode_foss/options.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.options.ean8options",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.options.Ean8Options"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_barcode_foss._internal.models.options.EncodeOptions",
+          "path": "src/aspose_barcode_foss/options.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.options.encodeoptions",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.options.EncodeOptions"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; enum; public by reexport; re-export of aspose_barcode_foss._internal.models.options.QrEncodeMode",
+          "path": "src/aspose_barcode_foss/options.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.options.qrencodemode",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.options.QrEncodeMode"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; enum; public by reexport; re-export of aspose_barcode_foss._internal.models.options.QrErrorCorrectionLevel",
+          "path": "src/aspose_barcode_foss/options.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.options.qrerrorcorrectionlevel",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.options.QrErrorCorrectionLevel"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_barcode_foss._internal.models.options.QrOptions",
+          "path": "src/aspose_barcode_foss/options.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.options.qroptions",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.options.QrOptions"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_barcode_foss._internal.models.options.RenderOptions",
+          "path": "src/aspose_barcode_foss/options.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.options.renderoptions",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.options.RenderOptions"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_barcode_foss._internal.models.options.ResolvedRenderOptions",
+          "path": "src/aspose_barcode_foss/options.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.options.resolvedrenderoptions",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.options.ResolvedRenderOptions"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_barcode_foss._internal.models.options.UpcaOptions",
+          "path": "src/aspose_barcode_foss/options.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.options.upcaoptions",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.options.UpcaOptions"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_barcode_foss._internal.models.options.UpceOptions",
+          "path": "src/aspose_barcode_foss/options.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.options.upceoptions",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.options.UpceOptions"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 29; class; public by reexport; re-export of aspose_barcode_foss.renderers.PdfRenderer",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.pdfrenderer",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.PdfRenderer"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 29; class; public by reexport; re-export of aspose_barcode_foss.renderers.PngRenderer",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.pngrenderer",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.PngRenderer"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose_barcode_foss.api.qr",
+        "docstring": "Create a QR Code (Model 2) barcode.",
+        "public_paths": "aspose_barcode_foss.api.qr",
+        "signature": "def qr(data: str | bytes, *, encode: QrOptions | None=None, render: RenderOptions | None=None) -> Barcode",
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 115; function; public by name",
+          "path": "src/aspose_barcode_foss/api.py"
+        },
+        {
+          "detail": "line 3; re-exported as aspose_barcode_foss.qr",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.qr",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.qr"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; enum; public by reexport; re-export of aspose_barcode_foss.options.QrEncodeMode",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.qrencodemode",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.QrEncodeMode"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; enum; public by reexport; re-export of aspose_barcode_foss.options.QrErrorCorrectionLevel",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.qrerrorcorrectionlevel",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.QrErrorCorrectionLevel"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; class; public by reexport; re-export of aspose_barcode_foss.options.QrOptions",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.qroptions",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.QrOptions"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 29; class; public by reexport; re-export of aspose_barcode_foss.renderers.Renderer",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.renderer",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.Renderer"
+    },
+    {
+      "attributes": {
+        "docstring": "Public renderer types.",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose_barcode_foss/renderers.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.renderers",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.renderers"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_barcode_foss._internal.renderers.pdf.PdfRenderer",
+          "path": "src/aspose_barcode_foss/renderers.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.renderers.pdfrenderer",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.renderers.PdfRenderer"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 4; class; public by reexport; re-export of aspose_barcode_foss._internal.renderers.png.PngRenderer",
+          "path": "src/aspose_barcode_foss/renderers.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.renderers.pngrenderer",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.renderers.PngRenderer"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 5; class; public by reexport; re-export of aspose_barcode_foss._internal.renderers.base.Renderer",
+          "path": "src/aspose_barcode_foss/renderers.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.renderers.renderer",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.renderers.Renderer"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; class; public by reexport; re-export of aspose_barcode_foss._internal.renderers.svg.SvgRenderer",
+          "path": "src/aspose_barcode_foss/renderers.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.renderers.svgrenderer",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.renderers.SvgRenderer"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 4; class; public by reexport; re-export of aspose_barcode_foss.exceptions.RenderingError",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.renderingerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.RenderingError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; class; public by reexport; re-export of aspose_barcode_foss.options.RenderOptions",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.renderoptions",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.RenderOptions"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; class; public by reexport; re-export of aspose_barcode_foss.options.ResolvedRenderOptions",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.resolvedrenderoptions",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.ResolvedRenderOptions"
+    },
+    {
+      "attributes": {
+        "docstring": "Public result object returned by the API.",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose_barcode_foss/result.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.result",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.result"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 29; class; public by reexport; re-export of aspose_barcode_foss.renderers.SvgRenderer",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.svgrenderer",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.SvgRenderer"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 4; class; public by reexport; re-export of aspose_barcode_foss.exceptions.SymbologyNotFoundError",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.symbologynotfounderror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.SymbologyNotFoundError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 4; class; public by reexport; re-export of aspose_barcode_foss.exceptions.UnsupportedCapabilityError",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.unsupportedcapabilityerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.UnsupportedCapabilityError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 4; class; public by reexport; re-export of aspose_barcode_foss.exceptions.UnsupportedFeatureError",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.unsupportedfeatureerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.UnsupportedFeatureError"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose_barcode_foss.api.upca",
+        "docstring": "Create a UPC-A barcode.",
+        "public_paths": "aspose_barcode_foss.api.upca",
+        "signature": "def upca(data: str | bytes, *, encode: UpcaOptions | None=None, render: RenderOptions | None=None) -> Barcode",
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 95; function; public by name",
+          "path": "src/aspose_barcode_foss/api.py"
+        },
+        {
+          "detail": "line 3; re-exported as aspose_barcode_foss.upca",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.upca",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.upca"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; class; public by reexport; re-export of aspose_barcode_foss.options.UpcaOptions",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.upcaoptions",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.UpcaOptions"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose_barcode_foss.api.upce",
+        "docstring": "Create a UPC-E barcode.",
+        "public_paths": "aspose_barcode_foss.api.upce",
+        "signature": "def upce(data: str | bytes, *, encode: UpceOptions | None=None, render: RenderOptions | None=None) -> Barcode",
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 105; function; public by name",
+          "path": "src/aspose_barcode_foss/api.py"
+        },
+        {
+          "detail": "line 3; re-exported as aspose_barcode_foss.upce",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.upce",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.upce"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; class; public by reexport; re-export of aspose_barcode_foss.options.UpceOptions",
+          "path": "src/aspose_barcode_foss/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_barcode_foss.upceoptions",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_barcode_foss.UpceOptions"
+    }
+  ],
+  "repository": "aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python",
+  "schema_version": 1,
+  "source_revision": "HEAD"
+}

@@ -1,0 +1,3531 @@
+{
+  "facts": [
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "no `PackageReference` a consumer would install is declared",
+          "path": "src/Aspose.PSD.FOSS/Aspose.PSD.FOSS.csproj"
+        }
+      ],
+      "id": "dependency:none",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "none"
+    },
+    {
+      "attributes": null,
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "lines 74-110; csharp fence; unit inherited_unit:001.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 1: NOT_VERIFIED; example compilation was not ported in this pull (no sandboxed dotnet build runner); this plugin only ever reports NOT_VERIFIED here",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:001",
+      "kind": "example",
+      "polarity": "UNRESOLVED",
+      "value": "using Aspose.PSD;\nusing Aspose.PSD.FileFormats.Core.Blending;\nusing Aspose.PSD.FileFormats.Psd;\nusing Aspose.PSD.FileFormats.Psd.Layers;\n\nusing var image = (PsdImage)Image.Load(\"input.psd\");\n\nConsole.WriteLine(image.Width);\nConsole.WriteLine(image.Height);\nConsole.WriteLine(image.ChannelsCount);\nConsole.WriteLine(image.BitsPerChannel);\nConsole.WriteLine(image.ColorMode);\nConsole.WriteLine(image.Version);\nConsole.WriteLine(image.Compression);\nConsole.WriteLine(image.Layers.Length);\nConsole.WriteLine(image.ImageResources.Length);\n\nforeach (Layer layer in image.Layers)\n{\n    Console.WriteLine(layer.Name);\n    Console.WriteLine(layer.Bounds);\n    Console.WriteLine(layer.BlendModeKey);\n    Console.WriteLine(layer.IsVisible);\n    Console.WriteLine(layer.Opacity);\n}\n\nimage.Layers[0].Name = \"Updated layer\";\nimage.Layers[0].IsVisible = false;\nimage.Layers[0].Left = 10;\nimage.Layers[0].Top = 20;\nimage.Layers[0].Right = 110;\nimage.Layers[0].Bottom = 120;\nimage.Layers[0].Opacity = 128;\nimage.Layers[0].BlendModeKey = BlendMode.Multiply;\nimage.Save(\"output.psd\");\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "admitted registry entry",
+          "path": "data/registry.json"
+        }
+      ],
+      "id": "identity:repository",
+      "kind": "identity",
+      "polarity": "SUPPORTED",
+      "value": "aspose-psd-foss/Aspose.PSD-FOSS-for-.NET"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "install command for the package id declared by the manifest",
+          "path": "src/Aspose.PSD.FOSS/Aspose.PSD.FOSS.csproj"
+        },
+        {
+          "detail": "package registry: found on nuget",
+          "path": "https://api.nuget.org/v3-flatcontainer/aspose.psd.foss/index.json"
+        }
+      ],
+      "id": "install_command:dotnet",
+      "kind": "install_command",
+      "polarity": "SUPPORTED",
+      "value": "dotnet add package Aspose.PSD.FOSS"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package id declared by the project file",
+          "path": "src/Aspose.PSD.FOSS/Aspose.PSD.FOSS.csproj"
+        }
+      ],
+      "id": "package:name",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FOSS"
+    },
+    {
+      "attributes": {
+        "floor_declaration": "TargetFrameworks"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "target frameworks the project declares",
+          "path": "src/Aspose.PSD.FOSS/Aspose.PSD.FOSS.csproj"
+        }
+      ],
+      "id": "package:target_framework",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "netstandard2.1;net10.0"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "version declared by the project file",
+          "path": "src/Aspose.PSD.FOSS/Aspose.PSD.FOSS.csproj"
+        }
+      ],
+      "id": "package:version",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "1.0.0"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 9; module; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/ImageLoader.cs"
+        }
+      ],
+      "id": "public_symbol:aspose",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 9; module; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/ImageLoader.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD"
+    },
+    {
+      "attributes": {
+        "docstring": "Contains the current build version information.",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 38; class; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Properties/BuildVersionInfo.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.buildversioninfo",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.BuildVersionInfo"
+    },
+    {
+      "attributes": {
+        "docstring": "The assembly version.",
+        "signature": "string",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 43; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Properties/BuildVersionInfo.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.buildversioninfo.assemblyversion",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.BuildVersionInfo.AssemblyVersion"
+    },
+    {
+      "attributes": {
+        "docstring": "The file version.",
+        "signature": "string",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 48; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Properties/BuildVersionInfo.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.buildversioninfo.fileversion",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.BuildVersionInfo.FileVersion"
+    },
+    {
+      "attributes": {
+        "docstring": "The product title.",
+        "signature": "string",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 53; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Properties/BuildVersionInfo.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.buildversioninfo.product",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.BuildVersionInfo.Product"
+    },
+    {
+      "attributes": {
+        "docstring": "The major product version.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 58; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Properties/BuildVersionInfo.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.buildversioninfo.productmajor",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.BuildVersionInfo.ProductMajor"
+    },
+    {
+      "attributes": {
+        "docstring": "The minor product version.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 63; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Properties/BuildVersionInfo.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.buildversioninfo.productminor",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.BuildVersionInfo.ProductMinor"
+    },
+    {
+      "attributes": {
+        "docstring": "The product release date.",
+        "signature": "DateTime",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 68; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Properties/BuildVersionInfo.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.buildversioninfo.releasedate",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.BuildVersionInfo.ReleaseDate"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 7; module; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/ChannelInformation.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 7; module; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/BlendMode.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.core",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Core"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 7; module; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/BlendMode.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.core.blending",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Core.Blending"
+    },
+    {
+      "attributes": {
+        "docstring": "Defines the blend modes used for layers in PSD files.",
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 7; enum; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/BlendMode.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.core.blending.blendmode",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Core.Blending.BlendMode"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 7; module; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/ChannelInformation.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd"
+    },
+    {
+      "attributes": {
+        "docstring": "Defines the color modes supported by PSD files.",
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; enum; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/ColorModes.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.colormodes",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.ColorModes"
+    },
+    {
+      "attributes": {
+        "docstring": "Defines the compression methods used for image data in PSD files.",
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; enum; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/CompressionMethod.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.compressionmethod",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.CompressionMethod"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 7; module; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/ChannelInformation.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers"
+    },
+    {
+      "attributes": {
+        "docstring": "Represents a PSD layer blend range.",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; class; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/BlendRange.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.blendrange",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.BlendRange"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the destination blend range.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 11; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/BlendRange.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.blendrange.destination",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.BlendRange.Destination"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the source blend range.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/BlendRange.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.blendrange.source",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.BlendRange.Source"
+    },
+    {
+      "attributes": {
+        "docstring": "Represents PSD layer channel information.",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 7; class; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/ChannelInformation.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.channelinformation",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.ChannelInformation"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the channel identifier.",
+        "signature": "short",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 36; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/ChannelInformation.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.channelinformation.channelid",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.ChannelInformation.ChannelID"
+    },
+    {
+      "attributes": {
+        "docstring": "Initializes a new instance of the ChannelInformation class.",
+        "signature": "ChannelInformation(CompressionMethod compressionMethod, int bitDepth, int psdVersion)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 15; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/ChannelInformation.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.channelinformation.channelinformation",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.ChannelInformation.ChannelInformation"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the channel compression method.",
+        "signature": "CompressionMethod",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 41; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/ChannelInformation.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.channelinformation.compressionmethod",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.ChannelInformation.CompressionMethod"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the channel length in bytes.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 46; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/ChannelInformation.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.channelinformation.length",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.ChannelInformation.Length"
+    },
+    {
+      "attributes": {
+        "docstring": "Represents global layer mask information.",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; class; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/GlobalLayerMaskInfo.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.globallayermaskinfo",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.GlobalLayerMaskInfo"
+    },
+    {
+      "attributes": {
+        "docstring": "Represents a single PSD layer with basic metadata used by the FOSS library.",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; class; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/Layer.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layer",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.Layer"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the layer blend mode key.",
+        "signature": "BlendMode",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 194; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/Layer.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layer.blendmodekey",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.Layer.BlendModeKey"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the bottom edge of the layer bounds.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 108; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/Layer.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layer.bottom",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.Layer.Bottom"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the Aspose.PSD-compatible local layer rectangle.",
+        "signature": "Rectangle",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 58; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/Layer.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layer.bounds",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.Layer.Bounds"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the channel information.",
+        "signature": "ChannelInformation[]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 208; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/Layer.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layer.channelinformation",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.Layer.ChannelInformation"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the layer's channels count.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 203; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/Layer.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layer.channelscount",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.Layer.ChannelsCount"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the PSD clipping value for the layer.",
+        "signature": "byte",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 168; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/Layer.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layer.clipping",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.Layer.Clipping"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the layer height in pixels.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 73; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/Layer.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layer.height",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.Layer.Height"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets a value indicating whether the layer is visible.",
+        "signature": "bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 138; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/Layer.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layer.isvisible",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.Layer.IsVisible"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the layer blending ranges data.",
+        "signature": "LayerBlendingRangesData",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 280; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/Layer.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layer.layerblendingrangesdata",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.Layer.LayerBlendingRangesData"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the layer mask data.",
+        "signature": "LayerMaskData?",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 262; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/Layer.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layer.layermaskdata",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.Layer.LayerMaskData"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the fixed-size byte count of the layer record trailer fields.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/Layer.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layer.layertrailersize",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.Layer.LayerTrailerSize"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the left edge of the layer bounds.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 93; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/Layer.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layer.left",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.Layer.Left"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the Pascal layer name stored in the layer record.",
+        "signature": "string",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 43; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/Layer.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layer.name",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.Layer.Name"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the layer opacity in the 0-255 range.",
+        "signature": "byte",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 153; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/Layer.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layer.opacity",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.Layer.Opacity"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the right edge of the layer bounds.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 123; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/Layer.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layer.right",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.Layer.Right"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the top edge of the layer bounds.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 78; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/Layer.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layer.top",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.Layer.Top"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the layer width in pixels.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 68; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/Layer.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layer.width",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.Layer.Width"
+    },
+    {
+      "attributes": {
+        "docstring": "Represents PSD layer blending ranges data.",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 8; class; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerBlendingRangesData.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layerblendingrangesdata",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerBlendingRangesData"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the per-channel blend ranges.",
+        "signature": "BlendRange[]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 39; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerBlendingRangesData.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layerblendingrangesdata.channelblendranges",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerBlendingRangesData.ChannelBlendRanges"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the composite blend range.",
+        "signature": "BlendRange",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 34; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerBlendingRangesData.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layerblendingrangesdata.compositeblendrange",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerBlendingRangesData.CompositeBlendRange"
+    },
+    {
+      "attributes": {
+        "docstring": "Initializes a new instance of the LayerBlendingRangesData class.",
+        "signature": "LayerBlendingRangesData()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerBlendingRangesData.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layerblendingrangesdata.layerblendingrangesdata",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerBlendingRangesData.LayerBlendingRangesData"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the blending ranges data length in bytes.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 44; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerBlendingRangesData.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layerblendingrangesdata.length",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerBlendingRangesData.Length"
+    },
+    {
+      "attributes": {
+        "docstring": "Defines the base class for PSD layer mask data.",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 8; class; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerMaskData.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layermaskdata",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerMaskData"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the bottom layer mask position.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 23; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerMaskData.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layermaskdata.bottom",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerMaskData.Bottom"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the size of the layer mask data.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 32; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerMaskData.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layermaskdata.datasize",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerMaskData.DataSize"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the default layer mask color.",
+        "signature": "byte",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 37; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerMaskData.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layermaskdata.defaultcolor",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerMaskData.DefaultColor"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the layer mask flags.",
+        "signature": "LayerMaskFlags",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 42; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerMaskData.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layermaskdata.flags",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerMaskData.Flags"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the layer mask image data.",
+        "signature": "byte[]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 47; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerMaskData.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layermaskdata.imagedata",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerMaskData.ImageData"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the left layer mask position.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 56; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerMaskData.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layermaskdata.left",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerMaskData.Left"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the mask rectangle.",
+        "signature": "Rectangle",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 65; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerMaskData.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layermaskdata.maskrectangle",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerMaskData.MaskRectangle"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the right layer mask position.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 74; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerMaskData.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layermaskdata.right",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerMaskData.Right"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the top layer mask position.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 83; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerMaskData.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layermaskdata.top",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerMaskData.Top"
+    },
+    {
+      "attributes": {
+        "docstring": "Defines layer mask data for layers that have only a raster or vector mask.",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; class; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerMaskDataShort.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layermaskdatashort",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerMaskDataShort"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the bottom layer mask position.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 23; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerMaskData.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layermaskdatashort.bottom",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerMaskDataShort.Bottom"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the size of the layer mask data.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 32; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerMaskData.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layermaskdatashort.datasize",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerMaskDataShort.DataSize"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the default layer mask color.",
+        "signature": "byte",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 37; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerMaskData.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layermaskdatashort.defaultcolor",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerMaskDataShort.DefaultColor"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the layer mask flags.",
+        "signature": "LayerMaskFlags",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 42; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerMaskData.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layermaskdatashort.flags",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerMaskDataShort.Flags"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the layer mask image data.",
+        "signature": "byte[]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 47; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerMaskData.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layermaskdatashort.imagedata",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerMaskDataShort.ImageData"
+    },
+    {
+      "attributes": {
+        "docstring": "Initializes a new instance of the LayerMaskDataShort class.",
+        "signature": "LayerMaskDataShort()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 11; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerMaskDataShort.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layermaskdatashort.layermaskdatashort",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerMaskDataShort.LayerMaskDataShort"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the left layer mask position.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 56; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerMaskData.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layermaskdatashort.left",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerMaskDataShort.Left"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the mask rectangle.",
+        "signature": "Rectangle",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 65; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerMaskData.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layermaskdatashort.maskrectangle",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerMaskDataShort.MaskRectangle"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the layer mask padding.",
+        "signature": "short",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerMaskDataShort.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layermaskdatashort.padding",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerMaskDataShort.Padding"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the right layer mask position.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 74; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerMaskData.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layermaskdatashort.right",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerMaskDataShort.Right"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the top layer mask position.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 83; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerMaskData.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layermaskdatashort.top",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerMaskDataShort.Top"
+    },
+    {
+      "attributes": {
+        "docstring": "Defines PSD layer mask flags.",
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 8; enum; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerMaskFlags.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layermaskflags",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerMaskFlags"
+    },
+    {
+      "attributes": {
+        "docstring": "Represents a PSD layer resource.",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; class; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerResource.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layerresource",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerResource"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the layer resource key.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerResource.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layerresource.key",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerResource.Key"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the layer resource length in bytes.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 26; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerResource.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layerresource.length",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerResource.Length"
+    },
+    {
+      "attributes": {
+        "docstring": "The PSB-specific layer resource signature.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerResource.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layerresource.psbresourcesignature",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerResource.PsbResourceSignature"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the minimal PSD version required for the layer resource.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 31; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerResource.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layerresource.psdversion",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerResource.PsdVersion"
+    },
+    {
+      "attributes": {
+        "docstring": "The common layer resource signature.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 11; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerResource.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layerresource.resourcesignature",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerResource.ResourceSignature"
+    },
+    {
+      "attributes": {
+        "docstring": "Saves the layer resource to the specified stream container.",
+        "signature": "Save(StreamContainer streamContainer, int psdVersion)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 43; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerResource.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layerresource.save",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerResource.Save"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the layer resource signature.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 36; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Layers/LayerResource.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.layers.layerresource.signature",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.Layers.LayerResource.Signature"
+    },
+    {
+      "attributes": {
+        "docstring": "Represents a PSD image that can be loaded, inspected, and saved without rendering.",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 12; class; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/PsdImage.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdimage",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdImage"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the active layer.",
+        "signature": "Layer?",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 110; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/PsdImage.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdimage.activelayer",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdImage.ActiveLayer"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the number of bits stored per channel.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 47; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/PsdImage.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdimage.bitsperchannel",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdImage.BitsPerChannel"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the image bounds.",
+        "signature": "Rectangle",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 24; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Image.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdimage.bounds",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdImage.Bounds"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the PSD channels count.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 100; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/PsdImage.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdimage.channelscount",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdImage.ChannelsCount"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the PSD color mode reported by the header.",
+        "signature": "ColorModes",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 52; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/PsdImage.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdimage.colormode",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdImage.ColorMode"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the compression method used by the merged image data section.",
+        "signature": "CompressionMethod",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 201; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/PsdImage.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdimage.compression",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdImage.Compression"
+    },
+    {
+      "attributes": {
+        "docstring": "Releases the image and optionally the underlying stream.",
+        "signature": "Dispose()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 358; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/PsdImage.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdimage.dispose",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdImage.Dispose"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the parsed global angle from the image resources, when present.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 222; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/PsdImage.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdimage.globalangle",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdImage.GlobalAngle"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the global layer mask info.",
+        "signature": "GlobalLayerMaskInfo",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 157; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/PsdImage.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdimage.globallayermaskinfo",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdImage.GlobalLayerMaskInfo"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the global layer resources.",
+        "signature": "LayerResource[]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 148; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/PsdImage.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdimage.globallayerresources",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdImage.GlobalLayerResources"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets a value indicating whether first alpha channel contains the transparency data for the merged result when specifying layers data.",
+        "signature": "bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 167; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/PsdImage.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdimage.hastransparencydata",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdImage.HasTransparencyData"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the document height in pixels.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 37; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/PsdImage.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdimage.height",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdImage.Height"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the PSD image resources.",
+        "signature": "ResourceBlock[]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 139; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/PsdImage.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdimage.imageresources",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdImage.ImageResources"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets a value indicating whether the PSD image is flattened.",
+        "signature": "bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 162; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/PsdImage.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdimage.isflatten",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdImage.IsFlatten"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the parsed layer collection.",
+        "signature": "Layer[]",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 91; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/PsdImage.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdimage.layers",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdImage.Layers"
+    },
+    {
+      "attributes": {
+        "docstring": "Loads a PSD image from a file path.",
+        "signature": "Load(string filePath)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 267; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/PsdImage.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdimage.load",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdImage.Load"
+    },
+    {
+      "attributes": {
+        "docstring": "Saves the image to a file path.",
+        "signature": "Save(string filePath)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 325; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/PsdImage.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdimage.save",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdImage.Save"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the image size.",
+        "signature": "Size",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 105; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/PsdImage.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdimage.size",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdImage.Size"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the Aspose.PSD-compatible API version number.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 61; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/PsdImage.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdimage.version",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdImage.Version"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the document width in pixels.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 32; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/PsdImage.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdimage.width",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdImage.Width"
+    },
+    {
+      "attributes": {
+        "docstring": "Exception that is thrown when an error occurs while loading a PSD file.",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 8; class; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/CoreExceptions/PsdLoadException.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdloadexception",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdLoadException"
+    },
+    {
+      "attributes": {
+        "docstring": "Initializes a new instance of the PsdLoadException class with a specified error message.",
+        "signature": "PsdLoadException(string message)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 14; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/CoreExceptions/PsdLoadException.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdloadexception.psdloadexception",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdLoadException.PsdLoadException"
+    },
+    {
+      "attributes": {
+        "docstring": "Exception that is thrown when an error occurs while saving a PSD file.",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 9; class; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/CoreExceptions/PsdSaveException.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdsaveexception",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdSaveException"
+    },
+    {
+      "attributes": {
+        "docstring": "Initializes a new instance of the PsdSaveException class with a specified error message.",
+        "signature": "PsdSaveException(string message)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 15; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/CoreExceptions/PsdSaveException.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdsaveexception.psdsaveexception",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdSaveException.PsdSaveException"
+    },
+    {
+      "attributes": {
+        "docstring": "Represents the supported PSD container versions.",
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; enum; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/PsdVersion.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.psdversion",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.PsdVersion"
+    },
+    {
+      "attributes": {
+        "docstring": "Represents a PSD image resource block.",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; class; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/ResourceBlock.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.resourceblock",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.ResourceBlock"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the resource data size in bytes.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/ResourceBlock.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.resourceblock.datasize",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.ResourceBlock.DataSize"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the unique identifier for the resource.",
+        "signature": "short",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 26; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/ResourceBlock.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.resourceblock.id",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.ResourceBlock.ID"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the minimal required PSD version.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 31; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/ResourceBlock.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.resourceblock.minimalversion",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.ResourceBlock.MinimalVersion"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the resource name.",
+        "signature": "string",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 36; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/ResourceBlock.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.resourceblock.name",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.ResourceBlock.Name"
+    },
+    {
+      "attributes": {
+        "docstring": "The ImageReady resource signature.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/ResourceBlock.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.resourceblock.resouceblockmesasignature",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.ResourceBlock.ResouceBlockMeSaSignature"
+    },
+    {
+      "attributes": {
+        "docstring": "The regular Photoshop resource signature.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 11; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/ResourceBlock.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.resourceblock.resouceblocksignature",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.ResourceBlock.ResouceBlockSignature"
+    },
+    {
+      "attributes": {
+        "docstring": "Saves the resource block to the specified stream container.",
+        "signature": "Save(StreamContainer stream)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 52; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/ResourceBlock.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.resourceblock.save",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.ResourceBlock.Save"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the resource signature.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 41; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/ResourceBlock.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.resourceblock.signature",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.ResourceBlock.Signature"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the resource block size in bytes including its data.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 46; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/ResourceBlock.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.resourceblock.size",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.ResourceBlock.Size"
+    },
+    {
+      "attributes": {
+        "docstring": "Validates the resource values.",
+        "signature": "ValidateValues()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 57; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/ResourceBlock.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.resourceblock.validatevalues",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.ResourceBlock.ValidateValues"
+    },
+    {
+      "attributes": {
+        "docstring": "Represents resource block state.",
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 64; enum; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/ResourceBlock.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.fileformats.psd.resourceblockstate",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.FileFormats.Psd.ResourceBlockState"
+    },
+    {
+      "attributes": {
+        "docstring": "Provides the Aspose.PSD-compatible base image entry point for loading PSD/PSB documents.",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 9; class; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Image.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.image",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Image"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the image bounds.",
+        "signature": "Rectangle",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 24; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Image.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.image.bounds",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Image.Bounds"
+    },
+    {
+      "attributes": {
+        "docstring": "Releases resources used by the image.",
+        "signature": "Dispose()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 62; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Image.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.image.dispose",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Image.Dispose"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the image height in pixels.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 19; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Image.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.image.height",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Image.Height"
+    },
+    {
+      "attributes": {
+        "docstring": "Loads a new image from the specified file path.",
+        "signature": "Load(string filePath)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 31; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Image.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.image.load",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Image.Load"
+    },
+    {
+      "attributes": {
+        "docstring": "Saves the image data to the specified file path.",
+        "signature": "Save(string filePath)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 51; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Image.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.image.save",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Image.Save"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the image width in pixels.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 14; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Image.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.image.width",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Image.Width"
+    },
+    {
+      "attributes": {
+        "docstring": "Provides the Load functionality for Images.",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 9; class; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/ImageLoader.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.imageloader",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.ImageLoader"
+    },
+    {
+      "attributes": {
+        "docstring": "Loads a new image from the specified file path.",
+        "signature": "Load(string filePath)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/ImageLoader.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.imageloader.load",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.ImageLoader.Load"
+    },
+    {
+      "attributes": {
+        "docstring": "Represents an ordered pair of integer x- and y-coordinates that defines a point in a two-dimensional plane.",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 9; class; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Point.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.point",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Point"
+    },
+    {
+      "attributes": {
+        "docstring": "Represents a Point with coordinates left uninitialized.",
+        "signature": "Point",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 14; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Point.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.point.empty",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Point.Empty"
+    },
+    {
+      "attributes": {
+        "docstring": "Determines whether the specified point is equal to this point.",
+        "signature": "Equals(Point other)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 47; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Point.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.point.equals",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Point.Equals"
+    },
+    {
+      "attributes": {
+        "docstring": "Returns a hash code for this point.",
+        "signature": "GetHashCode()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 66; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Point.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.point.gethashcode",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Point.GetHashCode"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets a value indicating whether this Point has coordinates left uninitialized.",
+        "signature": "bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 40; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Point.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.point.isempty",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Point.IsEmpty"
+    },
+    {
+      "attributes": {
+        "docstring": "Initializes a new instance of the Point structure with the specified coordinates.",
+        "signature": "Point(int x, int y)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Point.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.point.point",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Point.Point"
+    },
+    {
+      "attributes": {
+        "docstring": "Returns a compact coordinate representation.",
+        "signature": "ToString()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 75; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Point.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.point.tostring",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Point.ToString"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the x-coordinate of this Point.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 30; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Point.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.point.x",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Point.X"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the y-coordinate of this Point.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 35; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Point.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.point.y",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Point.Y"
+    },
+    {
+      "attributes": {
+        "docstring": "Stores a set of four integers that represent the location and size of a rectangle.",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 8; class; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the y-coordinate of the bottom edge of this Rectangle.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 63; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.bottom",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.Bottom"
+    },
+    {
+      "attributes": {
+        "docstring": "Converts a RectangleF structure to a Rectangle structure by rounding up the coordinates and size.",
+        "signature": "Ceiling(RectangleF value)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 142; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.ceiling",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.Ceiling"
+    },
+    {
+      "attributes": {
+        "docstring": "Determines whether the specified point is contained within this Rectangle.",
+        "signature": "Contains(Point point)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 268; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.contains",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.Contains"
+    },
+    {
+      "attributes": {
+        "docstring": "Represents a Rectangle structure with its properties left uninitialized.",
+        "signature": "Rectangle",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.empty",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.Empty"
+    },
+    {
+      "attributes": {
+        "docstring": "Determines whether the specified rectangle is equal to this rectangle.",
+        "signature": "Equals(Rectangle other)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 302; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.equals",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.Equals"
+    },
+    {
+      "attributes": {
+        "docstring": "Creates a rectangle from edge coordinates.",
+        "signature": "FromLeftTopRightBottom(int left, int top, int right, int bottom)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 159; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.fromlefttoprightbottom",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.FromLeftTopRightBottom"
+    },
+    {
+      "attributes": {
+        "docstring": "Creates a rectangle that spans the specified points.",
+        "signature": "FromPoints(Point point1, Point point2)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 183; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.frompoints",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.FromPoints"
+    },
+    {
+      "attributes": {
+        "docstring": "Returns a hash code for this rectangle.",
+        "signature": "GetHashCode()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 321; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.gethashcode",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.GetHashCode"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the height of this Rectangle.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 58; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.height",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.Height"
+    },
+    {
+      "attributes": {
+        "docstring": "Creates and returns an inflated copy of the specified rectangle.",
+        "signature": "Inflate(Rectangle rectangle, int x, int y)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 199; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.inflate",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.Inflate"
+    },
+    {
+      "attributes": {
+        "docstring": "Returns a rectangle that represents the intersection of two rectangles.",
+        "signature": "Intersect(Rectangle a, Rectangle b)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 212; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.intersect",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.Intersect"
+    },
+    {
+      "attributes": {
+        "docstring": "Determines whether this rectangle intersects with the specified rectangle.",
+        "signature": "IntersectsWith(Rectangle rectangle)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 362; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.intersectswith",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.IntersectsWith"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets a value indicating whether this Rectangle has no location or size.",
+        "signature": "bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 72; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.isempty",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.IsEmpty"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the x-coordinate of the left edge of this Rectangle.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 77; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.left",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.Left"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the coordinates of the upper-left corner of this Rectangle.",
+        "signature": "Point",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 91; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.location",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.Location"
+    },
+    {
+      "attributes": {
+        "docstring": "Normalizes this rectangle so that width and height are non-negative.",
+        "signature": "Normalize()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 373; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.normalize",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.Normalize"
+    },
+    {
+      "attributes": {
+        "docstring": "Moves this rectangle by the specified point.",
+        "signature": "Offset(Point point)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 392; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.offset",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.Offset"
+    },
+    {
+      "attributes": {
+        "docstring": "Initializes a new instance of the Rectangle structure with the specified location and size.",
+        "signature": "Rectangle(Point location, Size size)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 20; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.rectangle",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.Rectangle"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the x-coordinate of the right edge of this Rectangle.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 104; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.right",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.Right"
+    },
+    {
+      "attributes": {
+        "docstring": "Converts a RectangleF structure to a Rectangle structure by rounding the coordinates and size.",
+        "signature": "Round(RectangleF value)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 229; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.round",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.Round"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the size of this Rectangle.",
+        "signature": "Size",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 113; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.size",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.Size"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the y-coordinate of the top edge of this Rectangle.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 126; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.top",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.Top"
+    },
+    {
+      "attributes": {
+        "docstring": "Returns a string representation of this rectangle.",
+        "signature": "ToString()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 412; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.tostring",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.ToString"
+    },
+    {
+      "attributes": {
+        "docstring": "Converts a RectangleF structure to a Rectangle structure by truncating the coordinates and size.",
+        "signature": "Truncate(RectangleF value)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 243; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.truncate",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.Truncate"
+    },
+    {
+      "attributes": {
+        "docstring": "Returns a rectangle that contains the union of two rectangles.",
+        "signature": "Union(Rectangle a, Rectangle b)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 254; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.union",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.Union"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the width of this Rectangle.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 53; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.width",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.Width"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the x-coordinate of the upper-left corner of this Rectangle.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 43; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.x",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.X"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the y-coordinate of the upper-left corner of this Rectangle.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 48; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Rectangle.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectangle.y",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Rectangle.Y"
+    },
+    {
+      "attributes": {
+        "docstring": "Stores a set of four floating-point numbers that represent the location and size of a rectangle.",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 8; class; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/RectangleF.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectanglef",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.RectangleF"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the y-coordinate of the bottom edge of this RectangleF.",
+        "signature": "float",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 53; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/RectangleF.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectanglef.bottom",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.RectangleF.Bottom"
+    },
+    {
+      "attributes": {
+        "docstring": "Represents a RectangleF structure with its properties left uninitialized.",
+        "signature": "RectangleF",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/RectangleF.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectanglef.empty",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.RectangleF.Empty"
+    },
+    {
+      "attributes": {
+        "docstring": "Determines whether the specified rectangle is equal to this rectangle.",
+        "signature": "Equals(RectangleF other)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 80; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/RectangleF.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectanglef.equals",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.RectangleF.Equals"
+    },
+    {
+      "attributes": {
+        "docstring": "Returns a hash code for this rectangle.",
+        "signature": "GetHashCode()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 99; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/RectangleF.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectanglef.gethashcode",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.RectangleF.GetHashCode"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the height of this RectangleF.",
+        "signature": "float",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 48; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/RectangleF.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectanglef.height",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.RectangleF.Height"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets a value indicating whether this RectangleF has no location or size.",
+        "signature": "bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 58; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/RectangleF.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectanglef.isempty",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.RectangleF.IsEmpty"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the x-coordinate of the left edge of this RectangleF.",
+        "signature": "float",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 63; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/RectangleF.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectanglef.left",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.RectangleF.Left"
+    },
+    {
+      "attributes": {
+        "docstring": "Initializes a new instance of the RectangleF structure with the specified coordinates.",
+        "signature": "RectangleF(float x, float y, float width, float height)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 22; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/RectangleF.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectanglef.rectanglef",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.RectangleF.RectangleF"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the x-coordinate of the right edge of this RectangleF.",
+        "signature": "float",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 68; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/RectangleF.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectanglef.right",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.RectangleF.Right"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the y-coordinate of the top edge of this RectangleF.",
+        "signature": "float",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 73; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/RectangleF.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectanglef.top",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.RectangleF.Top"
+    },
+    {
+      "attributes": {
+        "docstring": "Returns a compact coordinate representation.",
+        "signature": "ToString()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 108; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/RectangleF.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectanglef.tostring",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.RectangleF.ToString"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the width of this RectangleF.",
+        "signature": "float",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 43; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/RectangleF.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectanglef.width",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.RectangleF.Width"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the x-coordinate of the upper-left corner of this RectangleF.",
+        "signature": "float",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 33; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/RectangleF.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectanglef.x",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.RectangleF.X"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the y-coordinate of the upper-left corner of this RectangleF.",
+        "signature": "float",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 38; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/RectangleF.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.rectanglef.y",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.RectangleF.Y"
+    },
+    {
+      "attributes": {
+        "docstring": "Represents an ordered pair of integer width and height values that defines a size.",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 8; class; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Size.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.size",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Size"
+    },
+    {
+      "attributes": {
+        "docstring": "Represents a Size with width and height left uninitialized.",
+        "signature": "Size",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Size.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.size.empty",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Size.Empty"
+    },
+    {
+      "attributes": {
+        "docstring": "Determines whether the specified size is equal to this size.",
+        "signature": "Equals(Size other)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 46; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Size.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.size.equals",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Size.Equals"
+    },
+    {
+      "attributes": {
+        "docstring": "Returns a hash code for this size.",
+        "signature": "GetHashCode()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 65; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Size.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.size.gethashcode",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Size.GetHashCode"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the height component of this Size.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 34; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Size.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.size.height",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Size.Height"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets a value indicating whether this Size has width and height left uninitialized.",
+        "signature": "bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 39; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Size.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.size.isempty",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Size.IsEmpty"
+    },
+    {
+      "attributes": {
+        "docstring": "Initializes a new instance of the Size structure with the specified dimensions.",
+        "signature": "Size(int width, int height)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 20; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Size.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.size.size",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Size.Size"
+    },
+    {
+      "attributes": {
+        "docstring": "Returns a compact size representation.",
+        "signature": "ToString()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 74; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Size.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.size.tostring",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Size.ToString"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the width component of this Size.",
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 29; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/Size.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.size.width",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.Size.Width"
+    },
+    {
+      "attributes": {
+        "docstring": "Represents a stream container used by resource save APIs.",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 9; class; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/StreamContainer.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.streamcontainer",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.StreamContainer"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets the wrapped stream.",
+        "signature": "Stream",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 23; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/StreamContainer.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.streamcontainer.stream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.StreamContainer.Stream"
+    },
+    {
+      "attributes": {
+        "docstring": "Initializes a new instance of the StreamContainer class.",
+        "signature": "StreamContainer(Stream stream)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 15; method; public by declaration",
+          "path": "src/Aspose.PSD.FOSS/StreamContainer.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.psd.streamcontainer.streamcontainer",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PSD.StreamContainer.StreamContainer"
+    }
+  ],
+  "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-.NET",
+  "schema_version": 1,
+  "source_revision": "HEAD"
+}

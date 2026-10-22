@@ -1,0 +1,733 @@
+{
+  "facts": [
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "extra 'dev' declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "dependency:development.dev.build-1.2",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "build>=1.2"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "extra 'dev' declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "dependency:development.dev.pytest-7.4",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "pytest>=7.4"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "extra 'dev' declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "dependency:development.dev.ruff-0.4",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "ruff>=0.4"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "extra 'dev' declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "dependency:development.dev.tomli-2.0-python_version-3.11",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "tomli>=2.0; python_version < '3.11'"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "extra 'dev' declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "dependency:development.dev.twine-5.0",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "twine>=5.0"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "no `project.dependencies` is declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "dependency:none",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "none"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 110-117; python fence; unit inherited_unit:001.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 1: FAILED; IndentationError",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:001",
+      "kind": "example",
+      "polarity": "CONTRADICTED",
+      "value": "from aspose_tex import TeXJob, TeXOptions, PdfDevice, create_input_source\n\nsource = create_input_source(\"Hello World\\n\\\\bye\")\ndevice = PdfDevice()\njob = TeXJob(source, device, options=TeXOptions(load_format=False))\npdf_bytes = job.run()\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 123-131; python fence; unit inherited_unit:002.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 2: FAILED; IndentationError",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "staged as hello.pdf",
+          "path": "testdata/hello_miktex.pdf"
+        }
+      ],
+      "id": "example:002",
+      "kind": "example",
+      "polarity": "CONTRADICTED",
+      "value": "from pathlib import Path\nfrom aspose_tex import TeXJob, TeXOptions, PdfDevice, create_input_source\n\nsource = create_input_source(\"Hello World\\n\\\\bye\")\ndevice = PdfDevice(Path(\"hello.pdf\"))\njob = TeXJob(source, device, options=TeXOptions(load_format=False))\njob.run() # hello.pdf is written to disk\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 140-147; python fence; unit inherited_unit:003.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 3: FAILED; IndentationError",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:003",
+      "kind": "example",
+      "polarity": "CONTRADICTED",
+      "value": "from aspose_tex import TeXJob, TeXOptions, DviDevice, create_input_source\n\nsource = create_input_source(\"Hello World\\n\\\\bye\")\ndevice = DviDevice()\njob = TeXJob(source, device, options=TeXOptions(load_format=False))\ndvi_bytes = job.run()\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 151-159; python fence; unit inherited_unit:004.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 4: FAILED; IndentationError",
+          "path": "receipts.json"
+        },
+        {
+          "detail": "staged as hello.dvi",
+          "path": "testdata/hello_ours.dvi"
+        }
+      ],
+      "id": "example:004",
+      "kind": "example",
+      "polarity": "CONTRADICTED",
+      "value": "from pathlib import Path\nfrom aspose_tex import TeXJob, TeXOptions, DviDevice, create_input_source\n\nsource = create_input_source(\"Hello World\\n\\\\bye\")\ndevice = DviDevice(Path(\"hello.dvi\"))\njob = TeXJob(source, device, options=TeXOptions(load_format=False))\njob.run()  # returns None; output is on disk\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 163-170; python fence; unit inherited_unit:005.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 5: FAILED; IndentationError",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:005",
+      "kind": "example",
+      "polarity": "CONTRADICTED",
+      "value": "from aspose_tex import TeXJob, TeXOptions, SvgDevice, create_input_source\n\nsource = create_input_source(\"Hello World\\n\\\\bye\")\ndevice = SvgDevice()\njob = TeXJob(source, device, options=TeXOptions(load_format=False))\nsvg_bytes = job.run()  # UTF-8 encoded SVG 1.1 document\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 175-183; python fence; unit inherited_unit:006.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 6: FAILED; IndentationError",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:006",
+      "kind": "example",
+      "polarity": "CONTRADICTED",
+      "value": "from pathlib import Path\nfrom aspose_tex import TeXJob, TeXOptions, SvgDevice, create_input_source\n\nsource = create_input_source(\"Hello World\\n\\\\bye\")\ndevice = SvgDevice(Path(\"output/hello\"))\njob = TeXJob(source, device, options=TeXOptions(load_format=False))\njob.run()  # writes output/hello.svg\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 187-195; python fence; unit inherited_unit:007.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 7: FAILED; IndentationError",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:007",
+      "kind": "example",
+      "polarity": "CONTRADICTED",
+      "value": "from aspose_tex import TeXJob, TeXOptions, SvgDevice, create_input_source\n\nsource = create_input_source(\"Page one\\n\\\\eject\\nPage two\\n\\\\bye\")\ndevice = SvgDevice()\njob = TeXJob(source, device, options=TeXOptions(load_format=False))\njob.run()\npages = device.get_all_pages()  # list[bytes], one SVG per page\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 199-207; python fence; unit inherited_unit:008.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 8: FAILED; IndentationError",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:008",
+      "kind": "example",
+      "polarity": "CONTRADICTED",
+      "value": "from aspose_tex import TeXJob, TeXOptions, PdfDevice, create_input_source\n\nopts = TeXOptions(job_name=\"hello\", magnification=1200, load_format=False)\nsource = create_input_source(\"Hello World\\n\\\\bye\")\ndevice = PdfDevice()\njob = TeXJob(source, device, options=opts)\npdf_bytes = job.run()\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 211-220; python fence; unit inherited_unit:009.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 9: FAILED; IndentationError",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:009",
+      "kind": "example",
+      "polarity": "CONTRADICTED",
+      "value": "from pathlib import Path\nfrom aspose_tex import TeXJob, TeXOptions, DviDevice, create_input_source\n\nopts = TeXOptions(load_format=False, extra_format_paths=[Path(\"tex-inputs\")])\nsource = create_input_source(\"\\\\input chapter1\\n\\\\bye\")\njob = TeXJob(source, DviDevice(), options=opts)\ndvi_bytes = job.run()\nmessages = job.messages\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 226-231; python fence; unit inherited_unit:010.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 10: EXECUTED; exit 0",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:010",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "import logging\n\nlogging.basicConfig(level=logging.INFO)\nlogging.getLogger(\"aspose_tex\").setLevel(logging.INFO)\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "admitted registry entry",
+          "path": "data/registry.json"
+        }
+      ],
+      "id": "identity:repository",
+      "kind": "identity",
+      "polarity": "SUPPORTED",
+      "value": "aspose-tex-foss/Aspose.TeX-FOSS-for-Python"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package dir",
+          "path": "src/aspose_tex/__init__.py"
+        }
+      ],
+      "id": "import_path:aspose_tex",
+      "kind": "import_path",
+      "polarity": "SUPPORTED",
+      "value": "aspose_tex"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package dir",
+          "path": "src/aspose_tex/_engine/__init__.py"
+        }
+      ],
+      "id": "import_path:aspose_tex.engine",
+      "kind": "import_path",
+      "polarity": "SUPPORTED",
+      "value": "aspose_tex._engine"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package dir",
+          "path": "src/aspose_tex/_fonts/__init__.py"
+        }
+      ],
+      "id": "import_path:aspose_tex.fonts",
+      "kind": "import_path",
+      "polarity": "SUPPORTED",
+      "value": "aspose_tex._fonts"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package dir",
+          "path": "src/aspose_tex/_input/__init__.py"
+        }
+      ],
+      "id": "import_path:aspose_tex.input",
+      "kind": "import_path",
+      "polarity": "SUPPORTED",
+      "value": "aspose_tex._input"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package dir",
+          "path": "src/aspose_tex/_output/__init__.py"
+        }
+      ],
+      "id": "import_path:aspose_tex.output",
+      "kind": "import_path",
+      "polarity": "SUPPORTED",
+      "value": "aspose_tex._output"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package dir",
+          "path": "src/aspose_tex/presentation/__init__.py"
+        }
+      ],
+      "id": "import_path:aspose_tex.presentation",
+      "kind": "import_path",
+      "polarity": "SUPPORTED",
+      "value": "aspose_tex.presentation"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "distribution name declared by the manifest",
+          "path": "pyproject.toml"
+        },
+        {
+          "detail": "package registry: distribution not found",
+          "path": "https://pypi.org/pypi/aspose-tex/json"
+        }
+      ],
+      "id": "install_command:pip",
+      "kind": "install_command",
+      "polarity": "CONTRADICTED",
+      "value": "pip install aspose-tex"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "license declared by the manifest",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "package:license",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "MIT"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "distribution name declared by the manifest",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "package:name",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "aspose-tex"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "python_requires declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "package:python_requires",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": ">=3.10"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "version declared by the manifest",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "package:version",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "26.5"
+    },
+    {
+      "attributes": {
+        "docstring": "aspose_tex \u2014 pure-Python TeX/LaTeX processing library.",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose_tex/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_tex",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_tex"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 8; unknown; public by reexport; re-export of aspose_tex.presentation.create_input_source",
+          "path": "src/aspose_tex/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_tex.create_input_source",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "aspose_tex.create_input_source"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 8; unknown; public by reexport; re-export of aspose_tex.presentation.DviDevice",
+          "path": "src/aspose_tex/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_tex.dvidevice",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "aspose_tex.DviDevice"
+    },
+    {
+      "attributes": {
+        "docstring": "Project-wide exception hierarchy for aspose_tex.",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose_tex/exceptions.py"
+        }
+      ],
+      "id": "public_symbol:aspose_tex.exceptions",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_tex.exceptions"
+    },
+    {
+      "attributes": {
+        "docstring": "Base exception for all aspose_tex errors.",
+        "signature": "class AsposeTeXError(Exception)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 4; class; public by name",
+          "path": "src/aspose_tex/exceptions.py"
+        }
+      ],
+      "id": "public_symbol:aspose_tex.exceptions.asposetexerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_tex.exceptions.AsposeTeXError"
+    },
+    {
+      "attributes": {
+        "docstring": "Raised for TeX engine errors (infinite recursion, undefined register, etc.).",
+        "signature": "class EngineError(AsposeTeXError)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 12; class; public by name",
+          "path": "src/aspose_tex/exceptions.py"
+        }
+      ],
+      "id": "public_symbol:aspose_tex.exceptions.engineerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_tex.exceptions.EngineError"
+    },
+    {
+      "attributes": {
+        "docstring": "Raised for font-related failures (TFM not found, corrupt file, invalid char, etc.).",
+        "signature": "class FontError(AsposeTeXError)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; class; public by name",
+          "path": "src/aspose_tex/exceptions.py"
+        }
+      ],
+      "id": "public_symbol:aspose_tex.exceptions.fonterror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_tex.exceptions.FontError"
+    },
+    {
+      "attributes": {
+        "docstring": "Raised for input reading failures (file not found, stack underflow, etc.).",
+        "signature": "class InputError(AsposeTeXError)",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 8; class; public by name",
+          "path": "src/aspose_tex/exceptions.py"
+        }
+      ],
+      "id": "public_symbol:aspose_tex.exceptions.inputerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_tex.exceptions.InputError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 7; unknown; public by reexport; re-export of aspose_tex._input.reader.FileInputSource",
+          "path": "src/aspose_tex/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_tex.fileinputsource",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "aspose_tex.FileInputSource"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 7; unknown; public by reexport; re-export of aspose_tex._input.reader.InputSource",
+          "path": "src/aspose_tex/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_tex.inputsource",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "aspose_tex.InputSource"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 8; unknown; public by reexport; re-export of aspose_tex.presentation.OutputDevice",
+          "path": "src/aspose_tex/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_tex.outputdevice",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "aspose_tex.OutputDevice"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 8; unknown; public by reexport; re-export of aspose_tex.presentation.OutputFormat",
+          "path": "src/aspose_tex/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_tex.outputformat",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "aspose_tex.OutputFormat"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 8; unknown; public by reexport; re-export of aspose_tex.presentation.PdfDevice",
+          "path": "src/aspose_tex/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_tex.pdfdevice",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "aspose_tex.PdfDevice"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 7; unknown; public by reexport; re-export of aspose_tex._input.reader.StringInputSource",
+          "path": "src/aspose_tex/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_tex.stringinputsource",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "aspose_tex.StringInputSource"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 8; unknown; public by reexport; re-export of aspose_tex.presentation.SvgDevice",
+          "path": "src/aspose_tex/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_tex.svgdevice",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "aspose_tex.SvgDevice"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 8; unknown; public by reexport; re-export of aspose_tex.presentation.TeXJob",
+          "path": "src/aspose_tex/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_tex.texjob",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "aspose_tex.TeXJob"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 8; unknown; public by reexport; re-export of aspose_tex.presentation.TeXOptions",
+          "path": "src/aspose_tex/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_tex.texoptions",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "aspose_tex.TeXOptions"
+    }
+  ],
+  "repository": "aspose-tex-foss/Aspose.TeX-FOSS-for-Python",
+  "schema_version": 1,
+  "source_revision": "HEAD"
+}

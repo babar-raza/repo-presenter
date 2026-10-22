@@ -1,0 +1,3989 @@
+{
+  "facts": [
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "no dependency is on the library target's public link interface, so a consumer links nothing beyond the library itself",
+          "path": "CMakeLists.txt"
+        }
+      ],
+      "id": "dependency:none",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "none"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 126-138; cpp fence; unit inherited_unit:001.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 1: EXECUTED; syntax-checked against repo6_cpp with g++.exe (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r1) 16.2.0 -std=c++17 -fsyntax-only; the library's own CMake build succeeded",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:001",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "#include <fstream>\n#include <iostream>\n\n#include \"aspose/email/foss/msg/mapi_message.hpp\"\n\nint main()\n{\n    std::ifstream input(\"sample.msg\", std::ios::binary);\n    auto message = aspose::email::foss::msg::mapi_message::from_stream(input);\n    std::cout << message.subject() << '\\n';\n}\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 142-161; cpp fence; unit inherited_unit:002.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 2: EXECUTED; syntax-checked against repo6_cpp with g++.exe (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r1) 16.2.0 -std=c++17 -fsyntax-only; the library's own CMake build succeeded",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:002",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "#include <fstream>\n\n#include \"aspose/email/foss/msg/mapi_message.hpp\"\n\nint main()\n{\n    auto message = aspose::email::foss::msg::mapi_message::create(\"Hello\", \"Body\");\n    message.set_sender_name(\"Alice\");\n    message.set_sender_email_address(\"alice@example.com\");\n    message.add_recipient(\"bob@example.com\", \"Bob\");\n    message.add_attachment(\"note.txt\", std::vector<std::uint8_t>{'a', 'b', 'c'}, \"text/plain\");\n\n    std::ofstream msg_output(\"hello.msg\", std::ios::binary);\n    message.save(msg_output);\n\n    std::ofstream eml_output(\"hello.eml\", std::ios::binary);\n    message.save_to_eml(eml_output);\n}\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 178-233; cpp fence; unit inherited_unit:003.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 3: FAILED; example_003.cpp:3:27: error: 'read_option' was not declared in this scope",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:003",
+      "kind": "example",
+      "polarity": "CONTRADICTED",
+      "value": "int main(int argc, char* argv[])\n{\n    const auto msg_path = read_option(argc, argv, \"--msg-path\", \"example-message.msg\");\n    const auto eml_path = read_option(argc, argv, \"--eml-path\", \"example-message.eml\");\n\n    auto message = aspose::email::foss::msg::mapi_message::create(\n        \"Quarterly status update and rollout plan\",\n        \"Hello team,\\n\\nPlease find the latest rollout summary attached.\\n\\nRegards,\\nEngineering\");\n\n    message.set_property(\n        to_underlying(aspose::email::foss::msg::common_message_property_id::sender_name),\n        to_underlying(aspose::email::foss::msg::property_type_code::ptyp_string),\n        std::string(\"Build Agent\"));\n    message.set_property(\n        to_underlying(aspose::email::foss::msg::common_message_property_id::sender_email_address),\n        to_underlying(aspose::email::foss::msg::property_type_code::ptyp_string),\n        std::string(\"build.agent@example.com\"));\n    message.set_property(\n        to_underlying(aspose::email::foss::msg::common_message_property_id::internet_message_id),\n        to_underlying(aspose::email::foss::msg::property_type_code::ptyp_string),\n        std::string(\"<example-message-001@example.com>\"));\n    message.set_property(\n        to_underlying(aspose::email::foss::msg::common_message_property_id::display_to),\n        to_underlying(aspose::email::foss::msg::property_type_code::ptyp_string),\n        std::string(\"Alice Example; Bob Example\"));\n    message.set_property(\n        to_underlying(aspose::email::foss::msg::common_message_property_id::display_cc),\n        to_underlying(aspose::email::foss::msg::property_type_code::ptyp_string),\n        std::string(\"Carol Example\"));\n    message.set_property(\n        to_underlying(aspose::email::foss::msg::common_message_property_id::display_bcc),\n        to_underlying(aspose::email::foss::msg::property_type_code::ptyp_string),\n        std::string(\"Ops Archive\"));\n    message.set_property(\n        to_underlying(aspose::email::foss::msg::common_message_property_id::transport_message_headers),\n        to_underlying(aspose::email::foss::msg::property_type_code::ptyp_string),\n        std::string(\"X-Environment: example\\r\\nX-Workflow: create-msg-and-eml\\r\\n\"));\n\n    message.add_recipient(\"alice@example.com\", \"Alice Example\");\n    message.add_recipient(\"bob@example.com\", \"Bob Example\");\n    message.add_recipient(\"carol@example.com\", \"Carol Example\", aspose::email::foss::msg::mapi_message::recipient_type_cc);\n    message.add_recipient(\"archive@example.com\", \"Ops Archive\", aspose::email::foss::msg::mapi_message::recipient_type_bcc);\n\n    message.add_attachment(\"hello.txt\", std::vector<std::uint8_t> {'s', 'a', 'm', 'p', 'l', 'e', ' ', 'a', 't', 't', 'a', 'c', 'h', 'm', 'e', 'n', 't', '\\n'}, \"text/plain\");\n    message.add_attachment(\"report.bin\", std::vector<std::uint8_t> {0x00, 0x01, 0x02, 0x03, 0x04, 0x05}, \"application/octet-stream\");\n    message.save(std::filesystem::path(msg_path));\n\n    auto loaded_message = aspose::email::foss::msg::mapi_message::from_file(std::filesystem::path(msg_path));\n    loaded_message.save_to_eml(std::filesystem::path(eml_path));\n\n    std::cout << \"MSG saved to: \" << msg_path << '\\n';\n    std::cout << \"EML saved to: \" << eml_path << '\\n';\n    return 0;\n}\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 245-273; cpp fence; unit inherited_unit:004.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 4: FAILED; example_004.cpp:5:14: error: 'cerr' is not a member of 'std'",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:004",
+      "kind": "example",
+      "polarity": "CONTRADICTED",
+      "value": "int main(int argc, char* argv[])\n{\n    if (argc < 2)\n    {\n        std::cerr << \"Usage: msg_reader.cpp <path-to-msg> [--out <path>]\\n\";\n        return 1;\n    }\n\n    const std::filesystem::path msg_path(argv[1]);\n    const auto out_path = read_option(argc, argv, \"--out\");\n\n    const auto reader = aspose::email::foss::msg::msg_reader::from_file(msg_path);\n    const auto document = aspose::email::foss::msg::msg_document::from_reader(reader);\n    const auto dump = build_dump(reader, document, msg_path);\n\n    if (!out_path.empty())\n    {\n        std::ofstream output(out_path, std::ios::binary);\n        output << dump;\n    }\n    else\n    {\n        std::cout << dump << '\\n';\n    }\n\n    return 0;\n}\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "admitted registry entry",
+          "path": "data/registry.json"
+        }
+      ],
+      "id": "identity:repository",
+      "kind": "identity",
+      "polarity": "SUPPORTED",
+      "value": "aspose-email-foss/Aspose.Email-FOSS-for-Cpp"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "CMake target a consumer links against `add_library`",
+          "path": "CMakeLists.txt"
+        }
+      ],
+      "id": "import_path:asposeemailfoss",
+      "kind": "import_path",
+      "polarity": "SUPPORTED",
+      "value": "AsposeEmailFoss"
+    },
+    {
+      "attributes": null,
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "source build for the CMake project the manifest declares; C++ has no package registry to install from",
+          "path": "CMakeLists.txt"
+        },
+        {
+          "detail": "package registry: none could not be read",
+          "path": "no package registry"
+        }
+      ],
+      "id": "install_command:cmake",
+      "kind": "install_command",
+      "polarity": "UNRESOLVED",
+      "value": "cmake -S . -B build\ncmake --build build"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lowest CMake version `cmake_minimum_required` accepts",
+          "path": "CMakeLists.txt"
+        }
+      ],
+      "id": "package:cmake_minimum",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "3.26"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "C++ standard the project's own build requires",
+          "path": "CMakeLists.txt"
+        }
+      ],
+      "id": "package:cxx_standard",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "17"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "project name declared by `project()`",
+          "path": "CMakeLists.txt"
+        }
+      ],
+      "id": "package:name",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "AsposeEmailFoss"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "version declared by `project(... VERSION ...)`",
+          "path": "CMakeLists.txt"
+        }
+      ],
+      "id": "package:version",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "0.1.0"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; module; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; module; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; module; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; module; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; class; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_document.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_document",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_document"
+    },
+    {
+      "attributes": {
+        "signature": "cfb_document from_buffer(std::uint8_t data, std::size_t size)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 42; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_document.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_document.from_buffer",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_document.from_buffer"
+    },
+    {
+      "attributes": {
+        "signature": "cfb_document from_bytes(std::vector<std::uint8_t> data)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 41; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_document.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_document.from_bytes",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_document.from_bytes"
+    },
+    {
+      "attributes": {
+        "signature": "cfb_document from_file(std::filesystem::path path)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 39; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_document.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_document.from_file",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_document.from_file"
+    },
+    {
+      "attributes": {
+        "signature": "cfb_document from_reader(cfb_reader reader)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 38; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_document.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_document.from_reader",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_document.from_reader"
+    },
+    {
+      "attributes": {
+        "signature": "cfb_document from_stream(std::istream stream)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 40; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_document.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_document.from_stream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_document.from_stream"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint16_t major_version()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 29; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_document.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_document.major_version",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_document.major_version"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint16_t minor_version()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 32; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_document.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_document.minor_version",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_document.minor_version"
+    },
+    {
+      "attributes": {
+        "signature": "cfb_storage root()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 26; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_document.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_document.root",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_document.root"
+    },
+    {
+      "attributes": {
+        "signature": "void set_major_version(std::uint16_t value)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 30; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_document.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_document.set_major_version",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_document.set_major_version"
+    },
+    {
+      "attributes": {
+        "signature": "void set_minor_version(std::uint16_t value)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 33; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_document.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_document.set_minor_version",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_document.set_minor_version"
+    },
+    {
+      "attributes": {
+        "signature": "void set_transaction_signature_number(std::uint32_t value)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 36; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_document.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_document.set_transaction_signature_number",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_document.set_transaction_signature_number"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint32_t transaction_signature_number()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 35; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_document.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_document.transaction_signature_number",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_document.transaction_signature_number"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 8; class; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_exception.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_exception",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_exception"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 11; class; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_node.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_node",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_node"
+    },
+    {
+      "attributes": {
+        "signature": "~cfb_node()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 20; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_node.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_node.cfb_node",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_node.cfb_node"
+    },
+    {
+      "attributes": {
+        "signature": "std::unique_ptr<cfb_node> clone()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 41; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_node.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_node.clone",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_node.clone"
+    },
+    {
+      "attributes": {
+        "signature": "std::array<std::uint8_t, 16> clsid()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 29; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_node.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_node.clsid",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_node.clsid"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint64_t creation_time()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 35; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_node.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_node.creation_time",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_node.creation_time"
+    },
+    {
+      "attributes": {
+        "signature": "bool is_storage()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 23; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_node.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_node.is_storage",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_node.is_storage"
+    },
+    {
+      "attributes": {
+        "signature": "bool is_stream()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 24; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_node.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_node.is_stream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_node.is_stream"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint64_t modified_time()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 38; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_node.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_node.modified_time",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_node.modified_time"
+    },
+    {
+      "attributes": {
+        "signature": "std::string name()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 26; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_node.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_node.name",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_node.name"
+    },
+    {
+      "attributes": {
+        "signature": "kind node_kind()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 22; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_node.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_node.node_kind",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_node.node_kind"
+    },
+    {
+      "attributes": {
+        "signature": "void set_creation_time(std::uint64_t value)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 36; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_node.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_node.set_creation_time",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_node.set_creation_time"
+    },
+    {
+      "attributes": {
+        "signature": "void set_modified_time(std::uint64_t value)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 39; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_node.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_node.set_modified_time",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_node.set_modified_time"
+    },
+    {
+      "attributes": {
+        "signature": "void set_state_bits(std::uint32_t value)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 33; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_node.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_node.set_state_bits",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_node.set_state_bits"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint32_t state_bits()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 32; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_node.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_node.state_bits",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_node.state_bits"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; class; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_reader",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_reader"
+    },
+    {
+      "attributes": {
+        "signature": "std::vector<std::uint32_t> child_ids(std::uint32_t storage_stream_id)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 43; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_reader.child_ids",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_reader.child_ids"
+    },
+    {
+      "attributes": {
+        "signature": "std::size_t data_size()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 34; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_reader.data_size",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_reader.data_size"
+    },
+    {
+      "attributes": {
+        "signature": "std::vector<std::uint32_t> difat()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 29; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_reader.difat",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_reader.difat"
+    },
+    {
+      "attributes": {
+        "signature": "std::vector<directory_entry> directory_entries()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 32; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_reader.directory_entries",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_reader.directory_entries"
+    },
+    {
+      "attributes": {
+        "signature": "std::size_t directory_entry_count()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 35; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_reader.directory_entry_count",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_reader.directory_entry_count"
+    },
+    {
+      "attributes": {
+        "signature": "std::vector<std::uint32_t> fat()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 30; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_reader.fat",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_reader.fat"
+    },
+    {
+      "attributes": {
+        "signature": "std::optional<std::uint32_t> find_child_by_name(std::uint32_t storage_stream_id, std::string name)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 44; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_reader.find_child_by_name",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_reader.find_child_by_name"
+    },
+    {
+      "attributes": {
+        "signature": "cfb_reader from_buffer(std::uint8_t data, std::size_t size)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 26; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_reader.from_buffer",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_reader.from_buffer"
+    },
+    {
+      "attributes": {
+        "signature": "cfb_reader from_bytes(std::vector<std::uint8_t> data)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 25; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_reader.from_bytes",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_reader.from_bytes"
+    },
+    {
+      "attributes": {
+        "signature": "cfb_reader from_file(std::filesystem::path path)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 23; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_reader.from_file",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_reader.from_file"
+    },
+    {
+      "attributes": {
+        "signature": "cfb_reader from_stream(std::istream stream)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 24; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_reader.from_stream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_reader.from_stream"
+    },
+    {
+      "attributes": {
+        "signature": "directory_entry get_entry(std::uint32_t stream_id)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 38; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_reader.get_entry",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_reader.get_entry"
+    },
+    {
+      "attributes": {
+        "signature": "std::vector<std::uint8_t> get_stream_data(std::uint32_t stream_id)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 39; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_reader.get_stream_data",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_reader.get_stream_data"
+    },
+    {
+      "attributes": {
+        "signature": "header header()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 28; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_reader.header",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_reader.header"
+    },
+    {
+      "attributes": {
+        "signature": "std::size_t materialized_stream_count()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 36; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_reader.materialized_stream_count",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_reader.materialized_stream_count"
+    },
+    {
+      "attributes": {
+        "signature": "std::vector<std::uint32_t> mini_fat()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 31; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_reader.mini_fat",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_reader.mini_fat"
+    },
+    {
+      "attributes": {
+        "signature": "std::optional<std::uint32_t> resolve_path(std::vector<std::string> names, std::uint32_t start_stream_id)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 45; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_reader.resolve_path",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_reader.resolve_path"
+    },
+    {
+      "attributes": {
+        "signature": "directory_entry root_entry()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 33; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_reader.root_entry",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_reader.root_entry"
+    },
+    {
+      "attributes": {
+        "signature": "std::vector<std::uint32_t> storage_ids()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 41; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_reader.storage_ids",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_reader.storage_ids"
+    },
+    {
+      "attributes": {
+        "signature": "std::vector<std::uint32_t> stream_ids()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 42; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_reader.stream_ids",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_reader.stream_ids"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 14; class; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_storage.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_storage",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_storage"
+    },
+    {
+      "attributes": {
+        "signature": "cfb_storage add_storage(cfb_storage storage)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 26; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_storage.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_storage.add_storage",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_storage.add_storage"
+    },
+    {
+      "attributes": {
+        "signature": "cfb_stream add_stream(cfb_stream stream)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 27; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_storage.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_storage.add_stream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_storage.add_stream"
+    },
+    {
+      "attributes": {
+        "signature": "cfb_storage cfb_storage()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_storage.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_storage.cfb_storage",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_storage.cfb_storage"
+    },
+    {
+      "attributes": {
+        "signature": "std::vector<std::unique_ptr<cfb_node>> children()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 23; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_storage.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_storage.children",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_storage.children"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 12; class; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_stream.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_stream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_stream"
+    },
+    {
+      "attributes": {
+        "signature": "std::vector<std::uint8_t> data()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 17; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_stream.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_stream.data",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_stream.data"
+    },
+    {
+      "attributes": {
+        "signature": "void set_data(std::vector<std::uint8_t> value)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 19; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_stream.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_stream.set_data",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_stream.set_data"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; class; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_writer.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_writer",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_writer"
+    },
+    {
+      "attributes": {
+        "signature": "std::vector<std::uint8_t> to_bytes(cfb_document document)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_writer.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_writer.to_bytes",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_writer.to_bytes"
+    },
+    {
+      "attributes": {
+        "signature": "void write_file(cfb_document document, std::filesystem::path path)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 17; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_writer.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_writer.write_file",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_writer.write_file"
+    },
+    {
+      "attributes": {
+        "signature": "void write_stream(cfb_document document, std::ostream stream)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/cfb_writer.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.cfb_writer.write_stream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.cfb_writer.write_stream"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 8; enum; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/directory_color_flag.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.directory_color_flag",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.directory_color_flag"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; class; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/directory_entry.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.directory_entry",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.directory_entry"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint32_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 22; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/directory_entry.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.directory_entry.child_id",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.directory_entry.child_id"
+    },
+    {
+      "attributes": {
+        "signature": "std::array<std::uint8_t, 16>",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 23; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/directory_entry.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.directory_entry.clsid",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.directory_entry.clsid"
+    },
+    {
+      "attributes": {
+        "signature": "directory_color_flag",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 19; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/directory_entry.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.directory_entry.color_flag",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.directory_entry.color_flag"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint64_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 25; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/directory_entry.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.directory_entry.creation_time",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.directory_entry.creation_time"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint16_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 17; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/directory_entry.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.directory_entry.directory_entry_name_length",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.directory_entry.directory_entry_name_length"
+    },
+    {
+      "attributes": {
+        "signature": "bool is_root()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 32; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/directory_entry.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.directory_entry.is_root",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.directory_entry.is_root"
+    },
+    {
+      "attributes": {
+        "signature": "bool is_storage()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 30; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/directory_entry.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.directory_entry.is_storage",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.directory_entry.is_storage"
+    },
+    {
+      "attributes": {
+        "signature": "bool is_stream()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 31; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/directory_entry.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.directory_entry.is_stream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.directory_entry.is_stream"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint32_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 20; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/directory_entry.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.directory_entry.left_sibling_id",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.directory_entry.left_sibling_id"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint64_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 26; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/directory_entry.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.directory_entry.modified_time",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.directory_entry.modified_time"
+    },
+    {
+      "attributes": {
+        "signature": "std::string",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/directory_entry.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.directory_entry.name",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.directory_entry.name"
+    },
+    {
+      "attributes": {
+        "signature": "directory_object_type",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/directory_entry.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.directory_entry.object_type",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.directory_entry.object_type"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint32_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/directory_entry.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.directory_entry.right_sibling_id",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.directory_entry.right_sibling_id"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint32_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 27; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/directory_entry.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.directory_entry.starting_sector_location",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.directory_entry.starting_sector_location"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint32_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 24; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/directory_entry.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.directory_entry.state_bits",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.directory_entry.state_bits"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint32_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 15; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/directory_entry.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.directory_entry.stream_id",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.directory_entry.stream_id"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint64_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 28; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/directory_entry.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.directory_entry.stream_size",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.directory_entry.stream_size"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 8; enum; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/directory_object_type.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.directory_object_type",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.directory_object_type"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 11; class; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/header.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.header",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.header"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint16_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 17; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/header.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.header.byte_order",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.header.byte_order"
+    },
+    {
+      "attributes": {
+        "signature": "std::vector<std::uint32_t>",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 30; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/header.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.header.difat",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.header.difat"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint32_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 28; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/header.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.header.first_difat_sector_location",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.header.first_difat_sector_location"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint32_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 23; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/header.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.header.first_directory_sector_location",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.header.first_directory_sector_location"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint32_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 26; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/header.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.header.first_mini_fat_sector_location",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.header.first_mini_fat_sector_location"
+    },
+    {
+      "attributes": {
+        "signature": "std::array<std::uint8_t, 16>",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 14; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/header.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.header.header_clsid",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.header.header_clsid"
+    },
+    {
+      "attributes": {
+        "signature": "std::array<std::uint8_t, 8>",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/header.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.header.header_signature",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.header.header_signature"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint16_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/header.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.header.major_version",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.header.major_version"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint16_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 19; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/header.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.header.mini_sector_shift",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.header.mini_sector_shift"
+    },
+    {
+      "attributes": {
+        "signature": "std::size_t mini_sector_size()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 33; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/header.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.header.mini_sector_size",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.header.mini_sector_size"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint32_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 25; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/header.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.header.mini_stream_cutoff_size",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.header.mini_stream_cutoff_size"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint16_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 15; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/header.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.header.minor_version",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.header.minor_version"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint32_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 29; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/header.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.header.number_of_difat_sectors",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.header.number_of_difat_sectors"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint32_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/header.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.header.number_of_directory_sectors",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.header.number_of_directory_sectors"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint32_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 22; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/header.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.header.number_of_fat_sectors",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.header.number_of_fat_sectors"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint32_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 27; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/header.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.header.number_of_mini_fat_sectors",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.header.number_of_mini_fat_sectors"
+    },
+    {
+      "attributes": {
+        "signature": "std::array<std::uint8_t, 6>",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 20; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/header.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.header.reserved",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.header.reserved"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint16_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/header.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.header.sector_shift",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.header.sector_shift"
+    },
+    {
+      "attributes": {
+        "signature": "std::size_t sector_size()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 32; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/header.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.header.sector_size",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.header.sector_size"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint32_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 24; method; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/header.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.header.transaction_signature_number",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.header.transaction_signature_number"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 8; enum; declared in a public header",
+          "path": "include/aspose/email/foss/cfb/sector_marker.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.cfb.sector_marker",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.cfb.sector_marker"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; module; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 8; enum; declared in a public header",
+          "path": "include/aspose/email/foss/msg/common_message_property_id.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.common_message_property_id",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.common_message_property_id"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; class; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_attachment.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_attachment",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_attachment"
+    },
+    {
+      "attributes": {
+        "signature": "std::string",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 29; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_attachment.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_attachment.content_id",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_attachment.content_id"
+    },
+    {
+      "attributes": {
+        "signature": "std::vector<std::uint8_t>",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 27; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_attachment.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_attachment.data",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_attachment.data"
+    },
+    {
+      "attributes": {
+        "signature": "std::shared_ptr<mapi_message>",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 30; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_attachment.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_attachment.embedded_message",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_attachment.embedded_message"
+    },
+    {
+      "attributes": {
+        "signature": "std::string",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 26; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_attachment.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_attachment.filename",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_attachment.filename"
+    },
+    {
+      "attributes": {
+        "signature": "mapi_attachment from_bytes(std::string filename, std::vector<std::uint8_t> data, std::string mime_type, std::string content_id)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 19; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_attachment.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_attachment.from_bytes",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_attachment.from_bytes"
+    },
+    {
+      "attributes": {
+        "signature": "mapi_attachment from_stream(std::string filename, std::istream stream, std::string mime_type, std::string content_id)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 20; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_attachment.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_attachment.from_stream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_attachment.from_stream"
+    },
+    {
+      "attributes": {
+        "signature": "bool is_embedded_message()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 24; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_attachment.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_attachment.is_embedded_message",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_attachment.is_embedded_message"
+    },
+    {
+      "attributes": {
+        "signature": "void load_data(std::istream stream)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 22; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_attachment.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_attachment.load_data",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_attachment.load_data"
+    },
+    {
+      "attributes": {
+        "signature": "std::string",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 28; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_attachment.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_attachment.mime_type",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_attachment.mime_type"
+    },
+    {
+      "attributes": {
+        "signature": "mapi_property_collection",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 31; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_attachment.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_attachment.properties",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_attachment.properties"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 20; class; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message"
+    },
+    {
+      "attributes": {
+        "signature": "mapi_attachment add_attachment(std::string filename, std::vector<std::uint8_t> data, std::string mime_type, std::string content_id)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 74; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.add_attachment",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.add_attachment"
+    },
+    {
+      "attributes": {
+        "signature": "mapi_attachment add_embedded_message_attachment(mapi_message message, std::string filename, std::string mime_type)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 76; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.add_embedded_message_attachment",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.add_embedded_message_attachment"
+    },
+    {
+      "attributes": {
+        "signature": "mapi_recipient add_recipient(std::string email_address, std::string display_name, int recipient_type)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 73; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.add_recipient",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.add_recipient"
+    },
+    {
+      "attributes": {
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 27; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.attach_method_by_value",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.attach_method_by_value"
+    },
+    {
+      "attributes": {
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 28; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.attach_method_embedded",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.attach_method_embedded"
+    },
+    {
+      "attributes": {
+        "signature": "std::vector<mapi_attachment> attachments()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 70; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.attachments",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.attachments"
+    },
+    {
+      "attributes": {
+        "signature": "std::string body()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 45; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.body",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.body"
+    },
+    {
+      "attributes": {
+        "signature": "mapi_message create(std::string subject, std::string body, bool unicode_strings)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 30; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.create",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.create"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint32_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 23; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.default_property_flags",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.default_property_flags"
+    },
+    {
+      "attributes": {
+        "signature": "mapi_message from_file(std::filesystem::path path, bool strict)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 31; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.from_file",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.from_file"
+    },
+    {
+      "attributes": {
+        "signature": "mapi_message from_msg_document(msg_document document)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 33; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.from_msg_document",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.from_msg_document"
+    },
+    {
+      "attributes": {
+        "signature": "mapi_message from_stream(std::istream stream, bool strict)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 32; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.from_stream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.from_stream"
+    },
+    {
+      "attributes": {
+        "signature": "std::any get_property_value(std::uint16_t property_id, std::optional<std::uint16_t> property_type)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 79; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.get_property_value",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.get_property_value"
+    },
+    {
+      "attributes": {
+        "signature": "std::string html_body()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 48; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.html_body",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.html_body"
+    },
+    {
+      "attributes": {
+        "signature": "std::string internet_message_id()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 63; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.internet_message_id",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.internet_message_id"
+    },
+    {
+      "attributes": {
+        "signature": "mapi_message load_from_eml(std::filesystem::path path)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 34; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.load_from_eml",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.load_from_eml"
+    },
+    {
+      "attributes": {
+        "signature": "std::string message_class()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 51; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.message_class",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.message_class"
+    },
+    {
+      "attributes": {
+        "signature": "mapi_property_collection properties()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 66; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.properties",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.properties"
+    },
+    {
+      "attributes": {
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 26; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.recipient_type_bcc",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.recipient_type_bcc"
+    },
+    {
+      "attributes": {
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 25; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.recipient_type_cc",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.recipient_type_cc"
+    },
+    {
+      "attributes": {
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 24; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.recipient_type_to",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.recipient_type_to"
+    },
+    {
+      "attributes": {
+        "signature": "std::vector<mapi_recipient> recipients()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 68; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.recipients",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.recipients"
+    },
+    {
+      "attributes": {
+        "signature": "std::vector<std::uint8_t> save()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.save",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.save"
+    },
+    {
+      "attributes": {
+        "signature": "std::vector<std::uint8_t> save_to_eml()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 85; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.save_to_eml",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.save_to_eml"
+    },
+    {
+      "attributes": {
+        "signature": "std::string sender_address_type()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 60; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.sender_address_type",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.sender_address_type"
+    },
+    {
+      "attributes": {
+        "signature": "std::string sender_email_address()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 57; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.sender_email_address",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.sender_email_address"
+    },
+    {
+      "attributes": {
+        "signature": "std::string sender_name()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 54; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.sender_name",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.sender_name"
+    },
+    {
+      "attributes": {
+        "signature": "void set_body(std::string value)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 46; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.set_body",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.set_body"
+    },
+    {
+      "attributes": {
+        "signature": "void set_html_body(std::string value)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 49; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.set_html_body",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.set_html_body"
+    },
+    {
+      "attributes": {
+        "signature": "void set_internet_message_id(std::string value)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 64; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.set_internet_message_id",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.set_internet_message_id"
+    },
+    {
+      "attributes": {
+        "signature": "void set_message_class(std::string value)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 52; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.set_message_class",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.set_message_class"
+    },
+    {
+      "attributes": {
+        "signature": "mapi_property set_property(std::uint16_t property_id, std::uint16_t property_type, std::any value, std::uint32_t flags)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 78; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.set_property",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.set_property"
+    },
+    {
+      "attributes": {
+        "signature": "void set_sender_address_type(std::string value)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 61; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.set_sender_address_type",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.set_sender_address_type"
+    },
+    {
+      "attributes": {
+        "signature": "void set_sender_email_address(std::string value)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 58; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.set_sender_email_address",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.set_sender_email_address"
+    },
+    {
+      "attributes": {
+        "signature": "void set_sender_name(std::string value)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 55; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.set_sender_name",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.set_sender_name"
+    },
+    {
+      "attributes": {
+        "signature": "void set_subject(std::string value)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 43; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.set_subject",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.set_subject"
+    },
+    {
+      "attributes": {
+        "signature": "void set_unicode_strings(bool value)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 38; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.set_unicode_strings",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.set_unicode_strings"
+    },
+    {
+      "attributes": {
+        "signature": "std::string subject()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 42; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.subject",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.subject"
+    },
+    {
+      "attributes": {
+        "signature": "msg_document to_msg_document()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 81; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.to_msg_document",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.to_msg_document"
+    },
+    {
+      "attributes": {
+        "signature": "bool unicode_strings()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 37; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.unicode_strings",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.unicode_strings"
+    },
+    {
+      "attributes": {
+        "signature": "std::vector<std::string> validation_issues()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 40; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_message.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_message.validation_issues",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_message.validation_issues"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 9; class; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_property.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_property",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_property"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint32_t flags()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 19; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_property.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_property.flags",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_property.flags"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint16_t property_id()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 14; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_property.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_property.property_id",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_property.property_id"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint32_t property_tag()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_property.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_property.property_tag",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_property.property_tag"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint16_t property_type()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 15; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_property.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_property.property_type",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_property.property_type"
+    },
+    {
+      "attributes": {
+        "signature": "void set_flags(std::uint32_t value)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 20; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_property.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_property.set_flags",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_property.set_flags"
+    },
+    {
+      "attributes": {
+        "signature": "void set_value(std::any value)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_property.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_property.set_value",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_property.set_value"
+    },
+    {
+      "attributes": {
+        "signature": "std::any value()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_property.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_property.value",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_property.value"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; class; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_property_collection.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_property_collection",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_property_collection"
+    },
+    {
+      "attributes": {
+        "signature": "mapi_property add(std::uint16_t property_id, std::uint16_t property_type, std::any value, std::uint32_t flags)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 17; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_property_collection.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_property_collection.add",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_property_collection.add"
+    },
+    {
+      "attributes": {
+        "signature": "mapi_property get(std::uint16_t property_id, std::optional<std::uint16_t> property_type)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_property_collection.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_property_collection.get",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_property_collection.get"
+    },
+    {
+      "attributes": {
+        "signature": "std::map<std::pair<std::uint16_t, std::uint16_t>, mapi_property> items()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_property_collection.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_property_collection.items",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_property_collection.items"
+    },
+    {
+      "attributes": {
+        "signature": "void remove(std::uint16_t property_id, std::optional<std::uint16_t> property_type)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 20; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_property_collection.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_property_collection.remove",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_property_collection.remove"
+    },
+    {
+      "attributes": {
+        "signature": "mapi_property set(mapi_property property)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_property_collection.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_property_collection.set",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_property_collection.set"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 10; class; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_recipient.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_recipient",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_recipient"
+    },
+    {
+      "attributes": {
+        "signature": "std::string",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_recipient.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_recipient.address_type",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_recipient.address_type"
+    },
+    {
+      "attributes": {
+        "signature": "std::string",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_recipient.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_recipient.display_name",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_recipient.display_name"
+    },
+    {
+      "attributes": {
+        "signature": "std::string",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 14; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_recipient.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_recipient.email_address",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_recipient.email_address"
+    },
+    {
+      "attributes": {
+        "signature": "mapi_property_collection",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 17; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_recipient.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_recipient.properties",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_recipient.properties"
+    },
+    {
+      "attributes": {
+        "signature": "int",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 15; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/mapi_recipient.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.mapi_recipient.recipient_type",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.mapi_recipient.recipient_type"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 14; class; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_document.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_document",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_document"
+    },
+    {
+      "attributes": {
+        "signature": "msg_document from_file(std::filesystem::path path, bool strict)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 32; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_document.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_document.from_file",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_document.from_file"
+    },
+    {
+      "attributes": {
+        "signature": "msg_document from_reader(msg_reader reader)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 31; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_document.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_document.from_reader",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_document.from_reader"
+    },
+    {
+      "attributes": {
+        "signature": "msg_document from_stream(std::istream stream, bool strict)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 33; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_document.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_document.from_stream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_document.from_stream"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint16_t major_version()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 26; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_document.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_document.major_version",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_document.major_version"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint16_t minor_version()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 27; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_document.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_document.minor_version",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_document.minor_version"
+    },
+    {
+      "attributes": {
+        "signature": "msg_storage root()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 24; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_document.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_document.root",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_document.root"
+    },
+    {
+      "attributes": {
+        "signature": "bool strict()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 29; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_document.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_document.strict",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_document.strict"
+    },
+    {
+      "attributes": {
+        "signature": "cfb::cfb_document to_cfb_document()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 35; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_document.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_document.to_cfb_document",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_document.to_cfb_document"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint32_t transaction_signature_number()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 28; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_document.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_document.transaction_signature_number",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_document.transaction_signature_number"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 8; class; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_exception.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_exception",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_exception"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; class; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_reader",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_reader"
+    },
+    {
+      "attributes": {
+        "signature": "cfb::cfb_reader cfb()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_reader.cfb",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_reader.cfb"
+    },
+    {
+      "attributes": {
+        "signature": "msg_reader from_file(std::filesystem::path path, bool strict)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_reader.from_file",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_reader.from_file"
+    },
+    {
+      "attributes": {
+        "signature": "msg_reader from_stream(std::istream stream, bool strict)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 19; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_reader.from_stream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_reader.from_stream"
+    },
+    {
+      "attributes": {
+        "signature": "bool strict()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 22; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_reader.strict",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_reader.strict"
+    },
+    {
+      "attributes": {
+        "signature": "std::vector<std::string> validation_issues()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 23; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_reader.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_reader.validation_issues",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_reader.validation_issues"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 15; class; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_storage.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_storage",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_storage"
+    },
+    {
+      "attributes": {
+        "signature": "msg_storage add_storage(msg_storage storage)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_storage.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_storage.add_storage",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_storage.add_storage"
+    },
+    {
+      "attributes": {
+        "signature": "msg_stream add_stream(msg_stream stream)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 20; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_storage.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_storage.add_stream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_storage.add_stream"
+    },
+    {
+      "attributes": {
+        "signature": "std::array<std::uint8_t, 16>",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 30; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_storage.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_storage.clsid",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_storage.clsid"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint64_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 32; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_storage.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_storage.creation_time",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_storage.creation_time"
+    },
+    {
+      "attributes": {
+        "signature": "msg_storage find_storage(std::string storage_name)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 25; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_storage.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_storage.find_storage",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_storage.find_storage"
+    },
+    {
+      "attributes": {
+        "signature": "msg_stream find_stream(std::string stream_name)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 23; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_storage.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_storage.find_stream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_storage.find_stream"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint64_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 33; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_storage.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_storage.modified_time",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_storage.modified_time"
+    },
+    {
+      "attributes": {
+        "signature": "std::string",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 28; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_storage.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_storage.name",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_storage.name"
+    },
+    {
+      "attributes": {
+        "signature": "msg_storage_role",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 29; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_storage.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_storage.role",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_storage.role"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint32_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 31; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_storage.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_storage.state_bits",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_storage.state_bits"
+    },
+    {
+      "attributes": {
+        "signature": "std::vector<msg_storage>",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 35; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_storage.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_storage.storages",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_storage.storages"
+    },
+    {
+      "attributes": {
+        "signature": "std::vector<msg_stream>",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 34; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_storage.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_storage.streams",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_storage.streams"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; enum; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_storage_role.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_storage_role",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_storage_role"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 11; class; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_stream.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_stream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_stream"
+    },
+    {
+      "attributes": {
+        "signature": "std::array<std::uint8_t, 16>",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_stream.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_stream.clsid",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_stream.clsid"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint64_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 20; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_stream.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_stream.creation_time",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_stream.creation_time"
+    },
+    {
+      "attributes": {
+        "signature": "std::vector<std::uint8_t>",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 17; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_stream.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_stream.data",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_stream.data"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint64_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_stream.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_stream.modified_time",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_stream.modified_time"
+    },
+    {
+      "attributes": {
+        "signature": "std::string",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_stream.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_stream.name",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_stream.name"
+    },
+    {
+      "attributes": {
+        "signature": "std::uint32_t",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 19; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_stream.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_stream.state_bits",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_stream.state_bits"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; class; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_writer.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_writer",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_writer"
+    },
+    {
+      "attributes": {
+        "signature": "std::vector<std::uint8_t> to_bytes(msg_document document)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_writer.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_writer.to_bytes",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_writer.to_bytes"
+    },
+    {
+      "attributes": {
+        "signature": "void write_file(msg_document document, std::filesystem::path path)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 17; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_writer.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_writer.write_file",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_writer.write_file"
+    },
+    {
+      "attributes": {
+        "signature": "void write_stream(msg_document document, std::ostream stream)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; method; declared in a public header",
+          "path": "include/aspose/email/foss/msg/msg_writer.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.msg_writer.write_stream",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.msg_writer.write_stream"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 8; enum; declared in a public header",
+          "path": "include/aspose/email/foss/msg/property_type_code.hpp"
+        }
+      ],
+      "id": "public_symbol:aspose.email.foss.msg.property_type_code",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose.email.foss.msg.property_type_code"
+    }
+  ],
+  "repository": "aspose-email-foss/Aspose.Email-FOSS-for-Cpp",
+  "schema_version": 1,
+  "source_revision": "HEAD"
+}

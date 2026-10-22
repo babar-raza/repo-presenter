@@ -1,0 +1,5878 @@
+{
+  "facts": [
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "extra 'test' declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "dependency:development.test.pytest-8",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "pytest>=8"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "extra 'js' declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "dependency:optional.js.quickjs-1.19-2",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "quickjs>=1.19,<2"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "install requirement declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "dependency:skia-python-87.0-145",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "skia-python>=87.0,<145"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 111-122; python fence; unit inherited_unit:001.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 1: EXECUTED; exit 0; ran against the repository source tree; the package would not build",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:001",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose_html import HTMLDocument, serialise\n\ndocument = HTMLDocument.parse(\"<main id='content'><h1>Hello</h1></main>\")\ncontent = document.get_element_by_id(\"content\")\n\nparagraph = document.create_element(\"p\")\nparagraph.text_content = \"Updated through the DOM API.\"\ncontent.append_child(paragraph)\n\nprint(serialise(content))\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 126-142; python fence; unit inherited_unit:002.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 2: EXECUTED; exit 0; ran against the repository source tree; the package would not build",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:002",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose_html.dom import Document\nfrom aspose_html.cssom import CSSStyleSheet\n\ndocument = Document()\nelement = document.create_element(\"div\")\nelement.set_attribute(\"class\", \"foo\")\nelement.set_attribute(\"id\", \"bar\")\ndocument.append_child(element)\n\nsheet = CSSStyleSheet()\nsheet.replace_sync(\".foo { color: red } #bar { color: blue }\")\ndocument.attach_style_sheet(sheet)\n\nstyle = element.get_computed_style()\nprint(style.get_property_value(\"color\"))  # \"blue\"\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 150-157; python fence; unit inherited_unit:003.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 3: EXECUTED; exit 0; ran against the repository source tree; the package would not build",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:003",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose_html import URL\n\nurl = URL(\"https://example.com/articles?category=html\")\nurl.search_params.set(\"page\", \"2\")\n\nprint(str(url))\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 164-171; python fence; unit inherited_unit:004.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 4: EXECUTED; exit 0; ran against the repository source tree; the package would not build",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:004",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose_html import HTMLDocument\n\ndocument = HTMLDocument.parse(\"<article><h1>News</h1><p>Hello</p></article>\")\nheading = document.get_elements_by_tag_name(\"h1\").item(0)\n\nprint(heading.text_content)\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 175-182; python fence; unit inherited_unit:005.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 5: EXECUTED; exit 0; ran against the repository source tree; the package would not build",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:005",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose_html.encoding.detection import detect_encoding\n\nresult = detect_encoding(b\"\\xef\\xbb\\xbf<p>x</p>\")\nprint(result.encoding)\nprint(result.confidence)\nprint(result.text)\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 186-197; python fence; unit inherited_unit:006.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 6: FAILED; ImportError; ran against the repository source tree; the package would not build; retried after installing declared extra providing 'quickjs' (quickjs>=1.19,<2)",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:006",
+      "kind": "example",
+      "polarity": "CONTRADICTED",
+      "value": "from aspose_html.dom import Document\nfrom aspose_html.js import JSContext\n\ndocument = Document()\nelement = document.create_element(\"div\")\ndocument.append_child(element)\n\nwith JSContext(document) as ctx:\n    result = ctx.evaluate(\"1 + 1\")\n    print(result)  # 2\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 201-207; python fence; unit inherited_unit:007.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 7: EXECUTED; exit 0; ran against the repository source tree; the package would not build",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:007",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "from aspose_html.tokenizer import Tokenizer, TokenizerState\n\ntokenizer = Tokenizer(\"<p>Hello</p>\")\ntokens = list(tokenizer.tokenize())\nprint(tokens[0].tag_name)  # \"p\"\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "admitted registry entry",
+          "path": "data/registry.json"
+        }
+      ],
+      "id": "identity:repository",
+      "kind": "identity",
+      "polarity": "SUPPORTED",
+      "value": "aspose-html-foss/Aspose.HTML-FOSS-for-Python"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package dir",
+          "path": "src/aspose_html/__init__.py"
+        }
+      ],
+      "id": "import_path:aspose_html",
+      "kind": "import_path",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package dir",
+          "path": "src/aspose_html/css/__init__.py"
+        }
+      ],
+      "id": "import_path:aspose_html.css",
+      "kind": "import_path",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.css"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package dir",
+          "path": "src/aspose_html/cssom/__init__.py"
+        }
+      ],
+      "id": "import_path:aspose_html.cssom",
+      "kind": "import_path",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.cssom"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package dir",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "import_path:aspose_html.dom",
+      "kind": "import_path",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package dir",
+          "path": "src/aspose_html/encoding/__init__.py"
+        }
+      ],
+      "id": "import_path:aspose_html.encoding",
+      "kind": "import_path",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.encoding"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package dir",
+          "path": "src/aspose_html/js/__init__.py"
+        }
+      ],
+      "id": "import_path:aspose_html.js",
+      "kind": "import_path",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.js"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package dir",
+          "path": "src/aspose_html/layout/__init__.py"
+        }
+      ],
+      "id": "import_path:aspose_html.layout",
+      "kind": "import_path",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.layout"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package dir",
+          "path": "src/aspose_html/tokenizer/__init__.py"
+        }
+      ],
+      "id": "import_path:aspose_html.tokenizer",
+      "kind": "import_path",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.tokenizer"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package dir",
+          "path": "src/aspose_html/tree/__init__.py"
+        }
+      ],
+      "id": "import_path:aspose_html.tree",
+      "kind": "import_path",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.tree"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package dir",
+          "path": "src/aspose_html/url/__init__.py"
+        }
+      ],
+      "id": "import_path:aspose_html.url",
+      "kind": "import_path",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.url"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "distribution name declared by the manifest",
+          "path": "pyproject.toml"
+        },
+        {
+          "detail": "package registry: distribution not found",
+          "path": "https://pypi.org/pypi/aspose-html-foss/json"
+        }
+      ],
+      "id": "install_command:pip",
+      "kind": "install_command",
+      "polarity": "CONTRADICTED",
+      "value": "pip install aspose-html-foss"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "license declared by the manifest",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "package:license",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "MIT"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "distribution name declared by the manifest",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "package:name",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "aspose-html-foss"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "python_requires declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "package:python_requires",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": ">=3.10"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "version declared by the manifest",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "package:version",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "0.1.0"
+    },
+    {
+      "attributes": {
+        "docstring": "Aspose.HTML \u2014 open-source Python HTML processing library.",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose_html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html"
+    },
+    {
+      "attributes": {
+        "docstring": "aspose_html.css \u2014 CSS selector engine public surface.",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose_html/css/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.css",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.css"
+    },
+    {
+      "attributes": {
+        "docstring": "Return ``True`` if *element* matches the CSS *selector*.",
+        "signature": "def element_matches(element: Element, selector: str) -> bool",
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 77; function; public by __all__",
+          "path": "src/aspose_html/css/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.css.element_matches",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.css.element_matches"
+    },
+    {
+      "attributes": {
+        "docstring": "Find elements matching a CSS selector rooted at the given node.",
+        "signature": "def select(root: Node, selector: str, first_only: bool=False) -> list[Element]",
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 14; function; public by __all__",
+          "path": "src/aspose_html/css/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.css.select",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.css.select"
+    },
+    {
+      "attributes": {
+        "docstring": "Public CSSOM rule-object baseline.",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose_html/cssom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.cssom",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.cssom"
+    },
+    {
+      "attributes": {
+        "docstring": "Namespace class for CSS static utilities (CSS Conditional Rules \u00a76).",
+        "signature": "class CSS",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 32; class; public by __all__",
+          "path": "src/aspose_html/cssom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.cssom.css",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.cssom.CSS"
+    },
+    {
+      "attributes": {
+        "docstring": "Return ``True`` when the CSS feature described by the arguments is supported.",
+        "signature": "def supports(property_or_condition: str, value: str | None=None) -> bool",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 51; method; public by __all__",
+          "path": "src/aspose_html/cssom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.cssom.css.supports",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.cssom.CSS.supports"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 12; class; public by reexport; re-export of aspose_html.cssom._rules.CSSCounterStyleRule",
+          "path": "src/aspose_html/cssom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.cssom.csscounterstylerule",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.cssom.CSSCounterStyleRule"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 12; class; public by reexport; re-export of aspose_html.cssom._rules.CSSFontFaceRule",
+          "path": "src/aspose_html/cssom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.cssom.cssfontfacerule",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.cssom.CSSFontFaceRule"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 12; class; public by reexport; re-export of aspose_html.cssom._rules.CSSImportRule",
+          "path": "src/aspose_html/cssom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.cssom.cssimportrule",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.cssom.CSSImportRule"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 12; class; public by reexport; re-export of aspose_html.cssom._rules.CSSKeyframeRule",
+          "path": "src/aspose_html/cssom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.cssom.csskeyframerule",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.cssom.CSSKeyframeRule"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 12; class; public by reexport; re-export of aspose_html.cssom._rules.CSSKeyframesRule",
+          "path": "src/aspose_html/cssom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.cssom.csskeyframesrule",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.cssom.CSSKeyframesRule"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 12; class; public by reexport; re-export of aspose_html.cssom._rules.CSSLayerBlockRule",
+          "path": "src/aspose_html/cssom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.cssom.csslayerblockrule",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.cssom.CSSLayerBlockRule"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 12; class; public by reexport; re-export of aspose_html.cssom._rules.CSSLayerStatementRule",
+          "path": "src/aspose_html/cssom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.cssom.csslayerstatementrule",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.cssom.CSSLayerStatementRule"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 12; class; public by reexport; re-export of aspose_html.cssom._rules.CSSMediaRule",
+          "path": "src/aspose_html/cssom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.cssom.cssmediarule",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.cssom.CSSMediaRule"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 12; class; public by reexport; re-export of aspose_html.cssom._rules.CSSNamespaceRule",
+          "path": "src/aspose_html/cssom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.cssom.cssnamespacerule",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.cssom.CSSNamespaceRule"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 12; class; public by reexport; re-export of aspose_html.cssom._rules.CSSPageRule",
+          "path": "src/aspose_html/cssom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.cssom.csspagerule",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.cssom.CSSPageRule"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 12; class; public by reexport; re-export of aspose_html.cssom._rules.CSSPropertyRule",
+          "path": "src/aspose_html/cssom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.cssom.csspropertyrule",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.cssom.CSSPropertyRule"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 12; class; public by reexport; re-export of aspose_html.cssom._rules.CSSRule",
+          "path": "src/aspose_html/cssom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.cssom.cssrule",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.cssom.CSSRule"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 12; class; public by reexport; re-export of aspose_html.cssom._rules.CSSRuleList",
+          "path": "src/aspose_html/cssom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.cssom.cssrulelist",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.cssom.CSSRuleList"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 12; class; public by reexport; re-export of aspose_html.cssom._rules.CSSStyleRule",
+          "path": "src/aspose_html/cssom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.cssom.cssstylerule",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.cssom.CSSStyleRule"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 29; class; public by reexport; re-export of aspose_html.cssom._stylesheet.CSSStyleSheet",
+          "path": "src/aspose_html/cssom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.cssom.cssstylesheet",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.cssom.CSSStyleSheet"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 12; class; public by reexport; re-export of aspose_html.cssom._rules.CSSSupportsRule",
+          "path": "src/aspose_html/cssom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.cssom.csssupportsrule",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.cssom.CSSSupportsRule"
+    },
+    {
+      "attributes": {
+        "docstring": "aspose_html.dom \u2014 WHATWG DOM Standard node hierarchy.",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 81; class; public by reexport; re-export of aspose_html.dom._abort_controller.AbortController",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.abortcontroller",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.AbortController"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 81; class; public by reexport; re-export of aspose_html.dom._abort_controller.AbortSignal",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.abortsignal",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.AbortSignal"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 45; class; public by reexport; re-export of aspose_html.dom._range.AbstractRange",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.abstractrange",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.AbstractRange"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 38; class; public by reexport; re-export of aspose_html.dom._attr.Attr",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.attr",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.Attr"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 50; class; public by reexport; re-export of aspose_html.dom._window.BarProp",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.barprop",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.BarProp"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 50; class; public by reexport; re-export of aspose_html.dom._window.BroadcastChannel",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.broadcastchannel",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.BroadcastChannel"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 34; class; public by reexport; re-export of aspose_html.dom._character_data.CDATASection",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.cdatasection",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.CDATASection"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 34; class; public by reexport; re-export of aspose_html.dom._character_data.CharacterData",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.characterdata",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.CharacterData"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 34; class; public by reexport; re-export of aspose_html.dom._character_data.Comment",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.comment",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.Comment"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 78; class; public by reexport; re-export of aspose_html.dom._cascade.ComputedStyleDeclaration",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.computedstyledeclaration",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.ComputedStyleDeclaration"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 50; class; public by reexport; re-export of aspose_html.dom._window.Console",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.console",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.Console"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 50; class; public by reexport; re-export of aspose_html.dom._window.Crypto",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.crypto",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.Crypto"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 40; class; public by reexport; re-export of aspose_html.dom._style.CSSStyleDeclaration",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.cssstyledeclaration",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.CSSStyleDeclaration"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 77; class; public by reexport; re-export of aspose_html.dom._custom_elements.CustomElementRegistry",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.customelementregistry",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.CustomElementRegistry"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; class; public by reexport; re-export of aspose_html.dom._event.CustomEvent",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.customevent",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.CustomEvent"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 50; class; public by reexport; re-export of aspose_html.dom._window.DataCloneError",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.datacloneerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.DataCloneError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 31; class; public by reexport; re-export of aspose_html.dom._document.Document",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.document",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.Document"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 37; class; public by reexport; re-export of aspose_html.dom._document_fragment.DocumentFragment",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.documentfragment",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.DocumentFragment"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 17; class; public by reexport; re-export of aspose_html.dom._node.DocumentPosition",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.documentposition",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.DocumentPosition"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 36; class; public by reexport; re-export of aspose_html.dom._document_type.DocumentType",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.documenttype",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.DocumentType"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 31; class; public by reexport; re-export of aspose_html.dom._document.DOMConfiguration",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.domconfiguration",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.DOMConfiguration"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_html.dom._exceptions.DOMException",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.domexception",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.DOMException"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 79; class; public by reexport; re-export of aspose_html.dom._implementation.DOMImplementation",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.domimplementation",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.DOMImplementation"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 49; class; public by reexport; re-export of aspose_html.dom._dom_parsing.DOMParser",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.domparser",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.DOMParser"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 80; class; public by reexport; re-export of aspose_html.dom._geometry.DOMRect",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.domrect",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.DOMRect"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 80; class; public by reexport; re-export of aspose_html.dom._geometry.DOMRectList",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.domrectlist",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.DOMRectList"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 42; class; public by reexport; re-export of aspose_html.dom._dataset.DOMStringMap",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.domstringmap",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.DOMStringMap"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 41; class; public by reexport; re-export of aspose_html.dom._token_list.DOMTokenList",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.domtokenlist",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.DOMTokenList"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 32; class; public by reexport; re-export of aspose_html.dom._element.Element",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.element",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.Element"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; class; public by reexport; re-export of aspose_html.dom._event.ErrorEvent",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.errorevent",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.ErrorEvent"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; class; public by reexport; re-export of aspose_html.dom._event.Event",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.event",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.Event"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 30; class; public by reexport; re-export of aspose_html.dom._event_target.EventTarget",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.eventtarget",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.EventTarget"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; class; public by reexport; re-export of aspose_html.dom._event.FocusEvent",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.focusevent",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.FocusEvent"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 75; class; public by reexport; re-export of aspose_html.dom._form_data.FormData",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.formdata",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.FormData"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; class; public by reexport; re-export of aspose_html.dom._event.HashChangeEvent",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.hashchangeevent",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HashChangeEvent"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_html.dom._exceptions.HierarchyRequestError",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.hierarchyrequesterror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HierarchyRequestError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 76; class; public by reexport; re-export of aspose_html.dom._history.History",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.history",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.History"
+    },
+    {
+      "attributes": {
+        "docstring": "HTML element subclasses \u2014 concrete types returned by Document.create_element().",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLAddressElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmladdresselement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLAddressElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; class; public by reexport; re-export of aspose_html.dom.html._anchor_elements.HTMLAnchorElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlanchorelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLAnchorElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; class; public by reexport; re-export of aspose_html.dom.html._anchor_elements.HTMLAreaElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlareaelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLAreaElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLArticleElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlarticleelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLArticleElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLAsideElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlasideelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLAsideElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 51; class; public by reexport; re-export of aspose_html.dom.html._media_elements.HTMLAudioElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlaudioelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLAudioElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 59; class; public by reexport; re-export of aspose_html.dom.html._metadata_elements.HTMLBaseElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlbaseelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLBaseElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLBodyElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlbodyelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLBodyElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLBRElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlbrelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLBRElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; class; public by reexport; re-export of aspose_html.dom.html._form_elements.HTMLButtonElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlbuttonelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLButtonElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 96; class; public by reexport; re-export of aspose_html.dom.html._embedded_elements.HTMLCanvasElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlcanvaselement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLCanvasElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 104; class; public by reexport; re-export of aspose_html.dom.html._text_elements.HTMLDataElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmldataelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLDataElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; class; public by reexport; re-export of aspose_html.dom.html._form_elements.HTMLDataListElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmldatalistelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLDataListElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLDetailsElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmldetailselement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLDetailsElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLDialogElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmldialogelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLDialogElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 104; class; public by reexport; re-export of aspose_html.dom.html._text_elements.HTMLDivElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmldivelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLDivElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 45; class; public by reexport; re-export of aspose_html.dom.html._list_elements.HTMLDListElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmldlistelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLDListElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 96; class; public by reexport; re-export of aspose_html.dom.html._embedded_elements.HTMLEmbedElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlembedelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLEmbedElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; class; public by reexport; re-export of aspose_html.dom.html._form_elements.HTMLFieldSetElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlfieldsetelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLFieldSetElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLFigCaptionElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlfigcaptionelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLFigCaptionElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLFigureElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlfigureelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLFigureElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLFooterElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlfooterelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLFooterElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; class; public by reexport; re-export of aspose_html.dom.html._form_elements.HTMLFormElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlformelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLFormElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLHeadElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlheadelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLHeadElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLHeaderElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlheaderelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLHeaderElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 104; class; public by reexport; re-export of aspose_html.dom.html._text_elements.HTMLHeadingElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlheadingelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLHeadingElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLHRElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlhrelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLHRElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLHtmlElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlhtmlelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLHtmlElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 96; class; public by reexport; re-export of aspose_html.dom.html._embedded_elements.HTMLIFrameElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmliframeelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLIFrameElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 96; class; public by reexport; re-export of aspose_html.dom.html._embedded_elements.HTMLImageElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlimageelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLImageElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; class; public by reexport; re-export of aspose_html.dom.html._form_elements.HTMLInputElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlinputelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLInputElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; class; public by reexport; re-export of aspose_html.dom.html._form_elements.HTMLLabelElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmllabelelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLLabelElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; class; public by reexport; re-export of aspose_html.dom.html._form_elements.HTMLLegendElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmllegendelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLLegendElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 45; class; public by reexport; re-export of aspose_html.dom.html._list_elements.HTMLLIElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmllielement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLLIElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 59; class; public by reexport; re-export of aspose_html.dom.html._metadata_elements.HTMLLinkElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmllinkelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLLinkElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLMainElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlmainelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLMainElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; class; public by reexport; re-export of aspose_html.dom.html._anchor_elements.HTMLMapElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlmapelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLMapElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLMarkElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlmarkelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLMarkElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 51; class; public by reexport; re-export of aspose_html.dom.html._media_elements.HTMLMediaElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlmediaelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLMediaElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLMenuElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlmenuelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLMenuElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 59; class; public by reexport; re-export of aspose_html.dom.html._metadata_elements.HTMLMetaElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlmetaelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLMetaElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; class; public by reexport; re-export of aspose_html.dom.html._form_elements.HTMLMeterElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlmeterelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLMeterElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLModElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlmodelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLModElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLNavElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlnavelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLNavElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLNoScriptElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlnoscriptelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLNoScriptElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 96; class; public by reexport; re-export of aspose_html.dom.html._embedded_elements.HTMLObjectElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlobjectelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLObjectElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 45; class; public by reexport; re-export of aspose_html.dom.html._list_elements.HTMLOListElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlolistelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLOListElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; class; public by reexport; re-export of aspose_html.dom.html._form_elements.HTMLOptGroupElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmloptgroupelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLOptGroupElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; class; public by reexport; re-export of aspose_html.dom.html._form_elements.HTMLOptionElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmloptionelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLOptionElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; class; public by reexport; re-export of aspose_html.dom.html._form_elements.HTMLOutputElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmloutputelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLOutputElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 104; class; public by reexport; re-export of aspose_html.dom.html._text_elements.HTMLParagraphElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlparagraphelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLParagraphElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 96; class; public by reexport; re-export of aspose_html.dom.html._embedded_elements.HTMLParamElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlparamelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLParamElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 51; class; public by reexport; re-export of aspose_html.dom.html._media_elements.HTMLPictureElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlpictureelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLPictureElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLPreElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlpreelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLPreElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; class; public by reexport; re-export of aspose_html.dom.html._form_elements.HTMLProgressElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlprogresselement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLProgressElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 104; class; public by reexport; re-export of aspose_html.dom.html._text_elements.HTMLQuoteElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlquoteelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLQuoteElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLRubyElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlrubyelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLRubyElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 59; class; public by reexport; re-export of aspose_html.dom.html._metadata_elements.HTMLScriptElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlscriptelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLScriptElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLSectionElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlsectionelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLSectionElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; class; public by reexport; re-export of aspose_html.dom.html._form_elements.HTMLSelectElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlselectelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLSelectElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLSmallElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlsmallelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLSmallElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 51; class; public by reexport; re-export of aspose_html.dom.html._media_elements.HTMLSourceElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlsourceelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLSourceElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 104; class; public by reexport; re-export of aspose_html.dom.html._text_elements.HTMLSpanElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlspanelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLSpanElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 59; class; public by reexport; re-export of aspose_html.dom.html._metadata_elements.HTMLStyleElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlstyleelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLStyleElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLSummaryElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlsummaryelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLSummaryElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 37; class; public by reexport; re-export of aspose_html.dom.html._table_elements.HTMLTableCaptionElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmltablecaptionelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLTableCaptionElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 37; class; public by reexport; re-export of aspose_html.dom.html._table_elements.HTMLTableCellElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmltablecellelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLTableCellElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 37; class; public by reexport; re-export of aspose_html.dom.html._table_elements.HTMLTableColElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmltablecolelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLTableColElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 37; class; public by reexport; re-export of aspose_html.dom.html._table_elements.HTMLTableElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmltableelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLTableElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 37; class; public by reexport; re-export of aspose_html.dom.html._table_elements.HTMLTableRowElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmltablerowelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLTableRowElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 37; class; public by reexport; re-export of aspose_html.dom.html._table_elements.HTMLTableSectionElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmltablesectionelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLTableSectionElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLTemplateElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmltemplateelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLTemplateElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; class; public by reexport; re-export of aspose_html.dom.html._form_elements.HTMLTextAreaElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmltextareaelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLTextAreaElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 104; class; public by reexport; re-export of aspose_html.dom.html._text_elements.HTMLTimeElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmltimeelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLTimeElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 59; class; public by reexport; re-export of aspose_html.dom.html._metadata_elements.HTMLTitleElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmltitleelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLTitleElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 51; class; public by reexport; re-export of aspose_html.dom.html._media_elements.HTMLTrackElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmltrackelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLTrackElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 45; class; public by reexport; re-export of aspose_html.dom.html._list_elements.HTMLUListElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlulistelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLUListElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 104; class; public by reexport; re-export of aspose_html.dom.html._text_elements.HTMLUnknownElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlunknownelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLUnknownElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 51; class; public by reexport; re-export of aspose_html.dom.html._media_elements.HTMLVideoElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlvideoelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLVideoElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 67; class; public by reexport; re-export of aspose_html.dom.html._sectioning_elements.HTMLWBRElement",
+          "path": "src/aspose_html/dom/html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.html.htmlwbrelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.html.HTMLWBRElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLAddressElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmladdresselement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLAddressElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLAnchorElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlanchorelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLAnchorElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLAreaElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlareaelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLAreaElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLArticleElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlarticleelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLArticleElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLAsideElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlasideelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLAsideElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLAudioElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlaudioelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLAudioElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLBaseElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlbaseelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLBaseElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLBodyElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlbodyelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLBodyElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLBRElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlbrelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLBRElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLButtonElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlbuttonelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLButtonElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLCanvasElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlcanvaselement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLCanvasElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 39; class; public by reexport; re-export of aspose_html.dom._collections.HTMLCollection",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlcollection",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLCollection"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLDataElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmldataelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLDataElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLDataListElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmldatalistelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLDataListElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLDetailsElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmldetailselement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLDetailsElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLDialogElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmldialogelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLDialogElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLDivElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmldivelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLDivElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLDListElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmldlistelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLDListElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 33; class; public by reexport; re-export of aspose_html.dom._html_element.HTMLElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLEmbedElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlembedelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLEmbedElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLFieldSetElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlfieldsetelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLFieldSetElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLFigCaptionElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlfigcaptionelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLFigCaptionElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLFigureElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlfigureelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLFigureElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLFooterElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlfooterelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLFooterElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLFormElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlformelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLFormElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLHeadElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlheadelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLHeadElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLHeaderElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlheaderelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLHeaderElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLHeadingElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlheadingelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLHeadingElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLHRElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlhrelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLHRElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLHtmlElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlhtmlelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLHtmlElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLIFrameElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmliframeelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLIFrameElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLImageElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlimageelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLImageElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLInputElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlinputelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLInputElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLLabelElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmllabelelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLLabelElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLLegendElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmllegendelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLLegendElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLLIElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmllielement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLLIElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLLinkElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmllinkelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLLinkElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLMainElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlmainelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLMainElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLMapElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlmapelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLMapElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLMarkElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlmarkelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLMarkElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLMediaElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlmediaelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLMediaElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLMenuElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlmenuelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLMenuElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLMetaElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlmetaelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLMetaElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLMeterElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlmeterelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLMeterElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLModElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlmodelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLModElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLNavElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlnavelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLNavElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLNoScriptElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlnoscriptelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLNoScriptElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLObjectElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlobjectelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLObjectElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLOListElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlolistelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLOListElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLOptGroupElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmloptgroupelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLOptGroupElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLOptionElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmloptionelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLOptionElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 39; class; public by reexport; re-export of aspose_html.dom._collections.HTMLOptionsCollection",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmloptionscollection",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLOptionsCollection"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLOutputElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmloutputelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLOutputElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLParagraphElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlparagraphelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLParagraphElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLParamElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlparamelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLParamElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLPictureElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlpictureelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLPictureElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLPreElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlpreelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLPreElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLProgressElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlprogresselement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLProgressElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLQuoteElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlquoteelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLQuoteElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLRubyElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlrubyelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLRubyElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLScriptElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlscriptelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLScriptElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLSectionElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlsectionelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLSectionElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLSelectElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlselectelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLSelectElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLSmallElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlsmallelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLSmallElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLSourceElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlsourceelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLSourceElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLSpanElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlspanelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLSpanElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLStyleElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlstyleelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLStyleElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLSummaryElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlsummaryelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLSummaryElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLTableCaptionElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmltablecaptionelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLTableCaptionElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLTableCellElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmltablecellelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLTableCellElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLTableColElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmltablecolelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLTableColElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLTableElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmltableelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLTableElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLTableRowElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmltablerowelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLTableRowElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLTableSectionElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmltablesectionelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLTableSectionElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLTemplateElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmltemplateelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLTemplateElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLTextAreaElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmltextareaelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLTextAreaElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLTimeElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmltimeelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLTimeElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLTitleElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmltitleelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLTitleElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLTrackElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmltrackelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLTrackElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLUListElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlulistelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLUListElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLUnknownElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlunknownelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLUnknownElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLVideoElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlvideoelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLVideoElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 82; class; public by reexport; re-export of aspose_html.dom.html.HTMLWBRElement",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.htmlwbrelement",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.HTMLWBRElement"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_html.dom._exceptions.IndexSizeError",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.indexsizeerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.IndexSizeError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; class; public by reexport; re-export of aspose_html.dom._event.InputEvent",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.inputevent",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.InputEvent"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 50; class; public by reexport; re-export of aspose_html.dom._window.IntersectionObserver",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.intersectionobserver",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.IntersectionObserver"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 50; class; public by reexport; re-export of aspose_html.dom._window.IntersectionObserverEntry",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.intersectionobserverentry",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.IntersectionObserverEntry"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_html.dom._exceptions.InUseAttributeError",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.inuseattributeerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.InUseAttributeError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_html.dom._exceptions.InvalidCharacterError",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.invalidcharactererror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.InvalidCharacterError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_html.dom._exceptions.InvalidStateError",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.invalidstateerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.InvalidStateError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; class; public by reexport; re-export of aspose_html.dom._event.KeyboardEvent",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.keyboardevent",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.KeyboardEvent"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 50; class; public by reexport; re-export of aspose_html.dom._window.Location",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.location",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.Location"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 50; class; public by reexport; re-export of aspose_html.dom._window.MediaQueryList",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.mediaquerylist",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.MediaQueryList"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 50; class; public by reexport; re-export of aspose_html.dom._window.MessageChannel",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.messagechannel",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.MessageChannel"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 50; class; public by reexport; re-export of aspose_html.dom._window.MessagePort",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.messageport",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.MessagePort"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; class; public by reexport; re-export of aspose_html.dom._event.MouseEvent",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.mouseevent",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.MouseEvent"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 47; class; public by reexport; re-export of aspose_html.dom._mutation_observer.MutationObserver",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.mutationobserver",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.MutationObserver"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 47; class; public by reexport; re-export of aspose_html.dom._mutation_observer.MutationRecord",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.mutationrecord",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.MutationRecord"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 39; class; public by reexport; re-export of aspose_html.dom._collections.NamedNodeMap",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.namednodemap",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.NamedNodeMap"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 50; class; public by reexport; re-export of aspose_html.dom._window.Navigator",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.navigator",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.Navigator"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 17; class; public by reexport; re-export of aspose_html.dom._node.Node",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.node",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.Node"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 44; class; public by reexport; re-export of aspose_html.dom._traversal.NodeFilter",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.nodefilter",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.NodeFilter"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 44; class; public by reexport; re-export of aspose_html.dom._traversal.NodeIterator",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.nodeiterator",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.NodeIterator"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 39; class; public by reexport; re-export of aspose_html.dom._collections.NodeList",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.nodelist",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.NodeList"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 2; class; public by reexport; re-export of aspose_html.dom._node_type.NodeType",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.nodetype",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.NodeType"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_html.dom._exceptions.NoModificationAllowedError",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.nomodificationallowederror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.NoModificationAllowedError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_html.dom._exceptions.NotFoundError",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.notfounderror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.NotFoundError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_html.dom._exceptions.NotSupportedError",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.notsupportederror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.NotSupportedError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 31; class; public by reexport; re-export of aspose_html.dom._document.ParseError",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.parseerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.ParseError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 50; class; public by reexport; re-export of aspose_html.dom._window.Performance",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.performance",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.Performance"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 50; class; public by reexport; re-export of aspose_html.dom._window.PerformanceEntry",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.performanceentry",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.PerformanceEntry"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 50; class; public by reexport; re-export of aspose_html.dom._window.PerformanceTiming",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.performancetiming",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.PerformanceTiming"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; class; public by reexport; re-export of aspose_html.dom._event.PopStateEvent",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.popstateevent",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.PopStateEvent"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 35; class; public by reexport; re-export of aspose_html.dom._processing_instruction.ProcessingInstruction",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.processinginstruction",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.ProcessingInstruction"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 45; class; public by reexport; re-export of aspose_html.dom._range.Range",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.range",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.Range"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 50; class; public by reexport; re-export of aspose_html.dom._window.ResizeObserver",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.resizeobserver",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.ResizeObserver"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 50; class; public by reexport; re-export of aspose_html.dom._window.ResizeObserverEntry",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.resizeobserverentry",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.ResizeObserverEntry"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 50; class; public by reexport; re-export of aspose_html.dom._window.Screen",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.screen",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.Screen"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_html.dom._exceptions.SecurityError",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.securityerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.SecurityError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 46; class; public by reexport; re-export of aspose_html.dom._selection.Selection",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.selection",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.Selection"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 50; function; public by reexport; re-export of aspose_html.dom._window.set_default_user_agent",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.set_default_user_agent",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.set_default_user_agent"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 45; class; public by reexport; re-export of aspose_html.dom._range.StaticRange",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.staticrange",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.StaticRange"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 50; class; public by reexport; re-export of aspose_html.dom._window.Storage",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.storage",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.Storage"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 43; class; public by reexport; re-export of aspose_html.dom._style_sheets.StyleSheetList",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.stylesheetlist",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.StyleSheetList"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 50; class; public by reexport; re-export of aspose_html.dom._window.SubtleCrypto",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.subtlecrypto",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.SubtleCrypto"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_html.dom._exceptions.SyntaxError",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.syntaxerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.SyntaxError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 34; class; public by reexport; re-export of aspose_html.dom._character_data.Text",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.text",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.Text"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 44; class; public by reexport; re-export of aspose_html.dom._traversal.TreeWalker",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.treewalker",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.TreeWalker"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; class; public by reexport; re-export of aspose_html.dom._event.UIEvent",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.uievent",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.UIEvent"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 48; class; public by reexport; re-export of aspose_html.dom._validation.ValidityState",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.validitystate",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.ValidityState"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 50; class; public by reexport; re-export of aspose_html.dom._window.VisualViewport",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.visualviewport",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.VisualViewport"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 50; class; public by reexport; re-export of aspose_html.dom._window.Window",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.window",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.Window"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_html.dom._exceptions.WrongDocumentError",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.wrongdocumenterror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.WrongDocumentError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 49; class; public by reexport; re-export of aspose_html.dom._dom_parsing.XMLSerializer",
+          "path": "src/aspose_html/dom/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.dom.xmlserializer",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.dom.XMLSerializer"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 4; class; public by reexport; re-export of aspose_html.dom.DOMParser",
+          "path": "src/aspose_html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.domparser",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.DOMParser"
+    },
+    {
+      "attributes": {
+        "docstring": "Encoding detection and input preprocessing for Aspose.HTML.",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose_html/encoding/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.encoding",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.encoding"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose_html.encoding.detection.detect_encoding",
+        "docstring": "Detect the character encoding of *data* and return a decoded result.",
+        "public_paths": "aspose_html.encoding.detection.detect_encoding",
+        "signature": "def detect_encoding(data: bytes, *, override_encoding: str | None=None) -> EncodingDetectionResult",
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 47; function; public by name",
+          "path": "src/aspose_html/encoding/detection.py"
+        },
+        {
+          "detail": "line 3; re-exported as aspose_html.encoding.detect_encoding",
+          "path": "src/aspose_html/encoding/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.encoding.detect_encoding",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.encoding.detect_encoding"
+    },
+    {
+      "attributes": {
+        "docstring": "Public API: ``EncodingDetectionResult`` and ``detect_encoding()``.",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose_html/encoding/detection.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.encoding.detection",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.encoding.detection"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose_html.encoding.detection.EncodingDetectionResult",
+        "docstring": "Result of encoding detection and decoding for an HTML byte stream.",
+        "public_paths": "aspose_html.encoding.detection.EncodingDetectionResult",
+        "signature": "class EncodingDetectionResult",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; class; public by name",
+          "path": "src/aspose_html/encoding/detection.py"
+        },
+        {
+          "detail": "line 3; re-exported as aspose_html.encoding.EncodingDetectionResult",
+          "path": "src/aspose_html/encoding/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.encoding.encodingdetectionresult",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.encoding.EncodingDetectionResult"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 2; class; public by reexport; re-export of aspose_html.encoding._decoder.UnsupportedEncodingError",
+          "path": "src/aspose_html/encoding/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.encoding.unsupportedencodingerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.encoding.UnsupportedEncodingError"
+    },
+    {
+      "attributes": {
+        "docstring": "HTMLDocument \u2014 top-level public entry point for HTML parsing.",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose_html/html_document.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.html_document",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.html_document"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose_html.html_document.HTMLDocument",
+        "docstring": "Top-level entry point for parsing HTML into a Document tree.",
+        "public_paths": "aspose_html.html_document.HTMLDocument",
+        "signature": "class HTMLDocument",
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; class; public by name",
+          "path": "src/aspose_html/html_document.py"
+        },
+        {
+          "detail": "line 2; re-exported as aspose_html.HTMLDocument",
+          "path": "src/aspose_html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.htmldocument",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.HTMLDocument"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose_html.html_document.HTMLDocument.load",
+        "docstring": "Load an HTML document from a file path and return a Document tree.",
+        "signature": "def load(cls, path: 'str | pathlib.Path') -> 'Document'",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 212; method; public by name",
+          "path": "src/aspose_html/html_document.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.htmldocument.load",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.HTMLDocument.load"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose_html.html_document.HTMLDocument.parse",
+        "docstring": "Parse HTML and return a Document tree.",
+        "signature": "def parse(cls, html: str | bytes, *, encoding: str | None=None, base_url: str | None=None) -> 'Document'",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 39; method; public by name",
+          "path": "src/aspose_html/html_document.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.htmldocument.parse",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.HTMLDocument.parse"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose_html.html_document.HTMLDocument.parse_fragment",
+        "docstring": "Parse an HTML fragment and return a DocumentFragment.",
+        "signature": "def parse_fragment(cls, html: str | bytes, context_element: 'Element | None'=None, *, encoding: str | None=None) -> 'DocumentFragment'",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 136; method; public by name",
+          "path": "src/aspose_html/html_document.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.htmldocument.parse_fragment",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.HTMLDocument.parse_fragment"
+    },
+    {
+      "attributes": {
+        "docstring": "aspose_html.js \u2014 QuickJS JavaScript execution layer.",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose_html/js/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.js",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.js"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 43; class; public by reexport; re-export of aspose_html.js._quickjs_bridge.JSContext",
+          "path": "src/aspose_html/js/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.js.jscontext",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.js.JSContext"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 43; class; public by reexport; re-export of aspose_html.js._quickjs_bridge.JSEvaluationError",
+          "path": "src/aspose_html/js/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.js.jsevaluationerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.js.JSEvaluationError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 44; class; public by reexport; re-export of aspose_html.js._module_loader.ModuleNotFoundError",
+          "path": "src/aspose_html/js/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.js.modulenotfounderror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.js.ModuleNotFoundError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 44; class; public by reexport; re-export of aspose_html.js._module_loader.ModuleRegistry",
+          "path": "src/aspose_html/js/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.js.moduleregistry",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.js.ModuleRegistry"
+    },
+    {
+      "attributes": {
+        "docstring": "Layout engine package \u2014 M7 ( architecture baseline).",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose_html/layout/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.layout",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.layout"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 49; class; public by reexport; re-export of aspose_html.layout._fragment_tree.BlockFragment",
+          "path": "src/aspose_html/layout/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.layout.blockfragment",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.layout.BlockFragment"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 40; class; public by reexport; re-export of aspose_html.layout._box_tree.BoxNode",
+          "path": "src/aspose_html/layout/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.layout.boxnode",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.layout.BoxNode"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 40; class; public by reexport; re-export of aspose_html.layout._box_tree.BoxRoot",
+          "path": "src/aspose_html/layout/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.layout.boxroot",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.layout.BoxRoot"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 40; function; public by reexport; re-export of aspose_html.layout._box_tree.build_box_tree",
+          "path": "src/aspose_html/layout/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.layout.build_box_tree",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.layout.build_box_tree"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 61; function; public by reexport; re-export of aspose_html.layout._style_cache.bump_style_epoch",
+          "path": "src/aspose_html/layout/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.layout.bump_style_epoch",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.layout.bump_style_epoch"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 40; function; public by reexport; re-export of aspose_html.layout._box_tree.classify_display",
+          "path": "src/aspose_html/layout/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.layout.classify_display",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.layout.classify_display"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 61; function; public by reexport; re-export of aspose_html.layout._style_cache.computed_style",
+          "path": "src/aspose_html/layout/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.layout.computed_style",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.layout.computed_style"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 48; class; public by reexport; re-export of aspose_html.layout._computed_style.ComputedStyle",
+          "path": "src/aspose_html/layout/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.layout.computedstyle",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.layout.ComputedStyle"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 40; class; public by reexport; re-export of aspose_html.layout._box_tree.Display",
+          "path": "src/aspose_html/layout/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.layout.display",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.layout.Display"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 49; class; public by reexport; re-export of aspose_html.layout._fragment_tree.EdgeSizes",
+          "path": "src/aspose_html/layout/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.layout.edgesizes",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.layout.EdgeSizes"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 49; class; public by reexport; re-export of aspose_html.layout._fragment_tree.FragmentRoot",
+          "path": "src/aspose_html/layout/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.layout.fragmentroot",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.layout.FragmentRoot"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 49; class; public by reexport; re-export of aspose_html.layout._fragment_tree.InlineTextFragment",
+          "path": "src/aspose_html/layout/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.layout.inlinetextfragment",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.layout.InlineTextFragment"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 47; function; public by reexport; re-export of aspose_html.layout._block.layout_block_tree",
+          "path": "src/aspose_html/layout/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.layout.layout_block_tree",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.layout.layout_block_tree"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 59; function; public by reexport; re-export of aspose_html.layout._inline.layout_inline_fragments",
+          "path": "src/aspose_html/layout/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.layout.layout_inline_fragments",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.layout.layout_inline_fragments"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 49; class; public by reexport; re-export of aspose_html.layout._fragment_tree.LineFragment",
+          "path": "src/aspose_html/layout/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.layout.linefragment",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.layout.LineFragment"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 49; class; public by reexport; re-export of aspose_html.layout._fragment_tree.PageFragment",
+          "path": "src/aspose_html/layout/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.layout.pagefragment",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.layout.PageFragment"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 49; class; public by reexport; re-export of aspose_html.layout._fragment_tree.PageMarginBoxes",
+          "path": "src/aspose_html/layout/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.layout.pagemarginboxes",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.layout.PageMarginBoxes"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 60; function; public by reexport; re-export of aspose_html.layout._pagination.paginate_fragments",
+          "path": "src/aspose_html/layout/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.layout.paginate_fragments",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.layout.paginate_fragments"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 49; class; public by reexport; re-export of aspose_html.layout._fragment_tree.ShapedRun",
+          "path": "src/aspose_html/layout/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.layout.shapedrun",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.layout.ShapedRun"
+    },
+    {
+      "attributes": {
+        "defined_at": "aspose_html.serialiser.serialise",
+        "docstring": "Serialise a DOM node to its HTML string representation.",
+        "public_paths": "aspose_html.serialiser.serialise",
+        "signature": "def serialise(node: 'Node') -> str",
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 194; function; public by name",
+          "path": "src/aspose_html/serialiser.py"
+        },
+        {
+          "detail": "line 3; re-exported as aspose_html.serialise",
+          "path": "src/aspose_html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.serialise",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.serialise"
+    },
+    {
+      "attributes": {
+        "docstring": "HTML serialisation \u2014 WHATWG HTML Living Standard \u00a713.3.",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose_html/serialiser.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.serialiser",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.serialiser"
+    },
+    {
+      "attributes": {
+        "docstring": "Return the serialisation of all children of *node*.",
+        "signature": "def inner_html(node: 'Node') -> str",
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 268; function; public by name",
+          "path": "src/aspose_html/serialiser.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.serialiser.inner_html",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.serialiser.inner_html"
+    },
+    {
+      "attributes": {
+        "docstring": "Return the serialisation of *node* including its own tag.",
+        "signature": "def outer_html(node: 'Node') -> str",
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 316; function; public by name",
+          "path": "src/aspose_html/serialiser.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.serialiser.outer_html",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.serialiser.outer_html"
+    },
+    {
+      "attributes": {
+        "docstring": "WHATWG HTML Tokeniser public API.",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose_html/tokenizer/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.tokenizer",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.tokenizer"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "unknown"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "line 25; unknown; public by reexport; re-export of aspose_html.tokenizer._tokens.AnyToken",
+          "path": "src/aspose_html/tokenizer/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.tokenizer.anytoken",
+      "kind": "public_symbol",
+      "polarity": "UNRESOLVED",
+      "value": "aspose_html.tokenizer.AnyToken"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 25; class; public by reexport; re-export of aspose_html.tokenizer._tokens.CharacterToken",
+          "path": "src/aspose_html/tokenizer/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.tokenizer.charactertoken",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.tokenizer.CharacterToken"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 25; class; public by reexport; re-export of aspose_html.tokenizer._tokens.CommentToken",
+          "path": "src/aspose_html/tokenizer/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.tokenizer.commenttoken",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.tokenizer.CommentToken"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 25; class; public by reexport; re-export of aspose_html.tokenizer._tokens.DoctypeToken",
+          "path": "src/aspose_html/tokenizer/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.tokenizer.doctypetoken",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.tokenizer.DoctypeToken"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 25; class; public by reexport; re-export of aspose_html.tokenizer._tokens.EndTagToken",
+          "path": "src/aspose_html/tokenizer/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.tokenizer.endtagtoken",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.tokenizer.EndTagToken"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 25; class; public by reexport; re-export of aspose_html.tokenizer._tokens.EofToken",
+          "path": "src/aspose_html/tokenizer/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.tokenizer.eoftoken",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.tokenizer.EofToken"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 25; class; public by reexport; re-export of aspose_html.tokenizer._tokens.StartTagToken",
+          "path": "src/aspose_html/tokenizer/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.tokenizer.starttagtoken",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.tokenizer.StartTagToken"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 35; class; public by reexport; re-export of aspose_html.tokenizer._tokenizer.Tokenizer",
+          "path": "src/aspose_html/tokenizer/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.tokenizer.tokenizer",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.tokenizer.Tokenizer"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 34; enum; public by reexport; re-export of aspose_html.tokenizer._states.TokenizerState",
+          "path": "src/aspose_html/tokenizer/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.tokenizer.tokenizerstate",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.tokenizer.TokenizerState"
+    },
+    {
+      "attributes": {
+        "docstring": "aspose_html.tree \u2014 WHATWG HTML tree construction (\u00a713.2.6).",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose_html/tree/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.tree",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.tree"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 17; function; public by reexport; re-export of aspose_html.tree._parse.parse_fragment",
+          "path": "src/aspose_html/tree/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.tree.parse_fragment",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.tree.parse_fragment"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "function"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 17; function; public by reexport; re-export of aspose_html.tree._parse.parse_html",
+          "path": "src/aspose_html/tree/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.tree.parse_html",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.tree.parse_html"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; class; public by reexport; re-export of aspose_html.tree._builder.TreeBuilder",
+          "path": "src/aspose_html/tree/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.tree.treebuilder",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.tree.TreeBuilder"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 5; class; public by reexport; re-export of aspose_html.url.URL",
+          "path": "src/aspose_html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.url",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.URL"
+    },
+    {
+      "attributes": {
+        "docstring": "WHATWG URL Standard surface.",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 1; module; public by name",
+          "path": "src/aspose_html/url/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.url-2",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.url"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 4; class; public by reexport; re-export of aspose_html.url._url.URL",
+          "path": "src/aspose_html/url/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.url.url",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.url.URL"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 4; class; public by reexport; re-export of aspose_html.url._url.URLParseError",
+          "path": "src/aspose_html/url/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.url.urlparseerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.url.URLParseError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by reexport; re-export of aspose_html.url._search_params.URLSearchParams",
+          "path": "src/aspose_html/url/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.url.urlsearchparams",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.url.URLSearchParams"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 5; class; public by reexport; re-export of aspose_html.url.URLParseError",
+          "path": "src/aspose_html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.urlparseerror",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.URLParseError"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 5; class; public by reexport; re-export of aspose_html.url.URLSearchParams",
+          "path": "src/aspose_html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.urlsearchparams",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.URLSearchParams"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 4; class; public by reexport; re-export of aspose_html.dom.XMLSerializer",
+          "path": "src/aspose_html/__init__.py"
+        }
+      ],
+      "id": "public_symbol:aspose_html.xmlserializer",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "aspose_html.XMLSerializer"
+    }
+  ],
+  "repository": "aspose-html-foss/Aspose.HTML-FOSS-for-Python",
+  "schema_version": 1,
+  "source_revision": "HEAD"
+}
