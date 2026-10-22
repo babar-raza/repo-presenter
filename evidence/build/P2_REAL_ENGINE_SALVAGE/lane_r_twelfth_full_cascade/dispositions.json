@@ -1,0 +1,844 @@
+{
+  "dispositions": [
+    {
+      "destination_section": "identity",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:repository",
+        "package:name"
+      ],
+      "rationale": "The H1 product name is rendered deterministically from identity and package facts.",
+      "unit_id": "inherited_unit:001.heading"
+    },
+    {
+      "destination_section": "badges",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "package:license"
+      ],
+      "rationale": "The license badge row is rendered deterministically in the badges section.",
+      "unit_id": "inherited_unit:002.badge_row"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the presence of a banner image or its link target.",
+      "unit_id": "inherited_unit:003.badge_row"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:license",
+        "import_path:aspose_html",
+        "public_symbol:aspose_html.htmldocument",
+        "public_symbol:aspose_html.dom.document"
+      ],
+      "rationale": "The paragraph describes the product, its license, and core APIs, supported by identity, package, import, and public symbol facts.",
+      "unit_id": "inherited_unit:004.paragraph"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Navigation heading is owned by the deterministic navigation section.",
+      "unit_id": "inherited_unit:005.heading"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The navigation list is rendered deterministically in the navigation section.",
+      "unit_id": "inherited_unit:006.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'At a Glance' heading is not placeable; the section is not rendered at this revision.",
+      "unit_id": "inherited_unit:007.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Mermaid diagram is not supported by facts; the at_a_glance section is not rendered.",
+      "unit_id": "inherited_unit:008.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_html.htmldocument",
+        "public_symbol:aspose_html.dom.document",
+        "public_symbol:aspose_html.cssom.cssstylesheet",
+        "public_symbol:aspose_html.url.url",
+        "public_symbol:aspose_html.js.jscontext"
+      ],
+      "rationale": "The heading is retained; the list items are supported by public symbol and dependency facts.",
+      "unit_id": "inherited_unit:009.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_html.htmldocument",
+        "public_symbol:aspose_html.dom.document",
+        "public_symbol:aspose_html.dom.element",
+        "public_symbol:aspose_html.cssom.cssstylesheet",
+        "public_symbol:aspose_html.url.url",
+        "public_symbol:aspose_html.js.jscontext",
+        "public_symbol:aspose_html.tokenizer.tokenizer",
+        "public_symbol:aspose_html.serialise"
+      ],
+      "rationale": "Each list item is supported by public symbol and dependency facts; the list is placed in key_capabilities.",
+      "unit_id": "inherited_unit:010.list"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Installation heading is owned by the deterministic installation section.",
+      "unit_id": "inherited_unit:011.heading"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "CORRECT_WITH_EVIDENCE",
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "rationale": "The paragraph describes source checkout installation, but the only verified install command is pip install aspose-html-foss, which is contradicted.",
+      "unit_id": "inherited_unit:012.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "rationale": "The code block shows source checkout commands, but the only verified install command is pip install aspose-html-foss.",
+      "unit_id": "inherited_unit:013.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "rationale": "The paragraph describes PYTHONPATH setup for source checkout, but the only verified install command is pip install aspose-html-foss.",
+      "unit_id": "inherited_unit:014.paragraph"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:name",
+        "import_path:aspose_html",
+        "package:python_requires",
+        "dependency:skia-python-87.0-145",
+        "dependency:optional.js.quickjs-1.19-2"
+      ],
+      "rationale": "The paragraph correctly states the package name, import path, Python requirement, and dependencies.",
+      "unit_id": "inherited_unit:015.paragraph"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:optional.js.quickjs-1.19-2"
+      ],
+      "rationale": "The code block shows the optional quickjs installation, which is supported by the dependency fact.",
+      "unit_id": "inherited_unit:016.code_block"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Dependencies heading is owned by the deterministic dependencies section.",
+      "unit_id": "inherited_unit:017.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Required Package Dependencies' heading is rendered deterministically in the dependencies section.",
+      "unit_id": "inherited_unit:018.heading"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:skia-python-87.0-145"
+      ],
+      "rationale": "The list item is supported by the dependency fact; it is moved to quick_start as part of the installation instructions.",
+      "unit_id": "inherited_unit:019.list"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Optional Dependencies' heading is rendered deterministically in the dependencies section.",
+      "unit_id": "inherited_unit:020.heading"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:optional.js.quickjs-1.19-2"
+      ],
+      "rationale": "The list item is supported by the dependency fact; it is moved to quick_start as part of the installation instructions.",
+      "unit_id": "inherited_unit:021.list"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Native and System Requirements' heading is rendered deterministically in the dependencies section.",
+      "unit_id": "inherited_unit:022.heading"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:python_requires"
+      ],
+      "rationale": "The list item is supported by the package fact; it is moved to quick_start as part of the installation instructions.",
+      "unit_id": "inherited_unit:023.list"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Development Dependencies' heading is rendered deterministically in the dependencies section.",
+      "unit_id": "inherited_unit:024.heading"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:development.test.pytest-8"
+      ],
+      "rationale": "The list item is supported by the dependency fact; it is moved to quick_start as part of the installation instructions.",
+      "unit_id": "inherited_unit:025.list"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The Quick Start heading is retained; the section is placeable and contains verified examples.",
+      "unit_id": "inherited_unit:026.heading"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "The paragraph introduces the first example, which is verified and supported by example:001.",
+      "unit_id": "inherited_unit:027.paragraph"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "The code block is the first example, which is verified and supported by example:001.",
+      "unit_id": "inherited_unit:028.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "The paragraph introduces the second example, which is verified and supported by example:002.",
+      "unit_id": "inherited_unit:029.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "The code block is the second example, which is verified and supported by example:002.",
+      "unit_id": "inherited_unit:030.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The Additional Examples heading is retained; the section is placeable and contains further verified examples.",
+      "unit_id": "inherited_unit:031.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The paragraph introduces the examples directory, which is supported by the examples directory structure.",
+      "unit_id": "inherited_unit:032.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "The heading is retained; the example is verified and supported by example:003.",
+      "unit_id": "inherited_unit:033.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "The code block is the third example, which is verified and supported by example:003.",
+      "unit_id": "inherited_unit:034.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The HTML block is not supported by any fact and introduces no new content.",
+      "unit_id": "inherited_unit:035.html_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:004"
+      ],
+      "rationale": "The heading is retained; the example is verified and supported by example:004.",
+      "unit_id": "inherited_unit:036.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:004"
+      ],
+      "rationale": "The code block is the fourth example, which is verified and supported by example:004.",
+      "unit_id": "inherited_unit:037.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:005"
+      ],
+      "rationale": "The heading is retained; the example is verified and supported by example:005.",
+      "unit_id": "inherited_unit:038.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:005"
+      ],
+      "rationale": "The code block is the fifth example, which is verified and supported by example:005.",
+      "unit_id": "inherited_unit:039.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The heading introduces an example (example:006) that is contradicted by facts; no placement is possible.",
+      "unit_id": "inherited_unit:040.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "example:006"
+      ],
+      "rationale": "The code block is contradicted by example:006, which shows the JSContext example is not supported.",
+      "unit_id": "inherited_unit:041.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:007"
+      ],
+      "rationale": "The heading 'Drive The Tokenizer Directly' introduces a code block superseded by the verified tokenizer example under additional_examples.",
+      "unit_id": "inherited_unit:042.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:007"
+      ],
+      "rationale": "The tokenizer example is verified and supported by example:007, and fits under additional_examples.",
+      "unit_id": "inherited_unit:043.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The HTML comment </details> is unsupported as no matching <details> opening tag exists in the facts.",
+      "unit_id": "inherited_unit:044.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'API Reference' heading is appropriate for the api_reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:045.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The paragraph describes the primary entry point and API surface, which aligns with the api_reference section.",
+      "unit_id": "inherited_unit:046.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The HTML comment <details> is unsupported as no matching </details> closing tag exists in the facts.",
+      "unit_id": "inherited_unit:047.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Core API' heading is appropriate for the api_reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:048.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The table lists HTMLDocument, which is a verified public symbol and core API entry point.",
+      "unit_id": "inherited_unit:049.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'CSS' heading is appropriate for the api_reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:050.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The table lists CSSOM selector classes, which are verified public symbols.",
+      "unit_id": "inherited_unit:051.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Enumerations' heading is appropriate for the api_reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:052.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The table lists CSS selector enumerations, which are verified public symbols.",
+      "unit_id": "inherited_unit:053.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'CSSOM' heading is appropriate for the api_reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:054.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The table lists CSSOM rule classes, which are verified public symbols.",
+      "unit_id": "inherited_unit:055.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'DOM' heading is appropriate for the api_reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:056.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The table lists DOM classes, which are verified public symbols.",
+      "unit_id": "inherited_unit:057.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Encoding' heading is appropriate for the api_reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:058.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The table lists encoding classes, which are verified public symbols.",
+      "unit_id": "inherited_unit:059.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'JS' heading is appropriate for the api_reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:060.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The table lists JS classes, which are verified public symbols.",
+      "unit_id": "inherited_unit:061.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Layout' heading is appropriate for the api_reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:062.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The table lists layout classes, which are verified public symbols.",
+      "unit_id": "inherited_unit:063.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Tokenizer' heading is appropriate for the api_reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:064.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The table lists tokenizer classes, which are verified public symbols.",
+      "unit_id": "inherited_unit:065.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Enumerations' heading is appropriate for the api_reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:066.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The table lists tokenizer state enumeration, which is a verified public symbol.",
+      "unit_id": "inherited_unit:067.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Tree' heading is appropriate for the api_reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:068.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The table lists tree classes, which are verified public symbols.",
+      "unit_id": "inherited_unit:069.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Enumerations' heading is appropriate for the api_reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:070.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The table lists insertion mode enumeration, which is a verified public symbol.",
+      "unit_id": "inherited_unit:071.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'URL' heading is appropriate for the api_reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:072.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The table lists URL classes, which are verified public symbols.",
+      "unit_id": "inherited_unit:073.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Detailed Member Reference' heading is appropriate for the api_reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:074.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'HTML Parsing and Documents' heading is appropriate for the api_reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:075.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The list describes HTML parsing methods, which are verified public symbols.",
+      "unit_id": "inherited_unit:076.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'DOM Core' heading is appropriate for the api_reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:077.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The list describes Document methods, which are verified public symbols.",
+      "unit_id": "inherited_unit:078.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The list describes Element methods, which are verified public symbols.",
+      "unit_id": "inherited_unit:078.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The list describes Node-related classes, which are verified public symbols.",
+      "unit_id": "inherited_unit:078.003.list"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.treewalker",
+        "public_symbol:aspose_html.dom.nodeiterator",
+        "public_symbol:aspose_html.dom.range",
+        "public_symbol:aspose_html.dom.staticrange",
+        "public_symbol:aspose_html.dom.selection"
+      ],
+      "rationale": "The list item describes DOM traversal and range/selection APIs, which are covered by the Key Capabilities section.",
+      "unit_id": "inherited_unit:078.004.list"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.event",
+        "public_symbol:aspose_html.dom.customevent",
+        "public_symbol:aspose_html.dom.mouseevent",
+        "public_symbol:aspose_html.dom.keyboardevent",
+        "public_symbol:aspose_html.dom.focusevent",
+        "public_symbol:aspose_html.dom.inputevent",
+        "public_symbol:aspose_html.dom.eventtarget",
+        "public_symbol:aspose_html.dom.mutationobserver"
+      ],
+      "rationale": "The list item describes DOM event and mutation-observation APIs, which are covered by the Key Capabilities section.",
+      "unit_id": "inherited_unit:078.005.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The heading '### CSS And CSSOM' is not supported as a distinct section; its content is covered under Key Capabilities.",
+      "unit_id": "inherited_unit:079.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose_html.cssom.cssstylesheet",
+        "public_symbol:aspose_html.cssom.cssstylerule",
+        "public_symbol:aspose_html.cssom.cssmediarule",
+        "public_symbol:aspose_html.cssom.cssfontfacerule",
+        "public_symbol:aspose_html.cssom.csskeyframesrule",
+        "public_symbol:aspose_html.dom.cssstyledeclaration",
+        "public_symbol:aspose_html.dom.computedstyledeclaration"
+      ],
+      "rationale": "The list item describes CSSOM classes and style declarations, which are covered by the Key Capabilities section.",
+      "unit_id": "inherited_unit:080.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The heading '### URL And Encoding' is not supported as a distinct section; its content is covered under Key Capabilities.",
+      "unit_id": "inherited_unit:081.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose_html.url.url",
+        "public_symbol:aspose_html.url.urlsearchparams",
+        "public_symbol:aspose_html.encoding.detect_encoding"
+      ],
+      "rationale": "The list item describes URL and encoding utilities, which are covered by the Key Capabilities section.",
+      "unit_id": "inherited_unit:082.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The heading '### JavaScript Bridge (Optional)' is not supported as a distinct section; its content is covered under Key Capabilities.",
+      "unit_id": "inherited_unit:083.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose_html.js.jscontext",
+        "public_symbol:aspose_html.js.moduleregistry"
+      ],
+      "rationale": "The list item describes JavaScript execution and module registry, which are covered by the Key Capabilities section.",
+      "unit_id": "inherited_unit:084.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The HTML block '</details>' is unsupported and has no standalone meaning.",
+      "unit_id": "inherited_unit:085.html_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The heading '## Documentation & Resources' is unsupported; its content is superseded by the Documentation & Resources section.",
+      "unit_id": "inherited_unit:086.heading"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The list item describes documentation links, which are superseded by the Documentation & Resources section.",
+      "unit_id": "inherited_unit:087.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading '## Scope and Limitations' is supported and matches the scope_limitations section.",
+      "unit_id": "inherited_unit:088.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_html.css.element_matches",
+        "public_symbol:aspose_html.cssom.cssrule",
+        "public_symbol:aspose_html.dom.validitystate",
+        "public_symbol:aspose_html.layout.boxnode",
+        "public_symbol:aspose_html.layout.pagefragment",
+        "public_symbol:aspose_html.js.jscontext"
+      ],
+      "rationale": "The list item describes limitations supported by facts and matches the scope_limitations section.",
+      "unit_id": "inherited_unit:089.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph references an enterprise edition product link not verified in facts.",
+      "unit_id": "inherited_unit:090.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading '## Development and Testing' is supported and matches the additional_examples section.",
+      "unit_id": "inherited_unit:091.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The paragraph describes testing setup supported by facts and matches the additional_examples section.",
+      "unit_id": "inherited_unit:092.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:development.test.pytest-8",
+        "dependency:skia-python-87.0-145"
+      ],
+      "rationale": "The code block describes test dependencies and commands supported by facts.",
+      "unit_id": "inherited_unit:093.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The paragraph describes optional quickjs dependency for JavaScript tests.",
+      "unit_id": "inherited_unit:094.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:optional.js.quickjs-1.19-2"
+      ],
+      "rationale": "The code block describes the quickjs dependency command supported by facts.",
+      "unit_id": "inherited_unit:095.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The paragraph describes conditional test skipping, supported by facts.",
+      "unit_id": "inherited_unit:096.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The paragraph describes test organization by module, supported by facts.",
+      "unit_id": "inherited_unit:097.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading '## License' is supported and matches the license section.",
+      "unit_id": "inherited_unit:098.heading"
+    },
+    {
+      "destination_section": "license",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "package:license"
+      ],
+      "rationale": "The paragraph describes the MIT license, which is superseded by the license section.",
+      "unit_id": "inherited_unit:099.paragraph"
+    }
+  ]
+}
