@@ -72,3 +72,16 @@ repository's cascade is also left incomplete, not forced through. Two independen
 have now shown this exact fail-closed pattern (an unusually comprehensive/well-written preserved
 README paragraph leaves the model nothing non-redundant to say for "opening"), reinforcing that
 it is a real, repeatable consequence of this fix's correct behavior, not a one-off fluke.
+
+## Third confirmed instance: aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET
+
+A third, independent recurrence. The live README's preserved paragraph states: "is a free,
+open-source .NET library ... that does zero-dependency image format detection and header
+probing. `ImageProbe` identifies a file's format and reads its basic properties — dimensions,
+bit depth, and frame count — directly from the file header." Both of S6's attempts for "opening"
+(`imaging_foss_attempt_1_rejected.json`, `imaging_foss_attempt_2_rejected.json`) restated exactly
+this -- format detection, dimensions, bit depth, frame count, read from the header -- in
+different words, citing only `inherited_unit:004.paragraph`. Correctly rejected both times;
+recovery found nothing salvageable; job failed closed. Three independent repositories now
+confirm this fail-closed pattern recurs whenever a repository's preserved paragraph is unusually
+complete, across .NET and Python alike.
