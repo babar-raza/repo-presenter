@@ -655,6 +655,77 @@ next_ready_items:
       output has no semantic-correctness check (S4/S5/S6's job): one limitation's citation in
       the real output is a real ID paired weakly with its claim -- the "citation exists vs.
       citation supports" gap the mission names, visible and stated in the evidence, not hidden.
+  - id: CLOSE_DUPLICATE_OPENING_PARAGRAPH_PARTIAL
+    status: DONE
+    priority: high
+    objective: >
+      Ten independent real Lane R cascades (lane_r_{first..tenth}_full_cascade) all showed the
+      same duplicate-opening-paragraph defect: an inherited README paragraph reconciliation (S4)
+      disposed VERIFIED_PRESERVE/REWRITE/MOVE into "opening" sits beside a freshly authored (S6)
+      "opening" unit covering the same ground, ranging from mild single-sentence overlap to
+      near-total duplication (two cases -- sixth/rust, ninth/typescript -- where S8 coherence's
+      own revision made it worse, not better). The full fix needs the unported
+      validation/review/repair subsystem (11,364 lines, correctly deferred as multi-session-scale
+      work -- see WIRE_PRESENTATION_PLANNING_AND_REAL_UNIT_CHECKS's own remaining notes) and this
+      card does not attempt it. Objective here was narrower and additive: close the specific,
+      severe failure mode the real evidence showed -- near-total duplication -- with a
+      deterministic check+recover pair, reusing already-ported primitives, without touching the
+      general "should opening ever carry preserved content" design question.
+    write_paths: [src/repo_presenter/readme/composition/authoring.py,
+      src/repo_presenter/readme/composition/coherence.py,
+      scripts/run_lane_r_authoring_real.py, scripts/run_lane_r_coherence.py,
+      tests/readme/composition/test_authoring.py, tests/readme/composition/test_coherence.py]
+    test_commands: [python -m pytest tests/readme/composition/test_authoring.py
+      tests/readme/composition/test_coherence.py -q, python -m pytest -q (full suite)]
+    falsifier: >
+      Temporarily replaced unit_checks()'s new guard condition with `if False and ...`,
+      independently re-ran the full suite: exactly
+      test_unit_checks_rejects_an_opening_unit_that_restates_the_preserved_paragraph and
+      test_coherence_checks_rejects_a_revised_opening_unit_that_restates_preserved failed (2 of
+      1052), nothing else -- then restored the guard and re-ran the full suite clean
+      (1052/1052, 11 skipped) before this card was marked DONE.
+    done_2026_10_22: >
+      DONE: added preserved_opening_text() and recover_opening_duplicates_preserved() to
+      authoring.py, reusing coverage.py's already-ported/tested states_all()/Destinations/
+      uncovered() (no new primitive). unit_checks() gained an optional dispositions= keyword
+      (default None, every existing call site unaffected): when "opening" has a preserved unit
+      and the authored unit's text fully states it or is fully stated by it (states_all(), 70%
+      per-sentence stem overlap, either direction), the unit is rejected with a specific
+      instruction (state only what the preserved paragraph does not already say). The recover
+      trims to the uncovered remainder and returns None (never fabricates text, failing closed)
+      when nothing genuinely new survives. coherence_checks()/recover_coherence_regressions()
+      gained the same dispositions= keyword and forward it into their own unit_checks() calls,
+      since coherence_checks() already delegates every section's rules to unit_checks() --
+      meaning one fix covers both the S6 authoring call site and the S8 coherence call site that
+      actually produced the two worst observed cases. Both real orchestration scripts
+      (run_lane_r_authoring_real.py, run_lane_r_coherence.py) now pass dispositions= and, for S6,
+      a new recover= (S6 had none wired before this card -- a separate pre-existing gap, closed
+      here only for the "opening" task specifically, not generally).
+      Verified empirically against the real, committed evidence, not by inspection: states_all()
+      run directly on the ninth cascade's real preserved/post-coherence-authored text pair scores
+      True both directions (correctly rejected); run on the sixth cascade's real pre-coherence
+      pair (genuinely different content sharing one short clause) scores False both directions
+      (correctly allowed, no false positive). uncovered() on the ninth cascade's pair returns ""
+      (nothing salvageable; recover correctly returns None) and on a synthetic partial-overlap
+      case correctly trims to just the new sentence. 12 new tests (8 in test_authoring.py, a new
+      test_coherence.py with 4). 1052/1052 whole-repo tests pass (11 skipped, up from 1040 before
+      this card). migration/reuse-manifest.yaml has its own full entry.
+    source_refs: [evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_sixth_full_cascade/,
+      evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_ninth_full_cascade/,
+      migration/reuse-manifest.yaml (this card's own entry)]
+    rollback: >
+      Revert the four src/scripts files and the two test files in one commit; dispositions=
+      defaults to None everywhere it was added, so no other caller's behaviour depends on this
+      change existing.
+    remaining: >
+      Partial fix only, honestly scoped: catches near-total duplication (states_all() full
+      containment, either direction) but not the milder structural redundancy most of the ten
+      cascades actually showed (two adjacent "what this product is" paragraphs that differ in
+      wording but still both introduce the product). That broader question -- whether "opening"
+      should ever carry a whole separately preserved paragraph alongside a freshly authored one
+      at all -- is unchanged and still needs the deferred validation/review/repair subsystem. A
+      targeted recheck (re-firing the cascade against the sixth and ninth cascades' own
+      repositories) is the natural next verification step, not yet done as of this card.
   - id: WIRE_GATEVERIFY_TO_PORTFOLIO
     status: READY
     purpose: >

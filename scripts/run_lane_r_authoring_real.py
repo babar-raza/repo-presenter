@@ -31,6 +31,7 @@ from repo_presenter.readme.composition.authoring import (
     authoring_schema,
     authoring_tasks,
     merge_units,
+    recover_opening_duplicates_preserved,
     unit_checks,
     write_content_units,
 )
@@ -92,7 +93,14 @@ def main() -> None:
         context = JobContext(repository=repository, source_revision=source_revision)
 
         def checks(output: dict, task=task) -> list[str]:
-            return unit_checks(output, task, document, name)
+            return unit_checks(output, task, document, name, dispositions=dispositions)
+
+        def recover(output: dict, task=task) -> dict | None:
+            if task.section_id != "opening":
+                return None
+            return recover_opening_duplicates_preserved(
+                output, dispositions=dispositions, facts=document
+            )
 
         result = run_job(
             loaded,
@@ -104,6 +112,7 @@ def main() -> None:
             context=context,
             call_schema=call_schema,
             checks=checks,
+            recover=recover,
         )
         print(
             f"      {task.label}: {result.provider_calls} call(s), "

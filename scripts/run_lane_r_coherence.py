@@ -120,11 +120,16 @@ def main() -> None:
                 name,
                 existing_units=existing,
                 prior_omitted=current.get("omitted", []),
+                dispositions=dispositions,
             )
 
         def recover(output: dict, batch_tasks=batch_tasks, existing=existing) -> dict | None:
             return recover_coherence_regressions(
-                output, existing_units=existing, facts=document, tasks=batch_tasks
+                output,
+                existing_units=existing,
+                facts=document,
+                tasks=batch_tasks,
+                dispositions=dispositions,
             )
 
         result = run_job(

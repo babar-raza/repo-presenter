@@ -1418,3 +1418,77 @@ entries:
     portfolio_consumers: any future Lane R cascade run that wants a coherence-revised final
       README. Fired against one repository so far.
     invalidation_impact: none -- new script, not yet relied on by anything else.
+  - component: "authoring.py's unit_checks()/recover_opening_duplicates_preserved(), coherence.py's
+      coherence_checks()/recover_coherence_regressions() dispositions-forwarding (duplicate-opening
+      guard)"
+    source: new-this-repository (composed from already-REUSE-ported coverage.py primitives:
+      states_all(), Destinations, uncovered())
+    evaluated_at_shas: []
+    behavior: >
+      A new, narrowly-scoped deterministic check: when reconciliation (S4) disposed an
+      inherited README paragraph VERIFIED_PRESERVE/REWRITE/MOVE straight into "opening",
+      unit_checks() now rejects an "opening" unit (from S6 authoring or S8 coherence,
+      both of which already call unit_checks()) whose text fully states, or is fully
+      stated by, that preserved paragraph (states_all(), 70% per-sentence stem overlap,
+      both directions). recover_opening_duplicates_preserved() is the paired recover=
+      last-resort: it trims the authored unit down to only the sentences the preserved
+      paragraph does not already state (coverage.uncovered()), and returns None (never
+      fabricates text) when nothing genuinely new would be left -- the job then fails
+      closed, exactly as with no recover at all. dispositions is a new optional,
+      default-None keyword on unit_checks()/coherence_checks()/recover_coherence_regressions();
+      every existing call site that never passes it keeps its exact prior behaviour.
+    evidence: >
+      Grounded in the real evidence this session's ten Lane R full cascades produced, not a
+      guessed shape of the defect: evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_{sixth,ninth}
+      _full_cascade/. states_all() run directly against the real, committed text of both
+      pairs (confirmed empirically, not by inspection): the ninth cascade's post-coherence
+      near-verbatim duplicate scores True in both directions (correctly rejected); the sixth
+      cascade's pre-coherence pair -- genuinely different content that happens to share a
+      short dependency-freedom clause -- scores False in both directions (correctly allowed,
+      no false positive). uncovered() against the ninth cascade's pair returns "" (nothing
+      salvageable; recover correctly returns None, failing closed) and against a synthetic
+      partial-overlap case correctly trims to just the new sentence. 12 new tests added
+      (tests/readme/composition/test_authoring.py, tests/readme/composition/test_coherence.py,
+      the latter new) using these real and synthetic fixtures; full suite 1052/1052 pass (11
+      skipped). Falsifier independently re-run: disabling the new check block (temporarily,
+      then restored) makes exactly test_unit_checks_rejects_an_opening_unit_that_restates_the
+      _preserved_paragraph and test_coherence_checks_rejects_a_revised_opening_unit_that_
+      restates_preserved fail, and nothing else in the 1052-test suite -- confirmed before
+      this entry was written, not assumed.
+    disposition: ADD (new code; reuses REUSE-ported coverage.py primitives verbatim, adds no
+      new primitive of its own)
+    reason: >
+      Ten independent real cascades this session (lane_r_{first..tenth}_full_cascade) all
+      showed the same duplicate-opening-paragraph defect class, ranging from a mild
+      single-sentence overlap to a near word-for-word duplicate (worsened, in two observed
+      cases, specifically by S8 coherence's own revision). The full fix -- deciding, at S4
+      reconciliation time, whether an inherited paragraph should ever have been disposed
+      VERIFIED_PRESERVE into a section S6 will also freshly author -- needs the unported
+      validation/review/repair subsystem (11,364 lines, already sized and correctly deferred
+      as multi-session-scale work; see project/state.yaml's WIRE_PRESENTATION_PLANNING_AND_
+      REAL_UNIT_CHECKS card). This narrower, additive check does not replace that deferred
+      work or attempt the general "should opening ever carry preserved content" design
+      question. It closes the specific, severe failure mode the real evidence actually
+      showed -- near-total duplication, most visibly introduced or worsened by coherence --
+      using machinery (states_all/uncovered) this repository had already ported and tested
+      for exactly this kind of "does X already say what Y says" question, applied here in a
+      new direction it was not previously applied in.
+    target_module: src/repo_presenter/readme/composition/authoring.py,
+      src/repo_presenter/readme/composition/coherence.py,
+      scripts/run_lane_r_authoring_real.py, scripts/run_lane_r_coherence.py
+    smallest_first_integration_test: >
+      tests/readme/composition/test_authoring.py::test_unit_checks_rejects_an_opening_unit_
+      that_restates_the_preserved_paragraph, grounded in the real ninth cascade's exact
+      preserved/authored text pair; independently re-run and confirmed to fail when the new
+      check is disabled (see evidence above).
+    portfolio_consumers: every future Lane R cascade's S6 authoring and S8 coherence calls,
+      across all 7 ecosystems and all repositories -- wired into both real orchestration
+      scripts this session already uses, not a library change nobody calls yet.
+    invalidation_impact: targeted, not global, per mission non-negotiable #4 (portfolio-first).
+      Only the "opening" section's own unit_checks()/coherence_checks() path is affected;
+      every other section's checks are unchanged (dispositions defaults to None and the new
+      block is gated on section_id == "opening"). The ten already-committed cascade evidence
+      directories (lane_r_{first..tenth}_full_cascade) are historical records of runs fired
+      before this fix existed and are not retroactively invalidated; a future cascade re-run
+      against the same repositories is the targeted recheck this fix earns, not required
+      before this entry is accepted.

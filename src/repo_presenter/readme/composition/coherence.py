@@ -29,6 +29,7 @@ from repo_presenter.readme.composition.audience import (
 )
 from repo_presenter.readme.composition.authoring import (
     SectionTask,
+    recover_opening_duplicates_preserved,
     restates_own_title,
     section_spellings,
     slot_records,
@@ -161,6 +162,7 @@ def coherence_checks(
     name: str,
     existing_units: list[dict[str, Any]] | None = None,
     prior_omitted: Sequence[Mapping[str, Any]] = (),
+    dispositions: Mapping[str, Any] | None = None,
 ) -> list[str]:
     """Every section's rules, applied to the units the pass returned for that section, plus a
     check that the revision did not silently drop named content the pre-coherence unit carried."""
@@ -191,6 +193,7 @@ def coherence_checks(
                 facts,
                 name,
                 elsewhere_cited=cited_elsewhere,
+                dispositions=dispositions,
             )
         )
     if existing_units is not None:
@@ -504,10 +507,18 @@ def recover_coherence_regressions(
     existing_units: list[dict[str, Any]],
     facts: FactsDocument,
     tasks: list[SectionTask],
+    dispositions: Mapping[str, Any] | None = None,
 ) -> dict[str, Any] | None:
     """The one ``recover=`` callable ``repair/rounds.py``'s S8 call site passes: all of S8
     coherence's own last-resort corrections, composed in order."""
     changed = False
+    if dispositions is not None:
+        opening_fixed = recover_opening_duplicates_preserved(
+            output, dispositions=dispositions, facts=facts
+        )
+        if opening_fixed is not None:
+            output = opening_fixed
+            changed = True
     missing_fixed = recover_coherence_missing_units(
         output, existing_units=existing_units, tasks=tasks
     )
