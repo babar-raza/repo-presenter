@@ -1,0 +1,216 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:repository",
+      "package:name",
+      "package:version",
+      "public_symbol:com",
+      "public_symbol:com.aspose",
+      "public_symbol:com.aspose.threed"
+    ],
+    "text": "Java developers building or inspecting 3D scenes who need a free, MIT-licensed library with API compatibility to Aspose.3D for Java."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed"
+      ],
+      "text": "Build and traverse 3D scene graphs using Scene, Node, Entity, and Group classes with parent-child hierarchy support.",
+      "title": "Scene graph construction"
+    },
+    {
+      "fact_ids": [
+        "format:input.stl",
+        "format:output.stl"
+      ],
+      "text": "Import and export STL geometry (binary or ASCII) using StlLoadOptions and StlSaveOptions dispatched through Scene.fromFile and Scene.save.",
+      "title": "Format I/O for STL"
+    },
+    {
+      "fact_ids": [
+        "format:input.fbx",
+        "format:input.glb",
+        "format:input.gltf",
+        "format:input.obj",
+        "format:input.stl",
+        "format:output.fbx",
+        "format:output.glb",
+        "format:output.gltf",
+        "format:output.obj",
+        "format:output.stl"
+      ],
+      "text": "Detect file format automatically or resolve it explicitly from file path or binary stream using FileFormat.detect and FileFormat.getFormatByExtension.",
+      "title": "Format detection"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed"
+      ],
+      "text": "Generate ready-to-use geometry for Box, Cylinder, Sphere, and Dish primitives via their toMesh() method.",
+      "title": "Primitive geometry generation"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed"
+      ],
+      "text": "Define materials including albedo, metallic/roughness, occlusion, and emissive channels with texture references using PbrMaterial and other material types.",
+      "title": "Material definition"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed"
+      ],
+      "text": "Model NURBS curves by exposing control points, knot vectors, degree, and order data through NurbsCurve.",
+      "title": "NURBS curve data modeling"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed"
+      ],
+      "text": "Perform geometry and transform math using Vector2/3/4, Matrix4, Quaternion, and BoundingBox classes.",
+      "title": "Math utilities"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "format:input.fbx",
+        "format:input.glb",
+        "format:input.gltf",
+        "format:input.obj",
+        "format:input.stl",
+        "format:output.fbx",
+        "format:output.glb",
+        "format:output.gltf",
+        "format:output.obj",
+        "format:output.stl"
+      ],
+      "text": "STL is the only format with fully functional import and export in the published 26.5.0 package; other formats have stub implementations."
+    },
+    {
+      "fact_ids": [
+        "format:input.obj",
+        "format:output.obj"
+      ],
+      "text": "OBJ import is not functional in the published artifact despite having a parser in upstream source; it ships as a stub."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed"
+      ],
+      "text": "NURBS curve sampling is not implemented; only control-point/knot/degree data is exposed."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed"
+      ],
+      "text": "PbrSpecularMaterial accessors are unimplemented; PbrMaterial is the functional alternative."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed"
+      ],
+      "text": "Scene rendering is not implemented in this edition."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:version",
+        "format:input.stl",
+        "format:output.stl"
+      ],
+      "text": "Provides a free, open-source alternative to the commercial Aspose.3D for Java library for basic 3D scene graph operations and STL format I/O."
+    },
+    {
+      "fact_ids": [
+        "format:input.fbx",
+        "format:input.glb",
+        "format:input.gltf",
+        "format:input.obj",
+        "format:input.stl",
+        "format:output.fbx",
+        "format:output.glb",
+        "format:output.gltf",
+        "format:output.obj",
+        "format:output.stl"
+      ],
+      "text": "Enables automatic format detection and explicit format resolution for supported 3D file types via FileFormat APIs."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:repository",
+      "package:name",
+      "package:version",
+      "public_symbol:com",
+      "public_symbol:com.aspose",
+      "public_symbol:com.aspose.threed"
+    ],
+    "text": "Aspose.3D FOSS for Java is a clean-room, open-source implementation of a 3D scene graph API for Java, exposing the same com.aspose.threed.* package as the commercial library."
+  },
+  "uncertainties": [
+    "The README mentions OBJ import has a working parser upstream but the published artifact ships a stub; it is unclear whether OBJ export is functional.",
+    "It is unclear whether glTF import/export is functional beyond option handling, as FILE_FORMATS.md and the summary table reportedly disagree.",
+    "The exact set of primitives with unimplemented toMesh() beyond NURBS is not fully specified in the facts.",
+    "It is unclear whether texture loading and saving beyond raw bytes is supported.",
+    "The behavior of formats that 'fail silently' is not detailed beyond general warnings.",
+    "It is unclear whether the public API surface beyond com.aspose.threed.* is fully exposed.",
+    "The relationship between the FOSS package and the commercial Enterprise Edition beyond API compatibility is not detailed in the facts.",
+    "It is unclear whether the test suite covers all format I/O paths beyond STL and glTF options."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "format:input.fbx",
+        "format:input.glb",
+        "format:input.gltf",
+        "format:input.obj",
+        "format:input.stl",
+        "format:output.fbx",
+        "format:output.glb",
+        "format:output.gltf",
+        "format:output.obj",
+        "format:output.stl"
+      ],
+      "name": "Load and convert 3D files",
+      "text": "Load a 3D file using Scene.fromFile and save it in another format using Scene.save, with automatic format detection or explicit format specification."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed"
+      ],
+      "name": "Build scene graphs from primitives",
+      "text": "Construct a scene graph using Scene, Node, and Entity, and attach geometry from primitives like Box, Cylinder, Sphere, and Dish via toMesh()."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed"
+      ],
+      "name": "Assign materials to nodes",
+      "text": "Define materials such as LambertMaterial, PhongMaterial, and PbrMaterial and assign them to nodes using Node.setMaterial."
+    }
+  ]
+}

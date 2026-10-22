@@ -447,9 +447,24 @@ next_ready_items:
       already precisely located and sized above), not a fluke. 1040/1040 whole-repo tests
       pass (no src changes this round). Evidence:
       evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_third_full_cascade/.
+    fourth_cascade_2026_10_22: >
+      DONE: fired the full cascade (S3-S8) against a fourth repository/ecosystem
+      (aspose-3d-foss/Aspose.3D-FOSS-for-Java, after python/go/net). Every real rejection in
+      this run (one in S6's api_reference#types-1, one in S8's second batch) was followed by
+      a real accepted correction on retry. A WORSE manifestation of the same known defect
+      class, not a new one: FOUR units landed in the single-slot "opening" section this
+      time (the real lead paragraph, correctly VERIFIED_REWRITE, plus three unrelated
+      VERIFIED_PRESERVE units about Maven Central publication, "no third-party
+      dependencies," and a Java-version requirement list) -- rendering as fragmented,
+      nonsensical noise under the opening sentence, not a clean duplicate paragraph. Same
+      root cause (coverage_findings()'s gap-check still never fires for a PLACING
+      disposition into an LLM-authored section), scaling worse on this repository's own
+      dispositions -- a fourth independent measurement strengthening why the real fix needs
+      the unported validation/review layer. 1040/1040 whole-repo tests pass. Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_fourth_full_cascade/.
     remaining: >
-      3 of 36 repositories now have a full real cascade run (python, go, net); not yet at
-      portfolio scale, and java/cpp/rust/typescript still untried for the full cascade
+      4 of 36 repositories now have a full real cascade run (python, go, net, java); not yet
+      at portfolio scale, and cpp/rust/typescript still untried for the full cascade
       (Lane L format detection is already proven for all of them independently).
       placement_errors IS now ported (2026-10-22, with references.py and the rest of the
       refusal/repair half -- dangling_pointers, uncited_omit_candidates, unprinted_commands,

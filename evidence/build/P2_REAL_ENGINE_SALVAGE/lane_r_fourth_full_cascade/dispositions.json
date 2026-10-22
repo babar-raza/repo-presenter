@@ -1,0 +1,815 @@
+{
+  "dispositions": [
+    {
+      "destination_section": "identity",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:repository",
+        "package:name"
+      ],
+      "rationale": "The H1 product name is rendered deterministically by the identity section.",
+      "unit_id": "inherited_unit:001.heading"
+    },
+    {
+      "destination_section": "badges",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "package:name",
+        "package:version",
+        "package:java_release"
+      ],
+      "rationale": "The badge row is rendered deterministically by the badges section.",
+      "unit_id": "inherited_unit:002.badge_row"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a product illustration or homepage link; the banner condition is not met.",
+      "unit_id": "inherited_unit:003.badge_row"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_REWRITE",
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:version",
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed"
+      ],
+      "rationale": "The paragraph's substance is covered by the opening section; facts support its core claims about the library's purpose and API compatibility.",
+      "unit_id": "inherited_unit:004.paragraph"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Navigation heading is rendered deterministically by the navigation section.",
+      "unit_id": "inherited_unit:005.heading"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The navigation list is rendered deterministically by the navigation section.",
+      "unit_id": "inherited_unit:006.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The At a Glance section is not rendered because the condition (at least three verified core capabilities with a verified input format) is not met by the facts.",
+      "unit_id": "inherited_unit:007.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Mermaid diagram is not rendered because the At a Glance section is omitted.",
+      "unit_id": "inherited_unit:008.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed",
+        "format:input.stl",
+        "format:output.stl"
+      ],
+      "rationale": "The Key Capabilities heading is placeable and the list items are supported by facts.",
+      "unit_id": "inherited_unit:009.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed",
+        "format:input.stl",
+        "format:output.stl"
+      ],
+      "rationale": "The list items are supported by facts and match the key capabilities section.",
+      "unit_id": "inherited_unit:010.list"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "rationale": "The Installation heading is rendered deterministically by the installation section.",
+      "unit_id": "inherited_unit:011.heading"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:name",
+        "package:version"
+      ],
+      "rationale": "The paragraph's substance about Maven Central publication is supported by facts and fits the opening section.",
+      "unit_id": "inherited_unit:012.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Maven:' label is not a standalone claim; the install command is rendered deterministically.",
+      "unit_id": "inherited_unit:013.paragraph"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "rationale": "The Maven install command is rendered deterministically by the installation section.",
+      "unit_id": "inherited_unit:014.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Gradle (Kotlin DSL):' label is not a standalone claim; the install command is rendered deterministically.",
+      "unit_id": "inherited_unit:015.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Gradle Kotlin DSL example is not supported by facts; only Maven is verified.",
+      "unit_id": "inherited_unit:016.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Gradle (Groovy DSL):' label is not a standalone claim; the install command is rendered deterministically.",
+      "unit_id": "inherited_unit:017.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Gradle Groovy DSL example is not supported by facts; only Maven is verified.",
+      "unit_id": "inherited_unit:018.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph about other build tools is not supported by facts.",
+      "unit_id": "inherited_unit:019.paragraph"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Dependencies heading is rendered deterministically by the dependencies section.",
+      "unit_id": "inherited_unit:020.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Required Package Dependencies' heading is rendered deterministically by the dependencies section.",
+      "unit_id": "inherited_unit:021.heading"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:none"
+      ],
+      "rationale": "The claim about no required third-party dependencies is supported by facts and fits the opening section.",
+      "unit_id": "inherited_unit:022.paragraph"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Native and System Requirements' heading is rendered deterministically by the dependencies section.",
+      "unit_id": "inherited_unit:023.heading"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:java_release"
+      ],
+      "rationale": "The list items about Java 21+ requirement are supported by facts and fit the opening section.",
+      "unit_id": "inherited_unit:024.list"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Development Dependencies' heading is rendered deterministically by the dependencies section.",
+      "unit_id": "inherited_unit:025.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:development.org.junit.jupiter-junit-jupiter"
+      ],
+      "rationale": "The test framework dependency is supported by facts and fits the scope limitations section.",
+      "unit_id": "inherited_unit:026.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Quick Start section is not rendered because the condition (at least one example executed or compiled in isolation) is not met by the facts.",
+      "unit_id": "inherited_unit:027.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Quick Start lead-in is not supported because the section is omitted.",
+      "unit_id": "inherited_unit:028.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Quick Start example is not supported because the section is omitted.",
+      "unit_id": "inherited_unit:029.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Quick Start follow-up is not supported because the section is omitted.",
+      "unit_id": "inherited_unit:030.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Quick Start example with options is not supported because the section is omitted.",
+      "unit_id": "inherited_unit:031.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Additional Examples section is not rendered because the condition (at least one further verified example) is not met by the facts.",
+      "unit_id": "inherited_unit:032.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Additional Examples lead-in is not supported because the section is omitted.",
+      "unit_id": "inherited_unit:033.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Build a Scene From a Primitive' heading is not supported because the section is omitted.",
+      "unit_id": "inherited_unit:034.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The primitive example is not supported because the section is omitted.",
+      "unit_id": "inherited_unit:035.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The details block is not supported because the section is omitted.",
+      "unit_id": "inherited_unit:036.html_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Assign a PBR Material' heading is not supported because the section is omitted.",
+      "unit_id": "inherited_unit:037.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The PBR material example is not supported because the section is omitted.",
+      "unit_id": "inherited_unit:038.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Define a NURBS Curve's Control Points' heading is not supported because the section is omitted.",
+      "unit_id": "inherited_unit:039.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The NURBS curve example is not supported because the section is omitted.",
+      "unit_id": "inherited_unit:040.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading introduces an example section whose content is superseded by the Quick Start and Additional Examples sections, which are not rendered at this time.",
+      "unit_id": "inherited_unit:041.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The example uses FileInputStream and Stream.wrap, which are not verified as functional; the only working example path is Scene.fromFile and Scene.save.",
+      "unit_id": "inherited_unit:042.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading introduces an example section whose content is superseded by the Quick Start and Additional Examples sections, which are not rendered at this time.",
+      "unit_id": "inherited_unit:043.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The example uses Node.getTransform().setTranslation, which is not verified as functional; transform mutation is not confirmed in the facts.",
+      "unit_id": "inherited_unit:044.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "NON_CONTENT",
+      "fact_ids": [],
+      "rationale": "This is a closing HTML tag without semantic content.",
+      "unit_id": "inherited_unit:045.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading matches the API Reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:046.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_REWRITE",
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed",
+        "public_symbol:com.aspose.threed.scene"
+      ],
+      "rationale": "The paragraph describes Scene as the central entry point, which is supported by the public_symbol facts and the Scene class.",
+      "unit_id": "inherited_unit:047.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "NON_CONTENT",
+      "fact_ids": [],
+      "rationale": "This is an opening HTML details tag without semantic content.",
+      "unit_id": "inherited_unit:048.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading matches the API Reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:049.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table lists the full public API surface, which is rendered deterministically by the API Reference section.",
+      "unit_id": "inherited_unit:050.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading matches the API Reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:051.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table lists interfaces, which are rendered deterministically by the API Reference section.",
+      "unit_id": "inherited_unit:052.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading matches the API Reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:053.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table lists enumerations, which are rendered deterministically by the API Reference section.",
+      "unit_id": "inherited_unit:054.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading matches the API Reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:055.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading matches the API Reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:056.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed",
+        "public_symbol:com.aspose.threed.scene",
+        "public_symbol:com.aspose.threed.node"
+      ],
+      "rationale": "The list items describe Scene and Node APIs, which are supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:057.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed",
+        "public_symbol:com.aspose.threed.node"
+      ],
+      "rationale": "The list items describe Node APIs, which are supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:057.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed",
+        "public_symbol:com.aspose.threed.entity",
+        "public_symbol:com.aspose.threed.sceneobject",
+        "public_symbol:com.aspose.threed.a3dobject"
+      ],
+      "rationale": "The list items describe the base hierarchy, which is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:057.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed",
+        "public_symbol:com.aspose.threed.group"
+      ],
+      "rationale": "The list item describes Group, which is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:057.004.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading matches the API Reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:058.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed",
+        "public_symbol:com.aspose.threed.mesh",
+        "public_symbol:com.aspose.threed.box",
+        "public_symbol:com.aspose.threed.cylinder",
+        "public_symbol:com.aspose.threed.sphere",
+        "public_symbol:com.aspose.threed.dish"
+      ],
+      "rationale": "The list items describe Mesh and primitives, which are supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:059.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed",
+        "public_symbol:com.aspose.threed.nurbscurve"
+      ],
+      "rationale": "The list items describe NurbsCurve, which is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:059.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed",
+        "public_symbol:com.aspose.threed.boundingbox"
+      ],
+      "rationale": "The list item describes BoundingBox, which is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:059.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading matches the API Reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:060.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed",
+        "public_symbol:com.aspose.threed.material"
+      ],
+      "rationale": "The list item describes Material, which is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:061.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed",
+        "public_symbol:com.aspose.threed.pbrmaterial"
+      ],
+      "rationale": "The list items describe PbrMaterial, which is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:061.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed",
+        "public_symbol:com.aspose.threed.texturedata"
+      ],
+      "rationale": "The list item describes TextureData, which is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:061.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading matches the API Reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:062.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed",
+        "public_symbol:com.aspose.threed.objloadoptions"
+      ],
+      "rationale": "The list item describes ObjLoadOptions, which is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:063.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed",
+        "public_symbol:com.aspose.threed.stlloadoptions",
+        "public_symbol:com.aspose.threed.stlsaveoptions",
+        "public_symbol:com.aspose.threed.filecontenttype"
+      ],
+      "rationale": "The list items describe STL options and FileContentType, which are supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:063.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed",
+        "public_symbol:com.aspose.threed.fileformat"
+      ],
+      "rationale": "The list items describe FileFormat, which is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:063.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading matches the API Reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:064.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed",
+        "public_symbol:com.aspose.threed.vector2",
+        "public_symbol:com.aspose.threed.vector3",
+        "public_symbol:com.aspose.threed.vector4",
+        "public_symbol:com.aspose.threed.fvector3",
+        "public_symbol:com.aspose.threed.fvector4"
+      ],
+      "rationale": "The list items describe vector classes, which are supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:065.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed",
+        "public_symbol:com.aspose.threed.matrix4",
+        "public_symbol:com.aspose.threed.quaternion",
+        "public_symbol:com.aspose.threed.transform",
+        "public_symbol:com.aspose.threed.globaltransform"
+      ],
+      "rationale": "The list items describe math utilities, which are supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:065.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading matches the API Reference section and is supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:066.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed",
+        "public_symbol:com.aspose.threed.importexception",
+        "public_symbol:com.aspose.threed.exportexception",
+        "public_symbol:com.aspose.threed.parseexception"
+      ],
+      "rationale": "The list items describe exceptions, which are supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:067.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "NON_CONTENT",
+      "fact_ids": [],
+      "rationale": "This is a closing HTML details tag without semantic content.",
+      "unit_id": "inherited_unit:068.html_block"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading matches the Documentation & Resources section, which is not rendered at this time.",
+      "unit_id": "inherited_unit:069.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The links are not verified as functional or present in the repository.",
+      "unit_id": "inherited_unit:070.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading '## Scope and Limitations' is preserved as the section heading for scope_limitations.",
+      "unit_id": "inherited_unit:071.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "format:input.stl",
+        "format:output.stl",
+        "format:input.obj",
+        "format:output.obj",
+        "public_symbol:com.aspose.threed.nurbscurve",
+        "public_symbol:com.aspose.threed.pbrspecularmaterial",
+        "public_symbol:com.aspose.threed.box",
+        "public_symbol:com.aspose.threed.cylinder",
+        "public_symbol:com.aspose.threed.sphere",
+        "public_symbol:com.aspose.threed.dish"
+      ],
+      "rationale": "The list items match limitations confirmed by format and public symbol facts, and are placed in scope_limitations.",
+      "unit_id": "inherited_unit:072.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about enterprise edition features or the product link; omitted.",
+      "unit_id": "inherited_unit:073.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading '## Development and Testing' is not placed; instead, its content is covered by the development_testing section, but the section itself is not placeb",
+      "unit_id": "inherited_unit:074.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The paragraph introduces build/test commands, but the development_testing section is not rendered (condition not met); however, the content is covered by the 'M",
+      "unit_id": "inherited_unit:075.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The code block is redundant with the development_testing section, which is not rendered at this revision.",
+      "unit_id": "inherited_unit:076.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the existence of TODO.md or AGENTS.md or their described content.",
+      "unit_id": "inherited_unit:077.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'View Development Notes' details block is unsupported by facts and omitted.",
+      "unit_id": "inherited_unit:078.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The HTML details block is unsupported and omitted.",
+      "unit_id": "inherited_unit:079.html_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the test suite coverage claims beyond STL and glTF options.",
+      "unit_id": "inherited_unit:080.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The closing HTML details tag is unsupported and omitted.",
+      "unit_id": "inherited_unit:081.html_block"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading '## License' is preserved as the section heading for license.",
+      "unit_id": "inherited_unit:082.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The license paragraph is placed in license, but the section heading is scope_limitations; the license content is placed in license, but the heading is preserved",
+      "unit_id": "inherited_unit:083.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the 'clean-room implementation' claim or its specific wording.",
+      "unit_id": "inherited_unit:084.paragraph"
+    }
+  ]
+}
