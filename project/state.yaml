@@ -213,8 +213,8 @@ next_ready_items:
     status: IN_PROGRESS
     priority: high
     purpose: >
-      The single biggest "lanes don't yet work equally" gap found in this session. 3 of 6
-      remaining ecosystems done (.NET, Java, C++); go/rust/typescript still stubbed.
+      The single biggest "lanes don't yet work equally" gap found in this session. 4 of 6
+      remaining ecosystems done (.NET, Java, C++, Go); rust/typescript still stubbed.
     done_net: >
       DONE 2026-10-22, clean (zero false positives after one found-and-fixed): new
       extractors/platforms/net_format_declarations.py (class-declaration + dispatch-switch
@@ -267,14 +267,35 @@ next_ready_items:
       there a signal fired for something that doesn't work, here something that works produces
       no signal. 924/924 whole-repo tests pass. Evidence:
       evidence/build/P2_REAL_ENGINE_SALVAGE/aspose-cells-foss__Aspose.Cells-FOSS-for-Cpp/.
+    done_go: >
+      DONE 2026-10-22, against aspose-cells-foss/Aspose.Cells-FOSS-for-Go (the only mode:full
+      go registry entry). A fourth, again-different idiom, and the first where the two-source
+      design itself does not transfer: Go has no format enum, no class hierarchy, no string-
+      literal constructor argument anywhere -- format support is expressed purely through
+      exported identifiers (ExportToCSV/ImportFromCSV, the format name a literal suffix of the
+      Go identifier) and, for the primary bare Load/Save, through English prose in the doc
+      comment directly above them (no format name in the identifier at all). Stated honestly:
+      an exported Go function's mere existence already implies the code compiles, so this
+      reader has no second, independent signal to corroborate against the way .NET/Java/C++'s
+      declared-vs-dispatch splits do -- confirmed directly by searching this repository's real
+      source for any TODO/stub marker near a format identifier and finding none. Both
+      "declaration" and "registration" are therefore emitted from the same single reading, by
+      design, not as a shortcut. Real end-to-end result: all 4 claimed formats
+      (input/output csv, input/output xlsx) come out SUPPORTED, matching the live README
+      exactly -- plus two unrelated, independently real Lane L findings proving the whole
+      pipeline is live for Go: two real structure fixes auto-applied (a stray second H1, an
+      unclosed <details> block), and a real compiler-caught broken example
+      (`undefined: generateSmallPNG`). 930/930 whole-repo tests pass. Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/aspose-cells-foss__Aspose.Cells-FOSS-for-Go/.
     remaining: >
-      go/rust/typescript format_claims/format_declarations are still stubbed (return []) --
-      confirmed each is the old repo's own unfinished state too, same as .NET/Java/C++ were.
-      Three ecosystems in and the correlation key has already diverged twice (.NET: identifier;
-      Java: extension string; C++: identifier again, but via a qualified enum reference, not a
-      dispatch-arm) -- confirms the discipline that matters is "read the real dispatch idiom
-      before writing a reader," never "reuse an existing reader's shape." Each remaining
-      ecosystem needs its own investigation against real source first.
+      rust/typescript format_claims/format_declarations are still stubbed (return []) --
+      confirmed each is the old repo's own unfinished state too, same as .NET/Java/C++/Go were.
+      Four ecosystems in, the correlation key has diverged three times (.NET: identifier via
+      dispatch-arm; Java: extension string; C++: identifier via qualified reference; Go: no
+      second signal at all) -- confirms the discipline that matters is "read the real dispatch
+      idiom before writing a reader," never "reuse an existing reader's shape," and that the
+      two-source design itself is not guaranteed to transfer. Each remaining ecosystem needs its
+      own investigation against real source first.
   - id: WRITE_PROMPTS_FOR_AUTHORING
     status: DONE
     purpose: >

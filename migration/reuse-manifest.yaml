@@ -970,3 +970,47 @@ entries:
       go/rust/typescript -- each needs its own real-source investigation before a reader is
       written.
     invalidation_impact: not yet pulled into any other ecosystem.
+
+  - component: "extractors/platforms/go_format_declarations.py"
+    source: "new engineering -- the old repo has the identical return-[] format_declarations
+      stub for go.py too"
+    evaluated_at_shas: []
+    behavior: >
+      A fourth, again-different idiom, and the first where the two-source design itself does
+      not transfer. Go has no format enum, no class hierarchy, no string-literal constructor
+      argument anywhere -- format support is expressed purely through exported identifiers
+      (ExportToCSV / ImportFromCSV, the format name a literal suffix of the Go identifier) and,
+      for the package's primary bare Load/Save, through English prose in the doc comment
+      directly above the function (no format name in the identifier itself). Both a
+      declaration and a registration record are emitted from the same single reading, by
+      design -- an exported Go function's mere existence already implies the code compiles, so
+      this reader has no second, independent signal to corroborate against the way .NET/Java/
+      C++'s declared-vs-dispatch splits do.
+    evidence: >
+      Designed against the REAL live source of aspose-cells-foss/Aspose.Cells-FOSS-for-Go
+      (2026-10-22), read directly before writing any pattern-matching code (workbook.go's bare
+      Load/Save and their doc comments, csv_handler.go's named ExportToCSV/ImportFromCSV).
+      Confirmed directly that this repository has no declared-but-stubbed format to miss: a
+      search for TODO/not-implemented markers near any format identifier found exactly one
+      unrelated hit (an OLE compound-file edge case). 6 new unit tests
+      (test_go_format_declarations.py). Real end-to-end result: all 4 claimed formats
+      (input/output csv, input/output xlsx) come out SUPPORTED, matching the live README
+      exactly, plus two unrelated real Lane L findings in the same run proving the whole
+      pipeline is live for Go (two structure fixes auto-applied, one compiler-caught broken
+      example). See
+      evidence/build/P2_REAL_ENGINE_SALVAGE/aspose-cells-foss__Aspose.Cells-FOSS-for-Go/.
+    disposition: "ADD (not REUSE/ADAPT -- genuinely new code, no old-repo equivalent exists)"
+    reason: >
+      Fourth of five remaining ecosystems toward "lanes work equally for all candidates." The
+      correlation key has now diverged three times across four readers, and this is the first
+      ecosystem where the two-source design itself does not transfer -- confirming the
+      discipline is "read the real idiom and build what it actually supports," not "port a
+      design that worked elsewhere."
+    target_module: src/repo_presenter/extractors/platforms/go_format_declarations.py
+    smallest_first_integration_test: tests/extractors/platforms/test_go_format_declarations.py
+      -- all green, plus the real end-to-end proof above.
+    portfolio_consumers: Lane L, every Go candidate. Only measured against the one mode:full
+      Go registry entry (Cells) so far -- the dry_run PDF Go repo has not been checked against
+      this reader's patterns. Still NOT proven for rust/typescript -- each needs its own
+      real-source investigation before a reader is written.
+    invalidation_impact: not yet pulled into any other ecosystem.

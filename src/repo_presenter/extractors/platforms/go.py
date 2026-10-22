@@ -27,6 +27,9 @@ from collections.abc import Iterator, Sequence
 from pathlib import Path
 from typing import Any
 
+from repo_presenter.extractors.platforms.go_format_declarations import (
+    format_declarations as go_format_declarations,
+)
 from repo_presenter.extractors.platforms.go_examples import (
     verify_go_examples,
 )
@@ -431,8 +434,10 @@ class GoPlugin:
         return []
 
     def format_declarations(self, root: Path, tree_paths: list[str]) -> Sequence[FormatDeclaration]:
-        """Not yet built; the vendored format reader lands with the cohort that needs it."""
-        return []
+        """Named-method + doc-comment reading; see go_format_declarations.py's own docstring
+        for why Go's idiom gives this reader no second, independent signal the way .NET/Java/
+        C++'s declaration-vs-dispatch splits do."""
+        return go_format_declarations(root, tree_paths)
 
 
 def _package_of(source_path: str, prefix: str) -> str:
