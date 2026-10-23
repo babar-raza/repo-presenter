@@ -1,0 +1,199 @@
+{
+  "audience": {
+    "fact_ids": [
+      "package:java_release",
+      "dependency:none",
+      "public_symbol:org",
+      "public_symbol:org.aspose",
+      "public_symbol:org.aspose.pdf"
+    ],
+    "text": "Java developers building server-side or desktop applications that require PDF document generation, manipulation, and conversion without third-party runtime dependencies."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.pdf"
+      ],
+      "text": "Build pages from scratch using Page, Paragraphs, Table, Row, Cell, FloatingBox, HeaderFooter, and stamps (TextStamp, ImageStamp, PageNumberStamp).",
+      "title": "Create and edit PDF content"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.pdf"
+      ],
+      "text": "Locate, extract, and replace text using TextFragmentAbsorber and TextAbsorber, including right-to-left and Arabic glyph shaping via ArabicShaper.",
+      "title": "Text extraction and manipulation"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.pdf"
+      ],
+      "text": "Work with AcroForm fields (TextBoxField, CheckboxField, ComboBoxField, etc.) and XFA forms via Form, XfaForm, XfaAcroFormConverter, and XfaFlattener.",
+      "title": "Form handling"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.pdf"
+      ],
+      "text": "Add and read annotations including highlight, underline, strikeout, squiggly, free text, ink, stamps, file attachments, links, and redaction.",
+      "title": "Annotations and markup"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.pdf"
+      ],
+      "text": "Encrypt and decrypt documents with AES or RC4 using AESCipher, RC4Cipher, and StandardSecurityHandler with separate user and owner passwords.",
+      "title": "Security and encryption"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.pdf"
+      ],
+      "text": "Split, merge, insert, extract, and reorder pages using PdfFileEditor, and edit individual page size and rotation with PdfPageEditor.",
+      "title": "Page operations"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.pdf"
+      ],
+      "text": "Validate and convert documents to PDF/A-1 through PDF/A-4 using PdfAValidator, PdfAConverter, and PdfAValidationResult.",
+      "title": "PDF/A and validation"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.pdf"
+      ],
+      "text": "Import HTML into PDF using HtmlLoadOptions and HtmlToPdfConverter, and export PDF to HTML or XML using HtmlSaveOptions and PdfToHtmlConverter.",
+      "title": "HTML import and export"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "text": "OCR functionality is not included; use a dedicated OCR library for text recognition in scanned images."
+    },
+    {
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "text": "Conversion to non-PDF formats (DOCX, XLSX, PPTX, EPUB, etc.) and from non-PDF formats (DOC, XPS, PostScript, SVG, etc.) is not supported."
+    },
+    {
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "text": "Full XFA form rendering is not reproduced; XFA data can be flattened to AcroForm but dynamic layout is not rendered."
+    },
+    {
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "text": "PdfFileSecurity.setAllowExceptions throws UnsupportedOperationException; the legacy AllowExceptions=false path is not implemented."
+    },
+    {
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "text": "Text replacement with non-Latin scripts (CJK, Arabic, Hebrew) may differ from a reference renderer in complex bidi cases."
+    },
+    {
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "text": "A single Document instance is not thread-safe; use one Document per thread for parallel processing."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "package:java_release",
+        "dependency:none"
+      ],
+      "text": "Enables creation and editing of PDF documents using a pure Java API without external native dependencies or runtime libraries."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.pdf"
+      ],
+      "text": "Supports text extraction, replacement, and search—including right-to-left and Arabic glyph shaping—via TextFragmentAbsorber and TextAbsorber."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.pdf"
+      ],
+      "text": "Provides tools for form handling (AcroForm and XFA), annotations, digital signatures, encryption, and PDF/A validation/conversion."
+    },
+    {
+      "fact_ids": [
+        "install_command:maven",
+        "package:name"
+      ],
+      "text": "Offers page operations (split, merge, reorder), rendering to raster images, and HTML import/export—all within a single dependency."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:repository",
+      "package:name",
+      "package:version",
+      "package:java_release"
+    ],
+    "text": "Aspose.PDF FOSS for Java is a free, open-source, pure-Java library for creating, reading, and modifying PDF documents compliant with ISO 32000-1:2008."
+  },
+  "uncertainties": [
+    "The exact set of public symbols beyond org.aspose.pdf is not fully enumerated in the facts.",
+    "Whether QR code generation via QrEncoder is fully ISO/IEC 18004 compliant beyond Model 2 is not confirmed by facts.",
+    "The extent of PDF/X validation and conversion test coverage is not detailed beyond 'no dedicated test coverage yet'.",
+    "The behavior of Image.setSelectedFrame(int) for multi-frame TIFF import is described but not verified by code examples.",
+    "Whether all public symbols listed in the README are present in the published artifact is not confirmed by facts.",
+    "The exact behavior of Document.optimizeResources() for font merging across resources is not specified beyond 'limited'.",
+    "The thread-safety boundary for Document instances is stated but not tested or demonstrated in code.",
+    "The version of Maven required to build the project is not explicitly stated beyond 'Maven 3'."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.pdf"
+      ],
+      "name": "Create and save a PDF from scratch",
+      "text": "Instantiate a Document, add a Page, insert Paragraphs including tables or stamps, and save to disk using Document.save."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.pdf"
+      ],
+      "name": "Extract text from an existing PDF",
+      "text": "Create a TextAbsorber, call Page.accept(TextAbsorber), and retrieve extracted text via TextAbsorber.getText."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.pdf"
+      ],
+      "name": "Edit form fields in a PDF",
+      "text": "Access Form via Document.getForm, retrieve or update Field values, and add new fields such as TextBoxField or CheckboxField."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.pdf"
+      ],
+      "name": "Render PDF pages to images",
+      "text": "Use a PageDevice subclass (e.g., PngDevice) and call process(Page, OutputStream) to generate raster images."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.pdf"
+      ],
+      "name": "Sign or verify a PDF",
+      "text": "Use PdfSigner with PKCS7 or PKCS7Detached to sign; use SignatureVerificationResult to verify existing signatures."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.pdf"
+      ],
+      "name": "Optimize a PDF's file size",
+      "text": "Call Document.optimizeResources(OptimizationOptions) to remove unused objects, link duplicate streams, and recompress content."
+    }
+  ]
+}

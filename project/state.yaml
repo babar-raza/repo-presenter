@@ -672,10 +672,19 @@ next_ready_items:
       duplicate-opening defect repeated a twenty-second time. 1052/1052 whole-repo tests
       pass (no src changes this round). Evidence:
       evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_twentysecond_full_cascade/.
+    twentythird_cascade_2026_10_22: >
+      DONE: fired the full cascade (S3-S8) against a twenty-third repository
+      (aspose-pdf-foss/Aspose.PDF-FOSS-for-Java), a fourth aspose-pdf-foss repository and a
+      second Java repository this session. S3-S6 all accepted on the first attempt.
+      coherence#1 needed one real reject->accept cycle; no revisions anywhere. The known
+      duplicate-opening defect repeated a twenty-third time, at the new largest scale yet
+      (133,810 characters pre-coherence, surpassing the nineteenth cascade's 123,340).
+      1052/1052 whole-repo tests pass (no src changes this round). Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_twentythird_full_cascade/.
     remaining: >
-      22 of 36 repositories now have a FULL real cascade run through S8 (plus one,
+      23 of 36 repositories now have a FULL real cascade run through S8 (plus one,
       aspose-html-foss/Python, with S3-S6+render only). All 7 ecosystems have been exercised
-      at least once (python x9, go x2, net x3, java, cpp x3, rust, typescript x2); the
+      at least once (python x9, go x2, net x3, java x2, cpp x3, rust, typescript x2); the
       portfolio as a whole (36 repositories) is still far from fully covered. Lane L format
       detection is already proven for all of them independently. Two unrelated pre-existing
       S6/S8 rough edges (the "TrueType" identifier rejection and the "cites facts outside
