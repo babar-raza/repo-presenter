@@ -1,0 +1,271 @@
+{
+  "audience": {
+    "fact_ids": [
+      "package:node_engine",
+      "dependency:none"
+    ],
+    "text": "Developers building Node.js applications that require PDF processing capabilities without external runtime dependencies."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:document.recovery",
+        "public_symbol:document.validate",
+        "public_symbol:document.repair",
+        "public_symbol:parsecontentstream",
+        "public_symbol:serializecontentstream"
+      ],
+      "text": "Parses classic cross-reference tables and streams, object streams, and all stream filters; recovers damaged files and reports what was repaired and lost.",
+      "title": "PDF Parsing and Repair"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:document.addpage",
+        "public_symbol:document.insertpage",
+        "public_symbol:document.removepage",
+        "public_symbol:document.reorder",
+        "public_symbol:document.split",
+        "public_symbol:document.extractpages",
+        "public_symbol:document.append",
+        "public_symbol:document.merge"
+      ],
+      "text": "Access and edit every page through doc.Pages with all five boundary boxes, rotation, resources, and content; manipulate the page set with AddPage, InsertPage, RemovePage, Reorder, Split, ExtractPages, Append, and Document.Merge.",
+      "title": "Page Manipulation"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.addtext",
+        "public_symbol:page.addtextblock",
+        "public_symbol:fontfamily",
+        "public_symbol:embeddedfont",
+        "public_symbol:flowparagraphoptions"
+      ],
+      "text": "Stamp text with AddText and AddTextBlock using the 12 Standard-14 Latin fonts or embedded TrueType/OpenType/WOFF/WOFF2 fonts, with optional complex-text shaping for bidi, Arabic, and OpenType GSUB/GPOS scripts.",
+      "title": "Text Authoring and Styling"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.graphics",
+        "public_symbol:page.addimage",
+        "public_symbol:page.addsvgobject",
+        "public_symbol:pagegraphics",
+        "public_symbol:tilingpattern"
+      ],
+      "text": "Draw vector graphics with page.Graphics() (lines, shapes, gradients, tiling patterns) and embed raster images (JPEG, PNG, BMP, TIFF) or vector SVG assets with page.AddSVGObject.",
+      "title": "Vector Graphics and Images"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:form",
+        "public_symbol:annotation",
+        "public_symbol:page.addcheckbox",
+        "public_symbol:page.addcombobox",
+        "public_symbol:page.addtextfield",
+        "public_symbol:page.addlink",
+        "public_symbol:page.addstamp"
+      ],
+      "text": "Create, fill, and style AcroForm fields, regenerate appearance streams, and round-trip field data through FDF/XFDF import and export; enumerate and edit 16 annotation subtypes.",
+      "title": "Forms and Annotations"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.getstructtree",
+        "public_symbol:document.autotag",
+        "public_symbol:document.createstructtree",
+        "public_symbol:structtreeroot",
+        "public_symbol:document.validatepdfua",
+        "public_symbol:document.converttopdfua"
+      ],
+      "text": "Read and author tagged-PDF structure with GetStructTree, AutoTag, CreateStructTree, and StructElement APIs; validate against PDF/UA and convert to PDF/UA.",
+      "title": "Tagged PDF and Accessibility"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:encryptoptions",
+        "public_symbol:pubsecencryptoptions",
+        "public_symbol:document.validatepdfa",
+        "public_symbol:document.converttopdfa",
+        "public_symbol:redactoptions",
+        "public_symbol:sanitizeoptions",
+        "public_symbol:document.sign",
+        "public_symbol:document.addvalidationdata"
+      ],
+      "text": "Open encrypted PDFs with standard and public-key encryption; write encrypted output; validate and convert to PDF/A and PDF/X; redact content; sanitize hidden data; and digitally sign with PAdES/B-LT/B-LTA.",
+      "title": "Security and Compliance"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.tosvg",
+        "public_symbol:page.toimage",
+        "public_symbol:document.tohtml",
+        "public_symbol:document.tomarkdown",
+        "public_symbol:document.todocx",
+        "public_symbol:document.toepub"
+      ],
+      "text": "Render pages to SVG or raster images (PNG/JPEG/TIFF/BMP/GIF) with a pure-TypeScript software rasterizer; export documents to reflowable or fixed-layout HTML, Markdown, DOCX, or EPUB.",
+      "title": "Export and Rendering"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "public_symbol:loadlimits",
+        "public_symbol:resourcelimiterror"
+      ],
+      "text": "Resource limits reduce known amplification but do not make a hostile file safe; CPU time is not bounded and combined memory limits are separate."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.recovery",
+        "public_symbol:objstmdamage"
+      ],
+      "text": "Damaged-file recovery is partial; objects stored inside an /ObjStm that are damaged are lost, and a scan cannot distinguish live from freed objects."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.tosvg",
+        "public_symbol:svgoptions"
+      ],
+      "text": "SVG rendering is preview-grade; text is positioned <text> styled by font family/weight, and exact glyph shapes depend on the viewer's fonts."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:flowparagraphoptions",
+        "public_symbol:flowheadingoptions"
+      ],
+      "text": "Complex-text shaping applies generic OpenType GSUB/GPOS only; there are no script-specific reordering engines for Indic, SEA, or Khmer."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:flow.adddocx",
+        "public_symbol:docxflowresult"
+      ],
+      "text": "DOCX import is a documented subset, not a Word layout engine; legacy .doc is out of scope, and headers, footers, footnotes, and revision tracking are not exported."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.sign",
+        "public_symbol:signoptions",
+        "public_symbol:saveoptions"
+      ],
+      "text": "Digital signing is single-pass; incremental-append requires the in-memory model unchanged since Open; any mutation switches signing to a full rewrite."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "package:node_engine",
+        "dependency:none",
+        "dependency:development.tsx",
+        "dependency:development.typescript"
+      ],
+      "text": "Enables parsing, editing, and rendering of PDF documents entirely in TypeScript with no external runtime dependencies."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:loadlimits",
+        "public_symbol:resourcelimiterror"
+      ],
+      "text": "Supports resource-bounded opening of untrusted PDFs to prevent memory exhaustion through LoadLimits."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:redactoptions",
+        "public_symbol:sanitizeoptions",
+        "public_symbol:optimizeoptions"
+      ],
+      "text": "Provides redaction, sanitization, and optimization workflows to remove hidden data and shrink file size."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:signoptions",
+        "public_symbol:signaturereport",
+        "public_symbol:validationdataoptions"
+      ],
+      "text": "Enables digital signing with PAdES/B-LT/B-LTA support, timestamps, and LTV validation data."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:repository",
+      "package:name",
+      "package:version",
+      "import_path:asposefoss-pdf",
+      "package:node_engine"
+    ],
+    "text": "Aspose.PDF FOSS for TypeScript is a free, open-source, zero-dependency TypeScript library for reading, manipulating, and writing PDF files in Node.js."
+  },
+  "uncertainties": [
+    "The library's handling of /User in optional-content configurations is not evaluated, since it names a person or organization and this library has no viewer identity.",
+    "XMP writes are not type-checked against predefined schemas; SetXmpValue accepts values that may not conform to their schema types.",
+    "The bundled fonts add ~3.1 MB to the library; subsetting the bundled faces to shrink this footprint is future work.",
+    "SVG <image> hrefs that are not data URIs are never fetched; the library never fetches an href itself and takes no dependency.",
+    "The HTML renderer does not draw <iframe> or <math> content, and <object>, <video>, <audio>, and <canvas> children render only as fallback content.",
+    "The bundled fonts add ~3.1 MB to the library; subsetting the bundled faces to shrink this footprint is future work.",
+    "The bundled fonts add ~3.1 MB to the library; subsetting the bundled faces to shrink this footprint is future work.",
+    "The bundled fonts add ~3.1 MB to the library; subsetting the bundled faces to shrink this footprint is future work."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "public_symbol:document.open",
+        "public_symbol:document.save",
+        "public_symbol:document.addpage",
+        "public_symbol:document.setmetadata"
+      ],
+      "name": "Open and Edit PDF",
+      "text": "Open a PDF with Document.Open, edit pages, metadata, and form fields, then save with Document.Save."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.addredact",
+        "public_symbol:page.markredacttext",
+        "public_symbol:page.applyredactions"
+      ],
+      "name": "Redact Content",
+      "text": "Mark regions for redaction with Page.AddRedact or Page.MarkRedactText, then apply with Page.ApplyRedactions to permanently remove content."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.toimage",
+        "public_symbol:imageoptions",
+        "public_symbol:saveimageformat"
+      ],
+      "name": "Render to Image",
+      "text": "Render a page to PNG, JPEG, TIFF, BMP, or GIF using Page.ToImage with configurable DPI, format, and mode."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.tohtml",
+        "public_symbol:document.tomarkdown",
+        "public_symbol:document.todocx",
+        "public_symbol:document.toepub",
+        "public_symbol:page.tosvg"
+      ],
+      "name": "Export to Other Formats",
+      "text": "Export a document to HTML, Markdown, DOCX, EPUB, or SVG using Document.ToHtml, Document.ToMarkdown, Document.ToDocx, Document.ToEpub, or Page.ToSvg."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.validatepdfa",
+        "public_symbol:document.validatepdfx",
+        "public_symbol:document.validatepdfua",
+        "public_symbol:document.converttopdfa",
+        "public_symbol:document.converttopdfua"
+      ],
+      "name": "Validate and Convert Standards",
+      "text": "Validate against PDF/A, PDF/X, or PDF/UA standards with Document.ValidatePdfA, Document.ValidatePdfX, or Document.ValidatePdfUa, and remediate with Document.ConvertToPdfA, Document.ConvertToPdfX, or Document.ConvertToPdfUa."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.sign",
+        "public_symbol:document.certify",
+        "public_symbol:signer",
+        "public_symbol:externalsigner"
+      ],
+      "name": "Sign Document",
+      "text": "Add a digital signature with Document.Sign or Document.Certify using PEM, PKCS#12, or external signer callbacks, optionally with timestamps and LTV data."
+    }
+  ]
+}
