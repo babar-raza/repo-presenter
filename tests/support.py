@@ -1,4 +1,4 @@
-"""Minimal test-support shim: REPO_ROOT, the npm test double, and disposable git fixtures.
+"""Minimal test-support shim: REPO_ROOT, the npm test double, and disposable git/registry fixtures.
 
 The old repository-presenter project's tests/support.py is a large builder module (synthetic
 project roots, cursors, sealed bundles, disposable git repos) with a heavy dependency closure
@@ -6,15 +6,18 @@ project roots, cursors, sealed bundles, disposable git repos) with a heavy depen
 pulled. Only the self-contained pieces are ported, each alongside the module it actually builds
 fixtures for: REPO_ROOT and the npm-stub helpers (fake_npm, npm_calls) for the extractors test
 suite (migration/reuse-manifest.yaml's "extractors/platforms" entry); init_git_repository/
-commit_all/head_revision for core/git_safety/git.py's own test suite (2026-10-23). Port the rest
-of the old support.py only alongside the modules it actually builds fixtures for.
+commit_all/head_revision for core/git_safety/git.py's own test suite; monitor_registry_entry/
+write_registry_file for core/registry/write_gate.py's own test suite (both 2026-10-23). Port the
+rest of the old support.py only alongside the modules it actually builds fixtures for.
 """
 
 from __future__ import annotations
 
+import json
 import os
 import stat
 from pathlib import Path
+from typing import Any
 
 from repo_presenter.core.git_safety.git import run_git
 
@@ -71,6 +74,41 @@ def head_revision(path: Path) -> str:
     result = run_git(["rev-parse", "HEAD"], cwd=path)
     assert result.returncode == 0, result.stderr
     return result.stdout.strip()
+
+
+def monitor_registry_entry(
+    repository: str, *, mode: str = "dry_run", repository_id: int = 1
+) -> dict[str, Any]:
+    """One registry entry payload for an Aspose FOSS repository (``data/registry.json`` shape).
+
+    Ported 2026-10-23 alongside core/registry/write_gate.py's own test suite.
+    """
+    owner, name = repository.split("/")
+    family = owner.removeprefix("aspose-").removesuffix("-foss")
+    platform = name.split("-for-")[1].lower()
+    platform = "net" if platform == ".net" else platform
+    return {
+        "repository": repository,
+        "family": family,
+        "platform": platform,
+        "ecosystem": platform,
+        "mode": mode,
+        "policy_profile": "fixture",
+        "active": True,
+        "provider_identity": {
+            "provider": "github",
+            "repository_id": repository_id,
+            "node_id": f"R_fixture_{repository_id}",
+        },
+    }
+
+
+def write_registry_file(root: Path, entries: list[dict[str, Any]]) -> Path:
+    """``data/registry.json`` under a synthetic project root."""
+    path = root / "data" / "registry.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({"schema_version": 1, "entries": entries}), encoding="utf-8")
+    return path
 
 
 def fake_npm(directory: Path, fail_run: bool = False) -> str:

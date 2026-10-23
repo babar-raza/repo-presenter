@@ -1469,3 +1469,29 @@ next_ready_items:
     next_step: >
       None for this card. clone.py's full pinned+push-neutered workflow remains a separate,
       bigger call (changes how every future clone is made) for deliberate future pickup.
+
+  - id: PORT_REGISTRY_WRITE_GATE
+    status: DONE
+    priority: low
+    purpose: >
+      Read the two remaining core/registry/ files (sandbox.py, write_gate.py) this session's
+      inventory had flagged unread.
+    done: >
+      sandbox.py: RETIRE -- old-repo-specific configuration (hardcodes that project's own
+      throwaway canary repository, babar-raza/presenter-sandbox), not portable logic. Not
+      ported. write_gate.py: genuinely generic and self-contained -- ported (ADAPT, import
+      paths only), plus 4 new Refusal codes (REGISTRY_NOT_LISTED/REGISTRY_DISABLED/
+      REGISTRY_DRY_RUN/REGISTRY_INACTIVE) added to authorization/refusals.py, matching the old
+      repo's naming exactly. This is the "registry write gate" the earlier GitHub App entry
+      deferred for lack of real artifacts to gate on -- no longer true, this repository has real
+      candidates now. Ported its test suite, dropping 2 of 12 tests that asserted specific
+      content of the OLD repository's own shipped registry.json, not meaningful here. Added
+      monitor_registry_entry/write_registry_file helpers to tests/support.py. 26 new tests,
+      1247/1247 passed, 11 skipped, full suite clean. NOT wired into any live effect path --
+      this repository has no README-proposal/metadata-write effect code yet
+      (components/propose/ still unpulled) to call it from.
+      Evidence: migration/reuse-manifest.yaml's git-safety/registry entry, extended in place
+      2026-10-23.
+    next_step: >
+      None for this card. snapshot/{capture,inventory}.py (349 lines) remain unread -- the last
+      item from this session's thorough salvage inventory pass still outstanding.

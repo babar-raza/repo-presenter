@@ -1,7 +1,7 @@
 """The typed reasons a write effect refuses, in one place.
 
 Trimmed from the old repo's ``core/authorization/refusals.py``: only the codes this repository's
-issue-filing slice can actually raise are kept (the registry-write-gate, candidate-bundle, and
+issue-filing slice and registry write gate can actually raise are kept (the candidate-bundle and
 correction-gate codes belong to components not pulled yet).
 """
 
@@ -20,6 +20,11 @@ class Refusal(StrEnum):
     NO_WRITE_TOKEN = "no_write_token"
     # Duplicate filing (repo_presenter.issues.dedup / repo_presenter.issues.file).
     ALREADY_FILED = "already_filed"
+    # The registry write gate (repo_presenter.core.registry.write_gate), ported 2026-10-23.
+    REGISTRY_NOT_LISTED = "registry_not_listed"
+    REGISTRY_DISABLED = "registry_disabled"
+    REGISTRY_DRY_RUN = "registry_dry_run"
+    REGISTRY_INACTIVE = "registry_inactive"
 
 
 class WriteRefusedError(Exception):

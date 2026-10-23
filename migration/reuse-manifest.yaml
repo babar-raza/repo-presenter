@@ -1770,10 +1770,40 @@ entries:
       itself). Verified directly against a real existing clone before trusting the test suite
       alone (rev-parse HEAD returned the correct SHA). 1221/1221 passed, 11 skipped, full suite
       clean, no new tests needed (pure mechanical substitution, same inputs/outputs).
+    sandbox_and_write_gate_evidence_2026_10_23: >
+      Read core/registry/{sandbox.py,write_gate.py} in full. sandbox.py is old-repo-specific
+      configuration, not portable logic: it hardcodes `babar-raza/presenter-sandbox` (that
+      project's own throwaway canary repository) as the only permitted sandbox target -- a
+      repository with no meaning in this one. Porting it would import a reference to someone
+      else's one-off GitHub repo for no reason; if this repository ever wants a sandbox-canary
+      pattern, it needs its OWN target named, which nothing here should invent unasked.
+      write_gate.py is the opposite: a generic, fully self-contained write-permission gate
+      (require_write_permitted: listed + active + the effect's own consulted mode permits it),
+      every dependency (authorization/refusals.py, registry/loader.py's find_entry/is_permitted,
+      registry/models.py's Registry/RegistryEntry/effective_issues_mode) already present under
+      the same names and shapes. This is exactly the "registry write gate" the GitHub App entry
+      above once deferred for lack of artifacts to gate on -- this repository now has real
+      candidates, so it is no longer gating against nothing.
+    disposition: "RETIRE: sandbox.py (old-repo-specific configuration, not logic). REUSE/ADAPT:
+      write_gate.py, pulled 2026-10-23 (import paths only, plus 4 new Refusal codes --
+      REGISTRY_NOT_LISTED/REGISTRY_DISABLED/REGISTRY_DRY_RUN/REGISTRY_INACTIVE -- added to
+      authorization/refusals.py, matching the old repo's own naming exactly). snapshot/
+      {capture,inventory}.py remain unread."
+    write_gate_pulled_2026_10_23: >
+      Ported write_gate.py and its test suite, dropping 2 of 12 tests that asserted specific
+      content of the OLD repository's own shipped data/registry.json (36 named entries, a
+      specific issue-filing opt-in set tied to that project's own decision history) -- not
+      meaningful against this repository's own, independently-assembled registry. Added
+      monitor_registry_entry/write_registry_file helpers to tests/support.py, following that
+      file's own "port the rest only alongside the modules it actually builds fixtures for"
+      policy. 26 passed (tests/core/registry/test_write_gate.py), 1247/1247 passed, 11 skipped,
+      full suite clean. NOT wired into any live effect path yet -- this repository has no
+      README-proposal or metadata-write effect code to call it from (components/propose/ is
+      still unpulled, see that entry below); it is available for the day one exists.
     next_step: >
       clone.py's full pinned+push-neutered workflow remains a bigger call (it changes how every
       future clone in this repository is made), better taken deliberately, not folded into this
-      pass. sandbox.py/write_gate.py/snapshot/{capture,inventory}.py remain unread.
+      pass. snapshot/{capture,inventory}.py remain unread.
     portfolio_consumers: every git subprocess call in this repository, once callers are updated
       to use run_git in place of os.popen/plain subprocess.
     invalidation_impact: none yet -- pulled, but no existing caller changed, so no existing
