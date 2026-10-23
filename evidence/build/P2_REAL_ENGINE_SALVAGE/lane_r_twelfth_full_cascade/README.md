@@ -1,4 +1,4 @@
-# The twelfth Lane R cascade — S3-S6+render complete, S8 failed for an unrelated reason
+# The twelfth Lane R cascade — S3-S6+render complete 2026-10-22, S8 completed on retry 2026-10-23
 
 2026-10-22. `aspose-html-foss/Aspose.HTML-FOSS-for-Python`. Twelfth cascade attempt, the largest
 repository this session has fired a cascade against (332 content units after S6 -- by far the
@@ -43,7 +43,25 @@ repositories than the first eleven cascades exercised. Neither is a regression c
 `CLOSE_DUPLICATE_OPENING_PARAGRAPH_PARTIAL`; both are left incomplete and unfixed here, out of
 this card's scope, and noted for a future taskcard rather than worked around.
 
+## Update, 2026-10-23: S8 retried and completed
+
+With `CLOSE_DUPLICATE_OPENING_PARAGRAPH_PARTIAL` now wired in and this session's broader cascade
+sweep complete, S8 coherence was re-fired against the same saved S3-S6 artifacts (S3-S6 were not
+re-run). This time it completed cleanly:
+
+| Stage | Calls | Outcome |
+|---|---|---|
+| S8 `coherence` | 2 batches, 4 calls total | `coherence#1`: 2 calls (one reject→accept cycle), revised `opening/opening`. `coherence#2`: 2 calls (one reject→accept cycle), revised `api_reference/intro` and 8 `api_reference/hub:*` units plus `scope_limitations/scope`. | Re-rendered: 70,536 characters. |
+
+The rejection that preceded `coherence#2`'s acceptance was the same unrelated, pre-existing
+"cites facts outside this section's set" rule noted above -- except this time the model's retry
+satisfied it, rather than failing twice. Coherence's revision of `opening` was a surface change
+(fully-qualified identifier paths, e.g. `aspose_html.HTMLDocument.parse` instead of
+`HTMLDocument.parse`), not a substantive change to the duplication's severity, which remains
+mild-to-moderate as originally observed. This repository now has a complete cascade through S8.
+
 ## Honest scope limits
 
-- 12 of 36 repositories now have at least a partial (S3-S6+render) real cascade run; this one's
-  S8 stage did not complete. 11 of 36 have a FULL cascade (through S8) completed and committed.
+- This repository's cascade is now complete through S8 (updated 2026-10-23); see
+  project/state.yaml's WIRE_PRESENTATION_PLANNING_AND_REAL_UNIT_CHECKS card for the current
+  portfolio-wide count.

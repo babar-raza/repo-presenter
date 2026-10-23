@@ -1,0 +1,2855 @@
+{
+  "coherence": {
+    "applied": true,
+    "revised": [
+      "api_reference/intro",
+      "api_reference/hub:public_symbol:aspose_html.htmldocument",
+      "api_reference/hub:public_symbol:aspose_html.dom.document",
+      "api_reference/hub:public_symbol:aspose_html.cssom.cssstylesheet",
+      "api_reference/hub:public_symbol:aspose_html.url.url",
+      "api_reference/hub:public_symbol:aspose_html.encoding.detect_encoding",
+      "api_reference/hub:public_symbol:aspose_html.js.jscontext",
+      "api_reference/hub:public_symbol:aspose_html.tokenizer.tokenizer",
+      "api_reference/hub:public_symbol:aspose_html.serialise",
+      "scope_limitations/scope"
+    ]
+  },
+  "omitted": [
+    {
+      "fact_id": "inherited_unit:029.paragraph",
+      "reason": "Not cited by any example fact in this section; belongs to a different workflow.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:030.code_block",
+      "reason": "Not cited by any example fact in this section; belongs to a different workflow.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:031.heading",
+      "reason": "Section heading; rendered by the deterministic renderer.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:032.paragraph",
+      "reason": "Not cited by any example fact in this section; belongs to a different workflow.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:033.heading",
+      "reason": "Not cited by any example fact in this section; belongs to a different workflow.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:034.code_block",
+      "reason": "Not cited by any example fact in this section; belongs to a different workflow.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:036.heading",
+      "reason": "Not cited by any example fact in this section; belongs to a different workflow.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:037.code_block",
+      "reason": "Not cited by any example fact in this section; belongs to a different workflow.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:038.heading",
+      "reason": "Not cited by any example fact in this section; belongs to a different workflow.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:039.code_block",
+      "reason": "Not cited by any example fact in this section; belongs to a different workflow.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:043.code_block",
+      "reason": "Not cited by any example fact in this section; belongs to a different workflow.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:091.heading",
+      "reason": "Not cited by any example fact in this section; belongs to a different workflow.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:092.paragraph",
+      "reason": "Not cited by any example fact in this section; belongs to a different workflow.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:093.code_block",
+      "reason": "Not cited by any example fact in this section; belongs to a different workflow.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:094.paragraph",
+      "reason": "Not cited by any example fact in this section; belongs to a different workflow.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:095.code_block",
+      "reason": "Not cited by any example fact in this section; belongs to a different workflow.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:096.paragraph",
+      "reason": "Not cited by any example fact in this section; belongs to a different workflow.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:097.paragraph",
+      "reason": "Not cited by any example fact in this section; belongs to a different workflow.",
+      "section": "additional_examples"
+    }
+  ],
+  "schema_version": 1,
+  "units": [
+    {
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:005",
+        "import_path:aspose_html",
+        "inherited_unit:004.paragraph",
+        "package:license",
+        "package:name",
+        "public_symbol:aspose_html.css.select",
+        "public_symbol:aspose_html.cssom.cssmediarule",
+        "public_symbol:aspose_html.cssom.cssstylerule",
+        "public_symbol:aspose_html.cssom.cssstylesheet",
+        "public_symbol:aspose_html.dom.computedstyledeclaration",
+        "public_symbol:aspose_html.dom.document",
+        "public_symbol:aspose_html.dom.element",
+        "public_symbol:aspose_html.dom.htmlinputelement",
+        "public_symbol:aspose_html.dom.htmlmediaelement",
+        "public_symbol:aspose_html.dom.htmltableelement",
+        "public_symbol:aspose_html.dom.nodelist",
+        "public_symbol:aspose_html.encoding.detect_encoding",
+        "public_symbol:aspose_html.htmldocument",
+        "public_symbol:aspose_html.htmldocument.load",
+        "public_symbol:aspose_html.htmldocument.parse",
+        "public_symbol:aspose_html.htmldocument.parse_fragment",
+        "public_symbol:aspose_html.js.jscontext",
+        "public_symbol:aspose_html.js.moduleregistry",
+        "public_symbol:aspose_html.serialise",
+        "public_symbol:aspose_html.serialiser.outer_html",
+        "public_symbol:aspose_html.tokenizer.starttagtoken",
+        "public_symbol:aspose_html.tokenizer.tokenizer",
+        "public_symbol:aspose_html.tree.parse_html",
+        "public_symbol:aspose_html.tree.treebuilder",
+        "public_symbol:aspose_html.url.url",
+        "public_symbol:aspose_html.url.urlsearchparams",
+        "public_symbol:aspose_html.xmlserializer"
+      ],
+      "section": "opening",
+      "slot": "opening",
+      "text": "Aspose.HTML FOSS for Python reads HTML input and parses it into a standards-based DOM tree using aspose_html.HTMLDocument.parse, aspose_html.HTMLDocument.parse_fragment, and aspose_html.tree.parse_html. It writes serialized markup output using aspose_html.serialise and aspose_html.XMLSerializer. It applies CSS by attaching aspose_html.cssom.CSSStyleSheet objects and resolving computed styles via aspose_html.dom.ComputedStyleDeclaration, supports CSS selector matching with aspose_html.css.select, and detects byte-stream encoding with aspose_html.encoding.detect_encoding. It handles URL parsing and query parameter manipulation with aspose_html.url.URL and aspose_html.url.URLSearchParams, and provides optional JavaScript execution through aspose_html.js.JSContext backed by QuickJS."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.htmldocument.load",
+        "public_symbol:aspose_html.htmldocument.parse",
+        "public_symbol:aspose_html.htmldocument.parse_fragment",
+        "public_symbol:aspose_html.tree.parse_html",
+        "public_symbol:aspose_html.tree.treebuilder"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "It parses HTML strings, bytes, fragments, and files into a DOM document using aspose_html.HTMLDocument.parse, aspose_html.HTMLDocument.parse_fragment, and aspose_html.HTMLDocument.load, while aspose_html.tree.parse_html and aspose_html.tree.TreeBuilder provide lower-level control over the tokenization and tree-construction process."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.css.select",
+        "public_symbol:aspose_html.dom.document",
+        "public_symbol:aspose_html.dom.element",
+        "public_symbol:aspose_html.dom.nodelist"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:2",
+      "text": "It builds, inspects, and mutates DOM trees by creating and updating nodes programmatically with aspose_html.dom.Document.create_element and append_child, reading and writing element attributes, classes, datasets, inline styles, and text content, and querying documents by ID, tag name, class name, and selector-oriented helpers such as get_element_by_id, get_elements_by_tag_name, TreeWalker, NodeIterator, and Range."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.cssom.cssmediarule",
+        "public_symbol:aspose_html.cssom.cssstylerule",
+        "public_symbol:aspose_html.cssom.cssstylesheet",
+        "public_symbol:aspose_html.dom.computedstyledeclaration"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "It matches CSS selectors and stylesheets against elements and resolves the cascade—including specificity, inline-vs-author rules, !important, and inheritance—with aspose_html.dom.Element.get_computed_style, while the CSSOM surface provided by aspose_html.cssom.CSSStyleSheet, aspose_html.cssom.CSSStyleRule, aspose_html.cssom.CSSMediaRule, and aspose_html.dom.ComputedStyleDeclaration models stylesheets structurally."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.encoding.detect_encoding",
+        "public_symbol:aspose_html.url.url",
+        "public_symbol:aspose_html.url.urlsearchparams"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:4",
+      "text": "It validates and manipulates URLs with aspose_html.url.URL, reads and edits query strings with aspose_html.url.URLSearchParams, and detects byte-stream character encodings using BOM and content sniffing with aspose_html.encoding.detect_encoding."
+    },
+    {
+      "fact_ids": [
+        "dependency:optional.js.quickjs-1.19-2",
+        "public_symbol:aspose_html.js.jscontext",
+        "public_symbol:aspose_html.js.moduleregistry"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "It executes JavaScript against a parsed DOM through aspose_html.js.JSContext, an optional QuickJS-backed bridge exposing DOM read-only proxies to script code, requiring the js extra dependency quickjs>=1.19,<2."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.tokenizer.starttagtoken",
+        "public_symbol:aspose_html.tokenizer.tokenizer",
+        "public_symbol:aspose_html.tree.treebuilder"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:6",
+      "text": "It implements the WHATWG tokenization and tree-construction algorithms directly through aspose_html.tokenizer.Tokenizer and aspose_html.tokenizer.StartTagToken, enabling callers who need low-level control over the parsing process."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlinputelement",
+        "public_symbol:aspose_html.dom.htmlmediaelement",
+        "public_symbol:aspose_html.dom.htmltableelement"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:7",
+      "text": "It exposes specialized HTML element classes such as aspose_html.dom.HTMLInputElement, aspose_html.dom.HTMLTableElement, and aspose_html.dom.HTMLMediaElement, each providing element-specific properties defined by their HTML interface."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.serialise",
+        "public_symbol:aspose_html.serialiser.outer_html",
+        "public_symbol:aspose_html.xmlserializer"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:8",
+      "text": "It serializes complete documents, fragments, and individual elements back to an HTML string using aspose_html.serialise or aspose_html.XMLSerializer, with aspose_html.serialiser.outer_html providing additional control over the output format."
+    },
+    {
+      "fact_ids": [
+        "example:001"
+      ],
+      "section": "quick_start",
+      "slot": "lead_in",
+      "text": "Parse an HTML string into a DOM, locate an element by its ID, create a new paragraph, set its text content, append it to the container, and serialize the updated subtree."
+    },
+    {
+      "fact_ids": [
+        "example:002"
+      ],
+      "section": "quick_start",
+      "slot": "lead_in:2",
+      "text": "Build a DOM with styled elements, attach an external CSS style sheet, and query the computed style property of an element to verify the applied rule."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:007"
+      ],
+      "section": "additional_examples",
+      "slot": "preview",
+      "text": "The following workflows demonstrate URL manipulation, element querying, encoding detection, and tokenization."
+    },
+    {
+      "fact_ids": [
+        "example:003"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:003",
+      "text": "Modify URL search parameters."
+    },
+    {
+      "fact_ids": [
+        "example:004"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:004",
+      "text": "Query elements by tag name."
+    },
+    {
+      "fact_ids": [
+        "example:005"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:005",
+      "text": "Detect character encoding from bytes."
+    },
+    {
+      "fact_ids": [
+        "example:007"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:007",
+      "text": "Tokenize HTML input."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:046.paragraph",
+        "public_symbol:aspose_html.htmldocument",
+        "public_symbol:aspose_html.htmldocument.load",
+        "public_symbol:aspose_html.htmldocument.parse",
+        "public_symbol:aspose_html.htmldocument.parse_fragment"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "The primary entry point is HTMLDocument, which parses HTML into a Document tree built from Node/Element and the specialized HTMLElement subclasses. The DOM tree can be queried and mutated directly, styled through the CSS/CSSOM surface, serialized back to markup, and optionally scripted through JSContext. The library exposes 243 public types in total, listed below by module, with curated highlights following."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.htmldocument",
+        "public_symbol:aspose_html.htmldocument.load",
+        "public_symbol:aspose_html.htmldocument.parse",
+        "public_symbol:aspose_html.htmldocument.parse_fragment"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_html.htmldocument",
+      "text": "It parses HTML strings, bytes, fragments, and files into a DOM document using HTMLDocument.parse, HTMLDocument.parse_fragment, and HTMLDocument.load, while parse_html and TreeBuilder provide lower-level control over the tokenization and tree-construction process."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.document",
+        "public_symbol:aspose_html.dom.element",
+        "public_symbol:aspose_html.dom.nodelist"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_html.dom.document",
+      "text": "It builds, inspects, and mutates DOM trees by creating and updating nodes programmatically with Document.create_element and append_child, reading and writing element attributes, classes, datasets, inline styles, and text content, and querying documents by ID, tag name, class name, and selector-oriented helpers such as get_element_by_id, get_elements_by_tag_name, TreeWalker, NodeIterator, and Range."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.cssom.cssstylerule",
+        "public_symbol:aspose_html.cssom.cssstylesheet",
+        "public_symbol:aspose_html.dom.computedstyledeclaration"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_html.cssom.cssstylesheet",
+      "text": "It matches CSS selectors and stylesheets against elements and resolves the cascade—including specificity, inline-vs-author rules, !important, and inheritance—with Element.get_computed_style, while the CSSOM surface provided by CSSStyleSheet, CSSStyleRule, and ComputedStyleDeclaration models stylesheets structurally."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.url.url",
+        "public_symbol:aspose_html.url.urlsearchparams"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_html.url.url",
+      "text": "It validates and manipulates URLs with URL, reads and edits query strings with URLSearchParams, and detects byte-stream character encodings using BOM and content sniffing with detect_encoding."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.encoding.detect_encoding"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_html.encoding.detect_encoding",
+      "text": "It analyzes byte streams to determine encoding and decode HTML content using detect_encoding."
+    },
+    {
+      "fact_ids": [
+        "dependency:optional.js.quickjs-1.19-2",
+        "public_symbol:aspose_html.js.jscontext"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_html.js.jscontext",
+      "text": "It executes JavaScript against a parsed DOM through JSContext, an optional QuickJS-backed bridge exposing DOM read-only proxies to script code, requiring the js extra dependency quickjs>=1.19,<2."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.tokenizer.starttagtoken",
+        "public_symbol:aspose_html.tokenizer.tokenizer"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_html.tokenizer.tokenizer",
+      "text": "It implements the WHATWG tokenization and tree-construction algorithms directly through Tokenizer and StartTagToken, enabling callers who need low-level control over the parsing process."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.serialise",
+        "public_symbol:aspose_html.xmlserializer"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_html.serialise",
+      "text": "It serializes complete documents, fragments, and individual elements back to an HTML string using serialise or XMLSerializer, with outer_html providing additional control over the output format."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:089.list",
+        "inherited_unit:098.heading",
+        "public_symbol:aspose_html.css.element_matches",
+        "public_symbol:aspose_html.css.select",
+        "public_symbol:aspose_html.cssom.cssrule",
+        "public_symbol:aspose_html.dom.validitystate",
+        "public_symbol:aspose_html.js.jscontext",
+        "public_symbol:aspose_html.layout.boxnode",
+        "public_symbol:aspose_html.layout.pagefragment"
+      ],
+      "section": "scope_limitations",
+      "slot": "scope",
+      "text": "Aspose.HTML FOSS for Python reads and writes HTML documents, parses CSS, and provides a DOM API with CSS selector matching, layout structure construction, and optional JavaScript execution via an external engine. The following are not implemented: CSS selector matching supports the core CSS Selectors Level 3 grammar, but several dynamic and legacy pseudo-classes are out of scope and raise NotImplementedError in the matcher and parser, and single-colon legacy pseudo-element forms are not parsed; CSSRule.type and CSSRule.css_text are not implemented; concrete rule subclasses such as CSSStyleRule and CSSMediaRule expose their own real properties instead; form constraint validation and HTMLImageElement.decode() are present on the API surface but not yet implemented; the library builds internal layout structures using BoxNode and PageFragment with skia-python for text-run metrics but does not yet expose a public API for rendering documents to an image or PDF; JavaScript execution via JSContext requires the optional quickjs extra and exposes a read-only DOM proxy to script code; its dynamic import() bridge is not implemented, though static module registration via ModuleRegistry works; CSS selector matching supports the core CSS Selectors Level 3 grammar, but several dynamic and legacy pseudo-classes are out of scope and raise NotImplementedError in the matcher and parser, and single-colon legacy pseudo-element forms are not parsed."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:089.list",
+        "public_symbol:aspose_html.css.element_matches"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:1",
+      "text": "CSS selector matching supports the core CSS Selectors Level 3 grammar, but several dynamic and legacy pseudo-classes are out of scope and raise NotImplementedError in the matcher and parser, and single-colon legacy pseudo-element forms are not parsed."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:089.list",
+        "public_symbol:aspose_html.cssom.cssrule"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:2",
+      "text": "CSSRule.type and CSSRule.css_text are not implemented; concrete rule subclasses such as CSSStyleRule and CSSMediaRule expose their own real properties instead."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:089.list",
+        "public_symbol:aspose_html.dom.validitystate"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:3",
+      "text": "Form constraint validation and HTMLImageElement.decode() are present on the API surface but not yet implemented."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:089.list",
+        "public_symbol:aspose_html.layout.boxnode",
+        "public_symbol:aspose_html.layout.pagefragment"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:4",
+      "text": "The library builds internal layout structures using BoxNode and PageFragment with skia-python for text-run metrics but does not yet expose a public API for rendering documents to an image or PDF."
+    },
+    {
+      "fact_ids": [
+        "dependency:optional.js.quickjs-1.19-2",
+        "inherited_unit:089.list",
+        "public_symbol:aspose_html.js.jscontext"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:5",
+      "text": "JavaScript execution via JSContext requires the optional quickjs extra and exposes a read-only DOM proxy to script code; its dynamic import() bridge is not implemented, though static module registration via ModuleRegistry works."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:089.list",
+        "public_symbol:aspose_html.css.select"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:6",
+      "text": "CSS selector matching supports the core CSS Selectors Level 3 grammar, but several dynamic and legacy pseudo-classes are out of scope and raise NotImplementedError in the matcher and parser, and single-colon legacy pseudo-element forms are not parsed."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.domparser"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.domparser",
+      "text": "The aspose_html.DOMParser class parses HTML and XML source strings into a document object."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.url"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.url",
+      "text": "The aspose_html.URL class represents a URL and provides methods to parse and manipulate its components."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.urlparseerror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.urlparseerror",
+      "text": "The aspose_html.URLParseError class represents an error that occurs when parsing a URL fails."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.urlsearchparams"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.urlsearchparams",
+      "text": "The aspose_html.URLSearchParams class provides methods to work with the query string of a URL."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.xmlserializer"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.xmlserializer",
+      "text": "The aspose_html.XMLSerializer class serializes a document or node tree into an XML string."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.cssom.csscounterstylerule"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.cssom.csscounterstylerule",
+      "text": "The aspose_html.cssom.CSSCounterStyleRule class represents a @counter-style at-rule in a CSS style sheet."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.cssom.cssfontfacerule"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.cssom.cssfontfacerule",
+      "text": "The aspose_html.cssom.CSSFontFaceRule class represents a @font-face at-rule in a CSS style sheet."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.cssom.cssimportrule"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.cssom.cssimportrule",
+      "text": "The aspose_html.cssom.CSSImportRule class represents a @import at-rule in a CSS style sheet."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.cssom.csskeyframerule"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.cssom.csskeyframerule",
+      "text": "The aspose_html.cssom.CSSKeyframeRule class represents a single keyframe in a CSS animation."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.cssom.csskeyframesrule"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.cssom.csskeyframesrule",
+      "text": "The aspose_html.cssom.CSSKeyframesRule class represents a @keyframes at-rule in a CSS style sheet."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.cssom.csslayerblockrule"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.cssom.csslayerblockrule",
+      "text": "The aspose_html.cssom.CSSLayerBlockRule class represents a @layer block at-rule in a CSS style sheet."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.cssom.csslayerstatementrule"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.cssom.csslayerstatementrule",
+      "text": "The aspose_html.cssom.CSSLayerStatementRule class represents a @layer statement at-rule in a CSS style sheet."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.cssom.cssmediarule"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.cssom.cssmediarule",
+      "text": "The aspose_html.cssom.CSSMediaRule class represents a @media at-rule in a CSS style sheet."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.cssom.cssnamespacerule"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.cssom.cssnamespacerule",
+      "text": "The aspose_html.cssom.CSSNamespaceRule class represents a @namespace at-rule in a CSS style sheet."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.cssom.csspagerule"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.cssom.csspagerule",
+      "text": "The aspose_html.cssom.CSSPageRule class represents a @page at-rule in a CSS style sheet."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.cssom.csspropertyrule"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.cssom.csspropertyrule",
+      "text": "The aspose_html.cssom.CSSPropertyRule class represents a @property at-rule in a CSS style sheet."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.cssom.cssrule"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.cssom.cssrule",
+      "text": "The aspose_html.cssom.CSSRule class is the base interface for all CSS rules."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.cssom.cssrulelist"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.cssom.cssrulelist",
+      "text": "The aspose_html.cssom.CSSRuleList class represents an ordered collection of CSSRule objects."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.cssom.cssstylerule"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.cssom.cssstylerule",
+      "text": "The aspose_html.cssom.CSSStyleRule class represents a CSS style rule consisting of a selector and a declaration block."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.cssom.cssstylesheet"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.cssom.cssstylesheet",
+      "text": "The aspose_html.cssom.CSSStyleSheet class represents a CSS style sheet."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.cssom.csssupportsrule"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.cssom.csssupportsrule",
+      "text": "The aspose_html.cssom.CSSSupportsRule class represents a @supports at-rule in a CSS style sheet."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.abortcontroller"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.abortcontroller",
+      "text": "The aspose_html.dom.AbortController class allows aborting one or more asynchronous operations."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.abortsignal"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.abortsignal",
+      "text": "The aspose_html.dom.AbortSignal class represents the state of an abort operation."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.abstractrange"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.abstractrange",
+      "text": "The aspose_html.dom.AbstractRange class represents a range of nodes within a document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.attr"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.attr",
+      "text": "The aspose_html.dom.Attr class represents an attribute on an HTML element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.barprop"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.barprop",
+      "text": "The aspose_html.dom.BarProp class provides access to the visibility of browser interface elements."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.broadcastchannel"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.broadcastchannel",
+      "text": "The aspose_html.dom.BroadcastChannel class enables communication between different browsing contexts."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.cdatasection"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.cdatasection",
+      "text": "The aspose_html.dom.CDATASection class represents a CDATA section in an XML document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.cssstyledeclaration"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.cssstyledeclaration",
+      "text": "The aspose_html.dom.CSSStyleDeclaration class represents a collection of CSS style properties."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.characterdata"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.characterdata",
+      "text": "The aspose_html.dom.CharacterData class is the base class for text, comment, and CDATA sections."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.comment"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.comment",
+      "text": "The aspose_html.dom.Comment class represents an HTML comment node."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.computedstyledeclaration"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.computedstyledeclaration",
+      "text": "The aspose_html.dom.ComputedStyleDeclaration class represents the computed CSS styles for an element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.console"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.console",
+      "text": "The aspose_html.dom.Console class provides methods for logging messages to the console."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.crypto"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.crypto",
+      "text": "The aspose_html.dom.Crypto class provides cryptographic functionality for web applications."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.customelementregistry"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.customelementregistry",
+      "text": "The aspose_html.dom.CustomElementRegistry class allows registration of custom element definitions."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.customevent"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.customevent",
+      "text": "The aspose_html.dom.CustomEvent class represents a custom event that can be dispatched on a node."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.domconfiguration"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.domconfiguration",
+      "text": "The aspose_html.dom.DOMConfiguration class represents a set of configuration parameters for DOM operations."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.domexception"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.domexception",
+      "text": "The aspose_html.dom.DOMException class represents an error that occurs during a DOM operation."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.domimplementation"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.domimplementation",
+      "text": "The aspose_html.dom.DOMImplementation class provides methods for creating document objects."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.domparser"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.domparser",
+      "text": "The aspose_html.dom.DOMParser class parses HTML and XML source strings into a document object."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.domrect"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.domrect",
+      "text": "The DOMRect class represents a rectangle defined by its top-left corner coordinates and its width and height."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.domrectlist"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.domrectlist",
+      "text": "The DOMRectList class represents a list of DOMRect objects."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.domstringmap"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.domstringmap",
+      "text": "The DOMStringMap class provides a dictionary-like object for custom data attributes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.domtokenlist"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.domtokenlist",
+      "text": "The DOMTokenList class represents a set of space-separated tokens, such as those in a class attribute."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.datacloneerror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.datacloneerror",
+      "text": "The DataCloneError class represents an error that occurs when an object cannot be cloned."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.document"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.document",
+      "text": "The Document class represents the entire HTML or XML document and serves as the entry point to the document's content."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.documentfragment"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.documentfragment",
+      "text": "The DocumentFragment class represents a minimal document object that has no parent."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.documentposition"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.documentposition",
+      "text": "The DocumentPosition class represents the position of a node relative to another node."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.documenttype"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.documenttype",
+      "text": "The DocumentType class represents a document type declaration in an HTML or XML document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.element"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.element",
+      "text": "The Element class represents a single node in the document tree that has a tag name and can have attributes and child nodes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.errorevent"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.errorevent",
+      "text": "The ErrorEvent class represents an error that occurred in the document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.event"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.event",
+      "text": "The Event class represents an event that occurs in the document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.eventtarget"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.eventtarget",
+      "text": "The EventTarget class is a base class that provides methods for registering and removing event listeners."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.focusevent"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.focusevent",
+      "text": "The FocusEvent class represents events that occur when an element gains or loses focus."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.formdata"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.formdata",
+      "text": "The FormData class provides a way to construct a set of key-value pairs representing form fields and their values."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmladdresselement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmladdresselement",
+      "text": "The HTMLAddressElement class represents an HTML address element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlanchorelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlanchorelement",
+      "text": "The HTMLAnchorElement class represents an HTML anchor element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlareaelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlareaelement",
+      "text": "The HTMLAreaElement class represents an HTML area element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlarticleelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlarticleelement",
+      "text": "The HTMLArticleElement class represents an HTML article element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlasideelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlasideelement",
+      "text": "The HTMLAsideElement class represents an HTML aside element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlaudioelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlaudioelement",
+      "text": "The HTMLAudioElement class represents an HTML audio element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlbrelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlbrelement",
+      "text": "The HTMLBRElement class represents an HTML line break element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlbaseelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlbaseelement",
+      "text": "The HTMLBaseElement class represents an HTML base element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlbodyelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlbodyelement",
+      "text": "The HTMLBodyElement class represents an HTML body element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlbuttonelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlbuttonelement",
+      "text": "The HTMLButtonElement class represents an HTML button element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlcanvaselement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlcanvaselement",
+      "text": "The HTMLCanvasElement class represents an HTML canvas element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlcollection"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlcollection",
+      "text": "The HTMLCollection class represents a collection of HTML elements."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmldlistelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmldlistelement",
+      "text": "The HTMLDListElement class represents an HTML definition list element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmldataelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmldataelement",
+      "text": "The HTMLDataElement class represents an HTML data element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmldatalistelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmldatalistelement",
+      "text": "The HTMLDataListElement class represents an HTML datalist element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmldetailselement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmldetailselement",
+      "text": "The HTMLDetailsElement class represents an HTML details element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmldialogelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmldialogelement",
+      "text": "The HTMLDialogElement class represents an HTML dialog element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmldivelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmldivelement",
+      "text": "The HTMLDivElement class represents an HTML div element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlelement",
+      "text": "The HTMLElement class represents an HTML element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlembedelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlembedelement",
+      "text": "The HTMLEmbedElement class represents an HTML embed element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlfieldsetelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlfieldsetelement",
+      "text": "The HTMLFieldSetElement class represents an HTML fieldset element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlfigcaptionelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlfigcaptionelement",
+      "text": "The HTMLFigCaptionElement class represents an HTML figure caption element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlfigureelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlfigureelement",
+      "text": "The HTMLFigureElement class represents an HTML figure element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlfooterelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlfooterelement",
+      "text": "The HTMLFooterElement class represents an HTML footer element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlformelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlformelement",
+      "text": "The HTMLFormElement class represents an HTML form element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlhrelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlhrelement",
+      "text": "The HTMLHRElement class represents an HTML hr element, which defines a thematic break or horizontal rule in a document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlheadelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlheadelement",
+      "text": "The HTMLHeadElement class represents an HTML head element, which contains machine-readable document information such as title and meta data."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlheaderelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlheaderelement",
+      "text": "The HTMLHeaderElement class represents an HTML header element, which typically contains introductory or navigational content for a page or section."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlheadingelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlheadingelement",
+      "text": "The HTMLHeadingElement class represents an HTML heading element, such as h1 through h6, used to define section headings in a document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlhtmlelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlhtmlelement",
+      "text": "The HTMLHtmlElement class represents an HTML html element, which is the root element of an HTML document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmliframeelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmliframeelement",
+      "text": "The HTMLIFrameElement class represents an HTML iframe element, which embeds another HTML document within the current document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlimageelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlimageelement",
+      "text": "The HTMLImageElement class represents an HTML img element, which embeds an image into the document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlinputelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlinputelement",
+      "text": "The HTMLInputElement class represents an HTML input element, which creates interactive controls for web-based forms."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmllielement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmllielement",
+      "text": "The HTMLLIElement class represents an HTML li element, which defines a list item in an ordered or unordered list."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmllabelelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmllabelelement",
+      "text": "The HTMLLabelElement class represents an HTML label element, which defines a caption for a form control."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmllegendelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmllegendelement",
+      "text": "The HTMLLegendElement class represents an HTML legend element, which provides a caption for a fieldset element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmllinkelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmllinkelement",
+      "text": "The HTMLLinkElement class represents an HTML link element, which specifies relationships between the current document and an external resource."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlmainelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlmainelement",
+      "text": "The HTMLMainElement class represents an HTML main element, which specifies the main content of a document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlmapelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlmapelement",
+      "text": "The HTMLMapElement class represents an HTML map element, which defines a client-side image map with clickable areas."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlmarkelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlmarkelement",
+      "text": "The HTMLMarkElement class represents an HTML mark element, which highlights text for reference or notation purposes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlmediaelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlmediaelement",
+      "text": "The HTMLMediaElement class represents an HTML media element, such as audio or video, providing controls for playback."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlmenuelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlmenuelement",
+      "text": "The HTMLMenuElement class represents an HTML menu element, which defines a list of commands or a context menu."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlmetaelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlmetaelement",
+      "text": "The HTMLMetaElement class represents an HTML meta element, which provides metadata about the HTML document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlmeterelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlmeterelement",
+      "text": "The HTMLMeterElement class represents an HTML meter element, which displays a scalar measurement within a known range."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlmodelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlmodelement",
+      "text": "The HTMLModElement class represents an HTML mod element, such as ins or del, indicating added or deleted text."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlnavelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlnavelement",
+      "text": "The HTMLNavElement class represents an HTML nav element, which defines a section of navigation links."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlnoscriptelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlnoscriptelement",
+      "text": "The HTMLNoScriptElement class represents an HTML noscript element, which provides alternative content for users without script support."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlolistelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlolistelement",
+      "text": "The HTMLOListElement class represents an HTML ol element, which defines an ordered list of items."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlobjectelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlobjectelement",
+      "text": "The HTMLObjectElement class represents an HTML object element, which embeds an external resource such as an image, nested browsing context, or plugin."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmloptgroupelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmloptgroupelement",
+      "text": "The HTMLOptGroupElement class represents an HTML optgroup element, which groups related options within a select element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmloptionelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmloptionelement",
+      "text": "The HTMLOptionElement class represents an HTML option element, which defines an item in a select element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmloptionscollection"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmloptionscollection",
+      "text": "The HTMLOptionsCollection class represents a collection of option elements, providing methods to access and manipulate them."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmloutputelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmloutputelement",
+      "text": "The HTMLOutputElement class represents an HTML output element, which displays the result of a calculation or user action."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlparagraphelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlparagraphelement",
+      "text": "The HTMLParagraphElement class represents an HTML p element, which defines a paragraph of text."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlparamelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlparamelement",
+      "text": "The HTMLParamElement class represents an HTML param element, which defines parameters for an object element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlpictureelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlpictureelement",
+      "text": "The HTMLPictureElement class represents an HTML picture element, which provides multiple image sources for responsive images."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlpreelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlpreelement",
+      "text": "The HTMLPreElement class represents an HTML pre element, which displays text in a fixed-width font while preserving whitespace."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlprogresselement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlprogresselement",
+      "text": "The HTMLProgressElement class represents an HTML progress element, which displays the completion progress of a task."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlquoteelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlquoteelement",
+      "text": "The HTMLQuoteElement class represents an HTML quote element, such as q or blockquote, used to cite content from another source."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlrubyelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlrubyelement",
+      "text": "The HTMLRubyElement class represents an HTML ruby element, which defines ruby annotations for East Asian typography."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlscriptelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlscriptelement",
+      "text": "The HTMLScriptElement class represents an HTML script element, which embeds or references executable code."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlsectionelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlsectionelement",
+      "text": "The HTMLSectionElement class represents an HTML section element, which defines a thematic grouping of content."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlselectelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlselectelement",
+      "text": "The HTMLSelectElement class represents an HTML select element, which creates a drop-down list for user selection."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlsmallelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlsmallelement",
+      "text": "The HTMLSmallElement class represents an HTML small element, which defines side comments or small print."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlsourceelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlsourceelement",
+      "text": "The HTMLSourceElement class represents an HTML source element, which specifies media resources for media elements."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlspanelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlspanelement",
+      "text": "The HTMLSpanElement class represents an HTML span element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlstyleelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlstyleelement",
+      "text": "The HTMLStyleElement class represents an HTML style element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlsummaryelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlsummaryelement",
+      "text": "The HTMLSummaryElement class represents an HTML summary element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmltablecaptionelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmltablecaptionelement",
+      "text": "The HTMLTableCaptionElement class represents an HTML table caption element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmltablecellelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmltablecellelement",
+      "text": "The HTMLTableCellElement class represents an HTML table cell element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmltablecolelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmltablecolelement",
+      "text": "The HTMLTableColElement class represents an HTML table column element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmltableelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmltableelement",
+      "text": "The HTMLTableElement class represents an HTML table element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmltablerowelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmltablerowelement",
+      "text": "The HTMLTableRowElement class represents an HTML table row element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmltablesectionelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmltablesectionelement",
+      "text": "The HTMLTableSectionElement class represents an HTML table section element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmltemplateelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmltemplateelement",
+      "text": "The HTMLTemplateElement class represents an HTML template element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmltextareaelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmltextareaelement",
+      "text": "The HTMLTextAreaElement class represents an HTML text area element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmltimeelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmltimeelement",
+      "text": "The HTMLTimeElement class represents an HTML time element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmltitleelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmltitleelement",
+      "text": "The HTMLTitleElement class represents an HTML title element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmltrackelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmltrackelement",
+      "text": "The HTMLTrackElement class represents an HTML track element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlulistelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlulistelement",
+      "text": "The HTMLUListElement class represents an HTML unordered list element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlunknownelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlunknownelement",
+      "text": "The HTMLUnknownElement class represents an HTML unknown element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlvideoelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlvideoelement",
+      "text": "The HTMLVideoElement class represents an HTML video element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlwbrelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.htmlwbrelement",
+      "text": "The HTMLWBRElement class represents an HTML word break element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.hashchangeevent"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.hashchangeevent",
+      "text": "The HashChangeEvent class represents an event that occurs when the fragment identifier of the URL changes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.hierarchyrequesterror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.hierarchyrequesterror",
+      "text": "The HierarchyRequestError class represents an error that occurs when a node is inserted in an invalid location."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.history"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.history",
+      "text": "The History class provides access to the browser session history."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.inuseattributeerror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.inuseattributeerror",
+      "text": "The InUseAttributeError class represents an error that occurs when an attribute is already in use."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.indexsizeerror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.indexsizeerror",
+      "text": "The IndexSizeError class represents an error that occurs when an index or size is negative or exceeds the allowed value."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.inputevent"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.inputevent",
+      "text": "The InputEvent class represents an event that occurs when the value of an input element changes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.intersectionobserver"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.intersectionobserver",
+      "text": "The IntersectionObserver class provides a way to asynchronously observe changes in the intersection of a target element with an ancestor element or with a viewport."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.intersectionobserverentry"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.intersectionobserverentry",
+      "text": "The IntersectionObserverEntry class represents the intersection status of a target element at a specific time."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.invalidcharactererror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.invalidcharactererror",
+      "text": "The InvalidCharacterError class represents an error that occurs when an invalid character is encountered."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.invalidstateerror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.invalidstateerror",
+      "text": "The InvalidStateError class represents an error that occurs when an operation is not allowed on the current state."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.keyboardevent"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.keyboardevent",
+      "text": "The KeyboardEvent class represents an event that occurs when a keyboard key is pressed or released."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.location"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.location",
+      "text": "The Location class provides access to the current URL and allows navigation to new URLs."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.mediaquerylist"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.mediaquerylist",
+      "text": "The MediaQueryList class represents a media query list."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.messagechannel"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.messagechannel",
+      "text": "The MessageChannel class represents a communication channel between different browsing contexts."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.messageport"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.messageport",
+      "text": "The MessagePort class represents one port of a message channel."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.mouseevent"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.mouseevent",
+      "text": "The MouseEvent class represents an event that occurs when a mouse button is pressed or released."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.mutationobserver"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.mutationobserver",
+      "text": "The MutationObserver class provides the ability to watch for changes being made to the DOM tree."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.mutationrecord"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.mutationrecord",
+      "text": "The MutationRecord class represents a single DOM mutation."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.namednodemap"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.namednodemap",
+      "text": "The NamedNodeMap class represents a collection of nodes that can be accessed by name."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.navigator"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.navigator",
+      "text": "The Navigator class provides information about the browser and the system it is running on."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.nomodificationallowederror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.nomodificationallowederror",
+      "text": "The NoModificationAllowedError class represents an error that occurs when a node cannot be modified."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.node"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.node",
+      "text": "The Node class represents a node in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.nodefilter"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.nodefilter",
+      "text": "NodeFilter defines a filter for selecting nodes during tree traversal."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.nodeiterator"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.nodeiterator",
+      "text": "NodeIterator provides a way to iterate over a list of nodes in a document tree."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.nodelist"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.nodelist",
+      "text": "NodeList represents an ordered collection of nodes in a document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.nodetype"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.nodetype",
+      "text": "NodeType specifies the type of a node in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.notfounderror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.notfounderror",
+      "text": "NotFoundError is raised when a requested object cannot be found."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.notsupportederror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.notsupportederror",
+      "text": "NotSupportedError is raised when a requested operation is not supported."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.parseerror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.parseerror",
+      "text": "ParseError is raised when a parsing operation fails."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.performance"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.performance",
+      "text": "Performance provides access to performance-related information for the document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.performanceentry"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.performanceentry",
+      "text": "PerformanceEntry represents a single performance metric in the performance timeline."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.performancetiming"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.performancetiming",
+      "text": "PerformanceTiming provides timing information for the document loading process."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.popstateevent"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.popstateevent",
+      "text": "PopStateEvent is fired when the active history entry changes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.processinginstruction"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.processinginstruction",
+      "text": "ProcessingInstruction represents a processing instruction in the document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.range"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.range",
+      "text": "Range represents a fragment of a document that can contain nodes and parts of text nodes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.resizeobserver"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.resizeobserver",
+      "text": "ResizeObserver observes changes to the size of an element’s content or border box."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.resizeobserverentry"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.resizeobserverentry",
+      "text": "ResizeObserverEntry reports the size of an observed element after a resize."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.screen"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.screen",
+      "text": "Screen provides information about the user’s screen."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.securityerror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.securityerror",
+      "text": "SecurityError is raised when a security check fails."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.selection"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.selection",
+      "text": "Selection represents the range of text selected by the user or the caret position."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.staticrange"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.staticrange",
+      "text": "StaticRange represents a static range of nodes in a document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.storage"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.storage",
+      "text": "Storage provides access to a set of key-value pairs for persistent data storage."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.stylesheetlist"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.stylesheetlist",
+      "text": "StyleSheetList represents a list of stylesheets associated with a document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.subtlecrypto"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.subtlecrypto",
+      "text": "SubtleCrypto provides cryptographic operations such as encryption and hashing."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.syntaxerror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.syntaxerror",
+      "text": "SyntaxError is raised when a syntax error occurs during parsing."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.text"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.text",
+      "text": "Text represents a text node in the document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.treewalker"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.treewalker",
+      "text": "TreeWalker provides a way to traverse a document tree using a filter."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.uievent"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.uievent",
+      "text": "UIEvent represents events that occur due to user interaction with the interface."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.validitystate"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.validitystate",
+      "text": "ValidityState provides information about the validity of a form control’s value."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.visualviewport"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.visualviewport",
+      "text": "VisualViewport represents the visual viewport of a web page."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.window"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.window",
+      "text": "Window represents the browser window or frame that contains the document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.wrongdocumenterror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.wrongdocumenterror",
+      "text": "WrongDocumentError is raised when a node is used in a different document than it was created."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.xmlserializer"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.xmlserializer",
+      "text": "XMLSerializer converts a DOM tree into an XML string."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmladdresselement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmladdresselement",
+      "text": "HTMLAddressElement represents an HTML address element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlanchorelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlanchorelement",
+      "text": "HTMLAnchorElement represents an HTML anchor element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlareaelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlareaelement",
+      "text": "HTMLAreaElement represents an HTML area element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlarticleelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlarticleelement",
+      "text": "HTMLArticleElement represents an HTML article element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlasideelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlasideelement",
+      "text": "HTMLAsideElement represents an HTML aside element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlaudioelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlaudioelement",
+      "text": "HTMLAudioElement represents an HTML audio element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlbrelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlbrelement",
+      "text": "HTMLBRElement represents an HTML br element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlbaseelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlbaseelement",
+      "text": "HTMLBaseElement represents an HTML base element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlbodyelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlbodyelement",
+      "text": "HTMLBodyElement represents an HTML body element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlbuttonelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlbuttonelement",
+      "text": "The HTMLButtonElement class represents an HTML button element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlcanvaselement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlcanvaselement",
+      "text": "The HTMLCanvasElement class represents an HTML canvas element used for rendering graphics via scripting."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmldlistelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmldlistelement",
+      "text": "The HTMLDListElement class represents an HTML description list element containing description terms and descriptions."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmldataelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmldataelement",
+      "text": "The HTMLDataElement class represents an HTML data element that provides a machine-readable translation of a given content."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmldatalistelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmldatalistelement",
+      "text": "The HTMLDataListElement class represents an HTML datalist element that contains a set of pre-defined options for an input element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmldetailselement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmldetailselement",
+      "text": "The HTMLDetailsElement class represents an HTML details element that contains additional visible information that can be toggled open or closed."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmldialogelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmldialogelement",
+      "text": "The HTMLDialogElement class represents an HTML dialog element that defines a dialog box or window."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmldivelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmldivelement",
+      "text": "The HTMLDivElement class represents an HTML division element used as a container for other elements."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlembedelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlembedelement",
+      "text": "The HTMLEmbedElement class represents an HTML embed element used to embed external content such as plug-in applications."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlfieldsetelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlfieldsetelement",
+      "text": "The HTMLFieldSetElement class represents an HTML fieldset element that groups related form controls."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlfigcaptionelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlfigcaptionelement",
+      "text": "The HTMLFigCaptionElement class represents an HTML figure caption element that provides a caption for a figure element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlfigureelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlfigureelement",
+      "text": "The HTMLFigureElement class represents an HTML figure element that contains self-contained content such as illustrations or code snippets."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlfooterelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlfooterelement",
+      "text": "The HTMLFooterElement class represents an HTML footer element that typically contains information about its section such as authorship or copyright."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlformelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlformelement",
+      "text": "The HTMLFormElement class represents an HTML form element used to collect user input."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlhrelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlhrelement",
+      "text": "The HTMLHRElement class represents an HTML horizontal rule element used to create a thematic break between paragraph-level elements."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlheadelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlheadelement",
+      "text": "The HTMLHeadElement class represents an HTML head element that contains machine-readable information about the document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlheaderelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlheaderelement",
+      "text": "The HTMLHeaderElement class represents an HTML header element that typically contains introductory content or navigational aids."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlheadingelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlheadingelement",
+      "text": "The HTMLHeadingElement class represents an HTML heading element such as h1 through h6."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlhtmlelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlhtmlelement",
+      "text": "The HTMLHtmlElement class represents an HTML html element that is the root element of an HTML document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmliframeelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmliframeelement",
+      "text": "The HTMLIFrameElement class represents an HTML inline frame element used to embed another document within the current document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlimageelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlimageelement",
+      "text": "The HTMLImageElement class represents an HTML image element used to embed an image in the document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlinputelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlinputelement",
+      "text": "The HTMLInputElement class represents an HTML input element used to create interactive controls for web-based forms."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmllielement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmllielement",
+      "text": "The HTMLLIElement class represents an HTML list item element used within ordered or unordered lists."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmllabelelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmllabelelement",
+      "text": "The HTMLLabelElement class represents an HTML label element that defines a caption for an input element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmllegendelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmllegendelement",
+      "text": "The HTMLLegendElement class represents an HTML legend element that defines a caption for a fieldset element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmllinkelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmllinkelement",
+      "text": "The HTMLLinkElement class represents an HTML link element used to link external resources such as style sheets."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlmainelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlmainelement",
+      "text": "The HTMLMainElement class represents an HTML main element that contains the dominant content of the document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlmapelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlmapelement",
+      "text": "The HTMLMapElement class represents an HTML map element used with area elements to define an image map."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlmarkelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlmarkelement",
+      "text": "The HTMLMarkElement class represents an HTML mark element used to highlight text for reference purposes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlmediaelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlmediaelement",
+      "text": "The HTMLMediaElement class represents an HTML media element that provides an interface for audio and video elements."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlmenuelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlmenuelement",
+      "text": "The HTMLMenuElement class represents an HTML menu element that defines a list of commands or menu items."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlmetaelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlmetaelement",
+      "text": "The HTMLMetaElement class represents an HTML meta element that provides metadata about the document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlmeterelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlmeterelement",
+      "text": "The HTMLMeterElement class represents an HTML meter element that displays a scalar measurement within a known range."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlmodelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlmodelement",
+      "text": "The HTMLModElement class represents an HTML modification element such as ins or del used to indicate added or deleted text."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlnavelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlnavelement",
+      "text": "The HTMLNavElement class represents an HTML navigation element that contains navigation links to other pages or parts of the page."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlnoscriptelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlnoscriptelement",
+      "text": "The HTMLNoScriptElement class represents an HTML noscript element that defines alternative content for browsers that do not support scripts."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlolistelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlolistelement",
+      "text": "The HTMLOListElement class represents an HTML ordered list element that contains a list of items with numbers."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlobjectelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlobjectelement",
+      "text": "The HTMLObjectElement class represents an HTML object element used to embed external resources such as images, nested browsing contexts, or plug-in content."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmloptgroupelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmloptgroupelement",
+      "text": "The HTMLOptGroupElement class represents an HTML option group element that groups related options within a select element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmloptionelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmloptionelement",
+      "text": "The HTMLOptionElement class represents an HTML option element that defines an item within a select element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmloutputelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmloutputelement",
+      "text": "The HTMLOutputElement represents an HTML output element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlparagraphelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlparagraphelement",
+      "text": "The HTMLParagraphElement represents an HTML paragraph element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlparamelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlparamelement",
+      "text": "The HTMLParamElement represents an HTML param element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlpictureelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlpictureelement",
+      "text": "The HTMLPictureElement represents an HTML picture element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlpreelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlpreelement",
+      "text": "The HTMLPreElement represents an HTML pre element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlprogresselement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlprogresselement",
+      "text": "The HTMLProgressElement represents an HTML progress element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlquoteelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlquoteelement",
+      "text": "The HTMLQuoteElement represents an HTML quote element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlrubyelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlrubyelement",
+      "text": "The HTMLRubyElement represents an HTML ruby element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlscriptelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlscriptelement",
+      "text": "The HTMLScriptElement represents an HTML script element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlsectionelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlsectionelement",
+      "text": "The HTMLSectionElement represents an HTML section element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlselectelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlselectelement",
+      "text": "The HTMLSelectElement represents an HTML select element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlsmallelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlsmallelement",
+      "text": "The HTMLSmallElement represents an HTML small element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlsourceelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlsourceelement",
+      "text": "The HTMLSourceElement represents an HTML source element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlspanelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlspanelement",
+      "text": "The HTMLSpanElement represents an HTML span element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlstyleelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlstyleelement",
+      "text": "The HTMLStyleElement represents an HTML style element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlsummaryelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlsummaryelement",
+      "text": "The HTMLSummaryElement represents an HTML summary element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmltablecaptionelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmltablecaptionelement",
+      "text": "The HTMLTableCaptionElement represents an HTML table caption element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmltablecellelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmltablecellelement",
+      "text": "The HTMLTableCellElement represents an HTML table cell element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmltablecolelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmltablecolelement",
+      "text": "The HTMLTableColElement represents an HTML table column element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmltableelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmltableelement",
+      "text": "The HTMLTableElement represents an HTML table element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmltablerowelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmltablerowelement",
+      "text": "The HTMLTableRowElement represents an HTML table row element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmltablesectionelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmltablesectionelement",
+      "text": "The HTMLTableSectionElement represents an HTML table section element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmltemplateelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmltemplateelement",
+      "text": "The HTMLTemplateElement represents an HTML template element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmltextareaelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmltextareaelement",
+      "text": "The HTMLTextAreaElement represents an HTML text area element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmltimeelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmltimeelement",
+      "text": "The HTMLTimeElement represents an HTML time element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmltitleelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmltitleelement",
+      "text": "The HTMLTitleElement represents an HTML title element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmltrackelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmltrackelement",
+      "text": "The HTMLTrackElement represents an HTML track element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlulistelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlulistelement",
+      "text": "The HTMLUListElement represents an HTML unordered list element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlunknownelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlunknownelement",
+      "text": "The HTMLUnknownElement represents an HTML unknown element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlvideoelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlvideoelement",
+      "text": "The HTMLVideoElement represents an HTML video element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.html.htmlwbrelement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.dom.html.htmlwbrelement",
+      "text": "The HTMLWBRElement represents an HTML word break element in the document object model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.encoding.unsupportedencodingerror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.encoding.unsupportedencodingerror",
+      "text": "The UnsupportedEncodingError is raised when an encoding is not supported."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.js.jscontext"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.js.jscontext",
+      "text": "The JSContext provides a JavaScript execution environment for the document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.js.jsevaluationerror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.js.jsevaluationerror",
+      "text": "The JSEvaluationError is raised when a JavaScript evaluation fails."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.js.modulenotfounderror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.js.modulenotfounderror",
+      "text": "The ModuleNotFoundError is raised when a JavaScript module cannot be found."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.js.moduleregistry"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.js.moduleregistry",
+      "text": "The ModuleRegistry manages JavaScript modules available for execution."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.layout.blockfragment"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.layout.blockfragment",
+      "text": "The BlockFragment represents a block-level fragment in the layout process."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.layout.boxnode"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.layout.boxnode",
+      "text": "The BoxNode represents a node in the layout box tree."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.layout.boxroot"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.layout.boxroot",
+      "text": "The BoxRoot represents the root of the layout box tree."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.layout.computedstyle"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.layout.computedstyle",
+      "text": "The ComputedStyle holds the computed CSS properties for a layout node."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.layout.display"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.layout.display",
+      "text": "Represents a display type in the layout engine."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.layout.edgesizes"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.layout.edgesizes",
+      "text": "Represents the edge sizes used in layout calculations."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.layout.fragmentroot"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.layout.fragmentroot",
+      "text": "Represents the root of a layout fragment tree."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.layout.inlinetextfragment"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.layout.inlinetextfragment",
+      "text": "Represents an inline text fragment in the layout process."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.layout.linefragment"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.layout.linefragment",
+      "text": "Represents a line fragment in the layout output."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.layout.pagefragment"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.layout.pagefragment",
+      "text": "Represents a page fragment in the layout structure."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.layout.pagemarginboxes"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.layout.pagemarginboxes",
+      "text": "Represents margin boxes associated with a page layout."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.layout.shapedrun"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.layout.shapedrun",
+      "text": "Represents a shaped run of text in the layout engine."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.tokenizer.charactertoken"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.tokenizer.charactertoken",
+      "text": "Represents a character token produced by the HTML tokenizer."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.tokenizer.commenttoken"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.tokenizer.commenttoken",
+      "text": "Represents a comment token produced by the HTML tokenizer."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.tokenizer.doctypetoken"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.tokenizer.doctypetoken",
+      "text": "Represents a doctype token produced by the HTML tokenizer."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.tokenizer.endtagtoken"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.tokenizer.endtagtoken",
+      "text": "Represents an end tag token produced by the HTML tokenizer."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.tokenizer.eoftoken"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.tokenizer.eoftoken",
+      "text": "Represents the end-of-file token produced by the HTML tokenizer."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.tokenizer.starttagtoken"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.tokenizer.starttagtoken",
+      "text": "Represents a start tag token produced by the HTML tokenizer."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.tokenizer.tokenizer"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.tokenizer.tokenizer",
+      "text": "Performs tokenization of HTML input into tokens."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.tokenizer.tokenizerstate"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.tokenizer.tokenizerstate",
+      "text": "Represents a state in the HTML tokenizer state machine."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.tree.treebuilder"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.tree.treebuilder",
+      "text": "Constructs the DOM tree from parsed tokens."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.url.url"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.url.url",
+      "text": "Represents a URL and provides parsing and manipulation capabilities."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.url.urlparseerror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.url.urlparseerror",
+      "text": "Represents an error that occurs during URL parsing."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.url.urlsearchparams"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_html.url.urlsearchparams",
+      "text": "Provides methods to work with the query string of a URL."
+    }
+  ]
+}
