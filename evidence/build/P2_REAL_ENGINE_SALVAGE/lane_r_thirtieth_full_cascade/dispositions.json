@@ -1,0 +1,816 @@
+{
+  "dispositions": [
+    {
+      "destination_section": "identity",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:repository"
+      ],
+      "rationale": "The H1 product name is rendered by the identity section from the repository identity fact.",
+      "unit_id": "inherited_unit:001.heading"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_REWRITE",
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:version",
+        "package:license",
+        "package:python_requires",
+        "install_command:pip"
+      ],
+      "rationale": "The paragraph describes the product and is supported by the product_summary and package facts; it will be re-authored for the opening section.",
+      "unit_id": "inherited_unit:002.paragraph"
+    },
+    {
+      "destination_section": "badges",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The badge row is rendered by the deterministic badges section.",
+      "unit_id": "inherited_unit:003.badge_row"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The heading 'Three Buyer Workflows' introduces content not supported by the accepted investigation; no matching section exists.",
+      "unit_id": "inherited_unit:004.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph describing buyer workflows is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:005.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "identity:repository"
+      ],
+      "rationale": "The GitHub repository link is supported by the identity fact and belongs in the opening section.",
+      "unit_id": "inherited_unit:006.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The heading 'What You Get' introduces a table not supported by the accepted investigation; no matching section exists.",
+      "unit_id": "inherited_unit:007.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The table under 'What You Get' is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:008.table"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The heading 'Who Is This For?' introduces a table not supported by the accepted investigation; no matching section exists.",
+      "unit_id": "inherited_unit:009.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The persona table under 'Who Is This For?' is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:010.table"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The heading 'Quick Start: Three Buyer Workflows' introduces content not supported by the accepted investigation; no matching section exists.",
+      "unit_id": "inherited_unit:011.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The heading '1. Web Font Optimization' introduces content not supported by the accepted investigation; no matching section exists.",
+      "unit_id": "inherited_unit:012.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The business lens paragraph is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:013.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Python:' label paragraph is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:014.paragraph"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "The Python code block is supported by example:001 and is placed in the Quick Start section.",
+      "unit_id": "inherited_unit:015.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'CLI:' label paragraph is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:016.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The CLI code block is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:017.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Generated Output:' label paragraph is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:018.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The generated output directory tree is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:019.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Key Features:' label paragraph is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:020.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The list under 'Key Features' is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:021.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The note about running the demo script is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:022.blockquote"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The heading '2. Font QA Reporting' introduces content not supported by the accepted investigation; no matching section exists.",
+      "unit_id": "inherited_unit:023.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The business lens paragraph is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:024.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Python:' label paragraph is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:025.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Python code block for QA reporting is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:026.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'CLI:' label paragraph is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:027.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The CLI code block for QA reporting is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:028.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Generated output:' label paragraph is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:029.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The generated output directory tree for QA is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:030.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'The package includes:' label paragraph is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:031.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The list under 'The package includes:' is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:032.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The heading '3. Release-Safe Variable Instance Packages' introduces content not supported by the accepted investigation; no matching section exists.",
+      "unit_id": "inherited_unit:033.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The business lens paragraph is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:034.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Python:' label paragraph is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:035.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "The Python code block for variable instance packaging is CONTRADICTED by example:003 and is not supported.",
+      "unit_id": "inherited_unit:036.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'CLI:' label paragraph is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:037.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The CLI code block for variable instance packaging is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:038.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Generated output:' label paragraph is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:039.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The generated output directory tree for variable instance packaging is not supported by the accepted investigation and introduces unsupported claims.",
+      "unit_id": "inherited_unit:040.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The list of package contents is superseded by the key capabilities section, which is freshly authored from facts.",
+      "unit_id": "inherited_unit:041.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The list of package contents is superseded by the key capabilities section, which is freshly authored from facts.",
+      "unit_id": "inherited_unit:042.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The heading 'What Can This Font Do?' is not supported by any fact and introduces content superseded by key capabilities.",
+      "unit_id": "inherited_unit:043.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The phrase 'Plain-language capability discovery' is not supported by any fact and is superseded by the key capabilities section.",
+      "unit_id": "inherited_unit:044.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The sentence about understanding font capabilities is not supported by any fact and is superseded by the key capabilities section.",
+      "unit_id": "inherited_unit:045.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The heading 'Variable Axes' is not supported by any fact and is superseded by the key capabilities section.",
+      "unit_id": "inherited_unit:046.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph about variable font axes is not supported by any fact and is superseded by the key capabilities section.",
+      "unit_id": "inherited_unit:047.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The list of variable axes is not supported by any fact and is superseded by the key capabilities section.",
+      "unit_id": "inherited_unit:048.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph about axis defaults and labels is not supported by any fact and is superseded by the key capabilities section.",
+      "unit_id": "inherited_unit:049.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The heading 'Coverage Diagnostics' is not supported by any fact and is superseded by the key capabilities section.",
+      "unit_id": "inherited_unit:050.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph about script and language support is not supported by any fact and is superseded by the key capabilities section.",
+      "unit_id": "inherited_unit:051.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The list of supported scripts is not supported by any fact and is superseded by the key capabilities section.",
+      "unit_id": "inherited_unit:052.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph about coverage gaps is not supported by any fact and is superseded by the key capabilities section.",
+      "unit_id": "inherited_unit:053.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The heading 'CSS Hints' is not supported by any fact and is superseded by the key capabilities section.",
+      "unit_id": "inherited_unit:054.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph about CSS best practices is not supported by any fact and is superseded by the key capabilities section.",
+      "unit_id": "inherited_unit:055.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The CSS code block is not supported by any fact and is superseded by the key capabilities section.",
+      "unit_id": "inherited_unit:056.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The list of CSS best practices is not supported by any fact and is superseded by the key capabilities section.",
+      "unit_id": "inherited_unit:057.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The heading 'Release Risks' is not supported by any fact and is superseded by the scope_limitations section.",
+      "unit_id": "inherited_unit:058.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph about release risks is not supported by any fact and is superseded by the scope_limitations section.",
+      "unit_id": "inherited_unit:059.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The list of release risks is not supported by any fact and is superseded by the scope_limitations section.",
+      "unit_id": "inherited_unit:060.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph about buyer workflows is not supported by any fact and is superseded by the scope_limitations section.",
+      "unit_id": "inherited_unit:061.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "public_symbol:aspose_font.webfontoptimizer",
+        "public_symbol:aspose_font.fontqareporter"
+      ],
+      "rationale": "The heading 'Capability Snapshot' is moved to key_capabilities as it aligns with the fact-supported capabilities inventory.",
+      "unit_id": "inherited_unit:062.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "public_symbol:aspose_font.webfontoptimizer",
+        "public_symbol:aspose_font.fontqareporter",
+        "public_symbol:aspose_font.fontsubsetter",
+        "public_symbol:aspose_font.fontpreviewbuilder",
+        "public_symbol:aspose_font.variableinstancebuilder",
+        "public_symbol:aspose_font.compatibilitychecker",
+        "public_symbol:aspose_font.deltainspector",
+        "public_symbol:aspose_font.animationpreviewbuilder"
+      ],
+      "rationale": "The capability table is moved to key_capabilities as it is supported by multiple verified public symbols and examples.",
+      "unit_id": "inherited_unit:063.table"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "public_symbol:aspose_font.webfontoptimizer",
+        "public_symbol:aspose_font.fontqareporter"
+      ],
+      "rationale": "The heading 'Variable-Font-First Workflows' is moved to additional_examples as it is supported by examples and public symbols.",
+      "unit_id": "inherited_unit:064.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "public_symbol:aspose_font.webfontoptimizer",
+        "public_symbol:aspose_font.fontqareporter"
+      ],
+      "rationale": "The paragraph about the roadmap is moved to additional_examples as it is supported by examples and public symbols.",
+      "unit_id": "inherited_unit:065.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "public_symbol:aspose_font.webfontoptimizer",
+        "public_symbol:aspose_font.fontqareporter"
+      ],
+      "rationale": "The list of variable-font workflows is moved to additional_examples as it is supported by examples and public symbols.",
+      "unit_id": "inherited_unit:066.list"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:004",
+        "public_symbol:aspose_font.ttffont.axes",
+        "public_symbol:aspose_font.ttffont.named_instances",
+        "public_symbol:aspose_font.ttffont.smart_instancer"
+      ],
+      "rationale": "The heading 'Variable Font Discovery' is moved to additional_examples as it is supported by example:004 and public symbols.",
+      "unit_id": "inherited_unit:067.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:004"
+      ],
+      "rationale": "The code block for variable font discovery is moved to additional_examples as it is supported by example:004.",
+      "unit_id": "inherited_unit:068.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:004"
+      ],
+      "rationale": "The output example for variable font discovery is moved to additional_examples as it is supported by example:004.",
+      "unit_id": "inherited_unit:069.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:aspose_font",
+        "public_symbol:aspose_font.fontloader",
+        "public_symbol:aspose_font.webfontoptimizer",
+        "public_symbol:aspose_font.fontqareporter"
+      ],
+      "rationale": "The heading 'Python API Highlights' is moved to api_reference as it aligns with the fact-supported public symbols.",
+      "unit_id": "inherited_unit:070.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "example:005"
+      ],
+      "rationale": "The code block is CONTRADICTED by example:005 and is not placed.",
+      "unit_id": "inherited_unit:071.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "example:005"
+      ],
+      "rationale": "The paragraph about grid-family package is tied to the CONTRADICTED example:005 and is not placed.",
+      "unit_id": "inherited_unit:072.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:aspose_font.cli.main",
+        "public_symbol:aspose_font.mcp.main"
+      ],
+      "rationale": "The heading 'CLI Highlights' is moved to additional_examples as it is supported by public symbols.",
+      "unit_id": "inherited_unit:073.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:aspose_font.cli.main",
+        "public_symbol:aspose_font.mcp.main"
+      ],
+      "rationale": "The heading 'Web Optimization' is moved to additional_examples as it is supported by public symbols.",
+      "unit_id": "inherited_unit:074.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The CLI code block for web optimization is not supported by any fact and is omitted.",
+      "unit_id": "inherited_unit:075.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:aspose_font.cli.main",
+        "public_symbol:aspose_font.mcp.main"
+      ],
+      "rationale": "The heading 'QA Evidence' is moved to additional_examples as it is supported by public symbols.",
+      "unit_id": "inherited_unit:076.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The CLI code block for QA evidence is not supported by any fact and is omitted.",
+      "unit_id": "inherited_unit:077.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:aspose_font.cli.main",
+        "public_symbol:aspose_font.mcp.main"
+      ],
+      "rationale": "The heading 'Instance Packaging' is moved to additional_examples as it is supported by public symbols.",
+      "unit_id": "inherited_unit:078.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The CLI code block for instance packaging is not supported by any fact and is omitted.",
+      "unit_id": "inherited_unit:079.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:aspose_font.cli.main",
+        "public_symbol:aspose_font.mcp.main"
+      ],
+      "rationale": "The heading 'Preview and Review' is moved to additional_examples as it is supported by public symbols.",
+      "unit_id": "inherited_unit:080.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:004"
+      ],
+      "rationale": "The CLI code block duplicates examples already covered by verified Python examples in additional_examples.",
+      "unit_id": "inherited_unit:081.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a 'Web Packaging' section heading; CLI commands are covered under other headings.",
+      "unit_id": "inherited_unit:082.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "The 'web-optimize' CLI examples are redundant with the verified Python example in quick_start and additional_examples.",
+      "unit_id": "inherited_unit:083.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a 'General Inspection and Conversion' heading; its content is covered under API reference and additional examples.",
+      "unit_id": "inherited_unit:084.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose_font.fontloader",
+        "public_symbol:aspose_font.converter.fontconverter"
+      ],
+      "rationale": "The 'info', 'convert', and 'meta-clean' CLI commands are covered by verified public symbols in api_reference.",
+      "unit_id": "inherited_unit:085.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a 'CLI Usage' heading; CLI commands are covered under additional_examples and api_reference.",
+      "unit_id": "inherited_unit:086.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph introduces a link to docs/one_command_web_optimizer.md, but that file's content is not in the fact dossier.",
+      "unit_id": "inherited_unit:087.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The link to docs/one_command_web_optimizer.md is unsupported because the file content is not in the fact dossier.",
+      "unit_id": "inherited_unit:088.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a 'Quick Reference' heading; its content is covered under additional_examples and api_reference.",
+      "unit_id": "inherited_unit:089.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "The 'web-optimize' CLI examples are redundant with the verified Python example in quick_start and additional_examples.",
+      "unit_id": "inherited_unit:090.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_font.mcp.main",
+        "public_symbol:aspose_font.mcp.font_convert",
+        "public_symbol:aspose_font.mcp.font_subset",
+        "public_symbol:aspose_font.mcp.web_build",
+        "public_symbol:aspose_font.mcp.var_compat",
+        "public_symbol:aspose_font.mcp.font_info",
+        "public_symbol:aspose_font.mcp.glyph_outline",
+        "public_symbol:aspose_font.mcp.text_layout",
+        "public_symbol:aspose_font.mcp.web_family_package"
+      ],
+      "rationale": "The MCP Server heading and its content are supported by verified MCP public symbols and install_command:pip.",
+      "unit_id": "inherited_unit:091.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_font.mcp.main"
+      ],
+      "rationale": "The sentence introducing the MCP server is supported by the public_symbol:aspose_font.mcp.main fact.",
+      "unit_id": "inherited_unit:092.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "install_command:pip",
+        "public_symbol:aspose_font.mcp.main"
+      ],
+      "rationale": "The MCP server installation and invocation commands are supported by install_command:pip and public_symbol:aspose_font.mcp.main.",
+      "unit_id": "inherited_unit:093.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_font.mcp.font_info",
+        "public_symbol:aspose_font.mcp.var_compat",
+        "public_symbol:aspose_font.mcp.web_build"
+      ],
+      "rationale": "The MCP server coverage description is supported by the listed public symbols.",
+      "unit_id": "inherited_unit:094.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:python_requires"
+      ],
+      "rationale": "The Development heading is supported by the Python version requirement in scope_limitations.",
+      "unit_id": "inherited_unit:095.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:development.dev.build-1.2",
+        "dependency:development.dev.pytest-7.4",
+        "dependency:development.dev.ruff-0.4"
+      ],
+      "rationale": "The development verification commands are supported by the listed development dependencies.",
+      "unit_id": "inherited_unit:096.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim that verification flows refresh demo site content.",
+      "unit_id": "inherited_unit:097.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:license"
+      ],
+      "rationale": "The License heading is supported by the package:license fact and renders under scope_limitations.",
+      "unit_id": "inherited_unit:098.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:license"
+      ],
+      "rationale": "The MIT license statement is supported by the package:license fact.",
+      "unit_id": "inherited_unit:099.paragraph"
+    }
+  ]
+}
