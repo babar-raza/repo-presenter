@@ -1263,8 +1263,41 @@ next_ready_items:
       metadata, with core/state mostly RETIRE).
 
   - id: BUILD_INDEPENDENT_REVIEWER
-    status: READY
+    status: BLOCKED_NEEDS_SCOPING
     priority: highest
+    scoping_read_2026_10_23: >
+      Read judge.py (740 lines) and the first ~220 lines of review.py (2,996 lines) in full
+      before writing any code, per this card's own discipline. CORRECTING this card's own
+      earlier framing: this is NOT a bounded, single-file build. Findings:
+      (1) judge.py itself is NOT where the Oct 20 fold-bug lived -- it is a pure, sealed-
+      bundle-file reader that aggregates deterministic clauses (J1-J6) and treats a reviewer's
+      verdict as purely advisory, explicitly "can never change authorizable in either
+      direction." It depends on BC-01..BC-11 blocking-check verdicts (validation.json) and a
+      bundle/manifest/seal file layout (core/candidates.py, data/readme_standard/*.yaml
+      archetypes) this repository has NONE of.
+      (2) review.py is where the real fold-bug lived, and it is a 2,996-line, 21-version,
+      heavily production-hardened module -- its own header comment is a changelog of 21
+      separate, measured false-positive/false-negative fixes found live against real
+      repositories over roughly six weeks of the old project's history, not a single clean
+      design. The DETERMINISTIC_RULES/JUDGMENT_RULES split (the one pattern worth carrying
+      forward) is version "19" of 21, built ON TOP OF a web of other machinery this repository
+      does not have: repair/rounds.py (the repair loop a reviewer's findings feed into -- this
+      repository has no repair loop at all, so a reviewer's REJECT findings currently have
+      nowhere to go), components/shell.py's exact chrome strings and renderer.py's exact
+      rendered output shape (several checks match literal renderer-emitted text, which will not
+      line up with this repository's own, independently adapted renderer without re-deriving
+      each match point), and FACT_KINDS/defect_fingerprint from repair/targeted.py (not ported).
+      A verbatim port would almost certainly misfire against this repository's different
+      pipeline shapes; a from-scratch build needs the claim-grounding layer
+      (validation/claims.py/deferrals.py, still PENDING_REVIEW per this file's own inventory
+      entry) read first to avoid re-deriving grounding logic that already exists, proven,
+      elsewhere.
+      CORRECTED PRIORITY NOTE: this remains the right next large undertaking (Gate A genuinely
+      needs it), but it is multi-session-scale work, comparable to the already-correctly-
+      deferred 11,364-line validation/review/repair subsystem named in
+      CLOSE_DUPLICATE_OPENING_PARAGRAPH_PARTIAL -- not a tweak, and not safely startable without
+      first deciding where a reviewer's REJECT findings go (this repository has no repair loop
+      to hand them to) and reading validation/claims.py+deferrals.py first.
     purpose: >
       Close the single largest gap SALVAGE_INVENTORY_2026_10_23 found: this repository has no
       independent non-authoring reviewer at all. Mission Gate A requires one; every candidate
@@ -1294,4 +1327,14 @@ next_ready_items:
       entry appended to migration/reuse-manifest.yaml 2026-10-23.
     rollback: delete the new file and its test; no other module depends on it yet (ADD, not
       ADAPT -- nothing to revert elsewhere).
+    next_step: >
+      Before writing independent_reviewer.py: (1) read validation/claims.py (690 lines) and
+      deferrals.py (905 lines) from the old repo -- the claim-grounding logic a reviewer's
+      factuality checks need, separate from this card's own object; (2) decide where this
+      repository hands a REJECT finding, given it has no repair/rounds.py-equivalent loop yet
+      -- either build the smallest possible repair-destination stub first, or scope v1 of the
+      reviewer to produce an advisory record only (no repair hand-off) until one exists; (3)
+      only then write independent_reviewer.py against THIS repository's own renderer.py/
+      authoring.py output shapes, carrying forward only the DETERMINISTIC_RULES/JUDGMENT_RULES
+      PATTERN from review.py's version "19", never its literal chrome-string match points.
     blocked_on: null
