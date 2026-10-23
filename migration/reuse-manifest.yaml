@@ -88,20 +88,28 @@ entries:
 
   - component: "registry / product discovery / processability / source snapshots and safe git clones"
     source: old-repository-presenter
-    disposition: PENDING_REVIEW
+    disposition: SUPERSEDED_BY_INVESTIGATION
     reason: >
-      Mission §3 names this as a prioritized salvage area but it has not yet
-      been read in this repository's P0 pass. data/registry.json's structure
-      was skimmed only to confirm the pinned P1 target's provider_identity
-      (project/state.yaml P1_VERTICAL_SLICE).
-    next_step: read core/registry, data/registry.json, and the clone/snapshot
-      code before P1 needs it.
+      This P0-era placeholder is superseded 2026-10-23 by the full thorough-investigation pass
+      (see the "full old-repo inventory, 2026-10-23 thorough pass" entries appended at the end of
+      this file): core/registry/{loader,models,naming}.py were pulled long ago (see the GitHub
+      App entry above); core/registry/{sandbox.py (107 lines), write_gate.py (78 lines)},
+      core/snapshot/{capture.py (167), inventory.py (182)}, and core/git_safety/{clone.py (251),
+      git.py (85), hooks.py (33), neuter.py (17), verify.py (64)} were all read (by name/size, not
+      yet line-by-line) and are now their own precisely-scoped PENDING_REVIEW entries below,
+      instead of this one vague placeholder.
+    next_step: see the "Safe git clone + source snapshot (NOT yet ported)" entry below.
 
   - component: "extraction, package ownership, public API verification, example execution"
     source: old-repository-presenter
-    disposition: PENDING_REVIEW
-    reason: not yet read.
-    next_step: read before P1's fact-building step for the pinned target.
+    disposition: SUPERSEDED_BY_INVESTIGATION
+    reason: >
+      This P0-era placeholder is superseded by the far more specific extractors/platforms/*
+      entries above (cpp/go/rust/typescript pulled; python/net/java pulled; the three
+      *_examples.py execution verifiers explicitly NOT pulled, tracked in that entry's own
+      known_gap field) -- nothing further to track under this generic heading.
+    next_step: none -- see the two extractors/platforms/* entries above for the real, current
+      status and the one real known_gap (python_examples.py/net_examples.py/java_examples.py).
 
   - component: "components/readme_correction/apply.py, engine.py, detectors/, chain.py, verify.py (Lane L correction engine)"
     source: old-repository-presenter
@@ -1492,3 +1500,267 @@ entries:
       before this fix existed and are not retroactively invalidated; a future cascade re-run
       against the same repositories is the targeted recheck this fix earns, not required
       before this entry is accepted.
+
+  # ===========================================================================================
+  # Full old-repo inventory, 2026-10-23 thorough pass (owner-directed: "investigate everything
+  # thoroughly ... make sure to salvage and reuse everything that is needed from old repo. It
+  # still has much that has not been imported."). This pass enumerated every directory under the
+  # old repo's src/repository_presenter/{components,core}/ against this manifest's existing
+  # entries, by name and line count (not yet line-by-line reading, except where noted) -- the
+  # mission's own P0 guidance ("research only until you can pick a concrete first module and
+  # test," "avoid days of detached forensics") means this pass sizes and prioritizes rather than
+  # reads every line of ~27,500 previously-untracked lines in one sitting. Each entry below is
+  # PENDING_REVIEW (needs a real read before any REUSE/ADAPT/ADD disposition) or DEFERRED
+  # (explicitly out of scope per the mission document or idea.md itself), never REUSE sight
+  # unseen, per mission §3's own reuse discipline.
+  # ===========================================================================================
+
+  - component: "components/readme/review/independent/review.py (2,996 lines) +
+      components/readme/acceptance/judge.py (740 lines) +
+      components/readme/review/acceptance/{profile,scorer,sealed,template_check,text_checks}.py
+      (1,573 lines; text_checks.py's fence-scanner slice already reused verbatim as this repo's
+      own fence_scan.py)"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    behavior: UNKNOWN in detail -- sized and named only, not read line-by-line this pass (judge.py
+      and review.py were each previously PENDING_REVIEW/entry-#1-ADAPT without a size; profile.py/
+      scorer.py/sealed.py/template_check.py were never named anywhere in this manifest before this
+      pass).
+    disposition: PENDING_REVIEW (judge.py and review.py keep their existing dispositions from
+      entries #1/#2 above -- ADAPT and PENDING_REVIEW respectively, never REUSE, per the Oct 20
+      owner-confirmed blind spot in docs/MISSION_AUTHORITY.md's "critical fact"); profile.py/
+      scorer.py/sealed.py/template_check.py newly PENDING_REVIEW.
+    reason: >
+      THIS IS THE SINGLE LARGEST MISSION-CRITICAL GAP FOUND THIS PASS. `src/repo_presenter`
+      currently contains ZERO files under any path named review/judge/acceptance -- confirmed by
+      a direct search of this repository's own src/ tree, 2026-10-23. Every one of the 36 Lane L
+      and 31 (of 36) Lane R candidates this session has produced was accepted using only
+      deterministic checks (detectors, unit_checks, coherence_checks) plus this session's own
+      supervisor judgment reading the evidence -- never an independently built, non-authoring
+      reviewer. Mission Gate A explicitly requires "one independent non-authoring
+      evidence-grounded reviewer" before a candidate's acceptance is real (idea.md §"Portfolio
+      README Presentation Contract" + the fresh-start mission document's own Gate A language).
+      This repository has never built one. The old repo's own version is explicitly disqualified
+      from a REUSE disposition (pre-2026-10-10: folded 27/30 real REJECT findings to ACCEPT
+      whenever a finding's quoted span matched a literal SUPPORTED fact value, regardless of
+      actual merit) -- entry #1 above already recorded the correct shape to build instead (the
+      DETERMINISTIC_RULES/JUDGMENT_RULES split, post-2026-10-10) and its own
+      smallest_first_integration_test (a candidate with one deliberately false claim whose quoted
+      span also matches a literal SUPPORTED fact elsewhere -- assert REJECT, not ACCEPT). That
+      spec is still the right target; it has simply never been executed as an actual taskcard.
+    target_module: src/repo_presenter/readme/review/independent_reviewer.py (planned per entry #1,
+      still not created)
+    next_step: >
+      Author and dispatch a taskcard: read judge.py (740 lines, smaller, read first) and
+      review.py (2,996 lines) in full against the four Oct 20 defect classes named in
+      docs/history-reconstruction.md, confirm which of the BC-04/BC-14 validators they call are
+      already independently covered by this repo's own ported machinery (references.py,
+      dispositions.py's placement_errors, the readme_correction detectors) versus genuinely
+      missing, then build this repo's OWN independent reviewer against the deterministic/
+      judgment-rule-split pattern -- not a port -- with the negative-control test entry #1
+      already specifies. This is higher priority than any further Lane R tail-chasing: without
+      it, "accepted" candidates in this repository rest on the same single-track
+      producer-grades-itself structure the Oct 20 owner ruling found broken in the old repo.
+    portfolio_consumers: both lanes, every candidate -- this is the acceptance gate mission Gate A
+      requires and this repository does not yet have.
+    invalidation_impact: >
+      None yet -- not built. Once built, every one of the 36 Lane L and 31 Lane R candidates
+      "accepted" so far has only ever passed deterministic checks + supervisor judgment, never
+      this independent gate -- building it does not retroactively invalidate those results (they
+      were never claimed to have passed an independent review in the first place), but a truthful
+      status report from this point forward must distinguish "deterministically checked and
+      supervisor-read" from "independently reviewed" until this component exists and is run
+      against them.
+
+  - component: "components/readme/repair/{rounds.py,targeted.py} (3,736 lines)"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    behavior: UNKNOWN in detail -- sized and named only, not read line-by-line this pass.
+    disposition: PENDING_REVIEW
+    reason: >
+      This is the orchestration layer dispositions.py's own S4 refusal/repair half (ported,
+      entry above) and the coherence S8 call site both originate from, per this repository's own
+      prior finding (see the "scripts/run_lane_r_coherence.py" entry above: "repair/rounds.py (not
+      ported) is the orchestration layer both this and the earlier S4 refusal/repair half came
+      from, and the next place to look" for a real fix to the duplicate-opening-paragraph defect
+      that CLOSE_DUPLICATE_OPENING_PARAGRAPH_PARTIAL only partially closed this session). Reading
+      it is the correct next step before attempting any further, deeper fix to that defect class
+      beyond the already-shipped partial guard.
+    target_module: not yet planned -- needs a read first.
+    next_step: >
+      Read rounds.py and targeted.py in full; determine whether either genuinely closes the
+      "should an inherited paragraph ever have been disposed VERIFIED_PRESERVE into a section S6
+      will also freshly author" design question that CLOSE_DUPLICATE_OPENING_PARAGRAPH_PARTIAL's
+      own objective explicitly named as needing this unported subsystem. Do not port sight
+      unseen -- confirm it actually solves this before committing to a multi-session port.
+    portfolio_consumers: Lane R, every candidate with a duplicate-opening-paragraph risk --
+      currently affects at least 2 of the 5 uncovered repositories
+      (aspose-imaging-foss/.NET, aspose-slides-foss/Java).
+    invalidation_impact: none yet -- not pulled.
+
+  - component: "components/readme/validation/{claims.py (690), content_presence.py (134),
+      deferrals.py (905), links/rules.py (133), registry.py (2,731)}"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    behavior: UNKNOWN in detail -- sized and named only, not read line-by-line this pass, except
+      that registry.py's narration_patterns list was already extracted verbatim as this repo's own
+      text_gate.py (see the Lane L engine entry above).
+    disposition: PENDING_REVIEW
+    reason: >
+      claims.py and deferrals.py look the most load-bearing of the five against this repository's
+      own still-valid outcome requirements (docs/MISSION_AUTHORITY.md: "every claim traces to a
+      verified fact with a SUPPORTED/CONTRADICTED/UNVERIFIED disposition" and "material detail
+      whose place cannot be determined fails closed... rather than being dumped into the
+      document") -- deferrals.py in particular is the direct dependency the dispositions.py test
+      suite already names as missing (review_deferrals, recover_uncited_prose_omits -- see the
+      references.py/dispositions.py refusal-half entry above's own test-coverage note). registry.py
+      at 2,731 lines is disproportionately large for a module this manifest has so far only ever
+      needed one list out of (narration_patterns) -- worth confirming whether the rest is a
+      genuinely separate concern (e.g. the old repo's own validator registry/dispatch, which
+      mission §1/§3 already says not to reuse verbatim given the Oct 20 blind spot) before reading
+      it in full.
+    target_module: not yet planned -- needs a read first.
+    next_step: >
+      Read claims.py and deferrals.py first (smaller, more clearly load-bearing); confirm whether
+      either closes real gaps this repository's own dispositions.py refusal/repair half left
+      open (its own test file explicitly could not port one old test for exactly this reason).
+      content_presence.py and links/rules.py are smaller and lower priority. registry.py: skim
+      its module docstring and top-level structure only, to decide whether a full read is
+      warranted, before committing more time -- do not read 2,731 lines speculatively.
+    portfolio_consumers: both lanes, every candidate, once pulled.
+    invalidation_impact: none yet -- not pulled.
+
+  - component: "Safe git clone + source snapshot (NOT yet ported): core/git_safety/{clone.py
+      (251), git.py (85), hooks.py (33), neuter.py (17), verify.py (64)}; core/registry/{sandbox.py
+      (107), write_gate.py (78)}; core/snapshot/{capture.py (167), inventory.py (182)}"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    behavior: UNKNOWN in detail -- sized and named only, not read line-by-line this pass. Names
+      strongly suggest hooks.py/neuter.py specifically disable or strip repository-supplied git
+      hooks before this project's own code operates on an untrusted third-party clone -- a real
+      operational-security concern, not a style preference, if accurate.
+    disposition: PENDING_REVIEW
+    reason: >
+      REAL, LIVE OPERATIONAL GAP, not merely a missed port: every clone this entire session (all
+      36 portfolio repositories, under /tmp/survey_clones/) was made with a plain `git clone`,
+      never this hardened wrapper. core/git_safety/process.py and verify.py's sibling (the
+      bounded-subprocess runner) are already ported and described in this manifest's extractors
+      entry as having "no shell, closed stdin, hard timeout, whole-process-tree kill" -- but that
+      hardening applies to running example code INSIDE an already-cloned repository, not to the
+      clone operation itself or to whatever a cloned repository's own .git/hooks might do. If
+      hooks.py/neuter.py do what their names suggest, this repository has been cloning arbitrary
+      third-party FOSS repositories all session without the old repo's own git-hook defuse step.
+    target_module: not yet planned -- needs a read first.
+    next_step: >
+      Read clone.py + hooks.py + neuter.py first (confirm or refute the hook-defuse hypothesis
+      above) before any further portfolio-wide cloning; this is the one entry in this inventory
+      pass with a plausible safety angle, not just a feature gap, and should be read before the
+      next batch of clones this session or a future one performs, not deferred indefinitely.
+      sandbox.py/write_gate.py (core/registry) and snapshot/{capture,inventory}.py are lower
+      urgency -- read after the clone-safety question is resolved.
+    portfolio_consumers: every clone operation this repository or any future session performs,
+      across both lanes.
+    invalidation_impact: none yet -- not pulled; the clones already made cannot be retroactively
+      hardened, only future ones.
+
+  - component: "PR/publish effect layer: components/propose/{effect.py (373), pull_request.py,
+      wave.py} (1,485 total) + components/candidates_publish/{effect.py (373), git_ops.py (161)}
+      (534 total) + components/readme_correction/{commands,docs,augment,gate,enrich,check,bundle,
+      committed,receipts,render,run,send,settle,live_bundle,live_gate,live_ops,
+      live_pull_request,pull_request,chain,verify}.py (5,738 total)"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    behavior: UNKNOWN in detail -- sized and named only, not read line-by-line this pass.
+      readme_correction's chain.py/verify.py (the sandboxed build/test runner) are already
+      DEFERRED per the Lane L engine entry above, for the same reason (additions.py is the only
+      caller and is itself deferred) -- listed again here only because they also appear in this
+      PR-effect grouping by directory, not because their disposition changed.
+    disposition: PENDING_REVIEW
+    reason: >
+      Directly blocks mission P3 ("submit one authorized PR for each lane where genuinely
+      eligible"). Confirmed zero lines of components/propose/ exist anywhere in this repository's
+      src/ tree (a direct search found nothing) -- this repository's GitHub-App auth foundation
+      (client.py, token_provenance.py, issues/{dedup,file}.py) is real and tested, but has no
+      PR-creation effect to call. Two candidate implementations exist in the old repo for what
+      may be the same underlying need: the generic components/propose/ path, and
+      readme_correction's own Lane-L-specific pull_request.py/live_pull_request.py -- both need
+      reading before choosing one, to avoid porting two competing PR-effect implementations when
+      one may already subsume or supersede the other.
+    target_module: not yet planned -- needs a read first.
+    next_step: >
+      Read components/propose/effect.py and pull_request.py first (smaller, generic, likely the
+      intended long-term path given it is not Lane-L-named); separately skim readme_correction's
+      pull_request.py/live_pull_request.py only enough to determine whether it is a
+      Lane-L-specific wrapper over the same primitives or a genuinely separate mechanism, before
+      reading the other ~5,000 lines in that directory (commands/docs/augment/gate/enrich/check/
+      bundle/committed/receipts/render/run/send/settle/live_bundle/live_gate/live_ops) --
+      most of those names suggest Lane-L-specific orchestration this repository's own, much
+      simpler scripts/run_lane_l.py may already supersede; confirm before reading all of it.
+    portfolio_consumers: both lanes, once any candidate is eligible for a real PR effect (P3).
+    invalidation_impact: none yet -- not pulled; no PR effect exists anywhere in this repository.
+
+  - component: "Portfolio monitoring: components/monitor/{discovery.py,drift.py,freshness.py,
+      install_state.py,org_listing.py,relevance.py} (2,025 total)"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    behavior: UNKNOWN in detail -- sized and named only, not read line-by-line this pass.
+    disposition: PENDING_REVIEW
+    reason: >
+      Maps directly to idea.md's own Operating Model ("continuously inventories explicitly
+      authorized GitHub sources... monitors every admitted repository, including newly discovered
+      read-only entries") and mission P4 ("enabled discovery, monitoring..."). Correctly lower
+      priority than the independent-reviewer gap or the P3 PR-effect gap above: mission's own
+      P0-P4 ordering puts P4 strictly after P3, and idea.md's own agile-operating-model section
+      says infrastructure is "just-in-time... enters the active path only when it unblocks the
+      current repository." Recorded here so it is not forgotten, not because it is next.
+    target_module: not yet planned -- needs a read first, and not before P3 lands.
+    next_step: defer reading until P3 (hosted PR/issue effects) is proven; then read before P4
+      work begins.
+    portfolio_consumers: future P4 autonomous operation, both lanes.
+    invalidation_impact: none yet -- not pulled.
+
+  - component: "Visual assets / social preview / metadata: components/metadata/{apply.py,
+      capture.py,preservation.py,proposal.py} (1,023 total)"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    behavior: UNKNOWN in detail -- sized and named only, not read line-by-line this pass.
+    disposition: DEFERRED (not PENDING_REVIEW -- see reason)
+    reason: >
+      idea.md's own §"Visual Assets and Social Preview" and docs/MISSION_AUTHORITY.md's distilled
+      requirement both already say this explicitly: "not required to be fully delivered during
+      the initial pilot... do not let this consume P1-P2 budget." This inventory pass only adds a
+      real size (1,023 lines) to what was previously an unweighed deferral -- the deferral itself
+      is unchanged and correctly stands.
+    target_module: not planned.
+    next_step: revisit only after the README/issue core (P1-P3) is fully operational, per idea.md's
+      own stated sequencing ("Add secondary metadata/social preview/community-file activities from
+      idea.md after the README/issue core is operational").
+    portfolio_consumers: none yet -- correctly deferred.
+    invalidation_impact: none.
+
+  - component: "Old repo's own durable-state/transaction machinery: core/state/{cas.py (306),
+      git_backend.py (351),health.py (196),present_transaction.py (456),recovery.py (230),
+      schema.py (345),trigger.py (236)} (2,122 total)"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    behavior: UNKNOWN in detail -- sized and named only, not read line-by-line this pass.
+    disposition: "RETIRE (cas.py, git_backend.py, health.py, recovery.py, schema.py, trigger.py);
+      PENDING_REVIEW (present_transaction.py only)"
+    reason: >
+      docs/MISSION_AUTHORITY.md's legacy-to-current mapping already resolves the old repo's
+      "durable supervisor state" concept to this repository's own project/state.yaml (the one
+      execution cursor, per AGENTS.md) -- six of these seven files are very likely exactly that
+      superseded supervisor-state machinery (cas = content-addressed store, git_backend, health,
+      recovery, schema, trigger all read as cursor/transaction-log plumbing for the OLD repo's own
+      retired Level-8 mission graph). present_transaction.py (456 lines, the largest single file
+      here) is named differently enough -- "transaction" in the sense of a finished README
+      candidate becoming a committed effect, not supervisor-cursor bookkeeping -- that it deserves
+      one real read before folding it into the same RETIRE disposition as its six siblings; it may
+      turn out to be product logic relevant to the P3 PR-effect question above rather than
+      retired supervisor plumbing.
+    target_module: none planned for the six RETIRE files.
+    next_step: read present_transaction.py alone (456 lines) when P3 work begins, specifically to
+      rule out (or confirm) that it is supervisor-state machinery rather than a present-the-
+      finished-candidate effect this repository's own PR-effect work could reuse.
+    portfolio_consumers: none for the six RETIRE files. present_transaction.py: possibly P3, TBD.
+    invalidation_impact: none -- none of these seven files are pulled.

@@ -87,7 +87,7 @@ current_gate:
   acceptance:
     - components/issues/, core/github/, core/authorization/ imported, adapted, independently tested (DONE -- src/repo_presenter/{issues,github,authorization}/, 32 tests passing, migration/reuse-manifest.yaml updated with real ADAPT disposition)
     - A repeatable per-repository process produced candidates without per-repository hand-driving by the supervisor (DONE via docs/PORTFOLIO_SCALE_PLAYBOOK.md + dispatched batches -- NOTE this is agent-driven, not yet a deterministic script; see BUILD_REPEATABLE_PIPELINE below)
-    - At least 28 repositories have a fully reviewed candidate for both lanes (DONE -- 36/36, exceeds target)
+    - At least 28 repositories have a fully reviewed candidate for both lanes (DONE -- 36/36, exceeds target; CAVEAT added 2026-10-23 -- see SALVAGE_INVENTORY_2026_10_23 below -- "reviewed" here means deterministic checks (detectors/unit_checks/coherence_checks) plus supervisor judgment reading the evidence, never an independently built non-authoring reviewer, which this repository does not yet have at all. This gate is not reopened/invalidated -- it was accepted against the owner's own 2026-10-21 bar, which this did satisfy -- but the gap is recorded here rather than left silently implied-closed, per mission non-negotiable #5 and the "report observations, not claims of progress" discipline (mission §13))
     - Registry of authorized repositories established in this repo (DONE -- data/registry.json, 36 entries, live-re-verified)
     - At least one real upstream effect (issue) filed with owner authorization (DONE -- aspose-3d-foss/Aspose.3D-FOSS-for-Python#4)
   blocker: null
@@ -1187,3 +1187,95 @@ next_ready_items:
       filing, per mission section 9's "first live effect per capability" rule -- though since
       the capability itself is now proven, routine filing may not need per-issue authorization
       once the owner confirms that.
+  - id: SALVAGE_INVENTORY_2026_10_23
+    status: DONE
+    priority: highest
+    purpose: >
+      Owner-directed, 2026-10-23: "investigate everything thoroughly... make sure to salvage and
+      reuse everything that is needed from old repo. It still has much that has not been
+      imported." A full enumeration of the old repo's src/repository_presenter/{components,core}/
+      tree against this repository's own migration/reuse-manifest.yaml, by directory name and
+      line count (not line-by-line reading except where a module was already evaluated earlier
+      this session) -- per the mission's own P0 discipline ("research only until you can pick a
+      concrete first module and test," "avoid days of detached forensics"), this card sizes and
+      prioritizes rather than reading all of it in one pass.
+    finding: >
+      Roughly 27,500 previously-untracked or only-vaguely-tracked lines found across 9 subtrees,
+      now precisely sized and each given its own migration/reuse-manifest.yaml entry (appended
+      2026-10-23, see the "Full old-repo inventory" entries at the end of that file): (1) the
+      independent non-authoring reviewer chain (review.py 2,996 + judge.py 740 + acceptance/*
+      1,573 = 5,309 lines) -- THE SINGLE LARGEST FINDING: this repository has ZERO files under
+      any review/judge/acceptance path, confirmed by direct search, meaning every one of the 36
+      Lane L and 31 Lane R "accepted" candidates so far rest on deterministic checks + supervisor
+      judgment alone, never an independent reviewer, despite mission Gate A requiring one; (2)
+      repair/{rounds,targeted}.py (3,736 lines) -- the orchestration layer this session's own
+      prior finding already named as "the next place to look" for a real (not partial) fix to
+      the duplicate-opening-paragraph defect; (3) validation/{claims,content_presence,deferrals,
+      links/rules,registry}.py (4,595 lines) -- claims.py/deferrals.py look load-bearing against
+      this repo's own still-valid "every claim traces to a verified fact" / "never silently
+      dumped" requirements; (4) safe git clone + source snapshot (git_safety/{clone,git,hooks,
+      neuter,verify}.py + registry/{sandbox,write_gate}.py + snapshot/{capture,inventory}.py,
+      984 lines) -- a REAL, LIVE operational gap, not just a missed port: every one of this
+      session's 36 portfolio clones used plain `git clone`, never this hardened wrapper, and
+      hooks.py/neuter.py's names suggest an untrusted-repo git-hook defuse step this session has
+      never applied; (5) the PR/publish effect layer (propose/ + candidates_publish/ +
+      readme_correction's own PR-adjacent files, 7,757 lines) -- directly blocks mission P3;
+      confirmed zero lines of components/propose/ exist in this repository's src/ tree at all;
+      (6) portfolio monitoring (monitor/*, 2,025 lines) -- maps to mission P4, correctly lower
+      priority, P4 strictly follows P3 per the mission's own ordering; (7) metadata/visual-asset/
+      social-preview (1,023 lines) -- correctly DEFERRED, idea.md and docs/MISSION_AUTHORITY.md
+      both already say this explicitly, this pass only adds a real size to an already-correct
+      deferral; (8) the old repo's own durable-state/transaction machinery (core/state/*, 2,122
+      lines) -- mostly RETIRE (superseded by this repo's own project/state.yaml per
+      docs/MISSION_AUTHORITY.md's existing mapping), except present_transaction.py (456 lines,
+      named differently enough to warrant one real read before folding it into the same RETIRE
+      disposition as its six siblings).
+    action_taken: >
+      migration/reuse-manifest.yaml updated: two stale P0-era catch-all PENDING_REVIEW entries
+      marked SUPERSEDED_BY_INVESTIGATION and pointed at the new precise entries; 8 new entries
+      appended with real sizes, dispositions (PENDING_REVIEW/DEFERRED/RETIRE per mission
+      discipline, never REUSE sight unseen), and concrete next_step fields. current_gate's
+      P1_PORTFOLIO_SCALE acceptance record annotated with the independent-reviewer caveat above
+      (not reopened/invalidated -- it met the bar it was actually accepted against -- but the gap
+      is now recorded, not silently implied-closed). plans/idea.md imported verbatim into this
+      repository (separate owner request, same message) for local gap-analysis convenience;
+      docs/MISSION_AUTHORITY.md's legacy-to-current mapping updated to match.
+    next_step: see BUILD_INDEPENDENT_REVIEWER below (highest-priority concrete next action from
+      this inventory) and the individual next_step fields on each new reuse-manifest.yaml entry
+      for the rest, in the priority order given in the finding above (reviewer > repair/rounds.py
+      > validation/claims+deferrals > safe-clone hardening > PR-effect layer > monitoring >
+      metadata, with core/state mostly RETIRE).
+
+  - id: BUILD_INDEPENDENT_REVIEWER
+    status: READY
+    priority: highest
+    purpose: >
+      Close the single largest gap SALVAGE_INVENTORY_2026_10_23 found: this repository has no
+      independent non-authoring reviewer at all. Mission Gate A requires one; every candidate
+      accepted so far (36/36 Lane L, 31/36 Lane R) rests on deterministic checks + supervisor
+      judgment only.
+    objective: >
+      Build this repository's OWN independent reviewer against the DETERMINISTIC_RULES/
+      JUDGMENT_RULES split pattern migration/reuse-manifest.yaml's entry #1 already specifies
+      (deterministic rules may refute with refuted_by{rule,evidence}; judgment rules annotate
+      only, never fold a REJECT to ACCEPT) -- NOT a port of the old repo's review.py/judge.py,
+      which are disqualified from REUSE by the Oct 20 owner-confirmed blind spot
+      (docs/MISSION_AUTHORITY.md's "critical fact": pre-2026-10-10, 27/30 real REJECT findings
+      were wrongly folded to ACCEPT whenever a finding's quoted span matched a literal SUPPORTED
+      fact value).
+    write_paths: [src/repo_presenter/readme/review/independent_reviewer.py,
+      tests/readme/review/test_independent_reviewer.py]
+    test_command: python -m pytest tests/readme/review -q
+    falsifier: >
+      Feed the reviewer a candidate with one deliberately false claim whose quoted span happens
+      to also match a literal SUPPORTED fact value elsewhere in the candidate (the exact negative
+      control the old bug would have failed); assert the verdict is REJECT, not ACCEPT. A change
+      that reintroduces the old fold-to-ACCEPT behavior must make this test fail.
+    source_refs: >
+      migration/reuse-manifest.yaml entry #1 ("components/readme/review/independent/
+      review.py (reviewer verdict-fold logic)"); docs/MISSION_AUTHORITY.md's "critical fact"
+      section; the new "review/independent/review.py + acceptance/judge.py + review/acceptance/*"
+      entry appended to migration/reuse-manifest.yaml 2026-10-23.
+    rollback: delete the new file and its test; no other module depends on it yet (ADD, not
+      ADAPT -- nothing to revert elsewhere).
+    blocked_on: null
