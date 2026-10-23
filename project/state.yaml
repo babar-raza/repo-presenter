@@ -1338,3 +1338,32 @@ next_ready_items:
       authoring.py output shapes, carrying forward only the DETERMINISTIC_RULES/JUDGMENT_RULES
       PATTERN from review.py's version "19", never its literal chrome-string match points.
     blocked_on: null
+
+  - id: PORT_BC14_CLAIM_VALIDATION
+    status: DONE
+    priority: medium
+    purpose: >
+      First concrete step of BUILD_INDEPENDENT_REVIEWER's own next_step (read
+      validation/claims.py+deferrals.py first). Read claims.py (690 lines) in full; unlike the
+      independent-reviewer question, this one module turned out to be a genuinely bounded,
+      single-pass port -- confirmed by reading it, not estimated from its line count.
+    done: >
+      Ported src/repo_presenter/readme/validation/claims.py (ADAPT, import paths only) and a new
+      narrow slice src/repo_presenter/readme/evidence/facts/license_text.py (REUSE, verbatim --
+      just classify_license_text, not the old repo's whole license.py, whose other functions are
+      a different, extraction-time concern this repository's own per-ecosystem extractors
+      already handle). Ported tests/readme/validation/test_claims.py (58 passing, parametrized
+      cases included; 3 of the old file's ~39 tests dropped -- they need validation/registry.py's
+      BLOCKING_CHECKS/_check_claims wrapper, 2,731 lines, not evaluated here) and
+      tests/readme/evidence/facts/test_license_text.py (3 passing). 1064/1064 passed, 11 skipped,
+      full suite clean -- 61 new tests, none removed, nothing else touched. Not yet wired into
+      any live checks= callback in either lane -- ported and tested only, the same honest
+      boundary this repository already uses for several other ported-but-unintegrated modules.
+      Evidence: migration/reuse-manifest.yaml's own "components/readme/validation/claims.py"
+      entry, updated in place 2026-10-23.
+    next_step: >
+      deferrals.py (905 lines) next -- the direct dependency dispositions.py's own test suite
+      already names as missing. Separately, and independent of that: decide where claims.py
+      itself gets wired into a live checks= callback (Lane L's correction pipeline, or Lane R's
+      reconciliation/authoring checks) before it affects any real candidate -- not yet decided,
+      not blocking further reads.

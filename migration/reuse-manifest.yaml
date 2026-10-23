@@ -1598,37 +1598,72 @@ entries:
       (aspose-imaging-foss/.NET, aspose-slides-foss/Java).
     invalidation_impact: none yet -- not pulled.
 
-  - component: "components/readme/validation/{claims.py (690), content_presence.py (134),
-      deferrals.py (905), links/rules.py (133), registry.py (2,731)}"
+  - component: "components/readme/validation/claims.py (BC-14: version, install-command and
+      publication claims held to the facts)"
     source: old-repository-presenter
     evaluated_at_shas: []
-    behavior: UNKNOWN in detail -- sized and named only, not read line-by-line this pass, except
-      that registry.py's narration_patterns list was already extracted verbatim as this repo's own
-      text_gate.py (see the Lane L engine entry above).
-    disposition: PENDING_REVIEW
+    behavior: >
+      Five deterministic, LLM-independent rules reading README text against a FactsDocument:
+      (a) a version attached to the package name/install command must equal the registry's
+      current release (or the manifest's, absent a registry reading), including CMake
+      find_package() version-request semantics; (b) a "not (yet) published" sentence must agree
+      with a positive registry/distribution reading; (c) an install command's package must not
+      be a near-miss of the package identity (Go module-path and import_path-fact exceptions
+      included); (d) a "sole/only/first published version" claim is held to the registry's own
+      version_count; (e) a licence is stated once, by the licence fact -- a LicenseRef- or
+      different-recognised-licence sentence is flagged.
+    evidence: >
+      Read in full and ported 2026-10-23 (ADAPT, import paths only -- confirmed genuinely
+      self-contained once one dependency was identified and separately handled: the module's
+      only import outside core.facts/core.package_registry, already present, was
+      classify_license_text from the old repo's license.py). Ported that one function as a new
+      narrow slice, src/repo_presenter/readme/evidence/facts/license_text.py (REUSE, verbatim),
+      rather than license.py's whole file -- its other functions (license_facts,
+      settle_declared_license, classify_declaration) are extraction-time fact-builders, a
+      different, not-yet-evaluated concern this repository's own per-ecosystem extractors
+      (extractors/platforms/python.py and siblings) already handle their own way; porting only
+      what one caller needs follows this repository's own established narrow-slice precedent
+      (fence_scan.py, text_gate.py). Test file ported with 3 of its ~39 cases dropped (they
+      exercise validation/registry.py's BLOCKING_CHECKS/_check_claims wrapper, a 2,731-line
+      module not evaluated here -- see that module's own entry below); every other test needed
+      only the import-path change. Result: 58 passed (tests/readme/validation/test_claims.py,
+      parametrized cases included) + 3 new for the license_text.py slice
+      (tests/readme/evidence/facts/test_license_text.py). 1064/1064 passed, 11 skipped, full
+      suite clean (no regressions; 61 new tests, none removed).
+    disposition: "REUSE/ADAPT: claims.py (import paths only) and the classify_license_text
+      narrow slice, both pulled. content_presence.py (134), deferrals.py (905), links/rules.py
+      (133), registry.py (2,731) remain PENDING_REVIEW, unevaluated -- see next_step."
     reason: >
-      claims.py and deferrals.py look the most load-bearing of the five against this repository's
-      own still-valid outcome requirements (docs/MISSION_AUTHORITY.md: "every claim traces to a
-      verified fact with a SUPPORTED/CONTRADICTED/UNVERIFIED disposition" and "material detail
-      whose place cannot be determined fails closed... rather than being dumped into the
-      document") -- deferrals.py in particular is the direct dependency the dispositions.py test
-      suite already names as missing (review_deferrals, recover_uncited_prose_omits -- see the
-      references.py/dispositions.py refusal-half entry above's own test-coverage note). registry.py
-      at 2,731 lines is disproportionately large for a module this manifest has so far only ever
-      needed one list out of (narration_patterns) -- worth confirming whether the rest is a
-      genuinely separate concern (e.g. the old repo's own validator registry/dispatch, which
-      mission §1/§3 already says not to reuse verbatim given the Oct 20 blind spot) before reading
-      it in full.
-    target_module: not yet planned -- needs a read first.
+      Directly closes a real, still-valid outcome requirement (docs/MISSION_AUTHORITY.md:
+      "every claim traces to a verified fact with a SUPPORTED/CONTRADICTED/UNVERIFIED
+      disposition") with zero new infrastructure needed -- unlike the independent-reviewer gap,
+      this module is genuinely a bounded, single-pass port, confirmed by actually reading it in
+      full rather than estimating from its line count alone.
+    target_module: src/repo_presenter/readme/validation/claims.py,
+      src/repo_presenter/readme/evidence/facts/license_text.py (both present)
+    smallest_first_integration_test: >
+      tests/readme/validation/test_claims.py (58, parametrized) + tests/readme/evidence/facts/
+      test_license_text.py (3) -- all green. Not yet wired into any live checks= callback in
+      either lane's orchestration scripts -- ported and tested, not yet integrated into a
+      running cascade (same honest boundary this manifest already uses elsewhere, e.g. the
+      references.py/dispositions.py refusal-half entry above).
+    portfolio_consumers: both lanes, every candidate, once wired into a live checks= callback
+      (not yet decided which stage -- Lane L's correction pipeline, or Lane R's reconciliation/
+      authoring checks -- both are plausible wiring points and the choice has not been made).
+    invalidation_impact: none yet -- ported and tested, not called from any live pipeline path.
     next_step: >
-      Read claims.py and deferrals.py first (smaller, more clearly load-bearing); confirm whether
-      either closes real gaps this repository's own dispositions.py refusal/repair half left
-      open (its own test file explicitly could not port one old test for exactly this reason).
-      content_presence.py and links/rules.py are smaller and lower priority. registry.py: skim
-      its module docstring and top-level structure only, to decide whether a full read is
-      warranted, before committing more time -- do not read 2,731 lines speculatively.
-    portfolio_consumers: both lanes, every candidate, once pulled.
-    invalidation_impact: none yet -- not pulled.
+      content_presence.py and links/rules.py are small and lower priority. deferrals.py (905
+      lines) is the direct dependency the dispositions.py test suite already names as missing
+      (review_deferrals, recover_uncited_prose_omits) -- read next. registry.py (2,731 lines)
+      remains disproportionately large for a module this manifest has so far only ever needed
+      one list out of (narration_patterns, already extracted as text_gate.py) -- skim its module
+      docstring and top-level structure only before deciding whether a full read is warranted;
+      do not read 2,731 lines speculatively. Separately: decide where claims.py itself gets
+      wired into a live checks= callback before it affects any real candidate.
+    portfolio_consumers_PENDING: both lanes, every candidate, once the remaining four files are
+      pulled.
+    invalidation_impact_PENDING: none yet -- content_presence.py/deferrals.py/links/rules.py/
+      registry.py not pulled.
 
   - component: "Safe git clone + source snapshot (NOT yet ported): core/git_safety/{clone.py
       (251), git.py (85), hooks.py (33), neuter.py (17), verify.py (64)}; core/registry/{sandbox.py
