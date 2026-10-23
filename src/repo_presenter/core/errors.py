@@ -51,3 +51,14 @@ class NotAllowlistedError(PresenterError):
     """
 
     exit_code = 3
+
+
+class GitSafetyError(PresenterError):
+    """A clone could not be made, pinned, or proven push-disabled; analysis never starts.
+
+    Ported (ADD, 2026-10-23) alongside ``core/git_safety/clone.py``. Drafted once before, on
+    the day ``core/git_safety/git.py`` was pulled, then reverted because git.py itself never
+    raises it -- only clone.py does. Re-added now that clone.py is actually being pulled.
+    """
+
+    exit_code = 3

@@ -1,0 +1,1022 @@
+"""Stage S11: targeted repair - one typed defect, its causal stage, one attempt per fingerprint.
+
+A blocking validation failure or a rejecting review finding becomes a defect routed to the stage
+that caused it (docs/STATE_MACHINE.md section 8): S3 investigation, S4 reconciliation, S5
+planning, or S6 authoring. Render and coherence defects are authoring defects, because only the
+units change. A finding that blames the evidence (S2) is repairable only when the evidence it
+cites exists and is SUPPORTED and the section is LLM-owned - then the disagreement is in how the
+section used the evidence, an S6 matter; otherwise extraction is reopened, which without a source
+or extractor change yields the same facts, and the finding is recorded as advisory. A defect in a
+deterministic section is advisory too: those blocks change only when their facts change. A finding
+whose quote is a preserved or moved unit's own placed text is routed to S4 regardless of its
+claimed causal stage, recorded ``misrouted``: authoring never placed that text and cannot revise
+it (RC-04, RESEARCH_AND_GUIDELINES.md 27.2 RC4/SW4, 2026-09-08).
+
+The fingerprint names the target - source, section, stage, criterion or check - so two findings
+that would be repaired the same way are equivalent. repairs.json records every attempt; a second
+equivalent failure is reported, never retried, and the mechanism must change before another ask.
+
+Ported (REUSE, verbatim apart from the import path) from the old repository-presenter project's
+``components/readme/repair/targeted.py``, 2026-10-23, found genuinely bounded and self-contained
+by a research fork (every import confirmed present under the same names, independently
+double-checked before porting). Its own sibling, ``repair/rounds.py`` (the S3-S10 orchestrator
+that produces the validation.json/review.json this module classifies), is NOT ported -- it
+cascades into the still-unported independent reviewer (readme/review/independent/review.py,
+2,996 lines, BLOCKED_NEEDS_SCOPING) and the BC-01..BC-12 validator dispatch (readme/validation/
+registry.py, already recorded as not a port candidate). This module is therefore available --
+Defect/review_defects/validation_defects/repair_packet/repair_checks all work today against
+hand-built or future defect-producer output -- but nothing in this repository yet calls it:
+there is still no live finding-producer (reviewer or validator) wired into any Lane R cascade.
+"""
+
+from __future__ import annotations
+
+import copy
+import json
+import re
+from collections.abc import Callable, Collection, Mapping, Sequence
+from dataclasses import dataclass, field, replace
+from pathlib import Path
+from typing import Any
+
+from jsonschema import Draft202012Validator
+
+from repo_presenter.readme.composition.authoring import uncarried_units
+from repo_presenter.readme.composition.renderer import (
+    example_block_visible_lines,
+)
+from repo_presenter.core.examples import printed_example
+from repo_presenter.core.facts import FACT_KINDS, FactsDocument, bounded_records
+from repo_presenter.core.llm.binding import binding_errors, merge_partial_units
+from repo_presenter.core.llm.jobs import schema_error_lines
+from repo_presenter.core.llm.ledger import canonical_hash
+from repo_presenter.core.llm.prompts import LoadedManifest
+from repo_presenter.core.registry.models import RegistryEntry
+
+REPAIRS_FILENAME = "repairs.json"
+MAX_ROUNDS = 3
+STAGE_JOBS: dict[str, str] = {
+    "S3": "repository_investigation",
+    "S4": "source_reconciliation",
+    "S5": "presentation_planning",
+    "S6": "section_authoring",
+}
+STATE_STAGES: dict[str, str] = {
+    "INVESTIGATING": "S3",
+    "RECONCILING": "S4",
+    "PLANNING": "S5",
+    "COMPOSING": "S6",
+}
+_COMPOSITION_STAGES = frozenset({"S6", "S7", "S8"})
+EVIDENCE_REASON = (
+    "evidence defect: extraction reopens only when the source or the extractor changes, and "
+    "neither has"
+)
+
+
+@dataclass(frozen=True)
+class Defect:
+    """One typed defect and where the loop may act on it."""
+
+    fingerprint: str
+    source: str
+    label: str
+    section_id: str | None
+    stage: str | None
+    record: dict[str, Any]
+    reason: str | None = None
+
+    @property
+    def repairable(self) -> bool:
+        return self.stage is not None
+
+
+@dataclass
+class SlotSetProbe:
+    """Whether a repair's own reply would change the plan's slot set.
+
+    The plan owns the slot set: S6's per-task schema requires exactly the slots the plan assigned,
+    so a revision that adds, drops, or re-chooses one is a planning decision by construction. The
+    escalation reads this comparison of two sets of slot names - the plan's, and the revision's -
+    and never the rejection's prose (docs/RESEARCH_AND_GUIDELINES.md section 27.2, the 2026-09-05
+    decision; RC8's rule that routing reads fields).
+
+    One probe instance is shared across every attempt a repair call makes (``repair_defect`` in
+    rounds.py builds it once and passes the same object to every ``checks`` invocation, reading
+    ``conflicts`` only after every attempt is exhausted), so ``conflicts`` latches the first real
+    conflict any attempt observed rather than recomputing from whichever reply happened to arrive
+    last (G4-W17 arrival item 80, lane E E13: on BarCode-Python attempt 1 correctly dropped three
+    slots per a legitimate planning decision - conflicts True - but attempt 2 complied by emptying
+    those slots' text instead, keeping the plan's own slot set and tripping ``minLength``; with
+    the old last-reply-only comparison that second, non-conflicting ``returned`` overwrote the
+    first, so the post-``JobError`` read in rounds.py saw no conflict and recorded the finding
+    unrepairable instead of escalating the correctly-routed planning decision attempt 1 found).
+    """
+
+    required: frozenset[str]
+    # The fact-selection half of the same planning decision (2026-10-04, aspose-font-foss/
+    # Aspose.Font-FOSS-for-Python, S6 finding F05-F08): the plan binds each slot to a fact set,
+    # and a repair whose correct wording cites a SUPPORTED fact outside its slot's set cannot be
+    # fixed at S6 - the plan chose the slot's facts. ``fact_sets`` is the plan's own per-slot
+    # binding, ``fact_universe`` the SUPPORTED fact IDs, ``neutral_facts`` the identity/package
+    # facts that belong to no slot. Unknown or unsupported IDs are not a planning signal and
+    # stay plain rejections.
+    fact_sets: Mapping[str, Collection[str]] = field(default_factory=dict, repr=False)
+    fact_universe: frozenset[str] = field(default_factory=frozenset, repr=False)
+    neutral_facts: frozenset[str] = field(default_factory=frozenset, repr=False)
+    _returned: frozenset[str] | None = field(default=None, repr=False)
+    _conflicted: bool = field(default=False, repr=False)
+    _fact_refs: frozenset[str] = field(default_factory=frozenset, repr=False)
+
+    @property
+    def returned(self) -> frozenset[str] | None:
+        return self._returned
+
+    @returned.setter
+    def returned(self, value: frozenset[str]) -> None:
+        self._returned = value
+        if value != self.required:
+            self._conflicted = True
+
+    def observe_facts(self, units: Sequence[Any]) -> frozenset[str]:
+        """Latch every SUPPORTED, non-neutral fact a reply's unit cites outside its own slot's
+        planned set; returns this reply's offending IDs. An accepted revision can never carry
+        one (``unit_checks`` rejects it), so this only ever speaks to a repair that failed."""
+        if not self.fact_sets:
+            return frozenset()
+        outside: set[str] = set()
+        for unit in units:
+            if not isinstance(unit, dict):
+                continue
+            bound = self.fact_sets.get(str(unit.get("slot")))
+            if bound is None:
+                continue
+            for fact_id in unit.get("fact_ids") or []:
+                if (
+                    fact_id in self.fact_universe
+                    and fact_id not in self.neutral_facts
+                    and fact_id not in bound
+                ):
+                    outside.add(fact_id)
+        self._fact_refs = self._fact_refs | frozenset(outside)
+        return frozenset(outside)
+
+    @property
+    def fact_conflicts(self) -> frozenset[str]:
+        return self._fact_refs
+
+    @property
+    def conflicts(self) -> bool:
+        return self._conflicted or bool(self._fact_refs)
+
+
+def defect_fingerprint(
+    source: str, section: str | None, stage: str | None, criterion: str, context: str = ""
+) -> str:
+    """Two defects the loop would repair the same way share a fingerprint. ``context`` is the
+    judge's own identity - the reviewer prompt's hash or the validator version - so a changed
+    mechanism permits a new attempt, as the contract requires after a second failure."""
+    return canonical_hash(
+        {
+            "source": source,
+            "section": section,
+            "stage": stage,
+            "criterion": criterion,
+            "context": context,
+        }
+    )[:24]
+
+
+def review_defects(
+    review: dict[str, Any],
+    facts: FactsDocument,
+    llm_sections: set[str],
+    repairer: str = "",
+    placed: Mapping[str, list[str]] | None = None,
+) -> list[Defect]:
+    """The review's blocking findings routed to the stage a repair may revise; ``repairer`` is
+    the repair prompt's hash, part of the fingerprint like the reviewer's own.
+
+    ``placed`` is `composition/placement.py`'s own ``placed_texts()`` output (destination section
+    to the verbatim texts it renders) for this round, when the caller has it. Before trusting a
+    finding's own ``causal_stage``, its quote is checked against that section's placed texts: a
+    match means the cited text is a preserved or moved unit `section_authoring` never wrote and
+    cannot revise, so the finding cannot be an authoring (S6) defect regardless of what
+    ``causal_stage`` claims - routed to S4 (`source_reconciliation`, which made the placement's
+    disposition) instead, and recorded ``misrouted: True`` (RC-04, RESEARCH_AND_GUIDELINES.md
+    27.2 RC4/SW4, 2026-09-08: two real candidates - Aspose.Email Python's `api_reference`
+    duplication, Aspose.3D for Java's F08 - each burned their one repair attempt on authoring
+    revising units it had never placed and could not touch, since the model-guessed
+    ``causal_stage`` was the only signal ever trusted).
+
+    A finding ``review_document`` narrowed - one whose ``absent`` claims the candidate partly
+    refuted, recorded as ``absent_refuted``/``absent_invented`` beside ``absent_remaining`` - is
+    handed to the repair with ``absent`` reduced to the remainder and the reviewer's own list
+    kept as ``absent_as_returned`` (G4-W17 arrival item 64, lane B LANE-B-R3-F3: Aspose.PDF for
+    C++'s F10 named three settled claims in its text, quote and repair instruction and two real
+    gaps nowhere, so the repair was handed work already done and the failure re-raised). The
+    fingerprint is the target and does not move.
+    """
+    context = f"{review.get('reviewer', {}).get('prompt_sha256', '')}|{repairer}"
+    placed = placed or {}
+    defects: list[Defect] = []
+    for finding in review.get("findings", []):
+        section = str(finding.get("section_id") or "") or None
+        named = str(finding.get("causal_stage") or "")
+        criterion = str(finding.get("criterion") or "")
+        quote = str(finding.get("quote") or "")
+        stage: str | None = "S6" if named in _COMPOSITION_STAGES else named
+        reason: str | None = None
+        misrouted = False
+        placed_here = placed.get(section, []) if section is not None else []
+        if quote and any(quote in text for text in placed_here):
+            stage, misrouted = "S4", True
+        elif named == "S2":
+            # In an LLM-authored section the claim either misused evidence that exists or
+            # asserts what no fact supports; both are fixed by revising the units. Only a
+            # deterministic section's content follows the facts themselves.
+            if section in llm_sections:
+                stage = "S6"
+            else:
+                stage, reason = None, EVIDENCE_REASON
+        if stage == "S6" and section not in llm_sections:
+            stage, reason = (
+                None,
+                (f"section {section} is deterministic; its blocks change only when facts change"),
+            )
+        if stage is not None and stage not in STAGE_JOBS:
+            stage, reason = None, f"stage {named} is not repairable by revision"
+        record = dict(finding)
+        if misrouted:
+            record["misrouted"] = True
+        remaining = finding.get("absent_remaining")
+        if remaining is not None:
+            record["absent_as_returned"] = list(finding.get("absent", []))
+            record["absent"] = list(remaining)
+        omitted = finding.get("omission_remaining")
+        if omitted is not None and isinstance(finding.get("omission"), dict):
+            # The typed omission claim, narrowed the same way: ids/phrases the section already
+            # renders (or that nothing may restore) are not handed to the repair as work.
+            record["omission_as_returned"] = dict(finding["omission"])
+            record["omission"] = {**finding["omission"], **omitted}
+        defects.append(
+            Defect(
+                defect_fingerprint("review", section, stage or named, criterion, context),
+                "review",
+                str(finding.get("id", "?")),
+                section,
+                stage,
+                record,
+                reason,
+            )
+        )
+    return defects
+
+
+def validation_defects(
+    validation: dict[str, Any], llm_sections: set[str], repairer: str = ""
+) -> list[Defect]:
+    """The failing blocking checks routed to the stage a repair may revise.
+
+    A COMPOSING check whose failures name more than one LLM-owned section is more than one
+    repairable target: each section's own repair is judged by that section's own checks, so this
+    returns one Defect per distinct (check, section) pair, each with its own fingerprint and its
+    own ``failures`` narrowed to that section alone (G4-W17 arrival item 87, lane B/primary-loop
+    LANE-B-R4-F1: PDF-Cpp's BC-08 raised three failures across two LLM-owned sections -
+    additional_examples and development_testing - and the prior shape named only the first
+    section as ``section = named[0] if named else None``, so development_testing's identical
+    failure was structurally unrepairable by construction and the transaction failed closed on
+    it once the first section was fixed).
+    """
+    defects: list[Defect] = []
+    context = f"{validation.get('validator_version', '')}|{repairer}"
+    for check in validation.get("checks", []):
+        if check.get("verdict") != "FAIL":
+            continue
+        state = check.get("causal_stage")
+        stage = STATE_STAGES.get(str(state))
+        details = list(check.get("details", []))
+        failures = list(check.get("failures", []))
+        sections: list[str | None] = [None]
+        reason: str | None = None
+        if stage == "S6":
+            named = list(
+                dict.fromkeys(
+                    str(failure.get("section_id"))
+                    for failure in failures
+                    if failure.get("section_id") in llm_sections
+                )
+            )
+            if named:
+                sections = list(named)
+            else:
+                stage, reason = None, "no failing check names an LLM-owned section"
+        elif stage is None:
+            reason = f"{state or 'the bundle'} is not repairable by revision"
+        for section in sections:
+            own_failures = (
+                failures
+                if section is None
+                else [f for f in failures if f.get("section_id") == section]
+            )
+            record = {
+                "id": check.get("id"),
+                "name": check.get("name"),
+                "causal_stage": state,
+                "details": details,
+                "failures": own_failures,
+            }
+            defects.append(
+                Defect(
+                    defect_fingerprint(
+                        "validation", section, stage or str(state), str(check.get("id")), context
+                    ),
+                    "validation",
+                    str(check.get("id", "?")),
+                    section,
+                    stage,
+                    record,
+                    reason,
+                )
+            )
+    return defects
+
+
+def merge_equivalent(defects: Sequence[Defect]) -> list[Defect]:
+    """One defect per fingerprint, carrying every equivalent finding of the round, so the one
+    repair the fingerprint allows sees the whole set rather than the first alone."""
+    merged: dict[str, Defect] = {}
+    for defect in defects:
+        first = merged.get(defect.fingerprint)
+        if first is None:
+            merged[defect.fingerprint] = defect
+            continue
+        equivalent = [*first.record.get("equivalent_findings", []), defect.record]
+        merged[defect.fingerprint] = replace(
+            first,
+            label=f"{first.label}+{defect.label}",
+            record={**first.record, "equivalent_findings": equivalent},
+        )
+    return list(merged.values())
+
+
+# The version of the repair behaviour a ledger entry was made under: which levers exist, what a
+# lever clears, how a replacement is judged. The ledger is scoped to a composition (revision,
+# facts, prompts) but code is not in that id, so a new or corrected repair lever on the same
+# facts and prompts found its defect already attempted and re-raised it without trying the fix
+# (aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript, 2026-10-05). Bump this when repair behaviour
+# changes in a way that could resolve a defect an earlier version could not; an attempt recorded
+# under another value no longer counts, so the changed code gets its one attempt. "1": the first
+# version to record it; entries written before it carry no value and keep counting exactly as
+# they did, so a sealed bundle's repairs.json is read and rewritten byte for byte.
+REPAIR_LOGIC_VERSION = "1"
+
+
+@dataclass
+class RepairLedger:
+    """repairs.json: every attempt by fingerprint; a second equivalent failure is never retried.
+
+    The attempts belong to the composition they were made against, named by ``composition`` -
+    the revision, the facts, and the prompt set it was built from (``composition_id``). Every
+    round of one composition sees that value and so does a replay, because a repair rewrites a
+    stored response and never those inputs. A transaction outlives its compositions, though, and
+    a fingerprint is only a section, a stage and a criterion: without the scope, the first round
+    of a rebuilt composition found its defects already attempted and reported every one as
+    re-raised without repairing any (measured on the canary 2026-09-05: seven findings, nineteen
+    re-raised, no repair attempted). A rebuilt composition is the changed evidence the contract's
+    one-attempt rule asks for (docs/README_CONTRACT.md section 6).
+    """
+
+    path: Path
+    attempts: dict[str, dict[str, Any]] = field(default_factory=dict)
+    composition: str = ""
+
+    def __post_init__(self) -> None:
+        if not self.path.is_file():
+            return
+        stored = json.loads(self.path.read_text(encoding="utf-8"))
+        if self.composition and stored.get("composition", "") != self.composition:
+            return  # another composition's attempts; this one starts with none
+        self.attempts = dict(stored.get("attempts", {}))
+
+    def attempted(self, fingerprint: str) -> bool:
+        """Whether this fingerprint's one attempt has been spent under the current repair logic.
+
+        An entry with no ``repair_logic_version`` is legacy and counts, as it always did. An entry
+        recorded under another version does not: the code that would repair it has changed.
+        """
+        entry = self.attempts.get(fingerprint)
+        if entry is None:
+            return False
+        recorded = entry.get("repair_logic_version")
+        return recorded is None or recorded == REPAIR_LOGIC_VERSION
+
+    def record(
+        self,
+        defect: Defect,
+        outcome: str,
+        request_sha256: str | None = None,
+        changes: Sequence[dict[str, Any]] = (),
+    ) -> None:
+        self.attempts[defect.fingerprint] = {
+            "source": defect.source,
+            "label": defect.label,
+            "section_id": defect.section_id,
+            "stage": defect.stage,
+            "outcome": outcome,
+            "reason": defect.reason,
+            "request_sha256": request_sha256,
+            "changes": list(changes),
+            # Distinct from "unrepairable": this finding never had a chance - its own quote is a
+            # preserved/moved unit's text, which the stage it was routed to (S4, not whatever the
+            # reviewer's causal_stage guessed) is now correctly targeting instead (RC-04,
+            # RESEARCH_AND_GUIDELINES.md 27.2 RC4/SW4, 2026-09-08). Absent or False otherwise.
+            "misrouted": bool(defect.record.get("misrouted", False)),
+            "repair_logic_version": REPAIR_LOGIC_VERSION,
+        }
+        self.write()
+
+    def note_re_raised(self, defect: Defect) -> None:
+        """A defect re-raised after its fingerprint's one attempt: recorded, never retried, and
+        never demoted on that account alone (docs/RESEARCH_AND_GUIDELINES.md section 27.5 D5) -
+        it blocks, and the transaction reports it rather than trying a third time."""
+        attempt = self.attempts[defect.fingerprint]
+        re_raised = list(attempt.get("re_raised", []))
+        if defect.label not in re_raised:
+            re_raised.append(defect.label)
+        attempt["re_raised"] = re_raised
+        self.write()
+
+    def write(self) -> None:
+        document = {
+            "schema_version": 1,
+            "composition": self.composition,
+            "attempts": self.attempts,
+        }
+        data = json.dumps(document, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.path.write_bytes(data.encode("utf-8"))
+
+    def summary(self) -> str:
+        repaired = sorted(
+            f"{a['label']} {a['stage']}{' ' + a['section_id'] if a['section_id'] else ''}"
+            for a in self.attempts.values()
+            if a["outcome"] == "repaired"
+        )
+        advisory = sum(1 for a in self.attempts.values() if a["outcome"] == "unrepairable")
+        escalated = sum(1 for a in self.attempts.values() if a["outcome"] == "escalated")
+        re_raised = sum(len(a.get("re_raised", [])) for a in self.attempts.values())
+        # .get(..., False), not ["misrouted"]: a repairs.json written before RC-04 has no such
+        # key on its older attempts, and reading one must not raise.
+        misrouted = sum(1 for a in self.attempts.values() if a.get("misrouted", False))
+        parts = [f"{len(repaired)} repaired" + (f" ({', '.join(repaired)})" if repaired else "")]
+        if escalated:
+            parts.append(f"{escalated} escalated to a plan-level repair")
+        parts.append(f"{advisory} unrepairable recorded advisory")
+        if misrouted:
+            parts.append(f"{misrouted} misrouted, now targeting the causing stage")
+        if re_raised:
+            # Never "recorded advisory": a re-raised defect blocks and the transaction reports
+            # it (section 27.5 D5), the same outcome an unrepairable one on its first attempt
+            # does not get.
+            parts.append(f"{re_raised} re-raised after repair; the equivalent failure stands")
+        return ", ".join(parts)
+
+
+# G4-W17 (docs/DECISION_LOG.md 2026-09-17 10:24 UTC, 2026-09-27 05:14 UTC): a BC-07 visible-line-
+# budget repair at S5 (presentation_planning) had no signal for which of the plan's own fields are
+# actually large, and the packet's `facts` carry every SUPPORTED record with no size hint. Measured
+# live on aspose-font-foss/Aspose.Font-FOSS-for-Python: the plan's own `flagship_example_id` alone
+# rendered 127 visible lines (a 122-line verified example plus its own heading and fences) against
+# a 12-line overage - by far the largest visible content this shell ever renders outside a
+# `<details>` block, and README_CONTRACT.md rows 10/12 make both this field and
+# `second_quick_start_example_id` explicitly optional ("when the plan selects one"). Neither
+# field's own example is lost by clearing it - the same verified content still renders inside the
+# section's existing collapsed block (`additional_example_ids`) or is simply not duplicated a
+# second time in Quick Start - so this never asks for content to be deleted or invented, only for
+# an already-optional slot to go unselected. The one repair attempt a fingerprint gets is otherwise
+# spent guessing between many small prose trims that rarely add up to the deficit
+# (RESEARCH_AND_GUIDELINES.md's own repeated observation of this class); naming the exact, measured
+# cost of the two real levers lets a single attempt succeed instead.
+#
+# The overage and budget are read as plain integers the caller (``rounds.py``) computes straight
+# from the rendered README and the policy's own constant (``composition/renderer.py::line_counts``,
+# never string-parsed from the check's own ``detail`` prose) - this module is a routing-held file
+# (tests/test_routing_fields.py) and a decision may never be read back out of a `details`/`detail`
+# string.
+VISIBLE_LINE_LEVER_FIELDS = ("flagship_example_id", "second_quick_start_example_id")
+
+
+def visible_line_budget_hint(
+    plan: Mapping[str, Any], facts: FactsDocument, visible: int, budget: int
+) -> dict[str, Any] | None:
+    """The exact visible-line cost of each optional plan field that can close a BC-07
+    visible-line-budget overage without deleting or fabricating anything, or ``None`` when the
+    plan carries neither lever field. ``visible``/``budget`` are the caller's own already-measured
+    integers - never derived here from any check's prose."""
+    by_id = {fact.id: fact for fact in facts.facts}
+    additional = list(plan.get("additional_example_ids") or [])
+    levers: dict[str, int] = {}
+    for field_name in VISIBLE_LINE_LEVER_FIELDS:
+        value = plan.get(field_name)
+        fact = by_id.get(value) if isinstance(value, str) and value else None
+        if fact is None:
+            continue
+        cost = example_block_visible_lines(printed_example(fact))
+        if field_name == "flagship_example_id" and additional == [value]:
+            # composition/renderer.py's own additional_examples branch: when the flagship is the
+            # plan's ONLY additional example, clearing it also collapses the <details> wrapper
+            # away entirely (nothing is left to hold it open) rather than moving the same content
+            # into an already-open one - one visible line less than the general formula (measured
+            # directly, tests/components/readme/composition/test_renderer.py). Every other field,
+            # and this field whenever more than one additional example exists, matches the
+            # formula exactly.
+            cost -= 1
+        levers[field_name] = cost
+    if not levers:
+        return None
+    return {
+        "visible_lines_over_budget": max(visible - budget, 0),
+        "optional_plan_fields_and_their_visible_line_cost_if_cleared": levers,
+    }
+
+
+def repair_packet(
+    entry: RegistryEntry,
+    defect: Defect,
+    stage_output: dict[str, Any],
+    facts: FactsDocument,
+    preserve: Sequence[str],
+    output_contract: dict[str, Any],
+    allowed: Collection[str] | None = None,
+    slot_facts: Mapping[str, Collection[str]] | None = None,
+    visible_line_budget: Mapping[str, Any] | None = None,
+    carried: Collection[str] = (),
+) -> dict[str, Any]:
+    """The packet for one repair call: the defect, the one artifact it may revise, its contract.
+
+    When the causal stage authored a section, ``allowed`` is that section's own fact set and the
+    packet carries only those records. The repair is judged by the section's checks, so a packet
+    holding the whole corpus asks the model to guess which part of it applies and rejects it for
+    guessing wrong: RESEARCH_AND_GUIDELINES.md section 27.2 RC1 measured 69 of 76 repair
+    rejections as citations outside the section's set, and the canary's own rejected replies
+    name that family and the UNRESOLVED-fact one it shares a cause with.
+
+    ``visible_line_budget`` is always present - required by the manifest's own packet field set
+    (``render_messages`` matches a packet against it exactly) - but is ``null`` unless the caller
+    passes one in: ``repair/rounds.py::repair_defect`` builds it with ``visible_line_budget_hint``
+    from the round's own rendered README and policy for a BC-07 visible-line-budget defect at S5 -
+    never derived here, or from any check's own ``detail`` prose (this module is a routing-held
+    file, tests/test_routing_fields.py).
+    """
+    kinds = [kind for kind in FACT_KINDS if kind != "inherited_unit"]
+    records = bounded_records(facts, kinds, ("SUPPORTED",))
+    if allowed is not None:
+        permitted = set(allowed)
+        records = [record for record in records if record["id"] in permitted]
+    records = [
+        *records,
+        *_named_inherited_units(defect, facts),
+        *_carried_inherited_units(facts, carried),
+    ]
+    defect_record: dict[str, Any] = {
+        **defect.record,
+        "fingerprint": defect.fingerprint,
+        "source": defect.source,
+    }
+    # The must-carry units this section still neither cites nor omits, named by ID: a repair that
+    # only sees their facts can cite them without ever stating their substance. Present only when
+    # something is still missing, so every other repair packet is byte-identical.
+    still_missing = uncarried_units(stage_output, carried)
+    if still_missing:
+        defect_record["uncarried_superseded_units"] = still_missing
+    packet: dict[str, Any] = {
+        "repository": entry.repository,
+        "defect": defect_record,
+        "causal_stage": defect.stage,
+        "stage_output": stage_output,
+        "facts": records,
+        "slot_facts": {slot: sorted(ids) for slot, ids in sorted((slot_facts or {}).items())},
+        "preserve": list(preserve),
+        "output_contract": output_contract,
+        "visible_line_budget": dict(visible_line_budget)
+        if visible_line_budget is not None
+        else None,
+        "omission_carriers": omission_carriers(defect, stage_output, facts, output_contract),
+    }
+    return packet
+
+
+# Which plan fields can carry content into which section, and the fact kind each takes. This is
+# the planning contract's own wiring (prompts/presentation_planning.yaml: additional_example_ids
+# exactly when additional_examples is included, api_hubs exactly when api_reference is, links to
+# the sections that list them) written once as a registry, so a new carrying field is a row here,
+# never a branch. A kind of ``None`` takes any SUPPORTED fact (a capability or limitation cites
+# whatever supports it).
+SECTION_PLAN_CARRIERS: Mapping[str, tuple[tuple[str, str | None], ...]] = {
+    "additional_examples": (("additional_example_ids", "example"),),
+    "quick_start": (
+        ("quick_start_example_id", "example"),
+        ("second_quick_start_example_id", "example"),
+    ),
+    "api_reference": (("api_hubs", "public_symbol"),),
+    "documentation_resources": (("links", "link_target"),),
+    "navigation": (("links", "link_target"),),
+    "key_capabilities": (("core_capabilities", None),),
+    "scope_limitations": (("material_limitations", None),),
+}
+_BACKTICKED = re.compile(r"`([^`\n]+)`")
+_MIN_QUOTE_LENGTH = 8
+_CARRIER_FACTS_PER_ITEM = 5
+_CARRIER_TEXT_BOUND = 200
+
+
+def omission_carriers(
+    defect: Defect,
+    stage_output: Mapping[str, Any],
+    facts: FactsDocument,
+    output_contract: Mapping[str, Any],
+) -> dict[str, Any] | None:
+    """For an upheld omission escalated to S5: what is missing and which plan fields can carry it.
+
+    Measured on Font-FOSS-for-Python (2026-10-05): the S5 repair of an upheld omission was handed
+    the missing phrases but not where a plan can put them, and returned the plan byte-identical
+    with a ledger entry claiming a change that never happened. Deterministic code answers the
+    mechanical half here - from the typed omission the review already narrowed to its remainder
+    (``omission_remaining``), the facts, and the planning contract - and the model still authors
+    the revised plan. Nothing is inserted into the plan, and no check is relaxed.
+
+    Each remaining id or phrase is resolved to the SUPPORTED facts it names (an exact id, a
+    backticked identifier that is a fact's value, or a phrase inside an inherited unit's text),
+    then to the one plan field of the finding's own section that takes that kind of fact, and
+    marked ``already_in_plan`` when the plan already holds it. A phrase that resolves only to
+    inherited text has no plan field: the reconciliation's disposition places it, and the packet
+    says so rather than inviting an invention. Returns ``None`` for any defect that is not an
+    S5 omission with something still missing.
+    """
+    omission = defect.record.get("omission")
+    if defect.stage != "S5" or not isinstance(omission, Mapping):
+        return None
+    ids = [str(item) for item in omission.get("missing_ids") or []]
+    quotes = [str(item) for item in omission.get("missing_quotes") or []]
+    section = str(omission.get("section_id") or defect.section_id or "")
+    if not section or not (ids or quotes):
+        return None
+    properties = output_contract.get("properties")
+    declared = set(properties) if isinstance(properties, Mapping) else None
+    carriers = [
+        (field_name, kind)
+        for field_name, kind in SECTION_PLAN_CARRIERS.get(section, ())
+        if declared is None or field_name in declared
+    ]
+    supported = {fact.id: fact for fact in facts.facts if fact.polarity == "SUPPORTED"}
+    by_value: dict[str, list[str]] = {}
+    inherited: list[tuple[str, str]] = []
+    for fact in supported.values():
+        if fact.kind == "inherited_unit":
+            inherited.append((fact.id, " ".join(fact.value.split())))
+        else:
+            by_value.setdefault(fact.value, []).append(fact.id)
+    items: list[dict[str, Any]] = []
+    for missing in [*ids, *quotes]:
+        names = _facts_named_by(missing, supported, by_value, inherited)
+        kinds = sorted({supported[name].kind for name in names})
+        field_name = next(
+            (
+                name
+                for name, kind in carriers
+                if any(
+                    supported[fact_id].kind != "inherited_unit"
+                    and (kind is None or supported[fact_id].kind == kind)
+                    for fact_id in names
+                )
+            ),
+            None,
+        )
+        held = json.dumps(stage_output.get(field_name)) if field_name else ""
+        items.append(
+            {
+                "missing": missing[:_CARRIER_TEXT_BOUND],
+                "fact_ids": names[:_CARRIER_FACTS_PER_ITEM],
+                "kinds": kinds,
+                "plan_field": field_name,
+                "already_in_plan": bool(names)
+                and field_name is not None
+                and all(f'"{fact_id}"' in held for fact_id in names[:_CARRIER_FACTS_PER_ITEM]),
+            }
+        )
+    return {
+        "section_id": section,
+        "plan_fields_for_section": [name for name, _ in carriers],
+        "upheld_missing": {
+            "ids": [item[:_CARRIER_TEXT_BOUND] for item in ids],
+            "quotes": [item[:_CARRIER_TEXT_BOUND] for item in quotes],
+        },
+        "items": items,
+    }
+
+
+def _facts_named_by(
+    missing: str,
+    supported: Mapping[str, Any],
+    by_value: Mapping[str, Sequence[str]],
+    inherited: Sequence[tuple[str, str]],
+) -> list[str]:
+    """The SUPPORTED fact IDs one missing id or phrase names, in a stable order."""
+    if missing in supported:
+        return [missing]
+    named: list[str] = []
+    for token in [missing.strip("` #"), *_BACKTICKED.findall(missing)]:
+        named.extend(by_value.get(token, ()))
+    if named:
+        return list(dict.fromkeys(named))
+    phrase = " ".join(missing.split())
+    if len(phrase) < _MIN_QUOTE_LENGTH:
+        return []
+    return [fact_id for fact_id, text in inherited if phrase in text]
+
+
+def _carried_inherited_units(
+    facts: FactsDocument, carried: Collection[str]
+) -> list[dict[str, str]]:
+    """The inherited_unit records a caller names as must-carry for the section being repaired -
+    only those IDs, never the rest of the corpus (RC1). The caller computes the set from the
+    reconciliation's own dispositions (composition/authoring.py ``carried_units``), never from
+    any finding's prose."""
+    wanted = set(carried)
+    if not wanted:
+        return []
+    return [
+        record
+        for record in bounded_records(facts, ["inherited_unit"], ("SUPPORTED",))
+        if record["id"] in wanted
+    ]
+
+
+def _named_inherited_units(defect: Defect, facts: FactsDocument) -> list[dict[str, str]]:
+    """The protected ``inherited_unit`` records the defect's own failures/details name - never
+    the whole inherited corpus.
+
+    ``repair_packet`` excludes every ``inherited_unit``-kind fact by default: RC1 measured 69 of
+    76 repair rejections as citations outside the target section's own fact set, so a packet
+    holding evidence the defect is not about invites the same guess-and-reject failure. A BC-08
+    protected-content defect's entire subject is a specific inherited_unit's own text, though -
+    its ``detail`` string is built from that exact fact ID (``validation/registry.py``'s
+    ``_check_protected``, ``f"{unit_id}: {disposition} keeps ..."``) - so the blanket exclusion
+    left it with no citable fact for the wording it is asked to restore (G4-W17 arrival item 88,
+    lane B/primary-loop LANE-B-R4-F2: on PDF-Cpp the four facts naming the missing command were
+    all inherited_unit-kind, and two different prompts on two different request hashes returned
+    the identical no-op - a property of the packet, not one reply's fluke). This widens the
+    exclusion only for the exact records the defect's own ``details``/``failures`` text already
+    names by exact fact-ID match, so a defect naming none carries none, same as before.
+    """
+    haystack = " ".join(
+        [
+            *(str(item) for item in defect.record.get("details", [])),
+            *(str(failure.get("detail", "")) for failure in defect.record.get("failures", [])),
+        ]
+    )
+    if not haystack:
+        return []
+    return [
+        record
+        for record in bounded_records(facts, ["inherited_unit"], ("SUPPORTED",))
+        if record["id"] in haystack
+    ]
+
+
+def repair_schema(
+    manifest: LoadedManifest, output_contract: dict[str, Any], *, bound_changes: bool = False
+) -> dict[str, Any]:
+    """The targeted_repair schema specialised for one call: ``revised_output`` constrained to the
+    causal stage's own output contract - the exact schema ``repair_checks`` already validates a
+    reply against post-hoc (``Draft202012Validator(output_contract)`` below).
+
+    G4-W17 arrival item 75 (lane F F18/F23, lane B LANE-B-W14R2-F1): the static manifest leaves
+    ``revised_output`` as a bare ``{"type": "object"}`` - no bound of any kind, for any causal
+    stage - so under constrained decoding a repair reply has no terminating condition until the
+    call's own token budget cuts it off mid-object, the one class of reply
+    ``core/llm/jobs.py`` cannot retry (a length-truncated reply is unrepairable by design). Since
+    ``output_contract`` is already what the reply is judged against after the fact, embedding it
+    here makes the decoder and the judge agree from the start instead of a schema-valid-but-later-
+    rejected reply wasting the one repair attempt a fingerprint gets. This is stage-agnostic: S3,
+    S4, S5, and S6 causal stages each supply their own contract, and section_authoring's own fix
+    (``maxLength`` on unit ``text``) carries through automatically when S6 is the causal stage.
+
+    ``bound_changes`` is for a repair whose ledger the code writes itself (a disposition patch,
+    ``reconciliation/patch.py``): the model's own ``changes`` are then one short entry that is
+    replaced by the derived ones, so the schema leaves it no room to spend the budget on them.
+    """
+    schema = copy.deepcopy(manifest.manifest.output.schema_)
+    schema["properties"]["revised_output"] = copy.deepcopy(output_contract)
+    if bound_changes:
+        changes = schema["properties"]["changes"]
+        changes["maxItems"] = 1
+        change = changes["items"]["properties"]
+        change["before"]["maxLength"] = change["after"]["maxLength"] = _BOUND_CHANGE_TEXT
+        change["fact_ids"] = {"type": "array", "maxItems": 0}
+    return schema
+
+
+# The longest ``before``/``after`` a bounded ``changes`` entry may carry: the model's entry is only
+# there to satisfy the manifest's ``minItems`` and is replaced by the derived ledger.
+_BOUND_CHANGE_TEXT = 160
+
+
+# item 93: a change's own "path" as the repair itself writes it - $.units[0].text,
+# additional_example_ids, material_limitations[2].fact_ids - a leading "$." is optional and
+# every other segment is a dict key or a "[N]" list index, exactly what repair_packet/the
+# targeted_repair prompt ask the model to report, never a full JSONPath expression.
+_PATH_SEGMENT = re.compile(r"\[(\d+)\]|([^.\[\]]+)")
+
+
+class _Unresolved:
+    """Sentinel: a change's own path did not resolve in the document it was read against - not
+    equal to any real JSON value, including ``None`` or an empty string."""
+
+
+_UNRESOLVED = _Unresolved()
+
+
+def _resolve_change_path(document: Any, path: str) -> Any:
+    """The value ``path`` names inside ``document``, or ``_UNRESOLVED`` when any segment fails to
+    resolve - never raises, since ``path`` is the repair's own free-text claim about where it
+    edited, not a schema-checked field (item 93).
+
+    PROPOSAL PGPY-06 (docs/DECISION_LOG.md, 2026-09-17 10:57 UTC), confirmed live measured on
+    Aspose.Words-FOSS-for-.NET's own first seal attempt (docs/DECISION_LOG.md, this fix's entry):
+    a leading ``"revised_output."`` token (or a bare ``"revised_output"``) is stripped the same
+    way a leading ``"$."`` already is. The model's own reply schema's one required top-level key
+    is literally ``revised_output`` (prompts/targeted_repair.yaml) - a reasonable reply spells its
+    own change path starting with that key, exactly as ``"$."`` is a reasonable, already-handled
+    JSONPath-style prefix. Both ``original`` and ``revised`` (``repair_checks``, this module, and
+    ``rounds.py``) are always the bare causal-stage object with no ``revised_output`` wrapper of
+    its own, so a path retaining this prefix never resolved against either side before this fix -
+    always ``_UNRESOLVED`` on both, comparing equal, so a real, textually different edit was
+    reported as an untruthful/uncorroborated ledger entry and refused. Stripping the correct
+    prefix can only let a genuine before/after difference become visible; it cannot manufacture
+    one where none exists, so this widens what a truthful ``changes[]`` entry may spell, never
+    what a false one may claim.
+    """
+    value: Any = document
+    trimmed = path.strip()
+    if trimmed.startswith("$."):
+        trimmed = trimmed[2:]
+    # Both prefixes are stripped in sequence, never as an if/elif: a JSONPath-style spelling of
+    # the reply's own key (`$.revised_output.units[3].text`) carries both, and stripping only the
+    # first left `revised_output` as a literal key that never resolves on either side.
+    if trimmed == "revised_output":
+        trimmed = ""
+    elif trimmed.startswith("revised_output."):
+        trimmed = trimmed[len("revised_output.") :]
+    for match in _PATH_SEGMENT.finditer(trimmed):
+        index, key = match.groups()
+        # A dotted list index (`units.0.text`) names the same element as `units[0].text`; the
+        # sealed repairs.json ledgers record it in sixteen accepted changes. Read as a key, it
+        # never resolves against a list, so the change is refused as untruthful.
+        if index is None and key is not None and key.isdigit() and isinstance(value, list):
+            index, key = key, None
+        if index is not None:
+            if not isinstance(value, list) or not 0 <= int(index) < len(value):
+                return _UNRESOLVED
+            value = value[int(index)]
+        else:
+            if not isinstance(value, dict) or key not in value:
+                return _UNRESOLVED
+            value = value[key]
+    return value
+
+
+def _uncorroborated_changes(
+    changes: Sequence[Mapping[str, Any]], original: Mapping[str, Any], revised: Mapping[str, Any]
+) -> list[str]:
+    """A ``changes[]`` entry claiming a value changed at its own ``path``, when the causal
+    stage's own stored input and this repair's revised output hold the identical value there
+    (item 93).
+
+    Measured on Font-Python's second run: the repair's ledger claimed ``additional_example_ids``
+    shrank 5 to 4, but the accepted final plan still carried all 5 - the one change that could
+    have closed the BC-07 length overage never happened, while an unrelated, purely additive
+    change (a capability title) is what actually shipped. `_refuse_noop` (rounds.py) already
+    refuses a revision proven identical to the causal stage's *whole* output; this catches the
+    narrower case a whole-object comparison cannot - a revision that differs somewhere, but whose
+    own ledger entry names a *different* path than where it actually changed anything. An entry
+    claiming no change at all (``before == after``) is not this check's concern.
+    """
+    errors: list[str] = []
+    for change in changes:
+        if not isinstance(change, dict):
+            continue
+        before, after = change.get("before"), change.get("after")
+        if before == after:
+            continue
+        path = str(change.get("path") or "")
+        if not path:
+            continue
+        actual_before = _resolve_change_path(original, path)
+        actual_after = _resolve_change_path(revised, path)
+        if actual_before == actual_after:
+            errors.append(
+                f"revised_output: change {change.get('id', '?')} claims {path!r} changed "
+                f"({before!r} to {after!r}), but the causal stage's own input and this revision "
+                "hold the identical value there"
+            )
+    return errors
+
+
+def repair_checks(
+    output: dict[str, Any],
+    defect: Defect,
+    output_contract: dict[str, Any],
+    binding: str,
+    facts: FactsDocument,
+    stage_checks: Callable[[dict[str, Any]], list[str]] | None = None,
+    slots: SlotSetProbe | None = None,
+    original: dict[str, Any] | None = None,
+    patch_contract: dict[str, Any] | None = None,
+    derive_changes: Callable[[dict[str, Any], dict[str, Any]], list[dict[str, Any]]] | None = None,
+) -> list[str]:
+    """Why the repair may not be used: it must target the defect, and the revised output must
+    satisfy the causal stage's own contract, binding, and checks exactly as a fresh reply would.
+
+    ``patch_contract`` is the narrower contract of a patch (``reconciliation/patch.py``): the
+    reply declares only the units at fault, so it is judged by that contract *before* it is merged
+    into ``original`` and the merged whole by ``output_contract``, binding and checks. With
+    ``derive_changes`` the ledger is what ``derive_changes(original, merged)`` says changed, not
+    what the reply claims: a model asked for its own ``changes`` named the unit's index in its
+    partial list and was refused for a path that does not exist in the stored batch (wave 4).
+
+    ``slots``, when a content stage gave one, records the slot set this reply would leave behind
+    and rejects a revision that changes it: the plan owns that set, so such a fix is a planning
+    decision the escalation routes to S5 rather than a revision this stage may make.
+
+    ``original``, the causal stage's own stored output before this repair, lets a ``unit_ids``-
+    bound reply (S4 reconciliation) declare only the units it actually revised: item 94's
+    ``merge_partial_units`` fills the rest in from ``original`` before anything below judges
+    completeness, so the merged, full object - not the reply's own partial one - is what schema,
+    binding, and the stage's own checks see, and what ends up stored. Every other binding has no
+    completeness notion for ``merge_partial_units`` to matter to.
+
+    ``original`` also lets every stage's own ``changes[]`` entries be checked for truthfulness
+    (item 93): each entry names a JSON path it claims changed, and if the value there is
+    identical in ``original`` and in the (possibly merged) revised output, the entry does not
+    corroborate what actually shipped and the revision is refused - `_refuse_noop` (rounds.py)
+    already refuses a revision proven identical to the causal stage's *whole* output, but a
+    revision that differs somewhere else while its ledger names an untouched path is not a
+    whole-object no-op and passed through unrefused before this.
+    """
+    errors: list[str] = []
+    if output.get("causal_stage") != defect.stage:
+        errors.append(f"causal_stage must be {defect.stage}; got {output.get('causal_stage')!r}")
+    if output.get("fingerprint") != defect.fingerprint:
+        errors.append(f"fingerprint must be the defect's own ({defect.fingerprint})")
+    revised = output.get("revised_output")
+    if not isinstance(revised, dict):
+        return [*errors, "revised_output must be the causal stage's output object"]
+    if patch_contract is not None:
+        errors.extend(
+            f"revised_output{line[1:]}"
+            for error in sorted(
+                Draft202012Validator(patch_contract).iter_errors(revised),
+                key=lambda error: error.json_path,
+            )
+            for line in schema_error_lines(error)
+        )
+    if binding == "unit_ids" and original is not None:
+        revised = merge_partial_units(revised, original)
+        output["revised_output"] = revised
+    validator = Draft202012Validator(output_contract)
+    errors.extend(
+        f"revised_output{error.json_path[1:]}: {error.message}"
+        for error in sorted(validator.iter_errors(revised), key=lambda error: error.json_path)
+    )
+    errors.extend(f"revised_output: {error}" for error in binding_errors(revised, facts, binding))
+    # Read before the stage's own checks, which normalise the units they judge.
+    if slots is not None:
+        returned = frozenset(
+            str(unit.get("slot"))
+            for unit in revised.get("units", [])
+            if isinstance(unit, dict) and unit.get("slot") is not None
+        )
+        slots.returned = returned
+        if slots.conflicts:
+            errors.append(
+                "revised_output: the plan owns this section's slot set "
+                f"({', '.join(sorted(slots.required))}); a revision filling "
+                f"{', '.join(sorted(returned)) or 'none of them'} would add, drop, or "
+                "re-choose a slot, which is a planning decision, not an authoring one"
+            )
+        outside_facts = slots.observe_facts(revised.get("units", []))
+        if outside_facts:
+            errors.append(
+                "revised_output: a unit cites "
+                f"{', '.join(sorted(outside_facts))}, outside its slot's planned facts; "
+                "choosing which facts a slot may cite is a planning decision, not an authoring one"
+            )
+    if original is not None and derive_changes is None:
+        errors.extend(_uncorroborated_changes(output.get("changes", []), original, revised))
+    if not errors and stage_checks is not None:
+        errors.extend(f"revised_output: {error}" for error in stage_checks(revised))
+    if not errors and original is not None and derive_changes is not None:
+        output["changes"] = derive_changes(original, revised)
+    return errors

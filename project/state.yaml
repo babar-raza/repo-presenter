@@ -1523,3 +1523,59 @@ next_ready_items:
       question) or larger, deliberately-deferred undertakings (clone.py's full workflow, the
       PR-effect layer for P3, portfolio monitoring for P4, metadata/visual-assets per idea.md's
       own explicit deferral).
+
+  - id: PORT_CLONE_PY
+    status: DONE
+    priority: medium
+    purpose: >
+      Owner directed: "check aspose.org, it is a reusable component. [o]ther wise check old
+      repo. I believe they both have figured this out" -- re-examine the previously-deferred
+      clone.py pinned/push-neutered workflow via a research fork before deciding.
+    done: >
+      aspose.org has no equivalent (its clone_cache.py solves a different problem -- a
+      persistent shallow-clone cache, not push-safety). Old repo's clone.py confirmed bounded:
+      one missing dependency (core/long_paths.py, 76 lines, pure stdlib), ported with its own
+      test suite. Re-added GitSafetyError to core/errors.py (previously drafted then reverted
+      when it was unneeded for git.py alone). Ported clone.py + hooks.py/neuter.py/verify.py
+      (already read in full earlier this session) with their real-git test suites (no network,
+      no mocks). 34 new tests, 1315/1315 passed, 11 skipped, full suite clean.
+      Evidence: migration/reuse-manifest.yaml's git-safety entry, extended in place 2026-10-23.
+    next_step: >
+      Decide whether to wire pinned_read_only_clone() into this session's own clone workflow --
+      every portfolio clone so far used plain `git clone`, with neither push-safety nor
+      race-safe revision pinning. Available now, not yet applied anywhere.
+
+  - id: PORT_TARGETED_REPAIR
+    status: DONE
+    priority: medium
+    purpose: >
+      A research fork investigated repair/rounds.py + repair/targeted.py (3,736 lines combined)
+      for BUILD_INDEPENDENT_REVIEWER's own open question: where does a REJECT finding go, given
+      this repository has no repair loop.
+    done: >
+      Clear split found: rounds.py is the full S3-S10 orchestrator (fires every stage, then
+      validate_candidate() + review_document(), then loops repair) -- NOT a port candidate, it
+      cascades into the still-unported independent reviewer and BC-01..BC-12 validator dispatch,
+      plus two wholly new unevaluated modules (reconciliation/patch.py, composition/
+      type_fallback.py). targeted.py is the opposite: the generic defect-classification +
+      repair-job-wiring layer (Defect, RepairLedger, defect_fingerprint, validation_defects,
+      review_defects, repair_packet/schema/checks, SlotSetProbe) with ZERO dependency back on
+      rounds.py and every one of its own imports independently re-verified present in this
+      repository under the same names. Ported (REUSE, import paths only) plus its test suite
+      (1,784 lines), dropping 2 of ~45 tests: one needs the unported review.py's
+      omission_defect, one reads the old repo's own sealed candidates/*/*/repairs.json fixtures
+      (never imported here -- FIXTURE_ONLY per docs/MISSION_AUTHORITY.md's critical fact).
+      43 passed (tests/readme/repair/test_targeted.py), 1358/1358 passed, 11 skipped, full
+      suite clean (confirmed after both this port and PORT_CLONE_PY's own port landed together).
+      Genuinely more capable than this repository's own duplicate-opening guard for the mild-
+      overlap cases its 70%-threshold scope limit lets through (review_defects' RC-04 logic
+      routes a quote matching PLACED text to S4, a freshly-authored duplicate sentence to a
+      real S6 repair call) -- but this lever is inert without a finding-producer: nothing in
+      this repository yet calls review_defects()/validation_defects() with anything to classify.
+    next_step: >
+      The real unblock for BUILD_INDEPENDENT_REVIEWER remains unchanged by this port: targeted.py
+      answers "how does a repair happen," not "what produces review.json/validation.json in the
+      first place." The fork's own suggestion -- scope v1 as a minimal custom defect-producer
+      calling validation_defects()/review_defects() against this repository's own lighter
+      checks= rejections, skipping the full BC-01..BC-12/review.py stack entirely -- is a third,
+      cheaper option alongside the two BUILD_INDEPENDENT_REVIEWER's own next_step already named.
