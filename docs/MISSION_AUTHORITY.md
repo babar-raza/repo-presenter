@@ -113,7 +113,7 @@ A README candidate (either lane) must, at minimum:
 
 | Named in old materials | Resolves to, in this repository |
 |---|---|
-| Old repo `plans/idea.md` | Still the product-requirements source (authority order #2 above); read, not copied |
+| Old repo `plans/idea.md` | Still the product-requirements source (authority order #2 above); copied verbatim into this repo's own `plans/idea.md` 2026-10-23 for local convenience (no authority change — the external original still wins on drift) |
 | Old repo `AGENTS.md`, `docs/EXECUTION_STATE_MACHINE.md`, `docs/STATE_MACHINE.md` | Forensic evidence / salvage source only; superseded here by `AGENTS.md` + `project/state.yaml` (this repo) |
 | Old repo `project/state.yaml` (gates G0–G3, work items G3-W11..W19) | Forensic evidence of what was attempted and why it stalled; this repo's own `project/state.yaml` is the only execution cursor here |
 | Old repo `migration/reuse-manifest.yaml` (its own pull from `foss-readme-optimizer`) | A precedent for this repo's own `migration/reuse-manifest.yaml`, not a transitive authority — its dispositions are claims to re-check, per mission §3 |
