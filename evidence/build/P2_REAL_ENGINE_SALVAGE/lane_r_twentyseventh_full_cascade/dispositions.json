@@ -1,0 +1,694 @@
+{
+  "dispositions": [
+    {
+      "destination_section": "identity",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The H1 product name is rendered deterministically by the identity section.",
+      "unit_id": "inherited_unit:001.heading"
+    },
+    {
+      "destination_section": "badges",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The badge row is rendered deterministically by the badges section.",
+      "unit_id": "inherited_unit:002.badge_row"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a product illustration or homepage link; the banner is omitted.",
+      "unit_id": "inherited_unit:003.badge_row"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:version",
+        "package:target_framework",
+        "install_command:dotnet"
+      ],
+      "rationale": "The paragraph matches the product_summary and is placed in the opening section.",
+      "unit_id": "inherited_unit:004.paragraph"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Navigation heading and list are rendered deterministically by the navigation section.",
+      "unit_id": "inherited_unit:005.heading"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Navigation list is rendered deterministically by the navigation section.",
+      "unit_id": "inherited_unit:006.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The At a Glance section is not rendered because its condition (at least three verified core capabilities with a verified input format) does not hold at this修订.",
+      "unit_id": "inherited_unit:007.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Mermaid diagram is omitted because the At a Glance section is not rendered.",
+      "unit_id": "inherited_unit:008.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The Key Capabilities heading is placed in the key_capabilities section.",
+      "unit_id": "inherited_unit:009.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose.cells_foss.workbook",
+        "public_symbol:aspose.cells_foss.worksheet",
+        "public_symbol:aspose.cells_foss.cells",
+        "public_symbol:aspose.cells_foss.cell",
+        "public_symbol:aspose.cells_foss.style",
+        "public_symbol:aspose.cells_foss.font",
+        "public_symbol:aspose.cells_foss.borders",
+        "public_symbol:aspose.cells_foss.fillpattern",
+        "public_symbol:aspose.cells_foss.styleflag",
+        "public_symbol:aspose.cells_foss.validationcollection",
+        "public_symbol:aspose.cells_foss.validation",
+        "public_symbol:aspose.cells_foss.conditionalformattingcollection",
+        "public_symbol:aspose.cells_foss.formatconditioncollection",
+        "public_symbol:aspose.cells_foss.listobjectcollection",
+        "public_symbol:aspose.cells_foss.listobject",
+        "public_symbol:aspose.cells_foss.chartcollection"
+      ],
+      "rationale": "The list items are grounded in verified public symbols and placed in the key_capabilities section.",
+      "unit_id": "inherited_unit:010.list"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Installation heading is rendered deterministically by the installation section.",
+      "unit_id": "inherited_unit:011.heading"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "rationale": "The install command is rendered deterministically by the installation section.",
+      "unit_id": "inherited_unit:012.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The XML PackageReference is not supported by any fact; only the dotnet CLI command is verified.",
+      "unit_id": "inherited_unit:013.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:target_framework"
+      ],
+      "rationale": "The paragraph about target frameworks is placed in the key_capabilities section as additional context.",
+      "unit_id": "inherited_unit:014.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Quick Start section is not rendered because its condition (at least one example executed or compiled in isolation) does not hold at this revision.",
+      "unit_id": "inherited_unit:015.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Quick Start lead-in is omitted because the Quick Start section is not rendered.",
+      "unit_id": "inherited_unit:016.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Quick Start example is omitted because the Quick Start section is not rendered.",
+      "unit_id": "inherited_unit:017.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Quick Start lead-in is omitted because the Quick Start section is not rendered.",
+      "unit_id": "inherited_unit:018.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Quick Start example is omitted because the Quick Start section is not rendered.",
+      "unit_id": "inherited_unit:019.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Quick Start lead-in is omitted because the Quick Start section is not rendered.",
+      "unit_id": "inherited_unit:020.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Quick Start example is omitted because the Quick Start section is not rendered.",
+      "unit_id": "inherited_unit:021.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Additional Examples section is not rendered because its condition (at least one further verified example) does not hold at this revision.",
+      "unit_id": "inherited_unit:022.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Additional Examples lead-in is omitted because the Additional Examples section is not rendered.",
+      "unit_id": "inherited_unit:023.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Additional Examples subsection is omitted because the Additional Examples section is not rendered.",
+      "unit_id": "inherited_unit:024.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Additional Examples code block is omitted because the Additional Examples section is not rendered.",
+      "unit_id": "inherited_unit:025.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Additional Examples details block is omitted because the Additional Examples section is not rendered.",
+      "unit_id": "inherited_unit:026.html_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Additional Examples subsection is omitted because the Additional Examples section is not rendered.",
+      "unit_id": "inherited_unit:027.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Additional Examples code block is omitted because the Additional Examples section is not rendered.",
+      "unit_id": "inherited_unit:028.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Additional Examples subsection is omitted because the Additional Examples section is not rendered.",
+      "unit_id": "inherited_unit:029.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Additional Examples code block is omitted because the Additional Examples section is not rendered.",
+      "unit_id": "inherited_unit:030.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Additional Examples subsection is omitted because the Additional Examples section is not rendered.",
+      "unit_id": "inherited_unit:031.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Additional Examples code block is omitted because the Additional Examples section is not rendered.",
+      "unit_id": "inherited_unit:032.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Additional Examples subsection is omitted because the Additional Examples section is not rendered.",
+      "unit_id": "inherited_unit:033.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Additional Examples code block is omitted because the Additional Examples section is not rendered.",
+      "unit_id": "inherited_unit:034.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Additional Examples subsection is omitted because the Additional Examples section is not rendered.",
+      "unit_id": "inherited_unit:035.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Additional Examples code block is omitted because the Additional Examples section is not rendered.",
+      "unit_id": "inherited_unit:036.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Additional Examples details block is omitted because the Additional Examples section is not rendered.",
+      "unit_id": "inherited_unit:037.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The API Reference heading is placed in the api_reference section.",
+      "unit_id": "inherited_unit:038.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose.cells_foss.workbook",
+        "public_symbol:aspose.cells_foss.worksheet",
+        "public_symbol:aspose.cells_foss.cells",
+        "public_symbol:aspose.cells_foss.cell"
+      ],
+      "rationale": "The paragraph about the public API surface is placed in the api_reference section.",
+      "unit_id": "inherited_unit:039.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The API Reference details block is omitted because the Additional Examples section is not rendered.",
+      "unit_id": "inherited_unit:040.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Core API' heading is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:041.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Core API table is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:042.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Interfaces' heading is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:043.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Interfaces table is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:044.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Structs' heading is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:045.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Structs table is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:046.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Enumerations' heading is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:047.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Enumerations table is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:048.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Detailed Member Reference' heading is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:049.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Workbook and Worksheets' heading is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:050.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Workbook member list is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:051.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Worksheet member list is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:051.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The LoadOptions/LoadDiagnostics member list is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:051.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Cells, Values, Styling, and Save Options' heading is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:052.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Cell member list is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:053.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Cells member list is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:053.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Style member list is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:053.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The SaveOptions/PdfSaveOptions member list is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:053.004.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Validation, Conditional Formatting, and Tables' heading is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:054.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The ValidationCollection member list is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:055.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Validation member list is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:055.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The ConditionalFormattingCollection member list is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:055.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The FormatConditionCollection member list is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:055.004.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The ListObjectCollection member list is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:055.005.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The ListObject member list is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:055.006.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Links, Names, and Drawing Objects' heading is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:056.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The HyperlinkCollection member list is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:057.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The DefinedNameCollection member list is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:057.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The ChartCollection member list is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:057.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Chart member list is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:057.004.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Exceptions' heading is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:058.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The CellsException list item is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:059.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The WorkbookLoadException/WorkbookSaveException list item is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:059.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The InvalidFileFormatException list item is superseded by the API Reference section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:059.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The StyleException/FormulaException/UnsupportedFeatureException list item is superseded by the API Reference section, which is deterministically rendered from",
+      "unit_id": "inherited_unit:059.004.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the presence of this closing HTML block; it is promotional markup not required by the specification.",
+      "unit_id": "inherited_unit:060.html_block"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Documentation & Resources' heading is superseded by the Documentation & Resources section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:061.heading"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Documentation & Resources list is superseded by the Documentation & Resources section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:062.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Scope and Limitations' heading is preserved as the section is placeable and matches the heading.",
+      "unit_id": "inherited_unit:063.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The Scope and Limitations list is preserved as the section is placeable and matches the heading.",
+      "unit_id": "inherited_unit:064.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about Aspose.Cells for .NET Enterprise Edition or its relation to this FOSS edition.",
+      "unit_id": "inherited_unit:065.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Development and Testing' section is rendered from facts and the heading is superseded by deterministic code.",
+      "unit_id": "inherited_unit:066.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Development and Testing' section is rendered from facts and this paragraph is superseded by deterministic code.",
+      "unit_id": "inherited_unit:067.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Development and Testing' section is rendered from facts and this code block is superseded by deterministic code.",
+      "unit_id": "inherited_unit:068.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Development and Testing' section is rendered from facts and this paragraph is superseded by deterministic code.",
+      "unit_id": "inherited_unit:069.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Development and Testing' section is rendered from facts and this code block is superseded by deterministic code.",
+      "unit_id": "inherited_unit:070.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Development and Testing' section is rendered from facts and this paragraph is superseded by deterministic code.",
+      "unit_id": "inherited_unit:071.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Development and Testing' section is rendered from facts and this code block is superseded by deterministic code.",
+      "unit_id": "inherited_unit:072.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Development and Testing' section is rendered from facts and this HTML block is superseded by deterministic code.",
+      "unit_id": "inherited_unit:073.html_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Development and Testing' section is rendered from facts and this paragraph is superseded by deterministic code.",
+      "unit_id": "inherited_unit:074.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Development and Testing' section is rendered from facts and this list is superseded by deterministic code.",
+      "unit_id": "inherited_unit:075.list"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Development and Testing' section is rendered from facts and this HTML block is superseded by deterministic code.",
+      "unit_id": "inherited_unit:076.html_block"
+    },
+    {
+      "destination_section": "license",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'License' section is rendered from facts and the heading is superseded by deterministic code.",
+      "unit_id": "inherited_unit:077.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The license paragraph is rendered from the license fact and placed in the license section, but the section is not placeable; however, the license section is a事实",
+      "unit_id": "inherited_unit:078.paragraph"
+    }
+  ]
+}
