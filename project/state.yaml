@@ -1072,6 +1072,19 @@ next_ready_items:
       Java, now confirm this is a real, repeatable consequence. Evidence appended to the
       same directory (slides_java_attempt_{1,2}_rejected.json). This repository's cascade is
       also left incomplete; the next full cascade fires against a different repository.
+      Fifth confirmed instance (2026-10-23): retrying aspose-imaging-foss/.NET's cascade --
+      S6 succeeded this time with a genuinely distinct "opening" unit -- found S8 coherence
+      independently falling into the same trap: its own revision attempt produced a near
+      word-for-word copy of the preserved paragraph, rejected twice, nothing salvageable.
+      First instance observed at S8 rather than S6. Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/lane_r_imaging_foss_net_retry_partial/ and the
+      same shared directory (imaging_foss_s8_retry_attempt_{1,2}_rejected.json).
+      Sixth confirmed instance (2026-10-23): retrying aspose-slides-foss/Java's S6 produced a
+      genuinely new LLM sample (not a cache hit) that still restated the same preserved
+      substance in different words. Two independent samples for the same repository both
+      fail the same way, strong evidence this is not a one-off unlucky draw. Evidence:
+      slides_java_retry_attempt_{1,2}_rejected.json, same directory. Both repositories'
+      cascades remain incomplete.
   - id: WIRE_GATEVERIFY_TO_PORTFOLIO
     status: READY
     purpose: >

@@ -1,0 +1,159 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:repository",
+      "package:name",
+      "package:target_framework",
+      "public_symbol:aspose",
+      "public_symbol:aspose.imaging",
+      "public_symbol:aspose.imaging.foss",
+      "dependency:none"
+    ],
+    "text": "Developers needing fast, lightweight image format identification and metadata extraction in .NET applications without full decoding or external dependencies."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "Detects 14 image formats by reading signature bytes only, returning an ImageFormat enum value without full parsing.",
+      "title": "Format detection"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "Reads width, height, bit depth, and frame count directly from format-specific header fields for PNG, JPEG, GIF, BMP, WEBP, ICO, TIFF, PSD, EMF, WMF, DICOM, DJVU, AVIF, and HEIC/HEIF.",
+      "title": "Header metadata extraction"
+    },
+    {
+      "fact_ids": [
+        "dependency:none",
+        "package:name"
+      ],
+      "text": "Has no required third-party package dependencies; all format parsing is implemented natively within the library.",
+      "title": "Zero dependencies"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "Returns partial ImageInfo with only Format set for malformed or truncated files instead of throwing exceptions.",
+      "title": "Robust error handling"
+    },
+    {
+      "fact_ids": [
+        "package:target_framework"
+      ],
+      "text": "Targets netstandard2.0 and net8.0, enabling use across a wide range of .NET implementations.",
+      "title": "Multi-target framework support"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "Provides both synchronous and asynchronous entry points (Probe/ProbeAsync, ProbeFile/ProbeFileAsync) for non-blocking I/O.",
+      "title": "Async support"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "Only performs format detection and header parsing; does not decode, render, edit, or convert pixel data."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "Frame count is real only for GIF, ICO, TIFF, and multi-page DJVU; other formats report fixed 1."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "Classic non-placeable WMF is detected but not dimensioned because its header lacks bounding rectangle."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "DICOM parsing stops at the first undefined-length element, such as a sequence or encapsulated pixel data."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "CDR support is planned but not yet implemented; no CdrFormatHandler exists in the current source tree."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "Eliminates the need to fully decode images just to determine format and basic properties like dimensions and bit depth."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "Provides format detection and header parsing for less common formats like PSD, EMF/WMF, DICOM, DJVU, AVIF, and HEIC/HEIF in a single library."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "Enables unattended processing of untrusted input by returning partial results instead of throwing exceptions on malformed files."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:repository",
+      "package:name",
+      "package:target_framework"
+    ],
+    "text": "Aspose.Imaging FOSS for .NET is a zero-dependency .NET library for image format detection and header probing without decoding pixel data."
+  },
+  "uncertainties": [
+    "Whether the library supports all DICOM transfer syntaxes beyond Implicit VR Little Endian and Explicit VR Little/Big Endian.",
+    "How the library handles AVIF grid images where the primary item association is ambiguous or missing.",
+    "Whether the library supports HEIC/HEIF variants beyond those explicitly listed in the README.",
+    "The exact behavior when probing a non-seekable stream that cannot be fully buffered.",
+    "Whether the library handles truncated multi-frame formats beyond reporting partial results.",
+    "How the library handles DJVU files that are indirect (multi-file) bundles rather than bundled DJVM.",
+    "Whether the library supports AVIF files with non-standard major brand combinations beyond avif/avis and mif1/mif2.",
+    "The exact set of formats supported beyond the 14 explicitly listed in the documentation."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "name": "Detect format from file",
+      "text": "Call ImageProbe.DetectFormat(byte[]) or DetectFormat(Stream) to identify an image format using only signature bytes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "name": "Probe file metadata",
+      "text": "Call ImageProbe.ProbeFile(string) or Probe(byte[]) to read width, height, bit depth, and frame count from the file header."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "name": "Asynchronous probing",
+      "text": "Use ImageProbe.ProbeFileAsync(string) or ProbeAsync(Stream) to avoid blocking on I/O in ASP.NET or UI threads."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "name": "Count frames in multi-frame formats",
+      "text": "Probe returns real frame counts for GIF, ICO, TIFF, and multi-page DJVU by walking their container structures."
+    }
+  ]
+}

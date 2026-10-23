@@ -99,3 +99,30 @@ all explicitly omitted with reasons in the second attempt). Correctly rejected b
 recovery found nothing salvageable; job failed closed. Four independent repositories, across
 .NET and Python and now Java, confirm this is a real, repeatable consequence of the fix's
 correct behavior.
+
+## Fifth confirmed instance: aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET, this time at S8
+
+A retry of this same repository's cascade (2026-10-23, after S6 succeeded on retry with a
+genuinely distinct "opening" unit) hit the identical pattern again, but this time at S8
+coherence rather than S6: coherence's own attempt to revise "opening" produced a near word-for-
+word copy of the preserved paragraph's own sentence ("ImageProbe identifies a file's format and
+reads its basic properties — dimensions, bit depth, and frame count — directly from the file
+header"), citing only `inherited_unit:004.paragraph` across both attempts
+(`imaging_foss_s8_retry_attempt_{1,2}_rejected.json`). Correctly rejected both times; recovery
+found nothing salvageable; the job failed closed. This confirms the fail-closed pattern is not
+confined to S6's initial authoring -- S8 coherence can independently fall into the same trap
+when it decides "opening" needs revising, for the same repository whose preserved paragraph is
+simply too comprehensive to leave room for anything non-redundant.
+
+## Sixth confirmed instance: aspose-slides-foss/Java, independently reconfirmed on retry
+
+A retry of aspose-slides-foss/Aspose.Slides-FOSS-for-Java's S6 authoring (2026-10-23) produced a
+genuinely NEW LLM sample (not a cache hit -- the rejected content differs from the original
+attempt's: `slides_java_retry_attempt_{1,2}_rejected.json` vs. the original
+`slides_java_attempt_{1,2}_rejected.json`) and still failed closed, restating the same preserved
+substance in different words ("It reads and writes .pptx presentations using the Presentation
+class as the root of the object model, which owns slides, shapes, images, comment authors, and
+document properties..."). Two independent samples for the same repository both fail the same
+way -- this is now strong evidence that this specific repository's preserved paragraph genuinely
+leaves no path to a non-redundant "opening" unit with the facts currently available to the
+model, not a one-off unlucky sample. This repository's cascade remains incomplete.

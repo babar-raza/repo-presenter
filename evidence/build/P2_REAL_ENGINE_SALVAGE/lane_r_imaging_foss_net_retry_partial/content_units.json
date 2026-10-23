@@ -1,0 +1,246 @@
+{
+  "omitted": [
+    {
+      "fact_id": "inherited_unit:009.heading",
+      "reason": "Inherited unit, not a fact about product behavior",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:010.list",
+      "reason": "Inherited unit, not a fact about product behavior",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:011.paragraph",
+      "reason": "Inherited unit, not a fact about product behavior",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:019.paragraph",
+      "reason": "Inherited unit, not a fact about product behavior",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:022.paragraph",
+      "reason": "Inherited unit, not a fact about product behavior",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:024.list",
+      "reason": "Inherited unit, not a fact about product behavior",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:001",
+      "reason": "Unresolved example, not an accepted fact",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:002",
+      "reason": "Unresolved example, not an accepted fact",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:003",
+      "reason": "Unresolved example, not an accepted fact",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:004",
+      "reason": "Unresolved example, not an accepted fact",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "install_command:dotnet",
+      "reason": "Contradicted install command, not an accepted fact",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:041.code_block",
+      "reason": "The renderer handles the code block slot; this unit does not describe inherited code blocks.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:044.paragraph",
+      "reason": "The renderer handles the paragraph slot; this unit does not describe inherited paragraphs.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:047.list",
+      "reason": "The renderer handles the list slot; this unit does not describe inherited lists.",
+      "section": "api_reference"
+    }
+  ],
+  "schema_version": 1,
+  "units": [
+    {
+      "fact_ids": [
+        "inherited_unit:004.paragraph"
+      ],
+      "section": "opening",
+      "slot": "opening",
+      "text": "It reads image file headers to detect format and extract dimensions, bit depth, and frame count without decoding pixels. It supports both synchronous and asynchronous probing from file paths, streams, or byte arrays."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "Detects 14 image formats by reading only signature bytes with ImageProbe.DetectFormat() and returning an ImageFormat value without loading a full imaging stack."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:2",
+      "text": "Extracts header metadata directly into an ImageInfo object containing width, height, bit depth, and frame count for PNG, JPEG, GIF, BMP, WEBP, ICO, TIFF, PSD, EMF, WMF, DICOM, DJVU, AVIF, and HEIC/HEIF formats."
+    },
+    {
+      "fact_ids": [
+        "dependency:none",
+        "package:name"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "Implements all format parsing natively with zero required third-party package dependencies."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:4",
+      "text": "Returns an ImageInfo with only the Format field set for malformed or truncated input instead of throwing, enabling unattended pipelines over untrusted files."
+    },
+    {
+      "fact_ids": [
+        "package:target_framework"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "Multi-targets netstandard2.0 and net8.0 to support both legacy and modern .NET runtimes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:6",
+      "text": "Provides both synchronous and asynchronous entry points for the same operations, including ProbeFile()/ProbeFileAsync() and Probe()/ProbeAsync()."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:target_framework",
+        "public_symbol:aspose.imaging.foss",
+        "public_symbol:aspose.imaging.foss.imageformat",
+        "public_symbol:aspose.imaging.foss.imageinfo",
+        "public_symbol:aspose.imaging.foss.imageprobe"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "Aspose.Imaging FOSS for .NET exposes Aspose.Imaging FOSS for .NET as its sole public namespace, targeting netstandard2.0 and net8.0. The ImageProbe class serves as the single entry point, returning an ImageFormat value and an ImageInfo record for every supported format."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:target_framework",
+        "public_symbol:aspose.imaging.foss",
+        "public_symbol:aspose.imaging.foss.imageformat",
+        "public_symbol:aspose.imaging.foss.imageinfo",
+        "public_symbol:aspose.imaging.foss.imageprobe"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.imaging.foss",
+      "text": "Aspose.Imaging.Foss.ImageProbe provides static methods such as DetectFormat, Probe, ProbeFile, ProbeAsync, and ProbeFileAsync to inspect image data and return an Aspose.Imaging.Foss.ImageFormat enum and an Aspose.Imaging.Foss.ImageInfo record containing Format, Width, Height, BitDepth, and FrameCount where available."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "inherited_unit:030.paragraph",
+        "inherited_unit:037.paragraph",
+        "inherited_unit:040.paragraph",
+        "inherited_unit:052.list",
+        "package:name",
+        "package:target_framework",
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "section": "scope_limitations",
+      "slot": "scope",
+      "text": "Aspose.Imaging FOSS for .NET provides format detection and header metadata inspection via the ImageProbe class; it reads format signatures and header fields but never decodes pixel data, so it does not support rendering, editing, or format conversion."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:052.list",
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:1",
+      "text": "Detection and metadata only: ImageProbe identifies a format and reads its header fields but never decodes pixel data, so there is no rendering, editing, or format-conversion capability anywhere in the library."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:052.list",
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:2",
+      "text": "Frame count reflects only what the container itself records: it is a real, computed count for GIF, ICO, TIFF, and bundled multi-page DJVU (DJVM), while every other supported format reports a fixed 1 for a successfully parsed header, and an indirect or truncated DJVM reports FrameCount as null."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:052.list",
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:3",
+      "text": "Non-placeable WMF is detected but not dimensioned: the classic (non-placeable) WMF header carries no bounding rectangle, so Probe returns a format-only ImageInfo for it, and only placeable WMF yields Width and Height assuming a conventional 96 DPI target."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:052.list",
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:4",
+      "text": "DICOM parsing stops at the first undefined-length element: a sequence or encapsulated pixel-data element with an undefined length ends the walk rather than being parsed, since Rows, Columns, and BitsAllocated always precede such elements in a conformant file."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:052.list",
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:5",
+      "text": "CDR support is planned but not yet implemented: no CdrFormatHandler exists in the current source tree."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss.imageformat"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.imaging.foss.imageformat",
+      "text": "Aspose.Imaging.Foss.ImageFormat represents a supported image file format."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss.imageinfo"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.imaging.foss.imageinfo",
+      "text": "Aspose.Imaging.Foss.ImageInfo provides metadata for an image, including its format, dimensions, bit depth, and frame count."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss.imageprobe"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.imaging.foss.imageprobe",
+      "text": "Aspose.Imaging.Foss.ImageProbe detects image formats and extracts image metadata from files, streams, or byte arrays."
+    }
+  ]
+}
