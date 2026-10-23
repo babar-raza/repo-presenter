@@ -21,6 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from repo_presenter.core.config import load_gateway_config
 from repo_presenter.core.facts import FactsDocument, read_facts
+from repo_presenter.core.git_safety.git import run_git
 from repo_presenter.core.llm.jobs import CallStore, JobContext, run_job
 from repo_presenter.core.llm.ledger import Ledger
 from repo_presenter.core.llm.prompts import load_manifests
@@ -69,7 +70,7 @@ def main() -> None:
     readme_bytes = (clone_path / "README.md").read_bytes()
     public_symbol_facts = [f for f in base_document.facts if f.kind == "public_symbol"]
     inherited = inherited_unit_facts("README.md", readme_bytes, public_symbol_facts, tree_paths)
-    source_revision = os.popen(f'git -C "{clone_path}" rev-parse HEAD').read().strip()
+    source_revision = run_git(["rev-parse", "HEAD"], cwd=clone_path).stdout.strip()
     document = FactsDocument(repository, source_revision, (*base_document.facts, *inherited))
 
     print("[3/6] loading the real prompt manifest and this repository's registry entry")

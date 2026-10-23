@@ -1760,18 +1760,20 @@ entries:
       before committing that git.py itself never raises it (only clone.py, not pulled, does);
       added code with no caller is exactly what this repository's own discipline refuses.
       7 new tests (tests/core/git_safety/test_git.py), 1221/1221 passed, 11 skipped, full suite
-      clean. NOT wired into any caller yet -- scripts/run_lane_r_*.py's own
-      os.popen(f'git -C "{clone_path}" rev-parse HEAD') calls and every portfolio clone this
-      session made still use the unguarded path; this port makes the fix available, it does not
-      yet apply it anywhere.
+      clean.
+    wired_into_callers_2026_10_23: >
+      Rewired all four scripts/run_lane_r_{investigation,reconciliation,planning,
+      authoring_real}.py call sites from os.popen(f'git -C "{clone_path}" rev-parse HEAD') onto
+      run_git(["rev-parse", "HEAD"], cwd=clone_path) -- mechanical, same output, no behavior
+      change beyond the safety flags/env-scrubbing now applied. run_lane_r_coherence.py needed
+      no change (reads source_revision from the already-built FactsDocument, never calls git
+      itself). Verified directly against a real existing clone before trusting the test suite
+      alone (rev-parse HEAD returned the correct SHA). 1221/1221 passed, 11 skipped, full suite
+      clean, no new tests needed (pure mechanical substitution, same inputs/outputs).
     next_step: >
-      Decide whether to rewire scripts/run_lane_r_*.py's own os.popen git calls onto run_git
-      (a real fix for a real, if never-yet-triggered, gap) -- a small, mechanical change per
-      call site, but touches five live orchestration scripts, so worth doing deliberately rather
-      than folding into a future unrelated change. clone.py's full pinned+push-neutered workflow
-      remains a bigger call (it changes how every future clone in this repository is made),
-      better taken deliberately. sandbox.py/write_gate.py/snapshot/{capture,inventory}.py remain
-      unread.
+      clone.py's full pinned+push-neutered workflow remains a bigger call (it changes how every
+      future clone in this repository is made), better taken deliberately, not folded into this
+      pass. sandbox.py/write_gate.py/snapshot/{capture,inventory}.py remain unread.
     portfolio_consumers: every git subprocess call in this repository, once callers are updated
       to use run_git in place of os.popen/plain subprocess.
     invalidation_impact: none yet -- pulled, but no existing caller changed, so no existing

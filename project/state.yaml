@@ -1458,12 +1458,14 @@ next_ready_items:
       tests/support.py (init_git_repository, commit_all, head_revision). Caught and reverted a
       premature addition before committing: a GitSafetyError class drafted for core/errors.py
       turned out unneeded -- git.py itself never raises it, only the unported clone.py does --
-      so it was removed rather than left as unused code. 1221/1221 passed, 11 skipped, full
-      suite clean (7 new tests, none removed). NOT wired into any caller -- scripts/
-      run_lane_r_*.py's own os.popen git calls and every clone this session made still use the
-      unguarded path; this makes the fix available, it does not apply it anywhere yet.
-      Evidence: migration/reuse-manifest.yaml's git-safety entry, extended in place 2026-10-23.
+      so it was removed rather than left as unused code. Then rewired all four scripts/
+      run_lane_r_{investigation,reconciliation,planning,authoring_real}.py call sites from
+      os.popen(...) onto run_git(["rev-parse", "HEAD"], cwd=clone_path) -- mechanical, same
+      output, verified directly against a real existing clone before trusting the test suite
+      alone. run_lane_r_coherence.py needed no change (never calls git itself). 1221/1221
+      passed, 11 skipped, full suite clean throughout (7 new tests from the port, none from the
+      rewire -- pure mechanical substitution). Evidence: migration/reuse-manifest.yaml's
+      git-safety entry, extended in place 2026-10-23.
     next_step: >
-      Decide whether to rewire scripts/run_lane_r_*.py's os.popen calls onto run_git -- small
-      and mechanical per call site, but touches five live orchestration scripts, so worth doing
-      deliberately. Not blocking anything else.
+      None for this card. clone.py's full pinned+push-neutered workflow remains a separate,
+      bigger call (changes how every future clone is made) for deliberate future pickup.
