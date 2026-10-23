@@ -1338,6 +1338,28 @@ next_ready_items:
       authoring.py output shapes, carrying forward only the DETERMINISTIC_RULES/JUDGMENT_RULES
       PATTERN from review.py's version "19", never its literal chrome-string match points.
     blocked_on: null
+    correction_2026_10_23_git_safety_hypothesis_refuted: >
+      SALVAGE_INVENTORY_2026_10_23's own finding (4) above guessed, from file names alone before
+      reading any of the code, that git_safety/{hooks,neuter}.py "defuse" a cloned repository's
+      own git hooks. Read all five files in full this tick: that hypothesis is WRONG, and in any
+      case not a meaningful git attack surface (`git clone` never transfers the remote's
+      server-side hooks into the local .git/hooks/, so there was nothing to defuse). The real,
+      confirmed mechanism: clone_pinned() makes a clone provably PUSH-SAFE (neuters the push URL,
+      installs a hard-exit pre-push hook, independently re-derives proof both are in place by
+      reading them back off disk rather than trusting its own write) and REVISION-PINNED (checks
+      the post-clone revision against an `ls-remote` read taken first, failing closed on a race
+      rather than silently returning a different snapshot). Separately, git.py (85 lines, REUSE-
+      grade, self-contained) fixes a real, different, documented defect class this session's own
+      git calls are exposed to: no caller scrubs GIT_DIR/GIT_WORK_TREE and five siblings from the
+      child environment, which Git itself exports into a hook's environment and which silently
+      redirects a command meant for the clone at `cwd` to some OTHER repository (a real, measured
+      2026-09-11 incident in the old repo: a test suite's own fixtures re-initialised the live
+      checkout under a pre-push hook). This session's own scripts/run_lane_r_*.py calls
+      (`os.popen(f'git -C "{clone_path}" rev-parse HEAD')`) and every portfolio clone this session
+      made have none of this hardening -- never exercised into a real failure this session (no
+      concurrent hook-running process shared this environment), but the gap is real. Full,
+      corrected record: migration/reuse-manifest.yaml's own entry for these files, rewritten in
+      place 2026-10-23 rather than left standing uncorrected.
 
   - id: PORT_BC14_CLAIM_VALIDATION
     status: DONE

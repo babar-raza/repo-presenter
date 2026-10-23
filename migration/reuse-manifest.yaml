@@ -1696,38 +1696,68 @@ entries:
       lane's real orchestration scripts -- neither is wired into a running cascade yet, ported
       and tested only.
 
-  - component: "Safe git clone + source snapshot (NOT yet ported): core/git_safety/{clone.py
-      (251), git.py (85), hooks.py (33), neuter.py (17), verify.py (64)}; core/registry/{sandbox.py
-      (107), write_gate.py (78)}; core/snapshot/{capture.py (167), inventory.py (182)}"
+  - component: "core/git_safety/{clone.py (251), git.py (85), hooks.py (33), neuter.py (17),
+      verify.py (64)}; core/registry/{sandbox.py (107), write_gate.py (78)}; core/snapshot/
+      {capture.py (167), inventory.py (182)}"
     source: old-repository-presenter
     evaluated_at_shas: []
-    behavior: UNKNOWN in detail -- sized and named only, not read line-by-line this pass. Names
-      strongly suggest hooks.py/neuter.py specifically disable or strip repository-supplied git
-      hooks before this project's own code operates on an untrusted third-party clone -- a real
-      operational-security concern, not a style preference, if accurate.
-    disposition: PENDING_REVIEW
+    behavior: >
+      Read clone.py, git.py, hooks.py, neuter.py, verify.py in full 2026-10-23 (sandbox.py/
+      write_gate.py/snapshot/{capture,inventory}.py not read this pass). clone_pinned() resolves
+      the remote's default-branch HEAD via `ls-remote` first, then clones and requires the
+      checked-out revision to match (a race with an upstream push fails closed, never a silent
+      different snapshot); it then neuters the origin push URL (neuter_push, a non-URL value
+      resolves to nothing), installs a pre-push hook that unconditionally exits 1 (hooks.py), and
+      independently re-derives proof both controls are actually in place by reading the remote
+      config and hook file back off disk (verify.py) -- never trusting its own write, and never
+      proving the block by attempting a real push. git.py is a single git subprocess wrapper
+      (built on the already-ported process.run_bounded) that pins determinism flags
+      (core.autocrlf=false, core.eol=lf), disables interactive credential prompts at the source
+      (GIT_TERMINAL_PROMPT=0, GCM_INTERACTIVE=never), and -- the one with a real documented
+      incident behind it -- scrubs GIT_DIR/GIT_WORK_TREE/GIT_INDEX_FILE and five siblings from
+      every child environment, because any one of them silently redirects a git command meant
+      for the repository at cwd to some OTHER repository Git exports them for (measured
+      2026-09-11 in the old repo: under a pre-push hook, a test suite's own fixtures
+      re-initialised the live checkout itself, chaining 16 and 8 commits onto two live branches
+      and flipping core.bare, while the identical run by hand was clean).
+    disposition: "CORRECTING this entry's own prior hypothesis (first written in the thorough
+      inventory pass, before reading any of these five files): hooks.py/neuter.py do NOT disable
+      or strip a cloned repository's OWN git hooks -- that was a plausible-sounding guess from
+      the file names alone, now refuted by reading the code, and in any case not a meaningful
+      git attack surface: `git clone` never transfers the remote's server-side hooks into the
+      local .git/hooks/ in the first place, so there was never anything here to defuse. The
+      REAL mechanism, confirmed by reading: these five files make a clone provably PUSH-SAFE
+      (so this session's own git commands can never accidentally write to the real upstream
+      remote) and REVISION-PINNED (so a race with an upstream push is a loud failure, never a
+      silent wrong snapshot) -- a different, also real, protection. PENDING_REVIEW: clone.py
+      (orchestrates a workflow-behavior change -- how this repository clones -- not a drop-in
+      utility); git.py (REUSE-grade, self-contained, no behavior-changing decision needed to
+      pull it, see reason); hooks.py/neuter.py/verify.py (small, only meaningful alongside
+      clone.py's own orchestration). sandbox.py/write_gate.py/snapshot/{capture,inventory}.py:
+      still unread, unchanged PENDING_REVIEW."
     reason: >
-      REAL, LIVE OPERATIONAL GAP, not merely a missed port: every clone this entire session (all
-      36 portfolio repositories, under /tmp/survey_clones/) was made with a plain `git clone`,
-      never this hardened wrapper. core/git_safety/process.py and verify.py's sibling (the
-      bounded-subprocess runner) are already ported and described in this manifest's extractors
-      entry as having "no shell, closed stdin, hard timeout, whole-process-tree kill" -- but that
-      hardening applies to running example code INSIDE an already-cloned repository, not to the
-      clone operation itself or to whatever a cloned repository's own .git/hooks might do. If
-      hooks.py/neuter.py do what their names suggest, this repository has been cloning arbitrary
-      third-party FOSS repositories all session without the old repo's own git-hook defuse step.
-    target_module: not yet planned -- needs a read first.
+      git.py specifically is worth prioritizing on its own, separate from the clone-workflow
+      question: every git invocation this entire session (all 36 portfolio clones, every
+      `rev-parse HEAD` in scripts/run_lane_r_*.py) used either plain `git clone` or
+      `os.popen(f'git -C "{clone_path}" rev-parse HEAD')` -- no safety flags, no credential-
+      prompt suppression, and critically no GIT_DIR-class environment scrubbing, the exact
+      unguarded surface the old repo's own 2026-09-11 incident exploited by accident. This
+      session never hit that failure mode (no concurrent hook-running process shared this
+      session's environment), but the gap is real and the fix is a small, self-contained,
+      additive wrapper (85 lines, one already-ported dependency) -- unlike clone.py's full
+      pinned/push-neutered workflow, pulling git.py changes no existing behavior until a caller
+      is updated to use it in place of os.popen/plain subprocess calls, so it carries no
+      invalidation risk of its own.
+    target_module: not yet planned for any of these files.
     next_step: >
-      Read clone.py + hooks.py + neuter.py first (confirm or refute the hook-defuse hypothesis
-      above) before any further portfolio-wide cloning; this is the one entry in this inventory
-      pass with a plausible safety angle, not just a feature gap, and should be read before the
-      next batch of clones this session or a future one performs, not deferred indefinitely.
-      sandbox.py/write_gate.py (core/registry) and snapshot/{capture,inventory}.py are lower
-      urgency -- read after the clone-safety question is resolved.
-    portfolio_consumers: every clone operation this repository or any future session performs,
-      across both lanes.
-    invalidation_impact: none yet -- not pulled; the clones already made cannot be retroactively
-      hardened, only future ones.
+      git.py: a reasonable near-term pull -- bounded, self-contained, additive, no workflow
+      decision required. clone.py's full pinned+push-neutered workflow is a bigger call (it
+      changes how every future clone in this repository is made) better taken deliberately, not
+      folded into this inventory pass. sandbox.py/write_gate.py/snapshot/{capture,inventory}.py
+      remain unread.
+    portfolio_consumers: every git subprocess call in this repository, once git.py is pulled and
+      callers are updated to use it.
+    invalidation_impact: none yet -- not pulled; no caller changed.
 
   - component: "PR/publish effect layer: components/propose/{effect.py (373), pull_request.py,
       wave.py} (1,485 total) + components/candidates_publish/{effect.py (373), git_ops.py (161)}
