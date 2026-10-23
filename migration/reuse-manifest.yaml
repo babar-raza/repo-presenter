@@ -1828,3 +1828,38 @@ entries:
       finished-candidate effect this repository's own PR-effect work could reuse.
     portfolio_consumers: none for the six RETIRE files. present_transaction.py: possibly P3, TBD.
     invalidation_impact: none -- none of these seven files are pulled.
+
+  - component: "components/readme/validation/links/rules.py (133 lines)"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    behavior: >
+      Four pure functions: verified_example_hashes/readme_link_budget (Aspose-link ceiling
+      measurement against composition/link_budget.py's policy), badge_slot/badge_problems
+      (badge-row correctness against renderer.py's BADGE_ORDER), and enterprise_anchor_problems
+      (the Enterprise Edition anchor's required text shape).
+    disposition: "RETIRE: enterprise_anchor_problems (stale and redundant -- see reason).
+      PENDING_REVIEW, low priority: verified_example_hashes/readme_link_budget/badge_slot/
+      badge_problems (dependencies confirmed present; not ported this pass)."
+    reason: >
+      Read in full 2026-10-23. enterprise_anchor_problems's own _ANCHOR regex requires the
+      anchor text to literally start "full-featured" -- the OLD wording
+      docs/MISSION_AUTHORITY.md's owner correction R2/R3 (2026-10-11) explicitly retired ("the
+      former 'full-featured ... Enterprise Edition' prefix is not required"). Porting this
+      function verbatim would have REINTRODUCED a defect the mission document already
+      corrected -- caught only by actually reading it, not by its line count or name. It is also
+      redundant: this repository's own src/repo_presenter/readme/correction/detectors/
+      enterprise_edition.py (built fresh this session, generalized from 3 real portfolio fixes)
+      already enforces the CURRENT, correct anchor shape (`Aspose.<Family> for <Platform> —
+      Enterprise Edition`, no "full-featured" prefix) -- confirmed by reading its own format
+      strings. The other three functions were not found redundant with anything existing and
+      remain a legitimate, if low-priority, future pull: badge_problems in particular could
+      catch a VERIFIED_PRESERVE'd badge row that is stale (this repository's own dispositions.py
+      checks only that kept text is *present* in the README, per J4-equivalent logic, not that a
+      kept badge row is still *correct* against current facts) -- a real, if narrow, gap, not
+      yet prioritized high enough to pull this session.
+    target_module: none planned.
+    next_step: >
+      Low priority. If pulled later: verified_example_hashes, readme_link_budget, badge_slot,
+      badge_problems only -- never enterprise_anchor_problems, which is superseded and stale.
+    portfolio_consumers: none yet -- not pulled.
+    invalidation_impact: none -- not pulled.
