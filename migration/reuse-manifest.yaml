@@ -1630,8 +1630,8 @@ entries:
       parametrized cases included) + 3 new for the license_text.py slice
       (tests/readme/evidence/facts/test_license_text.py). 1064/1064 passed, 11 skipped, full
       suite clean (no regressions; 61 new tests, none removed).
-    disposition: "REUSE/ADAPT: claims.py (import paths only) and the classify_license_text
-      narrow slice, both pulled. content_presence.py (134), deferrals.py (905), links/rules.py
+    disposition: "REUSE/ADAPT: claims.py, content_presence.py and deferrals.py (import paths
+      only) and the classify_license_text narrow slice, all pulled 2026-10-23. links/rules.py
       (133), registry.py (2,731) remain PENDING_REVIEW, unevaluated -- see next_step."
     reason: >
       Directly closes a real, still-valid outcome requirement (docs/MISSION_AUTHORITY.md:
@@ -1651,19 +1651,48 @@ entries:
       (not yet decided which stage -- Lane L's correction pipeline, or Lane R's reconciliation/
       authoring checks -- both are plausible wiring points and the choice has not been made).
     invalidation_impact: none yet -- ported and tested, not called from any live pipeline path.
+    deferrals_content_presence_evidence_2026_10_23: >
+      Read and ported both in full. content_presence.py (134 lines): one self-contained
+      function, unstated(), the decidable test behind an ADVISORY deferral's "nothing is lost"
+      claim (anchors -- code spans, link destinations, dotted numbers -- plus a word-share test
+      over README blocks for longer claim sentences). Only dependency,
+      composition/list_coverage.py's list_items/stems, already present. deferrals.py (905
+      lines): the DeferralClass registry (19 classes) that decides BLOCK vs ADVISORY for every
+      DEFER_UNRESOLVED unit, plus review_deferrals()'s ESCALATIONS mechanism -- given the
+      finished README, an ADVISORY class's "nothing is lost" claim is itself checked via
+      content_presence.unstated(), and promoted to BLOCK if the README does not actually carry
+      the unit's content (the exact wave-3 acceptance-review fix: three ADVISORY classes had
+      hidden real losses -- an install extra, a namespace-collision warning, an Enterprise
+      Edition paragraph -- behind an advisory that blocked nothing). One dependency needed
+      resolving: RECOVERED_COVERAGE_RATIONALE, a string constant deferrals.py imports from
+      dispositions.py there, not defined in this repository's own (partially-pulled)
+      dispositions.py. Added as a plain constant to src/repo_presenter/readme/reconciliation/
+      dispositions.py with an honest docstring: the fold mechanism that actually WRITES this
+      prefix to a rationale (dispositions._recover_uncovered, part of the still-not-fully-pulled
+      refusal/repair half) is not ported, so deferrals.py's NOT_CARRIED_BY_NAMED_SECTION class is
+      correctly registered but dormant (cannot currently match a real S4 output) until that fold
+      exists -- stated, not hidden. Test files ported with one test dropped
+      (test_a_unit_the_named_section_cannot_carry_is_an_advisory_deferral, which built its
+      fixture through that same unported fold rather than typing it by hand; the sibling
+      negative-control test that proves the same class's matching logic directly was kept).
+      Two fixture files copied from the old repo (wave6_s4_coordination.json,
+      wave6_pdf_go.facts.json) that the test file's own real-wave-6 regression cases need.
+      Result: 85 passed (tests/readme/validation/test_deferrals.py) + 7 passed
+      (tests/readme/validation/test_content_presence.py). 1214/1214 passed, 11 skipped, full
+      suite clean (92 new tests, none removed).
+    target_module_addendum: >
+      src/repo_presenter/readme/validation/{deferrals,content_presence}.py (both present);
+      src/repo_presenter/readme/reconciliation/dispositions.py (extended: one new constant,
+      RECOVERED_COVERAGE_RATIONALE).
     next_step: >
-      content_presence.py and links/rules.py are small and lower priority. deferrals.py (905
-      lines) is the direct dependency the dispositions.py test suite already names as missing
-      (review_deferrals, recover_uncited_prose_omits) -- read next. registry.py (2,731 lines)
-      remains disproportionately large for a module this manifest has so far only ever needed
-      one list out of (narration_patterns, already extracted as text_gate.py) -- skim its module
+      links/rules.py (133 lines) is small and low priority. registry.py (2,731 lines) remains
+      disproportionately large for a module this manifest has so far only ever needed one list
+      out of (narration_patterns, already extracted as text_gate.py) -- skim its module
       docstring and top-level structure only before deciding whether a full read is warranted;
-      do not read 2,731 lines speculatively. Separately: decide where claims.py itself gets
-      wired into a live checks= callback before it affects any real candidate.
-    portfolio_consumers_PENDING: both lanes, every candidate, once the remaining four files are
-      pulled.
-    invalidation_impact_PENDING: none yet -- content_presence.py/deferrals.py/links/rules.py/
-      registry.py not pulled.
+      do not read 2,731 lines speculatively. Separately: decide where claims.py AND
+      review_deferrals() themselves get wired into a live checks=/validation callback in either
+      lane's real orchestration scripts -- neither is wired into a running cascade yet, ported
+      and tested only.
 
   - component: "Safe git clone + source snapshot (NOT yet ported): core/git_safety/{clone.py
       (251), git.py (85), hooks.py (33), neuter.py (17), verify.py (64)}; core/registry/{sandbox.py

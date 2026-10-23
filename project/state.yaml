@@ -1367,3 +1367,36 @@ next_ready_items:
       itself gets wired into a live checks= callback (Lane L's correction pipeline, or Lane R's
       reconciliation/authoring checks) before it affects any real candidate -- not yet decided,
       not blocking further reads.
+
+  - id: PORT_BC05_DEFERRAL_CLASSIFICATION
+    status: DONE
+    priority: medium
+    purpose: >
+      PORT_BC14_CLAIM_VALIDATION's own next_step. Read deferrals.py (905 lines) and its sibling
+      content_presence.py (134 lines) in full -- both turned out genuinely portable, same as
+      claims.py before them.
+    done: >
+      Ported src/repo_presenter/readme/validation/{deferrals,content_presence}.py (ADAPT, import
+      paths only). deferrals.py is the DeferralClass registry (19 classes) deciding BLOCK vs
+      ADVISORY for every DEFER_UNRESOLVED unit, with an ESCALATIONS mechanism that checks an
+      ADVISORY class's "nothing is lost" claim against the finished README
+      (content_presence.unstated()) and promotes it to BLOCK when the claim is false -- the
+      exact wave-3 acceptance-review fix for three real content losses the old repo's own
+      ADVISORY classes once hid. One missing dependency resolved: added
+      RECOVERED_COVERAGE_RATIONALE as a plain string constant to
+      src/repo_presenter/readme/reconciliation/dispositions.py, with an honest note that the
+      fold mechanism which actually writes this prefix (_recover_uncovered) is not ported, so
+      deferrals.py's NOT_CARRIED_BY_NAMED_SECTION class is correctly registered but dormant
+      until that fold exists. Ported both test files, dropping one test
+      (test_a_unit_the_named_section_cannot_carry_is_an_advisory_deferral) that built its
+      fixture through that same unported fold; copied two fixture files
+      (wave6_s4_coordination.json, wave6_pdf_go.facts.json) the kept wave-6 regression tests
+      need. 85 + 7 new tests, 1214/1214 passed, 11 skipped, full suite clean (92 new tests, none
+      removed). Neither claims.py nor review_deferrals() is wired into a live checks=/validation
+      callback in either lane yet -- both ported and tested only.
+      Evidence: migration/reuse-manifest.yaml's claims.py entry, extended in place 2026-10-23.
+    next_step: >
+      links/rules.py (133 lines, low priority) and registry.py (2,731 lines, skim before
+      deciding whether to read in full) remain PENDING_REVIEW. Separately: decide where
+      claims.py and review_deferrals() get wired into a live callback before either affects a
+      real candidate.

@@ -106,6 +106,17 @@ from repo_presenter.readme.reconciliation.destinations import (
 )
 
 DISPOSITIONS_FILENAME = "dispositions.json"
+# Ported 2026-10-23 for readme/validation/deferrals.py's NOT_CARRIED_BY_NAMED_SECTION class to
+# import from here, matching the old repo's own layout (deferrals.py there imports this constant
+# from dispositions.py, not from itself). The old repo's own ``_recover_uncovered`` last-attempt
+# fold -- the mechanism that actually PREPENDS this prefix to a rationale, after TC-DSP-01 found a
+# disposition claiming a supersession its destination could not provably carry -- is not ported
+# here (part of dispositions.py's own refusal/repair half this repository has not pulled in full).
+# No live S4 call in this repository can currently produce a rationale carrying this prefix, so
+# deferrals.py's NOT_CARRIED_BY_NAMED_SECTION class is correctly registered but dormant until that
+# fold exists -- the same honest "ported, not yet exercised by an upstream producer" boundary this
+# repository already uses for several other components.
+RECOVERED_COVERAGE_RATIONALE = "Not provably carried by the section named; held for the owner. "
 PLACING = frozenset(
     {"VERIFIED_PRESERVE", "VERIFIED_REWRITE", "VERIFIED_MOVE", "CORRECT_WITH_EVIDENCE"}
 )
