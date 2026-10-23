@@ -1,0 +1,585 @@
+{
+  "additional_example_ids": [],
+  "api_hubs": [
+    {
+      "fact_ids": [
+        "public_symbol:document.open",
+        "public_symbol:document.save",
+        "public_symbol:document.new",
+        "public_symbol:document.pages",
+        "public_symbol:document.addpage",
+        "public_symbol:document.insertpage",
+        "public_symbol:document.removepage",
+        "public_symbol:document.reorder",
+        "public_symbol:document.split",
+        "public_symbol:document.extractpages",
+        "public_symbol:document.append",
+        "public_symbol:document.merge"
+      ],
+      "symbol_fact_id": "public_symbol:document"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.addfont",
+        "public_symbol:document.addfontfile",
+        "public_symbol:document.loadfontbyname",
+        "public_symbol:document.loadfontfamily",
+        "public_symbol:fontfamily",
+        "public_symbol:embeddedfont"
+      ],
+      "symbol_fact_id": "public_symbol:document.addfont"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.form",
+        "public_symbol:form.addcheckbox",
+        "public_symbol:form.addcombobox",
+        "public_symbol:form.addlistbox",
+        "public_symbol:form.addpushbutton",
+        "public_symbol:form.addradiogroup",
+        "public_symbol:form.addsignaturefield",
+        "public_symbol:form.addtextfield",
+        "public_symbol:form.checkvalues",
+        "public_symbol:form.constructor",
+        "public_symbol:form.dict",
+        "public_symbol:form.enforcerules"
+      ],
+      "symbol_fact_id": "public_symbol:document.formenforcerules"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.sign",
+        "public_symbol:document.certify",
+        "public_symbol:document.addvalidationdata",
+        "public_symbol:document.adddocumenttimestamp",
+        "public_symbol:document.verifydocumenttimestamps",
+        "public_symbol:document.verifysignatures",
+        "public_symbol:encryptoptions",
+        "public_symbol:pubsecencryptoptions",
+        "public_symbol:externalsigner",
+        "public_symbol:signer",
+        "public_symbol:signoptions",
+        "public_symbol:signaturereport"
+      ],
+      "symbol_fact_id": "public_symbol:document.sign"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.validate",
+        "public_symbol:document.repair",
+        "public_symbol:document.recovery",
+        "public_symbol:document.validatepdfa",
+        "public_symbol:document.validatepdfua",
+        "public_symbol:document.validatepdfx",
+        "public_symbol:document.converttopdfa",
+        "public_symbol:document.converttopdfua",
+        "public_symbol:document.converttopdfx",
+        "public_symbol:validationdataoptions",
+        "public_symbol:validationdataoptions",
+        "public_symbol:validationdataoptions"
+      ],
+      "symbol_fact_id": "public_symbol:document.validate"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.getstructtree",
+        "public_symbol:document.autotag",
+        "public_symbol:document.createstructtree",
+        "public_symbol:structtreeroot",
+        "public_symbol:structtreeroot",
+        "public_symbol:structtreeroot",
+        "public_symbol:structtreeroot",
+        "public_symbol:structtreeroot",
+        "public_symbol:structtreeroot",
+        "public_symbol:structtreeroot",
+        "public_symbol:structtreeroot",
+        "public_symbol:structtreeroot"
+      ],
+      "symbol_fact_id": "public_symbol:document.getstructtree"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.gettables",
+        "public_symbol:page",
+        "public_symbol:pagepath",
+        "public_symbol:pagepath",
+        "public_symbol:pagepath",
+        "public_symbol:pagepath",
+        "public_symbol:pagepath",
+        "public_symbol:pagepath",
+        "public_symbol:pagepath",
+        "public_symbol:pagepath",
+        "public_symbol:pagepath",
+        "public_symbol:pagepath"
+      ],
+      "symbol_fact_id": "public_symbol:document.gettables"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.tohtml",
+        "public_symbol:document.tomarkdown",
+        "public_symbol:document.todocx",
+        "public_symbol:document.toepub",
+        "public_symbol:page.tosvg",
+        "public_symbol:page.toimage",
+        "public_symbol:imageoptions",
+        "public_symbol:imageoptions",
+        "public_symbol:imageoptions",
+        "public_symbol:imageoptions",
+        "public_symbol:imageoptions",
+        "public_symbol:imageoptions"
+      ],
+      "symbol_fact_id": "public_symbol:document.tohtml"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.sanitize",
+        "public_symbol:redactoptions",
+        "public_symbol:redactoptions",
+        "public_symbol:redactoptions",
+        "public_symbol:redactoptions",
+        "public_symbol:redactoptions",
+        "public_symbol:redactoptions",
+        "public_symbol:redactoptions",
+        "public_symbol:redactoptions",
+        "public_symbol:redactoptions",
+        "public_symbol:redactoptions",
+        "public_symbol:redactoptions"
+      ],
+      "symbol_fact_id": "public_symbol:document.sanitize"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.optionalcontent",
+        "public_symbol:optionalcontent",
+        "public_symbol:optionalcontent",
+        "public_symbol:optionalcontent",
+        "public_symbol:optionalcontent",
+        "public_symbol:optionalcontent",
+        "public_symbol:optionalcontent",
+        "public_symbol:optionalcontent",
+        "public_symbol:optionalcontent",
+        "public_symbol:optionalcontent",
+        "public_symbol:optionalcontent",
+        "public_symbol:optionalcontent"
+      ],
+      "symbol_fact_id": "public_symbol:document.flattenlayers"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.getxmp",
+        "public_symbol:document.setxmp",
+        "public_symbol:document.getxmpvalue",
+        "public_symbol:document.setxmpvalue",
+        "public_symbol:document.syncmetadata",
+        "public_symbol:document.syncmetadata",
+        "public_symbol:document.syncmetadata",
+        "public_symbol:document.syncmetadata",
+        "public_symbol:document.syncmetadata",
+        "public_symbol:document.syncmetadata",
+        "public_symbol:document.syncmetadata",
+        "public_symbol:document.syncmetadata"
+      ],
+      "symbol_fact_id": "public_symbol:document.getxmp"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.getattachments",
+        "public_symbol:document.addattachment",
+        "public_symbol:document.removeattachment",
+        "public_symbol:document.getcollection",
+        "public_symbol:document.setcollection",
+        "public_symbol:document.removecollection",
+        "public_symbol:attachment",
+        "public_symbol:attachment",
+        "public_symbol:attachment",
+        "public_symbol:attachment",
+        "public_symbol:attachment",
+        "public_symbol:attachment"
+      ],
+      "symbol_fact_id": "public_symbol:document.getattachments"
+    }
+  ],
+  "at_a_glance": {
+    "capability_titles": [
+      "PDF Parsing and Repair",
+      "Page Manipulation",
+      "Text Authoring and Styling",
+      "Vector Graphics and Images",
+      "Forms and Annotations",
+      "Tagged PDF and Accessibility",
+      "Security and Compliance",
+      "Export and Rendering"
+    ],
+    "input_format_ids": [],
+    "output_format_ids": []
+  },
+  "core_capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:document.recovery",
+        "public_symbol:document.validate",
+        "public_symbol:document.repair",
+        "public_symbol:parsecontentstream",
+        "public_symbol:serializecontentstream"
+      ],
+      "title": "PDF Parsing and Repair"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:document.addpage",
+        "public_symbol:document.insertpage",
+        "public_symbol:document.removepage",
+        "public_symbol:document.reorder",
+        "public_symbol:document.split",
+        "public_symbol:document.extractpages",
+        "public_symbol:document.append",
+        "public_symbol:document.merge"
+      ],
+      "title": "Page Manipulation"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.addtext",
+        "public_symbol:page.addtextblock",
+        "public_symbol:fontfamily",
+        "public_symbol:embeddedfont",
+        "public_symbol:flowparagraphoptions"
+      ],
+      "title": "Text Authoring and Styling"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.graphics",
+        "public_symbol:page.addimage",
+        "public_symbol:page.addsvgobject",
+        "public_symbol:pagegraphics",
+        "public_symbol:tilingpattern"
+      ],
+      "title": "Vector Graphics and Images"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:form",
+        "public_symbol:annotation",
+        "public_symbol:page.addcheckbox",
+        "public_symbol:page.addcombobox",
+        "public_symbol:page.addtextfield",
+        "public_symbol:page.addlink",
+        "public_symbol:page.addstamp"
+      ],
+      "title": "Forms and Annotations"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.getstructtree",
+        "public_symbol:document.autotag",
+        "public_symbol:document.createstructtree",
+        "public_symbol:structtreeroot",
+        "public_symbol:document.validatepdfua",
+        "public_symbol:document.converttopdfua"
+      ],
+      "title": "Tagged PDF and Accessibility"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:encryptoptions",
+        "public_symbol:pubsecencryptoptions",
+        "public_symbol:document.validatepdfa",
+        "public_symbol:document.converttopdfa",
+        "public_symbol:redactoptions",
+        "public_symbol:sanitizeoptions",
+        "public_symbol:document.sign",
+        "public_symbol:document.addvalidationdata"
+      ],
+      "title": "Security and Compliance"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.tosvg",
+        "public_symbol:page.toimage",
+        "public_symbol:document.tohtml",
+        "public_symbol:document.tomarkdown",
+        "public_symbol:document.todocx",
+        "public_symbol:document.toepub"
+      ],
+      "title": "Export and Rendering"
+    }
+  ],
+  "deviations": [
+    {
+      "fact_ids": [
+        "inherited_unit:009.code_block"
+      ],
+      "section_id": "at_a_glance",
+      "text": "The Mermaid diagram from the inherited README is omitted because no fact supports its content."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:034.heading",
+        "inherited_unit:035.paragraph",
+        "inherited_unit:036.html_block"
+      ],
+      "section_id": "additional_examples",
+      "text": "The 'Additional Examples' section is omitted because no verified example fact supports any of the code blocks."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:012.html_block",
+        "inherited_unit:013.heading",
+        "inherited_unit:014.001.list",
+        "inherited_unit:014.002.list",
+        "inherited_unit:014.003.list",
+        "inherited_unit:014.004.list",
+        "inherited_unit:014.005.list",
+        "inherited_unit:014.006.list",
+        "inherited_unit:014.007.list",
+        "inherited_unit:014.008.list",
+        "inherited_unit:014.009.list",
+        "inherited_unit:014.010.list"
+      ],
+      "section_id": "api_reference",
+      "text": "The 'Detailed Capability Reference' section and its lists are omitted because no fact supports the detailed descriptions."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:021.code_block"
+      ],
+      "section_id": "installation",
+      "text": "The 'Installation' section is freshly authored because the inherited code block uses 'Document.OpenFile' which is not supported."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:031.code_block",
+        "inherited_unit:033.code_block"
+      ],
+      "section_id": "quick_start",
+      "text": "The 'Quick Start' section is freshly authored because no verified example fact supports the inherited code blocks."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:069.paragraph"
+      ],
+      "section_id": "scope_limitations",
+      "text": "The 'Complex-text shaping' limitation is corrected to reflect that only generic OpenType GSUB/GPOS is supported, not script-specific engines."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:070.paragraph"
+      ],
+      "section_id": "api_reference",
+      "text": "The 'Rotate' behavior of AddTextBlock is verified and included in the API reference."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:071.code_block"
+      ],
+      "section_id": "api_reference",
+      "text": "The 'Rotate' code block for AddTextBlock is verified and included in the API reference."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:072.heading"
+      ],
+      "section_id": "api_reference",
+      "text": "The 'Text decoration' section is verified and included in the API reference."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:073.paragraph"
+      ],
+      "section_id": "api_reference",
+      "text": "The 'Text decoration' paragraph is verified and included in the API reference."
+    }
+  ],
+  "flagship_example_id": null,
+  "links": [],
+  "material_limitations": [
+    {
+      "fact_ids": [
+        "public_symbol:loadlimits",
+        "public_symbol:resourcelimiterror"
+      ],
+      "unit_ids": [
+        "inherited_unit:499.001.list",
+        "inherited_unit:499.002.list",
+        "inherited_unit:503.001.list",
+        "inherited_unit:503.002.list",
+        "inherited_unit:503.003.list",
+        "inherited_unit:503.004.list",
+        "inherited_unit:503.005.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.recovery",
+        "public_symbol:objstmdamage"
+      ],
+      "unit_ids": [
+        "inherited_unit:499.001.list",
+        "inherited_unit:499.002.list",
+        "inherited_unit:503.001.list",
+        "inherited_unit:503.002.list",
+        "inherited_unit:503.003.list",
+        "inherited_unit:503.004.list",
+        "inherited_unit:503.005.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.tosvg",
+        "public_symbol:svgoptions"
+      ],
+      "unit_ids": [
+        "inherited_unit:499.001.list",
+        "inherited_unit:499.002.list",
+        "inherited_unit:503.001.list",
+        "inherited_unit:503.002.list",
+        "inherited_unit:503.003.list",
+        "inherited_unit:503.004.list",
+        "inherited_unit:503.005.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "public_symbol:flowparagraphoptions",
+        "public_symbol:flowheadingoptions"
+      ],
+      "unit_ids": [
+        "inherited_unit:499.001.list",
+        "inherited_unit:499.002.list",
+        "inherited_unit:503.001.list",
+        "inherited_unit:503.002.list",
+        "inherited_unit:503.003.list",
+        "inherited_unit:503.004.list",
+        "inherited_unit:503.005.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "public_symbol:flow.adddocx",
+        "public_symbol:docxflowresult"
+      ],
+      "unit_ids": [
+        "inherited_unit:499.001.list",
+        "inherited_unit:499.002.list",
+        "inherited_unit:503.001.list",
+        "inherited_unit:503.002.list",
+        "inherited_unit:503.003.list",
+        "inherited_unit:503.004.list",
+        "inherited_unit:503.005.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.sign",
+        "public_symbol:signoptions",
+        "public_symbol:saveoptions"
+      ],
+      "unit_ids": [
+        "inherited_unit:499.001.list",
+        "inherited_unit:499.002.list",
+        "inherited_unit:503.001.list",
+        "inherited_unit:503.002.list",
+        "inherited_unit:503.003.list",
+        "inherited_unit:503.004.list",
+        "inherited_unit:503.005.list"
+      ]
+    }
+  ],
+  "quick_start_example_id": null,
+  "second_quick_start_example_id": null,
+  "sections": [
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "identity"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "badges"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "banner"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "opening"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "navigation"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "at_a_glance"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "key_capabilities"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "installation"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "dependencies"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "quick_start"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "additional_examples"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "api_reference"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "documentation_resources"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "scope_limitations"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "development_testing"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "third_party_notices"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "license"
+    }
+  ]
+}

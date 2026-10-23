@@ -1,0 +1,4249 @@
+{
+  "dispositions": [
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:version",
+        "import_path:asposefoss-pdf",
+        "package:node_engine"
+      ],
+      "rationale": "The H1 product name matches the verified product identity and is placed in the opening section as required.",
+      "unit_id": "inherited_unit:001.heading"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:node_engine"
+      ],
+      "rationale": "The badge row is placed in the opening section; the Node.js version badge is supported by the package engine constraint.",
+      "unit_id": "inherited_unit:002.badge_row"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the linked product illustration or homepage; the banner condition does not hold.",
+      "unit_id": "inherited_unit:003.badge_row"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:node_engine",
+        "dependency:none"
+      ],
+      "rationale": "The paragraph describes the product, its purpose, and zero-dependency nature, all of which are verified by the facts.",
+      "unit_id": "inherited_unit:004.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:document.open",
+        "public_symbol:document.save"
+      ],
+      "rationale": "The paragraph describes the live model and Save behavior, which is supported by the Document.Open and Document.Save public symbols.",
+      "unit_id": "inherited_unit:005.paragraph"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:repository"
+      ],
+      "rationale": "The 'Navigation' heading is rendered by the deterministic navigation section and is redundant.",
+      "unit_id": "inherited_unit:006.heading"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:repository"
+      ],
+      "rationale": "The navigation list is rendered by the deterministic navigation section and is redundant.",
+      "unit_id": "inherited_unit:007.list"
+    },
+    {
+      "destination_section": "at_a_glance",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:repository"
+      ],
+      "rationale": "The 'At a Glance' heading is rendered by the deterministic at_a_glance section and is redundant.",
+      "unit_id": "inherited_unit:008.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the Mermaid diagram content; the at_a_glance condition does not hold.",
+      "unit_id": "inherited_unit:009.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Key Capabilities' heading is required and placeable; the section will be freshly authored from facts.",
+      "unit_id": "inherited_unit:010.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:document.recovery",
+        "public_symbol:document.validate",
+        "public_symbol:document.repair",
+        "public_symbol:parsecontentstream",
+        "public_symbol:serializecontentstream",
+        "public_symbol:page",
+        "public_symbol:document.addpage",
+        "public_symbol:document.insertpage",
+        "public_symbol:document.removepage",
+        "public_symbol:document.reorder",
+        "public_symbol:document.split",
+        "public_symbol:document.extractpages",
+        "public_symbol:document.append",
+        "public_symbol:document.merge",
+        "public_symbol:page.addtext",
+        "public_symbol:page.addtextblock"
+      ],
+      "rationale": "The first list item's substance is covered by the key capabilities section, which will be freshly authored from facts.",
+      "unit_id": "inherited_unit:011.001.list"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:form",
+        "public_symbol:annotation",
+        "public_symbol:page.addcheckbox",
+        "public_symbol:page.addcombobox",
+        "public_symbol:page.addtextfield",
+        "public_symbol:page.addlink",
+        "public_symbol:page.addstamp",
+        "public_symbol:document.getstructtree",
+        "public_symbol:document.autotag",
+        "public_symbol:document.createstructtree",
+        "public_symbol:structtreeroot",
+        "public_symbol:document.validatepdfua",
+        "public_symbol:document.converttopdfua"
+      ],
+      "rationale": "The second list item's substance is covered by the key capabilities section, which will be freshly authored from facts.",
+      "unit_id": "inherited_unit:011.002.list"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:encryptoptions",
+        "public_symbol:pubsecencryptoptions",
+        "public_symbol:document.validatepdfa",
+        "public_symbol:document.converttopdfa",
+        "public_symbol:redactoptions",
+        "public_symbol:sanitizeoptions",
+        "public_symbol:document.sign",
+        "public_symbol:document.addvalidationdata",
+        "public_symbol:page.tosvg",
+        "public_symbol:page.toimage",
+        "public_symbol:document.tohtml",
+        "public_symbol:document.tomarkdown",
+        "public_symbol:document.todocx",
+        "public_symbol:document.toepub"
+      ],
+      "rationale": "The third list item's substance is covered by the key capabilities section, which will be freshly authored from facts.",
+      "unit_id": "inherited_unit:011.003.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The HTML block is a collapsible toggle for the detailed capability reference, which is not supported by facts.",
+      "unit_id": "inherited_unit:012.html_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The 'Detailed Capability Reference' heading is not supported by facts and introduces unsupported detail.",
+      "unit_id": "inherited_unit:013.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The list item's substance is unsupported detail and is not covered by the key capabilities section.",
+      "unit_id": "inherited_unit:014.001.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The list item's substance is unsupported detail and is not covered by the key capabilities section.",
+      "unit_id": "inherited_unit:014.002.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The list item's substance is unsupported detail and is not covered by the key capabilities section.",
+      "unit_id": "inherited_unit:014.003.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The list item's substance is unsupported detail and is not covered by the key capabilities section.",
+      "unit_id": "inherited_unit:014.004.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The list item's substance is unsupported detail and is not covered by the key capabilities section.",
+      "unit_id": "inherited_unit:014.005.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The list item's substance is unsupported detail and is not covered by the key capabilities section.",
+      "unit_id": "inherited_unit:014.006.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The list item's substance is unsupported detail and is not covered by the key capabilities section.",
+      "unit_id": "inherited_unit:014.007.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The list item's substance is unsupported detail and is not covered by the key capabilities section.",
+      "unit_id": "inherited_unit:014.008.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The list item's substance is unsupported detail and is not covered by the key capabilities section.",
+      "unit_id": "inherited_unit:014.009.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The list item's substance is unsupported detail and is not covered by the key capabilities section.",
+      "unit_id": "inherited_unit:014.010.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The code block is an example, but no fact supports its execution or compilation in isolation; the quick_start condition does not hold.",
+      "unit_id": "inherited_unit:015.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The list item's substance is unsupported detail and is not covered by the key capabilities section.",
+      "unit_id": "inherited_unit:016.001.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The list item's substance is unsupported detail and is not covered by the key capabilities section.",
+      "unit_id": "inherited_unit:016.002.list"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:node_engine",
+        "dependency:none"
+      ],
+      "rationale": "The paragraph confirms the zero-dependency nature, which is supported by the package and dependency facts.",
+      "unit_id": "inherited_unit:017.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The closing HTML block is a toggle for unsupported detail and is not supported by facts.",
+      "unit_id": "inherited_unit:018.html_block"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:npm"
+      ],
+      "rationale": "The 'Installation' heading is rendered by the deterministic installation section and is redundant.",
+      "unit_id": "inherited_unit:019.heading"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "CORRECT_WITH_EVIDENCE",
+      "fact_ids": [
+        "install_command:npm"
+      ],
+      "rationale": "The paragraph describes installation from a local clone, but the fact contradicts the npm install command; the installation section will be freshly authored.",
+      "unit_id": "inherited_unit:020.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The code block is an example, but no fact supports its execution or compilation in isolation; the quick_start condition does not hold.",
+      "unit_id": "inherited_unit:021.code_block"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:none"
+      ],
+      "rationale": "The 'Dependencies' heading is rendered by the deterministic dependencies section and is redundant.",
+      "unit_id": "inherited_unit:022.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:none"
+      ],
+      "rationale": "The 'Required Package Dependencies' heading is rendered by the deterministic dependencies section and is redundant.",
+      "unit_id": "inherited_unit:023.heading"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:none"
+      ],
+      "rationale": "The paragraph confirms zero required third-party dependencies, which is supported by the dependency fact.",
+      "unit_id": "inherited_unit:024.paragraph"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "package:node_engine"
+      ],
+      "rationale": "The 'Native and System Requirements' heading is rendered by the deterministic dependencies section and is redundant.",
+      "unit_id": "inherited_unit:025.heading"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:node_engine"
+      ],
+      "rationale": "The list item confirms the Node.js engine requirement, which is supported by the package fact.",
+      "unit_id": "inherited_unit:026.list"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:development.tsx",
+        "dependency:development.types-node",
+        "dependency:development.typescript",
+        "dependency:development.vitest"
+      ],
+      "rationale": "The 'Development Dependencies' heading is rendered by the deterministic dependencies section and is redundant.",
+      "unit_id": "inherited_unit:027.heading"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:development.tsx",
+        "dependency:development.types-node",
+        "dependency:development.typescript",
+        "dependency:development.vitest"
+      ],
+      "rationale": "The list item confirms the development dependencies, which are supported by the dependency facts.",
+      "unit_id": "inherited_unit:028.list"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Quick Start' heading is superseded by the deterministic section 'Quick Start' which is not placeable and will be rendered from facts.",
+      "unit_id": "inherited_unit:029.heading"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Quick Start' paragraph is superseded by the deterministic section 'Quick Start' which is not placeable and will be rendered from facts.",
+      "unit_id": "inherited_unit:030.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "install_command:npm"
+      ],
+      "rationale": "The code block uses 'Document.OpenFile' which is not supported; facts show 'install_command:npm' is CONTRADICTED and no verified install command or example is可用",
+      "unit_id": "inherited_unit:031.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about 'Document.New' being the counterpart to 'Document.Open' or its usage details.",
+      "unit_id": "inherited_unit:032.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No verified example fact supports this code block; it is unsupported.",
+      "unit_id": "inherited_unit:033.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Additional Examples' heading is superseded by the deterministic section 'Additional Examples' which is not placeable and will be rendered from facts.",
+      "unit_id": "inherited_unit:034.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about 'More real, verified snippets' or their collection; unsupported.",
+      "unit_id": "inherited_unit:035.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the HTML details block structure; unsupported.",
+      "unit_id": "inherited_unit:036.html_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific heading or its content; unsupported.",
+      "unit_id": "inherited_unit:037.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific code block; unsupported.",
+      "unit_id": "inherited_unit:038.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific heading or its content; unsupported.",
+      "unit_id": "inherited_unit:039.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the specific description of 'LoadLimits.defaults' behavior; unsupported.",
+      "unit_id": "inherited_unit:040.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific code block; unsupported.",
+      "unit_id": "inherited_unit:041.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about bounds being enforced during use; unsupported.",
+      "unit_id": "inherited_unit:042.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific table of limits; unsupported.",
+      "unit_id": "inherited_unit:043.table"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about memory costs on Node 24; unsupported.",
+      "unit_id": "inherited_unit:044.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific table of resource costs; unsupported.",
+      "unit_id": "inherited_unit:045.table"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about memory behavior in garbage-collected runtimes; unsupported.",
+      "unit_id": "inherited_unit:046.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific heading or its content; unsupported.",
+      "unit_id": "inherited_unit:047.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the specific description of 'Validate' and 'Repair' behavior; unsupported.",
+      "unit_id": "inherited_unit:048.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific code block; unsupported.",
+      "unit_id": "inherited_unit:049.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific heading or its content; unsupported.",
+      "unit_id": "inherited_unit:050.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific code block; unsupported.",
+      "unit_id": "inherited_unit:051.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the specific description of encryption options; unsupported.",
+      "unit_id": "inherited_unit:052.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific heading or its content; unsupported.",
+      "unit_id": "inherited_unit:053.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific code block; unsupported.",
+      "unit_id": "inherited_unit:054.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about 'InvalidPasswordError' for PubSec; unsupported.",
+      "unit_id": "inherited_unit:055.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific heading or its content; unsupported.",
+      "unit_id": "inherited_unit:056.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific code block; unsupported.",
+      "unit_id": "inherited_unit:057.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific heading or its content; unsupported.",
+      "unit_id": "inherited_unit:058.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific code block; unsupported.",
+      "unit_id": "inherited_unit:059.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific heading or its content; unsupported.",
+      "unit_id": "inherited_unit:060.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific code block; unsupported.",
+      "unit_id": "inherited_unit:061.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the specific description of font options and text measurement; unsupported.",
+      "unit_id": "inherited_unit:062.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the specific description of 'AddTextBlock' behavior; unsupported.",
+      "unit_id": "inherited_unit:063.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific code block; unsupported.",
+      "unit_id": "inherited_unit:064.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the specific description of 'TextBlockOptions'; unsupported.",
+      "unit_id": "inherited_unit:065.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about run lists; unsupported.",
+      "unit_id": "inherited_unit:066.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific code block; unsupported.",
+      "unit_id": "inherited_unit:067.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the specific description of 'TextRun' behavior; unsupported.",
+      "unit_id": "inherited_unit:068.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "CORRECT_WITH_EVIDENCE",
+      "fact_ids": [
+        "public_symbol:unsupportedfeatureerror",
+        "public_symbol:embeddedfont"
+      ],
+      "rationale": "The paragraph describes three technical limitations of text rendering; facts confirm UnsupportedFeatureError is thrown for unsupported features and that complex",
+      "unit_id": "inherited_unit:069.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:textblockoptions"
+      ],
+      "rationale": "The paragraph explains the rotate behavior of AddTextBlock; facts confirm TextBlockOptions supports rotation and the box rotates with the text as a unit.",
+      "unit_id": "inherited_unit:070.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:textblockoptions"
+      ],
+      "rationale": "The code block demonstrates AddTextBlock with rotate; facts confirm TextBlockOptions supports rotation and the example is syntactically valid.",
+      "unit_id": "inherited_unit:071.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading introduces text decoration; facts confirm Decoration and DecorationOptions are public symbols.",
+      "unit_id": "inherited_unit:072.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:decorationoptions",
+        "public_symbol:background"
+      ],
+      "rationale": "The paragraph describes underline, strikethrough, background, and behind options; facts confirm DecorationOptions and Background are public symbols.",
+      "unit_id": "inherited_unit:073.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:decorationoptions",
+        "public_symbol:background"
+      ],
+      "rationale": "The code block demonstrates text decoration options; facts confirm DecorationOptions and Background are public symbols.",
+      "unit_id": "inherited_unit:074.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:flowparagraphoptions",
+        "public_symbol:flowheadingoptions"
+      ],
+      "rationale": "The paragraph states decoration applies to higher-level authoring layers; facts confirm FlowParagraphOptions and FlowHeadingOptions support decoration.",
+      "unit_id": "inherited_unit:075.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:watermarkoptions"
+      ],
+      "rationale": "The paragraph clarifies behind is only on AddText/AddTextBlock; facts confirm WatermarkOptions uses mode for z-order instead.",
+      "unit_id": "inherited_unit:076.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading introduces font embedding; facts confirm EmbeddedFont and FontFamily are public symbols.",
+      "unit_id": "inherited_unit:077.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:embeddedfont"
+      ],
+      "rationale": "The paragraph explains how to embed a font; facts confirm EmbeddedFont is the handle returned by AddFont.",
+      "unit_id": "inherited_unit:078.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:embeddedfont"
+      ],
+      "rationale": "The code block demonstrates embedding and using a font; facts confirm EmbeddedFont is the handle returned by AddFont.",
+      "unit_id": "inherited_unit:079.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:fontfamily"
+      ],
+      "rationale": "The paragraph explains font loading by family name; facts confirm FontFamily is the handle returned by LoadFontByName.",
+      "unit_id": "inherited_unit:080.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:fontfamily"
+      ],
+      "rationale": "The code block demonstrates loading a font by family name; facts confirm FontFamily is the handle returned by LoadFontByName.",
+      "unit_id": "inherited_unit:081.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:fontfamily"
+      ],
+      "rationale": "The paragraph explains font registration and loading behavior; facts confirm FontFamily loading behavior matches the description.",
+      "unit_id": "inherited_unit:082.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:fontfamily"
+      ],
+      "rationale": "The paragraph explains font selection by weight and slant; facts confirm FontFamily supports weight and slant matching.",
+      "unit_id": "inherited_unit:083.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:fontfamily"
+      ],
+      "rationale": "The code block demonstrates font selection by weight and slant; facts confirm FontFamily supports weight and slant matching.",
+      "unit_id": "inherited_unit:084.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:fontfamily"
+      ],
+      "rationale": "The paragraph explains font matching rules; facts confirm FontFamily follows CSS Fonts 4 matching rules.",
+      "unit_id": "inherited_unit:085.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:fontfamily"
+      ],
+      "rationale": "The paragraph explains ResolveFontByName behavior; facts confirm FontFamily supports resolving without loading.",
+      "unit_id": "inherited_unit:086.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:fontfamily"
+      ],
+      "rationale": "The paragraph explains FontFamily slot behavior; facts confirm FontFamily fills slots only when faces exist.",
+      "unit_id": "inherited_unit:087.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:embeddedfont"
+      ],
+      "rationale": "The paragraph explains font format support and embedding; facts confirm EmbeddedFont supports multiple formats.",
+      "unit_id": "inherited_unit:088.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading introduces complex-text shaping; facts confirm EmbeddedFont supports shaping.",
+      "unit_id": "inherited_unit:089.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:embeddedfont"
+      ],
+      "rationale": "The paragraph explains complex-text shaping with embedded fonts; facts confirm EmbeddedFont supports shaping.",
+      "unit_id": "inherited_unit:090.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:embeddedfont"
+      ],
+      "rationale": "The code block demonstrates complex-text shaping; facts confirm EmbeddedFont supports shaping.",
+      "unit_id": "inherited_unit:091.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:embeddedfont"
+      ],
+      "rationale": "The list describes shaping features; facts confirm EmbeddedFont supports these features.",
+      "unit_id": "inherited_unit:092.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:embeddedfont"
+      ],
+      "rationale": "The paragraph explains shaping round-tripping; facts confirm EmbeddedFont supports round-tripping.",
+      "unit_id": "inherited_unit:093.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading introduces tables; facts confirm TableBuilder and related symbols are public.",
+      "unit_id": "inherited_unit:094.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:tablebuilder"
+      ],
+      "rationale": "The paragraph describes table creation; facts confirm TableBuilder is the public symbol for table creation.",
+      "unit_id": "inherited_unit:095.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:tablebuilder"
+      ],
+      "rationale": "The code block demonstrates table creation; facts confirm TableBuilder is the public symbol for table creation.",
+      "unit_id": "inherited_unit:096.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:tablebuilder"
+      ],
+      "rationale": "The paragraph explains rowSpan behavior; facts confirm TableBuilder supports rowSpan.",
+      "unit_id": "inherited_unit:097.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:tablebuilder"
+      ],
+      "rationale": "The code block demonstrates rowSpan behavior; facts confirm TableBuilder supports rowSpan.",
+      "unit_id": "inherited_unit:098.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:tablebuilder"
+      ],
+      "rationale": "The paragraph explains rowSpan height distribution; facts confirm TableBuilder supports rowSpan height distribution.",
+      "unit_id": "inherited_unit:099.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:tablebuilder"
+      ],
+      "rationale": "The paragraph explains rowSpan atomicity across breaks; facts confirm TableBuilder supports rowSpan atomicity.",
+      "unit_id": "inherited_unit:100.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:tablebuilder"
+      ],
+      "rationale": "The paragraph explains rowSpan clamping; facts confirm TableBuilder supports rowSpan clamping.",
+      "unit_id": "inherited_unit:101.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:tablebuilder"
+      ],
+      "rationale": "The paragraph explains table styling; facts confirm TableBuilder supports styling.",
+      "unit_id": "inherited_unit:102.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:tablebuilder"
+      ],
+      "rationale": "The paragraph explains padding behavior; facts confirm TableBuilder supports padding.",
+      "unit_id": "inherited_unit:103.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:tablebuilder"
+      ],
+      "rationale": "The code block demonstrates padding behavior; facts confirm TableBuilder supports padding.",
+      "unit_id": "inherited_unit:104.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:borderinfo"
+      ],
+      "rationale": "The paragraph explains border behavior; facts confirm BorderInfo is the public symbol for borders.",
+      "unit_id": "inherited_unit:105.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:borderinfo"
+      ],
+      "rationale": "The code block demonstrates border behavior; facts confirm BorderInfo is the public symbol for borders.",
+      "unit_id": "inherited_unit:106.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:tablebuilder"
+      ],
+      "rationale": "The paragraph explains row height behavior; facts confirm TableBuilder supports row height.",
+      "unit_id": "inherited_unit:107.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:tablebuilder"
+      ],
+      "rationale": "The code block demonstrates row height behavior; facts confirm TableBuilder supports row height.",
+      "unit_id": "inherited_unit:108.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes cell image support, a verified capability of the library.",
+      "unit_id": "inherited_unit:109.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Example demonstrating cell image usage, supporting the key capability.",
+      "unit_id": "inherited_unit:110.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Heading for multi-page tables section, a verified capability.",
+      "unit_id": "inherited_unit:111.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes multi-page table pagination, a verified capability.",
+      "unit_id": "inherited_unit:112.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Example for manual pagination of tables, supporting the key capability.",
+      "unit_id": "inherited_unit:113.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes auto pagination for tables, a verified capability.",
+      "unit_id": "inherited_unit:114.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Example for auto pagination of tables, supporting the key capability.",
+      "unit_id": "inherited_unit:115.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes atomic row pagination for tables, a verified capability.",
+      "unit_id": "inherited_unit:116.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Heading for tagged tables section, a verified capability.",
+      "unit_id": "inherited_unit:117.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes tagged table structure and accessibility features, a verified capability.",
+      "unit_id": "inherited_unit:118.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Example for tagged tables, supporting the key capability.",
+      "unit_id": "inherited_unit:119.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes paginated tagged tables, a verified capability.",
+      "unit_id": "inherited_unit:120.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Heading for Table of Contents generation, a verified capability.",
+      "unit_id": "inherited_unit:121.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes TOC generation, a verified capability.",
+      "unit_id": "inherited_unit:122.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Example for TOC generation, supporting the key capability.",
+      "unit_id": "inherited_unit:123.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes TOC options and validation, a verified capability.",
+      "unit_id": "inherited_unit:124.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes tagged TOC structure, a verified capability.",
+      "unit_id": "inherited_unit:125.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes repeating rows in tables, a verified capability.",
+      "unit_id": "inherited_unit:126.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Example for repeating rows in tables, supporting the key capability.",
+      "unit_id": "inherited_unit:127.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Heading for multi-column flow layouts, a verified capability.",
+      "unit_id": "inherited_unit:128.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes multi-column flow layouts, a verified capability.",
+      "unit_id": "inherited_unit:129.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Example for multi-column flow layouts, supporting the key capability.",
+      "unit_id": "inherited_unit:130.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes flow layout APIs and options, a verified capability.",
+      "unit_id": "inherited_unit:131.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes floating box behavior, a verified capability.",
+      "unit_id": "inherited_unit:132.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Heading for HTML box decoration, a verified capability.",
+      "unit_id": "inherited_unit:133.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes HTML box border-radius and background-image rendering, a verified capability.",
+      "unit_id": "inherited_unit:134.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Example for HTML box decoration, supporting the key capability.",
+      "unit_id": "inherited_unit:135.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes HTML box splitting behavior, a verified capability.",
+      "unit_id": "inherited_unit:136.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Heading for hyphenation, a verified capability.",
+      "unit_id": "inherited_unit:137.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Example for hyphenation, supporting the key capability.",
+      "unit_id": "inherited_unit:138.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes hyphenation options and table support, a verified capability.",
+      "unit_id": "inherited_unit:139.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Heading for heading numbering, a verified capability.",
+      "unit_id": "inherited_unit:140.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes heading numbering, a verified capability.",
+      "unit_id": "inherited_unit:141.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Example for heading numbering, supporting the key capability.",
+      "unit_id": "inherited_unit:142.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes heading numbering formats, a verified capability.",
+      "unit_id": "inherited_unit:143.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Heading for running heads and page numbers, a verified capability.",
+      "unit_id": "inherited_unit:144.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes onPage and onRendered callbacks, a verified capability.",
+      "unit_id": "inherited_unit:145.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Example for running heads and page numbers, supporting the key capability.",
+      "unit_id": "inherited_unit:146.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes artifact tagging for callbacks, a verified capability.",
+      "unit_id": "inherited_unit:147.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Heading for tab stops, a verified capability.",
+      "unit_id": "inherited_unit:148.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim that tab stops with alignment and leaders are implemented; the public symbols table contains no TabStop-related entries.",
+      "unit_id": "inherited_unit:149.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the detailed behavior of tab stops described; the public symbols table contains no TabStop-related entries.",
+      "unit_id": "inherited_unit:150.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the existence of footnotes or endnotes features; the public symbols table contains no footnote or endnote entries.",
+      "unit_id": "inherited_unit:151.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the existence of footnotes or endnotes features; the public symbols table contains no footnote or endnote entries.",
+      "unit_id": "inherited_unit:152.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the existence of footnotes or endnotes features; the public symbols table contains no footnote or endnote entries.",
+      "unit_id": "inherited_unit:153.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the existence of footnotes or endnotes features; the public symbols table contains no footnote or endnote entries.",
+      "unit_id": "inherited_unit:154.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the existence of footnotes or endnotes features; the public symbols table contains no footnote or endnote entries.",
+      "unit_id": "inherited_unit:155.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the existence of footnotes or endnotes features; the public symbols table contains no footnote or endnote entries.",
+      "unit_id": "inherited_unit:156.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the existence of footnotes or endnotes features; the public symbols table contains no footnote or endnote entries.",
+      "unit_id": "inherited_unit:157.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading 'Render a Word Document' introduces a capability supported by public symbols: docxflowoptions, docxflowresult, docxfiletopdf, adddocxresult.",
+      "unit_id": "inherited_unit:158.heading"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:docxflowoptions",
+        "public_symbol:docxflowresult",
+        "public_symbol:docxfiletopdf",
+        "public_symbol:adddocxresult"
+      ],
+      "rationale": "The code block demonstrates DOCX import and conversion, supported by the listed public symbols.",
+      "unit_id": "inherited_unit:159.code_block"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:docxflowoptions",
+        "public_symbol:docxflowresult"
+      ],
+      "rationale": "The paragraph describes DOCX import behavior, supported by the listed public symbols.",
+      "unit_id": "inherited_unit:160.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading 'Draw Vector Graphics' introduces a capability supported by public symbols: pagegraphics, tilingpattern, gradient.",
+      "unit_id": "inherited_unit:161.heading"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:pagegraphics",
+        "public_symbol:gradient",
+        "public_symbol:tilingpattern"
+      ],
+      "rationale": "The code block demonstrates vector graphics operations, supported by the listed public symbols.",
+      "unit_id": "inherited_unit:162.code_block"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:pagegraphics"
+      ],
+      "rationale": "The paragraph describes vector graphics primitives and state management, supported by the listed public symbol.",
+      "unit_id": "inherited_unit:163.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:pagegraphics"
+      ],
+      "rationale": "The paragraph describes additional vector graphics primitives, supported by the listed public symbol.",
+      "unit_id": "inherited_unit:164.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:pagegraphics"
+      ],
+      "rationale": "The code block demonstrates vector graphics primitives, supported by the listed public symbol.",
+      "unit_id": "inherited_unit:165.code_block"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:gradient"
+      ],
+      "rationale": "The paragraph describes gradient operations, supported by the listed public symbol.",
+      "unit_id": "inherited_unit:166.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:gradient"
+      ],
+      "rationale": "The code block demonstrates gradient operations, supported by the listed public symbol.",
+      "unit_id": "inherited_unit:167.code_block"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:gradient"
+      ],
+      "rationale": "The code block demonstrates gradient stroke operations, supported by the listed public symbol.",
+      "unit_id": "inherited_unit:168.code_block"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:gradient"
+      ],
+      "rationale": "The paragraph describes gradient stroke behavior, supported by the listed public symbol.",
+      "unit_id": "inherited_unit:169.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:gradient"
+      ],
+      "rationale": "The paragraph describes gradient rendering details, supported by the listed public symbol.",
+      "unit_id": "inherited_unit:170.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:gradient"
+      ],
+      "rationale": "The paragraph describes gradient masking behavior, supported by the listed public symbol.",
+      "unit_id": "inherited_unit:171.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:tilingpattern"
+      ],
+      "rationale": "The paragraph introduces tiling patterns, supported by the listed public symbol.",
+      "unit_id": "inherited_unit:172.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:tilingpattern"
+      ],
+      "rationale": "The code block demonstrates tiling pattern usage, supported by the listed public symbol.",
+      "unit_id": "inherited_unit:173.code_block"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:tilingpattern"
+      ],
+      "rationale": "The paragraph describes tiling pattern options, supported by the listed public symbol.",
+      "unit_id": "inherited_unit:174.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:tilingpattern"
+      ],
+      "rationale": "The paragraph describes tiling pattern coordinate behavior, supported by the listed public symbol.",
+      "unit_id": "inherited_unit:175.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:tilingpattern"
+      ],
+      "rationale": "The paragraph introduces uncolored tiling patterns, supported by the listed public symbol.",
+      "unit_id": "inherited_unit:176.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:tilingpattern"
+      ],
+      "rationale": "The code block demonstrates uncolored tiling pattern usage, supported by the listed public symbol.",
+      "unit_id": "inherited_unit:177.code_block"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:tilingpattern"
+      ],
+      "rationale": "The paragraph describes uncolored tiling pattern constraints, supported by the listed public symbol.",
+      "unit_id": "inherited_unit:178.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:template"
+      ],
+      "rationale": "The paragraph introduces templates, supported by the listed public symbol.",
+      "unit_id": "inherited_unit:179.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:template"
+      ],
+      "rationale": "The code block demonstrates template usage, supported by the listed public symbol.",
+      "unit_id": "inherited_unit:180.code_block"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:template"
+      ],
+      "rationale": "The paragraph describes template placement options, supported by the listed public symbol.",
+      "unit_id": "inherited_unit:181.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:template"
+      ],
+      "rationale": "The paragraph describes template immutability and placement behavior, supported by the listed public symbol.",
+      "unit_id": "inherited_unit:182.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:template"
+      ],
+      "rationale": "The paragraph describes template structure limitations, supported by the listed public symbol.",
+      "unit_id": "inherited_unit:183.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading 'Insert Images' introduces a capability supported by public symbols: page.addimage, imageoptions.",
+      "unit_id": "inherited_unit:184.heading"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page.addimage",
+        "public_symbol:imageoptions"
+      ],
+      "rationale": "The code block demonstrates image insertion, supported by the listed public symbols.",
+      "unit_id": "inherited_unit:185.code_block"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page.addimage",
+        "public_symbol:imageoptions"
+      ],
+      "rationale": "The paragraph describes image format handling, supported by the listed public symbols.",
+      "unit_id": "inherited_unit:186.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading 'Generate Barcodes and QR Codes' introduces a capability supported by public symbols: linearbarcode, matrixbarcode.",
+      "unit_id": "inherited_unit:187.heading"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:linearbarcode",
+        "public_symbol:matrixbarcode"
+      ],
+      "rationale": "The paragraph describes barcode generation capabilities, supported by the listed public symbols.",
+      "unit_id": "inherited_unit:188.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page.addtext",
+        "public_symbol:page.graphics",
+        "public_symbol:page.addimage",
+        "public_symbol:page.addsvgobject"
+      ],
+      "rationale": "The code block demonstrates barcode generation, a core capability supported by public symbols like AddBarcodeOptions and LinearBarcode.",
+      "unit_id": "inherited_unit:189.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:barcodemodel",
+        "public_symbol:qroptions",
+        "public_symbol:makecode128",
+        "public_symbol:makeean13"
+      ],
+      "rationale": "Describes barcode options and low-level generators, all of which are verified public symbols.",
+      "unit_id": "inherited_unit:190.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:makecode128",
+        "public_symbol:makeean13",
+        "public_symbol:makeupca",
+        "public_symbol:makeean8"
+      ],
+      "rationale": "Clarifies that generation-only scope excludes recognition/decoding, which is a limitation supported by the absence of decoding symbols.",
+      "unit_id": "inherited_unit:191.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:optionalcontent",
+        "public_symbol:layer",
+        "public_symbol:layerconfig"
+      ],
+      "rationale": "Introduces a section on optional-content layers, a verified capability supported by public symbols.",
+      "unit_id": "inherited_unit:192.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:optionalcontent",
+        "public_symbol:layer"
+      ],
+      "rationale": "Describes how OptionalContent enumerates and manages layers, supported by public symbols.",
+      "unit_id": "inherited_unit:193.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:optionalcontent",
+        "public_symbol:layer",
+        "public_symbol:page.graphics"
+      ],
+      "rationale": "Demonstrates layer creation and tagging, supported by public symbols like OptionalContent, Layer, and PageGraphics.",
+      "unit_id": "inherited_unit:194.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:optionalcontent",
+        "public_symbol:layerconfig"
+      ],
+      "rationale": "Explains layer configuration storage and visibility, supported by public symbols.",
+      "unit_id": "inherited_unit:195.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:optionalcontent",
+        "public_symbol:layer"
+      ],
+      "rationale": "Introduces usage applications for layers, a capability supported by public symbols.",
+      "unit_id": "inherited_unit:196.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:optionalcontent",
+        "public_symbol:layer",
+        "public_symbol:layerconfig"
+      ],
+      "rationale": "Demonstrates SetUsage and ResolveForEvent, supported by public symbols.",
+      "unit_id": "inherited_unit:197.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:optionalcontent",
+        "public_symbol:layerconfig",
+        "public_symbol:layerstate"
+      ],
+      "rationale": "Explains ResolveForEvent and ApplyUsage behavior, supported by public symbols.",
+      "unit_id": "inherited_unit:198.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:optionalcontent",
+        "public_symbol:flattenlayersreport"
+      ],
+      "rationale": "Introduces FlattenLayers, a capability supported by public symbols.",
+      "unit_id": "inherited_unit:199.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:optionalcontent",
+        "public_symbol:flattenlayersreport"
+      ],
+      "rationale": "Demonstrates FlattenLayers usage and report, supported by public symbols.",
+      "unit_id": "inherited_unit:200.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:optionalcontent",
+        "public_symbol:flattenlayersreport"
+      ],
+      "rationale": "Explains FlattenLayers behavior and PDF/A compliance, supported by public symbols.",
+      "unit_id": "inherited_unit:201.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:optionalcontent",
+        "public_symbol:flattenlayersreport"
+      ],
+      "rationale": "Demonstrates FlattenLayers followed by ConvertToPdfA, supported by public symbols.",
+      "unit_id": "inherited_unit:202.code_block"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:optionalcontent",
+        "public_symbol:flattenlayersreport"
+      ],
+      "rationale": "Notes inline dictionaries and signed documents as unsupported, a limitation supported by public symbols.",
+      "unit_id": "inherited_unit:203.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:textfragment",
+        "public_symbol:textblock"
+      ],
+      "rationale": "Introduces text extraction, a capability supported by public symbols.",
+      "unit_id": "inherited_unit:204.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:textfragment"
+      ],
+      "rationale": "Demonstrates GetText, supported by public symbols.",
+      "unit_id": "inherited_unit:205.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:textfragment"
+      ],
+      "rationale": "Explains text decoding and spacing heuristics, supported by public symbols.",
+      "unit_id": "inherited_unit:206.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:textfragment"
+      ],
+      "rationale": "Introduces GetTextFragments, supported by public symbols.",
+      "unit_id": "inherited_unit:207.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:textfragment"
+      ],
+      "rationale": "Demonstrates GetTextFragments usage, supported by public symbols.",
+      "unit_id": "inherited_unit:208.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:textfragment"
+      ],
+      "rationale": "Explains fragment emission rules, supported by public symbols.",
+      "unit_id": "inherited_unit:209.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:textblock"
+      ],
+      "rationale": "Introduces GetStructuredText, supported by public symbols.",
+      "unit_id": "inherited_unit:210.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:textblock"
+      ],
+      "rationale": "Demonstrates GetStructuredText usage, supported by public symbols.",
+      "unit_id": "inherited_unit:211.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:pagepath"
+      ],
+      "rationale": "Introduces vector path extraction, a capability supported by public symbols.",
+      "unit_id": "inherited_unit:212.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:pagepath"
+      ],
+      "rationale": "Demonstrates GetPaths usage, supported by public symbols.",
+      "unit_id": "inherited_unit:213.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:pagepath"
+      ],
+      "rationale": "Explains PagePath structure and geometry handling, supported by public symbols.",
+      "unit_id": "inherited_unit:214.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:searchtext"
+      ],
+      "rationale": "Introduces text search, a capability supported by public symbols.",
+      "unit_id": "inherited_unit:215.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:searchtext"
+      ],
+      "rationale": "Demonstrates Search usage, supported by public symbols.",
+      "unit_id": "inherited_unit:216.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:searchtext"
+      ],
+      "rationale": "Explains Search match structure, supported by public symbols.",
+      "unit_id": "inherited_unit:217.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:searchannotations"
+      ],
+      "rationale": "Introduces SearchAnnotations, supported by public symbols.",
+      "unit_id": "inherited_unit:218.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:searchannotations"
+      ],
+      "rationale": "Demonstrates SearchAnnotations usage, supported by public symbols.",
+      "unit_id": "inherited_unit:219.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:searchannotations"
+      ],
+      "rationale": "Explains SearchAnnotations scope and options, supported by public symbols.",
+      "unit_id": "inherited_unit:220.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:redactoptions"
+      ],
+      "rationale": "Explains redaction workflow for annotation matches, supported by public symbols.",
+      "unit_id": "inherited_unit:221.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:redactoptions"
+      ],
+      "rationale": "Demonstrates annotation redaction, supported by public symbols.",
+      "unit_id": "inherited_unit:222.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:redactoptions"
+      ],
+      "rationale": "Notes redaction granularity for annotations, supported by public symbols.",
+      "unit_id": "inherited_unit:223.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:searchannotationtext"
+      ],
+      "rationale": "Introduces SearchAnnotationText, supported by public symbols.",
+      "unit_id": "inherited_unit:224.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:searchannotationtext"
+      ],
+      "rationale": "Demonstrates SearchAnnotationText usage, supported by public symbols.",
+      "unit_id": "inherited_unit:225.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:searchannotationtext"
+      ],
+      "rationale": "Explains differences between SearchAnnotationText and SearchAnnotations, supported by public symbols.",
+      "unit_id": "inherited_unit:226.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:searchannotationtext"
+      ],
+      "rationale": "Lists deliberate differences in SearchAnnotationText behavior, supported by public symbols.",
+      "unit_id": "inherited_unit:227.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:page",
+        "public_symbol:searchannotationtext"
+      ],
+      "rationale": "Notes that /RC rich content is not searched, a limitation supported by public symbols.",
+      "unit_id": "inherited_unit:228.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Replace Text' heading introduces an example section, but the 'Additional Examples' section is not rendered at this revision.",
+      "unit_id": "inherited_unit:229.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No example fact supports this code block; the 'Additional Examples' section is not rendered.",
+      "unit_id": "inherited_unit:230.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the detailed description of ReplaceText behavior; the example section is not rendered.",
+      "unit_id": "inherited_unit:231.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the description of ReplaceText adjust modes; the example section is not rendered.",
+      "unit_id": "inherited_unit:232.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Compare Documents' heading introduces an example section, but the 'Additional Examples' section is not rendered.",
+      "unit_id": "inherited_unit:233.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No example fact supports this code block; the 'Additional Examples' section is not rendered.",
+      "unit_id": "inherited_unit:234.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the detailed description of CompareText behavior; the example section is not rendered.",
+      "unit_id": "inherited_unit:235.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Redact Content' heading introduces an example section, but the 'Additional Examples' section is not rendered.",
+      "unit_id": "inherited_unit:236.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No example fact supports this code block; the 'Additional Examples' section is not rendered.",
+      "unit_id": "inherited_unit:237.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the detailed description of Redact behavior; the example section is not rendered.",
+      "unit_id": "inherited_unit:238.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Mark, then apply' heading introduces an example section, but the 'Additional Examples' section is not rendered.",
+      "unit_id": "inherited_unit:239.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the description of redaction marks; the example section is not rendered.",
+      "unit_id": "inherited_unit:240.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No example fact supports this code block; the 'Additional Examples' section is not rendered.",
+      "unit_id": "inherited_unit:241.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the description of redaction marks vs. applied redactions; the example section is not rendered.",
+      "unit_id": "inherited_unit:242.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the description of AddRedact options; the example section is not rendered.",
+      "unit_id": "inherited_unit:243.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the description of ApplyRedactions behavior; the example section is not rendered.",
+      "unit_id": "inherited_unit:244.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the description of annotation removal during redaction; the example section is not rendered.",
+      "unit_id": "inherited_unit:245.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the description of tagged redaction overlay; the example section is not rendered.",
+      "unit_id": "inherited_unit:246.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Flatten Annotations and Forms' heading introduces an example section, but the 'Additional Examples' section is not rendered.",
+      "unit_id": "inherited_unit:247.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No example fact supports this code block; the 'Additional Examples' section is not rendered.",
+      "unit_id": "inherited_unit:248.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the description of object-level flattening; the example section is not rendered.",
+      "unit_id": "inherited_unit:249.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No example fact supports this code block; the 'Additional Examples' section is not rendered.",
+      "unit_id": "inherited_unit:250.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the description of field unwiring during flattening; the example section is not rendered.",
+      "unit_id": "inherited_unit:251.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the description of flattening appearance streams; the example section is not rendered.",
+      "unit_id": "inherited_unit:252.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Create and Fill AcroForm Fields' heading introduces an example section, but the 'Additional Examples' section is not rendered.",
+      "unit_id": "inherited_unit:253.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No example fact supports this code block; the 'Additional Examples' section is not rendered.",
+      "unit_id": "inherited_unit:254.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the description of field appearance generation; the example section is not rendered.",
+      "unit_id": "inherited_unit:255.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the description of field creation; the example section is not rendered.",
+      "unit_id": "inherited_unit:256.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No example fact supports this code block; the 'Additional Examples' section is not rendered.",
+      "unit_id": "inherited_unit:257.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the description of field creation requirements; the example section is not rendered.",
+      "unit_id": "inherited_unit:258.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the description of password/comb field restrictions; the example section is not rendered.",
+      "unit_id": "inherited_unit:259.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the description of rich text field rendering; the example section is not rendered.",
+      "unit_id": "inherited_unit:260.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the description of DoNotSpellCheck and DoNotScroll hints; the example section is not rendered.",
+      "unit_id": "inherited_unit:261.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the description of field actions; the example section is not rendered.",
+      "unit_id": "inherited_unit:262.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No example fact supports this code block; the 'Additional Examples' section is not rendered.",
+      "unit_id": "inherited_unit:263.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the description of field action triggers; the example section is not rendered.",
+      "unit_id": "inherited_unit:264.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the description of checkbox/radio group creation; the example section is not rendered.",
+      "unit_id": "inherited_unit:265.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No example fact supports this code block; the 'Additional Examples' section is not rendered.",
+      "unit_id": "inherited_unit:266.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the description of radio group appearance states; the example section is not rendered.",
+      "unit_id": "inherited_unit:267.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the description of choice field options; the example section is not rendered.",
+      "unit_id": "inherited_unit:268.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific form field example; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:269.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about `/V`, `Editable`, and `MultiSelect` behavior; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:270.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim that the list can be changed afterwards; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:271.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific form field modification example; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:272.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about `AddOption` and `RemoveOption` behavior; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:273.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about push buttons having no value; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:274.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific push button example; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:275.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about appearance streams and `iconPosition` layouts; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:276.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific icon position table; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:277.table"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about icon drawing into appearance streams; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:278.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about action model for link annotations; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:279.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific link annotation example; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:280.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about field removal; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:281.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific field removal example; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:282.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about field removal semantics; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:283.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about tagged document removal semantics; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:284.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about AcroForm editing and XFA handling; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:285.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the existence of a 'Field styling' section; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:286.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about styling keys and `SetStyle`; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:287.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific styling example; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:288.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about border styles, colors, and absent keys; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:289.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about `textColor` for checkboxes and radio buttons; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:290.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about `rotate` behavior; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:291.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the existence of a 'Recalculate and Format a Filled Form' section; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:292.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about form scripts and AForm functions; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:293.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific recalculation example; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:294.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about `Recalculate` and `FormattedValue`; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:295.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the existence of a 'Convert an XFA Form to an AcroForm' section; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:296.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about `ConvertXfaToAcroForm`; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:297.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific XFA conversion example; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:298.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about geometry and data-only conversion; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:299.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about geometry handling in XFA conversion; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:300.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about `report.dataOnly`; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:301.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about hybrid form reconciliation; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:302.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about `/XFA` removal and PDF/A ordering; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:303.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the existence of an 'Import and Export Form Data' section; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:304.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about FDF/XFDF import and export; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:305.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific FDF/XFDF example; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:306.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about annotations traveling through FDF/XFDF; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:307.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports this specific annotation import/export example; it is not mentioned in the capabilities, workflows, or public symbols.",
+      "unit_id": "inherited_unit:308.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about annotation import/export behavior; it is not mentioned in the capabilities, limitations, or workflows.",
+      "unit_id": "inherited_unit:309.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about export/import of form fields, empty fields, or PdfParseError details; it is not mentioned in the capabilities, limitations, or.",
+      "unit_id": "inherited_unit:310.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the existence of a 'Read and Write Outlines (Bookmarks)' section; outline handling is not mentioned in the capabilities, limitations, or.",
+      "unit_id": "inherited_unit:311.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the code example for outlines; outline handling is not mentioned in the capabilities, limitations, or workflows.",
+      "unit_id": "inherited_unit:312.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about destination types and view parameters; outline handling is not mentioned in the capabilities, limitations, or workflows.",
+      "unit_id": "inherited_unit:313.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about named destinations vs page destinations; outline handling is not mentioned in the capabilities, limitations, or workflows.",
+      "unit_id": "inherited_unit:314.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about Color, Bold, Italic, and their omission; outline handling is not mentioned in the capabilities, limitations, or workflows.",
+      "unit_id": "inherited_unit:315.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the existence of a 'Read and Write Page Labels' section; page labels are not mentioned in the capabilities, limitations, or workflows.",
+      "unit_id": "inherited_unit:316.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the code example for page labels; page labels are not mentioned in the capabilities, limitations, or workflows.",
+      "unit_id": "inherited_unit:317.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about page label styles and rendering; page labels are not mentioned in the capabilities, limitations, or workflows.",
+      "unit_id": "inherited_unit:318.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the existence of a 'Manage Named Destinations' section; named destinations are not mentioned in the capabilities, limitations, or workflows.",
+      "unit_id": "inherited_unit:319.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the code example for named destinations; named destinations are not mentioned in the capabilities, limitations, or workflows.",
+      "unit_id": "inherited_unit:320.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about named destination storage and merging; named destinations are not mentioned in the capabilities, limitations, or workflows.",
+      "unit_id": "inherited_unit:321.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the existence of a 'Set Document Open Behaviour and Document-Level JavaScript' section; open actions and JavaScript are not mentioned in the.",
+      "unit_id": "inherited_unit:322.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about /OpenAction and its two shapes; open actions and JavaScript are not mentioned in the capabilities, limitations, or workflows.",
+      "unit_id": "inherited_unit:323.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the code example for open actions and JavaScript; open actions and JavaScript are not mentioned in the capabilities, limitations, or workflows.",
+      "unit_id": "inherited_unit:324.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about GetOpenAction() returning undefined; open actions and JavaScript are not mentioned in the capabilities, limitations, or.",
+      "unit_id": "inherited_unit:325.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about document-level JavaScript in /Names /JavaScript; open actions and JavaScript are not mentioned in the capabilities, limitations",
+      "unit_id": "inherited_unit:326.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the code example for JavaScript management; open actions and JavaScript are not mentioned in the capabilities, limitations, or workflows.",
+      "unit_id": "inherited_unit:327.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about JavaScript handling and conversion to PDF/A or PDF/X; open actions and JavaScript are not mentioned in the capabilities,",
+      "unit_id": "inherited_unit:328.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the existence of a 'Set Viewer Preferences' section; viewer preferences are not mentioned in the capabilities, limitations, or workflows.",
+      "unit_id": "inherited_unit:329.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about /ViewerPreferences and its 17 entries; viewer preferences are not mentioned in the capabilities, limitations, or workflows.",
+      "unit_id": "inherited_unit:330.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the code example for viewer preferences; viewer preferences are not mentioned in the capabilities, limitations, or workflows.",
+      "unit_id": "inherited_unit:331.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about getter behavior and lenient reading for viewer preferences; viewer preferences are not mentioned in the capabilities,",
+      "unit_id": "inherited_unit:332.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about SetViewerPreferences merging behavior and validation; viewer preferences are not mentioned in the capabilities,",
+      "unit_id": "inherited_unit:333.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about /PrintPageRange modeling and DisplayDocTitle; viewer preferences are not mentioned in the capabilities, limitations,",
+      "unit_id": "inherited_unit:334.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the existence of a 'Set Page Mode and Page Layout' section; page mode and layout are not mentioned in the capabilities, limitations, or",
+      "unit_id": "inherited_unit:335.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about /PageMode and /PageLayout catalog entries; page mode and layout are not mentioned in the capabilities, limitations, or",
+      "unit_id": "inherited_unit:336.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the code example for page mode and layout; page mode and layout are not mentioned in the capabilities, limitations, or workflows.",
+      "unit_id": "inherited_unit:337.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about /PageMode and /PageLayout values and their meanings; page mode and layout are not mentioned in the capabilities,",
+      "unit_id": "inherited_unit:338.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about FullScreen changing viewer behavior; page mode and layout are not mentioned in the capabilities, limitations, or",
+      "unit_id": "inherited_unit:339.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about page mode and layout following viewer-preferences rules; page mode and layout are not mentioned in the capabilities,",
+      "unit_id": "inherited_unit:340.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the existence of a 'Add Page Transitions' section; page transitions are not mentioned in the capabilities, limitations, or workflows.",
+      "unit_id": "inherited_unit:341.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about page /Trans and /Dur; page transitions are not mentioned in the capabilities, limitations, or workflows.",
+      "unit_id": "inherited_unit:342.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the code example for page transitions; page transitions are not mentioned in the capabilities, limitations, or workflows.",
+      "unit_id": "inherited_unit:343.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about transition parameters for Split, Blinds, Box, Fly; page transitions are not mentioned in the capabilities, limitations,",
+      "unit_id": "inherited_unit:344.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about the two durations being different clocks; page transitions are not mentioned in the capabilities, limitations, or",
+      "unit_id": "inherited_unit:345.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about replacing the transition dictionary wholly; page transitions are not mentioned in the capabilities, limitations, or",
+      "unit_id": "inherited_unit:346.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about transitions not being inherited and FullScreen not being modeled; page transitions are not mentioned in the",
+      "unit_id": "inherited_unit:347.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the existence of a 'Create and Search Annotations' section; annotations are not mentioned in the capabilities, limitations, or workflows.",
+      "unit_id": "inherited_unit:348.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The code block is an example of annotation authoring, which is covered by the API reference section.",
+      "unit_id": "inherited_unit:349.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The paragraph describes annotation types and properties, which are covered by the API reference section.",
+      "unit_id": "inherited_unit:350.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading 'Embed Files and Attachments' is covered by the API reference section.",
+      "unit_id": "inherited_unit:351.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The code block demonstrates file attachments, which are covered by the API reference section.",
+      "unit_id": "inherited_unit:352.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The paragraph describes attachment compression and options, which are covered by the API reference section.",
+      "unit_id": "inherited_unit:353.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The paragraph introduces portfolios, which are covered by the API reference section.",
+      "unit_id": "inherited_unit:354.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The code block demonstrates portfolio creation, which is covered by the API reference section.",
+      "unit_id": "inherited_unit:355.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The paragraph describes portfolio fields and settings, which are covered by the API reference section.",
+      "unit_id": "inherited_unit:356.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading 'Read and Write XMP Metadata' is covered by the API reference section.",
+      "unit_id": "inherited_unit:357.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The code block demonstrates XMP metadata handling, which is covered by the API reference section.",
+      "unit_id": "inherited_unit:358.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The paragraph describes XMP parsing and merging, which are covered by the API reference section.",
+      "unit_id": "inherited_unit:359.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The paragraph describes custom XMP properties, which are covered by the API reference section.",
+      "unit_id": "inherited_unit:360.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The paragraph introduces XMP value reading, which is covered by the API reference section.",
+      "unit_id": "inherited_unit:361.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The code block demonstrates XMP value reading, which is covered by the API reference section.",
+      "unit_id": "inherited_unit:362.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The paragraph describes XMP value converters, which are covered by the API reference section.",
+      "unit_id": "inherited_unit:363.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The paragraph introduces XMP value writing, which is covered by the API reference section.",
+      "unit_id": "inherited_unit:364.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The code block demonstrates XMP value writing, which is covered by the API reference section.",
+      "unit_id": "inherited_unit:365.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The paragraph describes XMP value types and mirroring, which are covered by the API reference section.",
+      "unit_id": "inherited_unit:366.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The paragraph introduces metadata synchronization, which is covered by the API reference section.",
+      "unit_id": "inherited_unit:367.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The code block demonstrates metadata synchronization, which is covered by the API reference section.",
+      "unit_id": "inherited_unit:368.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The paragraph describes metadata synchronization details, which are covered by the API reference section.",
+      "unit_id": "inherited_unit:369.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading 'Extract and Replace Embedded Images' is covered by the API reference section.",
+      "unit_id": "inherited_unit:370.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The code block demonstrates image extraction, which is covered by the API reference section.",
+      "unit_id": "inherited_unit:371.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The paragraph introduces image extraction as a file, which is covered by the API reference section.",
+      "unit_id": "inherited_unit:372.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The code block demonstrates image extraction as a file, which is covered by the API reference section.",
+      "unit_id": "inherited_unit:373.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The paragraph describes image encoding and format options, which are covered by the API reference section.",
+      "unit_id": "inherited_unit:374.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The paragraph introduces image extension handling, which is covered by the API reference section.",
+      "unit_id": "inherited_unit:375.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The paragraph introduces image replacement and removal, which are covered by the API reference section.",
+      "unit_id": "inherited_unit:376.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The code block demonstrates image replacement and removal, which are covered by the API reference section.",
+      "unit_id": "inherited_unit:377.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The paragraph describes image replacement details, which are covered by the API reference section.",
+      "unit_id": "inherited_unit:378.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The paragraph describes image scoping and inline images, which are covered by the API reference section.",
+      "unit_id": "inherited_unit:379.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The paragraph describes image decoding, which is covered by the API reference section.",
+      "unit_id": "inherited_unit:380.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The paragraph describes JPEG 2000 decoding, which is covered by the API reference section.",
+      "unit_id": "inherited_unit:381.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading 'Use File-Based Helper Methods' is covered by the API reference section.",
+      "unit_id": "inherited_unit:382.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The paragraph introduces file-based helper methods, which are covered by the API reference section.",
+      "unit_id": "inherited_unit:383.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The code block demonstrates file-based helper methods, which are covered by the API reference section.",
+      "unit_id": "inherited_unit:384.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading 'Remove Hidden Data' is covered by the API reference section.",
+      "unit_id": "inherited_unit:385.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The paragraph introduces sanitization, which is covered by the API reference section.",
+      "unit_id": "inherited_unit:386.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The code block demonstrates sanitization, which is covered by the API reference section.",
+      "unit_id": "inherited_unit:387.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The paragraph describes private data sanitization, which is covered by the API reference section.",
+      "unit_id": "inherited_unit:388.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes the lossy nature of `pagesToImages` and its effect on hidden content, which is a material limitation.",
+      "unit_id": "inherited_unit:389.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Supports the preceding paragraph with a concrete usage example of `Sanitize` with `pagesToImages`.",
+      "unit_id": "inherited_unit:390.code_block"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Explains that `Save()` writes a fresh file after sanitization and that incremental updates are refused, a material limitation.",
+      "unit_id": "inherited_unit:391.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes how actions are converted or removed during sanitization and that signed documents are refused, a material limitation.",
+      "unit_id": "inherited_unit:392.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Introduces the `Optimize` method, a core capability of the library.",
+      "unit_id": "inherited_unit:393.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "States that `doc.Optimize(opts?)` shrinks the live model in place, a core capability.",
+      "unit_id": "inherited_unit:394.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Lists the options and effects of `Optimize`, supporting the preceding paragraph with concrete details.",
+      "unit_id": "inherited_unit:395.table"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Clarifies which `Optimize` options are lossless and default on, and which are lossy and off by default.",
+      "unit_id": "inherited_unit:396.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Provides a concrete usage example of `Optimize` with lossless and lossy options.",
+      "unit_id": "inherited_unit:397.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes the `OptimizeReport` returned by `Optimize`, including its fields and estimated savings.",
+      "unit_id": "inherited_unit:398.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Explains the `dr` pass of `Optimize`, removing unreferenced `/DR` resources, a core capability.",
+      "unit_id": "inherited_unit:399.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "States that the `dr` pass declines for XFA documents or unparseable appearance streams, a limitation.",
+      "unit_id": "inherited_unit:400.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes the image pass of `Optimize`, including DPI measurement and skipping conditions.",
+      "unit_id": "inherited_unit:401.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Introduces the `ConvertColors` method, a core capability of the library.",
+      "unit_id": "inherited_unit:402.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "States that `doc.ConvertColors({ to })` converts a document's colour to one device space in place.",
+      "unit_id": "inherited_unit:403.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Provides a concrete usage example of `ConvertColors` and its report.",
+      "unit_id": "inherited_unit:404.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Explains how `skipped` entries report constructs that could not convert, including inline images and annotations.",
+      "unit_id": "inherited_unit:405.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Clarifies that every colour ends up in the target space except what `skipped` names.",
+      "unit_id": "inherited_unit:406.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "States that RGB → CMYK is naive and not colorimetrically correct without a destination profile, a limitation.",
+      "unit_id": "inherited_unit:407.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes how to use a colour-managed transform with `ConvertColors`.",
+      "unit_id": "inherited_unit:408.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Provides a concrete usage example of `iccCmykTransform` with `ConvertColors`.",
+      "unit_id": "inherited_unit:409.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Explains how `iccCmykTransform` builds a transform from an ICC profile, including supported profiles and intents.",
+      "unit_id": "inherited_unit:410.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Clarifies that the transform replaces one leg and never the pivot, and is validated once before anything converts.",
+      "unit_id": "inherited_unit:411.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "States that conversion is lossy and not reversible, and that signed documents throw `UnsupportedFeatureError`.",
+      "unit_id": "inherited_unit:412.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes the rule for colour conversion, including Rec. 601 luma and neutralized operators.",
+      "unit_id": "inherited_unit:413.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "States that Indexed images grey by rewriting their palette, a lossless route.",
+      "unit_id": "inherited_unit:414.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes the efficient greying route for YCbCr JPEGs, which is exact and generation-free.",
+      "unit_id": "inherited_unit:415.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Explains the routes for JPEGs that decline the efficient greying route, including re-encoding and growth.",
+      "unit_id": "inherited_unit:416.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes how shading functions convert, including resampling and mesh vertex conversion.",
+      "unit_id": "inherited_unit:417.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "States that colour-key `/Mask` is converted exactly, and Indexed images need no conversion.",
+      "unit_id": "inherited_unit:418.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Lists constructs that cannot convert and are reported in `skipped`, such as mesh data errors.",
+      "unit_id": "inherited_unit:419.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "States that `/OutputIntents` is deliberately left alone, a limitation of `ConvertColors`.",
+      "unit_id": "inherited_unit:420.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Introduces the export and rendering methods, a core capability of the library.",
+      "unit_id": "inherited_unit:421.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Provides a concrete usage example of rendering and export methods.",
+      "unit_id": "inherited_unit:422.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "An HTML comment with no supporting facts; its purpose is unclear in this context.",
+      "unit_id": "inherited_unit:423.html_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Introduces the AI model connection, a core capability of the library.",
+      "unit_id": "inherited_unit:424.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "States that AI features take a user-provided model and never call a default endpoint.",
+      "unit_id": "inherited_unit:425.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Provides a concrete usage example of `openAiModel` with OpenAI and local servers.",
+      "unit_id": "inherited_unit:426.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes the retry and timeout behavior for AI service calls, including error handling.",
+      "unit_id": "inherited_unit:427.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Introduces the MakeSearchable workflow, a core capability of the library.",
+      "unit_id": "inherited_unit:428.heading"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes MakeSearchable's OCR layer feature, which is supported by the AI capabilities in the plan.",
+      "unit_id": "inherited_unit:429.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aiocrengine",
+        "public_symbol:openaimodel",
+        "public_symbol:makesearchableoptions"
+      ],
+      "rationale": "Example code for MakeSearchable using aiOcrEngine and openAiModel, matching the AI workflows and public symbols.",
+      "unit_id": "inherited_unit:430.code_block"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Clarifies that vision models are coarse and dedicated OCR engines are supported through the same interface.",
+      "unit_id": "inherited_unit:431.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:ocrengine"
+      ],
+      "rationale": "Example of implementing a custom OcrEngine interface, which is supported by the public OcrEngine symbol.",
+      "unit_id": "inherited_unit:432.code_block"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes behavior for pages with existing text, failure handling, font, and signature field constraints.",
+      "unit_id": "inherited_unit:433.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Section heading for AI features Summarize, Ask, and GenerateAltText, which are covered in the AI capabilities.",
+      "unit_id": "inherited_unit:434.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Introduces Summarize, Ask, and GenerateAltText features, all supported by the AI capabilities and public symbols.",
+      "unit_id": "inherited_unit:435.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:summarizeoptions",
+        "public_symbol:askoptions",
+        "public_symbol:alttextoptions"
+      ],
+      "rationale": "Example code for Summarize, Ask, and GenerateAltText using openAiModel, matching the AI workflows.",
+      "unit_id": "inherited_unit:436.code_block"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes budget limits, ranking behavior, duplicate handling, and overwrite/retention rules for AI features.",
+      "unit_id": "inherited_unit:437.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Top-level API Reference heading, matching the destination section.",
+      "unit_id": "inherited_unit:438.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The API surface count and organization are rendered from facts in the api_reference section.",
+      "unit_id": "inherited_unit:439.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "HTML details/summary wrapper is not supported by any fact and adds no verifiable content.",
+      "unit_id": "inherited_unit:440.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Core API heading, matching the public symbols and API structure.",
+      "unit_id": "inherited_unit:441.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Core API table is rendered from facts in the api_reference section.",
+      "unit_id": "inherited_unit:442.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Annotations heading, matching the public symbols and API structure.",
+      "unit_id": "inherited_unit:443.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Annotations table is rendered from facts in the api_reference section.",
+      "unit_id": "inherited_unit:444.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Attachments heading, matching the public symbols and API structure.",
+      "unit_id": "inherited_unit:445.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Attachments table is rendered from facts in the api_reference section.",
+      "unit_id": "inherited_unit:446.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Conversion heading, matching the public symbols and API structure.",
+      "unit_id": "inherited_unit:447.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Conversion table is rendered from facts in the api_reference section.",
+      "unit_id": "inherited_unit:448.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Forms heading, matching the public symbols and API structure.",
+      "unit_id": "inherited_unit:449.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Forms table is rendered from facts in the api_reference section.",
+      "unit_id": "inherited_unit:450.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Redaction heading, matching the public symbols and API structure.",
+      "unit_id": "inherited_unit:451.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Redaction table is rendered from facts in the api_reference section.",
+      "unit_id": "inherited_unit:452.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Security heading, matching the public symbols and API structure.",
+      "unit_id": "inherited_unit:453.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Security table is rendered from facts in the api_reference section.",
+      "unit_id": "inherited_unit:454.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "AI heading, matching the public symbols and API structure.",
+      "unit_id": "inherited_unit:455.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The AI table is rendered from facts in the api_reference section.",
+      "unit_id": "inherited_unit:456.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Structure heading, matching the public symbols and API structure.",
+      "unit_id": "inherited_unit:457.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Structure table is rendered from facts in the api_reference section.",
+      "unit_id": "inherited_unit:458.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Text heading, matching the public symbols and API structure.",
+      "unit_id": "inherited_unit:459.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Text table is rendered from facts in the api_reference section.",
+      "unit_id": "inherited_unit:460.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Detailed Member Reference heading, matching the public symbols and API structure.",
+      "unit_id": "inherited_unit:461.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Introduces the detailed member reference tables, which are rendered from facts in the api_reference section.",
+      "unit_id": "inherited_unit:462.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The detailed member reference table is rendered from facts in the api_reference section.",
+      "unit_id": "inherited_unit:463.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "CORRECT_WITH_EVIDENCE",
+      "fact_ids": [
+        "public_symbol:page"
+      ],
+      "rationale": "The breaking change note about page.Annotations returning typed Annotation handles is supported by the public symbol page.",
+      "unit_id": "inherited_unit:464.blockquote"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Lists error types, which are supported by the public symbols and plan.",
+      "unit_id": "inherited_unit:465.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "HTML heading, matching the public symbols and API structure.",
+      "unit_id": "inherited_unit:466.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes parseHtml behavior, supported by the public symbol parseHtml.",
+      "unit_id": "inherited_unit:467.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:parsehtml"
+      ],
+      "rationale": "Example code for parseHtml, matching the public symbol.",
+      "unit_id": "inherited_unit:468.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:parsehtmlbytes"
+      ],
+      "rationale": "The paragraph describes parseHtmlBytes, a public symbol verified in the facts.",
+      "unit_id": "inherited_unit:469.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:parsehtmlbytes"
+      ],
+      "rationale": "The code block demonstrates parseHtmlBytes usage, matching the public symbol verified in the facts.",
+      "unit_id": "inherited_unit:470.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:parsehtmlbytes"
+      ],
+      "rationale": "The paragraph explains parseHtmlBytes behavior, consistent with the public symbol verified in the facts.",
+      "unit_id": "inherited_unit:471.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:parsehtmlbytes",
+        "public_symbol:htmldocument",
+        "public_symbol:htmlnode",
+        "public_symbol:htmlelement",
+        "public_symbol:htmltext",
+        "public_symbol:htmlcomment",
+        "public_symbol:htmlfragment",
+        "public_symbol:htmlprocessinginstruction",
+        "public_symbol:htmldoctype",
+        "public_symbol:htmlnamespace",
+        "public_symbol:adddocxresult",
+        "public_symbol:docxflowoptions",
+        "public_symbol:docxflowresult",
+        "public_symbol:docxflowresult",
+        "public_symbol:htmlflowoptions",
+        "public_symbol:htmlflowresult"
+      ],
+      "rationale": "The table lists public symbols that are already covered in the API Reference section.",
+      "unit_id": "inherited_unit:472.table"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about 1,918 of web-platform-tests' tree-construction cases.",
+      "unit_id": "inherited_unit:473.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim that rendering HTML into a page is not wired up yet.",
+      "unit_id": "inherited_unit:474.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the Markdown section heading.",
+      "unit_id": "inherited_unit:475.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the parseMarkdown example code.",
+      "unit_id": "inherited_unit:476.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the Markdown API table.",
+      "unit_id": "inherited_unit:477.table"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim that Markdown nodes carry no source positions.",
+      "unit_id": "inherited_unit:478.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about AddMarkdown rendering.",
+      "unit_id": "inherited_unit:479.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the AddMarkdown example code.",
+      "unit_id": "inherited_unit:480.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about adding Markdown into an existing flow.",
+      "unit_id": "inherited_unit:481.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the flow.AddMarkdown example code.",
+      "unit_id": "inherited_unit:482.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about adding Markdown into a rect.",
+      "unit_id": "inherited_unit:483.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the page.AddMarkdown example code.",
+      "unit_id": "inherited_unit:484.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about PDF/UA-conformant documents and lang/title options.",
+      "unit_id": "inherited_unit:485.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the PDF/UA example code.",
+      "unit_id": "inherited_unit:486.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the explanation about lang placement and page.AddMarkdown.",
+      "unit_id": "inherited_unit:487.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about links and tables rendering.",
+      "unit_id": "inherited_unit:488.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the link/table example code.",
+      "unit_id": "inherited_unit:489.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the claim about GFM footnotes becoming Flow footnotes.",
+      "unit_id": "inherited_unit:490.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the footnote example code.",
+      "unit_id": "inherited_unit:491.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the explanation about footnotePlacement and page.AddMarkdown.",
+      "unit_id": "inherited_unit:492.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the explanation about footnote numbering differences.",
+      "unit_id": "inherited_unit:493.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports the Markdown API table.",
+      "unit_id": "inherited_unit:494.table"
+    },
+    {
+      "destination_section": null,
+      "disposition": "NON_CONTENT",
+      "fact_ids": [],
+      "rationale": "The HTML block is a closing tag without content and serves as a separator.",
+      "unit_id": "inherited_unit:495.html_block"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:repository"
+      ],
+      "rationale": "The heading 'Documentation & Resources' is redundant with the documentation_resources section.",
+      "unit_id": "inherited_unit:496.heading"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:repository"
+      ],
+      "rationale": "The list items are redundant with the documentation_resources section.",
+      "unit_id": "inherited_unit:497.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:loadlimits",
+        "public_symbol:resourcelimiterror"
+      ],
+      "rationale": "The heading 'Scope and Limitations' is redundant with the scope_limitations section.",
+      "unit_id": "inherited_unit:498.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:loadlimits",
+        "public_symbol:resourcelimiterror"
+      ],
+      "rationale": "The list item describes resource limits, supported by the LoadLimits and ResourceLimitError public symbols.",
+      "unit_id": "inherited_unit:499.001.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:document.recovery",
+        "public_symbol:objstmdamage"
+      ],
+      "rationale": "The list item describes damaged-file recovery, supported by the document.recovery and objstmdamage public symbols.",
+      "unit_id": "inherited_unit:499.002.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:document.merge",
+        "public_symbol:document.split",
+        "public_symbol:document.extractpages",
+        "public_symbol:page.tosvg",
+        "public_symbol:page.toimage",
+        "public_symbol:document.tohtml",
+        "public_symbol:document.tomarkdown",
+        "public_symbol:document.todocx",
+        "public_symbol:document.toepub",
+        "public_symbol:document.addpage",
+        "public_symbol:page.addredact",
+        "public_symbol:page.addstamp",
+        "public_symbol:page.addimage",
+        "public_symbol:page.addsvgobject",
+        "public_symbol:page.addcheckbox",
+        "public_symbol:page.addcombobox"
+      ],
+      "rationale": "The table maps facade/plugin operations to equivalents, supported by the listed public symbols.",
+      "unit_id": "inherited_unit:500.table"
+    },
+    {
+      "destination_section": null,
+      "disposition": "NON_CONTENT",
+      "fact_ids": [],
+      "rationale": "The HTML block is a summary tag without content and serves as a separator.",
+      "unit_id": "inherited_unit:501.html_block"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:loadlimits",
+        "public_symbol:resourcelimiterror"
+      ],
+      "rationale": "The heading 'Detailed Limitations Reference' is redundant with the scope_limitations section.",
+      "unit_id": "inherited_unit:502.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:loadlimits",
+        "public_symbol:resourcelimiterror",
+        "public_symbol:document.recovery",
+        "public_symbol:objstmdamage"
+      ],
+      "rationale": "The list item describes resource limits and recovery, supported by the LoadLimits, ResourceLimitError, document.recovery, and objstmdamage public symbols.",
+      "unit_id": "inherited_unit:503.001.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:document.recovery",
+        "public_symbol:objstmdamage"
+      ],
+      "rationale": "The list item describes damaged-file recovery, supported by the document.recovery and objstmdamage public symbols.",
+      "unit_id": "inherited_unit:503.002.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:document.recovery",
+        "public_symbol:objstmdamage"
+      ],
+      "rationale": "The list item describes recovery and conversion, supported by the document.recovery and objstmdamage public symbols.",
+      "unit_id": "inherited_unit:503.003.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:document.recovery",
+        "public_symbol:objstmdamage"
+      ],
+      "rationale": "The list item describes recovery and rendering, supported by the document.recovery and objstmdamage public symbols.",
+      "unit_id": "inherited_unit:503.004.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:document.recovery",
+        "public_symbol:objstmdamage"
+      ],
+      "rationale": "The list item describes recovery and rendering, supported by the document.recovery and objstmdamage public symbols.",
+      "unit_id": "inherited_unit:503.005.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The list describes detailed limitations of the HTML renderer and PDF features; its substance is re-authored under scope_limitations.",
+      "unit_id": "inherited_unit:503.006.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The list describes additional limitations (hyphenation, tab stops, text replace); its substance is re-authored under scope_limitations.",
+      "unit_id": "inherited_unit:503.007.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The closing </details> tag is non-content markup with no standalone meaning; no fact supports its inclusion.",
+      "unit_id": "inherited_unit:504.html_block"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The paragraph introduces the FOSS scope and its distinction from Enterprise Edition; it fits the opening's two-to-four-sentence requirement.",
+      "unit_id": "inherited_unit:505.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading '## Development and Testing' is superseded by the deterministic section development_testing, which renders from build and test assets.",
+      "unit_id": "inherited_unit:506.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:development.tsx",
+        "dependency:development.typescript",
+        "dependency:development.vitest"
+      ],
+      "rationale": "The code block lists npm commands for dev setup; its substance is rendered by the deterministic development_testing section.",
+      "unit_id": "inherited_unit:507.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph explains build-time data regeneration; no fact supports its inclusion in the final README.",
+      "unit_id": "inherited_unit:508.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The code block lists generator commands; no fact supports its inclusion in the final README.",
+      "unit_id": "inherited_unit:509.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The heading '### Feature Showcase' introduces a subsection not present in the destination structure; no fact supports it.",
+      "unit_id": "inherited_unit:510.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph describes the feature showcase example; no fact supports its inclusion in the final README.",
+      "unit_id": "inherited_unit:511.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph introduces further capability sections; no fact supports its inclusion in the final README.",
+      "unit_id": "inherited_unit:512.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The list enumerates showcase features; no fact supports its inclusion in the final README.",
+      "unit_id": "inherited_unit:513.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph introduces the showcase build command; no fact supports its inclusion in the final README.",
+      "unit_id": "inherited_unit:514.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The code block shows the showcase build command; no fact supports its inclusion in the final README.",
+      "unit_id": "inherited_unit:515.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph explains gitignore behavior for generated docs; no fact supports its inclusion in the final README.",
+      "unit_id": "inherited_unit:516.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The table lists generated showcase files; no fact supports its inclusion in the final README.",
+      "unit_id": "inherited_unit:517.table"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph describes PDF/A validation status; no fact supports its inclusion in the final README.",
+      "unit_id": "inherited_unit:518.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph describes script assertions on the showcase PDF; no fact supports its inclusion in the final README.",
+      "unit_id": "inherited_unit:519.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The paragraph points to design specs and issue tracking; no fact supports its inclusion in the final README.",
+      "unit_id": "inherited_unit:520.paragraph"
+    },
+    {
+      "destination_section": "license",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading '## License' is superseded by the deterministic license section, which renders from the license fact.",
+      "unit_id": "inherited_unit:521.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The paragraph declares the MIT License and its permissions; it is preserved as a factual license statement.",
+      "unit_id": "inherited_unit:522.paragraph"
+    }
+  ]
+}
