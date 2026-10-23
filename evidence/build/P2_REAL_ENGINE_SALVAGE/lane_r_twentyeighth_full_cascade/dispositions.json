@@ -1,0 +1,431 @@
+{
+  "dispositions": [
+    {
+      "destination_section": "identity",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:version"
+      ],
+      "rationale": "The H1 product name is rendered deterministically by the identity section.",
+      "unit_id": "inherited_unit:001.heading"
+    },
+    {
+      "destination_section": "badges",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The badge row is rendered deterministically by the badges section.",
+      "unit_id": "inherited_unit:002.badge_row"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a product illustration or homepage link; the banner condition is not met.",
+      "unit_id": "inherited_unit:003.badge_row"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:version",
+        "package:java_release",
+        "dependency:none",
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "rationale": "The paragraph's substance is supported by facts and fits the opening section's required content.",
+      "unit_id": "inherited_unit:004.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The navigation section is rendered deterministically; the heading is redundant.",
+      "unit_id": "inherited_unit:005.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The navigation list is rendered deterministically; the inherited list is redundant.",
+      "unit_id": "inherited_unit:006.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The at_a_glance section is not rendered (Mermaid diagram condition not met); the heading is unsupported.",
+      "unit_id": "inherited_unit:007.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The at_a_glance section is not rendered; the Mermaid diagram is unsupported.",
+      "unit_id": "inherited_unit:008.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading is required for the key_capabilities section.",
+      "unit_id": "inherited_unit:009.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_REWRITE",
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "rationale": "The list items are supported by public symbols and fit the key_capabilities section.",
+      "unit_id": "inherited_unit:010.list"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The installation section is rendered deterministically; the heading is redundant.",
+      "unit_id": "inherited_unit:011.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The installation command is rendered deterministically; the lead-in paragraph is redundant.",
+      "unit_id": "inherited_unit:012.paragraph"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "rationale": "The Maven install command is rendered deterministically by the installation section.",
+      "unit_id": "inherited_unit:013.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Gradle Groovy DSL example is not supported by facts; only Maven is verified.",
+      "unit_id": "inherited_unit:014.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Gradle Groovy DSL example is not supported by facts; only Maven is verified.",
+      "unit_id": "inherited_unit:015.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The runtime dependency on Apache POI is contradicted by the dependency:none fact.",
+      "unit_id": "inherited_unit:016.paragraph"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The dependencies section is rendered deterministically; the heading is redundant.",
+      "unit_id": "inherited_unit:017.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The required package dependencies subsection is not supported; the dependency:none fact states none.",
+      "unit_id": "inherited_unit:018.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:none"
+      ],
+      "rationale": "The paragraph's claim of no required dependencies is supported and fits the scope_limitations section.",
+      "unit_id": "inherited_unit:019.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The native and system requirements subsection is not supported; Java 17 is covered by package:java_release.",
+      "unit_id": "inherited_unit:020.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:java_release"
+      ],
+      "rationale": "The Java 17 requirement is supported and fits the scope_limitations section.",
+      "unit_id": "inherited_unit:021.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The development dependencies subsection is not supported; it is covered by the dependencies section.",
+      "unit_id": "inherited_unit:022.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:development.org.junit.jupiter-junit-jupiter",
+        "dependency:development.org.apache.poi-poi-ooxml"
+      ],
+      "rationale": "The development dependencies are supported and fit the scope_limitations section.",
+      "unit_id": "inherited_unit:023.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The quick_start section is not rendered (example condition not met); the heading is unsupported.",
+      "unit_id": "inherited_unit:024.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The quick_start section is not rendered; the lead-in paragraph is unsupported.",
+      "unit_id": "inherited_unit:025.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The quick_start section is not rendered; the example is unsupported.",
+      "unit_id": "inherited_unit:026.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The additional_examples section is not rendered (example condition not met); the lead-in is unsupported.",
+      "unit_id": "inherited_unit:027.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The additional_examples section is not rendered; the example is unsupported.",
+      "unit_id": "inherited_unit:028.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The additional_examples section is not rendered; the heading is unsupported.",
+      "unit_id": "inherited_unit:029.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The additional_examples section is not rendered; the lead-in is unsupported.",
+      "unit_id": "inherited_unit:030.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The additional_examples section is not rendered; the example is unsupported.",
+      "unit_id": "inherited_unit:031.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The project structure is not a required section and is unsupported by facts.",
+      "unit_id": "inherited_unit:032.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The project structure is not a required section and is unsupported by facts.",
+      "unit_id": "inherited_unit:033.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The project structure is not a required section and is unsupported by facts.",
+      "unit_id": "inherited_unit:034.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'API Reference' heading is rendered by the deterministic api_reference section.",
+      "unit_id": "inherited_unit:035.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_REWRITE",
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "rationale": "The public entry point `org.aspose.cells_foss` is verified; the count of 183 public types is unsupported by facts.",
+      "unit_id": "inherited_unit:036.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The `<details>` wrapper is redundant with the deterministic API reference section structure.",
+      "unit_id": "inherited_unit:037.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Core API' heading is rendered by the deterministic api_reference section.",
+      "unit_id": "inherited_unit:038.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The full table of 183 public types is unsupported; facts only verify the module name and sample symbols.",
+      "unit_id": "inherited_unit:039.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Interfaces' heading is rendered by the deterministic api_reference section.",
+      "unit_id": "inherited_unit:040.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The table of interfaces is unsupported; facts only verify `IPackageReader`, `IPackageWriter`, and `IWarningCallback` exist.",
+      "unit_id": "inherited_unit:041.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Enumerations' heading is rendered by the deterministic api_reference section.",
+      "unit_id": "inherited_unit:042.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The full table of enumerations is unsupported; facts only verify a sample of enum symbols exist.",
+      "unit_id": "inherited_unit:043.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The closing `</details>` tag is redundant with the deterministic api_reference section structure.",
+      "unit_id": "inherited_unit:044.html_block"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Documentation & Resources' heading is rendered by the deterministic documentation_resources section.",
+      "unit_id": "inherited_unit:045.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The list items are unsupported; no link targets are verified by facts.",
+      "unit_id": "inherited_unit:046.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Scope and Limitations' heading is required and placeable; no facts contradict it.",
+      "unit_id": "inherited_unit:047.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "rationale": "The listed limitations (xlsx-only saving, ChartEx preservation, formula round-tripping) are supported by the accepted investigation.",
+      "unit_id": "inherited_unit:048.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Enterprise Edition link and feature claims are unsupported by facts.",
+      "unit_id": "inherited_unit:049.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Development and Testing' heading is rendered by the deterministic development_testing section.",
+      "unit_id": "inherited_unit:050.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:java_release"
+      ],
+      "rationale": "JDK 17+ requirement is supported by the package:java_release fact.",
+      "unit_id": "inherited_unit:051.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The `mvn test` command is unsupported; no build/test assets are verified.",
+      "unit_id": "inherited_unit:052.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The additional Maven commands are unsupported; no build/test assets are verified.",
+      "unit_id": "inherited_unit:053.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The code block of Maven commands is unsupported; no build/test assets are verified.",
+      "unit_id": "inherited_unit:054.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The release workflow link and PUBLISHING.md reference are unsupported by facts.",
+      "unit_id": "inherited_unit:055.paragraph"
+    },
+    {
+      "destination_section": "license",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'License' heading is rendered by the deterministic license section.",
+      "unit_id": "inherited_unit:056.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The license prose is unsupported; no license fact is provided.",
+      "unit_id": "inherited_unit:057.paragraph"
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "coherence": {
+    "applied": true,
+    "revised": [
+      "opening/opening",
+      "api_reference/intro",
+      "scope_limitations/limitation:2"
+    ]
+  },
+  "omitted": [
+    {
+      "fact_id": "dependency:none",
+      "reason": "The opening unit does not state dependency claims; the fact is not cited in any unit per the objective.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:009.heading",
+      "reason": "The heading '## Key Capabilities' is rendered by the deterministic renderer and not part of the prose units.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:010.list",
+      "reason": "The list content is rendered by the deterministic renderer and not part of the prose units.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:001",
+      "reason": "Example code is not cited in any accepted fact as part of the product description; it is an unresolved example and excluded from prose.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "example:002",
+      "reason": "Example code is not cited in any accepted fact as part of the product description; it is an unresolved example and excluded from prose.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "example:003",
+      "reason": "Example code is not cited in any accepted fact as part of the product description; it is an unresolved example and excluded from prose.",
+      "section": "api_reference"
+    }
+  ],
+  "schema_version": 1,
+  "units": [
+    {
+      "fact_ids": [
+        "inherited_unit:004.paragraph",
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "section": "opening",
+      "slot": "opening",
+      "text": "It reads, writes, and edits Excel .xlsx workbooks through Workbook, which owns a WorksheetCollection of Worksheet objects, supports adding, removing, and renaming sheets, selecting the active sheet, and controlling per-sheet visibility via getVisibilityType()/setVisibilityType() with VisibilityType; each worksheet exposes a Cells collection of Cell objects for reading and writing string, numeric, boolean, date/time, and formula values, and LoadOptions exposes strict-mode toggles and package/XML repair while Workbook.getLoadDiagnostics() returns a load diagnostics report with repair details and preservation notes for unsupported package parts."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "It reads, writes, and edits Excel .xlsx workbooks through Workbook, which owns a WorksheetCollection of Worksheet objects, supports adding, removing, and renaming sheets, selecting the active sheet, and controlling per-sheet visibility via getVisibilityType()/setVisibilityType() with VisibilityType; each worksheet exposes a Cells collection of Cell objects for reading and writing string, numeric, boolean, date/time, and formula values, and LoadOptions exposes strict-mode toggles and package/XML repair while Workbook.getLoadDiagnostics() returns a load diagnostics report with repair details and preservation notes for unsupported package parts."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:2",
+      "text": "Cell formatting and styling are handled by Style, which carries font, borders, fill, alignment, number format, and protection flags, set through Cell.getStyle()/setStyle(), and NumberFormat looks up and resolves built-in Excel number-format codes, while row and column layout is controlled with explicit sizing, hiding, and outline grouping via Row/Column, and Worksheet exposes tab color, zoom, gridline visibility, row/column header visibility, zero display, and right-to-left layout."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "Data validation and conditional formatting are applied to worksheet ranges via ValidationCollection and ConditionalFormattingCollection, both scoped to CellArea, and AutoFilter supports color filters, dynamic filters, top-10 filters, custom filters, and sort conditions on a worksheet range."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:4",
+      "text": "Chart and shape rendering supports creating 18 of the 25 real ChartType values programmatically via ChartCollection.add(), while the other 7 ChartEx types (Waterfall, Treemap, Sunburst, Histogram, Box and Whisker, Funnel, and Map) round-trip verbatim from a loaded workbook but cannot be created through the API, and ShapeCollection adds, retrieves, and removes drawing objects across 38 preset geometries (AutoShapeType) while preserving complex shapes loaded from an XLSX file verbatim."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "Table and page setup support includes configuring print layout and page setup via PageSetup, freezing rows and/or columns by coordinate or cell name and inspecting or clearing the frozen state, locking structure, windows, and revisions with separate passwords via WorksheetProtection/WorkbookProtection, and persisting window layout and document-level metadata through WorkbookView/DocumentProperties/WorkbookProperties, while ListObjectCollection creates, resizes, styles, and removes structured Excel tables (ListObjects), including column definitions and totals rows."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:6",
+      "text": "Comment and image embedding is supported by CommentCollection, which adds, edits, and removes cell comments (notes) with author, text, visibility, and size, and PictureCollection, which embeds images from bytes, streams, or file paths with two-cell anchor positioning and detects JPEG, PNG, GIF, and BMP formats."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:036.paragraph",
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "The public entry point is org.aspose.cells_foss. The classes below cover the full supported public API surface — 183 public types organized into one module."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:org.aspose.cells_foss",
+      "text": "The org.aspose.cells_foss package serves as the public entry point and contains the core classes for working with spreadsheet documents."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:019.paragraph",
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "section": "scope_limitations",
+      "slot": "scope",
+      "text": "Aspose.Cells FOSS for Java reads and writes Excel workbooks in the .xlsx format, supports Java 17 or later, and has no required third-party package dependencies."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:048.list",
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:1",
+      "text": "Saving is currently limited to .xlsx, ChartEx types (Waterfall, Treemap, Sunburst, Histogram, Box and Whisker, Funnel, and Map) cannot be created programmatically, formulas are stored and round-tripped but the library is not a full spreadsheet calculation engine, a handful of public XML-mapper classes are unimplemented skeleton code, and some APIs exist mainly to preserve OOXML metadata and package fidelity rather than to provide full Excel feature parity."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:048.list",
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:2",
+      "text": "Formulas are stored and round-tripped, but the library is not a full spreadsheet calculation engine."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:048.list",
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:3",
+      "text": "A handful of public XML-mapper classes are unimplemented skeleton code carried over from an early scaffold, and some APIs exist mainly to preserve OOXML metadata and package fidelity rather than to provide full Excel feature parity."
+    }
+  ]
+}

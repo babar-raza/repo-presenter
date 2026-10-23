@@ -1,0 +1,131 @@
+{
+  "audience": {
+    "fact_ids": [
+      "package:java_release",
+      "dependency:none",
+      "public_symbol:org.aspose.cells_foss"
+    ],
+    "text": "Java developers building applications that require reading, writing, and manipulating Excel .xlsx workbooks without runtime dependencies on Apache POI."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "text": "Create, load, modify, and save Excel .xlsx workbooks through Workbook, WorksheetCollection, Worksheet, and Cells APIs.",
+      "title": "Read and write Excel workbooks"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "text": "Apply full cell formatting including font, borders, fill, alignment, number format, and protection via Style and Cell APIs.",
+      "title": "Cell formatting and styling"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "text": "Configure data validation and conditional formatting on worksheet ranges using ValidationCollection and ConditionalFormattingCollection scoped to CellArea.",
+      "title": "Data validation and conditional formatting"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "text": "Create 18 of 25 chart types programmatically via ChartCollection.add() and add drawing shapes via ShapeCollection with 38 preset geometries.",
+      "title": "Chart and shape rendering"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "text": "Create and manage Excel tables (ListObjects) via ListObjectCollection and configure print layout and page setup via PageSetup.",
+      "title": "Table and page setup support"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "text": "Add and manage cell comments via CommentCollection and embed images from bytes, streams, or file paths via PictureCollection.",
+      "title": "Comment and image embedding"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "text": "Saving is currently limited to .xlsx format only."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "text": "ChartEx types (Waterfall, Treemap, Sunburst, Histogram, Box and Whisker, Funnel, and Map) cannot be created programmatically."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "text": "Formulas are stored and round-tripped but the library is not a full spreadsheet calculation engine."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "dependency:none",
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "text": "Enables programmatic Excel workbook creation and manipulation in Java without requiring Apache POI at runtime, using a self-contained library."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "text": "Supports full round-trip handling of Excel features including cell values, formulas, styling, data validation, conditional formatting, charts, shapes, and tables."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:repository",
+      "package:name",
+      "package:version",
+      "package:java_release"
+    ],
+    "text": "Aspose.Cells FOSS for Java is a free, open-source, pure-Java spreadsheet library for creating, loading, modifying, and saving Excel .xlsx workbooks targeting Java 17."
+  },
+  "uncertainties": [
+    "The exact set of unimplemented XML-mapper classes and their impact on metadata preservation is not fully specified.",
+    "Whether the 7 ChartEx types preserved verbatim from loaded workbooks retain full fidelity across save/load cycles is unclear.",
+    "The behavior of strict-mode toggles in LoadOptions when applied to malformed workbooks is not detailed.",
+    "The scope of APIs that exist only to preserve OOXML metadata without providing Excel feature parity is not fully documented.",
+    "The runtime behavior of WorkbookProtection and WorksheetProtection when multiple passwords are set is not specified.",
+    "The handling of complex shapes loaded from XLSX files beyond preservation is not detailed.",
+    "The exact set of supported image formats beyond JPEG, PNG, GIF, and BMP is not confirmed.",
+    "The behavior of CalculationProperties settings during formula round-tripping is not specified."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "name": "Create and save workbook",
+      "text": "Create a new workbook using Workbook, add values to cells, apply styles, and save as .xlsx using Workbook.save()."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "name": "Load and inspect workbook",
+      "text": "Load an existing .xlsx file using Workbook with LoadOptions and inspect diagnostics via Workbook.getLoadDiagnostics()."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "name": "Apply formatting and validation",
+      "text": "Apply cell styling via Cell.getStyle()/setStyle(), configure data validation via ValidationCollection, and set conditional formatting via ConditionalFormattingCollection."
+    }
+  ]
+}
