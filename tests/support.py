@@ -148,3 +148,40 @@ def fake_npm(directory: Path, fail_run: bool = False) -> str:
 def npm_calls(npm: str) -> list[str]:
     log = Path(npm).parent / "npm.log"
     return [line.strip() for line in log.read_text("utf-8").splitlines()] if log.is_file() else []
+
+
+def merge_to_origin_main(root: Path, message: str = "merge") -> str:
+    """Commit everything under ``root`` (initialising a disposable repository on first use) and
+    point ``refs/remotes/origin/main`` at the new commit - the state of a control checkout whose
+    ``main`` already holds that content. Returns the commit.
+
+    Ported 2026-10-23 alongside core/authorization/record_provenance.py's own test suite.
+    """
+    if not (root / ".git").exists():
+        init_git_repository(root, with_commit=False)
+    revision = commit_all(root, message)
+    assert run_git(["update-ref", "refs/remotes/origin/main", revision], cwd=root).returncode == 0
+    return revision
+
+
+def make_permit(repository: str, *, mode: str = "full", effect: str = "readme_proposal") -> Any:
+    """A ``WritePermit`` for a repository that is not a real Aspose FOSS name (the registry model
+    validates the name, ``model_construct`` does not) - the effect modules only read ``.effect``
+    and ``.entry.repository`` from it.
+
+    Ported 2026-10-23 alongside propose/effect.py's own test suite.
+    """
+    from repo_presenter.core.registry.models import RegistryEntry
+    from repo_presenter.core.registry.write_gate import WritePermit
+
+    entry = RegistryEntry.model_construct(
+        repository=repository,
+        family="fixture",
+        platform="fixture",
+        ecosystem="fixture",
+        mode=mode,
+        policy_profile="fixture",
+        active=True,
+        provider_identity=None,
+    )
+    return WritePermit(effect=effect, entry=entry)  # type: ignore[arg-type]

@@ -1579,3 +1579,59 @@ next_ready_items:
       calling validation_defects()/review_defects() against this repository's own lighter
       checks= rejections, skipping the full BC-01..BC-12/review.py stack entirely -- is a third,
       cheaper option alongside the two BUILD_INDEPENDENT_REVIEWER's own next_step already named.
+
+  - id: PORT_PROPOSE_EFFECT_LAYER
+    status: DONE
+    priority: medium
+    purpose: >
+      Owner directed: "again check old repo, otherwise plan from scratch" -- re-examine the
+      PR/publish effect layer (mission P3's "submit one authorized PR" blocker) via a research
+      fork before deciding what to port.
+    done: >
+      Fork confirmed propose/ (generic) is the right target, not readme_correction's Lane-L-
+      specific PR files (unported diagram engine + correction-bundle format) or propose/wave.py
+      (needs the unported candidates.py bundle format) or candidates_publish/ (an internal
+      bookkeeping effect for a retired workflow). Pulled: authorization/{proposal,
+      record_provenance}.py, propose/{pull_request,effect}.py, ~9 new github/client.py REST
+      primitives, token_provenance.py's verify_pull_request_app. Added 9 new Refusal codes.
+      Caught and fixed a real bug: this repository's own TokenDecision carries an extra field
+      the old repo's version lacks, which silently scrambled 5 ported tests' positional
+      constructions -- fixed with keyword arguments, not just an import-path change.
+      144 new tests, 1502/1502 passed, 11 skipped, full suite clean.
+      EXPECTED_APP_ID/SLUG are inherited, UNCONFIRMED placeholders -- flagged prominently, must
+      be replaced with this repository's real App identity before any live use.
+      Evidence: migration/reuse-manifest.yaml's PR-effect-layer entry, extended in place
+      2026-10-23.
+    next_step: >
+      Not wired into any live path -- still "never fired live" by design. Before real use:
+      confirm this repository's own App identity; wire
+      REPOSITORY_PRESENTER_PROPOSAL_WRITE_AUTHORIZED into production; decide how a real Lane R
+      cascade's PullRequestEvidence gets built. readme_correction's own 5,738-line orchestration
+      directory remains unread, a separate Lane-L-specific concern.
+
+  - id: OWNER_THREE_PART_CHECK_2026_10_23_CLOSED
+    status: DONE
+    priority: high
+    purpose: >
+      Close out the owner's explicit three-part direction this session: (1) check old repo for a
+      repair mechanism worth salvaging for the independent reviewer; (2) check aspose.org (then
+      old repo) for the clone-safety workflow; (3) check old repo for the PR-effect/monitoring/
+      metadata layer, otherwise plan from scratch.
+    done: >
+      All three answered with real research forks before any code was written, consistent with
+      this session's own discipline of reading real logic rather than guessing from names (the
+      git-safety hooks.py/neuter.py correction earlier this session is the cautionary precedent
+      this discipline exists to avoid repeating). (1) repair/targeted.py ported
+      (PORT_TARGETED_REPAIR); repair/rounds.py correctly left unported, cascades into the still-
+      BLOCKED_NEEDS_SCOPING independent reviewer. (2) aspose.org has no equivalent; old repo's
+      clone.py ported and wired into all four Lane R orchestration scripts (PORT_CLONE_PY). (3)
+      the generic propose/ path ported (PORT_PROPOSE_EFFECT_LAYER); monitor/metadata correctly
+      stay deferred per mission's own P3-before-P4 ordering and idea.md's explicit deferral.
+      Two commits (clone.py+targeted.py together, then the propose/ effect layer), 221 new
+      tests (77 + 144), full suite clean throughout (1221 -> 1358 -> 1502), zero regressions.
+    next_step: >
+      The independent reviewer's own repair-destination question is UNCHANGED by any of this:
+      targeted.py answers "how a repair happens," not "what produces a finding to repair" --
+      still needs the owner's own call on BUILD_INDEPENDENT_REVIEWER's next_step (advisory-only
+      v1, a minimal repair-destination stub, or the fork's third option: a lightweight custom
+      defect-producer against this repository's own checks= rejections).

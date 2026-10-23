@@ -24,8 +24,26 @@ from dataclasses import dataclass
 from typing import Literal
 
 from repo_presenter.authorization.refusals import Refusal
-from repo_presenter.github.client import API_ROOT, FetchFn, default_fetch
+from repo_presenter.github.client import (
+    API_ROOT,
+    FetchFn,
+    default_fetch,
+    get_app_id,
+    get_pull_request_author,
+)
+from repo_presenter.github.errors import RepositoryMetadataError
 
+#: The GitHub App id/slug ``verify_pull_request_app`` attributes a presenter pull request to.
+#: INHERITED FROM THE OLD REPO'S OWN REGISTERED APP (``core/github/token_provenance.py``,
+#: ``project/state.yaml``), 2026-10-23 -- NOT independently confirmed as this repository's own
+#: App identity. No pull request has ever been created by this repository (propose/effect.py
+#: itself is "never fired live" by design), so this constant has not yet mattered in practice;
+#: both values must be replaced with this repository's own actual GitHub App id/slug before
+#: verify_pull_request_app is ever relied on for a real write -- consistent with mission section
+#: 9's "the first live exercise against a real external target is owner-selected, never agent-
+#: selected" rule. A caller may also override both as keyword arguments without editing this file.
+EXPECTED_APP_ID = 5092474
+EXPECTED_APP_SLUG = "repository-presenter"
 INSTALLATION_TOKEN_PREFIX = "ghs_"
 #: Env var a local run reads for its write-scoped token (never an installation token in practice).
 LOCAL_TOKEN_ENV_VAR = "GH_TOKEN"
@@ -127,3 +145,42 @@ def resolve_write_token(
             f"unset or empty) - production never falls back to {LOCAL_TOKEN_ENV_VAR}",
         )
     return verify_installation_token(repository, token, fetch=fetch)
+
+
+def verify_pull_request_app(
+    owner: str,
+    name: str,
+    number: int,
+    *,
+    token: str,
+    fetch: FetchFn = default_fetch,
+    expected_app_id: int = EXPECTED_APP_ID,
+    expected_app_slug: str = EXPECTED_APP_SLUG,
+) -> TokenDecision:
+    """Refuse unless pull request ``number`` was authored by the expected GitHub App's bot.
+
+    Ported (ADAPT, 2026-10-23) alongside ``propose/effect.py``: what a bare installation token
+    cannot prove about itself (which App minted it) is attested on the pull request it produced
+    instead -- the author must be the ``Bot`` account ``<expected_app_slug>[bot]``, and that
+    slug's own public App id must equal ``expected_app_id``.
+    """
+    try:
+        author = get_pull_request_author(owner, name, number, token=token, fetch=fetch)
+        app_id = get_app_id(expected_app_slug, token=token, fetch=fetch)
+    except RepositoryMetadataError as exc:
+        return _refuse(Refusal.TOKEN_UNVERIFIABLE, f"could not attribute pull request: {exc}")
+    expected_login = f"{expected_app_slug}[bot]"
+    if author is None or author[1] != "Bot" or author[0].casefold() != expected_login:
+        who = "no author" if author is None else f"{author[1]} {author[0]}"
+        return _refuse(
+            Refusal.TOKEN_APP_MISMATCH,
+            f"pull request #{number} was authored by {who}, not the expected App bot "
+            f"{expected_login}",
+        )
+    if app_id != expected_app_id:
+        return _refuse(
+            Refusal.TOKEN_APP_MISMATCH,
+            f"GitHub App {expected_app_slug} has id {app_id}, not the expected "
+            f"{expected_app_id}",
+        )
+    return TokenDecision(True, token)

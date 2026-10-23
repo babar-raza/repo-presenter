@@ -1,8 +1,15 @@
 """Ported (trimmed) from the old repo's tests/core/github/test_client.py: issue creation and the
-fingerprint-marker dedup search, a fake fetch/write only -- no test here makes a live call."""
+fingerprint-marker dedup search, a fake fetch/write only -- no test here makes a live call.
+
+The proposal-effect primitives (get_ref/create_ref/get_contents/put_contents/
+find_pull_requests/create_pull_request/update_pull_request/get_pull_request_author/get_app_id)
+were ported 2026-10-23 alongside propose/effect.py, reusing this file's own OWNER/REPO fixture
+names rather than the old repo's own separate pair for that section -- neither pair's exact
+identity matters to what is being tested."""
 
 from __future__ import annotations
 
+import base64
 from typing import Any
 
 import pytest
@@ -10,8 +17,18 @@ import pytest
 from repo_presenter.github.client import (
     API_ROOT,
     ISSUE_LIST_MAX_PAGES,
+    PULLS_PAGE_SIZE,
     create_issue,
+    create_pull_request,
+    create_ref,
     find_issue_with_marker,
+    find_pull_requests,
+    get_app_id,
+    get_contents,
+    get_pull_request_author,
+    get_ref,
+    put_contents,
+    update_pull_request,
 )
 from repo_presenter.github.errors import RepositoryMetadataError
 
@@ -159,3 +176,337 @@ def test_find_issue_fails_closed_past_the_page_cap() -> None:
     with pytest.raises(RepositoryMetadataError, match="cannot prove absence"):
         find_issue_with_marker(OWNER, REPO, MARKER, token="ghp_r", fetch=fetch)
     assert len(fetch.urls) == ISSUE_LIST_MAX_PAGES
+
+
+# ---------------------------------------------------------------------------
+# The proposal-effect primitives: branch, contents, and pull-request RPCs
+# propose/effect.py composes into one idempotent "create or update a presenter
+# branch and its PR" write. Ported 2026-10-23.
+# ---------------------------------------------------------------------------
+
+
+def test_get_ref_returns_the_tip_sha_when_the_branch_exists() -> None:
+    def fetch(url: str, token: str | None) -> tuple[int, object]:
+        assert url == f"{API_ROOT}/repos/{OWNER}/{REPO}/git/ref/heads/main"
+        return 200, {"object": {"sha": "abc123"}}
+
+    assert get_ref(OWNER, REPO, "main", token="ghp_w", fetch=fetch) == "abc123"
+
+
+def test_get_ref_returns_none_when_the_branch_does_not_exist() -> None:
+    def fetch(url: str, token: str | None) -> tuple[int, object]:
+        return 404, {"message": "Not Found"}
+
+    assert get_ref(OWNER, REPO, "presenter/readme-update", token="ghp_w", fetch=fetch) is None
+
+
+def test_get_ref_raises_on_unreachable() -> None:
+    def fetch(url: str, token: str | None) -> tuple[int, object]:
+        return -1, "ConnectError"
+
+    with pytest.raises(RepositoryMetadataError, match="unreachable"):
+        get_ref(OWNER, REPO, "main", token="ghp_w", fetch=fetch)
+
+
+def test_get_ref_raises_on_a_malformed_success_body() -> None:
+    def fetch(url: str, token: str | None) -> tuple[int, object]:
+        return 200, {"object": {}}
+
+    with pytest.raises(RepositoryMetadataError):
+        get_ref(OWNER, REPO, "main", token="ghp_w", fetch=fetch)
+
+
+def test_create_ref_posts_the_new_branch_pointing_at_sha() -> None:
+    write = _RecordingWrite(status_code=201, body={"ref": "refs/heads/presenter/readme-update"})
+    create_ref(OWNER, REPO, "presenter/readme-update", "abc123", token="ghp_w", write=write)
+    assert len(write.calls) == 1
+    url, token, payload = write.calls[0]
+    assert url == f"{API_ROOT}/repos/{OWNER}/{REPO}/git/refs"
+    assert token == "ghp_w"
+    assert payload == {"ref": "refs/heads/presenter/readme-update", "sha": "abc123"}
+
+
+def test_create_ref_refuses_without_a_token_no_call_made() -> None:
+    write = _RecordingWrite()
+    with pytest.raises(RepositoryMetadataError):
+        create_ref(OWNER, REPO, "presenter/readme-update", "abc123", token="", write=write)
+    assert write.calls == []
+
+
+def test_create_ref_raises_on_a_non_201_status() -> None:
+    write = _RecordingWrite(status_code=422, body={"message": "Reference already exists"})
+    with pytest.raises(RepositoryMetadataError):
+        create_ref(OWNER, REPO, "presenter/readme-update", "abc123", token="ghp_w", write=write)
+
+
+def test_get_contents_decodes_base64_text() -> None:
+
+    encoded = base64.b64encode(b"# Hello\n").decode("ascii")
+
+    def fetch(url: str, token: str | None) -> tuple[int, object]:
+        assert url == f"{API_ROOT}/repos/{OWNER}/{REPO}/contents/README.md?ref=main"
+        return 200, {"sha": "filesha1", "content": encoded}
+
+    contents = get_contents(OWNER, REPO, "README.md", ref="main", token="ghp_w", fetch=fetch)
+    assert contents is not None
+    assert contents.text == "# Hello\n"
+    assert contents.sha == "filesha1"
+
+
+def test_get_contents_returns_none_when_the_file_does_not_exist_on_this_branch() -> None:
+    def fetch(url: str, token: str | None) -> tuple[int, object]:
+        return 404, {"message": "Not Found"}
+
+    found = get_contents(OWNER, REPO, "README.md", ref="presenter/x", token="ghp_w", fetch=fetch)
+    assert found is None
+
+
+def test_get_contents_raises_on_unreachable() -> None:
+    def fetch(url: str, token: str | None) -> tuple[int, object]:
+        return -1, "ConnectError"
+
+    with pytest.raises(RepositoryMetadataError, match="unreachable"):
+        get_contents(OWNER, REPO, "README.md", ref="main", token="ghp_w", fetch=fetch)
+
+
+def test_put_contents_creates_a_new_file_with_no_sha() -> None:
+
+    write = _RecordingWrite(
+        status_code=201,
+        body={"content": {"sha": "newfilesha"}, "commit": {"sha": "newcommitsha"}},
+    )
+    outcome = put_contents(
+        OWNER,
+        REPO,
+        "README.md",
+        branch="presenter/readme-update",
+        message="Update README via repo-presenter",
+        text="# New\n",
+        sha=None,
+        token="ghp_w",
+        write=write,
+    )
+    assert len(write.calls) == 1
+    url, token, payload = write.calls[0]
+    assert url == f"{API_ROOT}/repos/{OWNER}/{REPO}/contents/README.md"
+    assert token == "ghp_w"
+    assert "sha" not in payload
+    assert base64.b64decode(payload["content"]).decode("utf-8") == "# New\n"
+    assert outcome.content_sha == "newfilesha"
+    assert outcome.commit_sha == "newcommitsha"
+
+
+def test_put_contents_updates_an_existing_file_with_its_sha() -> None:
+    write = _RecordingWrite(
+        status_code=200,
+        body={"content": {"sha": "updatedsha"}, "commit": {"sha": "updatedcommit"}},
+    )
+    put_contents(
+        OWNER,
+        REPO,
+        "README.md",
+        branch="presenter/readme-update",
+        message="m",
+        text="# Updated\n",
+        sha="oldsha",
+        token="ghp_w",
+        write=write,
+    )
+    assert write.calls[0][2]["sha"] == "oldsha"
+
+
+def test_put_contents_refuses_without_a_token_no_call_made() -> None:
+    write = _RecordingWrite()
+    with pytest.raises(RepositoryMetadataError):
+        put_contents(
+            OWNER, REPO, "README.md", branch="b", message="m", text="t", sha=None,
+            token="", write=write,
+        )
+    assert write.calls == []
+
+
+def test_put_contents_raises_on_unreachable_the_lost_response_shape() -> None:
+    """propose/effect.py pattern-matches "unreachable" in this exact message to decide a
+    response was lost (eligible for reconciliation) rather than hard-rejected."""
+
+    def write(url: str, token: str, payload: dict[str, Any]) -> tuple[int, Any]:
+        return -1, "ReadTimeout: the server did not respond"
+
+    with pytest.raises(RepositoryMetadataError, match="unreachable"):
+        put_contents(
+            OWNER, REPO, "README.md", branch="b", message="m", text="t", sha=None,
+            token="ghp_w", write=write,
+        )
+
+
+def test_put_contents_raises_on_a_non_2xx_status() -> None:
+    write = _RecordingWrite(status_code=409, body={"message": "sha does not match"})
+    with pytest.raises(RepositoryMetadataError):
+        put_contents(
+            OWNER, REPO, "README.md", branch="b", message="m", text="t", sha="stalesha",
+            token="ghp_w", write=write,
+        )
+
+
+def _pull(
+    number: int, *, state: str, merged_at: str | None = None, body: str = ""
+) -> dict[str, Any]:
+    return {
+        "number": number,
+        "html_url": f"https://github.com/x/y/pull/{number}",
+        "title": "Update README",
+        "body": body,
+        "state": state,
+        "merged_at": merged_at,
+    }
+
+
+def test_find_pull_requests_asks_for_every_state_not_only_open() -> None:
+    seen: list[str] = []
+
+    def fetch(url: str, token: str | None) -> tuple[int, object]:
+        seen.append(url)
+        return 200, []
+
+    assert (
+        find_pull_requests(OWNER, REPO, head_branch="presenter/x", token="ghs_w", fetch=fetch) == ()
+    )
+    assert "state=all" in seen[0]
+    assert "state=open" not in seen[0]
+    assert f"head={OWNER}:presenter/x" in seen[0]
+
+
+def test_find_pull_requests_classifies_open_closed_and_merged() -> None:
+    def fetch(url: str, token: str | None) -> tuple[int, object]:
+        return 200, [
+            _pull(12, state="open"),
+            _pull(11, state="closed", merged_at="2026-10-01T00:00:00Z", body="merged one"),
+            _pull(10, state="closed", merged_at=None, body="declined one"),
+        ]
+
+    found = find_pull_requests(OWNER, REPO, head_branch="b", token="ghs_w", fetch=fetch)
+    assert [(pr.number, pr.state) for pr in found] == [(12, "open"), (11, "merged"), (10, "closed")]
+    assert found[1].body == "merged one"
+
+
+def test_find_pull_requests_refuses_a_full_page_as_possibly_incomplete() -> None:
+    def fetch(url: str, token: str | None) -> tuple[int, object]:
+        return 200, [_pull(n, state="closed") for n in range(PULLS_PAGE_SIZE)]
+
+    with pytest.raises(RepositoryMetadataError, match="cannot be proven complete"):
+        find_pull_requests(OWNER, REPO, head_branch="b", token="ghs_w", fetch=fetch)
+
+
+def test_find_pull_requests_raises_on_unreachable_and_on_http_errors() -> None:
+    with pytest.raises(RepositoryMetadataError, match="unreachable"):
+        find_pull_requests(
+            OWNER, REPO, head_branch="b", token="t", fetch=lambda u, t: (-1, "ConnectError")
+        )
+    with pytest.raises(RepositoryMetadataError, match="HTTP 500"):
+        find_pull_requests(OWNER, REPO, head_branch="b", token="t", fetch=lambda u, t: (500, None))
+
+
+def test_create_pull_request_posts_head_base_title_and_body() -> None:
+    write = _RecordingWrite(
+        status_code=201,
+        body={
+            "number": 11,
+            "html_url": "https://github.com/x/y/pull/11",
+            "title": "Update README",
+            "body": "body",
+        },
+    )
+    created = create_pull_request(
+        OWNER, REPO, title="Update README", body="body", head="presenter/readme-update",
+        base="main", token="ghp_w", write=write,
+    )
+    assert len(write.calls) == 1
+    url, _token, payload = write.calls[0]
+    assert url == f"{API_ROOT}/repos/{OWNER}/{REPO}/pulls"
+    assert payload == {
+        "title": "Update README",
+        "body": "body",
+        "head": "presenter/readme-update",
+        "base": "main",
+    }
+    assert created.number == 11
+    assert created.url == "https://github.com/x/y/pull/11"
+
+
+def test_create_pull_request_refuses_without_a_token_no_call_made() -> None:
+    write = _RecordingWrite()
+    with pytest.raises(RepositoryMetadataError):
+        create_pull_request(
+            OWNER, REPO, title="t", body="b", head="h", base="main", token="", write=write
+        )
+    assert write.calls == []
+
+
+def test_update_pull_request_patches_title_and_body() -> None:
+    write = _RecordingWrite(
+        status_code=200,
+        body={"html_url": "https://github.com/x/y/pull/11", "title": "New title", "body": "new"},
+    )
+    updated = update_pull_request(
+        OWNER, REPO, 11, title="New title", body="new", token="ghp_w", write=write
+    )
+    assert len(write.calls) == 1
+    url, _token, payload = write.calls[0]
+    assert url == f"{API_ROOT}/repos/{OWNER}/{REPO}/pulls/11"
+    assert payload == {"title": "New title", "body": "new"}
+    assert updated.number == 11
+    assert updated.title == "New title"
+
+
+def test_update_pull_request_refuses_without_a_token_no_call_made() -> None:
+    write = _RecordingWrite()
+    with pytest.raises(RepositoryMetadataError):
+        update_pull_request(OWNER, REPO, 11, title="t", body="b", token="", write=write)
+    assert write.calls == []
+
+
+def test_update_pull_request_raises_on_a_non_200_status() -> None:
+    write = _RecordingWrite(status_code=404, body={"message": "Not Found"})
+    with pytest.raises(RepositoryMetadataError):
+        update_pull_request(OWNER, REPO, 11, title="t", body="b", token="ghp_w", write=write)
+
+
+def test_get_pull_request_author_reads_the_bot_login_not_performed_via_github_app() -> None:
+    seen: list[str] = []
+
+    def fetch(url: str, token: str | None) -> tuple[int, object]:
+        seen.append(url)
+        return 200, {
+            "user": {"login": "repo-presenter[bot]", "type": "Bot"},
+            "performed_via_github_app": None,
+        }
+
+    assert get_pull_request_author(OWNER, REPO, 4, token="ghs_w", fetch=fetch) == (
+        "repo-presenter[bot]",
+        "Bot",
+    )
+    assert seen == [f"{API_ROOT}/repos/{OWNER}/{REPO}/issues/4"]
+
+
+def test_get_pull_request_author_is_none_without_a_user_and_raises_on_http_errors() -> None:
+    assert (
+        get_pull_request_author(OWNER, REPO, 4, token="t", fetch=lambda u, t: (200, {"user": None}))
+        is None
+    )
+    with pytest.raises(RepositoryMetadataError, match="HTTP 404"):
+        get_pull_request_author(OWNER, REPO, 4, token="t", fetch=lambda u, t: (404, {}))
+    with pytest.raises(RepositoryMetadataError, match="unreachable"):
+        get_pull_request_author(OWNER, REPO, 4, token="t", fetch=lambda u, t: (-1, "x"))
+
+
+def test_get_app_id_reads_the_public_app_by_slug() -> None:
+    seen: list[str] = []
+
+    def fetch(url: str, token: str | None) -> tuple[int, object]:
+        seen.append(url)
+        return 200, {"id": 5092474, "slug": "repository-presenter"}
+
+    assert get_app_id("repository-presenter", token="ghs_w", fetch=fetch) == 5092474
+    assert seen == [f"{API_ROOT}/apps/repository-presenter"]
+    with pytest.raises(RepositoryMetadataError, match="HTTP 404"):
+        get_app_id("nope", token="t", fetch=lambda u, t: (404, {}))

@@ -1,8 +1,8 @@
 """The typed reasons a write effect refuses, in one place.
 
 Trimmed from the old repo's ``core/authorization/refusals.py``: only the codes this repository's
-issue-filing slice and registry write gate can actually raise are kept (the candidate-bundle and
-correction-gate codes belong to components not pulled yet).
+issue-filing slice, registry write gate, and proposal-authorization pull can actually raise are
+kept (the candidate-bundle and correction-gate codes belong to components not pulled yet).
 """
 
 from __future__ import annotations
@@ -15,6 +15,7 @@ class Refusal(StrEnum):
     TOKEN_NOT_INSTALLATION = "token_not_installation"
     TOKEN_WRONG_SCOPE = "token_wrong_scope"
     TOKEN_UNVERIFIABLE = "token_unverifiable"
+    TOKEN_APP_MISMATCH = "token_app_mismatch"
     # The owner kill switch and credential presence (repo_presenter.issues.file).
     WRITE_NOT_ENABLED = "write_not_enabled"
     NO_WRITE_TOKEN = "no_write_token"
@@ -25,6 +26,18 @@ class Refusal(StrEnum):
     REGISTRY_DISABLED = "registry_disabled"
     REGISTRY_DRY_RUN = "registry_dry_run"
     REGISTRY_INACTIVE = "registry_inactive"
+    # Proposal authorization (repo_presenter.core.authorization.{proposal,record_provenance}),
+    # ported 2026-10-23.
+    AUTHORIZATION_MISSING = "authorization_missing"
+    AUTHORIZATION_UNREADABLE = "authorization_unreadable"
+    AUTHORIZATION_NOT_COMMITTED = "authorization_not_committed"
+    AUTHORIZATION_EXPIRED = "authorization_expired"
+    AUTHORIZATION_MISMATCH = "authorization_mismatch"
+    # The README-proposal effect itself (repo_presenter.propose.effect), ported 2026-10-23.
+    PR_ALREADY_MERGED = "pr_already_merged"
+    PR_ALREADY_CLOSED = "pr_already_closed"
+    SOURCE_MOVED = "source_moved"
+    GITHUB_ERROR = "github_error"
 
 
 class WriteRefusedError(Exception):

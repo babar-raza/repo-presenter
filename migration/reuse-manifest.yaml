@@ -1871,18 +1871,63 @@ entries:
       readme_correction's own Lane-L-specific pull_request.py/live_pull_request.py -- both need
       reading before choosing one, to avoid porting two competing PR-effect implementations when
       one may already subsume or supersede the other.
-    target_module: not yet planned -- needs a read first.
+    target_module: >
+      src/repo_presenter/propose/{pull_request,effect}.py; src/repo_presenter/authorization/
+      {proposal,record_provenance}.py; src/repo_presenter/github/client.py (extended);
+      src/repo_presenter/github/token_provenance.py (extended) -- all present, 2026-10-23.
+    propose_effect_pulled_2026_10_23: >
+      Owner-directed: "again check old repo, otherwise plan from scratch." A research fork read
+      propose/effect.py (462 lines) and pull_request.py (297 lines) in full and confirmed the
+      generic propose/ path is the right target, not readme_correction's Lane-L-specific
+      pull_request.py/live_pull_request.py (which import the unported diagram-geometry engine
+      and correction-bundle format) -- the two are genuinely different mechanisms, not the same
+      one wrapped twice. propose/wave.py (batch orchestration, needs the unported
+      core/candidates.py bundle format) and candidates_publish/ (an internal bookkeeping effect
+      for the old repo's own retired sealed-bundle workflow, not a README-PR-to-external-target
+      mechanism) are NOT ported -- correctly not bounded, left PENDING_REVIEW/low-relevance.
+
+      Pulled this pass, each REUSE/ADAPT (import paths only, confirmed self-contained):
+      authorization/proposal.py (the persisted ProposalAuthorization record + validate_
+      authorization) and record_provenance.py (git-provenance proof an authorization record
+      pre-dates its triggering commit -- kept its own minimal subprocess git() rather than
+      delegating to the more hardened core/git_safety/git.py, a deliberate scope decision, not
+      an oversight); propose/pull_request.py whole (load_pull_request_evidence reads a
+      validation.json/examples.json pair by plain file shape, not a sealed-bundle-specific
+      format -- works today given files in that shape, just not yet produced by any real Lane R
+      cascade); propose/effect.py whole (propose_candidate, the actual gated PR-creation
+      effect); ~9 new github/client.py REST primitives (get_ref/create_ref/get_contents/
+      put_contents/find_pull_requests/create_pull_request/update_pull_request/
+      get_pull_request_author/get_app_id) plus default_put/default_patch; token_provenance.py's
+      new verify_pull_request_app. Added 9 new Refusal codes (5 AUTHORIZATION_*, TOKEN_APP_
+      MISMATCH, PR_ALREADY_MERGED/CLOSED, SOURCE_MOVED, GITHUB_ERROR).
+
+      EXPECTED_APP_ID/EXPECTED_APP_SLUG (token_provenance.py) are inherited, UNCONFIRMED
+      placeholders from the old repo's own registered App -- flagged prominently in that
+      module's own docstring; must be replaced with this repository's real App identity before
+      any live use, never assumed correct.
+
+      Found and fixed a real bug while porting, not just an import-path mismatch: this
+      repository's own TokenDecision (added earlier this session, alongside resolve_write_token)
+      carries an extra ``token`` field the old repo's version does not, which silently scrambled
+      5 ported tests' positional ``TokenDecision(False, code, reason)`` constructions (``code``
+      landed in the ``token`` field). Fixed by switching those calls to keyword arguments.
+
+      144 new tests across 6 files (tests/core/authorization/{test_proposal,
+      test_record_provenance}.py, tests/propose/{test_pull_request,test_effect}.py,
+      tests/github/{test_client,test_token_provenance}.py -- the latter two extended, not new
+      files), 1502/1502 passed, 11 skipped, full suite clean.
     next_step: >
-      Read components/propose/effect.py and pull_request.py first (smaller, generic, likely the
-      intended long-term path given it is not Lane-L-named); separately skim readme_correction's
-      pull_request.py/live_pull_request.py only enough to determine whether it is a
-      Lane-L-specific wrapper over the same primitives or a genuinely separate mechanism, before
-      reading the other ~5,000 lines in that directory (commands/docs/augment/gate/enrich/check/
-      bundle/committed/receipts/render/run/send/settle/live_bundle/live_gate/live_ops) --
-      most of those names suggest Lane-L-specific orchestration this repository's own, much
-      simpler scripts/run_lane_l.py may already supersede; confirm before reading all of it.
-    portfolio_consumers: both lanes, once any candidate is eligible for a real PR effect (P3).
-    invalidation_impact: none yet -- not pulled; no PR effect exists anywhere in this repository.
+      Not wired into any live Lane R/L path -- this is still "never fired live" by design
+      (mission section 9, idea.md's owner-selected-first-exercise rule). Before any real use:
+      confirm this repository's own App identity for EXPECTED_APP_ID/SLUG;
+      REPOSITORY_PRESENTER_PROPOSAL_WRITE_AUTHORIZED has no production wiring yet; decide how a
+      real Lane R cascade's PullRequestEvidence gets built (load_pull_request_evidence's sealed-
+      bundle shape vs. some other source). readme_correction's own 5,738-line orchestration
+      directory remains unread -- its own, separate, Lane-L-specific concern.
+    portfolio_consumers: both lanes, once any candidate is eligible for a real PR effect (P3) and
+      the App-identity/authorization-wiring questions above are resolved.
+    invalidation_impact: none yet -- pulled, but no caller invokes propose_candidate from any
+      live path.
 
   - component: "Portfolio monitoring: components/monitor/{discovery.py,drift.py,freshness.py,
       install_state.py,org_listing.py,relevance.py} (2,025 total)"

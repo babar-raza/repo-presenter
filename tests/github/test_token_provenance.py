@@ -1,5 +1,11 @@
 """Ported (trimmed) from the old repo's tests/core/github/test_token_provenance.py, plus new tests
-for this repository's own local-vs-production ``resolve_write_token`` split."""
+for this repository's own local-vs-production ``resolve_write_token`` split.
+
+``verify_pull_request_app``'s own tests, ported 2026-10-23 alongside ``propose/effect.py``, were
+added below -- they pin the current EXPECTED_APP_ID/SLUG placeholders (inherited from the old
+repo's own registered App, not yet confirmed as this repository's own; see token_provenance.py's
+own docstring), so they will need updating the day those constants are replaced with this
+repository's real App identity."""
 
 from __future__ import annotations
 
@@ -8,9 +14,11 @@ from typing import Any
 from repo_presenter.authorization.refusals import Refusal
 from repo_presenter.github.token_provenance import (
     APP_INSTALLATION_TOKEN_ENV_VAR,
+    EXPECTED_APP_ID,
     LOCAL_TOKEN_ENV_VAR,
     resolve_write_token,
     verify_installation_token,
+    verify_pull_request_app,
 )
 
 TARGET = "aspose-cells-foss/Aspose.Cells-FOSS-for-Java"
@@ -118,3 +126,64 @@ def test_production_mode_refuses_a_hand_set_pat_passed_as_the_app_token() -> Non
     )
     assert decision.ok is False
     assert decision.code is Refusal.TOKEN_NOT_INSTALLATION
+
+
+# ---------------------------------------------------------------------------
+# verify_pull_request_app: what a bare installation token cannot prove about itself
+# (which App minted it) is attested on the pull request it produced instead.
+# ---------------------------------------------------------------------------
+
+
+def _router(pr: dict[str, Any], app: dict[str, Any] | None = None) -> Any:
+    """Answer ``/issues/N`` with ``pr`` and ``/apps/<slug>`` with ``app`` (200 each)."""
+    app_body = {"id": EXPECTED_APP_ID, "slug": "repository-presenter"} if app is None else app
+
+    def fetch(url: str, token: str | None) -> tuple[int, object]:
+        return (200, app_body) if "/apps/" in url else (200, pr)
+
+    return fetch
+
+
+_BOT = {"login": "repository-presenter[bot]", "type": "Bot"}
+
+
+def test_a_pull_request_authored_by_the_expected_app_bot_is_accepted() -> None:
+    # The live shape (old repo, run 38883943550, presenter-sandbox#1): the App's bot is the
+    # author and performed_via_github_app is null - the very case a naive check would refuse.
+    pr = {"user": _BOT, "performed_via_github_app": None}
+    decision = verify_pull_request_app("o", "n", 4, token=INSTALLATION_TOKEN, fetch=_router(pr))
+    assert decision.ok is True
+
+
+def test_a_pull_request_from_another_author_is_refused() -> None:
+    for user in (
+        {"login": "someone-else[bot]", "type": "Bot"},
+        {"login": "repository-presenter", "type": "User"},
+        {"login": "someone", "type": "User"},
+        None,
+    ):
+        decision = verify_pull_request_app(
+            "o", "n", 4, token=INSTALLATION_TOKEN, fetch=_router({"user": user})
+        )
+        assert decision.ok is False
+        assert decision.code is Refusal.TOKEN_APP_MISMATCH
+
+
+def test_a_slug_that_resolves_to_a_different_app_id_is_refused() -> None:
+    decision = verify_pull_request_app(
+        "o",
+        "n",
+        4,
+        token=INSTALLATION_TOKEN,
+        fetch=_router({"user": _BOT}, {"id": 15368, "slug": "repository-presenter"}),
+    )
+    assert decision.ok is False
+    assert decision.code is Refusal.TOKEN_APP_MISMATCH
+
+
+def test_an_unreadable_pull_request_is_unverifiable() -> None:
+    decision = verify_pull_request_app(
+        "o", "n", 4, token=INSTALLATION_TOKEN, fetch=_fetch(404, {"message": "Not Found"})
+    )
+    assert decision.ok is False
+    assert decision.code is Refusal.TOKEN_UNVERIFIABLE
