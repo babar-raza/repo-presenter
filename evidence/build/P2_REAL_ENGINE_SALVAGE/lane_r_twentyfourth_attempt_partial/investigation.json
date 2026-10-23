@@ -1,0 +1,205 @@
+{
+  "audience": {
+    "fact_ids": [
+      "package:cxx_standard",
+      "package:cmake_minimum",
+      "example:008",
+      "example:009"
+    ],
+    "text": "C++ developers building cross-platform applications that need to generate or manipulate PowerPoint presentations without requiring Microsoft PowerPoint or COM interop."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "example:008",
+        "example:009",
+        "format:output.pptx",
+        "format:output.pptm",
+        "format:output.ppsx",
+        "format:output.ppsm",
+        "format:output.potx",
+        "format:output.potm"
+      ],
+      "text": "Create new presentations with a default blank slide or load existing .pptx files, then save to Office Open XML formats using Presentation and SaveFormat.",
+      "title": "Create and edit presentations"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.slides.foss",
+        "import_path:asposeslidesfoss"
+      ],
+      "text": "Add, remove, and clone slides via SlideCollection; insert AutoShapes, Tables, Connectors, and PictureFrames via ShapeCollection methods.",
+      "title": "Manage slides and shapes"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.slides.foss",
+        "import_path:asposeslidesfoss"
+      ],
+      "text": "Apply character-level formatting via PortionFormat, paragraph formatting via ParagraphFormat, and shape fills, outlines, shadows, 3D effects via respective format classes.",
+      "title": "Format text and shapes"
+    },
+    {
+      "fact_ids": [
+        "example:008",
+        "public_symbol:aspose.slides.foss",
+        "import_path:asposeslidesfoss"
+      ],
+      "text": "Add per-slide speaker notes via NotesSlideManager and add comments with authors, positions, timestamps, and replies via CommentAuthorCollection and CommentCollection.",
+      "title": "Add speaker notes and comments"
+    },
+    {
+      "fact_ids": [
+        "example:009",
+        "public_symbol:aspose.slides.foss",
+        "import_path:asposeslidesfoss"
+      ],
+      "text": "Embed images from in-memory byte buffers via ImageCollection and set core, application, and custom document properties via DocumentProperties.",
+      "title": "Embed images and manage document properties"
+    },
+    {
+      "fact_ids": [
+        "format:output.pptx",
+        "format:output.pptm",
+        "format:output.ppsx",
+        "format:output.ppsm",
+        "format:output.potx",
+        "format:output.potm"
+      ],
+      "text": "Save presentations to six Office Open XML formats: PPTX, PPTM, PPSX, PPSM, POTX, and POTM.",
+      "title": "Export to multiple formats"
+    },
+    {
+      "fact_ids": [
+        "import_path:asposeslidesfoss"
+      ],
+      "text": "Unknown XML parts encountered during load are preserved verbatim on save, ensuring round-trip integrity for unmodeled content.",
+      "title": "Preserve unknown XML parts"
+    },
+    {
+      "fact_ids": [
+        "package:cmake_minimum",
+        "package:cxx_standard",
+        "dependency:pugixml",
+        "dependency:development.miniz"
+      ],
+      "text": "Integrate via CMake FetchContent or install via CMake package; requires C++20 and CMake 3.20+.",
+      "title": "Cross-platform CMake integration"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "import_path:asposeslidesfoss"
+      ],
+      "text": "Save() only accepts file paths; saving to streams is unsupported."
+    },
+    {
+      "fact_ids": [
+        "import_path:asposeslidesfoss"
+      ],
+      "text": "Add_image() only accepts in-memory byte buffers; loading images from paths or streams is unsupported."
+    },
+    {
+      "fact_ids": [
+        "import_path:asposeslidesfoss"
+      ],
+      "text": "Add_clone() on slides loses text content of shapes; the clone copies geometry but not text frames."
+    },
+    {
+      "fact_ids": [
+        "import_path:asposeslidesfoss"
+      ],
+      "text": "Add_clone() on masters does not persist to the saved package; slide master references are not written."
+    },
+    {
+      "fact_ids": [
+        "import_path:asposeslidesfoss"
+      ],
+      "text": "Save() throws std::invalid_argument for non-Office Open XML formats (PDF, HTML, ODP, images, etc.); only six PPTX-family formats are supported."
+    },
+    {
+      "fact_ids": [
+        "import_path:asposeslidesfoss"
+      ],
+      "text": "pugixml is exposed in the public interface; consumers must link against pugixml headers and library."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "import_path:asposeslidesfoss"
+      ],
+      "text": "Enables programmatic PowerPoint creation and editing in C++ without external dependencies like Microsoft Office, COM, or proprietary runtimes."
+    },
+    {
+      "fact_ids": [
+        "package:cmake_minimum",
+        "dependency:pugixml",
+        "dependency:development.miniz",
+        "dependency:development.googletest"
+      ],
+      "text": "Supports CMake-based builds with automatic dependency fetching via FetchContent, simplifying integration into existing C++ projects."
+    },
+    {
+      "fact_ids": [
+        "package:distribution.aspose.slides.cpp.foss",
+        "package:cxx_standard"
+      ],
+      "text": "Provides a stable, versioned static library with prebuilt Windows NuGet packages for MSVC, reducing build complexity on Windows."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:repository",
+      "package:name",
+      "package:version",
+      "package:distribution.aspose.slides.cpp.foss",
+      "import_path:asposeslidesfoss",
+      "public_symbol:aspose.slides.foss"
+    ],
+    "text": "Aspose.Slides FOSS for C++ is a free, open-source C++20 library for creating, reading, and editing PowerPoint presentations, distributed under the MIT License."
+  },
+  "uncertainties": [
+    "Whether the library supports saving to SVG or other non-PPTX-family formats beyond the documented SaveFormat enum.",
+    "Whether the library supports VBA macro injection or editing.",
+    "Whether digital signatures are supported in any form.",
+    "Whether animations or slide transitions are partially supported beyond the documented absence.",
+    "Whether the library supports slide backgrounds or themes beyond what is documented.",
+    "Whether placeholder geometry inheritance is fully modeled for all layout scenarios.",
+    "Whether the conformance test suite covers all edge cases for unknown XML parts preservation.",
+    "Whether the NuGet package supports ARM64 Windows beyond x64 and Win32."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "example:008",
+        "public_symbol:aspose.slides.foss",
+        "import_path:asposeslidesfoss"
+      ],
+      "name": "Create presentation with comments",
+      "text": "Instantiate a Presentation, add a comment author, insert a comment with position and timestamp, link a reply using set_parent_comment, and save to PPTX."
+    },
+    {
+      "fact_ids": [
+        "example:009",
+        "public_symbol:aspose.slides.foss",
+        "import_path:asposeslidesfoss"
+      ],
+      "name": "Set document properties",
+      "text": "Create a Presentation, set title, author, and custom properties via document_properties(), then save to PPTX."
+    },
+    {
+      "fact_ids": [
+        "package:cmake_minimum",
+        "dependency:pugixml",
+        "dependency:development.miniz",
+        "dependency:development.googletest"
+      ],
+      "name": "Build and test",
+      "text": "Build the library with CMake 3.20+, fetch dependencies (pugixml, miniz, googletest), run unit, integration, and conformance tests, and validate output packages."
+    }
+  ]
+}
