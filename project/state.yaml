@@ -1400,3 +1400,22 @@ next_ready_items:
       deciding whether to read in full) remain PENDING_REVIEW. Separately: decide where
       claims.py and review_deferrals() get wired into a live callback before either affects a
       real candidate.
+    validation_subtree_closed_out_2026_10_23: >
+      Read links/rules.py in full (133 lines) and skimmed registry.py (module docstring +
+      imports, not line-by-line, per its own next_step's instruction not to read 2,731 lines
+      speculatively). Findings: links/rules.py's enterprise_anchor_problems enforces the OLD
+      "full-featured ... Enterprise Edition" anchor wording docs/MISSION_AUTHORITY.md's owner
+      correction R2/R3 already retired -- a verbatim port would have reintroduced a fixed
+      defect, and it is redundant anyway (this repository's own enterprise_edition.py detector
+      already does it correctly). RETIRED that one function; the other three
+      (verified_example_hashes/readme_link_budget/badge_slot/badge_problems) stay PENDING_REVIEW,
+      low priority, not ported this pass. registry.py (BC-01..BC-12's dispatch layer) turned out
+      to directly import that same stale enterprise_anchor_problems -- confirming it is exactly
+      the "validation chain with a causal blind spot" category docs/MISSION_AUTHORITY.md's
+      critical fact already warns against reusing without independent re-verification; disposed
+      PENDING_REVIEW/not-a-port-candidate, not read further. This closes out the validation/
+      subtree's investigation: claims.py and deferrals.py+content_presence.py are ported and
+      independently re-verified fresh; links/rules.py and registry.py are correctly left
+      unported, each for a stated, evidenced reason rather than merely their size.
+      No source changes this entry -- migration/reuse-manifest.yaml updated with both findings,
+      see its own links/rules.py and registry.py entries.

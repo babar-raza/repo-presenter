@@ -1632,7 +1632,9 @@ entries:
       suite clean (no regressions; 61 new tests, none removed).
     disposition: "REUSE/ADAPT: claims.py, content_presence.py and deferrals.py (import paths
       only) and the classify_license_text narrow slice, all pulled 2026-10-23. links/rules.py
-      (133), registry.py (2,731) remain PENDING_REVIEW, unevaluated -- see next_step."
+      (133): one function RETIRE, three PENDING_REVIEW, low priority (see that module's own
+      entry below). registry.py (2,731): skimmed (module docstring + imports only, not read in
+      full) -- NOT a candidate for a verbatim port; see that module's own entry below."
     reason: >
       Directly closes a real, still-valid outcome requirement (docs/MISSION_AUTHORITY.md:
       "every claim traces to a verified fact with a SUPPORTED/CONTRADICTED/UNVERIFIED
@@ -1862,4 +1864,50 @@ entries:
       Low priority. If pulled later: verified_example_hashes, readme_link_budget, badge_slot,
       badge_problems only -- never enterprise_anchor_problems, which is superseded and stale.
     portfolio_consumers: none yet -- not pulled.
+    invalidation_impact: none -- not pulled.
+
+  - component: "components/readme/validation/registry.py (2,731 lines) -- Stage S9, the
+      versioned registry of the eleven blocking checks (BC-01..BC-12)"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    behavior: >
+      Module docstring + full import block skimmed only, per this manifest's own prior
+      next_step ("skim ... before deciding whether a full read is warranted; do not read 2,731
+      lines speculatively") -- not read line-by-line. Confirmed: this is the orchestration layer
+      that wires claims.py (BC-14), deferrals.py's review_deferrals (BC-05), links/rules.py
+      (BC-06/BC-07, badge_problems AND enterprise_anchor_problems both), references.py's
+      dangling_references, and roughly a dozen more checks (authoring.py's
+      EDITION_SUBSTITUTE/allowed_identifiers/surface_members/verified_members, glance.py's
+      diagram_failures, shell.py, terminology.py, link_budget.py, list_coverage.py, placement.py,
+      renderer.py exports, evidence/facts/{assets,links,product_pages,unpublished}.py,
+      core/{ecosystems,examples,facts,package_registry,secrets}.py) into one validation.json per
+      candidate, each check versioned and routed to the causal stage a failure reopens.
+    disposition: "PENDING_REVIEW, NOT a REUSE/ADAPT candidate as a whole -- do not port
+      verbatim. This is exactly the kind of component docs/MISSION_AUTHORITY.md's own critical
+      fact already warns about: 'any system whose validation or reviewer shares the same causal
+      blind spot as its producer must be re-evaluated before reuse' (mission section 3), applied
+      there to review.py/judge.py/'the BC-04/BC-14 validators' by name -- this registry.py is
+      precisely the dispatch layer those validators run inside. Confirmed concretely, not just
+      by category: it imports links/rules.py's enterprise_anchor_problems directly, the function
+      this manifest's own links/rules.py entry (above) just found stale and already superseded
+      by this repository's own enterprise_edition.py detector -- a verbatim port of registry.py
+      would reintroduce that exact retired defect at the orchestration level even though
+      links/rules.py itself was correctly not pulled."
+    reason: >
+      Answers this manifest's own open question from the claims.py entry's earlier next_step
+      ('confirm whether the rest is a genuinely separate concern ... before reading it in
+      full') -- yes: a large, separate, integration-risk orchestration concern, not a sibling
+      validator of claims.py/deferrals.py's own kind. claims.py and deferrals.py were each
+      independently re-read and re-verified against this repository's own current facts/rules
+      before porting (finding and fixing nothing stale in either); registry.py's own
+      enterprise_anchor_problems import proves the wrapper itself was NOT independently
+      re-verified when this skim was done, consistent with the mission's warning.
+    target_module: none planned. If this repository ever needs a BC-01..BC-12-style unified
+      validation.json, it should be built fresh from the independently-reverified pieces already
+      ported (claims.py, deferrals.py) plus whichever of the dozen other dependencies are
+      themselves independently reverified first -- never by porting this dispatch shell.
+    next_step: none planned; do not read the remaining ~2,600 lines speculatively. Revisit only
+      if a future taskcard specifically needs a unified validation.json and has already
+      independently reverified every check it would wire in.
+    portfolio_consumers: none -- not pulled, and not planned to be pulled as a whole.
     invalidation_impact: none -- not pulled.
