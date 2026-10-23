@@ -1,0 +1,543 @@
+{
+  "coherence": {
+    "applied": true,
+    "revised": []
+  },
+  "omitted": [],
+  "schema_version": 1,
+  "units": [
+    {
+      "fact_ids": [
+        "identity:repository",
+        "format:input.psd",
+        "example:002",
+        "public_symbol:aspose_psd_foss.psdimage",
+        "public_symbol:aspose_psd_foss.layers.layer",
+        "public_symbol:aspose_psd_foss.sections.imagedata",
+        "public_symbol:aspose_psd_foss.resources.psdresourceinfo",
+        "public_symbol:aspose_psd_foss.psdimage.save",
+        "public_symbol:aspose_psd_foss.streamcontainer",
+        "public_symbol:aspose_psd_foss.psdimage.width",
+        "public_symbol:aspose_psd_foss.psdimage.height",
+        "public_symbol:aspose_psd_foss.psdimage.channels",
+        "public_symbol:aspose_psd_foss.psdimage.bits_per_channel",
+        "public_symbol:aspose_psd_foss.psdimage.color_mode",
+        "public_symbol:aspose_psd_foss.psdimage.version",
+        "public_symbol:aspose_psd_foss.psdimage.is_psb",
+        "public_symbol:aspose_psd_foss.psdimage.layer_count",
+        "public_symbol:aspose_psd_foss.psdimage.resource_count",
+        "public_symbol:aspose_psd_foss.psdimage.compression",
+        "public_symbol:aspose_psd_foss.psdimage.image_data_kind",
+        "public_symbol:aspose_psd_foss.layers.channelinformation",
+        "public_symbol:aspose_psd_foss.layers.blendmode",
+        "public_symbol:aspose_psd_foss.layers.layerblendmodemapper",
+        "public_symbol:aspose_psd_foss.layers.layermaskdatashort",
+        "public_symbol:aspose_psd_foss.layers.layerblendingrangesdata",
+        "public_symbol:aspose_psd_foss.sections.imageresourcessection",
+        "public_symbol:aspose_psd_foss.resources.unknownresource",
+        "public_symbol:aspose_psd_foss.bigendianreader",
+        "public_symbol:aspose_psd_foss.psdsectionreader",
+        "inherited_unit:004.paragraph"
+      ],
+      "section": "opening",
+      "slot": "opening",
+      "text": "Aspose.PSD FOSS for Python reads Adobe Photoshop .psd and .psb files, inspects their metadata, layers, channel information, blend modes, masks, image resources, and image-data structures (RLE and ZIP compression), and saves the files back to .psd or .psb format. It exposes document properties such as width, height, channels, bits_per_channel, color_mode, version, is_psb, layer_count, resource_count, compression, and image_data_kind through the PsdImage class. It provides access to layer objects with properties like name, bounds, blend_mode_key, and channel_information, and supports reading image resources and imagedata sections. The library runs on Python 3.7+ and depends only on the standard library."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.psdimage.bits_per_channel",
+        "public_symbol:aspose_psd_foss.psdimage.channels",
+        "public_symbol:aspose_psd_foss.psdimage.color_mode",
+        "public_symbol:aspose_psd_foss.psdimage.compression",
+        "public_symbol:aspose_psd_foss.psdimage.height",
+        "public_symbol:aspose_psd_foss.psdimage.image_data_kind",
+        "public_symbol:aspose_psd_foss.psdimage.is_psb",
+        "public_symbol:aspose_psd_foss.psdimage.layer_count",
+        "public_symbol:aspose_psd_foss.psdimage.resource_count",
+        "public_symbol:aspose_psd_foss.psdimage.version",
+        "public_symbol:aspose_psd_foss.psdimage.width"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "Document metadata inspection exposes width, height, channels, bits_per_channel, color_mode, version, is_psb, layer_count, resource_count, compression, and image_data_kind through the PsdImage class."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.blendmode",
+        "public_symbol:aspose_psd_foss.layers.channelinformation",
+        "public_symbol:aspose_psd_foss.layers.layer"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:2",
+      "text": "Layer model access provides layer name, bounds, opacity, visibility, clipping, blend_mode_key, channels_count, and channel_information through the layer class."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.blendmode",
+        "public_symbol:aspose_psd_foss.layers.layerblendmodemapper"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "Blend mode handling maps 4-character PSD keys to enum values using the BlendMode enum and LayerBlendModeMapper."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.layerblendingrangesdata",
+        "public_symbol:aspose_psd_foss.layers.layermaskdatashort"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:4",
+      "text": "Mask and blending ranges expose raw length and basic properties through LayerMaskDataShort and LayerBlendingRangesData, with mutations not supported."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.resources.psdresourceinfo",
+        "public_symbol:aspose_psd_foss.resources.unknownresource",
+        "public_symbol:aspose_psd_foss.sections.imageresourcessection"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "Image resource parsing handles unknown resources via ImageResourcesSection, preserving raw payloads, with UnknownResource exposing resource_id, name, and data."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.psdimage.save"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:6",
+      "text": "Byte-exact round-trip saving preserves all unmodified sections, enabling lossless save-load cycles through PsdImage.save."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.bigendianreader",
+        "public_symbol:aspose_psd_foss.psdsectionreader",
+        "public_symbol:aspose_psd_foss.streamcontainer"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:7",
+      "text": "Non-seekable stream support enables loading from streams that do not support seeking using BigEndianReader, PsdSectionReader, and StreamContainer."
+    },
+    {
+      "fact_ids": [
+        "example:002"
+      ],
+      "section": "quick_start",
+      "slot": "lead_in",
+      "text": "This example loads a PSD file and prints each layer's index, name, and bounds to inspect the image structure."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "inherited_unit:033.paragraph",
+        "public_symbol:aspose_psd_foss.psdimage"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "The public entry point is the aspose_psd_foss package. It provides the aspose_psd_foss.PsdImage class to load, inspect, and save Adobe Photoshop files, with methods for accessing layers, resources, color mode, compression, and other core properties."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.psdimage",
+        "public_symbol:aspose_psd_foss.psdimage.color_mode",
+        "public_symbol:aspose_psd_foss.psdimage.compression",
+        "public_symbol:aspose_psd_foss.psdimage.dispose",
+        "public_symbol:aspose_psd_foss.psdimage.has_icc_profile",
+        "public_symbol:aspose_psd_foss.psdimage.has_image_resources",
+        "public_symbol:aspose_psd_foss.psdimage.has_layers",
+        "public_symbol:aspose_psd_foss.psdimage.height",
+        "public_symbol:aspose_psd_foss.psdimage.layers",
+        "public_symbol:aspose_psd_foss.psdimage.load",
+        "public_symbol:aspose_psd_foss.psdimage.save",
+        "public_symbol:aspose_psd_foss.psdimage.width"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_psd_foss.psdimage",
+      "text": "The aspose_psd_foss.PsdImage class represents a loaded Photoshop document and exposes its aspose_psd_foss.PsdImage.width, aspose_psd_foss.PsdImage.height, aspose_psd_foss.PsdImage.color_mode, aspose_psd_foss.PsdImage.compression, aspose_psd_foss.PsdImage.has_layers, aspose_psd_foss.PsdImage.has_image_resources, aspose_psd_foss.PsdImage.has_icc_profile, aspose_psd_foss.PsdImage.layers, aspose_psd_foss.PsdImage.load, and aspose_psd_foss.PsdImage.save members."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.image.load",
+        "public_symbol:aspose_psd_foss.imageloader.load_from_path",
+        "public_symbol:aspose_psd_foss.imageloader.load_from_stream",
+        "public_symbol:aspose_psd_foss.loaders.psdimageloader",
+        "public_symbol:aspose_psd_foss.psdimage.load"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.load",
+      "text": "Loading a PSD file is performed via the aspose_psd_foss.Image.load method, which supports loading from a file path using aspose_psd_foss.ImageLoader.load_from_path or from a stream using aspose_psd_foss.ImageLoader.load_from_stream, returning an aspose_psd_foss.PsdImage instance when the input is a Photoshop document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.psdimage.save",
+        "public_symbol:aspose_psd_foss.writedescriptors.psdimagewriter"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.save",
+      "text": "Saving a aspose_psd_foss.PsdImage instance is done by calling its aspose_psd_foss.PsdImage.save method, which accepts a file path or a stream and uses the aspose_psd_foss.writedescriptors.psdimagewriter descriptor to write the output."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.layer",
+        "public_symbol:aspose_psd_foss.psdimage.layer_count",
+        "public_symbol:aspose_psd_foss.psdimage.layers"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.layers",
+      "text": "The aspose_psd_foss.PsdImage.layers property returns a collection of aspose_psd_foss.layers.layer objects, and the aspose_psd_foss.PsdImage.layer_count property indicates how many layers the document contains."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.psdimage.image_resources",
+        "public_symbol:aspose_psd_foss.psdimage.resources",
+        "public_symbol:aspose_psd_foss.resourceblock",
+        "public_symbol:aspose_psd_foss.sections.imageresourcessection"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.resources",
+      "text": "The aspose_psd_foss.PsdImage.resources property provides access to the document's resource blocks, and the aspose_psd_foss.PsdImage.image_resources property returns the image resources section, which contains aspose_psd_foss.ResourceBlock instances within the aspose_psd_foss.sections.imageresourcessection."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.layer",
+        "public_symbol:aspose_psd_foss.psdimage.active_layer"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.active_layer",
+      "text": "The aspose_psd_foss.PsdImage.active_layer property returns the currently active aspose_psd_foss.layers.layer in the document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.colormodes",
+        "public_symbol:aspose_psd_foss.psdimage.color_mode",
+        "public_symbol:aspose_psd_foss.sections.psdcolordatakind"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.color_mode",
+      "text": "The aspose_psd_foss.PsdImage.color_mode property indicates the color mode of the document, represented by values from the aspose_psd_foss.ColorModes enumeration, and the underlying color data kind is defined in aspose_psd_foss.sections.psdcolordatakind."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.compressionmethod",
+        "public_symbol:aspose_psd_foss.psdimage.compression",
+        "public_symbol:aspose_psd_foss.sections.imagedatastructure"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.compression",
+      "text": "The aspose_psd_foss.PsdImage.compression property specifies the compression method used for the image data, represented by values from the aspose_psd_foss.CompressionMethod enumeration, and the structure of the image data is described by aspose_psd_foss.sections.imagedatastructure."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.psdimage.has_layers",
+        "public_symbol:aspose_psd_foss.sections.layerandmasksection"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.has_layers",
+      "text": "The aspose_psd_foss.PsdImage.has_layers property returns a boolean indicating whether the document contains layers, as defined in the aspose_psd_foss.sections.layerandmasksection."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.psdimage.has_image_resources",
+        "public_symbol:aspose_psd_foss.sections.imageresourcessection"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.has_image_resources",
+      "text": "The aspose_psd_foss.PsdImage.has_image_resources property returns a boolean indicating whether the document contains image resources, as defined in the aspose_psd_foss.sections.imageresourcessection."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.psdimage.has_icc_profile",
+        "public_symbol:aspose_psd_foss.resources.psdresourceinfo"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.has_icc_profile",
+      "text": "The aspose_psd_foss.PsdImage.has_icc_profile property returns a boolean indicating whether the document contains an ICC profile, as defined in the aspose_psd_foss.resources.psdresourceinfo section."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.psdimage.dispose",
+        "public_symbol:aspose_psd_foss.streamcontainer"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.dispose",
+      "text": "The aspose_psd_foss.PsdImage.dispose method releases resources used by the document and accepts an aspose_psd_foss.StreamContainer instance for stream cleanup."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "inherited_unit:040.paragraph",
+        "public_symbol:aspose_psd_foss.layers.channelinformation",
+        "public_symbol:aspose_psd_foss.layers.layerblendingrangesdata",
+        "public_symbol:aspose_psd_foss.layers.layermaskdatashort",
+        "public_symbol:aspose_psd_foss.sections.imagedata"
+      ],
+      "section": "scope_limitations",
+      "slot": "scope",
+      "text": "Aspose.PSD FOSS for Python reads and writes Photoshop Document files, exposing layer and image data through the aspose_psd_foss.layers.channelinformation, aspose_psd_foss.layers.layerblendingrangesdata, aspose_psd_foss.layers.layermaskdatashort, and aspose_psd_foss.sections.imagedata classes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.channelinformation"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:1",
+      "text": "The aspose_psd_foss.layers.channelinformation class provides access to channel data but does not expose methods to modify channel content directly."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.layerblendingrangesdata",
+        "public_symbol:aspose_psd_foss.layers.layermaskdatashort"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:2",
+      "text": "The aspose_psd_foss.layers.layerblendingrangesdata and aspose_psd_foss.layers.layermaskdatashort classes expose blending ranges and mask data structures but do not provide APIs to edit their contents."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.sections.imagedata"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:3",
+      "text": "The aspose_psd_foss.sections.imagedata class exposes image data sections but does not support programmatic modification of section contents."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.bigendianwriter"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss.bigendianwriter",
+      "text": "The BigEndianWriter class writes data in big-endian byte order to a stream, providing methods to write bytes, integers, and Pascal strings with optional alignment."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layerandmasksectionreader"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss.layerandmasksectionreader",
+      "text": "The LayerAndMaskSectionReader class reads the layer and mask section of a PSD file, parsing layer records and associated mask data."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.point"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss.point",
+      "text": "The Point class represents a point in two-dimensional space with X and Y coordinates."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.psdversion"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss.psdversion",
+      "text": "The PsdVersion class specifies the version of the PSD file format, such as Photoshop CS6 or CC."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.size"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss.size",
+      "text": "The Size class represents the dimensions of a rectangle with width and height values."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.globallayermaskinfo.globallayermaskinfo"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss.layers.globallayermaskinfo.globallayermaskinfo",
+      "text": "The GlobalLayerMaskInfo class stores global layer mask information for a PSD file."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.layer.layer"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss.layers.layer.layer",
+      "text": "The Layer class represents a single layer in a PSD file, containing its bounds, blending mode, opacity, and other properties."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.layerblendingrangesinfo.layerblendingrangesinfo"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss.layers.layerblendingrangesinfo.layerblendingrangesinfo",
+      "text": "The LayerBlendingRangesInfo class defines the blending ranges for a layer in a PSD file."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.layerblendmodemapper.layerblendmodemapper"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss.layers.layerblendmodemapper.layerblendmodemapper",
+      "text": "The LayerBlendModeMapper class maps blend mode keys to their string representations in a PSD file."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.layermaskinfo.layermaskinfo"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss.layers.layermaskinfo.layermaskinfo",
+      "text": "The LayerMaskInfo class stores mask data associated with a layer in a PSD file."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.layerrawdata.layerrawdata"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss.layers.layerrawdata.layerrawdata",
+      "text": "The LayerRawData class holds the raw binary data of a layer in a PSD file."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.layerrecordreader.layerrecordreader"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss.layers.layerrecordreader.layerrecordreader",
+      "text": "The LayerRecordReader class reads and parses layer records from a PSD file's layer section."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.layerresource.layerresource"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss.layers.layerresource.layerresource",
+      "text": "The LayerResource class is an abstract base class for layer resources in a PSD file."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.rawlayerblendingrangessection.rawlayerblendingrangessection"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss.layers.rawlayerblendingrangessection.rawlayerblendingrangessection",
+      "text": "The RawLayerBlendingRangesSection class represents the raw section containing layer blending ranges data in a PSD file."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.rawlayermasksection.rawlayermasksection"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss.layers.rawlayermasksection.rawlayermasksection",
+      "text": "The RawLayerMaskSection class represents the raw section containing layer mask data in a PSD file."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.loaders.psdimageloader.psdimageloader"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss.loaders.psdimageloader.psdimageloader",
+      "text": "The PsdImageLoader class loads PSD image files from a stream or file path."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.resources.indexedcolorpalette.indexedcolorpalette"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss.resources.indexedcolorpalette.indexedcolorpalette",
+      "text": "The IndexedColorPalette class represents an indexed color palette used in a PSD file."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.resources.psdresourcekind.psdresourcekind"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss.resources.psdresourcekind.psdresourcekind",
+      "text": "The PsdResourceKind class specifies the type of image resource in a PSD file using an enumeration."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.sections.psdimagedatainfo.psdimagedatainfo"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss.sections.psdimagedatainfo.psdimagedatainfo",
+      "text": "The PsdImageDataInfo class contains metadata about the image data section of a PSD file."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss_test.asposecompatibilitytests.testasposecompatibility"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss_test.asposecompatibilitytests.testasposecompatibility",
+      "text": "The TestAsposeCompatibility class verifies compatibility with Aspose.PSD behavior."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss_test.colordatatests.testcolordata"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss_test.colordatatests.testcolordata",
+      "text": "The TestColorData class validates color data handling in PSD files."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss_test.fixturedocumenttests.testfixturedocument"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss_test.fixturedocumenttests.testfixturedocument",
+      "text": "The TestFixtureDocument class tests document loading using fixture files."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss_test.imagedatatests.testimagedata"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss_test.imagedatatests.testimagedata",
+      "text": "The TestImageData class validates image data parsing in PSD files."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss_test.imageresourcessectiontests.testimageresourcessection"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss_test.imageresourcessectiontests.testimageresourcessection",
+      "text": "The TestImageResourcesSection class tests the image resources section of PSD files."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss_test.inspectiondtotests.inspectiondtotests"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss_test.inspectiondtotests.inspectiondtotests",
+      "text": "The InspectionDtoTests class validates inspection data transfer objects for PSD files."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss_test.layersectiontests.testlayersection"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss_test.layersectiontests.testlayersection",
+      "text": "The TestLayerSection class tests the layer section parsing in PSD files."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss_test.pascalstringtests.testpascalstring"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss_test.pascalstringtests.testpascalstring",
+      "text": "The TestPascalString class validates Pascal string handling in PSD files."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss_test.psdheadertests.testpsdheadertests"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss_test.psdheadertests.testpsdheadertests",
+      "text": "The TestPsdHeaderTests class validates the PSD file header parsing."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss_test.psdimageloadtests.testpsdimageload"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss_test.psdimageloadtests.testpsdimageload",
+      "text": "The TestPsdImageLoad class validates loading of PSD images from streams or files."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss_test.psdimagesavetests.testpsdimagesavetests"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_psd_foss_test.psdimagesavetests.testpsdimagesavetests",
+      "text": "The TestPsdImagesaveTests class validates saving PSD images to streams or files."
+    }
+  ]
+}
