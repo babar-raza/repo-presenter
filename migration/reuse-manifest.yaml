@@ -1748,16 +1748,34 @@ entries:
       pinned/push-neutered workflow, pulling git.py changes no existing behavior until a caller
       is updated to use it in place of os.popen/plain subprocess calls, so it carries no
       invalidation risk of its own.
-    target_module: not yet planned for any of these files.
+    target_module: src/repo_presenter/core/git_safety/git.py (present, 2026-10-23).
+    git_py_pulled_2026_10_23: >
+      Ported git.py (REUSE, import paths only) and its real-git test suite (not a spy for the
+      two tests that exercise the actual measured incident shape: a fixture repository created
+      under an exported GIT_DIR, GIT_WORK_TREE, GIT_INDEX_FILE -- the commit must land in the
+      fixture, never the surrounding repository). Added three small helpers to tests/support.py
+      (init_git_repository, commit_all, head_revision), themselves built on run_git, following
+      that file's own "port the rest only alongside the modules it actually builds fixtures for"
+      policy. Did NOT add a GitSafetyError class to core/errors.py as first drafted -- caught
+      before committing that git.py itself never raises it (only clone.py, not pulled, does);
+      added code with no caller is exactly what this repository's own discipline refuses.
+      7 new tests (tests/core/git_safety/test_git.py), 1221/1221 passed, 11 skipped, full suite
+      clean. NOT wired into any caller yet -- scripts/run_lane_r_*.py's own
+      os.popen(f'git -C "{clone_path}" rev-parse HEAD') calls and every portfolio clone this
+      session made still use the unguarded path; this port makes the fix available, it does not
+      yet apply it anywhere.
     next_step: >
-      git.py: a reasonable near-term pull -- bounded, self-contained, additive, no workflow
-      decision required. clone.py's full pinned+push-neutered workflow is a bigger call (it
-      changes how every future clone in this repository is made) better taken deliberately, not
-      folded into this inventory pass. sandbox.py/write_gate.py/snapshot/{capture,inventory}.py
-      remain unread.
-    portfolio_consumers: every git subprocess call in this repository, once git.py is pulled and
-      callers are updated to use it.
-    invalidation_impact: none yet -- not pulled; no caller changed.
+      Decide whether to rewire scripts/run_lane_r_*.py's own os.popen git calls onto run_git
+      (a real fix for a real, if never-yet-triggered, gap) -- a small, mechanical change per
+      call site, but touches five live orchestration scripts, so worth doing deliberately rather
+      than folding into a future unrelated change. clone.py's full pinned+push-neutered workflow
+      remains a bigger call (it changes how every future clone in this repository is made),
+      better taken deliberately. sandbox.py/write_gate.py/snapshot/{capture,inventory}.py remain
+      unread.
+    portfolio_consumers: every git subprocess call in this repository, once callers are updated
+      to use run_git in place of os.popen/plain subprocess.
+    invalidation_impact: none yet -- pulled, but no existing caller changed, so no existing
+      behavior is affected.
 
   - component: "PR/publish effect layer: components/propose/{effect.py (373), pull_request.py,
       wave.py} (1,485 total) + components/candidates_publish/{effect.py (373), git_ops.py (161)}

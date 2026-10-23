@@ -1441,3 +1441,29 @@ next_ready_items:
       unported, each for a stated, evidenced reason rather than merely their size.
       No source changes this entry -- migration/reuse-manifest.yaml updated with both findings,
       see its own links/rules.py and registry.py entries.
+
+  - id: PORT_GIT_SAFETY_WRAPPER
+    status: DONE
+    priority: low
+    purpose: >
+      Pull the one genuinely bounded, additive item the git-safety correction surfaced:
+      core/git_safety/git.py, the single git subprocess wrapper that scrubs GIT_DIR-class
+      environment variables (a real, documented defect class this session's own git calls are
+      exposed to, with no behavior-changing workflow decision required to pull the utility
+      itself).
+    done: >
+      Ported src/repo_presenter/core/git_safety/git.py (REUSE, import paths only) and its real-
+      git test suite tests/core/git_safety/test_git.py (7 tests, two of them real git operations
+      reproducing the measured incident shape, not mocks). Added three small helpers to
+      tests/support.py (init_git_repository, commit_all, head_revision). Caught and reverted a
+      premature addition before committing: a GitSafetyError class drafted for core/errors.py
+      turned out unneeded -- git.py itself never raises it, only the unported clone.py does --
+      so it was removed rather than left as unused code. 1221/1221 passed, 11 skipped, full
+      suite clean (7 new tests, none removed). NOT wired into any caller -- scripts/
+      run_lane_r_*.py's own os.popen git calls and every clone this session made still use the
+      unguarded path; this makes the fix available, it does not apply it anywhere yet.
+      Evidence: migration/reuse-manifest.yaml's git-safety entry, extended in place 2026-10-23.
+    next_step: >
+      Decide whether to rewire scripts/run_lane_r_*.py's os.popen calls onto run_git -- small
+      and mechanical per call site, but touches five live orchestration scripts, so worth doing
+      deliberately. Not blocking anything else.

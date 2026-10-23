@@ -1,12 +1,13 @@
-"""Minimal test-support shim: REPO_ROOT and the npm test double.
+"""Minimal test-support shim: REPO_ROOT, the npm test double, and disposable git fixtures.
 
 The old repository-presenter project's tests/support.py is a large builder module (synthetic
 project roots, cursors, sealed bundles, disposable git repos) with a heavy dependency closure
 (openai, httpx, components.issues, core.registry, core.state) none of which this repository has
-pulled. Only REPO_ROOT and the two self-contained npm-stub helpers (fake_npm, npm_calls) --
-ported verbatim, stdlib-only -- are needed by the extractors test suite ported under
-migration/reuse-manifest.yaml's "extractors/platforms" entry. Port the rest of the old support.py
-only alongside the modules it actually builds fixtures for.
+pulled. Only the self-contained pieces are ported, each alongside the module it actually builds
+fixtures for: REPO_ROOT and the npm-stub helpers (fake_npm, npm_calls) for the extractors test
+suite (migration/reuse-manifest.yaml's "extractors/platforms" entry); init_git_repository/
+commit_all/head_revision for core/git_safety/git.py's own test suite (2026-10-23). Port the rest
+of the old support.py only alongside the modules it actually builds fixtures for.
 """
 
 from __future__ import annotations
@@ -15,7 +16,61 @@ import os
 import stat
 from pathlib import Path
 
+from repo_presenter.core.git_safety.git import run_git
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
+
+
+def init_git_repository(path: Path, *, with_commit: bool = True) -> Path:
+    """A disposable local repository on branch ``main`` with a local identity.
+
+    ``git init``'s exit status is never the evidence: when git already resolves ``path`` inside
+    some repository, ``git init`` there is a no-op re-init that still exits 0, and every fixture
+    command after it (identity config, ``add``, ``commit``) lands on that repository instead -
+    measured 2026-09-11 (old repo, RESEARCH_AND_GUIDELINES.md section 29, G4-W17 arrival item 55)
+    as fixture commits on live lane branches and that checkout's own identity and ``core.bare``
+    rewritten. So the target is refused up front if git resolves any repository for it, and the
+    repository just created is verified to be the one at ``path`` before anything is written
+    into it.
+    """
+    path.mkdir(parents=True, exist_ok=True)
+    enclosing = run_git(["rev-parse", "--absolute-git-dir"], cwd=path)
+    if enclosing.returncode == 0:
+        raise RuntimeError(
+            f"refusing to init a fixture repository at {path}: git already resolves it inside"
+            f" {enclosing.stdout.strip()}, where `git init` would be a no-op re-init exiting 0"
+            " and every fixture command after it would land on that repository"
+        )
+    for args in (
+        ["init", "-q", "-b", "main"],
+        ["config", "user.email", "test@example.com"],
+        ["config", "user.name", "Test"],
+    ):
+        result = run_git(args, cwd=path)
+        assert result.returncode == 0, result.stderr
+    own = run_git(["rev-parse", "--absolute-git-dir"], cwd=path)
+    assert own.returncode == 0, own.stderr
+    assert Path(own.stdout.strip()).resolve() == (path / ".git").resolve(), (
+        f"fixture at {path} resolved to a different repository: {own.stdout.strip()}"
+    )
+    if with_commit:
+        (path / "README.md").write_text("# test\n", encoding="utf-8")
+        commit_all(path, "initial")
+    return path
+
+
+def commit_all(path: Path, message: str) -> str:
+    """Stage everything, commit, and return the new HEAD revision."""
+    assert run_git(["add", "."], cwd=path).returncode == 0
+    result = run_git(["commit", "-q", "-m", message], cwd=path)
+    assert result.returncode == 0, result.stderr
+    return head_revision(path)
+
+
+def head_revision(path: Path) -> str:
+    result = run_git(["rev-parse", "HEAD"], cwd=path)
+    assert result.returncode == 0, result.stderr
+    return result.stdout.strip()
 
 
 def fake_npm(directory: Path, fail_run: bool = False) -> str:
