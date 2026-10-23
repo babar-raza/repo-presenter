@@ -85,3 +85,17 @@ different words, citing only `inherited_unit:004.paragraph`. Correctly rejected 
 recovery found nothing salvageable; job failed closed. Three independent repositories now
 confirm this fail-closed pattern recurs whenever a repository's preserved paragraph is unusually
 complete, across .NET and Python alike.
+
+## Fourth confirmed instance: aspose-slides-foss/Aspose.Slides-FOSS-for-Java
+
+A fourth independent recurrence, this time Java. The preserved content spans several inherited
+units (reading/writing `.pptx`, building the OOXML package without external tools, preserving
+unknown XML on save, the `Presentation` class as object-model root, no Office/COM/proprietary
+runtime, JDK 21+ with no runtime dependencies beyond the JDK). Both of S6's attempts for
+"opening" (`slides_java_attempt_1_rejected.json`, `slides_java_attempt_2_rejected.json`) restated
+this same substance, citing those same preserved units directly rather than reaching for the
+dossier's own more specific facts (`public_symbol:relationship`, `public_symbol:getfontname`,
+all explicitly omitted with reasons in the second attempt). Correctly rejected both times;
+recovery found nothing salvageable; job failed closed. Four independent repositories, across
+.NET and Python and now Java, confirm this is a real, repeatable consequence of the fix's
+correct behavior.

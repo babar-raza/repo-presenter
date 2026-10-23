@@ -974,6 +974,16 @@ next_ready_items:
       consequence of the fix's correct behavior. Evidence appended to the same directory
       (imaging_foss_attempt_{1,2}_rejected.json). This repository's cascade is also left
       incomplete; the seventeenth full cascade fires against a different repository instead.
+      Fourth confirmed instance: aspose-slides-foss/Aspose.Slides-FOSS-for-Java hit the
+      identical pattern -- a preserved paragraph set spanning reading/writing .pptx, the
+      OOXML package, unknown-XML preservation, the Presentation object-model root, and
+      JDK 21+ with no runtime dependencies -- left both S6 attempts restating the same
+      substance, citing the preserved units directly rather than reaching for more specific
+      facts (public_symbol:relationship, public_symbol:getfontname) explicitly available and
+      explicitly omitted instead. Four independent repositories, across .NET, Python, and
+      Java, now confirm this is a real, repeatable consequence. Evidence appended to the
+      same directory (slides_java_attempt_{1,2}_rejected.json). This repository's cascade is
+      also left incomplete; the next full cascade fires against a different repository.
   - id: WIRE_GATEVERIFY_TO_PORTFOLIO
     status: READY
     purpose: >
