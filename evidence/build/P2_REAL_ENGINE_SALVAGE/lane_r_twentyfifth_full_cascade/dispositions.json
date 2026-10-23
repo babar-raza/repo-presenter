@@ -1,0 +1,391 @@
+{
+  "dispositions": [
+    {
+      "destination_section": "identity",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:repository",
+        "package:name"
+      ],
+      "rationale": "The H1 product name is rendered deterministically from identity and package facts.",
+      "unit_id": "inherited_unit:001.heading"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_REWRITE",
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:version",
+        "package:target_framework"
+      ],
+      "rationale": "The product summary fact supports this paragraph's substance for the opening section.",
+      "unit_id": "inherited_unit:002.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "install_command:dotnet",
+        "package:name"
+      ],
+      "rationale": "This clarifies the library is not a rendering engine or full commercial replacement, matching limitations.",
+      "unit_id": "inherited_unit:003.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a dedicated 'Who This Project Is For' section; audience is covered in opening.",
+      "unit_id": "inherited_unit:004.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a dedicated 'Who This Project Is For' section; audience is covered in opening.",
+      "unit_id": "inherited_unit:005.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_REWRITE",
+      "fact_ids": [
+        "public_symbol:aspose.psd.image",
+        "public_symbol:aspose.psd.imageloader",
+        "public_symbol:aspose.psd.streamcontainer",
+        "public_symbol:aspose.psd.fileformats",
+        "public_symbol:aspose.psd.rectanglef",
+        "public_symbol:aspose.psd.point"
+      ],
+      "rationale": "The capabilities list is re-authored from verified public symbols and workflows.",
+      "unit_id": "inherited_unit:006.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "install_command:dotnet",
+        "package:name"
+      ],
+      "rationale": "This matches the limitation that the library does not render or support pixel editing.",
+      "unit_id": "inherited_unit:007.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_REWRITE",
+      "fact_ids": [
+        "install_command:dotnet",
+        "package:name",
+        "public_symbol:aspose.psd.imageloader",
+        "public_symbol:aspose.psd.fileformats"
+      ],
+      "rationale": "The limitations list is re-authored from verified facts about rendering, export, and feature coverage.",
+      "unit_id": "inherited_unit:008.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a dedicated 'Common Workflows' section; workflows are covered in opening and examples.",
+      "unit_id": "inherited_unit:009.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a dedicated 'Common Workflows' section; workflows are covered in opening and examples.",
+      "unit_id": "inherited_unit:010.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a dedicated 'Mental Model' section; mental model is covered in opening and scope.",
+      "unit_id": "inherited_unit:011.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a dedicated 'Mental Model' section; mental model is covered in opening and scope.",
+      "unit_id": "inherited_unit:012.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a dedicated 'Highlights' section; highlights are covered in key capabilities.",
+      "unit_id": "inherited_unit:013.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a dedicated 'Highlights' section; highlights are covered in key capabilities.",
+      "unit_id": "inherited_unit:014.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a dedicated 'Requirements' section; target framework is covered in identity and dependencies.",
+      "unit_id": "inherited_unit:015.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a dedicated 'Requirements' section; target framework is covered in identity and dependencies.",
+      "unit_id": "inherited_unit:016.list"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "rationale": "The installation section is rendered deterministically from the install command fact.",
+      "unit_id": "inherited_unit:017.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The fact set does not confirm whether the package is published to NuGet; this uncertainty is omitted.",
+      "unit_id": "inherited_unit:018.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The fact set does not confirm local build instructions; this uncertainty is omitted.",
+      "unit_id": "inherited_unit:019.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The fact set does not confirm local build instructions; this uncertainty is omitted.",
+      "unit_id": "inherited_unit:020.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The fact set does not confirm local build instructions; this uncertainty is omitted.",
+      "unit_id": "inherited_unit:021.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The fact set does not confirm local build instructions; this uncertainty is omitted.",
+      "unit_id": "inherited_unit:022.paragraph"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "rationale": "The installation section is rendered deterministically from the install command fact.",
+      "unit_id": "inherited_unit:023.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The condition for Quick Start (a verified example executed in isolation) does not hold at this revision.",
+      "unit_id": "inherited_unit:024.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The condition for Quick Start (a verified example executed in isolation) does not hold at this revision.",
+      "unit_id": "inherited_unit:025.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a dedicated 'Choosing Between Aspose.PSD.FOSS and Commercial Aspose.PSD' section.",
+      "unit_id": "inherited_unit:026.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a dedicated 'Choosing Between Aspose.PSD.FOSS and Commercial Aspose.PSD' section.",
+      "unit_id": "inherited_unit:027.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a dedicated 'Choosing Between Aspose.PSD.FOSS and Commercial Aspose.PSD' section.",
+      "unit_id": "inherited_unit:028.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a dedicated 'Samples' section; samples are out of scope for this generic README.",
+      "unit_id": "inherited_unit:029.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a dedicated 'Samples' section; samples are out of scope for this generic README.",
+      "unit_id": "inherited_unit:030.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a dedicated 'Samples' section; samples are out of scope for this generic README.",
+      "unit_id": "inherited_unit:031.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a dedicated 'Samples' section; samples are out of scope for this generic README.",
+      "unit_id": "inherited_unit:032.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a dedicated 'Samples' section; samples are out of scope for this generic README.",
+      "unit_id": "inherited_unit:033.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a dedicated 'Samples' section; samples are out of scope for this generic README.",
+      "unit_id": "inherited_unit:034.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a dedicated 'Samples' section; samples are out of scope for this generic README.",
+      "unit_id": "inherited_unit:035.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a dedicated 'Samples' section; samples are out of scope for this generic README.",
+      "unit_id": "inherited_unit:036.table"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a dedicated 'Samples' section; samples are out of scope for this generic README.",
+      "unit_id": "inherited_unit:037.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact supports a dedicated 'Samples' section; samples are out of scope for this generic README.",
+      "unit_id": "inherited_unit:038.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact confirms the behavior of using a test fixture when no input file is passed.",
+      "unit_id": "inherited_unit:039.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact confirms default output to the repository `tmp/` folder for stream or structural-editing samples.",
+      "unit_id": "inherited_unit:040.paragraph"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Documentation' heading is superseded by the deterministic 'Documentation & Resources' section, which is rendered from facts.",
+      "unit_id": "inherited_unit:041.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact confirms the existence or location of Markdown documentation files in the repository.",
+      "unit_id": "inherited_unit:042.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No fact confirms the listed documentation files exist or are accessible.",
+      "unit_id": "inherited_unit:043.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Supported Scope' heading is superseded by the deterministic 'Scope and Limitations' section, which re-authors the same content from facts.",
+      "unit_id": "inherited_unit:044.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose.psd.image",
+        "public_symbol:aspose.psd.imageloader",
+        "public_symbol:aspose.psd.fileformats",
+        "public_symbol:aspose.psd.rectangle",
+        "public_symbol:aspose.psd.rectanglef",
+        "public_symbol:aspose.psd.point",
+        "public_symbol:aspose.psd.size",
+        "public_symbol:aspose.psd.streamcontainer"
+      ],
+      "rationale": "The listed capabilities are fully covered by the key capabilities section, which is freshly authored from verified facts.",
+      "unit_id": "inherited_unit:045.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Out of Scope' heading is superseded by the deterministic 'Scope and Limitations' section, which re-authors the same content from facts.",
+      "unit_id": "inherited_unit:046.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:dotnet",
+        "package:name",
+        "public_symbol:aspose.psd.imageloader",
+        "public_symbol:aspose.psd.fileformats"
+      ],
+      "rationale": "The listed limitations are fully covered by the scope limitations section, which is freshly authored from verified facts.",
+      "unit_id": "inherited_unit:047.list"
+    },
+    {
+      "destination_section": "license",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'License' heading is superseded by the deterministic 'License' section, which is rendered from the license fact.",
+      "unit_id": "inherited_unit:048.heading"
+    },
+    {
+      "destination_section": "license",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The license statement 'MIT' is superseded by the deterministic 'License' section, which is rendered from the license fact.",
+      "unit_id": "inherited_unit:049.paragraph"
+    }
+  ]
+}

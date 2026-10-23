@@ -1,0 +1,159 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:repository",
+      "package:name",
+      "install_command:dotnet"
+    ],
+    "text": "Developers needing metadata-safe PSD/PSB inspection and limited structural editing in .NET without rendering or raster editing."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.image",
+        "public_symbol:aspose.psd.imageloader",
+        "public_symbol:aspose.psd.streamcontainer"
+      ],
+      "text": "Load PSD and supported PSB files from file paths and stream sources using the public API surface.",
+      "title": "Load PSD/PSB from file and stream"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.image",
+        "public_symbol:aspose.psd.rectangle",
+        "public_symbol:aspose.psd.size"
+      ],
+      "text": "Read document-level metadata including Width, Height, ChannelsCount, BitsPerChannel, ColorMode, Version, Size, Bounds, Compression, ImageResources, and IsFlatten.",
+      "title": "Read document metadata"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.fileformats",
+        "public_symbol:aspose.psd.rectanglef",
+        "public_symbol:aspose.psd.point"
+      ],
+      "text": "Read and modify layer properties such as Name, Bounds, Width, Height, Top, Left, Bottom, Right, IsVisible, Opacity, Clipping, and BlendModeKey.",
+      "title": "Read and modify layer metadata"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.streamcontainer",
+        "public_symbol:aspose.psd.imageloader"
+      ],
+      "text": "Preserve unsupported sections of PSD/PSB files as raw bytes during save operations, ensuring minimal data loss.",
+      "title": "Preserve unsupported sections"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.image",
+        "public_symbol:aspose.psd.imageloader"
+      ],
+      "text": "Save updated PSD/PSB files without rendering pixels, supporting metadata-only workflows.",
+      "title": "Save without rendering"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "install_command:dotnet",
+        "package:name"
+      ],
+      "text": "The library does not render PSD/PSB content or support pixel editing."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:name"
+      ],
+      "text": "It does not interpret the full Photoshop feature set semantically or replace the commercial Aspose.PSD API one-to-one."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.imageloader"
+      ],
+      "text": "Export to raster formats like PNG or JPEG is not supported."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.fileformats"
+      ],
+      "text": "Full image resource editing and semantic recognition of specific resource kinds are out of scope."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.image",
+        "public_symbol:aspose.psd.fileformats",
+        "public_symbol:aspose.psd.rectangle",
+        "public_symbol:aspose.psd.rectanglef",
+        "public_symbol:aspose.psd.point",
+        "public_symbol:aspose.psd.size"
+      ],
+      "text": "Enables reading and modifying supported layer metadata—such as name, visibility, opacity, clipping, blend mode, and geometry—while preserving unsupported sections as raw bytes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd",
+        "public_symbol:aspose.psd.buildversioninfo"
+      ],
+      "text": "Provides a compact public API to inspect document properties like dimensions, color mode, compression, and image resources without rendering pixels."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.imageloader",
+        "public_symbol:aspose.psd.streamcontainer"
+      ],
+      "text": "Supports saving updated PSD/PSB files without rendering, preserving file integrity for unsupported structures."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:repository",
+      "package:name",
+      "package:version",
+      "package:target_framework"
+    ],
+    "text": "Aspose.PSD.FOSS is a free open-source .NET library for loading, inspecting, editing a small subset of PSD/PSB metadata, and saving the file back without rendering."
+  },
+  "uncertainties": [
+    "Whether the package is published to NuGet or only available via local build is unclear from the fact set.",
+    "The exact set of supported image resources beyond high-level summaries is not specified.",
+    "Whether text, vector, effects, smart filters, and adjustment layers are supported is not stated.",
+    "The behavior of coordinate transformations for layer geometry is not detailed.",
+    "Whether PSB files beyond the currently supported subset are fully compatible is not confirmed.",
+    "The extent of raw-byte preservation for corrupted or malformed sections is not defined.",
+    "The version compatibility of PSD/PSB files generated by this library with other tools is not stated.",
+    "Whether the library supports multi-threaded or concurrent access to the same file is not specified."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.image",
+        "public_symbol:aspose.psd.rectangle",
+        "public_symbol:aspose.psd.size",
+        "public_symbol:aspose.psd.point"
+      ],
+      "name": "Inspect PSD/PSB structure",
+      "text": "Load PSD/PSB from file paths or streams and read document properties such as Width, Height, ChannelsCount, BitsPerChannel, ColorMode, and Version."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.fileformats",
+        "public_symbol:aspose.psd.rectanglef",
+        "public_symbol:aspose.psd.streamcontainer"
+      ],
+      "name": "Enumerate and edit layers",
+      "text": "Enumerate layers and modify supported properties including Name, IsVisible, Opacity, Clipping, BlendModeKey, and geometry via coordinate properties."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.imageloader",
+        "public_symbol:aspose.psd.streamcontainer",
+        "install_command:dotnet"
+      ],
+      "name": "Save without rendering",
+      "text": "Save updated PSD/PSB files back to disk or streams without rendering pixels, preserving unsupported sections as raw bytes where possible."
+    }
+  ]
+}

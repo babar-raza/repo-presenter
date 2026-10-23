@@ -1,0 +1,242 @@
+{
+  "omitted": [
+    {
+      "fact_id": "public_symbol:aspose.psd.buildversioninfo",
+      "reason": "The fact names a public symbol but provides no functional description; no capability or action can be derived from it for the opening.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose.psd.imageloader",
+      "reason": "The fact names a public symbol but provides no functional description; no capability or action can be derived from it for the opening.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose.psd.streamcontainer",
+      "reason": "The fact names a public symbol but provides no functional description; no capability or action can be derived from it for the opening.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "install_command:dotnet",
+      "reason": "Installation instructions belong in a separate installation or setup section, not in the opening.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "package:name",
+      "reason": "The package name is already embedded in the inherited unit's value and does not need restatement in the opening.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "package:version",
+      "reason": "Version information is not stated in the opening by any accepted fact and is omitted.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "identity:repository",
+      "reason": "Repository identity is not stated in the opening by any accepted fact and is omitted.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:047.list",
+      "reason": "Its content is fully incorporated into limitation:2, limitation:3, and limitation:4 units.",
+      "section": "scope_limitations"
+    }
+  ],
+  "schema_version": 1,
+  "units": [
+    {
+      "fact_ids": [
+        "inherited_unit:002.paragraph",
+        "public_symbol:aspose.psd.image",
+        "public_symbol:aspose.psd.rectangle",
+        "public_symbol:aspose.psd.rectanglef",
+        "public_symbol:aspose.psd.point",
+        "public_symbol:aspose.psd.size"
+      ],
+      "section": "opening",
+      "slot": "opening",
+      "text": "It reads and writes PSD and PSB files, inspects metadata, and edits a small subset of their metadata without rendering. It exposes types such as Aspose.PSD.Image, Aspose.PSD.Rectangle, Aspose.PSD.RectangleF, Aspose.PSD.Point, and Aspose.PSD.Size to support metadata operations. Methods including Image.Load, Image.Save, and Image.Dispose enable file handling and resource management."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.image",
+        "public_symbol:aspose.psd.imageloader",
+        "public_symbol:aspose.psd.streamcontainer"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "It loads PSD and PSB files from file paths or streams using the Aspose.PSD.Image.Load method and Aspose.PSD.ImageLoader.Load method, supporting input via Aspose.PSD.StreamContainer."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.image",
+        "public_symbol:aspose.psd.rectangle",
+        "public_symbol:aspose.psd.size"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:2",
+      "text": "It reads document metadata such as width, height, color mode, compression, and layer count through properties on Aspose.PSD.Image, and provides Aspose.PSD.Rectangle and Aspose.PSD.Size structures for geometric inspection."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.fileformats",
+        "public_symbol:aspose.psd.point",
+        "public_symbol:aspose.psd.rectanglef"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "It reads and modifies layer metadata including name, bounds, visibility, opacity, and blend mode using Aspose.PSD.FileFormats layer types, with Aspose.PSD.Point, Aspose.PSD.RectangleF, and related structures for coordinate and dimension handling."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.imageloader",
+        "public_symbol:aspose.psd.streamcontainer"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:4",
+      "text": "It preserves unsupported file sections during load and save operations by retaining raw stream data through Aspose.PSD.StreamContainer and Aspose.PSD.ImageLoader, ensuring round-trip fidelity."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.image",
+        "public_symbol:aspose.psd.imageloader"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "It saves files back to disk or stream without rendering pixels by calling Aspose.PSD.Image.Save, maintaining all layers and resources in their original structure."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:target_framework",
+        "package:version",
+        "public_symbol:aspose.psd",
+        "public_symbol:aspose.psd.buildversioninfo"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "Aspose.PSD FOSS for .NET provides the Aspose.PSD namespace as its primary entry point, with Aspose.PSD.BuildVersionInfo exposing version metadata. The Aspose.PSD.Image class serves as the base for image handling, while Aspose.PSD.FileFormats contains supporting types for file format operations."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:target_framework",
+        "package:version",
+        "public_symbol:aspose.psd",
+        "public_symbol:aspose.psd.buildversioninfo"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.psd",
+      "text": "The Aspose.PSD namespace includes Aspose.PSD.BuildVersionInfo, which provides AssemblyVersion, FileVersion, Product, ProductMajor, ProductMinor, and ReleaseDate properties to inspect the library version details."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:target_framework",
+        "package:version",
+        "public_symbol:aspose.psd.image",
+        "public_symbol:aspose.psd.imageloader",
+        "public_symbol:aspose.psd.streamcontainer"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.psd.image",
+      "text": "The Aspose.PSD.Image class offers core image functionality including Bounds, Height, Width, Load, and Save members, while Aspose.PSD.ImageLoader provides the Load method for loading images, and Aspose.PSD.StreamContainer supplies the Stream property and StreamContainer constructor for stream-based operations."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:target_framework",
+        "package:version",
+        "public_symbol:aspose.psd.fileformats",
+        "public_symbol:aspose.psd.point",
+        "public_symbol:aspose.psd.rectanglef"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.psd.fileformats",
+      "text": "The Aspose.PSD.FileFormats namespace includes Aspose.PSD.RectangleF and Aspose.PSD.Point, where RectangleF provides geometric properties such as Bottom, Empty, Equals, GetHashCode, Height, IsEmpty, Left, RectangleF, Right, ToString, Top, Width, X, and Y, and Point provides Empty, Equals, GetHashCode, IsEmpty, Point, ToString, X, and Y members."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "inherited_unit:003.paragraph",
+        "inherited_unit:007.paragraph",
+        "inherited_unit:008.list",
+        "inherited_unit:047.list",
+        "install_command:dotnet",
+        "package:name",
+        "package:target_framework",
+        "package:version",
+        "public_symbol:aspose.psd.fileformats",
+        "public_symbol:aspose.psd.imageloader"
+      ],
+      "section": "scope_limitations",
+      "slot": "scope",
+      "text": "Aspose.PSD FOSS for .NET reads and writes PSD and PSB files for metadata-safe inspection and limited structural editing. It exposes the Aspose.PSD.FileFormats and Aspose.PSD.ImageLoader namespaces and supports the netstandard2.1 and net10.0 target frameworks."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "inherited_unit:003.paragraph",
+        "inherited_unit:007.paragraph",
+        "install_command:dotnet",
+        "package:name"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:1",
+      "text": "It is not a rendering engine, a raster editor, or an open-source replacement for the full commercial Aspose.PSD product."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "inherited_unit:008.list",
+        "inherited_unit:047.list",
+        "install_command:dotnet",
+        "package:name",
+        "public_symbol:aspose.psd.fileformats",
+        "public_symbol:aspose.psd.imageloader"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:2",
+      "text": "It does not render PSD/PSB content, edit pixels, export raster images, interpret the full Photoshop feature set semantically, or replace the commercial Aspose.PSD API surface one-to-one."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "inherited_unit:003.paragraph",
+        "inherited_unit:007.paragraph",
+        "inherited_unit:008.list",
+        "inherited_unit:047.list",
+        "install_command:dotnet",
+        "package:name",
+        "package:target_framework",
+        "package:version",
+        "public_symbol:aspose.psd.fileformats",
+        "public_symbol:aspose.psd.imageloader"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:3",
+      "text": "It does not support full image resource editing, semantic recognition of specific image resource kinds, full tagged block editing, or rendering of text, vector, effects, smart filters, and adjustment layers."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "inherited_unit:003.paragraph",
+        "inherited_unit:007.paragraph",
+        "inherited_unit:008.list",
+        "inherited_unit:047.list",
+        "install_command:dotnet",
+        "package:name",
+        "package:target_framework",
+        "package:version",
+        "public_symbol:aspose.psd.fileformats",
+        "public_symbol:aspose.psd.imageloader"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:4",
+      "text": "It does not support exporting to PNG, JPEG, or other raster formats."
+    }
+  ]
+}
