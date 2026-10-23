@@ -1495,3 +1495,31 @@ next_ready_items:
     next_step: >
       None for this card. snapshot/{capture,inventory}.py (349 lines) remain unread -- the last
       item from this session's thorough salvage inventory pass still outstanding.
+
+  - id: PORT_SNAPSHOT_INVENTORY
+    status: DONE
+    priority: low
+    purpose: >
+      Read the last outstanding item from this session's thorough salvage inventory pass:
+      core/snapshot/{capture,inventory}.py.
+    done: >
+      inventory.py's scan() (README/LICENSE/NOTICES/community-file detection, case-insensitive,
+      stdlib only): ported (REUSE, import paths only) with its 34-test suite, no adaptation
+      needed beyond the import path. capture.py: PENDING_REVIEW, deliberately not ported --
+      tightly coupled to core/git_safety/clone.py's ReadOnlyClone, the pinned/push-neutered
+      clone workflow already deferred as its own bigger call (see PORT_GIT_SAFETY_WRAPPER's own
+      history). 1281/1281 passed, 11 skipped, full suite clean (34 new tests, none removed).
+      Not wired into any extractor -- this repository's own per-ecosystem plugins still find
+      license evidence their own way. Evidence: migration/reuse-manifest.yaml's git-safety/
+      registry entry, extended in place 2026-10-23.
+      This closes out every item from SALVAGE_INVENTORY_2026_10_23's original catalogue except
+      clone.py/capture.py (grouped, deliberately deferred together) and the larger PR-effect/
+      monitoring/metadata entries already recorded as lower priority, not next.
+    next_step: >
+      None for this card. The thorough salvage-inventory thread (claims.py, deferrals.py+
+      content_presence.py, links/rules.py, registry.py, git_safety/git.py, registry/
+      write_gate.py, snapshot/inventory.py) is now fully worked through. Remaining open items
+      are either genuine design decisions (BUILD_INDEPENDENT_REVIEWER's repair-destination
+      question) or larger, deliberately-deferred undertakings (clone.py's full workflow, the
+      PR-effect layer for P3, portfolio monitoring for P4, metadata/visual-assets per idea.md's
+      own explicit deferral).
