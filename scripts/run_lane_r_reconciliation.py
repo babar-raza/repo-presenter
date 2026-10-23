@@ -17,7 +17,6 @@ from __future__ import annotations
 import json
 import os
 import sys
-import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
@@ -84,7 +83,7 @@ def main() -> None:
     print(f"      {len(batches)} batch(es) of inherited units, {len(inherited)} units total")
 
     config = load_gateway_config(os.environ)
-    workspace = Path(tempfile.mkdtemp(prefix="rp_lane_r_s4_"))
+    workspace = Path("scripts") / "_lane_r_output" / repo_dir / "llm_cache"
     ledger = Ledger(workspace / "ledger.jsonl")
     store = CallStore(workspace / "calls")
 

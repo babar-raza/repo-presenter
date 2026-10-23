@@ -15,7 +15,6 @@ from __future__ import annotations
 import json
 import os
 import sys
-import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
@@ -34,6 +33,10 @@ from repo_presenter.readme.composition.authoring import (
     recover_opening_duplicates_preserved,
     unit_checks,
     write_content_units,
+)
+from repo_presenter.readme.composition.authoring_retry import (
+    authoring_narrowing,
+    recover_restating_sentences,
 )
 from repo_presenter.readme.composition.components.identity import product_name
 from repo_presenter.readme.evidence.facts.inherited import inherited_unit_facts
@@ -82,7 +85,7 @@ def main() -> None:
     print(f"[4/6] {len(tasks)} real authoring task(s): {[t.label for t in tasks]}")
 
     config = load_gateway_config(os.environ)
-    workspace = Path(tempfile.mkdtemp(prefix="rp_lane_r_s6_"))
+    workspace = out_dir / "llm_cache"
     ledger = Ledger(workspace / "ledger.jsonl")
     store = CallStore(workspace / "calls")
 
@@ -96,11 +99,11 @@ def main() -> None:
             return unit_checks(output, task, document, name, dispositions=dispositions)
 
         def recover(output: dict, task=task) -> dict | None:
-            if task.section_id != "opening":
-                return None
-            return recover_opening_duplicates_preserved(
-                output, dispositions=dispositions, facts=document
-            )
+            if task.section_id == "opening":
+                return recover_opening_duplicates_preserved(
+                    output, dispositions=dispositions, facts=document
+                )
+            return recover_restating_sentences(output, task=task, facts=document)
 
         result = run_job(
             loaded,
@@ -113,6 +116,7 @@ def main() -> None:
             call_schema=call_schema,
             checks=checks,
             recover=recover,
+            narrow=authoring_narrowing(task, loaded),
         )
         print(
             f"      {task.label}: {result.provider_calls} call(s), "

@@ -45,6 +45,19 @@ from repo_presenter.readme.composition.output_bounds import (
 COHERENCE_SECTION = "all"
 _SPELLING_CAP = 120
 _COHERENCE_BATCH_UNITS = 16
+# A batch's reply must echo back every unit's (possibly revised) text, so a batch whose units
+# together already carry a lot of rendered text can overrun the manifest's max_output_tokens
+# even well under _COHERENCE_BATCH_UNITS -- confirmed live against aspose-pdf-foss/TypeScript
+# (541 inherited units, 155,143-character pre-coherence render): a coherence batch of only 16
+# units still failed closed with "output truncated at the manifest's max_output_tokens (8000)".
+# ~4 characters/token is a conservative, widely-used estimate; this cap is deliberately well
+# under 8000 * 4 so a batch's own existing text leaves headroom for the model's revision.
+_COHERENCE_BATCH_CHARS = 20000
+
+
+def _task_chars(task: SectionTask) -> int:
+    """A conservative proxy for how much rendered text one task's own units already carry."""
+    return sum(len(line) for lines in task.slot_render_lines.values() for line in lines)
 
 
 def coherence_packet(
@@ -109,18 +122,34 @@ def coherence_citable_ids(tasks: list[SectionTask]) -> list[str]:
 
 def coherence_batches(tasks: list[SectionTask]) -> list[tuple[str, list[SectionTask]]]:
     """Every LLM-owned section, grouped into fixed-size coherence batches in document (task)
-    order - one ``(batch_id, group)`` pair per coherence call this round makes."""
+    order - one ``(batch_id, group)`` pair per coherence call this round makes.
+
+    Splits on whichever of two independent caps a task would first exceed: the original
+    unit-count cap (``_COHERENCE_BATCH_UNITS``), or a rendered-text-size cap
+    (``_COHERENCE_BATCH_CHARS``) added after a real max_output_tokens truncation was observed
+    on a batch that was small in unit count but large in rendered text. This can only ever
+    produce MORE, smaller batches than the unit-count cap alone did -- a batch that already fit
+    under 16 units still fits unless its own text is also large, so no existing batch grouping
+    for an already-accepted cascade changes unless its rendered text was large enough to be at
+    truncation risk in the first place."""
     tasks = [task for task in tasks if not task.is_batch]
     batches: list[list[SectionTask]] = []
     current: list[SectionTask] = []
     current_units = 0
+    current_chars = 0
     for task in tasks:
-        if current and current_units + len(task.slots) > _COHERENCE_BATCH_UNITS:
+        task_chars = _task_chars(task)
+        if current and (
+            current_units + len(task.slots) > _COHERENCE_BATCH_UNITS
+            or current_chars + task_chars > _COHERENCE_BATCH_CHARS
+        ):
             batches.append(current)
             current = []
             current_units = 0
+            current_chars = 0
         current.append(task)
         current_units += len(task.slots)
+        current_chars += task_chars
     if current:
         batches.append(current)
     return [(f"coherence#{index + 1}", group) for index, group in enumerate(batches)]

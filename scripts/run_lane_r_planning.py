@@ -17,7 +17,6 @@ from __future__ import annotations
 import json
 import os
 import sys
-import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
@@ -90,7 +89,7 @@ def main() -> None:
 
     print("[4/5] firing the REAL LLM call through the live gateway, with the REAL plan_checks")
     config = load_gateway_config(os.environ)
-    workspace = Path(tempfile.mkdtemp(prefix="rp_lane_r_s5_"))
+    workspace = out_dir / "llm_cache"
     ledger = Ledger(workspace / "ledger.jsonl")
     store = CallStore(workspace / "calls")
     context = JobContext(repository=repository, source_revision=source_revision)
