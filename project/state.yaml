@@ -1468,13 +1468,36 @@ next_ready_items:
     next_step: >
       (a) aspose-font-foss/Python's broken install command needs an actual fix -- this card
       found it, it does not fix it; no repair hand-off exists yet (BUILD_INDEPENDENT_REVIEWER's
-      still-open item (2)). (b) Cohort (1), the original 36-repository P1_PORTFOLIO_SCALE sweep,
-      has not been run through this reviewer at all -- it has no content_units/dispositions JSON
-      to feed the duplicate_opening_paragraph rule, so only claim_contradiction_rule could run
-      against it (readme_text + facts.json alone); scoping that as its own pass, with units=[]
-      and dispositions={"dispositions": []}, is a reasonable next card but was not done here to
-      avoid conflating two different cohorts' results in one commit. (c) Re-run this script
-      whenever a repository in either cohort advances to a new render.
+      still-open item (2)). (b) attempted 2026-10-24, BLOCKED -- see
+      p1_cohort_attempt_2026_10_24 below: the P1_PORTFOLIO_SCALE cohort's facts.json uses a
+      completely different, incompatible schema; this is now a recorded, scoped-out finding, not
+      an open next_step. (c) Re-run this script whenever a repository in the P2 cohort advances
+      to a new render.
+    p1_cohort_attempt_2026_10_24: >
+      Tried item (b) above: wrote scripts/run_independent_review_p1.py to call
+      claim_contradiction_rule against evidence/build/P1_PORTFOLIO_SCALE/<repo>/{lane_l,lane_r}_
+      candidate.md + facts.json (units=[] / dispositions={"dispositions": []}, since this
+      cohort's own content_units.json is a narrative per-unit disposition list in a different
+      schema entirely, not the job-pipeline shape). It crashed on the very first repository:
+      `core.facts.read_facts` requires `Fact(id, kind, value, evidence, polarity)`, but EVERY
+      P1_PORTFOLIO_SCALE facts.json (checked 4 repositories across 3 different product families
+      -- aspose-3d-foss/.NET, aspose-cells-foss/Python, aspose-words-foss/.NET, aspose-font-
+      foss/Python -- all identical in shape) instead stores `{id, claim, disposition, evidence}`:
+      a free-text claim string plus an agent-assigned disposition (SUPPORTED/CONTRADICTED/
+      UNVERIFIED), not a typed fact value at all. This is the concrete shape of
+      known_gaps_for_future_work's own prior note ("every ACCEPT in this sweep was a one-time
+      manual/agent-assisted verification, not a re-run through this repo's own ops/ tooling") --
+      the P1 cohort's own facts were never typed facts to begin with, they are one agent's prose
+      judgment already baked in. SCOPE DECISION (made here, not deferred): do not build a
+      schema-adapter module to translate P1's prose claims into typed Fact values for this
+      reviewer -- that would mean re-deriving extraction from an untrusted agent's narration,
+      exactly what claims.py's typed-fact model and mission non-negotiable #6 ("evidence records
+      come from tooling, never from model narration") exist to prevent. The mission's own actual
+      path for this cohort is already running: P2_REAL_ENGINE_SALVAGE is incrementally re-
+      cascading these same repositories through the real, typed S3-S8 pipeline (34 of 36 already
+      have a real cascade attempt); P1 candidates are correctly superseded by that effort over
+      time rather than patched into reviewability as they stand. The broken script was deleted,
+      not committed -- nothing half-working was left in the tree.
     evidence: evidence/build/P2_REAL_ENGINE_SALVAGE/independent_review_report.json
 
   - id: PORT_BC14_CLAIM_VALIDATION
