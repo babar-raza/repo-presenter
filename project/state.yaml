@@ -1195,7 +1195,7 @@ next_ready_items:
       additive path now exists; step 7 of that plan is this card's own original ask.
 
   - id: PORT_BUNDLE_INTEGRITY_LAYER
-    status: PLANNED
+    status: IN_PROGRESS
     priority: high
     purpose: >
       Owner-directed deep assessment (2026-10-24): investigate whether the old repo's sealed-
@@ -1240,11 +1240,34 @@ next_ready_items:
       needing fresh design against readme/review/independent_reviewer.py, not a port of the
       disqualified old module; (7) revisit WIRE_GATEVERIFY_TO_PORTFOLIO once something real
       exists to wire it to.
+    step_1_done_2026_10_24: >
+      Ported src/repo_presenter/core/noop_proof.py (the bundle-independent subset: ProcessIdentity,
+      Invocation, InvocationRecord/read_invocation_record, Measurement/measure_invocation/
+      require_zero_provider_calls, Verification/verify_noop_pair -- NOT ledger_totals/
+      reconcile_ledger/LedgerReconciliationError, which read a sealed bundle's manifest and are
+      deferred to the candidates.py step). tests/core/test_noop_proof.py: 20 tests ported from the
+      old repo's own fixtures, all passing; one adaptation needed (a subprocess test needed an
+      explicit PYTHONPATH since repo_presenter is not pip-installed here). Full suite re-run clean:
+      1,546 passed, 0 failed, 11 skipped. Full detail: plans/PLAN_bundle_integrity_and_noop_proof.md
+      "Step 1 execution log."
+      REAL GAP FOUND, NOT YET RESOLVED: no scripts/run_lane_r_*.py script stamps an invocation_id
+      into its Ledger (verified: Ledger(workspace / "ledger.jsonl") is called with no
+      invocation_id argument; the two real ledgers on disk today have invocation_id=None on every
+      record) -- so this primitive, though correct and tested, cannot yet be exercised against any
+      real script run. Deliberately NOT fixed by wiring it in blind: there is a genuine, unresolved
+      design question first -- does one script-run (one OS process) count as one "invocation," or
+      does one full multi-script S3-S8 cascade for one repository count as one logical invocation?
+      The old repo's model assumed a single hosted process ran the whole cascade, so this question
+      never existed there; this repository deliberately split each stage into its own script, so it
+      is a real, new design decision, not something to copy from the old repo.
     next_step: >
-      Step 1 (port noop_proof.py's process-verification code) is the smallest, lowest-risk,
-      immediately actionable next piece of this plan -- not yet started. No step has been coded
-      yet; this card and the plan document are the planning artifact, not a build report.
-    write_paths_planned: [src/repo_presenter/core/noop_proof.py (step 1),
+      Decide the invocation-scope question above (plans/PLAN_bundle_integrity_and_noop_proof.md's
+      "Step 1 execution log" -- may need owner input, it is a design choice not a fact to look up)
+      before wiring Invocation into any script. Then: wire it into the chosen scope and run
+      verify_noop_pair against two real consecutive runs of one real repository as the first live
+      proof (the 20 unit tests prove the primitive is correct; they do not yet prove it works
+      against this repository's actual scripts). Only after that: step 2 (read seal.py in full).
+    write_paths_planned: [src/repo_presenter/core/noop_proof.py (step 1, DONE),
       src/repo_presenter/core/candidates.py (step 3),
       src/repo_presenter/readme/bundle/seal.py (step 4),
       src/repo_presenter/readme/bundle/recheck.py (steps 5-6, extends the existing port)]
@@ -1253,11 +1276,13 @@ next_ready_items:
       the old repo's core/noop_proof.py, core/candidates.py, components/readme/bundle/{seal,
       recheck}.py; plans/repository_presenter_fresh_start_supervisor_prompt.md section 8.
     invalidation_impact: >
-      None yet -- planning only, no code written. Once step 3 lands, the plan's own legacy-safety
-      regression gate (a permanent test asserting candidates.py/recheck.py never emit a verdict
-      for a repository with no candidates/ bundle) is the concrete, tested guarantee that this
-      work can never invalidate the existing 36 Lane L / 34 Lane R "ready for review" candidates
-      (project/state.yaml's owner_review_status note) -- not a promise, a gate.
+      None from step 1: core/noop_proof.py is a new, standalone module nothing else calls yet
+      (not wired into any script), so it cannot affect any existing candidate's status. Once
+      step 3 (candidates.py) lands, that module's own legacy-safety regression gate (a permanent
+      test asserting candidates.py/recheck.py never emit a verdict for a repository with no
+      candidates/ bundle) is the concrete, tested guarantee that this work can never invalidate
+      the existing 36 Lane L / 34 Lane R "ready for review" candidates (project/state.yaml's
+      owner_review_status note) -- not a promise, a gate.
 
   - id: ENTERPRISE_EDITION_NAMING_CHECK
     status: DONE

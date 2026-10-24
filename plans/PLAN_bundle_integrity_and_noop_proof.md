@@ -1,6 +1,8 @@
 # Plan: bundle integrity + no-op proof layer (not a full sealed-bundle migration)
 
-Status: PLANNED, not started. Authority: subordinate to `plans/repository_presenter_fresh_start_supervisor_prompt.md`
+Status: Step 1 DONE 2026-10-24 (ported, tested; see "Step 1 execution log" near the end of this
+file for what was built and a real integration gap it surfaced). Steps 2–7 not started. Authority:
+subordinate to `plans/repository_presenter_fresh_start_supervisor_prompt.md`
 (the mission document) and `AGENTS.md`; this file is a living plan, not an authority document — if it
 ever conflicts with the mission document, the mission document wins and this file is corrected.
 Logged per owner instruction, 2026-10-24: "after analysis, log it in decision logs, plans and
@@ -290,3 +292,67 @@ layer the original premise mistakenly targeted, and its single highest-leverage,
 zero-prerequisite first step (porting `noop_proof.py`'s process-verification code against the
 already-working `CallStore`/ledger) is immediately actionable without touching anything else in
 this plan.
+
+## Step 1 execution log (2026-10-24)
+
+**What was built**: `src/repo_presenter/core/noop_proof.py` — the bundle-independent subset of
+the old repo's `core/noop_proof.py` (524 lines old; this port is ~380 lines, not ~460 as first
+estimated — see correction below). Ported: `ProcessIdentity` (process identity read from the OS,
+never a placeholder, Windows/macOS/Linux readings all carried over verbatim), `Invocation`
+(`begin`/`run_ref`/`attach_ledger`/`document`/`write`), `InvocationRecord`/
+`read_invocation_record`, `Measurement`/`measure_invocation`/`require_zero_provider_calls`,
+`Verification`/`verify_noop_pair`, and the typed `NoOpProofError` reason constants. Explicitly NOT
+ported (deferred to the `candidates.py` step, since they read a sealed bundle's own manifest
+fields): `ledger_totals`, `reconcile_ledger`, `LedgerReconciliationError`, `LEDGER_TOTALS_MISMATCH`.
+
+**Sizing correction**: the original estimate ("~460 of 524 lines are bundle-independent") was
+close but not exact once actually ported — `ledger_totals()` itself turned out unnecessary to
+port at all (not just bundle-independent-but-deferred): this repository's own
+`core/llm/ledger.py::summarize()` already computes the equivalent one-sided ledger sums. Only the
+narrower, per-`invocation_id` count `measure_invocation` needs was genuinely new. Net: the ported
+file is smaller than first estimated, and nothing was lost by trimming it.
+
+**Tests**: `tests/core/test_noop_proof.py`, ported from the old repo's own test file (same
+fixtures: `Rerun`, `record()`, `identity()` helpers, same negative controls). 20 of the old file's
+tests ported; the "reconciling totals" section (6 tests) and the two CLI/hosted-workflow tests
+were dropped along with the code they exercise (no CLI command or workflow exists here yet). One
+adaptation was needed and is itself worth recording: the old test's
+`test_two_real_processes_have_distinct_identities_that_share_a_boot` spawns a bare `python -c
+"import repository_presenter..."` subprocess, which worked in the old repo because its package
+was pip-installed; this repository's `repo_presenter` is only importable via `tests/conftest.py`'s
+own `sys.path.insert`, so the ported test's subprocess call needed an explicit `PYTHONPATH` env
+var pointing at `src/` to import at all. All 20 pass. Full repository suite re-run clean: 1,546
+passed, 0 failed, 11 skipped (the 2 CMake-toolchain failures present in some earlier runs this
+session did not recur here — consistent with the earlier finding that they are an environment
+flake, not a regression).
+
+**Real integration gap found while scoping step 1 further** (not yet resolved, not yet acted on):
+none of `scripts/run_lane_r_{investigation,reconciliation,planning,authoring_real,coherence,
+render}.py` currently construct an `Invocation`, pass an `invocation_id` into their `Ledger`, or
+write an invocation record to disk (checked directly: `Ledger(workspace / "ledger.jsonl")` is
+called with no `invocation_id` argument in `run_lane_r_investigation.py`, and the two real ledgers
+on disk today — `scripts/_lane_r_output/aspose-pdf-foss__Aspose.PDF-FOSS-for-TypeScript/llm_cache/
+ledger.jsonl` and the aspose-words-foss/.NET equivalent — confirm every record's `invocation_id`
+is `None`). This means the newly-ported `verify_noop_pair`/`measure_invocation` primitive, while
+complete and correctly tested against faithful synthetic fixtures, cannot yet be exercised against
+any real script run — there is nothing stamped to measure.
+
+This was deliberately NOT fixed by wiring `Invocation` into the scripts this tick, because doing
+so blind would answer a real design question by accident rather than by decision: **does one
+script-run (one OS process, e.g. one `run_lane_r_investigation.py` invocation) count as one
+"invocation" for no-op-proof purposes, or does one full S3-S8 cascade for one repository —
+necessarily spanning several separate script processes, by this repository's own architecture —
+count as one logical invocation that should be proven a no-op as a whole?** The old repo's own
+model assumed a single hosted `present` process ran the entire cascade, so "one invocation" and
+"one process" were the same thing there; this repository deliberately split each stage into its
+own script, so they are not the same thing here, and nothing has decided which one the no-op proof
+should apply to. Wiring the scripts before deciding this would likely need rework once decided.
+
+**Next step, concretely**: before any script is touched, decide the invocation-scope question
+above (owner input may be needed — this is a real design choice, not a fact to look up), then wire
+`Invocation.begin()`/`attach_ledger()`/`.write()` into the chosen scope and re-run
+`verify_noop_pair` against two real consecutive runs of a real repository as the first live proof
+(the step 1 unit tests prove the primitive is correct; they do not yet prove it works against this
+repository's actual scripts). This step comes before `candidates.py` (originally "step 3") in
+practice, even though it was not named as its own numbered step in the original "Implementation
+direction" list above — that list is corrected by this note, not silently superseded.
