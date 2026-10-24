@@ -2120,3 +2120,54 @@ entries:
       independently reverified every check it would wire in.
     portfolio_consumers: none -- not pulled, and not planned to be pulled as a whole.
     invalidation_impact: none -- not pulled.
+
+  - component: "components/issues/model.py (210 lines) + components/issues/approval.py (295
+      lines)"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    behavior: >
+      model.py: the typed Handoff/TriggeringCheck/EvidenceEntry/IssueRef shape for one upstream-
+      defect handoff artifact, with a fail-closed reader (load_handoff/handoff_from_dict) and
+      writer (write_handoff/handoff_to_dict). approval.py: per-handoff owner approval
+      verification -- a committed ops/issue_approvals/<handoff-id>.json record (evidence-digest-
+      bound, expiring, max 30-day window), verified fail-closed (verify_approval), read only
+      from a git ref never the working tree (GitApprovalStore), refusing a bot-authored
+      introducing commit or a shallow clone that cannot identify one.
+    evidence: >
+      Owner ruling 2026-10-24 (docs/DECISION_LOG.md, project/state.yaml's
+      DECIDE_NEXT_ISSUE_FILINGS): adopt the old repo's real, production-proven issue-automation
+      model instead of this repository's own interim "draft markdown, wait for chat go-ahead"
+      pattern. A dedicated investigation confirmed the old repo's issues-scheduled.yml really
+      gates filing on exactly this committed approval-record mechanism in live production, not
+      merely in source.
+    disposition: REUSE (both files, verbatim apart from the import path -- zero adaptation
+      needed beyond that; approval.py's own core.git_safety.git.run_git dependency was already
+      ported in this repository and matches its call shape exactly, confirmed by direct read,
+      not assumed)
+    reason: >
+      "Stick to that implementation... no need to reinvent them or do it differently" (owner,
+      2026-10-24). Both files are self-contained (model.py: stdlib only; approval.py: only
+      model.py + the already-ported git.py) and carry real, measured security properties (the
+      incident this module exists to prevent: a single repository variable that would have
+      authorized every pending handoff, including ones the owner never read) -- re-deriving
+      this from scratch would be strictly worse than porting it.
+    target_module: src/repo_presenter/issues/model.py, src/repo_presenter/issues/approval.py
+      (both DONE 2026-10-24)
+    smallest_first_integration_test: >
+      tests/issues/test_model.py (16 tests) + tests/issues/test_approval.py (28 tests), a
+      representative subset of the old repo's own ~826 test lines (the full file also covers
+      file_handoff/plan_filing, not ported here -- see next_step). All 44 pass.
+    portfolio_consumers: >
+      None yet -- these two modules are ADDITIVE and not yet wired into
+      src/repo_presenter/issues/file.py's existing file_issue(), which still takes its own
+      boolean "authorized" argument from whatever caller supplies it (currently a chat-
+      authorized draft, per repository). Nothing currently calls verify_approval.
+    invalidation_impact: none -- new, additive modules; no existing caller changed.
+    next_step: >
+      The old repo's CURRENT components/issues/file.py has grown to 783 lines (file_handoff,
+      plan_filing, plus close_handoff/comment_on_filed for the "file-and-close" gated workflow
+      step) since this repository's own file.py (108 lines) was trimmed from an earlier, smaller
+      version of it. Upgrading file_issue() to file_handoff()-shaped (taking a Handoff, calling
+      verify_approval via an injected ApprovalStore, before any create/dedup call) is real,
+      separate, not-yet-scoped work -- read the old repo's current file.py in full first, do
+      not guess its current shape from this entry's own earlier-pull trimmed version.

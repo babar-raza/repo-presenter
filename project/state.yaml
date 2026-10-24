@@ -1457,8 +1457,12 @@ next_ready_items:
       this portfolio as it stands today; a synthetic or newly-discovered repository would be
       needed to test that path, which is future work, not blocked by this finding.
   - id: DECIDE_NEXT_ISSUE_FILINGS
-    status: BLOCKED_EXTERNAL
-    blocked_on: owner decision
+    status: IN_PROGRESS
+    blocked_on: >
+      The engineering work (upgrading issues/file.py to the approval-gated model) is unblocked
+      and in progress -- see implementation_progress_2026_10_24 below. Only the final step
+      (each of the 6 pending drafts needs its own ops/issue_approvals/<handoff_id>.json
+      committed by the owner) is blocked on the owner, per the adoption_decision below.
     purpose: >
       6 more genuine, deduped, evidenced upstream defects are drafted and ready
       (aspose-3d-foss .NET and Java format-unreachability, aspose-email-foss .NET test-fixture
@@ -1499,6 +1503,33 @@ next_ready_items:
       draft -> owner commits one approval-record file (a one-time, auditable action per defect,
       matching the old repo's own proven shape) -> the scheduled job files it autonomously
       thereafter, no further chat exchange needed.
+    implementation_progress_2026_10_24: >
+      Ported src/repo_presenter/issues/model.py (the typed Handoff shape) and
+      src/repo_presenter/issues/approval.py (verify_approval, GitApprovalStore) verbatim apart
+      from the import path -- both self-contained (model.py: stdlib only; approval.py: only
+      model.py + the already-ported core/git_safety/git.py, confirmed matching by direct read).
+      44 ported tests (tests/issues/test_model.py, tests/issues/test_approval.py), a
+      representative subset of the old repo's ~826 test lines, all passing. Full detail:
+      migration/reuse-manifest.yaml's new entry.
+      NOT yet done, and this is the real remaining gap, not a detail: these two modules are
+      purely additive -- nothing calls verify_approval yet. src/repo_presenter/issues/file.py
+      (this repository's own, 108 lines) still takes a plain boolean "authorized" argument from
+      whatever caller supplies it; it does not yet construct a Handoff from a draft, call
+      verify_approval against a committed ops/issue_approvals/ record, or replace the "draft
+      markdown, wait for chat go-ahead" pattern the 6 pending drafts still use. The old repo's
+      OWN current file.py has grown to 783 lines (file_handoff/plan_filing/close_handoff/
+      comment_on_filed) since this repository's version was trimmed from an earlier cut of it --
+      upgrading file_issue() to that shape is real, separately-sized work, not yet started, and
+      should not be guessed at from this repository's own already-trimmed version.
+    next_step: >
+      Read the old repo's current components/issues/file.py (783 lines) in full, then upgrade
+      this repository's issues/file.py so a filing attempt constructs a Handoff, checks
+      verify_approval via a GitApprovalStore (or an injected fake in tests) before any dedup/
+      create call, and only then wire the 6 pending draft_upstream_issue.md handoffs through it
+      -- each still needs its own ops/issue_approvals/<handoff_id>.json committed by the owner
+      once (the "one-time, auditable action per defect" the adoption_decision above names), not
+      filed by this card.
+
   - id: SALVAGE_INVENTORY_2026_10_23
     status: DONE
     priority: highest
