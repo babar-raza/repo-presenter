@@ -29,6 +29,7 @@ from repo_presenter.core.git_safety.git import run_git
 from repo_presenter.core.llm.jobs import CallStore, JobContext, run_job
 from repo_presenter.core.llm.ledger import Ledger
 from repo_presenter.core.llm.prompts import load_manifests
+from repo_presenter.core.noop_proof import Invocation
 from repo_presenter.core.registry.loader import load_registry, require_listed
 from repo_presenter.readme.evidence.facts.inherited import inherited_unit_facts
 from repo_presenter.readme.investigation.dossier import (
@@ -89,7 +90,14 @@ def main() -> None:
     print("[5/6] firing the REAL LLM call through the live gateway")
     config = load_gateway_config(os.environ)
     workspace = Path("scripts/_lane_r_output") / repository.replace("/", "__") / "llm_cache"
-    ledger = Ledger(workspace / "ledger.jsonl")
+    # Invocation/invocation_id: project/state.yaml's PORT_BUNDLE_INTEGRITY_LAYER step 1 (2026-10-24)
+    # -- one invocation per script run, matching readme/bundle/recheck.py's own per-scope currency
+    # model rather than one invocation per whole multi-script cascade. Lets a future caller run this
+    # script twice and call core.noop_proof.verify_noop_pair against the two invocation records this
+    # writes, proving the second run made zero new provider calls.
+    invocation = Invocation.begin()
+    ledger_path = workspace / "ledger.jsonl"
+    ledger = Ledger(ledger_path, invocation_id=invocation.invocation_id)
     store = CallStore(workspace / "calls")
     context = JobContext(repository=repository, source_revision=source_revision)
 
@@ -117,6 +125,11 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     digest = write_investigation(result.output, out_dir / "investigation.json")
     print(f"\nWrote {out_dir / 'investigation.json'} (sha256 {digest})")
+
+    invocation.attach_ledger(repository, ledger_path)
+    invocation_record_path = workspace / "invocations" / f"{invocation.invocation_id}.json"
+    invocation.write(invocation_record_path, Path("."), 0)
+    print(f"Wrote {invocation_record_path} (invocation {invocation.invocation_id})")
 
 
 if __name__ == "__main__":

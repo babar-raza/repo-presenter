@@ -356,3 +356,46 @@ above (owner input may be needed — this is a real design choice, not a fact to
 repository's actual scripts). This step comes before `candidates.py` (originally "step 3") in
 practice, even though it was not named as its own numbered step in the original "Implementation
 direction" list above — that list is corrected by this note, not silently superseded.
+
+## Invocation-scope question resolved, with real production precedent now in hand (2026-10-24)
+
+A separate, parallel investigation (triggered by the owner reporting "we completed P3 & P4 in old
+repo") read the old repo's real, currently-running production workflows in full — not just its
+source tree in the abstract. This surfaced the actual, proven answer to the question above:
+**in production, one invocation is one whole-repository `present` command execution** — one CLI
+call that runs admission, facts, composition, review, render, and sealing for one repository in
+one process, invoked twice by `present.yml` (`--invocation-record first.json` / `second.json`),
+gated by `repository-presenter verify-noop-proof --first ... --second ...`. This is the exact
+design `core/noop_proof.py` was built for, now confirmed as a live production exercise of it, not
+just a theory — strong validation that today's port (`core/noop_proof.py`,
+`tests/core/test_noop_proof.py`) got the primitive itself right.
+
+**It does not resolve the question in this repository's favor as a straight copy, and the
+divergence is deliberate, not an oversight**: the old repo's "one invocation, one process" design
+works because `present` is a single monolithic command. This repository has no such command —
+the pipeline is six separate scripts (`run_lane_r_{investigation,reconciliation,planning,
+authoring_real,coherence}.py`, `render.py` makes no LLM calls and was correctly left unwired),
+each its own OS process even for a single non-rerun execution, with file-based handoffs. Mapping
+the old repo's exact invocation scope onto that would require first building a
+`present`-equivalent single-process orchestrator — itself a large, separate undertaking (see the
+2026-10-24 P3/P4 investigation's own gap list, recorded in `project/state.yaml`'s
+`GITHUB_ACTIONS_HOSTING_GAP_2026_10_24`). Decided instead, for now: keep the per-script invocation
+scope already reasoned toward earlier (one `Invocation.begin()` per script run, matching
+`readme/bundle/recheck.py`'s own per-scope currency model) — wired into all five LLM-calling
+scripts today. This is a real, deliberate adaptation, not a blind copy of the proven old-repo
+design; if a `present`-equivalent orchestrator is ever built (see the P3/P4 finding), the
+invocation scope should likely be revisited to match the old repo's own proven, coarser grain at
+that point, not before.
+
+**What was actually wired, 2026-10-24**: `Invocation.begin()` at the top of each script's gateway
+section, the resulting `invocation_id` passed into that script's `Ledger(...)`, and after the
+job(s) complete, `invocation.attach_ledger(...)` + `invocation.write(workspace / "invocations" /
+f"{invocation.invocation_id}.json", ...)`. Applied to `run_lane_r_investigation.py`,
+`_reconciliation.py`, `_planning.py`, `_authoring_real.py`, `_coherence.py` — all five scripts
+that make LLM calls. `render.py` makes none and needs no invocation. All five compile; full suite
+re-run clean (see commit log for the exact count). **Not yet live-demonstrated**: no fresh git
+clone was available in this environment to fire a real `run_lane_r_investigation.py` end to end,
+and fabricating one just to force a demonstration was judged more invasive than warranted given
+the primitive's own 20 unit tests already prove its correctness — the first real
+`verify_noop_pair` call against one of these scripts' own real invocation records will happen
+naturally the next time a real cascade runs twice, not forced here.

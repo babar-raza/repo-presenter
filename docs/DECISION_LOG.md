@@ -115,3 +115,61 @@ adoption decision); `docs/MISSION_AUTHORITY.md`'s "Upstream defect reporting" bu
 product-requirement correction); `src/repo_presenter/github/token_provenance.py` (the corrected
 App-identity docstring); `plans/idea.md`'s top annotation (the pointer from the still-verbatim
 old product-requirements text to this ruling).
+
+---
+
+## 2026-10-24: Correcting the GitHub Actions salvage sizing after reading the real workflows and CLI in full; resolving the no-op invocation-scope question with real production precedent
+
+**Decision**: correct the same-day earlier framing ("adapt proven workflow definitions, a
+materially smaller task") after actually reading all six core old-repo workflows and the CLI
+they call in full. The real gap is a missing single-process orchestrator (the old repo's
+`present` command), not a YAML-adaptation exercise. Separately: wire `core/noop_proof.py`'s
+`Invocation` into this repository's five LLM-calling scripts now, at the per-script scope
+already reasoned toward, rather than wait to match the old repo's own proven (but structurally
+incompatible) per-whole-pipeline scope.
+
+**Why**: a follow-up investigation (same research thread as the earlier same-day P3/P4 finding,
+continued rather than restarted, read-only, `gh`/file-verified) read `present.yml`, `propose.yml`,
+`issues-scheduled.yml`, `sealing-scheduled.yml`, `monitor.yml`, `liveness.yml` in full, plus the
+CLI they call (`src/repository_presenter/cli.py`, 4,828 lines, ~30 subcommands). Found:
+
+- `present.yml`'s entire design assumes ONE command (`repository-presenter present`) runs the
+  whole per-repository pipeline in one process, invoked twice for the no-op proof. This
+  repository's six separate scripts (`run_lane_r_{investigation,reconciliation,planning,
+  authoring_real,coherence}.py`) have no equivalent — there is no single call that could be
+  invoked twice the same way.
+- Durable state across ephemeral runners (mission §9's own requirement) uses three distinct real
+  mechanisms in the old repo — a dedicated git-ref namespace
+  (`refs/repository-presenter-state/records/...`) for sealed bundles, Actions artifacts for
+  monitor evidence, and the Actions API itself for sealing cooldown history — none of which this
+  repository has any equivalent of.
+- The GitHub App is confirmed the *same* one this repository's `token_provenance.py` already
+  names (provisioned via a real one-time manifest-flow registration,
+  `tools/github_app/{manifest.json,register.html,register_exchange.py}`) — no new App
+  registration needed if this project keeps using it.
+- Toolchain-provisioning steps in `present.yml` (dotnet/JDK/Node/Go/Rust/g++/cmake/ninja) are
+  directly portable as-is, independent of everything else.
+
+**Invocation-scope resolution**: the old repo's real precedent answers the question
+`plans/PLAN_bundle_integrity_and_noop_proof.md` left open after step 1 (one invocation per
+script-run vs. one per whole cascade) — in production it's the latter, one invocation per whole
+`present` call. Decided NOT to copy that scope directly: building a `present`-equivalent
+orchestrator is itself the large undertaking named above, and forcing today's wiring to wait for
+it would block real progress on a separate, already-scoped decision. Kept the per-script scope,
+wired `Invocation.begin()`/`attach_ledger()`/`.write()` into all five LLM-calling scripts today.
+If a `present`-equivalent orchestrator is ever built, the invocation scope should likely be
+revisited to match the old repo's own proven, coarser grain then — not before.
+
+**What this does NOT decide**: whether to build the `present`-equivalent orchestrator (large) or
+adapt workflows to the six-script shape (smaller, diverges from proven design) — both remain open,
+named as the next real decision in `project/state.yaml`'s `GITHUB_ACTIONS_HOSTING_GAP_2026_10_24`.
+Does not re-verify whether a sealed bundle's durable commit target would be the working tree or
+the dedicated git-ref namespace found here — flagged as a re-check needed before
+`core/candidates.py` is ported (`PORT_BUNDLE_INTEGRITY_LAYER` step 3). Does not live-demonstrate
+`verify_noop_pair` against a real script run (no fresh clone was available in this environment;
+deferred to the next real cascade run rather than fabricated).
+
+**Where the detail lives**: `project/state.yaml`'s `GITHUB_ACTIONS_HOSTING_GAP_2026_10_24`
+(corrected salvage sizing, full CLI/gap findings) and `PORT_BUNDLE_INTEGRITY_LAYER` (the
+invocation-wiring record); `plans/PLAN_bundle_integrity_and_noop_proof.md`'s "Invocation-scope
+question resolved" section (full reasoning).

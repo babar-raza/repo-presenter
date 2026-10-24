@@ -1262,31 +1262,56 @@ next_ready_items:
       itself an answer. No action taken on the old repo's workflows; this is recorded as an open
       question for the owner, not decided here.
     salvage_decision: >
-      Port the old repo's real, proven .github/workflows/ definitions rather than design hosted
-      CI from scratch -- this changes the next_step below from "design P3 hosting" to "adapt
-      proven production workflow definitions," a materially smaller and lower-risk task than
-      previously framed. Read each workflow in full before adapting (several were not read in
-      depth by the investigation: candidates-publish.yml -- never actually run, defined but
-      unexercised -- audit-app-installations.yml, verify-app-installation.yml,
-      mirror-gitlab.yml). Adapt, do not copy blind: every workflow calls the old repo's own CLI
-      entry points and script paths, which differ from this repository's scripts/run_lane_r_*.py
-      layout and do not yet have a unified CLI the old repo's workflows assume.
+      CORRECTED 2026-10-24 (same day, after reading the real workflow bodies and CLI in full --
+      the earlier "materially smaller task" framing directly below was written from trigger/
+      schedule evidence alone and undersold the real gap; left standing, not deleted, per this
+      project's own practice of correcting rather than erasing). Porting the workflows is NOT
+      primarily a YAML-adaptation task. The old repo has ONE unified CLI
+      (`repository-presenter`, pyproject.toml console script -> src/repository_presenter/cli.py,
+      4,828 lines, ~30 subcommands) and, critically, ONE subcommand (`present`, cli.py's
+      run_present/_run_present, ~390 lines) that runs the ENTIRE per-repository pipeline --
+      admission, facts, composition, review, render, sealing -- in a single process. present.yml
+      calls this ONE command twice (--invocation-record first.json/second.json) and gates on
+      `repository-presenter verify-noop-proof --first ... --second ...` -- the exact mechanism
+      core/noop_proof.py (ported today, step 1 above) was built for, now confirmed as a live
+      production exercise of it. This repository has NO equivalent: six separate scripts, six
+      separate processes, file-based handoffs, no pip-installed console script, and no
+      candidates/ sealed-bundle directory or CURRENT-pointer convention for present.yml's own
+      durable-state commit step to write into. Durable state across ephemeral runners (mission
+      section 9's own requirement) uses THREE distinct real mechanisms in the old repo, none of
+      which exist here: a dedicated git-ref namespace (refs/repository-presenter-state/
+      records/...) for sealed-bundle commits, GitHub Actions artifacts for monitor evidence
+      (never committed), and the GitHub Actions API itself (queried fresh each run) for sealing
+      cooldown history. GitHub App credentials (GH_APP_ID/GH_APP_PRIVATE_KEY, 6 secrets total)
+      were provisioned through a real one-time manifest-flow registration
+      (tools/github_app/{manifest.json,register.html,register_exchange.py}) -- confirmed the
+      SAME real App (repository-presenter[bot], slug verified via a real PR author) this
+      repository's own token_provenance.py already names; no new App registration is needed if
+      this project continues using it. Toolchain-provisioning steps (dotnet/JDK/Node/Go/Rust/
+      g++/cmake/ninja install) in present.yml ARE directly portable as-is -- no dependency on
+      anything repository-presenter-specific.
     next_step: >
       (1) Flag the operational-risk question above to the owner explicitly (done, this update).
-      (2) Read the real workflow YAML bodies in full (present.yml, propose.yml,
-      issues-scheduled.yml, sealing-scheduled.yml, monitor.yml, liveness.yml at minimum) to
-      extract the exact trigger/schedule/credential-split pattern before adapting anything.
-      (3) Identify this repository's own equivalent CLI entry points (currently scripts/run_
-      lane_r_*.py, one script per stage -- the old repo's workflows likely assume a single
-      unified CLI) and decide whether to build that unifying CLI first or adapt workflows to
-      call the existing per-stage scripts directly. (4) Build the smallest real vertical slice
-      per mission section 12 ("one small vertical slice on GitHub Actions before broader
-      automation") -- not all 13 workflows at once.
+      (2) Decide, as its own scoped undertaking (not a quick follow-on to this card): build a
+      present-equivalent single-process orchestrator over this repository's existing six
+      scripts/components (large, but the components themselves -- composition, review via
+      today's independent_reviewer.py, render -- already exist and are proven; this would be
+      wiring, not new invention), OR rewrite workflows to call the six scripts in sequence
+      (smaller, but diverges from the old repo's own proven invocation-scope design -- see
+      plans/PLAN_bundle_integrity_and_noop_proof.md's "Invocation-scope question resolved").
+      (3) Before porting core/candidates.py (PORT_BUNDLE_INTEGRITY_LAYER step 3), re-check
+      whether a sealed bundle's durable commit target is the working tree or the dedicated
+      git-ref namespace found here -- this changes what candidates.py actually reads from.
+      (4) Build the smallest real vertical slice per mission section 12 ("one small vertical
+      slice on GitHub Actions before broader automation") once (2) is decided -- not all 13
+      workflows, and not the full present-equivalent orchestrator, at once.
     source_refs: >
       plans/repository_presenter_fresh_start_supervisor_prompt.md non-negotiable #1 and
       section 9; plans/idea.md "Execution Environments and GitHub Access"; the old repo's real
-      .github/workflows/*.yml (13 files) and ops/issue_approvals/; project/state.yaml's own
-      active_work_item (P2_REAL_ENGINE_SALVAGE, IN_PROGRESS).
+      .github/workflows/*.yml (13 files, all 6 core ones read in full), src/repository_presenter/
+      cli.py (4,828 lines), tools/github_app/, docs/CREDENTIAL_ROTATION_RUNBOOK.md,
+      ops/issue_approvals/; project/state.yaml's own active_work_item (P2_REAL_ENGINE_SALVAGE,
+      IN_PROGRESS).
 
   - id: PORT_BUNDLE_INTEGRITY_LAYER
     status: IN_PROGRESS
@@ -1354,13 +1379,30 @@ next_ready_items:
       The old repo's model assumed a single hosted process ran the whole cascade, so this question
       never existed there; this repository deliberately split each stage into its own script, so it
       is a real, new design decision, not something to copy from the old repo.
+    invocation_wiring_done_2026_10_24: >
+      Decided and wired. A parallel P3/P4 investigation (GITHUB_ACTIONS_HOSTING_GAP_2026_10_24)
+      found the old repo's real production precedent: one invocation = one whole-repository
+      `present` command execution (a single monolithic CLI call this repository has no
+      equivalent of). Deliberately did NOT copy that scope: building a `present`-equivalent
+      single-process orchestrator is itself a large, separate undertaking (see that card's own
+      CLI/gap findings). Kept the per-script scope already reasoned toward (one
+      Invocation.begin() per script run, matching readme/bundle/recheck.py's own per-scope
+      model) and wired it into all five LLM-calling scripts: run_lane_r_{investigation,
+      reconciliation,planning,authoring_real,coherence}.py (render.py makes no LLM calls, left
+      unwired). Each now creates one Invocation, threads its invocation_id into that script's
+      Ledger, and writes an invocation record to workspace/invocations/<id>.json. All five
+      compile; full suite re-run clean. NOT yet live-demonstrated against a real clone+gateway
+      call (none was on disk in this environment; fabricating one was judged more invasive than
+      the already-thorough 20 unit tests warranted) -- the first real verify_noop_pair call
+      against real invocation records will happen naturally on the next real cascade run.
+      Full reasoning: plans/PLAN_bundle_integrity_and_noop_proof.md's "Invocation-scope question
+      resolved" section.
     next_step: >
-      Decide the invocation-scope question above (plans/PLAN_bundle_integrity_and_noop_proof.md's
-      "Step 1 execution log" -- may need owner input, it is a design choice not a fact to look up)
-      before wiring Invocation into any script. Then: wire it into the chosen scope and run
-      verify_noop_pair against two real consecutive runs of one real repository as the first live
-      proof (the 20 unit tests prove the primitive is correct; they do not yet prove it works
-      against this repository's actual scripts). Only after that: step 2 (read seal.py in full).
+      Read seal.py in full (step 2), now informed by the P3/P4 investigation's own finding that
+      the old repo's durable-state mechanism for a sealed bundle is a dedicated git-ref
+      namespace (refs/repository-presenter-state/records/...), not a committed file in the
+      working tree as this plan's own candidates.py read assumed -- re-check that assumption
+      before porting candidates.py (step 3).
     write_paths_planned: [src/repo_presenter/core/noop_proof.py (step 1, DONE),
       src/repo_presenter/core/candidates.py (step 3),
       src/repo_presenter/readme/bundle/seal.py (step 4),

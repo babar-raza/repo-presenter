@@ -25,6 +25,7 @@ from repo_presenter.core.git_safety.git import run_git
 from repo_presenter.core.llm.jobs import CallStore, JobContext, run_job
 from repo_presenter.core.llm.ledger import Ledger
 from repo_presenter.core.llm.prompts import load_manifests
+from repo_presenter.core.noop_proof import Invocation
 from repo_presenter.core.registry.loader import load_registry, require_listed
 from repo_presenter.extractors.platforms.registry import plugin_for
 from repo_presenter.readme.composition.authoring import (
@@ -87,7 +88,9 @@ def main() -> None:
 
     config = load_gateway_config(os.environ)
     workspace = out_dir / "llm_cache"
-    ledger = Ledger(workspace / "ledger.jsonl")
+    invocation = Invocation.begin()
+    ledger_path = workspace / "ledger.jsonl"
+    ledger = Ledger(ledger_path, invocation_id=invocation.invocation_id)
     store = CallStore(workspace / "calls")
 
     outputs: dict[str, dict] = {}
@@ -133,6 +136,11 @@ def main() -> None:
 
     digest = write_content_units(merged, out_dir / "content_units.json")
     print(f"\nWrote {out_dir / 'content_units.json'} (sha256 {digest})")
+
+    invocation.attach_ledger(repository, ledger_path)
+    invocation_record_path = workspace / "invocations" / f"{invocation.invocation_id}.json"
+    invocation.write(invocation_record_path, Path("."), 0)
+    print(f"Wrote {invocation_record_path} (invocation {invocation.invocation_id})")
 
 
 if __name__ == "__main__":

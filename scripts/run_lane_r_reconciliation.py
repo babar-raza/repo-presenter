@@ -27,6 +27,7 @@ from repo_presenter.core.git_safety.git import run_git
 from repo_presenter.core.llm.jobs import CallStore, JobContext, run_job
 from repo_presenter.core.llm.ledger import Ledger
 from repo_presenter.core.llm.prompts import load_manifests
+from repo_presenter.core.noop_proof import Invocation
 from repo_presenter.core.registry.loader import load_registry, require_listed
 from repo_presenter.readme.evidence.facts.inherited import inherited_unit_facts
 from repo_presenter.readme.reconciliation.dispositions import (
@@ -85,7 +86,10 @@ def main() -> None:
 
     config = load_gateway_config(os.environ)
     workspace = Path("scripts") / "_lane_r_output" / repo_dir / "llm_cache"
-    ledger = Ledger(workspace / "ledger.jsonl")
+    # One invocation per script run (project/state.yaml PORT_BUNDLE_INTEGRITY_LAYER step 1).
+    invocation = Invocation.begin()
+    ledger_path = workspace / "ledger.jsonl"
+    ledger = Ledger(ledger_path, invocation_id=invocation.invocation_id)
     store = CallStore(workspace / "calls")
 
     outputs = []
@@ -122,6 +126,11 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     digest = write_dispositions(merged, out_dir / "dispositions.json")
     print(f"\nWrote {out_dir / 'dispositions.json'} (sha256 {digest})")
+
+    invocation.attach_ledger(repository, ledger_path)
+    invocation_record_path = workspace / "invocations" / f"{invocation.invocation_id}.json"
+    invocation.write(invocation_record_path, Path("."), 0)
+    print(f"Wrote {invocation_record_path} (invocation {invocation.invocation_id})")
 
 
 if __name__ == "__main__":
