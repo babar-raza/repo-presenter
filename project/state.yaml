@@ -1299,12 +1299,15 @@ next_ready_items:
     status: BLOCKED_EXTERNAL
     blocked_on: owner decision
     purpose: >
-      5 more genuine, deduped, evidenced upstream defects are drafted and ready
+      6 more genuine, deduped, evidenced upstream defects are drafted and ready
       (aspose-3d-foss .NET and Java format-unreachability, aspose-email-foss .NET test-fixture
       note, aspose-psd-foss Python version-claim, aspose-words-foss .NET nuspec metadata gap --
       the last one's severity was corrected downward after independent re-verification showed
-      no reproducible runtime failure). Owner has only explicitly authorized the one already
-      filed (aspose-3d-foss Python#4); the rest need an explicit per-repository go-ahead before
+      no reproducible runtime failure -- plus aspose-font-foss Python's broken MCP install
+      command, added 2026-10-24, found by the new independent reviewer and dedup-checked;
+      evidence/build/P2_REAL_ENGINE_SALVAGE/aspose-font-foss__Aspose.Font-FOSS-for-Python/
+      draft_upstream_issue.md). Owner has only explicitly authorized the one already filed
+      (aspose-3d-foss Python#4); the rest need an explicit per-repository go-ahead before
       filing, per mission section 9's "first live effect per capability" rule -- though since
       the capability itself is now proven, routine filing may not need per-issue authorization
       once the owner confirms that.
