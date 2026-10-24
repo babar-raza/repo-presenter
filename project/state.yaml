@@ -1465,10 +1465,44 @@ next_ready_items:
       29/30 ACCEPT + 1 genuine, hand-verified REJECT is neither degenerate extreme, and the one
       REJECT is a real, reproducible defect, not a false positive -- satisfies this run's own
       negative control without needing synthetic fixtures for it.
+    root_cause_traced_2026_10_24: >
+      Before drafting any repair/issue action for the aspose-font-foss/Python finding, traced it
+      to its actual source rather than assuming S6 authoring wrote it (AGENTS.md: verify, don't
+      guess from names/shape). Searched facts.json, content_units.json, and
+      content_units.coherent.json for the literal flagged text (`aspose-font[mcp]`) -- zero
+      matches in any of them. Found it instead in README.patch.diff on BOTH the `-` (original)
+      and `+` (new candidate) sides: this line is inherited verbatim from the live upstream
+      README, not authored or rendered by this project's pipeline at all. Confirmed independently
+      live: `gh api repos/aspose-font-foss/Aspose.Font-FOSS-for-Python/contents/README.md` at
+      current main (0735cc2797665a21ccf96409289c7d4f2da054d9) still has this exact line (its own
+      "## MCP Server" section) -- a genuine, currently-live, previously unreported upstream
+      defect, not a stale fixture artifact and not an artifact of this project's own composition.
+      CONSEQUENCE FOR THE REPAIR-ROUTING DESIGN QUESTION (BUILD_INDEPENDENT_REVIEWER's still-open
+      item (2)): this concretely proves that a naive "every REJECT finding is an S6 authoring
+      defect" Defect-constructor would have been WRONG for this exact real finding --
+      readme/repair/targeted.py::review_defects already anticipates exactly this case (its own
+      `placed`-text check reroutes a finding whose quote matches a preserved/placed unit's text
+      to S4, "misrouted": True, "authoring never placed that text and cannot revise it") --
+      confirming review_defects is the right target and that Finding needs a real `quote` field
+      plus composition/placement.py's placed_texts() wired in before any Defect construction can
+      be trusted, not guessed. Deliberately NOT built this tick -- recorded as next_step, not
+      rushed, per the owner's own 2026-10-24 "plan carefully before building" directive.
+    upstream_issue_drafted_2026_10_24: >
+      Dedup-checked (`gh issue list --repo aspose-font-foss/Aspose.Font-FOSS-for-Python --state
+      all` and `--search "mcp"`: both empty -- not a duplicate) and drafted, NOT filed, per
+      mission section 9 (owner authorization required for a new live effect target). Draft:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/aspose-font-foss__Aspose.Font-FOSS-for-Python/
+      draft_upstream_issue.md, matching the existing draft_upstream_issue.md convention (see
+      SALVAGE_INVENTORY_2026_10_23-era aspose-3d-foss drafts). Awaiting owner go-ahead to file,
+      same as this session's other 2 pending drafts.
     next_step: >
-      (a) aspose-font-foss/Python's broken install command needs an actual fix -- this card
-      found it, it does not fix it; no repair hand-off exists yet (BUILD_INDEPENDENT_REVIEWER's
-      still-open item (2)). (b) attempted 2026-10-24, BLOCKED -- see
+      (a) aspose-font-foss/Python's broken install command: root cause traced (see above, an
+      upstream-inherited line, not a Lane R authoring defect) and a draft upstream issue is ready
+      for owner review -- this card does not file it. Separately, the REUSE-ported
+      repair/targeted.py::review_defects is confirmed the right target for a future Defect
+      constructor, but building that constructor needs Finding.quote and
+      composition/placement.py's placed_texts() wired in first (not done this tick -- see
+      root_cause_traced_2026_10_24). (b) attempted 2026-10-24, BLOCKED -- see
       p1_cohort_attempt_2026_10_24 below: the P1_PORTFOLIO_SCALE cohort's facts.json uses a
       completely different, incompatible schema; this is now a recorded, scoped-out finding, not
       an open next_step. (c) Re-run this script whenever a repository in the P2 cohort advances
