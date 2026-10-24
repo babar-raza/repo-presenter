@@ -55,3 +55,63 @@ It also does not change or re-port `CallStore`/the ledger — those are correct 
 **Where the detail lives**: full evidence-cited assessment, target architecture, ordered
 implementation steps, and verification strategy — `plans/PLAN_bundle_integrity_and_noop_proof.md`.
 Live tracking card — `project/state.yaml`'s `PORT_BUNDLE_INTEGRITY_LAYER`.
+
+---
+
+## 2026-10-24: The old repo's P3/P4 (hosted GitHub Actions, GitHub App, issue/PR automation) is real, live production — not just documented; issue filing moves to a committed-approval model
+
+**Decision**: (1) treat the old repo's `.github/workflows/`, GitHub App identity, and issue/PR
+automation as real, salvageable, proven infrastructure — not a design reference to rebuild from
+scratch; (2) adopt the old repo's real approval-gated issue-filing model going forward, replacing
+this repository's own interim "draft a markdown file, wait for a chat go-ahead" pattern; (3) flag
+an operational risk to the owner rather than deciding it unilaterally.
+
+**Why**: the owner stated "we completed P3 & P4 in old repo" and asked if that work could be
+reused, and separately ruled that issue filing should no longer need a human to file each one,
+citing the old repo's system as "tested and proved." A dedicated investigation (read-only,
+verified via `gh run list`/`gh api` against the real `babar-raza/repository-presenter` remote —
+not narration) found:
+
+- **GitHub Actions hosting is real and currently running.** 13 workflow files exist; several
+  (`Liveness`, `Monitor`, a daily `Sealing` job, a daily `Upstream issues` job) show
+  `completed success` runs through **2026-10-24T11:34:11Z — today, during this session.**
+  `present.yml` and `propose.yml` both have real successful `workflow_dispatch` runs.
+- **The GitHub App identity is confirmed real, not a placeholder.** The real open PR this
+  automation produced (`aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp#7`) is authored by
+  `repository-presenter[bot]`, `is_bot: true` — exactly `EXPECTED_APP_SLUG` in this repository's
+  own `token_provenance.py`, now corrected from "unconfirmed placeholder" to "confirmed real."
+  It is the same App (installed on the target upstream repos, not on either supervisor's own
+  checkout), so there is no reason for this repository to register a new one.
+- **Issue filing is real and autonomous, but not human-free.** `.github/workflows/
+  issues-scheduled.yml` gates filing on a committed per-defect approval record
+  (`ops/issue_approvals/<handoff_id>.json`: evidence digest, approver, approved/expires
+  timestamps) existing and matching the finding's evidence digest. Once that one committed
+  approval exists, the scheduled, capped job files and closes autonomously with no further
+  human step. **The owner's premise that no human step remains was corrected, not just
+  accepted**, per mission non-negotiable #7 (observations, not claims): one committed approval
+  per defect is still real and required — that is the model being adopted, not a looser one.
+- **Real filed issues are extensive** (e.g. 5 on one repository, 3 on another — far more than
+  this repository's own "1 filed" count, because that count is this repository's own history,
+  not the shared upstream portfolio's).
+- **The old repo's daily "Sealing" workflow is the live production backbone of the exact
+  sealed-bundle architecture** the separate `PORT_BUNDLE_INTEGRITY_LAYER` decision above is
+  porting from source — a running reference implementation exists, not just old code.
+
+**Operational risk flagged, not resolved here**: the old repo's hosted automation is continuing
+to file real issues and open real PRs against the same upstream portfolio this new repository is
+being built to eventually replace, concurrently with this session's own work. Whether to let it
+keep running unattended or pause it first is an operational decision for the owner, not an
+engineering one — not decided or acted on in this entry.
+
+**What this does NOT decide**: it does not port all 13 old workflows at once (mission §12: "one
+small vertical slice on GitHub Actions before broader automation" applies here too); it does not
+independently re-verify `EXPECTED_APP_ID`'s numeric value (no app-level JWT access in the
+investigation's environment — slug confirmed, numeric id not); it does not resolve the
+operational-risk question above.
+
+**Where the detail lives**: `project/state.yaml`'s `GITHUB_ACTIONS_HOSTING_GAP_2026_10_24` (full
+finding, salvage decision, ordered next steps) and `DECIDE_NEXT_ISSUE_FILINGS` (the issue-filing
+adoption decision); `docs/MISSION_AUTHORITY.md`'s "Upstream defect reporting" bullet (the binding
+product-requirement correction); `src/repo_presenter/github/token_provenance.py` (the corrected
+App-identity docstring); `plans/idea.md`'s top annotation (the pointer from the still-verbatim
+old product-requirements text to this ruling).

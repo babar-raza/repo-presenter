@@ -1195,7 +1195,7 @@ next_ready_items:
       additive path now exists; step 7 of that plan is this card's own original ask.
 
   - id: GITHUB_ACTIONS_HOSTING_GAP_2026_10_24
-    status: NOT_STARTED
+    status: BLOCKED_NEEDS_OWNER_DECISION
     priority: highest
     purpose: >
       Recorded while answering the owner's 2026-10-24 status question ("how far from
@@ -1231,18 +1231,62 @@ next_ready_items:
       The gap is real but not a missed step out of order -- it is the next phase, not a
       skipped one. Recorded now so it is visible in the state machine rather than only
       inferable from P-ordering, per the owner's explicit "so we do not forget about anything."
+    major_update_2026_10_24_old_repo_p3_p4_confirmed_live: >
+      Owner stated "we completed P3 & P4 in old repo" and asked whether that work is salvageable.
+      A dedicated investigation (read-only, gh-verified, not narrative) confirmed: it is real,
+      currently-running PRODUCTION infrastructure, not just documented or locally tested. VERIFIED
+      via `gh run list`/`gh api` against the live baber-raza/repository-presenter remote:
+      13 real .github/workflows/*.yml files; several (Liveness every ~30min, Monitor every 6h,
+      a daily Sealing job, a daily Upstream-issues job) show `completed success` runs through
+      2026-10-24T11:34:11Z -- TODAY, during this very session. present.yml (hosted README
+      generation) and propose.yml (hosted PR effect) both have real successful workflow_dispatch
+      runs. A real open PR exists (aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp#7, authored by
+      `repository-presenter[bot]`, confirming EXPECTED_APP_SLUG is the real App, not a guess --
+      token_provenance.py's docstring corrected accordingly). Real filed issues are extensive:
+      e.g. aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript has 5 (#4-#8), aspose-cells-foss/
+      Aspose.Cells-FOSS-for-Cpp has 3 -- far more than this repository's own "1 filed" count
+      reflects, because that count is this (new) repository's own history, not the portfolio's.
+      The old repo's daily "Sealing (scheduled)" workflow is the LIVE PRODUCTION BACKBONE of
+      exactly the sealed-bundle architecture PORT_BUNDLE_INTEGRITY_LAYER (below) is evaluating
+      from source alone -- a live reference implementation exists, not just old code.
+    operational_risk_flagged_not_yet_owner_resolved: >
+      IMPORTANT, surfaced but not unilaterally acted on: the old repo's hosted automation is
+      LIVE and continuing to file real issues and open real PRs against the SAME upstream
+      portfolio this new repository is being built to eventually replace -- concurrently with
+      this session's own work. This is an operational question only the owner can resolve (not
+      an engineering choice): should the old system's hosted workflows keep running unattended
+      while this new repository is built, risking duplicate/conflicting external actions once
+      this repository also starts writing, or should they be paused/disabled first? Mission
+      section 1 says "do not modify or destructively clean the legacy repositories" but is
+      silent on whether to pause its LIVE hosted automation specifically -- that silence is not
+      itself an answer. No action taken on the old repo's workflows; this is recorded as an open
+      question for the owner, not decided here.
+    salvage_decision: >
+      Port the old repo's real, proven .github/workflows/ definitions rather than design hosted
+      CI from scratch -- this changes the next_step below from "design P3 hosting" to "adapt
+      proven production workflow definitions," a materially smaller and lower-risk task than
+      previously framed. Read each workflow in full before adapting (several were not read in
+      depth by the investigation: candidates-publish.yml -- never actually run, defined but
+      unexercised -- audit-app-installations.yml, verify-app-installation.yml,
+      mirror-gitlab.yml). Adapt, do not copy blind: every workflow calls the old repo's own CLI
+      entry points and script paths, which differ from this repository's scripts/run_lane_r_*.py
+      layout and do not yet have a unified CLI the old repo's workflows assume.
     next_step: >
-      Not started. When P2 is far enough along to justify it (mission section 12: "build one
-      small vertical slice on GitHub Actions before broader automation" -- i.e. do not wait for
-      100% of P2 either), scope the smallest real workflow: one manually-dispatchable
-      .github/workflows/*.yml that runs this repository's own existing CLI/test entry points
-      on a GitHub-hosted runner for ONE repository, with the same local GH_TOKEN-vs-GitHub-App
-      credential split idea.md requires. This is P3 work, not P2 or this bundle-integrity plan's
-      work -- flagged here so it is tracked, not scheduled by this card.
+      (1) Flag the operational-risk question above to the owner explicitly (done, this update).
+      (2) Read the real workflow YAML bodies in full (present.yml, propose.yml,
+      issues-scheduled.yml, sealing-scheduled.yml, monitor.yml, liveness.yml at minimum) to
+      extract the exact trigger/schedule/credential-split pattern before adapting anything.
+      (3) Identify this repository's own equivalent CLI entry points (currently scripts/run_
+      lane_r_*.py, one script per stage -- the old repo's workflows likely assume a single
+      unified CLI) and decide whether to build that unifying CLI first or adapt workflows to
+      call the existing per-stage scripts directly. (4) Build the smallest real vertical slice
+      per mission section 12 ("one small vertical slice on GitHub Actions before broader
+      automation") -- not all 13 workflows at once.
     source_refs: >
       plans/repository_presenter_fresh_start_supervisor_prompt.md non-negotiable #1 and
-      section 9; plans/idea.md "Execution Environments and GitHub Access"; project/state.yaml's
-      own active_work_item (P2_REAL_ENGINE_SALVAGE, IN_PROGRESS).
+      section 9; plans/idea.md "Execution Environments and GitHub Access"; the old repo's real
+      .github/workflows/*.yml (13 files) and ops/issue_approvals/; project/state.yaml's own
+      active_work_item (P2_REAL_ENGINE_SALVAGE, IN_PROGRESS).
 
   - id: PORT_BUNDLE_INTEGRITY_LAYER
     status: IN_PROGRESS
@@ -1386,6 +1430,33 @@ next_ready_items:
       filing, per mission section 9's "first live effect per capability" rule -- though since
       the capability itself is now proven, routine filing may not need per-issue authorization
       once the owner confirms that.
+    owner_ruling_2026_10_24: >
+      Owner ruling: issue filing must stop requiring a human to file each one going forward --
+      "all issues must be handled by the issue system, just like the old repo was doing...
+      stick to that implementation as it as tested and proved." A dedicated investigation
+      studied the old repo's real, live, production-proven implementation (not its own
+      narration) before adopting anything. FINDING, reported honestly per mission non-
+      negotiable #7 (observations, not claims): the old system is real and autonomous in
+      execution, but it is NOT fully human-free -- it requires exactly one committed owner
+      approval record per defect (ops/issue_approvals/<handoff_id>.json: handoff_id,
+      repository, evidence_digest, approver, approved_at, expires_at), checked by a workflow
+      gate (`vars.REPOSITORY_PRESENTER_ISSUES_WRITE_AUTHORIZED == '1'` AND the approval file
+      exists and matches the evidence digest) before a scheduled job may file or close anything.
+      Once that one committed approval exists, the daily scheduled workflow files/closes
+      autonomously, capped (`--daily-cap 3 --open-cap 5 --pace-seconds 10`), with zero further
+      human step. This is the model to adopt -- NOT a model with no owner step at all, which is
+      not what was actually proven. Correcting the premise here rather than silently building
+      something looser and calling it the same thing.
+    adoption_decision: >
+      Adopt the old repo's real approval-gated model as-is, not a from-scratch design: a
+      committed per-defect approval record (ops/issue_approvals/<handoff_id>.json shape, keyed
+      to an evidence digest so an approval cannot silently cover a different, later-drifted
+      finding) plus a scheduled, capped, autonomous filing job that reads committed approvals
+      and needs no interactive step. This replaces the current "draft_upstream_issue.md, wait
+      for a chat go-ahead" pattern this repository has used so far (6 drafts pending) with:
+      draft -> owner commits one approval-record file (a one-time, auditable action per defect,
+      matching the old repo's own proven shape) -> the scheduled job files it autonomously
+      thereafter, no further chat exchange needed.
   - id: SALVAGE_INVENTORY_2026_10_23
     status: DONE
     priority: highest

@@ -90,6 +90,15 @@ A README candidate (either lane) must, at minimum:
   utility.
 - Upstream defect reporting (confirmed, reproducible, deduplicated issues) is a
   separate effect path from README changes, not a substitute for either.
+- **Owner ruling, 2026-10-24 (overrides idea.md's "bounded interim fallback... for a human
+  to file" language for this repository going forward):** issue filing is not a per-issue
+  chat-authorized action anymore. Adopt the old repo's own real, production-proven model
+  (confirmed live, not from narration — see `docs/DECISION_LOG.md`'s 2026-10-24 entry): one
+  committed, evidence-digest-bound approval record per defect
+  (`ops/issue_approvals/<handoff_id>.json`), then a scheduled, capped, autonomous job files
+  (and closes) with no further human step. This is NOT a fully human-free system — exactly
+  one committed approval per defect is still required, which is what was actually proven, not
+  a looser "no owner step at all" model.
 - Visual-asset/social-preview delivery is explicitly **not required for the
   initial pilot** — a bounded interim handoff is acceptable (idea.md §"Visual
   Assets and Social Preview"). Do not let this consume P1–P2 budget.

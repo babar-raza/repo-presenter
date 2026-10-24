@@ -37,13 +37,18 @@ from repo_presenter.github.errors import RepositoryMetadataError
 
 #: The GitHub App id/slug ``verify_pull_request_app`` attributes a presenter pull request to.
 #: INHERITED FROM THE OLD REPO'S OWN REGISTERED APP (``core/github/token_provenance.py``,
-#: ``project/state.yaml``), 2026-10-23 -- NOT independently confirmed as this repository's own
-#: App identity. No pull request has ever been created by this repository (propose/effect.py
-#: itself is "never fired live" by design), so this constant has not yet mattered in practice;
-#: both values must be replaced with this repository's own actual GitHub App id/slug before
-#: verify_pull_request_app is ever relied on for a real write -- consistent with mission section
-#: 9's "the first live exercise against a real external target is owner-selected, never agent-
-#: selected" rule. A caller may also override both as keyword arguments without editing this file.
+#: ``project/state.yaml``), 2026-10-23. CONFIRMED REAL 2026-10-24 (not a placeholder): a dedicated
+#: investigation read the old repo's live, currently-running hosted workflows directly and
+#: verified, via `gh api`, that the real open pull request they produced (aspose-cells-foss/
+#: Aspose.Cells-FOSS-for-Cpp#7) is authored by `repository-presenter[bot]`, `is_bot: true` --
+#: exactly matching EXPECTED_APP_SLUG. This is the SAME GitHub App this project intends to keep
+#: using (it is installed on the target upstream repositories, not on this supervisor checkout,
+#: so there is no reason for a new repository to need a new App registration). EXPECTED_APP_ID's
+#: numeric value was NOT independently re-verified the same way (no app-level JWT access in the
+#: investigation's environment) -- confidence is high but not as direct as the slug's. Still,
+#: this repository's own propose/effect.py has never fired live, so this constant has not yet
+#: mattered in practice here; a caller may override both as keyword arguments without editing
+#: this file if either value is ever found wrong.
 EXPECTED_APP_ID = 5092474
 EXPECTED_APP_SLUG = "repository-presenter"
 INSTALLATION_TOKEN_PREFIX = "ghs_"

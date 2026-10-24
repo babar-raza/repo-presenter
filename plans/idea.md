@@ -9,6 +9,20 @@
 > own distillation. If this copy ever drifts from the external original, the external original
 > wins and this copy is corrected to match — see `docs/MISSION_AUTHORITY.md`'s legacy-to-current
 > mapping table.
+>
+> **New-repository owner ruling, 2026-10-24 (this repository's current owner, overriding this
+> document's own text per mission §1 — "the owner's instructions in this mission outrank
+> contradictory legacy tactics and stale text" — not an edit to the imported body below, which
+> stays verbatim).** This document's "Upstream Defect Reporting" section (below) still says "a
+> bounded interim fallback... for a human to file... is acceptable until direct issue creation is
+> authorized and automated." As of 2026-10-24 that interim fallback is retired for this
+> repository: issue filing now follows the old repo's own real, live, production-proven
+> approval-gated model (one committed per-defect approval record, then autonomous scheduled
+> filing — not a per-issue chat authorization, and not fully human-free either). Full ruling,
+> evidence, and what it does and does not decide: `docs/DECISION_LOG.md`'s 2026-10-24 entry
+> ("The old repo's P3/P4... is real, live production"); binding distillation:
+> `docs/MISSION_AUTHORITY.md`'s "Upstream defect reporting" bullet; live tracking:
+> `project/state.yaml`'s `DECIDE_NEXT_ISSUE_FILINGS` and `GITHUB_ACTIONS_HOSTING_GAP_2026_10_24`.
 
 > **Repository Presenter authority note (added 2026-09-02).** This file is the human product
 > authority, carried over verbatim from `babar-raza/foss-readme-optimizer`. It matches that
