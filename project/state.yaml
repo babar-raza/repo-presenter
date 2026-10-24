@@ -75,6 +75,21 @@ progress:
     - "No automated rerun/no-op proof exists yet for any candidate -- every ACCEPT in this sweep was a one-time manual/agent-assisted verification, not a re-run through this repo's own ops/ tooling. gateverify.py exists (P0) but is not yet wired to re-check portfolio candidates."
     - "lane_r_candidate.md in most repos is identical to lane_l_candidate.md by genuine per-repo convergence reasoning (documented in each lane_r_plan.md), but this has only been falsified (shown to actually diverge) on 0 repositories so far -- P2's cross-ecosystem cohort should deliberately include at least one weak/missing-README repository to test real Lane R divergence."
 
+owner_review_status:
+  note: >
+    2026-10-24, owner-stated correction (binding, applies to all status language in this file
+    and in conversation going forward): every "accepted"/"ACCEPTED"/"ACCEPT" above --
+    lane_l_accepted, lane_r_accepted, current_gate.status, the 2026-10-21 portfolio-sweep note,
+    and every per-repository "accepted on the first attempt" cascade-log line -- records
+    pipeline-level acceptance only (deterministic checks + supervisor-rerun verification, or a
+    second dispatched agent's review per AGENTS.md's no-self-grading rule). None of it is
+    owner/human acceptance: the owner has explicitly stated they have not yet personally
+    reviewed any candidate, so none are "accepted" in that sense -- the correct status for all
+    36 Lane L / 34 Lane R candidates is READY FOR REVIEW. This note does not rewrite or retract
+    the historical records above (each was true to what it actually verified at the time); it
+    clarifies what level of acceptance each one represents, per mission non-negotiable #7
+    ("report observations, not claims of progress") and #5 (no silent self-grading overrule).
+
 current_gate:
   id: P1_PORTFOLIO_SCALE
   status: ACCEPTED
