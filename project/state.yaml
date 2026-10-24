@@ -1376,10 +1376,13 @@ next_ready_items:
     rollback: delete the new file and its test; no other module depends on it yet (ADD, not
       ADAPT -- nothing to revert elsewhere).
     next_step: >
-      v1 is built (see build_2026_10_24 above). Three genuinely open follow-ons, none decided by
-      this card: (1) run the reviewer against the existing 36 Lane L / 34 Lane R candidates as a
-      first-ever independent pass and record real findings per repository, not simulated ones;
-      (2) decide where a REJECT hands off -- readme/repair/targeted.py is REUSE-ported and
+      v1 is built (see build_2026_10_24 above). (1) DONE 2026-10-24 -- see
+      RUN_INDEPENDENT_REVIEW_P2_COHORT_2026_10_24 below: ran the reviewer against the
+      P2_REAL_ENGINE_SALVAGE cohort (30/34 reviewable, 1 genuine REJECT found and hand-verified:
+      aspose-font-foss/Python's broken install command). That card's own scope_correction notes
+      this does NOT cover the separate, original P1_PORTFOLIO_SCALE 36-repository sweep, which
+      remains unreviewed. Two genuinely open follow-ons remain: (2) decide where a REJECT hands
+      off -- readme/repair/targeted.py is REUSE-ported and
       ready to receive a defect, but nothing yet constructs one from a ReviewVerdict, and no
       repair loop (repair/rounds.py-equivalent) exists to run a repair job once constructed; (3)
       add judgment rules (preservation-holdout breadth, forest-acceptance differential fixtures
@@ -1409,6 +1412,70 @@ next_ready_items:
       concurrent hook-running process shared this environment), but the gap is real. Full,
       corrected record: migration/reuse-manifest.yaml's own entry for these files, rewritten in
       place 2026-10-23 rather than left standing uncorrected.
+
+  - id: RUN_INDEPENDENT_REVIEW_P2_COHORT_2026_10_24
+    status: DONE
+    priority: high
+    purpose: >
+      BUILD_INDEPENDENT_REVIEWER's own next_step (1): run the freshly built reviewer against
+      real evidence as a first-ever independent pass, not simulated fixtures.
+    scope_correction: >
+      IMPORTANT precision correction against this card's own first draft and
+      BUILD_INDEPENDENT_REVIEWER's next_step wording: "the existing 36 Lane L / 34 Lane R
+      candidates" is not one homogeneous set. There are two separate cohorts, produced by two
+      different mechanisms: (1) the original P1_PORTFOLIO_SCALE sweep (36 repositories,
+      agent-dispatched composition, evidence/build/P1_PORTFOLIO_SCALE/<repo>/lane_r_candidate.md
+      -- no structured content_units/dispositions JSON kept per repository); (2) the
+      P2_REAL_ENGINE_SALVAGE cohort (34 repositories that had a REAL S3-S8 deterministic-job
+      cascade run this session, scripts/_lane_r_output/<repo>/ + matching facts.json under
+      evidence/build/P2_REAL_ENGINE_SALVAGE/<repo>/). Their "blocked" sets do not even match
+      (P1 names aspose-psd-foss/.NET + aspose-slides-foss/.NET as its 2 blocked; the P2 cohort's
+      4 repositories without a completed render are entirely different ones -- aspose-email-
+      foss/.Net, aspose-page-foss/Python, aspose-slides-foss/Java, aspose-words-foss/.NET),
+      confirming these are genuinely two separate tracks, not one set counted twice. This run
+      covers ONLY cohort (2). Cohort (1) remains entirely unreviewed by this pass.
+    action_taken: >
+      Added scripts/run_independent_review.py: iterates every scripts/_lane_r_output/<repo_dir>/
+      directory, matches it to evidence/build/P2_REAL_ENGINE_SALVAGE/<repo_dir>/facts.json by
+      the exact same repo_dir naming convention run_lane_r_render.py already uses (no fuzzy
+      matching), prefers the coherence-finalized render (content_units.coherent.json +
+      README.coherent.md) over the pre-coherence one when both exist, and calls
+      review_candidate() for every repository that has a completed render. Report written to
+      evidence/build/P2_REAL_ENGINE_SALVAGE/independent_review_report.json (one entry per
+      repository: reviewable/not, stage, verdict, findings).
+    finding: >
+      30 of 34 attempted repositories were reviewable (4 have no completed render yet: aspose-
+      email-foss/.Net, aspose-page-foss/Python, aspose-slides-foss/Java, aspose-words-foss/.NET
+      -- correctly recorded as "not yet reviewable," not silently skipped). Of the 30 reviewed:
+      29 ACCEPT, 0 findings each; 1 REJECT -- aspose-font-foss/Aspose.Font-FOSS-for-Python, line
+      206: the candidate's own MCP-install example runs `pip install "aspose-font[mcp]"`, naming
+      the package `aspose-font`, but the real package identity (pyproject.toml, confirmed via
+      facts.json) is `aspose-font-foss` -- a real, previously undetected broken install command
+      that would fail for an actual user (no package named plain `aspose-font` is what this
+      project publishes). Independently verified by hand against the real README.coherent.md
+      and facts.json before accepting the finding as genuine, not just trusting the tool's own
+      output (AGENTS.md: a REJECT is never self-graded away). Zero duplicate-opening-paragraph
+      findings across all 30 -- expected, not a sign the rule is inert: the inline partial fix
+      (recover_opening_duplicates_preserved) already runs during authoring and corrects that
+      defect class before these final coherent/rendered artifacts are written, so this
+      independent rule finding nothing here is consistent with the inline guard having worked,
+      not with the independent check failing to look.
+    negative_control_note: >
+      Mission section 11: "a checker that accepts everything or rejects everything is broken."
+      29/30 ACCEPT + 1 genuine, hand-verified REJECT is neither degenerate extreme, and the one
+      REJECT is a real, reproducible defect, not a false positive -- satisfies this run's own
+      negative control without needing synthetic fixtures for it.
+    next_step: >
+      (a) aspose-font-foss/Python's broken install command needs an actual fix -- this card
+      found it, it does not fix it; no repair hand-off exists yet (BUILD_INDEPENDENT_REVIEWER's
+      still-open item (2)). (b) Cohort (1), the original 36-repository P1_PORTFOLIO_SCALE sweep,
+      has not been run through this reviewer at all -- it has no content_units/dispositions JSON
+      to feed the duplicate_opening_paragraph rule, so only claim_contradiction_rule could run
+      against it (readme_text + facts.json alone); scoping that as its own pass, with units=[]
+      and dispositions={"dispositions": []}, is a reasonable next card but was not done here to
+      avoid conflating two different cohorts' results in one commit. (c) Re-run this script
+      whenever a repository in either cohort advances to a new render.
+    evidence: evidence/build/P2_REAL_ENGINE_SALVAGE/independent_review_report.json
 
   - id: PORT_BC14_CLAIM_VALIDATION
     status: DONE
