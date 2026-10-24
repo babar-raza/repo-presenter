@@ -14,6 +14,7 @@ neither this file nor a derived document ever overrides those.
 | What old code/tests/fixtures may this repo reuse, and how? | `migration/reuse-manifest.yaml` |
 | What actually happened historically, independently re-verified? | `docs/history-reconstruction.md` |
 | How does the supervisor/worker loop run day to day? | `ops/SUPERVISOR.md` |
+| Why was a given architectural/scope decision made, and what did it deliberately not decide? | `docs/DECISION_LOG.md` (records decisions; grants no authority of its own — the live cursor for any decision is still `project/state.yaml`) |
 
 If two of the above conflict, the first row wins; a lower row is corrected to
 match, never the reverse.

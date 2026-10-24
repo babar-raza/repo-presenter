@@ -1186,6 +1186,79 @@ next_ready_items:
       currency model is built around, which still does not exist here. Still correctly
       BLOCKED_EXTERNAL-equivalent (no owner action would unblock it either -- it needs a real
       multi-session design/build of the bundle concept itself, not a decision).
+    superseded_in_part_2026_10_24: >
+      The owner asked for a deep assessment of this exact gap (prompted by the old repo's bundle
+      architecture) -- see PORT_BUNDLE_INTEGRITY_LAYER below and
+      docs/DECISION_LOG.md/plans/PLAN_bundle_integrity_and_noop_proof.md for the full result.
+      This card's own blocked status stands (the sealed-bundle format genuinely does not exist
+      here), but it is no longer "no owner action would unblock it either" -- a concrete, ordered,
+      additive path now exists; step 7 of that plan is this card's own original ask.
+
+  - id: PORT_BUNDLE_INTEGRITY_LAYER
+    status: PLANNED
+    priority: high
+    purpose: >
+      Owner-directed deep assessment (2026-10-24): investigate whether the old repo's sealed-
+      bundle architecture (manifest.json + CURRENT pointer + dependencies.json + a lifecycle
+      state machine) is better than this repository's current flat-file evidence layout, and
+      specifically verify the owner's belief that "zero new provider calls" caching is driven by
+      it, before committing to porting it (option A, owner-agreed in principle). Full structured
+      assessment produced via a dedicated research pass against both repositories' real code (not
+      from memory): plans/PLAN_bundle_integrity_and_noop_proof.md. Decision recorded:
+      docs/DECISION_LOG.md.
+    finding_summary: >
+      The owner's specific premise does not hold: caching is implemented by core/llm/jobs.py's
+      CallStore (content-addressed, keyed by request hash), already ported into this repository
+      and already proven working this session (the 2026-10-23 tempfile.mkdtemp() workspace bug
+      and fix) -- CallStore has no dependency on the bundle/manifest format in either repository's
+      actual code. What the old repo's bundle layer DOES provide, with zero equivalent here, is
+      real: a formal process-independent no-op proof (core/noop_proof.py's ProcessIdentity/
+      verify_noop_pair/measure_invocation), tamper-evident bundle integrity (core/candidates.py's
+      verify_bundle), and a durable, machine-readable per-repository CURRENT/currency state
+      matching mission section 8's own named vocabulary, which this repository's current partial
+      recheck.py port does not yet fully match either (a separate, smaller fix). candidates.py's
+      reader was verified directly to be additively safe: it silently does not count or judge any
+      repository lacking a candidates/ bundle tree -- "never invalidate already-accepted
+      candidates" is a property of the code as written, not something bolted on after.
+    decision: >
+      Port the no-op-proof + bundle-integrity + currency layer ADDITIVELY, for future cascades
+      only, never retroactively applied to or capable of invalidating any existing candidate.
+      Explicitly NOT approved: porting the entire old bundle system in one undertaking (the
+      original, broader reading of option A) -- narrowed because caching turned out not to need
+      it, seal.py (1,203 lines, the bundle writer) has not been read at all yet, and two of the
+      five recheck.py scope-runners cascade into modules already disqualified or marked
+      not-portable-as-a-whole regardless of how this layer is built.
+    ordered_plan: >
+      See plans/PLAN_bundle_integrity_and_noop_proof.md "Implementation direction" for the full,
+      dependency-ordered sequence and safeguards. Summary: (1) port noop_proof.py's bundle-
+      independent ~460 lines first -- zero prerequisites, usable immediately against the existing
+      CallStore/ledger; (2) read seal.py in full before any porting decision on it; (3) port
+      candidates.py with a falsifier proving it never touches legacy evidence; (4) port/adapt
+      seal.py as a new, opt-in step appended to the existing render pipeline; (5) align
+      recheck.py's CURRENCY_STATES with mission section 8's full vocabulary; (6) finish
+      recheck.py's five scope-runners against the new sealed format, with the "reviewer" runner
+      needing fresh design against readme/review/independent_reviewer.py, not a port of the
+      disqualified old module; (7) revisit WIRE_GATEVERIFY_TO_PORTFOLIO once something real
+      exists to wire it to.
+    next_step: >
+      Step 1 (port noop_proof.py's process-verification code) is the smallest, lowest-risk,
+      immediately actionable next piece of this plan -- not yet started. No step has been coded
+      yet; this card and the plan document are the planning artifact, not a build report.
+    write_paths_planned: [src/repo_presenter/core/noop_proof.py (step 1),
+      src/repo_presenter/core/candidates.py (step 3),
+      src/repo_presenter/readme/bundle/seal.py (step 4),
+      src/repo_presenter/readme/bundle/recheck.py (steps 5-6, extends the existing port)]
+    source_refs: >
+      docs/DECISION_LOG.md's 2026-10-24 entry; plans/PLAN_bundle_integrity_and_noop_proof.md;
+      the old repo's core/noop_proof.py, core/candidates.py, components/readme/bundle/{seal,
+      recheck}.py; plans/repository_presenter_fresh_start_supervisor_prompt.md section 8.
+    invalidation_impact: >
+      None yet -- planning only, no code written. Once step 3 lands, the plan's own legacy-safety
+      regression gate (a permanent test asserting candidates.py/recheck.py never emit a verdict
+      for a repository with no candidates/ bundle) is the concrete, tested guarantee that this
+      work can never invalidate the existing 36 Lane L / 34 Lane R "ready for review" candidates
+      (project/state.yaml's owner_review_status note) -- not a promise, a gate.
+
   - id: ENTERPRISE_EDITION_NAMING_CHECK
     status: DONE
     purpose: >
