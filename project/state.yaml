@@ -1169,6 +1169,23 @@ next_ready_items:
       module "would not prove anything real" (recheck.py's own words) and was correctly
       refused rather than faked when recheck.py was first ported. Nothing new to do here
       until that subsystem exists.
+    rechecked_2026_10_24: >
+      Re-investigated after today's independent-reviewer build, in case it changed anything --
+      it does not. Several of the 2026-10-22 blocking dependencies are now genuinely ported
+      (composition/authoring.py, extractors/platforms/registry.py,
+      evidence/facts/inherited.py, core/registry/ -- all in active use this session, including
+      by today's own scripts/backfill_inherited_facts.py), but the two load-bearing ones are
+      not and are not planned to be: `core/candidates.py` (the sealed-bundle manifest/
+      directory-convention format recheck_bundle validates currency against) and
+      `validation/registry.py` (confirmed elsewhere in this file as "not a port candidate as a
+      whole"). This repository has no "sealed bundle" concept at all -- its own evidence layout
+      (scripts/_lane_r_output/<repo>/, evidence/build/<phase>/<repo>/) is a different
+      architecture, not a missing file. readme/review/independent_reviewer.py existing now does
+      not change this: recheck_bundle's dependency on "review/independent/review.py" was never
+      really about that one specific module, it is about the bundle format the rest of its
+      currency model is built around, which still does not exist here. Still correctly
+      BLOCKED_EXTERNAL-equivalent (no owner action would unblock it either -- it needs a real
+      multi-session design/build of the bundle concept itself, not a decision).
   - id: ENTERPRISE_EDITION_NAMING_CHECK
     status: DONE
     purpose: >
