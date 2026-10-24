@@ -1610,6 +1610,24 @@ next_ready_items:
       them in memory for one render call and never persisted the result. Fixed going forward
       (write_facts call added); the 30 already-written facts.json files are not backfilled
       (would need a live re-clone per repository, explicitly deferred, not done speculatively).
+    proof_of_concept_backfill_2026_10_24: >
+      Proved the fix actually works end to end, on the one repository this session has the
+      deepest context on, without a full git clone: scripts/backfill_inherited_facts.py fetches
+      README.md + the file tree via the GitHub Contents/Trees API (read-only fact extraction
+      needs no push-safety, so core/git_safety/clone.py would be overkill here) and writes a
+      SIBLING file, facts.poc_backfill.json, deliberately never overwriting the committed
+      facts.json evidence record in place (mission non-negotiable #6 cuts both ways: backfilling
+      history retroactively would blur "what the cascade actually used" with "what got added
+      later"). Run against aspose-font-foss/Aspose.Font-FOSS-for-Python (live main @
+      0735cc2797665a21ccf96409289c7d4f2da054d9): computed 106 real inherited_unit facts (vs. 0
+      before). Confirmed `preserved_opening_text` now returns real, non-empty preserved text
+      (279 chars) instead of silently returning ""; duplicate_opening_paragraph_rule genuinely
+      exercised against it for the first time and correctly found no defect in this repository's
+      own "opening" unit -- a true negative this time, not a structural no-op. The
+      claim_contradiction finding (aspose-font-foss's broken install command) is unaffected and
+      still fires identically. Evidence:
+      evidence/build/P2_REAL_ENGINE_SALVAGE/aspose-font-foss__Aspose.Font-FOSS-for-Python/
+      facts.poc_backfill.json.
     deliberately_not_built: >
       No repair loop (repair/rounds.py-equivalent) that actually fires a job from a Defect --
       this repository still has none, and building one is multi-session-scale work this card
@@ -1619,7 +1637,8 @@ next_ready_items:
     write_paths: [src/repo_presenter/readme/review/defect_bridge.py,
       tests/readme/review/test_defect_bridge.py,
       src/repo_presenter/readme/review/independent_reviewer.py (Finding.quote only),
-      scripts/run_lane_r_render.py (facts persistence fix)]
+      scripts/run_lane_r_render.py (facts persistence fix),
+      scripts/backfill_inherited_facts.py (proof-of-concept, no git clone needed)]
     source_refs: >
       migration/reuse-manifest.yaml entry #1; readme/repair/targeted.py's own REUSE-port entry;
       RUN_INDEPENDENT_REVIEW_P2_COHORT_2026_10_24's real finding.
