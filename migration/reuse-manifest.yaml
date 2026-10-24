@@ -73,9 +73,14 @@ entries:
       authoring.preserved_opening_text + coverage.states_all); no judgment rules registered yet
       (the extension point exists and is structurally safe -- Finding.__post_init__ raises if a
       judgment-kind finding ever carries a refutation); no forest-acceptance breadth yet (mission
-      P2 activity, deliberately deferred past this P1-style first proof); no repair hand-off yet
-      (BUILD_INDEPENDENT_REVIEWER's 'where does a REJECT go' question remains genuinely open --
-      this build does not decide it). The veto is wired live into propose/effect.py's
+      P2 activity, deliberately deferred past this P1-style first proof). Repair hand-off: DONE
+      2026-10-24 (project/state.yaml BUILD_DEFECT_BRIDGE_2026_10_24) -- added Finding.quote and
+      src/repo_presenter/readme/review/defect_bridge.py, bridging a ReviewVerdict's deterministic
+      REJECT findings into readme/repair/targeted.py::review_defects (routes a finding over
+      inherited/placed content to S4, never S6 -- confirmed necessary by this reviewer's own
+      first real finding, aspose-font-foss/Python, which was exactly such a case). No repair LOOP
+      exists yet to fire a job from the Defects this produces -- that remains genuinely deferred.
+      The veto is wired live into propose/effect.py's
       propose_candidate (a required `review` parameter, no override path) -- the one real
       effect-firing site that exists, so 'can veto' is an enforced property, not an unread file."
     smallest_first_integration_test: >
@@ -85,11 +90,14 @@ entries:
       exact negative control the old bug would have failed). PASSES as of
       2026-10-24: tests/readme/review/test_independent_reviewer.py::
       test_falsifier_a_quoted_span_matching_a_supported_fact_elsewhere_still_rejects.
-    portfolio_consumers: both lanes, every candidate — this is the acceptance gate. As of
-      2026-10-24 it is built but has not yet been RUN against any of the existing 36 Lane L / 34
-      Lane R candidates — see BUILD_INDEPENDENT_REVIEWER's next_step. Owner correction on
-      record (project/state.yaml owner_review_status, 2026-10-24): none of those 36/34
-      candidates carry owner acceptance regardless of this reviewer's eventual verdicts.
+    portfolio_consumers: >
+      Both lanes, every candidate -- this is the acceptance gate. As of 2026-10-24 it has been
+      run against the P2_REAL_ENGINE_SALVAGE cohort (RUN_INDEPENDENT_REVIEW_P2_COHORT_2026_10_24,
+      project/state.yaml) -- 30/34 reviewable, 1 genuine REJECT found and hand-verified. The
+      separate, original P1_PORTFOLIO_SCALE 36-repository sweep remains unreviewed (incompatible
+      facts.json schema; see that card's p1_cohort_attempt_2026_10_24). Owner correction on
+      record (project/state.yaml owner_review_status, 2026-10-24): none of either cohort's
+      candidates carry owner acceptance regardless of this reviewer's verdicts.
     invalidation_impact: >
       Built 2026-10-24. Running it against the existing 36 Lane L / 34 Lane R candidates is a
       first-ever independent review pass, not a reseal (mission §8 "consumed-scope invalidation
@@ -1454,8 +1462,8 @@ entries:
   - component: "authoring.py's unit_checks()/recover_opening_duplicates_preserved(), coherence.py's
       coherence_checks()/recover_coherence_regressions() dispositions-forwarding (duplicate-opening
       guard)"
-    source: new-this-repository (composed from already-REUSE-ported coverage.py primitives:
-      states_all(), Destinations, uncovered())
+    source: "new-this-repository (composed from already-REUSE-ported coverage.py primitives:
+      states_all(), Destinations, uncovered())"
     evaluated_at_shas: []
     behavior: >
       A new, narrowly-scoped deterministic check: when reconciliation (S4) disposed an
@@ -1517,7 +1525,8 @@ entries:
     portfolio_consumers: every future Lane R cascade's S6 authoring and S8 coherence calls,
       across all 7 ecosystems and all repositories -- wired into both real orchestration
       scripts this session already uses, not a library change nobody calls yet.
-    invalidation_impact: targeted, not global, per mission non-negotiable #4 (portfolio-first).
+    invalidation_impact: >
+      Targeted, not global, per mission non-negotiable #4 (portfolio-first).
       Only the "opening" section's own unit_checks()/coherence_checks() path is affected;
       every other section's checks are unchanged (dispositions defaults to None and the new
       block is gated on section_id == "opening"). The ten already-committed cascade evidence
@@ -1551,7 +1560,8 @@ entries:
       and review.py were each previously PENDING_REVIEW/entry-#1-ADAPT without a size; profile.py/
       scorer.py/sealed.py/template_check.py were never named anywhere in this manifest before this
       pass).
-    disposition: PENDING_REVIEW (judge.py and review.py keep their existing dispositions from
+    disposition: >
+      PENDING_REVIEW (judge.py and review.py keep their existing dispositions from
       entries #1/#2 above -- ADAPT and PENDING_REVIEW respectively, never REUSE, per the Oct 20
       owner-confirmed blind spot in docs/MISSION_AUTHORITY.md's "critical fact"); profile.py/
       scorer.py/sealed.py/template_check.py newly PENDING_REVIEW.
@@ -1573,8 +1583,8 @@ entries:
       smallest_first_integration_test (a candidate with one deliberately false claim whose quoted
       span also matches a literal SUPPORTED fact elsewhere -- assert REJECT, not ACCEPT). That
       spec is still the right target; it has simply never been executed as an actual taskcard.
-    target_module: src/repo_presenter/readme/review/independent_reviewer.py (planned per entry #1,
-      still not created)
+    target_module: "src/repo_presenter/readme/review/independent_reviewer.py (planned per entry
+      #1, still not created)"
     next_step: >
       Author and dispatch a taskcard: read judge.py (740 lines, smaller, read first) and
       review.py (2,996 lines) in full against the four Oct 20 defect classes named in
@@ -1596,6 +1606,16 @@ entries:
       status report from this point forward must distinguish "deterministically checked and
       supervisor-read" from "independently reviewed" until this component exists and is run
       against them.
+    superseded_2026_10_24: >
+      SUPERSEDED_BY_BUILD -- not rewritten in place, left standing per this file's own practice
+      of marking stale entries rather than silently editing them away. The gap this entry
+      described is closed: src/repo_presenter/readme/review/independent_reviewer.py was built
+      (entry #1 above is the authoritative record of what was actually built, its real v1 scope,
+      and the first real run against the P2_REAL_ENGINE_SALVAGE cohort -- see also
+      project/state.yaml's BUILD_INDEPENDENT_REVIEWER and
+      RUN_INDEPENDENT_REVIEW_P2_COHORT_2026_10_24). This entry's own target_module note ("still
+      not created") and invalidation_impact ("None yet -- not built") are now factually stale;
+      read entry #1, not this one, for current status.
 
   - component: "components/readme/repair/{rounds.py,targeted.py} (3,736 lines)"
     source: old-repository-presenter
@@ -2017,7 +2037,7 @@ entries:
     next_step: read present_transaction.py alone (456 lines) when P3 work begins, specifically to
       rule out (or confirm) that it is supervisor-state machinery rather than a present-the-
       finished-candidate effect this repository's own PR-effect work could reuse.
-    portfolio_consumers: none for the six RETIRE files. present_transaction.py: possibly P3, TBD.
+    portfolio_consumers: "none for the six RETIRE files. present_transaction.py: possibly P3, TBD."
     invalidation_impact: none -- none of these seven files are pulled.
 
   - component: "components/readme/validation/links/rules.py (133 lines)"

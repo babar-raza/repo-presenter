@@ -91,6 +91,13 @@ class Finding:
     kind: RuleKind
     message: str
     refuted_by: Refutation | None = None
+    # The literal flagged text, when one exists -- not a paraphrase. readme.review.defect_bridge
+    # matches this against composition/placement.py's placed_texts() to tell an authoring (S6)
+    # defect from one over content the candidate inherited verbatim (S4); that distinction
+    # cannot be guessed from `rule`/`kind` alone (project/state.yaml's
+    # root_cause_traced_2026_10_24: the real aspose-font-foss/Python case was inherited, not
+    # authored, and a naive always-S6 router would have misrouted it).
+    quote: str = ""
 
     def __post_init__(self) -> None:
         if self.kind == "judgment" and self.refuted_by is not None:
@@ -124,15 +131,20 @@ def claim_contradiction_rule(readme_text: str, facts: FactsDocument) -> list[Fin
     """Factual holdout (mission section 11: "adversarial factual... holdouts"). Reuses
     ``readme.validation.claims.claim_findings`` verbatim -- the claim-vs-fact contradiction
     detector this repository already has, independently proven, rather than re-deriving it."""
-    return [
-        Finding(
-            rule="claim_contradiction",
-            kind="deterministic",
-            message=f"line {finding.line} ({finding.stage}): {finding.detail}",
-            refuted_by=Refutation(rule="claim_contradiction", evidence=finding.detail),
+    lines = readme_text.splitlines()
+    findings = []
+    for finding in claim_findings(readme_text, facts):
+        quote = lines[finding.line] if 0 <= finding.line < len(lines) else ""
+        findings.append(
+            Finding(
+                rule="claim_contradiction",
+                kind="deterministic",
+                message=f"line {finding.line} ({finding.stage}): {finding.detail}",
+                refuted_by=Refutation(rule="claim_contradiction", evidence=finding.detail),
+                quote=quote,
+            )
         )
-        for finding in claim_findings(readme_text, facts)
-    ]
+    return findings
 
 
 def duplicate_opening_paragraph_rule(
@@ -169,6 +181,7 @@ def duplicate_opening_paragraph_rule(
                         rule="duplicate_opening_paragraph",
                         evidence=f"preserved={preserved!r} authored={text!r}",
                     ),
+                    quote=text,
                 )
             ]
         break

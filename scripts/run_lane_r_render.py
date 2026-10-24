@@ -20,7 +20,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from repo_presenter.core.facts import FactsDocument, read_facts
+from repo_presenter.core.facts import FactsDocument, read_facts, write_facts
 from repo_presenter.core.registry.loader import load_registry, require_listed
 from repo_presenter.extractors.platforms.registry import plugin_for
 from repo_presenter.readme.composition.renderer import render_patch, render_readme
@@ -54,7 +54,15 @@ def main() -> None:
     readme_bytes = (clone_path / "README.md").read_bytes()
     public_symbol_facts = [f for f in base_document.facts if f.kind == "public_symbol"]
     inherited = inherited_unit_facts("README.md", readme_bytes, public_symbol_facts, tree_paths)
-    document = FactsDocument(repository, base_document.source_revision, (*base_document.facts, *inherited))
+    # Drop any inherited_unit facts a prior run of this same script already wrote back to
+    # facts_path, so a second run against the same README is idempotent rather than duplicating
+    # them (2026-10-24: this merge used to live only in memory for the one render call below and
+    # was never persisted at all -- every on-disk facts.json in P2_REAL_ENGINE_SALVAGE had zero
+    # inherited_unit facts, which silently blocked both the independent reviewer's duplicate-
+    # opening rule and composition/placement.py's own placed-text lookup for every repository;
+    # see project/state.yaml's correction_2026_10_24_duplicate_opening_claim_was_wrong).
+    kept = tuple(f for f in base_document.facts if f.kind != "inherited_unit")
+    document = FactsDocument(repository, base_document.source_revision, (*kept, *inherited))
 
     repo_registry = load_registry(Path("data/registry.json"))
     entry = require_listed(repo_registry, repository)
@@ -71,6 +79,9 @@ def main() -> None:
     patch = render_patch(original, rendered)
     (out_dir / "README.patch.diff").write_text(patch, encoding="utf-8", newline="\n")
     print(f"      wrote {out_dir / 'README.patch.diff'} ({len(patch.splitlines())} diff lines)")
+
+    facts_hash = write_facts(document, facts_path)
+    print(f"      wrote {facts_path} with {len(inherited)} inherited_unit facts ({facts_hash[:12]})")
 
 
 if __name__ == "__main__":

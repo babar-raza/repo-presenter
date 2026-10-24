@@ -1381,14 +1381,16 @@ next_ready_items:
       P2_REAL_ENGINE_SALVAGE cohort (30/34 reviewable, 1 genuine REJECT found and hand-verified:
       aspose-font-foss/Python's broken install command). That card's own scope_correction notes
       this does NOT cover the separate, original P1_PORTFOLIO_SCALE 36-repository sweep, which
-      remains unreviewed. Two genuinely open follow-ons remain: (2) decide where a REJECT hands
-      off -- readme/repair/targeted.py is REUSE-ported and
-      ready to receive a defect, but nothing yet constructs one from a ReviewVerdict, and no
-      repair loop (repair/rounds.py-equivalent) exists to run a repair job once constructed; (3)
-      add judgment rules (preservation-holdout breadth, forest-acceptance differential fixtures
-      per mission section 11) only after (1) shows real portfolio-wide failure classes worth
-      generalizing from -- mission P2 discipline ("generalize by failure class, not anecdote"),
-      not before.
+      remains unreviewed. (2) DONE 2026-10-24 -- see BUILD_DEFECT_BRIDGE_2026_10_24 below: built
+      readme/review/defect_bridge.py, bridging a ReviewVerdict's deterministic REJECT findings
+      into readme/repair/targeted.py::review_defects (REUSE-ported, now actually called by
+      something for the first time). One open follow-on remains: (3) add judgment rules
+      (preservation-holdout breadth, forest-acceptance differential fixtures per mission section
+      11) only after real portfolio-wide runs show failure classes worth generalizing from --
+      mission P2 discipline ("generalize by failure class, not anecdote"), not before. Building
+      an actual repair loop (repair/rounds.py-equivalent) that fires a job from a Defect remains
+      correctly out of scope -- defect_bridge.py produces typed, correctly routed Defect
+      records; nothing yet consumes one to actually revise a candidate.
     blocked_on: null
     correction_2026_10_23_git_safety_hypothesis_refuted: >
       SALVAGE_INVENTORY_2026_10_23's own finding (4) above guessed, from file names alone before
@@ -1454,12 +1456,40 @@ next_ready_items:
       that would fail for an actual user (no package named plain `aspose-font` is what this
       project publishes). Independently verified by hand against the real README.coherent.md
       and facts.json before accepting the finding as genuine, not just trusting the tool's own
-      output (AGENTS.md: a REJECT is never self-graded away). Zero duplicate-opening-paragraph
-      findings across all 30 -- expected, not a sign the rule is inert: the inline partial fix
-      (recover_opening_duplicates_preserved) already runs during authoring and corrects that
-      defect class before these final coherent/rendered artifacts are written, so this
-      independent rule finding nothing here is consistent with the inline guard having worked,
-      not with the independent check failing to look.
+      output (AGENTS.md: a REJECT is never self-graded away).
+    correction_2026_10_24_duplicate_opening_claim_was_wrong: >
+      RETRACTED: this card originally claimed "zero duplicate-opening-paragraph findings across
+      all 30 -- expected... consistent with the inline guard having worked, not with the
+      independent check failing to look." That claim was FALSE and is withdrawn, not silently
+      edited away (mission non-negotiable #5/#7). While scoping the Defect constructor
+      (2026-10-24), found that EVERY on-disk facts.json in this cohort (checked aspose-font-foss/
+      Python and aspose-3d-foss/Java) has ZERO `inherited_unit`-kind facts. Root cause:
+      run_lane_r_render.py computes `inherited_unit_facts()` from the live clone's README bytes
+      + file tree at render time and merges it into an IN-MEMORY FactsDocument for that one
+      render call only -- it was never written back to facts.json on disk. Consequence, verified
+      directly: `duplicate_opening_paragraph_rule`'s own `preserved_opening_text(dispositions,
+      facts)` call returns `""` for every one of these 30 repositories regardless of whether a
+      real duplicate exists, because it filters on `fact.kind == "inherited_unit"` and finds
+      none -- the rule silently no-ops every time, structurally, not because the inline guard
+      succeeded. The SAME root cause also means `composition/placement.py::placements()` returns
+      an empty list for all 30 (it looks up units via `facts.by_kind("inherited_unit")` too),
+      which blocks the Defect constructor's own S4-misrouting detection identically -- this is
+      one shared gap, not two. The claim_contradiction_rule's own 29 ACCEPT / 1 REJECT result is
+      UNAFFECTED (it only needs readme_text + ordinary facts, both present) and stands as
+      reported.
+    next_step_fix_2026_10_24: >
+      Fixing forward, not backfilling blindly: scripts/run_lane_r_render.py now persists the
+      merged FactsDocument (base + inherited_unit facts) back to facts.json via
+      core.facts.write_facts, so every cascade run AFTER this fix carries real inherited_unit
+      facts on disk. The 30 already-written facts.json files are NOT backfilled by this change
+      (doing so needs each repository's live clone again, a real re-clone cost this card does
+      not spend speculatively) -- re-running duplicate_opening_paragraph_rule meaningfully
+      against the existing 30 remains a separate, explicitly deferred follow-on, not silently
+      implied-done. One proof-of-concept re-clone against a repository state.yaml's own cascade
+      narrative already named as having a confirmed, real duplicate-opening instance is the
+      right-sized way to verify the fixed rule end-to-end against real data before trusting it
+      more broadly (mission P1 "demonstrate... against the same pinned real repository" before
+      P2 breadth).
     negative_control_note: >
       Mission section 11: "a checker that accepts everything or rejects everything is broken."
       29/30 ACCEPT + 1 genuine, hand-verified REJECT is neither degenerate extreme, and the one
@@ -1498,11 +1528,9 @@ next_ready_items:
     next_step: >
       (a) aspose-font-foss/Python's broken install command: root cause traced (see above, an
       upstream-inherited line, not a Lane R authoring defect) and a draft upstream issue is ready
-      for owner review -- this card does not file it. Separately, the REUSE-ported
-      repair/targeted.py::review_defects is confirmed the right target for a future Defect
-      constructor, but building that constructor needs Finding.quote and
-      composition/placement.py's placed_texts() wired in first (not done this tick -- see
-      root_cause_traced_2026_10_24). (b) attempted 2026-10-24, BLOCKED -- see
+      for owner review -- this card does not file it. The Defect constructor this finding
+      motivated is now built -- see BUILD_DEFECT_BRIDGE_2026_10_24 below. (b) attempted
+      2026-10-24, BLOCKED -- see
       p1_cohort_attempt_2026_10_24 below: the P1_PORTFOLIO_SCALE cohort's facts.json uses a
       completely different, incompatible schema; this is now a recorded, scoped-out finding, not
       an open next_step. (c) Re-run this script whenever a repository in the P2 cohort advances
@@ -1533,6 +1561,70 @@ next_ready_items:
       time rather than patched into reviewability as they stand. The broken script was deleted,
       not committed -- nothing half-working was left in the tree.
     evidence: evidence/build/P2_REAL_ENGINE_SALVAGE/independent_review_report.json
+
+  - id: BUILD_DEFECT_BRIDGE_2026_10_24
+    status: DONE
+    priority: high
+    purpose: >
+      BUILD_INDEPENDENT_REVIEWER's still-open item (2): decide and build where a REJECT finding
+      hands off, informed by root_cause_traced_2026_10_24's real finding rather than guessed.
+    plan_against_mission: >
+      Per the owner's 2026-10-24 directive (plan carefully, conform to
+      plans/repository_presenter_fresh_start_supervisor_prompt.md, never risk invalidating
+      accepted work before building from scratch): read readme/repair/targeted.py in full before
+      writing anything new. Confirmed `review_defects(review, facts, llm_sections, repairer,
+      placed)` already exists, is REUSE-ported and already implements the exact routing contract
+      mission section 11 needs (a finding whose quote matches placed/preserved text reroutes to
+      S4, "misrouted": True, never S6) -- so the only new code needed is the BRIDGE from
+      ReviewVerdict's typed Finding objects into that function's own `review` dict shape, never
+      a reimplementation of the routing logic itself (mission's own reuse discipline). Confirmed
+      via root_cause_traced_2026_10_24 that skipping this bridge and guessing causal_stage="S6"
+      uniformly would have been concretely wrong for the one real finding on record.
+    action_taken: >
+      Added Finding.quote (independent_reviewer.py) -- the literal flagged text, populated by
+      both v1 rules (claim_contradiction_rule reads the exact source line;
+      duplicate_opening_paragraph_rule uses the authored unit's own text).
+      Finding.__post_init__'s existing no-quiet-demotion guard is untouched. Added
+      src/repo_presenter/readme/review/defect_bridge.py: `build_defects(verdict, units, plan,
+      dispositions, facts, ecosystem, repairer="")` -- computes `placed_texts(placements(...))`
+      once, locates each deterministic-REJECT finding's quote in placed content first (so
+      inherited/preserved defects never reach S6) and falls back to the authored units list
+      (so an authoring defect in an LLM-owned section reaches S6), then calls
+      `review_defects()` for the actual, already-proven routing decision. Judgment-kind
+      findings (no `refuted_by`) are filtered out before `review_defects` is ever called --
+      annotate-only in, nothing in, out.
+    tests: >
+      tests/readme/review/test_defect_bridge.py (6 tests, all passing): the real
+      inherited-content case routes to S4 with misrouted=True; an authored-unit case in an
+      LLM-owned section routes to S6; a finding in a deterministic (non-LLM) section is advisory,
+      not repairable, with a reason; judgment-only findings and an empty/ACCEPT verdict produce
+      zero defects; two different `repairer` values produce different fingerprints (future-
+      mechanism-change invalidation, the same contract review_defects already enforces).
+    discovered_while_planning_2026_10_24: >
+      While building the fixtures for this card's own tests, found and fixed a REAL, separate
+      correctness bug in this session's own prior work (see
+      correction_2026_10_24_duplicate_opening_claim_was_wrong on
+      RUN_INDEPENDENT_REVIEW_P2_COHORT_2026_10_24 above and
+      next_step_fix_2026_10_24/scripts/run_lane_r_render.py): every on-disk facts.json in
+      P2_REAL_ENGINE_SALVAGE had zero inherited_unit facts, because run_lane_r_render.py merged
+      them in memory for one render call and never persisted the result. Fixed going forward
+      (write_facts call added); the 30 already-written facts.json files are not backfilled
+      (would need a live re-clone per repository, explicitly deferred, not done speculatively).
+    deliberately_not_built: >
+      No repair loop (repair/rounds.py-equivalent) that actually fires a job from a Defect --
+      this repository still has none, and building one is multi-session-scale work this card
+      does not attempt. No backfill of the 30 existing facts.json files (see above). No judgment
+      rules (BUILD_INDEPENDENT_REVIEWER's own remaining item (3), explicitly deferred until real
+      portfolio-wide runs justify the breadth, per mission P2 discipline).
+    write_paths: [src/repo_presenter/readme/review/defect_bridge.py,
+      tests/readme/review/test_defect_bridge.py,
+      src/repo_presenter/readme/review/independent_reviewer.py (Finding.quote only),
+      scripts/run_lane_r_render.py (facts persistence fix)]
+    source_refs: >
+      migration/reuse-manifest.yaml entry #1; readme/repair/targeted.py's own REUSE-port entry;
+      RUN_INDEPENDENT_REVIEW_P2_COHORT_2026_10_24's real finding.
+    rollback: delete defect_bridge.py and its test; revert Finding.quote (default "" makes it
+      additive, nothing else reads it yet); revert the write_facts call in run_lane_r_render.py.
 
   - id: PORT_BC14_CLAIM_VALIDATION
     status: DONE
