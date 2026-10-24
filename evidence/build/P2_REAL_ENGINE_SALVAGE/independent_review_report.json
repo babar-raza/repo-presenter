@@ -100,6 +100,7 @@
       {
         "kind": "deterministic",
         "message": "line 206 (EXTRACTING): the install command names 'aspose-font', but the package identity is 'aspose-font-foss'",
+        "quote": "pip install \"aspose-font[mcp]\"",
         "refuted_by": {
           "evidence": "the install command names 'aspose-font', but the package identity is 'aspose-font-foss'",
           "rule": "claim_contradiction"
@@ -225,8 +226,11 @@
     "verdict": "ACCEPT"
   },
   "aspose-words-foss__Aspose.Words-FOSS-for-.NET": {
-    "reason": "no rendered candidate yet",
-    "reviewable": false
+    "deterministic_reject_count": 0,
+    "findings": [],
+    "reviewable": true,
+    "stage": "coherent",
+    "verdict": "ACCEPT"
   },
   "aspose-words-foss__Aspose.Words-FOSS-for-Python": {
     "deterministic_reject_count": 0,

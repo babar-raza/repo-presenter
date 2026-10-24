@@ -68,7 +68,13 @@ def main() -> None:
     inherited = inherited_unit_facts("README.md", readme_bytes, public_symbol_facts, tree_paths)
     print(f"      {len(inherited)} inherited units")
     source_revision = run_git(["rev-parse", "HEAD"], cwd=clone_path).stdout.strip()
-    document = FactsDocument(repository, source_revision, (*base_document.facts, *inherited))
+    # Drop any inherited_unit facts already in facts.json (written by a later stage's own
+    # write_facts call, e.g. render.py) before merging freshly computed ones, so re-running an
+    # earlier stage on an already-rendered repository stays idempotent rather than colliding on
+    # duplicate fact IDs (found live 2026-10-24, aspose-words-foss/.NET's real coherence run --
+    # see project/state.yaml PORT_BUNDLE_INTEGRITY_LAYER).
+    kept = tuple(f for f in base_document.facts if f.kind != "inherited_unit")
+    document = FactsDocument(repository, source_revision, (*kept, *inherited))
 
     print("[4/6] loading the real, ported prompt manifests and this repository's registry entry")
     prompt_registry = load_manifests(Path("prompts"))

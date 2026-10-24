@@ -77,7 +77,11 @@ def main() -> None:
     readme_bytes = (clone_path / "README.md").read_bytes()
     public_symbol_facts = [f for f in base_document.facts if f.kind == "public_symbol"]
     inherited = inherited_unit_facts("README.md", readme_bytes, public_symbol_facts, tree_paths)
-    document = FactsDocument(repository, base_document.source_revision, (*base_document.facts, *inherited))
+    # Idempotent re-merge: see run_lane_r_investigation.py's identical comment. This is the exact
+    # collision found live 2026-10-24 (aspose-words-foss/.NET, run after render.py had already
+    # persisted inherited_unit facts into facts.json).
+    kept = tuple(f for f in base_document.facts if f.kind != "inherited_unit")
+    document = FactsDocument(repository, base_document.source_revision, (*kept, *inherited))
 
     repo_registry = load_registry(Path("data/registry.json"))
     entry = require_listed(repo_registry, repository)

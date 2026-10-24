@@ -1194,6 +1194,70 @@ next_ready_items:
       here), but it is no longer "no owner action would unblock it either" -- a concrete, ordered,
       additive path now exists; step 7 of that plan is this card's own original ask.
 
+  - id: LANE_R_CASCADE_COMPLETION_2026_10_24
+    status: DONE
+    priority: high
+    purpose: >
+      Pivot back to the primary lanes goal after a long infrastructure-focused stretch (bundle-
+      integrity/no-op-proof, the P3/P4 investigation, issue-approval model) -- advance one of
+      the 4 incomplete P2_REAL_ENGINE_SALVAGE cascades (aspose-email-foss/.Net, aspose-page-
+      foss/Python, aspose-slides-foss/Java, aspose-words-foss/.NET) to real completion, using
+      the now-confirmed GPT_OSS_API_KEY/GPT_OSS_ENDPOINT credentials.
+    action_taken: >
+      First, the FIRST LIVE exercise of core/git_safety/clone.py's pinned_read_only_clone --
+      cloned aspose-email-foss/Aspose.Email-FOSS-for-.Net read-only, pinned to live main
+      (59125b4732df0eedbc4d4c2ab978698ed4348eb7), push verified blocked (push_url=DISABLED,
+      pre-push hook installed with marker). Every one of this session's other 36 portfolio
+      clones used plain `git clone`, never this hardened wrapper -- now proven working, not
+      just built. Ran run_lane_r_authoring_real.py (S6) against it for real: failed closed on
+      the known duplicate-opening-paragraph defect ("state only what that paragraph does not
+      already say... never the product's identity, license, or dependency-freedom again") after
+      3 real attempts including the narrowed retry -- a genuine, correct, non-silent refusal,
+      not a bug; this defect class has now recurred on essentially every real cascade this
+      session has run. The cascade for this repository remains incomplete.
+      Second: cloned aspose-words-foss/Aspose.Words-FOSS-for-.NET the same way (pinned to
+      0d3f1add920f5294d726b4f286c2d6ba7c3ae22c), whose only prior recorded failure was an
+      unrelated title-restatement rejection, not the recurring duplicate-opening class. Ran S6
+      (authoring_real) -- SUCCEEDED, 5 real authoring tasks, content_units.json written, a real
+      invocation record written for the first time by today's own Invocation wiring
+      (PORT_BUNDLE_INTEGRITY_LAYER). Ran S7 (render, deterministic) -- SUCCEEDED, 126,455
+      characters, and facts.json gained 104 real inherited_unit facts via today's earlier
+      persistence fix, exactly as designed.
+    bug_found_and_fixed: >
+      Running S8 (coherence) immediately after S7 crashed: `ValueError: duplicate fact IDs`.
+      Root cause: coherence.py (and, it turns out, investigation.py/reconciliation.py/
+      planning.py/authoring_real.py too) independently recomputes inherited_unit_facts() from
+      the live clone and merges it into base_document.facts WITHOUT first dropping any
+      inherited_unit facts already there -- a latent idempotency gap today's own facts-
+      persistence fix (render.py only) exposed for the first time, because before that fix
+      facts.json never legitimately carried inherited_unit facts at all, so the merge was
+      always additive-into-emptiness. Fixed all five remaining scripts with the same `kept =
+      tuple(f for f in base_document.facts if f.kind != "inherited_unit")` guard render.py
+      already had. Re-ran coherence.py after the fix: SUCCEEDED, 2 real coherence batches, one
+      genuine revision (scope_limitations, NOT the duplicate-opening class -- "opening"
+      untouched), final README 126,587 characters.
+    independent_review_result: >
+      Ran readme/review/independent_reviewer.py against the completed cascade (the coherence-
+      finalized units + facts + dispositions): verdict ACCEPT, 0 findings. A real, first-ever
+      independent review of a cascade completed entirely within this one tick -- not retrofitted
+      onto old evidence.
+    invalidation_impact: >
+      None to any OTHER candidate -- this is a targeted completion of one previously-incomplete
+      repository's own cascade (mission non-negotiable #3: consumed-scope only). The 5-script
+      idempotency fix is additive/defensive (a no-op whenever facts.json has no inherited_unit
+      facts yet, which is every repository except aspose-words-foss/.NET's own render.py
+      output so far) and does not change any already-written evidence file.
+    source_refs: >
+      scripts/run_lane_r_{investigation,reconciliation,planning,authoring_real,coherence}.py;
+      core/git_safety/clone.py; evidence/build/P2_REAL_ENGINE_SALVAGE/aspose-words-foss__
+      Aspose.Words-FOSS-for-.NET/ and aspose-email-foss__Aspose.Email-FOSS-for-.Net/.
+    next_step: >
+      2 of 4 previously-incomplete P2 cascades remain (aspose-page-foss/Python, aspose-slides-
+      foss/Java) plus aspose-email-foss/.Net's own confirmed-stuck state (same known defect
+      class; needs the eventual repair/no-op-proof work this session has been separately
+      building, not a blind retry). aspose-words-foss/.NET's own real finding set (0, ACCEPT)
+      means no new draft_upstream_issue.md is needed for it.
+
   - id: GITHUB_ACTIONS_HOSTING_GAP_2026_10_24
     status: BLOCKED_NEEDS_OWNER_DECISION
     priority: highest
@@ -1769,6 +1833,12 @@ next_ready_items:
       project publishes). Independently verified by hand against the real README.coherent.md
       and facts.json before accepting the finding as genuine, not just trusting the tool's own
       output (AGENTS.md: a REJECT is never self-graded away).
+    rerun_2026_10_24_after_lane_r_cascade_completion: >
+      Re-run via tooling (not hand-edited) after LANE_R_CASCADE_COMPLETION_2026_10_24 completed
+      aspose-words-foss/.NET's own cascade for real: 31 of 34 attempted repositories now
+      reviewable (3 remain without a completed render: aspose-email-foss/.Net, aspose-page-
+      foss/Python, aspose-slides-foss/Java). Of the 31: 30 ACCEPT, 1 REJECT (still aspose-font-
+      foss/Python, unchanged). aspose-words-foss/.NET itself: ACCEPT, 0 findings.
     correction_2026_10_24_duplicate_opening_claim_was_wrong: >
       RETRACTED: this card originally claimed "zero duplicate-opening-paragraph findings across
       all 30 -- expected... consistent with the inline guard having worked, not with the

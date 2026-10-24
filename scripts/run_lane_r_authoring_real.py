@@ -72,7 +72,9 @@ def main() -> None:
     public_symbol_facts = [f for f in base_document.facts if f.kind == "public_symbol"]
     inherited = inherited_unit_facts("README.md", readme_bytes, public_symbol_facts, tree_paths)
     source_revision = run_git(["rev-parse", "HEAD"], cwd=clone_path).stdout.strip()
-    document = FactsDocument(repository, source_revision, (*base_document.facts, *inherited))
+    # Idempotent re-merge: see run_lane_r_investigation.py's identical comment.
+    kept = tuple(f for f in base_document.facts if f.kind != "inherited_unit")
+    document = FactsDocument(repository, source_revision, (*kept, *inherited))
 
     print("[3/6] loading the real prompt manifest and this repository's registry entry")
     prompt_registry = load_manifests(Path("prompts"))
