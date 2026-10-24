@@ -1278,8 +1278,41 @@ next_ready_items:
       metadata, with core/state mostly RETIRE).
 
   - id: BUILD_INDEPENDENT_REVIEWER
-    status: BLOCKED_NEEDS_SCOPING
+    status: DONE
     priority: highest
+    build_2026_10_24: >
+      Owner directive (2026-10-24): when nothing is salvageable from aspose.org or the old
+      repo, build from scratch -- but only after careful production-grade planning conforming
+      to plans/repository_presenter_fresh_start_supervisor_prompt.md, and without risking
+      invalidating already-processed candidates (mission non-negotiable #3). Applied here: read
+      mission section 11 in full before writing code (the actual Gate A bar -- "independent
+      non-authoring criticism that can veto, with no quiet demotion," plus "adversarial factual
+      / preservation holdouts" and a "forest acceptance" standard for later breadth). Built
+      src/repo_presenter/readme/review/independent_reviewer.py from scratch (DETERMINISTIC_RULES/
+      JUDGMENT_RULES pattern only, zero lines ported) plus
+      tests/readme/review/test_independent_reviewer.py (14 tests, all passing, including the
+      card's own falsifier below). The no-quiet-demotion invariant is enforced structurally:
+      `Finding.__post_init__` raises if a judgment-kind finding ever carries a `refuted_by` --
+      the old fold bug is made unreachable by construction, not merely avoided by convention.
+      Wired the veto live into propose/effect.py's propose_candidate as a required `review`
+      parameter with no override path (authorization/refusals.py: new Refusal.REVIEW_REJECTED);
+      tests/propose/test_effect.py extended (4 new tests) and the whole suite re-run clean.
+      v1 scope, deliberately bounded (mission P1 "smallest working... + independent verifier,"
+      not the full P2 forest-acceptance breadth): two deterministic rules only
+      (claim_contradiction reusing validation/claims.py verbatim; duplicate_opening_paragraph
+      reusing authoring.preserved_opening_text + coverage.states_all, the same primitives the
+      inline partial fix uses, called independently against the final persisted output). No
+      judgment rules registered yet (extension point exists, structurally safe to add to). NOT
+      yet decided or built: where a REJECT finding hands off to repair (this repository still
+      has no repair loop wired to readme/repair/targeted.py) -- genuinely deferred, not silently
+      closed. NOT yet run against any of the existing 36 Lane L / 34 Lane R candidates -- per
+      owner_review_status above, none of those carry owner acceptance regardless, so a first
+      portfolio-wide run is a new finding-producing pass, not a reseal, whenever it happens.
+      Full suite re-run after this build: 1518 passed, 2 failed (unrelated pre-existing
+      environment flake, confirmed via `git stash` on clean HEAD --
+      tests/extractors/platforms/test_cpp_examples.py's two CMake-build-verification tests fail
+      identically with no changes applied at all; this machine's local C++ toolchain state, not
+      a code regression), 11 skipped.
     scoping_read_2026_10_23: >
       Read judge.py (740 lines) and the first ~220 lines of review.py (2,996 lines) in full
       before writing any code, per this card's own discipline. CORRECTING this card's own
@@ -1343,15 +1376,16 @@ next_ready_items:
     rollback: delete the new file and its test; no other module depends on it yet (ADD, not
       ADAPT -- nothing to revert elsewhere).
     next_step: >
-      Before writing independent_reviewer.py: (1) read validation/claims.py (690 lines) and
-      deferrals.py (905 lines) from the old repo -- the claim-grounding logic a reviewer's
-      factuality checks need, separate from this card's own object; (2) decide where this
-      repository hands a REJECT finding, given it has no repair/rounds.py-equivalent loop yet
-      -- either build the smallest possible repair-destination stub first, or scope v1 of the
-      reviewer to produce an advisory record only (no repair hand-off) until one exists; (3)
-      only then write independent_reviewer.py against THIS repository's own renderer.py/
-      authoring.py output shapes, carrying forward only the DETERMINISTIC_RULES/JUDGMENT_RULES
-      PATTERN from review.py's version "19", never its literal chrome-string match points.
+      v1 is built (see build_2026_10_24 above). Three genuinely open follow-ons, none decided by
+      this card: (1) run the reviewer against the existing 36 Lane L / 34 Lane R candidates as a
+      first-ever independent pass and record real findings per repository, not simulated ones;
+      (2) decide where a REJECT hands off -- readme/repair/targeted.py is REUSE-ported and
+      ready to receive a defect, but nothing yet constructs one from a ReviewVerdict, and no
+      repair loop (repair/rounds.py-equivalent) exists to run a repair job once constructed; (3)
+      add judgment rules (preservation-holdout breadth, forest-acceptance differential fixtures
+      per mission section 11) only after (1) shows real portfolio-wide failure classes worth
+      generalizing from -- mission P2 discipline ("generalize by failure class, not anecdote"),
+      not before.
     blocked_on: null
     correction_2026_10_23_git_safety_hypothesis_refuted: >
       SALVAGE_INVENTORY_2026_10_23's own finding (4) above guessed, from file names alone before

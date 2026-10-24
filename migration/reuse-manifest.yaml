@@ -54,7 +54,12 @@ entries:
       end to end against a real candidate as of 2026-10-21.
     licensing: proprietary, same owner (babar-raza) — no restriction beyond normal
       private-repo reuse by the same owner.
-    disposition: ADAPT
+    disposition: "ADD, not ADAPT (corrected 2026-10-24): the rule-split *pattern* was carried
+      forward as designed, but zero lines of the old review.py/judge.py were ported -- both are
+      disqualified from REUSE by their dependence on a sealed bundle/manifest layout
+      (core/candidates.py) and a repair loop (repair/rounds.py) this repository does not have.
+      Built from scratch, from this entry's own pattern description, against this repository's
+      own evidence shapes."
     reason: >
       The deterministic/judgment rule-split *pattern* is sound design and worth
       re-implementing; the code itself is unproven post-fix and the component's
@@ -62,16 +67,36 @@ entries:
       spot (Oct 20 findings: 71/366 contradicted examples passed its gates). Do
       not REUSE verbatim; write this repo's own reviewer against the pattern,
       verified fresh in P1.
-    target_module: src/repo_presenter/readme/review/independent_reviewer.py (planned, not yet created)
+    target_module: "src/repo_presenter/readme/review/independent_reviewer.py -- BUILT 2026-10-24
+      (project/state.yaml BUILD_INDEPENDENT_REVIEWER). v1 scope: two deterministic rules only
+      (claim_contradiction via validation/claims.py, duplicate_opening_paragraph via
+      authoring.preserved_opening_text + coverage.states_all); no judgment rules registered yet
+      (the extension point exists and is structurally safe -- Finding.__post_init__ raises if a
+      judgment-kind finding ever carries a refutation); no forest-acceptance breadth yet (mission
+      P2 activity, deliberately deferred past this P1-style first proof); no repair hand-off yet
+      (BUILD_INDEPENDENT_REVIEWER's 'where does a REJECT go' question remains genuinely open --
+      this build does not decide it). The veto is wired live into propose/effect.py's
+      propose_candidate (a required `review` parameter, no override path) -- the one real
+      effect-firing site that exists, so 'can veto' is an enforced property, not an unread file."
     smallest_first_integration_test: >
       Feed the reviewer a candidate with one deliberately false claim whose
       quoted span happens to also match a literal SUPPORTED fact elsewhere in
       the candidate; assert the verdict is REJECT, not ACCEPT (this is the
-      exact negative control the old bug would have failed).
-    portfolio_consumers: both lanes, every candidate — this is the acceptance gate.
+      exact negative control the old bug would have failed). PASSES as of
+      2026-10-24: tests/readme/review/test_independent_reviewer.py::
+      test_falsifier_a_quoted_span_matching_a_supported_fact_elsewhere_still_rejects.
+    portfolio_consumers: both lanes, every candidate — this is the acceptance gate. As of
+      2026-10-24 it is built but has not yet been RUN against any of the existing 36 Lane L / 34
+      Lane R candidates — see BUILD_INDEPENDENT_REVIEWER's next_step. Owner correction on
+      record (project/state.yaml owner_review_status, 2026-10-24): none of those 36/34
+      candidates carry owner acceptance regardless of this reviewer's eventual verdicts.
     invalidation_impact: >
-      None yet — not pulled. Once pulled, a change to this module's logic
-      reopens review for every candidate it has verdicted (mission §8).
+      Built 2026-10-24. Running it against the existing 36 Lane L / 34 Lane R candidates is a
+      first-ever independent review pass, not a reseal (mission §8 "consumed-scope invalidation
+      only"): no independent reviewer existed before this build (SALVAGE_INVENTORY_2026_10_23
+      confirmed zero review/judge/acceptance code in this repository), so no candidate's prior
+      pipeline-level pass is being reopened by this module's own existence -- a REJECT it finds
+      against one candidate is a new finding against that one candidate only.
 
   - component: "components/readme/acceptance/judge.py"
     source: old-repository-presenter

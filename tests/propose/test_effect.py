@@ -26,7 +26,25 @@ from repo_presenter.github.errors import RepositoryMetadataError
 from repo_presenter.github.client import CommitOutcome, FileContents, PullRequestRef
 from repo_presenter.github.token_provenance import TokenDecision
 from repo_presenter.core.hashing import sha256_text
+from repo_presenter.readme.review.independent_reviewer import (
+    Finding,
+    Refutation,
+    ReviewVerdict,
+)
 from support import make_permit
+
+ACCEPTED_REVIEW = ReviewVerdict(verdict="ACCEPT", findings=())
+REJECTED_REVIEW = ReviewVerdict(
+    verdict="REJECT",
+    findings=(
+        Finding(
+            rule="claim_contradiction",
+            kind="deterministic",
+            message="stale version",
+            refuted_by=Refutation(rule="claim_contradiction", evidence="26.9.0 vs 26.10.0"),
+        ),
+    ),
+)
 
 REPOSITORY = "babar-raza/disposable-target"
 BASE_BRANCH = "main"
@@ -195,6 +213,7 @@ def _propose(
         "pr_body": "Automated README proposal.",
         "token": "ghs_write",
         "environment": {AUTHORIZATION_VARIABLE: "1"},
+        "review": ACCEPTED_REVIEW,
         "clock": lambda: "2026-10-01T00:30:00Z",  # deterministic: authorization expires 01:00:00Z
     }
     kwargs.update(github.kwargs())
@@ -293,6 +312,7 @@ def test_the_source_recheck_is_required_not_optional() -> None:
         "pr_body": "b",
         "token": "ghs_write",
         "environment": {AUTHORIZATION_VARIABLE: "1"},
+        "review": ACCEPTED_REVIEW,
         **github.kwargs(),
     }
     with pytest.raises(TypeError, match="recheck_source"):
@@ -482,6 +502,50 @@ def test_every_early_refusal_carries_its_typed_code() -> None:
     assert _propose(github, token=None).reason_code is Refusal.NO_WRITE_TOKEN
     stale = _propose(github, recheck_source=lambda: "a" * 40)
     _assert_refused_without_writes(github, stale, Refusal.SOURCE_MOVED)
+
+
+# ---------------------------------------------------------------------------
+# the independent reviewer's veto: no quiet demotion, no override
+# ---------------------------------------------------------------------------
+
+
+def test_a_rejected_review_verdict_refuses_before_any_token_or_network_call() -> None:
+    github = FakeGitHub()
+    result = _propose(github, review=REJECTED_REVIEW, token=None)
+    _assert_refused_without_writes(github, result, Refusal.REVIEW_REJECTED)
+    assert "1 deterministic finding" in result.reason
+
+
+def test_a_rejected_review_verdict_refuses_even_with_every_other_gate_clear() -> None:
+    github = FakeGitHub()
+    result = _propose(github, review=REJECTED_REVIEW)
+    _assert_refused_without_writes(github, result, Refusal.REVIEW_REJECTED)
+
+
+def test_an_accepted_review_verdict_proceeds() -> None:
+    github = FakeGitHub()
+    assert _propose(github, review=ACCEPTED_REVIEW).effected is True
+
+
+def test_the_review_verdict_is_required_not_optional() -> None:
+    """A veto parameter with a default that silently accepts is not a veto."""
+    github = FakeGitHub()
+    kwargs: dict[str, object] = {
+        "repository": REPOSITORY,
+        "readme_text": README_V1,
+        "source_revision": SOURCE_REVISION,
+        "permit": make_permit(REPOSITORY),
+        "load_authorization": lambda: _authorization(),
+        "recheck_source": lambda: SOURCE_REVISION,
+        "base_branch": BASE_BRANCH,
+        "pr_title": "t",
+        "pr_body": "b",
+        "token": "ghs_write",
+        "environment": {AUTHORIZATION_VARIABLE: "1"},
+        **github.kwargs(),
+    }
+    with pytest.raises(TypeError, match="review"):
+        propose_candidate(**kwargs)  # type: ignore[arg-type]
 
 
 def test_a_missing_authorization_record_refuses_with_the_typed_reason() -> None:

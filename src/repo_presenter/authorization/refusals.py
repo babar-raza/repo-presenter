@@ -38,6 +38,11 @@ class Refusal(StrEnum):
     PR_ALREADY_CLOSED = "pr_already_closed"
     SOURCE_MOVED = "source_moved"
     GITHUB_ERROR = "github_error"
+    # The independent reviewer's veto (repo_presenter.readme.review.independent_reviewer),
+    # wired into propose.effect 2026-10-24: mission section 11's "independent non-authoring
+    # criticism that can veto, with no quiet demotion" has to block the one real effect that
+    # exists, or it is not actually a veto.
+    REVIEW_REJECTED = "review_rejected"
 
 
 class WriteRefusedError(Exception):

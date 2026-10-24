@@ -17,17 +17,22 @@ Every gate below runs, in this order, before the first write, and each refusal i
    never reach this function.
 2. `write_authorized(environment)` - the owner-controlled kill switch
    `REPOSITORY_PRESENTER_PROPOSAL_WRITE_AUTHORIZED`. Never inferred from a credential.
-3. A write-scoped token is supplied (`GH_PROPOSAL_WRITE_TOKEN` - never `GH_TOKEN`).
-4. The authorization record (`core/authorization/proposal.py`): a persisted, reviewed file committed
+3. `review` (required, `readme/review/independent_reviewer.py::ReviewVerdict`) - the independent
+   reviewer's veto (mission section 11: "independent non-authoring criticism that can veto, with
+   no quiet demotion"). A verdict other than `"ACCEPT"` refuses with `Refusal.REVIEW_REJECTED`
+   before any token or network call; there is no override parameter, because a veto that can be
+   bypassed by the caller is not a veto.
+4. A write-scoped token is supplied (`GH_PROPOSAL_WRITE_TOKEN` - never `GH_TOKEN`).
+5. The authorization record (`core/authorization/proposal.py`): a persisted, reviewed file committed
    to the control repository before this run was triggered, which `load_authorization` loads and
    checks for provenance. Every bound field - repository, candidate hash, source revision, base
    branch, presenter branch, window - is then checked against the candidate and live target this
    call holds. The record is independent of the proposal: it is not computed from it.
-5. Token provenance (`core/github/token_provenance.py`): an installation token whose reach is
+6. Token provenance (`core/github/token_provenance.py`): an installation token whose reach is
    exactly the target repository.
-6. Source freshness: `recheck_source` (required) must equal the authorized source revision - the
+7. Source freshness: `recheck_source` (required) must equal the authorized source revision - the
    `AGENTS.md` "Recheck upstream revision immediately before an effect" rule.
-7. Pull-request history: every state is read before anything is written. A merged or closed
+8. Pull-request history: every state is read before anything is written. A merged or closed
    pull request for the same candidate is never recreated unless the record names it in
    `supersedes_prs`.
 
@@ -63,6 +68,7 @@ from repo_presenter.authorization.proposal import (
     ProposalAuthorization,
     validate_authorization,
 )
+from repo_presenter.readme.review.independent_reviewer import ReviewVerdict
 from repo_presenter.authorization.refusals import Refusal, WriteRefusedError
 from repo_presenter.github.errors import RepositoryMetadataError
 from repo_presenter.github.client import (
@@ -227,6 +233,7 @@ def propose_candidate(
     base_branch: str,
     token: str | None,
     environment: Mapping[str, str],
+    review: ReviewVerdict,
     permit: WritePermit,
     load_authorization: LoadAuthorizationFn,
     recheck_source: RecheckSourceFn,
@@ -283,6 +290,15 @@ def propose_candidate(
 
     if not write_authorized(environment):
         return _refuse(False, Refusal.WRITE_NOT_ENABLED, _NOT_AUTHORIZED_REASON)
+
+    if review.verdict != "ACCEPT":
+        return _refuse(
+            True,
+            Refusal.REVIEW_REJECTED,
+            "the independent reviewer rejected this candidate "
+            f"({review.deterministic_reject_count} deterministic finding(s)); it is never "
+            "proposed while a REJECT stands, and no caller can override this verdict",
+        )
 
     if not token:
         return _refuse(True, Refusal.NO_WRITE_TOKEN, _NO_TOKEN_REASON)
