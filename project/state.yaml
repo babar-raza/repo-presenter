@@ -1194,6 +1194,56 @@ next_ready_items:
       here), but it is no longer "no owner action would unblock it either" -- a concrete, ordered,
       additive path now exists; step 7 of that plan is this card's own original ask.
 
+  - id: GITHUB_ACTIONS_HOSTING_GAP_2026_10_24
+    status: NOT_STARTED
+    priority: highest
+    purpose: >
+      Recorded while answering the owner's 2026-10-24 status question ("how far from
+      completion against idea.md/the mission document"), re-grounded against
+      plans/repository_presenter_fresh_start_supervisor_prompt.md directly (owner's own
+      instruction: keep that document in mind, it names why this project started a new
+      repository in the first place). Checked directly: no .github/workflows/ directory exists
+      in this repository at all -- zero files, confirmed by listing.
+    finding: >
+      Mission non-negotiable #1 (the FIRST of eight, section 1): "Build a GitHub Actions
+      runner-based autonomous system... It must operate on actual hosted runners with
+      scheduled and on-demand triggers, not just locally." Mission section 9 is titled
+      "Continuous GitHub Actions production behavior" and requires "an actual working
+      scheduled and manually dispatchable hosted runner pipeline... Build one small vertical
+      slice on GitHub Actions before broader automation." idea.md's own "Execution Environments
+      and GitHub Access" section requires the same split (local GH_TOKEN testing vs. a
+      production GitHub App on actual Actions runners, failing closed if the App is
+      unavailable, never falling back to a personal token). None of this exists yet. Every
+      piece of real work this session and prior sessions have done -- all 34 P2_REAL_ENGINE_
+      SALVAGE cascades, the independent reviewer, the PR-effect layer, today's bundle work --
+      has run locally, by a human or agent invoking a script directly. This is not a cosmetic
+      gap: it is one of the mission's own eight non-negotiables, and it has had zero
+      directed work of any kind in this repository's history (confirmed: no prior card
+      anywhere in this file mentions "GitHub Actions," ".github/workflows," or "hosted
+      runner").
+    why_not_yet_flagged_earlier: >
+      Mission's own P-ordering (section 12) explains this honestly, not as an oversight:
+      P0-P2 (bootstrap, vertical slice, portfolio scale, real-engine salvage) are correctly
+      local-first by design ("do not build the complete final architecture before the first
+      application result"); P3 is explicitly "prove hosted effects... run on a real hosted
+      GitHub Actions runner," and this repository's own active_work_item is still
+      P2_REAL_ENGINE_SALVAGE (IN_PROGRESS), meaning P3 has correctly not started yet either.
+      The gap is real but not a missed step out of order -- it is the next phase, not a
+      skipped one. Recorded now so it is visible in the state machine rather than only
+      inferable from P-ordering, per the owner's explicit "so we do not forget about anything."
+    next_step: >
+      Not started. When P2 is far enough along to justify it (mission section 12: "build one
+      small vertical slice on GitHub Actions before broader automation" -- i.e. do not wait for
+      100% of P2 either), scope the smallest real workflow: one manually-dispatchable
+      .github/workflows/*.yml that runs this repository's own existing CLI/test entry points
+      on a GitHub-hosted runner for ONE repository, with the same local GH_TOKEN-vs-GitHub-App
+      credential split idea.md requires. This is P3 work, not P2 or this bundle-integrity plan's
+      work -- flagged here so it is tracked, not scheduled by this card.
+    source_refs: >
+      plans/repository_presenter_fresh_start_supervisor_prompt.md non-negotiable #1 and
+      section 9; plans/idea.md "Execution Environments and GitHub Access"; project/state.yaml's
+      own active_work_item (P2_REAL_ENGINE_SALVAGE, IN_PROGRESS).
+
   - id: PORT_BUNDLE_INTEGRITY_LAYER
     status: IN_PROGRESS
     priority: high
