@@ -96,7 +96,7 @@ def test_local_mode_fails_closed_without_gh_token() -> None:
 
 def test_production_mode_fails_closed_without_app_credentials_even_if_gh_token_is_set() -> None:
     """The exact idea.md guarantee this pull is asked to keep intact: production never falls back
-    to the local GH_TOKEN."""
+    to the local GITHUB_TOKEN."""
     decision = resolve_write_token(
         {LOCAL_TOKEN_ENV_VAR: "ghp_a_local_token_is_not_enough"},
         repository=TARGET,

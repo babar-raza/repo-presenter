@@ -26,6 +26,7 @@ SECRET_VARIABLES = frozenset(
     {
         "GPT_OSS_API_KEY",
         "GH_TOKEN",
+        "GITHUB_TOKEN",
         "GH_METADATA_WRITE_TOKEN",
         "GH_ISSUES_WRITE_TOKEN",
         "GH_PROPOSAL_WRITE_TOKEN",

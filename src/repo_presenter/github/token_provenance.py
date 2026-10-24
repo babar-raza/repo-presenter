@@ -1,5 +1,5 @@
-"""Which write token a filing run may use, and how it is proven: local ``GH_TOKEN`` vs. production
-GitHub App installation token.
+"""Which write token a filing run may use, and how it is proven: local ``GITHUB_TOKEN`` vs.
+production GitHub App installation token.
 
 Ported (trimmed) from the old repo's ``core/github/token_provenance.py``, whose docstring explains
 the fuller design this is cut from: GitHub lets a bare installation token prove, through
@@ -9,12 +9,14 @@ repository. ``verify_installation_token`` is ported close to verbatim -- it is t
 design this repository's production path will need unchanged.
 
 What is new here (this repository's own model, not yet written in the old repo): the explicit
-local-vs-production split. Local testing authenticates with a plain ``GH_TOKEN`` (a personal access
-token, used directly -- there is no installation to verify against in a developer's own checkout).
-Production is required to mint a GitHub App installation token and fails closed -- refuses, never
-silently falls back to a personal token -- when that credential is absent or does not verify. This
-is the shape ``migration/reuse-manifest.yaml``'s GitHub-App component entry asks to keep intact for
-later even though only the local path is exercised end to end today.
+local-vs-production split. Local testing authenticates with a plain ``GITHUB_TOKEN`` (a personal
+access token, used directly -- there is no installation to verify against in a developer's own
+checkout; corrected 2026-10-24 from the earlier ``GH_TOKEN`` name -- that variable is not set in
+this environment, ``GITHUB_TOKEN`` is, matching the name GitHub's own tooling, including `gh`
+itself, actually uses). Production is required to mint a GitHub App installation token and fails
+closed -- refuses, never silently falls back to a personal token -- when that credential is absent
+or does not verify. This is the shape ``migration/reuse-manifest.yaml``'s GitHub-App component
+entry asks to keep intact for later even though only the local path is exercised end to end today.
 """
 
 from __future__ import annotations
@@ -46,7 +48,7 @@ EXPECTED_APP_ID = 5092474
 EXPECTED_APP_SLUG = "repository-presenter"
 INSTALLATION_TOKEN_PREFIX = "ghs_"
 #: Env var a local run reads for its write-scoped token (never an installation token in practice).
-LOCAL_TOKEN_ENV_VAR = "GH_TOKEN"
+LOCAL_TOKEN_ENV_VAR = "GITHUB_TOKEN"
 #: Env var a production run reads: a GitHub App installation token minted per run, scoped to one
 #: repository. Never the same variable as the local path, so the two can never be confused.
 APP_INSTALLATION_TOKEN_ENV_VAR = "GH_APP_INSTALLATION_TOKEN"
@@ -121,9 +123,9 @@ def resolve_write_token(
 ) -> TokenDecision:
     """Resolve the write-scoped token for ``mode``, failing closed rather than falling back.
 
-    ``mode="local"``: reads ``GH_TOKEN`` and returns it unverified-by-GitHub-App-standards -- this
-    is the local developer path idea.md names explicitly; there is no installation to check it
-    against. Only its mere presence is required.
+    ``mode="local"``: reads ``GITHUB_TOKEN`` and returns it unverified-by-GitHub-App-standards --
+    this is the local developer path idea.md names explicitly; there is no installation to check
+    it against. Only its mere presence is required.
 
     ``mode="production"``: reads ``GH_APP_INSTALLATION_TOKEN`` and, if present, runs it through
     :func:`verify_installation_token` scoped to ``repository``. Absence is refused
