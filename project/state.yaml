@@ -1585,14 +1585,28 @@ next_ready_items:
       comment_on_filed) since this repository's version was trimmed from an earlier cut of it --
       upgrading file_issue() to that shape is real, separately-sized work, not yet started, and
       should not be guessed at from this repository's own already-trimmed version.
+    file_handoff_done_2026_10_24: >
+      Read the old repo's current components/issues/file.py (783 lines) in full. It splits
+      cleanly: file_handoff/plan_filing (~225 lines, needs only approval.py + model.py, both
+      already ported) vs. close_handoff/plan_close/plan_close_gated/comment_on_filed (~340
+      lines, needs a separate close_approval.py and a redetect.py-shaped RedetectionResult,
+      neither read). Ported the file_handoff/plan_filing half, REPLACING this repository's own
+      earlier, simpler file_issue()/FileResult -- confirmed no production caller existed for
+      the old one (search: only its own test file referenced it), so nothing needed updating
+      besides the test suite. 25 tests ported/adapted (tests/issues/test_file.py) + 75/75 in
+      the whole issues/ package; full repository suite re-run clean. Full detail:
+      migration/reuse-manifest.yaml's entry.
     next_step: >
-      Read the old repo's current components/issues/file.py (783 lines) in full, then upgrade
-      this repository's issues/file.py so a filing attempt constructs a Handoff, checks
-      verify_approval via a GitApprovalStore (or an injected fake in tests) before any dedup/
-      create call, and only then wire the 6 pending draft_upstream_issue.md handoffs through it
-      -- each still needs its own ops/issue_approvals/<handoff_id>.json committed by the owner
-      once (the "one-time, auditable action per defect" the adoption_decision above names), not
-      filed by this card.
+      close_handoff/comment_on_filed remain NOT ported -- a separate, not-yet-scoped follow-on
+      (needs close_approval.py and a redetect.py-shaped RedetectionResult read first, not
+      guessed at). For the 6 pending draft_upstream_issue.md handoffs: each still needs (a) its
+      content turned into a real issues.model.Handoff record (not yet done -- the drafts are
+      free-text markdown, not typed Handoff JSON, so a small conversion step is needed before
+      file_handoff can be called at all), and (b) its own ops/issue_approvals/<handoff_id>.json
+      committed by the owner once (the adoption_decision's "one-time, auditable action per
+      defect"), not filed by this card. No wiring script calling file_handoff against a real
+      target exists yet either -- this pass ported and tested the mechanism, it did not stand
+      up a caller.
 
   - id: SALVAGE_INVENTORY_2026_10_23
     status: DONE

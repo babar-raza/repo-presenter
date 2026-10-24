@@ -2163,11 +2163,19 @@ entries:
       boolean "authorized" argument from whatever caller supplies it (currently a chat-
       authorized draft, per repository). Nothing currently calls verify_approval.
     invalidation_impact: none -- new, additive modules; no existing caller changed.
-    next_step: >
-      The old repo's CURRENT components/issues/file.py has grown to 783 lines (file_handoff,
-      plan_filing, plus close_handoff/comment_on_filed for the "file-and-close" gated workflow
-      step) since this repository's own file.py (108 lines) was trimmed from an earlier, smaller
-      version of it. Upgrading file_issue() to file_handoff()-shaped (taking a Handoff, calling
-      verify_approval via an injected ApprovalStore, before any create/dedup call) is real,
-      separate, not-yet-scoped work -- read the old repo's current file.py in full first, do
-      not guess its current shape from this entry's own earlier-pull trimmed version.
+    next_step_done_2026_10_24: >
+      Read the old repo's current components/issues/file.py (783 lines) in full, confirmed it
+      splits cleanly: file_handoff/plan_filing (~225 lines, needs only approval.py + model.py,
+      both already ported) vs. close_handoff/plan_close/plan_close_gated/comment_on_filed
+      (~340 lines, needs a separate close_approval.py and a redetect.py-shaped
+      RedetectionResult, neither read or ported). Ported the file_handoff/plan_filing half only,
+      REPLACING this repository's own earlier, simpler file_issue()/FileResult (no production
+      caller existed -- confirmed by search -- so no caller needed updating). The old module's
+      `recheck: Callable[[], RedetectionResult]` parameter is now typed against a narrower local
+      `RecheckResult` Protocol (just the two fields `plan_filing` actually reads,
+      `still_fires`/`note`) instead of pulling in the unported redetect.py module -- any future,
+      fuller RedetectionResult will satisfy this Protocol structurally once that module exists.
+      close_handoff/comment_on_filed remain NOT ported -- tracked as their own follow-on, not
+      guessed at. 25 tests ported (tests/issues/test_file.py, the file_handoff/plan_filing
+      subset of the old repo's ~1,000 test lines) plus 2 new ones (permit/token-provenance
+      gate ordering). All pass; full repository suite re-run clean.

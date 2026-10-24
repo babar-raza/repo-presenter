@@ -1,136 +1,452 @@
-"""Tests for the gated filer (repo_presenter.issues.file), ported in shape from the old repo's
-components/issues/test_file.py duplicate-filing-guard and kill-switch tests."""
+"""The gated write: ``POST /repos/{owner}/{repo}/issues`` (``issues/file.py``). Every test injects
+a fake ``create`` function -- no test here makes a live GitHub call. The point of this file is the
+gate itself: an unauthorized, under-credentialed, already-filed, or recheck-failed handoff must
+never reach ``create``.
+
+Ported (ADAPT, the file_handoff/plan_filing subset -- not close_handoff/comment_on_filed, not
+ported in src/repo_presenter/issues/file.py this pass either) from the old repository-presenter
+project's own tests/components/issues/test_file.py, 2026-10-24.
+"""
 
 from __future__ import annotations
 
+import json
+import pytest
+from dataclasses import dataclass, replace
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
-from repo_presenter.issues.dedup import fingerprint_marker
-from repo_presenter.issues.file import AUTHORIZATION_VARIABLE, file_issue, write_authorized
+from repo_presenter.issues.approval import evidence_digest, handoff_id
+from repo_presenter.issues.file import (
+    AUTHORIZATION_VARIABLE,
+    FileResult,
+    write_authorized,
+)
+from repo_presenter.issues.file import file_handoff as _file_handoff
+from repo_presenter.issues.file import plan_filing as _plan_filing
+from repo_presenter.issues.model import EvidenceEntry, Handoff, IssueRef, TriggeringCheck
+from repo_presenter.github.errors import RepositoryMetadataError
+from repo_presenter.github.token_provenance import TokenDecision
+from support import make_permit
 
-FINGERPRINT = "sha256:abc123"
-OWNER = "aspose-3d-foss"
-REPO = "Aspose.3D-FOSS-for-Python"
+NOW = datetime(2026, 10, 5, 12, 0, tzinfo=UTC)
+
+REPO = "aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp"
+REVISION = "9f852d0ff1cfdad2d661556d6b87a8eff8c063a2"
+FINGERPRINT = "sha256:b3df5761421b54a0e30d65eafab785a0c6ca8f3a13653e1dbb63a8488e170365"
 
 
-class _RecordingWrite:
+def _handoff(*, status: str = "HANDOFF_PENDING", issue_ref: IssueRef | None = None) -> Handoff:
+    return Handoff(
+        schema_version=1,
+        repository=REPO,
+        source_revision=REVISION,
+        defect_fingerprint=FINGERPRINT,
+        triggering_check=TriggeringCheck(id="BC-02", version="3", causal_stage="EXTRACTING"),
+        evidence=(EvidenceEntry(path="src/x/NumberFormat.cpp", detail="trigraph '??/' is fatal"),),
+        claim=f"At revision {REVISION}, {REPO}'s own install_command:cmake is UNRESOLVED.",
+        suggested_issue_title=f"install_command:cmake is UNRESOLVED at {REVISION[:12]}",
+        suggested_issue_body="repository-presenter's validation pipeline found this.\n",
+        status=status,  # type: ignore[arg-type]
+        issue_ref=issue_ref,
+    )
+
+
+@dataclass(frozen=True)
+class _Recheck:
+    still_fires: bool | None
+    note: str = "still fires"
+
+
+class _MemoryStore:
+    """A minimal ApprovalStore -- the same shape tests/issues/test_approval.py uses."""
+
+    def __init__(self, records: dict[str, str] | None = None) -> None:
+        self.records = dict(records or {})
+
+    def read(self, identifier: str) -> str | None:
+        return self.records.get(identifier)
+
+
+def _approving_store(handoff: Handoff) -> _MemoryStore:
+    record = {
+        "handoff_id": handoff_id(handoff),
+        "repository": handoff.repository,
+        "evidence_digest": evidence_digest(handoff),
+        "approver": "owner-login",
+        "approved_at": (NOW - timedelta(hours=1)).isoformat(),
+        "expires_at": (NOW + timedelta(days=6)).isoformat(),
+    }
+    return _MemoryStore({handoff_id(handoff): json.dumps(record)})
+
+
+def _accepting_token_verifier(token: str) -> TokenDecision:
+    return TokenDecision(True, token)
+
+
+def file_handoff(handoff: Handoff, **kwargs: Any) -> FileResult:
+    """``file_handoff`` with the owner's approval for ``handoff`` committed, and a fixed
+    ``now`` matching ``_approving_store``'s own clock. These tests are about the other gates; the
+    approval gate's own refusals are in test_approval.py."""
+    kwargs.setdefault("approvals", _approving_store(handoff))
+    kwargs.setdefault("permit", make_permit(handoff.repository, effect="issue_filing"))
+    kwargs.setdefault("verify_token", _accepting_token_verifier)
+    kwargs.setdefault("now", lambda: NOW)
+    return _file_handoff(handoff, **kwargs)
+
+
+def plan_filing(handoff: Handoff, **kwargs: Any) -> Any:
+    kwargs.setdefault("approvals", _approving_store(handoff))
+    kwargs.setdefault("now", lambda: NOW)
+    return _plan_filing(handoff, **kwargs)
+
+
+class _RecordingCreate:
+    """A fake ``WriteFn`` that records every call and returns a fixed response."""
+
     def __init__(self, status_code: int = 201, body: object = None) -> None:
         self.calls: list[tuple[str, str, dict[str, Any]]] = []
         self.status_code = status_code
-        self.body = body
+        self.body = body if body is not None else {"number": 7, "html_url": "https://x/issues/7"}
 
     def __call__(self, url: str, token: str, payload: dict[str, Any]) -> tuple[int, Any]:
         self.calls.append((url, token, payload))
         return self.status_code, self.body
 
 
-def _empty_fetch(url: str, token: str | None) -> tuple[int, Any]:
-    return 200, []
+def _issue_ref(number: int = 7) -> IssueRef:
+    return IssueRef(number=number, url=f"https://x/issues/{number}")
 
 
-def _fetch_with_existing(number: int, fingerprint: str):  # type: ignore[no-untyped-def]
-    marker = fingerprint_marker(fingerprint)
-
-    def fetch(url: str, token: str | None) -> tuple[int, Any]:
-        return 200, [
-            {
-                "number": number,
-                "html_url": f"https://github.com/{OWNER}/{REPO}/issues/{number}",
-                "body": f"text\n\n{marker}\n",
-            }
-        ]
-
-    return fetch
+MARKER = f"<!-- repository-presenter-defect: {FINGERPRINT} -->"
 
 
-def test_write_authorized_is_true_only_for_truthy_values() -> None:
-    assert write_authorized({AUTHORIZATION_VARIABLE: "1"}) is True
-    assert write_authorized({AUTHORIZATION_VARIABLE: "true"}) is True
-    assert write_authorized({AUTHORIZATION_VARIABLE: "YES"}) is True
+# ---------------------------------------------------------------------------
+# write_authorized
+# ---------------------------------------------------------------------------
+
+
+def test_write_authorized_true_for_1_true_or_yes_case_insensitive() -> None:
+    for value in ("1", "true", "True", "TRUE", "yes", "Yes"):
+        assert write_authorized({AUTHORIZATION_VARIABLE: value}) is True
+
+
+def test_write_authorized_false_when_absent_empty_or_any_other_value() -> None:
     assert write_authorized({}) is False
-    assert write_authorized({AUTHORIZATION_VARIABLE: "0"}) is False
     assert write_authorized({AUTHORIZATION_VARIABLE: ""}) is False
+    assert write_authorized({AUTHORIZATION_VARIABLE: "0"}) is False
+    assert write_authorized({AUTHORIZATION_VARIABLE: "false"}) is False
 
 
-def test_file_issue_refuses_without_authorization_no_network_call_made() -> None:
-    def fetch(url: str, token: str | None) -> tuple[int, Any]:
-        raise AssertionError("must not search when not authorized")
+def test_write_authorized_ignores_credential_looking_variables() -> None:
+    """A write-scoped token being present must never itself flip authorization on."""
+    assert write_authorized({"GH_ISSUES_WRITE_TOKEN": "ghp_realtoken1234567890"}) is False
 
-    write = _RecordingWrite()
-    result = file_issue(
-        OWNER,
-        REPO,
-        title="t",
-        body="b",
-        defect_fingerprint=FINGERPRINT,
-        token="ghp_w",
-        authorized=False,
-        fetch=fetch,
-        write=write,
+
+# ---------------------------------------------------------------------------
+# file_handoff: refused before any network call
+# ---------------------------------------------------------------------------
+
+
+def test_unauthorized_makes_no_create_call_at_all() -> None:
+    create = _RecordingCreate()
+    result = file_handoff(_handoff(), token="ghp_write", environment={}, create=create)
+    assert create.calls == []
+    assert result.authorized is False
+    assert result.filed is False
+    assert AUTHORIZATION_VARIABLE in result.reason
+    assert "kill switch" in result.reason
+
+
+def test_authorized_but_no_token_makes_no_create_call() -> None:
+    create = _RecordingCreate()
+    result = file_handoff(
+        _handoff(), token=None, environment={AUTHORIZATION_VARIABLE: "1"}, create=create
     )
+    assert create.calls == []
+    assert result.authorized is True
+    assert result.filed is False
+    assert "token" in result.reason
+
+
+def test_a_non_pending_status_is_refused_even_when_fully_authorized() -> None:
+    create = _RecordingCreate()
+    handoff = _handoff(status="FILED", issue_ref=IssueRef(number=1, url="https://x/issues/1"))
+    result = file_handoff(
+        handoff, token="ghp_write", environment={AUTHORIZATION_VARIABLE: "1"}, create=create
+    )
+    assert create.calls == []
+    assert result.filed is False
+    assert "FILED" in result.reason
+    assert "HANDOFF_PENDING" in result.reason
+
+
+def test_an_acknowledged_handoff_is_also_refused_never_re_filed() -> None:
+    create = _RecordingCreate()
+    handoff = _handoff(status="HANDOFF_ACKNOWLEDGED")
+    result = file_handoff(
+        handoff, token="ghp_write", environment={AUTHORIZATION_VARIABLE: "1"}, create=create
+    )
+    assert create.calls == []
+    assert result.filed is False
+
+
+# ---------------------------------------------------------------------------
+# file_handoff: recheck-before-effect
+# ---------------------------------------------------------------------------
+
+
+def test_recheck_says_no_longer_fires_aborts_the_write() -> None:
+    create = _RecordingCreate()
+    result = file_handoff(
+        _handoff(),
+        token="ghp_write",
+        environment={AUTHORIZATION_VARIABLE: "1"},
+        create=create,
+        recheck=lambda: _Recheck(still_fires=False, note="no longer fires: fixed upstream"),
+    )
+    assert create.calls == []
+    assert result.filed is False
+    assert "no longer fires" in result.reason
+
+
+def test_recheck_inconclusive_aborts_the_write() -> None:
+    create = _RecordingCreate()
+    result = file_handoff(
+        _handoff(),
+        token="ghp_write",
+        environment={AUTHORIZATION_VARIABLE: "1"},
+        create=create,
+        recheck=lambda: _Recheck(still_fires=None, note="inconclusive: network error"),
+    )
+    assert create.calls == []
+    assert result.filed is False
+    assert "inconclusive" in result.reason
+
+
+def test_recheck_confirms_still_fires_and_proceeds_to_file() -> None:
+    create = _RecordingCreate()
+    result = file_handoff(
+        _handoff(),
+        token="ghp_write",
+        environment={AUTHORIZATION_VARIABLE: "1"},
+        create=create,
+        recheck=lambda: _Recheck(still_fires=True),
+    )
+    assert len(create.calls) == 1
+    assert result.filed is True
+
+
+def test_no_recheck_supplied_proceeds_to_file() -> None:
+    """``recheck`` is optional - a caller with no redetector wiring still gets the base gates."""
+    create = _RecordingCreate()
+    result = file_handoff(
+        _handoff(), token="ghp_write", environment={AUTHORIZATION_VARIABLE: "1"}, create=create
+    )
+    assert len(create.calls) == 1
+    assert result.filed is True
+
+
+# ---------------------------------------------------------------------------
+# file_handoff: the authorized write path
+# ---------------------------------------------------------------------------
+
+
+def test_authorized_write_posts_the_suggested_title_and_body() -> None:
+    create = _RecordingCreate()
+    handoff = _handoff()
+    result = file_handoff(
+        handoff, token="ghp_write", environment={AUTHORIZATION_VARIABLE: "1"}, create=create
+    )
+    assert len(create.calls) == 1
+    url, token, payload = create.calls[0]
+    assert url == "https://api.github.com/repos/aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp/issues"
+    assert token == "ghp_write"
+    assert payload["title"] == handoff.suggested_issue_title
+    assert payload["body"].startswith(handoff.suggested_issue_body.rstrip())
+    assert payload["body"].rstrip().endswith(f"<!-- repository-presenter-defect: {FINGERPRINT} -->")
+    assert result.filed is True
+    assert result.issue_ref == IssueRef(number=7, url="https://x/issues/7")
+    assert result.reason == "filed"
+
+
+def test_a_create_failure_is_reported_never_raised() -> None:
+    create = _RecordingCreate(status_code=422, body={"message": "Validation failed"})
+    result = file_handoff(
+        _handoff(), token="ghp_write", environment={AUTHORIZATION_VARIABLE: "1"}, create=create
+    )
+    assert result.filed is False
+    assert "422" in result.reason
+    assert result.issue_ref is None
+
+
+# ---------------------------------------------------------------------------
+# FileResult never leaks the token
+# ---------------------------------------------------------------------------
+
+
+def test_file_result_never_echoes_the_token() -> None:
+    create = _RecordingCreate()
+    result = file_handoff(
+        _handoff(),
+        token="ghp_super_secret_write_token",
+        environment={AUTHORIZATION_VARIABLE: "1"},
+        create=create,
+    )
+    assert isinstance(result, FileResult)
+    assert "ghp_super_secret_write_token" not in repr(result)
+
+
+def test_a_second_call_against_a_filed_handoff_never_double_files() -> None:
+    """The idempotency guard end to end: file once, then simulate the on-disk status update (as
+    a caller's own CLI/script would) and confirm a second call refuses without a network call."""
+    create = _RecordingCreate()
+    handoff = _handoff()
+    first = file_handoff(
+        handoff, token="ghp_write", environment={AUTHORIZATION_VARIABLE: "1"}, create=create
+    )
+    assert first.filed is True
+    refiled = replace(handoff, status="FILED", issue_ref=first.issue_ref)
+    second = file_handoff(
+        refiled, token="ghp_write", environment={AUTHORIZATION_VARIABLE: "1"}, create=create
+    )
+    assert second.filed is False
+    assert len(create.calls) == 1
+
+
+# ---------------------------------------------------------------------------
+# Scheduled-run dedup: the upstream marker, the fail-closed lookup, and the read-only plan
+# ---------------------------------------------------------------------------
+
+
+def test_the_posted_body_carries_the_fingerprint_marker_so_a_later_run_can_find_it() -> None:
+    create = _RecordingCreate()
+    file_handoff(
+        _handoff(), token="ghp_write", environment={AUTHORIZATION_VARIABLE: "1"}, create=create
+    )
+    _, _, payload = create.calls[0]
+    assert payload["body"].startswith("repository-presenter's validation pipeline found this.")
+    assert payload["body"].rstrip().endswith(MARKER)
+
+
+def test_a_body_that_already_carries_the_marker_is_not_given_a_second_one() -> None:
+    create = _RecordingCreate()
+    handoff = replace(_handoff(), suggested_issue_body=f"text\n\n{MARKER}\n")
+    file_handoff(
+        handoff, token="ghp_write", environment={AUTHORIZATION_VARIABLE: "1"}, create=create
+    )
+    assert create.calls[0][2]["body"].count(MARKER) == 1
+
+
+def test_a_second_run_from_a_fresh_checkout_files_nothing_when_the_upstream_issue_exists() -> None:
+    """The local artifact still reads HANDOFF_PENDING (a fresh checkout never kept the FILED
+    write); the upstream issue body alone proves the defect is already filed."""
+    create = _RecordingCreate()
+    result = file_handoff(
+        _handoff(),
+        token="ghp_write",
+        environment={AUTHORIZATION_VARIABLE: "1"},
+        create=create,
+        existing=lambda: _issue_ref(7),
+        recheck=lambda: _Recheck(still_fires=True),
+    )
+    assert create.calls == []
+    assert result.filed is False
+    assert result.error is False
+    assert result.issue_ref == _issue_ref(7)
+    assert "already filed" in result.reason
+
+
+def test_an_inconclusive_upstream_lookup_refuses_to_file_never_assumes_absence() -> None:
+    def broken() -> IssueRef | None:
+        raise RepositoryMetadataError("o/n: GET returned HTTP 403")
+
+    create = _RecordingCreate()
+    result = file_handoff(
+        _handoff(),
+        token="ghp_write",
+        environment={AUTHORIZATION_VARIABLE: "1"},
+        create=create,
+        existing=broken,
+    )
+    assert create.calls == []
     assert result.filed is False
     assert result.issue_ref is None
-    assert write.calls == []
+    assert "inconclusive" in result.reason
 
 
-def test_file_issue_refuses_without_a_token_no_network_call_made() -> None:
-    def fetch(url: str, token: str | None) -> tuple[int, Any]:
-        raise AssertionError("must not search without a token")
-
-    write = _RecordingWrite()
-    result = file_issue(
-        OWNER,
-        REPO,
-        title="t",
-        body="b",
-        defect_fingerprint=FINGERPRINT,
-        token=None,
-        authorized=True,
-        fetch=fetch,
-        write=write,
+def test_an_authorized_create_failure_is_flagged_as_an_error_not_a_refusal() -> None:
+    create = _RecordingCreate(status_code=500, body={"message": "boom"})
+    result = file_handoff(
+        _handoff(), token="ghp_write", environment={AUTHORIZATION_VARIABLE: "1"}, create=create
     )
     assert result.filed is False
-    assert write.calls == []
+    assert result.error is True
 
 
-def test_file_issue_finds_an_already_filed_duplicate_and_never_creates_a_second_one() -> None:
-    write = _RecordingWrite()
-    result = file_issue(
-        OWNER,
-        REPO,
-        title="t",
-        body="b",
-        defect_fingerprint=FINGERPRINT,
-        token="ghp_w",
-        authorized=True,
-        fetch=_fetch_with_existing(99, FINGERPRINT),
-        write=write,
+def test_plan_filing_is_read_only_and_reports_ready_when_nothing_blocks_it() -> None:
+    plan = plan_filing(
+        _handoff(), existing=lambda: None, recheck=lambda: _Recheck(still_fires=True)
     )
+    assert plan.ready is True
+    assert plan.refusal is None
+    assert plan.already_filed is None
+
+
+def test_plan_filing_reports_an_existing_upstream_issue_as_already_filed() -> None:
+    plan = plan_filing(
+        _handoff(), existing=lambda: _issue_ref(7), recheck=lambda: _Recheck(still_fires=True)
+    )
+    assert plan.ready is False
+    assert plan.already_filed == _issue_ref(7)
+
+
+def test_plan_filing_refuses_a_non_pending_handoff_without_any_lookup() -> None:
+    def must_not_run() -> IssueRef | None:
+        raise AssertionError("a lookup must not run for a non-pending handoff")
+
+    plan = plan_filing(_handoff(status="FILED", issue_ref=_issue_ref()), existing=must_not_run)
+    assert plan.refusal is not None
+    assert "not HANDOFF_PENDING" in plan.refusal
+
+
+# ---------------------------------------------------------------------------
+# permit / token-provenance integration (file_handoff's own gate ordering)
+# ---------------------------------------------------------------------------
+
+
+def test_a_permit_for_another_effect_or_repository_is_refused() -> None:
+    with pytest.raises(ValueError, match="permit"):
+        file_handoff(
+            _handoff(),
+            token="ghp_write",
+            environment={AUTHORIZATION_VARIABLE: "1"},
+            create=_RecordingCreate(),
+            permit=make_permit("someone/else", effect="issue_filing"),
+        )
+    with pytest.raises(ValueError, match="permit"):
+        file_handoff(
+            _handoff(),
+            token="ghp_write",
+            environment={AUTHORIZATION_VARIABLE: "1"},
+            create=_RecordingCreate(),
+            permit=make_permit(REPO, effect="readme_proposal"),
+        )
+
+
+def test_an_unverified_write_token_is_refused_before_any_write() -> None:
+    create = _RecordingCreate()
+
+    def refusing(token: str) -> TokenDecision:
+        return TokenDecision(False, token, reason="not an installation token")
+
+    result = file_handoff(
+        _handoff(),
+        token="ghp_write",
+        environment={AUTHORIZATION_VARIABLE: "1"},
+        create=create,
+        verify_token=refusing,
+    )
+    assert create.calls == []
     assert result.filed is False
-    assert result.issue_ref is not None
-    assert result.issue_ref.number == 99
-    assert write.calls == []  # the duplicate-filing guard: no POST is ever made
-
-
-def test_file_issue_creates_a_new_issue_with_the_marker_appended_when_none_exists() -> None:
-    write = _RecordingWrite(
-        status_code=201,
-        body={"number": 101, "html_url": f"https://github.com/{OWNER}/{REPO}/issues/101"},
-    )
-    result = file_issue(
-        OWNER,
-        REPO,
-        title="OBJ export drops material indices",
-        body="Steps to reproduce...",
-        defect_fingerprint=FINGERPRINT,
-        token="ghp_w",
-        authorized=True,
-        fetch=_empty_fetch,
-        write=write,
-    )
-    assert result.filed is True
-    assert result.issue_ref is not None
-    assert result.issue_ref.number == 101
-    assert len(write.calls) == 1
-    _, _, payload = write.calls[0]
-    assert fingerprint_marker(FINGERPRINT) in payload["body"]
+    assert "write token refused" in result.reason
