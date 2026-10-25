@@ -1891,6 +1891,14 @@ entries:
       needs_compiler failures in tests/extractors/platforms/test_cpp_examples.py, confirmed via
       git stash to already fail identically on cef9b2a with none of this session's changes
       present -- environment-dependent, not a regression), 11 skipped.
+    raw_calls_filename_added_2026_10_25: >
+      Added RAW_CALLS_FILENAME = "raw_calls.json" to
+      src/repo_presenter/readme/composition/authoring.py as step 4 of
+      PORT_BUNDLE_INTEGRITY_LAYER's step-2 plan -- filename constant only, not
+      write_raw_calls/seed_additional_calls, both of which depend on the old repo's
+      repair/rounds.py batch-call machinery (not ported, no decision made to port). This belongs
+      to the same component grouping as capture.py/noop_proof.py above (all four are pieces
+      seal.py's own REQUIRED/OPTIONAL artifact checks reference).
     next_step: >
       Decide whether to wire pinned_read_only_clone() + capture_snapshot()/verify_snapshot()
       into this session's own clone workflow (every portfolio clone so far used a plain

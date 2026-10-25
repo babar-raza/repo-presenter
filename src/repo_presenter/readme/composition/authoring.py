@@ -53,6 +53,9 @@ from repo_presenter.readme.composition.text_hygiene import hygiene_errors
 from repo_presenter.readme.evidence.facts.links import link_text
 
 CONTENT_UNITS_FILENAME = "content_units.json"
+# Filename only (ADD, 2026-10-25): a future seal.py port checks this as an optional bundle
+# artifact. write_raw_calls itself depends on repair/rounds.py's batch-call machinery, not ported.
+RAW_CALLS_FILENAME = "raw_calls.json"
 AUTHORED_SECTIONS: tuple[str, ...] = tuple(
     section.id for section in SEMANTIC_SHELL if section.owner != "D" and section.id != "at_a_glance"
 )
