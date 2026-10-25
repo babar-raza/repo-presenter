@@ -1376,6 +1376,14 @@ next_ready_items:
       cli.py (4,828 lines), tools/github_app/, docs/CREDENTIAL_ROTATION_RUNBOOK.md,
       ops/issue_approvals/; project/state.yaml's own active_work_item (P2_REAL_ENGINE_SALVAGE,
       IN_PROGRESS).
+    confirmed_independently_2026_10_25: >
+      PORT_BUNDLE_INTEGRITY_LAYER's own step_6 (above) read seal.py's full 1,203 lines and
+      independently reconfirmed this card's core finding from a second angle: seal.py's whole
+      no-op-proof model needs exactly one ledger per sealed transaction, but this repository's
+      own invocation_wiring_done_2026_10_24 decision deliberately wired five separate per-script
+      ledgers instead, precisely because no present-equivalent single process exists yet. Two
+      independent readings (this card's workflow/CLI reading, that card's seal.py reading) now
+      converge on the same orchestrator decision as the one thing both are blocked on.
 
   - id: PORT_BUNDLE_INTEGRITY_LAYER
     status: IN_PROGRESS
@@ -1539,19 +1547,56 @@ next_ready_items:
       (tests/readme/review/test_independent_reviewer.py, 21 total in that file). Full suite
       re-run clean: 1634 passed, 11 skipped, 5 deselected (pre-existing unrelated
       needs_compiler failures).
+    step_6_done_2026_10_25_seal_py_adaptation_is_blocked_not_just_unplanned: >
+      Did the planning pass next_step (1) called for: read seal.py's own full 1,203 lines
+      directly (not just its import list, which step 2 already checked). CORRECTED FINDING,
+      more serious than step 2's "needs a dedicated planning pass" framing suggested: seal.py's
+      adaptation is not an independently schedulable design task. It is blocked on the exact
+      same undecided question GITHUB_ACTIONS_HOSTING_GAP_2026_10_24 already named
+      BLOCKED_NEEDS_OWNER_DECISION -- whether this repository builds a present-equivalent
+      single-process orchestrator -- for two concrete, newly-confirmed reasons, not assumed:
+      (1) seal_candidate()'s entire I/O model is built around ONE ``transaction: Path``: a
+      single staging directory holding every artifact for one repository's one cascade run
+      together (facts.json, dispositions.json, plan.json, validation.json, review.json,
+      calls.jsonl, all siblings under one directory). This repository has no such directory --
+      its real evidence is deliberately split across scripts/_lane_r_output/<repo>/ (render
+      output) and evidence/build/<phase>/<repo>/ (facts/handoffs), a split this project chose on
+      its own terms, not an oversight to paper over with a path-remapping adapter.
+      (2) Far more serious: seal_candidate()'s whole no-op-proof model
+      (measure_invocation/reconcile_ledger against inputs.transaction / LEDGER_FILENAME) assumes
+      exactly ONE ledger holds every provider call for the whole sealed unit. This repository's
+      own invocation_wiring_done_2026_10_24 decision (above) deliberately wired FIVE separate
+      Invocation/Ledger pairs per repository cascade -- one per script
+      (investigation/reconciliation/planning/authoring_real/coherence) -- precisely because no
+      present-equivalent single process exists to hold one ledger. seal.py's no-op proof cannot
+      be pointed at "a" ledger for a repository; there isn't one. Reconciling this needs either
+      the present-equivalent orchestrator (one process, one ledger, matching the old repo
+      exactly) or a genuinely new, undesigned mechanism to aggregate proof across five separate
+      per-script invocations -- neither exists, and inventing the second without owner input
+      would be exactly the kind of unplanned from-scratch build the owner's own discipline
+      warns against.
+      Also confirms candidates.py's own port (next_step 2 below) is blocked the same way,
+      exactly as GITHUB_ACTIONS_HOSTING_GAP_2026_10_24's own next_step (3) already flagged
+      ("before porting core/candidates.py, re-check whether a sealed bundle's durable commit
+      target is the working tree or the dedicated git-ref namespace") -- not a separate,
+      independently-resolvable gap.
+      What this planning pass does NOT change: steps 3-5 above (capture.py, noop_proof.py's
+      ledger reconciliation, RAW_CALLS_FILENAME, the review-verdict artifact) are all real,
+      independently useful, already-committed work, each usable on its own regardless of how
+      the orchestrator question resolves -- none of it is wasted by this finding.
     next_step: >
-      In order: (1) adapt seal.py's own logic against this repository's REAL artifact shapes
+      BLOCKED on GITHUB_ACTIONS_HOSTING_GAP_2026_10_24's own owner decision (present-equivalent
+      orchestrator vs. a redesigned multi-ledger no-op-proof mechanism) -- not a task this card
+      can schedule independently any further. Once that decision lands: (1) if the orchestrator
+      is built, seal.py adapts close to verbatim (its own transaction/ledger assumptions become
+      true again) against this repository's real artifact names
       (facts.json/dispositions.json/plan.json/content_units.coherent.json/README.coherent.md/
-      review_verdict.json/llm_cache/*), never the old repo's validation.json/review.json shape
-      -- review_verdict.json now exists and names where it lives, closing the one gap that
-      previously blocked this; (2) port core/candidates.py with a falsifier proving it never
-      touches legacy evidence. Both are larger work and should not be rushed per the owner's
-      own "plan carefully before building from scratch" directive -- not started this tick;
-      (1) in particular still needs a dedicated planning pass against seal.py's full 1,203
-      lines before any write_paths commitment, since this repository's facts/dispositions/plan
-      artifacts split across two directories (scripts/_lane_r_output/ vs.
-      evidence/build/<phase>/<repo>/) in a way seal.py's own single-bundle-directory model does
-      not anticipate.
+      review_verdict.json/llm_cache/*), never the old repo's validation.json/review.json shape;
+      (2) if a multi-ledger design is chosen instead, seal.py needs a genuine rewrite of its
+      no-op-proof aggregation, not an adaptation -- a separate, larger, not-yet-scoped task; (3)
+      either way, port core/candidates.py afterward, with a falsifier proving it never touches
+      legacy evidence. Nothing here should be started before that owner decision, per the
+      owner's own "plan carefully before building from scratch" directive.
     write_paths_planned: [src/repo_presenter/core/noop_proof.py (steps 1 + 3, DONE),
       src/repo_presenter/core/snapshot/capture.py (step 3, DONE),
       src/repo_presenter/readme/composition/authoring.py (step 4, DONE -- filename constant only),

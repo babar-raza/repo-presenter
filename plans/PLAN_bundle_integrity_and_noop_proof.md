@@ -468,3 +468,26 @@ against this repository's real `REQUIRED_ARTIFACTS` shape (`facts.json`, `dispos
 the owner's own "plan carefully before building from scratch" directive asks for, applied to a
 genuinely large remaining piece -- recorded precisely so the next session does not have to
 re-derive it, and does not inherit the first read's overly pessimistic (and wrong) conclusion.
+
+## seal.py's full read, 2026-10-25 — adaptation is blocked, not just unplanned
+
+Read seal.py's full 1,203 lines (step 2 above only checked its import list). Two concrete,
+previously-unconfirmed reasons its adaptation is blocked on the same orchestrator decision
+`GITHUB_ACTIONS_HOSTING_GAP_2026_10_24` already flags, not an independently schedulable design
+task:
+
+1. `seal_candidate()`'s whole I/O model assumes one `transaction: Path` — a single staging
+   directory holding every artifact for one repository's one cascade run together. This
+   repository's real evidence is deliberately split across `scripts/_lane_r_output/<repo>/`
+   (render output) and `evidence/build/<phase>/<repo>/` (facts/handoffs) — a chosen architecture,
+   not an oversight a path-remapping adapter should paper over.
+2. More seriously: `seal_candidate()`'s no-op-proof model (`measure_invocation`/
+   `reconcile_ledger` against `inputs.transaction / LEDGER_FILENAME`) needs exactly one ledger
+   per sealed transaction. This repository's own 2026-10-24 invocation-wiring decision
+   deliberately wired FIVE separate `Invocation`/`Ledger` pairs per repository cascade — one per
+   script — precisely because no present-equivalent single process exists. There is no single
+   "the ledger" to point seal.py's proof at.
+
+Full detail: `project/state.yaml`'s `PORT_BUNDLE_INTEGRITY_LAYER` step_6 and
+`docs/DECISION_LOG.md`'s 2026-10-25 entry. Not started this tick, correctly: this needs the
+owner's orchestrator decision first.

@@ -173,3 +173,39 @@ deferred to the next real cascade run rather than fabricated).
 (corrected salvage sizing, full CLI/gap findings) and `PORT_BUNDLE_INTEGRITY_LAYER` (the
 invocation-wiring record); `plans/PLAN_bundle_integrity_and_noop_proof.md`'s "Invocation-scope
 question resolved" section (full reasoning).
+
+---
+
+## 2026-10-25: seal.py's adaptation is blocked on the orchestrator decision, not an independent planning task
+
+**Decision**: do not attempt to adapt `readme/bundle/seal.py` against this repository's real
+artifact shapes yet. A full read of its 1,203 lines (not just its import list, already checked
+2026-10-25) found two concrete reasons its adaptation is blocked on the exact same undecided
+question `GITHUB_ACTIONS_HOSTING_GAP_2026_10_24` already named `BLOCKED_NEEDS_OWNER_DECISION`
+(build a `present`-equivalent single-process orchestrator, or not): (1) `seal_candidate()`'s
+entire I/O model assumes one `transaction: Path` — a single staging directory holding every
+artifact for one repository's one cascade run together — which this repository's deliberately
+split evidence layout (`scripts/_lane_r_output/<repo>/` vs. `evidence/build/<phase>/<repo>/`)
+does not have; (2) more seriously, `seal_candidate()`'s whole no-op-proof model needs exactly one
+ledger per sealed transaction, but this repository's own 2026-10-24 invocation-wiring decision
+deliberately wired five separate per-script ledgers instead, precisely because no
+present-equivalent single process exists yet to hold one. Did build and commit, independently of
+this finding, the smaller pieces that remain useful regardless of how the orchestrator question
+resolves: `core/snapshot/capture.py`, `noop_proof.py`'s ledger-reconciliation functions, the
+`RAW_CALLS_FILENAME` constant, and a new `REVIEWER_LOGIC_VERSION` + persisted
+`review_verdict.json` artifact for `independent_reviewer.py`.
+
+**Why**: the owner's own "plan carefully before building from scratch" directive. Adapting
+seal.py around a transaction/ledger shape that does not exist here would mean either quietly
+assuming the orchestrator already exists (it does not) or inventing a new, undesigned multi-ledger
+aggregation mechanism unasked — exactly the kind of unplanned from-scratch build that directive
+warns against.
+
+**What this does NOT decide**: whether to build the `present`-equivalent orchestrator or redesign
+the no-op proof for multiple per-script ledgers instead — both remain open, as
+`GITHUB_ACTIONS_HOSTING_GAP_2026_10_24` already says. Does not touch `core/candidates.py`, which
+is blocked the same way (that card's own next_step (3) already said so).
+
+**Where the detail lives**: `project/state.yaml`'s `PORT_BUNDLE_INTEGRITY_LAYER` (`step_6_done_
+2026_10_25_seal_py_adaptation_is_blocked_not_just_unplanned`) and `GITHUB_ACTIONS_HOSTING_GAP_
+2026_10_24` (`confirmed_independently_2026_10_25`); `plans/PLAN_bundle_integrity_and_noop_proof.md`.
