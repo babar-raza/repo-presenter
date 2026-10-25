@@ -15,6 +15,12 @@ owner acceptance, and SALVAGE_INVENTORY_2026_10_23 confirmed no independent revi
 this repository before BUILD_INDEPENDENT_REVIEWER. A REJECT found here is a new finding against
 mission non-negotiable #3 ("consumed-scope invalidation only"), not a global reseal.
 
+Writes two artifacts: the portfolio-wide REPORT_PATH below (unchanged), and, per repository,
+``review_verdict.json`` beside its other final cascade output (PORT_BUNDLE_INTEGRITY_LAYER's own
+named gap -- a ReviewVerdict was computed but never persisted per repository before now, only
+folded into the portfolio aggregate). The per-repository file is what a future seal.py adaptation
+would actually seal.
+
 Usage:
     python scripts/run_independent_review.py
 """
@@ -29,7 +35,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from repo_presenter.core.facts import read_facts
-from repo_presenter.readme.review.independent_reviewer import review_candidate
+from repo_presenter.readme.review.independent_reviewer import (
+    REVIEW_VERDICT_FILENAME,
+    review_candidate,
+    write_review_verdict,
+)
 
 LANE_R_OUTPUT = Path("scripts/_lane_r_output")
 FACTS_ROOT = Path("evidence/build/P2_REAL_ENGINE_SALVAGE")
@@ -94,6 +104,7 @@ def main() -> None:
         verdict = review_candidate(
             readme_text=readme_text, units=units, facts=facts, dispositions=dispositions
         )
+        write_review_verdict(verdict, out_dir / REVIEW_VERDICT_FILENAME)
         reviewed += 1
         if verdict.verdict == "REJECT":
             rejected += 1

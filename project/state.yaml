@@ -1513,21 +1513,53 @@ next_ready_items:
       its test suites (test_authoring.py, test_authoring_retry.py) unaffected (26 passed). Full
       suite re-run clean: 1627 passed, 11 skipped, 5 deselected (the pre-existing unrelated
       needs_compiler failures already confirmed on cef9b2a).
+    step_5_done_2026_10_25_review_verdict_artifact: >
+      Designed and built next_step item (1): independent_reviewer.py gets its own
+      REVIEWER_LOGIC_VERSION = "1" constant (bump whenever review_candidate's rule set or
+      _fold's fold condition changes meaning -- the same contract composition/authoring.py's
+      NORMALISATION_VERSION and composition/renderer.py's RENDERER_VERSION already serve for
+      their own stages; NOT a port of the old repo's own REVIEWER_LOGIC_VERSION, which versions
+      a 2,996-line judged/unjudged replay model this repository's v1 reviewer does not have).
+      Added write_review_verdict/load_review_verdict + ReviewVerdictError to
+      independent_reviewer.py itself (REVIEW_VERDICT_FILENAME = "review_verdict.json"),
+      following issues/model.py's write_handoff/load_handoff convention. load_review_verdict
+      fails closed on a malformed shape AND on a verdict/findings pair that doesn't match
+      _fold's own invariant (an artifact claiming ACCEPT while carrying a deterministic
+      refutation is refused, never silently trusted) -- it deliberately does NOT fail closed on
+      a reviewer_logic_version mismatch, since currency is a question for whatever future
+      recheck/seal layer calls this, not a parse error to hide here.
+      Decided where to write it: scripts/_lane_r_output/<repo>/review_verdict.json, beside
+      content_units.coherent.json/README.coherent.md -- the "final persisted cascade output"
+      directory independent_reviewer.py's own docstring already names, not
+      evidence/build/<phase>/<repo>/ (which holds facts.json/handoff.json, a different kind of
+      durable record). Wired scripts/run_independent_review.py to write it for real, alongside
+      the portfolio-wide report it already wrote, and re-ran it for real: identical result to
+      the prior run (31 reviewed, 1 REJECT, 30 ACCEPT, 3 not yet reviewable), with 31 real
+      review_verdict.json files now on disk, each round-trip-readable. 7 new tests
+      (tests/readme/review/test_independent_reviewer.py, 21 total in that file). Full suite
+      re-run clean: 1634 passed, 11 skipped, 5 deselected (pre-existing unrelated
+      needs_compiler failures).
     next_step: >
-      In order: (1) design (not port) a version constant for independent_reviewer.py and a
-      per-repository persisted review-verdict artifact (new work, not ported from anything); (2)
-      only then adapt seal.py's own logic against this repository's REAL artifact shapes
+      In order: (1) adapt seal.py's own logic against this repository's REAL artifact shapes
       (facts.json/dispositions.json/plan.json/content_units.coherent.json/README.coherent.md/
-      llm_cache/*), never the old repo's validation.json/review.json shape; (3) port
-      core/candidates.py with a falsifier proving it never touches legacy evidence. All three
-      are design/larger work and should not be rushed per the owner's own "plan carefully before
-      building from scratch" directive -- not started this tick; needs a dedicated planning
-      pass before any write_paths commitment.
+      review_verdict.json/llm_cache/*), never the old repo's validation.json/review.json shape
+      -- review_verdict.json now exists and names where it lives, closing the one gap that
+      previously blocked this; (2) port core/candidates.py with a falsifier proving it never
+      touches legacy evidence. Both are larger work and should not be rushed per the owner's
+      own "plan carefully before building from scratch" directive -- not started this tick;
+      (1) in particular still needs a dedicated planning pass against seal.py's full 1,203
+      lines before any write_paths commitment, since this repository's facts/dispositions/plan
+      artifacts split across two directories (scripts/_lane_r_output/ vs.
+      evidence/build/<phase>/<repo>/) in a way seal.py's own single-bundle-directory model does
+      not anticipate.
     write_paths_planned: [src/repo_presenter/core/noop_proof.py (steps 1 + 3, DONE),
       src/repo_presenter/core/snapshot/capture.py (step 3, DONE),
       src/repo_presenter/readme/composition/authoring.py (step 4, DONE -- filename constant only),
-      src/repo_presenter/core/candidates.py (next_step 3),
-      src/repo_presenter/readme/bundle/seal.py (next_step 2 adaptation),
+      src/repo_presenter/readme/review/independent_reviewer.py (step 5, DONE -- version
+      constant + write_review_verdict/load_review_verdict),
+      scripts/run_independent_review.py (step 5, DONE -- wired to write the new artifact),
+      src/repo_presenter/core/candidates.py (next_step 2),
+      src/repo_presenter/readme/bundle/seal.py (next_step 1 adaptation),
       src/repo_presenter/readme/bundle/recheck.py (later steps, extends the existing port)]
     source_refs: >
       docs/DECISION_LOG.md's 2026-10-24 entry; plans/PLAN_bundle_integrity_and_noop_proof.md;

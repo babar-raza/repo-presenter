@@ -1891,6 +1891,19 @@ entries:
       needs_compiler failures in tests/extractors/platforms/test_cpp_examples.py, confirmed via
       git stash to already fail identically on cef9b2a with none of this session's changes
       present -- environment-dependent, not a regression), 11 skipped.
+    review_verdict_artifact_added_2026_10_25: >
+      Added REVIEWER_LOGIC_VERSION + write_review_verdict/load_review_verdict to
+      src/repo_presenter/readme/review/independent_reviewer.py, and wired
+      scripts/run_independent_review.py to write review_verdict.json per repository
+      (scripts/_lane_r_output/<repo>/) alongside its existing portfolio-wide report -- step 5 of
+      PORT_BUNDLE_INTEGRITY_LAYER's step-2 plan. This is design work, not a port: the old repo's
+      own REVIEWER_LOGIC_VERSION versions a 2,996-line judged/unjudged replay model
+      (review.py/judge.py) already disqualified from a verbatim port (BUILD_INDEPENDENT_REVIEWER);
+      only the PURPOSE (a version tag + a persisted per-repository artifact a future seal.py
+      adaptation can seal) was carried over, built fresh against this repository's own v1
+      reviewer. Re-ran scripts/run_independent_review.py for real: identical result to the prior
+      run (31 reviewed, 1 REJECT, 30 ACCEPT), with 31 real review_verdict.json files now on disk.
+      7 new tests; full suite re-run clean (1634 passed, 11 skipped, 5 deselected).
     raw_calls_filename_added_2026_10_25: >
       Added RAW_CALLS_FILENAME = "raw_calls.json" to
       src/repo_presenter/readme/composition/authoring.py as step 4 of

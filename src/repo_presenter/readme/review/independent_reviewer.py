@@ -58,8 +58,11 @@ re-opens other than the one candidate actually found defective.
 
 from __future__ import annotations
 
+import hashlib
+import json
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
+from pathlib import Path
 from typing import Any, Literal
 
 from repo_presenter.core.facts import FactsDocument
@@ -69,6 +72,17 @@ from repo_presenter.readme.validation.claims import claim_findings
 
 RuleKind = Literal["deterministic", "judgment"]
 Verdict = Literal["ACCEPT", "REJECT"]
+
+#: Bump whenever review_candidate's rule set, a rule's own matching logic, or _fold's fold
+#: condition changes meaning (the same contract composition/authoring.py's NORMALISATION_VERSION
+#: and composition/renderer.py's RENDERER_VERSION already serve for their own stages). A future
+#: seal.py adaptation (PORT_BUNDLE_INTEGRITY_LAYER, project/state.yaml) reads this from a sealed
+#: review_verdict.json to decide whether a candidate's verdict was computed under today's
+#: reviewer logic or needs a fresh review -- mirroring the old repo's own REVIEWER_LOGIC_VERSION,
+#: not ported verbatim (that one versions a 2,996-line judged/unjudged replay model this
+#: repository's own v1 reviewer does not have).
+REVIEWER_LOGIC_VERSION = "1"
+REVIEW_VERDICT_FILENAME = "review_verdict.json"
 
 
 @dataclass(frozen=True)
@@ -206,3 +220,78 @@ def review_candidate(
         *duplicate_opening_paragraph_rule(units, dispositions=dispositions, facts=facts),
     ]
     return ReviewVerdict(verdict=_fold(findings), findings=tuple(findings))
+
+
+class ReviewVerdictError(ValueError):
+    """A persisted review-verdict artifact does not have the shape this module can read back."""
+
+
+def write_review_verdict(verdict: ReviewVerdict, path: Path) -> str:
+    """Persist one candidate's verdict as the durable, sealable artifact a future seal.py
+    adaptation names (PORT_BUNDLE_INTEGRITY_LAYER's own gap: ``ReviewVerdict`` was computed but
+    never written to disk per repository, only folded into a portfolio-wide aggregate). Returns
+    the sha256 of the bytes written, matching composition/authoring.py's
+    ``write_content_units``/issues/model.py's ``write_handoff`` convention."""
+    document = {
+        "schema_version": 1,
+        "reviewer_logic_version": REVIEWER_LOGIC_VERSION,
+        "verdict": verdict.verdict,
+        "findings": [asdict(finding) for finding in verdict.findings],
+    }
+    data = (json.dumps(document, indent=2, sort_keys=True, ensure_ascii=False) + "\n").encode(
+        "utf-8"
+    )
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(data)
+    return hashlib.sha256(data).hexdigest()
+
+
+def load_review_verdict(path: Path) -> ReviewVerdict:
+    """Read back a ``write_review_verdict`` artifact. Fails closed on a shape this module cannot
+    safely reconstruct a ``Finding``/``Refutation`` from -- never on a ``reviewer_logic_version``
+    mismatch, which is a currency question for the caller (a future recheck/seal layer), not a
+    parse error this function should hide or judge."""
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ReviewVerdictError(f"{path}: cannot read/parse as JSON: {exc}") from exc
+    if not isinstance(payload, dict):
+        raise ReviewVerdictError(f"{path}: top level must be a JSON object")
+    try:
+        verdict = payload["verdict"]
+        raw_findings = payload["findings"]
+    except KeyError as exc:
+        raise ReviewVerdictError(f"{path}: missing required field {exc}") from exc
+    if verdict not in ("ACCEPT", "REJECT"):
+        raise ReviewVerdictError(f"{path}: unknown verdict {verdict!r}")
+    if not isinstance(raw_findings, list):
+        raise ReviewVerdictError(f"{path}: findings must be a list")
+    findings = []
+    for raw in raw_findings:
+        if not isinstance(raw, dict):
+            raise ReviewVerdictError(f"{path}: each finding must be an object")
+        kind = raw["kind"]
+        if kind not in ("deterministic", "judgment"):
+            raise ReviewVerdictError(f"{path}: unknown finding kind {kind!r}")
+        raw_refutation = raw.get("refuted_by")
+        refutation = (
+            None
+            if raw_refutation is None
+            else Refutation(rule=raw_refutation["rule"], evidence=raw_refutation["evidence"])
+        )
+        findings.append(
+            Finding(
+                rule=raw["rule"],
+                kind=kind,
+                message=raw["message"],
+                refuted_by=refutation,
+                quote=raw.get("quote", ""),
+            )
+        )
+    reconstructed = ReviewVerdict(verdict=verdict, findings=tuple(findings))
+    if reconstructed.verdict != _fold(reconstructed.findings):
+        raise ReviewVerdictError(
+            f"{path}: persisted verdict {reconstructed.verdict!r} does not match _fold of its "
+            "own findings -- the artifact is internally inconsistent"
+        )
+    return reconstructed

@@ -14,15 +14,20 @@ from __future__ import annotations
 
 from repo_presenter.core.facts import Evidence, Fact, FactsDocument
 from repo_presenter.readme.review.independent_reviewer import (
+    REVIEWER_LOGIC_VERSION,
     Finding,
     Refutation,
     ReviewVerdict,
+    ReviewVerdictError,
     _fold,
     claim_contradiction_rule,
     duplicate_opening_paragraph_rule,
+    load_review_verdict,
     review_candidate,
+    write_review_verdict,
 )
 
+import json
 import pytest
 
 REVISION = "a" * 40
@@ -269,3 +274,100 @@ def test_falsifier_a_quoted_span_matching_a_supported_fact_elsewhere_still_rejec
         readme_text=readme, units=[], facts=_facts(*NET), dispositions={"dispositions": []}
     )
     assert verdict.verdict == "REJECT"
+
+
+# ---------------------------------------------------------------------------
+# persisting a verdict (PORT_BUNDLE_INTEGRITY_LAYER's own named gap: a ReviewVerdict was
+# computed but never written per repository before now)
+# ---------------------------------------------------------------------------
+
+
+def test_write_then_load_round_trips_an_accept_verdict_with_no_findings(tmp_path) -> None:
+    verdict = ReviewVerdict(verdict="ACCEPT", findings=())
+    path = tmp_path / "review_verdict.json"
+    write_review_verdict(verdict, path)
+    assert load_review_verdict(path) == verdict
+
+
+def test_write_then_load_round_trips_a_reject_verdict_with_mixed_findings(tmp_path) -> None:
+    verdict = ReviewVerdict(
+        verdict="REJECT",
+        findings=(
+            Finding(rule="style_note", kind="judgment", message="a bit verbose"),
+            Finding(
+                rule="claim_contradiction",
+                kind="deterministic",
+                message="stale version",
+                refuted_by=Refutation(rule="claim_contradiction", evidence="26.1.0 != 26.9.0"),
+                quote="version 26.1.0",
+            ),
+        ),
+    )
+    path = tmp_path / "review_verdict.json"
+    write_review_verdict(verdict, path)
+    assert load_review_verdict(path) == verdict
+
+
+def test_the_persisted_artifact_carries_the_reviewer_logic_version(tmp_path) -> None:
+    path = tmp_path / "review_verdict.json"
+    write_review_verdict(ReviewVerdict(verdict="ACCEPT", findings=()), path)
+    document = json.loads(path.read_text(encoding="utf-8"))
+    assert document["reviewer_logic_version"] == REVIEWER_LOGIC_VERSION
+
+
+def test_write_review_verdict_returns_the_sha256_of_the_bytes_it_wrote(tmp_path) -> None:
+    import hashlib
+
+    path = tmp_path / "review_verdict.json"
+    digest = write_review_verdict(ReviewVerdict(verdict="ACCEPT", findings=()), path)
+    assert digest == hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def test_load_fails_closed_on_a_verdict_that_does_not_match_its_own_findings(tmp_path) -> None:
+    """An artifact claiming ACCEPT while carrying a deterministic refutation is internally
+    inconsistent -- exactly the shape _fold's own invariant forbids being produced honestly, so
+    a load must refuse it rather than silently trust the stored ``verdict`` field."""
+    path = tmp_path / "review_verdict.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "reviewer_logic_version": REVIEWER_LOGIC_VERSION,
+                "verdict": "ACCEPT",
+                "findings": [
+                    {
+                        "rule": "claim_contradiction",
+                        "kind": "deterministic",
+                        "message": "stale version",
+                        "refuted_by": {"rule": "claim_contradiction", "evidence": "x"},
+                        "quote": "",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    with pytest.raises(ReviewVerdictError, match="does not match"):
+        load_review_verdict(path)
+
+
+def test_load_fails_closed_on_an_unknown_finding_kind(tmp_path) -> None:
+    path = tmp_path / "review_verdict.json"
+    path.write_text(
+        json.dumps(
+            {
+                "verdict": "ACCEPT",
+                "findings": [{"rule": "x", "kind": "mystery", "message": "m"}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    with pytest.raises(ReviewVerdictError, match="unknown finding kind"):
+        load_review_verdict(path)
+
+
+def test_load_fails_closed_on_malformed_json(tmp_path) -> None:
+    path = tmp_path / "review_verdict.json"
+    path.write_text("not json", encoding="utf-8")
+    with pytest.raises(ReviewVerdictError, match="cannot read/parse"):
+        load_review_verdict(path)
