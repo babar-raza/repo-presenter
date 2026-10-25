@@ -2567,27 +2567,51 @@ next_ready_items:
       Proves the one property no per-script test ever could: every one of those 9 calls lands in
       the SAME ledger.jsonl file under the SAME invocation_id. 1635/1635 passed, 11 skipped, 5
       pre-existing unrelated needs_compiler failures already confirmed unrelated.
-    not_yet_done: >
-      NOT yet live-demonstrated against a real clone + the real GPT_OSS gateway (credentials are
-      available in this environment, confirmed). Deliberately not forced this tick: every
-      repository with a real facts.json already has a prior six-script cascade's own real
-      scripts/_lane_r_output/<repo>/ (gitignored working output, including its own CallStore),
-      and a live run_cascade call against one would partly reuse that store's cached calls
-      rather than cleanly prove fresh end-to-end gateway behavior; a repository with no prior
-      cascade (aspose-gis-foss/Aspose.GIS.FOSS-for-.Net, cloned but never extracted) has no
-      facts.json yet, which is a separate, earlier (S1/S2 extraction) stage not in scope here.
-      The first real live run_cascade call will happen naturally on the next real extraction +
-      cascade pass, the same honest deferral pattern this session already used for
-      verify_noop_pair. close_handoff/comment_on_filed-style follow-ons are unaffected.
+    live_demonstrated_2026_10_25: >
+      Ran scripts/run_cascade.py for real against aspose-3d-foss/Aspose.3D-FOSS-for-.NET (net):
+      a real existing clone (52b0f00e..., matching the already-drafted RVM/U3D/AMF/HTML5 handoff's
+      own pinned revision) with a real README.md and a real, never-before-cascaded facts.json
+      (3,606 facts) -- genuinely fresh, not reusing any prior six-script CallStore.
+      REAL PROCESS MISTAKE, reported honestly rather than smoothed over: the first launch was
+      backgrounded via both the harness's own run_in_background AND a shell `&`, which
+      double-detached it -- the harness's "completed, exit code 0" notification reported the
+      outer launcher shell returning (near-instant, since `&` itself is non-blocking), not the
+      actual python process finishing. Believing it had exited, a second, identical run_cascade
+      call was started moments later against the SAME repository and SAME output directory. Both
+      processes ran concurrently for about 8.5 minutes (06:00:38-06:09:17 UTC), confirmed by two
+      distinct invocation_ids genuinely interleaved in the one real ledger.jsonl with overlapping
+      real timestamps. Consequence, read directly from the ledger, not estimated: investigation
+      and reconciliation (3 calls) were safely cache-reused by the second-starting process from
+      the first's own real results (no waste there), but presentation_planning and ~8 of the
+      section_authoring calls raced before either process had written its result, so each made
+      its own separate real duplicate provider call -- real, avoidable extra API spend, roughly
+      doubling the cost of those specific calls. No corruption resulted: the later-finishing
+      process (the originally-backgrounded one, pid 4036, its own invocation record confirms
+      started_at 06:00:38Z/finished_at 06:09:17Z) completed its own full, coherent write
+      sequence last, so the final on-disk state (review_verdict.json: ACCEPT, 0 findings;
+      README.coherent.md: a real, well-formed 630-line-README-derived candidate correctly
+      NOT overclaiming RVM/U3D/AMF/HTML5) is self-consistent, not a mixed/partial write.
+      Lesson recorded, not just the mistake: never combine shell `&` with the harness's own
+      run_in_background for a real-cost operation; verify actual completion from the real
+      artifact/invocation-record state on disk, not from a launcher-shell notification alone.
+      This IS the real live demonstration PORT_BUNDLE_INTEGRITY_LAYER/GITHUB_ACTIONS_HOSTING_GAP
+      both needed -- a real orchestrator run, one shared ledger per invocation (both of the two
+      accidental concurrent ones independently held that property correctly), real schema/check
+      validation against the live gateway (2 real rejection-then-reask cycles happened for real,
+      both recovered correctly), a real ACCEPT verdict. aspose-3d-foss/Aspose.3D-FOSS-for-.NET
+      now has real Lane R output under scripts/_lane_r_output/ -- ready for review, NOT owner-
+      accepted (per standing discipline; this is new output this tick, not yet reviewed).
     next_step: >
-      (1) Live-demonstrate run_cascade for real against a freshly-extracted repository once one
-      exists. (2) Wire scripts/run_cascade.py (or run_cascade() directly) into whatever hosted
-      GitHub Actions vertical slice GITHUB_ACTIONS_HOSTING_GAP_2026_10_24's own next_step (4)
-      still names as not started. (3) Re-evaluate PORT_BUNDLE_INTEGRITY_LAYER's seal.py
-      adaptation now that one ledger per repository cascade is real -- its own step_6 finding's
-      two blockers (the transaction-directory shape, the single-ledger assumption) are both
-      substantially closer to true now, though the directory-split (scripts/_lane_r_output/ vs.
-      evidence/build/<phase>/<repo>/) still needs its own adaptation pass, not assumed solved.
+      (1) Wire scripts/run_cascade.py (or run_cascade() directly) into whatever hosted GitHub
+      Actions vertical slice GITHUB_ACTIONS_HOSTING_GAP_2026_10_24's own next_step (4) still
+      names as not started. (2) Re-evaluate PORT_BUNDLE_INTEGRITY_LAYER's seal.py adaptation now
+      that one ledger per repository cascade is real and live-demonstrated -- its own step_6
+      finding's two blockers (the transaction-directory shape, the single-ledger assumption) are
+      both substantially closer to true now, though the directory-split
+      (scripts/_lane_r_output/ vs. evidence/build/<phase>/<repo>/) still needs its own adaptation
+      pass, not assumed solved. (3) When running run_cascade.py again, always use exactly one of
+      run_in_background or shell `&`, never both, and confirm completion from the invocation
+      record file, not a notification alone.
     write_paths: [src/repo_presenter/cascade.py, scripts/run_cascade.py, tests/test_cascade.py]
     source_refs: >
       docs/DECISION_LOG.md's 2026-10-25 orchestrator entries; project/state.yaml's

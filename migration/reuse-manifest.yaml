@@ -2236,9 +2236,11 @@ entries:
       attempt against this repository's real prompt manifests/schemas/checks, so the test's own
       "9 calls, zero retries, one shared ledger" assertion is a measured fact. 1635/1635 passed,
       11 skipped, full suite clean.
-    not_yet_done: >
-      Not yet live-demonstrated against a real clone + the real GPT_OSS gateway (see
-      BUILD_PRESENT_EQUIVALENT_ORCHESTRATOR's own not_yet_done note for why -- every repository
-      with a real facts.json already has its own prior six-script cascade's CallStore, and none
-      without one has been extracted yet). Deferred to the next real extraction + cascade pass,
-      the same honest pattern this session already used for verify_noop_pair.
+    live_demonstrated_2026_10_25: >
+      Live-demonstrated for real against aspose-3d-foss/Aspose.3D-FOSS-for-.NET (a real,
+      never-before-cascaded repository, 3,606 real facts). See
+      BUILD_PRESENT_EQUIVALENT_ORCHESTRATOR's own live_demonstrated_2026_10_25 note for the full
+      account, including a real process mistake (an accidental double-backgrounded concurrent
+      second run) that cost real duplicate API spend on ~9 calls but produced no data
+      corruption -- the final on-disk state is self-consistent (review_verdict.json: ACCEPT, 0
+      findings).
