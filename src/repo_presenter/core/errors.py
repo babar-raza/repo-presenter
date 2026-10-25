@@ -62,3 +62,11 @@ class GitSafetyError(PresenterError):
     """
 
     exit_code = 3
+
+
+class RepositorySnapshotError(GitSafetyError):
+    """The immutable repository view is absent or drifted while a transaction used it.
+
+    Ported (ADD, 2026-10-25) alongside ``core/snapshot/capture.py``, step 2 of
+    ``plans/PLAN_bundle_integrity_and_noop_proof.md``.
+    """

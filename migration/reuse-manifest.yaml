@@ -1878,16 +1878,28 @@ entries:
       remotes, using tests/support.py's init_git_repository/commit_all/head_revision, already
       present from the git.py port). 34 new tests (7 long_paths + 27 across
       test_{clone,hooks,neuter,verify}.py), 1315/1315 passed, 11 skipped, full suite clean.
+    capture_py_pulled_2026_10_25: >
+      Ported (REUSE, verbatim apart from the import path) as step 2 of
+      plans/PLAN_bundle_integrity_and_noop_proof.md, item (1) of its 5-item next_step list,
+      now that the blocking dependency the 2026-10-23 note above named (clone.py's
+      ReadOnlyClone) is genuinely pulled and live-exercised, not just present. Added
+      RepositorySnapshotError(GitSafetyError) to core/errors.py (the existing GitSafetyError
+      family, not a new branch). Ported its 13-test suite (import path only; local disposable
+      repositories via tests/support.py's init_git_repository/commit_all/head_revision and
+      pinned_read_only_clone against a local file:// source, same pattern as the clone.py
+      tests). 13/13 passed; full suite 1627/1627 passed (+ 5 pre-existing unrelated
+      needs_compiler failures in tests/extractors/platforms/test_cpp_examples.py, confirmed via
+      git stash to already fail identically on cef9b2a with none of this session's changes
+      present -- environment-dependent, not a regression), 11 skipped.
     next_step: >
-      Decide whether to wire pinned_read_only_clone() into this session's own clone workflow
-      (every portfolio clone so far used a plain `git clone` into /tmp/survey_clones/, with
-      neither push-safety nor race-safe revision pinning) -- available now, not yet applied
-      anywhere, same honest boundary as several other ports this session. capture.py (the
-      snapshot/inventory.py entry above) now has everything it needs (ReadOnlyClone exists) and
-      could follow if wanted. This closes out every item from this session's original thorough
-      salvage inventory pass except the larger PR-effect/monitoring/metadata entries, two of
-      which (propose/ for P3) a separate research fork the same day found genuinely bounded too
-      -- see the new entry below.
+      Decide whether to wire pinned_read_only_clone() + capture_snapshot()/verify_snapshot()
+      into this session's own clone workflow (every portfolio clone so far used a plain
+      `git clone` into /tmp/survey_clones/, with neither push-safety, race-safe revision
+      pinning, nor drift verification) -- both are available now, not yet applied anywhere,
+      same honest boundary as several other ports this session. This closes out every item
+      from this session's original thorough salvage inventory pass except the larger
+      PR-effect/monitoring/metadata entries, two of which (propose/ for P3) a separate research
+      fork the same day found genuinely bounded too -- see the new entry below.
     portfolio_consumers: every git subprocess call in this repository, once callers are updated
       to use run_git in place of os.popen/plain subprocess.
     invalidation_impact: none yet -- pulled, but no existing caller changed, so no existing

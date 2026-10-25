@@ -45,7 +45,7 @@ import struct
 import subprocess
 import sys
 import uuid
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -68,6 +68,7 @@ RERUN_FAILED = "RERUN_FAILED"
 SAME_PROCESS = "SAME_PROCESS"
 PROCESS_IDENTITY_UNAVAILABLE = "PROCESS_IDENTITY_UNAVAILABLE"
 DISPOSITION_MISMATCH = "DISPOSITION_MISMATCH"
+LEDGER_TOTALS_MISMATCH = "LEDGER_TOTALS_MISMATCH"
 
 # Minted once when this module is imported: two invocations that share it shared an interpreter.
 _PROCESS_NONCE = uuid.uuid4().hex
@@ -82,6 +83,19 @@ class NoOpProofError(PresenterError):
         super().__init__(f"[{reason}] {detail}")
         self.reason = reason
         self.detail = detail
+
+
+class LedgerReconciliationError(NoOpProofError):
+    """A bundle's recorded totals disagree with the ledger it seals.
+
+    PORT (REUSE) from the old repo's own class, 2026-10-25, step 2 of
+    ``plans/PLAN_bundle_integrity_and_noop_proof.md`` -- deferred from step 1 because it reads a
+    sealed bundle's own manifest fields, which ``core/candidates.py`` (not yet ported) is what
+    will actually produce.
+    """
+
+    def __init__(self, detail: str) -> None:
+        super().__init__(LEDGER_TOTALS_MISMATCH, detail)
 
 
 # --- process identity -------------------------------------------------------------------------
@@ -446,3 +460,91 @@ def verify_noop_pair(first: Path, second: Path, root: Path) -> Verification:
     measurement = measure_invocation(ledger, second_record.invocation_id)
     require_zero_provider_calls(measurement, second_record.ledger or ledger.name)
     return Verification(first_record, second_record, measurement)
+
+
+# --- reconciling totals -----------------------------------------------------------------------
+#
+# PORT (REUSE) from the old repo's own functions, 2026-10-25, step 2 of
+# plans/PLAN_bundle_integrity_and_noop_proof.md. Deferred from step 1 because both read a sealed
+# bundle's own manifest fields (ledger_totals/sealed_by/no_op_proof) -- core/candidates.py (not
+# yet ported, step 3) is what will actually produce a manifest to reconcile against; until then,
+# nothing calls reconcile_ledger, same as the rest of this module's history before any script
+# called verify_noop_pair.
+
+
+def ledger_totals(records: Sequence[CallRecord]) -> dict[str, Any]:
+    """The sums a bundle records about its own ledger, taken over every record sealed in it.
+
+    ``total_tokens`` is the sum over provider calls, or ``None`` when any provider call carries
+    no token count (a partial sum would read as a measurement it is not).
+    """
+    provider = [record for record in records if record.disposition == "provider_call"]
+    known = all(record.total_tokens is not None for record in provider)
+    return {
+        "records": len(records),
+        "provider_calls": len(provider),
+        "cache_reuses": sum(1 for record in records if record.disposition == "cache_reuse"),
+        "audit_only": sum(1 for record in records if record.retained_reason),
+        "total_tokens": sum(record.total_tokens or 0 for record in provider) if known else None,
+    }
+
+
+def reconcile_ledger(manifest: Mapping[str, Any], ledger: Path) -> None:
+    """Fail with ``LEDGER_TOTALS_MISMATCH`` unless the manifest's totals equal the ledger's sums.
+
+    Checked: the recorded ``ledger_totals`` against the sums taken here; ``provider_calls``
+    against the provider calls the sealing invocation stamped; and, for a proven bundle, the
+    proof's claim of zero provider calls against what its rerun invocation stamped. A manifest
+    that records no ``ledger_totals`` was sealed before they existed and is left to its pending
+    update rather than judged by a rule it could not have met.
+    """
+    recorded = manifest.get("ledger_totals")
+    if recorded is None:
+        return
+    try:
+        records = load_records(ledger)
+    except (OSError, ValueError, TypeError) as exc:
+        raise LedgerReconciliationError(f"{ledger.name} cannot be read: {exc}") from exc
+    actual = ledger_totals(records)
+    if not isinstance(recorded, Mapping):
+        raise LedgerReconciliationError("the manifest's ledger_totals is not an object")
+    if dict(recorded) != actual:
+        differing = sorted(
+            key for key in set(actual) | set(recorded) if recorded.get(key) != actual.get(key)
+        )
+        raise LedgerReconciliationError(
+            "the manifest's ledger_totals disagree with the sums over its calls.jsonl: "
+            + ", ".join(
+                f"{key} recorded {recorded.get(key)!r} ledger {actual.get(key)!r}"
+                for key in differing
+            )
+        )
+    sealed_by = manifest.get("sealed_by")
+    if isinstance(sealed_by, dict) and isinstance(sealed_by.get("invocation_id"), str):
+        stamped = sum(
+            1
+            for record in records
+            if record.invocation_id == sealed_by["invocation_id"]
+            and record.disposition == "provider_call"
+        )
+        if manifest.get("provider_calls") != stamped:
+            raise LedgerReconciliationError(
+                f"the manifest records {manifest.get('provider_calls')!r} provider calls for its "
+                f"sealing invocation, the ledger holds {stamped}"
+            )
+    proof = manifest.get("no_op_proof")
+    rerun = proof.get("rerun") if isinstance(proof, dict) else None
+    if isinstance(proof, dict) and isinstance(rerun, dict):
+        if not isinstance(rerun.get("invocation_id"), str):
+            raise LedgerReconciliationError("the no-op proof names no rerun invocation")
+        calls = sum(
+            1
+            for record in records
+            if record.invocation_id == rerun["invocation_id"]
+            and record.disposition == "provider_call"
+        )
+        if calls != 0 or proof.get("provider_calls") != 0:
+            raise LedgerReconciliationError(
+                f"the no-op proof claims zero provider calls, the ledger holds {calls} stamped "
+                "to its rerun invocation"
+            )

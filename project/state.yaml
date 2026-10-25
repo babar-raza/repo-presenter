@@ -1484,23 +1484,39 @@ next_ready_items:
       repository's independent_reviewer.py returns a ReviewVerdict that is never persisted
       per-repository (only a portfolio-wide aggregate exists) -- sealing needs that artifact to
       exist first. Full detail: plans/PLAN_bundle_integrity_and_noop_proof.md's "Step 2" section.
+    step_3_done_2026_10_25: >
+      Completed next_step items (1) and (2) together. (1) Ported
+      src/repo_presenter/core/snapshot/capture.py (167 lines, verbatim apart from import paths)
+      now that clone.py's ReadOnlyClone -- the one dependency that blocked it since 2026-10-23
+      -- is live-exercised, not just present. Added RepositorySnapshotError(GitSafetyError) to
+      core/errors.py. Ported its 13-test suite (tests/core/snapshot/test_capture.py, import
+      path only; local disposable repositories via tests/support.py, pinned_read_only_clone
+      against a local file:// source -- same pattern already proven for clone.py's own tests).
+      (2) Ported noop_proof.py's remaining 3 pieces -- ledger_totals, reconcile_ledger,
+      LedgerReconciliationError (+ LEDGER_TOTALS_MISMATCH) -- verbatim, exactly as step 1
+      deferred them. Extended tests/core/test_noop_proof.py with 6 new reconciliation tests (29
+      total in that file, all passing). Full suite re-run clean: 1627 passed, 11 skipped, +5
+      pre-existing unrelated needs_compiler failures in
+      tests/extractors/platforms/test_cpp_examples.py -- verified via git stash that these 5
+      already fail identically on cef9b2a with none of today's changes present (environment-
+      dependent: compiler/CMake state in this machine, not a regression). Full detail:
+      migration/reuse-manifest.yaml's capture_py_pulled_2026_10_25 entry.
     next_step: >
-      In order: (1) port core/snapshot/capture.py (167 lines); (2) port noop_proof.py's
-      remaining 3 functions (ledger_totals/reconcile_ledger/LedgerReconciliationError -- already
-      fully understood from step 1's own reading, no new investigation needed); (3) add
-      RAW_CALLS_FILENAME to authoring.py; (4) design (not port) a version constant for
-      independent_reviewer.py and a per-repository persisted review-verdict artifact (new work,
-      not ported from anything); (5) only then adapt seal.py's own logic against this
-      repository's REAL artifact shapes (facts.json/dispositions.json/plan.json/
-      content_units.coherent.json/README.coherent.md/llm_cache/*), never the old repo's
-      validation.json/review.json shape. Each of (1)-(3) is a small, bounded, already-scoped
-      port; (4)-(5) are design work and should not be rushed per the owner's own "plan carefully
-      before building from scratch" directive -- not started this tick.
-    write_paths_planned: [src/repo_presenter/core/noop_proof.py (step 1, DONE),
-      src/repo_presenter/core/snapshot/capture.py (new),
-      src/repo_presenter/core/candidates.py (step 3),
-      src/repo_presenter/readme/bundle/seal.py (step 4),
-      src/repo_presenter/readme/bundle/recheck.py (steps 5-6, extends the existing port)]
+      In order: (1) add RAW_CALLS_FILENAME to authoring.py (trivial, already scoped); (2)
+      design (not port) a version constant for independent_reviewer.py and a per-repository
+      persisted review-verdict artifact (new work, not ported from anything); (3) only then
+      adapt seal.py's own logic against this repository's REAL artifact shapes
+      (facts.json/dispositions.json/plan.json/content_units.coherent.json/README.coherent.md/
+      llm_cache/*), never the old repo's validation.json/review.json shape; (4) port
+      core/candidates.py with a falsifier proving it never touches legacy evidence. (1) is a
+      small, bounded, already-scoped port; (2)-(4) are design/larger work and should not be
+      rushed per the owner's own "plan carefully before building from scratch" directive -- not
+      started this tick.
+    write_paths_planned: [src/repo_presenter/core/noop_proof.py (steps 1 + 3, DONE),
+      src/repo_presenter/core/snapshot/capture.py (step 3, DONE),
+      src/repo_presenter/core/candidates.py (step 4),
+      src/repo_presenter/readme/bundle/seal.py (step 3-adaptation),
+      src/repo_presenter/readme/bundle/recheck.py (later steps, extends the existing port)]
     source_refs: >
       docs/DECISION_LOG.md's 2026-10-24 entry; plans/PLAN_bundle_integrity_and_noop_proof.md;
       the old repo's core/noop_proof.py, core/candidates.py, components/readme/bundle/{seal,

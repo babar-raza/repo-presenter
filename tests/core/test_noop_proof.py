@@ -6,12 +6,12 @@ count behind a zero exit code, a missing ledger, one process claiming both invoc
 (core/noop_proof.py).
 
 Ported (REUSE, scoped) from the old repository-presenter project's own
-tests/core/test_noop_proof.py, 2026-10-24, step 1 of
-plans/PLAN_bundle_integrity_and_noop_proof.md. The old file's "reconciling totals" section
-(ledger_totals/reconcile_ledger/LedgerReconciliationError -- the bundle-manifest-reading half)
-and its CLI/hosted-workflow tests are NOT ported here: this repository has no bundle/manifest and
-no `verify-noop-proof` CLI command yet. Those belong with core/candidates.py's own port (a later
-step), not this one.
+tests/core/test_noop_proof.py, 2026-10-24 (step 1) and 2026-10-25 (step 2, the "reconciling
+totals" section -- ledger_totals/reconcile_ledger/LedgerReconciliationError). Its CLI/hosted-
+workflow tests are still NOT ported here: this repository has no sealed bundle/manifest writer
+yet (core/candidates.py, step 3) and no `verify-noop-proof` CLI command. Reconciling against a
+manifest is tested here with a hand-built manifest dict, not a real sealed bundle -- that
+integration test belongs with candidates.py's own port.
 """
 
 from __future__ import annotations
@@ -32,14 +32,18 @@ from repo_presenter.core.noop_proof import (
     INVOCATION_RECORD_MISSING,
     LEDGER_MISSING,
     LEDGER_NO_RECORDS,
+    LEDGER_TOTALS_MISMATCH,
     LEDGER_UNREADABLE,
     NONZERO_PROVIDER_CALLS,
     RERUN_FAILED,
     SAME_PROCESS,
     Invocation,
+    LedgerReconciliationError,
     NoOpProofError,
     ProcessIdentity,
+    ledger_totals,
     measure_invocation,
+    reconcile_ledger,
     require_distinct_processes,
     verify_noop_pair,
 )
@@ -378,3 +382,79 @@ def test_a_rerun_whose_outcome_class_differs_from_the_first_runs_fails(rerun: Re
     assert reason(lambda: verify_noop_pair(rerun.first, rerun.second, rerun.root)) == (
         noop_proof.DISPOSITION_MISMATCH
     )
+
+
+# ---------------------------------------------------------------------------
+# reconciling totals (step 2, 2026-10-25): a hand-built manifest dict here, not a real sealed
+# bundle -- the real integration (a manifest core/candidates.py actually writes) belongs with
+# that module's own port.
+# ---------------------------------------------------------------------------
+
+
+def sealed_ledger(tmp_path: Path) -> tuple[Path, dict[str, Any]]:
+    records = [
+        record("a", "first", "provider_call", tokens=20),
+        record("b", "first", "provider_call", tokens=30),
+        record("c", "second", "cache_reuse"),
+    ]
+    path = tmp_path / "calls.jsonl"
+    path.write_text("".join(f"{item.to_line()}\n" for item in records), encoding="utf-8")
+    manifest = {
+        "provider_calls": 2,
+        "sealed_by": {"invocation_id": "first"},
+        "ledger_totals": ledger_totals(records),
+    }
+    return path, manifest
+
+
+def test_totals_are_the_sums_over_the_ledger(tmp_path: Path) -> None:
+    path, manifest = sealed_ledger(tmp_path)
+    assert manifest["ledger_totals"] == {
+        "records": 3,
+        "provider_calls": 2,
+        "cache_reuses": 1,
+        "audit_only": 0,
+        "total_tokens": 50,
+    }
+    reconcile_ledger(manifest, path)  # does not raise
+
+
+def test_an_unknown_token_count_is_not_summed_into_a_partial_total() -> None:
+    totals = ledger_totals([record("a", "x", "provider_call", tokens=None)])
+    assert totals["total_tokens"] is None
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [("records", 4), ("provider_calls", 3), ("cache_reuses", 0), ("total_tokens", 51)],
+)
+def test_a_tampered_total_is_a_typed_blocking_failure(
+    tmp_path: Path, field: str, value: int
+) -> None:
+    path, manifest = sealed_ledger(tmp_path)
+    manifest["ledger_totals"][field] = value
+    with pytest.raises(LedgerReconciliationError) as caught:
+        reconcile_ledger(manifest, path)
+    assert caught.value.reason == LEDGER_TOTALS_MISMATCH and field in str(caught.value)
+
+
+def test_a_manifest_provider_count_that_the_ledger_does_not_hold_fails(tmp_path: Path) -> None:
+    path, manifest = sealed_ledger(tmp_path)
+    manifest["provider_calls"] = 0
+    with pytest.raises(LedgerReconciliationError, match="sealing invocation"):
+        reconcile_ledger(manifest, path)
+
+
+def test_a_proof_claiming_zero_calls_for_a_rerun_that_made_some_fails(tmp_path: Path) -> None:
+    path, manifest = sealed_ledger(tmp_path)
+    manifest["no_op_proof"] = {"provider_calls": 0, "rerun": {"invocation_id": "first"}}
+    with pytest.raises(LedgerReconciliationError, match="claims zero provider calls"):
+        reconcile_ledger(manifest, path)
+
+
+def test_a_manifest_sealed_before_totals_were_recorded_is_not_judged_by_them(
+    tmp_path: Path,
+) -> None:
+    path, manifest = sealed_ledger(tmp_path)
+    del manifest["ledger_totals"]
+    reconcile_ledger(manifest, path)  # does not raise: it waits for its pending update instead
