@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Python",
+  "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
+  "defect_fingerprint": "sha256:c0b968c685e126485e19b37c53d2383c3f81da709bdb61c52d15c9718be1e334",
+  "triggering_check": {
+    "id": "manual_review.readme_version_claim_mismatch",
+    "version": "1",
+    "causal_stage": "EXTRACTING"
+  },
+  "evidence": [
+    {
+      "path": "evidence/build/P1_PORTFOLIO_SCALE/aspose-psd-foss__Aspose.PSD-FOSS-for-Python/draft_upstream_issue.md",
+      "detail": "full evidence-backed proposal, repro, and dedup check"
+    }
+  ],
+  "claim": "The README states twice that the package runs on Python 3.7+, but the published PyPI package metadata declares requires_python >=3.8, so pip on Python 3.7 refuses the install the README instructs.",
+  "suggested_issue_title": "README claims Python 3.7+ support, but the published PyPI package requires Python >=3.8",
+  "suggested_issue_body": "The README states twice that the package \"runs on Python 3.7+\" and \"Requires\nPython 3.7 or later,\" but the published package's own metadata on PyPI says\notherwise:\n\n```\n$ curl -s https://pypi.org/pypi/aspose-psd-foss/json | python -c \"import json,sys; print(json.load(sys.stdin)['info']['requires_python'])\"\n>=3.8\n```\n\n`pip install aspose-psd-foss` on Python 3.7 will be refused by pip given this\nmetadata, contradicting the README's own installation instructions. No\n`setup.py`/`pyproject.toml`/`setup.cfg` exists in this repository to check\nwhich value the maintainers intended \u2014 recommend either correcting the README\nto say 3.8+, or relaxing the published `python_requires` if 3.7 support is\nactually intended and was dropped unintentionally.\n",
+  "status": "HANDOFF_PENDING",
+  "issue_ref": null,
+  "close_reason": null
+}

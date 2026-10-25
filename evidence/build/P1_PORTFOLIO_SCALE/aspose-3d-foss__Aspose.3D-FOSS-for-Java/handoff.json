@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Java",
+  "source_revision": "3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3",
+  "defect_fingerprint": "sha256:ab2d3c53182555bda5f3979b4dd79e6dac2dc8261ebbeaf091c9ece010127542",
+  "triggering_check": {
+    "id": "manual_review.silent_failure_inconsistency",
+    "version": "1",
+    "causal_stage": "EXTRACTING"
+  },
+  "evidence": [
+    {
+      "path": "evidence/build/P1_PORTFOLIO_SCALE/aspose-3d-foss__Aspose.3D-FOSS-for-Java/draft_upstream_issue.md",
+      "detail": "full evidence-backed proposal, repro, and dedup check"
+    }
+  ],
+  "claim": "Plane.toMesh() is unimplemented (marked TODO) but returns an empty Mesh with no exception, unlike Pyramid/Torus/RectangularTorus, which all correctly throw UnsupportedOperationException for the same unimplemented state.",
+  "suggested_issue_title": "Plane.toMesh() silently returns an empty Mesh instead of throwing UnsupportedOperationException like its sibling unfinished primitives",
+  "suggested_issue_body": "`Plane.java`'s `toMesh()` method is marked `// TODO: Implement mesh conversion` and returns\n`new Mesh()`:\n\n```java\npublic Mesh toMesh() {\n    // TODO: Implement mesh conversion\n    return new Mesh();\n}\n```\n\n`Mesh`'s no-arg constructor produces an object with zero control points and zero polygons\n(`getPolygonCount() == 0`), so this call succeeds without ever throwing, while silently producing\ngeometry that is empty and unusable.\n\nThis is inconsistent with the other primitive classes in the same state of incompleteness \u2014\n`Pyramid`, `Torus`, and `RectangularTorus` all correctly signal \"not yet implemented\" by throwing:\n\n```java\n// Pyramid.java, Torus.java, RectangularTorus.java\n@Override\npublic Mesh toMesh() {\n    throw new UnsupportedOperationException();\n}\n```\n\n### Impact\n\nA caller who builds a scene with a `Plane` node and calls `toMesh()` (or any code path that\ntriggers it, e.g. mesh-dependent export) gets no exception and no obvious signal that nothing was\nproduced -- only an empty `Mesh`. This is the same silent-failure hazard class the project's own\n`README.md` already documents for unfinished file formats (\"Several of the recognized-but-\nunfinished formats above fail silently rather than with an error... don't rely on catching an\nexception to detect the gap \u2014 check the actual output\"), but the equivalent risk for primitive\nmesh conversion is not currently disclosed anywhere in the README or `FILE_FORMATS.md`.\n\n### Suggested fix shape (not a patch; for triage only)\n\nEither implement real plane mesh generation (the class already exposes `length`/`width`/\n`lengthSegments`/`widthSegments`/`up` -- a complete parameter set for generating a real\nsubdivided-plane mesh), or make `Plane.toMesh()` throw `UnsupportedOperationException()` like its\nsibling unfinished primitives, so failures are loud and discoverable rather than silent.\n",
+  "status": "HANDOFF_PENDING",
+  "issue_ref": null,
+  "close_reason": null
+}

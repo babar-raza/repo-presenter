@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "repository": "aspose-font-foss/Aspose.Font-FOSS-for-Python",
+  "source_revision": "0735cc2797665a21ccf96409289c7d4f2da054d9",
+  "defect_fingerprint": "sha256:b6fc57a3f696ef97a09339fa5f05a5374a9935dd2caf5815a129ad7fa78c96c8",
+  "triggering_check": {
+    "id": "independent_reviewer.readme_install_command_check",
+    "version": "1",
+    "causal_stage": "EXTRACTING"
+  },
+  "evidence": [
+    {
+      "path": "evidence/build/P2_REAL_ENGINE_SALVAGE/aspose-font-foss__Aspose.Font-FOSS-for-Python/draft_upstream_issue.md",
+      "detail": "full evidence-backed proposal, repro, and dedup check; found by readme/review/independent_reviewer.py during the P2_REAL_ENGINE_SALVAGE cohort pass"
+    }
+  ],
+  "claim": "The README's MCP Server section instructs pip install \"aspose-font[mcp]\", but pyproject.toml's own name field publishes the distribution as aspose-font-foss, so the documented command asks pip for a distribution this project does not publish.",
+  "suggested_issue_title": "The MCP Server install command in the README names a package that is not published -- pip install \"aspose-font[mcp]\" should be pip install \"aspose-font-foss[mcp]\"",
+  "suggested_issue_body": "The \"## MCP Server\" section's install example:\n\n```bash\npip install \"aspose-font[mcp]\"\npython -m aspose_font.mcp\n```\n\nnames the distribution `aspose-font`. The package this repository actually publishes (declared\nin `pyproject.toml`'s own `name` field) is `aspose-font-foss`. No package named plain\n`aspose-font` is published by this project, so this exact command, copy-pasted as written, asks\npip for the wrong distribution.\n\n### Repro\n\nReading `pyproject.toml` at the pinned revision directly shows:\n\n```toml\n[project]\nname = \"aspose-font-foss\"\n```\n\nwhile the README's own MCP Server section (line 568 as of the pinned revision) reads:\n\n```bash\npip install \"aspose-font[mcp]\"\n```\n\nThe `python -m aspose_font.mcp` line on the next line is correct as written (the installed\n*module* is `aspose_font`, independent of the *distribution* name) -- only the `pip install`\ntarget is wrong.\n\n### Impact on the published README\n\nA reader following this section's own instructions verbatim gets a pip resolution failure (or,\nworse, installs an unrelated same-named package if one ever appears on PyPI) rather than this\nproject's own MCP server support.\n\n### Suggested fix shape (not a patch; for triage only)\n\nChange `pip install \"aspose-font[mcp]\"` to `pip install \"aspose-font-foss[mcp]\"` in the MCP\nServer section. No other install example in the README repeats this mistake (the main\nInstallation section correctly uses `aspose-font-foss` throughout).\n",
+  "status": "HANDOFF_PENDING",
+  "issue_ref": null,
+  "close_reason": null,
+  "defect_class": "README_MISSING_OR_PLACEHOLDER"
+}

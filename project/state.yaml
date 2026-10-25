@@ -1672,17 +1672,48 @@ next_ready_items:
       tests/issues/test_file.py's two hardcoded marker-string assertions to match. 127/127
       passed (tests/issues/ + tests/github/); full suite re-run clean (1627 passed, 11 skipped,
       5 deselected pre-existing needs_compiler failures already confirmed unrelated).
+    handoffs_converted_and_wired_2026_10_25: >
+      Converted all 7 draft_upstream_issue.md proposals (the 6 pending + the one already filed,
+      aspose-3d-foss/Python#4) into typed issues.model.Handoff JSON records, written alongside
+      each draft as handoff.json. suggested_issue_body is exactly the "Proposed body"/"Draft
+      issue" section text (never the title header, the "NOT FILED"/provenance HTML comments, or
+      the "Dedup check performed" section) -- confirmed byte-for-byte against the one real
+      filing: body_with_marker(h.suggested_issue_body, h.defect_fingerprint) reconstructs
+      exactly what `gh issue view 4` returns live, verified directly, not assumed. That one
+      handoff's defect_fingerprint is the exact value already recorded in its own
+      filed_issue.json (sha256:f9371cf61c...), not recomputed -- recomputing with a different
+      formula would silently desync the record from the real live marker. The 6 pending ones
+      use fingerprint(repository, check_id, signature) = sha256:sha256(f"{repository}\n
+      {check_id}\n{signature}"), the old repo's own dedup-key formula (classes.py), with
+      signature = the proposed title and check_id naming how each was found (manual_review.* for
+      6, independent_reviewer.readme_install_command_check for the one the new independent
+      reviewer actually found). defect_class set only where a DEFECT_CLASSES entry is a genuine,
+      honest match (EXAMPLE_FAILS x2, BUILD_OR_TESTS_FAIL, MANIFEST_PLACEHOLDER_METADATA,
+      README_MISSING_OR_PLACEHOLDER) -- left unset for 2 findings with no clean match, rather
+      than forcing a misleading classification. Every record round-trip validated
+      (write_handoff -> load_handoff, equal dataclass).
+      Built scripts/plan_pending_handoffs.py -- the wiring script this card's own gap named as
+      missing. Read-only: scans evidence/build/*/*/handoff.json, runs each through
+      issues.file.plan_filing against a real GitApprovalStore rooted at this repository's own
+      HEAD, never calls existing/recheck, never touches the network. Ran it for real: all 6
+      pending handoffs correctly refuse with "no approval record (ops/issue_approvals/
+      <handoff_id>.json is not committed)"; the already-FILED one correctly refuses on the
+      separate duplicate-filing guard ("status is 'FILED', not HANDOFF_PENDING"). This is the
+      real approval gate and the real duplicate-filing guard both demonstrated end to end
+      against real typed records, with zero network calls and zero filing risk -- not a unit
+      test fixture. Report written to evidence/build/pending_handoffs_plan.json.
     next_step: >
       close_handoff/comment_on_filed remain NOT ported -- a separate, not-yet-scoped follow-on
       (needs close_approval.py and a redetect.py-shaped RedetectionResult read first, not
-      guessed at). For the 6 pending draft_upstream_issue.md handoffs: each still needs (a) its
-      content turned into a real issues.model.Handoff record (not yet done -- the drafts are
-      free-text markdown, not typed Handoff JSON, so a small conversion step is needed before
-      file_handoff can be called at all), and (b) its own ops/issue_approvals/<handoff_id>.json
-      committed by the owner once (the adoption_decision's "one-time, auditable action per
-      defect"), not filed by this card. No wiring script calling file_handoff against a real
-      target exists yet either -- this pass ported and tested the mechanism, it did not stand
-      up a caller.
+      guessed at). The 6 pending handoffs are now each one owner action away from filing: the
+      owner commits ops/issue_approvals/<handoff_id>.json (id, repository, evidence_digest,
+      approver, approved_at, expires_at -- the exact handoff_id/evidence_digest pair
+      scripts/plan_pending_handoffs.py's own report names for each) for whichever defects they
+      want filed; re-running that script after a commit will show `ready=True` for exactly
+      those. No autonomous scheduled filing job exists yet either (this pass proved the gate,
+      it did not stand up a cron-equivalent caller that actually invokes file_handoff) -- a
+      separate, smaller follow-on once at least one real owner approval exists to test it
+      against.
 
   - id: SALVAGE_INVENTORY_2026_10_23
     status: DONE

@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-.NET",
+  "source_revision": "52b0f00ebf28a0b4173921725ff170685ec2c502",
+  "defect_fingerprint": "sha256:7fa2a1196c2f0362ad261bd77cd6ae551028a25f41c90f3eadd7e4427a7ee90e",
+  "triggering_check": {
+    "id": "manual_review.readme_format_overclaim",
+    "version": "1",
+    "causal_stage": "EXTRACTING"
+  },
+  "evidence": [
+    {
+      "path": "evidence/build/P1_PORTFOLIO_SCALE/aspose-3d-foss__Aspose.3D-FOSS-for-.NET/draft_upstream_issue.md",
+      "detail": "full evidence-backed proposal, repro, and dedup check"
+    }
+  ],
+  "claim": "The README documents RVM, Universal 3D, AMF, and HTML5/Aspose 3D Web export as supported formats, but none of the four is registered in FileFormat._formats, so Scene.Save()/Scene.Open() always throw ArgumentException for them through the public API.",
+  "suggested_issue_title": "FileFormat.RvmText/RvmBinary, Universal3D, AMF, and HTML5 are public static fields with no dispatch entry -- Scene.Open()/Scene.Save() always throw ArgumentException for .rvm, .u3d, .amf, .html, contradicting the README's own documented format support",
+  "suggested_issue_body": "`Scene.Save(path)` and `Scene.Open(path)` both resolve a format exclusively through\n`FileFormat.GetFormatByExtension()`, which only recognizes extensions present in the private\nstatic `FileFormat._formats` list (populated by `InitializeFormats()`: OBJ, STL, glTF, FBX,\nMicrosoft 3MF, COLLADA, PLY, Discreet 3DS -- 8 entries). `FileFormat` separately exposes public\nstatic fields `RvmText`, `RvmBinary` (`Formats.RvmFormat`), `Universal3D`, `AMF`, and\n`HTML5`/`Aspose3DWeb`, which look like registered, dispatchable formats from the public API\nsurface, but none of them is added to `_formats`.\n\n### Repro\n\n```csharp\nusing Aspose.ThreeD;\nusing Aspose.ThreeD.Entities;\nusing Aspose.ThreeD.Shading;\n\nvar scene = new Scene();\nscene.RootNode.CreateChildNode(\"Box\", new Entities.Box(2, 2, 2), new LambertMaterial(\"m\"));\n\nscene.Save(\"out.rvm\");   // ArgumentException: Unsupported file format: .rvm\nscene.Save(\"out.u3d\");   // ArgumentException: Unsupported file format: .u3d\nscene.Save(\"out.amf\");   // ArgumentException: Unsupported file format: .amf\nscene.Save(\"out.html\");  // ArgumentException: Unsupported file format: .html\n```\n\nReproduced live against this exact `main` commit: cloned the repository, referenced\n`src/main/Aspose.ThreeD/Aspose.ThreeD.csproj` directly from a throwaway console app (dotnet\n10.0.401), and ran the above. All four calls threw `ArgumentException` at the\n`GetFormatByExtension` call, before any RVM/U3D/AMF/HTML5-specific code ever ran. By contrast,\n`.obj`/`.stl`/`.3mf`/`.dae`/`.ply`/`.3ds` all succeeded in the same session, for the same scene.\n\n### Impact on the published README\n\nThis repository's own `README.md` currently documents RVM, U3D, AMF, and HTML5 as supported\nformats in three places: the opening paragraph (\"...Universal 3D\"), the Key Capabilities section\n(\"plus Microsoft 3MF and AVEVA PDMS RVM models, AMF, and an HTML5/Aspose 3D Web viewer export\"),\nand the At a Glance diagram (inputs/outputs for RVM and U3D). The Scope and Limitations section\nadditionally states \"core RVM geometry import/export works, RVM attribute data does not load\" --\nwhich is also incorrect; RVM is not reachable at all through the public `Scene` API, not 90%\nfunctional.\n\n### Suggested fix shape (not a patch; for triage only)\n\n1. Either add `RvmFormat`/`Universal3D`/`AMF`/`HTML5` (with real reader/writer backing, which does\n   not currently exist anywhere in the codebase) to `FileFormat._formats` and `IOService`'s\n   dispatch switches, or\n2. If these four formats are intentionally out of scope for the FOSS edition (consistent with\n   how `DracoFormat`/`PdfFormat` are already disclosed as \"no reader/writer implementation\n   anywhere in the codebase\"), update the README to remove the RVM/U3D/AMF/HTML5 claims and\n   correct the Scope and Limitations RVM bullet accordingly.\n",
+  "status": "HANDOFF_PENDING",
+  "issue_ref": null,
+  "close_reason": null,
+  "defect_class": "EXAMPLE_FAILS"
+}

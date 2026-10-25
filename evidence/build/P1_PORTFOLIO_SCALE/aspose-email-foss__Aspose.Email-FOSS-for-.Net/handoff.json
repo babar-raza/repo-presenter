@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "repository": "aspose-email-foss/Aspose.Email-FOSS-for-.Net",
+  "source_revision": "59125b4732df0eedbc4d4c2ab978698ed4348eb7",
+  "defect_fingerprint": "sha256:6703e6c43a5659020df489516079a5aeea8754c71d10bbee2788dc31446db198",
+  "triggering_check": {
+    "id": "manual_review.documented_test_command_fails",
+    "version": "1",
+    "causal_stage": "EXTRACTING"
+  },
+  "evidence": [
+    {
+      "path": "evidence/build/P1_PORTFOLIO_SCALE/aspose-email-foss__Aspose.Email-FOSS-for-.Net/draft_upstream_issue.md",
+      "detail": "full evidence-backed proposal, repro, and dedup check"
+    }
+  ],
+  "claim": "Running the README's own documented test command on a fresh Windows checkout with Git's common default core.autocrlf=true produces 2 failures out of 20 tests, caused by the tests' own fixture-construction Replace double-converting already-CRLF source lines, not by the library's EML parsing itself.",
+  "suggested_issue_title": "2 of 20 xUnit tests in MapiMessageEmlTests fail on a standard Windows checkout (core.autocrlf=true) due to double-CRLF corruption in the tests' own fixture construction",
+  "suggested_issue_body": "Running the README's own documented command,\n`dotnet test tests/Aspose.Email.Foss.Tests/Aspose.Email.Foss.Tests.csproj`, on a fresh\nWindows checkout with Git's common default `core.autocrlf=true` produces 2 failures out\nof 20 tests, both in `MapiMessageEmlTests`:\n\n- `LoadFromEmlHandlesFoldedHeadersAndBase64Text` \u2014 expected `\"Base64 body\"`, got `\"\"`.\n- `LoadFromEmlHandlesMultipartRelatedInlineAttachment` \u2014 expected `HtmlBody` to contain\n  `\"cid:inline-1\"`, got `null`.\n\n### Root cause\n\nBoth tests build a synthetic `.eml` fixture from a C# raw string literal and then call:\n\n```csharp\nEncoding.ASCII.GetBytes(eml.Replace(\"\\n\", \"\\r\\n\", StringComparison.Ordinal))\n```\n\nWhen the `.cs` source file itself already has CRLF line endings \u2014 exactly what\n`core.autocrlf=true` produces on checkout, and confirmed this is how these two test\nmethods are actually stored in this repository on a Windows clone \u2014 the raw string\nliteral's embedded line breaks are already `\\r\\n`. The `.Replace(\"\\n\", \"\\r\\n\")` call then\nmatches the `\\n` *inside* each existing `\\r\\n` pair and turns it into `\\r\\n`, so every\nline ending becomes `\\r\\r\\n` (a doubled carriage return). This corrupts the synthetic\nMIME message's header folding and multipart boundary lines before the library's own EML\nparser ever sees valid input, so the parser correctly produces empty/`null` fields for a\nmalformed message \u2014 this is not a bug in `MapiMessage.LoadFromEml`'s MIME/CFB parsing\nitself.\n\n### Reproduction (independently confirmed, not just inspected)\n\n1. Built an isolated console app referencing the real library, with the identical raw\n   string literal + `.Replace(\"\\n\", \"\\r\\n\")` logic as the failing tests.\n2. Saved as a plain LF file: reproduces the tests' intended (passing) behavior exactly \u2014\n   `HtmlBody` correctly quoted-printable-decoded, 1 attachment found with the right\n   `ContentId`/`MimeType`/`Data`.\n3. Re-saved byte-for-byte with CRLF line endings only (no other change): reproduces the\n   exact failure \u2014 `HtmlBody` empty, 0 attachments found.\n\nThis isolates the cause to the checkout line-ending + `.Replace()` interaction, not to\nanything environment-specific beyond that.\n\n### Suggested fix\n\nIn both tests, replace the line-ending normalization with something idempotent regardless\nof the source file's own line endings, e.g. normalize to `\\n` first:\n`eml.Replace(\"\\r\\n\", \"\\n\", StringComparison.Ordinal).Replace(\"\\n\", \"\\r\\n\", StringComparison.Ordinal)`,\nor construct the fixture bytes directly rather than via string `.Replace()`.\n\n### Impact\n\nLow severity (test-only; the shipped library's own EML parsing is unaffected, confirmed\nseparately), but real: a contributor who clones this repository on Windows with the\ndefault Git configuration and follows the README's own \"Development and Testing\"\ninstructions verbatim will see 2 failing tests out of the box, which could be mistaken\nfor a real regression.\n",
+  "status": "HANDOFF_PENDING",
+  "issue_ref": null,
+  "close_reason": null,
+  "defect_class": "BUILD_OR_TESTS_FAIL"
+}

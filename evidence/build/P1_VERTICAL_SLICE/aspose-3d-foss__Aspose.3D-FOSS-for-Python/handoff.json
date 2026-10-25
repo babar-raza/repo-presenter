@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Python",
+  "source_revision": "65b1f577c0f16d0d9112bb6c1153d3024543ac02",
+  "defect_fingerprint": "sha256:f9371cf61ccad4d0e7e122c7db82c378f9d2b9540605e8470e26c696607affb2",
+  "triggering_check": {
+    "id": "manual_review.example_runtime_failure",
+    "version": "1",
+    "causal_stage": "EXTRACTING"
+  },
+  "evidence": [
+    {
+      "path": "evidence/build/P1_VERTICAL_SLICE/aspose-3d-foss__Aspose.3D-FOSS-for-Python/draft_upstream_issue.md",
+      "detail": "full evidence-backed proposal, repro, and dedup check"
+    },
+    {
+      "path": "evidence/build/P1_VERTICAL_SLICE/aspose-3d-foss__Aspose.3D-FOSS-for-Python/filed_issue.json",
+      "detail": "real filing record: issue #4, OPEN"
+    }
+  ],
+  "claim": "The README documents OBJ export as a supported, working format, but Scene.save() to .obj always raises TypeError, and ObjExporter.export() called directly writes zero bytes for any scene built the documented create_child_node() way.",
+  "suggested_issue_title": "OBJ export via Scene.save() always raises TypeError; direct ObjExporter.export() silently writes nothing for any scene built the documented way",
+  "suggested_issue_body": "`Scene.save(path_ending_in_.obj)` fails on every call with:\n\n```\nTypeError: a bytes-like object is required, not 'str'\n```\n\nReproduced on the published PyPI package `aspose-3d-foss==26.1.0` and against the\ncurrent `master` blob of `aspose/threed/formats/obj/ObjExporter.py` (byte-identical\nto the installed wheel, so this is not a stale-package issue).\n\n### Repro\n\n```python\nimport aspose.threed as a3d\nfrom aspose.threed.entities import Box\n\nscene = a3d.Scene()\nbox = Box(length=2.0, width=1.0, height=1.0)\nscene.root_node.create_child_node(\"box\", entity=box.to_mesh())\nscene.save(\"box.obj\")\n```\n\n```\nTraceback (most recent call last):\n  ...\n  File \".../aspose/threed/Scene.py\", line 181, in save\n    exporter.export(self, stream, options)\n  File \".../aspose/threed/formats/obj/ObjExporter.py\", line 25, in export\n    self._write_obj(scene, stream, options)\n  File \".../aspose/threed/formats/obj/ObjExporter.py\", line 50, in _write_obj\n    stream.write(content)\nTypeError: a bytes-like object is required, not 'str'\n```\n\n### Root cause 1 - str written to a binary stream\n\n`ObjExporter._write_obj()` (line 50) builds `content = '\\n'.join(lines)`, a `str`,\nand calls `stream.write(content)` directly. `Scene.save()` always opens a\nfilename-based target with `open(file_name, 'wb')` (binary mode), so this always\nfails for a plain filename.\n\n### Root cause 2 - independent of root cause 1, and still broken if \"fixed\" naively\n\nEven calling `ObjExporter().export(scene, io.StringIO(), options)` directly,\nbypassing `Scene.save()` with a correctly-typed text stream, writes **zero bytes**\nfor a scene built the way every example in this project's own README builds one\n(entities attached to a named child node via `create_child_node()`), because:\n\n```python\ndef _collect_nodes(self, node, node_map, material_map, node_id=0):\n    if node.entity is not None and node not in node_map.values():\n        node_map[node_id] = node\n        ...\n        for child in node.child_nodes:\n            node_id = self._collect_nodes(child, node_map, material_map, node_id + 1)\n    return node_id\n```\n\nThe recursive descent into `node.child_nodes` only happens **inside** the\n`if node.entity is not None` branch. When called with `scene.root_node` (which\nitself carries no entity in every documented usage pattern), the function returns\nimmediately without visiting any child node, so `node_map` stays empty regardless\nof what the scene actually contains.\n\n### Impact\n\nOBJ export is completely non-functional through any usage pattern this project's\nown README documents, and has no test coverage (`tests/test_obj_importer.py`\nexists; no OBJ export test exists in the repository).\n\n### Suggested fix shape (not a patch; for triage only)\n\n1. Encode `content` to bytes (`content.encode('utf-8')`) before writing, or detect\n   the stream's mode and encode conditionally, matching the pattern other\n   exporters already use successfully (STL/glTF/3MF export all work correctly\n   against the same `Scene.save()` binary-stream contract).\n2. Fix `_collect_nodes()` to recurse into `node.child_nodes` unconditionally,\n   independent of whether the current node itself carries an entity (mirroring\n   how `Scene.save()`'s own working exporters traverse the scene graph).\n",
+  "status": "FILED",
+  "issue_ref": {
+    "number": 4,
+    "url": "https://github.com/aspose-3d-foss/Aspose.3D-FOSS-for-Python/issues/4"
+  },
+  "close_reason": null,
+  "defect_class": "EXAMPLE_FAILS"
+}
