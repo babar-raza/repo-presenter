@@ -1152,7 +1152,13 @@ next_ready_items:
       slides_java_retry_attempt_{1,2}_rejected.json, same directory. Both repositories'
       cascades remain incomplete.
   - id: WIRE_GATEVERIFY_TO_PORTFOLIO
-    status: READY
+    status: BLOCKED_NEEDS_OWNER_DECISION
+    status_corrected_2026_10_25: >
+      Was stale-labeled READY despite this card's own superseded_in_part_2026_10_24 and
+      rechecked_2026_10_24 notes already saying it is blocked. Corrected to match
+      GITHUB_ACTIONS_HOSTING_GAP_2026_10_24/PORT_BUNDLE_INTEGRITY_LAYER, which carry the same
+      status for the same root cause (no present-equivalent orchestrator, no single sealed-
+      bundle ledger) -- this card's own step 7 of that plan.
     purpose: >
       ops/gateverify.py's do_verify/rebuild_state exist (P0) but have never been run
       against a P1_PORTFOLIO_SCALE candidate. Define what "no-op, zero new provider calls"
