@@ -1152,13 +1152,22 @@ next_ready_items:
       slides_java_retry_attempt_{1,2}_rejected.json, same directory. Both repositories'
       cascades remain incomplete.
   - id: WIRE_GATEVERIFY_TO_PORTFOLIO
-    status: BLOCKED_NEEDS_OWNER_DECISION
+    status: BLOCKED
     status_corrected_2026_10_25: >
       Was stale-labeled READY despite this card's own superseded_in_part_2026_10_24 and
       rechecked_2026_10_24 notes already saying it is blocked. Corrected to match
-      GITHUB_ACTIONS_HOSTING_GAP_2026_10_24/PORT_BUNDLE_INTEGRITY_LAYER, which carry the same
+      GITHUB_ACTIONS_HOSTING_GAP_2026_10_24/PORT_BUNDLE_INTEGRITY_LAYER, which carried the same
       status for the same root cause (no present-equivalent orchestrator, no single sealed-
       bundle ledger) -- this card's own step 7 of that plan.
+    status_update_2026_10_25_orchestrator_built: >
+      The owner decided and BUILD_PRESENT_EQUIVALENT_ORCHESTRATOR landed a real one-ledger-per-
+      cascade orchestrator (src/repo_presenter/cascade.py) the same day. This card is NOT yet
+      unblocked by that alone: it specifically needs core/candidates.py's sealed-bundle manifest
+      convention (still not ported) to exist before "no-op, zero new provider calls" for a
+      README candidate has anything concrete to verify against. Downgraded from
+      BLOCKED_NEEDS_OWNER_DECISION to plain BLOCKED -- the decision this card itself needed is
+      resolved; what remains is ordinary sequencing (candidates.py has to exist first), not a
+      further owner call.
     purpose: >
       ops/gateverify.py's do_verify/rebuild_state exist (P0) but have never been run
       against a P1_PORTFOLIO_SCALE candidate. Define what "no-op, zero new provider calls"
@@ -1265,7 +1274,12 @@ next_ready_items:
       means no new draft_upstream_issue.md is needed for it.
 
   - id: GITHUB_ACTIONS_HOSTING_GAP_2026_10_24
-    status: BLOCKED_NEEDS_OWNER_DECISION
+    status: IN_PROGRESS
+    status_corrected_2026_10_25: >
+      The owner decided 2026-10-25 (asked directly): build the present-equivalent orchestrator.
+      See BUILD_PRESENT_EQUIVALENT_ORCHESTRATOR (new card, below) for the real work landed
+      since. This card's own next_step (4) -- a real hosted GitHub Actions vertical slice -- is
+      still not started; status reflects "decided and underway," not "done."
     priority: highest
     purpose: >
       Recorded while answering the owner's 2026-10-24 status question ("how far from
@@ -1392,14 +1406,17 @@ next_ready_items:
       converge on the same orchestrator decision as the one thing both are blocked on.
 
   - id: PORT_BUNDLE_INTEGRITY_LAYER
-    status: BLOCKED_NEEDS_OWNER_DECISION
+    status: IN_PROGRESS
     priority: high
     status_note_2026_10_25: >
       Steps 1-5 (noop_proof.py, capture.py, RAW_CALLS_FILENAME, the review-verdict artifact) are
-      DONE and independently useful regardless of what follows. Status reflects step 6 only: the
-      one remaining piece (seal.py/candidates.py) is blocked on the same owner decision
-      GITHUB_ACTIONS_HOSTING_GAP_2026_10_24 already carries this status for -- not abandoned,
-      not newly stuck, just correctly not startable before that decision lands.
+      DONE and independently useful regardless of what follows. Step 6's own blocker (the
+      orchestrator decision) is now resolved -- see BUILD_PRESENT_EQUIVALENT_ORCHESTRATOR (new
+      card): the owner decided to build it, and a real one-ledger-per-cascade orchestrator now
+      exists (src/repo_presenter/cascade.py). seal.py's own adaptation is not yet re-attempted
+      (that card's own next_step (3) names it as a re-evaluation, not a rushed next action) --
+      status moves back to IN_PROGRESS because the blocking decision is resolved, not because
+      seal.py itself has been adapted yet.
     purpose: >
       Owner-directed deep assessment (2026-10-24): investigate whether the old repo's sealed-
       bundle architecture (manifest.json + CURRENT pointer + dependencies.json + a lifecycle
@@ -2514,3 +2531,69 @@ next_ready_items:
       still needs the owner's own call on BUILD_INDEPENDENT_REVIEWER's next_step (advisory-only
       v1, a minimal repair-destination stub, or the fork's third option: a lightweight custom
       defect-producer against this repository's own checks= rejections).
+
+  - id: BUILD_PRESENT_EQUIVALENT_ORCHESTRATOR
+    status: IN_PROGRESS
+    priority: highest
+    purpose: >
+      Owner-decided 2026-10-25 (see docs/DECISION_LOG.md): resolve the blocker three cards
+      converged on (GITHUB_ACTIONS_HOSTING_GAP_2026_10_24, PORT_BUNDLE_INTEGRITY_LAYER,
+      WIRE_GATEVERIFY_TO_PORTFOLIO) by building a present-equivalent orchestrator -- one process
+      runs the whole S3-S8 cascade for one repository under one Invocation/Ledger, matching the
+      old repo's own proven design, instead of this repository's six separate scripts (each its
+      own process, its own Invocation).
+    done_2026_10_25: >
+      Built src/repo_presenter/cascade.py's run_cascade(). Inlines the exact same stage calls
+      scripts/run_lane_r_{investigation,reconciliation,planning,authoring_real,coherence}.py +
+      run_lane_r_render.py made (investigation_packet/schema, reconciliation_batches/packet/
+      schema, planning_packet/schema/plan_checks, authoring_tasks/schema/unit_checks,
+      coherence_batches/packet/schema/checks, render_readme/render_patch), but under ONE
+      Invocation/Ledger/CallStore for the whole run, computing the inherited-unit FactsDocument
+      merge ONCE instead of six times. Also runs independent_reviewer.review_candidate at the
+      end and writes review_verdict.json (the artifact PORT_BUNDLE_INTEGRITY_LAYER step 5 added
+      2026-10-25) -- the whole cascade plus review is now one process, one invocation.
+      Writes the exact same artifact files under out_dir the six scripts wrote (investigation/
+      dispositions/plan/content_units(.coherent).json, README.(rendered|coherent).md,
+      README.patch.diff, review_verdict.json) plus facts.json with inherited_unit facts merged
+      in -- every existing downstream reader (scripts/run_independent_review.py, a future
+      seal.py adaptation) needs no change.
+      scripts/run_cascade.py: thin CLI wrapper, same usage shape as the six scripts it replaces.
+      tests/test_cascade.py: a genuine integration test, not a relaxed stand-in. Derived every
+      one of its 9 scripted LLM replies (investigation, reconciliation, planning, 5 authoring
+      tasks, 1 coherence batch) by actually running each through the REAL run_job against this
+      fixture first (a scratch probe script, not guessed), confirming every reply is accepted on
+      the FIRST attempt against this repository's REAL prompt manifests and REAL schema/check
+      logic -- so the test's own "9 provider calls, zero retries" expectation is a measured fact.
+      Proves the one property no per-script test ever could: every one of those 9 calls lands in
+      the SAME ledger.jsonl file under the SAME invocation_id. 1635/1635 passed, 11 skipped, 5
+      pre-existing unrelated needs_compiler failures already confirmed unrelated.
+    not_yet_done: >
+      NOT yet live-demonstrated against a real clone + the real GPT_OSS gateway (credentials are
+      available in this environment, confirmed). Deliberately not forced this tick: every
+      repository with a real facts.json already has a prior six-script cascade's own real
+      scripts/_lane_r_output/<repo>/ (gitignored working output, including its own CallStore),
+      and a live run_cascade call against one would partly reuse that store's cached calls
+      rather than cleanly prove fresh end-to-end gateway behavior; a repository with no prior
+      cascade (aspose-gis-foss/Aspose.GIS.FOSS-for-.Net, cloned but never extracted) has no
+      facts.json yet, which is a separate, earlier (S1/S2 extraction) stage not in scope here.
+      The first real live run_cascade call will happen naturally on the next real extraction +
+      cascade pass, the same honest deferral pattern this session already used for
+      verify_noop_pair. close_handoff/comment_on_filed-style follow-ons are unaffected.
+    next_step: >
+      (1) Live-demonstrate run_cascade for real against a freshly-extracted repository once one
+      exists. (2) Wire scripts/run_cascade.py (or run_cascade() directly) into whatever hosted
+      GitHub Actions vertical slice GITHUB_ACTIONS_HOSTING_GAP_2026_10_24's own next_step (4)
+      still names as not started. (3) Re-evaluate PORT_BUNDLE_INTEGRITY_LAYER's seal.py
+      adaptation now that one ledger per repository cascade is real -- its own step_6 finding's
+      two blockers (the transaction-directory shape, the single-ledger assumption) are both
+      substantially closer to true now, though the directory-split (scripts/_lane_r_output/ vs.
+      evidence/build/<phase>/<repo>/) still needs its own adaptation pass, not assumed solved.
+    write_paths: [src/repo_presenter/cascade.py, scripts/run_cascade.py, tests/test_cascade.py]
+    source_refs: >
+      docs/DECISION_LOG.md's 2026-10-25 orchestrator entries; project/state.yaml's
+      GITHUB_ACTIONS_HOSTING_GAP_2026_10_24/PORT_BUNDLE_INTEGRITY_LAYER/
+      WIRE_GATEVERIFY_TO_PORTFOLIO; the six scripts.py this replaces.
+    invalidation_impact: >
+      None: cascade.py is new, additive, and no existing candidate's own already-written
+      artifacts are touched by this card (the six original scripts remain unchanged and fully
+      functional; nothing here deletes or supersedes them yet).

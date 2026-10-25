@@ -209,3 +209,26 @@ is blocked the same way (that card's own next_step (3) already said so).
 **Where the detail lives**: `project/state.yaml`'s `PORT_BUNDLE_INTEGRITY_LAYER` (`step_6_done_
 2026_10_25_seal_py_adaptation_is_blocked_not_just_unplanned`) and `GITHUB_ACTIONS_HOSTING_GAP_
 2026_10_24` (`confirmed_independently_2026_10_25`); `plans/PLAN_bundle_integrity_and_noop_proof.md`.
+
+---
+
+## 2026-10-25: Owner decision — build the present-equivalent orchestrator
+
+**Decision**: the owner was asked directly (three cards — `GITHUB_ACTIONS_HOSTING_GAP_2026_10_24`,
+`PORT_BUNDLE_INTEGRITY_LAYER`, `WIRE_GATEVERIFY_TO_PORTFOLIO` — all converge on this one blocker)
+how to resolve the missing single-process orchestrator. The owner chose: build the
+present-equivalent orchestrator — one process wraps the six existing scripts end to end for one
+repository, matching the old repo's proven design exactly (one `Invocation`/`Ledger`, one
+`transaction` directory), over redesigning the no-op proof for multiple per-script ledgers, and
+over deferring further.
+
+**Why**: this also unblocks the GitHub Actions hosting gap (mission non-negotiable #1), and the
+components it wraps (composition, review via `independent_reviewer.py`, render) already exist and
+are proven — this is wiring, not new invention, per `GITHUB_ACTIONS_HOSTING_GAP_2026_10_24`'s own
+next_step note.
+
+**What this does NOT decide**: the orchestrator's exact internal shape (a new script vs. a CLI
+subcommand vs. a library function multiple callers use) — that is this session's own next planning
+pass, recorded in `project/state.yaml`'s new `BUILD_PRESENT_EQUIVALENT_ORCHESTRATOR` card.
+
+**Where the detail lives**: `project/state.yaml`'s `BUILD_PRESENT_EQUIVALENT_ORCHESTRATOR`.

@@ -2212,3 +2212,33 @@ entries:
       guessed at. 25 tests ported (tests/issues/test_file.py, the file_handoff/plan_filing
       subset of the old repo's ~1,000 test lines) plus 2 new ones (permit/token-provenance
       gate ordering). All pass; full repository suite re-run clean.
+
+  - component: "present-equivalent orchestrator (src/repo_presenter/cascade.py)"
+    source: NEW -- not a port
+    disposition: BUILD_NEW_2026_10_25
+    reason: >
+      Owner-decided 2026-10-25 (project/state.yaml's BUILD_PRESENT_EQUIVALENT_ORCHESTRATOR):
+      three cards converged on the lack of a single-process, single-ledger orchestrator
+      matching the old repo's own `present` CLI command. Not ported from the old repo's cli.py
+      (4,828 lines, ~30 subcommands, a pip-installed console script) -- this repository has no
+      equivalent CLI at all, and inlining this repository's OWN already-ported stage functions
+      under one shared Invocation/Ledger is a new, much smaller undertaking than porting cli.py
+      wholesale would be.
+    evidence: >
+      src/repo_presenter/cascade.py's run_cascade() inlines the exact calls
+      scripts/run_lane_r_{investigation,reconciliation,planning,authoring_real,coherence}.py +
+      run_lane_r_render.py made, under one Invocation/Ledger/CallStore, computing the inherited-
+      unit FactsDocument merge once instead of six times, then runs
+      readme.review.independent_reviewer.review_candidate and writes review_verdict.json at the
+      end. scripts/run_cascade.py: thin CLI wrapper. tests/test_cascade.py: every one of its 9
+      scripted LLM replies was derived by actually running it through the real run_job against
+      a real fixture first (a scratch probe, not guessed) -- confirmed accepted on the first
+      attempt against this repository's real prompt manifests/schemas/checks, so the test's own
+      "9 calls, zero retries, one shared ledger" assertion is a measured fact. 1635/1635 passed,
+      11 skipped, full suite clean.
+    not_yet_done: >
+      Not yet live-demonstrated against a real clone + the real GPT_OSS gateway (see
+      BUILD_PRESENT_EQUIVALENT_ORCHESTRATOR's own not_yet_done note for why -- every repository
+      with a real facts.json already has its own prior six-script cascade's CallStore, and none
+      without one has been extracted yet). Deferred to the next real extraction + cascade pass,
+      the same honest pattern this session already used for verify_noop_pair.
