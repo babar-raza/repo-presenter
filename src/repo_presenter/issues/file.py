@@ -76,6 +76,7 @@ from repo_presenter.issues.approval import (
     is_valid_repository,
     verify_approval,
 )
+from repo_presenter.issues.dedup import body_with_marker
 from repo_presenter.issues.model import Handoff, IssueRef
 
 AUTHORIZATION_VARIABLE = "REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED"
@@ -109,22 +110,6 @@ def write_authorized(environment: Mapping[str, str]) -> bool:
     ``True`` here is necessary and never sufficient: filing also needs the handoff's own approval
     record."""
     return environment.get(AUTHORIZATION_VARIABLE, "").strip().lower() in _AUTHORIZED_VALUES
-
-
-def fingerprint_marker(defect_fingerprint: str) -> str:
-    """The hidden marker every filed body carries, so the target repository itself records which
-    defect an issue is for."""
-    return f"<!-- repository-presenter-defect: {defect_fingerprint} -->"
-
-
-def body_with_marker(handoff: Handoff) -> str:
-    """The suggested body, with the fingerprint marker appended once when a handoff does not
-    already carry it."""
-    marker = fingerprint_marker(handoff.defect_fingerprint)
-    body = handoff.suggested_issue_body
-    if marker in body:
-        return body
-    return f"{body.rstrip()}\n\n{marker}\n"
 
 
 def _split(repository: str) -> tuple[str, str]:
@@ -353,7 +338,7 @@ def file_handoff(
                 owner,
                 name,
                 title=handoff.suggested_issue_title,
-                body=body_with_marker(handoff),
+                body=body_with_marker(handoff.suggested_issue_body, handoff.defect_fingerprint),
                 token=token,
                 write=create,
             )

@@ -1654,6 +1654,24 @@ next_ready_items:
       besides the test suite. 25 tests ported/adapted (tests/issues/test_file.py) + 75/75 in
       the whole issues/ package; full repository suite re-run clean. Full detail:
       migration/reuse-manifest.yaml's entry.
+    marker_bug_found_and_fixed_2026_10_25: >
+      Found and fixed a real, latent correctness bug while investigating this card's own
+      "no wiring script exists yet" gap. file.py's own file_handoff_done_2026_10_24 port had
+      defined its OWN local fingerprint_marker/body_with_marker, carrying the OLD repo's marker
+      string verbatim ("repository-presenter-defect") instead of this repository's own, already-
+      ported issues/dedup.py + github/client.py canonical marker ("repo-presenter-defect") --
+      dedup.py's own docstring explicitly documents that rename as deliberate, to avoid a filing
+      from this project ever being mistaken for the old repo's. Confirmed concretely: the one
+      real issue already filed (aspose-3d-foss/Python#4, via the retired file_issue() path
+      before this session's file_handoff port) carries the CORRECT marker
+      ("repo-presenter-defect", checked live via `gh issue view`); file.py's new code would have
+      written the WRONG one on every future filing, silently breaking the exact duplicate-filing
+      safety net this module's own docstring promises (a later run's dedup.check_dedup search
+      would never find what file_handoff itself had written). Fixed by deleting file.py's
+      duplicate functions and importing body_with_marker from dedup.py instead; updated
+      tests/issues/test_file.py's two hardcoded marker-string assertions to match. 127/127
+      passed (tests/issues/ + tests/github/); full suite re-run clean (1627 passed, 11 skipped,
+      5 deselected pre-existing needs_compiler failures already confirmed unrelated).
     next_step: >
       close_handoff/comment_on_filed remain NOT ported -- a separate, not-yet-scoped follow-on
       (needs close_approval.py and a redetect.py-shaped RedetectionResult read first, not

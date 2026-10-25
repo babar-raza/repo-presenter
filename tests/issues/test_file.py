@@ -118,7 +118,7 @@ def _issue_ref(number: int = 7) -> IssueRef:
     return IssueRef(number=number, url=f"https://x/issues/{number}")
 
 
-MARKER = f"<!-- repository-presenter-defect: {FINGERPRINT} -->"
+MARKER = f"<!-- repo-presenter-defect: {FINGERPRINT} -->"
 
 
 # ---------------------------------------------------------------------------
@@ -264,7 +264,7 @@ def test_authorized_write_posts_the_suggested_title_and_body() -> None:
     assert token == "ghp_write"
     assert payload["title"] == handoff.suggested_issue_title
     assert payload["body"].startswith(handoff.suggested_issue_body.rstrip())
-    assert payload["body"].rstrip().endswith(f"<!-- repository-presenter-defect: {FINGERPRINT} -->")
+    assert payload["body"].rstrip().endswith(f"<!-- repo-presenter-defect: {FINGERPRINT} -->")
     assert result.filed is True
     assert result.issue_ref == IssueRef(number=7, url="https://x/issues/7")
     assert result.reason == "filed"
