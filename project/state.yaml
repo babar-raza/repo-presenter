@@ -1386,8 +1386,14 @@ next_ready_items:
       converge on the same orchestrator decision as the one thing both are blocked on.
 
   - id: PORT_BUNDLE_INTEGRITY_LAYER
-    status: IN_PROGRESS
+    status: BLOCKED_NEEDS_OWNER_DECISION
     priority: high
+    status_note_2026_10_25: >
+      Steps 1-5 (noop_proof.py, capture.py, RAW_CALLS_FILENAME, the review-verdict artifact) are
+      DONE and independently useful regardless of what follows. Status reflects step 6 only: the
+      one remaining piece (seal.py/candidates.py) is blocked on the same owner decision
+      GITHUB_ACTIONS_HOSTING_GAP_2026_10_24 already carries this status for -- not abandoned,
+      not newly stuck, just correctly not startable before that decision lands.
     purpose: >
       Owner-directed deep assessment (2026-10-24): investigate whether the old repo's sealed-
       bundle architecture (manifest.json + CURRENT pointer + dependencies.json + a lifecycle
