@@ -1581,10 +1581,13 @@ next_ready_items:
   - id: DECIDE_NEXT_ISSUE_FILINGS
     status: IN_PROGRESS
     blocked_on: >
-      The engineering work (upgrading issues/file.py to the approval-gated model) is unblocked
-      and in progress -- see implementation_progress_2026_10_24 below. Only the final step
-      (each of the 6 pending drafts needs its own ops/issue_approvals/<handoff_id>.json
-      committed by the owner) is blocked on the owner, per the adoption_decision below.
+      CONFIRMED, not just anticipated, as of handoffs_converted_and_wired_2026_10_25: all
+      engineering work is done (file.py's approval-gated model, the 7 typed Handoff records,
+      and scripts/plan_pending_handoffs.py proving the gate end to end). Everything left is the
+      owner's own action -- committing ops/issue_approvals/<handoff_id>.json per defect they
+      want filed, using the handoff_id/evidence_digest scripts/plan_pending_handoffs.py's report
+      names for each -- plus a separate, not-yet-scoped scheduled-filing-job follow-on that has
+      no real approval to test against yet.
     purpose: >
       6 more genuine, deduped, evidenced upstream defects are drafted and ready
       (aspose-3d-foss .NET and Java format-unreachability, aspose-email-foss .NET test-fixture
