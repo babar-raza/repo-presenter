@@ -1461,13 +1461,43 @@ next_ready_items:
       against real invocation records will happen naturally on the next real cascade run.
       Full reasoning: plans/PLAN_bundle_integrity_and_noop_proof.md's "Invocation-scope question
       resolved" section.
+    step_2_done_2026_10_25_corrected_from_an_overly_pessimistic_first_read: >
+      Read seal.py (1,203 lines) in full. First pass, from its ~18 imports alone, looked
+      alarming (two disqualified/not-portable modules among them) and concluded it "cannot be
+      ported wholesale" -- caught before being recorded: re-checked every import by actually
+      running it against this repository's real src/ under the project's own interpreter (the
+      first mechanical check used the wrong interpreter and produced false "module missing"
+      results for pydantic/jsonschema/markdown_it-dependent modules, caught and redone). Real
+      result, far better than the first read: shell.py, policy.py, renderer.py, ledger.py's
+      parse_records, secrets.py's scan_for_secrets, toolchains.py, and most of the version
+      constants seal.py reads ALL already exist and resolve cleanly -- none of that was known
+      for certain before checking. Genuinely missing: a trivial RAW_CALLS_FILENAME constant;
+      the 3 noop_proof.py functions step 1 deliberately deferred (confirmed correctly deferred
+      to exactly this point); core/snapshot/capture.py (167 lines, deferred alongside clone.py
+      long before clone.py itself was ported and live-exercised -- never circled back to);
+      core/candidates.py itself (step 3, expected). REVIEWER_LOGIC_VERSION/VALIDATOR_VERSION
+      turned out to be plain version-number strings, not logic, and record_replay_verdict is 15
+      lines patching one check's verdict on a validation.json shape this repository does not
+      have -- none of this needs the disqualified modules themselves, only this repository's
+      own small version constant and no-op-proof record (neither exists yet). Real, newly-
+      found gap: seal.py's own REQUIRED_ARTIFACTS names validation.json/review.json; this
+      repository's independent_reviewer.py returns a ReviewVerdict that is never persisted
+      per-repository (only a portfolio-wide aggregate exists) -- sealing needs that artifact to
+      exist first. Full detail: plans/PLAN_bundle_integrity_and_noop_proof.md's "Step 2" section.
     next_step: >
-      Read seal.py in full (step 2), now informed by the P3/P4 investigation's own finding that
-      the old repo's durable-state mechanism for a sealed bundle is a dedicated git-ref
-      namespace (refs/repository-presenter-state/records/...), not a committed file in the
-      working tree as this plan's own candidates.py read assumed -- re-check that assumption
-      before porting candidates.py (step 3).
+      In order: (1) port core/snapshot/capture.py (167 lines); (2) port noop_proof.py's
+      remaining 3 functions (ledger_totals/reconcile_ledger/LedgerReconciliationError -- already
+      fully understood from step 1's own reading, no new investigation needed); (3) add
+      RAW_CALLS_FILENAME to authoring.py; (4) design (not port) a version constant for
+      independent_reviewer.py and a per-repository persisted review-verdict artifact (new work,
+      not ported from anything); (5) only then adapt seal.py's own logic against this
+      repository's REAL artifact shapes (facts.json/dispositions.json/plan.json/
+      content_units.coherent.json/README.coherent.md/llm_cache/*), never the old repo's
+      validation.json/review.json shape. Each of (1)-(3) is a small, bounded, already-scoped
+      port; (4)-(5) are design work and should not be rushed per the owner's own "plan carefully
+      before building from scratch" directive -- not started this tick.
     write_paths_planned: [src/repo_presenter/core/noop_proof.py (step 1, DONE),
+      src/repo_presenter/core/snapshot/capture.py (new),
       src/repo_presenter/core/candidates.py (step 3),
       src/repo_presenter/readme/bundle/seal.py (step 4),
       src/repo_presenter/readme/bundle/recheck.py (steps 5-6, extends the existing port)]

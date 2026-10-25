@@ -393,9 +393,78 @@ job(s) complete, `invocation.attach_ledger(...)` + `invocation.write(workspace /
 f"{invocation.invocation_id}.json", ...)`. Applied to `run_lane_r_investigation.py`,
 `_reconciliation.py`, `_planning.py`, `_authoring_real.py`, `_coherence.py` — all five scripts
 that make LLM calls. `render.py` makes none and needs no invocation. All five compile; full suite
-re-run clean (see commit log for the exact count). **Not yet live-demonstrated**: no fresh git
-clone was available in this environment to fire a real `run_lane_r_investigation.py` end to end,
-and fabricating one just to force a demonstration was judged more invasive than warranted given
-the primitive's own 20 unit tests already prove its correctness — the first real
-`verify_noop_pair` call against one of these scripts' own real invocation records will happen
-naturally the next time a real cascade runs twice, not forced here.
+re-run clean (see commit log for the exact count). This was in fact live-demonstrated shortly
+after, incidentally: `LANE_R_CASCADE_COMPLETION_2026_10_24` (`project/state.yaml`) ran
+`run_lane_r_authoring_real.py` and `run_lane_r_coherence.py` for real against
+`aspose-words-foss/.NET`, and both wrote a real invocation record under
+`llm_cache/invocations/`, proving the wiring works end to end against a live gateway call, not
+just in unit tests.
+
+## Step 2 (read seal.py in full) — done 2026-10-25, corrected from an overly pessimistic first read
+
+**First read, from the import list alone**: seal.py (1,203 lines) imports from ~18 modules,
+several of which looked immediately disqualifying — `readme/review/independent/review.py`
+(disqualified, fold-bug) and `readme/validation/registry.py` (not a port candidate as a whole,
+per `migration/reuse-manifest.yaml`) among them. This produced an initial, alarmed conclusion
+that seal.py "cannot be ported wholesale" and would need a from-scratch redesign.
+
+**Corrected after actually checking which imports resolve, per this project's own standing
+discipline (verify, don't conclude from an import list alone)**: ran every one of seal.py's ~18
+imports against this repository's real `src/`, under the project's own interpreter (not a bare
+system Python missing `pydantic`/`jsonschema`/`markdown_it` — the first check run used the wrong
+interpreter and produced false "module missing" results, caught and redone). The real result is
+far better than the first read suggested:
+
+- **Already present and resolve cleanly, no action needed**: `readme/bundle/invalidation.py`
+  (`STATE_INVALIDATED`/`STATE_UPDATE_AVAILABLE`/`ScopeError`/`route`), `readme/composition/
+  authoring.py`'s `NORMALISATION_VERSION`, `readme/composition/components/shell.py`'s
+  `SHELL_VERSION`, `readme/composition/policy.py` (`POLICY_VERSION`/`policy_packet`),
+  `readme/composition/renderer.py`'s `RENDERER_VERSION`, `readme/evidence/facts/inherited.py`'s
+  `INHERITED_UNITS_VERSION`, `extractors/surface/extractor.py`'s `EXTRACTOR_VERSION`,
+  `core/llm/jobs.py`'s `CallStore`, `core/llm/ledger.py` (`LEDGER_FILENAME`/`canonical_hash`/
+  `parse_records` -- `parse_records` specifically was not known to exist before checking),
+  `core/llm/prompts.py`'s `PromptRegistry`, `core/registry/models.py`'s `RegistryEntry`,
+  `core/secrets.py` (`ConfiguredSecret`/`scan_for_secrets` -- `scan_for_secrets` not known to
+  exist before checking), `core/toolchains.py`'s `toolchain_fingerprint`.
+- **Genuinely missing, small**: `readme/composition/authoring.py`'s `RAW_CALLS_FILENAME`
+  constant (trivial to add); `core/noop_proof.py`'s `LedgerReconciliationError`/`ledger_totals`/
+  `reconcile_ledger` (exactly the bundle-manifest-reading subset step 1 deliberately deferred --
+  confirmed correctly deferred to exactly this point, not missed); `core/snapshot/capture.py`
+  (167 lines, whole module not ported -- previously deferred alongside `clone.py`, which has
+  since been ported and live-exercised; capture.py itself was never circled back to).
+- **Genuinely missing, needs a decision, not a mechanical port**: `core/candidates.py` (the
+  planned step 3 itself, expected); `readme/review/independent/review.py`'s
+  `REVIEWER_LOGIC_VERSION` and `readme/validation/registry.py`'s `VALIDATOR_VERSION`/
+  `BLOCKING_CHECKS`/`record_replay_verdict`. Read what these actually are, not just their
+  names: `REVIEWER_LOGIC_VERSION`/`VALIDATOR_VERSION` are plain version-number strings (`"21"`,
+  `"23"`) -- fingerprints of which mechanism version produced a bundle, for invalidation-scope
+  purposes (mission §8), not logic to port. `record_replay_verdict` is 15 lines that overwrite
+  one specific check's (`"BC-11"`, the no-op-proof check itself) verdict to `PASS` after a
+  successful replay, on a `validation.json`-shaped document this repository has no equivalent
+  of (its own checks run inline during authoring/coherence, never consolidated into one
+  artifact). None of this needs the disqualified modules' actual logic -- it needs this
+  repository's OWN version constant for `independent_reviewer.py` (does not exist yet) and an
+  equivalent small patch function for whatever this repository's own no-op-proof record ends up
+  being, once that exists.
+- **A real, newly-discovered gap seal.py's own `REQUIRED_ARTIFACTS` tuple surfaces**:
+  `REQUIRED_ARTIFACTS` includes `validation.json` and `review.json` -- this repository produces
+  neither. `readme/review/independent_reviewer.py::review_candidate` returns a `ReviewVerdict`
+  object that is never persisted to disk per repository (only a portfolio-wide aggregate,
+  `evidence/build/P2_REAL_ENGINE_SALVAGE/independent_review_report.json`, exists). Sealing a
+  bundle meaningfully needs a per-repository review-verdict artifact that does not exist yet --
+  this is new, genuinely needed work, not a port of anything.
+
+**Revised sizing**: seal.py is substantially MORE portable than the first read suggested. The
+real remaining gap before it could be adapted is: port `capture.py` (167 lines); port the 3
+deferred `noop_proof.py` functions (small, already fully understood from step 1's own reading);
+add a `RAW_CALLS_FILENAME` constant; design (not port) a small `independent_reviewer.py` version
+constant and a per-repository persisted review-verdict artifact; THEN adapt seal.py's own logic
+against this repository's real `REQUIRED_ARTIFACTS` shape (`facts.json`, `dispositions.json`,
+`plan.json`, `content_units.coherent.json`, `README.coherent.md`, `llm_cache/ledger.jsonl`,
+`llm_cache/invocations/*.json`, plus the new review-verdict artifact) -- not the old repo's own
+`validation.json`/`review.json` shape, which this project does not and should not replicate.
+
+**Deliberately not started this tick**: none of the above was built. This is the planning pass
+the owner's own "plan carefully before building from scratch" directive asks for, applied to a
+genuinely large remaining piece -- recorded precisely so the next session does not have to
+re-derive it, and does not inherit the first read's overly pessimistic (and wrong) conclusion.
