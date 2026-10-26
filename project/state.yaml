@@ -1486,10 +1486,17 @@ next_ready_items:
       (bc3d00f), git_backend.py (5752a1e), trigger.py (285b8c7), recovery.py (48fe72b),
       health.py (b1ea293), present_transaction.py + processability.py + the full old state test
       suite. 234 state-related tests pass; each file committed after its own suite passed.
-      (2) Mission non-negotiable #1 itself (hosted GitHub Actions vertical slice) -- NOW UNBLOCKED
-      by (1); build the real present.yml-equivalent hosted workflow this card's own next_step (4)
-      already named, wired through run_present_transaction (present_transaction.py), not
-      cascade.py directly. Not yet started.
+      (2) Mission non-negotiable #1, hosted vertical slice -- BUILT 2026-10-27 (commit 2ddcd32):
+      src/repo_presenter/present.py runs one listed repository through the durable transaction
+      (pinned clone -> Lane L facts from the clone -> whole S3-S8 cascade -> independent review ->
+      first seal), with typed failures recorded as FAILED_INTERNAL; src/repo_presenter/lane_l.py is
+      the production facts stage; .github/workflows/present.yml is workflow_dispatch only. 5 wiring
+      tests pass against the real git-ref backend on a local bare remote. NOT YET DONE, and each
+      needs the owner's go-ahead because it spends real provider calls and writes state refs to
+      origin: (a) the first live hosted run; (b) a scheduled trigger (cadence and spend are an
+      owner decision). Known gap, not hidden: a hosted runner starts with an empty workdir, so a
+      sealed bundle never survives to a later run and the no-op proof cannot be reached hosted yet.
+      Persisting sealed bundles across runs (state ref or artifact) is the next honest step.
       (3) judge.py/review.py's acceptance-scoring tier (core/candidates.py's deliberately-
       deferred Tier 2: load_proposable_candidate/_review_refusal/ProposableCandidate/
       AcceptanceGate) -- not yet scoped/read this session; read the old repo's source in full
