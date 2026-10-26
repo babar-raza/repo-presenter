@@ -1752,31 +1752,96 @@ entries:
       (3) Re-run the cascade for the 29 repositories with stale facts before reading any new verdict
       for them.
 
-  - component: "components/readme/repair/{rounds.py,targeted.py} (3,736 lines)"
+  - component: "components/readme/repair/{rounds.py (1,187 lines), targeted.py (1,010 lines), __init__.py (1 line)}"
     source: old-repository-presenter
     evaluated_at_shas: []
-    behavior: UNKNOWN in detail -- sized and named only, not read line-by-line this pass.
-    disposition: PENDING_REVIEW
+    behavior: >
+      Both files read in full on 2026-10-26. Total is 2,197 lines, not the 3,736 in the earlier
+      sizing (wc -l on the old repair/ folder gives 1,187 and 1,010; no other module is in it).
+      targeted.py: defect model, fingerprints, review and validation defect routing, RepairLedger,
+      repair_packet/schema/checks, SlotSetProbe. rounds.py: run_round (S3-S10 orchestrator),
+      round_defects, the S10 second and third reader trigger, _stage_target, repair_defect (one
+      targeted_repair call per causal stage, with S6 to S5 escalation and the BC-07 visible-line
+      path), run_transaction (the bounded loop), and raw_calls sealing.
+    disposition: >
+      PER-FILE. targeted.py: PORTED (verbatim apart from import paths and a module docstring note,
+      commit fd30f58; re-diffed 2026-10-26, 35 changed lines in total). rounds.py: the repair loop
+      is needed for the mission (a REJECT needs a targeted repair path, not only a block), so the
+      S5/S6 part was PORTED AS AN ADAPTATION to src/repo_presenter/readme/repair/loop.py, built over
+      cascade.run_cascade and the deterministic ReviewVerdict. The rest of rounds.py is RETIRED or
+      DEFERRED, function by function below.
+    per_file: >
+      targeted.py: PORTED (fd30f58, unchanged this pass).
+      rounds.py, function by function:
+      run_round (S3-S10 orchestrator, S9 validate_candidate, S10 review_document): RETIRE for S3-S8,
+      superseded by repo_presenter/cascade.py run_cascade (same stage calls and artifact files, one
+      invocation). S9 and S10 depend on validation/registry.py and review/independent/review.py,
+      neither ported; the deterministic independent_reviewer replaces S10 by design.
+      TransactionInputs, Round: RETIRE with run_round (their only consumers).
+      round_defects: RETIRE for the review half, superseded by readme/review/defect_bridge.py
+      build_defects (same review_defects call, with placed texts). Its validation_defects half is
+      DEFER (needs S9 failures; no S9 exists here).
+      _second_opinion, _third_opinion, _read_review, SecondReadFailure: DEFER. Corroborating second
+      and third judgment reads; no LLM judgment rule exists yet (independent_reviewer v1 is
+      deterministic only).
+      _raw_call_entry, _round_raw_calls (raw_calls.json): DEFER with the bundle and seal layer;
+      write_raw_calls is not ported.
+      _stage_target S3 and S4 branches: DEFER. defect_bridge only produces causal stage S6, or S4 for
+      a finding whose quote is placed content (misrouted), so S3 is unreachable. S4 repair needs the
+      patch-scoped path (reconciliation/patch.py, 259 lines, not ported); a whole-batch S4 revision
+      would regenerate unrelated units, which the mission forbids.
+      _stage_target S5 and S6, repair_defect (S5/S6), _refuse_noop, title and must-carry layers,
+      _slot_set_probe, escalate_to_plan, composition_id, run_transaction: PORT (ADAPT) into
+      readme/repair/loop.py. Adaptations, each named: (1) the causal call's request hash is
+      recomputed from stage inputs read back from out_dir, so the stored revised output is the one
+      the next cascade run reads; (2) the cascade's document order is rebuilt (inherited units
+      appended last), because packets serialise in that order and facts.json stores facts sorted;
+      (3) keep_unflagged_units is NEW: a targeted S6 revision may change only the unit the finding's
+      quote sits in (the mission's no-regeneration rule); (4) a round in which no stored output
+      changed stops rather than re-running the cascade (the old run_transaction always re-ran).
+      _reject_insufficient_visible_line_overage and the BC-07 branch of repair_defect: DEFER. BC-07
+      is an S9 check; the cascade does not run S9, so the branch is inert.
+      type_fallback (recover_section_authoring_with_type_fallback): RETIRE for repair. It sits only
+      in fresh authoring, which run_cascade already makes without it.
+      sealed_bundle seeding (reconstructed_task_output): DEFER with the bundle layer.
+      score_candidate (advisory acceptance profile): DEFER. Advisory, no blocking role.
     reason: >
-      This is the orchestration layer dispositions.py's own S4 refusal/repair half (ported,
-      entry above) and the coherence S8 call site both originate from, per this repository's own
-      prior finding (see the "scripts/run_lane_r_coherence.py" entry above: "repair/rounds.py (not
-      ported) is the orchestration layer both this and the earlier S4 refusal/repair half came
-      from, and the next place to look" for a real fix to the duplicate-opening-paragraph defect
-      that CLOSE_DUPLICATE_OPENING_PARAGRAPH_PARTIAL only partially closed this session). Reading
-      it is the correct next step before attempting any further, deeper fix to that defect class
-      beyond the already-shipped partial guard.
-    target_module: not yet planned -- needs a read first.
-    next_step: >
-      Read rounds.py and targeted.py in full; determine whether either genuinely closes the
-      "should an inherited paragraph ever have been disposed VERIFIED_PRESERVE into a section S6
-      will also freshly author" design question that CLOSE_DUPLICATE_OPENING_PARAGRAPH_PARTIAL's
-      own objective explicitly named as needing this unported subsystem. Do not port sight
-      unseen -- confirm it actually solves this before committing to a multi-session port.
-    portfolio_consumers: Lane R, every candidate with a duplicate-opening-paragraph risk --
-      currently affects at least 2 of the 5 uncovered repositories
-      (aspose-imaging-foss/.NET, aspose-slides-foss/Java).
-    invalidation_impact: none yet -- not pulled.
+      The mission's Lane R rule is that a REJECT blocks unless refuted, and that unfixable feedback
+      ends BLOCKED, never ACCEPT. Blocking alone satisfied that, but left every fixable reviewer
+      finding with no path to repair (project/state.yaml, BUILD_INDEPENDENT_REVIEWER's open item).
+      The S5/S6 loop closes that path with the old repository's guards, so a repair is one judged
+      run_job call, never a silent edit, and only the repaired section and what it changes
+      downstream are asked again (the store serves the rest). S4 findings stay unrepairable on
+      purpose: the motivating aspose-font-foss/Python finding is an inherited install command, and
+      its honest status is BLOCKED until the patch-scoped S4 path is ported.
+    target_module: "src/repo_presenter/readme/repair/loop.py (PORT_REPAIR_LOOP_2026_10_26); tests/readme/repair/test_loop.py (6 offline tests)"
+    progress_note_2026_10_26: >
+      Ported the S5/S6 repair loop. Tests are offline (scripted fake client, no live call):
+      no-op refusal, unflagged-unit guard, a closed S6 repair (one targeted_repair call, the
+      repaired unit stored under its causal request hash, the next cascade pass serving every other
+      call from the store, 1 new provider call), an unrepairable no-op repair (both asks refused,
+      recorded, not retried), and the S6 to S5 slot-set escalation. Full suite: 2071 passed before,
+      2077 passed after (11 skipped both times).
+      Defect found while porting (a property of this repository's cascade, not of the old code):
+      packets serialise facts in document order, which puts inherited units last, but facts.json
+      stores facts sorted, so any cache key recomputed from disk silently differs (measured on the
+      planning request hash). loop.py rebuilds the order. Any reader that recomputes request hashes
+      from facts.json must do the same.
+      Old-code observation: rounds.py _stage_target looks up the S6 task with a bare next() and no
+      default, so a defect naming a section with no task raises StopIteration instead of recording
+      an outcome. The port records unrepairable in that case.
+      Observation on the scripted fixture: the real deterministic reviewer returns REJECT on it
+      (disposition_coverage on a kept code block, live_readme_loss on headings marked NON_CONTENT).
+      Those findings have no repairable causal stage, so they stay blocking. Not evaluated against
+      live candidates.
+      Not done: S4 repair (needs reconciliation/patch.py), the BC-07 visible-line branch and
+      validation_defects (need S9), judgment second reads (need a judgment rule), raw_calls and
+      bundle seeding (need the bundle layer). No live repair run exists.
+    portfolio_consumers: any Lane R candidate with a deterministic REJECT whose causal stage is S5 or S6.
+    invalidation_impact: >
+      None for accepted candidates: nothing has run it live. A repaired candidate changes only its
+      own consumed stage and its downstream calls; no other candidate's store entries are touched.
+    smallest_first_integration_test: "tests/readme/repair/test_loop.py::test_a_rejected_finding_is_repaired_once_through_run_job_and_the_cascade_is_settled"
 
   - component: "components/readme/validation/claims.py (BC-14: version, install-command and
       publication claims held to the facts)"
