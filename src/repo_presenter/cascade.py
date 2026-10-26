@@ -97,7 +97,9 @@ DEFAULT_REGISTRY_PATH = Path("data/registry.json")
 class CascadeResult:
     """Everything a caller (a thin CLI, a future hosted workflow step) needs after one full
     S3-S8 run: the one invocation that made every provider call, where every artifact landed,
-    and the independent reviewer's own verdict on the result."""
+    the independent reviewer's own verdict on the result, and -- for a caller that wants to seal
+    this result (readme.bundle.seal.seal_candidate) -- the registry entry and the final
+    FactsDocument this run actually consumed, so sealing never has to re-derive them."""
 
     repository: str
     source_revision: str
@@ -107,6 +109,8 @@ class CascadeResult:
     facts_path: Path
     readme_path: Path
     review_verdict: ReviewVerdict
+    entry: RegistryEntry
+    document: FactsDocument
 
 
 def _tree_paths(root: Path) -> list[str]:
@@ -352,4 +356,6 @@ def run_cascade(
         facts_path=facts_path,
         readme_path=readme_path,
         review_verdict=verdict,
+        entry=entry,
+        document=document,
     )
