@@ -1152,7 +1152,29 @@ next_ready_items:
       slides_java_retry_attempt_{1,2}_rejected.json, same directory. Both repositories'
       cascades remain incomplete.
   - id: WIRE_GATEVERIFY_TO_PORTFOLIO
-    status: BLOCKED
+    status: DONE
+    status_corrected_2026_10_26_closed_on_a_better_fitted_mechanism: >
+      Re-read ops/gateverify.py's own real code in full before attempting to "wire" anything
+      into it (this card's own original ask), rather than guessing from its name. It is this
+      repository's own TASKCARD-verification engine (AGENTS.md's taskcard discipline:
+      do_verify/rebuild_state run a card's checks twice clean, apply a negative-control
+      falsifier, and accept/reject the CARD) -- entirely unrelated machinery to a README
+      candidate's own no-op proof. The card's original framing ("wire gateverify.py... against
+      a P1_PORTFOLIO_SCALE candidate") conflated two different systems; there was never a
+      natural seam to wire through there.
+      The real need this card actually named -- "define what no-op, zero new provider calls
+      means for a README candidate and wire a real check" -- IS now genuinely answered, by a
+      better-fitted mechanism: readme/bundle/seal.py's own no-op-proof-adoption dance (built
+      PORT_BUNDLE_INTEGRITY_LAYER steps 9-12, live-demonstrated for real against aspose-3d-foss/
+      Aspose.3D-FOSS-for-.NET: a fresh, byte-identical, zero-provider-call rerun moves a bundle
+      from ACCEPTED to READY_FOR_PROPOSAL with a measured proof) plus core/candidates.py's
+      count_current_candidates/integrity_valid_candidates/verify_bundle (step 8), which
+      independently re-verify that proof from the sealed manifest + real ledger alone, any time,
+      without rerunning anything. Closing this card DONE on that basis, not on a literal
+      gateverify.py integration that was never the right shape for what was actually needed.
+      recheck_bundle/recheck_portfolio's own fuller 5-scope currency check (still blocked on
+      validation/registry.py) remains a separate, larger, correctly-still-open question -- this
+      card's own narrower "no-op means X, here's a real check" ask is what closes here.
     status_corrected_2026_10_25: >
       Was stale-labeled READY despite this card's own superseded_in_part_2026_10_24 and
       rechecked_2026_10_24 notes already saying it is blocked. Corrected to match
