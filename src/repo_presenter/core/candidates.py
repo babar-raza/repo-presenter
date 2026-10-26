@@ -42,6 +42,10 @@ CURRENT_FILENAME = "CURRENT"
 # imported, since core/ may not import a readme/ module (this file's own docstring; see also
 # readme/bundle/seal.py's identical note about core/llm/ledger.py's LEDGER_FILENAME).
 DEPENDENCIES_FILENAME = "dependencies.json"
+# The manifest field the drift monitor reads: upstream file -> git blob id at the sealed revision.
+# Written by readme/bundle/seal.py when it records upstream blobs; absent on bundles sealed without
+# them, which the monitor then judges from the sealed facts' cited paths instead.
+UPSTREAM_BLOBS_FIELD = "upstream_blobs"
 COUNTED_STATES = frozenset({"READY_FOR_PROPOSAL"})
 # The only manifest shape this code knows how to trust. A future, incompatible schema_version
 # must fail closed rather than have its (possibly differently-shaped) `files` map trusted as if

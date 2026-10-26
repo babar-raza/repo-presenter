@@ -2038,21 +2038,88 @@ entries:
       install_state.py,org_listing.py,relevance.py} (2,025 total)"
     source: old-repository-presenter
     evaluated_at_shas: []
-    behavior: UNKNOWN in detail -- sized and named only, not read line-by-line this pass.
-    disposition: PENDING_REVIEW
-    reason: >
-      Maps directly to idea.md's own Operating Model ("continuously inventories explicitly
-      authorized GitHub sources... monitors every admitted repository, including newly discovered
-      read-only entries") and mission P4 ("enabled discovery, monitoring..."). Correctly lower
-      priority than the independent-reviewer gap or the P3 PR-effect gap above: mission's own
-      P0-P4 ordering puts P4 strictly after P3, and idea.md's own agile-operating-model section
-      says infrastructure is "just-in-time... enters the active path only when it unblocks the
-      current repository." Recorded here so it is not forgotten, not because it is next.
-    target_module: not yet planned -- needs a read first, and not before P3 lands.
-    next_step: defer reading until P3 (hosted PR/issue effects) is proven; then read before P4
-      work begins.
-    portfolio_consumers: future P4 autonomous operation, both lanes.
-    invalidation_impact: none yet -- not pulled.
+    behavior: >
+      Read in full (2026-10-26 port pass). Registry discovery reconciles data/registry.json
+      against each authorized organization's listing by stable repository id (REGISTERED /
+      UNREGISTERED / EXCLUDED_BY_POLICY / MISSING_UPSTREAM, never admits). Drift observation
+      compares each repository's default-branch head with its CURRENT sealed bundle and classifies
+      the change by consumed paths (relevance.py) plus a 30-day registry freshness recheck
+      (freshness.py). Both are read-only; the GitHub readers and org lister are injected.
+    disposition: PARTIAL_PORT
+    per_file:
+      - file: components/monitor/org_listing.py
+        disposition: PORTED
+        target: src/repo_presenter/monitor/org_listing.py
+        adaptations: "TypeError for the two shape checks (both still caught by the listing's own
+          except clause); noqa on the per-organization isolation boundary"
+      - file: components/monitor/discovery.py
+        disposition: PORTED
+        target: src/repo_presenter/monitor/discovery.py
+        adaptations: "import paths only; noqa on the per-organization isolation boundary"
+      - file: components/monitor/relevance.py
+        disposition: PORTED
+        target: src/repo_presenter/monitor/relevance.py
+        adaptations: "imports UPSTREAM_BLOBS_FIELD from core/candidates.py (constant added there;
+          the one edit to an existing ported module)"
+      - file: components/monitor/freshness.py
+        disposition: PORTED
+        target: src/repo_presenter/monitor/freshness.py
+        adaptations: "fromisoformat without the Z replacement (Python >= 3.11 accepts Z); noqa on
+          the registry isolation boundary"
+      - file: components/monitor/drift.py
+        disposition: ADAPTED (observation half ported; sealing-contract half DEFERRED)
+        target: src/repo_presenter/monitor/drift.py
+        reason_for_deferred_half: >
+          assemble_drift_contract, AssembledContract, MAX_DRIFT_AGE and the source_revision field
+          exist only to feed core/sealing_plan.py (plan_sealing_run / read_drift_contract), the old
+          G7 scheduled sealing planner. That planner is not ported, and nothing in this repository
+          consumes a sealing contract: the hosted entry points are present.py and cascade.py, and
+          .github/workflows/ holds only present.yml. Porting the contract would invent a consumer.
+          Re-decide when the hosted scheduler's handoff from monitor evidence is designed.
+        blocked_on: "supervisor decision on how monitor evidence feeds the hosted present pipeline"
+      - file: components/monitor/install_state.py
+        disposition: DEFERRED
+        reason: >
+          Its only consumers are assemble_drift_contract (deferred above) and the old CLI's
+          monitor-install-record / monitor-install-summary commands (CLI not ported, and
+          .github/workflows/monitor.yml does not exist here). It also carries APP_ID 5092474 and
+          slug repository-presenter as constants, the same values token_provenance.py already flags
+          as unconfirmed for this repository's own App. Port it with the monitor workflow, after the
+          App identity is confirmed.
+        blocked_on: "monitor workflow design; owner confirmation of the GitHub App identity"
+    shared_dependencies_ported:
+      - file: core/github/read_client.py (old repo)
+        disposition: PORTED
+        target: src/repo_presenter/github/read_client.py
+        note: "Absent from this repository (github/ held only client.py and token_provenance.py).
+          Read-only GET primitives: fetch_get, fetch_tree, fetch_default_branch_sha, fetch_file."
+      - file: data/registry_exclusions.json
+        disposition: PORTED (data)
+        target: data/registry_exclusions.json
+        note: "Copied verbatim: discovery reads it by default (observe_registry_gaps). The policy is
+          the old repo's owner-approved rule set (org profile, archived, fork); owner to confirm it
+          still applies to this repository."
+    tests:
+      ported: "tests/monitor/{test_org_listing,test_discovery,test_relevance,test_freshness,
+        test_drift_content,test_drift}.py (observation tests only in test_drift and
+        test_relevance) and tests/github/test_read_client.py; fakes added to tests/support.py
+        (write_bundle, FakeDefaultBranchReader, FakeOrganizationLister, mirror, with_extra,
+        registry_without, the BEYOND/BEFORE_ADMISSION fixtures)"
+      not_ported: "test_install_state.py; the contract/handoff tests in test_drift.py and
+        test_relevance.py (they need sealing_plan and the CLI)"
+    progress_note: >
+      2026-10-26: 131 tests in the monitor and read_client suites pass offline (no network: fake
+      readers and listers only). Full suite before and after the port is recorded in the commit
+      message. Discovery and drift have no entry point in this repository yet (no CLI is ported, and
+      no workflow calls them). The blob-recording branch of relevance.py is exercised only by
+      synthetic manifests: readme/bundle/seal.py does not yet write upstream_blobs, so every live
+      bundle is judged by the sealed-facts fallback until seal.py records them (that is a readme/
+      bundle item, not this one).
+    portfolio_consumers: both lanes, through the drift document (every admitted repository) and
+      the discovery report (every authorized organization); no current live consumer.
+    invalidation_impact: none. Observation only; no code path reseals or invalidates on a monitor
+      row yet. Any future consumer must act on the per-repository change class, never on a global
+      reseal (mission section 1.5).
 
   - component: "Visual assets / social preview / metadata: components/metadata/{apply.py,
       capture.py,preservation.py,proposal.py} (1,023 total)"
