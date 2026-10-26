@@ -45,7 +45,7 @@ effects before retrying". The pull request the effect creates or updates is attr
 expected GitHub App (`verify_pull_request_app`) - the one thing a bare installation token cannot
 prove about itself ahead of time.
 
-Ported (REUSE, verbatim apart from the import path) from the old repository-presenter project's
+Ported (ADAPT) from the old repository-presenter project's
 ``components/propose/effect.py``, 2026-10-23, as the write half of mission P3's "submit one
 authorized PR" blocker -- a research fork confirmed it is a bounded port once
 ``authorization/proposal.py``+``record_provenance.py``, ``propose/pull_request.py``'s
@@ -53,7 +53,9 @@ composition half, and the ~9 github/client.py REST primitives it uses are each p
 the same day). Still never armed here either: ``REPOSITORY_PRESENTER_PROPOSAL_WRITE_AUTHORIZED``
 has no production wiring, token_provenance.py's ``EXPECTED_APP_ID``/``EXPECTED_APP_SLUG`` are
 inherited placeholders pending confirmation of this repository's own App identity, and nothing
-calls ``propose_candidate`` from any live Lane R/L path yet.
+calls ``propose_candidate`` from any live Lane R/L path yet. The one change beyond import
+paths: a required ``review`` argument whose non-ACCEPT verdict refuses with ``REVIEW_REJECTED``
+(mission section 7, step 7: a reviewer REJECT is blocking); the old module had no reviewer gate.
 """
 
 from __future__ import annotations
@@ -63,14 +65,13 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from datetime import UTC, datetime
 
-from repo_presenter.propose.pull_request import PullRequestContent
 from repo_presenter.authorization.proposal import (
     ProposalAuthorization,
     validate_authorization,
 )
-from repo_presenter.readme.review.independent_reviewer import ReviewVerdict
 from repo_presenter.authorization.refusals import Refusal, WriteRefusedError
-from repo_presenter.github.errors import RepositoryMetadataError
+from repo_presenter.core.hashing import sha256_text
+from repo_presenter.core.registry.write_gate import WritePermit
 from repo_presenter.github.client import (
     FileContents,
     PullRequestRef,
@@ -96,6 +97,7 @@ from repo_presenter.github.client import (
 from repo_presenter.github.client import (
     update_pull_request as default_update_pull_request,
 )
+from repo_presenter.github.errors import RepositoryMetadataError
 from repo_presenter.github.token_provenance import (
     TokenDecision,
 )
@@ -105,8 +107,8 @@ from repo_presenter.github.token_provenance import (
 from repo_presenter.github.token_provenance import (
     verify_pull_request_app as default_verify_pull_request_app,
 )
-from repo_presenter.core.hashing import sha256_text
-from repo_presenter.core.registry.write_gate import WritePermit
+from repo_presenter.propose.pull_request import PullRequestContent
+from repo_presenter.readme.review.independent_reviewer import ReviewVerdict
 
 AUTHORIZATION_VARIABLE = "REPOSITORY_PRESENTER_PROPOSAL_WRITE_AUTHORIZED"
 _AUTHORIZED_VALUES = frozenset({"1", "true", "yes"})
@@ -132,7 +134,9 @@ _NOT_AUTHORIZED_REASON = (
     f"not authorized: set {AUTHORIZATION_VARIABLE}=1 (owner-controlled) - a token's presence or "
     "scope is never by itself sufficient"
 )
-_NO_TOKEN_REASON = "no write-scoped token available (GH_PROPOSAL_WRITE_TOKEN, never GH_TOKEN)"
+_NO_TOKEN_REASON = (
+    "no write-scoped token available (GH_PROPOSAL_WRITE_TOKEN, never GH_TOKEN)"
+)
 README_PATH = "README.md"
 
 GetRefFn = Callable[..., "str | None"]
@@ -162,7 +166,10 @@ def _utc_now() -> str:
 def write_authorized(environment: Mapping[str, str]) -> bool:
     """`True` only when the owner has explicitly set `AUTHORIZATION_VARIABLE` to a truthy value.
     Absence, an empty string, or any other value is unauthorized - fail closed."""
-    return environment.get(AUTHORIZATION_VARIABLE, "").strip().lower() in _AUTHORIZED_VALUES
+    return (
+        environment.get(AUTHORIZATION_VARIABLE, "").strip().lower()
+        in _AUTHORIZED_VALUES
+    )
 
 
 @dataclass(frozen=True)
@@ -263,10 +270,16 @@ def propose_candidate(
     """
     if compose_pull_request is None and (pr_title is None or pr_body is None):
         raise ValueError("give pr_title and pr_body, or compose_pull_request")
-    if compose_pull_request is not None and (pr_title is not None or pr_body is not None):
-        raise ValueError("give either pr_title and pr_body, or compose_pull_request - not both")
+    if compose_pull_request is not None and (
+        pr_title is not None or pr_body is not None
+    ):
+        raise ValueError(
+            "give either pr_title and pr_body, or compose_pull_request - not both"
+        )
     if permit.effect != "readme_proposal" or permit.entry.repository != repository:
-        raise ValueError("the write permit does not clear this effect for this repository")
+        raise ValueError(
+            "the write permit does not clear this effect for this repository"
+        )
     owner, name = repository.split("/", 1)
     branch = branch if branch is not None else presenter_branch_name()
 
@@ -317,12 +330,16 @@ def propose_candidate(
         expected_branch=branch,
     )
     if not decision.granted:
-        return _refuse(True, decision.code or Refusal.AUTHORIZATION_MISMATCH, decision.reason)
+        return _refuse(
+            True, decision.code or Refusal.AUTHORIZATION_MISMATCH, decision.reason
+        )
 
     token_decision = verify_token(repository, token)
     if not token_decision.ok:
         return _refuse(
-            True, token_decision.code or Refusal.TOKEN_UNVERIFIABLE, token_decision.reason
+            True,
+            token_decision.code or Refusal.TOKEN_UNVERIFIABLE,
+            token_decision.reason,
         )
 
     # past every gate that needs nothing of the target but the token itself ------------------
@@ -348,9 +365,13 @@ def propose_candidate(
         if settled is not None:
             return _refuse(True, settled[0], settled[1])
     else:
-        attribution = verify_pull_request_app(owner, name, existing_pr.number, token=token)
+        attribution = verify_pull_request_app(
+            owner, name, existing_pr.number, token=token
+        )
         if not attribution.ok:
-            return _refuse(True, attribution.code or Refusal.TOKEN_UNVERIFIABLE, attribution.reason)
+            return _refuse(
+                True, attribution.code or Refusal.TOKEN_UNVERIFIABLE, attribution.reason
+            )
 
     # past every gate: the first remote write is below ----------------------------------------
 
@@ -363,10 +384,16 @@ def propose_candidate(
 
     if compose_pull_request is not None:
         try:
-            live_readme = get_contents(owner, name, README_PATH, ref=base_branch, token=token)
+            live_readme = get_contents(
+                owner, name, README_PATH, ref=base_branch, token=token
+            )
         except RepositoryMetadataError as exc:
-            return _github_error(f"could not read {README_PATH} on {base_branch!r}: {exc}")
-        content = compose_pull_request(None if live_readme is None else live_readme.text)
+            return _github_error(
+                f"could not read {README_PATH} on {base_branch!r}: {exc}"
+            )
+        content = compose_pull_request(
+            None if live_readme is None else live_readme.text
+        )
         pr_title, pr_body = content.title, content.body
     assert pr_title is not None and pr_body is not None
 
@@ -402,7 +429,9 @@ def propose_candidate(
             commit_written = True
         except RepositoryMetadataError as exc:
             if "unreachable" not in str(exc) or reconcile_write is None:
-                return _github_error(f"could not write {README_PATH} on {branch!r}: {exc}")
+                return _github_error(
+                    f"could not write {README_PATH} on {branch!r}: {exc}"
+                )
             # Lost-response reconciliation (AGENTS.md "reconcile uncertain remote effects before
             # retrying"): re-observe the branch's real current content before ever retrying.
             reconciled = reconcile_write()
@@ -472,7 +501,9 @@ def propose_candidate(
                 )
                 pr_updated = True
             except RepositoryMetadataError as exc:
-                return _github_error(f"could not update the presenter pull request: {exc}")
+                return _github_error(
+                    f"could not update the presenter pull request: {exc}"
+                )
 
     return ProposalEffectResult(
         repository=repository,
@@ -484,5 +515,7 @@ def propose_candidate(
         commit_written=commit_written,
         pr_created=pr_created,
         pr_updated=pr_updated,
-        reason="proposed" if (commit_written or pr_created or pr_updated) else "no change needed",
+        reason="proposed"
+        if (commit_written or pr_created or pr_updated)
+        else "no change needed",
     )

@@ -1965,7 +1965,7 @@ entries:
       DEFERRED per the Lane L engine entry above, for the same reason (additions.py is the only
       caller and is itself deferred) -- listed again here only because they also appear in this
       PR-effect grouping by directory, not because their disposition changed.
-    disposition: PENDING_REVIEW
+    disposition: PARTIAL_PORT
     reason: >
       Directly blocks mission P3 ("submit one authorized PR for each lane where genuinely
       eligible"). Confirmed zero lines of components/propose/ exist anywhere in this repository's
@@ -2033,6 +2033,43 @@ entries:
       the App-identity/authorization-wiring questions above are resolved.
     invalidation_impact: none yet -- pulled, but no caller invokes propose_candidate from any
       live path.
+    port_pass_2026_10_26: >
+      Second port pass (Haiku worker, 2026-10-26), against the old source read in full and the
+      new repo's existing ports. Per-file decisions:
+      - propose/effect.py: already ported 2026-10-23 with ADAPT (not REUSE as its own docstring
+        once claimed): the review veto (required ``review`` argument, REVIEW_REJECTED on any
+        non-ACCEPT verdict, mission section 7 step 7) is an addition, now recorded in its
+        docstring; tests/propose/test_effect.py gained the matching tests and keyword-argument
+        TokenDecision constructions (positional construction scrambled the refusal code here).
+      - propose/pull_request.py: already ported 2026-10-23, REUSE (import paths only).
+      - candidates_publish/effect.py + git_ops.py + __init__.py: PORTED (ADAPT: import paths,
+        RepositoryMetadataError from github/errors.py, TokenDecision keyword construction in the
+        tests), NOT YET WIRED. Live write effect: commits a sealed bundle to this control
+        repository's candidates/<slug>/ tree and opens/updates its PR. Needed because
+        core/candidates.py counts CURRENT bundles from that committed tree, and no hosted path
+        yet commits one (present.yml only uploads an artifact). Open gap: publish_candidates
+        does not itself check the bundle's READY_FOR_PROPOSAL state; the old workflow did that
+        step, and nothing in this repository performs it yet. Any future wiring must add that
+        check before calling it.
+      - candidates_publish tests: tests/candidates_publish/{test_effect,test_git_ops}.py ported
+        (ADAPT, imports and TokenDecision keywords); test_cli.py RETIRED (it exercises the old
+        CLI, which this repository does not port; the new hosted entry points are present.py
+        and cascade.py).
+      - propose/wave.py: DEFER. assess_wave and emit_records take an AcceptanceGate and call
+        core/candidates.py::proposal_gate_refusal, which the new core/candidates.py deliberately
+        does not port (it is tied to the old review.json shape and the 30-point scorer, which
+        this repository does not have). Porting wave.py would mean inventing that gate.
+        tests/components/propose/test_wave.py and test_cli.py: DEFER with it.
+      - readme_correction/{pull_request,live_pull_request,committed,live_ops,live_gate,live_bundle,
+        run,send,settle,...}.py: DEFER. Their imports include components/readme_diagram/* (the
+        diagram-geometry engine, not ported; no readme_diagram package in src/repo_presenter)
+        and components/readme/acceptance/judge + review/acceptance/text_checks (not ported). This
+        is the Lane L-specific PR path, blocked on the same unported engine as chain/verify.
+      Not read line-by-line in this pass: readme_correction/live_ops.py (1,082 lines) beyond its
+      imports, and readme_correction/pull_request.py (1,217 lines) beyond its imports; both are
+      DEFER on the blockers above, which were verified from the import lists.
+      Verified: tests/propose + tests/candidates_publish pass offline (108 at the time of the
+      candidates_publish port); no test calls the live GitHub write API (fakes only).
 
   - component: "Portfolio monitoring: components/monitor/{discovery.py,drift.py,freshness.py,
       install_state.py,org_listing.py,relevance.py} (2,025 total)"
