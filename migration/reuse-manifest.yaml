@@ -2244,3 +2244,32 @@ entries:
       second run) that cost real duplicate API spend on ~9 calls but produced no data
       corruption -- the final on-disk state is self-consistent (review_verdict.json: ACCEPT, 0
       findings).
+
+  - component: "seal.py v1: first-seal-only bundle (src/repo_presenter/readme/bundle/seal.py)"
+    source: old-repository-presenter's components/readme/bundle/seal.py (1,203 lines)
+    disposition: ADAPT_2026_10_26
+    reason: >
+      Not a verbatim port -- the old module assumes one transaction directory, one ledger per
+      transaction, and its own validation.json/review.json pair. This repository's real evidence
+      splits across scripts/_lane_r_output/<repo>/ and evidence/build/<phase>/<repo>/facts.json,
+      and has review_verdict.json instead. Full design recorded in
+      plans/PLAN_bundle_integrity_and_noop_proof.md's "seal.py v1 design" section before writing
+      any code. Scoped to ONLY the first seal (state ACCEPTED, no_op_proof always None); the
+      re-seal/update-adoption/no-op-proof-adoption dance is a deliberate, separate follow-on
+      (NotImplementedError against an already-sealed bundle, matching recheck.py's own
+      recheck_bundle/recheck_portfolio pattern for a scope not yet built).
+    evidence: >
+      9 new tests (tests/readme/bundle/test_seal.py), 1644/1644 passed. LIVE-DEMONSTRATED for
+      real against aspose-3d-foss/Aspose.3D-FOSS-for-.NET's own real cascade output (the one the
+      orchestrator's own live demonstration produced): sealed this repository's first-ever real
+      candidates/<owner>__<name>/<revision>/manifest.json. Confirmed reconcile_ledger correctly
+      handles a real ledger containing records from two accidental concurrent invocations
+      (ledger_totals over the whole file vs. provider_calls filtered to one invocation -- both
+      checks passed against real drift, not synthetic). candidates/ is a new, intentionally
+      committed (not gitignored) top-level directory.
+    not_yet_done: >
+      core/candidates.py's bundle-integrity/counting tier (verify_bundle,
+      count_current_candidates, stale_candidates) -- now has a real caller for the first time.
+      The re-seal/no-op-proof-adoption dance itself. Wiring seal_candidate as cascade.
+      run_cascade's own natural next call (today's demonstration reconstructed an Invocation by
+      hand from a saved record).

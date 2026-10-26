@@ -491,3 +491,54 @@ task:
 Full detail: `project/state.yaml`'s `PORT_BUNDLE_INTEGRITY_LAYER` step_6 and
 `docs/DECISION_LOG.md`'s 2026-10-25 entry. Not started this tick, correctly: this needs the
 owner's orchestrator decision first.
+
+## seal.py v1 design: first-seal-only, 2026-10-26
+
+Concrete design, resolved after reading candidates.py, invalidation.py, and recheck.py in full
+(not guessed). Scope: a real, durable `candidates/<owner>__<name>/<revision>/manifest.json` for
+the FIRST seal of a cascade's output only (state ACCEPTED, no_op_proof=None). The re-seal /
+update-adoption / no-op-proof-adoption dance (`_record_update`/`_adopt_update`/`_proof` in the
+old repo) is explicitly NOT in v1 -- it needs a second fresh-process rerun to compare against,
+which is its own later step, exactly as `core/noop_proof.py` itself was staged in two passes.
+
+**Artifact name mapping** (this repo's real names, not the old repo's):
+
+| Bundle name | Source | Required |
+|---|---|---|
+| `README.md` | `out_dir/README.coherent.md`, fallback `README.rendered.md` | yes |
+| `README.patch.diff` | `out_dir/README.patch.diff` | yes |
+| `facts.json` | `facts_path` (evidence/build/<phase>/<repo>/, NOT out_dir -- the one real cross-directory read this adaptation needs) | yes |
+| `dispositions.json` | `out_dir/dispositions.json` | yes |
+| `plan.json` | `out_dir/plan.json` | yes |
+| `review_verdict.json` | `out_dir/review_verdict.json` (replaces the old repo's validation.json+review.json pair) | yes |
+| `ledger.jsonl` | `out_dir/llm_cache/ledger.jsonl` (this repo's real ledger filename -- `core/llm/ledger.py`'s own `LEDGER_FILENAME="calls.jsonl"` constant is NOT this repo's actual on-disk name; no script ever used it) | yes |
+| `investigation.json` | `out_dir/investigation.json` | optional |
+| `content_units.json` | `out_dir/content_units.json` | optional |
+| `content_units.coherent.json` | `out_dir/content_units.coherent.json` | optional |
+
+`REPLAY_EXEMPT = {"ledger.jsonl", "manifest.json"}` (no `probes.json` equivalent exists yet).
+
+**Directory**: `candidates/<owner>__<name>/<revision>/` at the repository root, matching
+`recheck.py`'s own already-ported `receipt_path()` (`root / "candidates" / repository_dir /
+"rechecks" / f"{revision}.json"`) -- committed to git (not gitignored), unlike
+`scripts/_lane_r_output/`.
+
+**dependencies.json**, simplified for v1 (no acceptance-profile/model-fallback/policy concepts
+exist in this repo yet, so none are invented): `source.revision`, `environment` (python_version,
+os, extractor_version, inherited_units_version, toolchains via `core.toolchains.
+toolchain_fingerprint`), `prompts` (hashes/routes/versions via `PromptRegistry.hashes()`/
+`.routes()`), `components` (shell/renderer/normalisation/reviewer_logic versions, all already
+real constants), `facts` (digest per fact id). Omitted, documented as a gap rather than
+fabricated: `protected_content_fingerprint` (no protected-content check exists here),
+`models_used`/model-route tracking (no fallback-chain concept exists here),
+`acceptance_profile_version`/`validator_version` (no acceptance scorer or consolidated
+validation.json exists here).
+
+**invalidation.py's `ARTIFACT_SCOPES`** needs new rows for this repo's real artifact names
+(additive, matching the table's own "a new artifact is one row" design): `"review_verdict.json"
+-> reviewer`, `"content_units.coherent.json" -> authoring`. Not yet added (next_step).
+
+**`seal_candidate()`'s own scope**: only the `manifest is None` branch (first seal). An existing
+manifest raises `NotImplementedError` naming this, the same pattern `recheck_bundle`/
+`recheck_portfolio` already use in this same package, rather than faking a re-seal/no-op-proof
+result that was not actually computed.

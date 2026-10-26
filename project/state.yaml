@@ -1613,27 +1613,68 @@ next_ready_items:
       ledger reconciliation, RAW_CALLS_FILENAME, the review-verdict artifact) are all real,
       independently useful, already-committed work, each usable on its own regardless of how
       the orchestrator question resolves -- none of it is wasted by this finding.
+    step_7_done_2026_10_26_seal_py_v1_first_seal: >
+      The orchestrator decision (2026-10-25) and its real live demonstration (same day, against
+      aspose-3d-foss/Aspose.3D-FOSS-for-.NET) resolved this card's own step_6 blocker. Read
+      core/candidates.py, readme/bundle/invalidation.py, and readme/bundle/recheck.py in full
+      before writing anything (not guessed): invalidation.py's route()/scope_of() are already
+      fully ported and self-contained; recheck.py already anticipates `root / "candidates" /
+      repository_dir / ...` as the bundle directory convention. Built
+      src/repo_presenter/readme/bundle/seal.py as an ADAPTATION, not a verbatim port, explicitly
+      scoped to ONLY the first seal (state ACCEPTED, no_op_proof always None) -- the re-seal /
+      update-adoption / no-op-proof-adoption dance needs a SECOND fresh-process rerun to compare
+      against, a separate later step, exactly as noop_proof.py itself was staged in two passes.
+      Calling seal_candidate against an already-sealed bundle raises NotImplementedError naming
+      this, the same pattern recheck_bundle/recheck_portfolio already use for a scope not built.
+      Real artifact-name mapping (this repo's own names, not the old repo's): README.md <-
+      README.coherent.md (fallback README.rendered.md), README.patch.diff, facts.json (the one
+      real cross-directory read, from evidence/build/<phase>/<repo>/, not out_dir),
+      dispositions.json, plan.json, review_verdict.json (replaces validation.json+review.json),
+      ledger.jsonl (this repo's REAL on-disk ledger name -- core/llm/ledger.py's own
+      LEDGER_FILENAME="calls.jsonl" constant is not what any script here has ever written, a
+      real discrepancy caught by checking, not assumed). dependencies.json simplified for v1,
+      omitting fields with no concept in this repo yet (acceptance-profile/model-fallback/
+      consolidated-validation), documented as a gap rather than fabricated. 9 new tests
+      (tests/readme/bundle/test_seal.py): real manifest/file-presence, the README fallback,
+      fail-closed on a missing artifact, the CURRENT pointer, the secret-leak refusal (and that
+      it leaves no trace), the NotImplementedError on a second seal, ledger round-trip,
+      dependencies.json shape. 1644/1644 passed, 11 skipped, 5 deselected (pre-existing
+      unrelated).
+      LIVE-DEMONSTRATED FOR REAL, not just unit-tested: sealed aspose-3d-foss/Aspose.3D-FOSS-
+      for-.NET's own real cascade output (the one produced by the live orchestrator
+      demonstration above) into this repository's first-ever real
+      candidates/aspose-3d-foss__Aspose.3D-FOSS-for-.NET/52b0f00e.../manifest.json. Confirms
+      reconcile_ledger (already real-tested in isolation) now also correctly handles a REAL,
+      messy ledger containing records from both of yesterday's accidental concurrent runs:
+      ledger_totals.provider_calls=25 (the whole file, both invocations) vs.
+      manifest.provider_calls=16 (only this invocation's own stamped calls) -- both checks
+      passed, proving the per-invocation filtering works against real, not synthetic, drift.
+      candidates/ is a new, intentionally-committed (not gitignored) top-level directory.
+      Deliberately NOT added this pass: new ARTIFACT_SCOPES rows for review_verdict.json/
+      content_units.coherent.json (invalidation.py's own route()) -- v1's first-seal-only path
+      never calls route() at all, so adding rows now would be dead code with no caller yet,
+      exactly what this project's own discipline refuses; they belong with the re-seal follow-on.
     next_step: >
-      BLOCKED on GITHUB_ACTIONS_HOSTING_GAP_2026_10_24's own owner decision (present-equivalent
-      orchestrator vs. a redesigned multi-ledger no-op-proof mechanism) -- not a task this card
-      can schedule independently any further. Once that decision lands: (1) if the orchestrator
-      is built, seal.py adapts close to verbatim (its own transaction/ledger assumptions become
-      true again) against this repository's real artifact names
-      (facts.json/dispositions.json/plan.json/content_units.coherent.json/README.coherent.md/
-      review_verdict.json/llm_cache/*), never the old repo's validation.json/review.json shape;
-      (2) if a multi-ledger design is chosen instead, seal.py needs a genuine rewrite of its
-      no-op-proof aggregation, not an adaptation -- a separate, larger, not-yet-scoped task; (3)
-      either way, port core/candidates.py afterward, with a falsifier proving it never touches
-      legacy evidence. Nothing here should be started before that owner decision, per the
-      owner's own "plan carefully before building from scratch" directive.
+      (1) Port core/candidates.py's bundle-integrity/counting tier (verify_bundle,
+      count_current_candidates, current_counted_repository_dirs, stale_candidates) -- now has a
+      real caller: a real candidates/ tree with a real manifest.json exists to read. Its second
+      tier (load_proposable_candidate/_review_refusal/ProposableCandidate/AcceptanceGate) stays
+      deferred -- tied to the old repo's own review.json shape and a 30-point acceptance scorer
+      this repository does not have. (2) Build the re-seal / update-adoption / no-op-proof-
+      adoption dance as its own, separate, larger task: a second fresh-process rerun of the same
+      repository, comparing byte-for-byte against the sealed bundle, is what actually proves the
+      no-op claim -- genuinely not attempted yet. (3) Wire seal_candidate as cascade.run_cascade's
+      own natural follow-on call (today's demonstration reconstructed an Invocation from a saved
+      record by hand; a real caller should pass CascadeResult.invocation/.provider_calls
+      directly).
     write_paths_planned: [src/repo_presenter/core/noop_proof.py (steps 1 + 3, DONE),
       src/repo_presenter/core/snapshot/capture.py (step 3, DONE),
       src/repo_presenter/readme/composition/authoring.py (step 4, DONE -- filename constant only),
       src/repo_presenter/readme/review/independent_reviewer.py (step 5, DONE -- version
       constant + write_review_verdict/load_review_verdict),
       scripts/run_independent_review.py (step 5, DONE -- wired to write the new artifact),
-      src/repo_presenter/core/candidates.py (next_step 2),
-      src/repo_presenter/readme/bundle/seal.py (next_step 1 adaptation),
+      src/repo_presenter/readme/bundle/seal.py (step 7, DONE -- v1, first seal only),
+      src/repo_presenter/core/candidates.py (next_step 1, bundle-integrity tier only),
       src/repo_presenter/readme/bundle/recheck.py (later steps, extends the existing port)]
     source_refs: >
       docs/DECISION_LOG.md's 2026-10-24 entry; plans/PLAN_bundle_integrity_and_noop_proof.md;

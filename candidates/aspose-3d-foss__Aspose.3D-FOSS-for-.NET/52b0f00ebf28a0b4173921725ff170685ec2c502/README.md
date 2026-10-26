@@ -1,0 +1,837 @@
+# Aspose.3D FOSS for .NET
+
+[![NuGet](https://img.shields.io/nuget/v/Aspose.3D.FOSS.svg)](https://www.nuget.org/packages/Aspose.3D.FOSS/) ![.NET](https://img.shields.io/badge/.net-netcoreapp3.1_%7C_net6.0_%7C_net8.0_%7C_net10.0-blue.svg)
+
+It reads and writes `.fbx`, `.gltf`, `.obj`, `.stl`, `.dae`, `.3mf`, `.3ds`, and `.ply` files. It constructs scene graphs using `Scene` and `Node`, assigns shading materials, and supports animation through `AnimationClip`.
+
+Aspose.3D FOSS for .NET is a free, open-source, MIT-licensed .NET library for building and
+converting 3D scenes without any external 3D engine. It exposes an Aspose.3D-compatible API
+surface — `Scene`, `Node`, `Mesh`, `Material` — for constructing scene graphs from primitive and
+IFC-style profile geometry, assigning shading materials, animating hierarchies, and reading and
+writing widely used interchange formats such as FBX, glTF, Wavefront OBJ, STL, COLLADA, and
+Universal 3D, as pure managed code with no native dependencies.
+
+## Navigation
+
+- [At a Glance](#at-a-glance)
+- [Key Capabilities](#key-capabilities)
+- [Installation](#installation)
+- [Dependencies](#dependencies)
+- [API Reference](#api-reference)
+- [Scope and Limitations](#scope-and-limitations)
+
+## At a Glance
+
+```mermaid
+flowchart LR
+Start["An existing 3DS, 3MF, COLLADA, FBX, glTF, OBJ, PLY, or STL file"]
+Start --> Product["Aspose.3D FOSS for .NET"]
+Product["Aspose.3D FOSS for .NET"] --> Cap1["Scene graph construction"]
+Cap2["Primitive and profile geometry"]
+Cap3["Material assignment"]
+Cap4["Animation support"]
+Cap5["Format conversion"]
+Cap6["Mesh vertex data handling"]
+Cap7["NURBS data definition"]
+Product["Aspose.3D FOSS for .NET"] --> Cap2["Primitive and profile geometry"]
+Product["Aspose.3D FOSS for .NET"] --> Cap3["Material assignment"]
+Product["Aspose.3D FOSS for .NET"] --> Cap4["Animation support"]
+Product["Aspose.3D FOSS for .NET"] --> Cap5["Format conversion"]
+Product["Aspose.3D FOSS for .NET"] --> Cap6["Mesh vertex data handling"]
+Product["Aspose.3D FOSS for .NET"] --> Cap7["NURBS data definition"]
+Cap1["Scene graph construction"] --> Output["3DS, 3MF, COLLADA, FBX, glTF, OBJ, PLY, or STL file"]
+Cap2["Primitive and profile geometry"] --> Output["3DS, 3MF, COLLADA, FBX, glTF, OBJ, PLY, or STL file"]
+Cap3["Material assignment"] --> Output["3DS, 3MF, COLLADA, FBX, glTF, OBJ, PLY, or STL file"]
+Cap4["Animation support"] --> Output["3DS, 3MF, COLLADA, FBX, glTF, OBJ, PLY, or STL file"]
+Cap5["Format conversion"] --> Output["3DS, 3MF, COLLADA, FBX, glTF, OBJ, PLY, or STL file"]
+Cap6["Mesh vertex data handling"] --> Output["3DS, 3MF, COLLADA, FBX, glTF, OBJ, PLY, or STL file"]
+Cap7["NURBS data definition"] --> Output["3DS, 3MF, COLLADA, FBX, glTF, OBJ, PLY, or STL file"]
+```
+
+## Key Capabilities
+
+- **Scene graph construction.** Build, traverse, and manage a 3D scene graph with `Aspose.ThreeD.Scene` and `Aspose.ThreeD.Node` — every `Scene` starts with a `RootNode`, and `Node.CreateChildNode()` or `AddChildNode()` attach child nodes carrying entities, transforms, and materials.
+- **Primitive and profile geometry.** Construct primitive and CAD-style profile geometry directly — `Box`, `Cylinder`, `Sphere`, `Dish`, `Torus`, `Pyramid`, `Plane`, and IFC-compatible 2D profiles including `LShape`, `TShape`, `UShape`, `ZShape`, `CShape`, `HShape`, `CircleShape`, and `RectangleShape` — which can be extruded or revolved into solids via `LinearExtrusion`, `RevolvedAreaSolid`, and `SweptAreaSolid`.
+- **Material assignment.** Assign shading materials through `Material` subclasses including `LambertMaterial`, `PhongMaterial`, `PbrMaterial`, `PbrSpecularMaterial`, and `ShaderMaterial` — each attaches to a `Node` independently of the entity it carries.
+- **Animation support.** Animate scenes with `AnimationClip` and `AnimationChannel`, keyed by `KeyFrame`/`KeyframeSequence`, and skin meshes with `Bone`, `Skeleton`, and `SkinDeformer`; morph-target animation is available through `MorphTargetDeformer` and `MorphTargetChannel`.
+- **Format conversion.** Convert 3D scenes by reading and writing `.fbx`, `.gltf`, `.obj`, `.stl`, `.dae`, and `.3mf` with full round-trip fidelity, plus Microsoft 3MF and AVEVA PDMS RVM models, AMF, and an HTML5/Aspose 3D Web viewer export, through `Scene.FromFile()` and `Scene.Save()` using the matching `FileFormat` constants.
+- **Mesh vertex data handling.** Read and write per-vertex mesh data through a custom `VertexDeclaration` and `VertexElement` subclasses — normals, UVs, vertex color, tangent/binormal, smoothing groups, and user data.
+- **NURBS data definition.** Define NURBS curves and surfaces with `NurbsCurve` and `NurbsSurface`, specifying control points, weights, and knot vectors directly.
+
+## Installation
+
+Install the published package from NuGet (`Aspose.3D.FOSS`, version 26.1.0):
+
+```bash
+dotnet add package Aspose.3D.FOSS
+```
+
+## Dependencies
+
+### Required Package Dependencies
+
+No required third-party package dependencies; in `src/main/Aspose.ThreeD/Aspose.ThreeD.csproj`, no `PackageReference` a consumer would install is declared.
+
+### Native and System Requirements
+
+- Requires .NET `netcoreapp3.1;net6.0;net8.0;net10.0` (`TargetFrameworks` in `src/main/Aspose.ThreeD/Aspose.ThreeD.csproj`).
+
+## API Reference
+
+Aspose.3D FOSS for .NET provides core 3D scene and geometry manipulation through the `Scene` and `Node` classes. `Scene` serves as the top-level container that holds the node hierarchy, animation, and rendering resources, while `Node` represents individual elements in the scene graph that carry transforms and entities.
+
+The verified public surface has 293 types.
+
+<details>
+<summary>View the Complete Public API Surface</summary>
+
+### Core API
+
+| Class | Description |
+| --- | --- |
+| `A3DObject` | The base class of all Aspose.ThreeD objects, all sub classes will support dynamic properties. |
+| `AnimationChannel` | Aspose.ThreeD.Animation.AnimationChannel represents an animation channel that controls a property over time using a sequence of keyframes. |
+| `AnimationClip` | The Animation clip is a collection of animations. |
+| `AnimationNode` | Aspose.3D's supports animation hierarchy, each animation can be composed by several animations and animation's key-frame definition. |
+| `BindPoint` | A BindPoint is usually created on an object's property, some property types contains multiple component fields(like a Vector3 field), will generate channel for each component field and connects the field to one or more keyframe sequence instance(s) through the channels. |
+| `Extrapolation` | Aspose.ThreeD.Animation.Extrapolation defines how animation values are extended beyond the defined keyframe range. |
+| `KeyFrame` | Aspose.ThreeD.Animation.KeyFrame represents a single keyframe in an animation sequence with time, value, and interpolation properties. |
+| `KeyframeSequence` | Aspose.ThreeD.Animation.KeyframeSequence represents a collection of keyframes that define an animation sequence for a specific property. |
+| `AssetInfo` | Information of asset. |
+| `AxisSystem` | Axis system is an combination of coordinate system, up vector and front vector. |
+| `BonePose` | The  contains the transformation matrix for a bone node. |
+| `CustomObject` | Represents custom object data. |
+| `Bone` | A bone defines the subset of the geometry's control point, and defined blend weight for each control point. |
+| `Deformer` | Base class for  and. |
+| `MorphTargetChannel` | A MorphTargetChannel is used by  to organize the target geometries. |
+| `MorphTargetDeformer` | MorphTargetDeformer provides per-vertex animation. |
+| `SkinDeformer` | A skin deformer contains multiple bones to work, each bone blends a part of the geometry by control point's weights. |
+| `BooleanOperand` | This class encapsulates the transformed mesh as Boolean operation's operand. |
+| `BooleanOperator` | Aspose.ThreeD.Entities.BooleanOperator performs boolean operations on geometric entities. |
+| `Box` | Box. |
+| `Camera` | The camera describes the eye point of the viewer looking at the scene. |
+| `Circle` | A  curve consists of a set of points in the edge of the circle shape. |
+| `CompositeCurve` | A  is consisting of several curve segments. |
+| `Curve` | The base class of all curve implementations. |
+| `Cylinder` | Parameterized Cylinder. |
+| `Dish` | Parameterized dish. |
+| `Ellipse` | An Ellipse defines a set of points that form the shape of ellipse. |
+| `EndPoint` | The end point to trim the curve, can be a parameter value or a Cartesian point. |
+| `Frustum` | The base class of Camera and Light. |
+| `Geometry` | The base class of all renderable geometric objects (like Mesh, Box, Cylinder and etc.). |
+| `HalfSpace` | represents a infinity space which is split by a plane, this can be used with. |
+| `IIndexedVertexElement` | VertexElement with indices data. |
+| `IMeshConvertible` | Entities that implemented this interface can be converted to mesh. |
+| `IOrientable` | Orientable entities shall implement this interface. |
+| `Light` | The light illuminates the scene. |
+| `Line` | A polyline is a path defined by a set of points with segments, and connected by edges, which means it can also be a set of connected line segments. |
+| `LinearExtrusion` | Linear extrusion takes a 2D shape as input and extends the shape in the 3rd dimension. |
+| `Mesh` | A mesh is made of many n-sided polygons. |
+| `NurbsCurve` | NURBS curve is a curve represented by NURBS(Non-uniform rational basis spline), A NURBS curve is defined by its control points, a set of weighted control points and a knot vector The w component in control point is used as control point's weight, whatever it is a 2D or 3D. |
+| `NurbsDirection` | A 3D surface has two direction, the U and V, the NurbsDirection defines data for each direction. |
+| `NurbsSurface` | is a surface represented by NURBS(Non-uniform rational basis spline), A  is defined by two  and . |
+| `Patch` | A  is a parametric modeling surface, similar to , it's also defined by two , the  and . |
+| `PatchDirection` | Patch's U and V direction. |
+| `Plane` | Parameterized plane. |
+| `PointCloud` | The point cloud contains no topology information but only the control points and the vertex elements. |
+| `PolygonBuilder` | A helper class to build polygon for. |
+| `PolygonModifier` | Aspose.ThreeD.Entities.PolygonModifier provides functionality to modify polygonal geometry. |
+| `Primitive` | Base class for all primitives. |
+| `Pyramid` | Parameterized pyramid. |
+| `RectangularTorus` | Parameterized rectangular torus. |
+| `RevolvedAreaSolid` | This class represents a solid model by revolving a cross section provided by a profile about an axis. |
+| `Segment` | A segment in composite curve. |
+| `Shape` | The shape describes the deformation on a set of control points, which is similar to the cluster deformer in Maya. |
+| `Skeleton` | The Skeleton is mainly used by CAD software to help designer to manipulate the transformation of skeletal structure, it's usually useless outside the CAD softwares. |
+| `Sphere` | Parameterized sphere. |
+| `SweptAreaSolid` | A SweptAreaSolid constructs a geometry by sweeping a profile along a directrix. |
+| `Torus` | Parameterized torus. |
+| `TransformedCurve` | A TransformedCurve gives a curve a placement by using a transformation matrix. |
+| `TriMesh` | A TriMesh contains raw data that can be used by GPU directly. |
+| `TrimmedCurve` | A bounded curve that trimmed the basis curve at both ends. |
+| `VertexElement` | Base class of vertex elements. |
+| `VertexElementBinormal` | Aspose.ThreeD.Entities.VertexElementBinormal stores binormal data for each vertex in a mesh. |
+| `VertexElementDoublesTemplate` | A helper class for defining concrete implementations. |
+| `VertexElementEdgeCrease` | Defines the edge crease for specified components. |
+| `VertexElementFVector` | A helper class for defining concrete implementations. |
+| `VertexElementHole` | Defines if specified polygon is hole. |
+| `VertexElementIntsTemplate` | A helper class for defining concrete implementations. |
+| `VertexElementMaterial` | Defines material index for specified components. |
+| `VertexElementNormal` | Aspose.ThreeD.Entities.VertexElementNormal stores normal vectors for each vertex in a mesh. |
+| `VertexElementPolygonGroup` | Defines polygon group for specified components to group related polygons together. |
+| `VertexElementSmoothingGroup` | A smoothing group is a group of polygons in a polygon mesh which should appear to form a smooth surface. |
+| `VertexElementSpecular` | Defines specular color for specified components. |
+| `VertexElementTangent` | Aspose.ThreeD.Entities.VertexElementTangent stores tangent vectors for each vertex in a mesh. |
+| `VertexElementTemplate` | A helper class for defining concrete implementations. |
+| `VertexElementUV` | Defines the UV coordinates for specified components. |
+| `VertexElementUserData` | Defines custom user data for specified components. |
+| `VertexElementVector4` | A helper class for defining concrete implementations. |
+| `VertexElementVertexColor` | Defines the vertex color for specified components. |
+| `VertexElementVertexCrease` | Defines the vertex crease for specified components. |
+| `VertexElementVisibility` | Defines if specified components is visible. |
+| `VertexElementWeight` | Defines blend weight for specified components. |
+| `Entity` | The base class of all entities. |
+| `ExportException` | Export exception. |
+| `FileFormat` | File format definition. |
+| `FileFormatType` | File format type. |
+| `A3dwSaveOptions` | Save options for A3DW format. |
+| `AmfSaveOptions` | Save options for AMF. |
+| `Chunk` | Represents a 3DS chunk header. |
+| `ColladaSaveOptions` | Save options for Collada format. |
+| `Discreet3dsLoadOptions` | Load options for 3DS file. |
+| `Discreet3dsSaveOptions` | Save options for 3DS file. |
+| `DracoFormat` | Google Draco format. |
+| `DracoSaveOptions` | Save options for Google draco files. |
+| `FbxLoadOptions` | Load options for FBX format. |
+| `FbxSaveOptions` | Save options for FBX format. |
+| `ClassType` | The class definitions . |
+| `EnumType` | Aspose.ThreeD.Formats.GLTF.EnumType defines the type of an enumeration in a GLTF asset. |
+| `EnumValue` | Aspose.ThreeD.Formats.GLTF.EnumValue represents a single value within a GLTF enumeration. |
+| `GLTF.Property` | Aspose.ThreeD.Formats.GLTF.Property represents a named property in a GLTF asset. |
+| `PropertyTable` | Aspose.ThreeD.Formats.GLTF.PropertyTable groups related GLTF properties into a table structure. |
+| `StructuralMetadata` | This class provides support for EXT_structural_metadata, only used in glTF. |
+| `GltfLoadOptions` | Load options for glTF format. |
+| `GltfSaveOptions` | Save options for glTF format. |
+| `Html5SaveOptions` | Save options for HTML5. |
+| `IOConfig` | IO config for serialization/deserialization. |
+| `JtLoadOptions` | Load options for Siemens JT. |
+| `LoadOptions` | The base class to configure options in file loading for different types. |
+| `Microsoft3MFFormat` | File format instance for Microsoft 3MF with 3MF related utilities. |
+| `Microsoft3MFSaveOptions` | Aspose.ThreeD.Formats.Microsoft3MFSaveOptions specifies options for saving scenes to the Microsoft 3MF format. |
+| `ObjLoadOptions` | Load options for Wavefront OBJ format. |
+| `ObjSaveOptions` | Save options for Wavefront OBJ format. |
+| `PdfFormat` | Adobe's Portable Document Format. |
+| `PdfLoadOptions` | Options for PDF loading. |
+| `PdfSaveOptions` | The save options in PDF exporting. |
+| `PlyFormat` | The PLY format. |
+| `PlyLoadOptions` | Aspose.ThreeD.Formats.PlyLoadOptions specifies options for loading scenes from the PLY format. |
+| `PlySaveOptions` | Aspose.ThreeD.Formats.PlySaveOptions specifies options for saving scenes to the PLY format. |
+| `RvmFormat` | The RVM Format. |
+| `RvmLoadOptions` | Load options for AVEVA Plant Design Management System's RVM file. |
+| `RvmSaveOptions` | Save options for Aveva PDMS RVM file. |
+| `SaveOptions` | The base class to configure options in file saving for different types. |
+| `StlLoadOptions` | Load options for STL format. |
+| `StlSaveOptions` | Save options for STL format. |
+| `U3dLoadOptions` | Load options for universal 3d. |
+| `U3dSaveOptions` | Save options for universal 3d. |
+| `UsdSaveOptions` | Save options for USD/USDZ formats. |
+| `XLoadOptions` | The Load options for DirectX X files. |
+| `GlobalTransform` | Global transform is similar to  but it's immutable while it represents the final evaluated transformation. |
+| `Group` | A  represents the logical relationships of . |
+| `INamedObject` | Object that has a name. |
+| `ImageRenderOptions` | Options for  and. |
+| `ImportException` | Import exception. |
+| `License` | License management class (not available in FOSS version). |
+| `Metered` | Metered license management class (not available in FOSS version). |
+| `Node` | Represents an element in the scene graph. |
+| `Pose` | The pose is used to store transformation matrix when the geometry is skinned. |
+| `ArbitraryProfile` | This class allows you to construct a 2D profile directly from arbitrary curve. |
+| `CShape` | IFC compatible C-shape profile that defined by parameters. |
+| `CenterLineProfile` | IFC compatible center line profile. |
+| `CircleShape` | IFC compatible circle profile, which can be used to construct a mesh through. |
+| `EllipseShape` | IFC compatible ellipse profile. |
+| `FontFile` | Font file contains definitions for glyphs, this is used to create text profile. |
+| `HShape` | The  provides the defining parameters of an 'H' or 'I' shape. |
+| `HollowCircleShape` | IFC compatible hollow circle profile. |
+| `HollowRectangleShape` | IFC compatible hollow rectangular shape with both inner/outer rounding corners. |
+| `LShape` | IFC compatible L-shape profile that defined by parameters. |
+| `MirroredProfile` | IFC compatible mirror profile. |
+| `ParameterizedProfile` | The base class of all parameterized profiles. |
+| `Profile` | 2D Profile in xy plane. |
+| `RectangleShape` | IFC compatible rectangular shape with rounding corners. |
+| `TShape` | IFC compatible T-shape defined by parameters. |
+| `Text` | Text profile, this profile describes contours using font and text. |
+| `TrapeziumShape` | IFC compatible Trapezium shape defined by parameters. |
+| `UShape` | IFC compatible U-shape defined by parameters. |
+| `ZShape` | IFC compatible Z-shape profile that defined by parameters. |
+| `ThreeD.Property` | Class to hold user-defined properties. |
+| `PropertyCollection` | The collection of properties. |
+| `CubeFaceData` | Data for each face of the cube map texture. |
+| `DescriptorSetUpdater` | This class allows to update the  in a chain operation. |
+| `DriverException` | The exception raised by internal rendering drivers. |
+| `EntityRenderer` | Subclass this to implement rendering for different kind of entities. |
+| `EntityRendererKey` | The key of registered entity renderer. |
+| `GLSLSource` | The source code of shaders in GLSL. |
+| `IBuffer` | The base interface of all managed buffers used in rendering. |
+| `ICommandList` | Encodes a sequence of commands which will be sent to GPU to render. |
+| `IDescriptorSet` | The descriptor sets describes different resources that can be used to bind to the render pipeline like buffers, textures. |
+| `IIndexBuffer` | The index buffer describes the geometry used in rendering pipeline. |
+| `IPipeline` | Pipeline interface. |
+| `IRenderQueue` | Entity renderer uses this queue to manage render tasks. |
+| `IRenderTarget` | The base interface of render target. |
+| `IRenderTexture` | The interface of render texture. |
+| `IRenderWindow` | Render window interface. |
+| `ITexture1D` | 1D texture. |
+| `ITexture2D` | 2D texture. |
+| `ITextureCodec` | Codec for textures. |
+| `ITextureCubemap` | Cube map texture. |
+| `ITextureDecoder` | External texture decoder should implement this interface for decoding. |
+| `ITextureEncoder` | External texture encoder should implement this interface for encoding. |
+| `ITextureUnit` | represents a texture in the memory that shared between GPU and CPU and can be sampled by the shader, where the  only represents a reference to an external file. |
+| `IVertexBuffer` | The vertex buffer holds the polygon vertex data that will be sent to rendering pipeline. |
+| `InitializationException` | Initialization exception. |
+| `PixelMapping` | Aspose.ThreeD.Render.PixelMapping specifies how texture coordinates map to pixels. |
+| `PostProcessing` | The post-processing effects. |
+| `PushConstant` | A utility to provide data to shader through push constant. |
+| `RenderFactory` | RenderFactory creates all resources that represented in rendering pipeline. |
+| `RenderParameters` | Describe the parameters of the render target. |
+| `RenderResource` | Render resource base class. |
+| `RenderState` | Render state for building the pipeline The changes made on render state will not affect the created pipeline instances. |
+| `Renderer` | The context about renderer. |
+| `RendererVariableManager` | This class manages variables used in rendering. |
+| `SPIRVSource` | The compiled shader in SPIR-V format. |
+| `ShaderException` | Shader related exceptions. |
+| `ShaderProgram` | The shader program. |
+| `ShaderSet` | Shader programs for each kind of materials. |
+| `ShaderSource` | The source code of shader. |
+| `ShaderVariable` | Shader variable. |
+| `StencilState` | Stencil states per face. |
+| `TextureCodec` | Class to manage encoders and decoders for textures. |
+| `TextureData` | This class contains the raw data and format definition of a texture. |
+| `Viewport` | A  contains at least one viewport for rendering the scene. |
+| `WindowHandle` | Encapsulated window handle for different platforms. |
+| `Scene` | A scene is a top-level object that contains the nodes, geometries, materials, textures, animation, poses, sub-scenes and etc. |
+| `SceneObject` | The root class of objects that will be stored inside a scene. |
+| `LambertMaterial` | Material for lambert shading model. |
+| `Material` | Material defines the parameters necessary for visual appearance of geometry. |
+| `PbrMaterial` | Material for physically based rendering based on albedo color/metallic/roughness. |
+| `PbrSpecularMaterial` | Material for physically based rendering based on diffuse color/specular/glossiness. |
+| `PhongMaterial` | Material for blinn-phong shading model. |
+| `ShaderMaterial` | A shader material allows to describe the material by external rendering engine or shader language. |
+| `ShaderTechnique` | A shader technique represents a concrete rendering implementation. |
+| `Texture` | This class defines the texture from an external file. |
+| `TextureBase` | Base class for all concrete textures. |
+| `TextureSlot` | Texture slot in Material, can be enumerated through material instance. |
+| `Transform` | A transform contains information that allow access to object's translate/scale/rotation or transform matrix at minimum cost This is used by local transform. |
+| `TrialException` | Trial exception. |
+| `BoundingBox` | The axis-aligned bounding box. |
+| `BoundingBox2D` | Aspose.ThreeD.Utilities.BoundingBox2D represents a two-dimensional bounding box. |
+| `FMatrix4` | Aspose.ThreeD.Utilities.FMatrix4 represents a 4x4 matrix of single-precision floating-point numbers. |
+| `FVector2` | Aspose.ThreeD.Utilities.FVector2 represents a two-dimensional vector of single-precision floating-point numbers. |
+| `FVector3` | Represents a 3D vector. |
+| `FVector4` | Aspose.ThreeD.Utilities.FVector4 represents a four-dimensional vector of single-precision floating-point numbers. |
+| `FileSystem` | File system encapsulation. |
+| `IArrayList` | Aspose.3D has its own highly optimized implementation of List for better loading/saving performance Only this interface is exposed for user with IList compatible and similar interfaces. |
+| `IOExtension` | Aspose.ThreeD.Utilities.IOExtension provides utility methods for input and output operations. |
+| `MathUtils` | Aspose.ThreeD.Utilities.MathUtils provides common mathematical utility functions. |
+| `Matrix4` | Aspose.ThreeD.Utilities.Matrix4 represents a 4x4 matrix of double-precision floating-point numbers. |
+| `ParseException` | Aspose.ThreeD.Utilities.ParseException is thrown when parsing of input data fails. |
+| `Quaternion` | Quaternion is usually used to perform rotation in computer graphics. |
+| `Rect` | Aspose.ThreeD.Utilities.Rect represents a rectangle with floating-point coordinates. |
+| `RelativeRectangle` | Aspose.ThreeD.Utilities.RelativeRectangle represents a rectangle defined by relative coordinates. |
+| `SemanticAttribute` | Aspose.ThreeD.Utilities.SemanticAttribute defines the semantic meaning of a vertex attribute. |
+| `TransformBuilder` | Aspose.ThreeD.Utilities.TransformBuilder provides methods to construct transformation matrices. |
+| `Vector2` | Aspose.ThreeD.Utilities.Vector2 represents a two-dimensional vector of double-precision floating-point numbers. |
+| `Vector3` | Aspose.ThreeD.Utilities.Vector3 represents a three-dimensional vector of double-precision floating-point numbers. |
+| `Vector4` | Aspose.ThreeD.Utilities.Vector4 represents a four-dimensional vector of double-precision floating-point numbers. |
+| `Vertex` | Aspose.ThreeD.Utilities.Vertex represents a single vertex in a mesh with position and associated attributes. |
+| `VertexDeclaration` | Aspose.ThreeD.Utilities.VertexDeclaration describes the layout of vertex data in a mesh. |
+| `VertexField` | Aspose.ThreeD.Utilities.VertexField defines a single field within a vertex declaration. |
+| `Watermark` | Aspose.ThreeD.Utilities.Watermark represents a watermark that can be applied to 3D scenes. |
+
+#### Enumerations
+
+| Enumeration | Description |
+| --- | --- |
+| `ExtrapolationType` | Extrapolation type. |
+| `Interpolation` | The key frame's interpolation type. |
+| `StepMode` | Interpolation step mode. |
+| `WeightedMode` | Weighted mode. |
+| `Axis` | Axis. |
+| `CoordinateSystem` | Coordinate system. |
+| `BoneLinkMode` | A bone's link mode refers to the way in which a bone is connected or linked to its parent bone within a hierarchical structure. |
+| `ApertureMode` | Camera aperture modes. |
+| `BooleanOperation` | Mesh's Boolean operation. |
+| `CurveDimension` | The dimension of the curves. |
+| `LightType` | Light types. |
+| `MappingMode` | Mapping mode. |
+| `NurbsType` | NURBS types. |
+| `PatchDirectionType` | Patch direction's types. |
+| `ProjectionType` | Camera's projection types. |
+| `ReferenceMode` | defines how mapping information is stored and referenced by. |
+| `RotationMode` | The frustum's rotation mode. |
+| `SkeletonType` | Aspose.ThreeD.Entities.SkeletonType specifies the type of skeleton used in skeletal animation. |
+| `SplitMeshPolicy` | Share vertex/control point data between sub-meshes or each sub-mesh has its own compacted data. |
+| `TextureMapping` | The texture mapping type for Describes which kind of texture mapping is used. |
+| `VertexElementType` | The type of the vertex element, defined how it will be used in modeling. |
+| `FileContentType` | File content type. |
+| `ColladaTransformStyle` | The node's transformation style of node. |
+| `DracoCompressionLevel` | Compression level for draco file. |
+| `GltfEmbeddedImageFormat` | How glTF exporter will embed the textures during the exporting. |
+| `PdfLightingScheme` | LightingScheme specifies the lighting to apply to 3D artwork. |
+| `PdfRenderMode` | Render mode specifies the style in which the 3D artwork is rendered. |
+| `PoseType` | Pose type. |
+| `PropertyFlags` | Property's flags. |
+| `BlendFactor` | Blend factor specify pixel arithmetic. |
+| `CompareFunction` | Compare function for depth/stencil testing. |
+| `CubeFace` | Cube face selection. |
+| `CullFaceMode` | Cull face mode. |
+| `DrawOperation` | The primitive types to render. |
+| `EntityRendererFeatures` | The extra features that the entity renderer will provide. |
+| `FrontFace` | Front face winding. |
+| `IndexDataType` | The data type of the elements in. |
+| `PixelFormat` | The pixel's format used in texture unit. |
+| `PixelMapMode` | Aspose.ThreeD.Render.PixelMapMode defines how pixel maps are applied during rendering. |
+| `PolygonMode` | Polygon mode. |
+| `PresetShaders` | This defines the preset internal shaders used by the renderer. |
+| `RenderQueueGroupId` | The group id of render queue. |
+| `RenderStage` | The render stage. |
+| `ShaderStage` | Shader stage. |
+| `StencilAction` | Stencil action. |
+| `TextureType` | The type of the. |
+| `AlphaSource` | Defines whether the texture contains the alpha channel. |
+| `TextureFilter` | Filter options during texture sampling. |
+| `WrapMode` | Texture's wrap mode. |
+| `BoundingBoxExtent` | The extent of the bounding box. |
+| `ComposeOrder` | The order to compose transform matrix. |
+| `RotationOrder` | The order controls which rx ry rz are applied in the transformation matrix. |
+| `VertexFieldDataType` | Vertex field's data type. |
+| `VertexFieldSemantic` | The semantic of the vertex field. |
+
+#### Detailed Member Reference
+
+### Scene
+
+The `Scene` class provides static methods like `FromFile` and `FromStream` to load scenes from files or streams, and instance methods such as Save to export scenes to formats like `.fbx` and `.gltf`; it exposes the `RootNode` property to access the top-level node, and supports animation clips, poses, and asset metadata through its members.
+
+- `AnimationClips`: Gets all AnimationClip defined in the scene.
+- `AssetInfo`: Gets or sets the top-level asset information.
+- `Clear`: Clears the scene content and restores the default settings.
+- `CreateAnimationClip`: A shorthand function to create and register the The first AnimationClip will be assigned to the.
+- `CurrentAnimationClip`: Gets or sets the active AnimationClip.
+- `FindProperty`: Finds the property.
+- `FromFile`: Opens the scene from given path using specified file format.
+- `FromStream`: Opens the scene from given stream using specified file format.
+- `GetAnimationClip`: Gets a named AnimationClip.
+- `GetProperty`: Get the value of specified property.
+- `Library`: Objects that not directly used in scene hierarchy can be defined in Library.
+- `Name`: Gets or sets the name.
+- `Open`: Opens the scene from given stream using specified file format.
+- `Poses`: Gets all Pose used in this scene.
+- `Properties`: Gets the collection of all properties.
+- `RemoveProperty`: Removes a dynamic property.
+- `Render`: Render the scene into external file from given camera's perspective.
+- `RootNode`: Gets the root node of the scene.
+- `Save`: Saves the scene to stream using specified file format.
+- `SetProperty`: Sets the value of specified property.
+- `SubScenes`: Gets all sub-scenes.
+- `Version`: Version of the Aspose.3D library.
+
+### Node
+
+The `Node` class represents an element in the scene graph that holds a local transform, optional entity, and child nodes; it provides methods like `CreateChildNode` and `AddChildNode` to build hierarchies, `EvaluateGlobalTransform` to compute world-space transforms, and properties such as `ChildNodes`, Entities, and `Material` to inspect and modify its contents.
+
+- `Accept`: Walks through all descendant nodes(including the current node) and call the visitor with the node.
+- `AddChildNode`: Add a child node to this node.
+- `AddEntity`: Add an entity to the node.
+- `AssetInfo`: Per-node asset info.
+- `ChildNodes`: Gets the children nodes.
+- `CreateChildNode`: Creates a child node.
+- `Entities`: Gets all node entities.
+- `Entity`: Gets or sets the first entity attached to this node, if sets, will clear other entities.
+- `EvaluateGlobalTransform`: Evaluate the global transform, include the geometric transform or not.
+- `Excluded`: Gets or sets whether to exclude this node and all child nodes/entities during exporting.
+- `FindProperty`: Finds the property.
+- `GetBoundingBox`: Calculate the bounding box of the node.
+- `GetChild`: Gets the child node at specified index.
+- `GetEntity`: Gets the first entity that matches the specified type T.
+- `GetProperty`: Get the value of specified property.
+- `GlobalTransform`: Gets the global transform.
+- `Material`: Gets or sets the first material associated with this node, if sets, will clear other materials.
+- `Materials`: Gets the materials associated with this node.
+- `Merge`: Detach everything under the node and attach them to current node.
+- `MetaDatas`: Gets the meta data defined in this node.
+- `Name`: Gets or sets the name.
+- `ParentNode`: Gets or sets the parent node.
+- `Properties`: Gets the collection of all properties.
+- `RemoveProperty`: Removes a dynamic property.
+- `Scene`: Gets the scene that this object belongs to.
+- `SelectObjects`: Select multiple objects under current node using XPath-like query syntax.
+- `SelectSingleObject`: Select single object under current node using XPath-like query syntax.
+- `SetProperty`: Sets the value of specified property.
+- `ToString`: Gets the string representation of this node.
+- `Transform`: Gets the local transform.
+- `Visible`: Gets or sets to show the node.
+
+### Entities
+
+The Entities namespace contains base and concrete classes for geometric objects such as `Mesh`, `Box`, `Cylinder`, and `Camera`, which inherit from `Entity` and can be attached to `Node` instances to define the visual and structural components of a 3D scene.
+
+### Shading
+
+The Shading namespace provides material classes like `LambertMaterial`, `PhongMaterial`, and `PbrMaterial` that define how surfaces appear under lighting, supporting properties such as diffuse color, specular highlights, and physically based rendering parameters.
+
+### Animation
+
+The Animation namespace includes classes such as `AnimationClip`, `AnimationChannel`, and `KeyFrame` that enable keyframe-based animation of node transforms and entity properties through ordered sequences of time-value pairs.
+
+### Deformers
+
+The Deformers namespace provides base and concrete classes like `SkinDeformer` and `MorphTargetDeformer` that modify geometry by blending control points across multiple bones or target shapes.
+
+### Formats
+
+The Formats namespace exposes file format support for `.fbx` and `.gltf` through load and save options, with `FileFormat` providing detection and registration for formats used by `Scene.Open` and `Scene.Save`.
+
+### CustomObject
+
+The `CustomObject` class allows storing and retrieving custom data through a property collection, supporting dynamic property management via `FindProperty`, `GetProperty`, and `SetProperty` methods.
+
+- `FindProperty`: Finds the property.
+- `GetProperty`: Get the value of specified property.
+- `Name`: Gets or sets the name.
+- `Properties`: Gets the collection of all properties.
+- `RemoveProperty`: Removes a dynamic property.
+- `SetProperty`: Sets the value of specified property.
+
+### ThreeD.Property
+
+The `Property` class and its collection types enable storing named user-defined values on objects, with support for dynamic property lookup, retrieval, and modification through methods like `FindProperty`, `GetProperty`, and `SetProperty`.
+
+- `GetBindPoint`: Gets the property bind point on specified animation instance.
+- `GetExtra`: Gets extra data of the property associated by name.
+- `GetKeyframeSequence`: Gets the keyframe sequence on specified animation instance.
+- `Name`: Gets the name of the property.
+- `SetExtra`: Sets extra data of the property associated by name.
+- `ToString`: Returns a string that represents the current property.
+- `Value`: Gets or sets the value.
+- `ValueType`: Gets the type of the property value.
+
+### Utilities
+
+The Utilities namespace includes helper types such as `MathUtils` for vector operations and `TransformBuilder` for composing transformation matrices, supporting common mathematical and geometric tasks in 3D modeling workflows.
+
+### Render
+
+The Render namespace provides classes and interfaces for rendering scenes, including `Renderer`, `RenderTarget`, and shader-related types, though rendering functionality is not implemented in this FOSS build.
+
+### License
+
+The `License` class supports license management, though this FOSS build does not require or use licensing.
+
+- `SetLicense`: Sets the license (not available in FOSS version).
+
+| Class | Description |
+|---|---|
+| `A3DObject` | The base class of all Aspose.ThreeD objects; all subclasses support dynamic properties. |
+| `A3dwSaveOptions` | Save options for the A3DW format (registered, not implemented in this FOSS build). |
+| `AmfSaveOptions` | Save options for AMF. |
+| `AnimationChannel` | Stores a sequence of keyframes and provides `Add(time, value)` to insert new keyframe data. |
+| `AnimationClip` | A collection of animations. |
+| `AnimationNode` | Aspose.3D's animation hierarchy — each animation can be composed of several animations and their key-frame definitions. |
+| `ArbitraryProfile` | Constructs a 2D profile directly from an arbitrary curve. |
+| `AssetInfo` | Information about an asset. |
+| `AxisSystem` | A combination of coordinate system, up vector, and front vector. |
+| `BindPoint` | Created on an object's property; multi-component fields (like `Vector3`) generate a channel per component, connected to one or more keyframe sequences. |
+| `Bone` | Defines the subset of the geometry's control points and the blend weight for each control point. |
+| `BonePose` | Contains the transformation matrix for a bone node. |
+| `BooleanOperand` | Encapsulates the transformed mesh as a Boolean operation's operand (the operation itself is not executed in this FOSS build — see Scope and Limitations). |
+| `BooleanOperator` | Combines two `BooleanOperand`s with a `BooleanOperation` (union, intersection, subtraction). |
+| `Box` | Parameterized box primitive. |
+| `CShape` | IFC-compatible C-shape profile defined by parameters. |
+| `Camera` | Describes the eye point of the viewer looking at the scene. |
+| `CenterLineProfile` | IFC-compatible center line profile. |
+| `Circle` | A curve consisting of a set of points on the edge of a circle shape. |
+| `CircleShape` | IFC-compatible circle profile that can be extruded into a mesh. |
+| `ClassType` | Class definition metadata. |
+| `ColladaSaveOptions` | Save options for COLLADA. |
+| `CompositeCurve` | A curve consisting of several curve segments. |
+| `Curve` | The base class of all curve implementations. |
+| `CustomObject` | Represents custom object data. |
+| `Cylinder` | Parameterized cylinder primitive. |
+| `Deformer` | Base class for `SkinDeformer` and `MorphTargetDeformer`. |
+| `DescriptorSetUpdater` | Updates a descriptor set in a chain operation. |
+| `Discreet3dsLoadOptions` | Load options for 3DS files. |
+| `Discreet3dsSaveOptions` | Save options for 3DS files. |
+| `Dish` | Parameterized dish primitive. |
+| `DracoFormat` | Google Draco format registration — encode and decode both throw in this FOSS build (see Scope and Limitations). |
+| `DracoSaveOptions` | Save options for Draco files. |
+| `DriverException` | Exception raised by internal rendering drivers. |
+| `Ellipse` | A curve defining the shape of an ellipse. |
+| `EllipseShape` | IFC-compatible ellipse profile. |
+| `Entity` | The base class of all entities (geometry, cameras, lights). |
+| `EntityRenderer` | Base class to implement rendering for different kinds of entities. |
+| `EntityRendererKey` | The key of a registered entity renderer. |
+| `EnumType` | Reflection metadata describing an enum type. |
+| `EnumValue` | A single named value of an `EnumType`. |
+| `ExportException` | Exception raised on export failure. |
+| `Extrapolation` | Controls the extrapolation mode (via `ExtrapolationType`) applied outside a keyframe sequence's range. |
+| `FbxLoadOptions` | Load options for FBX format. |
+| `FbxSaveOptions` | Save options for FBX format. |
+| `FileFormat` | File format registry — `Detect`/`GetFormatByExtension` plus per-format static members (`WavefrontOBJ`, `STLBinary`, `GLTF2`, `Collada`, `Discreet3DS`, `Microsoft3MF`) used with `Scene.Save()`/`FromFile()`. |
+| `FileFormatType` | File format family type. |
+| `FileSystem` | File system encapsulation used during load/save. |
+| `FontFile` | Font glyph definitions, used to create a `Text` profile. |
+| `Frustum` | Base class of `Camera` and `Light`. |
+| `GLSLSource` | Shader source code in GLSL. |
+| `Geometry` | The base class of all renderable geometric objects (`Mesh`, `Box`, `Cylinder`, and similar). |
+| `GlobalTransform` | The immutable final evaluated transformation, similar to `Transform` but read-only. |
+| `GltfLoadOptions` | Load options for glTF format. |
+| `GltfSaveOptions` | Save options for glTF format. |
+| `Group` | Represents the logical relationships between entities. |
+| `HShape` | IFC-compatible H/I-shape profile defined by parameters. |
+| `HalfSpace` | An infinite space split by a plane. |
+| `HollowCircleShape` | IFC-compatible hollow circle profile. |
+| `HollowRectangleShape` | IFC-compatible hollow rectangular profile with inner/outer rounding. |
+| `Html5SaveOptions` | Save options for HTML5 (Aspose 3D Web viewer) export. |
+| `IOConfig` | IO configuration for serialization/deserialization. |
+| `IOExtension` | Writes a `Matrix4` value to a `BinaryWriter`. |
+| `ImageRenderOptions` | Options for image rendering (rendering itself is out of scope in this FOSS build). |
+| `ImportException` | Exception raised on import failure. |
+| `InitializationException` | Exception raised on initialization failure. |
+| `JtLoadOptions` | Load options for Siemens JT (registered, not functional — see Scope and Limitations). |
+| `KeyFrame` | A single keyframe in an animation sequence. |
+| `KeyframeSequence` | An ordered sequence of `KeyFrame`s for a single property. |
+| `LShape` | IFC-compatible L-shape profile defined by parameters. |
+| `LambertMaterial` | Material for the Lambert shading model. |
+| `License` | License management class (not applicable to this open-source edition). |
+| `Light` | Illuminates the scene. |
+| `Line` | A polyline defined by a set of points connected by segments. |
+| `LinearExtrusion` | Extrudes a 2D profile shape along the third dimension. |
+| `LoadOptions` | Base class for per-format load options. |
+| `Material` | Base class defining the parameters for a geometry's visual appearance. |
+| `MathUtils` | Vector/normal math helpers, e.g. `CalcNormal` for a polygon defined by `Vector3` points. |
+| `Mesh` | A mesh made of many n-sided polygons. |
+| `Metered` | Metered license management class (not applicable to this open-source edition). |
+| `Microsoft3MFFormat` | Microsoft 3MF format registration and utilities — core geometry import/export works; build-instruction metadata is not implemented (see Scope and Limitations). |
+| `Microsoft3MFSaveOptions` | Save options for Microsoft 3MF. |
+| `MirroredProfile` | IFC-compatible mirrored profile. |
+| `MorphTargetChannel` | Used by `MorphTargetDeformer` to organize target geometries. |
+| `MorphTargetDeformer` | Provides per-vertex morph-target animation. |
+| `Node` | An element in the scene graph — carries a transform, an optional entity, and child nodes; `CreateChildNode`/`AddChildNode`/`Merge`/`EvaluateGlobalTransform` attach and manage them. |
+| `NurbsCurve` | A curve represented by NURBS (Non-Uniform Rational B-Spline) control points and a knot vector. |
+| `NurbsDirection` | Per-direction data for a `NurbsSurface`'s U or V direction. |
+| `NurbsSurface` | A surface represented by NURBS, defined by its U and V `NurbsDirection`s. |
+| `ObjLoadOptions` | Load options for Wavefront OBJ format. |
+| `ObjSaveOptions` | Save options for Wavefront OBJ format. |
+| `ParameterizedProfile` | Base class of all parameterized 2D profiles. |
+| `ParseException` | Exception raised on a parse failure. |
+| `Patch` | A parametric modeling surface defined by two `NurbsDirection`s, similar to `NurbsSurface`. |
+| `PatchDirection` | A `Patch`'s U or V direction. |
+| `PbrMaterial` | Material for physically based rendering using albedo/metallic/roughness. |
+| `PbrSpecularMaterial` | Material for physically based rendering using diffuse/specular/glossiness. |
+| `PdfFormat` | Adobe PDF format registration — extraction/import throws in this FOSS build; export is not registered (see Scope and Limitations). |
+| `PdfLoadOptions` | Options for PDF loading. |
+| `PdfSaveOptions` | Options for PDF exporting. |
+| `PhongMaterial` | Material for the Blinn-Phong shading model. |
+| `PixelMapping` | Maps pixel coordinates for a texture unit. |
+| `Plane` | Parameterized plane primitive. |
+| `PlyFormat` | PLY format registration; its own direct `Encode`/`Decode` methods throw, but this is not the path `Scene.Save()`/`Scene.Open()` use — see PLY note in Scope and Limitations. |
+| `PlyLoadOptions` | Load options for PLY files. |
+| `PlySaveOptions` | Save options for PLY files. |
+| `PointCloud` | Contains control points and vertex elements with no topology information. |
+| `PolygonBuilder` | Helper to build a polygon for `Mesh`. |
+| `PolygonModifier` | Mesh utility surface (triangulation, normal/UV generation, merge) — every operation throws in this FOSS build (see Scope and Limitations). |
+| `Pose` | Stores the transformation matrix used when geometry is skinned. |
+| `PostProcessing` | Post-processing effect settings (rendering is out of scope in this FOSS build). |
+| `Primitive` | Base class for all parameterized primitives (`Box`, `Cylinder`, `Sphere`, and similar). |
+| `Profile` | A 2D profile in the XY plane. |
+| `Property-GLTF` | Exposes `GetExtra`/`SetExtra` for arbitrary user data and `GetBindPoint` for animation bind points. |
+| `Property-ThreeD` | Holds user-defined properties. |
+| `PropertyCollection` | A collection of `Property` instances. |
+| `PropertyTable` | A table of `PropertyCollection` entries indexed by name. |
+| `PushConstant` | Provides data to a shader through a push constant. |
+| `Pyramid` | Parameterized pyramid primitive. |
+| `RectangleShape` | IFC-compatible rectangular profile with rounded corners. |
+| `RectangularTorus` | Parameterized rectangular torus primitive. |
+| `RenderFactory` | Creates resources used in the rendering pipeline (rendering is out of scope in this FOSS build). |
+| `RenderParameters` | Describes the parameters of a render target. |
+| `RenderResource` | Base class for render resources. |
+| `RenderState` | Pipeline render state. |
+| `Renderer` | Rendering context. |
+| `RendererVariableManager` | Manages variables used during rendering. |
+| `RevolvedAreaSolid` | A solid built by revolving a profile's cross-section around an axis. |
+| `RvmFormat` | AVEVA PDMS RVM format registration — core geometry import/export works; attribute loading is not implemented (see Scope and Limitations). |
+| `RvmLoadOptions` | Load options for AVEVA PDMS RVM files. |
+| `RvmSaveOptions` | Save options for AVEVA PDMS RVM files. |
+| `SPIRVSource` | A shader compiled to SPIR-V. |
+| `SaveOptions` | Base class for per-format save options. |
+| `Scene` | The top-level container for nodes, geometries, materials, textures, animation, and poses. |
+| `SceneObject` | The root class of objects stored inside a `Scene`. |
+| `Segment` | A segment within a `CompositeCurve`. |
+| `SemanticAttribute` | Declares the vertex field semantic for a custom vertex element. |
+| `ShaderException` | Shader-related exceptions. |
+| `ShaderMaterial` | A material described by an external rendering engine or shader language. |
+| `ShaderProgram` | A compiled shader program. |
+| `ShaderSet` | The set of shader programs for each material kind. |
+| `ShaderSource` | Shader source code. |
+| `ShaderTechnique` | A concrete rendering implementation for a technique. |
+| `ShaderVariable` | A shader variable. |
+| `Shape` | Describes deformation on a set of control points, similar to a Maya cluster deformer. |
+| `Skeleton` | Manipulates the transformation of a skeletal structure. |
+| `SkinDeformer` | Blends geometry across multiple bones using per-control-point weights. |
+| `Sphere` | Parameterized sphere primitive. |
+| `StencilState` | Per-face stencil states. |
+| `StlLoadOptions` | Load options for STL format. |
+| `StlSaveOptions` | Save options for STL format. |
+| `StructuralMetadata` | glTF `EXT_structural_metadata` support — not implemented in this FOSS build. |
+| `SweptAreaSolid` | A solid built by sweeping a profile along a directrix. |
+| `TShape` | IFC-compatible T-shape profile defined by parameters. |
+| `Text` | A profile describing contours from a font and text. |
+| `Texture` | A texture sourced from an external file. |
+| `TextureBase` | Base class for all concrete textures. |
+| `TextureCodec` | Manages texture encoders and decoders. |
+| `TextureData` | Raw pixel data and format definition of a texture. |
+| `TextureSlot` | A texture slot on a `Material`. |
+| `Torus` | Parameterized torus primitive. |
+| `Transform` | Access to an object's local translate/scale/rotation or transform matrix. |
+| `TransformBuilder` | Composes multiple transform matrices via `Append`/`Prepend`/`Scale`/`RotateDegree`, exposing the composed `Matrix`. |
+| `TransformedCurve` | Gives a curve a placement via a transformation matrix. |
+| `TrapeziumShape` | IFC-compatible trapezium profile defined by parameters. |
+| `TriMesh` | Raw GPU-ready mesh buffer representation — most conversion/read helpers throw in this FOSS build (see Scope and Limitations). |
+| `TrialException` | Trial-related exception (not applicable to this open-source edition). |
+| `TrimmedCurve` | A bounded curve trimmed from a basis curve at both ends. |
+| `U3dLoadOptions` | Load options for Universal 3D (U3D). |
+| `U3dSaveOptions` | Save options for Universal 3D (U3D). |
+| `UShape` | IFC-compatible U-shape profile defined by parameters. |
+| `UsdSaveOptions` | Save options for USD/USDZ (registered, not implemented in this FOSS build). |
+| `Vertex` | Reads component vectors (e.g. `ReadVector3`) from a vertex field. |
+| `VertexDeclaration` | Defines a custom vertex layout via `AddField`; sealed once built. |
+| `VertexElement` | Base class of vertex elements. |
+| `VertexElementBinormal` | Per-vertex binormal data. |
+| `VertexElementDoublesTemplate` | Helper base for `double`-typed vertex elements. |
+| `VertexElementEdgeCrease` | Edge crease values for specified components. |
+| `VertexElementFVector` | Helper base for `FVector`-typed vertex elements. |
+| `VertexElementHole` | Marks whether a polygon is a hole. |
+| `VertexElementIntsTemplate` | Helper base for `int`-typed vertex elements. |
+| `VertexElementMaterial` | Material index for specified components. |
+| `VertexElementNormal` | Per-vertex normal data. |
+| `VertexElementPolygonGroup` | Groups related polygons together. |
+| `VertexElementSmoothingGroup` | Groups polygons that should appear to form a smooth surface. |
+| `VertexElementSpecular` | Per-vertex specular color. |
+| `VertexElementTangent` | Per-vertex tangent data, exposed via `Tangents`. |
+| `VertexElementTemplate` | Generic helper base for typed vertex elements. |
+| `VertexElementUV` | Per-vertex UV coordinates. |
+| `VertexElementUserData` | Custom user data for specified components. |
+| `VertexElementVector4` | Helper base for `Vector4`-typed vertex elements. |
+| `VertexElementVertexColor` | Per-vertex color. |
+| `VertexElementVertexCrease` | Vertex crease values. |
+| `VertexElementVisibility` | Marks whether specified components are visible. |
+| `VertexElementWeight` | Per-vertex blend weight. |
+| `VertexField` | Describes a custom vertex attribute's data type, semantic, alias, index, offset, and size. |
+| `Viewport` | One or more render viewports for a scene (rendering is out of scope in this FOSS build). |
+| `Watermark` | Embeds and extracts text watermarks in 3D files, with optional password protection. |
+| `WindowHandle` | Encapsulated window handle for different platforms. |
+| `XLoadOptions` | Load options for DirectX `.x` files. |
+| `ZShape` | IFC-compatible Z-shape profile defined by parameters. |
+
+| Interface | Description |
+|---|---|
+| `IArrayList` | Aspose.3D's own optimized `List<T>`-compatible collection for faster loading/saving. |
+| `IBuffer` | Base interface of all managed rendering buffers. |
+| `ICommandList` | Encodes a sequence of GPU rendering commands. |
+| `IDescriptorSet` | Describes resources (buffers, textures) bound to the render pipeline. |
+| `IIndexBuffer` | Describes the index geometry used by the rendering pipeline. |
+| `IIndexedVertexElement` | A `VertexElement` that also carries index data. |
+| `IMeshConvertible` | Implemented by entities that can be converted to a `Mesh`. |
+| `INamedObject` | An object that has a name. |
+| `IOrientable` | Implemented by entities that support orientation. |
+| `IPipeline` | Pipeline interface (rendering is out of scope in this FOSS build). |
+| `IRenderQueue` | Manages render tasks for an entity renderer. |
+| `IRenderTarget` | Base interface of a render target. |
+| `IRenderTexture` | Interface of a render texture. |
+| `IRenderWindow` | Render window interface. |
+| `ITexture1D` | A 1D texture. |
+| `ITexture2D` | A 2D texture. |
+| `ITextureCodec` | Codec interface for textures. |
+| `ITextureCubemap` | A cube map texture. |
+| `ITextureDecoder` | Implemented by external texture decoders. |
+| `ITextureEncoder` | Implemented by external texture encoders. |
+| `ITextureUnit` | A texture in memory shared between GPU and CPU. |
+| `IVertexBuffer` | Holds polygon vertex data sent to the rendering pipeline. |
+
+| Struct | Description |
+|---|---|
+| `BoundingBox` | An axis-aligned bounding box. |
+| `BoundingBox2D` | A 2D bounding box initialized from minimum and maximum vectors. |
+| `CubeFaceData` | Data for each face of a cube map texture. |
+| `EndPoint` | A curve trim endpoint, given as a parameter value or a Cartesian point. |
+| `FMatrix4` | A single-precision 4x4 matrix with `Concatenate`, `Transpose`, and `Inverse`. |
+| `FVector2` | A single-precision 2D vector. |
+| `FVector3` | A single-precision 3D vector. |
+| `FVector4` | A single-precision 4D vector. |
+| `Matrix4` | A double-precision 4x4 matrix with `Inverse()` and `Decompose()`. |
+| `Quaternion` | A rotation, expressed as a quaternion. |
+| `Rect` | A rectangle with a `Contains` point test. |
+| `RelativeRectangle` | A rectangle given as left/top/width/height offsets. |
+| `Vector2` | A double-precision 2D vector. |
+| `Vector3` | A double-precision 3D vector, with scalar (·) and cross (×) products, and normalization. |
+| `Vector4` | A double-precision 4D vector, constructible from a `Vector3` plus `w`. |
+
+| Enumeration | Description |
+|---|---|
+| `AlphaSource` | Whether a texture contains an alpha channel. |
+| `ApertureMode` | Camera aperture modes. |
+| `Axis` | A coordinate axis. |
+| `BlendFactor` | Pixel blend factor. |
+| `BoneLinkMode` | How a bone connects to its parent bone. |
+| `BooleanOperation` | A mesh Boolean operation kind (union, intersection, subtraction). |
+| `BoundingBoxExtent` | The extent of a bounding box. |
+| `ColladaTransformStyle` | A node's COLLADA transformation style. |
+| `CompareFunction` | Compare function for depth/stencil testing. |
+| `ComposeOrder` | The order used to compose a transform matrix. |
+| `CoordinateSystem` | Left- or right-handed coordinate system. |
+| `CubeFace` | Cube map face selection. |
+| `CullFaceMode` | Cull face mode. |
+| `CurveDimension` | The dimensionality of a curve. |
+| `DracoCompressionLevel` | Compression level for Draco files (Draco encode/decode are not implemented in this FOSS build). |
+| `DrawOperation` | Primitive draw types (rendering is out of scope in this FOSS build). |
+| `EntityRendererFeatures` | Extra features an entity renderer provides. |
+| `ExtrapolationType` | Extrapolation mode outside a keyframe sequence's range. |
+| `FileContentType` | ASCII or Binary file content. |
+| `FrontFace` | Front-face winding order. |
+| `GltfEmbeddedImageFormat` | How the glTF exporter embeds textures. |
+| `IndexDataType` | The data type of index buffer elements. |
+| `Interpolation` | Keyframe interpolation type. |
+| `LightType` | Light types. |
+| `MappingMode` | Texture mapping mode. |
+| `NurbsType` | NURBS curve/surface type classification. |
+| `PatchDirectionType` | `Patch` direction type. |
+| `PdfLightingScheme` | Lighting scheme for PDF 3D artwork (PDF import/export is not implemented in this FOSS build). |
+| `PdfRenderMode` | Render mode for PDF 3D artwork (PDF import/export is not implemented in this FOSS build). |
+| `PixelFormat` | Texture unit pixel format. |
+| `PixelMapMode` | Pixel mapping mode. |
+| `PolygonMode` | Polygon fill mode (rendering is out of scope in this FOSS build). |
+| `PoseType` | Pose type. |
+| `PresetShaders` | Preset internal shaders used by the renderer (rendering is out of scope in this FOSS build). |
+| `ProjectionType` | Camera projection types. |
+| `PropertyFlags` | Property flags. |
+| `ReferenceMode` | How mapping information is stored and referenced by a vertex element. |
+| `RenderQueueGroupId` | Render queue group id (rendering is out of scope in this FOSS build). |
+| `RenderStage` | Render pipeline stage (rendering is out of scope in this FOSS build). |
+| `RotationMode` | Frustum rotation mode. |
+| `RotationOrder` | Order in which rotations around X/Y/Z are applied. |
+| `ShaderStage` | Shader pipeline stage. |
+| `SkeletonType` | Skeleton type classification. |
+| `SplitMeshPolicy` | Whether split sub-meshes share vertex data or own a compacted copy. |
+| `StencilAction` | Stencil action. |
+| `StepMode` | Interpolation step mode. |
+| `TextureFilter` | Texture sampling filter options. |
+| `TextureMapping` | Texture mapping type. |
+| `TextureType` | Texture kind classification. |
+| `VertexElementType` | How a vertex element is used in modeling. |
+| `VertexFieldDataType` | A vertex field's data type. |
+| `VertexFieldSemantic` | A vertex field's semantic. |
+| `WeightedMode` | Weighted blend mode. |
+| `WrapMode` | Texture wrap mode. |
+
+</details>
+
+## Scope and Limitations
+
+Aspose.3D FOSS for .NET reads and writes `.3ds`, `.3mf`, and `.ply` files through the `Scene.Open` and `Scene.Save` APIs, targeting netcoreapp3.1, net6.0, net8.0, and net10.0 runtimes with zero external package dependencies.
+
+- Rendering is not implemented in this FOSS build — `Scene.Render`, `RenderFactory`, and the `IRenderTarget`/`IRenderWindow` rendering pipeline all throw `NotImplementedException`.
+- PLY import and export work through `Scene.Open` and `Scene.Save` using `PlyReader`/`PlyWriter`, but the public `FileFormat.PLY` field backed by the non-dispatched `PlyFormat` class throws `NotImplementedException` when Encode or Decode is called directly.
+- `PolygonModifier` utilities, `TriMesh` buffer helpers, `NurbsCurve` evaluation, `NurbsSurface.ToMesh`, and text watermarking all throw `NotImplementedException` in this FOSS build.
+- `CustomObject.CustomObject`, `CustomObject.FindProperty`, `CustomObject.GetProperty`, `CustomObject.Name`, `CustomObject.Properties`, `CustomObject.RemoveProperty`, and `CustomObject.SetProperty` are present but not functional in this FOSS build.
+- Core `.3mf` geometry import/export works, but `Microsoft3MFFormat` build-instruction metadata — `IsBuildable`, `GetTransformForBuild`, `SetBuildable`, and object type accessors — is not implemented.
+- `License` and trial-management APIs — `License.License`, `License.SetLicense`, `Metered.GetConsumptionCredit`, `Metered.GetConsumptionQuantity`, `Metered.IsMeteredLicensed`, `Metered.Metered`, and `Metered.SetMeteredKey` — are present for API-surface compatibility but are not applicable to this open-source edition.
+
+- Targets `netcoreapp3.1`, `net6.0`, `net8.0`, and `net10.0` in Release builds — runs on any
+  compatible .NET Core 3.1 or later .NET/.NET Core runtime.
+
+- `RvmFormat.LoadAttributes` is not implemented — core RVM geometry import/export works, RVM
+  attribute data does not load.
+
+This project is licensed under the [MIT License](LICENSE). The MIT License permits use, copying, modification, distribution, sublicensing, and commercial use, provided its copyright and permission notice are retained. The software is provided without warranty.

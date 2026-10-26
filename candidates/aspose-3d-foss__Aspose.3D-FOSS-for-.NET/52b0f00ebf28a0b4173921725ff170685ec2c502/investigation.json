@@ -1,0 +1,219 @@
+{
+  "audience": {
+    "fact_ids": [
+      "package:target_framework",
+      "install_command:dotnet",
+      "public_symbol:aspose.threed.scene",
+      "public_symbol:aspose.threed.node"
+    ],
+    "text": "Developers building .NET applications targeting netcoreapp3.1, net6.0, net8.0, or net10.0 who need to programmatically create, manipulate, and convert 3D scenes."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.scene",
+        "public_symbol:aspose.threed.node",
+        "public_symbol:aspose.threed.sceneobject"
+      ],
+      "text": "Construct and manage 3D scene graphs using Scene and Node, with support for child node attachment and entity assignment.",
+      "title": "Scene graph construction"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.entities",
+        "public_symbol:aspose.threed.profiles"
+      ],
+      "text": "Create primitive shapes (Box, Cylinder, Sphere, etc.) and IFC-compatible 2D profiles (LShape, TShape, etc.) for solid modeling.",
+      "title": "Primitive and profile geometry"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.shading",
+        "public_symbol:aspose.threed.node"
+      ],
+      "text": "Assign shading materials including LambertMaterial, PhongMaterial, PbrMaterial, and ShaderMaterial to nodes.",
+      "title": "Material assignment"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.animation",
+        "public_symbol:aspose.threed.deformers"
+      ],
+      "text": "Animate scenes using AnimationClip, AnimationChannel, KeyFrame, Bone, Skeleton, SkinDeformer, and MorphTargetDeformer.",
+      "title": "Animation support"
+    },
+    {
+      "fact_ids": [
+        "format:input.fbx",
+        "format:output.fbx",
+        "format:input.gltf",
+        "format:output.gltf",
+        "format:input.obj",
+        "format:output.obj",
+        "format:input.stl",
+        "format:output.stl",
+        "format:input.dae",
+        "format:output.dae",
+        "format:input.3mf"
+      ],
+      "text": "Convert scenes between FBX, glTF, OBJ, STL, COLLADA, 3MF, 3DS, PLY, AMF, and HTML5 viewer export formats.",
+      "title": "Format conversion"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.entities",
+        "public_symbol:aspose.threed.property"
+      ],
+      "text": "Read and write per-vertex mesh data including normals, UVs, vertex color, tangent/binormal, smoothing groups, and user data.",
+      "title": "Mesh vertex data handling"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.customobject"
+      ],
+      "text": "Define NURBS curves and surfaces using control points, weights, and knot vectors via NurbsCurve and NurbsSurface.",
+      "title": "NURBS data definition"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "install_command:dotnet",
+        "public_symbol:aspose.threed.render"
+      ],
+      "text": "Rendering is not implemented — Scene.Render and related APIs throw NotImplementedException."
+    },
+    {
+      "fact_ids": [
+        "format:input.ply",
+        "format:output.ply",
+        "public_symbol:aspose.threed.formats"
+      ],
+      "text": "PLY import/export works via Scene.Open/Save but direct use of PLYFormat.Encode/Decode throws NotImplementedException."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities"
+      ],
+      "text": "PolygonModifier and most TriMesh helpers throw NotImplementedException — mesh post-processing utilities are not functional."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.customobject"
+      ],
+      "text": "NURBS evaluation and surface-to-mesh conversion throw NotImplementedException."
+    },
+    {
+      "fact_ids": [
+        "format:input.3mf",
+        "format:output.3mf",
+        "format:input.3ds",
+        "format:output.3ds"
+      ],
+      "text": "3MF build metadata and RVM attribute loading are not implemented despite core geometry support."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.license",
+        "public_symbol:aspose.threed.metered"
+      ],
+      "text": "License and Metered APIs exist for API compatibility but are not applicable to this open-source edition."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "install_command:dotnet",
+        "public_symbol:aspose.threed.entities",
+        "public_symbol:aspose.threed.profiles",
+        "public_symbol:aspose.threed.shading",
+        "public_symbol:aspose.threed.animation"
+      ],
+      "text": "Enables programmatic construction of 3D scene graphs using primitives and IFC-style profiles, with support for assigning materials and animating hierarchies."
+    },
+    {
+      "fact_ids": [
+        "format:input.fbx",
+        "format:output.fbx",
+        "format:input.gltf",
+        "format:output.gltf",
+        "format:input.obj",
+        "format:output.obj",
+        "format:input.stl",
+        "format:output.stl",
+        "format:input.dae",
+        "format:output.dae",
+        "format:input.3mf",
+        "format:output.3mf",
+        "format:input.3ds",
+        "format:output.3ds"
+      ],
+      "text": "Supports round-trip conversion between widely used 3D interchange formats including FBX, glTF, OBJ, STL, COLLADA, 3MF, and RVM."
+    },
+    {
+      "fact_ids": [
+        "dependency:none",
+        "package:target_framework"
+      ],
+      "text": "Provides pure managed-code 3D processing with no native dependencies, simplifying deployment across Windows, Linux, and macOS."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:repository",
+      "package:name",
+      "install_command:dotnet",
+      "package:target_framework",
+      "package:version",
+      "dependency:none"
+    ],
+    "text": "Aspose.3D FOSS for .NET is a free, open-source MIT-licensed .NET library for building, traversing, and converting 3D scenes without external 3D engines."
+  },
+  "uncertainties": [
+    "The exact scope of 'production-extension metadata' in 3MF is not detailed beyond IsBuildable and related methods.",
+    "Whether PDF and Google Draco formats are supported via any path beyond the explicit exception-throwing formats is unclear.",
+    "The behavior of Scene.Render when called in a non-FOSS context is not specified.",
+    "The relationship between Aspose.3D.FOSS and Aspose.3D for .NET Enterprise Edition beyond the README note is not detailed.",
+    "Whether custom object types beyond those listed are supported is not confirmed.",
+    "The extent of support for vertex color and tangent/binormal in all output formats is not specified.",
+    "The behavior of Scene.Save when targeting unsupported formats like PDF or Draco is not detailed.",
+    "The availability of additional public symbols beyond those listed in the dossier is not confirmed."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.scene",
+        "public_symbol:aspose.threed.node",
+        "public_symbol:aspose.threed.shading",
+        "format:output.fbx"
+      ],
+      "name": "Build and save a 3D scene",
+      "text": "Create a scene with a primitive entity, assign a material, and save to FBX using Scene.Save()."
+    },
+    {
+      "fact_ids": [
+        "format:input.gltf",
+        "format:output.obj",
+        "public_symbol:aspose.threed.scene"
+      ],
+      "name": "Load and convert between formats",
+      "text": "Load an existing glTF scene via Scene.FromFile() and re-save it as OBJ using Scene.Save()."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.scene",
+        "public_symbol:aspose.threed.node"
+      ],
+      "name": "Traverse node hierarchy",
+      "text": "Enumerate nodes in a loaded scene using the RootNode and child node relationships."
+    },
+    {
+      "fact_ids": [
+        "format:output.dae",
+        "public_symbol:aspose.threed.scene"
+      ],
+      "name": "Export to COLLADA via stream",
+      "text": "Save a scene to COLLADA format using a stream and Scene.Save()."
+    }
+  ]
+}
