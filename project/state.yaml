@@ -1792,13 +1792,38 @@ next_ready_items:
       non-invalidating case, both against this repository's own real invalidation.py table) are
       the honest evidence for this step. The next genuine real difference in that candidate's
       own future reruns will exercise this path for real.
+    step_12_done_2026_10_26_adopt_update_completes_the_dance: >
+      Built _adopt_update (seal.py v4, same day): a LATER rerun whose artifacts reproduce
+      exactly what a waiting update recorded (:func:`_matches_waiting_update`, comparing against
+      the update's own ``files`` digest map, not the originally-sealed content), fresh and
+      zero-call, adopts it as the new proven content -- keeping the previous proof on the
+      manifest under ``adopted`` for the record (``adopted.previous_proof``). Added
+      ``recorded_by`` to the update record (``_record_update``) so adoption's own freshness
+      check has something real to check freshness against (the recorder, not the original
+      sealer). ``_write_bundle`` gained an ``extra`` param to carry the ``adopted`` block through
+      without a separate write path.
+      This COMPLETES the no-op-proof-adoption dance this card's own step 6/7/9/10/11 history
+      built toward in stages: a candidate can now be first-sealed, proven, drift and have that
+      drift recorded against its proof, and have a later reproduction of that exact drift
+      adopted as the new proven state -- the full lifecycle the old repo's own seal.py
+      implements, rebuilt here against this repository's real artifact names and real
+      split-evidence layout, not a verbatim port.
+      Simplified, documented rather than silently approximated (module docstring updated to
+      name this precisely): _record_update always re-timestamps/re-records on every further
+      differing rerun rather than tracking whether an update is genuinely new first (the old
+      repo's own idempotency bookkeeping) -- an honest, simpler behavior.
+      1 new test (tests/readme/bundle/test_seal.py, 15 total): seal -> prove -> a differing
+      rerun records VALID_UPDATE_AVAILABLE -> a LATER, genuinely different fresh process (not
+      just different from the original seal, but from the recorder too) reproduces that exact
+      update with zero calls -> adopts it, previous_proof preserved. Full suite re-run clean:
+      1682 passed, 11 skipped, 5 deselected.
     next_step: >
-      (1) Build _adopt_update: a later rerun whose artifacts reproduce the WAITING update byte
-      for byte with zero calls, rather than the originally sealed content, adopts it as the new
-      proven content (keeping the previous proof for the record). (2) Wire
-      count_current_candidates/integrity_valid_candidates into WIRE_GATEVERIFY_TO_PORTFOLIO's
-      own "define what no-op means for a README candidate" ask, now that a real, reachable
-      implementation exists.
+      (1) Wire count_current_candidates/integrity_valid_candidates into
+      WIRE_GATEVERIFY_TO_PORTFOLIO's own "define what no-op means for a README candidate" ask,
+      now that a real, complete, reachable implementation exists. (2) Live-demonstrate
+      record/adopt against a real repository once one genuinely drifts and is re-proven -- no
+      real candidate has done this yet; the unit tests are the honest evidence for now. (3) The
+      old repo's own idempotency bookkeeping for _record_update, if ever worth the complexity.
     write_paths_planned: [src/repo_presenter/core/noop_proof.py (steps 1 + 3, DONE),
       src/repo_presenter/core/snapshot/capture.py (step 3, DONE),
       src/repo_presenter/readme/composition/authoring.py (step 4, DONE -- filename constant only),

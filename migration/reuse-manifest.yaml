@@ -2374,3 +2374,25 @@ entries:
       _adopt_update itself. Not live-demonstrated against the real aspose-3d-foss/.NET bundle
       this pass -- it is currently READY_FOR_PROPOSAL and genuinely stable; manufacturing an
       artificial difference just to exercise this path would not be real evidence.
+
+  - component: "seal.py v4: _adopt_update completes the no-op-proof-adoption dance"
+    source: old-repository-presenter's components/readme/bundle/seal.py (_adopt_update)
+    disposition: ADAPT_2026_10_26
+    reason: >
+      A LATER rerun whose artifacts reproduce exactly what a waiting update recorded (compared
+      against the update's own files digest map, not the originally sealed content), fresh and
+      zero-call, now adopts it as the new proven content -- keeping the previous proof on the
+      manifest under "adopted" for the record. This COMPLETES the no-op-proof-adoption dance:
+      first seal, proof, update recording, update adoption. Simplified from the old repo's own
+      mechanism, documented rather than silently approximated: _record_update always
+      re-timestamps on every further differing rerun rather than tracking whether an update is
+      genuinely new first (the old repo's own idempotency bookkeeping).
+    evidence: >
+      1 new test (tests/readme/bundle/test_seal.py, 15 total): seal -> prove -> a differing
+      rerun records a waiting update -> a later, genuinely different fresh process reproduces
+      that exact update with zero calls -> adopts it, previous_proof preserved. Full suite
+      re-run clean: 1682 passed, 11 skipped, 5 deselected.
+    not_yet_done: >
+      Live-demonstrating record/adopt against a real repository -- no real candidate has
+      genuinely drifted-then-been-reproven yet; the unit tests are the honest evidence for now.
+      The old repo's own idempotency bookkeeping, if ever worth the complexity.

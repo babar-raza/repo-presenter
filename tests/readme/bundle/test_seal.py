@@ -1,11 +1,12 @@
-"""seal.py: the first seal of a cascade's real output, and the real no-op proof of a rerun.
+"""seal.py's full no-op-proof-adoption dance: the first seal, the real proof, and update
+recording/adoption for a rerun whose artifacts genuinely differ.
 
-Scope matches readme.bundle.seal's own module docstring: the first seal (state ACCEPTED,
-no_op_proof None), and a later, fresh, byte-identical, zero-provider-call rerun's proof (state
-READY_FOR_PROPOSAL). A rerun whose artifacts genuinely differ, or that is not fresh or not
-zero-call, must raise NotImplementedError -- the update-adoption dance for a real difference is
-not built yet, the same pattern readme.bundle.recheck's own recheck_bundle/recheck_portfolio
-already use for a scope not built.
+Scope matches readme.bundle.seal's own module docstring (v1-v4): the first seal (ACCEPTED), the
+real proof of a fresh byte-identical zero-call rerun (READY_FOR_PROPOSAL), recording a
+difference against an already-proven or already-waiting bundle through invalidation.py's own
+route() (VALID_UPDATE_AVAILABLE/INVALIDATED), and adopting a waiting update once a later rerun
+reproduces it, fresh and zero-call. A byte-identical rerun that is not fresh or not zero-call
+still raises NotImplementedError -- the proof is never faked.
 """
 
 from __future__ import annotations
@@ -219,11 +220,14 @@ def test_seal_candidate_refuses_a_bundle_containing_a_configured_secret(tmp_path
     assert not any(p.name.startswith(".") for p in repo_dir.iterdir()) if repo_dir.is_dir() else True
 
 
-def _fresh_invocation() -> Invocation:
+def _fresh_invocation(seed: int = 0) -> Invocation:
     """A different process from whatever sealed the first manifest in this test run -- real
-    processes never share a nonce; this hand-built one deliberately does not either."""
+    processes never share a nonce; this hand-built one deliberately does not either. Pass a
+    distinct ``seed`` for each of several calls in one test that must be mutually fresh from
+    one another too (not just from the original seal)."""
     identity = ProcessIdentity(
-        pid=999999, started="2026-10-26T00:00:00Z", boot_id="other-boot", nonce="other-nonce"
+        pid=999999 + seed, started="2026-10-26T00:00:00Z", boot_id="other-boot",
+        nonce=f"other-nonce-{seed}",
     )
     return Invocation(uuid.uuid4().hex, identity, "2026-10-26T00:00:01Z")
 
@@ -248,7 +252,7 @@ def _append_cache_reuse_record(out_dir: Path, invocation_id: str) -> None:
     tell "genuinely reused everything" from "died before its first job")."""
     record = {
         **_LEDGER_RECORD,
-        "call_id": "a-00-cache_reuse-1",
+        "call_id": f"a-00-cache_reuse-{invocation_id}",
         "invocation_id": invocation_id,
         "disposition": "cache_reuse",
         "attempt": 0,
@@ -407,3 +411,44 @@ def test_dependencies_document_names_the_consumed_facts_and_components(tmp_path:
     assert set(document["facts"]) == {fact.id for fact in inputs.facts.facts}
     assert document["components"]["reviewer_logic"]
     assert "repository_investigation" in document["prompts"]
+
+
+def test_seal_candidate_adopts_a_waiting_update_on_a_later_fresh_zero_call_reproduction(
+    tmp_path: Path,
+) -> None:
+    """A rerun that reproduces exactly what a waiting update recorded -- fresh, zero calls --
+    adopts it as the new proven content, keeping the previous proof on the manifest for the
+    record under "adopted"."""
+    inputs = _inputs(tmp_path)
+    seal_candidate(inputs)
+    fresh = _fresh_invocation()
+    _append_cache_reuse_record(inputs.out_dir, fresh.invocation_id)
+    first_proof = seal_candidate(_rerun_inputs(inputs, invocation=fresh, provider_calls=0))
+    assert first_proof.state == "READY_FOR_PROPOSAL"
+
+    # A rerun changes plan.json and records the update (byte-identical check fails, so this
+    # recording rerun itself need not be fresh or zero-call).
+    (inputs.out_dir / "plan.json").write_text('{"core_capabilities": ["changed"]}\n', encoding="utf-8")
+    recorder = _fresh_invocation(seed=1)
+    _append_cache_reuse_record(inputs.out_dir, recorder.invocation_id)
+    recorded = seal_candidate(_rerun_inputs(inputs, invocation=recorder, provider_calls=0))
+    assert recorded.state == "VALID_UPDATE_AVAILABLE"
+
+    # A LATER rerun reproduces exactly that same changed plan.json -- fresh (a genuinely
+    # different process from the recorder, not just from the original seal), zero calls -- and
+    # adopts it.
+    adopter = _fresh_invocation(seed=2)
+    _append_cache_reuse_record(inputs.out_dir, adopter.invocation_id)
+    adopted_result = seal_candidate(_rerun_inputs(inputs, invocation=adopter, provider_calls=0))
+
+    assert adopted_result.state == "READY_FOR_PROPOSAL"
+    assert adopted_result.no_op_proof is not None
+    assert adopted_result.no_op_proof["byte_identical"] is True
+    assert (adopted_result.bundle / "plan.json").read_text(encoding="utf-8") == (
+        inputs.out_dir / "plan.json"
+    ).read_text(encoding="utf-8")
+
+    manifest = json.loads((adopted_result.bundle / BUNDLE_MANIFEST_NAME).read_text(encoding="utf-8"))
+    assert manifest["state"] == "READY_FOR_PROPOSAL"
+    assert manifest["adopted"]["changed"] == ["plan.json"]
+    assert manifest["adopted"]["previous_proof"] == first_proof.no_op_proof

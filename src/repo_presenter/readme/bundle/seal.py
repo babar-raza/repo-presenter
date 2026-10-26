@@ -11,24 +11,30 @@ own output, including the one shared ledger ``cascade.run_cascade`` now writes) 
 has ``review_verdict.json`` (``readme.review.independent_reviewer``), not the old repo's
 consolidated 21-check validation.json.
 
-Scope, deliberately bounded in two passes, exactly as ``core/noop_proof.py`` itself was (step 1:
-the bundle-independent subset; step 3: the ledger-reconciliation subset):
+Built in four passes on 2026-10-26, exactly as ``core/noop_proof.py`` itself was staged across
+its own steps 1 and 3:
 
-- v1 (2026-10-26): only the FIRST seal (manifest state ``ACCEPTED``, ``no_op_proof`` always
-  ``None``).
-- v2 (2026-10-26, same day): the no-op proof itself -- a SECOND, later, fresh-process rerun
-  whose artifacts reproduce the sealed ones byte for byte with zero provider calls moves the
-  bundle to ``READY_FOR_PROPOSAL`` with a measured proof. Still explicitly NOT built: the
-  update-adoption dance for a rerun whose artifacts genuinely DIFFER from what is sealed (the old
-  repo's ``_record_update``/``_adopt_update``, which route a difference through
-  ``invalidation.py``'s ``route()`` into ``VALID_UPDATE_AVAILABLE``/``INVALIDATED``) -- that needs
-  the new ``ARTIFACT_SCOPES`` rows this module's own v1 docstring deferred, and is a materially
-  different, larger decision (does a differing rerun silently re-seal, or wait for the owner?)
-  than proving a byte-identical one. Calling :func:`seal_candidate` against a bundle whose
-  artifacts differ from an already-proven ``READY_FOR_PROPOSAL`` seal, or whose rerun is not
-  fresh or not zero-call, raises ``NotImplementedError`` naming this precisely, the same pattern
-  this package's own ``recheck_bundle``/``recheck_portfolio`` (``readme/bundle/recheck.py``)
-  already use for a scope not yet built, rather than faking a result nothing actually computed.
+- v1: the FIRST seal (manifest state ``ACCEPTED``, ``no_op_proof`` always ``None``).
+- v2: the no-op proof itself -- a SECOND, later, fresh-process rerun whose artifacts reproduce
+  the sealed ones byte for byte with zero provider calls moves the bundle to
+  ``READY_FOR_PROPOSAL`` with a measured proof.
+- v3: a rerun whose artifacts DIFFER from a bundle that is already proven, or already carries a
+  waiting update, routes the difference through ``invalidation.py``'s ``route()`` and RECORDS it
+  (:func:`_record_update`) -- the proven content and its proof are left exactly as proven; only
+  the manifest's own ``state``/``update`` (and, when the scope invalidates, ``invalidated``)
+  fields change. A rerun against a bundle that was never proven and carries no waiting update
+  simply re-seals plainly (the old repo's own ``seal_candidate`` takes this same path for a
+  changed, not-yet-``waiting_state`` bundle).
+- v4: ADOPTING a waiting update -- a LATER rerun that reproduces exactly what the update
+  recorded, fresh and zero-call, becomes the new proven content (:func:`_adopt_update`), with
+  the previous proof kept on the manifest under ``adopted`` for the record.
+
+This completes the no-op-proof-adoption dance the module's own v1/v2 docstrings named as not yet
+built. Explicitly still simplified from the old repo's own mechanism, documented rather than
+silently approximated: ``_record_update`` always re-timestamps/re-records a waiting update on
+every further differing rerun rather than tracking whether it is genuinely a *new* update before
+doing so (the old repo's own idempotency bookkeeping) -- an honest, simpler behavior, not a
+missing feature with a silent gap.
 
 The bundle lives at ``candidates/<owner>__<name>/<revision>/`` at the repository root (matching
 ``recheck.py``'s own already-ported ``receipt_path()``), committed to git -- unlike
@@ -264,6 +270,7 @@ def _write_bundle(
     inputs: SealInputs,
     state: str = STATE_ACCEPTED,
     proof: dict[str, Any] | None = None,
+    extra: Mapping[str, Any] | None = None,
 ) -> SealResult:
     files = {
         name: {"sha256": _sha256(data), "bytes": len(data)} for name, data in sorted(staged.items())
@@ -281,6 +288,7 @@ def _write_bundle(
         "ledger_totals": ledger_totals(
             parse_records(staged[LEDGER_BUNDLE_FILENAME].decode("utf-8"), LEDGER_BUNDLE_FILENAME)
         ),
+        **dict(extra or {}),
     }
     bundle.parent.mkdir(parents=True, exist_ok=True)
     # Staged to a sibling temp directory and scanned for secrets before anything under `bundle`
@@ -358,16 +366,17 @@ def _update_digests(staged: Mapping[str, bytes]) -> dict[str, str]:
 
 
 def _record_update(
-    bundle: Path, existing: Mapping[str, Any], differing: list[str], staged: Mapping[str, bytes]
+    bundle: Path,
+    existing: Mapping[str, Any],
+    differing: list[str],
+    staged: Mapping[str, bytes],
+    inputs: SealInputs,
 ) -> SealResult:
     """Record that a difference arrived against a bundle that already carries a proof or a
     waiting update of its own -- route it through invalidation.py's own scope table and write
     ONLY the manifest, never the already-sealed files: the proven content (and its proof) stays
     exactly as proven, with the new difference waiting beside it until a later rerun reproduces
-    it byte for byte with zero calls (``_adopt_update``'s own job -- not built yet; a bundle
-    left in this state keeps re-recording the same update on every further differing rerun,
-    rather than adopting it, which is an honest, simpler, but less complete bookkeeping than the
-    old repo's own idempotency tracking)."""
+    it byte for byte with zero calls (:func:`_adopt_update`)."""
     try:
         routing = route_scopes((), differing)
     except ScopeError as exc:
@@ -383,6 +392,7 @@ def _record_update(
         "earliest_affected_stage": routing.stage,
         "changed": differing,
         "recorded_at": _now(),
+        "recorded_by": inputs.invocation.run_ref(),
         "files": _update_digests(staged),
     }
     recorded = {k: v for k, v in existing.items() if k != "invalidated"}
@@ -401,6 +411,34 @@ def _record_update(
         state=routing.state,
         files=dict(existing.get("files", {})),
         no_op_proof=existing.get("no_op_proof"),
+    )
+
+
+def _matches_waiting_update(staged: Mapping[str, bytes], waiting: Mapping[str, Any]) -> bool:
+    """Whether ``staged`` is exactly the content a previously recorded update named -- the
+    rerun this waiting update was itself describing, not a further, different difference."""
+    return bool(waiting) and waiting.get("files") == _update_digests(staged)
+
+
+def _adopt_update(
+    bundle: Path, existing: Mapping[str, Any], waiting: Mapping[str, Any],
+    staged: Mapping[str, bytes], inputs: SealInputs, measured: Measurement,
+) -> SealResult:
+    """A LATER, fresh, zero-call rerun reproduced the WAITING update byte for byte: it becomes
+    the new proven content. The previous proof is kept on the manifest for the record, under
+    ``adopted``, exactly as the update itself was first recorded -- adoption is not a second,
+    independent seal, it is the deferred update finally landing."""
+    proof = _proof(waiting["recorded_by"], inputs, measured)
+    adopted = {
+        key: waiting[key]
+        for key in ("scopes", "triggering_scope", "scope_basis", "classification",
+                    "earliest_affected_stage", "changed", "recorded_at")
+        if key in waiting
+    }
+    adopted["previous_proof"] = existing.get("no_op_proof")
+    adopted["adopted_at"] = proof["proven_at"]
+    return _write_bundle(
+        bundle, staged, inputs=inputs, state=STATE_READY, proof=proof, extra={"adopted": adopted}
     )
 
 
@@ -428,14 +466,13 @@ def seal_candidate(inputs: SealInputs) -> SealResult:
     claimed a no-op yet, so there is nothing to protect (the old repo's own ``seal_candidate``
     takes exactly this path: a changed, not-yet-``waiting_state`` bundle re-seals as ACCEPTED,
     proof withdrawn -- there never was one). A rerun whose artifacts differ from a bundle that
-    IS already proven, or already carries a waiting update, routes the difference through
-    invalidation.py's ``route()`` and records it (:func:`_record_update`) -- the proven content
-    and its proof stay exactly as proven; only the manifest's own ``state``/``update`` fields
-    change. Adopting a later rerun that reproduces the WAITING update byte for byte with zero
-    calls (the old repo's own ``_adopt_update``) is not built yet -- a bundle left with a
-    recorded update simply keeps re-recording the same one on every further differing rerun,
-    not yet adopting it. Also raises :class:`NotImplementedError` when byte-identical artifacts
-    are not fresh or not zero-call -- never faking the proof either."""
+    IS already proven, or already carries a waiting update, either ADOPTS that waiting update
+    (:func:`_adopt_update`, when this rerun is itself a fresh, zero-call reproduction of exactly
+    what the update recorded) or ROUTES the new difference through invalidation.py's ``route()``
+    and records it (:func:`_record_update`, otherwise) -- either way the proven content and its
+    proof stay exactly as proven until genuinely adopted; only the manifest's own
+    ``state``/``update``/``adopted`` fields change. Also raises :class:`NotImplementedError`
+    when byte-identical artifacts are not fresh or not zero-call -- never faking the proof."""
     bundle = bundle_directory(inputs.candidates_root, inputs.entry, inputs.source_revision)
     existing = _read_manifest(bundle / BUNDLE_MANIFEST_NAME)
     staged = _staged_artifacts(inputs)
@@ -448,7 +485,17 @@ def seal_candidate(inputs: SealInputs) -> SealResult:
             # Nothing was proven or waiting yet -- a plain re-seal with the new content, same as
             # the first seal would have been had this content been the first one staged.
             return _write_bundle(bundle, staged, inputs=inputs)
-        return _record_update(bundle, existing, differing, staged)
+        waiting = existing.get("update") or {}
+        if (
+            inputs.provider_calls == 0
+            and _matches_waiting_update(staged, waiting)
+            and _fresh_after(waiting.get("recorded_by"), inputs)
+        ):
+            measured = measure_invocation(
+                inputs.out_dir / "llm_cache" / LEDGER_BUNDLE_FILENAME, inputs.invocation.invocation_id
+            )
+            return _adopt_update(bundle, existing, waiting, staged, inputs, measured)
+        return _record_update(bundle, existing, differing, staged, inputs)
     if inputs.provider_calls != 0:
         raise NotImplementedError(
             f"seal_candidate: {bundle}'s artifacts are byte-identical to this rerun, but it made "
