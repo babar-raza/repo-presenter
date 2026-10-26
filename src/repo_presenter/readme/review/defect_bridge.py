@@ -38,7 +38,7 @@ from repo_presenter.readme.review.independent_reviewer import ReviewVerdict
 #: whenever a rule's own matching logic changes meaning, so a stale fingerprint from before the
 #: change never short-circuits a fresh repair attempt as "already tried" (the same contract an
 #: LLM reviewer's own prompt hash serves).
-RULESET_VERSION = "independent_reviewer.v1.deterministic_only"
+RULESET_VERSION = "independent_reviewer.v2.deterministic_only"
 
 
 def _llm_sections(units: Sequence[Mapping[str, Any]]) -> set[str]:

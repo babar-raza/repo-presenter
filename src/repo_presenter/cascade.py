@@ -338,7 +338,7 @@ def run_cascade(
 
     verdict = review_candidate(
         readme_text=final_readme, units=coherent_units.get("units", []), facts=document,
-        dispositions=dispositions,
+        dispositions=dispositions, original_readme=original,
     )
     write_review_verdict(verdict, out_dir / REVIEW_VERDICT_FILENAME)
 

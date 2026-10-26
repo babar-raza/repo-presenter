@@ -213,18 +213,16 @@ def test_review_candidate_accepts_a_clean_candidate() -> None:
     """Negative control (mission section 11): a checker that rejects everything is as broken as
     one that accepts everything. A genuinely clean candidate must ACCEPT."""
     facts = _facts(*NET, *_facts_with_preserved_opening(PRESERVED_OPENING).facts)
-    units = [
-        {
-            "section": "opening",
-            "slot": "opening",
-            "text": "It also provides a built-in validator via Widget.validate().",
-        }
-    ]
+    authored = "It also provides a built-in validator via Widget.validate()."
+    units = [{"section": "opening", "slot": "opening", "text": authored}]
+    sep = "\n\n"
+    clean = sep.join([PRESERVED_OPENING, authored, CURRENT_README])
     verdict = review_candidate(
-        readme_text=CURRENT_README,
+        readme_text=clean,
         units=units,
         facts=facts,
         dispositions=_DISPOSITIONS_PRESERVING_OPENING,
+        original_readme=clean,
     )
     assert verdict.verdict == "ACCEPT"
     assert verdict.findings == ()
@@ -236,6 +234,7 @@ def test_review_candidate_rejects_a_real_stale_version_end_to_end() -> None:
         units=[],
         facts=_facts(*NET),
         dispositions={"dispositions": []},
+        original_readme=STALE_README,
     )
     assert verdict.verdict == "REJECT"
     assert verdict.deterministic_reject_count == 1
@@ -249,9 +248,10 @@ def test_review_candidate_rejects_the_duplicate_opening_regression_end_to_end() 
         units=units,
         facts=facts,
         dispositions=_DISPOSITIONS_PRESERVING_OPENING,
+        original_readme="# Anything\n\nNo claims here.\n",
     )
     assert verdict.verdict == "REJECT"
-    assert verdict.deterministic_reject_count == 1
+    assert "duplicate_opening_paragraph" in {finding.rule for finding in verdict.findings}
 
 
 # ---------------------------------------------------------------------------
@@ -271,7 +271,8 @@ def test_falsifier_a_quoted_span_matching_a_supported_fact_elsewhere_still_rejec
         "The current version is 26.9.0.\n"
     )
     verdict = review_candidate(
-        readme_text=readme, units=[], facts=_facts(*NET), dispositions={"dispositions": []}
+        readme_text=readme, units=[], facts=_facts(*NET), dispositions={"dispositions": []},
+        original_readme=readme,
     )
     assert verdict.verdict == "REJECT"
 

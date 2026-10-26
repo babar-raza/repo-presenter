@@ -35,6 +35,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from repo_presenter.core.facts import read_facts
+from repo_presenter.readme.bundle.recheck import original_readme
 from repo_presenter.readme.review.independent_reviewer import (
     REVIEW_VERDICT_FILENAME,
     review_candidate,
@@ -100,9 +101,28 @@ def main() -> None:
         readme_text = _readme_text(out_dir, stage)
         facts = read_facts(facts_path)
         dispositions = json.loads((out_dir / "dispositions.json").read_text(encoding="utf-8"))
+        if not any(fact.kind == "inherited_unit" for fact in facts.facts):
+            # Facts written before the inherited-unit persistence fix carry no inherited_unit
+            # facts, so every disposition would look like a stray unit. That is missing evidence,
+            # not a candidate defect: the cascade must be re-run before this repository is reviewed.
+            results[repo_dir] = {"reviewable": False, "reason": "facts.json has no inherited_unit facts"}
+            not_reviewable += 1
+            print(f"SKIP  {repo_dir}: facts.json has no inherited_unit facts (re-run the cascade)")
+            continue
+
+        # newline="" keeps the CRLF endings the live README (and so the sealed patch) carries.
+        rendered = (out_dir / "README.rendered.md").read_text(encoding="utf-8", newline="")
+        patch = (out_dir / "README.patch.diff").read_text(encoding="utf-8", newline="")
+        original = original_readme(rendered, patch)
+        if original is None:
+            results[repo_dir] = {"reviewable": False, "reason": "live README not recoverable from README.patch.diff"}
+            not_reviewable += 1
+            print(f"SKIP  {repo_dir}: live README not recoverable from README.patch.diff")
+            continue
 
         verdict = review_candidate(
-            readme_text=readme_text, units=units, facts=facts, dispositions=dispositions
+            readme_text=readme_text, units=units, facts=facts, dispositions=dispositions,
+            original_readme=original,
         )
         write_review_verdict(verdict, out_dir / REVIEW_VERDICT_FILENAME)
         reviewed += 1

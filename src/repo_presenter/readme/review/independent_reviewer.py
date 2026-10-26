@@ -18,22 +18,26 @@ why the fold logic here is deliberately isolated in ``_fold`` and structurally c
 subverted by a judgment rule: ``Finding.__post_init__`` raises if a ``"judgment"``-kind finding
 ever carries a ``refuted_by`` -- the invariant is enforced by construction, not by convention.
 
-Scope of v1 (deliberately bounded, per the mission's P1 "smallest working... + independent
-verifier" discipline -- see ``project/state.yaml``'s ``BUILD_INDEPENDENT_REVIEWER`` card for the
-full reasoning):
+Scope (deliberately bounded, per the mission's P1 "smallest working... + independent verifier"
+discipline -- see ``project/state.yaml``'s ``BUILD_INDEPENDENT_REVIEWER`` card for the full
+reasoning). Every rule is deterministic and reuses an already-proven primitive where one exists:
 
-- Two deterministic rules only, both reusing already-proven, already-tested primitives rather
-  than re-deriving detection logic (the mission's own reuse discipline): a factual holdout
-  (``claim_contradiction``, via ``readme.validation.claims.claim_findings``) and a preservation/
-  previous-regression holdout (``duplicate_opening_paragraph``, via
-  ``readme.composition.authoring.preserved_opening_text`` +
-  ``readme.composition.coverage.states_all`` -- the exact primitives the duplicate-opening
-  defect's own partial fix already uses, called here independently of the authoring pipeline's
-  own inline guard, against the final persisted output).
+- ``claim_contradiction``: a factual holdout, via ``readme.validation.claims.claim_findings``.
+- ``duplicate_opening_paragraph``: a preservation holdout, via
+  ``readme.composition.authoring.preserved_opening_text`` + ``readme.composition.coverage.states_all``.
+- ``disposition_coverage``: every inherited unit has exactly one disposition, names no unknown unit,
+  and a kept unit's text is printed in the README (the old ``judge.py`` J4 clause, rebuilt here as
+  a rule over this repository's own evidence shapes).
+- ``live_readme_loss``: the candidate loses no live heading, fenced block, link target or verified
+  install command unless a disposition accounts for it (the old ``judge.py`` J6 clause, ported as a
+  rule). Unlike the old clause it does not depend on the live README's position in a hard-coded
+  standard: it applies to every repository, because the mission makes the live README the
+  reference for what must be kept.
 - No judgment rules are registered yet. The extension point (``Finding.kind == "judgment"``)
-  exists and is structurally safe to add to, but no LLM-backed holdout ships in v1 -- a known,
-  explicitly recorded gap, not a silent one (mirrors the project's existing
-  ``known_gaps_for_future_work`` pattern).
+  exists and is structurally safe to add to, but no LLM-backed holdout ships yet -- a known,
+  explicitly recorded gap, not a silent one. The old repository's LLM reviewer and its
+  demotion/second-read machinery (``readme/review/independent/review.py``) are not ported; see
+  ``migration/reuse-manifest.yaml`` for the per-function disposition.
 - No repair hand-off: a REJECT verdict is advisory-and-blocking (it is read by
   ``propose.effect.propose_candidate`` as a required gate -- see that module) but does not feed
   ``readme.repair.targeted``'s defect-classification layer yet. That remains open, deliberately,
@@ -60,14 +64,20 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
+from collections import Counter
 from collections.abc import Mapping, Sequence
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Literal
 
+from markdown_it import MarkdownIt
+from markdown_it.token import Token
+
 from repo_presenter.core.facts import FactsDocument
 from repo_presenter.readme.composition.authoring import preserved_opening_text
 from repo_presenter.readme.composition.coverage import states_all
+from repo_presenter.readme.evidence.facts.links import extract_links
 from repo_presenter.readme.validation.claims import claim_findings
 
 RuleKind = Literal["deterministic", "judgment"]
@@ -81,7 +91,7 @@ Verdict = Literal["ACCEPT", "REJECT"]
 #: reviewer logic or needs a fresh review -- mirroring the old repo's own REVIEWER_LOGIC_VERSION,
 #: not ported verbatim (that one versions a 2,996-line judged/unjudged replay model this
 #: repository's own v1 reviewer does not have).
-REVIEWER_LOGIC_VERSION = "1"
+REVIEWER_LOGIC_VERSION = "2"
 REVIEW_VERDICT_FILENAME = "review_verdict.json"
 
 
@@ -125,7 +135,11 @@ def _fold(findings: Sequence[Finding]) -> Verdict:
     """The one place a verdict is decided. REJECT if, and only if, at least one finding carries
     a ``refuted_by`` -- no other field or rule kind can influence this. Isolated in its own
     function so it can be tested directly and adversarially, independent of which rules ran."""
-    return "REJECT" if any(finding.refuted_by is not None for finding in findings) else "ACCEPT"
+    return (
+        "REJECT"
+        if any(finding.refuted_by is not None for finding in findings)
+        else "ACCEPT"
+    )
 
 
 @dataclass(frozen=True)
@@ -154,7 +168,9 @@ def claim_contradiction_rule(readme_text: str, facts: FactsDocument) -> list[Fin
                 rule="claim_contradiction",
                 kind="deterministic",
                 message=f"line {finding.line} ({finding.stage}): {finding.detail}",
-                refuted_by=Refutation(rule="claim_contradiction", evidence=finding.detail),
+                refuted_by=Refutation(
+                    rule="claim_contradiction", evidence=finding.detail
+                ),
                 quote=quote,
             )
         )
@@ -202,22 +218,236 @@ def duplicate_opening_paragraph_rule(
     return []
 
 
+#: Kept units must print verbatim (judge.py J4); these dispositions account for a live loss (J6).
+KEPT_DISPOSITIONS: frozenset[str] = frozenset({"VERIFIED_PRESERVE", "VERIFIED_MOVE"})
+ACCOUNTING_DISPOSITIONS: frozenset[str] = frozenset(
+    {
+        "SUPERSEDE_REDUNDANT",
+        "CORRECT_WITH_EVIDENCE",
+        "VERIFIED_REWRITE",
+        "OMIT_UNSUPPORTED",
+    }
+)
+
+_MARKDOWN = MarkdownIt("commonmark").enable(["table", "strikethrough"])
+_NON_ALNUM = re.compile(r"[^0-9a-z]+")
+
+
+def _squeezed(text: str) -> str:
+    return " ".join(text.split())
+
+
+def _heading_key(text: str) -> str:
+    """A heading's comparison form: letters and digits only, lower case, ``&`` read as ``and``.
+    The renderer re-levels and re-cases headings, which is not a loss of their text."""
+    return _NON_ALNUM.sub(" ", text.casefold().replace("&", " and ")).strip()
+
+
+def _code(text: str) -> str:
+    """A fenced block or command as a reader compares it: line ends and trailing spaces aside."""
+    return "\n".join(
+        line.rstrip() for line in text.replace("\r\n", "\n").splitlines()
+    ).strip()
+
+
+def _inline_text(inline: Token) -> str:
+    parts: list[str] = []
+    for child in inline.children or []:
+        if child.type in {"text", "code_inline", "image"}:
+            parts.append(child.content)
+        elif child.type in {"softbreak", "hardbreak"}:
+            parts.append(" ")
+    return "".join(parts).strip()
+
+
+@dataclass(frozen=True)
+class _Markdown:
+    headings: tuple[str, ...]
+    fences: tuple[str, ...]
+
+
+def _read_markdown(text: str) -> _Markdown:
+    tokens = _MARKDOWN.parse(text)
+    headings: list[str] = []
+    fences: list[str] = []
+    for index, token in enumerate(tokens):
+        if token.type == "heading_open":
+            headings.append(_inline_text(tokens[index + 1]))
+        elif token.type == "fence":
+            fences.append(_code(token.content))
+    return _Markdown(tuple(headings), tuple(fences))
+
+
+def _inherited_units(facts: FactsDocument) -> dict[str, str]:
+    return {
+        fact.id: fact.value for fact in facts.facts if fact.kind == "inherited_unit"
+    }
+
+
+def _dispositions_list(dispositions: Mapping[str, Any]) -> list[Mapping[str, Any]]:
+    rows = dispositions.get("dispositions", [])
+    return [row for row in rows if isinstance(row, Mapping)]
+
+
+def _kept_text_printed(unit_text: str, unit_id: str, readme_text: str) -> bool:
+    if _squeezed(unit_text) in _squeezed(readme_text):
+        return True
+    if unit_id.endswith(".heading"):
+        wanted = _heading_key(unit_text.lstrip("#").strip())
+        return any(
+            _heading_key(text) == wanted
+            for text in _read_markdown(readme_text).headings
+        )
+    return False
+
+
+def disposition_coverage_rule(
+    readme_text: str,
+    *,
+    facts: FactsDocument,
+    dispositions: Mapping[str, Any],
+) -> list[Finding]:
+    """Preservation holdout (judge.py J4): every inherited unit has exactly one disposition, no
+    disposition names a unit the facts do not carry, and every kept unit's text is printed in the
+    README. Each defect is a deterministic refutation: the candidate is provably incomplete."""
+    units = _inherited_units(facts)
+    rows = _dispositions_list(dispositions)
+    counts = Counter(str(row.get("unit_id", "")) for row in rows)
+    problems: list[tuple[str, str]] = []
+    for unit in units:
+        if counts.get(unit, 0) != 1:
+            problems.append(
+                (unit, f"{unit} has {counts.get(unit, 0)} dispositions, not one")
+            )
+    for unit in counts:
+        if unit not in units:
+            problems.append(
+                (unit, f"{unit} is named by a disposition but is not an inherited unit")
+            )
+    for row in rows:
+        unit = str(row.get("unit_id", ""))
+        kept = row.get("disposition") in KEPT_DISPOSITIONS
+        if (
+            kept
+            and unit in units
+            and not _kept_text_printed(units[unit], unit, readme_text)
+        ):
+            message = f"{unit} is kept ({row.get('disposition')}) but its text is not printed in the README"
+            problems.append((units[unit], message))
+    return [
+        Finding(
+            rule="disposition_coverage",
+            kind="deterministic",
+            message=message,
+            refuted_by=Refutation(rule="disposition_coverage", evidence=message),
+            quote=quote,
+        )
+        for quote, message in problems
+    ]
+
+
+def _accounting_units(
+    facts: FactsDocument, dispositions: Mapping[str, Any]
+) -> list[str]:
+    """The text of every inherited unit whose disposition accounts for a loss: an accounting
+    disposition that cites at least one fact and states a rationale. A kept, deferred or
+    non-content disposition, or one without evidence, accounts for nothing."""
+    units = _inherited_units(facts)
+    return [
+        units[str(row.get("unit_id"))]
+        for row in _dispositions_list(dispositions)
+        if row.get("disposition") in ACCOUNTING_DISPOSITIONS
+        and row.get("fact_ids")
+        and str(row.get("rationale", "")).strip()
+        and str(row.get("unit_id")) in units
+    ]
+
+
+def live_readme_loss_rule(
+    original_readme: str,
+    readme_text: str,
+    *,
+    facts: FactsDocument,
+    dispositions: Mapping[str, Any],
+) -> list[Finding]:
+    """Preservation holdout (judge.py J6): the candidate loses nothing of the live README that a
+    disposition does not account for. Lost means a live heading no candidate heading matches, a
+    live fenced block no candidate fence contains, a live link target no candidate link has, or a
+    live line equal to a SUPPORTED install command that the candidate does not contain."""
+    accounting = _accounting_units(facts, dispositions)
+    accounted_headings = {
+        _heading_key(unit.lstrip("#")) for unit in accounting if unit.startswith("#")
+    }
+
+    def accounted(needle: str) -> bool:
+        return any(needle in _code(unit) for unit in accounting)
+
+    old = _read_markdown(original_readme)
+    new = _read_markdown(readme_text)
+    new_headings = {_heading_key(text) for text in new.headings}
+    lost: list[tuple[str, str]] = []
+    for text in old.headings:
+        key = _heading_key(text)
+        if key not in new_headings and key not in accounted_headings:
+            lost.append((text, f"heading {text!r}"))
+    for fence in old.fences:
+        if not any(fence in other for other in new.fences) and not accounted(fence):
+            lost.append(
+                (fence, f"code block {fence.splitlines()[0][:50] if fence else ''!r}")
+            )
+    new_targets = {link.href.rstrip("/") for link in extract_links(readme_text)}
+    for link in extract_links(original_readme):
+        target = link.href.rstrip("/")
+        if target not in new_targets and not accounted(link.href):
+            lost.append((link.href, f"link {link.href}"))
+    candidate_text = _code(readme_text)
+    for command in _verified_install_commands(facts, original_readme):
+        if command not in candidate_text and not accounted(command):
+            lost.append((command, f"command {command!r}"))
+    return [
+        Finding(
+            rule="live_readme_loss",
+            kind="deterministic",
+            message=f"live README content lost without an accounting disposition: {label}",
+            refuted_by=Refutation(rule="live_readme_loss", evidence=label),
+            quote=quote,
+        )
+        for quote, label in lost
+    ]
+
+
+def _verified_install_commands(facts: FactsDocument, live: str) -> list[str]:
+    text = _code(live)
+    commands = {
+        _code(fact.value)
+        for fact in facts.facts
+        if fact.kind == "install_command" and fact.polarity == "SUPPORTED"
+    }
+    return sorted(command for command in commands if command and command in text)
+
+
 def review_candidate(
     *,
     readme_text: str,
     units: Sequence[Mapping[str, Any]],
     facts: FactsDocument,
     dispositions: Mapping[str, Any],
+    original_readme: str,
 ) -> ReviewVerdict:
     """Run every registered rule against one rendered candidate and fold the result. ``units``
     is the final persisted ``section_authoring`` output (post S8 coherence, pre-render) -- the
     same durable evidence this repository already keeps per cascade; ``readme_text`` is the
-    rendered markdown produced from it. Both are required so a factual check can read the
-    rendered prose and a structural check can read the pre-render units without re-parsing
-    markdown back into units."""
+    rendered markdown produced from it; ``original_readme`` is the live README the candidate was
+    made from, which the preservation rule needs and which must never be silently absent."""
     findings: list[Finding] = [
         *claim_contradiction_rule(readme_text, facts),
-        *duplicate_opening_paragraph_rule(units, dispositions=dispositions, facts=facts),
+        *duplicate_opening_paragraph_rule(
+            units, dispositions=dispositions, facts=facts
+        ),
+        *disposition_coverage_rule(readme_text, facts=facts, dispositions=dispositions),
+        *live_readme_loss_rule(
+            original_readme, readme_text, facts=facts, dispositions=dispositions
+        ),
     ]
     return ReviewVerdict(verdict=_fold(findings), findings=tuple(findings))
 
@@ -238,9 +468,9 @@ def write_review_verdict(verdict: ReviewVerdict, path: Path) -> str:
         "verdict": verdict.verdict,
         "findings": [asdict(finding) for finding in verdict.findings],
     }
-    data = (json.dumps(document, indent=2, sort_keys=True, ensure_ascii=False) + "\n").encode(
-        "utf-8"
-    )
+    data = (
+        json.dumps(document, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+    ).encode("utf-8")
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_bytes(data)
     return hashlib.sha256(data).hexdigest()
@@ -277,7 +507,9 @@ def load_review_verdict(path: Path) -> ReviewVerdict:
         refutation = (
             None
             if raw_refutation is None
-            else Refutation(rule=raw_refutation["rule"], evidence=raw_refutation["evidence"])
+            else Refutation(
+                rule=raw_refutation["rule"], evidence=raw_refutation["evidence"]
+            )
         )
         findings.append(
             Finding(

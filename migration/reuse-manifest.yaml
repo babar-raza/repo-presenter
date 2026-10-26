@@ -109,8 +109,8 @@ entries:
   - component: "components/readme/acceptance/judge.py"
     source: old-repository-presenter
     evaluated_at_shas: []
-    behavior: UNKNOWN — not yet read.
-    disposition: PENDING_REVIEW
+    behavior: read in full 2026-10-26; see the per-file record below.
+    disposition: DECIDED_2026_10_26 (partial ADAPT of J4 and J6 into readme/review/independent_reviewer.py; the other clauses RETIRED or SUPERSEDED)
     reason: >
       Same family as review.py (the Lane L validation chain the Oct 20 owner
       ruling found broken: examples/links/API/format-claim detection gaps).
@@ -1643,6 +1643,114 @@ entries:
       RUN_INDEPENDENT_REVIEW_P2_COHORT_2026_10_24). This entry's own target_module note ("still
       not created") and invalidation_impact ("None yet -- not built") are now factually stale;
       read entry #1, not this one, for current status.
+
+  - component: "independent review and acceptance judge (per-file decisions, 2026-10-26)"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    behavior: >
+      Old files read: components/readme/review/independent/review.py (2,996 lines: its rule set,
+      its review_document entry point and the 21 REVIEWER_LOGIC_VERSION notes, read in full),
+      components/readme/acceptance/judge.py (740 lines, read in full), and the five files under
+      components/readme/review/acceptance/ (profile, scorer, sealed, template_check, text_checks:
+      headers and rubric/predicate structure read).
+    disposition: >
+      PARTIAL ADAPT. Only the two preservation holdouts the mission needs were ported (see per_file).
+      The mission's independent review is still incomplete: this repository has no LLM-backed
+      judgment reviewer (see the DEFER items below).
+    per_file:
+      - file: "acceptance/judge.py J4: kept text printed and one disposition per inherited unit"
+        decision: ADAPT -> src/repo_presenter/readme/review/independent_reviewer.py::disposition_coverage_rule
+        why: >
+          Reads the dispositions and facts this repository writes. Rebuilt as a deterministic rule
+          that returns Finding/Refutation, not a clause over a sealed bundle.
+      - file: "acceptance/judge.py J6: not worse than the live README (headings, fenced blocks, link targets, verified install commands)"
+        decision: ADAPT -> independent_reviewer.py::live_readme_loss_rule and _accounting_units
+        why: >
+          The mission requires every important live unit to be retained or dispositioned, and no
+          such check existed here (no loss or unaccounted-content check under src/). Changes from the
+          old clause: no survey.json applicability gate, since the mission makes the live README the
+          reference for every repository, not only for standard-following ones.
+      - file: "acceptance/judge.py J1: BC-01/02/03/06/08/09 read from validation.json (_verdicts, _require_checks, _checks_clause, _failure_text)"
+        decision: RETIRE
+        why: >
+          Reads a consolidated validation.json from the old 21-check pipeline, which this repository
+          does not write. Each check is called by the code that owns it (readme/validation/claims.py,
+          readme/correction/detectors/*, readme/reconciliation/dispositions.py).
+      - file: "acceptance/judge.py J2_STANDARD (load_standard, ELEMENT_MATCHERS, Standard, _standard_clause)"
+        decision: RETIRE
+        why: >
+          Checks headings against a hard-coded per-archetype standard in data/readme_standard. This
+          repository has no such data (data/ holds only registry files). Mission section 3, item 2,
+          makes the live README, not a universal shell, the structural reference.
+      - file: "acceptance/judge.py J3_CLAIMS (BC-04 read from validation.json)"
+        decision: SUPERSEDED by independent_reviewer.py::claim_contradiction_rule, which calls
+          readme/validation/claims.py::claim_findings directly.
+      - file: "acceptance/judge.py J5_RERUN (no_op_proven, BC-11 read from manifest)"
+        decision: SUPERSEDED by readme/bundle/seal.py, which writes no_op_proof with fresh_process,
+          byte_identical and provider_calls, and refuses a proof whose provider_calls is not zero
+          (seal.py around lines 452-502).
+      - file: "acceptance/judge.py judge_bundle, JudgeVerdict, reviewer_advisory, authorizable"
+        decision: RETIRE
+        why: >
+          Makes the reviewer's verdict advisory only. The mission requires the reverse: a REJECT
+          blocks. That is enforced by the verdict fold in independent_reviewer.py (unchanged) and by
+          propose/effect.py (REVIEW_REJECTED).
+      - file: "review/acceptance/{profile,scorer,sealed,template_check}.py and text_checks.py predicates (the 30-point rubric and its 14 disqualifiers, including D14 template filling)"
+        decision: RETIRE, not ported as a gate
+        why: >
+          The brief and the mission (section 3, "Explicitly re-evaluate before reuse") name the
+          30-point rubric as old-repository history, not the acceptance authority. text_checks.py's
+          fence scanner was already ported as readme/correction/fence_scan.py.
+      - file: "review/independent/review.py demotion: DEMOTED_SECTION, DEMOTED_QUOTE, renderer_owned_defect, renderer_owned_rulings, unrepairable_demotion"
+        decision: RETIRE, never port
+        why: >
+          Folds a REJECT into advisory without a deterministic refutation of the finding. That is
+          the quiet demotion mission section 11 forbids.
+      - file: "review/independent/review.py second and third reads (second_read_decision, second_reader, third_reader, SecondReadDecision, prose_judgment, finding_class, seed constants)"
+        decision: RETIRE for now; re-decide together with the LLM reviewer (DEFER below)
+        why: >
+          Corroborates an LLM reviewer's free-form findings by re-asking under other seeds. It exists
+          only for that reviewer, which this repository does not have.
+      - file: "review/independent/review.py deterministic refutation rules (factuality_defect, cited_fact_defect, name_denial_defect, absence_defect, omission_defect, excluded_evidence_defect, excluded_disposition_defect, scope_defect, rendered_defect, the _cited_* matchers and their thresholds)"
+        decision: DEFER (not retired; blocked on the LLM reviewer)
+        why: >
+          These are the deterministic way to refute an LLM reviewer's finding, so the mission's
+          independent review needs them. Today they would have no findings to act on. They also
+          encode 21 versions of matching heuristics (REVIEWER_LOGIC_VERSION 1 to 21) that must be
+          re-validated against this repository's own finding shape, not ported verbatim.
+      - file: "review/independent/review.py LLM reviewer job (review_packet, review_document entry point, prompts/independent_review.yaml wiring)"
+        decision: DEFER. The mission's independent non-authoring criticism (factual truth, usefulness,
+          unsupported claims, promotional language) is not built here yet.
+        why: >
+          It needs a reviewer prompt, a provider call through core/llm, a typed finding schema and
+          offline fakes for tests. That is a separate, sized taskcard. The 2,996-line module is not
+          ported as one block.
+    tests_ported: >
+      tests/readme/review/test_preservation_rules.py (16 tests: a negative and a positive control for
+      each new rule, an end-to-end negative control through review_candidate, and live-README
+      recovery). The J4 and J6 cases in the old tests/components/readme/acceptance/test_judge.py were
+      read and reproduced there. The J1/J2/J3/J5 cases are not ported, since their clauses are not.
+    measurement_2026_10_26: >
+      Read-only run of the two new rules over the committed cascade outputs in scripts/_lane_r_output
+      (nothing written). 32 directories had a readable live README, and 3 had no facts.json. 29 of
+      the 32 committed facts.json files carry NO inherited_unit facts (the persistence gap fixed
+      2026-10-24), so the disposition rule reports every dispositioned unit as a stray and the loss
+      rule has an empty accounting. Those findings reflect stale evidence and are not candidate
+      defects. The two repositories whose facts carry inherited units are aspose-3d-foss .NET
+      (disposition_coverage 7, live_readme_loss 37) and aspose-words-foss .NET (8 and 40). A spot check
+      on 3D-.NET found "## Quick Start" and "### Development Dependencies" absent from both
+      README.rendered.md and README.coherent.md, while the live README has them, so those losses are
+      real. scripts/run_independent_review.py now skips a repository whose facts have no
+      inherited_unit facts, and it recovers the live README with newline="", since the live file is
+      CRLF and a text-mode read breaks the round trip. The committed review_verdict.json files were
+      not rewritten.
+    open_items: >
+      (1) DEFER: the LLM-backed judgment reviewer and its deterministic refutation matchers.
+      (2) The Oct 20 defect classes (example execution, link resolution, API completeness, format
+      claims) are still not checked by the Lane R reviewer. The Lane L detectors in
+      readme/correction/detectors/ are candidates to port as rules, a portfolio-scope decision.
+      (3) Re-run the cascade for the 29 repositories with stale facts before reading any new verdict
+      for them.
 
   - component: "components/readme/repair/{rounds.py,targeted.py} (3,736 lines)"
     source: old-repository-presenter
