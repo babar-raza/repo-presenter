@@ -1,0 +1,73 @@
+name: present
+
+# One repository, one durable transaction, run on a hosted GitHub Actions runner. Dispatchable by
+# hand here; a scheduled trigger is an owner decision (cadence and provider spend) not yet made.
+on:
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: "owner/name of a repository listed in data/registry.json"
+        required: true
+        type: string
+      ecosystem:
+        description: "platform plugin the repository is registered under"
+        required: true
+        type: choice
+        options: [python, net, java, cpp, go, rust, typescript, nodejs]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: present-${{ inputs.repository }}
+  cancel-in-progress: false
+
+jobs:
+  present:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install
+        run: python -m pip install -e .
+
+      - name: Require the durable-state write token
+        env:
+          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ secrets.REPOSITORY_PRESENTER_STATE_TOKEN }}
+        run: |
+          if [ -z "$REPOSITORY_PRESENTER_STATE_TOKEN" ]; then
+            echo "::error::REPOSITORY_PRESENTER_STATE_TOKEN must be set to write durable state"
+            exit 1
+          fi
+
+      - name: Present
+        env:
+          INPUT_REPOSITORY: ${{ inputs.repository }}
+          INPUT_ECOSYSTEM: ${{ inputs.ecosystem }}
+          GITHUB_REPOSITORY_SLUG: ${{ github.repository }}
+          GPT_OSS_ENDPOINT: ${{ secrets.GPT_OSS_ENDPOINT }}
+          GPT_OSS_API_KEY: ${{ secrets.GPT_OSS_API_KEY }}
+          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ secrets.REPOSITORY_PRESENTER_STATE_TOKEN }}
+          REPOSITORY_PRESENTER_READ_TOKEN: ${{ secrets.REPOSITORY_PRESENTER_READ_TOKEN }}
+        run: |
+          python -m repo_presenter.present \
+            --repository "$INPUT_REPOSITORY" \
+            --ecosystem "$INPUT_ECOSYSTEM" \
+            --state-remote "https://github.com/${GITHUB_REPOSITORY_SLUG}.git" \
+            --workdir .present-work
+
+      - name: Keep the run's evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: present-${{ inputs.ecosystem }}-${{ github.run_id }}
+          path: .present-work
+          if-no-files-found: ignore
+          retention-days: 14
