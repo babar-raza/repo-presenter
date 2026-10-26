@@ -2295,3 +2295,28 @@ entries:
       The re-seal/update-adoption/no-op-proof-adoption dance (what would ever move a bundle to
       READY_FOR_PROPOSAL). Wiring seal_candidate as cascade.run_cascade's own natural follow-on
       call.
+
+  - component: "seal.py v2: the real no-op proof (readme/bundle/seal.py)"
+    source: old-repository-presenter's components/readme/bundle/seal.py (_fresh_after/_proof)
+    disposition: ADAPT_2026_10_26
+    reason: >
+      Completes seal.py's own v1 scope boundary: a later, fresh, byte-identical, zero-provider-
+      call rerun now moves a bundle from ACCEPTED to READY_FOR_PROPOSAL with a measured proof.
+      Ported _fresh_after/_proof, reusing already-ported same_process/identity_of_run_ref/
+      measure_invocation (core/noop_proof.py). Still explicitly deferred: the update-adoption
+      dance for a rerun whose artifacts genuinely DIFFER (routing through invalidation.py's
+      route() into VALID_UPDATE_AVAILABLE/INVALIDATED) -- a materially different, larger
+      decision than proving a byte-identical rerun, and needs new ARTIFACT_SCOPES rows this
+      module's own v1 docstring already deferred.
+    evidence: >
+      3 new tests (tests/readme/bundle/test_seal.py, 12 total): the real proof path and all
+      three refusal paths (differing artifacts, nonzero calls, not fresh). Full suite re-run
+      clean: 1679 passed, 11 skipped, 5 deselected. LIVE-DEMONSTRATED for real: reran
+      scripts/run_cascade.py against aspose-3d-foss/Aspose.3D-FOSS-for-.NET twice more, both
+      zero-new-call full cache hits -- both correctly REFUSED to seal, naming exactly which
+      artifacts (README.md, README.patch.diff, content_units(.coherent).json) differ from the
+      first seal, because an earlier accidental concurrent run's own extra calls had changed
+      that content. The safety property this mechanism exists for, caught on a real case.
+    not_yet_done: >
+      The update-adoption dance itself. aspose-3d-foss/Aspose.3D-FOSS-for-.NET's own real,
+      currently-differing bundle is ready-made evidence to build and test it against.

@@ -1,4 +1,4 @@
-"""Seal one cascade's output into a durable, content-addressed bundle (first seal only).
+"""Seal one cascade's output into a durable, content-addressed bundle, and prove the no-op.
 
 ADAPT (not ported verbatim -- design recorded in
 ``plans/PLAN_bundle_integrity_and_noop_proof.md``'s "seal.py v1 design" section, 2026-10-26) from
@@ -11,15 +11,24 @@ own output, including the one shared ledger ``cascade.run_cascade`` now writes) 
 has ``review_verdict.json`` (``readme.review.independent_reviewer``), not the old repo's
 consolidated 21-check validation.json.
 
-Scope of v1, deliberately bounded: only the FIRST seal of a cascade's output (manifest state
-``ACCEPTED``, ``no_op_proof`` always ``None``). The old repo's re-seal / update-adoption / no-op-
-proof-adoption dance (its own ``_record_update``/``_adopt_update``/``_proof``) needs a SECOND
-fresh-process rerun to compare against -- a separate, later step, exactly as
-``core/noop_proof.py`` itself was staged in two passes (step 1: the bundle-independent subset;
-step 3: the ledger-reconciliation subset). Calling :func:`seal_candidate` against an already-
-sealed bundle raises ``NotImplementedError`` naming this, the same pattern this package's own
-``recheck_bundle``/``recheck_portfolio`` (``readme/bundle/recheck.py``) already use for a scope
-not yet built, rather than faking a result nothing actually computed.
+Scope, deliberately bounded in two passes, exactly as ``core/noop_proof.py`` itself was (step 1:
+the bundle-independent subset; step 3: the ledger-reconciliation subset):
+
+- v1 (2026-10-26): only the FIRST seal (manifest state ``ACCEPTED``, ``no_op_proof`` always
+  ``None``).
+- v2 (2026-10-26, same day): the no-op proof itself -- a SECOND, later, fresh-process rerun
+  whose artifacts reproduce the sealed ones byte for byte with zero provider calls moves the
+  bundle to ``READY_FOR_PROPOSAL`` with a measured proof. Still explicitly NOT built: the
+  update-adoption dance for a rerun whose artifacts genuinely DIFFER from what is sealed (the old
+  repo's ``_record_update``/``_adopt_update``, which route a difference through
+  ``invalidation.py``'s ``route()`` into ``VALID_UPDATE_AVAILABLE``/``INVALIDATED``) -- that needs
+  the new ``ARTIFACT_SCOPES`` rows this module's own v1 docstring deferred, and is a materially
+  different, larger decision (does a differing rerun silently re-seal, or wait for the owner?)
+  than proving a byte-identical one. Calling :func:`seal_candidate` against a bundle whose
+  artifacts differ from an already-proven ``READY_FOR_PROPOSAL`` seal, or whose rerun is not
+  fresh or not zero-call, raises ``NotImplementedError`` naming this precisely, the same pattern
+  this package's own ``recheck_bundle``/``recheck_portfolio`` (``readme/bundle/recheck.py``)
+  already use for a scope not yet built, rather than faking a result nothing actually computed.
 
 The bundle lives at ``candidates/<owner>__<name>/<revision>/`` at the repository root (matching
 ``recheck.py``'s own already-ported ``receipt_path()``), committed to git -- unlike
@@ -43,7 +52,15 @@ from repo_presenter.core.errors import PresenterError
 from repo_presenter.core.facts import FactsDocument
 from repo_presenter.core.llm.ledger import parse_records
 from repo_presenter.core.llm.prompts import PromptRegistry
-from repo_presenter.core.noop_proof import Invocation, ledger_totals, reconcile_ledger
+from repo_presenter.core.noop_proof import (
+    Invocation,
+    Measurement,
+    identity_of_run_ref,
+    ledger_totals,
+    measure_invocation,
+    reconcile_ledger,
+    same_process,
+)
 from repo_presenter.core.registry.models import RegistryEntry
 from repo_presenter.core.secrets import ConfiguredSecret, scan_for_secrets
 from repo_presenter.core.toolchains import toolchain_fingerprint
@@ -118,6 +135,7 @@ class SealResult:
     bundle: Path
     state: str
     files: dict[str, dict[str, Any]]
+    no_op_proof: dict[str, Any] | None = None
 
 
 def bundle_directory(candidates_root: Path, entry: RegistryEntry, revision: str) -> Path:
@@ -233,7 +251,14 @@ def _staged_artifacts(inputs: SealInputs) -> dict[str, bytes]:
     return staged
 
 
-def _write_bundle(bundle: Path, staged: Mapping[str, bytes], *, inputs: SealInputs) -> SealResult:
+def _write_bundle(
+    bundle: Path,
+    staged: Mapping[str, bytes],
+    *,
+    inputs: SealInputs,
+    state: str = STATE_ACCEPTED,
+    proof: dict[str, Any] | None = None,
+) -> SealResult:
     files = {
         name: {"sha256": _sha256(data), "bytes": len(data)} for name, data in sorted(staged.items())
     }
@@ -241,11 +266,11 @@ def _write_bundle(bundle: Path, staged: Mapping[str, bytes], *, inputs: SealInpu
         "schema_version": 1,
         "repository": inputs.entry.repository,
         "revision": inputs.source_revision,
-        "state": STATE_ACCEPTED,
+        "state": state,
         "sealed_at": _now(),
         "files": files,
         "provider_calls": inputs.provider_calls,
-        "no_op_proof": None,
+        "no_op_proof": proof,
         "sealed_by": inputs.invocation.run_ref(),
         "ledger_totals": ledger_totals(
             parse_records(staged[LEDGER_BUNDLE_FILENAME].decode("utf-8"), LEDGER_BUNDLE_FILENAME)
@@ -275,22 +300,93 @@ def _write_bundle(bundle: Path, staged: Mapping[str, bytes], *, inputs: SealInpu
     pointer = f"{inputs.source_revision}\n".encode()
     if not current.is_file() or current.read_bytes() != pointer:
         current.write_bytes(pointer)
-    return SealResult(bundle=bundle, state=STATE_ACCEPTED, files=files)
+    return SealResult(bundle=bundle, state=state, files=files, no_op_proof=proof)
+
+
+def _read_manifest(path: Path) -> dict[str, Any] | None:
+    if not path.is_file():
+        return None
+    try:
+        loaded = json.loads(path.read_text(encoding="utf-8"))
+    except ValueError as exc:
+        raise SealError(f"seal: unreadable bundle manifest {path}: {exc}") from exc
+    return loaded if isinstance(loaded, dict) else None
+
+
+def _differing_artifacts(staged: Mapping[str, bytes], bundle: Path) -> list[str]:
+    """Staged artifact names whose bytes differ from what is already sealed, ignoring the files
+    that carry a clock by design (``REPLAY_EXEMPT``) and cannot be compared this way."""
+    differing = []
+    for name, data in staged.items():
+        if name in REPLAY_EXEMPT:
+            continue
+        existing = bundle / name
+        if not existing.is_file() or existing.read_bytes() != data:
+            differing.append(name)
+    return sorted(differing)
+
+
+def _fresh_after(prior_ref: object, inputs: SealInputs) -> bool:
+    """Whether this invocation is a different process from the one ``prior_ref`` names. A
+    reference that names no process (a bundle sealed before processes were identified) cannot
+    establish freshness, so it is not fresh."""
+    prior = identity_of_run_ref(prior_ref)
+    return prior is not None and not same_process(prior, inputs.invocation.identity)
+
+
+def _proof(prior_ref: Mapping[str, Any], inputs: SealInputs, measured: Measurement) -> dict[str, Any]:
+    """The no-op proof record: every field is something this seal measured or compared. A
+    caller reaches here only after freshness, byte-identity, and zero provider calls all hold
+    (:func:`seal_candidate` withholds the proof otherwise); the record names both runs so an
+    audit can repeat the comparison."""
+    return {
+        "proven_at": _now(),
+        "fresh_process": True,
+        "byte_identical": True,
+        "provider_calls": measured.provider_calls,
+        "first_run": dict(prior_ref),
+        "rerun": {**inputs.invocation.run_ref(), **measured.to_dict()},
+    }
 
 
 def seal_candidate(inputs: SealInputs) -> SealResult:
-    """Seal this cascade's output as the bundle's FIRST manifest (state ACCEPTED, no_op_proof
-    None). Raises :class:`NotImplementedError` against an already-sealed bundle: re-seal and the
-    no-op-proof-adoption dance are a deliberate, not-yet-built follow-on (see this module's own
-    docstring) -- never faked as a result nothing here actually computed."""
+    """Seal this cascade's output: the bundle's FIRST manifest (state ACCEPTED, no_op_proof
+    None) when nothing is sealed yet, or -- when a LATER, fresh process reproduces an already-
+    sealed bundle byte for byte with zero provider calls -- the measured no-op proof that moves
+    it to READY_FOR_PROPOSAL. Raises :class:`NotImplementedError` whenever a rerun's artifacts
+    genuinely differ from what is sealed, or a rerun is not fresh or not zero-call: the update-
+    adoption dance for a real difference is a deliberate, not-yet-built follow-on (see this
+    module's own docstring) -- never faked as a result nothing here actually computed."""
     bundle = bundle_directory(inputs.candidates_root, inputs.entry, inputs.source_revision)
-    if (bundle / BUNDLE_MANIFEST_NAME).is_file():
-        raise NotImplementedError(
-            f"seal_candidate: {bundle} is already sealed. Re-seal, update-adoption, and the "
-            "no-op-proof-adoption dance are not ported in this v1 (see readme.bundle.seal's own "
-            "module docstring and plans/PLAN_bundle_integrity_and_noop_proof.md's 'seal.py v1 "
-            "design' section) -- this needs a second fresh-process rerun to compare against, a "
-            "separate, later step."
-        )
+    existing = _read_manifest(bundle / BUNDLE_MANIFEST_NAME)
     staged = _staged_artifacts(inputs)
-    return _write_bundle(bundle, staged, inputs=inputs)
+    if existing is None:
+        return _write_bundle(bundle, staged, inputs=inputs)
+
+    differing = _differing_artifacts(staged, bundle)
+    if differing:
+        raise NotImplementedError(
+            f"seal_candidate: {bundle} is already sealed and this rerun's own "
+            f"{', '.join(differing)} differ from what is sealed. The update-adoption dance "
+            "(routing a real difference through invalidation.py's route() into "
+            "VALID_UPDATE_AVAILABLE/INVALIDATED) is not built yet (see this module's own "
+            "docstring) -- never silently re-sealed over a difference nothing has judged."
+        )
+    if inputs.provider_calls != 0:
+        raise NotImplementedError(
+            f"seal_candidate: {bundle}'s artifacts are byte-identical to this rerun, but it made "
+            f"{inputs.provider_calls} provider call(s) -- a no-op proof needs zero. The proof is "
+            "withheld; re-run in a way that makes no provider calls to prove it."
+        )
+    if not _fresh_after(existing.get("sealed_by"), inputs):
+        raise NotImplementedError(
+            f"seal_candidate: {bundle}'s artifacts are byte-identical and this rerun made zero "
+            "provider calls, but it is not a fresh process (the same process that sealed the "
+            "bundle, or the bundle names no sealing process to be fresh from) -- a no-op proof "
+            "needs a genuinely later, different process."
+        )
+    measured = measure_invocation(
+        inputs.out_dir / "llm_cache" / LEDGER_BUNDLE_FILENAME, inputs.invocation.invocation_id
+    )
+    proof = _proof(existing["sealed_by"], inputs, measured)
+    return _write_bundle(bundle, staged, inputs=inputs, state=STATE_READY, proof=proof)

@@ -1,13 +1,17 @@
-"""seal.py v1: the first seal of a cascade's real output into a durable bundle.
+"""seal.py: the first seal of a cascade's real output, and the real no-op proof of a rerun.
 
-Scope matches readme.bundle.seal's own module docstring: only the first seal (state ACCEPTED,
-no_op_proof None). Re-seal / update-adoption is not built yet and must raise NotImplementedError,
-the same pattern readme.bundle.recheck's own recheck_bundle/recheck_portfolio already use.
+Scope matches readme.bundle.seal's own module docstring: the first seal (state ACCEPTED,
+no_op_proof None), and a later, fresh, byte-identical, zero-provider-call rerun's proof (state
+READY_FOR_PROPOSAL). A rerun whose artifacts genuinely differ, or that is not fresh or not
+zero-call, must raise NotImplementedError -- the update-adoption dance for a real difference is
+not built yet, the same pattern readme.bundle.recheck's own recheck_bundle/recheck_portfolio
+already use for a scope not built.
 """
 
 from __future__ import annotations
 
 import json
+import uuid
 from pathlib import Path
 
 import pytest
@@ -22,7 +26,7 @@ from repo_presenter.core.llm.prompts import (
     PromptRegistry,
     Sampling,
 )
-from repo_presenter.core.noop_proof import Invocation
+from repo_presenter.core.noop_proof import Invocation, ProcessIdentity
 from repo_presenter.core.secrets import ConfiguredSecret
 from repo_presenter.readme.bundle.seal import (
     BUNDLE_MANIFEST_NAME,
@@ -215,13 +219,105 @@ def test_seal_candidate_refuses_a_bundle_containing_a_configured_secret(tmp_path
     assert not any(p.name.startswith(".") for p in repo_dir.iterdir()) if repo_dir.is_dir() else True
 
 
-def test_seal_candidate_raises_not_implemented_against_an_already_sealed_bundle(
+def _fresh_invocation() -> Invocation:
+    """A different process from whatever sealed the first manifest in this test run -- real
+    processes never share a nonce; this hand-built one deliberately does not either."""
+    identity = ProcessIdentity(
+        pid=999999, started="2026-10-26T00:00:00Z", boot_id="other-boot", nonce="other-nonce"
+    )
+    return Invocation(uuid.uuid4().hex, identity, "2026-10-26T00:00:01Z")
+
+
+def _rerun_inputs(inputs: SealInputs, *, invocation: Invocation, provider_calls: int) -> SealInputs:
+    return SealInputs(
+        entry=inputs.entry,
+        source_revision=inputs.source_revision,
+        facts=inputs.facts,
+        prompts=inputs.prompts,
+        out_dir=inputs.out_dir,
+        facts_path=inputs.facts_path,
+        candidates_root=inputs.candidates_root,
+        provider_calls=provider_calls,
+        invocation=invocation,
+    )
+
+
+def _append_cache_reuse_record(out_dir: Path, invocation_id: str) -> None:
+    """A real rerun that answers every job from the CallStore records a cache_reuse line for
+    each -- measure_invocation refuses an invocation with zero ledger records at all (it cannot
+    tell "genuinely reused everything" from "died before its first job")."""
+    record = {
+        **_LEDGER_RECORD,
+        "call_id": "a-00-cache_reuse-1",
+        "invocation_id": invocation_id,
+        "disposition": "cache_reuse",
+        "attempt": 0,
+    }
+    ledger_path = out_dir / "llm_cache" / "ledger.jsonl"
+    with ledger_path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(record) + "\n")
+
+
+def test_seal_candidate_raises_not_implemented_when_a_rerun_is_not_zero_call(
     tmp_path: Path,
 ) -> None:
     inputs = _inputs(tmp_path)
     seal_candidate(inputs)
-    with pytest.raises(NotImplementedError, match="already sealed"):
-        seal_candidate(inputs)
+    with pytest.raises(NotImplementedError, match="provider call"):
+        seal_candidate(inputs)  # same inputs: byte-identical, but provider_calls == 1
+
+
+def test_seal_candidate_raises_not_implemented_when_a_zero_call_rerun_is_not_fresh(
+    tmp_path: Path,
+) -> None:
+    inputs = _inputs(tmp_path)
+    seal_candidate(inputs)
+    rerun = _rerun_inputs(inputs, invocation=inputs.invocation, provider_calls=0)
+    with pytest.raises(NotImplementedError, match="fresh process"):
+        seal_candidate(rerun)  # the SAME process that sealed it, never fresh from itself
+
+
+def test_seal_candidate_raises_not_implemented_when_a_fresh_rerun_s_artifacts_differ(
+    tmp_path: Path,
+) -> None:
+    inputs = _inputs(tmp_path)
+    seal_candidate(inputs)
+    (inputs.out_dir / "plan.json").write_text('{"core_capabilities": ["changed"]}\n', encoding="utf-8")
+    fresh = _fresh_invocation()
+    _append_cache_reuse_record(inputs.out_dir, fresh.invocation_id)
+    rerun = _rerun_inputs(inputs, invocation=fresh, provider_calls=0)
+    with pytest.raises(NotImplementedError, match="plan.json"):
+        seal_candidate(rerun)
+
+
+def test_seal_candidate_proves_the_no_op_on_a_fresh_byte_identical_zero_call_rerun(
+    tmp_path: Path,
+) -> None:
+    inputs = _inputs(tmp_path)
+    first = seal_candidate(inputs)
+    assert first.state == "ACCEPTED"
+    assert first.no_op_proof is None
+
+    fresh = _fresh_invocation()
+    _append_cache_reuse_record(inputs.out_dir, fresh.invocation_id)
+    rerun = _rerun_inputs(inputs, invocation=fresh, provider_calls=0)
+    result = seal_candidate(rerun)
+
+    assert result.state == "READY_FOR_PROPOSAL"
+    assert result.no_op_proof is not None
+    assert result.no_op_proof["byte_identical"] is True
+    assert result.no_op_proof["fresh_process"] is True
+    assert result.no_op_proof["provider_calls"] == 0
+    assert result.no_op_proof["rerun"]["invocation_id"] == fresh.invocation_id
+    assert result.no_op_proof["first_run"]["invocation_id"] == inputs.invocation.invocation_id
+
+    manifest = json.loads((result.bundle / BUNDLE_MANIFEST_NAME).read_text(encoding="utf-8"))
+    assert manifest["state"] == "READY_FOR_PROPOSAL"
+    assert manifest["no_op_proof"]["byte_identical"] is True
+    # The artifact content itself really is untouched -- not just reported as such.
+    assert (result.bundle / "plan.json").read_text(encoding="utf-8") == (
+        inputs.out_dir / "plan.json"
+    ).read_text(encoding="utf-8")
 
 
 def test_the_sealed_ledger_is_read_back_identically(tmp_path: Path) -> None:

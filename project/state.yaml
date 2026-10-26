@@ -1689,14 +1689,42 @@ next_ready_items:
       count_current_candidates == 0 (ACCEPTED is not a counted state -- correctly not claiming
       progress a bundle has not earned; READY_FOR_PROPOSAL needs the no-op-proof-adoption dance,
       still not built). This is the exact, honest distinction the module's own design makes.
+    step_9_done_2026_10_26_seal_candidate_wired_plus_the_real_no_op_proof: >
+      Wired seal_candidate as scripts/run_cascade.py's own automatic follow-on call:
+      CascadeResult now carries entry/document too, so a caller passes them straight through
+      instead of reconstructing an Invocation from a saved record by hand (today's earlier live
+      demonstration's own gap). Live-tested for real against aspose-3d-foss/Aspose.3D-FOSS-for-
+      .NET (already sealed): the cascade re-ran mostly from cache (3 new calls, not 16), and the
+      seal step printed "not sealed: ... already sealed" instead of crashing.
+      Then built the real no-op proof itself (seal.py v2, same day): a LATER, fresh, byte-
+      identical, zero-provider-call rerun now moves a bundle from ACCEPTED to
+      READY_FOR_PROPOSAL with a measured proof (first_run/rerun identities, provider_calls==0,
+      byte_identical==True) -- ported _fresh_after/_proof from the old repo's own seal.py,
+      reusing already-ported same_process/identity_of_run_ref/measure_invocation. A rerun whose
+      artifacts genuinely differ, or that is not fresh, or that made any provider call, raises
+      NotImplementedError naming exactly which check failed -- the update-adoption dance for a
+      real difference (routing through invalidation.py's route()) remains deliberately not
+      built. 3 new tests added to tests/readme/bundle/test_seal.py (12 total): the real proof
+      path, and the three distinct refusal paths. Full suite re-run clean: 1679 passed, 11
+      skipped, 5 deselected (pre-existing unrelated).
+      LIVE-DEMONSTRATED for real, not just unit-tested, including a genuine refusal: reran
+      scripts/run_cascade.py against aspose-3d-foss/Aspose.3D-FOSS-for-.NET twice more. Both
+      runs made zero new provider calls (full cache hit) -- but both correctly REFUSED to seal,
+      because the earlier accidental concurrent run's own 3 extra real calls (recorded honestly
+      in this card's step_6/7 history) had changed README.md/content_units(.coherent).json
+      content in the CallStore, so the rerun's artifacts now genuinely differ from what the
+      FIRST seal recorded. seal_candidate named exactly which files differ and refused to
+      silently re-seal over them -- precisely the safety property this mechanism exists for,
+      caught on a real, not contrived, case. This candidate now has a real, stable
+      VALID_UPDATE_AVAILABLE-shaped situation waiting for the (not yet built) update-adoption
+      dance, which is itself useful, honest evidence for scoping that follow-on correctly.
     next_step: >
-      (1) Build the re-seal / update-adoption / no-op-proof-adoption dance as its own, separate,
-      larger task: a second fresh-process rerun of the same repository, comparing byte-for-byte
-      against the sealed bundle, is what actually proves the no-op claim and is what would move
-      a bundle from ACCEPTED to READY_FOR_PROPOSAL -- genuinely not attempted yet. (2) Wire
-      seal_candidate as cascade.run_cascade's own natural follow-on call (today's demonstration
-      reconstructed an Invocation from a saved record by hand; a real caller should pass
-      CascadeResult.invocation/.provider_calls directly). (3) Wire count_current_candidates/
+      (1) Build the update-adoption dance for a rerun whose artifacts genuinely differ: route
+      the difference through invalidation.py's route() into VALID_UPDATE_AVAILABLE/INVALIDATED
+      -- needs the new ARTIFACT_SCOPES rows (review_verdict.json/content_units.coherent.json)
+      this module's own v1 docstring deferred, since route() has no real caller until this
+      exists. aspose-3d-foss/Aspose.3D-FOSS-for-.NET's own real, currently-differing bundle is
+      ready-made evidence to build and test this against. (2) Wire count_current_candidates/
       integrity_valid_candidates into WIRE_GATEVERIFY_TO_PORTFOLIO's own "define what no-op
       means for a README candidate" ask, now that a real, reachable implementation exists.
     write_paths_planned: [src/repo_presenter/core/noop_proof.py (steps 1 + 3, DONE),
