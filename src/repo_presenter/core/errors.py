@@ -6,8 +6,8 @@ with the stage that raises it.
 
 Ported (REUSE, near-verbatim) from the old repository-presenter project's ``core/errors.py``
 per migration/reuse-manifest.yaml, trimmed to the classes the ported extraction layer actually
-raises (``ConfigError``); the remaining old-repo classes (state/CAS/gateway/job/git-safety
-errors) belong to stages not yet pulled into this repository and are not reproduced here.
+raises (``ConfigError``); a class is added here only together with the stage that raises it, as
+more of the old repo's own stages are pulled.
 """
 
 from __future__ import annotations
@@ -70,3 +70,23 @@ class RepositorySnapshotError(GitSafetyError):
     Ported (ADD, 2026-10-25) alongside ``core/snapshot/capture.py``, step 2 of
     ``plans/PLAN_bundle_integrity_and_noop_proof.md``.
     """
+
+
+class StateBackendError(PresenterError):
+    """The durable-state backend (``core/state/``) could not load, save, or lease a repository
+    record: corrupt or unparseable stored state, an unsupported schema version, or a CAS write
+    that failed for a reason other than a plain stale-version rejection (``core/state/cas.py``
+    retries those; this is for what is left after retries are exhausted or cannot apply).
+
+    Ported (ADD, 2026-10-26) alongside ``core/state/schema.py`` -- the durable-state/transaction
+    backend migration/reuse-manifest.yaml had wrongly marked RETIRE by name-pattern match alone,
+    corrected after actually reading it (mission non-negotiable #1's hosted-runner durable-state
+    requirement).
+    """
+
+
+class IllegalTransitionError(StateBackendError):
+    """A durable-state transition was rejected by ``core/state/cas.py``'s own checks: not in the
+    transition registry, the record's current state does not match the transition's ``from``, or
+    the caller's lease/fencing token is stale (the old repo's own docs/STATE_MACHINE.md section
+    17 -- this repository has no equivalent doc yet; the rule itself is enforced in code)."""

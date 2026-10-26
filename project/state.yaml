@@ -1475,6 +1475,41 @@ next_ready_items:
       recovery/trigger-dedup gap the old repo's own history shows this subsystem exists to
       close. Scoped, ordered port plan: migration/reuse-manifest.yaml's own next_step field for
       this component.
+    unattended_overnight_execution_plan_2026_10_26: >
+      Owner directive, 2026-10-26 night: leave unattended until morning; no further milestone
+      narration or small-accomplishment summaries in the session transcript -- this field is the
+      durable record of what is still open and the order it is being worked in, so nothing is
+      lost to context/summary churn. Full honest reconciliation of "has this repo produced
+      everything plans/*.md needs" as of tonight: NOT YET TRUE. Open items, in the order they are
+      being executed:
+      (1) core/state/ durable-state backend port (this card, above) -- schema.py DONE (ported
+      verbatim bar import-path, registry/record models, compiles, assertions hold); cas.py,
+      git_backend.py, trigger.py, recovery.py, health.py, present_transaction.py still to port,
+      in that dependency order, each with its own old-repo test file ported alongside it, full
+      suite re-run after each, committed after each passes (never batched into one unverified
+      commit).
+      (2) Mission non-negotiable #1 itself (hosted GitHub Actions vertical slice) -- blocked on
+      (1); once the durable-state backend exists, build the real present.yml-equivalent hosted
+      workflow this card's own next_step (4) already named, wired through run_present_transaction
+      (present_transaction.py), not cascade.py directly.
+      (3) judge.py/review.py's acceptance-scoring tier (core/candidates.py's deliberately-
+      deferred Tier 2: load_proposable_candidate/_review_refusal/ProposableCandidate/
+      AcceptanceGate) -- not yet scoped/read this session; read the old repo's source in full
+      before porting, same discipline as (1).
+      (4) repair/{rounds,targeted}.py (3,736 lines) -- not yet read this session; read in full,
+      classify genuinely-needed vs. superseded-by-this-repo's-own-mechanisms before porting
+      anything, per the same RETIRE-by-name-pattern mistake this card's own correction above
+      exists to not repeat.
+      (5) readme_correction engine (5,738 lines) -- not yet read this session; same discipline.
+      (6) propose/PR-effect layer's fuller pieces -- this repo already has a working minimal
+      issues/PR path (src/repo_presenter/issues/, github/, authorization/); read the old repo's
+      fuller propose/ to find what it has beyond that minimal path before porting.
+      Each item gets: full old-repo source read before any porting decision, verbatim-bar-
+      import-path porting (no silent redesign), its own old-repo test suite ported alongside,
+      compile + full-suite re-run + commit per file or small cohesive group of files (not per
+      whole item), and this state.yaml card updated with what was actually done -- never a
+      claim of completion without an independently re-run test command backing it, per AGENTS.md's
+      no-self-grading rule and mission non-negotiable #7.
 
   - id: PORT_BUNDLE_INTEGRITY_LAYER
     status: IN_PROGRESS
