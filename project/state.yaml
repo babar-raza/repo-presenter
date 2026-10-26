@@ -1168,6 +1168,20 @@ next_ready_items:
       BLOCKED_NEEDS_OWNER_DECISION to plain BLOCKED -- the decision this card itself needed is
       resolved; what remains is ordinary sequencing (candidates.py has to exist first), not a
       further owner call.
+    status_update_2026_10_26_candidates_py_and_seal_py_v1_exist: >
+      core/candidates.py's bundle-integrity tier and readme/bundle/seal.py v1 both now exist and
+      are live-demonstrated (PORT_BUNDLE_INTEGRITY_LAYER steps 7-8) -- there is now a real,
+      concrete "zero new provider calls" check: verify_bundle's own reconcile_ledger call, which
+      checks a sealed manifest's recorded provider_calls/ledger_totals against the real sums
+      over its ledger.jsonl. This is NOT the full answer this card's own blocked_on_same_
+      dependency_2026_10_22/rechecked_2026_10_24 notes describe (recheck_bundle/
+      recheck_portfolio's full 5-scope currency check, which still needs
+      validation/registry.py -- "not a port candidate as a whole" -- and is unaffected by
+      today's work). Still BLOCKED for the full ask, but the dependency that made it BLOCKED is
+      now partially real rather than entirely absent. Not wired into ops/gateverify.py this
+      pass -- that file is this repository's own taskcard-verification tooling, a different
+      concern from the README-candidate pipeline, and deserves its own careful look rather than
+      a rushed wire-in at the tail of an already-long session.
     purpose: >
       ops/gateverify.py's do_verify/rebuild_state exist (P0) but have never been run
       against a P1_PORTFOLIO_SCALE candidate. Define what "no-op, zero new provider calls"
