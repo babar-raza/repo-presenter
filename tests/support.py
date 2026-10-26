@@ -20,6 +20,8 @@ from pathlib import Path
 from typing import Any
 
 from repo_presenter.core.git_safety.git import run_git
+from repo_presenter.core.state.cas import SaveResult
+from repo_presenter.core.state.schema import RepositoryRecord
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -185,3 +187,27 @@ def make_permit(repository: str, *, mode: str = "full", effect: str = "readme_pr
         provider_identity=None,
     )
     return WritePermit(effect=effect, entry=entry)  # type: ignore[arg-type]
+
+
+class InMemoryStateBackend:
+    """A :class:`repo_presenter.core.state.cas.StateBackend` test double with the real
+    compare-and-swap contract (stale-version rejection, no silent lost update) and no git
+    subprocess, for ``tests/core/state/``'s fast suites. The git-ref backend is proven separately
+    against a disposable local repository in its own test module."""
+
+    def __init__(self) -> None:
+        self._records: dict[str, RepositoryRecord] = {}
+
+    def load(self, repository: str) -> RepositoryRecord | None:
+        return self._records.get(repository)
+
+    def save(
+        self, repository: str, record: RepositoryRecord, expected_version: int | None
+    ) -> SaveResult:
+        current = self._records.get(repository)
+        current_version = current.state_version if current is not None else None
+        if current_version != expected_version:
+            return SaveResult(outcome="stale", record=current)
+        saved = record.model_copy(update={"state_version": (current_version or 0) + 1})
+        self._records[repository] = saved
+        return SaveResult(outcome="saved", record=saved)
