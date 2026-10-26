@@ -2273,3 +2273,25 @@ entries:
       The re-seal/no-op-proof-adoption dance itself. Wiring seal_candidate as cascade.
       run_cascade's own natural next call (today's demonstration reconstructed an Invocation by
       hand from a saved record).
+
+  - component: "core/candidates.py bundle-integrity/counting tier"
+    source: old-repository-presenter's core/candidates.py (647 lines)
+    disposition: PARTIAL_PORT_2026_10_26
+    reason: >
+      Ported the bundle-integrity/counting tier only (SealedBundle, iter_sealed_bundles,
+      verify_bundle, integrity_valid_candidates, count_current_candidates,
+      current_counted_repository_dirs, ready_revision, ready_revision_at, stale_candidates
+      simplified). Not ported: the proposal-gate/review-refusal tier
+      (load_proposable_candidate/_review_refusal/ProposableCandidate/AcceptanceGate), tied to the
+      old repo's own review.json shape and a 30-point acceptance scorer this repository does not
+      have; examples_verification_summary, since seal.py v1 produces no examples.json.
+    evidence: >
+      32 new tests (tests/core/test_candidates.py). Full suite re-run clean: 1676 passed, 11
+      skipped, 5 deselected. Verified for real against the one real sealed bundle
+      (aspose-3d-foss/Aspose.3D-FOSS-for-.NET): integrity_valid_candidates == 1,
+      count_current_candidates == 0 (ACCEPTED, not yet READY_FOR_PROPOSAL -- correct, not an
+      inflated count).
+    not_yet_done: >
+      The re-seal/update-adoption/no-op-proof-adoption dance (what would ever move a bundle to
+      READY_FOR_PROPOSAL). Wiring seal_candidate as cascade.run_cascade's own natural follow-on
+      call.

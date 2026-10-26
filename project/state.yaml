@@ -1654,19 +1654,37 @@ next_ready_items:
       content_units.coherent.json (invalidation.py's own route()) -- v1's first-seal-only path
       never calls route() at all, so adding rows now would be dead code with no caller yet,
       exactly what this project's own discipline refuses; they belong with the re-seal follow-on.
+    step_8_done_2026_10_26_candidates_py_bundle_integrity_tier: >
+      Ported core/candidates.py's bundle-integrity/counting tier: SealedBundle,
+      iter_sealed_bundles, verify_bundle (now wired to reconcile_ledger against this repo's own
+      "ledger.jsonl" name, not the old repo's "calls.jsonl"), integrity_valid_candidates,
+      count_current_candidates, current_counted_repository_dirs, ready_revision,
+      ready_revision_at, stale_candidates (simplified: no validator/BLOCKING_CHECKS comparison,
+      since no consolidated validation.json exists here), BundleError/BundleLedgerError.
+      Deliberately NOT ported: the proposal-gate/review-refusal tier
+      (load_proposable_candidate/_review_refusal/ProposableCandidate/AcceptanceGate) -- tied to
+      the old repo's own review.json shape (verdict_as_returned/verdict_basis/demoted) and a
+      30-point acceptance scorer this repository does not have; also not ported:
+      examples_verification_summary, since seal.py v1 produces no examples.json artifact, so it
+      would always report (0, 0). 32 new tests (tests/core/test_candidates.py, adapted
+      structure/names from the old repo's own 703-line file, not verbatim -- most of it
+      exercises the untouched tier). Full suite re-run clean: 1676 passed, 11 skipped, 5
+      deselected (pre-existing unrelated).
+      Verified for real against the one real sealed bundle (aspose-3d-foss/Aspose.3D-FOSS-for-
+      .NET, state ACCEPTED): integrity_valid_candidates == 1 (verify_bundle passes cleanly),
+      count_current_candidates == 0 (ACCEPTED is not a counted state -- correctly not claiming
+      progress a bundle has not earned; READY_FOR_PROPOSAL needs the no-op-proof-adoption dance,
+      still not built). This is the exact, honest distinction the module's own design makes.
     next_step: >
-      (1) Port core/candidates.py's bundle-integrity/counting tier (verify_bundle,
-      count_current_candidates, current_counted_repository_dirs, stale_candidates) -- now has a
-      real caller: a real candidates/ tree with a real manifest.json exists to read. Its second
-      tier (load_proposable_candidate/_review_refusal/ProposableCandidate/AcceptanceGate) stays
-      deferred -- tied to the old repo's own review.json shape and a 30-point acceptance scorer
-      this repository does not have. (2) Build the re-seal / update-adoption / no-op-proof-
-      adoption dance as its own, separate, larger task: a second fresh-process rerun of the same
-      repository, comparing byte-for-byte against the sealed bundle, is what actually proves the
-      no-op claim -- genuinely not attempted yet. (3) Wire seal_candidate as cascade.run_cascade's
-      own natural follow-on call (today's demonstration reconstructed an Invocation from a saved
-      record by hand; a real caller should pass CascadeResult.invocation/.provider_calls
-      directly).
+      (1) Build the re-seal / update-adoption / no-op-proof-adoption dance as its own, separate,
+      larger task: a second fresh-process rerun of the same repository, comparing byte-for-byte
+      against the sealed bundle, is what actually proves the no-op claim and is what would move
+      a bundle from ACCEPTED to READY_FOR_PROPOSAL -- genuinely not attempted yet. (2) Wire
+      seal_candidate as cascade.run_cascade's own natural follow-on call (today's demonstration
+      reconstructed an Invocation from a saved record by hand; a real caller should pass
+      CascadeResult.invocation/.provider_calls directly). (3) Wire count_current_candidates/
+      integrity_valid_candidates into WIRE_GATEVERIFY_TO_PORTFOLIO's own "define what no-op
+      means for a README candidate" ask, now that a real, reachable implementation exists.
     write_paths_planned: [src/repo_presenter/core/noop_proof.py (steps 1 + 3, DONE),
       src/repo_presenter/core/snapshot/capture.py (step 3, DONE),
       src/repo_presenter/readme/composition/authoring.py (step 4, DONE -- filename constant only),
@@ -1674,7 +1692,7 @@ next_ready_items:
       constant + write_review_verdict/load_review_verdict),
       scripts/run_independent_review.py (step 5, DONE -- wired to write the new artifact),
       src/repo_presenter/readme/bundle/seal.py (step 7, DONE -- v1, first seal only),
-      src/repo_presenter/core/candidates.py (next_step 1, bundle-integrity tier only),
+      src/repo_presenter/core/candidates.py (step 8, DONE -- bundle-integrity tier only),
       src/repo_presenter/readme/bundle/recheck.py (later steps, extends the existing port)]
     source_refs: >
       docs/DECISION_LOG.md's 2026-10-24 entry; plans/PLAN_bundle_integrity_and_noop_proof.md;
