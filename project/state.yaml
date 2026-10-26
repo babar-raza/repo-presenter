@@ -1516,6 +1516,23 @@ next_ready_items:
       claim of completion without an independently re-run test command backing it, per AGENTS.md's
       no-self-grading rule and mission non-negotiable #7.
 
+    overnight_progress_2026_10_27: >
+      Each item below was ported by a separate agent under the shared brief, then independently
+      re-verified by the supervisor (full suite re-run, clean tree) before being recorded here.
+      DONE, ported: (3) independent review's preservation holdouts 115e8be (the LLM reviewer
+      itself is NOT built -- the mission's judgment criticism remains open); (4) Lane R repair
+      loop 26abe30 (S5/S6 only; S4 repair BLOCKED on reconciliation/patch.py); (5) readme
+      correction detectors already ported earlier; (6) propose/PR effect 81bcaa9 (ported, NOT
+      wired -- no hosted path calls it, and publish_candidates does not check READY_FOR_PROPOSAL
+      itself); monitoring/discovery 9045554 (ported, NOT wired into any scheduler).
+      PARTIAL: S9 validation 1b1a1ac -- the checks the mission needs, piece by piece; the At a
+      Glance topology check stays a stub that always passes (~700 lines of readme_diagram needed).
+      DEFERRED WITH OWNER DECISION REQUIRED: Lane L chain.py/verify.py (5f05807) -- they run
+      repo-supplied build commands on the host with only an env allow-list and a timeout; a real
+      isolation layer (G4) or an explicit owner acceptance of host execution is required first.
+      DEFERRED, not blocking: metadata/visual assets (DEFERRED in the manifest).
+      Full suite at 1b1a1ac: 2217 passed, 11 skipped.
+
   - id: PORT_BUNDLE_INTEGRITY_LAYER
     status: IN_PROGRESS
     priority: high
