@@ -2320,3 +2320,32 @@ entries:
     not_yet_done: >
       The update-adoption dance itself. aspose-3d-foss/Aspose.3D-FOSS-for-.NET's own real,
       currently-differing bundle is ready-made evidence to build and test it against.
+
+  - component: "seal.py: corrected the differing-artifacts branch (unproven vs. proven bundles)"
+    source: self-caught correction, 2026-10-26
+    disposition: CORRECTION_2026_10_26
+    reason: >
+      seal.py v2's first implementation raised NotImplementedError for ANY differing rerun, but
+      a bundle that was never proven (still ACCEPTED, no_op_proof None) has no proof to protect.
+      Checked the old repo's own seal_candidate directly rather than assumed: its own
+      "waiting_state" guard requires READY_FOR_PROPOSAL/VALID_UPDATE_AVAILABLE/INVALIDATED-with-
+      an-update: ACCEPTED is not a member, so a changed, not-yet-waiting_state bundle re-seals
+      plainly there too. Re-scoped: a differing rerun against an unproven bundle now simply
+      re-seals; NotImplementedError is raised only when a rerun's artifacts differ from an
+      ALREADY-PROVEN bundle.
+    evidence: >
+      1 test corrected, 1 new test added (tests/readme/bundle/test_seal.py, 13 total). Full
+      suite re-run clean: 1680 passed, 11 skipped, 5 deselected.
+      LIVE-DEMONSTRATED: this is the landmark real result the whole PORT_BUNDLE_INTEGRITY_LAYER
+      effort has been building toward. Reran scripts/run_cascade.py against aspose-3d-foss/
+      Aspose.3D-FOSS-for-.NET twice more: first rerun re-sealed plainly over the step-9 drift
+      (state ACCEPTED); second rerun, immediately after, was byte-identical, zero-call, and a
+      genuinely fresh process -> a REAL no-op proof recorded, state READY_FOR_PROPOSAL. The real
+      manifest.json names two distinct real OS processes (different pid/nonce), the second
+      making 0 provider calls across 12 real cache_reuse ledger records. Confirmed via
+      core.candidates: verify_bundle passes, integrity_valid_candidates == 1,
+      count_current_candidates == 1 -- the first time this repository has ever counted a real,
+      independently-verified, no-op-proven candidate.
+    not_yet_done: >
+      The update-adoption dance for a rerun whose artifacts differ from an ALREADY-PROVEN
+      bundle (needs new ARTIFACT_SCOPES rows in invalidation.py, which now has a real caller).

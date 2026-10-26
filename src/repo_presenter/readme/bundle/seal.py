@@ -353,10 +353,17 @@ def seal_candidate(inputs: SealInputs) -> SealResult:
     """Seal this cascade's output: the bundle's FIRST manifest (state ACCEPTED, no_op_proof
     None) when nothing is sealed yet, or -- when a LATER, fresh process reproduces an already-
     sealed bundle byte for byte with zero provider calls -- the measured no-op proof that moves
-    it to READY_FOR_PROPOSAL. Raises :class:`NotImplementedError` whenever a rerun's artifacts
-    genuinely differ from what is sealed, or a rerun is not fresh or not zero-call: the update-
-    adoption dance for a real difference is a deliberate, not-yet-built follow-on (see this
-    module's own docstring) -- never faked as a result nothing here actually computed."""
+    it to READY_FOR_PROPOSAL. A rerun whose artifacts differ from a bundle that was never proven
+    (still ACCEPTED) simply re-seals over it -- nothing has claimed a no-op yet, so there is no
+    proof to protect (the old repo's own ``seal_candidate`` takes exactly this path: a changed,
+    not-yet-``waiting_state`` bundle re-seals as ACCEPTED, proof withdrawn -- there never was
+    one). Raises :class:`NotImplementedError` only when a rerun's artifacts differ from a bundle
+    that WAS already proven (state READY_FOR_PROPOSAL with a recorded no_op_proof): preserving
+    that existing proof while routing the new difference through invalidation.py's route() into
+    VALID_UPDATE_AVAILABLE/INVALIDATED is a deliberate, not-yet-built follow-on (see this
+    module's own docstring) -- never faked as a result nothing here actually computed. Also
+    raises it when byte-identical artifacts are not fresh or not zero-call -- never faking the
+    proof either."""
     bundle = bundle_directory(inputs.candidates_root, inputs.entry, inputs.source_revision)
     existing = _read_manifest(bundle / BUNDLE_MANIFEST_NAME)
     staged = _staged_artifacts(inputs)
@@ -364,13 +371,19 @@ def seal_candidate(inputs: SealInputs) -> SealResult:
         return _write_bundle(bundle, staged, inputs=inputs)
 
     differing = _differing_artifacts(staged, bundle)
+    was_proven = existing.get("state") == STATE_READY and existing.get("no_op_proof") is not None
     if differing:
+        if not was_proven:
+            # Nothing was proven yet -- a plain re-seal with the new content, same as the first
+            # seal would have been had this content been the first one staged.
+            return _write_bundle(bundle, staged, inputs=inputs)
         raise NotImplementedError(
-            f"seal_candidate: {bundle} is already sealed and this rerun's own "
-            f"{', '.join(differing)} differ from what is sealed. The update-adoption dance "
-            "(routing a real difference through invalidation.py's route() into "
-            "VALID_UPDATE_AVAILABLE/INVALIDATED) is not built yet (see this module's own "
-            "docstring) -- never silently re-sealed over a difference nothing has judged."
+            f"seal_candidate: {bundle} is already proven READY_FOR_PROPOSAL and this rerun's "
+            f"own {', '.join(differing)} differ from the proven content. The update-adoption "
+            "dance (preserving the existing proof while routing the new difference through "
+            "invalidation.py's route() into VALID_UPDATE_AVAILABLE/INVALIDATED) is not built yet "
+            "(see this module's own docstring) -- never silently re-sealed over a proven "
+            "bundle's own difference nothing has judged."
         )
     if inputs.provider_calls != 0:
         raise NotImplementedError(

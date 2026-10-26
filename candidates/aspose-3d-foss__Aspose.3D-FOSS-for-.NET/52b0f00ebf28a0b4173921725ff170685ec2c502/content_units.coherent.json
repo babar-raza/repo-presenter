@@ -1,37 +1,47 @@
 {
   "coherence": {
     "applied": true,
-    "revised": []
+    "revised": [
+      "scope_limitations/scope"
+    ]
   },
   "omitted": [],
   "schema_version": 1,
   "units": [
     {
       "fact_ids": [
-        "format:input.fbx",
-        "format:output.fbx",
-        "format:input.gltf",
-        "format:output.gltf",
-        "format:input.obj",
-        "format:output.obj",
-        "format:input.stl",
-        "format:output.stl",
-        "format:input.dae",
-        "format:output.dae",
-        "format:input.3mf",
-        "format:output.3mf",
+        "dependency:none",
         "format:input.3ds",
-        "format:output.3ds",
+        "format:input.3mf",
+        "format:input.dae",
+        "format:input.fbx",
+        "format:input.gltf",
+        "format:input.obj",
         "format:input.ply",
+        "format:input.stl",
+        "format:output.3ds",
+        "format:output.3mf",
+        "format:output.dae",
+        "format:output.fbx",
+        "format:output.gltf",
+        "format:output.obj",
         "format:output.ply",
-        "public_symbol:aspose.threed.scene",
-        "public_symbol:aspose.threed.node",
+        "format:output.stl",
+        "inherited_unit:004.paragraph",
+        "public_symbol:aspose.threed.animation",
+        "public_symbol:aspose.threed.customobject",
+        "public_symbol:aspose.threed.deformers",
         "public_symbol:aspose.threed.entities",
-        "public_symbol:aspose.threed.animation"
+        "public_symbol:aspose.threed.node",
+        "public_symbol:aspose.threed.profiles",
+        "public_symbol:aspose.threed.property",
+        "public_symbol:aspose.threed.scene",
+        "public_symbol:aspose.threed.sceneobject",
+        "public_symbol:aspose.threed.shading"
       ],
       "section": "opening",
       "slot": "opening",
-      "text": "It reads and writes .fbx, .gltf, .obj, .stl, .dae, .3mf, .3ds, and .ply files. It constructs scene graphs using Scene and Node, assigns shading materials, and supports animation through AnimationClip."
+      "text": "Aspose.3D FOSS for .NET reads and writes 3D scene data in .fbx, .gltf, .obj, .stl, .dae, .3mf, .3ds, and .ply formats. It converts scenes between these formats and constructs scene graphs using Aspose.ThreeD.Scene, Aspose.ThreeD.Node, Aspose.ThreeD.Entities, Aspose.ThreeD.Profiles, Aspose.ThreeD.Shading, and Aspose.ThreeD.Animation. The library operates as pure managed code with no native dependencies and exposes an Aspose.3D-compatible API surface for building and converting 3D scenes."
     },
     {
       "fact_ids": [
@@ -87,7 +97,7 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:5",
-      "text": "Convert 3D scenes by reading and writing .fbx, .gltf, .obj, .stl, .dae, and .3mf with full round-trip fidelity, plus Microsoft 3MF and AVEVA PDMS RVM models, AMF, and an HTML5/Aspose 3D Web viewer export, through Scene.FromFile() and Scene.Save() using the matching FileFormat constants."
+      "text": "Convert 3D scenes by reading and writing .fbx, .gltf, .obj, .stl, .dae, and .3mf — including .fbx-to-.obj and .gltf-to-.obj conversions — with full round-trip fidelity, plus Microsoft 3MF and AVEVA PDMS RVM models, AMF, and an HTML5/Aspose 3D Web viewer export, through Scene.FromFile() and Scene.Save() using the matching FileFormat constants."
     },
     {
       "fact_ids": [
@@ -276,7 +286,6 @@
         "format:output.3ds",
         "format:output.3mf",
         "format:output.ply",
-        "identity:repository",
         "inherited_unit:017.paragraph",
         "inherited_unit:019.list",
         "package:name",
@@ -285,7 +294,7 @@
       ],
       "section": "scope_limitations",
       "slot": "scope",
-      "text": "Aspose.3D FOSS for .NET reads and writes .3ds, .3mf, and .ply files through the Scene.Open and Scene.Save APIs, targeting netcoreapp3.1, net6.0, net8.0, and net10.0 runtimes with zero external package dependencies."
+      "text": "Aspose.3D FOSS for .NET reads and writes .3ds, .3mf, and .ply files through the Scene.Open and Scene.Save APIs, targeting netcoreapp3.1;net6.0;net8.0;net10.0 runtimes with zero external package dependencies."
     },
     {
       "fact_ids": [

@@ -1,20 +1,20 @@
 {
   "files": {
     "README.md": {
-      "bytes": 59950,
-      "sha256": "66862b956f7bd78fd2b51ef543967d4d4f6325707710f448c27ab5eb04b7475e"
+      "bytes": 60309,
+      "sha256": "441db27346261230cdfe3d759f8bec15c744326012d5eabc12b0d78c4d658d93"
     },
     "README.patch.diff": {
-      "bytes": 96798,
-      "sha256": "d30205b56ae334c8c3cce7bef840c5c01b0c9f94104b5109bc88d8a504bf07a8"
+      "bytes": 97152,
+      "sha256": "7f7bca8cb9896654be48393558541b7af6f5ed1c9fd4b41b38a83b9873784074"
     },
     "content_units.coherent.json": {
-      "bytes": 28201,
-      "sha256": "4c268d4416cfef9e7aedf8793d12471a68b4b511922ec04717ae14f926cb6fd2"
+      "bytes": 28923,
+      "sha256": "44950476e8948c20c22ad68d51859975462e3e325e4a2760bd2c26bb9e73839a"
     },
     "content_units.json": {
-      "bytes": 28207,
-      "sha256": "f5077429c2d327b043feacd3ea58eea8cd3eb650c663cdb04efafb8ce7b31f34"
+      "bytes": 28909,
+      "sha256": "240f0a8e956b6c794ebc194a38582c05e3dcac0a1b11481f8e4da9eebeba75b8"
     },
     "dependencies.json": {
       "bytes": 489601,
@@ -33,8 +33,8 @@
       "sha256": "7161926c0802f028609ee07410d529d095d03d81c6230bdc0f81d3299f2c38be"
     },
     "ledger.jsonl": {
-      "bytes": 33112,
-      "sha256": "a306fce5bdbaf0a747b08981dcc57abd8672c644ec26076da2428b61d4969108"
+      "bytes": 101832,
+      "sha256": "b915c893b0d3caf3b9eff116ff8d55c9a2c03f4ef9379ee510cdcc6f9be3b8e3"
     },
     "plan.json": {
       "bytes": 9225,
@@ -47,26 +47,54 @@
   },
   "ledger_totals": {
     "audit_only": 0,
-    "cache_reuses": 3,
-    "provider_calls": 25,
-    "records": 28,
+    "cache_reuses": 60,
+    "provider_calls": 28,
+    "records": 88,
     "total_tokens": null
   },
-  "no_op_proof": null,
-  "provider_calls": 16,
+  "no_op_proof": {
+    "byte_identical": true,
+    "first_run": {
+      "identity": {
+        "boot_id": "win:134374614075000000",
+        "nonce": "b27c48c16cbe4f20abb71c94529fc6b1",
+        "pid": 35796,
+        "started": "win:134374678423683072"
+      },
+      "invocation_id": "05bfc7f928294f589522125fa62e7c31",
+      "started_at": "2026-10-26T05:57:23Z"
+    },
+    "fresh_process": true,
+    "proven_at": "2026-10-26T05:57:47Z",
+    "provider_calls": 0,
+    "rerun": {
+      "cache_reuses": 12,
+      "identity": {
+        "boot_id": "win:134374614075000000",
+        "nonce": "0b80c6c5ed274b1681ef67ed7cdff9a3",
+        "pid": 53188,
+        "started": "win:134374678564456676"
+      },
+      "invocation_id": "b39a43211a0149f09c68b56065d8a067",
+      "provider_calls": 0,
+      "records": 12,
+      "started_at": "2026-10-26T05:57:37Z"
+    }
+  },
+  "provider_calls": 0,
   "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-.NET",
   "revision": "52b0f00ebf28a0b4173921725ff170685ec2c502",
   "schema_version": 1,
-  "sealed_at": "2026-10-26T04:28:48Z",
+  "sealed_at": "2026-10-26T05:57:47Z",
   "sealed_by": {
     "identity": {
-      "boot_id": "win:134373737715000000",
-      "nonce": "e0010c4b59114e809cc03e549321ef5f",
-      "pid": 4036,
-      "started": "win:134373816369643015"
+      "boot_id": "win:134374614075000000",
+      "nonce": "0b80c6c5ed274b1681ef67ed7cdff9a3",
+      "pid": 53188,
+      "started": "win:134374678564456676"
     },
-    "invocation_id": "d5e214718791420ea05eb4d2d3aab649",
-    "started_at": "2026-10-25T06:00:38Z"
+    "invocation_id": "b39a43211a0149f09c68b56065d8a067",
+    "started_at": "2026-10-26T05:57:37Z"
   },
-  "state": "ACCEPTED"
+  "state": "READY_FOR_PROPOSAL"
 }

@@ -277,15 +277,44 @@ def test_seal_candidate_raises_not_implemented_when_a_zero_call_rerun_is_not_fre
         seal_candidate(rerun)  # the SAME process that sealed it, never fresh from itself
 
 
-def test_seal_candidate_raises_not_implemented_when_a_fresh_rerun_s_artifacts_differ(
+def test_seal_candidate_re_seals_plainly_when_an_unproven_bundle_s_artifacts_differ(
     tmp_path: Path,
 ) -> None:
+    """Nothing was proven yet (still ACCEPTED), so a differing rerun simply re-seals over it --
+    there is no proof to protect, matching the old repo's own seal_candidate: a changed,
+    not-yet-``waiting_state`` bundle re-seals as ACCEPTED, proof withdrawn (there never was
+    one)."""
+    inputs = _inputs(tmp_path)
+    first = seal_candidate(inputs)
+    assert first.state == "ACCEPTED"
+
+    (inputs.out_dir / "plan.json").write_text('{"core_capabilities": ["changed"]}\n', encoding="utf-8")
+    rerun = _rerun_inputs(inputs, invocation=inputs.invocation, provider_calls=1)
+    result = seal_candidate(rerun)
+
+    assert result.state == "ACCEPTED"
+    assert result.no_op_proof is None
+    assert (result.bundle / "plan.json").read_text(encoding="utf-8") == (
+        inputs.out_dir / "plan.json"
+    ).read_text(encoding="utf-8")
+
+
+def test_seal_candidate_raises_not_implemented_when_a_proven_bundle_s_artifacts_differ(
+    tmp_path: Path,
+) -> None:
+    """Once a bundle IS proven (READY_FOR_PROPOSAL), a later difference must not silently
+    overwrite the proof -- that needs the update-adoption dance, not built yet."""
     inputs = _inputs(tmp_path)
     seal_candidate(inputs)
-    (inputs.out_dir / "plan.json").write_text('{"core_capabilities": ["changed"]}\n', encoding="utf-8")
     fresh = _fresh_invocation()
     _append_cache_reuse_record(inputs.out_dir, fresh.invocation_id)
-    rerun = _rerun_inputs(inputs, invocation=fresh, provider_calls=0)
+    proven = seal_candidate(_rerun_inputs(inputs, invocation=fresh, provider_calls=0))
+    assert proven.state == "READY_FOR_PROPOSAL"
+
+    (inputs.out_dir / "plan.json").write_text('{"core_capabilities": ["changed"]}\n', encoding="utf-8")
+    later = _fresh_invocation()
+    _append_cache_reuse_record(inputs.out_dir, later.invocation_id)
+    rerun = _rerun_inputs(inputs, invocation=later, provider_calls=0)
     with pytest.raises(NotImplementedError, match="plan.json"):
         seal_candidate(rerun)
 

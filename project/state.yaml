@@ -1709,24 +1709,52 @@ next_ready_items:
       skipped, 5 deselected (pre-existing unrelated).
       LIVE-DEMONSTRATED for real, not just unit-tested, including a genuine refusal: reran
       scripts/run_cascade.py against aspose-3d-foss/Aspose.3D-FOSS-for-.NET twice more. Both
-      runs made zero new provider calls (full cache hit) -- but both correctly REFUSED to seal,
-      because the earlier accidental concurrent run's own 3 extra real calls (recorded honestly
-      in this card's step_6/7 history) had changed README.md/content_units(.coherent).json
-      content in the CallStore, so the rerun's artifacts now genuinely differ from what the
-      FIRST seal recorded. seal_candidate named exactly which files differ and refused to
-      silently re-seal over them -- precisely the safety property this mechanism exists for,
-      caught on a real, not contrived, case. This candidate now has a real, stable
-      VALID_UPDATE_AVAILABLE-shaped situation waiting for the (not yet built) update-adoption
-      dance, which is itself useful, honest evidence for scoping that follow-on correctly.
+      runs made zero new provider calls (full cache hit) -- but both REFUSED to seal, because
+      the earlier accidental concurrent run's own 3 extra real calls (recorded honestly in this
+      card's step_6/7 history) had changed README.md/content_units(.coherent).json content in
+      the CallStore, so the rerun's artifacts now genuinely differed from what the FIRST seal
+      recorded.
+    step_10_done_2026_10_26_corrected_the_differing_branch_and_the_first_real_no_op_proof: >
+      CORRECTED a real overreach in step 9's own implementation, caught before being left
+      standing (the same discipline step 2's seal.py sizing correction used): the code refused
+      ANY differing rerun with NotImplementedError, but a bundle that was never proven
+      (still ACCEPTED, no_op_proof None, aspose-3d-foss/Aspose.3D-FOSS-for-.NET's exact real
+      state) has no proof to protect -- the old repo's own seal_candidate re-seals plainly over
+      a changed, not-yet-"waiting_state" bundle (its own "waiting_state" check requires
+      READY_FOR_PROPOSAL/VALID_UPDATE_AVAILABLE/INVALIDATED-with-an-update, which ACCEPTED is
+      not a member of), checked directly in the old module's own source rather than assumed.
+      Re-scoped: a differing rerun against an UNPROVEN bundle now simply re-seals (ACCEPTED
+      again, proof still None, same as a first seal would have been); NotImplementedError is
+      now raised ONLY when a rerun's artifacts differ from a bundle that WAS already proven
+      (state READY_FOR_PROPOSAL with a recorded no_op_proof) -- the genuinely harder case this
+      card's own update-adoption dance still needs. 1 test corrected, 1 new test added
+      (tests/readme/bundle/test_seal.py, 13 total: the plain-re-seal case and the
+      proven-bundle-differs case, now separately covered). Full suite re-run clean: 1680 passed,
+      11 skipped, 5 deselected.
+      LIVE-DEMONSTRATED, and this is the real landmark result the whole PORT_BUNDLE_INTEGRITY_
+      LAYER effort has been building toward: reran scripts/run_cascade.py against aspose-3d-foss/
+      Aspose.3D-FOSS-for-.NET twice more. First rerun: zero new calls, differing artifacts (the
+      step-9 drift) -> correctly re-sealed plainly (state ACCEPTED, same as before). Second
+      rerun, immediately after: zero new calls, byte-identical to what the first rerun just
+      sealed, a genuinely fresh process (different pid/nonce) -> REAL no-op proof recorded,
+      state READY_FOR_PROPOSAL. The real manifest.json's own no_op_proof names two distinct real
+      OS processes (pid 35796 vs. pid 53188, different nonces), the second making 0 provider
+      calls across 12 real ledger records, all cache_reuse. Confirmed via core.candidates:
+      verify_bundle passes, integrity_valid_candidates == 1, count_current_candidates == 1 --
+      the first time this repository has ever counted a real, independently-verified,
+      no-op-proven candidate. The real README.md content drifted slightly from the original
+      seal (natural LLM retry-round wording variance, e.g. a punctuation-list formatting change
+      in one sentence) -- left as-is, since it is real, valid accepted LLM output, not
+      corruption, and not something to hand-edit.
     next_step: >
-      (1) Build the update-adoption dance for a rerun whose artifacts genuinely differ: route
-      the difference through invalidation.py's route() into VALID_UPDATE_AVAILABLE/INVALIDATED
-      -- needs the new ARTIFACT_SCOPES rows (review_verdict.json/content_units.coherent.json)
-      this module's own v1 docstring deferred, since route() has no real caller until this
-      exists. aspose-3d-foss/Aspose.3D-FOSS-for-.NET's own real, currently-differing bundle is
-      ready-made evidence to build and test this against. (2) Wire count_current_candidates/
-      integrity_valid_candidates into WIRE_GATEVERIFY_TO_PORTFOLIO's own "define what no-op
-      means for a README candidate" ask, now that a real, reachable implementation exists.
+      (1) Build the update-adoption dance for a rerun whose artifacts differ from an ALREADY-
+      PROVEN bundle: route the difference through invalidation.py's route() into
+      VALID_UPDATE_AVAILABLE/INVALIDATED -- needs the new ARTIFACT_SCOPES rows
+      (review_verdict.json/content_units.coherent.json/README.patch.diff) this module's own v1
+      docstring deferred, since route() has no real caller until this exists. (2) Wire
+      count_current_candidates/integrity_valid_candidates into WIRE_GATEVERIFY_TO_PORTFOLIO's
+      own "define what no-op means for a README candidate" ask, now that a real, reachable
+      implementation exists.
     write_paths_planned: [src/repo_presenter/core/noop_proof.py (steps 1 + 3, DONE),
       src/repo_presenter/core/snapshot/capture.py (step 3, DONE),
       src/repo_presenter/readme/composition/authoring.py (step 4, DONE -- filename constant only),

@@ -2,7 +2,7 @@
 
 [![NuGet](https://img.shields.io/nuget/v/Aspose.3D.FOSS.svg)](https://www.nuget.org/packages/Aspose.3D.FOSS/) ![.NET](https://img.shields.io/badge/.net-netcoreapp3.1_%7C_net6.0_%7C_net8.0_%7C_net10.0-blue.svg)
 
-It reads and writes `.fbx`, `.gltf`, `.obj`, `.stl`, `.dae`, `.3mf`, `.3ds`, and `.ply` files. It constructs scene graphs using `Scene` and `Node`, assigns shading materials, and supports animation through `AnimationClip`.
+Aspose.3D FOSS for .NET reads and writes 3D scene data in `.fbx`, `.gltf`, `.obj`, `.stl`, `.dae`, `.3mf`, `.3ds`, and `.ply` formats. It converts scenes between these formats and constructs scene graphs using `Aspose.ThreeD.Scene`, `Aspose.ThreeD.Node`, `Aspose.ThreeD.Entities`, `Aspose.ThreeD.Profiles`, `Aspose.ThreeD.Shading`, and `Aspose.ThreeD.Animation`. The library operates as pure managed code with no native dependencies and exposes an Aspose.3D-compatible API surface for building and converting 3D scenes.
 
 Aspose.3D FOSS for .NET is a free, open-source, MIT-licensed .NET library for building and
 converting 3D scenes without any external 3D engine. It exposes an Aspose.3D-compatible API
@@ -54,7 +54,7 @@ Cap7["NURBS data definition"] --> Output["3DS, 3MF, COLLADA, FBX, glTF, OBJ, PLY
 - **Primitive and profile geometry.** Construct primitive and CAD-style profile geometry directly — `Box`, `Cylinder`, `Sphere`, `Dish`, `Torus`, `Pyramid`, `Plane`, and IFC-compatible 2D profiles including `LShape`, `TShape`, `UShape`, `ZShape`, `CShape`, `HShape`, `CircleShape`, and `RectangleShape` — which can be extruded or revolved into solids via `LinearExtrusion`, `RevolvedAreaSolid`, and `SweptAreaSolid`.
 - **Material assignment.** Assign shading materials through `Material` subclasses including `LambertMaterial`, `PhongMaterial`, `PbrMaterial`, `PbrSpecularMaterial`, and `ShaderMaterial` — each attaches to a `Node` independently of the entity it carries.
 - **Animation support.** Animate scenes with `AnimationClip` and `AnimationChannel`, keyed by `KeyFrame`/`KeyframeSequence`, and skin meshes with `Bone`, `Skeleton`, and `SkinDeformer`; morph-target animation is available through `MorphTargetDeformer` and `MorphTargetChannel`.
-- **Format conversion.** Convert 3D scenes by reading and writing `.fbx`, `.gltf`, `.obj`, `.stl`, `.dae`, and `.3mf` with full round-trip fidelity, plus Microsoft 3MF and AVEVA PDMS RVM models, AMF, and an HTML5/Aspose 3D Web viewer export, through `Scene.FromFile()` and `Scene.Save()` using the matching `FileFormat` constants.
+- **Format conversion.** Convert 3D scenes by reading and writing `.fbx`, `.gltf`, `.obj`, `.stl`, `.dae`, and `.3mf` — including `.fbx`-to-`.obj` and `.gltf`-to-`.obj` conversions — with full round-trip fidelity, plus Microsoft 3MF and AVEVA PDMS RVM models, AMF, and an HTML5/Aspose 3D Web viewer export, through `Scene.FromFile()` and `Scene.Save()` using the matching `FileFormat` constants.
 - **Mesh vertex data handling.** Read and write per-vertex mesh data through a custom `VertexDeclaration` and `VertexElement` subclasses — normals, UVs, vertex color, tangent/binormal, smoothing groups, and user data.
 - **NURBS data definition.** Define NURBS curves and surfaces with `NurbsCurve` and `NurbsSurface`, specifying control points, weights, and knot vectors directly.
 
@@ -819,7 +819,7 @@ The `License` class supports license management, though this FOSS build does not
 
 ## Scope and Limitations
 
-Aspose.3D FOSS for .NET reads and writes `.3ds`, `.3mf`, and `.ply` files through the `Scene.Open` and `Scene.Save` APIs, targeting netcoreapp3.1, net6.0, net8.0, and net10.0 runtimes with zero external package dependencies.
+Aspose.3D FOSS for .NET reads and writes `.3ds`, `.3mf`, and `.ply` files through the `Scene.Open` and `Scene.Save` APIs, targeting netcoreapp3.1;net6.0;net8.0;net10.0 runtimes with zero external package dependencies.
 
 - Rendering is not implemented in this FOSS build — `Scene.Render`, `RenderFactory`, and the `IRenderTarget`/`IRenderWindow` rendering pipeline all throw `NotImplementedException`.
 - PLY import and export work through `Scene.Open` and `Scene.Save` using `PlyReader`/`PlyWriter`, but the public `FileFormat.PLY` field backed by the non-dispatched `PlyFormat` class throws `NotImplementedException` when Encode or Decode is called directly.
