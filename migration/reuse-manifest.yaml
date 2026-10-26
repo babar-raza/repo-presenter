@@ -2438,9 +2438,10 @@ entries:
       measurement against composition/link_budget.py's policy), badge_slot/badge_problems
       (badge-row correctness against renderer.py's BADGE_ORDER), and enterprise_anchor_problems
       (the Enterprise Edition anchor's required text shape).
-    disposition: "RETIRE: enterprise_anchor_problems (stale and redundant -- see reason).
-      PENDING_REVIEW, low priority: verified_example_hashes/readme_link_budget/badge_slot/
-      badge_problems (dependencies confirmed present; not ported this pass)."
+    disposition: "PORTED 2026-10-26 (ADAPT, narrow): verified_example_hashes, readme_link_budget,
+      badge_slot, badge_problems -> src/repo_presenter/readme/validation/rules.py, with tests in
+      tests/readme/validation/test_rules.py. RETIRE: enterprise_anchor_problems (stale and
+      redundant -- see reason)."
     reason: >
       Read in full 2026-10-23. enterprise_anchor_problems's own _ANCHOR regex requires the
       anchor text to literally start "full-featured" -- the OLD wording
@@ -2458,58 +2459,161 @@ entries:
       checks only that kept text is *present* in the README, per J4-equivalent logic, not that a
       kept badge row is still *correct* against current facts) -- a real, if narrow, gap, not
       yet prioritized high enough to pull this session.
-    target_module: none planned.
+    target_module: src/repo_presenter/readme/validation/rules.py (present).
     next_step: >
-      Low priority. If pulled later: verified_example_hashes, readme_link_budget, badge_slot,
-      badge_problems only -- never enterprise_anchor_problems, which is superseded and stale.
-    portfolio_consumers: none yet -- not pulled.
-    invalidation_impact: none -- not pulled.
+      Done for the four pure rules. enterprise_anchor_problems is never ported (superseded and
+      stale). The renderer still emits the retired "full-featured" anchor prefix; see the open
+      defect recorded on the registry.py entry.
+    portfolio_consumers: none yet -- ported, not called by a live stage.
+    invalidation_impact: none yet -- ported and tested, not called from any sealed path.
 
   - component: "components/readme/validation/registry.py (2,731 lines) -- Stage S9, the
-      versioned registry of the eleven blocking checks (BC-01..BC-12)"
+      versioned registry of the eleven blocking checks (BC-01..BC-12, BC-14)"
     source: old-repository-presenter
     evaluated_at_shas: []
     behavior: >
-      Module docstring + full import block skimmed only, per this manifest's own prior
-      next_step ("skim ... before deciding whether a full read is warranted; do not read 2,731
-      lines speculatively") -- not read line-by-line. Confirmed: this is the orchestration layer
-      that wires claims.py (BC-14), deferrals.py's review_deferrals (BC-05), links/rules.py
-      (BC-06/BC-07, badge_problems AND enterprise_anchor_problems both), references.py's
-      dangling_references, and roughly a dozen more checks (authoring.py's
-      EDITION_SUBSTITUTE/allowed_identifiers/surface_members/verified_members, glance.py's
-      diagram_failures, shell.py, terminology.py, link_budget.py, list_coverage.py, placement.py,
-      renderer.py exports, evidence/facts/{assets,links,product_pages,unpublished}.py,
-      core/{ecosystems,examples,facts,package_registry,secrets}.py) into one validation.json per
-      candidate, each check versioned and routed to the causal stage a failure reopens.
-    disposition: "PENDING_REVIEW, NOT a REUSE/ADAPT candidate as a whole -- do not port
-      verbatim. This is exactly the kind of component docs/MISSION_AUTHORITY.md's own critical
-      fact already warns about: 'any system whose validation or reviewer shares the same causal
-      blind spot as its producer must be re-evaluated before reuse' (mission section 3), applied
-      there to review.py/judge.py/'the BC-04/BC-14 validators' by name -- this registry.py is
-      precisely the dispatch layer those validators run inside. Confirmed concretely, not just
-      by category: it imports links/rules.py's enterprise_anchor_problems directly, the function
-      this manifest's own links/rules.py entry (above) just found stale and already superseded
-      by this repository's own enterprise_edition.py detector -- a verbatim port of registry.py
-      would reintroduce that exact retired defect at the orchestration level even though
-      links/rules.py itself was correctly not pulled."
+      Read in full 2026-10-26 (all 2,731 lines), and its tests read in full (test_registry.py,
+      3,722 lines). It is the dispatch shell over the blocking checks: BLOCKING_CHECKS (a version
+      table), validate_candidate (one validation.json per candidate), and about forty judge
+      functions. Its judges call composition/* (authoring, placement, renderer, references,
+      list_coverage, link_budget, terminology, glance), evidence/facts/* (links, product_pages,
+      unpublished, assets), core/* (ecosystems, facts, package_registry, secrets, examples) and
+      validation/claims.py + deferrals.py.
+    disposition: >
+      PORTED PER CHECK, not as a whole. Ten judged checks are now independent functions in
+      src/repo_presenter/readme/validation/ and run together by blocking.validate_candidate:
+      BC-01, BC-02, BC-03, BC-04, BC-05, BC-06, BC-07 (minus its At a Glance geometry sub-check),
+      BC-08, BC-09, BC-12, BC-14. BC-10 and BC-11 are RETIRED. The dispatch shell was not ported.
+      Not wired into cascade.py: ported and tested, not yet run by any live stage.
     reason: >
-      Answers this manifest's own open question from the claims.py entry's earlier next_step
-      ('confirm whether the rest is a genuinely separate concern ... before reading it in
-      full') -- yes: a large, separate, integration-risk orchestration concern, not a sibling
-      validator of claims.py/deferrals.py's own kind. claims.py and deferrals.py were each
-      independently re-read and re-verified against this repository's own current facts/rules
-      before porting (finding and fixing nothing stale in either); registry.py's own
-      enterprise_anchor_problems import proves the wrapper itself was NOT independently
-      re-verified when this skim was done, consistent with the mission's warning.
-    target_module: none planned. If this repository ever needs a BC-01..BC-12-style unified
-      validation.json, it should be built fresh from the independently-reverified pieces already
-      ported (claims.py, deferrals.py) plus whichever of the dozen other dependencies are
-      themselves independently reverified first -- never by porting this dispatch shell.
-    next_step: none planned; do not read the remaining ~2,600 lines speculatively. Revisit only
-      if a future taskcard specifically needs a unified validation.json and has already
-      independently reverified every check it would wire in.
-    portfolio_consumers: none -- not pulled, and not planned to be pulled as a whole.
-    invalidation_impact: none -- not pulled.
+      DECISION TABLE. PORT: in the new repo under the module named. ADAPT: ported with the change
+      named. RETIRE: not ported, reason verified in code. DEFER: not ported, blocker stated.
+      DUPLICATE: already ported elsewhere and reused.
+      -- Dispatch and envelope --
+      BLOCKING_CHECKS and the VALIDATOR_VERSION history (lines 117-476): RETIRE. The version table
+        records the old repo's sealed-bundle re-check history. This repository keys invalidation
+        on dependencies.json component versions (readme/bundle/invalidation.py), not on a
+        per-check integer. A check's identity is its judge's function name.
+      validate_candidate: ADAPT (reduced). Now blocking.validate_candidate: ten judged checks, one
+        record each (verdict, earliest causal stage, details, failures as fields). Dropped from
+        the old envelope: summary/advisory/coverage/fingerprint fields (see DEFER rows).
+      blocking_failures: PORT (blocking.py). summarize_validation and write_validation (the
+        validation.json writer and its determinism test): DEFER until a sealing stage reads
+        validation.json. No consumer exists in this repository yet.
+      ROW_FACT_KINDS, coverage_ledger, coverage_rows, _evidence_detail, _LEDGER_REASONS: DEFER.
+        A diagnostic table with no verdict. Its only reader is validation.json.
+      advisory_notes: DEFER. Reviewer context only. Its claim_notes part is ported
+        (validation/claims.py) and its quoted_evidence_elisions part is ported (renderer.py).
+        Only the envelope that carries it is missing.
+      protected_fingerprint: DEFER with the envelope (feeds validation.json only).
+      deferred_on_required_rows, REQUIRED_SECTIONS, record_review_verdict: RETIRE (BC-10). They
+        read the old review.json shape (second_reader.read, identity_separate, demoted,
+        single_reader_advisory, reviewer_scope_defect, causal_state). readme/review/
+        independent_reviewer.py never writes that shape; its verdict file is review_verdict.json
+        (ACCEPT/REJECT by deterministic rules, no second read).
+      record_replay_verdict: RETIRE (BC-11). It stamps PASS on BC-11 without reading any evidence.
+        The judgment is readme/bundle/evaluation.py over core/noop_proof.py.
+      -- Judges, one row per check --
+      _check_source (BC-01): PORT -> readme/validation/provenance.py source_failures.
+      _check_install, _stated_by_distribution, _unestablished_install, _registry_install_lines,
+        _registry_command_failures (BC-02): PORT -> readme/validation/install.py.
+      _documented_source_failures (BC-02): PORT -> install.py. documented_steps and its two phrase
+        constants are ported as a narrow slice (readme/evidence/facts/unpublished.py). The
+        extraction half (unpublished_statement, documented_source_install) stays unported.
+      _check_source_checkout (BC-02, TC-TST-01): PORT -> install.py.
+      _check_examples (BC-03): PORT -> provenance.py example_failures.
+      _check_units (BC-04): PORT -> units.py unit_failures. Its per-section unit_checks call is
+        the already-ported authoring.unit_checks, which cascade.py also runs at S4/S6. The
+        re-run on final units and the identifier-in-code-span rule are the new part.
+      _check_dispositions, _dropped_list_failures (BC-05): PORT -> units.py disposition_failures.
+        review_deferrals is DUPLICATE, reused from readme/validation/deferrals.py (ported
+        2026-10-23).
+      _check_protected, protected_fragments (BC-08): PORT -> units.py.
+      _check_links (BC-06): ADAPT -> links.py link_failures. Named changes: (1) the
+        enterprise_anchor_problems call is RETIRED (below); (2) check_anchor, check_relative and
+        LinkResult are re-ported as the pure local-link judges. The live-fetch half of
+        evidence/facts/links.py stays unported, as the new links.py already records.
+      enterprise_anchor_problems (links/rules.py): RETIRE. It required the anchor to open
+        "full-featured", which docs/MISSION_AUTHORITY.md owner correction R2/R3 retired. See the
+        OPEN DEFECT below: the renderer still emits that prefix.
+      _edition_substitute_failures, EDITION_SUBSTITUTE (BC-06): PORT -> links.py
+        edition_substitute_failures. Distinct from correction/detectors/enterprise_edition.py,
+        which repairs the naming and does not judge it. The judge is the part missing elsewhere.
+      _unsafe_html_failures, _is_dangerous_url, _dangerous_url_spans (BC-06, G7-W01, THREAT_MODEL
+        area 3): PORT -> links.py unsafe_html_failures. Needed because kept inherited html_block
+        units reach the README verbatim.
+      _renderer_owned (BC-06): PORT -> links.py (img.shields.io host, the ecosystem's own registry
+        badge target read off EcosystemSpec.badge, and this repository's own github.com path).
+      _check_structure (BC-07): ADAPT -> structure.py structure_failures. Named changes: (1) the
+        narration phrases are not re-declared: DUPLICATE of correction/text_gate.narration_patterns
+        (already ported; identical list and "generated by" blocklist). (2) The At a Glance
+        topology sub-check is not run; see DEFER below.
+      _topology_failures / glance.diagram_failures (BC-07 At a Glance geometry): DEFER. The ported
+        composition/components/glance.diagram_failures is a documented stub that returns [] always;
+        running it would pass topology silently. The real contract is
+        components/readme_diagram/contract.py (157 lines), which imports geometry.py (206),
+        parse.py (257) and model.py (88): about 700 lines of geometry subsystem. Large and
+        separate, so it is a future taskcard. Until then BC-07 does not claim topology.
+      _heading_case_failures, _collapsed_section_failures, _fence_and_spacing_failures,
+        _reference_failures, and the H1, badge, type, example-heading, abbreviation and length
+        rules (BC-07): PORT -> structure.py.
+      _check_canonical_name, canonical_name_pattern, _is_technical_identifier, _name_tail and the
+        identifier cue regexes (BC-12): PORT -> structure.py canonical_name_failures.
+      _check_claims (BC-14): PORT -> provenance.py claim_failures (routing wrapper only). The rules
+        are validation/claims.py, ported 2026-10-23, which independent_reviewer's
+        claim_contradiction_rule also calls.
+      check_secrets (BC-09): PORT -> blocking.py secret_failures over core/secrets.scan_for_secrets.
+      -- Helpers --
+      Failure, Candidate, CausalStage, STAGE_ORDER, _earliest: PORT -> failures.py.
+      _NARRATION, _NARRATION_FORMS, _generated_by_pattern, narration_patterns: DUPLICATE of
+        correction/text_gate.py (already ported; identical list). Reused, not copied.
+      _visible_prose, _prose, _section_lines, _section_texts, _outside_fences, _fences,
+        _fence_body, _unit_type, _normalized, _sha256: PORT -> text.py.
+      _example_for_unit, _placements (memo), _placed_texts, _verbatim_lines: PORT -> units.py.
+      -- Tests (old test_registry.py, 109 tests) --
+      PORTED: 91 of 109, in tests/readme/validation/test_registry_checks.py (126 items passing).
+        Two adapted, not dropped: the hyphen package-name test (its advisory-note assertion
+        removed) and the failure-record test (PENDING verdict filter replaced by PASS/FAIL).
+        Replaced, not ported: a sound candidate passes every ported check; a blocking deferral
+        fails BC-05 while an advisory one does not. New: a documented source install must state
+        what admits it (the documented-steps branch of BC-02 had no kept test).
+      DROPPED: 18 tests, each for a reason in the port record. (a) validation.json envelope,
+        determinism, and the BC-10/BC-11 verdict pending envelope: 2. (b) coverage ledger: 1.
+        (c) Enterprise anchor rules (retired) and the sealed-revision read of the old repo: 3.
+        (d) At a Glance geometry: 1 (the label-wrap test). The causal-stage test is PORTED minus its
+        glance block, not dropped. (e) advisory-list
+        BC-05 and BC-12 tests: 4. (f) BC-02 unpublished-row tests that need the old extraction
+        observers (observe, plugin_for, documented_source_install) and the old fixture
+        unpublished_rows.json: 7.
+      test_rules.py (old links/test_rules.py, 9 tests): 8 PORTED in tests/readme/validation/
+        test_rules.py. The Enterprise anchor test is dropped (RETIRE).
+      -- OPEN DEFECT found while porting (NOT fixed here; the renderer is a ported component) --
+      composition/renderer.py enterprise_anchor() (line ~751) returns
+        "full-featured {name} -- Enterprise Edition", used by _enterprise_paragraph (line ~767).
+        docs/MISSION_AUTHORITY.md's outcome requirements forbid that prefix (owner correction
+        R2/R3). Read from the code, not yet observed in a rendered README. No check catches it
+        now: the only check that named the prefix is RETIRED.
+      -- Outstanding --
+      Not wired into cascade.py: the ten checks are callable and tested, and no live stage runs
+        them. No judge module carries a component version, so changing one does not yet invalidate
+        a sealed candidate (readme/bundle/invalidation.py has no scope for these functions). Both
+        need the sealing taskcard, not this port.
+    target_module: >
+      src/repo_presenter/readme/validation/{failures,text,provenance,units,install,rules,links,
+      structure,blocking}.py; src/repo_presenter/readme/evidence/facts/unpublished.py (narrow
+      slice). Tests: tests/readme/validation/test_registry_checks.py, test_rules.py.
+    next_step: >
+      (1) Follow-up card for the renderer's "full-featured" Enterprise prefix (OPEN DEFECT above).
+      (2) Port the At a Glance geometry (components/readme_diagram: contract, geometry, parse,
+      model) as its own taskcard, then restore BC-07's topology sub-check through
+      composition/components/glance.diagram_failures. (3) Wire blocking.validate_candidate into a
+      live candidate path, and give each judge module a component version registered with
+      readme/bundle/invalidation.py, before any candidate is sealed on its result.
+    portfolio_consumers: none yet -- ported, not called by cascade.py or any live stage.
+    invalidation_impact: none yet -- ported and tested, not called from any sealed path.
+    smallest_first_integration_test: >
+      tests/readme/validation/test_registry_checks.py::test_a_sound_candidate_passes_every_ported_check
+      (all ten judged checks pass on the fixture candidate).
 
   - component: "components/issues/model.py (210 lines) + components/issues/approval.py (295
       lines)"
