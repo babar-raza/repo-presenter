@@ -182,6 +182,12 @@ STAGE_OVERRIDES: dict[str, str] = {"components.reviewer_logic": "COMPOSING"}
 # A sealed artifact -> the scope of the stage that wrote it. dependencies.json records the
 # consumed inputs; the one field no evaluated input covers is the protected-content fingerprint,
 # which the accepted dispositions produce.
+#
+# "README.patch.diff", "content_units.coherent.json" and "review_verdict.json" (ADD, 2026-10-26,
+# readme/bundle/seal.py's own update-adoption dance) are this repository's own real artifact
+# names, not the old repo's -- "README.patch"/no coherent-units file/"review.json" there. Added
+# only once seal.py's own route() call gave this table a real caller (never dead rows with
+# nothing to read them, this project's own standing discipline).
 ARTIFACT_SCOPES: dict[str, str] = {
     "facts.json": "facts",
     "examples.json": "facts",
@@ -191,11 +197,14 @@ ARTIFACT_SCOPES: dict[str, str] = {
     "plan.json": "planning",
     "README.md": "authoring",
     "README.patch": "authoring",
+    "README.patch.diff": "authoring",
     "content_units.json": "authoring",
+    "content_units.coherent.json": "authoring",
     "raw_calls.json": "authoring",
     "repairs.json": "authoring",
     "validation.json": "validator",
     "review.json": "reviewer",
+    "review_verdict.json": "reviewer",
 }
 
 

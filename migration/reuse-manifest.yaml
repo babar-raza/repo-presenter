@@ -2349,3 +2349,28 @@ entries:
     not_yet_done: >
       The update-adoption dance for a rerun whose artifacts differ from an ALREADY-PROVEN
       bundle (needs new ARTIFACT_SCOPES rows in invalidation.py, which now has a real caller).
+
+  - component: "seal.py v3: the update-adoption dance's detection/recording half"
+    source: old-repository-presenter's components/readme/bundle/seal.py (_record_update)
+    disposition: ADAPT_2026_10_26
+    reason: >
+      A rerun whose artifacts differ from a bundle that already carries a proof or a waiting
+      update now routes the difference through readme/bundle/invalidation.py's own route()
+      (already fully ported) instead of raising NotImplementedError. The proven content and its
+      proof are left exactly as proven; only the manifest's own state/update (and, when the
+      scope invalidates, an "invalidated" record) fields change. Added the 3 real
+      ARTIFACT_SCOPES rows (README.patch.diff, content_units.coherent.json, review_verdict.json)
+      invalidation.py's own table had deferred until route() had a real caller.
+      Explicitly still deferred: _adopt_update (a later rerun that reproduces the waiting update
+      byte for byte with zero calls becomes the new proven content) -- a bundle with a recorded
+      update keeps re-recording the same one on every further differing rerun, an honest,
+      simpler bookkeeping than the old repo's own idempotency tracking.
+    evidence: >
+      2 tests rewritten/added (tests/readme/bundle/test_seal.py, 14 total): a real
+      non-invalidating case (plan.json -> VALID_UPDATE_AVAILABLE) and a real invalidating case
+      (facts.json -> INVALIDATED). 28/28 existing invalidation.py tests unaffected. Full suite
+      re-run clean: 1681 passed, 11 skipped, 5 deselected.
+    not_yet_done: >
+      _adopt_update itself. Not live-demonstrated against the real aspose-3d-foss/.NET bundle
+      this pass -- it is currently READY_FOR_PROPOSAL and genuinely stable; manufacturing an
+      artificial difference just to exercise this path would not be real evidence.

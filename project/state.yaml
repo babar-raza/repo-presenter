@@ -1422,6 +1422,23 @@ next_ready_items:
   - id: PORT_BUNDLE_INTEGRITY_LAYER
     status: IN_PROGRESS
     priority: high
+    mission_grounding_checked_2026_10_26: >
+      Owner instruction: always keep plans/ directory files in scope, not just
+      project/state.yaml/docs/MISSION_AUTHORITY.md. Checked plans/
+      repository_presenter_fresh_start_supervisor_prompt.md directly before continuing this
+      card's own next step: line 41 cites the old repo's own historical G1 sealed canary
+      ("manifest recorded READY_FOR_PROPOSAL and a fresh-process, zero-provider-call rerun") as
+      exactly the mechanism this card just real-achieved for the first time in THIS repository;
+      lines 163-165 describe exactly the update-adoption behavior ("only consuming candidates
+      are rechecked; no indiscriminate reseal" / "historical acceptance history is preserved")
+      step_11 below builds. Also checked plans/idea.md's own "Gates A/B/C... fixed floor of 20"
+      language is OLD-REPO historical ruling carrying no authority here (its own header says
+      so; confirmed docs/MISSION_AUTHORITY.md's legacy-mapping table does not re-state any
+      numeric floor for this repository) -- not a target this repository is currently behind on.
+      Also confirmed aspose-3d-foss/Aspose.3D-FOSS-for-.NET already satisfies mission P1's
+      "demonstrate both Lane L and Lane R on the same pinned real repository" (scripts/
+      _lane_l_output/ already has it from earlier this session; Lane R now also does, with a
+      real no-op proof).
     status_note_2026_10_25: >
       Steps 1-5 (noop_proof.py, capture.py, RAW_CALLS_FILENAME, the review-verdict artifact) are
       DONE and independently useful regardless of what follows. Step 6's own blocker (the
@@ -1746,12 +1763,39 @@ next_ready_items:
       seal (natural LLM retry-round wording variance, e.g. a punctuation-list formatting change
       in one sentence) -- left as-is, since it is real, valid accepted LLM output, not
       corruption, and not something to hand-edit.
+    step_11_done_2026_10_26_update_adoption_detection_and_recording: >
+      Built _record_update (seal.py v3, same day): a rerun whose artifacts differ from a bundle
+      that already carries a proof (READY_FOR_PROPOSAL) or a waiting update of its own now
+      routes the difference through invalidation.py's own route(), instead of raising
+      NotImplementedError. The proven content and its proof are left exactly as proven -- only
+      the manifest's own state/update (and, when the triggering scope invalidates, an
+      "invalidated" record) fields change. Added the 3 real ARTIFACT_SCOPES rows this module's
+      own v1/v2 docstrings had deferred (README.patch.diff, content_units.coherent.json,
+      review_verdict.json -> authoring/authoring/reviewer) -- added only now that route() has a
+      real caller, per this project's own "no dead rows" discipline. 28/28 existing
+      invalidation.py tests still pass unchanged.
+      Explicitly still deferred, named precisely rather than guessed at: _adopt_update (a LATER
+      rerun that reproduces the WAITING update byte for byte with zero calls becomes the new
+      proven content) -- a bundle left with a recorded update simply keeps re-recording the
+      same one on every further differing rerun rather than adopting it, an honest, simpler,
+      but less complete bookkeeping than the old repo's own idempotency tracking (which tracks
+      whether an update is genuinely new before re-timestamping it; this version always
+      re-timestamps).
+      2 tests rewritten/added (tests/readme/bundle/test_seal.py, 14 total): a real
+      non-invalidating case (plan.json differs -> VALID_UPDATE_AVAILABLE, "planning" scope) and
+      a real invalidating case (facts.json differs -> INVALIDATED, "facts" scope, with an
+      "invalidated" record). Full suite re-run clean: 1681 passed, 11 skipped, 5 deselected.
+      NOT live-demonstrated against the real aspose-3d-foss/.NET bundle this pass -- it is
+      currently READY_FOR_PROPOSAL and genuinely stable (no real further drift to route), and
+      manufacturing an artificial difference just to exercise this path would not be real
+      evidence of anything; the unit tests above (one real invalidating case, one real
+      non-invalidating case, both against this repository's own real invalidation.py table) are
+      the honest evidence for this step. The next genuine real difference in that candidate's
+      own future reruns will exercise this path for real.
     next_step: >
-      (1) Build the update-adoption dance for a rerun whose artifacts differ from an ALREADY-
-      PROVEN bundle: route the difference through invalidation.py's route() into
-      VALID_UPDATE_AVAILABLE/INVALIDATED -- needs the new ARTIFACT_SCOPES rows
-      (review_verdict.json/content_units.coherent.json/README.patch.diff) this module's own v1
-      docstring deferred, since route() has no real caller until this exists. (2) Wire
+      (1) Build _adopt_update: a later rerun whose artifacts reproduce the WAITING update byte
+      for byte with zero calls, rather than the originally sealed content, adopts it as the new
+      proven content (keeping the previous proof for the record). (2) Wire
       count_current_candidates/integrity_valid_candidates into WIRE_GATEVERIFY_TO_PORTFOLIO's
       own "define what no-op means for a README candidate" ask, now that a real, reachable
       implementation exists.

@@ -64,6 +64,12 @@ from repo_presenter.core.noop_proof import (
 from repo_presenter.core.registry.models import RegistryEntry
 from repo_presenter.core.secrets import ConfiguredSecret, scan_for_secrets
 from repo_presenter.core.toolchains import toolchain_fingerprint
+from repo_presenter.readme.bundle.invalidation import (
+    STATE_INVALIDATED,
+    STATE_UPDATE_AVAILABLE,
+    ScopeError,
+)
+from repo_presenter.readme.bundle.invalidation import route as route_scopes
 from repo_presenter.readme.composition.authoring import NORMALISATION_VERSION
 from repo_presenter.readme.composition.components.shell import SHELL_VERSION
 from repo_presenter.readme.composition.renderer import RENDERER_VERSION
@@ -334,6 +340,70 @@ def _fresh_after(prior_ref: object, inputs: SealInputs) -> bool:
     return prior is not None and not same_process(prior, inputs.invocation.identity)
 
 
+def _is_waiting_state(manifest: Mapping[str, Any]) -> bool:
+    """Whether ``manifest`` already carries a proof (READY_FOR_PROPOSAL), a waiting update
+    (VALID_UPDATE_AVAILABLE), or an invalidation with a waiting update of its own -- the cases
+    where a new difference must be routed and recorded, never silently overwritten by a plain
+    re-seal. A plain ACCEPTED bundle (nothing proven, nothing waiting) is not a member."""
+    state = manifest.get("state")
+    if state in (STATE_READY, STATE_UPDATE_AVAILABLE):
+        return True
+    return state == STATE_INVALIDATED and bool(manifest.get("update"))
+
+
+def _update_digests(staged: Mapping[str, bytes]) -> dict[str, str]:
+    return {
+        name: _sha256(data) for name, data in sorted(staged.items()) if name not in REPLAY_EXEMPT
+    }
+
+
+def _record_update(
+    bundle: Path, existing: Mapping[str, Any], differing: list[str], staged: Mapping[str, bytes]
+) -> SealResult:
+    """Record that a difference arrived against a bundle that already carries a proof or a
+    waiting update of its own -- route it through invalidation.py's own scope table and write
+    ONLY the manifest, never the already-sealed files: the proven content (and its proof) stays
+    exactly as proven, with the new difference waiting beside it until a later rerun reproduces
+    it byte for byte with zero calls (``_adopt_update``'s own job -- not built yet; a bundle
+    left in this state keeps re-recording the same update on every further differing rerun,
+    rather than adopting it, which is an honest, simpler, but less complete bookkeeping than the
+    old repo's own idempotency tracking)."""
+    try:
+        routing = route_scopes((), differing)
+    except ScopeError as exc:
+        raise SealError(f"seal: {exc}") from exc
+    if routing.state is None or routing.triggering_scope is None:
+        raise SealError("seal: a recorded update with no differing artifact to route")
+    update = {
+        "available": True,
+        "classification": "factual" if routing.invalidates else "presentation",
+        "scopes": list(routing.scopes),
+        "triggering_scope": routing.triggering_scope,
+        "scope_basis": routing.basis,
+        "earliest_affected_stage": routing.stage,
+        "changed": differing,
+        "recorded_at": _now(),
+        "files": _update_digests(staged),
+    }
+    recorded = {k: v for k, v in existing.items() if k != "invalidated"}
+    recorded["state"] = routing.state
+    recorded["update"] = update
+    if routing.invalidates:
+        recorded["invalidated"] = {
+            "scope": routing.triggering_scope,
+            "causal_stage": routing.stage,
+            "detail": f"{', '.join(differing)} changed",
+            "recorded_at": update["recorded_at"],
+        }
+    (bundle / BUNDLE_MANIFEST_NAME).write_bytes(_canonical_json(recorded))
+    return SealResult(
+        bundle=bundle,
+        state=routing.state,
+        files=dict(existing.get("files", {})),
+        no_op_proof=existing.get("no_op_proof"),
+    )
+
+
 def _proof(prior_ref: Mapping[str, Any], inputs: SealInputs, measured: Measurement) -> dict[str, Any]:
     """The no-op proof record: every field is something this seal measured or compared. A
     caller reaches here only after freshness, byte-identity, and zero provider calls all hold
@@ -353,17 +423,19 @@ def seal_candidate(inputs: SealInputs) -> SealResult:
     """Seal this cascade's output: the bundle's FIRST manifest (state ACCEPTED, no_op_proof
     None) when nothing is sealed yet, or -- when a LATER, fresh process reproduces an already-
     sealed bundle byte for byte with zero provider calls -- the measured no-op proof that moves
-    it to READY_FOR_PROPOSAL. A rerun whose artifacts differ from a bundle that was never proven
-    (still ACCEPTED) simply re-seals over it -- nothing has claimed a no-op yet, so there is no
-    proof to protect (the old repo's own ``seal_candidate`` takes exactly this path: a changed,
-    not-yet-``waiting_state`` bundle re-seals as ACCEPTED, proof withdrawn -- there never was
-    one). Raises :class:`NotImplementedError` only when a rerun's artifacts differ from a bundle
-    that WAS already proven (state READY_FOR_PROPOSAL with a recorded no_op_proof): preserving
-    that existing proof while routing the new difference through invalidation.py's route() into
-    VALID_UPDATE_AVAILABLE/INVALIDATED is a deliberate, not-yet-built follow-on (see this
-    module's own docstring) -- never faked as a result nothing here actually computed. Also
-    raises it when byte-identical artifacts are not fresh or not zero-call -- never faking the
-    proof either."""
+    it to READY_FOR_PROPOSAL. A rerun whose artifacts differ from a bundle that carries no proof
+    and no waiting update of its own (plain ACCEPTED) simply re-seals over it -- nothing has
+    claimed a no-op yet, so there is nothing to protect (the old repo's own ``seal_candidate``
+    takes exactly this path: a changed, not-yet-``waiting_state`` bundle re-seals as ACCEPTED,
+    proof withdrawn -- there never was one). A rerun whose artifacts differ from a bundle that
+    IS already proven, or already carries a waiting update, routes the difference through
+    invalidation.py's ``route()`` and records it (:func:`_record_update`) -- the proven content
+    and its proof stay exactly as proven; only the manifest's own ``state``/``update`` fields
+    change. Adopting a later rerun that reproduces the WAITING update byte for byte with zero
+    calls (the old repo's own ``_adopt_update``) is not built yet -- a bundle left with a
+    recorded update simply keeps re-recording the same one on every further differing rerun,
+    not yet adopting it. Also raises :class:`NotImplementedError` when byte-identical artifacts
+    are not fresh or not zero-call -- never faking the proof either."""
     bundle = bundle_directory(inputs.candidates_root, inputs.entry, inputs.source_revision)
     existing = _read_manifest(bundle / BUNDLE_MANIFEST_NAME)
     staged = _staged_artifacts(inputs)
@@ -371,20 +443,12 @@ def seal_candidate(inputs: SealInputs) -> SealResult:
         return _write_bundle(bundle, staged, inputs=inputs)
 
     differing = _differing_artifacts(staged, bundle)
-    was_proven = existing.get("state") == STATE_READY and existing.get("no_op_proof") is not None
     if differing:
-        if not was_proven:
-            # Nothing was proven yet -- a plain re-seal with the new content, same as the first
-            # seal would have been had this content been the first one staged.
+        if not _is_waiting_state(existing):
+            # Nothing was proven or waiting yet -- a plain re-seal with the new content, same as
+            # the first seal would have been had this content been the first one staged.
             return _write_bundle(bundle, staged, inputs=inputs)
-        raise NotImplementedError(
-            f"seal_candidate: {bundle} is already proven READY_FOR_PROPOSAL and this rerun's "
-            f"own {', '.join(differing)} differ from the proven content. The update-adoption "
-            "dance (preserving the existing proof while routing the new difference through "
-            "invalidation.py's route() into VALID_UPDATE_AVAILABLE/INVALIDATED) is not built yet "
-            "(see this module's own docstring) -- never silently re-sealed over a proven "
-            "bundle's own difference nothing has judged."
-        )
+        return _record_update(bundle, existing, differing, staged)
     if inputs.provider_calls != 0:
         raise NotImplementedError(
             f"seal_candidate: {bundle}'s artifacts are byte-identical to this rerun, but it made "

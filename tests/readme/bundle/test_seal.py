@@ -299,11 +299,11 @@ def test_seal_candidate_re_seals_plainly_when_an_unproven_bundle_s_artifacts_dif
     ).read_text(encoding="utf-8")
 
 
-def test_seal_candidate_raises_not_implemented_when_a_proven_bundle_s_artifacts_differ(
+def test_seal_candidate_records_an_invalidating_update_when_a_proven_bundle_s_facts_differ(
     tmp_path: Path,
 ) -> None:
-    """Once a bundle IS proven (READY_FOR_PROPOSAL), a later difference must not silently
-    overwrite the proof -- that needs the update-adoption dance, not built yet."""
+    """facts.json's own scope ("facts") is the one scope that invalidates -- the proven content
+    is still left untouched, but the manifest also carries an "invalidated" record."""
     inputs = _inputs(tmp_path)
     seal_candidate(inputs)
     fresh = _fresh_invocation()
@@ -311,12 +311,53 @@ def test_seal_candidate_raises_not_implemented_when_a_proven_bundle_s_artifacts_
     proven = seal_candidate(_rerun_inputs(inputs, invocation=fresh, provider_calls=0))
     assert proven.state == "READY_FOR_PROPOSAL"
 
+    inputs.facts_path.write_text('{"not": "the same facts anymore"}\n', encoding="utf-8")
+    later = _fresh_invocation()
+    _append_cache_reuse_record(inputs.out_dir, later.invocation_id)
+    result = seal_candidate(_rerun_inputs(inputs, invocation=later, provider_calls=0))
+
+    assert result.state == "INVALIDATED"
+    assert result.no_op_proof is not None  # still preserved for the record
+
+    manifest = json.loads((result.bundle / BUNDLE_MANIFEST_NAME).read_text(encoding="utf-8"))
+    assert manifest["state"] == "INVALIDATED"
+    assert manifest["update"]["classification"] == "factual"
+    assert manifest["update"]["triggering_scope"] == "facts"
+    assert manifest["invalidated"]["scope"] == "facts"
+
+
+def test_seal_candidate_raises_not_implemented_when_a_proven_bundle_s_artifacts_differ(
+    tmp_path: Path,
+) -> None:
+    """Once a bundle IS proven (READY_FOR_PROPOSAL), a later difference must not silently
+    overwrite the proof: it is routed through invalidation.py's route() and recorded as a
+    waiting update instead, with the proven content and its proof left exactly as proven.
+    Adopting the waiting update on a further matching rerun is not built yet."""
+    inputs = _inputs(tmp_path)
+    seal_candidate(inputs)
+    fresh = _fresh_invocation()
+    _append_cache_reuse_record(inputs.out_dir, fresh.invocation_id)
+    proven = seal_candidate(_rerun_inputs(inputs, invocation=fresh, provider_calls=0))
+    assert proven.state == "READY_FOR_PROPOSAL"
+    proven_plan_bytes = (proven.bundle / "plan.json").read_bytes()
+
     (inputs.out_dir / "plan.json").write_text('{"core_capabilities": ["changed"]}\n', encoding="utf-8")
     later = _fresh_invocation()
     _append_cache_reuse_record(inputs.out_dir, later.invocation_id)
     rerun = _rerun_inputs(inputs, invocation=later, provider_calls=0)
-    with pytest.raises(NotImplementedError, match="plan.json"):
-        seal_candidate(rerun)
+    result = seal_candidate(rerun)
+
+    # plan.json's own scope ("planning") never invalidates -- only "facts" does.
+    assert result.state == "VALID_UPDATE_AVAILABLE"
+    assert result.no_op_proof is not None  # the original proof is preserved, not withdrawn
+    assert (result.bundle / "plan.json").read_bytes() == proven_plan_bytes  # untouched
+
+    manifest = json.loads((result.bundle / BUNDLE_MANIFEST_NAME).read_text(encoding="utf-8"))
+    assert manifest["state"] == "VALID_UPDATE_AVAILABLE"
+    assert manifest["update"]["available"] is True
+    assert manifest["update"]["changed"] == ["plan.json"]
+    assert manifest["update"]["triggering_scope"] == "planning"
+    assert "invalidated" not in manifest
 
 
 def test_seal_candidate_proves_the_no_op_on_a_fresh_byte_identical_zero_call_rerun(
