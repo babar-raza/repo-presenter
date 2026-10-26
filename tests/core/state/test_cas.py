@@ -9,6 +9,7 @@ from __future__ import annotations
 from datetime import UTC, datetime, timedelta
 
 import pytest
+from support import InMemoryStateBackend
 
 from repo_presenter.core.errors import IllegalTransitionError, StateBackendError
 from repo_presenter.core.state.cas import (
@@ -19,7 +20,6 @@ from repo_presenter.core.state.cas import (
     renew_lease,
     save_state_patch,
 )
-from support import InMemoryStateBackend
 
 REPO = "aspose-3d-foss/example"
 PROVIDER_ID = 42
@@ -56,7 +56,9 @@ def test_save_state_patch_retries_through_a_concurrent_writer() -> None:
     real_save = backend.save
     calls = {"n": 0}
 
-    def interleaved_save(repository: str, record: object, expected_version: int | None) -> object:
+    def interleaved_save(
+        repository: str, record: object, expected_version: int | None
+    ) -> object:
         calls["n"] += 1
         if calls["n"] == 1:
             # Simulate a second writer winning the race between this attempt's read and its write.
@@ -78,7 +80,9 @@ def test_save_state_patch_retries_through_a_concurrent_writer() -> None:
     )
     assert result.state == "EXTRACTING"
     assert result.recovery_count == 1  # the interleaved writer's update was not lost
-    assert result.state_version == 3  # v1 create, v2 interleaved writer, v3 this attempt's retry
+    assert (
+        result.state_version == 3
+    )  # v1 create, v2 interleaved writer, v3 this attempt's retry
 
 
 class InMemoryStateBackendProxy:
@@ -91,12 +95,16 @@ class InMemoryStateBackendProxy:
         return self._backend.load(repository)
 
     def save(self, repository: str, record: object, expected_version: int | None):
-        return InMemoryStateBackend.save(self._backend, repository, record, expected_version)
+        return InMemoryStateBackend.save(
+            self._backend, repository, record, expected_version
+        )
 
 
 def test_acquire_lease_grants_an_unheld_lease_with_fencing_token_one() -> None:
     backend = InMemoryStateBackend()
-    lease = acquire_lease(backend, REPO, holder_id="worker-a", provider_repository_id=PROVIDER_ID)
+    lease = acquire_lease(
+        backend, REPO, holder_id="worker-a", provider_repository_id=PROVIDER_ID
+    )
     assert lease is not None
     assert lease.fencing_token == 1
     assert lease_is_current(backend, REPO, lease)
@@ -104,13 +112,21 @@ def test_acquire_lease_grants_an_unheld_lease_with_fencing_token_one() -> None:
 
 def test_acquire_lease_refuses_while_another_holder_is_unexpired() -> None:
     backend = InMemoryStateBackend()
-    first = acquire_lease(backend, REPO, holder_id="worker-a", provider_repository_id=PROVIDER_ID)
+    first = acquire_lease(
+        backend, REPO, holder_id="worker-a", provider_repository_id=PROVIDER_ID
+    )
     assert first is not None
-    second = acquire_lease(backend, REPO, holder_id="worker-b", provider_repository_id=PROVIDER_ID)
-    assert second is None  # negative control: concurrent acquire must not silently double-grant
+    second = acquire_lease(
+        backend, REPO, holder_id="worker-b", provider_repository_id=PROVIDER_ID
+    )
+    assert (
+        second is None
+    )  # negative control: concurrent acquire must not silently double-grant
 
 
-def test_acquire_lease_reclaims_an_expired_lease_with_a_strictly_higher_fencing_token() -> None:
+def test_acquire_lease_reclaims_an_expired_lease_with_a_strictly_higher_fencing_token() -> (
+    None
+):
     backend = InMemoryStateBackend()
     now = datetime(2026, 1, 1, tzinfo=UTC)
     first = acquire_lease(
@@ -133,7 +149,9 @@ def test_acquire_lease_reclaims_an_expired_lease_with_a_strictly_higher_fencing_
     )
     assert second is not None
     assert second.holder_id == "worker-b"
-    assert second.fencing_token == 2  # strictly higher than the reclaimed worker-a's token
+    assert (
+        second.fencing_token == 2
+    )  # strictly higher than the reclaimed worker-a's token
 
 
 def test_renew_lease_extends_without_changing_the_fencing_token() -> None:
@@ -220,12 +238,16 @@ def test_release_lease_only_removes_its_own_holder_and_fencing_token() -> None:
 
 def test_record_transition_commits_state_and_receipt_together() -> None:
     backend = InMemoryStateBackend()
-    lease = acquire_lease(backend, REPO, holder_id="worker-a", provider_repository_id=PROVIDER_ID)
+    lease = acquire_lease(
+        backend, REPO, holder_id="worker-a", provider_repository_id=PROVIDER_ID
+    )
     assert lease is not None
     save_state_patch(
         backend,
         REPO,
-        lambda r: r.model_copy(update={"active_transaction_id": "tx-1", "state": "SNAPSHOTTING"}),
+        lambda r: r.model_copy(
+            update={"active_transaction_id": "tx-1", "state": "SNAPSHOTTING"}
+        ),
         provider_repository_id=PROVIDER_ID,
     )
     record, receipt = record_transition(
@@ -250,12 +272,16 @@ def test_record_transition_commits_state_and_receipt_together() -> None:
 def test_record_transition_rejects_an_unregistered_transition() -> None:
     """Negative control: an illegal state transition must never be silently accepted."""
     backend = InMemoryStateBackend()
-    lease = acquire_lease(backend, REPO, holder_id="worker-a", provider_repository_id=PROVIDER_ID)
+    lease = acquire_lease(
+        backend, REPO, holder_id="worker-a", provider_repository_id=PROVIDER_ID
+    )
     assert lease is not None
     save_state_patch(
         backend,
         REPO,
-        lambda r: r.model_copy(update={"active_transaction_id": "tx-1", "state": "OBSERVED"}),
+        lambda r: r.model_copy(
+            update={"active_transaction_id": "tx-1", "state": "OBSERVED"}
+        ),
         provider_repository_id=PROVIDER_ID,
     )
     with pytest.raises(IllegalTransitionError):
@@ -290,7 +316,9 @@ def test_record_transition_rejects_a_stale_fencing_token() -> None:
     save_state_patch(
         backend,
         REPO,
-        lambda r: r.model_copy(update={"active_transaction_id": "tx-1", "state": "OBSERVED"}),
+        lambda r: r.model_copy(
+            update={"active_transaction_id": "tx-1", "state": "OBSERVED"}
+        ),
         provider_repository_id=PROVIDER_ID,
     )
     acquire_lease(
@@ -317,7 +345,9 @@ def test_record_transition_rejects_a_stale_fencing_token() -> None:
 
 def test_record_transition_requires_an_active_transaction() -> None:
     backend = InMemoryStateBackend()
-    lease = acquire_lease(backend, REPO, holder_id="worker-a", provider_repository_id=PROVIDER_ID)
+    lease = acquire_lease(
+        backend, REPO, holder_id="worker-a", provider_repository_id=PROVIDER_ID
+    )
     assert lease is not None
     with pytest.raises(IllegalTransitionError):
         record_transition(
@@ -333,7 +363,9 @@ def test_record_transition_requires_an_active_transaction() -> None:
         )
 
 
-def test_save_state_patch_raises_state_backend_error_when_retries_are_exhausted() -> None:
+def test_save_state_patch_raises_state_backend_error_when_retries_are_exhausted() -> (
+    None
+):
     backend = InMemoryStateBackend()
     save_state_patch(backend, REPO, lambda r: r, provider_repository_id=PROVIDER_ID)
     real_save = backend.save

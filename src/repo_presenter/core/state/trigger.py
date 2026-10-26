@@ -81,7 +81,9 @@ def normalize_trigger(
     """
     if event_type == "schedule":
         if not schedule_window:
-            raise StateBackendError("a schedule trigger requires a stable schedule_window")
+            raise StateBackendError(
+                "a schedule trigger requires a stable schedule_window"
+            )
         dedup_key = f"schedule:{repository}:{schedule_window}"
     elif event_type == "repository_dispatch":
         identity = delivery_id or provider_event_id
@@ -93,7 +95,9 @@ def normalize_trigger(
     elif event_type in ("workflow_dispatch", "workflow_call"):
         identity = workflow_run_id or provider_event_id
         if not identity:
-            raise StateBackendError(f"a {event_type} trigger requires a workflow run identity")
+            raise StateBackendError(
+                f"a {event_type} trigger requires a workflow run identity"
+            )
         dedup_key = f"run:{identity}:{repository}"
     elif event_type == "recovery":
         identity = provider_event_id
@@ -105,7 +109,9 @@ def normalize_trigger(
     else:
         identity = provider_event_id or workflow_run_id
         if not identity:
-            raise StateBackendError(f"a {event_type} trigger requires a provider identity")
+            raise StateBackendError(
+                f"a {event_type} trigger requires a provider identity"
+            )
         dedup_key = f"manual:{identity}:{repository}"
 
     provider_id = provider_event_id or delivery_id or workflow_run_id or schedule_window
@@ -137,7 +143,9 @@ class TriggerAdmission:
     lease: LeaseRecord | None
 
 
-def _bounded_put(mapping: dict[str, str], key: str, value: str, *, limit: int) -> dict[str, str]:
+def _bounded_put(
+    mapping: dict[str, str], key: str, value: str, *, limit: int
+) -> dict[str, str]:
     if mapping.get(key) == value:
         return mapping
     updated = dict(mapping)
@@ -220,7 +228,10 @@ def admit_trigger(
         )
 
     saved = save_state_patch(
-        backend, envelope.repository, patch, provider_repository_id=provider_repository_id
+        backend,
+        envelope.repository,
+        patch,
+        provider_repository_id=provider_repository_id,
     )
     outcome = outcome_box["outcome"]
     transaction_id = outcome_box["transaction_id"]

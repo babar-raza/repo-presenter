@@ -1482,16 +1482,14 @@ next_ready_items:
       lost to context/summary churn. Full honest reconciliation of "has this repo produced
       everything plans/*.md needs" as of tonight: NOT YET TRUE. Open items, in the order they are
       being executed:
-      (1) core/state/ durable-state backend port (this card, above) -- schema.py DONE (ported
-      verbatim bar import-path, registry/record models, compiles, assertions hold); cas.py,
-      git_backend.py, trigger.py, recovery.py, health.py, present_transaction.py still to port,
-      in that dependency order, each with its own old-repo test file ported alongside it, full
-      suite re-run after each, committed after each passes (never batched into one unverified
-      commit).
-      (2) Mission non-negotiable #1 itself (hosted GitHub Actions vertical slice) -- blocked on
-      (1); once the durable-state backend exists, build the real present.yml-equivalent hosted
-      workflow this card's own next_step (4) already named, wired through run_present_transaction
-      (present_transaction.py), not cascade.py directly.
+      (1) core/state/ durable-state backend port -- DONE 2026-10-26: schema.py (d614036), cas.py
+      (bc3d00f), git_backend.py (5752a1e), trigger.py (285b8c7), recovery.py (48fe72b),
+      health.py (b1ea293), present_transaction.py + processability.py + the full old state test
+      suite. 234 state-related tests pass; each file committed after its own suite passed.
+      (2) Mission non-negotiable #1 itself (hosted GitHub Actions vertical slice) -- NOW UNBLOCKED
+      by (1); build the real present.yml-equivalent hosted workflow this card's own next_step (4)
+      already named, wired through run_present_transaction (present_transaction.py), not
+      cascade.py directly. Not yet started.
       (3) judge.py/review.py's acceptance-scoring tier (core/candidates.py's deliberately-
       deferred Tier 2: load_proposable_candidate/_review_refusal/ProposableCandidate/
       AcceptanceGate) -- not yet scoped/read this session; read the old repo's source in full

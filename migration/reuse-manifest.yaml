@@ -2078,7 +2078,18 @@ entries:
       different thing: RUNTIME, per-repository transaction state for a hosted, ephemeral-runner
       PRODUCT, which project/state.yaml (a human/supervisor-maintained YAML file in THIS
       checkout) cannot substitute for at all.
-    disposition: PENDING_REVIEW_FOR_PORT (corrected from RETIRE)
+    disposition: REUSE_PORTED_2026_10_26 (corrected from RETIRE; all seven files ported verbatim
+      bar import paths, each with its own old-repo test suite, 234 state-related tests passing,
+      full suite 1889 passed / 11 skipped at the last whole-suite run)
+    port_progress_2026_10_26: >
+      DONE, in dependency order, one commit per file: schema.py (d614036), cas.py (bc3d00f,
+      with InMemoryStateBackend added to tests/support.py), git_backend.py (5752a1e, 9 tests
+      against a real disposable bare repo), trigger.py (285b8c7), recovery.py (48fe72b),
+      health.py (b1ea293), present_transaction.py plus its test suite (this commit).
+      processability.py (readme/evidence/, 69 lines, the NON_PROCESSABLE path
+      present_transaction.py's own tests depend on) ported alongside it: its dependencies
+      (extractors/platforms/registry.py, core/snapshot/capture.py) already existed here.
+      A ruff pass fixed import ordering and one PYI034 (__enter__ -> Self) before commit.
     reason: >
       Mission non-negotiable #1 ("Build a GitHub Actions runner-based autonomous system...
       operate on actual hosted runners") and section 9 ("durable state across ephemeral

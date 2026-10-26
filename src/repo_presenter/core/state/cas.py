@@ -19,7 +19,11 @@ from typing import Literal, Protocol
 from uuid import uuid4
 
 from repo_presenter.core.errors import IllegalTransitionError, StateBackendError
-from repo_presenter.core.retry import RETRY_POLICIES, RetryableOperationError, run_with_retry
+from repo_presenter.core.retry import (
+    RETRY_POLICIES,
+    RetryableOperationError,
+    run_with_retry,
+)
 from repo_presenter.core.state.schema import (
     LeaseRecord,
     RepositoryRecord,
@@ -63,7 +67,9 @@ RepositoryPatch = Callable[[RepositoryRecord], RepositoryRecord]
 
 
 def _default_record(repository: str, provider_repository_id: int) -> RepositoryRecord:
-    return RepositoryRecord(repository=repository, provider_repository_id=provider_repository_id)
+    return RepositoryRecord(
+        repository=repository, provider_repository_id=provider_repository_id
+    )
 
 
 def save_state_patch(
@@ -90,7 +96,9 @@ def save_state_patch(
             return current
         result = backend.save(repository, updated, expected_version)
         if result.outcome == "saved":
-            if result.record is None:  # pragma: no cover - defensive, contract violation
+            if (
+                result.record is None
+            ):  # pragma: no cover - defensive, contract violation
                 raise StateBackendError(
                     f"backend reported 'saved' with no record for {repository!r}"
                 )
@@ -161,7 +169,9 @@ def acquire_lease(
         won["lease"] = lease
         return record.model_copy(update={"lease": lease})
 
-    save_state_patch(backend, repository, patch, provider_repository_id=provider_repository_id)
+    save_state_patch(
+        backend, repository, patch, provider_repository_id=provider_repository_id
+    )
     return won["lease"]
 
 
@@ -195,12 +205,18 @@ def renew_lease(
         won["lease"] = renewed
         return record.model_copy(update={"lease": renewed})
 
-    save_state_patch(backend, repository, patch, provider_repository_id=provider_repository_id)
+    save_state_patch(
+        backend, repository, patch, provider_repository_id=provider_repository_id
+    )
     return won["lease"]
 
 
 def release_lease(
-    backend: StateBackend, repository: str, lease: LeaseRecord, *, provider_repository_id: int
+    backend: StateBackend,
+    repository: str,
+    lease: LeaseRecord,
+    *,
+    provider_repository_id: int,
 ) -> None:
     """Best-effort compare-and-swap release: only ever clears the lease this exact holder+fencing
     token put there. A failure is swallowed - the lease self-heals via expiry either way (the same
@@ -210,14 +226,20 @@ def release_lease(
 
     def patch(record: RepositoryRecord) -> RepositoryRecord:
         if not _lease_matches(record.lease, lease):
-            return record  # already reclaimed by someone else; nothing of ours to remove
+            return (
+                record  # already reclaimed by someone else; nothing of ours to remove
+            )
         return record.model_copy(update={"lease": None})
 
     with contextlib.suppress(StateBackendError):
-        save_state_patch(backend, repository, patch, provider_repository_id=provider_repository_id)
+        save_state_patch(
+            backend, repository, patch, provider_repository_id=provider_repository_id
+        )
 
 
-def lease_is_current(backend: StateBackend, repository: str, lease: LeaseRecord) -> bool:
+def lease_is_current(
+    backend: StateBackend, repository: str, lease: LeaseRecord
+) -> bool:
     """Fresh read: is ``lease`` still the exclusive, un-reclaimed lease on ``repository`` right now?
 
     Checked by holder identity *and* fencing token, not wall-clock alone - the same reasoning as

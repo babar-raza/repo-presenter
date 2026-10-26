@@ -170,7 +170,9 @@ def _sweep_one(
             }
         )
 
-    save_state_patch(backend, repository, patch, provider_repository_id=provider_repository_id)
+    save_state_patch(
+        backend, repository, patch, provider_repository_id=provider_repository_id
+    )
     if "transaction_id" not in captured:
         return None
     return RecoveryOutcome(

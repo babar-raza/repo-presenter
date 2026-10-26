@@ -10,13 +10,17 @@ import subprocess
 from pathlib import Path
 
 import pytest
+from support import init_git_repository
 
 from repo_presenter.core.errors import StateBackendError
 from repo_presenter.core.git_safety.git import run_git
 from repo_presenter.core.state.cas import acquire_lease, save_state_patch
-from repo_presenter.core.state.git_backend import STATE_REF_PREFIX, GitStateBackend, _ref_key
+from repo_presenter.core.state.git_backend import (
+    STATE_REF_PREFIX,
+    GitStateBackend,
+    _ref_key,
+)
 from repo_presenter.core.state.schema import RepositoryRecord
-from support import init_git_repository
 
 REPO = "aspose-3d-foss/example"
 PROVIDER_ID = 42
@@ -61,10 +65,14 @@ def test_save_rejects_a_stale_expected_version(remote: Path) -> None:
         assert result.outcome == "stale"
         assert result.record is not None
         assert result.record.state_version == 1
-        assert result.record.state == "OBSERVED"  # the stale write never actually landed
+        assert (
+            result.record.state == "OBSERVED"
+        )  # the stale write never actually landed
 
 
-def test_two_independent_backends_racing_the_same_remote_cas_conflict(remote: Path) -> None:
+def test_two_independent_backends_racing_the_same_remote_cas_conflict(
+    remote: Path,
+) -> None:
     """The real non-fast-forward push rejection, not a mocked one: two separate
     ``GitStateBackend`` instances (as two concurrent worker processes would be) against the same
     remote, where only one writer's CAS can win."""
@@ -76,19 +84,26 @@ def test_two_independent_backends_racing_the_same_remote_cas_conflict(remote: Pa
         a_result = worker_a.save(
             REPO,
             RepositoryRecord(
-                repository=REPO, provider_repository_id=PROVIDER_ID, state="SNAPSHOTTING"
+                repository=REPO,
+                provider_repository_id=PROVIDER_ID,
+                state="SNAPSHOTTING",
             ),
             expected_version=None,
         )
         b_result = worker_b.save(
             REPO,
             RepositoryRecord(
-                repository=REPO, provider_repository_id=PROVIDER_ID, state="SNAPSHOTTING"
+                repository=REPO,
+                provider_repository_id=PROVIDER_ID,
+                state="SNAPSHOTTING",
             ),
             expected_version=None,
         )
         outcomes = {a_result.outcome, b_result.outcome}
-        assert outcomes == {"saved", "stale"}  # exactly one writer wins; the other is told so
+        assert outcomes == {
+            "saved",
+            "stale",
+        }  # exactly one writer wins; the other is told so
 
         # Negative control: duplicate effects never apply twice - the loser retries against the
         # winner's now-current version rather than silently overwriting it.
@@ -110,7 +125,9 @@ def test_two_independent_backends_racing_the_same_remote_cas_conflict(remote: Pa
         assert retried.record.state_version == winner_version.state_version + 1
 
 
-def _push_corrupt_record(remote: Path, tmp_path: Path, payload: str, *, label: str) -> None:
+def _push_corrupt_record(
+    remote: Path, tmp_path: Path, payload: str, *, label: str
+) -> None:
     """Push ``payload`` verbatim as ``record.json`` on this repository's state ref, exactly as a
     corrupt durable-state write (a mid-write crash, a backend bug, a hand-edited ref) would leave
     it - shared by every "fail closed on corrupt stored state" shape below."""
@@ -124,17 +141,24 @@ def _push_corrupt_record(remote: Path, tmp_path: Path, payload: str, *, label: s
     head = run_git(["rev-parse", "HEAD"], cwd=scratch)
     assert head.returncode == 0
     remote_ref = f"{STATE_REF_PREFIX}/{_ref_key(REPO)}"
-    push = run_git(["push", str(remote), f"{head.stdout.strip()}:{remote_ref}"], cwd=scratch)
+    push = run_git(
+        ["push", str(remote), f"{head.stdout.strip()}:{remote_ref}"], cwd=scratch
+    )
     assert push.returncode == 0
 
 
-def test_load_fails_closed_on_corrupt_stored_state(remote: Path, tmp_path: Path) -> None:
+def test_load_fails_closed_on_corrupt_stored_state(
+    remote: Path, tmp_path: Path
+) -> None:
     """Negative control: a malformed/corrupt durable-state blob must never be silently accepted
     as empty or default state - it is a fail-closed error. This shape: truncated/unparseable JSON
     (a write cut off mid-byte-stream)."""
     _push_corrupt_record(remote, tmp_path, "{not valid json", label="truncated-json")
 
-    with GitStateBackend(remote=str(remote)) as backend, pytest.raises(StateBackendError):
+    with (
+        GitStateBackend(remote=str(remote)) as backend,
+        pytest.raises(StateBackendError),
+    ):
         backend.load(REPO)
 
 
@@ -146,10 +170,16 @@ def test_load_fails_closed_on_valid_json_with_a_missing_required_field(
     no ``provider_repository_id``). Must fail exactly as closed as unparseable JSON, never default
     to an empty/fresh record just because the blob happened to decode."""
     _push_corrupt_record(
-        remote, tmp_path, json.dumps({"schema_version": 1, "state": "OBSERVED"}), label="no-repo"
+        remote,
+        tmp_path,
+        json.dumps({"schema_version": 1, "state": "OBSERVED"}),
+        label="no-repo",
     )
 
-    with GitStateBackend(remote=str(remote)) as backend, pytest.raises(StateBackendError):
+    with (
+        GitStateBackend(remote=str(remote)) as backend,
+        pytest.raises(StateBackendError),
+    ):
         backend.load(REPO)
 
 
@@ -174,7 +204,10 @@ def test_load_fails_closed_on_valid_json_with_wrong_field_types(
         label="wrong-types",
     )
 
-    with GitStateBackend(remote=str(remote)) as backend, pytest.raises(StateBackendError):
+    with (
+        GitStateBackend(remote=str(remote)) as backend,
+        pytest.raises(StateBackendError),
+    ):
         backend.load(REPO)
 
 
@@ -192,7 +225,9 @@ def test_a_leaky_transport_never_surfaces_the_live_token_in_a_raised_error(
     token = "ghp_live_token_should_never_appear_in_any_error_1234567890"
     real_run_git = run_git
 
-    def leaky_run_git(args: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+    def leaky_run_git(
+        args: list[str], **kwargs: object
+    ) -> subprocess.CompletedProcess[str]:
         if args and args[0] == "push":
             return subprocess.CompletedProcess(
                 args=args,
@@ -212,7 +247,9 @@ def test_a_leaky_transport_never_surfaces_the_live_token_in_a_raised_error(
         backend.save(
             REPO,
             RepositoryRecord(
-                repository=REPO, provider_repository_id=PROVIDER_ID, state="SNAPSHOTTING"
+                repository=REPO,
+                provider_repository_id=PROVIDER_ID,
+                state="SNAPSHOTTING",
             ),
             expected_version=None,
         )
@@ -220,7 +257,9 @@ def test_a_leaky_transport_never_surfaces_the_live_token_in_a_raised_error(
     assert "[REDACTED]" in str(excinfo.value)
 
 
-def test_lease_and_transition_helpers_compose_with_the_real_backend(remote: Path) -> None:
+def test_lease_and_transition_helpers_compose_with_the_real_backend(
+    remote: Path,
+) -> None:
     """The backend-agnostic cas.py helpers (acquire_lease, save_state_patch) work unchanged
     against the real git-ref backend, not only the in-memory test double."""
     with GitStateBackend(remote=str(remote)) as backend:

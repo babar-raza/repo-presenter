@@ -91,7 +91,10 @@ QUIESCENT_OR_TERMINAL_STATES: frozenset[TransactionState] = frozenset(
     }
 )
 
-assert frozenset(get_args(TransactionState)) == ACTIVE_STATES | QUIESCENT_OR_TERMINAL_STATES
+assert (
+    frozenset(get_args(TransactionState))
+    == ACTIVE_STATES | QUIESCENT_OR_TERMINAL_STATES
+)
 assert not (ACTIVE_STATES & QUIESCENT_OR_TERMINAL_STATES)
 
 # The three "previous active state" rows (RETRYABLE, BLOCKED_EXTERNAL, FAILED_INTERNAL) resume
@@ -191,10 +194,16 @@ _DIAGRAM_EDGES: tuple[tuple[TransactionState, TransactionState], ...] = (
 
 TRANSITION_REGISTRY: frozenset[tuple[TransactionState, TransactionState]] = frozenset(
     _DIAGRAM_EDGES
-) | frozenset((source, target) for source in _RECOVERY_WILDCARD_SOURCES for target in ACTIVE_STATES)
+) | frozenset(
+    (source, target)
+    for source in _RECOVERY_WILDCARD_SOURCES
+    for target in ACTIVE_STATES
+)
 
 
-def is_registered_transition(from_state: TransactionState, to_state: TransactionState) -> bool:
+def is_registered_transition(
+    from_state: TransactionState, to_state: TransactionState
+) -> bool:
     """Section 17's first rejection rule: "it is not present in the transition registry"."""
     return (from_state, to_state) in TRANSITION_REGISTRY
 

@@ -8,6 +8,7 @@ from __future__ import annotations
 from datetime import UTC, datetime, timedelta
 
 import pytest
+from support import InMemoryStateBackend
 
 from repo_presenter.core.errors import IllegalTransitionError
 from repo_presenter.core.state.cas import (
@@ -18,7 +19,6 @@ from repo_presenter.core.state.cas import (
 )
 from repo_presenter.core.state.recovery import recovery_sweep, resume_recoverable
 from repo_presenter.core.state.schema import DependencyHashes, SourceObservation
-from support import InMemoryStateBackend
 
 REPO = "aspose-3d-foss/example"
 PROVIDER_ID = 42
@@ -80,7 +80,9 @@ def _start_transaction_at(backend: InMemoryStateBackend, *, state: str, now: dat
     return lease, record
 
 
-def test_a_killed_mid_transaction_process_recovers_without_losing_accepted_progress() -> None:
+def test_a_killed_mid_transaction_process_recovers_without_losing_accepted_progress() -> (
+    None
+):
     """The acceptance bar, verbatim: a killed-mid-transaction process recovers cleanly on the
     next run without double-processing or losing the accepted portion."""
     backend = InMemoryStateBackend()
@@ -107,7 +109,9 @@ def test_a_killed_mid_transaction_process_recovers_without_losing_accepted_progr
     assert swept.active_transaction_id == "tx-1"  # same transaction, not a new one
     assert swept.failure is not None
     assert swept.failure.resume_state == "VALIDATING"  # never skips ahead or falls back
-    assert swept.dependencies.facts == "sha256:facts"  # the accepted portion is not lost
+    assert (
+        swept.dependencies.facts == "sha256:facts"
+    )  # the accepted portion is not lost
 
     # A second sweep run (as the next scheduled pass would do) must not double-process: it is a
     # no-op once the transaction is no longer in an active state with a stale lease.
@@ -190,7 +194,9 @@ def test_a_stale_lease_is_reclaimed_after_its_own_recorded_timeout() -> None:
     assert reclaimed_lease.holder_id == "worker-b"
 
 
-def test_recovery_marks_a_transaction_superseded_when_source_revision_has_moved_on() -> None:
+def test_recovery_marks_a_transaction_superseded_when_source_revision_has_moved_on() -> (
+    None
+):
     """Section 15 point 7: a newer source revision supersedes stale in-flight work rather than
     resuming it into a world its own inputs no longer describe."""
     backend = InMemoryStateBackend()
@@ -201,7 +207,9 @@ def test_recovery_marks_a_transaction_superseded_when_source_revision_has_moved_
     outcomes = recovery_sweep(
         backend,
         {REPO: PROVIDER_ID},
-        current_source_revisions={REPO: "rev-2"},  # the registry has since moved past rev-1
+        current_source_revisions={
+            REPO: "rev-2"
+        },  # the registry has since moved past rev-1
         now=after_lease_expiry,
     )
     assert len(outcomes) == 1
@@ -209,7 +217,9 @@ def test_recovery_marks_a_transaction_superseded_when_source_revision_has_moved_
     record = backend.load(REPO)
     assert record is not None
     assert record.state == "SUPERSEDED"
-    assert record.lease is not None  # the expired lease is preserved, not nulled (recovery.py)
+    assert (
+        record.lease is not None
+    )  # the expired lease is preserved, not nulled (recovery.py)
 
     # A superseded transaction is never "resumable" - resume_recoverable only acts on RETRYABLE.
     assert (
@@ -233,7 +243,9 @@ def test_recovery_ignores_a_repository_with_no_active_transaction() -> None:
 def test_resume_recoverable_is_none_for_a_repository_that_is_not_retryable() -> None:
     backend = InMemoryStateBackend()
     assert (
-        resume_recoverable(backend, REPO, holder_id="worker-a", provider_repository_id=PROVIDER_ID)
+        resume_recoverable(
+            backend, REPO, holder_id="worker-a", provider_repository_id=PROVIDER_ID
+        )
         is None
     )
 

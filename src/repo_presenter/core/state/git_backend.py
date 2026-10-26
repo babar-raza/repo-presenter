@@ -30,6 +30,7 @@ import subprocess
 import tempfile
 import threading
 from pathlib import Path
+from typing import Self
 from uuid import uuid4
 
 from pydantic import ValidationError
@@ -80,13 +81,20 @@ def _is_non_fast_forward(stderr: str) -> bool:
     lowered = stderr.lower()
     known_marker = any(
         marker in lowered
-        for marker in ("non-fast-forward", "fetch first", "stale info", "already exists")
+        for marker in (
+            "non-fast-forward",
+            "fetch first",
+            "stale info",
+            "already exists",
+        )
     )
     # GitHub can reject a stale ref update with "cannot lock ref ... is at <new> but expected
     # <old>" instead of the usual non-fast-forward wording. It is the same CAS outcome - another
     # writer won after our read - so the caller must reload and retry.
     stale_expected_value = (
-        "cannot lock ref" in lowered and " is at " in lowered and " but expected " in lowered
+        "cannot lock ref" in lowered
+        and " is at " in lowered
+        and " but expected " in lowered
     )
     return known_marker or stale_expected_value
 
@@ -111,7 +119,9 @@ class _StateGitWorkspace:
     """One process-local, disposable bare object/ref database for state git plumbing."""
 
     def __init__(self) -> None:
-        self._temporary = tempfile.TemporaryDirectory(prefix="repository-presenter-state-")
+        self._temporary = tempfile.TemporaryDirectory(
+            prefix="repository-presenter-state-"
+        )
         self.root = Path(self._temporary.name)
         self.git_dir = self.root / "plumbing.git"
         initialized = run_git(["init", "--bare", str(self.git_dir)], cwd=self.root)
@@ -143,7 +153,7 @@ class GitStateBackend:
         """Deterministically remove this backend's disposable plumbing workspace."""
         self._workspace.cleanup()
 
-    def __enter__(self) -> GitStateBackend:
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(self, *_exc_info: object) -> None:
@@ -188,7 +198,9 @@ class GitStateBackend:
             if "couldn't find remote ref" in lowered:
                 return result
             if any(marker in lowered for marker in _TRANSIENT_GIT_READ_ERRORS):
-                raise RetryableOperationError(f"fetch of {remote_ref} failed: {result.stderr}")
+                raise RetryableOperationError(
+                    f"fetch of {remote_ref} failed: {result.stderr}"
+                )
             raise StateBackendError(f"fetch of {remote_ref} failed: {result.stderr}")
 
         try:
@@ -219,8 +231,12 @@ class GitStateBackend:
             result = self._run_remote_git(args)
             if result.returncode == 0 or _is_non_fast_forward(result.stderr):
                 return result
-            if any(marker in result.stderr.lower() for marker in _TRANSIENT_GIT_READ_ERRORS):
-                raise RetryableOperationError(f"push of {remote_ref} failed: {result.stderr}")
+            if any(
+                marker in result.stderr.lower() for marker in _TRANSIENT_GIT_READ_ERRORS
+            ):
+                raise RetryableOperationError(
+                    f"push of {remote_ref} failed: {result.stderr}"
+                )
             return result
 
         try:
@@ -231,10 +247,14 @@ class GitStateBackend:
     def _read_blob(self, commit_sha: str, path: str) -> str:
         result = run_git(["cat-file", "-p", f"{commit_sha}:{path}"], cwd=self._git_cwd)
         if result.returncode != 0:
-            raise StateBackendError(f"reading {path} from {commit_sha} failed: {result.stderr}")
+            raise StateBackendError(
+                f"reading {path} from {commit_sha} failed: {result.stderr}"
+            )
         return result.stdout
 
-    def _write_commit(self, *, payload: str, parent_sha: str | None, message: str) -> str:
+    def _write_commit(
+        self, *, payload: str, parent_sha: str | None, message: str
+    ) -> str:
         """``hash-object`` -> ``update-index --cacheinfo`` -> ``write-tree`` -> ``commit-tree`` -
         no working tree touched. Returns the new commit SHA.
 
@@ -251,7 +271,9 @@ class GitStateBackend:
         tmp_path = self._workspace.root / f"record-{uuid4().hex}.json"
         tmp_path.write_text(payload, encoding="utf-8", newline="\n")
         try:
-            blob = run_git(["hash-object", "-w", "--", str(tmp_path)], cwd=self._git_cwd)
+            blob = run_git(
+                ["hash-object", "-w", "--", str(tmp_path)], cwd=self._git_cwd
+            )
         finally:
             tmp_path.unlink(missing_ok=True)
         if blob.returncode != 0:
@@ -259,7 +281,12 @@ class GitStateBackend:
         blob_sha = blob.stdout.strip()
 
         indexed = run_git(
-            ["update-index", "--add", "--cacheinfo", f"100644,{blob_sha},{RECORD_BLOB_PATH}"],
+            [
+                "update-index",
+                "--add",
+                "--cacheinfo",
+                f"100644,{blob_sha},{RECORD_BLOB_PATH}",
+            ],
             cwd=self._git_cwd,
         )
         if indexed.returncode != 0:
@@ -292,7 +319,9 @@ class GitStateBackend:
             sha = self._fetch_remote_sha(remote_ref)
             if sha is None:
                 return None
-            return self._parse_record(repository, self._read_blob(sha, RECORD_BLOB_PATH))
+            return self._parse_record(
+                repository, self._read_blob(sha, RECORD_BLOB_PATH)
+            )
 
     def save(
         self, repository: str, record: RepositoryRecord, expected_version: int | None
@@ -329,7 +358,8 @@ class GitStateBackend:
             )
 
             push = self._push_with_retry(
-                ["push", self._remote, f"{commit_sha}:{remote_ref}"], remote_ref=remote_ref
+                ["push", self._remote, f"{commit_sha}:{remote_ref}"],
+                remote_ref=remote_ref,
             )
             if push.returncode != 0:
                 if _is_non_fast_forward(push.stderr):
