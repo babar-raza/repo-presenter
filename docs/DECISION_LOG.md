@@ -232,3 +232,39 @@ subcommand vs. a library function multiple callers use) — that is this session
 pass, recorded in `project/state.yaml`'s new `BUILD_PRESENT_EQUIVALENT_ORCHESTRATOR` card.
 
 **Where the detail lives**: `project/state.yaml`'s `BUILD_PRESENT_EQUIVALENT_ORCHESTRATOR`.
+
+---
+
+## 2026-10-26: A premature RETIRE classification almost lost real salvageable product logic
+
+**Decision**: correct `migration/reuse-manifest.yaml`'s disposition for the old repo's
+`core/state/{cas,git_backend,health,recovery,schema,trigger}.py` (1,666 of 2,122 lines) from
+`RETIRE` to `PENDING_REVIEW_FOR_PORT`. These six files, plus `present_transaction.py` (already
+`PENDING_REVIEW`), are a real, production-proven 23-state repository-transaction machine — crash
+recovery, trigger deduplication, and lease/fencing-token worker coordination across ephemeral
+GitHub Actions runners, backed by a real git-ref CAS store (one ref per repository, written via
+pure plumbing commands). This is exactly mission section 9's own "durable state across ephemeral
+runners" requirement, and mission non-negotiable #1 (a hosted GitHub Actions system) cannot be
+honestly satisfied without something like it.
+
+**Why**: the owner's own 2026-10-26 instruction — before any "replace the old repo" step, confirm
+everything needed has genuinely been salvaged, and keep `plans/*.md` in scope rather than taking
+"this repo has produced everything we need" at face value. A direct re-check found these six files
+had been marked `RETIRE` by name-pattern match alone ("core/state" sounds like supervisor-cursor
+plumbing, already superseded by `project/state.yaml` per `docs/MISSION_AUTHORITY.md`'s own mapping
+table) — never actually read. That mapping is correct for the old repo's own retired Level-8
+*mission graph* (a build-time supervisor concept); it has nothing to do with this subsystem, which
+is *runtime*, per-repository transaction state for a hosted product. Reading all seven files in
+full confirmed they are real product logic, not retired plumbing — and `core/retry.py`'s own
+`RETRY_POLICIES` already carries a `"state_cas"` policy key, added in this repository's very first
+salvage commit (2026-10-21) with a comment naming `core/state/cas.py` explicitly: this need was
+anticipated early and then dropped, not newly invented today.
+
+**What this does NOT decide**: when to actually port this subsystem (tracked as
+`GITHUB_ACTIONS_HOSTING_GAP_2026_10_24`'s own next-step prerequisite, ordered dependency plan in
+the manifest's own entry) or how the hosted vertical slice itself is built. Does not retroactively
+change any already-sealed candidate — nothing here was ever pulled, so nothing else depends on it.
+
+**Where the detail lives**: `migration/reuse-manifest.yaml`'s own corrected entry;
+`project/state.yaml`'s `GITHUB_ACTIONS_HOSTING_GAP_2026_10_24`
+(`major_correction_2026_10_26_durable_state_backend_was_wrongly_marked_retire`).

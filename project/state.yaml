@@ -1440,6 +1440,41 @@ next_ready_items:
       ledgers instead, precisely because no present-equivalent single process exists yet. Two
       independent readings (this card's workflow/CLI reading, that card's seal.py reading) now
       converge on the same orchestrator decision as the one thing both are blocked on.
+    major_correction_2026_10_26_durable_state_backend_was_wrongly_marked_retire: >
+      Owner directive, 2026-10-26: before any "replace the old repo" step, confirm everything
+      needed has genuinely been salvaged, and keep plans/*.md in scope rather than taking the
+      premise "this repo has produced everything we need" at face value. Direct re-check found
+      a real, material gap: migration/reuse-manifest.yaml had marked core/state/{cas,
+      git_backend,health,recovery,schema,trigger}.py (1,666 of 2,122 lines) RETIRE by NAME-
+      PATTERN MATCH ALONE ("core/state" sounds like supervisor-cursor plumbing), never actually
+      read. All seven core/state/*.py files (including present_transaction.py, already flagged
+      PENDING_REVIEW) were read in full just now. They are NOT retired supervisor-cursor
+      machinery -- they are a real, production-proven 23-state REPOSITORY TRANSACTION machine
+      (crash recovery, trigger dedup, lease/fencing-token coordination across ephemeral
+      runners, a real git-ref CAS backend) that is EXACTLY mission section 9's own "durable
+      state across ephemeral runners" requirement, and non-negotiable #1 (hosted GitHub Actions)
+      cannot be honestly satisfied without something like it: cascade.py runs correctly in one
+      local process but has zero crash-recovery or trigger-dedup, which a real scheduled hosted
+      runner needs the moment a runner is killed mid-job or two triggers race.
+      This is a direct, concrete counter-example to "this repo has produced everything we need
+      as per plans/*.md" -- mission non-negotiable #1 is explicitly not yet satisfied, and this
+      is real, substantial (2,122 lines), already-engineered salvageable logic that was at real
+      risk of being lost by a premature RETIRE classification, exactly the failure mode the
+      owner's instruction was guarding against. Checked dependencies directly: core/retry.py's
+      RETRY_POLICIES already has a "state_cas" policy key (added in the very first 2026-10-21
+      salvage commit, naming core/state/cas.py explicitly) -- this need was anticipated early
+      and then dropped, not newly discovered. github_https_auth_env/redact already exist with
+      matching signatures. Only two small exception classes (StateBackendError/
+      IllegalTransitionError) are missing. Full correction recorded in migration/
+      reuse-manifest.yaml's own entry (disposition corrected RETIRE -> PENDING_REVIEW_FOR_PORT).
+    next_step_correction_2026_10_26: >
+      This card's own next_step (2)-(4) above stands, but now has a concrete FOURTH prerequisite
+      alongside it, not after it: port core/state/{schema,cas,git_backend,trigger,recovery,
+      health}.py (present_transaction.py already named) BEFORE or ALONGSIDE the hosted vertical
+      slice -- building a hosted workflow without this backend would reproduce the exact crash-
+      recovery/trigger-dedup gap the old repo's own history shows this subsystem exists to
+      close. Scoped, ordered port plan: migration/reuse-manifest.yaml's own next_step field for
+      this component.
 
   - id: PORT_BUNDLE_INTEGRITY_LAYER
     status: IN_PROGRESS

@@ -2051,27 +2051,69 @@ entries:
       schema.py (345),trigger.py (236)} (2,122 total)"
     source: old-repository-presenter
     evaluated_at_shas: []
-    behavior: UNKNOWN in detail -- sized and named only, not read line-by-line this pass.
-    disposition: "RETIRE (cas.py, git_backend.py, health.py, recovery.py, schema.py, trigger.py);
-      PENDING_REVIEW (present_transaction.py only)"
+    behavior: >
+      CORRECTED 2026-10-26 (all seven files now actually read in full, not sized/guessed): this
+      is NOT supervisor-cursor plumbing for the old repo's own retired Level-8 mission graph.
+      It is a real, production-proven, 23-state REPOSITORY TRANSACTION machine
+      (``docs/STATE_MACHINE.md`` section 4.1's own table) that gives the hosted GitHub Actions
+      system crash recovery, trigger deduplication, and lease/fencing-token worker coordination
+      across EPHEMERAL RUNNERS -- exactly mission section 9's own "durable state across
+      ephemeral runners" requirement, which THIS repository has not built at all. schema.py
+      defines the 23-state TransactionState enum (OBSERVED -> SNAPSHOTTING -> EXTRACTING -> ...
+      -> ACCEPTED -> PROVING_NO_OP -> READY_FOR_PROPOSAL -> PROPOSING -> MONITORING) and a
+      Pydantic RepositoryRecord with a CAS version counter and a bounded trigger-dedup ledger.
+      cas.py is the backend-agnostic CAS/lease/fencing-token/transition-commit layer.
+      git_backend.py is the REAL backend: one git ref per repository
+      (refs/repository-presenter-state/records/<owner>__<name>) holding the whole record,
+      written via pure plumbing (hash-object/update-index --cacheinfo/write-tree/commit-tree,
+      no working tree touched), with careful non-fast-forward/silent-no-op-commit race handling
+      and token redaction. trigger.py normalizes and deduplicates scheduled/dispatch/webhook
+      triggers into one CAS operation. recovery.py sweeps stale leases before each scheduling
+      pass and marks them RETRYABLE (never silently abandoned or re-run from scratch) or
+      SUPERSEDED (a newer source revision owns the work). health.py is dead-man alerting over
+      the same record (stale/failed/budget-exceeded -> ::error:: annotations). All of this was
+      previously, wrongly, name-pattern-matched to "supervisor state, already superseded by
+      project/state.yaml" without being read -- that mapping is correct for the OLD repo's own
+      retired Level-8 MISSION GRAPH (a build-time supervisor concept), but this subsystem is a
+      different thing: RUNTIME, per-repository transaction state for a hosted, ephemeral-runner
+      PRODUCT, which project/state.yaml (a human/supervisor-maintained YAML file in THIS
+      checkout) cannot substitute for at all.
+    disposition: PENDING_REVIEW_FOR_PORT (corrected from RETIRE)
     reason: >
-      docs/MISSION_AUTHORITY.md's legacy-to-current mapping already resolves the old repo's
-      "durable supervisor state" concept to this repository's own project/state.yaml (the one
-      execution cursor, per AGENTS.md) -- six of these seven files are very likely exactly that
-      superseded supervisor-state machinery (cas = content-addressed store, git_backend, health,
-      recovery, schema, trigger all read as cursor/transaction-log plumbing for the OLD repo's own
-      retired Level-8 mission graph). present_transaction.py (456 lines, the largest single file
-      here) is named differently enough -- "transaction" in the sense of a finished README
-      candidate becoming a committed effect, not supervisor-cursor bookkeeping -- that it deserves
-      one real read before folding it into the same RETIRE disposition as its six siblings; it may
-      turn out to be product logic relevant to the P3 PR-effect question above rather than
-      retired supervisor plumbing.
-    target_module: none planned for the six RETIRE files.
-    next_step: read present_transaction.py alone (456 lines) when P3 work begins, specifically to
-      rule out (or confirm) that it is supervisor-state machinery rather than a present-the-
-      finished-candidate effect this repository's own PR-effect work could reuse.
-    portfolio_consumers: "none for the six RETIRE files. present_transaction.py: possibly P3, TBD."
-    invalidation_impact: none -- none of these seven files are pulled.
+      Mission non-negotiable #1 ("Build a GitHub Actions runner-based autonomous system...
+      operate on actual hosted runners") and section 9 ("durable state across ephemeral
+      runners") are NOT YET satisfied by this repository -- BUILD_PRESENT_EQUIVALENT_
+      ORCHESTRATOR's own cascade.py runs correctly in one local process but has no crash-
+      recovery, trigger-dedup, or lease coordination at all, which is exactly what a real
+      scheduled hosted runner needs the moment two triggers can race or a runner can be killed
+      mid-job. This subsystem is the real, already-engineered answer to exactly that gap, not a
+      retired concept -- correcting a session-earlier mistake: marking it RETIRE by name-pattern
+      alone, without reading it, directly risked losing real salvageable product logic the
+      mission's own non-negotiable #1 still needs. Found while directly re-checking whether
+      "everything we need" has genuinely been salvaged (owner's own 2026-10-26 instruction to
+      keep plans/ in scope and verify before any "replace the old repo" step).
+    dependency_check_2026_10_26: >
+      Checked directly, not assumed: core/retry.py's RETRY_POLICIES ALREADY has a "state_cas"
+      policy key (added in the very first 2026-10-21 salvage commit, with a comment explicitly
+      naming core/state/cas.py) -- this subsystem's own need was anticipated early and then
+      never finished. github_https_auth_env (core/git_safety/git.py) and redact
+      (core/secrets.py) already exist with matching signatures. Only StateBackendError/
+      IllegalTransitionError are missing from core/errors.py (two small exception classes) and
+      the core/state/ package itself was never created. This is a highly tractable, well-scoped
+      port, not a from-scratch design.
+    target_module: src/repo_presenter/core/state/{schema,cas,git_backend,trigger,recovery,
+      health,present_transaction}.py
+    next_step: >
+      Port in dependency order: schema.py (no internal deps) -> cas.py (needs schema.py,
+      core/errors.py's two new exceptions, core/retry.py already present) -> git_backend.py
+      (needs cas.py, core/git_safety/git.py, core/secrets.py, all present) -> trigger.py (needs
+      cas.py/schema.py) -> recovery.py (needs cas.py/schema.py) -> health.py (needs schema.py
+      only) -> present_transaction.py last (needs core/candidates.py, already ported). Each with
+      its own ported test suite. Wire into whatever hosted present.yml-equivalent workflow
+      GITHUB_ACTIONS_HOSTING_GAP_2026_10_24's own vertical slice builds.
+    portfolio_consumers: the hosted GitHub Actions vertical slice (not built yet) -- this is a
+      genuine prerequisite for it, not an optional enhancement.
+    invalidation_impact: none yet -- nothing pulled, no existing caller to affect.
 
   - component: "components/readme/validation/links/rules.py (133 lines)"
     source: old-repository-presenter
