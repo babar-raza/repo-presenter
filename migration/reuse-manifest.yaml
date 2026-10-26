@@ -146,16 +146,43 @@ entries:
 
   - component: "components/readme_correction/apply.py, engine.py, detectors/, chain.py, verify.py (Lane L correction engine)"
     source: old-repository-presenter
-    disposition: PENDING_REVIEW
+    disposition: DEFER
+    per_file:
+      apply.py: PORTED (see the readme_correction/ Lane L engine entry above; src/repo_presenter/readme/correction/apply.py)
+      engine.py: PORTED (same entry; src/repo_presenter/readme/correction/engine.py)
+      detectors/ (examples, gaps, links, structure, format_overclaim, enterprise_edition): PORTED
+      detectors/additions.py (add_dev_commands, add_doc_links, add_install_forms): NOT PORTED, DEFERRED
+      chain.py: DEFERRED
+      verify.py: DEFERRED
     reason: >
-      This is the component the Oct 20 ruling found broken in its *output*
-      (examples/links/API/format claims). The engine architecture (edit
-      operations with stable anchors) may still be sound even if its detector
-      coverage is incomplete — these are separable claims. Not yet read in
-      enough depth here to disposition either way.
-    next_step: read apply.py/engine.py/chain.py structure vs. detectors/
-      coverage separately; the Oct 20 findings are about detector coverage
-      gaps, not necessarily the engine's edit-application mechanism.
+      Read in full 2026-10-26 (verify.py in full; chain.py in full; receipts.py interfaces
+      and apply_plan). chain.py + verify.py are not a standalone piece that can be ported
+      alone. (1) Inputs: chain.plan_chain consumes CI-sourced command facts (source "ci
+      workflow", precondition attribute) that only the old extraction's command_facts()
+      emits; the new readme/evidence/facts/commands.py is trimmed to doc-side parsing and has
+      no ci_jobs/CiJob/CiRun. Porting chain needs the ci_jobs closure (~96 lines of old
+      commands.py) plus assets.is_release_workflow (~8 lines), all extraction apparatus that
+      is itself PENDING_REVIEW. (2) verify.py imports ChainPlan from chain.py and Receipt/
+      StepResult/outcomes from receipts.py; receipts.py (190 lines) is needed too, and its
+      apply_plan folds receipts into correction facts. (3) The only caller is
+      additions.add_dev_commands, which is not ported. (4) Confinement, the decisive point:
+      verify.py runs repository-supplied install/build/test commands (pip install -e,
+      npm install with lifecycle scripts, mvn, cargo, cmake) on the HOST first, bounded only
+      by a secret-free environment, redirected caches, a clean clone and a timeout. There is
+      no filesystem or network isolation on that path. The Docker fallback (read-only mount of
+      the workspace, copy into the container, container removed) runs only after the host
+      attempt has already executed, with network enabled and no CPU, memory or capability
+      limits. The new core/execution.py states it "is a process and credential boundary, not an
+      OS sandbox ... Container isolation for hosted runs arrives at G4". Porting verify.py now
+      would import an unconfined execution path ahead of that gate. Not ported for that reason,
+      in addition to the scope reasons.
+    dependencies_for_a_future_port:
+      present_in_new_repo: "core/execution.py (profile_environment, secret_free_environment), core/git_safety/{clone.force_rmtree, git.run_git, process.run_bounded}, core/secrets.py, core/toolchains.py, packaging (pyproject pin), docker CLI (Docker Desktop installed on this host; daemon state not checked)"
+      missing: "receipts.py (190 lines); chain.py (~310 lines); commands.py ci_jobs/CiJob/CiRun closure (~96 lines) and assets.is_release_workflow (~8 lines); the CI-sourced command_facts extraction; additions.py (add_dev_commands); enrich.py"
+    prerequisites_before_porting:
+      - "G4 container isolation for hosted runs, or an explicit owner decision to accept host execution of repository build commands"
+      - "additions.py detector port (the only caller), so the runner has an input and a consumer"
+    next_step: none until the prerequisites above are met; the Lane L engine entry above is the live record of what is ported.
 
   - component: "GitHub App, source freshness, authorization, PR branch/issue reconciliation (components/propose/, components/issues/, core/github/, core/authorization/)"
     source: old-repository-presenter
