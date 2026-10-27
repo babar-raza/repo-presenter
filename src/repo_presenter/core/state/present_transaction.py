@@ -56,9 +56,14 @@ from repo_presenter.core.candidates import (
     CURRENT_FILENAME,
     verify_bundle,
 )
-from repo_presenter.core.errors import StateBackendError
+from repo_presenter.core.errors import IllegalTransitionError, StateBackendError
 from repo_presenter.core.registry.models import RegistryEntry
-from repo_presenter.core.state.cas import StateBackend, record_transition, release_lease
+from repo_presenter.core.state.cas import (
+    StateBackend,
+    record_transition,
+    release_lease,
+    save_state_patch,
+)
 from repo_presenter.core.state.recovery import recovery_sweep, resume_recoverable
 from repo_presenter.core.state.schema import (
     FailureRecord,
@@ -408,6 +413,27 @@ def _commit_outcome(
             "pipeline's own stages - see core/state/present_transaction.py's module docstring)"
         )
     _require_registered_path(current_state, hops)
+    if outcome.kind == "failed" and not hops:
+        # Already in a failed state: no transition exists to carry this run's failure, but the
+        # record must still describe THIS failure, not the first one it ever recorded. Written
+        # under the same lease/fencing check a transition would have enforced.
+        def refresh_failure(record: RepositoryRecord) -> RepositoryRecord:
+            held = record.lease
+            if held is None or (held.holder_id, held.fencing_token) != (
+                lease.holder_id,
+                lease.fencing_token,
+            ):
+                raise IllegalTransitionError(
+                    f"failure refresh for {repository!r} rejected: lease/fencing token is stale"
+                )
+            return mark_failed(record)
+
+        save_state_patch(
+            backend,
+            repository,
+            refresh_failure,
+            provider_repository_id=provider_repository_id,
+        )
     for index, to_state in enumerate(hops):
         is_final_failure_hop = outcome.kind == "failed" and index == len(hops) - 1
         record_transition(

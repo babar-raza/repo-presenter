@@ -990,3 +990,31 @@ def test_a_placeholder_from_an_accepted_record_has_no_registered_path_and_fails_
     record = backend.load(REPO)
     assert record is not None
     assert record.state == "ACCEPTED"
+
+
+def test_a_repeat_failure_refreshes_the_recorded_failure_detail() -> None:
+    """The record must describe the latest failure, not the first one it ever recorded (a repeat
+    failure plans no hop, so the detail used to stay stale and health alerts quoted it)."""
+    backend = InMemoryStateBackend()
+
+    def fail(detail: str, run_id: str) -> None:
+        run_present_transaction(
+            backend=backend,
+            repository=REPO,
+            provider_repository_id=PROVIDER_ID,
+            holder_id="worker-a",
+            run=lambda: 1,
+            classify=_classify_always(PresentOutcome(kind="failed", detail=detail)),
+            workflow_run_id=run_id,
+        )
+
+    fail("first failure: 50 findings", "run-F1")
+    first = backend.load(REPO)
+    assert first is not None and first.failure is not None
+    fail("second failure: 26 findings", "run-F2")
+    second = backend.load(REPO)
+    assert second is not None and second.failure is not None
+    assert second.state == "FAILED_INTERNAL"
+    assert second.failure.detail == "second failure: 26 findings"
+    assert second.failure.occurred_at >= first.failure.occurred_at
+    assert second.lease is None
