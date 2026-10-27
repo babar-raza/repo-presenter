@@ -34,6 +34,7 @@ from pathlib import Path
 from typing import Any
 
 from repo_presenter.cascade import (
+    COMPOSED_DISPOSITIONS_FILENAME,
     DEFAULT_PROMPTS_PATH,
     DEFAULT_REGISTRY_PATH,
     CascadeResult,
@@ -599,7 +600,12 @@ def _load_context(
         ),
     )
     investigation = _read_json(out_dir / "investigation.json")
-    dispositions = _read_json(out_dir / "dispositions.json")
+    # The dispositions the S5/S6/S8 calls were made from, not the accounted ones the README and
+    # the reviewer saw: the request hashes rebuilt here must match the call store's.
+    composed = out_dir / COMPOSED_DISPOSITIONS_FILENAME
+    dispositions = _read_json(
+        composed if composed.is_file() else out_dir / "dispositions.json"
+    )
     plan = _read_json(out_dir / "plan.json")
     tasks = authoring_tasks(entry, facts, investigation, dispositions, plan)
     return RepairContext(

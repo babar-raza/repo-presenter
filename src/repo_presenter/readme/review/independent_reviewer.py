@@ -77,8 +77,10 @@ from markdown_it.token import Token
 from repo_presenter.core.facts import FactsDocument
 from repo_presenter.readme.composition.authoring import preserved_opening_text
 from repo_presenter.readme.composition.coverage import states_all
+from repo_presenter.readme.composition.list_coverage import list_items, missing_items
 from repo_presenter.readme.evidence.facts.links import extract_links
 from repo_presenter.readme.validation.claims import claim_findings
+from repo_presenter.readme.validation.text import section_texts
 
 RuleKind = Literal["deterministic", "judgment"]
 Verdict = Literal["ACCEPT", "REJECT"]
@@ -91,7 +93,7 @@ Verdict = Literal["ACCEPT", "REJECT"]
 #: reviewer logic or needs a fresh review -- mirroring the old repo's own REVIEWER_LOGIC_VERSION,
 #: not ported verbatim (that one versions a 2,996-line judged/unjudged replay model this
 #: repository's own v1 reviewer does not have).
-REVIEWER_LOGIC_VERSION = "2"
+REVIEWER_LOGIC_VERSION = "3"
 REVIEW_VERDICT_FILENAME = "review_verdict.json"
 
 
@@ -289,16 +291,60 @@ def _dispositions_list(dispositions: Mapping[str, Any]) -> list[Mapping[str, Any
     return [row for row in rows if isinstance(row, Mapping)]
 
 
-def _kept_text_printed(unit_text: str, unit_id: str, readme_text: str) -> bool:
+def heading_printed(unit_text: str, readme_text: str) -> bool:
+    """Whether a README heading has the same comparison form as the inherited heading
+    ``unit_text``: the one test ``live_readme_loss_rule`` loses a heading by."""
+    wanted = _heading_key(unit_text.lstrip("#").strip())
+    return any(
+        _heading_key(text) == wanted for text in _read_markdown(readme_text).headings
+    )
+
+
+def _list_items_stated(
+    unit_text: str, destination: str | None, readme_text: str
+) -> bool:
+    """Whether a kept list the renderer printed in part is retained: at least one item is in the
+    README as written, and every item is in the README, by its link when it has one, else by its
+    subject words in the destination section. BC-05's own standard for a list the renderer prints
+    only in part, because it prints just the items the section's own content does not already
+    state (``validation.units._dropped_list_failures``).
+
+    A list with no item printed as written is not this case: it is wholly restated, and the S9
+    accounting supersedes it without changing the render. Here that would delete the items that
+    are printed, so the list is judged retained instead."""
+    if destination is None:
+        return False
+    squeezed = _squeezed(readme_text)
+    if not any(_squeezed(item) in squeezed for item in list_items(unit_text)):
+        return False
+    stated = section_texts(readme_text).get(destination, "")
+    return not missing_items(
+        unit_text,
+        stated,
+        by_link=destination == "documentation_resources",
+        document_text=readme_text,
+    )
+
+
+def _kept_text_printed(
+    unit_text: str,
+    unit_id: str,
+    readme_text: str,
+    destination: str | None = None,
+) -> bool:
+    if unit_id.endswith(".heading"):
+        # A heading is printed only as a heading. A substring match would call
+        # "### Convert a Lambert Material to PBR" printed because the README says
+        # "### Convert a Lambert Material to PBR Material", while live_readme_loss_rule (which
+        # compares whole headings) reports it lost: the two rules must agree.
+        return heading_printed(unit_text, readme_text)
     if _squeezed(unit_text) in _squeezed(readme_text):
         return True
-    if unit_id.endswith(".heading"):
-        wanted = _heading_key(unit_text.lstrip("#").strip())
-        return any(
-            _heading_key(text) == wanted
-            for text in _read_markdown(readme_text).headings
-        )
-    return False
+    # A list is retained when every one of its items is: the renderer prints only the items its
+    # section does not already state, so a fully stated list is rarely one verbatim block.
+    return unit_id.endswith(".list") and _list_items_stated(
+        unit_text, destination, readme_text
+    )
 
 
 def unprinted_kept_units(
@@ -316,7 +362,9 @@ def unprinted_kept_units(
         for row in _dispositions_list(dispositions)
         if row.get("disposition") in KEPT_DISPOSITIONS
         and (unit := str(row.get("unit_id", ""))) in units
-        and not _kept_text_printed(units[unit], unit, readme_text)
+        and not _kept_text_printed(
+            units[unit], unit, readme_text, row.get("destination_section")
+        )
     ]
 
 

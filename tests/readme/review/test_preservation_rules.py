@@ -158,6 +158,84 @@ def test_disposition_coverage_accepts_a_kept_heading_that_was_re_leveled_and_re_
     )
 
 
+def test_a_kept_heading_is_not_printed_because_another_heading_contains_its_words() -> (
+    None
+):
+    """Hosted run 7: '### Convert a Lambert Material to PBR' was counted printed because the README
+    says '### Convert a Lambert Material to PBR Material', while the loss rule (whole headings)
+    reported it lost. A heading is printed only as the same heading."""
+    live = "# Widget FOSS\n\n### Convert a Lambert Material to PBR\n"
+    candidate = "# Widget FOSS\n\n### Convert a Lambert Material to PBR Material\n"
+    units = (
+        _unit("inherited_unit:001.heading", "# Widget FOSS"),
+        _unit("inherited_unit:002.heading", "### Convert a Lambert Material to PBR"),
+    )
+    dispositions = {"dispositions": [_row(unit.id) for unit in units]}
+    findings = disposition_coverage_rule(
+        candidate, facts=_facts(*units), dispositions=dispositions
+    )
+    assert len(findings) == 1 and "002.heading" in findings[0].message
+    assert (
+        disposition_coverage_rule(live, facts=_facts(*units), dispositions=dispositions)
+        == []
+    )
+
+
+RESOURCES = (
+    "- **[Docs](https://widget.example.com/docs)** - installation and guides.\n"
+    "- **[Notes](notes.md)** - implementation status."
+)
+
+
+def _list_case(readme: str) -> list:
+    units = (_unit("inherited_unit:001.list", RESOURCES),)
+    dispositions = {
+        "dispositions": [
+            _row(
+                "inherited_unit:001.list",
+                "VERIFIED_MOVE",
+                destination_section="documentation_resources",
+            )
+        ]
+    }
+    return disposition_coverage_rule(
+        readme, facts=_facts(*units), dispositions=dispositions
+    )
+
+
+def test_a_list_printed_in_part_with_every_other_item_stated_is_retained() -> None:
+    """Hosted run 7's Documentation and Resources list: the renderer printed the one item the
+    section did not already state, and stated the others with their links."""
+    readme = (
+        "## Documentation & Resources\n\n"
+        "- **[Docs](https://widget.example.com/docs)** - The guides cover installation.\n"
+        "- **[Notes](notes.md)** - implementation status.\n"
+    )
+    assert _list_case(readme) == []
+
+
+def test_a_list_printed_in_part_is_rejected_when_another_item_is_nowhere() -> None:
+    readme = (
+        "## Documentation & Resources\n\n"
+        "- **[Notes](notes.md)** - implementation status.\n"
+    )
+    findings = _list_case(readme)
+    assert len(findings) == 1 and "001.list is kept" in findings[0].message
+
+
+def test_a_list_with_no_item_printed_as_written_is_still_flagged_for_the_accounting() -> (
+    None
+):
+    """A wholly restated list is the accounting's to supersede (the render is unchanged by it);
+    the reviewer does not excuse it."""
+    readme = (
+        "## Documentation & Resources\n\n"
+        "The guides cover installation, see https://widget.example.com/docs and notes.md.\n"
+    )
+    findings = _list_case(readme)
+    assert len(findings) == 1 and "001.list is kept" in findings[0].message
+
+
 # ---------------------------------------------------------------------------
 # live_readme_loss (judge.py J6)
 # ---------------------------------------------------------------------------

@@ -224,6 +224,17 @@ README_WITH_SUBHEADING = README + "\n### Main\n"
 SUBHEADING = "inherited_unit:007.heading"
 
 
+def _reply_keeping_code_without_an_example() -> dict[str, Any]:
+    """The fixture's reconciliation, except the quick-start code block is kept citing no example.
+    The renderer prints no such block, and with no SUPPORTED example to cite the accounting cannot
+    say it is redundant: it stays a defect for the S4 repair, which is what these tests drive."""
+    dispositions = [dict(entry) for entry in _RECONCILIATION_REPLY["dispositions"]]
+    for entry in dispositions:
+        if entry["unit_id"] == CODE:
+            entry["fact_ids"] = []
+    return {"dispositions": dispositions}
+
+
 def _reply_keeping_a_subheading() -> dict[str, Any]:
     dispositions = [dict(entry) for entry in _RECONCILIATION_REPLY["dispositions"]]
     dispositions.append(
@@ -244,14 +255,19 @@ def test_a_kept_subheading_the_renderer_does_not_print_is_accounted_by_the_casca
     run = _Run(tmp_path, monkeypatch, README_WITH_SUBHEADING)
     result = run.first_pass(_first_replies(_reply_keeping_a_subheading()))
 
-    assert [item.unit_id for item in result.accounted] == [SUBHEADING]
+    # The fixture's quick-start code block cites the SUPPORTED example the renderer prints it from,
+    # so it is accounted too; the sub-heading is the case under test.
+    assert [item.unit_id for item in result.accounted] == [CODE, SUBHEADING]
     entry = _by_unit(run.json("dispositions.json"))[SUBHEADING]
     assert (entry["disposition"], entry["destination_section"]) == (
         "SUPERSEDE_REDUNDANT",
         "api_reference",
     )
     assert entry["fact_ids"] == ["public_symbol:aspose_widget_foss.widget"]
-    assert run.json("accounting.json")["accounted"][0]["unit_id"] == SUBHEADING
+    assert [a["unit_id"] for a in run.json("accounting.json")["accounted"]] == [
+        CODE,
+        SUBHEADING,
+    ]
     assert not any("'Main'" in f.message for f in result.review_verdict.findings)
     assert "Main" not in (run.out / "README.coherent.md").read_text(encoding="utf-8")
 
@@ -359,7 +375,7 @@ def test_a_kept_unit_the_render_cannot_print_is_repaired_once_and_the_cascade_ru
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     run = _Run(tmp_path, monkeypatch)
-    first = run.first_pass()
+    first = run.first_pass(_first_replies(_reply_keeping_code_without_an_example()))
     assert "disposition_coverage" in _rules(first)
     assert first.rounds == 1
     defect = _s4_defect(run, first)
@@ -406,7 +422,7 @@ def test_a_defect_is_attempted_once_and_a_refused_repair_is_never_retried(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     run = _Run(tmp_path, monkeypatch)
-    first = run.first_pass()
+    first = run.first_pass(_first_replies(_reply_keeping_code_without_an_example()))
     defect = _s4_defect(run, first)
     # the reply keeps the unit as written, which prints the quoted text: refused, twice
     kept = _rewrite_reply(defect.fingerprint)

@@ -203,10 +203,16 @@ def test_a_rejected_finding_is_repaired_once_through_run_job_and_the_cascade_is_
         max_rounds=1,
     )
     assert first.provider_calls == 9
-    # The fixture's own real verdict is REJECT, for heading and code-block losses no repair here
-    # can touch (deterministic sections). Those stay, unrepairable, after the settle as well.
+    # The fixture's own real verdict is REJECT, for heading losses no repair here can touch
+    # (deterministic sections). Those stay, unrepairable, after the settle as well. Its kept
+    # quick-start code block used to be a second finding; the renderer prints that block from the
+    # SUPPORTED example fact it cites, so the S9 accounting now says so and cites that fact.
     real_rules = {finding.rule for finding in first.review_verdict.findings}
-    assert real_rules == {"disposition_coverage", "live_readme_loss"}
+    assert real_rules == {"live_readme_loss"}
+    accounted = json.loads((out_dir / "accounting.json").read_text(encoding="utf-8"))
+    code = [a for a in accounted["accounted"] if a["unit_id"].endswith("004.code_block")]
+    assert code and code[0]["now"] == "SUPERSEDE_REDUNDANT"
+    assert any(fact.startswith("example:") for fact in code[0]["fact_ids"])
     before = json.loads(
         (out_dir / "content_units.coherent.json").read_text(encoding="utf-8")
     )

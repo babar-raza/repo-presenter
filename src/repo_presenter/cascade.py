@@ -119,6 +119,7 @@ from repo_presenter.readme.validation.blocking import validate_candidate
 from repo_presenter.readme.validation.failures import Candidate
 
 DEFAULT_PROMPTS_PATH = Path("prompts")
+COMPOSED_DISPOSITIONS_FILENAME = "dispositions.composed.json"
 DEFAULT_REGISTRY_PATH = Path("data/registry.json")
 
 
@@ -339,6 +340,10 @@ def _compose(
         entry=entry, document=document, investigation=investigation, prompts=prompts, **common
     )
     write_dispositions(dispositions, out_dir / "dispositions.json")
+    # What the planning, authoring and coherence calls are made from. dispositions.json is
+    # rewritten below with the S9 accounting, so a repair that rebuilds those calls' request
+    # hashes from disk reads this one, or every rebuilt hash would miss the call store.
+    write_dispositions(dispositions, out_dir / COMPOSED_DISPOSITIONS_FILENAME)
 
     plan = _run_planning(
         entry=entry, document=document, investigation=investigation, dispositions=dispositions,

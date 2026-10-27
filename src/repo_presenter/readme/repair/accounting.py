@@ -28,9 +28,10 @@ keeps them only when the README is byte-identical.
 from __future__ import annotations
 
 import copy
+import re
 from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, NamedTuple
 
 from repo_presenter.readme.composition.placement import (
     PLACED,
@@ -39,7 +40,10 @@ from repo_presenter.readme.composition.placement import (
     renderer_fact_ids,
 )
 from repo_presenter.readme.reconciliation.dispositions import rendering_fact_ids
-from repo_presenter.readme.review.independent_reviewer import unprinted_kept_units
+from repo_presenter.readme.review.independent_reviewer import (
+    heading_printed,
+    unprinted_kept_units,
+)
 from repo_presenter.readme.validation.failures import Candidate
 from repo_presenter.readme.validation.text import section_texts
 from repo_presenter.readme.validation.units import _dropped_list_failures, placements_of
@@ -57,7 +61,24 @@ RATIONALE_DIAGRAM = (
     "Superseded by the At a Glance diagram the renderer draws from the verified formats "
     "and capabilities."
 )
+RATIONALE_EXAMPLE_CODE = (
+    "Printed by the example section from the verified example fact it cites, with any usings the "
+    "compiler needed supplied above the inherited code."
+)
+RATIONALE_EXAMPLE_HEADING = (
+    "Heading owned by the renderer: the example section prints its own title for the example "
+    "this heading introduced."
+)
+RATIONALE_LEAD_HEADING = (
+    "Omitted with the example it introduced: that example is contradicted ({facts}), so its "
+    "heading has nothing left to introduce."
+)
 MERMAID_FENCE = "mermaid"
+EXAMPLE_SECTIONS = frozenset({"quick_start", "additional_examples"})
+_FENCE = re.compile(
+    r"^(?:```|~~~)[^\n]*\n(.*?)\n(?:```|~~~)[ \t]*$", re.MULTILINE | re.DOTALL
+)
+_ORDINAL = re.compile(r"inherited_unit:(\d+)\.")
 
 
 @dataclass(frozen=True)
@@ -66,15 +87,16 @@ class Accounted:
 
     unit_id: str
     was: str
-    destination: str
+    destination: str | None
     reason: str
     fact_ids: tuple[str, ...]
+    now: str = "SUPERSEDE_REDUNDANT"
 
     def to_json(self) -> dict[str, Any]:
         return {
             "unit_id": self.unit_id,
             "was": self.was,
-            "now": "SUPERSEDE_REDUNDANT",
+            "now": self.now,
             "destination_section": self.destination,
             "reason": self.reason,
             "fact_ids": list(self.fact_ids),
@@ -147,47 +169,205 @@ def _lists_state_their_items(candidate: Candidate, placement: Placement) -> bool
     return not _dropped_list_failures(candidate, placement, texts)
 
 
+class _Decision(NamedTuple):
+    destination: str | None
+    rationale: str
+    fact_ids: list[str]
+    disposition: str = "SUPERSEDE_REDUNDANT"
+
+
+def _normalised(text: str) -> str:
+    return "\n".join(
+        line.rstrip() for line in text.replace("\r\n", "\n").splitlines()
+    ).strip()
+
+
+def _fence_bodies(readme: str) -> list[str]:
+    return [_normalised(match.group(1)) for match in _FENCE.finditer(readme)]
+
+
+def _code_body(unit_text: str) -> str | None:
+    match = _FENCE.match(unit_text.strip())
+    return _normalised(match.group(1)) if match else None
+
+
+def _unit_values(candidate: Candidate) -> dict[str, str]:
+    return {fact.id: fact.value for fact in candidate.facts.by_kind("inherited_unit")}
+
+
+def _examples(
+    entry: Mapping[str, Any], candidate: Candidate, polarity: str, known: frozenset[str]
+) -> list[str]:
+    """The example facts ``entry`` cites that have ``polarity``."""
+    wanted = {
+        fact.id
+        for fact in candidate.facts.by_kind("example")
+        if fact.polarity == polarity
+    }
+    return sorted(
+        fact_id
+        for fact_id in entry.get("fact_ids") or []
+        if fact_id in wanted and fact_id in known
+    )
+
+
+def _code_printed(unit_text: str, candidate: Candidate) -> bool:
+    """Whether the README prints the inherited code block's body verbatim inside some fence (the
+    example section may put supplied usings above it, so containment, not equality)."""
+    body = _code_body(unit_text)
+    return body is not None and any(
+        body in printed for printed in _fence_bodies(candidate.readme)
+    )
+
+
+def _payload_row(
+    heading_id: str, candidate: Candidate
+) -> tuple[str, Mapping[str, Any]] | None:
+    """The disposition row of the first code block under the inherited heading ``heading_id``
+    (the example the heading introduces), stopping at the next heading."""
+    match = _ORDINAL.match(heading_id)
+    if match is None:
+        return None
+    start = int(match.group(1))
+    ordered = sorted(
+        (int(m.group(1)), unit)
+        for unit in _unit_values(candidate)
+        if (m := _ORDINAL.match(unit)) is not None and int(m.group(1)) > start
+    )
+    rows = {
+        str(row.get("unit_id")): row
+        for row in candidate.dispositions.get("dispositions", [])
+    }
+    for _, unit in ordered:
+        if unit.endswith(".heading"):
+            return None
+        if unit.endswith(".code_block") and unit in rows:
+            return unit, rows[unit]
+    return None
+
+
+def _example_heading(
+    entry: Mapping[str, Any], candidate: Candidate, known: frozenset[str], section: str
+) -> _Decision | None:
+    """A kept heading that introduced a SUPPORTED example the section prints under its own title."""
+    payload = _payload_row(str(entry.get("unit_id", "")), candidate)
+    if payload is None:
+        return None
+    unit_id, row = payload
+    facts = _examples(row, candidate, "SUPPORTED", known)
+    text = _unit_values(candidate).get(unit_id, "")
+    if not facts or not _code_printed(text, candidate):
+        return None
+    return _Decision(section, RATIONALE_EXAMPLE_HEADING, facts)
+
+
+def _lead_heading_omitted(
+    entry: Mapping[str, Any], candidate: Candidate, known: frozenset[str]
+) -> _Decision | None:
+    """A kept heading whose only content was an example S4 omitted because a fact contradicts it:
+    the heading goes with the example, citing the same fact."""
+    if not str(entry.get("unit_id", "")).endswith(".heading"):
+        return None
+    payload = _payload_row(str(entry["unit_id"]), candidate)
+    if payload is None:
+        return None
+    _, row = payload
+    if row.get("disposition") != "OMIT_UNSUPPORTED":
+        return None
+    facts = _examples(row, candidate, "CONTRADICTED", known)
+    if not facts:
+        return None
+    return _Decision(
+        None,
+        RATIONALE_LEAD_HEADING.format(facts=", ".join(facts)),
+        facts,
+        "OMIT_UNSUPPORTED",
+    )
+
+
+def _uncited_heading(
+    entry: Mapping[str, Any], candidate: Candidate, known: frozenset[str]
+) -> _Decision | None:
+    """A heading S4 already superseded into a renderer-owned section without citing any fact: the
+    reviewer counts a supersession only when a fact backs it, so cite the facts the destination
+    section is built from. Only when the heading is in fact not printed."""
+    unit_id = str(entry.get("unit_id", ""))
+    value = _unit_values(candidate).get(unit_id)
+    destination = entry.get("destination_section")
+    if (
+        value is None
+        or not unit_id.endswith(".heading")
+        or entry.get("disposition") != "SUPERSEDE_REDUNDANT"
+        or any(fact_id in known for fact_id in entry.get("fact_ids") or [])
+        or not isinstance(destination, str)
+        or heading_printed(value, candidate.readme)
+    ):
+        return None
+    included = {
+        str(item.get("section_id"))
+        for item in candidate.plan.get("sections", [])
+        if item.get("include")
+    }
+    if destination not in included:
+        return None
+    ids = planned_fact_ids(candidate.plan, destination) or renderer_fact_ids(
+        destination, candidate.facts, candidate.plan
+    )
+    facts = sorted(ids & known)
+    if not facts:
+        return None
+    rationale = str(entry.get("rationale") or "").strip() or RATIONALE_HEADING.format(
+        section=destination.replace("_", " ")
+    )
+    return _Decision(destination, rationale, facts)
+
+
 def _decide(
     placement: Placement,
     entry: Mapping[str, Any],
     candidate: Candidate,
     known: frozenset[str],
-) -> tuple[str, str, list[str]] | None:
-    """``(destination, rationale, fact_ids)`` for a kept unit the render did not print, or ``None``
-    when it cannot be accounted deterministically."""
+) -> _Decision | None:
+    """The accounting for a kept unit the render did not print, or ``None`` when it cannot be
+    accounted deterministically."""
     unit_id = placement.unit_id
     section = placement.destination
     if placement.outcome == "overlap":
         facts = _covering_facts(placement, entry, candidate, known)
         if not facts or not _lists_state_their_items(candidate, placement):
             return None
-        return (
-            section,
-            RATIONALE_OVERLAP.format(section=section.replace("_", " ")),
-            facts,
+        return _Decision(
+            section, RATIONALE_OVERLAP.format(section=section.replace("_", " ")), facts
         )
     if placement.outcome != "owned_elsewhere":
         return None
     if unit_id.endswith(".heading"):
         facts = _heading_facts(placement, candidate, known)
+        if not facts and section in EXAMPLE_SECTIONS:
+            return _example_heading(entry, candidate, known, section)
         if not facts:
             return None
-        return (
-            section,
-            RATIONALE_HEADING.format(section=section.replace("_", " ")),
-            facts,
+        return _Decision(
+            section, RATIONALE_HEADING.format(section=section.replace("_", " ")), facts
         )
     if unit_id.endswith(".code_block") and _is_mermaid(placement.text):
         facts = _diagram_fact_ids(candidate.plan, known)
         if not facts or not _drawn(candidate.plan, candidate.readme):
             return None
-        return "at_a_glance", RATIONALE_DIAGRAM, facts
+        return _Decision("at_a_glance", RATIONALE_DIAGRAM, facts)
+    if unit_id.endswith(".code_block") and section in EXAMPLE_SECTIONS:
+        facts = _examples(entry, candidate, "SUPPORTED", known)
+        if not facts or not _code_printed(
+            _unit_values(candidate).get(unit_id, ""), candidate
+        ):
+            return None
+        return _Decision(section, RATIONALE_EXAMPLE_CODE, facts)
     return None
 
 
 def _uncited_diagram(
     entry: Mapping[str, Any], candidate: Candidate, known: frozenset[str]
-) -> tuple[str, str, list[str]] | None:
+) -> _Decision | None:
     """The accounting for an inherited Mermaid block S4 dropped without citing a fact (``OMIT_
     UNSUPPORTED`` with no fact_ids, or ``DEFER_UNRESOLVED``) while the renderer drew its own At a
     Glance diagram: that diagram takes its place, drawn from the facts the plan names."""
@@ -209,7 +389,7 @@ def _uncited_diagram(
     ):
         return None
     facts = _diagram_fact_ids(candidate.plan, known)
-    return ("at_a_glance", RATIONALE_DIAGRAM, facts) if facts else None
+    return _Decision("at_a_glance", RATIONALE_DIAGRAM, facts) if facts else None
 
 
 def account_unprinted_units(
@@ -230,6 +410,8 @@ def account_unprinted_units(
     for entry in settled.get("dispositions", []):
         unit_id = str(entry.get("unit_id", ""))
         placement = by_unit.get(unit_id)
+        decided: _Decision | None = None
+        reason = ""
         if (
             unit_id in unprinted
             and placement is not None
@@ -237,18 +419,32 @@ def account_unprinted_units(
         ):
             decided = _decide(placement, entry, candidate, known)
             reason = placement.outcome
-        else:
+            if decided is None:
+                decided = _lead_heading_omitted(entry, candidate, known)
+                reason = "lead_heading_omitted"
+        if decided is None:
             decided = _uncited_diagram(entry, candidate, known)
             reason = "uncited_diagram"
         if decided is None:
+            decided = _uncited_heading(entry, candidate, known)
+            reason = "uncited_heading"
+        if decided is None:
             continue
-        destination, rationale, fact_ids = decided
         was = str(entry.get("disposition"))
-        entry["disposition"] = "SUPERSEDE_REDUNDANT"
-        entry["destination_section"] = destination
-        entry["fact_ids"] = fact_ids
-        entry["rationale"] = rationale
-        accounted.append(Accounted(unit_id, was, destination, reason, tuple(fact_ids)))
+        entry["disposition"] = decided.disposition
+        entry["destination_section"] = decided.destination
+        entry["fact_ids"] = decided.fact_ids
+        entry["rationale"] = decided.rationale
+        accounted.append(
+            Accounted(
+                unit_id,
+                was,
+                decided.destination,
+                reason,
+                tuple(decided.fact_ids),
+                decided.disposition,
+            )
+        )
     return settled, accounted
 
 

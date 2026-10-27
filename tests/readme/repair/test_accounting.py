@@ -12,6 +12,7 @@ README is accepted and the README bytes are unchanged.
 from __future__ import annotations
 
 import copy
+import dataclasses
 from typing import Any
 
 import pytest
@@ -423,15 +424,20 @@ def test_a_heading_the_renderer_prints_is_left_alone() -> None:
 
 
 def test_a_list_the_destination_does_not_state_is_left_for_repair() -> None:
-    """Overlap is not enough: BC-05's own test (every item stated) must hold. Here the plan links
-    one of the two targets, so the section never states the second item."""
+    """Overlap is not enough: every item must be stated. The plan links one of the two targets,
+    the renderer prints the other item as written, and then the second item's link is taken out of
+    the README: the list is no longer stated, so it is left for repair, not accounted."""
     plan = _plan()
     plan["links"] = plan["links"][:1]
     candidate = _candidate(_dispositions(), plan=plan)
+    candidate = dataclasses.replace(
+        candidate, readme=candidate.readme.replace("https://kb.example.com/3d", "")
+    )
     assert "004.list" in _unprinted(candidate)
     settled, accounted = account_unprinted_units(candidate)
     assert _by_unit(settled)["004.list"]["disposition"] == "VERIFIED_PRESERVE"
     assert not any(a.unit_id.endswith("004.list") for a in accounted)
+
 
 
 def test_a_kept_list_that_is_printed_is_not_touched() -> None:
