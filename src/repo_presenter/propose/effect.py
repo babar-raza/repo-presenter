@@ -19,7 +19,8 @@ Every gate below runs, in this order, before the first write, and each refusal i
    `REPOSITORY_PRESENTER_PROPOSAL_WRITE_AUTHORIZED`. Never inferred from a credential.
 3. `review` (required, `readme/review/independent_reviewer.py::ReviewVerdict`) - the independent
    reviewer's veto (mission section 11: "independent non-authoring criticism that can veto, with
-   no quiet demotion"). A verdict other than `"ACCEPT"` refuses with `Refusal.REVIEW_REJECTED`
+   no quiet demotion"). A verdict other than `"ACCEPT"`, or one no model reviewed
+   (`ReviewVerdict.model_reviewed`), refuses with `Refusal.REVIEW_REJECTED`
    before any token or network call; there is no override parameter, because a veto that can be
    bypassed by the caller is not a veto.
 4. A write-scoped token is supplied (`GH_PROPOSAL_WRITE_TOKEN` - never `GH_TOKEN`).
@@ -305,12 +306,22 @@ def propose_candidate(
         return _refuse(False, Refusal.WRITE_NOT_ENABLED, _NOT_AUTHORIZED_REASON)
 
     if review.verdict != "ACCEPT":
+        blocking = review.blocking_findings
+        rules = ", ".join(sorted({finding.rule for finding in blocking})) or review.fold.reason
         return _refuse(
             True,
             Refusal.REVIEW_REJECTED,
             "the independent reviewer rejected this candidate "
-            f"({review.deterministic_reject_count} deterministic finding(s)); it is never "
-            "proposed while a REJECT stands, and no caller can override this verdict",
+            f"({len(blocking)} blocking finding(s), {review.deterministic_reject_count} of them "
+            f"deterministic: {rules}); it is never proposed while a REJECT stands, and no caller "
+            "can override this verdict",
+        )
+    if not review.model_reviewed:
+        return _refuse(
+            True,
+            Refusal.REVIEW_REJECTED,
+            "no independent model reviewed this candidate: a deterministic-only verdict is not "
+            "the independent review the mission requires, so it is never proposed",
         )
 
     if not token:

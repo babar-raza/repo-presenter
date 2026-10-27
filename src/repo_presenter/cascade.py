@@ -19,8 +19,13 @@ scripts had to), one ``Invocation``/``Ledger``/``CallStore``, and writing the ex
 files to ``out_dir`` the six scripts wrote, so every existing downstream reader
 (``scripts/run_independent_review.py``, a future ``seal.py`` adaptation) needs no change.
 
-Independent review (``readme.review.independent_reviewer``) runs at the end of the same process,
-writing ``review_verdict.json`` beside the other final artifacts -- not a separate pass any more.
+Independent review runs at the end of the same process, writing ``review_verdict.json`` beside the
+other final artifacts. Stage S10 is the model's review (``readme.review.llm_review``,
+``plans/PLAN_independent_llm_reviewer.md`` D7): it runs once per candidate version, only when no
+deterministic rule and no blocking check rejects the candidate; its blocking findings are routed by
+causal stage into the same repair (``review_repair_rounds`` rounds at most, each re-review a counted
+call on the one ledger), and a candidate that still blocks is BLOCKED with the verdict's exact
+findings. A review that cannot be obtained raises ``ReviewUnavailable``.
 
 S4 runs ``dispositions.normalize`` as the reconciliation job's own checks, and S9 follows the render:
 the kept units the renderer did not print are accounted (``readme.repair.accounting``), the ported
@@ -115,7 +120,14 @@ from repo_presenter.readme.review.independent_reviewer import (
     review_candidate,
     write_review_verdict,
 )
-from repo_presenter.readme.validation.blocking import validate_candidate
+from repo_presenter.readme.review.llm_review import (
+    MAX_REVIEW_REPAIR_ROUNDS,
+    review_with_model,
+)
+from repo_presenter.readme.validation.blocking import (
+    blocking_failures,
+    validate_candidate,
+)
 from repo_presenter.readme.validation.failures import Candidate
 
 DEFAULT_PROMPTS_PATH = Path("prompts")
@@ -445,6 +457,80 @@ def _repair_s4(
     return any(changed)
 
 
+@dataclass(frozen=True)
+class _Settled:
+    """The result of the S4-S9 passes: the last composition, the validation and the deterministic
+    verdict that judged it, and how many passes it took."""
+
+    composed: _Composition
+    validation: dict[str, Any]
+    verdict: ReviewVerdict
+    rounds: int
+
+
+def _settle_s9(
+    *, entry: RegistryEntry, document: FactsDocument, investigation: dict, ecosystem: str,
+    tree_paths: list[str], original_bytes: bytes, original: str, out_dir: Path,
+    prompts: PromptRegistry, config: GatewayConfig, ledger: Ledger, store: CallStore,
+    context: JobContext, repairs: RepairLedger, max_rounds: int,
+) -> _Settled:
+    """Compose, validate and review deterministically, repairing S4 defects, until nothing fresh
+    is repairable or ``max_rounds`` passes have been made. No model reviews here (S10 follows)."""
+    rounds = 0
+    while True:
+        rounds += 1
+        composed = _compose(
+            entry=entry, document=document, investigation=investigation, ecosystem=ecosystem,
+            tree_paths=tree_paths, original_bytes=original_bytes, out_dir=out_dir,
+            prompts=prompts, config=config, ledger=ledger, store=store, context=context,
+        )
+        candidate = _candidate(
+            entry, document, composed.plan, composed.coherent_units, composed.dispositions,
+            composed.readme, tree_paths, composed.tasks,
+        )
+        validation = validate_candidate(candidate, out_dir, [])
+        verdict = review_candidate(
+            readme_text=composed.readme, units=composed.coherent_units.get("units", []),
+            facts=document, dispositions=composed.dispositions, original_readme=original,
+        )
+        write_review_verdict(verdict, out_dir / REVIEW_VERDICT_FILENAME)
+        if rounds >= max_rounds:
+            break
+        defects = _s4_defects(
+            composed=composed, validation=validation, verdict=verdict, entry=entry,
+            document=document, prompts=prompts,
+        )
+        if not defects or not _repair_s4(
+            defects=defects, composed=composed, investigation=investigation, entry=entry,
+            document=document, prompts=prompts, config=config, ledger=ledger, store=store,
+            context=context, repairs=repairs,
+        ):
+            break
+    return _Settled(composed, validation, verdict, rounds)
+
+
+def _review_defects(
+    *, settled: _Settled, verdict: ReviewVerdict, entry: RegistryEntry, document: FactsDocument,
+    prompts: PromptRegistry, repairs: RepairLedger,
+) -> list[Defect]:
+    """The repairable defects of the model's blocking findings, routed by their causal stage
+    (``review.defect_bridge``). A finding no stage may revise is recorded unrepairable."""
+    composed = settled.composed
+    defects = build_defects(
+        verdict,
+        units=composed.coherent_units.get("units", []),
+        plan=composed.plan,
+        dispositions=composed.dispositions,
+        facts=document,
+        ecosystem=entry.ecosystem,
+        repairer=prompts["targeted_repair"].sha256,
+    )
+    for defect in defects:
+        if not defect.repairable and not repairs.attempted(defect.fingerprint):
+            repairs.record(defect, "unrepairable")
+    return [defect for defect in defects if defect.repairable]
+
+
 def run_cascade(
     repository: str,
     ecosystem: str,
@@ -456,6 +542,7 @@ def run_cascade(
     prompts_path: Path = DEFAULT_PROMPTS_PATH,
     registry_path: Path = DEFAULT_REGISTRY_PATH,
     max_rounds: int = MAX_ROUNDS,
+    review_repair_rounds: int = MAX_REVIEW_REPAIR_ROUNDS,
 ) -> CascadeResult:
     """Run S3 (investigation) through S8 (coherence), the S9 validation and the independent
     review, for one repository, as one process under one invocation. Writes the same artifact
@@ -472,6 +559,11 @@ def run_cascade(
     cascade runs again from the call store, until nothing fresh is repairable or ``max_rounds``
     passes have been made. Every repair is a ``run_job`` call on this same ledger, so the
     invocation stays the one that made every provider call.
+
+    S10: when S9 leaves no deterministic blocking finding, the independent model reviews the
+    candidate (one provider call, two when it needed the one re-ask). Its blocking findings are
+    repaired by their causal stage and the candidate re-composed and re-reviewed, at most
+    ``review_repair_rounds`` times; ``0`` leaves the repair to the caller (``repair.loop``).
     """
     from repo_presenter.readme.repair.loop import composition_hash
 
@@ -506,36 +598,45 @@ def run_cascade(
     )
     write_facts(document, facts_path)
 
-    rounds = 0
-    while True:
-        rounds += 1
-        composed = _compose(
-            entry=entry, document=document, investigation=investigation, ecosystem=ecosystem,
-            tree_paths=tree_paths, original_bytes=original_bytes, out_dir=out_dir,
+    settle = {
+        "entry": entry, "document": document, "investigation": investigation,
+        "ecosystem": ecosystem, "tree_paths": tree_paths, "original_bytes": original_bytes,
+        "original": original, "out_dir": out_dir, "prompts": prompts, "config": config,
+        "ledger": ledger, "store": store, "context": context, "repairs": repairs,
+        "max_rounds": max_rounds,
+    }
+    settled = _settle_s9(**settle)
+    rounds = settled.rounds
+    verdict = settled.verdict
+    review_rounds = 0
+    while not verdict.blocking_findings and not blocking_failures(settled.validation):
+        # S10 (plan D7): the model reviews only a candidate no deterministic rule or blocking
+        # check rejects, once per candidate version. ReviewUnavailable propagates: no valid
+        # review, no verdict that could be sealed.
+        verdict = review_with_model(
             prompts=prompts, config=config, ledger=ledger, store=store, context=context,
-        )
-        candidate = _candidate(
-            entry, document, composed.plan, composed.coherent_units, composed.dispositions,
-            composed.readme, tree_paths, composed.tasks,
-        )
-        validation = validate_candidate(candidate, out_dir, [])
-        verdict = review_candidate(
-            readme_text=composed.readme, units=composed.coherent_units.get("units", []),
-            facts=document, dispositions=composed.dispositions, original_readme=original,
+            candidate_readme=settled.composed.readme, original_readme=original, facts=document,
+            plan=settled.composed.plan, dispositions=settled.composed.dispositions,
+            validation=settled.validation, deterministic_findings=verdict.findings,
         )
         write_review_verdict(verdict, out_dir / REVIEW_VERDICT_FILENAME)
-        if rounds >= max_rounds:
+        if verdict.verdict == "ACCEPT" or review_rounds >= review_repair_rounds:
             break
-        defects = _s4_defects(
-            composed=composed, validation=validation, verdict=verdict, entry=entry,
-            document=document, prompts=prompts,
+        defects = _review_defects(
+            settled=settled, verdict=verdict, entry=entry, document=document, prompts=prompts,
+            repairs=repairs,
         )
         if not defects or not _repair_s4(
-            defects=defects, composed=composed, investigation=investigation, entry=entry,
+            defects=defects, composed=settled.composed, investigation=investigation, entry=entry,
             document=document, prompts=prompts, config=config, ledger=ledger, store=store,
             context=context, repairs=repairs,
         ):
             break
+        review_rounds += 1
+        settled = _settle_s9(**settle)
+        rounds += settled.rounds
+        verdict = settled.verdict
+    composed, validation = settled.composed, settled.validation
     (out_dir / "validation.json").write_text(
         json.dumps(validation, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
         encoding="utf-8",

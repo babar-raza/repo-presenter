@@ -34,7 +34,15 @@ from repo_presenter.readme.review.independent_reviewer import (
     ReviewVerdict,
 )
 
-ACCEPTED_REVIEW = ReviewVerdict(verdict="ACCEPT", findings=())
+ACCEPTED_REVIEW = ReviewVerdict.folded(
+    (),
+    model_verdict="ACCEPT",
+    prompt_version="15",
+    model_served="gpt-oss",
+    request_sha256="a" * 64,
+    reply_sha256="b" * 64,
+)
+UNREVIEWED_ACCEPT = ReviewVerdict(verdict="ACCEPT", findings=())
 REJECTED_REVIEW = ReviewVerdict(
     verdict="REJECT",
     findings=(
@@ -542,13 +550,20 @@ def test_a_rejected_review_verdict_refuses_before_any_token_or_network_call() ->
     github = FakeGitHub()
     result = _propose(github, review=REJECTED_REVIEW, token=None)
     _assert_refused_without_writes(github, result, Refusal.REVIEW_REJECTED)
-    assert "1 deterministic finding" in result.reason
+    assert "1 blocking finding(s), 1 of them deterministic: claim_contradiction" in result.reason
 
 
 def test_a_rejected_review_verdict_refuses_even_with_every_other_gate_clear() -> None:
     github = FakeGitHub()
     result = _propose(github, review=REJECTED_REVIEW)
     _assert_refused_without_writes(github, result, Refusal.REVIEW_REJECTED)
+
+
+def test_a_deterministic_only_accept_is_never_proposed() -> None:
+    github = FakeGitHub()
+    result = _propose(github, review=UNREVIEWED_ACCEPT)
+    _assert_refused_without_writes(github, result, Refusal.REVIEW_REJECTED)
+    assert "no independent model reviewed" in result.reason
 
 
 def test_an_accepted_review_verdict_proceeds() -> None:

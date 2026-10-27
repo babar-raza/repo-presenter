@@ -649,6 +649,7 @@ def settle_candidate(
         "registry_path": registry_path,
         # this loop owns the rounds; the cascade's own S9 repair would double-spend the calls
         "max_rounds": 1,
+        "review_repair_rounds": 0,
     }
     result = run_cascade(repository, ecosystem, clone_path, **cascade_args)
     repairs = RepairLedger(

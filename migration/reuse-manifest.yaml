@@ -1718,12 +1718,13 @@ entries:
           encode 21 versions of matching heuristics (REVIEWER_LOGIC_VERSION 1 to 21) that must be
           re-validated against this repository's own finding shape, not ported verbatim.
       - file: "review/independent/review.py LLM reviewer job (review_packet, review_document entry point, prompts/independent_review.yaml wiring)"
-        decision: DEFER. The mission's independent non-authoring criticism (factual truth, usefulness,
-          unsupported claims, promotional language) is not built here yet.
+        decision: ADAPT 2026-10-27 (P2_JOB, see p2_job_2026_10_27) - the job is rebuilt over core/llm
+          (readme/review/packet.py, llm_review.py, prompts/independent_review.yaml v15, cascade stage
+          S10); the 2,996-line module is not ported as one block.
         why: >
-          It needs a reviewer prompt, a provider call through core/llm, a typed finding schema and
-          offline fakes for tests. That is a separate, sized taskcard. The 2,996-line module is not
-          ported as one block.
+          The mission's independent non-authoring criticism (factual truth, usefulness, unsupported
+          claims, promotional language) needed a reviewer prompt, a provider call through core/llm,
+          a typed finding schema and offline fakes for tests; those exist now.
     tests_ported: >
       tests/readme/review/test_preservation_rules.py (16 tests: a negative and a positive control for
       each new rule, an end-to-end negative control through review_candidate, and live-README
@@ -1771,9 +1772,25 @@ entries:
       ACCEPT. Still DEFERRED to Phase 2: review_packet, the job, prompt v15, cascade stage S10,
       repair routing and the present.py gate. Tests: tests/readme/review/test_clearances.py,
       test_review_contract.py, test_review_invariants.py (exhaustive fold property and AST checks).
+    p2_job_2026_10_27: >
+      PLAN_independent_llm_reviewer.md Phase 2 (P2_JOB). prompts/independent_review.yaml v15
+      (claim_kind, one typed claim per finding, no advisory tier, the "quote contains a SUPPORTED
+      fact value" sentence removed, route gpt-oss, provisional on the calibration gate);
+      readme/review/packet.py (review_packet: evidence only, the author's rationale/reason fields
+      dropped, README text delimited as untrusted data by digest-bearing begin/end lines;
+      review_schema: the call schema narrowed to the six claim kinds' own shapes);
+      readme/review/llm_review.py (review_with_model: run_job with the Phase 1 contract as checks,
+      one re-ask, ReviewUnavailable on a second rejection or an unreachable provider;
+      blocked_predicate); cascade.py stage S10 and repair routing (review_repair_rounds, default 2);
+      present.py gate on ReviewVerdict.model_reviewed and ReviewUnavailable as a transient failure;
+      propose/effect.py refusal text via blocking_findings and a refusal of an unreviewed ACCEPT;
+      defect_bridge.py hands the repair the finding's own text, instruction and typed claim.
+      Provider calls per review: 1, or 2 with the one re-ask, or 0 on a call-store replay.
+      Tests: tests/readme/review/test_llm_review.py, tests/test_cascade_s10.py,
+      tests/test_present_review.py.
     open_items: >
-      (1) Phase 2: the LLM reviewer job, packet, prompt v15 and wiring (the core is built, see
-      p1_core_2026_10_27). (1b) The tail-of-dotted-symbol name resolution and the mixed
+      (1) Phase 3: calibration of the reviewer (corpus, mutation operators, the stub-reviewer gate,
+      the live pilot, the gpt-oss route decision); the job is built, see p2_job_2026_10_27. (1b) The tail-of-dotted-symbol name resolution and the mixed
       present-plus-unsourced absence bundle are deliberately NOT clearances; calibration (Phase 3)
       decides from data whether either earns one, each with a failing test first.
       (2) The Oct 20 defect classes (example execution, link resolution, API completeness, format

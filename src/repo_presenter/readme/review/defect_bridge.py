@@ -33,6 +33,7 @@ from typing import Any
 from repo_presenter.core.facts import FactsDocument
 from repo_presenter.readme.composition.placement import placed_texts, placements
 from repo_presenter.readme.repair.targeted import Defect, review_defects
+from repo_presenter.readme.review.findings import Finding
 from repo_presenter.readme.review.independent_reviewer import ReviewVerdict
 
 #: Stands in for a reviewer prompt's hash in ``defect_fingerprint``'s ``context`` (old repo's
@@ -40,7 +41,7 @@ from repo_presenter.readme.review.independent_reviewer import ReviewVerdict
 #: whenever a rule's own matching logic changes meaning, so a stale fingerprint from before the
 #: change never short-circuits a fresh repair attempt as "already tried" (the same contract an
 #: LLM reviewer's own prompt hash serves).
-RULESET_VERSION = "independent_reviewer.v3.llm_core"
+RULESET_VERSION = "independent_reviewer.v4.llm_job"
 
 #: Rules whose finding is, by what the rule measures, about a disposition: a kept unit that is not
 #: printed is S4's claim that did not hold. The other rules measure authored text (S6).
@@ -72,6 +73,30 @@ def _locate_section(quote: str, units: Sequence[Mapping[str, Any]], placed: Mapp
     return None
 
 
+def _claim(finding: Finding) -> dict[str, Any]:
+    """What the repair is handed beyond the quote: an LLM finding's own text, instruction and
+    typed claim, in the reply's field names. A deterministic finding carries none of these."""
+    if finding.source != "llm":
+        return {}
+    omission = finding.omission
+    return {
+        "claim_kind": finding.claim_kind,
+        "text": finding.message,
+        "repair": finding.repair,
+        "fact_ids": list(finding.fact_ids),
+        "absent": list(finding.absent),
+        "unsupported_names": list(finding.unsupported_names),
+        "omission": None
+        if omission is None
+        else {
+            "kind": "omission",
+            "section_id": omission.section_id,
+            "missing_ids": list(omission.missing_ids),
+            "missing_quotes": list(omission.missing_quotes),
+        },
+    }
+
+
 def build_defects(
     verdict: ReviewVerdict,
     *,
@@ -99,7 +124,7 @@ def build_defects(
         "reviewer": {"prompt_sha256": RULESET_VERSION},
         "findings": [
             {
-                "id": f"{finding.rule}:{index}",
+                "id": finding.finding_id or f"{finding.rule}:{index}",
                 "section_id": finding.section_id
                 or _locate_section(finding.quote, units, placed),
                 "causal_stage": finding.causal_stage
@@ -107,6 +132,7 @@ def build_defects(
                 "criterion": finding.criterion or finding.rule,
                 "quote": finding.quote,
                 "message": finding.message,
+                **_claim(finding),
             }
             for index, finding in enumerate(findings)
         ],

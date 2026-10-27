@@ -52,6 +52,9 @@ from repo_presenter.core.state.present_transaction import (
 from repo_presenter.facts_handoff import FactsManifest, load_handoff, write_handoff
 from repo_presenter.lane_l import build_lane_l_facts
 from repo_presenter.readme.bundle.seal import SealInputs, seal_candidate
+from repo_presenter.readme.review.llm_review import blocked_predicate
+from repo_presenter.readme.review.verdict import ReviewUnavailable
+from repo_presenter.readme.validation.blocking import blocking_failures
 
 READ_TOKEN_VARIABLE = "REPOSITORY_PRESENTER_READ_TOKEN"
 DEFAULT_WORKDIR = Path(".present-work")
@@ -121,8 +124,17 @@ def _cascade_and_seal(
     verdict = result.review_verdict
     if verdict.verdict != "ACCEPT":
         raise PresentFailure(
-            f"independent review returned {verdict.verdict} with {len(verdict.findings)} "
-            "finding(s); nothing sealed"
+            f"independent review returned {verdict.verdict} with "
+            f"{len(verdict.blocking_findings)} blocking finding(s) of {len(verdict.findings)}; "
+            f"nothing sealed; {blocked_predicate(verdict)}"
+        )
+    if not verdict.model_reviewed:
+        failing = ", ".join(check["id"] for check in blocking_failures(result.validation))
+        raise PresentFailure(
+            "no independent model review of this candidate was made, and a deterministic-only "
+            "verdict is never sealed"
+            + (f"; blocking checks still fail: {failing}" if failing else "")
+            + "; nothing sealed"
         )
     seal_candidate(
         SealInputs(
@@ -243,6 +255,14 @@ def run_present(
             failure["detail"] = (
                 "model output was rejected by the job's own checks after its bounded re-asks "
                 f"(retryable: a re-run asks the model again): {type(exc).__name__}: {exc}"
+            )
+            failure["class"] = "transient"
+            return 1
+        except ReviewUnavailable as exc:
+            failure["detail"] = (
+                "no valid independent review could be obtained, so nothing was sealed "
+                f"(retryable: a re-run asks the reviewer again): {exc.reason}"
+                + "".join(f"; {error}" for error in exc.errors[:3])
             )
             failure["class"] = "transient"
             return 1

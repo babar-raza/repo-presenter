@@ -304,3 +304,59 @@ reviewer scope re-checks sealed content (`REVIEWER_LOGIC_VERSION` 3 -> 4), it re
 **Where the detail lives**: `src/repo_presenter/readme/review/{findings,clearances,reply,verdict,verdict_io,matching}.py`;
 `tests/readme/review/test_{clearances,review_contract,review_invariants}.py`;
 `migration/reuse-manifest.yaml` (`p1_core_2026_10_27`).
+
+---
+
+## 2026-10-27: Independent LLM reviewer, Phase 2 (the job, stage S10, the gates): clarifications to plan D1-D8
+
+**Decided / clarified** (`plans/PLAN_independent_llm_reviewer.md` stays the design; the places Phase 2
+had to choose where the plan was silent, plus one amendment):
+
+1. Amendment to D2, found by Phase 1: a finding carries ONE typed claim, so two claims are two
+   findings. Prompt v15 says so, and the call schema (`readme/review/packet.py::review_schema`)
+   narrows each finding to its `claim_kind`'s own shape: `claim_kind` plus exactly the typed field
+   that kind needs (`absent`, `unsupported_names` or `omission`) and no other. The manifest schema
+   keeps the typed fields optional so a stored reply is judged by the wider schema on replay.
+2. Prompt v15 removes the advisory tier (a finding without a section or stage blocks, stage
+   `unclear`), removes the sentence that made a quote containing a SUPPORTED fact value "supported
+   by definition" (D3: not a clearance), and keeps the mechanical quote / absent / unsupported_names
+   / omission contract. `model_route` is `gpt-oss` (D6), recorded as PROVISIONAL on the D9 calibration
+   gate; a test pins that the reviewer's route differs from every authoring job's.
+3. Evidence only (D6c): the packet drops every `rationale` / `reason` field the planner and the
+   reconciler attached to a decision. The two READMEs are wrapped in begin/end lines carrying the
+   SHA-256 of the wrapped text, so the text cannot contain its own closing line; facts and
+   dispositions are declared evidence, not instructions. The wrapped text is the README byte for
+   byte; the contract checks quotes against the raw candidate.
+4. Stage S10 runs when S9 leaves no deterministic finding AND no failing blocking check (BC-xx):
+   a failing blocking check is a deterministic rejection in the sense of D7, though it is not in
+   `ReviewVerdict`. Consequence to watch: a candidate with a persistent BC failure is never sent to
+   the model and, being unreviewed, never seals. It used to seal on the deterministic verdict alone.
+5. Provider calls per review: one when the first reply is valid, two with the one re-ask (`run_job`
+   with no `narrow` or `recover`), none on a call-store replay (the verdict is rebuilt from the
+   stored reply; the model served is read back from the store). A transport retry of one attempt
+   is its own counted call. Each repair round adds its repair calls, the re-asked downstream
+   stages and one re-review.
+6. Repair routing: blocking findings go through `defect_bridge.build_defects` (which now hands the
+   repair the finding's text, instruction and typed claim, not only its quote) into
+   `repair_defect`, at most `review_repair_rounds` (default 2) rounds; one fingerprint is attempted
+   once, so a finding that returns after its repair is recorded re-raised and the candidate is
+   BLOCKED with `llm_review.blocked_predicate`'s exact text. `repair.loop.settle_candidate`, which
+   owns its own rounds, passes `review_repair_rounds=0`.
+7. `ReviewUnavailable` (second invalid reply, or a provider unreachable through the bounded
+   transport retries) propagates out of `run_cascade`; `present.run_present` records it as a
+   transient failure and seals nothing. `present._cascade_and_seal` refuses any verdict whose
+   `model_reviewed` is False, and `propose.effect` refuses an unreviewed ACCEPT too, so a
+   deterministic-only verdict can neither seal nor be proposed.
+
+**What this does NOT decide**: calibration thresholds, the corpus and whether `gpt-oss` keeps the
+route (Phase 3); whether a 6000-token output budget suffices for a reasoning model (unmeasured; a
+`finish_reason: length` is a hard `JobError`, not a retry); the packet's size on a large surface
+(facts keep the existing symbol bounds and `symbol_index` is capped at 1500 values). No sealed
+candidate is invalidated: a reviewer prompt, model or logic change reaches only the `reviewer` scope
+(asserted in `tests/readme/review/test_llm_review.py`).
+
+**Where the detail lives**: `src/repo_presenter/readme/review/{packet,llm_review}.py`,
+`src/repo_presenter/cascade.py` (`_settle_s9`, `_review_defects`, stage S10),
+`prompts/independent_review.yaml`; `tests/readme/review/test_llm_review.py`,
+`tests/test_cascade_s10.py`, `tests/test_present_review.py`; `migration/reuse-manifest.yaml`
+(`p2_job_2026_10_27`).
