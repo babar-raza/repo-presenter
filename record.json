@@ -5,7 +5,7 @@
   "provider_repository_id": 1224468949,
   "registry_revision": null,
   "active_transaction_id": "b8b09d6469db42c4b94a798807bcff09",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "PresentFailure: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (heading 'Native and System Requirements'); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link agents.md)",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-27T18:07:46.814258+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:40555617732",
     "acquired_at": "2026-10-27T17:59:38.806050+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-10-27T18:14:38.806050+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "3f443b0477d54578acf3c41d5ef9d461",
+    "transaction_id": "b8b09d6469db42c4b94a798807bcff09",
+    "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-27T18:07:46.345202+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript",
+    "output_manifest": "candidates/aspose-cells-foss__Aspose.Cells-FOSS-for-TypeScript/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:40555617732:aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript": "b8b09d6469db42c4b94a798807bcff09"
   },
