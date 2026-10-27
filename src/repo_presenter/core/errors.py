@@ -96,3 +96,9 @@ class IllegalTransitionError(StateBackendError):
     transition registry, the record's current state does not match the transition's ``from``, or
     the caller's lease/fencing token is stale (the old repo's own docs/STATE_MACHINE.md section
     17 -- this repository has no equivalent doc yet; the rule itself is enforced in code)."""
+
+
+class ExecutionUnavailableError(PresenterError):
+    """The example-execution boundary could not start a process at all (a missing interpreter, a
+    path that does not resolve). That is a fact about the harness, not about the example, so the
+    caller records the examples NOT_VERIFIED; it is never evidence that an example is false."""

@@ -13,7 +13,12 @@ import hashlib
 from pathlib import Path
 
 from repo_presenter.core.ecosystems import spec_for
-from repo_presenter.core.examples import ExampleCandidate, collapse_blank_runs
+from repo_presenter.core.errors import ExecutionUnavailableError
+from repo_presenter.core.examples import (
+    ExampleCandidate,
+    ExampleReceipt,
+    collapse_blank_runs,
+)
 from repo_presenter.core.facts import FactsDocument
 from repo_presenter.core.registry.models import RegistryEntry
 from repo_presenter.core.snapshot.capture import RepositorySnapshot
@@ -21,6 +26,7 @@ from repo_presenter.core.snapshot.inventory import scan
 from repo_presenter.extractors.platforms.registry import plugin_for
 from repo_presenter.readme.evidence.facts.extract import extract_facts
 from repo_presenter.readme.evidence.facts.inherited import inventory_units
+
 
 def _fence_parts(source: str) -> tuple[str, str] | None:
     """The info-string language and body of a fenced block, or ``None`` for an indented block."""
@@ -54,7 +60,9 @@ def select_examples(
         parts = _fence_parts(unit.source)
         if parts is None or parts[0] not in aliases or not parts[1].strip():
             continue
-        normalized = "\n".join(line.rstrip() for line in parts[1].splitlines() if line.strip())
+        normalized = "\n".join(
+            line.rstrip() for line in parts[1].splitlines() if line.strip()
+        )
         if normalized in seen:
             continue
         seen.add(normalized)
@@ -121,6 +129,10 @@ def build_lane_l_facts(
     ``published_version._observe``.
     """
     plugin = plugin_for(ecosystem)
+    # Absolute from the entry point on: every verifier derives interpreter, script and cache
+    # paths from these, and runs its child from another directory.
+    root = root.resolve()
+    workspace = workspace.resolve()
     tree_paths = tree_paths_of(root)
     snapshot = snapshot_of(repository, root, source_revision, tree_paths)
     readme_text = (
@@ -132,7 +144,22 @@ def build_lane_l_facts(
         readme_text, snapshot.readme_path or "README.md", ecosystem
     )
     workspace.mkdir(parents=True, exist_ok=True)
-    receipts = plugin.verify_examples(root, tree_paths, candidates, workspace)
+    try:
+        receipts = plugin.verify_examples(root, tree_paths, candidates, workspace)
+    except ExecutionUnavailableError as exc:
+        # The harness could not start a process: that says nothing about the examples. Every one
+        # is NOT_VERIFIED (recorded UNRESOLVED), never a crash and never a false CONTRADICTED.
+        receipts = [
+            ExampleReceipt(
+                ordinal=candidate.ordinal,
+                outcome="NOT_VERIFIED",
+                return_code=None,
+                stdout="",
+                stderr="",
+                detail=f"example execution unavailable: {exc}",
+            )
+            for candidate in candidates
+        ]
     document, _probes = extract_facts(
         entry,
         snapshot,

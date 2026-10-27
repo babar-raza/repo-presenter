@@ -16,6 +16,7 @@ import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from repo_presenter.core.errors import ExecutionUnavailableError
 from repo_presenter.core.git_safety.process import TIMEOUT_EXIT_CODE, run_bounded
 from repo_presenter.core.secrets import redact
 
@@ -156,6 +157,12 @@ def execute(
         )
     if not workspace.is_dir():
         raise ValueError(f"example workspace does not exist: {workspace}")
+    # The child runs with cwd=workspace, so a relative path in argv would resolve against the
+    # workspace instead of the caller's directory (hosted run 9: '.present-work/examples/venv/
+    # bin/python' was not found). Absolute here, whatever the caller passed.
+    workspace = workspace.resolve()
+    if os.sep in argv[0] or "/" in argv[0]:
+        argv = [str(Path(argv[0]).resolve()), *argv[1:]]
     source = dict(os.environ if base_environment is None else base_environment)
     overlay = dict(extra_environment or {})
     removed_secret_values = [
@@ -165,7 +172,14 @@ def execute(
     ]
     environment = secret_free_environment(source)
     environment.update(_without_secret_names(overlay))
-    result = run_bounded(argv, cwd=workspace, timeout=timeout_seconds, env=environment)
+    try:
+        result = run_bounded(
+            argv, cwd=workspace, timeout=timeout_seconds, env=environment
+        )
+    except OSError as exc:
+        raise ExecutionUnavailableError(
+            f"could not start {argv[0]!r}: {type(exc).__name__}: {exc.strerror or exc}"
+        ) from exc
     return ExecutionResult(
         argv=tuple(argv),
         return_code=result.returncode,

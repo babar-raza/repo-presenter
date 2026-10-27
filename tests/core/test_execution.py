@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 
@@ -183,3 +184,52 @@ def test_profile_environment_paths_are_absolute_even_for_a_relative_workspace(
     for name, value in overlay.items():
         assert Path(value).is_absolute(), (name, value)
         assert Path(value).is_dir()
+
+
+def test_a_relative_executable_resolves_against_the_callers_directory_not_the_workspace(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Hosted run 9: execute() runs the child with cwd=workspace, so a relative interpreter path
+    ('.present-work/examples/venv/bin/python') resolved against the workspace and was not found."""
+    import stat
+    import sys
+
+    monkeypatch.chdir(tmp_path)
+    tools = tmp_path / "tools"
+    tools.mkdir()
+    workspace = tmp_path / "ws"
+    workspace.mkdir()
+    runner = tools / "runner.py"
+    runner.write_text("import sys\nprint('ran', sys.argv[1])\n", encoding="utf-8")
+    result = execute(
+        [os.path.relpath(sys.executable, tmp_path), str(runner), "ok"],
+        workspace=Path("ws"),
+        timeout_seconds=30,
+    )
+    assert result.return_code == 0
+    assert "ran ok" in result.stdout
+    # POSIX resolves a relative executable against the child's cwd (the workspace), Windows against
+    # the parent's, so assert the property itself: the recorded executable is absolute.
+    assert Path(result.argv[0]).is_absolute()
+
+    if sys.platform != "win32":
+        script = tools / "tool.sh"
+        script.write_text("#!/bin/sh\necho tool-ran\n", encoding="utf-8")
+        script.chmod(script.stat().st_mode | stat.S_IXUSR)
+        result = execute(
+            [str(Path("tools") / "tool.sh")], workspace=Path("ws"), timeout_seconds=30
+        )
+        assert "tool-ran" in result.stdout
+
+
+def test_a_process_that_cannot_start_is_a_typed_error_not_a_raw_traceback(
+    tmp_path: Path,
+) -> None:
+    from repo_presenter.core.errors import ExecutionUnavailableError
+
+    with pytest.raises(ExecutionUnavailableError, match="could not start"):
+        execute(
+            [str(tmp_path / "does" / "not" / "exist")],
+            workspace=tmp_path,
+            timeout_seconds=5,
+        )

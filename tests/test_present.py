@@ -797,3 +797,83 @@ def test_gitattributes_keeps_sealed_bundles_byte_exact() -> None:
         encoding="utf-8"
     )
     assert "candidates/** -text" in attributes.splitlines()
+
+
+def test_a_harness_that_cannot_start_a_process_leaves_examples_unverified_not_contradicted(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Hosted run 9 (first non-.NET ecosystem): a relative workspace made the example harness
+    unable to start its interpreter and the whole facts stage crashed. An execution failure says
+    nothing about the examples: each is NOT_VERIFIED, never a crash, never CONTRADICTED. The
+    clone and workspace are passed RELATIVE, as the hosted command line does."""
+    from repo_presenter.core.errors import ExecutionUnavailableError
+    from repo_presenter.extractors.platforms import python as python_platform
+
+    monkeypatch.setattr(links, "fetch_status", lambda url, transport=None: (200, url))
+    monkeypatch.chdir(tmp_path)
+    clone = init_git_repository(tmp_path / "clone")
+    (clone / "README.md").write_text(
+        "# Example\n\nUse it:\n\n```python\nimport example_widget\nexample_widget.render()\n```\n",
+        encoding="utf-8",
+    )
+    (clone / "example_widget.py").write_text(
+        "def render():\n    return 1\n", encoding="utf-8"
+    )
+    revision = commit_all(clone, "seed")
+
+    def cannot_start(*args: object, **kwargs: object) -> None:
+        raise ExecutionUnavailableError("could not start 'python': FileNotFoundError")
+
+    monkeypatch.setattr(python_platform, "verify_python_examples", cannot_start)
+
+    document = build_lane_l_facts(
+        REPO,
+        Path("clone"),
+        "python",
+        source_revision=revision,
+        workspace=Path("work") / "examples",
+        entry=_entry(),
+    )
+    examples = [f for f in document.facts if f.kind == "example"]
+    assert examples, "the README's fenced block should yield an example fact"
+    assert all(f.polarity != "CONTRADICTED" for f in examples)
+
+
+def test_the_example_verifier_receives_absolute_paths_even_from_a_relative_command_line(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The hosted command passes '--workdir .present-work'. Every verifier derives interpreter,
+    script and cache paths from the root and workspace it is given and runs its child from another
+    directory, so the entry point must hand it absolute ones."""
+    from repo_presenter.extractors.platforms import python as python_platform
+
+    monkeypatch.setattr(links, "fetch_status", lambda url, transport=None: (200, url))
+    monkeypatch.chdir(tmp_path)
+    clone = init_git_repository(tmp_path / "clone")
+    (clone / "README.md").write_text("# Example\n", encoding="utf-8")
+    (clone / "example_widget.py").write_text("X = 1\n", encoding="utf-8")
+    revision = commit_all(clone, "seed")
+    seen: list[Path] = []
+
+    def spy(
+        root: Path,
+        tree_paths: object,
+        candidates: object,
+        workspace: Path,
+        *a: object,
+        **k: object,
+    ):
+        seen.extend([root, workspace])
+        return []
+
+    monkeypatch.setattr(python_platform, "verify_python_examples", spy)
+    build_lane_l_facts(
+        REPO,
+        Path("clone"),
+        "python",
+        source_revision=revision,
+        workspace=Path("work") / "examples",
+        entry=_entry(),
+    )
+    assert len(seen) == 2
+    assert all(path.is_absolute() for path in seen), seen
