@@ -79,6 +79,11 @@ _FENCE = re.compile(
     r"^(?:```|~~~)[^\n]*\n(.*?)\n(?:```|~~~)[ \t]*$", re.MULTILINE | re.DOTALL
 )
 _ORDINAL = re.compile(r"inherited_unit:(\d+)\.")
+_EXAMPLE_UNIT = re.compile(r"\bunit (inherited_unit:\d+\.code_block)\b")
+RATIONALE_CONTRADICTED_OMISSION = (
+    "Omitted because the example is contradicted ({facts}): it failed verification against this "
+    "revision, so it may not be restored."
+)
 
 
 @dataclass(frozen=True)
@@ -211,6 +216,25 @@ def _examples(
     )
 
 
+def _unit_examples(
+    unit_id: str, candidate: Candidate, polarity: str, known: frozenset[str]
+) -> list[str]:
+    """The example facts with ``polarity`` whose own evidence names the inherited code block
+    ``unit_id`` as the fence they verified. The link lives in the example fact (the extractor
+    wrote it when it lifted the fence), so it is the proof even when S4's row cites no fact."""
+    return sorted(
+        fact.id
+        for fact in candidate.facts.by_kind("example")
+        if fact.polarity == polarity
+        and fact.id in known
+        and any(
+            (match := _EXAMPLE_UNIT.search(evidence.detail)) is not None
+            and match.group(1) == unit_id
+            for evidence in fact.evidence
+        )
+    )
+
+
 def _code_printed(unit_text: str, candidate: Candidate) -> bool:
     """Whether the README prints the inherited code block's body verbatim inside some fence (the
     example section may put supplied usings above it, so containment, not equality)."""
@@ -314,12 +338,70 @@ def _uncited_heading(
         destination, candidate.facts, candidate.plan
     )
     facts = sorted(ids & known)
+    if not facts and destination in EXAMPLE_SECTIONS:
+        # An example section is built from example facts, not planned facts: the heading goes
+        # with the SUPPORTED example it introduced, printed under the section's own title.
+        facts = _example_payload_facts(
+            unit_id, candidate, "SUPPORTED", known, printed=True
+        )
     if not facts:
         return None
     rationale = str(entry.get("rationale") or "").strip() or RATIONALE_HEADING.format(
         section=destination.replace("_", " ")
     )
     return _Decision(destination, rationale, facts)
+
+
+def _example_payload_facts(
+    heading_id: str,
+    candidate: Candidate,
+    polarity: str,
+    known: frozenset[str],
+    *,
+    printed: bool,
+) -> list[str]:
+    """The ``polarity`` example facts of the code block under the inherited heading
+    ``heading_id``; with ``printed`` only when the README prints that block's body."""
+    payload = _payload_row(heading_id, candidate)
+    if payload is None:
+        return []
+    unit_id, _row = payload
+    if printed and not _code_printed(
+        _unit_values(candidate).get(unit_id, ""), candidate
+    ):
+        return []
+    return _unit_examples(unit_id, candidate, polarity, known)
+
+
+def _uncited_contradicted_omission(
+    entry: Mapping[str, Any], candidate: Candidate, known: frozenset[str]
+) -> _Decision | None:
+    """An inherited example block S4 already omitted because a fact contradicts it, but whose
+    ``fact_ids`` are empty (the contradiction is only in the rationale prose). The reviewer counts
+    an omission only when it cites a fact, so cite the CONTRADICTED example fact the extractor
+    linked to that very block. The same for the heading that introduced it. Nothing is invented
+    and nothing renders differently: the unit stays omitted."""
+    unit_id = str(entry.get("unit_id", ""))
+    if (
+        entry.get("disposition") != "OMIT_UNSUPPORTED"
+        or any(fact_id in known for fact_id in entry.get("fact_ids") or [])
+        or unit_id not in _unit_values(candidate)
+    ):
+        return None
+    if unit_id.endswith(".code_block"):
+        facts = _unit_examples(unit_id, candidate, "CONTRADICTED", known)
+    elif unit_id.endswith(".heading"):
+        facts = _example_payload_facts(
+            unit_id, candidate, "CONTRADICTED", known, printed=False
+        )
+    else:
+        return None
+    if not facts:
+        return None
+    rationale = str(entry.get("rationale") or "").strip() or (
+        RATIONALE_CONTRADICTED_OMISSION.format(facts=", ".join(facts))
+    )
+    return _Decision(None, rationale, facts, "OMIT_UNSUPPORTED")
 
 
 def _decide(
@@ -425,6 +507,9 @@ def account_unprinted_units(
         if decided is None:
             decided = _uncited_diagram(entry, candidate, known)
             reason = "uncited_diagram"
+        if decided is None:
+            decided = _uncited_contradicted_omission(entry, candidate, known)
+            reason = "uncited_contradicted_omission"
         if decided is None:
             decided = _uncited_heading(entry, candidate, known)
             reason = "uncited_heading"
