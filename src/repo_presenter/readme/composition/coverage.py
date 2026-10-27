@@ -32,7 +32,9 @@ COMMAND = re.compile(
 )
 SENTENCE_SHARE = 0.7
 
-_RELEASE = re.compile(r"(?<![\w.])v?\d+(?:\.\d+){2,}(?:[-+][0-9A-Za-z]+(?:\.[0-9A-Za-z]+)*)?(?!\w)")
+_RELEASE = re.compile(
+    r"(?<![\w.])v?\d+(?:\.\d+){2,}(?:[-+][0-9A-Za-z]+(?:\.[0-9A-Za-z]+)*)?(?!\w)"
+)
 RELEASE_TOKEN = "<release>"
 
 _SPAN = re.compile(r"`([^`]+)`")
@@ -69,7 +71,9 @@ class _Indexed:
 class Destinations:
     """The document as it renders with no kept unit placed, section by section."""
 
-    def __init__(self, section_text: Callable[[str], str], section_ids: Sequence[str]) -> None:
+    def __init__(
+        self, section_text: Callable[[str], str], section_ids: Sequence[str]
+    ) -> None:
         self._section_text = section_text
         self._section_ids = tuple(section_ids)
         self._texts: dict[str, str] = {}
@@ -101,14 +105,18 @@ class Destinations:
         key = "\x00".join((section_id, *also))
         if key not in self._indexed:
             texts = [self.text(section_id)]
-            texts.extend(self.text(other) for other in also if other in self._section_ids)
+            texts.extend(
+                self.text(other) for other in also if other in self._section_ids
+            )
             self._indexed[key] = _Indexed("\n\n".join(texts))
         return self._indexed[key]
 
     @property
     def document(self) -> str:
         if self._document is None:
-            self._document = "\n\n".join(self.text(section_id) for section_id in self._section_ids)
+            self._document = "\n\n".join(
+                self.text(section_id) for section_id in self._section_ids
+            )
         return self._document
 
 
@@ -173,7 +181,9 @@ def _uncovered_items(
             document_text=shown.document if by_link else "",
         )
     )
-    absent_elsewhere = set(missing_items(text, elsewhere.text)) if elsewhere is not None else set()
+    absent_elsewhere = (
+        set(missing_items(text, elsewhere.text)) if elsewhere is not None else set()
+    )
 
     def stated_elsewhere(item: str) -> bool:
         return (
@@ -186,7 +196,9 @@ def _uncovered_items(
     for block in blocks:
         item = " ".join(list_items(block))
         first = next(iter(list_items(block)), "")
-        if (first in absent and not stated_elsewhere(item)) or not _carries_all(block, shown):
+        if (first in absent and not stated_elsewhere(item)) or not _carries_all(
+            block, shown
+        ):
             open_items.append(block)
     return text if len(open_items) == len(blocks) else "\n".join(open_items)
 
@@ -237,6 +249,19 @@ def states_all(kept: str, text: str, share: float = SENTENCE_SHARE) -> bool:
     return bool(parts) and all(indexed.states(part, share) for part in parts)
 
 
+def partly_printed(unit_text: str, readme_text: str) -> bool:
+    """Whether at least one sentence (or, for a list, item) of ``unit_text`` is printed, word for
+    word, somewhere in ``readme_text``. ``states_all`` alone only proves every part is restated in
+    some form; a unit entirely reworded, with nothing of it surviving verbatim, is not a trimmed
+    remainder (placement's own ``uncovered``/``uncovered_block`` always leaves the uncovered part
+    exactly as written) -- it is a unit nothing of which actually renders, and must not be
+    confused with one."""
+    squeezed = _squash(readme_text)
+    items = list_items(unit_text)
+    parts = items if items else sentences(unit_text)
+    return any(_squash(part).strip() and _squash(part) in squeezed for part in parts)
+
+
 def _loose(line: str) -> str:
     return " ".join(unversioned(line).split()).lower()
 
@@ -266,6 +291,7 @@ def uncovered_block(text: str, shown: Destinations, sections: Sequence[str]) -> 
     exact = set(printed)
     loose = {_loose(line) for line in printed}
     covered = all(
-        (line in exact) if COMMAND.match(line) else (_loose(line) in loose) for line in lines
+        (line in exact) if COMMAND.match(line) else (_loose(line) in loose)
+        for line in lines
     )
     return "" if covered else text

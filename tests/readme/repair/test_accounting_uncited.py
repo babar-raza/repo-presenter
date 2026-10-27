@@ -192,13 +192,26 @@ def test_an_omission_that_already_cites_a_fact_is_not_rewritten() -> None:
 
 
 def test_a_non_example_omission_is_never_given_an_example_fact() -> None:
-    """Negative control: an omitted paragraph is not an example block, so even with a CONTRADICTED
-    example in the document there is nothing deterministic to cite."""
+    """Negative control: an omitted list is not an example block, so even with a CONTRADICTED
+    example in the document ``_uncited_contradicted_omission`` cites nothing for it. The list's
+    own documentation_resources links are, in fact, restated word-for-word-equivalent by that
+    section's own authored content (the same facts ``test_accounting.py``'s overlap case cites
+    for this very list when it is kept instead of omitted) -- ``_uncited_redundant_omission``
+    (the Go/qwen3-next hosted generalization: an OMIT_UNSUPPORTED unit redundant with a real
+    section, proven from the rendered document) correctly backfills those, not an example fact."""
     dispositions = _dispositions(
         **{"004.list": _entry("004.list", "OMIT_UNSUPPORTED", None, [])}
     )
-    settled, _ = account_unprinted_units(_candidate(dispositions, _facts_linked()))
-    assert _by_unit(settled)["004.list"]["fact_ids"] == []
+    settled, accounted = account_unprinted_units(
+        _candidate(dispositions, _facts_linked())
+    )
+    row = _by_unit(settled)["004.list"]
+    assert not any(str(fid).startswith("example:") for fid in row["fact_ids"])
+    assert set(row["fact_ids"]) == {"link_target:001", "link_target:002"}
+    assert row["destination_section"] == "documentation_resources"
+    assert next(a for a in accounted if a.unit_id.endswith("004.list")).reason == (
+        "uncited_redundant_omission"
+    )
 
 
 def test_the_accounting_never_changes_what_renders_and_the_reviewer_agrees() -> None:

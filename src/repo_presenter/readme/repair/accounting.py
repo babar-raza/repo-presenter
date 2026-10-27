@@ -33,6 +33,8 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any, NamedTuple
 
+from repo_presenter.readme.composition.coverage import hard_tokens, states_all
+from repo_presenter.readme.composition.list_coverage import stems
 from repo_presenter.readme.composition.placement import (
     PLACED,
     Placement,
@@ -352,6 +354,152 @@ def _uncited_heading(
     return _Decision(destination, rationale, facts)
 
 
+def _included_sections(plan: Mapping[str, Any]) -> list[str]:
+    return [
+        str(item.get("section_id"))
+        for item in plan.get("sections", [])
+        if item.get("include")
+    ]
+
+
+#: Below this many distinct word stems, a sentence-overlap test is not a statement of
+#: redundancy -- it is a short label ("Maven:") that shares its one or two words with almost
+#: any section by accident. ``states_all``'s own 70% share would call ``{"maven"}`` a match for
+#: any paragraph that happens to say "Maven" once.
+_MIN_STEMS_FOR_REDUNDANCY = 3
+
+
+def _section_covering(
+    text: str, candidate: Candidate, known: frozenset[str]
+) -> tuple[str, list[str]] | None:
+    """The first included section whose own rendered text states every sentence of ``text`` (the
+    same sentence-overlap test placement's own ``uncovered`` rests a drop on, ``coverage.
+    states_all``), proven from the finished README, never guessed from a rationale's prose; every
+    link or command ``text`` carries must still be somewhere in the document
+    (``coverage.hard_tokens``), so a unit whose link or command was in fact dropped is never
+    matched by a paraphrase alone. Returns that section with the facts its own content rests on,
+    or ``None`` when no section states it, the section cites no fact, or ``text`` is too short a
+    fragment for a stem-overlap test to mean anything."""
+    if len(stems(text)) < _MIN_STEMS_FOR_REDUNDANCY:
+        return None
+    if not all(token in candidate.readme for token in hard_tokens(text)):
+        return None
+    texts = section_texts(candidate.readme)
+    for section in _included_sections(candidate.plan):
+        section_text = texts.get(section, "")
+        if not section_text or not states_all(section_text, text):
+            continue
+        ids = planned_fact_ids(candidate.plan, section) or renderer_fact_ids(
+            section, candidate.facts, candidate.plan
+        )
+        facts = sorted(ids & known)
+        if facts:
+            return section, facts
+    return None
+
+
+#: The only unit types ``_section_covering`` is trusted on: prose with real sentences or items.
+#: A heading carries no content of its own to compare (handled separately, via what it
+#: introduced); a code block is verbatim, not prose, and already has its own ``owned_elsewhere``/
+#: ``_example_heading`` path; a bare HTML wrapper (``<details>``, ``</details>``) is so short that
+#: its "sentence" squashes to one or two common words, which a stem-overlap test can match almost
+#: anywhere -- never a real statement of redundancy.
+_PROSE_UNIT_TYPES = frozenset({"paragraph", "list", "table"})
+
+
+def _heading_children(heading_id: str, candidate: Candidate) -> list[str]:
+    """Every unit immediately after ``heading_id``, up to the next heading: what it introduced."""
+    match = _ORDINAL.match(heading_id)
+    if match is None:
+        return []
+    start = int(match.group(1))
+    ordered = sorted(
+        (int(m.group(1)), unit)
+        for unit in _unit_values(candidate)
+        if (m := _ORDINAL.match(unit)) is not None and int(m.group(1)) > start
+    )
+    children: list[str] = []
+    for _, unit in ordered:
+        if unit.endswith(".heading"):
+            break
+        children.append(unit)
+    return children
+
+
+def _uncited_redundant_omission(
+    entry: Mapping[str, Any], candidate: Candidate, known: frozenset[str]
+) -> _Decision | None:
+    """An ``OMIT_UNSUPPORTED`` unit whose own rationale already claims it is redundant with a real
+    section, but cites no fact for it: the same "kept, S4 named the wrong disposition for it"
+    shape ``_uncited_heading`` repairs for ``SUPERSEDE_REDUNDANT``, except S4 called it
+    ``OMIT_UNSUPPORTED`` instead -- a difference in which word the authoring model used for the
+    same omitted-because-covered-elsewhere fact, which must not change whether the reviewer can
+    see the citation. The section is proven from the rendered document (``_section_covering``),
+    never parsed from the rationale text. A heading is accounted the same way as what it
+    introduced: only when every unit it introduced resolves to the very same section."""
+    unit_id = str(entry.get("unit_id", ""))
+    value = _unit_values(candidate).get(unit_id)
+    if (
+        value is None
+        or entry.get("disposition") != "OMIT_UNSUPPORTED"
+        or entry.get("destination_section") is not None
+        or any(fact_id in known for fact_id in entry.get("fact_ids") or [])
+        or not str(entry.get("rationale") or "").strip()
+    ):
+        return None
+    rationale = str(entry["rationale"]).strip()
+    if not unit_id.endswith(".heading"):
+        if unit_id.rsplit(".", 1)[-1] not in _PROSE_UNIT_TYPES:
+            return None
+        found = _section_covering(value, candidate, known)
+        if found is None:
+            return None
+        section, facts = found
+        return _Decision(section, rationale, facts, "OMIT_UNSUPPORTED")
+    if heading_printed(value, candidate.readme):
+        # Already printed (the renderer may own this exact heading itself, such as its own "At a
+        # Glance"): nothing to account for.
+        return None
+    children = _heading_children(unit_id, candidate)
+    if not children:
+        return None
+    rows = {
+        str(row.get("unit_id")): row
+        for row in candidate.dispositions.get("dispositions", [])
+    }
+    section: str | None = None
+    facts: set[str] = set()
+    for child in children:
+        if child.rsplit(".", 1)[-1] not in _PROSE_UNIT_TYPES | {"code_block"}:
+            # A structural wrapper (such as an HTML ``<details>`` tag) carries no content of its
+            # own to disagree with the heading's destination: skip it, rather than abort.
+            continue
+        row = rows.get(child)
+        child_value = _unit_values(candidate).get(child, "")
+        child_section: str | None = None
+        child_facts: list[str] = []
+        if row is not None:
+            row_destination = row.get("destination_section")
+            row_known_facts = sorted(set(row.get("fact_ids") or []) & known)
+            if isinstance(row_destination, str) and row_known_facts:
+                child_section, child_facts = row_destination, row_known_facts
+        if child_section is None:
+            if child.rsplit(".", 1)[-1] not in _PROSE_UNIT_TYPES:
+                return None
+            child_found = _section_covering(child_value, candidate, known)
+            if child_found is None:
+                return None
+            child_section, child_facts = child_found
+        if section is None:
+            section = child_section
+        elif section != child_section:
+            return None
+        facts.update(child_facts)
+    if section is None or not facts:
+        return None
+    return _Decision(section, rationale, sorted(facts), "OMIT_UNSUPPORTED")
+
+
 def _example_payload_facts(
     heading_id: str,
     candidate: Candidate,
@@ -513,6 +661,9 @@ def account_unprinted_units(
         if decided is None:
             decided = _uncited_heading(entry, candidate, known)
             reason = "uncited_heading"
+        if decided is None:
+            decided = _uncited_redundant_omission(entry, candidate, known)
+            reason = "uncited_redundant_omission"
         if decided is None:
             continue
         was = str(entry.get("disposition"))

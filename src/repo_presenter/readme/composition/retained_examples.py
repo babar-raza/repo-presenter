@@ -25,7 +25,7 @@ from repo_presenter.core.facts import Fact, FactsDocument
 
 NOT_VERIFIED_NOTE = (
     "> **Not verified:** this example is carried over unchanged from the project's existing "
-    "README. It could not be compiled or run against this revision."
+    "README. It could not be compiled or run here."
 )
 QUICK_START = "quick_start"
 ADDITIONAL_EXAMPLES = "additional_examples"

@@ -365,10 +365,25 @@ def test_the_renderer_prints_each_unverified_example_verbatim_beside_the_fixed_n
 def test_the_note_is_fixed_wording_that_does_not_claim_the_example_works() -> None:
     assert NOT_VERIFIED_NOTE == (
         "> **Not verified:** this example is carried over unchanged from the project's existing "
-        "README. It could not be compiled or run against this revision."
+        "README. It could not be compiled or run here."
     )
     lowered = NOT_VERIFIED_NOTE.lower()
     assert "works" not in lowered and "tested" not in lowered and "verified:" in lowered
+
+
+def test_the_note_carries_no_banned_narration_phrase() -> None:
+    """The qwen3-next/Rust hosted shape: BC-07 ("Structure" -- ``validation/structure.py``'s
+    ``_narration_failures``) failed on 'internal narration \\'this revision\\'' every time this
+    fixed, renderer-owned note was printed -- a defect of the note's own wording, not of the
+    content it accompanies, real in every ecosystem that ever retains an unverified example. The
+    falsifier: restoring the old "against this revision" wording must make this fail."""
+    from repo_presenter.readme.correction.text_gate import narration
+
+    assert narration(NOT_VERIFIED_NOTE) == []
+    assert narration(
+        "> **Not verified:** this example is carried over unchanged from the project's "
+        "existing README. It could not be compiled or run against this revision."
+    ) == ["this revision"]
 
 
 def test_dispositions_that_never_went_through_the_stage_render_no_example() -> None:

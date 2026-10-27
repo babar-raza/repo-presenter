@@ -79,7 +79,11 @@ from markdown_it.token import Token
 
 from repo_presenter.core.facts import FactsDocument
 from repo_presenter.readme.composition.authoring import preserved_opening_text
-from repo_presenter.readme.composition.coverage import states_all
+from repo_presenter.readme.composition.coverage import (
+    hard_tokens,
+    partly_printed,
+    states_all,
+)
 from repo_presenter.readme.composition.list_coverage import list_items, missing_items
 from repo_presenter.readme.evidence.facts.links import extract_links
 from repo_presenter.readme.review.findings import Finding
@@ -348,8 +352,28 @@ def _kept_text_printed(
         return True
     # A list is retained when every one of its items is: the renderer prints only the items its
     # section does not already state, so a fully stated list is rarely one verbatim block.
-    return unit_id.endswith(".list") and _list_items_stated(
+    if unit_id.endswith(".list") and _list_items_stated(
         unit_text, destination, readme_text
+    ):
+        return True
+    # Placement (``composition/coverage.py``'s own ``uncovered``/``uncovered_block``) may keep a
+    # paragraph or table only in part, printing just the sentences a destination section -- or a
+    # section it is read together with (``placement.py``'s "also") -- does not already state,
+    # verbatim. That is not a silent drop: the same shape is recognized here, independently of the
+    # renderer's own fact-ID bookkeeping, by the same sentence-overlap test placement rests its
+    # drop on (``states_all``, already proven for ``duplicate_opening_paragraph``) -- guarded by
+    # two things placement's own trim always leaves true of a genuine remainder, never of a unit
+    # entirely paraphrased away: every link or command the unit carries is still somewhere in the
+    # document (``hard_tokens``), and at least one sentence of it is printed word for word, not
+    # merely restated (``partly_printed``) -- so a unit nothing of which actually survives is still
+    # correctly judged lost, not waved through on a family resemblance.
+    if unit_id.rsplit(".", 1)[-1] not in {"paragraph", "list", "table"}:
+        return False
+    carries_all = all(token in readme_text for token in hard_tokens(unit_text))
+    return (
+        carries_all
+        and partly_printed(unit_text, readme_text)
+        and states_all(readme_text, unit_text)
     )
 
 

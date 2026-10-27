@@ -571,3 +571,74 @@ of the proof; and "a lane dimension in CURRENT" is a `CURRENT` per lane.
 **What this does NOT decide**: whether to run fresh hosted cascades for more clean twins (needed before the gate can be read); the owner's
 acceptance of any declared limit (unavailable while shared gates fail); Lane L calibration (`review_with_model(..., rendered=False)` exists for
 a maintainers' README, uncalibrated).
+
+---
+
+## 2026-10-28: First qwen3-next cohort (five new ecosystems) — a generalization gap in S9 accounting, not five one-off ecosystem defects
+
+**Decision**: the 2026-10-27 cohort's three REJECTs sharing the earlier .NET/Python shape (Java, Go, TypeScript)
+were diagnosed as one generalization gap, per mission section 12 ("two equivalent failures force a changed
+causal approach"), not patched per finding. Root cause: the "is this kept unit printed" test
+(`independent_reviewer.unprinted_kept_units`, shared by `disposition_coverage_rule` and
+`accounting.account_unprinted_units` on purpose, so the two can never disagree) only recognized a full exact
+text match, or — for a list only — every item stated within its own destination section; `placement.py`'s own
+`uncovered()`/`uncovered_block()` can legitimately print just the *uncovered remainder* of a kept paragraph or
+table (same-section, or cross-section via `placement.py`'s `_STATED_BY`/"also"), which the check had no concept
+of at all. Fixed by recognizing the same sentence-overlap test placement's own drop rests on
+(`coverage.states_all`), guarded by two properties a genuine trimmed remainder always has and a unit entirely
+paraphrased away never does: every link or command the unit carries is still in the document
+(`coverage.hard_tokens`), and at least one sentence or item of it is printed word for word, not merely restated
+(`coverage.partly_printed`, new — this guard is what keeps the fix from reopening the measured .NET/Python
+list-redundancy case, where neither list item is ever printed verbatim). A second, related gap: an
+`OMIT_UNSUPPORTED` unit (usually a heading) whose own rationale already says it is redundant with a real
+section, but cites no fact — the authoring model used the word "omit" for the exact "covered elsewhere" shape
+`_uncited_heading` already repairs for the word "supersede", and the old dispatcher matched that literal
+disposition string only. Fixed by `accounting._uncited_redundant_omission`, which proves the covering section
+from the rendered document (never the rationale's prose), with a minimum-stem floor so a short label such as
+"Maven:" is never matched by sentence-overlap alone.
+
+**Why**: three of five brand-new-ecosystem hosted runs hit the identical cause class on the first try — direct
+evidence the earlier fix (`accounting.py` commits `b0c72f9`, `4604b62`) was correct for the two shapes it was
+built from but did not generalize, because it reasoned from one literal disposition word and one literal-match
+test rather than from what the renderer can actually do to a kept or omitted unit's text. Per-ecosystem
+inspection (Java: 3 of 4 findings were this shape, 1 a real dropped hyperlink left blocking; Go: 2 of 6 headings
+were this shape, 4 were genuinely lost content — a directory-tree code block and a `docs/usage.md` link neither
+restated anywhere — correctly left blocking; TypeScript: 0 of 2 findings were this shape, both are a missing
+fact-extraction gap for a later card, not an accounting question) confirms the fix is general, not a sixth
+one-off patch: it resolves the shape wherever it is real and leaves every genuinely-lost unit exactly as
+blocking as before.
+
+**Two further decisions on the same cohort**:
+- **Cpp (40555595204, authoring `OutputRejectedError`, transient, never reached the reviewer)**: the rejection
+  is correct, not a missing fact. `intro` cited `` `reference.aspose.org` `` (a bare domain, copied from the
+  live README's own prose) as a verified identifier; the only fact that exists for it is the full URL
+  (`link_target`, value `https://reference.aspose.org/cells/cpp/`), never the bare domain. Minting a new fact
+  by string-slicing another fact's URL would be manufacturing evidence to satisfy a validator, not extraction.
+  `composition/authoring_retry.py`'s own documented remedy ("a stray identifier is deliberately NOT rewritten
+  into words: that would launder an unevidenced claim") is exactly the self-healing retry this case calls for,
+  already ported and already tested. No code changed for this one.
+- **Rust (40555609801, deterministic BC-07 failed, no LLM review reached — working as designed)**: BC-07 found
+  two real things. One is a genuine renderer bug, fixed: the fixed, cross-ecosystem `NOT_VERIFIED_NOTE`
+  (`composition/retained_examples.py`) said "...against this revision", a banned narration phrase
+  (`readme/correction/text_gate.py`'s own catalog), so BC-07 necessarily fails every time *any* ecosystem ever
+  retains an unverified example — reworded, meaning unchanged, with a falsifier test
+  (`narration(NOT_VERIFIED_NOTE) == []`, and the old wording confirmed to still fail it). The other is a
+  genuine, still-open content defect, left alone: `inherited_unit:048.paragraph` says "summarized in the
+  module-grouped table below" but no table follows it in that section — a dangling forward reference needing
+  S4/authoring repair, not a check fix.
+
+**What this does NOT decide**: TypeScript's missing Node/TypeScript engine-version fact (parallel to Java's
+`package:java_release`) — a real gap, left for a future extraction card. Go's two genuinely lost units and
+Rust's dangling table reference — real content defects needing an S4/authoring repair pass on a live rerun, not
+a check or accounting change. None of the five runs has been re-dispatched hosted; this is proven offline
+against the downloaded evidence (`C:\Users\babar\AppData\Local\Temp\cohort1\<run-id>\`), not yet against a
+fresh hosted pass.
+
+**Where the detail lives**: `src/repo_presenter/readme/review/independent_reviewer.py` (`_kept_text_printed`),
+`src/repo_presenter/readme/repair/accounting.py` (`_uncited_redundant_omission`, `_section_covering`,
+`_heading_children`), `src/repo_presenter/readme/composition/coverage.py` (`partly_printed`),
+`src/repo_presenter/readme/composition/retained_examples.py` (`NOT_VERIFIED_NOTE`);
+`tests/readme/repair/test_accounting_generalization.py` (16, new, parametrized across java/go/typescript/
+net/python); `tests/readme/repair/test_accounting_uncited.py`, `tests/readme/composition/test_retained_examples.py`,
+`tests/readme/review/test_scope.py` (updated); `migration/reuse-manifest.yaml` (the matching entry, with the
+full per-run measured-defect breakdown and blast-radius query).

@@ -57,7 +57,7 @@ from aspose.widget import Widget
 Widget().render("out.png")
 ```
 
-> **Not verified:** this example is carried over unchanged from the project's existing README. It could not be compiled or run against this revision.
+> **Not verified:** this example is carried over unchanged from the project's existing README. It could not be compiled or run here.
 
 ## Additional Examples
 
@@ -313,10 +313,19 @@ Found a bug or have a feature request? [Open an issue](https://github.com/o/r/is
 def test_a_corrected_live_readme_has_no_renderer_owned_section() -> None:
     live = LIVE.splitlines()
     shell = [live[n - 1] for n in reviewable_lines(LIVE)]
-    assert "Run pip install widget to get the library. It supports every Python 3 release." not in shell
+    assert (
+        "Run pip install widget to get the library. It supports every Python 3 release."
+        not in shell
+    )
     maintainers = [live[n - 1] for n in reviewable_lines(LIVE, rendered=False)]
-    assert "Run pip install widget to get the library. It supports every Python 3 release." in maintainers
-    assert "Widget is licensed under the MIT License, which permits commercial use." in maintainers
+    assert (
+        "Run pip install widget to get the library. It supports every Python 3 release."
+        in maintainers
+    )
+    assert (
+        "Widget is licensed under the MIT License, which permits commercial use."
+        in maintainers
+    )
     # the maintainers' own sentence is theirs even when it reads like one the renderer prints
     assert any("Found a bug" in row for row in maintainers)
     # markup is markup whoever wrote it
@@ -325,5 +334,10 @@ def test_a_corrected_live_readme_has_no_renderer_owned_section() -> None:
 
 def test_sections_are_still_named_for_a_live_readme() -> None:
     text = LIVE.splitlines()
-    n = text.index("Widget is licensed under the MIT License, which permits commercial use.") + 1
+    n = (
+        text.index(
+            "Widget is licensed under the MIT License, which permits commercial use."
+        )
+        + 1
+    )
     assert section_of_line(LIVE, n, rendered=False) == "license"

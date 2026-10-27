@@ -3246,6 +3246,99 @@ entries:
       failures are repaired when S4-caused, not yet a gate. S5/S6 reviewer findings are repaired by
       loop.settle_candidate, not inside the cascade.
 
+  - component: "First qwen3-next cohort (five hosted present runs, one new ecosystem each): a generalization gap in S9 accounting, not five one-off ecosystem defects"
+    source: new repository (no old-repository counterpart; this is a fix to NEW code recorded above)
+    evaluated_at_shas: []
+    per_file:
+      "independent_reviewer._kept_text_printed / unprinted_kept_units": "FIX. Recognizes a kept paragraph, list or table placement.py's own uncovered()/uncovered_block() prints only in part (the destination section, or a section it is read with -- placement.py's 'also' -- already states some of it), via the SAME sentence-overlap test placement rests its own drop on (coverage.states_all), guarded by two things a genuine trimmed remainder always has and a unit entirely paraphrased away never does: every link or command the unit carries is still in the document (coverage.hard_tokens, new), and at least one sentence or item of it is printed word for word, not merely restated (coverage.partly_printed, new). Before this fix the check only recognized a full exact match (or, for a list, every item stated within its OWN destination section only): any partial, cross-section or destination-adjacent trim was called 'not printed' even though nothing was silently dropped."
+      "accounting._uncited_redundant_omission / _section_covering / _heading_children (new)": "FIX. An OMIT_UNSUPPORTED unit (most often a heading, sometimes its own list/paragraph/table content) whose rationale already claims it is redundant with a real section but cites no fact: the same shape _uncited_heading already repairs for the literal disposition word SUPERSEDE_REDUNDANT, except S4 chose the word OMIT_UNSUPPORTED for the identical 'covered elsewhere' decision. _section_covering proves the covering section from the rendered document (states_all against every included section's own text, with the hard_tokens link/command guard and a minimum-stem floor -- _MIN_STEMS_FOR_REDUNDANCY=3 -- so a short label such as 'Maven:' is never matched by accident), never parsed from the rationale's prose. A heading borrows what it introduced (_heading_children walks to the next heading, skipping structural wrappers such as <details>): it is accounted only when every content unit it introduced resolves to the very same section."
+      "composition/coverage.partly_printed (new)": "NEW, small, required. See above; shared by both fixes so they can never disagree about what a genuine trimmed remainder looks like."
+      "composition/retained_examples.NOT_VERIFIED_NOTE": "FIX (old-code defect, found and fixed, not merely recorded; see measured_defect/Rust below): the renderer's own fixed note for an unverified retained example said '...against this revision', a banned narration phrase (readme/correction/text_gate.py's own catalog) baked into a deterministic, cross-ecosystem template -- BC-07 (structure_failures) necessarily fails every time any ecosystem ever retains an unverified example. Reworded to '...could not be compiled or run here.', meaning unchanged."
+    measured_defect: >
+      Five hosted present runs (qwen3-next, one new ecosystem each), 2026-10-27, all recorded correctly
+      as REAL findings (not crashes). (1) aspose-3d-foss/Aspose.3D-FOSS-for-Java 40555587482: REJECT, 3
+      disposition_coverage findings (012.paragraph/024.list/080.paragraph kept VERIFIED_PRESERVE but
+      placement.py printed only their uncovered remainder, a cross-section 'also' case for 012/024
+      (read_with=('installation','dependencies')) and a same-section case for 080) + 1 live_readme_loss
+      (080's cited test-directory link really is dropped, rendered as plain text -- left blocking,
+      correctly real, not an accounting question). (3) aspose-cells-foss/...-for-Go 40555603173: REJECT,
+      6 live_readme_loss findings; 2 were the generalization gap (010/042/072-equivalent headings
+      'CSV Import' and 'Constraints', OMIT_UNSUPPORTED with empty fact_ids and a rationale naming the
+      real section redundant with them -- additional_examples/example:010 and scope_limitations
+      respectively, both backfilled); 4 were genuinely lost content left alone ('Project Structure'
+      heading and its directory-tree code block, 'Detailed Documentation' heading and its docs/usage.md
+      link -- neither is restated anywhere in the finished README; _section_covering correctly finds no
+      covering section for either and leaves them uncited, still blocking). (5) aspose-cells-foss/...-
+      for-TypeScript 40555617732: REJECT, 2 live_readme_loss findings, BOTH genuine and NOT a
+      generalization-gap instance: 'agents.md' is omitted because no fact confirms the file's existence
+      (the repository's own lowercase agents.md is real, but nothing in the extracted facts says so --
+      a missing-fact-extraction defect for a future card, not an accounting fix), and 'Native and System
+      Requirements' is omitted because no fact backs the specific 'Node.js 18+ / TypeScript 5+' version
+      claim (unlike Java's package:java_release, TypeScript has no engine-version fact) -- left alone,
+      correctly real. (2) aspose-cells-foss/...-for-Cpp 40555595204: authoring OutputRejectedError,
+      transient, never reached the reviewer -- DECISION: working as designed, not a defect. 'intro'
+      cited `reference.aspose.org` (a bare domain, copied from the live README's own prose) as if it
+      were a verified identifier; the only fact that exists for it is the FULL URL
+      (link_target, value 'https://reference.aspose.org/cells/cpp/'), not the bare domain, so the
+      check is correct to refuse it -- composition/authoring_retry.py's own documented design ('a stray
+      identifier is deliberately NOT rewritten into words: that would launder an unevidenced claim') is
+      exactly the self-healing remedy this case calls for (delete the clause or say it in plain words),
+      already ported and already tested (tests/readme/composition/test_authoring_retry.py). No fact was
+      added: minting a fact whose value is a string-sliced fragment of another fact's URL would not be
+      extraction, it would be manufacturing a fact to satisfy a validator. (4) aspose-cells-foss/...-for-
+      Rust 40555609801: deterministic BC-07 failed, no LLM review reached (working as designed: a
+      deterministic-only verdict is never sealed). DECISION: BC-07 found two real things, one a genuine
+      renderer bug (fixed above: 'this revision' narration leaking from the retained-example note,
+      present on all 7 retained examples in this README, reproducible in any ecosystem) and one a
+      genuine, still-open content defect left alone (048.paragraph says 'summarized in the module-
+      grouped table below' but no table follows it in that section -- a dangling forward reference that
+      needs S4/authoring repair, not a check fix).
+    evidence: >
+      Root-caused by direct inspection of each run's facts.json/dispositions.json/plan.json/
+      README.coherent.md under C:\Users\babar\AppData\Local\Temp\cohort1\<run-id>\, replayed offline
+      through the real production code (repo_presenter.readme.repair.accounting.
+      account_unprinted_units, repo_presenter.readme.review.independent_reviewer.review_candidate) with
+      each ecosystem's real spec registered (extractors.platforms.{java,go,typescript}). Java: 3 of 4
+      findings resolved (unprinted==[], accounted==[]: nothing needed rewriting, the fix is in
+      recognizing what already printed), 1 left correctly blocking. Go: 2 of 6 resolved, 4 left
+      correctly blocking, render byte-identical before/after. TypeScript: 0 of 2 resolved (both
+      genuinely real; verdict unchanged, confirming the fix does not touch real findings). Rust: the
+      'this revision' structure failure gone on a fresh render from the real artifacts, the dangling-
+      table-reference failure unchanged. Tests: tests/readme/repair/test_accounting_generalization.py
+      (16, new -- parametrized java/go/typescript/net/python for both the trimmed-remainder-paragraph
+      shape and the OMIT_UNSUPPORTED-redundant-with-a-real-section shape, each with its own negative
+      control: a dropped link behind a paraphrase stays flagged, content nothing restates stays
+      uncited), tests/readme/repair/test_accounting_uncited.py (updated, 1 test: the pre-existing
+      negative control for 'an omitted unit is never given an EXAMPLE fact' is narrowed to its stated
+      claim and extended to assert the NEW, correct documentation_resources citation -- the same list,
+      same facts, test_accounting.py's own overlap case already cites when the unit is kept instead of
+      omitted), tests/readme/composition/test_retained_examples.py (updated pin + 1 new falsifier:
+      narration(NOT_VERIFIED_NOTE) == [] now, and fails on the old wording when restored). Full suite:
+      3269 passed/11 skipped before -> 3286 passed/11 skipped after (net +17: 16 new + 1 new; zero
+      regressions; PYTHONPATH=src python -m pytest -q, twice, ~8 minutes each).
+    blast_radius: >
+      Queried before the fix: no candidates/ bundle, no sealed Lane R/L artifact, and no committed
+      evidence file was read for write, resealed or edited. Every artifact inspected lives under the
+      scratchpad cohort1/ directory (five hosted runs' downloaded evidence, never committed) or is a
+      synthetic fixture built fresh in the new test file. The two production fixes
+      (independent_reviewer._kept_text_printed, accounting._uncited_redundant_omission) touch a shared
+      pure function each rule already calls (unprinted_kept_units) and a new accounting fallback
+      (dispatched only for OMIT_UNSUPPORTED/empty-fact_ids/no-destination/non-empty-rationale entries,
+      a narrow, already-uncommon shape); retained_examples.NOT_VERIFIED_NOTE is a single-constant
+      wording change with no other callers of the old string. No sealed candidate in candidates/ or
+      evidence/build/ is a SUPERSEDE_REDUNDANT/OMIT_UNSUPPORTED heading or a retained-unverified-example
+      candidate at this reviewer_logic version (checked: evidence/build/P1_PORTFOLIO_SCALE/ holds no
+      dispositions.json with an OMIT_UNSUPPORTED entry naming 'redundant', and no README containing the
+      old NOT_VERIFIED_NOTE wording), so nothing already-accepted is invalidated; this is a forward fix
+      for the next hosted pass over these five repositories and any future one, not a reseal.
+    not_yet_done: >
+      TypeScript's missing Node/TypeScript engine-version fact (parallel to Java's
+      package:java_release) is a real gap for a future extraction card, not touched here. Go's two
+      genuinely lost units (the directory-tree code block, the docs/usage.md link) and Rust's dangling
+      'table below' forward reference need an S4/authoring repair pass on a live rerun, not a check or
+      accounting change. The five runs have not been re-dispatched hosted; this fix is proven offline
+      against the downloaded evidence, not yet against a fresh hosted pass.
+
   - component: "Lane L hosted parity: the correction engine run, sealed, independently reviewed and transacted as an equal lane (LANE_L_HOSTED_PARITY, plans/PLAN_lane_l_hosted.md)"
     source: old-repository-presenter
     evaluated_at_shas: []
