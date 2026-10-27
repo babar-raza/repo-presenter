@@ -268,3 +268,39 @@ change any already-sealed candidate — nothing here was ever pulled, so nothing
 **Where the detail lives**: `migration/reuse-manifest.yaml`'s own corrected entry;
 `project/state.yaml`'s `GITHUB_ACTIONS_HOSTING_GAP_2026_10_24`
 (`major_correction_2026_10_26_durable_state_backend_was_wrongly_marked_retire`).
+
+## 2026-10-27: Independent LLM reviewer, Phase 1 (pure-code core): clarifications to plan D1-D5
+
+**Decided / clarified** (`plans/PLAN_independent_llm_reviewer.md` stays the design; these are the
+places Phase 1 had to choose where the plan was silent or ambiguous):
+
+1. One typed claim per finding. D2 says a finding is cleared only if "every typed field it declares"
+   is disproved. A single `Clearance` per finding cannot prove two fields, so the contract (D4)
+   requires `claim_kind` to name the one typed field the finding fills and refuses a finding that
+   fills another; two typed claims are two findings. Non-typed kinds (`contradiction`,
+   `unsupported_claim`, `quality`) fill none, so a quality complaint cannot be dressed as an absence.
+2. Clearances err toward blocking. Presence is strict (exact text, case-sensitive, whole-token,
+   inside the named section; an unlocatable section never clears); "is it in the evidence" is lenient
+   (Markdown stripped, case-folded) so uncertainty keeps the finding standing. Strings under three
+   characters, a string the finding quotes itself, a multi-word "name", and a cited non-SUPPORTED
+   fact all leave a finding BLOCKING. A bundle of both present and unsourced strings is in neither
+   `absence_present` nor `absence_unsourced` and keeps blocking (the old repository's combined
+   "settled" ruling is not ported). `names_supported` is equality only; a bare member name is not
+   resolved through a dotted symbol's tail.
+3. The quote check tolerates Markdown syntax and ellipsis fragments (the old repository measured
+   three real failures from stricter matching) but not case changes, paraphrase, the 80-character
+   anchor, or a quote scoped to the wrong section.
+4. A deterministic-only verdict (no model asked) still folds to ACCEPT when nothing blocks, so the
+   existing cascade is unchanged, but `ReviewVerdict.model_reviewed` is False and
+   `review_verdict.json` records `model_verdict: null`. Phase 2 must make "a model reviewed this" a
+   precondition of sealing and of the `present.py` gate (D4: a run with no valid review cannot be
+   sealed).
+5. Schema-1 `judgment` findings (never produced by any shipped rule) do not load under schema 2.
+
+**What this does NOT decide**: the packet, prompt v15 wording, the model route, cascade stage S10, or
+repair routing (Phase 2); calibration thresholds (Phase 3). No existing candidate is invalidated: the
+reviewer scope re-checks sealed content (`REVIEWER_LOGIC_VERSION` 3 -> 4), it regenerates nothing.
+
+**Where the detail lives**: `src/repo_presenter/readme/review/{findings,clearances,reply,verdict,verdict_io,matching}.py`;
+`tests/readme/review/test_{clearances,review_contract,review_invariants}.py`;
+`migration/reuse-manifest.yaml` (`p1_core_2026_10_27`).

@@ -12,23 +12,23 @@ exactly the regression this module exists to make impossible.
 
 from __future__ import annotations
 
+import json
+
+import pytest
+
 from repo_presenter.core.facts import Evidence, Fact, FactsDocument
 from repo_presenter.readme.review.independent_reviewer import (
     REVIEWER_LOGIC_VERSION,
     Finding,
-    Refutation,
     ReviewVerdict,
     ReviewVerdictError,
-    _fold,
     claim_contradiction_rule,
     duplicate_opening_paragraph_rule,
+    fold_verdict,
     load_review_verdict,
     review_candidate,
     write_review_verdict,
 )
-
-import json
-import pytest
 
 REVISION = "a" * 40
 
@@ -42,58 +42,54 @@ def _facts(*facts: Fact) -> FactsDocument:
 # ---------------------------------------------------------------------------
 
 
+def _rule(rule: str = "claim_contradiction", **overrides: str) -> Finding:
+    return Finding(rule=rule, source="deterministic", message="m", evidence="e", **overrides)
+
+
+def _verdict_of(findings: list[Finding]) -> str:
+    return fold_verdict(model_verdict=None, findings=findings).verdict
+
+
 def test_fold_accepts_when_there_are_no_findings() -> None:
-    assert _fold([]) == "ACCEPT"
+    assert _verdict_of([]) == "ACCEPT"
 
 
-def test_fold_accepts_when_every_finding_is_judgment_only() -> None:
+def test_fold_rejects_whenever_any_deterministic_finding_is_present() -> None:
+    """The exact invariant the old repository's fold-bug violated: one deterministic finding,
+    buried among any number of other findings, must still REJECT. (Replaces the old
+    judgment-only/annotate test: there is no annotate-only tier any more, so a blocking finding of
+    any source rejects and only a registered clearance can stop one blocking.)"""
     findings = [
-        Finding(rule="style_note", kind="judgment", message="a bit verbose"),
-        Finding(rule="another_note", kind="judgment", message="could be tighter"),
+        Finding(rule="llm:style", source="llm", message="minor"),
+        _rule(),
+        Finding(rule="llm:style", source="llm", message="minor too"),
     ]
-    assert _fold(findings) == "ACCEPT"
+    assert _verdict_of(findings) == "REJECT"
 
 
-def test_fold_rejects_whenever_any_finding_carries_a_refutation() -> None:
-    """The exact invariant the old repository's fold-bug violated: one deterministic refutation,
-    buried among any number of judgment-only annotations, must still REJECT."""
-    findings = [
-        Finding(rule="style_note", kind="judgment", message="minor"),
+def test_an_llm_finding_with_no_clearance_blocks_rather_than_annotates() -> None:
+    assert _verdict_of([Finding(rule="llm:style", source="llm", message="a bit verbose")]) == "REJECT"
+
+
+def test_a_deterministic_finding_can_never_be_cleared() -> None:
+    """Enforced by construction, not convention -- the single most important guarantee this
+    module makes. (Replaces ``test_a_judgment_finding_can_never_carry_a_refutation``: the
+    structural guarantee moved from 'judgment cannot refute' to 'only a clearance clears'.)"""
+    from repo_presenter.readme.review.findings import Clearance
+
+    with pytest.raises(ValueError, match="cannot be CLEARED"):
         Finding(
             rule="claim_contradiction",
-            kind="deterministic",
-            message="stale version",
-            refuted_by=Refutation(rule="claim_contradiction", evidence="26.9.0 vs 26.10.0"),
-        ),
-        Finding(rule="another_note", kind="judgment", message="minor too"),
-    ]
-    assert _fold(findings) == "REJECT"
-
-
-def test_a_judgment_finding_can_never_carry_a_refutation() -> None:
-    """Enforced by construction, not convention -- the single most important guarantee this
-    module makes. A future judgment rule literally cannot reintroduce the old bug class."""
-    with pytest.raises(ValueError, match="annotate only"):
-        Finding(
-            rule="a_future_judgment_rule",
-            kind="judgment",
-            message="tried to refute",
-            refuted_by=Refutation(rule="a_future_judgment_rule", evidence="should be impossible"),
+            source="deterministic",
+            message="tried to clear",
+            status="CLEARED",
+            clearance=Clearance("absence_present", ("x",), "0" * 64),
         )
 
 
-def test_review_verdicts_deterministic_reject_count_counts_only_refutations() -> None:
-    verdict = ReviewVerdict(
-        verdict="REJECT",
-        findings=(
-            Finding(rule="a", kind="judgment", message="m"),
-            Finding(
-                rule="b",
-                kind="deterministic",
-                message="m",
-                refuted_by=Refutation(rule="b", evidence="e"),
-            ),
-        ),
+def test_review_verdicts_deterministic_reject_count_counts_only_rule_findings() -> None:
+    verdict = ReviewVerdict.folded(
+        [Finding(rule="llm:a", source="llm", message="m"), _rule("b")]
     )
     assert verdict.deterministic_reject_count == 1
 
@@ -125,9 +121,8 @@ def test_claim_contradiction_rule_flags_a_real_stale_version() -> None:
     corrected once (BC-14). The reviewer must catch it independently of whichever Lane produced
     the candidate."""
     [finding] = claim_contradiction_rule(STALE_README, _facts(*NET))
-    assert finding.kind == "deterministic"
-    assert finding.refuted_by is not None
-    assert "26.10.0" in finding.refuted_by.evidence
+    assert finding.source == "deterministic" and finding.blocking
+    assert "26.10.0" in finding.evidence
 
 
 def test_claim_contradiction_rule_is_silent_on_the_current_version() -> None:
@@ -176,8 +171,7 @@ def test_duplicate_opening_paragraph_rule_flags_a_near_total_restatement() -> No
     [finding] = duplicate_opening_paragraph_rule(
         units, dispositions=_DISPOSITIONS_PRESERVING_OPENING, facts=facts
     )
-    assert finding.kind == "deterministic"
-    assert finding.refuted_by is not None
+    assert finding.source == "deterministic" and finding.blocking
 
 
 def test_duplicate_opening_paragraph_rule_allows_genuinely_new_content() -> None:
@@ -264,7 +258,7 @@ def test_falsifier_a_quoted_span_matching_a_supported_fact_elsewhere_still_rejec
     string) also appears, verbatim, as a SUPPORTED fact value elsewhere available to the
     reviewer (package:version == "26.9.0"). The old fold bug treated that coincidental match as
     proof of correctness and folded the REJECT to ACCEPT. This must never happen here: the
-    verdict is decided by `_fold`, which looks only at `refuted_by`, never at whether a quoted
+    verdict is decided by `fold_verdict`, which looks only at blocking findings, never at whether a quoted
     span happens to match some other fact's literal value."""
     readme = (
         "## Installation\n\n```bash\ndotnet add package Aspose.PDF.FOSS --version 26.9.0\n```\n\n"
@@ -291,19 +285,20 @@ def test_write_then_load_round_trips_an_accept_verdict_with_no_findings(tmp_path
 
 
 def test_write_then_load_round_trips_a_reject_verdict_with_mixed_findings(tmp_path) -> None:
-    verdict = ReviewVerdict(
-        verdict="REJECT",
-        findings=(
-            Finding(rule="style_note", kind="judgment", message="a bit verbose"),
+    verdict = ReviewVerdict.folded(
+        [
+            Finding(rule="llm:style", source="llm", message="a bit verbose", quote="verbose"),
             Finding(
                 rule="claim_contradiction",
-                kind="deterministic",
+                source="deterministic",
+                claim_kind="contradiction",
                 message="stale version",
-                refuted_by=Refutation(rule="claim_contradiction", evidence="26.1.0 != 26.9.0"),
+                evidence="26.1.0 != 26.9.0",
                 quote="version 26.1.0",
             ),
-        ),
+        ]
     )
+    assert verdict.verdict == "REJECT"
     path = tmp_path / "review_verdict.json"
     write_review_verdict(verdict, path)
     assert load_review_verdict(path) == verdict
@@ -333,7 +328,7 @@ def test_load_fails_closed_on_a_verdict_that_does_not_match_its_own_findings(tmp
         json.dumps(
             {
                 "schema_version": 1,
-                "reviewer_logic_version": REVIEWER_LOGIC_VERSION,
+                "reviewer_logic_version": "3",
                 "verdict": "ACCEPT",
                 "findings": [
                     {

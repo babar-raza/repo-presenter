@@ -31,7 +31,6 @@ from repo_presenter.propose.effect import (
 from repo_presenter.propose.pull_request import PullRequestContent
 from repo_presenter.readme.review.independent_reviewer import (
     Finding,
-    Refutation,
     ReviewVerdict,
 )
 
@@ -41,11 +40,9 @@ REJECTED_REVIEW = ReviewVerdict(
     findings=(
         Finding(
             rule="claim_contradiction",
-            kind="deterministic",
+            source="deterministic",
             message="stale version",
-            refuted_by=Refutation(
-                rule="claim_contradiction", evidence="26.9.0 vs 26.10.0"
-            ),
+            evidence="26.9.0 vs 26.10.0",
         ),
     ),
 )

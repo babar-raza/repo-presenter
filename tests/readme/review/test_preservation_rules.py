@@ -110,7 +110,7 @@ def test_disposition_coverage_rejects_a_unit_with_no_disposition() -> None:
     assert _messages(findings) == [
         "inherited_unit:002.paragraph has 0 dispositions, not one"
     ]
-    assert all(finding.refuted_by is not None for finding in findings)
+    assert all(finding.source == "deterministic" and finding.blocking for finding in findings)
 
 
 def test_disposition_coverage_rejects_a_unit_with_two_dispositions() -> None:

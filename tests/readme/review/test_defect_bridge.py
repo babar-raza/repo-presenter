@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from repo_presenter.core.facts import Evidence, Fact, FactsDocument
 from repo_presenter.readme.review.defect_bridge import build_defects
-from repo_presenter.readme.review.independent_reviewer import Finding, Refutation, ReviewVerdict
+from repo_presenter.readme.review.independent_reviewer import Finding, ReviewVerdict
 
 REVISION = "a" * 40
 REPOSITORY = "org/repo"
@@ -52,9 +52,9 @@ def test_a_finding_over_inherited_content_routes_to_s4_not_s6() -> None:
         findings=(
             Finding(
                 rule="claim_contradiction",
-                kind="deterministic",
+                source="deterministic",
                 message="wrong package name",
-                refuted_by=Refutation(rule="claim_contradiction", evidence="wrong package name"),
+                evidence="wrong package name",
                 quote=quote,
             ),
         ),
@@ -76,9 +76,9 @@ def test_a_finding_over_an_authored_unit_in_an_llm_owned_section_routes_to_s6() 
         findings=(
             Finding(
                 rule="duplicate_opening_paragraph",
-                kind="deterministic",
+                source="deterministic",
                 message="restates the preserved paragraph",
-                refuted_by=Refutation(rule="duplicate_opening_paragraph", evidence="dup"),
+                evidence="dup",
                 quote=quote,
             ),
         ),
@@ -105,9 +105,9 @@ def test_a_finding_in_a_deterministic_section_is_advisory_not_repairable() -> No
         findings=(
             Finding(
                 rule="claim_contradiction",
-                kind="deterministic",
+                source="deterministic",
                 message="m",
-                refuted_by=Refutation(rule="claim_contradiction", evidence="e"),
+                evidence="e",
                 quote=quote,
             ),
         ),
@@ -124,13 +124,34 @@ def test_a_finding_in_a_deterministic_section_is_advisory_not_repairable() -> No
     assert defect.reason is not None
 
 
-def test_judgment_only_findings_never_become_defects() -> None:
-    """Annotate-only: a judgment finding (no refuted_by -- enforced structurally, see
-    Finding.__post_init__) never reaches review_defects at all."""
-    verdict = ReviewVerdict(
-        verdict="ACCEPT",
-        findings=(Finding(rule="style_note", kind="judgment", message="a bit verbose"),),
+def _llm_finding(**overrides: object) -> Finding:
+    fields: dict[str, object] = {
+        "rule": "llm:completeness",
+        "source": "llm",
+        "message": "the section lacks something",
+        "claim_kind": "quality",
+        "finding_id": "F01",
+        "section_id": "opening",
+        "causal_stage": "S6",
+        "criterion": "completeness",
+        "quote": "authored text",
+        "repair": "add it",
+    }
+    fields.update(overrides)
+    return Finding(**fields)  # type: ignore[arg-type]
+
+
+def test_a_cleared_llm_finding_is_no_repair_target() -> None:
+    """There is no annotate-only tier: a finding is a repair target while BLOCKING, and stops being
+    one only when a registered clearance has proved it false."""
+    from repo_presenter.readme.review.clearances import apply_clearances
+    from tests.readme.review.review_support import context
+
+    cleared = apply_clearances(
+        _llm_finding(claim_kind="absence", absent=("quantum teleport mode",), quote=""), context()
     )
+    assert cleared.status == "CLEARED"
+    verdict = ReviewVerdict.folded([cleared])
     assert (
         build_defects(
             verdict,
@@ -142,6 +163,22 @@ def test_judgment_only_findings_never_become_defects() -> None:
         )
         == []
     )
+
+
+def test_a_blocking_llm_finding_is_routed_by_its_own_section_stage_and_criterion() -> None:
+    verdict = ReviewVerdict.folded([_llm_finding()], model_verdict="REJECT_PRESENTATION",
+                                   prompt_version="15", model_served="m",
+                                   request_sha256="a", reply_sha256="b")
+    [defect] = build_defects(
+        verdict,
+        units=[{"section": "opening", "slot": "opening", "text": "authored text here"}],
+        plan=_plan("opening"),
+        dispositions={"dispositions": []},
+        facts=_facts(),
+        ecosystem="python",
+    )
+    assert defect.repairable is True
+    assert defect.stage == "S6" and defect.section_id == "opening"
 
 
 def test_an_accepted_verdict_with_no_findings_produces_no_defects() -> None:
@@ -168,9 +205,9 @@ def test_every_defect_fingerprint_embeds_the_ruleset_version_for_future_invalida
         findings=(
             Finding(
                 rule="claim_contradiction",
-                kind="deterministic",
+                source="deterministic",
                 message="m",
-                refuted_by=Refutation(rule="claim_contradiction", evidence="e"),
+                evidence="e",
                 quote=quote,
             ),
         ),
@@ -200,9 +237,9 @@ def test_a_kept_but_unprinted_unit_is_an_s4_defect_even_when_the_render_placed_n
         findings=(
             Finding(
                 rule="disposition_coverage",
-                kind="deterministic",
+                source="deterministic",
                 message=f"{unit} is kept (VERIFIED_PRESERVE) but its text is not printed",
-                refuted_by=Refutation(rule="disposition_coverage", evidence="not printed"),
+                evidence="not printed",
                 quote=text,
             ),
         ),
@@ -224,9 +261,9 @@ def test_the_same_quote_under_another_rule_stays_where_it_was_routed() -> None:
         findings=(
             Finding(
                 rule="claim_contradiction",
-                kind="deterministic",
+                source="deterministic",
                 message="m",
-                refuted_by=Refutation(rule="claim_contradiction", evidence="e"),
+                evidence="e",
                 quote=text,
             ),
         ),

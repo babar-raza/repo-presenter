@@ -33,7 +33,6 @@ from repo_presenter.readme.repair.targeted import REPAIRS_FILENAME, RepairLedger
 from repo_presenter.readme.review.defect_bridge import build_defects
 from repo_presenter.readme.review.independent_reviewer import (
     Finding,
-    Refutation,
     ReviewVerdict,
 )
 from tests.readme.composition.synthetic import make_entry, make_facts
@@ -89,9 +88,9 @@ def _registry(tmp_path: Path) -> Path:
 def _injected_reject(*, quote: str) -> ReviewVerdict:
     finding = Finding(
         rule="claim_contradiction",
-        kind="deterministic",
+        source="deterministic",
         message="injected by the test: the quoted sentence must be repaired",
-        refuted_by=Refutation(rule="claim_contradiction", evidence="test fixture"),
+        evidence="test fixture",
         quote=quote,
     )
     return ReviewVerdict(verdict="REJECT", findings=(finding,))

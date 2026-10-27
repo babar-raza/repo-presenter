@@ -17,10 +17,12 @@ to a repair stage that cannot touch it.
 
 This module does not build a repair loop (no ``repair/rounds.py``-equivalent exists in this
 repository) -- it stops at producing typed, correctly routed ``Defect`` records, ready for
-whenever one exists. ``review_candidate``'s own two v1 rules are deterministic only (no judgment
-rules yet), so ``build_defects`` only ever considers findings that already carry a
-``Finding.refuted_by`` -- an annotate-only judgment finding never becomes a repair target, by the
-same no-quiet-demotion discipline ``independent_reviewer.py`` enforces for the verdict itself.
+whenever one exists. ``build_defects`` considers every BLOCKING finding -- a deterministic rule's
+and an LLM reviewer's alike -- and never a CLEARED one: a cleared finding was proven false by a
+registered clearance, so it is no repair target. There is no annotate-only tier to skip
+(``readme.review.findings``). An LLM finding carries its own ``section_id``, ``causal_stage`` and
+``criterion``, which are used as the reviewer stated them; a deterministic finding is located from
+its quote, as before.
 """
 
 from __future__ import annotations
@@ -38,7 +40,7 @@ from repo_presenter.readme.review.independent_reviewer import ReviewVerdict
 #: whenever a rule's own matching logic changes meaning, so a stale fingerprint from before the
 #: change never short-circuits a fresh repair attempt as "already tried" (the same contract an
 #: LLM reviewer's own prompt hash serves).
-RULESET_VERSION = "independent_reviewer.v2.deterministic_only"
+RULESET_VERSION = "independent_reviewer.v3.llm_core"
 
 #: Rules whose finding is, by what the rule measures, about a disposition: a kept unit that is not
 #: printed is S4's claim that did not hold. The other rules measure authored text (S6).
@@ -80,7 +82,7 @@ def build_defects(
     ecosystem: str,
     repairer: str = "",
 ) -> list[Defect]:
-    """Every deterministic REJECT finding in ``verdict``, routed to a ``Defect``.
+    """Every BLOCKING finding in ``verdict``, routed to a ``Defect``.
 
     ``placements()``/``placed_texts()`` need real ``inherited_unit`` facts to find anything
     (project/state.yaml's root_cause_traced_2026_10_24: every facts.json this repository had
@@ -92,15 +94,17 @@ def build_defects(
     """
     placed = placed_texts(placements(dict(plan), dict(dispositions), facts, ecosystem))
     llm_sections = _llm_sections(units)
-    findings = [finding for finding in verdict.findings if finding.refuted_by is not None]
+    findings = list(verdict.blocking_findings)
     review = {
         "reviewer": {"prompt_sha256": RULESET_VERSION},
         "findings": [
             {
                 "id": f"{finding.rule}:{index}",
-                "section_id": _locate_section(finding.quote, units, placed),
-                "causal_stage": "S4" if finding.rule in S4_RULES else "S6",
-                "criterion": finding.rule,
+                "section_id": finding.section_id
+                or _locate_section(finding.quote, units, placed),
+                "causal_stage": finding.causal_stage
+                or ("S4" if finding.rule in S4_RULES else "S6"),
+                "criterion": finding.criterion or finding.rule,
                 "quote": finding.quote,
                 "message": finding.message,
             }

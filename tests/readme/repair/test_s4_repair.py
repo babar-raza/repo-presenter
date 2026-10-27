@@ -35,7 +35,6 @@ from repo_presenter.readme.repair.targeted import Defect, RepairLedger
 from repo_presenter.readme.review.defect_bridge import build_defects
 from repo_presenter.readme.review.independent_reviewer import (
     Finding,
-    Refutation,
     ReviewVerdict,
 )
 from tests.readme.composition.synthetic import make_entry
@@ -188,9 +187,9 @@ def _defect() -> Defect:
     facts = _facts()
     finding = Finding(
         rule="claim_contradiction",
-        kind="deterministic",
+        source="deterministic",
         message=MESSAGE,
-        refuted_by=Refutation(rule="claim_contradiction", evidence="package:name"),
+        evidence="package:name",
         quote=WRONG_LINE,
     )
     [defect] = build_defects(

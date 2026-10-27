@@ -1711,7 +1711,7 @@ entries:
           Corroborates an LLM reviewer's free-form findings by re-asking under other seeds. It exists
           only for that reviewer, which this repository does not have.
       - file: "review/independent/review.py deterministic refutation rules (factuality_defect, cited_fact_defect, name_denial_defect, absence_defect, omission_defect, excluded_evidence_defect, excluded_disposition_defect, scope_defect, rendered_defect, the _cited_* matchers and their thresholds)"
-        decision: DEFER (not retired; blocked on the LLM reviewer)
+        decision: PARTIAL ADAPT 2026-10-27 (P1_CORE, see p1_core_2026_10_27) - absence, name-denial and omission matchers rebuilt as the four D3 clearances; the quote-contains-a-fact-value family, the excluded-evidence/disposition rules and the renderer-owned rules are RETIRED
         why: >
           These are the deterministic way to refute an LLM reviewer's finding, so the mission's
           independent review needs them. Today they would have no findings to act on. They also
@@ -1743,8 +1743,39 @@ entries:
       inherited_unit facts, and it recovers the live README with newline="", since the live file is
       CRLF and a text-mode read breaks the round trip. The committed review_verdict.json files were
       not rewritten.
+    p1_core_2026_10_27: >
+      PLAN_independent_llm_reviewer.md Phase 1 (P1_CORE) built the pure-code core of the LLM
+      reviewer; no model is called yet (Phase 2). New modules under src/repo_presenter/readme/review/:
+      findings.py (Finding with source deterministic|llm, claim_kind, status BLOCKING|CLEARED and a
+      digest-bound Clearance), clearances.py (the closed D3 catalogue: absence_present,
+      absence_unsourced, names_supported, omission_present), reply.py (D4 contract validation as
+      run_job-style checks, findings_from_reply, review_from_reply), verdict.py (the one fold,
+      ReviewVerdict whose __post_init__ re-runs it, ReviewUnavailable, REVIEWER_LOGIC_VERSION "4"),
+      verdict_io.py (review_verdict.json schema 2, schema 1 still readable) and matching.py.
+      Per-function dispositions from the old review.py: absence_defect / absence_partition ->
+      ADAPT as absence_present and absence_unsourced (kept: section-scoped presence, "nowhere in the
+      original README or any fact value", an absent string the finding quotes is no absence claim;
+      dropped: absence_restated word-overlap tier, ABSENCE_SETTLED combined ruling); name_denial_defect
+      -> ADAPT as names_supported (kept: name normalisation, multi-word entry is a claim, a cited
+      non-SUPPORTED fact blocks; dropped: tail and leading-segment resolution, the not-in-section
+      allowance -- plan D3 says "equals"); omission_partition / _id_rendered -> ADAPT as
+      omission_present (kept: id is rendered when its literal value is in the section; dropped: the
+      content-unit-citation shortcut and the unrestorable tier, which D4 turns into a contract
+      error); quote_located and _normalized -> ADAPT as matching.quote_located / plain (kept:
+      Markdown syntax and ellipsis fragments tolerated; dropped: the 80-character anchor and
+      case folding); _section_slice -> ADAPT as matching.section_scope (an unlocatable section
+      never clears). RETIRED, never ported: excluded_evidence_defect, excluded_disposition_defect,
+      factuality_defect / cited_fact_defect (the quote-contains-a-SUPPORTED-fact-value family,
+      the 27/30 incident), renderer_owned_*, the demotion machinery, second and third reads, the
+      30-point rubric, and every rule whose outcome was a demotion or a returned REJECT folded to
+      ACCEPT. Still DEFERRED to Phase 2: review_packet, the job, prompt v15, cascade stage S10,
+      repair routing and the present.py gate. Tests: tests/readme/review/test_clearances.py,
+      test_review_contract.py, test_review_invariants.py (exhaustive fold property and AST checks).
     open_items: >
-      (1) DEFER: the LLM-backed judgment reviewer and its deterministic refutation matchers.
+      (1) Phase 2: the LLM reviewer job, packet, prompt v15 and wiring (the core is built, see
+      p1_core_2026_10_27). (1b) The tail-of-dotted-symbol name resolution and the mixed
+      present-plus-unsourced absence bundle are deliberately NOT clearances; calibration (Phase 3)
+      decides from data whether either earns one, each with a failing test first.
       (2) The Oct 20 defect classes (example execution, link resolution, API completeness, format
       claims) are still not checked by the Lane R reviewer. The Lane L detectors in
       readme/correction/detectors/ are candidates to port as rules, a portfolio-scope decision.
