@@ -1494,9 +1494,16 @@ next_ready_items:
       tests pass against the real git-ref backend on a local bare remote. NOT YET DONE, and each
       needs the owner's go-ahead because it spends real provider calls and writes state refs to
       origin: (a) the first live hosted run; (b) a scheduled trigger (cadence and spend are an
-      owner decision). Known gap, not hidden: a hosted runner starts with an empty workdir, so a
-      sealed bundle never survives to a later run and the no-op proof cannot be reached hosted yet.
-      Persisting sealed bundles across runs (state ref or artifact) is the next honest step.
+      owner decision). Persistence FIXED 2026-10-27: the first cut sealed into the disposable
+      .present-work, so no bundle could outlive a run. present.py now seals into the checkout's
+      candidates/ tree (--candidates-root, default "."), the old repo's own model (its committed
+      candidates/<slug>/ tree is the record), and present.yml restores/saves candidates/<slug>
+      plus the LLM call store (.present-work/cascade/llm_cache, ~300 KB per repo) with
+      actions/cache so a rerun can reproduce the bundle with zero provider calls. Both are
+      content-addressed, so a stale or evicted cache costs a fresh seal, never a wrong proof.
+      Still UNPROVEN until a hosted run exercises it (needs the owner's go-ahead), and actions/cache
+      is best-effort (evicted after 7 days unused): the durable record is the committed tree, whose
+      publication (candidates_publish, ported 81bcaa9) is gated on an owner variable and App token.
       (3) judge.py/review.py's acceptance-scoring tier (core/candidates.py's deliberately-
       deferred Tier 2: load_proposable_candidate/_review_refusal/ProposableCandidate/
       AcceptanceGate) -- not yet scoped/read this session; read the old repo's source in full

@@ -79,7 +79,7 @@ def test_a_sealed_candidate_commits_accepted_and_releases_the_lease(
         exit_code = run_present(
             backend=backend,
             entry=entry,
-            workdir=workdir,
+            candidates_root=workdir,
             holder_id="present:run-1",
             workflow_run_id="run-1",
             pipeline=pipeline,
@@ -110,7 +110,7 @@ def test_a_rejected_candidate_records_a_named_failure_not_a_silent_drop(
         exit_code = run_present(
             backend=backend,
             entry=entry,
-            workdir=tmp_path / "work",
+            candidates_root=tmp_path / "work",
             holder_id="present:run-2",
             workflow_run_id="run-2",
             pipeline=pipeline,
@@ -141,7 +141,7 @@ def test_an_untyped_defect_propagates_and_still_releases_the_lease(
             run_present(
                 backend=backend,
                 entry=entry,
-                workdir=tmp_path / "work",
+                candidates_root=tmp_path / "work",
                 holder_id="present:run-3",
                 workflow_run_id="run-3",
                 pipeline=pipeline,

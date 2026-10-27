@@ -45,6 +45,10 @@ from repo_presenter.readme.bundle.seal import SealInputs, seal_candidate
 
 READ_TOKEN_VARIABLE = "REPOSITORY_PRESENTER_READ_TOKEN"
 DEFAULT_WORKDIR = Path(".present-work")
+# Sealed bundles live in the checkout's committed candidates/ tree (or a restored copy of it),
+# never in the disposable workdir: a rerun can only prove a no-op against a bundle that outlives
+# the run that sealed it.
+DEFAULT_CANDIDATES_ROOT = Path(".")
 
 
 class PresentFailure(PresenterError):
@@ -57,6 +61,7 @@ def cascade_pipeline(
     repository: str,
     ecosystem: str,
     workdir: Path,
+    candidates_root: Path,
     config: GatewayConfig,
     read_token: str | None,
     prompts_path: Path,
@@ -98,7 +103,7 @@ def cascade_pipeline(
             prompts=load_manifests(prompts_path),
             out_dir=result.out_dir,
             facts_path=result.facts_path,
-            candidates_root=workdir,
+            candidates_root=candidates_root,
             provider_calls=result.provider_calls,
             invocation=result.invocation,
         )
@@ -109,7 +114,7 @@ def run_present(
     *,
     backend: StateBackend,
     entry: RegistryEntry,
-    workdir: Path,
+    candidates_root: Path,
     holder_id: str,
     workflow_run_id: str | None,
     pipeline: Callable[[], None],
@@ -135,7 +140,7 @@ def run_present(
                 kind="failed",
                 detail=failure.get("detail", f"present exited {exit_code}"),
             )
-        return classify_present_outcome(workdir, entry, exit_code)
+        return classify_present_outcome(candidates_root, entry, exit_code)
 
     return run_present_transaction(
         backend=backend,
@@ -156,6 +161,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--repository", required=True)
     parser.add_argument("--ecosystem", required=True)
     parser.add_argument("--workdir", type=Path, default=DEFAULT_WORKDIR)
+    parser.add_argument("--candidates-root", type=Path, default=DEFAULT_CANDIDATES_ROOT)
     parser.add_argument("--registry", type=Path, default=DEFAULT_REGISTRY_PATH)
     parser.add_argument("--prompts", type=Path, default=DEFAULT_PROMPTS_PATH)
     parser.add_argument("--state-remote", default="origin")
@@ -179,13 +185,14 @@ def main(argv: Sequence[str] | None = None) -> int:
         exit_code = run_present(
             backend=backend,
             entry=entry,
-            workdir=args.workdir,
+            candidates_root=args.candidates_root,
             holder_id=f"present:{args.workflow_run_id or os.getpid()}",
             workflow_run_id=args.workflow_run_id,
             pipeline=lambda: cascade_pipeline(
                 repository=args.repository,
                 ecosystem=args.ecosystem,
                 workdir=args.workdir,
+                candidates_root=args.candidates_root,
                 config=config,
                 read_token=read_token,
                 prompts_path=args.prompts,

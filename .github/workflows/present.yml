@@ -38,6 +38,26 @@ jobs:
       - name: Install
         run: python -m pip install -e .
 
+      - name: Name this repository's persisted state
+        id: slug
+        env:
+          INPUT_REPOSITORY: ${{ inputs.repository }}
+        run: echo "slug=${INPUT_REPOSITORY//\//__}" >> "$GITHUB_OUTPUT"
+
+      # A runner starts empty, so the previous run's sealed bundle and LLM call store are restored
+      # here. Without them a rerun re-spends every provider call and can never reach the
+      # zero-call byte-identical no-op proof. Both are content-addressed (a bundle is verified by
+      # its manifest, a call by its request hash), so a stale or partial restore can only cost a
+      # re-run, never a wrong proof; a cache miss degrades to a fresh seal.
+      - name: Restore the previous sealed bundle and call store
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            candidates/${{ steps.slug.outputs.slug }}
+            .present-work/cascade/llm_cache
+          key: presenter-state-${{ steps.slug.outputs.slug }}-${{ github.run_id }}
+          restore-keys: presenter-state-${{ steps.slug.outputs.slug }}-
+
       - name: Require the durable-state write token
         env:
           REPOSITORY_PRESENTER_STATE_TOKEN: ${{ secrets.REPOSITORY_PRESENTER_STATE_TOKEN }}
@@ -63,11 +83,22 @@ jobs:
             --state-remote "https://github.com/${GITHUB_REPOSITORY_SLUG}.git" \
             --workdir .present-work
 
+      - name: Save the sealed bundle and call store for the next run
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            candidates/${{ steps.slug.outputs.slug }}
+            .present-work/cascade/llm_cache
+          key: presenter-state-${{ steps.slug.outputs.slug }}-${{ github.run_id }}
+
       - name: Keep the run's evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: present-${{ inputs.ecosystem }}-${{ github.run_id }}
-          path: .present-work
+          path: |
+            .present-work
+            candidates/${{ steps.slug.outputs.slug }}
           if-no-files-found: ignore
           retention-days: 14
