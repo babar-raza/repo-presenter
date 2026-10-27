@@ -184,8 +184,12 @@ def test_a_model_output_rejection_is_recorded_as_a_retryable_failure(
 @pytest.mark.parametrize(
     "error",
     [
-        PresentFailure("independent review returned REJECT with 1 finding(s); nothing sealed"),
-        JobError("section_authoring: output truncated at the manifest's max_output_tokens"),
+        PresentFailure(
+            "independent review returned REJECT with 1 finding(s); nothing sealed"
+        ),
+        JobError(
+            "section_authoring: output truncated at the manifest's max_output_tokens"
+        ),
     ],
 )
 def test_other_typed_failures_keep_the_validation_failed_classification(
@@ -728,3 +732,68 @@ def test_a_toolchain_step_in_the_present_job_fails_the_structure_check() -> None
     )
     with pytest.raises(AssertionError, match="toolchain step"):
         assert_present_job_runs_no_repository_code(workflow)
+
+
+def test_a_corrupt_sealed_bundle_is_a_recorded_failure_not_an_escaping_exception(
+    remote: Path, tmp_path: Path
+) -> None:
+    """Hosted run 8: a committed bundle failed its own hash check inside classification, the
+    BundleError escaped, and the durable record kept describing an earlier run."""
+    entry = _entry()
+    work = tmp_path / "work"
+
+    def pipeline() -> None:
+        _write_sealed_bundle(work, entry, "ACCEPTED")
+        slug = work / CANDIDATES_DIRNAME / f"{entry.owner}__{entry.name}" / "rev-1"
+        (slug / "README.md").write_bytes(b"tampered after sealing\n")
+
+    with GitStateBackend(remote=str(remote)) as backend:
+        exit_code = run_present(
+            backend=backend,
+            entry=entry,
+            candidates_root=work,
+            holder_id="present:run-corrupt",
+            workflow_run_id="run-corrupt",
+            pipeline=pipeline,
+        )
+        record = backend.load(REPO)
+
+    assert exit_code == 0
+    assert record is not None
+    assert record.state == "FAILED_INTERNAL"
+    assert record.failure is not None
+    assert "BundleError" in record.failure.detail
+    assert record.lease is None
+
+
+def test_every_artifact_the_cascade_writes_pins_its_newline() -> None:
+    """A sealed artifact is hashed by its exact bytes: a write that takes the platform's default
+    newline gives CRLF on Windows and LF on Linux, so the same cascade would seal different
+    bytes on each and the cross-machine byte-identical rerun would be impossible."""
+    import ast
+
+    path = Path(present.__file__).parent / "cascade.py"
+    tree = ast.parse(path.read_text(encoding="utf-8"))
+    writes = [
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Attribute)
+        and node.func.attr == "write_text"
+    ]
+    assert writes, "expected the cascade to write artifacts"
+    unpinned = [
+        node.lineno
+        for node in writes
+        if not any(keyword.arg == "newline" for keyword in node.keywords)
+    ]
+    assert unpinned == [], f"write_text without newline= at cascade.py lines {unpinned}"
+
+
+def test_gitattributes_keeps_sealed_bundles_byte_exact() -> None:
+    """Hosted run 8: Windows autocrlf stored a bundle file with LF while its manifest hashed the
+    CRLF bytes, so every Linux checkout saw a corrupt bundle."""
+    attributes = (Path(present.__file__).parents[2] / ".gitattributes").read_text(
+        encoding="utf-8"
+    )
+    assert "candidates/** -text" in attributes.splitlines()

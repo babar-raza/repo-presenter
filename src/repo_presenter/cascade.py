@@ -384,10 +384,12 @@ def _compose(
     (out_dir / ACCOUNTING_FILENAME).write_text(
         json.dumps(accounting_document(accounted), indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
+        newline="\n",
     )
     (out_dir / "content_units.coherent.json").write_text(
         json.dumps(coherent_units, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
         encoding="utf-8",
+        newline="\n",
     )
     (out_dir / "README.coherent.md").write_text(final_readme, encoding="utf-8", newline="\n")
     return _Composition(
@@ -537,6 +539,7 @@ def run_cascade(
     (out_dir / "validation.json").write_text(
         json.dumps(validation, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
         encoding="utf-8",
+        newline="\n",
     )
 
     invocation.attach_ledger(repository, ledger_path)

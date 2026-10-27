@@ -256,9 +256,16 @@ def run_present(
             return PresentOutcome(
                 kind="failed",
                 detail=failure.get("detail", f"present exited {exit_code}"),
-                failure_class="transient" if failure.get("class") == "transient" else None,
+                failure_class="transient"
+                if failure.get("class") == "transient"
+                else None,
             )
-        return classify_present_outcome(candidates_root, entry, exit_code)
+        try:
+            return classify_present_outcome(candidates_root, entry, exit_code)
+        except PresenterError as exc:
+            # A bundle that fails its own integrity check is a recorded failure, never an
+            # exception that leaves the durable record describing an earlier run.
+            return PresentOutcome(kind="failed", detail=f"{type(exc).__name__}: {exc}")
 
     return run_present_transaction(
         backend=backend,

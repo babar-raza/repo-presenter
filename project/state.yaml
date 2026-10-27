@@ -1559,6 +1559,83 @@ next_ready_items:
       unported dependency. Work order: A (port extraction), D+C (S9 validate and S4 repair wired
       into the cascade), B (NOT_VERIFIED example policy).
 
+  - id: INDEPENDENT_LLM_REVIEWER
+    status: PLANNED
+    priority: highest
+    authority: plans/PLAN_independent_llm_reviewer.md (design); mission sections 7.7 and 11
+    purpose: >
+      Close the largest mission gap. Today only deterministic rules can block; an LLM judgment can never
+      veto, the inverse of mission section 7 step 7 ("a returned reviewer REJECT is blocking unless an
+      explicit, proven deterministic refutation resolves each finding"). Evidence it matters: hosted runs
+      accepted a capability unit containing "full round-trip fidelity", which no fact supports.
+    decisions_taken_2026_10_27: >
+      Taken by the supervisor under the owner's delegation ("you are in the best position to decide"),
+      replacing the three questions earlier left open: (1) the fold changes -- LLM findings block by
+      default and clear only through a closed catalogue of deterministic clearances (plan D1-D5); (2) the
+      reviewer routes to gpt-oss, a different model from the author, SUBJECT to the calibration gate
+      (plan D6/D9); a failed gate keeps qwen3-next as a recorded, visible exception, never silently;
+      (3) live calibration calls are authorised within a stated budget of about 170 calls, hard cap 250.
+    phases:
+      - id: P1_CORE
+        status: PENDING
+        exit: finding status/clearance model, closed clearance catalogue, single fold, verdict v2, contract validation; scripted tests V1-V3 pass.
+      - id: P2_JOB
+        status: PENDING
+        exit: packet builder, prompt v15 (claim_kind, no advisory tier), run_job wiring, cascade stage S10, repair routing, present.py gate; scripted end to end.
+      - id: P3_CALIBRATION
+        status: PENDING
+        exit: forest corpus + mutation operators + metrics harness; always-ACCEPT and always-REJECT stubs fail the gate; live pilot within budget; recall/FP/stability numbers recorded in docs/.
+    done_when: plan section 3 D10 -- V1..V7 pass and verdict v2 is sealed in bundles.
+    reopening_rule: only a prompt, model route or a new clearance (failing test first); never a rule loosened without a proven false positive and a negative control.
+
+  - id: LANE_L_HOSTED_PARITY
+    status: PLANNED
+    priority: highest
+    due: immediately after INDEPENDENT_LLM_REVIEWER.P3_CALIBRATION, before any cohort or PR work
+    purpose: >
+      RECORDED 2026-10-27 at the owner's instruction. Mission section 1 and non-negotiable #1/#2 make
+      Lane L and Lane R two equal first-class lanes. FACT: src/repo_presenter/present.py runs only the
+      Lane R cascade (S3-S8). The Lane L correction engine (src/repo_presenter/readme/correction/) runs
+      only from scripts/run_lane_l.py; it has had no hosted run, no seal, no durable-state transaction
+      and no independent review of its final README. The work narrowed to one lane and that is a
+      deviation, not a decision.
+    required:
+      - a hosted Lane L stage: clone -> facts -> correct() -> verified edits -> the SAME independent reviewer judging the FINAL README, not only the edit delta (mission section 6) -> seal -> zero-drift byte-identical zero-provider-call rerun
+      - a lane dimension in the bundle manifest and CURRENT so both lanes' candidates appear in one status model; existing bundles stay valid as Lane R through a versioned reader
+      - blast-radius query over candidates/ before the layout change (non-negotiable #3); no reseal
+      - the same durable-state transaction and the same facts/isolation split as Lane R
+    done_when: one hosted Lane L candidate per ecosystem in the cohort passes the reviewer and a rerun is byte-identical with zero provider calls.
+
+  - id: COHORT_FIRST_GUARD
+    status: ACTIVE
+    purpose: >
+      RECORDED 2026-10-27 in answer to "are we stuck in the same loop". Evidence: the old repo looped on
+      FALSE GREENS (reviewer REJECT stored as ACCEPT, 389 of 746 preserved units not printed) followed by
+      broad invalidation. This repo's recent work is the opposite and narrower: eight hosted runs on ONE
+      repository (aspose-3d-foss/.NET), each exposing a DIFFERENT cause, all fixed with falsifiers
+      (findings 50 -> 26 -> 10 -> sealed-bundle corruption; relative NuGet cache path; hidden-directory
+      artifact uploads x2; CRLF normalization of committed bundles; unrecorded classify crash). Not a repeat
+      loop, but it is single-repository tuning, which mission non-negotiable #4 (portfolio first) and
+      section 12 (two equivalent failures force a changed causal approach) exist to stop.
+    rules:
+      - every hosted run is recorded with its cause class and whether the class is new or a repeat
+      - two repeats of a class, or three consecutive hosted runs on one repository without widening, force a changed approach: widen to the next ecosystem, or write the offline harness that reproduces the class first
+      - cohort pilot before further single-repository hosted work: one repository per supported ecosystem (python, net, java, cpp, go, rust, typescript), both lanes, stated budget about 150 provider calls, cap 200
+      - a finding count of zero on one repository is not acceptance; the forest rules of mission section 11 are
+    hosted_run_log:
+      - run: 40460371379 / 40461345611
+        cause_class: reviewer rejected 50 findings (missing facts, dropped examples) ; new
+      - run: 40464255814
+        cause_class: stale failure record after a repeat failure; new
+      - run: 40472066797 / 40472312302
+        cause_class: hidden directory skipped by upload-artifact (second time; first was run 1); REPEAT -- fixed by checking every upload path
+      - run: 40474666141
+        cause_class: environment failure recorded as CONTRADICTED example (relative cache path); new
+      - run: 40479146713
+        cause_class: coherence added an out-of-slot citation, one rejection aborted the run; new
+      - run: 40483823597
+        cause_class: committed bundle bytes altered by autocrlf, plus a classify exception that escaped; new
+
   - id: PORT_BUNDLE_INTEGRITY_LAYER
     status: IN_PROGRESS
     priority: high
