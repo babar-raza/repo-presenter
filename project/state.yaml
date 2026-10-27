@@ -1709,6 +1709,26 @@ next_ready_items:
       - cohort pilot before further single-repository hosted work: one repository per supported ecosystem (python, net, java, cpp, go, rust, typescript), both lanes, stated budget about 150 provider calls, cap 200
       - a finding count of zero on one repository is not acceptance; the forest rules of mission section 11 are
     hosted_run_log:
+      - run: 40571532257 (java, after 0f98ca2) / 40571547837 (go, after 0f98ca2)
+        cause_class: >-
+          CONFIRMED FIX on real hosted runs: Java 4 findings -> 1 (the predicted genuine link loss,
+          left correctly blocking); Go 6 findings -> 4 (the predicted genuinely-lost units, left
+          correctly blocking). The generalization held on real data, not just the offline replay.
+      - run: 40571563106 (typescript, after 0f98ca2)
+        cause_class: "unchanged at 2 findings, as predicted -- a real missing-fact-extraction gap, not an accounting bug"
+      - run: 40571540396 (cpp, after 0f98ca2)
+        cause_class: >-
+          NEW, real, scoped: the authoring rejection self-healed via the existing retry (confirming
+          that diagnosis), and the run reached S4/the reviewer for the first time. Two code blocks
+          (a NuGet PackageReference snippet, a CMake find_package snippet) were OMIT_UNSUPPORTED with
+          the rationale "not supported by facts" and no cited fact, yet matching facts DO exist
+          (package:distribution.aspose.cells.cpp.foss = "Aspose.Cells.Cpp.FOSS"; install_command:cmake).
+          Confirmed the content is not restated anywhere else in the rendered README (0 matches) --
+          a genuine S4 reconciliation citation bug (the disposition itself is wrong, not just
+          under-cited), different from the accounting-backfill shape 0f98ca2 fixed. Not yet fixed.
+      - run: 40571555199 (rust, after 0f98ca2)
+        cause_class: "confirmed same, single, already-known BC-07 defect (the dangling 'table below' forward reference) -- the renderer-note bug 0f98ca2 fixed is gone; this is the one real content defect left for S4 repair, not a new or repeat class"
+
       - run: 40555587482 (java) / 40555603173 (go) / 40555617732 (typescript)
         cause_class: >-
           disposition_coverage/live_readme_loss omission -- kept or lost units not accounted for;
