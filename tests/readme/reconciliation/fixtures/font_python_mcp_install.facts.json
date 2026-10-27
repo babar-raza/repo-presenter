@@ -1,0 +1,173 @@
+{
+  "facts": [
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "extra 'mcp' declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "dependency:optional.mcp.mcp-1.0",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "mcp>=1.0"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "admitted registry entry",
+          "path": "data/registry.json"
+        }
+      ],
+      "id": "identity:repository",
+      "kind": "identity",
+      "polarity": "SUPPORTED",
+      "value": "aspose-font-foss/Aspose.Font-FOSS-for-Python"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "distribution name declared by the manifest",
+          "path": "pyproject.toml"
+        },
+        {
+          "detail": "package registry: found; manifest version not published",
+          "path": "https://pypi.org/pypi/aspose-font-foss/json"
+        }
+      ],
+      "id": "install_command:pip",
+      "kind": "install_command",
+      "polarity": "SUPPORTED",
+      "value": "pip install aspose-font-foss"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "license declared by the manifest",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "package:license",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "MIT"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "distribution name declared by the manifest",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "package:name",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "aspose-font-foss"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "python_requires declared",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "package:python_requires",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": ">=3.10"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "version declared by the manifest",
+          "path": "pyproject.toml"
+        }
+      ],
+      "id": "package:version",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "1.0.0"
+    },
+    {
+      "attributes": {
+        "section": "aspose-font"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 563-563; heading; under aspose-font",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:098.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## MCP Server"
+    },
+    {
+      "attributes": {
+        "section": "aspose-font > MCP Server"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 565-565; paragraph; under aspose-font > MCP Server",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:099.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "Expose the library to AI clients and local toolchains:"
+    },
+    {
+      "attributes": {
+        "section": "aspose-font > MCP Server"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 567-570; code_block; under aspose-font > MCP Server",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:100.code_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "```bash\npip install \"aspose-font[mcp]\"\npython -m aspose_font.mcp\n```"
+    },
+    {
+      "attributes": {
+        "section": "aspose-font > MCP Server"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 572-574; paragraph; under aspose-font > MCP Server",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:101.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "The MCP server now covers low-level inspection tools, machine-readable variable-font compatibility\nreports through `var_compat`, and high-level web export workflows including single-bundle web\npackaging and shared family-package generation."
+    }
+  ],
+  "repository": "aspose-font-foss/Aspose.Font-FOSS-for-Python",
+  "schema_version": 1,
+  "source_revision": "0735cc2797665a21ccf96409289c7d4f2da054d9"
+}

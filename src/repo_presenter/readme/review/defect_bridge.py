@@ -98,6 +98,7 @@ def build_defects(
                 "causal_stage": "S6",
                 "criterion": finding.rule,
                 "quote": finding.quote,
+                "message": finding.message,
             }
             for index, finding in enumerate(findings)
         ],

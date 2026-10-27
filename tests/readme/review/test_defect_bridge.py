@@ -65,6 +65,7 @@ def test_a_finding_over_inherited_content_routes_to_s4_not_s6() -> None:
     assert defect.stage == "S4"
     assert defect.repairable is True
     assert defect.record.get("misrouted") is True
+    assert defect.record.get("message") == "wrong package name"
 
 
 def test_a_finding_over_an_authored_unit_in_an_llm_owned_section_routes_to_s6() -> None:

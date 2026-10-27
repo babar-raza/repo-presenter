@@ -1786,10 +1786,9 @@ entries:
       deterministic only).
       _raw_call_entry, _round_raw_calls (raw_calls.json): DEFER with the bundle and seal layer;
       write_raw_calls is not ported.
-      _stage_target S3 and S4 branches: DEFER. defect_bridge only produces causal stage S6, or S4 for
-      a finding whose quote is placed content (misrouted), so S3 is unreachable. S4 repair needs the
-      patch-scoped path (reconciliation/patch.py, 259 lines, not ported); a whole-batch S4 revision
-      would regenerate unrelated units, which the mission forbids.
+      _stage_target S3 branch: DEFER. defect_bridge never produces causal stage S3, so it is
+      unreachable. _stage_target S4 branch and the S4 half of repair_defect: PORT (ADAPT) into
+      readme/repair/loop.py (_repair_reconciliation, 2026-10-26, see progress_note_s4 below).
       _stage_target S5 and S6, repair_defect (S5/S6), _refuse_noop, title and must-carry layers,
       _slot_set_probe, escalate_to_plan, composition_id, run_transaction: PORT (ADAPT) into
       readme/repair/loop.py. Adaptations, each named: (1) the causal call's request hash is
@@ -1811,9 +1810,10 @@ entries:
       finding with no path to repair (project/state.yaml, BUILD_INDEPENDENT_REVIEWER's open item).
       The S5/S6 loop closes that path with the old repository's guards, so a repair is one judged
       run_job call, never a silent edit, and only the repaired section and what it changes
-      downstream are asked again (the store serves the rest). S4 findings stay unrepairable on
-      purpose: the motivating aspose-font-foss/Python finding is an inherited install command, and
-      its honest status is BLOCKED until the patch-scoped S4 path is ported.
+      downstream are asked again (the store serves the rest). S4 findings were first left
+      unrepairable on purpose, pending the patch-scoped S4 path; that path is now ported and wired
+      (progress_note_s4 below). Whether the motivating aspose-font-foss/Python finding, an
+      inherited install command, can reach ACCEPT is NOT established: see progress_note_s4.
     target_module: "src/repo_presenter/readme/repair/loop.py (PORT_REPAIR_LOOP_2026_10_26); tests/readme/repair/test_loop.py (6 offline tests)"
     progress_note_2026_10_26: >
       Ported the S5/S6 repair loop. Tests are offline (scripted fake client, no live call):
@@ -1834,7 +1834,7 @@ entries:
       (disposition_coverage on a kept code block, live_readme_loss on headings marked NON_CONTENT).
       Those findings have no repairable causal stage, so they stay blocking. Not evaluated against
       live candidates.
-      Not done: S4 repair (needs reconciliation/patch.py), the BC-07 visible-line branch and
+      Not done: the BC-07 visible-line branch and
       validation_defects (need S9), judgment second reads (need a judgment rule), raw_calls and
       bundle seeding (need the bundle layer). No live repair run exists.
     portfolio_consumers: any Lane R candidate with a deterministic REJECT whose causal stage is S5 or S6.
@@ -1842,6 +1842,47 @@ entries:
       None for accepted candidates: nothing has run it live. A repaired candidate changes only its
       own consumed stage and its downstream calls; no other candidate's store entries are touched.
     smallest_first_integration_test: "tests/readme/repair/test_loop.py::test_a_rejected_finding_is_repaired_once_through_run_job_and_the_cascade_is_settled"
+    progress_note_s4: >
+      S4 (disposition) repair wired into loop.py, 2026-10-26: repair_defect S4 ->
+      _repair_reconciliation -> patch_scope -> run_job(targeted_repair; reply contract bounded to
+      the units at fault, ledger bounded to one entry) -> repair_checks (patch_contract,
+      merge_partial_units, derive_changes=unit_changes) -> patch_checks(refuse_noop(
+      reconcile_checks)) -> the repaired batch stored under the causing call's request hash, which
+      the next cascade run serves. Adaptations, each named: (1) a review defect carries a quote and
+      no unit, so the units at fault are the inherited units whose placed text (placement.placements)
+      holds the quote (a field, not prose); the old repo's validator failures carried unit_id, and
+      those are still honoured first; (2) a defect that names no placed unit is recorded
+      unrepairable, where the old code fell back to a whole-batch revision (which truncated and
+      regenerated unrelated units); (3) reject_printed_quote is NEW: a revision that keeps the
+      quoted unit VERIFIED_PRESERVE/VERIFIED_MOVE still prints the defect, so it is refused (the
+      old reply that only moved a unit would have been accepted); (4) defect_bridge now passes the
+      finding's message into the defect record, or the repair model sees only a rule name and a
+      quote and not why the line is wrong.
+      Fixture test on the motivating case (tests/readme/repair/test_s4_repair.py, 9 tests, offline,
+      scripted client, a verbatim slice of facts.poc_backfill.json of
+      aspose-font-foss/Aspose.Font-FOSS-for-Python): the preserved line pip install
+      "aspose-font[mcp]" against SUPPORTED install_command:pip = pip install aspose-font-foss
+      routes review -> S4 (misrouted) -> a two-unit patch (the command and its lead-in). Results:
+      OMIT_UNSUPPORTED citing the install fact is accepted and stored, but normalize folds an
+      omitted install-class command block to DEFER_UNRESOLVED while an install fact exists (the
+      wrong command leaves the README); CORRECT_WITH_EVIDENCE and a SUPERSEDE_REDUNDANT into
+      installation are refused by existing checks (unprinted_command, uncovered_supersession)
+      because the stage has no way to print a corrected command; the same disposition handed back,
+      or the unit moved to another section, is refused.
+      HONEST STATUS OF THE REAL CASE: the repair path is now mechanically reachable and tested
+      offline, but it is NOT shown to reach ACCEPT. A deferral accounts for nothing in the
+      reviewer's live_readme_loss rule (a test characterises this: the removed fence is still
+      flagged), so after the repair that rule would reject the removed fence instead. Needs a live
+      call to confirm either way, and a decision (owner) on how a command contradicted by a
+      SUPPORTED fact should be dispositioned. The upstream fix (draft_upstream_issue.md, not
+      filed) remains the clean resolution. No live call was made.
+      Other observations. (a) cascade._run_reconciliation calls run_job without checks=, so a
+      stored S4 batch is un-normalised; the patch's reconcile_checks normalises the merged whole
+      batch, so other units can change in the derived ledger. Wiring reconcile_checks into the
+      cascade's S4 call was not done here (outside this item). (b) dispositions._recover_uncovered
+      is still not ported, so test_patch.py builds the stored batch by hand where the old test ran
+      it. (c) The 3D-Java fixtures (wave4_3d_java.facts.json, wave4_s4_content_loss.json) are
+      copied from the old repo's tests for test_patch.py.
 
   - component: "components/readme/validation/claims.py (BC-14: version, install-command and
       publication claims held to the facts)"
@@ -2857,3 +2898,32 @@ entries:
       Live-demonstrating record/adopt against a real repository -- no real candidate has
       genuinely drifted-then-been-reproven yet; the unit tests are the honest evidence for now.
       The old repo's own idempotency bookkeeping, if ever worth the complexity.
+
+  - component: "components/readme/reconciliation/patch.py (259 lines) + tests/components/readme/reconciliation/test_patch.py"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    behavior: >
+      Read in full 2026-10-26. The repair of a disposition defect as a per-unit patch: failing_units
+      and target_batch read the units at fault from failure records' unit_id; patch_scope builds
+      the PatchScope (units, their stored dispositions with text/heading/nearest section, a
+      reconciliation_schema cut down to those units, the units that are deferrals); patch_checks
+      refuses a still-deferred unit; unit_changes derives the ledger from the difference;
+      condensed shortens long enums for the prompt.
+    disposition: >
+      patch.py: PORTED (verbatim apart from import paths; diffed). Every dependency was already
+      present: lead_in_of, reconciliation_batch_facts, reconciliation_schema, units_per_reply,
+      holdable_sections, nearest_for_units, source_heading, binding.merge_partial_units,
+      repair_checks' patch_contract/derive_changes parameters and repair_schema(bound_changes).
+      test_patch.py: PORTED (16 tests) with two adaptations: the stored batch is built by hand
+      because dispositions._recover_uncovered is not ported, and the old repair_defect-through-the-
+      gateway tests (rounds.py, retired) are replaced by tests/readme/repair/test_s4_repair.py,
+      which drives the new loop wiring.
+    target_module: "src/repo_presenter/readme/reconciliation/patch.py; tests/readme/reconciliation/test_patch.py (16); tests/readme/repair/test_s4_repair.py (9)"
+    progress_note_2026_10_26: >
+      Wired into readme/repair/loop.py; see progress_note_s4 on the repair/ entry. Old-code defect:
+      none found in patch.py. Not live-demonstrated.
+    portfolio_consumers: any Lane R candidate with a reviewer finding whose quote is placed (preserved or moved) content.
+    invalidation_impact: >
+      None for accepted candidates: nothing has run it live. A repaired S4 batch changes the
+      dispositions, so S5 and everything downstream of the repaired candidate are asked again;
+      other candidates' stores are untouched.

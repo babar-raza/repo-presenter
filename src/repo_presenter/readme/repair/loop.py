@@ -15,10 +15,13 @@ only the repaired stage and whatever it changed downstream are asked again. A de
 fingerprint was already attempted is reported, never retried. The loop ends on ACCEPT, when no
 fresh repairable defect remains, or at ``MAX_ROUNDS``.
 
-Routing: S6 (one authored section) and S5 (the plan, reached by an S6 slot-set escalation). S4
-findings (inherited content) are recorded unrepairable: their repair needs the patch-scoped
-reconciliation path (``reconciliation/patch.py``), which is not ported, and a whole-batch S4
-revision would regenerate unrelated units.
+Routing: S6 (one authored section), S5 (the plan, reached by an S6 slot-set escalation) and S4
+(a disposition of inherited content). An S4 defect is repaired as a per-unit patch
+(``reconciliation/patch.py``): the units at fault are the inherited units whose placed text holds
+the finding's quote, the reply contract is cut down to those units, the reply is merged into the
+stored batch and judged by the batch's own checks, and its ledger is derived from the difference.
+A defect that names no placed unit is recorded unrepairable: a whole-batch S4 revision would
+regenerate unrelated units.
 """
 
 from __future__ import annotations
@@ -66,10 +69,26 @@ from repo_presenter.readme.composition.authoring import (
     unit_checks,
 )
 from repo_presenter.readme.composition.components.identity import product_name
+from repo_presenter.readme.composition.placement import PLACED, placements
 from repo_presenter.readme.composition.planning import (
     plan_checks,
     planning_packet,
     planning_schema,
+)
+from repo_presenter.readme.reconciliation.dispositions import (
+    reconcile_checks,
+    reconciliation_batch_facts,
+    reconciliation_batches,
+    reconciliation_packet,
+    reconciliation_schema,
+)
+from repo_presenter.readme.reconciliation.patch import (
+    PatchScope,
+    condensed,
+    failing_units,
+    patch_checks,
+    patch_scope,
+    unit_changes,
 )
 from repo_presenter.readme.repair.targeted import (
     MAX_ROUNDS,
@@ -210,21 +229,28 @@ def _targeted_call(
     slot_facts: Mapping[str, Collection[str]] | None = None,
     carried: Sequence[str] = (),
     recover: Callable[[dict[str, Any]], dict[str, Any] | None] | None = None,
+    patch: PatchScope | None = None,
+    stage_facts: FactsDocument | None = None,
 ) -> JobResult | JobError:
     """One ``targeted_repair`` call, judged by ``repair_checks`` around the causing stage's own
-    ``checks``; a rejection after the job's own re-asks comes back as the ``JobError``."""
+    ``checks``; a rejection after the job's own re-asks comes back as the ``JobError``.
+
+    ``patch`` is an S4 disposition patch: the reply is asked for and judged by its bounded contract,
+    merged into ``original``, and its ledger derived from the difference. ``stage_facts`` is the
+    fact set the causing call's own binding was judged against (one batch's, for S4)."""
     contract = loaded.manifest.output.schema_
     repairer = rc.prompts["targeted_repair"]
+    reply_contract = patch.contract if patch is not None else contract
     try:
         return run_job(
             repairer,
             repair_packet(
                 rc.entry,
                 defect,
-                original,
+                patch.shown if patch is not None else original,
                 rc.facts,
                 (),
-                contract,
+                condensed(reply_contract) if patch is not None else contract,
                 allowed,
                 slot_facts,
                 None,
@@ -235,13 +261,17 @@ def _targeted_call(
             ledger=rc.ledger,
             store=rc.store,
             context=rc.context,
-            call_schema=repair_schema(repairer, contract),
+            call_schema=repair_schema(
+                repairer, reply_contract, bound_changes=patch is not None
+            ),
             checks=partial(
                 repair_checks,
                 defect=defect,
                 output_contract=contract,
+                patch_contract=reply_contract if patch is not None else None,
+                derive_changes=unit_changes if patch is not None else None,
                 binding=loaded.manifest.output.binding,
-                facts=rc.facts,
+                facts=stage_facts if stage_facts is not None else rc.facts,
                 stage_checks=checks,
                 slots=slots,
                 original=original,
@@ -299,6 +329,123 @@ def _repair_plan(rc: RepairContext, defect: Defect, repairs: RepairLedger) -> bo
     if isinstance(outcome, JobError):
         return _unrepairable(defect, repairs, str(outcome))
     return _accept(rc, defect, loaded, key, outcome, repairs)
+
+
+def reject_printed_quote(
+    checks: Checks, scope: PatchScope, texts: Mapping[str, str], quotes: Collection[str]
+) -> Checks:
+    """Refuse an S4 revision that keeps printing the text the finding quotes.
+
+    A kept disposition (``PLACED``) prints its unit as written, so a unit whose text holds the
+    quote and is still kept, in this section or another, has not been repaired: moving a wrong
+    command is not fixing it. Run after ``checks`` so the disposition judged is the normalised one.
+    """
+    quoted = [
+        unit
+        for unit in scope.unit_ids
+        if any(quote and quote in texts.get(unit, "") for quote in quotes)
+    ]
+    if not quoted:
+        return checks
+
+    def guarded(revised: dict[str, Any]) -> list[str]:
+        errors = checks(revised)
+        by_unit = {
+            str(entry.get("unit_id")): entry
+            for entry in revised.get("dispositions", [])
+            if isinstance(entry, Mapping)
+        }
+        for unit in quoted:
+            disposition = by_unit.get(unit, {}).get("disposition")
+            if disposition in PLACED:
+                errors.append(
+                    f"{unit}: still {disposition}, which prints the quoted text as written; the "
+                    "finding is about that text, so keeping it in any section leaves the defect"
+                )
+        return errors
+
+    return guarded
+
+
+def _named_units(rc: RepairContext, defect: Defect) -> list[str]:
+    """The inherited units a defect is about: those its failure records name in their ``unit_id``
+    field, else (a review finding, which carries a quote and no unit) those whose placed text holds
+    the quote. The quote is a field of the finding and the placed text is what the renderer
+    prints, so no prose is read."""
+    named = failing_units(defect.record)
+    if named:
+        return named
+    placed = placements(rc.plan, rc.dispositions, rc.facts, rc.entry.ecosystem)
+    for record in [defect.record, *defect.record.get("equivalent_findings", [])]:
+        quote = str(record.get("quote") or "")
+        for placement in placed if quote else ():
+            if quote in placement.text and placement.unit_id not in named:
+                named.append(placement.unit_id)
+    return named
+
+
+def _repair_reconciliation(
+    rc: RepairContext, defect: Defect, repairs: RepairLedger
+) -> bool:
+    """An S4 defect repaired as a patch of the units at fault: one ``targeted_repair`` call whose
+    reply is bounded to those units, merged into the stored batch and judged by the batch's own
+    checks. The repaired batch replaces the stored one under the causing call's request hash."""
+    loaded = rc.prompts["source_reconciliation"]
+    batches = dict(
+        reconciliation_batches(rc.facts, loaded.manifest.sampling.max_output_tokens)
+    )
+    keys: dict[str, str] = {}
+    stored: dict[str, dict[str, Any]] = {}
+    for batch_id, units in batches.items():
+        batch_facts = reconciliation_batch_facts(rc.facts, units)
+        key = request_hash(
+            loaded,
+            reconciliation_packet(
+                rc.entry, batch_facts, rc.investigation, loaded.manifest, units
+            ),
+            reconciliation_schema(loaded, units, batch_facts, rc.investigation),
+            model=effective_model(loaded, rc.context),
+        )
+        output = rc.store.get(key)
+        if output is not None:
+            keys[batch_id], stored[batch_id] = key, output
+    scope = patch_scope(
+        {"failures": [{"unit_id": unit} for unit in _named_units(rc, defect)]},
+        stored,
+        batches,
+        rc.facts,
+        loaded,
+        rc.investigation,
+        rc.prompts["targeted_repair"].manifest.sampling.max_output_tokens,
+    )
+    if scope is None:
+        return _unrepairable(
+            defect,
+            repairs,
+            "no stored disposition of an inherited unit is named by this defect; a whole-batch "
+            "revision would regenerate unrelated units",
+        )
+    batch_facts = reconciliation_batch_facts(rc.facts, batches[scope.batch_id])
+    original = stored[scope.batch_id]
+    quotes = [
+        str(record.get("quote") or "")
+        for record in [defect.record, *defect.record.get("equivalent_findings", [])]
+    ]
+    checks = patch_checks(
+        scope,
+        reject_printed_quote(
+            refuse_noop(original, partial(reconcile_checks, facts=batch_facts)),
+            scope,
+            {fact.id: fact.value for fact in batch_facts.by_kind("inherited_unit")},
+            quotes,
+        ),
+    )
+    outcome = _targeted_call(
+        rc, defect, loaded, original, checks, patch=scope, stage_facts=batch_facts
+    )
+    if isinstance(outcome, JobError):
+        return _unrepairable(defect, repairs, str(outcome))
+    return _accept(rc, defect, loaded, keys[scope.batch_id], outcome, repairs)
 
 
 def _escalate_to_plan(
@@ -392,11 +539,12 @@ def repair_defect(rc: RepairContext, defect: Defect, repairs: RepairLedger) -> b
         return _repair_section(rc, defect, repairs)
     if defect.stage == "S5":
         return _repair_plan(rc, defect, repairs)
+    if defect.stage == "S4":
+        return _repair_reconciliation(rc, defect, repairs)
     return _unrepairable(
         defect,
         repairs,
-        defect.reason
-        or f"{defect.stage} repair is not ported (S4 needs the patch-scoped reconciliation path)",
+        defect.reason or f"{defect.stage} repair is not ported",
     )
 
 
