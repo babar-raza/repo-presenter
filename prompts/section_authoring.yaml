@@ -3,7 +3,7 @@ version: "20"
 stage: S6
 purpose: Author the plain-prose content units of one LLM-owned section from its accepted fact packet - the opening, capability titles and descriptions, lead-ins, limitation prose, resource prose, development summary, Enterprise Edition context - and, in coherence mode, revise LLM-owned units once so the document reads as one developer journey.
 model_route: qwen3-next
-route_rationale: Of the two general-purpose chat models the recorded catalog lists (qwen3-next, gpt-oss), qwen3-next is the one the legacy gateway characterization found reliable for structured JSON and for bounded section prose across four ecosystems without prompt branching; the lighter-cost alternative, gpt-oss, was recorded as unreliable at JSON validity, so this job also routes to qwen3-next. Revisited whenever preflight records a changed catalog.
+route_rationale: The owner designated qwen3-next as the one chat model this system uses (2026-10-27); the legacy gateway characterization also found it reliable for structured JSON and for bounded section prose across four ecosystems without prompt branching, so this job routes to qwen3-next. Revisited whenever preflight records a changed catalog.
 sampling:
   temperature: 0.0
   max_output_tokens: 8000

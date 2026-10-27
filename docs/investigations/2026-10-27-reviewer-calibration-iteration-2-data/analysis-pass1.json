@@ -1,0 +1,2463 @@
+[
+ {
+  "case": "run5/clean",
+  "role": "clean",
+  "klass": null,
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "run5/real:unsupported_claim:0",
+  "role": "real_defect",
+  "klass": "unsupported_claim",
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "run5/inject_unsupported_claim",
+  "role": "mutant",
+  "klass": "unsupported_claim",
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "run5/contradict_version",
+  "role": "mutant",
+  "klass": "contradiction",
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "run5/contradict_package_name",
+  "role": "mutant",
+  "klass": "contradiction",
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "run5/drop_section",
+  "role": "mutant",
+  "klass": "content_loss",
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "run5/duplicate_paragraph",
+  "role": "mutant",
+  "klass": "duplicate_paragraph",
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "run5/break_install_command",
+  "role": "mutant",
+  "klass": "broken_install",
+  "stored": true,
+  "verdict": "REJECT",
+  "model_verdict": "REJECT_FACTUAL",
+  "findings": [
+   {
+    "id": "F01",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from NuGet (`Aspose.3D.FOSS`, version 26.1.0):",
+    "quote": "Install the published package from NuGet (`Aspose.3D.FOSS`, version 26.1.0):",
+    "audit": "audit: distinctive terms ['NuGet', 'Aspose.3D.FOSS', '3D', '26.1.0']; found in SUPPORTED fact values: NuGet -> inherited_unit:002.badge_row, Aspose.3D.FOSS -> inherited_unit:002.badge_row, 3D -> format:input.3ds, 26.1.0 -> inherited_unit:013.code_block; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F02",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "```bash",
+    "quote": "```bash",
+    "audit": "audit: the quoted claim has no distinctive term (identifier, number or quoted phrase) to look up; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F03",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "dotnet add package Aspose.3D.FSOS",
+    "quote": "dotnet add package Aspose.3D.FSOS",
+    "audit": "audit: distinctive terms ['3D']; found in SUPPORTED fact values: 3D -> format:input.3ds; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F04",
+    "kind": "unsupported_claim",
+    "section": "dependencies",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "No required third-party package dependencies; in `src/main/Aspose.ThreeD/Aspose.ThreeD.csproj`, no `PackageReference` a consumer would install is declared.",
+    "quote": "No required third-party package dependencies; in `src/main/Aspose.ThreeD/Aspose.ThreeD.csproj`, no `PackageReference` a consumer would install is declared.",
+    "audit": "audit: distinctive terms ['src/main/Aspose.ThreeD/Aspose.ThreeD.csproj', 'Aspose.ThreeD', 'ThreeD', 'Aspose.ThreeD.csproj', 'PackageReference']; found in SUPPORTED fact values: src/main/Aspose.ThreeD/Aspose.ThreeD.csproj -> inherited_unit:014.paragraph, Aspose.ThreeD -> inherited_unit:014.paragraph, ThreeD -> inherited_unit:014.paragraph, Aspose.ThreeD.csproj -> inherited_unit:014.paragraph; in no SUPPORTED fact value and not in the original README: ['PackageReference']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F05",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 293 types.",
+    "quote": "The verified public surface has 293 types.",
+    "audit": "audit: distinctive terms ['293']; in no SUPPORTED fact value and not in the original README: ['293']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F06",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "### Core API",
+    "quote": "### Core API",
+    "audit": "audit: the quoted claim has no distinctive term (identifier, number or quoted phrase) to look up; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F07",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| Class | Description |",
+    "quote": "| Class | Description |",
+    "audit": "audit: the quoted claim has no distinctive term (identifier, number or quoted phrase) to look up; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F08",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `A3DObject` | The base class of all Aspose.ThreeD objects, all sub classes will support dynamic properties. |",
+    "quote": "| `A3DObject` | The base class of all Aspose.ThreeD objects, all sub classes will support dynamic properties. |",
+    "audit": "audit: distinctive terms ['A3DObject', 'Aspose.ThreeD', 'ThreeD']; found in SUPPORTED fact values: A3DObject -> inherited_unit:050.table, Aspose.ThreeD -> inherited_unit:014.paragraph, ThreeD -> inherited_unit:014.paragraph; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F09",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `AnimationChannel` | Aspose.ThreeD.Animation.AnimationChannel represents an animation channel that controls a property over time using keyframes. |",
+    "quote": "| `AnimationChannel` | Aspose.ThreeD.Animation.AnimationChannel represents an animation channel that controls a property over time using keyframes. |",
+    "audit": "audit: distinctive terms ['AnimationChannel', 'Aspose.ThreeD.Animation.AnimationChannel', 'ThreeD']; found in SUPPORTED fact values: AnimationChannel -> inherited_unit:010.list, Aspose.ThreeD.Animation.AnimationChannel -> public_symbol:aspose.threed.animation.animationchannel, ThreeD -> inherited_unit:014.paragraph; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F10",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `AnimationClip` | The Animation clip is a collection of animations. |",
+    "quote": "| `AnimationClip` | The Animation clip is a collection of animations. |",
+    "audit": "audit: distinctive terms ['AnimationClip']; found in SUPPORTED fact values: AnimationClip -> inherited_unit:010.list; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F11",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `AnimationNode` | Aspose.3D's supports animation hierarchy, each animation can be composed by several animations and animation's key-frame definition. |",
+    "quote": "| `AnimationNode` | Aspose.3D's supports animation hierarchy, each animation can be composed by several animations and animation's key-frame definition. |",
+    "audit": "audit: distinctive terms ['AnimationNode', '3D']; found in SUPPORTED fact values: AnimationNode -> inherited_unit:050.table, 3D -> format:input.3ds; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F12",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `BindPoint` | A BindPoint is usually created on an object's property, some property types contains multiple component fields(like a Vector3 field), will generate channel for each component field and connects the field to one or more keyfr",
+    "quote": "| `BindPoint` | A BindPoint is usually created on an object's property, some property types contains multiple component fields(like a Vector3 field), will gener",
+    "audit": "audit: distinctive terms ['BindPoint']; found in SUPPORTED fact values: BindPoint -> inherited_unit:050.table; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F13",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `Extrapolation` | Aspose.ThreeD.Animation.Extrapolation defines how animation values are extended beyond the defined keyframe range. |",
+    "quote": "| `Extrapolation` | Aspose.ThreeD.Animation.Extrapolation defines how animation values are extended beyond the defined keyframe range. |",
+    "audit": "audit: distinctive terms ['Extrapolation', 'Aspose.ThreeD.Animation.Extrapolation', 'ThreeD']; found in SUPPORTED fact values: Extrapolation -> inherited_unit:050.table, Aspose.ThreeD.Animation.Extrapolation -> public_symbol:aspose.threed.animation.extrapolation, ThreeD -> inherited_unit:014.paragraph; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F14",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `KeyFrame` | Aspose.ThreeD.Animation.KeyFrame represents a single keyframe with time, value, and interpolation parameters. |",
+    "quote": "| `KeyFrame` | Aspose.ThreeD.Animation.KeyFrame represents a single keyframe with time, value, and interpolation parameters. |",
+    "audit": "audit: distinctive terms ['KeyFrame', 'Aspose.ThreeD.Animation.KeyFrame', 'ThreeD']; found in SUPPORTED fact values: KeyFrame -> inherited_unit:008.code_block, Aspose.ThreeD.Animation.KeyFrame -> public_symbol:aspose.threed.animation.keyframe, ThreeD -> inherited_unit:014.paragraph; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F15",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `KeyframeSequence` | Aspose.ThreeD.Animation.KeyframeSequence represents a sequence of keyframes that animate a specific property. |",
+    "quote": "| `KeyframeSequence` | Aspose.ThreeD.Animation.KeyframeSequence represents a sequence of keyframes that animate a specific property. |",
+    "audit": "audit: distinctive terms ['KeyframeSequence', 'Aspose.ThreeD.Animation.KeyframeSequence', 'ThreeD']; found in SUPPORTED fact values: KeyframeSequence -> inherited_unit:010.list, Aspose.ThreeD.Animation.KeyframeSequence -> public_symbol:aspose.threed.animation.keyframesequence, ThreeD -> inherited_unit:014.paragraph; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F16",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `AssetInfo` | Information of asset. |",
+    "quote": "| `AssetInfo` | Information of asset. |",
+    "audit": "audit: distinctive terms ['AssetInfo']; found in SUPPORTED fact values: AssetInfo -> inherited_unit:050.table; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   }
+  ]
+ },
+ {
+  "case": "run5/invent_api_name",
+  "role": "mutant",
+  "klass": "invented_api",
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "run5/add_promotional_filler",
+  "role": "mutant",
+  "klass": "promotional_filler",
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "run7/clean",
+  "role": "clean",
+  "klass": null,
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "run7/real:unsupported_claim:0",
+  "role": "real_defect",
+  "klass": "unsupported_claim",
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "run7/real:contradiction:1",
+  "role": "real_defect",
+  "klass": "contradiction",
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "run7/inject_unsupported_claim",
+  "role": "mutant",
+  "klass": "unsupported_claim",
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "run7/contradict_version",
+  "role": "mutant",
+  "klass": "contradiction",
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "run7/drop_section",
+  "role": "mutant",
+  "klass": "content_loss",
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "run7/duplicate_paragraph",
+  "role": "mutant",
+  "klass": "duplicate_paragraph",
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "run7/break_install_command",
+  "stored": false
+ },
+ {
+  "case": "run7/invent_api_name",
+  "role": "mutant",
+  "klass": "invented_api",
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "run7/add_promotional_filler",
+  "role": "mutant",
+  "klass": "promotional_filler",
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "run9/clean",
+  "role": "clean",
+  "klass": null,
+  "stored": true,
+  "verdict": "REJECT",
+  "model_verdict": "REJECT_FACTUAL",
+  "findings": [
+   {
+    "id": "F01",
+    "kind": "unsupported_claim",
+    "section": "opening",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Aspose.3D FOSS for Python reads `.3mf`, `.dae`, `.fbx`, `.glb`, `.gltf`, `.obj`, and `.stl` files and writes `.3mf`, `.glb`, `.gltf`, `.obj`, and `.stl` files.",
+    "quote": "![Python](https://img.shields.io/badge/python-3.7%2B-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Contributors](ht",
+    "audit": "audit: distinctive terms ['img.shields.io', '3.7%', '2B', 'blue.svg', '3d', '3D', 'github.com']; found in SUPPORTED fact values: img.shields.io -> link_target:001, 3.7% -> link_target:001, 2B -> identity:revision, blue.svg -> link_target:001, 3d -> identity:family, 3D -> identity:family, github.com -> inherited_unit:002.badge_row; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F02",
+    "kind": "unsupported_claim",
+    "section": "key_capabilities",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "It triangulates arbitrary polygon data into triangle fans with `PolygonBuilder`, a real ear-clipping triangulation implementation rather than a naive fan split.",
+    "quote": "- **Triangulate polygons.** It triangulates arbitrary polygon data into triangle fans with `PolygonBuilder`, a real ear-clipping triangulation implementation ra",
+    "audit": "audit: distinctive terms ['PolygonBuilder']; found in SUPPORTED fact values: PolygonBuilder -> inherited_unit:060.table; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F03",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The package `aspose-3d-foss` could not be confirmed on PyPI (package registry: a distribution of this name exists, but ownership not confirmed: the registry's project URLs point at another repository).",
+    "quote": "The package `aspose-3d-foss` could not be confirmed on PyPI (package registry: a distribution of this name exists, but ownership not confirmed: the registry's p",
+    "audit": "audit: distinctive terms ['aspose-3d-foss', '3d', 'PyPI']; found in SUPPORTED fact values: aspose-3d-foss -> identity:repository, 3d -> identity:family, PyPI -> inherited_unit:002.badge_row; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F04",
+    "kind": "unsupported_claim",
+    "section": "quick_start",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from PyPI (`aspose-3d-foss`, version 26.1.0):",
+    "quote": "Install the published package from PyPI (`aspose-3d-foss`, version 26.1.0):",
+    "audit": "audit: distinctive terms ['PyPI', 'aspose-3d-foss', '3d', '26.1.0']; found in SUPPORTED fact values: PyPI -> inherited_unit:002.badge_row, aspose-3d-foss -> identity:repository, 3d -> identity:family, 26.1.0 -> inherited_unit:012.paragraph; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F05",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 337 types.",
+    "quote": "The verified public surface has 337 types.",
+    "audit": "audit: distinctive terms ['337']; in no SUPPORTED fact value and not in the original README: ['337']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F06",
+    "kind": "unsupported_claim",
+    "section": "scope_limitations",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Aspose.3D FOSS for Python reads and writes OBJ, STL, glTF, and COLLADA files, and provides classes for mesh, geometry, curve, and shading manipulation.",
+    "quote": "Aspose.3D FOSS for Python reads and writes OBJ, STL, glTF, and COLLADA files, and provides classes for mesh, geometry, curve, and shading manipulation.",
+    "audit": "audit: distinctive terms ['3D']; found in SUPPORTED fact values: 3D -> identity:family; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   }
+  ]
+ },
+ {
+  "case": "run9/inject_unsupported_claim",
+  "role": "mutant",
+  "klass": "unsupported_claim",
+  "stored": true,
+  "verdict": "REJECT",
+  "model_verdict": "REJECT_FACTUAL",
+  "findings": [
+   {
+    "id": "F01",
+    "kind": "unsupported_claim",
+    "section": "opening",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "It preserves every attribute through a full round-trip with complete fidelity.",
+    "quote": "Aspose.3D FOSS for Python reads `.3mf`, `.dae`, `.fbx`, `.glb`, `.gltf`, `.obj`, and `.stl` files and writes `.3mf`, `.glb`, `.gltf`, `.obj`, and `.stl` files. ",
+    "audit": "audit: distinctive terms ['3D', '.3mf', '3mf', '.dae', '.fbx', '.glb', '.gltf', '.obj', '.stl', 'aspose.threed.Scene', 'aspose.threed.Mesh', 'aspose.threed.Primitive']; found in SUPPORTED fact values: 3D -> identity:family, .3mf -> format:input.3mf, 3mf -> format:input.3mf, .dae -> format:input.dae, .fbx -> format:input.fbx, .glb -> format:input.glb, .gltf -> example:002, .obj -> format:input.obj, .stl -> example:004, aspose.threed.Scene -> public_symbol:aspose.threed.scene, aspose.threed.Mesh -> public_symbol:aspose.threed.mesh, aspose.threed.Primitive -> public_symbol:aspose.threed.primitive; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F02",
+    "kind": "contradiction",
+    "section": "key_capabilities",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "It triangulates arbitrary polygon data into triangle fans with `PolygonBuilder`, a real ear-clipping triangulation implementation rather than a naive fan split.",
+    "quote": "- **Triangulate polygons.** It triangulates arbitrary polygon data into triangle fans with `PolygonBuilder`, a real ear-clipping triangulation implementation ra",
+    "audit": ""
+   },
+   {
+    "id": "F03",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The package `aspose-3d-foss` could not be confirmed on PyPI (package registry: a distribution of this name exists, but ownership not confirmed: the registry's project URLs point at another repository).",
+    "quote": "The package `aspose-3d-foss` could not be confirmed on PyPI (package registry: a distribution of this name exists, but ownership not confirmed: the registry's p",
+    "audit": "audit: distinctive terms ['aspose-3d-foss', '3d', 'PyPI']; found in SUPPORTED fact values: aspose-3d-foss -> identity:repository, 3d -> identity:family, PyPI -> inherited_unit:002.badge_row; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F04",
+    "kind": "unsupported_claim",
+    "section": "quick_start",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "example",
+    "text": "Install the published package from PyPI (`aspose-3d-foss`, version 26.1.0):",
+    "quote": "Install the published package from PyPI (`aspose-3d-foss`, version 26.1.0):",
+    "audit": "audit: distinctive terms ['PyPI', 'aspose-3d-foss', '3d', '26.1.0']; found in SUPPORTED fact values: PyPI -> inherited_unit:002.badge_row, aspose-3d-foss -> identity:repository, 3d -> identity:family, 26.1.0 -> inherited_unit:012.paragraph; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F05",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 337 types.",
+    "quote": "The verified public surface has 337 types.",
+    "audit": "audit: distinctive terms ['337']; in no SUPPORTED fact value and not in the original README: ['337']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F06",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "presentation",
+    "text": "The `aspose.threed.Scene` class provides `Scene.open()` and `Scene.save()` methods to load and write 3D scenes, and `Scene.from_file()` for convenience; it exposes `Scene.root_node` as the top of the node hierarchy, `Scene.animation_clips` ",
+    "quote": "The `aspose.threed.Scene` class provides `Scene.open()` and `Scene.save()` methods to load and write 3D scenes, and `Scene.from_file()` for convenience; it expo",
+    "audit": "audit: distinctive terms ['aspose.threed.Scene', 'Scene.open()', 'Scene.open', 'Scene.save()', 'Scene.save', '3D', 'Scene.from_file()', 'Scene.from_file', 'from_file', 'Scene.root_node', 'root_node', 'Scene.animation_clips']; found in SUPPORTED fact values: aspose.threed.Scene -> public_symbol:aspose.threed.scene, Scene.open() -> inherited_unit:010.list, Scene.open -> example:007, Scene.save() -> example:005, Scene.save -> example:002, 3D -> identity:family, Scene.from_file -> public_symbol:aspose.threed.scene.from_file, from_file -> public_symbol:aspose.threed.profiles.fontfile.from_file, Scene.root_node -> example:002, root_node -> example:002, Scene.animation_clips -> public_symbol:aspose.threed.scene.animation_clips; in no SUPPORTED fact value and not in the original README: ['Scene.from_file()']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F07",
+    "kind": "contradiction",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The `aspose.threed.Mesh` class stores geometric data including `control_points` for vertex positions and `polygon_count` for face definitions; it is typically created via `PolygonBuilder` to construct polygons from control points.",
+    "quote": "The `aspose.threed.Mesh` class stores geometric data including `control_points` for vertex positions and `polygon_count` for face definitions; it is typically c",
+    "audit": ""
+   },
+   {
+    "id": "F08",
+    "kind": "omission",
+    "section": "scope_limitations",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Aspose.3D FOSS for Python reads and writes OBJ, STL, glTF, and COLLADA files, and provides classes for mesh, geometry, curve, and shading manipulation.",
+    "quote": "Aspose.3D FOSS for Python reads and writes OBJ, STL, glTF, and COLLADA files, and provides classes for mesh, geometry, curve, and shading manipulation.",
+    "audit": ""
+   },
+   {
+    "id": "F09",
+    "kind": "omission",
+    "section": "scope_limitations",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "COLLADA import works for `.dae` files, but COLLADA export is not reachable through `Scene.save()` because `IOService`'s exporter lookup fails before reaching `ColladaExporter`, and COLLADA load/save options must be imported from their exact",
+    "quote": "- COLLADA import works for `.dae` files, but COLLADA export is not reachable through `Scene.save()` because `IOService`'s exporter lookup fails before reaching ",
+    "audit": ""
+   },
+   {
+    "id": "F10",
+    "kind": "omission",
+    "section": "development_testing",
+    "owner": "M",
+    "status": "CLEARED",
+    "crit": "presentation",
+    "text": "The suite covers 33 test files under `tests/`. Releases run through the [publish workflow](.github/workflows/publish.yml).",
+    "quote": "The suite covers 33 test files under `tests/`. Releases run through the [publish workflow](.github/workflows/publish.yml).",
+    "audit": ""
+   }
+  ]
+ },
+ {
+  "case": "run9/contradict_version",
+  "role": "mutant",
+  "klass": "contradiction",
+  "stored": true,
+  "verdict": "REJECT",
+  "model_verdict": "REJECT_FACTUAL",
+  "findings": [
+   {
+    "id": "F01",
+    "kind": "unsupported_claim",
+    "section": "opening",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Aspose.3D FOSS for Python reads `.3mf`, `.dae`, `.fbx`, `.glb`, `.gltf`, `.obj`, and `.stl` files and writes `.3mf`, `.glb`, `.gltf`, `.obj`, and `.stl` files.",
+    "quote": "![Python](https://img.shields.io/badge/python-3.7%2B-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Contributors](ht",
+    "audit": "audit: distinctive terms ['img.shields.io', '3.7%', '2B', 'blue.svg', '3d', '3D', 'github.com']; found in SUPPORTED fact values: img.shields.io -> link_target:001, 3.7% -> link_target:001, 2B -> identity:revision, blue.svg -> link_target:001, 3d -> identity:family, 3D -> identity:family, github.com -> inherited_unit:002.badge_row; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F02",
+    "kind": "unsupported_claim",
+    "section": "key_capabilities",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "It triangulates arbitrary polygon data into triangle fans with `PolygonBuilder`, a real ear-clipping triangulation implementation rather than a naive fan split.",
+    "quote": "- **Triangulate polygons.** It triangulates arbitrary polygon data into triangle fans with `PolygonBuilder`, a real ear-clipping triangulation implementation ra",
+    "audit": "audit: distinctive terms ['PolygonBuilder']; found in SUPPORTED fact values: PolygonBuilder -> inherited_unit:060.table; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F03",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The package `aspose-3d-foss` could not be confirmed on PyPI (package registry: a distribution of this name exists, but ownership not confirmed: the registry's project URLs point at another repository).",
+    "quote": "The package `aspose-3d-foss` could not be confirmed on PyPI (package registry: a distribution of this name exists, but ownership not confirmed: the registry's p",
+    "audit": "audit: distinctive terms ['aspose-3d-foss', '3d', 'PyPI']; found in SUPPORTED fact values: aspose-3d-foss -> identity:repository, 3d -> identity:family, PyPI -> inherited_unit:002.badge_row; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F04",
+    "kind": "contradiction",
+    "section": "quick_start",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from PyPI (`aspose-3d-foss`, version 27.1.0):",
+    "quote": "Install the published package from PyPI (`aspose-3d-foss`, version 27.1.0):",
+    "audit": ""
+   },
+   {
+    "id": "F05",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 337 types.",
+    "quote": "The verified public surface has 337 types.",
+    "audit": "audit: distinctive terms ['337']; in no SUPPORTED fact value and not in the original README: ['337']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F06",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The `aspose.threed.Scene` class provides `Scene.open()` and `Scene.save()` methods to load and write 3D scenes, and `Scene.from_file()` for convenience; it exposes `Scene.root_node` as the top of the node hierarchy, `Scene.animation_clips` ",
+    "quote": "The `aspose.threed.Scene` class provides `Scene.open()` and `Scene.save()` methods to load and write 3D scenes, and `Scene.from_file()` for convenience; it expo",
+    "audit": "audit: distinctive terms ['aspose.threed.Scene', 'Scene.open()', 'Scene.open', 'Scene.save()', 'Scene.save', '3D', 'Scene.from_file()', 'Scene.from_file', 'from_file', 'Scene.root_node', 'root_node', 'Scene.animation_clips']; found in SUPPORTED fact values: aspose.threed.Scene -> public_symbol:aspose.threed.scene, Scene.open() -> inherited_unit:010.list, Scene.open -> example:007, Scene.save() -> example:005, Scene.save -> example:002, 3D -> identity:family, Scene.from_file -> public_symbol:aspose.threed.scene.from_file, from_file -> public_symbol:aspose.threed.profiles.fontfile.from_file, Scene.root_node -> example:002, root_node -> example:002, Scene.animation_clips -> public_symbol:aspose.threed.scene.animation_clips; in no SUPPORTED fact value and not in the original README: ['Scene.from_file()']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F07",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The `aspose.threed.Node` class represents an object in the scene hierarchy, with `Node.transform` providing its local coordinate system, `Node.child_nodes` for hierarchical children, `Node.entities` for attached `Mesh`-derived objects, and ",
+    "quote": "The `aspose.threed.Node` class represents an object in the scene hierarchy, with `Node.transform` providing its local coordinate system, `Node.child_nodes` for ",
+    "audit": "audit: distinctive terms ['aspose.threed.Node', 'Node.transform', 'Node.child_nodes', 'child_nodes', 'Node.entities', 'Mesh', 'Node.material', 'Node.evaluate_global_transform()', 'Node.evaluate_global_transform', 'evaluate_global_transform']; found in SUPPORTED fact values: aspose.threed.Node -> public_symbol:aspose.threed.node, Node.transform -> inherited_unit:046.code_block, Node.child_nodes -> example:007, child_nodes -> example:007, Node.entities -> public_symbol:aspose.threed.node.entities, Mesh -> example:002, Node.material -> example:005, Node.evaluate_global_transform -> public_symbol:aspose.threed.node.evaluate_global_transform, evaluate_global_transform -> public_symbol:aspose.threed.node.evaluate_global_transform; in no SUPPORTED fact value and not in the original README: ['Node.evaluate_global_transform()']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F08",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The `aspose.threed.Mesh` class stores geometric data including `control_points` for vertex positions and `polygon_count` for face definitions; it is typically created via `PolygonBuilder` to construct polygons from control points.",
+    "quote": "The `aspose.threed.Mesh` class stores geometric data including `control_points` for vertex positions and `polygon_count` for face definitions; it is typically c",
+    "audit": "audit: distinctive terms ['aspose.threed.Mesh', 'control_points', 'polygon_count', 'PolygonBuilder']; found in SUPPORTED fact values: aspose.threed.Mesh -> public_symbol:aspose.threed.mesh, control_points -> example:005, polygon_count -> inherited_unit:028.code_block, PolygonBuilder -> inherited_unit:060.table; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F09",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The `aspose.threed.shading` module provides `aspose.threed.Light` and `aspose.threed.Camera` classes for scene illumination and view configuration; materials use properties such as `diffuse_color`, `metallic_factor`, and `roughness_factor` ",
+    "quote": "The `aspose.threed.shading` module provides `aspose.threed.Light` and `aspose.threed.Camera` classes for scene illumination and view configuration; materials us",
+    "audit": "audit: distinctive terms ['aspose.threed.shading', 'aspose.threed.Light', 'aspose.threed.Camera', 'diffuse_color', 'metallic_factor', 'roughness_factor']; found in SUPPORTED fact values: aspose.threed.shading -> example:002, aspose.threed.Light -> public_symbol:aspose.threed.light, aspose.threed.Camera -> public_symbol:aspose.threed.camera, diffuse_color -> example:002, metallic_factor -> example:004, roughness_factor -> example:004; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F10",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The `aspose.threed.entities` module provides `aspose.threed.Primitive` classes for procedural geometry and utilities such as `PolygonBuilder` to construct `Mesh` objects; entities inherit from a common base and expose properties like entity",
+    "quote": "The `aspose.threed.entities` module provides `aspose.threed.Primitive` classes for procedural geometry and utilities such as `PolygonBuilder` to construct `Mesh",
+    "audit": "audit: distinctive terms ['aspose.threed.entities', 'aspose.threed.Primitive', 'PolygonBuilder', 'Mesh']; found in SUPPORTED fact values: aspose.threed.entities -> example:002, aspose.threed.Primitive -> public_symbol:aspose.threed.primitive, PolygonBuilder -> inherited_unit:060.table, Mesh -> example:002; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F11",
+    "kind": "unsupported_claim",
+    "section": "scope_limitations",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Aspose.3D FOSS for Python reads and writes OBJ, STL, glTF, and COLLADA files, and provides classes for mesh, geometry, curve, and shading manipulation.",
+    "quote": "Aspose.3D FOSS for Python reads and writes OBJ, STL, glTF, and COLLADA files, and provides classes for mesh, geometry, curve, and shading manipulation.",
+    "audit": "audit: distinctive terms ['3D']; found in SUPPORTED fact values: 3D -> identity:family; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F12",
+    "kind": "unsupported_claim",
+    "section": "scope_limitations",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "COLLADA import works for `.dae` files, but COLLADA export is not reachable through `Scene.save()` because `IOService`'s exporter lookup fails before reaching `ColladaExporter`, and COLLADA load/save options must be imported from their exact",
+    "quote": "- COLLADA import works for `.dae` files, but COLLADA export is not reachable through `Scene.save()` because `IOService`'s exporter lookup fails before reaching ",
+    "audit": "audit: distinctive terms ['.dae', 'Scene.save()', 'Scene.save', 'IOService', 'ColladaExporter', 'aspose.threed.formats']; found in SUPPORTED fact values: .dae -> format:input.dae, Scene.save() -> example:005, Scene.save -> example:002, IOService -> inherited_unit:067.list, ColladaExporter -> inherited_unit:060.table, aspose.threed.formats -> example:005; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F13",
+    "kind": "unsupported_claim",
+    "section": "development_testing",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The suite covers 33 test files under `tests/`. Releases run through the [publish workflow](.github/workflows/publish.yml).",
+    "quote": "The suite covers 33 test files under `tests/`. Releases run through the [publish workflow](.github/workflows/publish.yml).",
+    "audit": "audit: distinctive terms ['33', 'tests/', 'publish.yml']; found in SUPPORTED fact values: 33 -> inherited_unit:074.paragraph, tests/ -> build_test_asset:tests, publish.yml -> build_test_asset:release-workflow; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F14",
+    "kind": "unsupported_claim",
+    "section": "development_testing",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "To build from a clone, run: ```bash pip install build python -m build ```",
+    "quote": "pip install build",
+    "audit": "audit: the quoted claim has no distinctive term (identifier, number or quoted phrase) to look up; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   }
+  ]
+ },
+ {
+  "case": "run9/drop_section",
+  "role": "mutant",
+  "klass": "content_loss",
+  "stored": true,
+  "verdict": "REJECT",
+  "model_verdict": "REJECT_FACTUAL",
+  "findings": [
+   {
+    "id": "F01",
+    "kind": "unsupported_claim",
+    "section": "opening",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Aspose.3D FOSS for Python reads `.3mf`, `.dae`, `.fbx`, `.glb`, `.gltf`, `.obj`, and `.stl` files and writes `.3mf`, `.glb`, `.gltf`, `.obj`, and `.stl` files.",
+    "quote": "![Python](https://img.shields.io/badge/python-3.7%2B-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Contributors](ht",
+    "audit": "audit: distinctive terms ['img.shields.io', '3.7%', '2B', 'blue.svg', '3d', '3D', 'github.com']; found in SUPPORTED fact values: img.shields.io -> link_target:001, 3.7% -> link_target:001, 2B -> identity:revision, blue.svg -> link_target:001, 3d -> identity:family, 3D -> identity:family, github.com -> inherited_unit:002.badge_row; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F02",
+    "kind": "unsupported_claim",
+    "section": "key_capabilities",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "It triangulates arbitrary polygon data into triangle fans with `PolygonBuilder`, a real ear-clipping triangulation implementation rather than a naive fan split.",
+    "quote": "- **Triangulate polygons.** It triangulates arbitrary polygon data into triangle fans with `PolygonBuilder`, a real ear-clipping triangulation implementation ra",
+    "audit": "audit: distinctive terms ['PolygonBuilder']; found in SUPPORTED fact values: PolygonBuilder -> inherited_unit:060.table; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F03",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The package `aspose-3d-foss` could not be confirmed on PyPI (package registry: a distribution of this name exists, but ownership not confirmed: the registry's project URLs point at another repository).",
+    "quote": "The package `aspose-3d-foss` could not be confirmed on PyPI (package registry: a distribution of this name exists, but ownership not confirmed: the registry's p",
+    "audit": "audit: distinctive terms ['aspose-3d-foss', '3d', 'PyPI']; found in SUPPORTED fact values: aspose-3d-foss -> identity:repository, 3d -> identity:family, PyPI -> inherited_unit:002.badge_row; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F04",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 337 types.",
+    "quote": "The verified public surface has 337 types.",
+    "audit": "audit: distinctive terms ['337']; in no SUPPORTED fact value and not in the original README: ['337']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F05",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The `aspose.threed.Scene` class provides `Scene.open()` and `Scene.save()` methods to load and write 3D scenes, and `Scene.from_file()` for convenience; it exposes `Scene.root_node` as the top of the node hierarchy, `Scene.animation_clips` ",
+    "quote": "The `aspose.threed.Scene` class provides `Scene.open()` and `Scene.save()` methods to load and write 3D scenes, and `Scene.from_file()` for convenience; it expo",
+    "audit": "audit: distinctive terms ['aspose.threed.Scene', 'Scene.open()', 'Scene.open', 'Scene.save()', 'Scene.save', '3D', 'Scene.from_file()', 'Scene.from_file', 'from_file', 'Scene.root_node', 'root_node', 'Scene.animation_clips']; found in SUPPORTED fact values: aspose.threed.Scene -> public_symbol:aspose.threed.scene, Scene.open() -> inherited_unit:010.list, Scene.open -> example:007, Scene.save() -> example:005, Scene.save -> example:002, 3D -> identity:family, Scene.from_file -> public_symbol:aspose.threed.scene.from_file, from_file -> public_symbol:aspose.threed.profiles.fontfile.from_file, Scene.root_node -> example:002, root_node -> example:002, Scene.animation_clips -> public_symbol:aspose.threed.scene.animation_clips; in no SUPPORTED fact value and not in the original README: ['Scene.from_file()']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F06",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The `aspose.threed.Mesh` class stores geometric data including `control_points` for vertex positions and `polygon_count` for face definitions; it is typically created via `PolygonBuilder` to construct polygons from control points.",
+    "quote": "The `aspose.threed.Mesh` class stores geometric data including `control_points` for vertex positions and `polygon_count` for face definitions; it is typically c",
+    "audit": "audit: distinctive terms ['aspose.threed.Mesh', 'control_points', 'polygon_count', 'PolygonBuilder']; found in SUPPORTED fact values: aspose.threed.Mesh -> public_symbol:aspose.threed.mesh, control_points -> example:005, polygon_count -> inherited_unit:028.code_block, PolygonBuilder -> inherited_unit:060.table; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F07",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The `aspose.threed.shading` module provides `aspose.threed.Light` and `aspose.threed.Camera` classes for scene illumination and view configuration; materials use properties such as `diffuse_color`, `metallic_factor`, and `roughness_factor` ",
+    "quote": "The `aspose.threed.shading` module provides `aspose.threed.Light` and `aspose.threed.Camera` classes for scene illumination and view configuration; materials us",
+    "audit": "audit: distinctive terms ['aspose.threed.shading', 'aspose.threed.Light', 'aspose.threed.Camera', 'diffuse_color', 'metallic_factor', 'roughness_factor']; found in SUPPORTED fact values: aspose.threed.shading -> example:002, aspose.threed.Light -> public_symbol:aspose.threed.light, aspose.threed.Camera -> public_symbol:aspose.threed.camera, diffuse_color -> example:002, metallic_factor -> example:004, roughness_factor -> example:004; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F08",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The `aspose.threed.entities` module provides `aspose.threed.Primitive` classes for procedural geometry and utilities such as `PolygonBuilder` to construct `Mesh` objects; entities inherit from a common base and expose properties like entity",
+    "quote": "The `aspose.threed.entities` module provides `aspose.threed.Primitive` classes for procedural geometry and utilities such as `PolygonBuilder` to construct `Mesh",
+    "audit": "audit: distinctive terms ['aspose.threed.entities', 'aspose.threed.Primitive', 'PolygonBuilder', 'Mesh']; found in SUPPORTED fact values: aspose.threed.entities -> example:002, aspose.threed.Primitive -> public_symbol:aspose.threed.primitive, PolygonBuilder -> inherited_unit:060.table, Mesh -> example:002; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F09",
+    "kind": "unsupported_claim",
+    "section": "development_testing",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The suite covers 33 test files under `tests/`. Releases run through the [publish workflow](.github/workflows/publish.yml).",
+    "quote": "The suite covers 33 test files under `tests/`. Releases run through the [publish workflow](.github/workflows/publish.yml).",
+    "audit": "audit: distinctive terms ['33', 'tests/', 'publish.yml']; found in SUPPORTED fact values: 33 -> inherited_unit:074.paragraph, tests/ -> build_test_asset:tests, publish.yml -> build_test_asset:release-workflow; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F10",
+    "kind": "unsupported_claim",
+    "section": "development_testing",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the repository and run the test suite:",
+    "quote": "Install the repository and run the test suite:",
+    "audit": "audit: the quoted claim has no distinctive term (identifier, number or quoted phrase) to look up; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   }
+  ]
+ },
+ {
+  "case": "run9/duplicate_paragraph",
+  "stored": false
+ },
+ {
+  "case": "run9/invent_api_name",
+  "role": "mutant",
+  "klass": "invented_api",
+  "stored": true,
+  "verdict": "REJECT",
+  "model_verdict": "REJECT_FACTUAL",
+  "findings": [
+   {
+    "id": "F01",
+    "kind": "unsupported_claim",
+    "section": "opening",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Aspose.3D FOSS for Python reads `.3mf`, `.dae`, `.fbx`, `.glb`, `.gltf`, `.obj`, and `.stl` files and writes `.3mf`, `.glb`, `.gltf`, `.obj`, and `.stl` files.",
+    "quote": "![Python](https://img.shields.io/badge/python-3.7%2B-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Contributors](ht",
+    "audit": "audit: distinctive terms ['img.shields.io', '3.7%', '2B', 'blue.svg', '3d', '3D', 'github.com']; found in SUPPORTED fact values: img.shields.io -> link_target:001, 3.7% -> link_target:001, 2B -> identity:revision, blue.svg -> link_target:001, 3d -> identity:family, 3D -> identity:family, github.com -> inherited_unit:002.badge_row; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F02",
+    "kind": "unsupported_claim",
+    "section": "key_capabilities",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "It triangulates arbitrary polygon data into triangle fans with `PolygonBuilder`, a real ear-clipping triangulation implementation rather than a naive fan split.",
+    "quote": "- **Triangulate polygons.** It triangulates arbitrary polygon data into triangle fans with `PolygonBuilder`, a real ear-clipping triangulation implementation ra",
+    "audit": "audit: distinctive terms ['PolygonBuilder']; found in SUPPORTED fact values: PolygonBuilder -> inherited_unit:060.table; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F03",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The package `aspose-3d-foss` could not be confirmed on PyPI (package registry: a distribution of this name exists, but ownership not confirmed: the registry's project URLs point at another repository).",
+    "quote": "The package `aspose-3d-foss` could not be confirmed on PyPI (package registry: a distribution of this name exists, but ownership not confirmed: the registry's p",
+    "audit": "audit: distinctive terms ['aspose-3d-foss', '3d', 'PyPI']; found in SUPPORTED fact values: aspose-3d-foss -> identity:repository, 3d -> identity:family, PyPI -> inherited_unit:002.badge_row; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F04",
+    "kind": "unsupported_claim",
+    "section": "quick_start",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from PyPI (`aspose-3d-foss`, version 26.1.0):",
+    "quote": "Install the published package from PyPI (`aspose-3d-foss`, version 26.1.0):",
+    "audit": "audit: distinctive terms ['PyPI', 'aspose-3d-foss', '3d', '26.1.0']; found in SUPPORTED fact values: PyPI -> inherited_unit:002.badge_row, aspose-3d-foss -> identity:repository, 3d -> identity:family, 26.1.0 -> inherited_unit:012.paragraph; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F05",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 337 types.",
+    "quote": "The verified public surface has 337 types.",
+    "audit": "audit: distinctive terms ['337']; in no SUPPORTED fact value and not in the original README: ['337']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F06",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The `aspose.threed.Scene` class provides `Scene.open()` and `Scene.save()` methods to load and write 3D scenes, and `Scene.from_file()` for convenience; it exposes `Scene.root_node` as the top of the node hierarchy, `Scene.animation_clips` ",
+    "quote": "The `aspose.threed.Scene` class provides `Scene.open()` and `Scene.save()` methods to load and write 3D scenes, and `Scene.from_file()` for convenience; it expo",
+    "audit": "audit: distinctive terms ['aspose.threed.Scene', 'Scene.open()', 'Scene.open', 'Scene.save()', 'Scene.save', '3D', 'Scene.from_file()', 'Scene.from_file', 'from_file', 'Scene.root_node', 'root_node', 'Scene.animation_clips']; found in SUPPORTED fact values: aspose.threed.Scene -> public_symbol:aspose.threed.scene, Scene.open() -> inherited_unit:010.list, Scene.open -> example:007, Scene.save() -> example:005, Scene.save -> example:002, 3D -> identity:family, Scene.from_file -> public_symbol:aspose.threed.scene.from_file, from_file -> public_symbol:aspose.threed.profiles.fontfile.from_file, Scene.root_node -> example:002, root_node -> example:002, Scene.animation_clips -> public_symbol:aspose.threed.scene.animation_clips; in no SUPPORTED fact value and not in the original README: ['Scene.from_file()']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F07",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The `aspose.threed.Mesh` class stores geometric data including `control_points` for vertex positions and `polygon_count` for face definitions; it is typically created via `PolygonBuilder` to construct polygons from control points.",
+    "quote": "The `aspose.threed.Mesh` class stores geometric data including `control_points` for vertex positions and `polygon_count` for face definitions; it is typically c",
+    "audit": "audit: distinctive terms ['aspose.threed.Mesh', 'control_points', 'polygon_count', 'PolygonBuilder']; found in SUPPORTED fact values: aspose.threed.Mesh -> public_symbol:aspose.threed.mesh, control_points -> example:005, polygon_count -> inherited_unit:028.code_block, PolygonBuilder -> inherited_unit:060.table; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F08",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The `aspose.threed.entities` module provides `aspose.threed.Primitive` classes for procedural geometry and utilities such as `PolygonBuilder` to construct `Mesh` objects; entities inherit from a common base and expose properties like entity",
+    "quote": "The `aspose.threed.entities` module provides `aspose.threed.Primitive` classes for procedural geometry and utilities such as `PolygonBuilder` to construct `Mesh",
+    "audit": "audit: distinctive terms ['aspose.threed.entities', 'aspose.threed.Primitive', 'PolygonBuilder', 'Mesh']; found in SUPPORTED fact values: aspose.threed.entities -> example:002, aspose.threed.Primitive -> public_symbol:aspose.threed.primitive, PolygonBuilder -> inherited_unit:060.table, Mesh -> example:002; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F09",
+    "kind": "unsupported_claim",
+    "section": "scope_limitations",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Aspose.3D FOSS for Python reads and writes OBJ, STL, glTF, and COLLADA files, and provides classes for mesh, geometry, curve, and shading manipulation.",
+    "quote": "Aspose.3D FOSS for Python reads and writes OBJ, STL, glTF, and COLLADA files, and provides classes for mesh, geometry, curve, and shading manipulation.",
+    "audit": "audit: distinctive terms ['3D']; found in SUPPORTED fact values: 3D -> identity:family; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F10",
+    "kind": "unsupported_claim",
+    "section": "development_testing",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The suite covers 33 test files under `tests/`. Releases run through the [publish workflow](.github/workflows/publish.yml).",
+    "quote": "The suite covers 33 test files under `tests/`. Releases run through the [publish workflow](.github/workflows/publish.yml).",
+    "audit": "audit: distinctive terms ['33', 'tests/', 'publish.yml']; found in SUPPORTED fact values: 33 -> inherited_unit:074.paragraph, tests/ -> build_test_asset:tests, publish.yml -> build_test_asset:release-workflow; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   }
+  ]
+ },
+ {
+  "case": "run9/add_promotional_filler",
+  "role": "mutant",
+  "klass": "promotional_filler",
+  "stored": true,
+  "verdict": "REJECT",
+  "model_verdict": "REJECT_PRESENTATION",
+  "findings": [
+   {
+    "id": "F01",
+    "kind": "quality",
+    "section": "opening",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "presentation",
+    "text": "Aspose.3D FOSS for Python reads `.3mf`, `.dae`, `.fbx`, `.glb`, `.gltf`, `.obj`, and `.stl` files and writes `.3mf`, `.glb`, `.gltf`, `.obj`, and `.stl` files. It supports scene management through `aspose.threed.Scene`, entity representatio",
+    "quote": "Aspose.3D FOSS for Python reads `.3mf`, `.dae`, `.fbx`, `.glb`, `.gltf`, `.obj`, and `.stl` files and writes `.3mf`, `.glb`, `.gltf`, `.obj`, and `.stl` files. ",
+    "audit": ""
+   },
+   {
+    "id": "F02",
+    "kind": "quality",
+    "section": "key_capabilities",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "presentation",
+    "text": "It triangulates arbitrary polygon data into triangle fans with `PolygonBuilder`, a real ear-clipping triangulation implementation rather than a naive fan split.",
+    "quote": "- **Triangulate polygons.** It triangulates arbitrary polygon data into triangle fans with `PolygonBuilder`, a real ear-clipping triangulation implementation ra",
+    "audit": ""
+   },
+   {
+    "id": "F03",
+    "kind": "quality",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "presentation",
+    "text": "The verified public surface has 337 types.",
+    "quote": "The verified public surface has 337 types.",
+    "audit": ""
+   },
+   {
+    "id": "F04",
+    "kind": "quality",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "presentation",
+    "text": "The `aspose.threed.Scene` class provides `Scene.open()` and `Scene.save()` methods to load and write 3D scenes, and `Scene.from_file()` for convenience; it exposes `Scene.root_node` as the top of the node hierarchy, `Scene.animation_clips` ",
+    "quote": "The `aspose.threed.Scene` class provides `Scene.open()` and `Scene.save()` methods to load and write 3D scenes, and `Scene.from_file()` for convenience; it expo",
+    "audit": ""
+   },
+   {
+    "id": "F05",
+    "kind": "quality",
+    "section": "scope_limitations",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "presentation",
+    "text": "Aspose.3D FOSS for Python reads and writes OBJ, STL, glTF, and COLLADA files, and provides classes for mesh, geometry, curve, and shading manipulation.",
+    "quote": "Aspose.3D FOSS for Python reads and writes OBJ, STL, glTF, and COLLADA files, and provides classes for mesh, geometry, curve, and shading manipulation.",
+    "audit": ""
+   },
+   {
+    "id": "F06",
+    "kind": "quality",
+    "section": "scope_limitations",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "presentation",
+    "text": "COLLADA import works for `.dae` files, but COLLADA export is not reachable through `Scene.save()` because `IOService`'s exporter lookup fails before reaching `ColladaExporter`, and COLLADA load/save options must be imported from their exact",
+    "quote": "- COLLADA import works for `.dae` files, but COLLADA export is not reachable through `Scene.save()` because `IOService`'s exporter lookup fails before reaching ",
+    "audit": ""
+   },
+   {
+    "id": "F07",
+    "kind": "quality",
+    "section": "development_testing",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "presentation",
+    "text": "Aspose.3D FOSS for Python requires Python 3.7 or later and supports versions 3.7 through 3.12 on Windows, macOS, and Linux with no native dependencies. The test suite resides in the tests/ directory and covers OBJ, STL, glTF, COLLADA, and 3",
+    "quote": "Aspose.3D FOSS for Python requires Python 3.7 or later and supports versions 3.7 through 3.12 on Windows, macOS, and Linux with no native dependencies. The test",
+    "audit": ""
+   },
+   {
+    "id": "F08",
+    "kind": "quality",
+    "section": "development_testing",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "presentation",
+    "text": "The suite covers 33 test files under `tests/`. Releases run through the [publish workflow](.github/workflows/publish.yml).",
+    "quote": "The suite covers 33 test files under `tests/`. Releases run through the [publish workflow](.github/workflows/publish.yml).",
+    "audit": ""
+   },
+   {
+    "id": "F09",
+    "kind": "quality",
+    "section": "development_testing",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "presentation",
+    "text": "To work from the latest source checkout instead, install it in editable mode:",
+    "quote": "To work from the latest source checkout instead, install it in editable mode:",
+    "audit": ""
+   },
+   {
+    "id": "F10",
+    "kind": "quality",
+    "section": "development_testing",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "presentation",
+    "text": "pytest `>=7.0.0` \u2014 test runner installed via the optional `dev` extra",
+    "quote": "- `pytest` `>=7.0.0` \u2014 test runner installed via the optional `dev` extra",
+    "audit": ""
+   }
+  ]
+ },
+ {
+  "case": "cellsnet/clean",
+  "role": "unscored_twin",
+  "klass": null,
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "cellsnet/inject_unsupported_claim",
+  "role": "mutant",
+  "klass": "unsupported_claim",
+  "stored": true,
+  "verdict": "REJECT",
+  "model_verdict": "REJECT_FACTUAL",
+  "findings": [
+   {
+    "id": "F01",
+    "kind": "unsupported_claim",
+    "section": "opening",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Every conversion is verified byte-for-byte lossless against the reference implementation.",
+    "quote": "It reads and writes Excel .xlsx workbooks, converts them to PDF, and supports editing cells, styles, validation, conditional formatting, list objects, charts, a",
+    "audit": "audit: distinctive terms ['LoadOptions', 'LoadDiagnostics', 'IWarningCallback']; found in SUPPORTED fact values: LoadOptions -> inherited_unit:010.list, LoadDiagnostics -> inherited_unit:010.list, IWarningCallback -> inherited_unit:010.list; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F02",
+    "kind": "omission",
+    "section": "dependencies",
+    "owner": "D",
+    "status": "CLEARED",
+    "crit": "completeness",
+    "text": "### Required Package Dependencies",
+    "quote": "### Required Package Dependencies",
+    "audit": ""
+   },
+   {
+    "id": "F03",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "completeness",
+    "text": "The verified public surface has 98 types.",
+    "quote": "The verified public surface has 98 types.",
+    "audit": "audit: distinctive terms ['98']; in no SUPPORTED fact value and not in the original README: ['98']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F04",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `FontSetting` | Represents a range of characters within a cell's rich text. |",
+    "quote": "| `FontSetting` | Represents a range of characters within a cell's rich text. |",
+    "audit": "audit: distinctive terms ['FontSetting']; found in SUPPORTED fact values: FontSetting -> public_symbol:aspose.cells_foss.fontsetting; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F05",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `Worksheet` | Encapsulates a single worksheet and its supported v0.1 worksheet features. |",
+    "quote": "| `Worksheet` | Encapsulates a single worksheet and its supported v0.1 worksheet features. |",
+    "audit": "audit: distinctive terms ['Worksheet']; found in SUPPORTED fact values: Worksheet -> inherited_unit:004.paragraph; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F06",
+    "kind": "unsupported_claim",
+    "section": "scope_limitations",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Cell.Formula stores the formula as a string; the library does not parse, evaluate, or recalculate formulas, and attempts to calculate a formula raise FormulaException.",
+    "quote": "- `Cell.Formula` stores the formula as a string; the library does not parse, evaluate, or recalculate formulas, and attempts to calculate a formula raise `Formu",
+    "audit": "audit: distinctive terms ['Cell.Formula', 'FormulaException']; found in SUPPORTED fact values: Cell.Formula -> inherited_unit:010.list, FormulaException -> inherited_unit:042.table; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F07",
+    "kind": "absence",
+    "section": "scope_limitations",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "presentation",
+    "text": "This project is licensed under the [MIT License](License/LICENSE.txt). The MIT License permits use, copying, modification, distribution, sublicensing, and commercial use, provided its copyright and permission notice are retained. The softwa",
+    "quote": "This project is licensed under the [MIT License](License/LICENSE.txt). The MIT License permits use, copying, modification, distribution, sublicensing, and comme",
+    "audit": ""
+   }
+  ]
+ },
+ {
+  "case": "cellsnet/contradict_version",
+  "role": "mutant",
+  "klass": "contradiction",
+  "stored": true,
+  "verdict": "REJECT",
+  "model_verdict": "REJECT_FACTUAL",
+  "findings": [
+   {
+    "id": "F01",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from NuGet (`Aspose.Cells.FOSS`, version 27.9.0.0):",
+    "quote": "Install the published package from NuGet (`Aspose.Cells.FOSS`, version 27.9.0.0):",
+    "audit": "audit: distinctive terms ['NuGet', 'Aspose.Cells.FOSS', '27.9.0.0']; found in SUPPORTED fact values: NuGet -> inherited_unit:002.badge_row, Aspose.Cells.FOSS -> inherited_unit:002.badge_row; in no SUPPORTED fact value and not in the original README: ['27.9.0.0']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F02",
+    "kind": "unsupported_claim",
+    "section": "dependencies",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "### Required Package Dependencies",
+    "quote": "### Required Package Dependencies",
+    "audit": "audit: the quoted claim has no distinctive term (identifier, number or quoted phrase) to look up; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F03",
+    "kind": "unsupported_claim",
+    "section": "dependencies",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "- `SkiaSharp 2.88.8`",
+    "quote": "- `SkiaSharp 2.88.8`",
+    "audit": "audit: distinctive terms ['SkiaSharp 2.88.8', 'SkiaSharp', '2.88.8']; found in SUPPORTED fact values: SkiaSharp 2.88.8 -> dependency:skiasharp, SkiaSharp -> dependency:skiasharp, 2.88.8 -> dependency:skiasharp; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F04",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 98 types.",
+    "quote": "The verified public surface has 98 types.",
+    "audit": "audit: distinctive terms ['98']; in no SUPPORTED fact value and not in the original README: ['98']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F05",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `FontSetting` | Represents a range of characters within a cell's rich text. |",
+    "quote": "| `FontSetting` | Represents a range of characters within a cell's rich text. |",
+    "audit": "audit: distinctive terms ['FontSetting']; found in SUPPORTED fact values: FontSetting -> public_symbol:aspose.cells_foss.fontsetting; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F06",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `Worksheet` | Encapsulates a single worksheet and its supported v0.1 worksheet features. |",
+    "quote": "| `Worksheet` | Encapsulates a single worksheet and its supported v0.1 worksheet features. |",
+    "audit": "audit: distinctive terms ['Worksheet']; found in SUPPORTED fact values: Worksheet -> inherited_unit:004.paragraph; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F07",
+    "kind": "unsupported_claim",
+    "section": "scope_limitations",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "- `Cell.Formula` stores the formula as a string; the library does not parse, evaluate, or recalculate formulas, and attempts to calculate a formula raise `FormulaException`.",
+    "quote": "- `Cell.Formula` stores the formula as a string; the library does not parse, evaluate, or recalculate formulas, and attempts to calculate a formula raise `Formu",
+    "audit": "audit: distinctive terms ['Cell.Formula', 'FormulaException']; found in SUPPORTED fact values: Cell.Formula -> inherited_unit:010.list, FormulaException -> inherited_unit:042.table; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F08",
+    "kind": "unsupported_claim",
+    "section": "scope_limitations",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "- **Load format scope.** Load support is limited to XLSX (`LoadFormat.Auto` and `LoadFormat.Xlsx`). Legacy XLS, ODS, CSV, and other spreadsheet formats are not loaded.",
+    "quote": "- **Load format scope.** Load support is limited to XLSX (`LoadFormat.Auto` and `LoadFormat.Xlsx`). Legacy XLS, ODS, CSV, and other spreadsheet formats are not ",
+    "audit": "audit: distinctive terms ['LoadFormat.Auto', 'LoadFormat.Xlsx']; found in SUPPORTED fact values: LoadFormat.Auto -> inherited_unit:064.list, LoadFormat.Xlsx -> inherited_unit:064.list; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F09",
+    "kind": "unsupported_claim",
+    "section": "scope_limitations",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "- **Save format scope.** Save support currently covers XLSX and PDF (`SaveFormat.Xlsx` and `SaveFormat.Pdf`).",
+    "quote": "- **Save format scope.** Save support currently covers XLSX and PDF (`SaveFormat.Xlsx` and `SaveFormat.Pdf`).",
+    "audit": "audit: distinctive terms ['SaveFormat.Xlsx', 'SaveFormat.Pdf']; found in SUPPORTED fact values: SaveFormat.Xlsx -> inherited_unit:064.list, SaveFormat.Pdf -> inherited_unit:010.list; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F10",
+    "kind": "unsupported_claim",
+    "section": "scope_limitations",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "- **No formula calculation engine.** `Cell.Formula` stores the formula as a string; the library does not parse, evaluate, or recalculate formulas.",
+    "quote": "- **No formula calculation engine.** `Cell.Formula` stores the formula as a string; the library does not parse, evaluate, or recalculate formulas.",
+    "audit": "audit: distinctive terms ['Cell.Formula']; found in SUPPORTED fact values: Cell.Formula -> inherited_unit:010.list; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F11",
+    "kind": "unsupported_claim",
+    "section": "scope_limitations",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "- **No image or HTML export.** PDF export is supported, but there is no image or HTML rendering output in this checkout.",
+    "quote": "- **No image or HTML export.** PDF export is supported, but there is no image or HTML rendering output in this checkout.",
+    "audit": "audit: the quoted claim has no distinctive term (identifier, number or quoted phrase) to look up; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F12",
+    "kind": "unsupported_claim",
+    "section": "scope_limitations",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "- **No print execution.** `Worksheet.PageSetup` configures how a spreadsheet application would print the file, but the library itself does not send workbooks to a printer.",
+    "quote": "- **No print execution.** `Worksheet.PageSetup` configures how a spreadsheet application would print the file, but the library itself does not send workbooks to",
+    "audit": "audit: distinctive terms ['Worksheet.PageSetup', 'PageSetup']; found in SUPPORTED fact values: Worksheet.PageSetup -> inherited_unit:010.list, PageSetup -> inherited_unit:010.list; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F13",
+    "kind": "unsupported_claim",
+    "section": "scope_limitations",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "- **No macros or VBA.** The public API has no VBA-project or macro-related types, so macro-enabled workbooks round-trip only their non-macro content.",
+    "quote": "- **No macros or VBA.** The public API has no VBA-project or macro-related types, so macro-enabled workbooks round-trip only their non-macro content.",
+    "audit": "audit: the quoted claim has no distinctive term (identifier, number or quoted phrase) to look up; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F14",
+    "kind": "unsupported_claim",
+    "section": "scope_limitations",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "- **No pivot tables.** Structured tables (`ListObject`) and charts (`Chart`) are supported; pivot tables are not part of the public API surface.",
+    "quote": "- **No pivot tables.** Structured tables (`ListObject`) and charts (`Chart`) are supported; pivot tables are not part of the public API surface.",
+    "audit": "audit: distinctive terms ['ListObject', 'Chart']; found in SUPPORTED fact values: ListObject -> inherited_unit:010.list, Chart -> inherited_unit:008.code_block; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   }
+  ]
+ },
+ {
+  "case": "cellsnet/drop_section",
+  "role": "mutant",
+  "klass": "content_loss",
+  "stored": true,
+  "verdict": "REJECT",
+  "model_verdict": "REJECT_FACTUAL",
+  "findings": [
+   {
+    "id": "F01",
+    "kind": "unsupported_claim",
+    "section": "dependencies",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The library has a required dependency on SkiaSharp 2.88.8.",
+    "quote": "- `SkiaSharp 2.88.8`",
+    "audit": "audit: distinctive terms ['SkiaSharp 2.88.8', 'SkiaSharp', '2.88.8']; found in SUPPORTED fact values: SkiaSharp 2.88.8 -> dependency:skiasharp, SkiaSharp -> dependency:skiasharp, 2.88.8 -> dependency:skiasharp; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F02",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 98 types.",
+    "quote": "The verified public surface has 98 types.",
+    "audit": "audit: distinctive terms ['98']; in no SUPPORTED fact value and not in the original README: ['98']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F03",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The `FontSetting` class represents a range of characters within a cell's rich text.",
+    "quote": "| `FontSetting` | Represents a range of characters within a cell's rich text. |",
+    "audit": "audit: distinctive terms ['FontSetting']; found in SUPPORTED fact values: FontSetting -> public_symbol:aspose.cells_foss.fontsetting; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F04",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The `Worksheet` class encapsulates a single worksheet and its supported v0.1 worksheet features.",
+    "quote": "| `Worksheet` | Encapsulates a single worksheet and its supported v0.1 worksheet features. |",
+    "audit": "audit: distinctive terms ['Worksheet']; found in SUPPORTED fact values: Worksheet -> inherited_unit:004.paragraph; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F05",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The `Style` class allows developers to define formatting for cells, including `BackgroundColor`, `ForegroundColor`, `Font`, `Borders`, `FillPattern`, `HorizontalAlignment`, `IndentLevel`, `IsHidden`, and `IsLocked`, and supports operations ",
+    "quote": "The `Style` class allows developers to define formatting for cells, including `BackgroundColor`, `ForegroundColor`, `Font`, `Borders`, `FillPattern`, `Horizonta",
+    "audit": "audit: distinctive terms ['Style', 'BackgroundColor', 'ForegroundColor', 'Font', 'Borders', 'FillPattern', 'HorizontalAlignment', 'IndentLevel', 'IsHidden', 'IsLocked']; found in SUPPORTED fact values: Style -> inherited_unit:010.list, BackgroundColor -> inherited_unit:053.003.list, ForegroundColor -> inherited_unit:017.code_block, Font -> inherited_unit:010.list, Borders -> inherited_unit:010.list, FillPattern -> inherited_unit:010.list, HorizontalAlignment -> inherited_unit:048.table, IndentLevel -> public_symbol:aspose.cells_foss.style.indentlevel, IsHidden -> inherited_unit:053.003.list, IsLocked -> inherited_unit:053.003.list; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F06",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The `Validation` class enables data validation rules on cells, managed through the `ValidationCollection`, and works alongside `ConditionalFormattingCollection` for conditional formatting rules.",
+    "quote": "The `Validation` class enables data validation rules on cells, managed through the `ValidationCollection`, and works alongside `ConditionalFormattingCollection`",
+    "audit": "audit: distinctive terms ['Validation', 'ValidationCollection', 'ConditionalFormattingCollection']; found in SUPPORTED fact values: Validation -> inherited_unit:008.code_block, ValidationCollection -> inherited_unit:010.list, ConditionalFormattingCollection -> inherited_unit:042.table; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F07",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The `ListObject` class represents a table in a worksheet, accessible via the `ListObjectCollection`, and supports features such as charts through the `Chart` and `ChartCollection` classes.",
+    "quote": "The `ListObject` class represents a table in a worksheet, accessible via the `ListObjectCollection`, and supports features such as charts through the `Chart` an",
+    "audit": "audit: distinctive terms ['ListObject', 'ListObjectCollection', 'Chart', 'ChartCollection']; found in SUPPORTED fact values: ListObject -> inherited_unit:010.list, ListObjectCollection -> inherited_unit:042.table, Chart -> inherited_unit:008.code_block, ChartCollection -> inherited_unit:010.list; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F08",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The `PdfSaveOptions` class controls how a workbook is saved to PDF format, supporting options such as `OnePagePerSheet` and `AllColumnsInOnePagePerSheet`, and works with `SaveFormat` and `PageSetup` settings.",
+    "quote": "The `PdfSaveOptions` class controls how a workbook is saved to PDF format, supporting options such as `OnePagePerSheet` and `AllColumnsInOnePagePerSheet`, and w",
+    "audit": "audit: distinctive terms ['PdfSaveOptions', 'OnePagePerSheet', 'AllColumnsInOnePagePerSheet', 'SaveFormat', 'PageSetup']; found in SUPPORTED fact values: PdfSaveOptions -> inherited_unit:010.list, OnePagePerSheet -> inherited_unit:021.code_block, AllColumnsInOnePagePerSheet -> inherited_unit:036.code_block, SaveFormat -> inherited_unit:010.list, PageSetup -> inherited_unit:010.list; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F09",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The `WorkbookProtection` and `WorksheetProtection` classes provide methods to protect and unprotect workbooks and worksheets, respectively.",
+    "quote": "`WorkbookProtection` and `WorksheetProtection` classes provide methods to protect and unprotect workbooks and worksheets, respectively.",
+    "audit": "audit: distinctive terms ['WorkbookProtection', 'WorksheetProtection']; found in SUPPORTED fact values: WorkbookProtection -> inherited_unit:010.list, WorksheetProtection -> inherited_unit:042.table; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   }
+  ]
+ },
+ {
+  "case": "cellsnet/break_install_command",
+  "role": "mutant",
+  "klass": "broken_install",
+  "stored": true,
+  "verdict": "REJECT",
+  "model_verdict": "REJECT_FACTUAL",
+  "findings": [
+   {
+    "id": "F01",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from NuGet (`Aspose.Cells.FOSS`, version 26.9.0.0):",
+    "quote": "Install the published package from NuGet (`Aspose.Cells.FOSS`, version 26.9.0.0):",
+    "audit": "audit: distinctive terms ['NuGet', 'Aspose.Cells.FOSS', '26.9.0.0']; found in SUPPORTED fact values: NuGet -> inherited_unit:002.badge_row, Aspose.Cells.FOSS -> inherited_unit:002.badge_row, 26.9.0.0 -> package:version; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F02",
+    "kind": "contradiction",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "```bash dotnet add package Aspose.Cells.FSOS ```",
+    "quote": "dotnet add package Aspose.Cells.FSOS",
+    "audit": ""
+   },
+   {
+    "id": "F03",
+    "kind": "unsupported_claim",
+    "section": "dependencies",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "### Required Package Dependencies - `SkiaSharp 2.88.8`",
+    "quote": "- `SkiaSharp 2.88.8`",
+    "audit": "audit: distinctive terms ['SkiaSharp 2.88.8', 'SkiaSharp', '2.88.8']; found in SUPPORTED fact values: SkiaSharp 2.88.8 -> dependency:skiasharp, SkiaSharp -> dependency:skiasharp, 2.88.8 -> dependency:skiasharp; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F04",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 98 types.",
+    "quote": "The verified public surface has 98 types.",
+    "audit": "audit: distinctive terms ['98']; in no SUPPORTED fact value and not in the original README: ['98']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F05",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `FontSetting` | Represents a range of characters within a cell's rich text. |",
+    "quote": "| `FontSetting` | Represents a range of characters within a cell's rich text. |",
+    "audit": "audit: distinctive terms ['FontSetting']; found in SUPPORTED fact values: FontSetting -> public_symbol:aspose.cells_foss.fontsetting; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F06",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `Worksheet` | Encapsulates a single worksheet and its supported v0.1 worksheet features. |",
+    "quote": "| `Worksheet` | Encapsulates a single worksheet and its supported v0.1 worksheet features. |",
+    "audit": "audit: distinctive terms ['Worksheet']; found in SUPPORTED fact values: Worksheet -> inherited_unit:004.paragraph; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F07",
+    "kind": "unsupported_claim",
+    "section": "scope_limitations",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "`Cell.Formula` stores the formula as a string; the library does not parse, evaluate, or recalculate formulas, and attempts to calculate a formula raise `FormulaException`.",
+    "quote": "- `Cell.Formula` stores the formula as a string; the library does not parse, evaluate, or recalculate formulas, and attempts to calculate a formula raise `Formu",
+    "audit": "audit: distinctive terms ['Cell.Formula', 'FormulaException']; found in SUPPORTED fact values: Cell.Formula -> inherited_unit:010.list, FormulaException -> inherited_unit:042.table; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   }
+  ]
+ },
+ {
+  "case": "cellspy/clean",
+  "role": "unscored_twin",
+  "klass": null,
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "cellspy/inject_unsupported_claim",
+  "role": "mutant",
+  "klass": "unsupported_claim",
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "cellspy/contradict_version",
+  "role": "mutant",
+  "klass": "contradiction",
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "cellspy/drop_section",
+  "role": "mutant",
+  "klass": "content_loss",
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "cellspy/break_install_command",
+  "role": "mutant",
+  "klass": "broken_install",
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "psdnet/clean",
+  "role": "unscored_twin",
+  "klass": null,
+  "stored": true,
+  "verdict": "REJECT",
+  "model_verdict": "REJECT_FACTUAL",
+  "findings": [
+   {
+    "id": "F01",
+    "kind": "contradiction",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 1.0.0):",
+    "quote": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 1.0.0):",
+    "audit": ""
+   }
+  ]
+ },
+ {
+  "case": "psdnet/inject_unsupported_claim",
+  "role": "mutant",
+  "klass": "unsupported_claim",
+  "stored": true,
+  "verdict": "REJECT",
+  "model_verdict": "REJECT_FACTUAL",
+  "findings": [
+   {
+    "id": "F01",
+    "kind": "unsupported_claim",
+    "section": "opening",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "It reads and writes PSD and PSB files, inspects metadata, and edits a small subset of their metadata without rendering. It exposes types such as `Aspose.PSD.Image`, `Aspose.PSD.Rectangle`, `Aspose.PSD.RectangleF`, `Aspose.PSD.Point`, and `A",
+    "quote": "[![NuGet](https://img.shields.io/nuget/v/Aspose.PSD.FOSS.svg)](https://www.nuget.org/packages/Aspose.PSD.FOSS/) ![.NET](https://img.shields.io/badge/.net-netsta",
+    "audit": "audit: distinctive terms ['NuGet', 'img.shields.io', 'Aspose.PSD.FOSS.svg', 'www.nuget.org', 'Aspose.PSD.FOSS', '7C', 'blue.svg']; found in SUPPORTED fact values: NuGet -> inherited_unit:018.paragraph, Aspose.PSD.FOSS -> inherited_unit:001.heading; in no SUPPORTED fact value and not in the original README: ['img.shields.io', 'Aspose.PSD.FOSS.svg', 'www.nuget.org', '7C', 'blue.svg']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F02",
+    "kind": "contradiction",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 1.0.0):",
+    "quote": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 1.0.0):",
+    "audit": ""
+   },
+   {
+    "id": "F03",
+    "kind": "unsupported_claim",
+    "section": "dependencies",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "No required third-party package dependencies; in `src/Aspose.PSD.FOSS/Aspose.PSD.FOSS.csproj`, no `PackageReference` a consumer would install is declared.",
+    "quote": "No required third-party package dependencies; in `src/Aspose.PSD.FOSS/Aspose.PSD.FOSS.csproj`, no `PackageReference` a consumer would install is declared.",
+    "audit": "audit: distinctive terms ['src/Aspose.PSD.FOSS/Aspose.PSD.FOSS.csproj', 'Aspose.PSD.FOSS', 'Aspose.PSD.FOSS.csproj', 'PackageReference']; found in SUPPORTED fact values: src/Aspose.PSD.FOSS/Aspose.PSD.FOSS.csproj -> inherited_unit:020.code_block, Aspose.PSD.FOSS -> inherited_unit:001.heading, Aspose.PSD.FOSS.csproj -> inherited_unit:020.code_block; in no SUPPORTED fact value and not in the original README: ['PackageReference']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F04",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 26 types.",
+    "quote": "The verified public surface has 26 types.",
+    "audit": "audit: distinctive terms ['26']; in no SUPPORTED fact value and not in the original README: ['26']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F05",
+    "kind": "unsupported_claim",
+    "section": "key_capabilities",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "It preserves unsupported file sections during load and save operations by retaining raw stream data through `Aspose.PSD.StreamContainer` and `Aspose.PSD.ImageLoader`, ensuring round-trip fidelity.",
+    "quote": "- **Preserve unsupported sections.** It preserves unsupported file sections during load and save operations by retaining raw stream data through `Aspose.PSD.Str",
+    "audit": "audit: distinctive terms ['Aspose.PSD.StreamContainer', 'StreamContainer', 'Aspose.PSD.ImageLoader', 'ImageLoader']; found in SUPPORTED fact values: Aspose.PSD.StreamContainer -> public_symbol:aspose.psd.streamcontainer, StreamContainer -> public_symbol:aspose.psd.streamcontainer, Aspose.PSD.ImageLoader -> public_symbol:aspose.psd.imageloader, ImageLoader -> public_symbol:aspose.psd.imageloader; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   }
+  ]
+ },
+ {
+  "case": "psdnet/contradict_version",
+  "role": "mutant",
+  "klass": "contradiction",
+  "stored": true,
+  "verdict": "REJECT",
+  "model_verdict": "REJECT_FACTUAL",
+  "findings": [
+   {
+    "id": "F01",
+    "kind": "contradiction",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "quote": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "audit": ""
+   },
+   {
+    "id": "F02",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "quote": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "audit": "audit: distinctive terms ['NuGet', 'Aspose.PSD.FOSS', '2.0.0']; found in SUPPORTED fact values: NuGet -> inherited_unit:018.paragraph, Aspose.PSD.FOSS -> inherited_unit:001.heading; in no SUPPORTED fact value and not in the original README: ['2.0.0']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F03",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "quote": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "audit": "audit: distinctive terms ['NuGet', 'Aspose.PSD.FOSS', '2.0.0']; found in SUPPORTED fact values: NuGet -> inherited_unit:018.paragraph, Aspose.PSD.FOSS -> inherited_unit:001.heading; in no SUPPORTED fact value and not in the original README: ['2.0.0']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F04",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "quote": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "audit": "audit: distinctive terms ['NuGet', 'Aspose.PSD.FOSS', '2.0.0']; found in SUPPORTED fact values: NuGet -> inherited_unit:018.paragraph, Aspose.PSD.FOSS -> inherited_unit:001.heading; in no SUPPORTED fact value and not in the original README: ['2.0.0']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F05",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "quote": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "audit": "audit: distinctive terms ['NuGet', 'Aspose.PSD.FOSS', '2.0.0']; found in SUPPORTED fact values: NuGet -> inherited_unit:018.paragraph, Aspose.PSD.FOSS -> inherited_unit:001.heading; in no SUPPORTED fact value and not in the original README: ['2.0.0']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F06",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "quote": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "audit": "audit: distinctive terms ['NuGet', 'Aspose.PSD.FOSS', '2.0.0']; found in SUPPORTED fact values: NuGet -> inherited_unit:018.paragraph, Aspose.PSD.FOSS -> inherited_unit:001.heading; in no SUPPORTED fact value and not in the original README: ['2.0.0']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F07",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "quote": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "audit": "audit: distinctive terms ['NuGet', 'Aspose.PSD.FOSS', '2.0.0']; found in SUPPORTED fact values: NuGet -> inherited_unit:018.paragraph, Aspose.PSD.FOSS -> inherited_unit:001.heading; in no SUPPORTED fact value and not in the original README: ['2.0.0']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F08",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "quote": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "audit": "audit: distinctive terms ['NuGet', 'Aspose.PSD.FOSS', '2.0.0']; found in SUPPORTED fact values: NuGet -> inherited_unit:018.paragraph, Aspose.PSD.FOSS -> inherited_unit:001.heading; in no SUPPORTED fact value and not in the original README: ['2.0.0']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F09",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "quote": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "audit": "audit: distinctive terms ['NuGet', 'Aspose.PSD.FOSS', '2.0.0']; found in SUPPORTED fact values: NuGet -> inherited_unit:018.paragraph, Aspose.PSD.FOSS -> inherited_unit:001.heading; in no SUPPORTED fact value and not in the original README: ['2.0.0']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F10",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "quote": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "audit": "audit: distinctive terms ['NuGet', 'Aspose.PSD.FOSS', '2.0.0']; found in SUPPORTED fact values: NuGet -> inherited_unit:018.paragraph, Aspose.PSD.FOSS -> inherited_unit:001.heading; in no SUPPORTED fact value and not in the original README: ['2.0.0']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F11",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "quote": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "audit": "audit: distinctive terms ['NuGet', 'Aspose.PSD.FOSS', '2.0.0']; found in SUPPORTED fact values: NuGet -> inherited_unit:018.paragraph, Aspose.PSD.FOSS -> inherited_unit:001.heading; in no SUPPORTED fact value and not in the original README: ['2.0.0']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F12",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "quote": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "audit": "audit: distinctive terms ['NuGet', 'Aspose.PSD.FOSS', '2.0.0']; found in SUPPORTED fact values: NuGet -> inherited_unit:018.paragraph, Aspose.PSD.FOSS -> inherited_unit:001.heading; in no SUPPORTED fact value and not in the original README: ['2.0.0']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F13",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "quote": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "audit": "audit: distinctive terms ['NuGet', 'Aspose.PSD.FOSS', '2.0.0']; found in SUPPORTED fact values: NuGet -> inherited_unit:018.paragraph, Aspose.PSD.FOSS -> inherited_unit:001.heading; in no SUPPORTED fact value and not in the original README: ['2.0.0']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F14",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "quote": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "audit": "audit: distinctive terms ['NuGet', 'Aspose.PSD.FOSS', '2.0.0']; found in SUPPORTED fact values: NuGet -> inherited_unit:018.paragraph, Aspose.PSD.FOSS -> inherited_unit:001.heading; in no SUPPORTED fact value and not in the original README: ['2.0.0']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F15",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "quote": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "audit": "audit: distinctive terms ['NuGet', 'Aspose.PSD.FOSS', '2.0.0']; found in SUPPORTED fact values: NuGet -> inherited_unit:018.paragraph, Aspose.PSD.FOSS -> inherited_unit:001.heading; in no SUPPORTED fact value and not in the original README: ['2.0.0']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F16",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "quote": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 2.0.0):",
+    "audit": "audit: distinctive terms ['NuGet', 'Aspose.PSD.FOSS', '2.0.0']; found in SUPPORTED fact values: NuGet -> inherited_unit:018.paragraph, Aspose.PSD.FOSS -> inherited_unit:001.heading; in no SUPPORTED fact value and not in the original README: ['2.0.0']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   }
+  ]
+ },
+ {
+  "case": "psdnet/drop_section",
+  "role": "mutant",
+  "klass": "content_loss",
+  "stored": true,
+  "verdict": "REJECT",
+  "model_verdict": "REJECT_FACTUAL",
+  "findings": [
+   {
+    "id": "F01",
+    "kind": "contradiction",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 1.0.0):",
+    "quote": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 1.0.0):",
+    "audit": ""
+   }
+  ]
+ },
+ {
+  "case": "psdnet/break_install_command",
+  "role": "mutant",
+  "klass": "broken_install",
+  "stored": true,
+  "verdict": "REJECT",
+  "model_verdict": "REJECT_FACTUAL",
+  "findings": [
+   {
+    "id": "F01",
+    "kind": "contradiction",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 1.0.0):",
+    "quote": "Install the published package from NuGet (`Aspose.PSD.FOSS`, version 1.0.0):",
+    "audit": ""
+   },
+   {
+    "id": "F02",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "```bash dotnet add package Aspose.PSD.FSOS ```",
+    "quote": "dotnet add package Aspose.PSD.FSOS",
+    "audit": "audit: distinctive terms ['Aspose.PSD.FSOS']; in no SUPPORTED fact value and not in the original README: ['Aspose.PSD.FSOS']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F03",
+    "kind": "unsupported_claim",
+    "section": "dependencies",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "No required third-party package dependencies; in `src/Aspose.PSD.FOSS/Aspose.PSD.FOSS.csproj`, no `PackageReference` a consumer would install is declared.",
+    "quote": "No required third-party package dependencies; in `src/Aspose.PSD.FOSS/Aspose.PSD.FOSS.csproj`, no `PackageReference` a consumer would install is declared.",
+    "audit": "audit: distinctive terms ['src/Aspose.PSD.FOSS/Aspose.PSD.FOSS.csproj', 'Aspose.PSD.FOSS', 'Aspose.PSD.FOSS.csproj', 'PackageReference']; found in SUPPORTED fact values: src/Aspose.PSD.FOSS/Aspose.PSD.FOSS.csproj -> inherited_unit:020.code_block, Aspose.PSD.FOSS -> inherited_unit:001.heading, Aspose.PSD.FOSS.csproj -> inherited_unit:020.code_block; in no SUPPORTED fact value and not in the original README: ['PackageReference']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F04",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 26 types.",
+    "quote": "The verified public surface has 26 types.",
+    "audit": "audit: distinctive terms ['26']; in no SUPPORTED fact value and not in the original README: ['26']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F05",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The `Aspose.PSD.Image` class offers core image functionality including Bounds, Height, Width, Load, and Save members, while `Aspose.PSD.ImageLoader` provides the Load method for loading images, and `Aspose.PSD.StreamContainer` supplies the ",
+    "quote": "The `Aspose.PSD.Image` class offers core image functionality including Bounds, Height, Width, Load, and Save members, while `Aspose.PSD.ImageLoader` provides th",
+    "audit": "audit: distinctive terms ['Aspose.PSD.Image', 'Aspose.PSD.ImageLoader', 'ImageLoader', 'Aspose.PSD.StreamContainer', 'StreamContainer']; found in SUPPORTED fact values: Aspose.PSD.Image -> public_symbol:aspose.psd.image, Aspose.PSD.ImageLoader -> public_symbol:aspose.psd.imageloader, ImageLoader -> public_symbol:aspose.psd.imageloader, Aspose.PSD.StreamContainer -> public_symbol:aspose.psd.streamcontainer, StreamContainer -> public_symbol:aspose.psd.streamcontainer; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F06",
+    "kind": "unsupported_claim",
+    "section": "scope_limitations",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "It exposes the `Aspose.PSD.FileFormats` and `Aspose.PSD.ImageLoader` namespaces and supports the netstandard2.1 and net10.0 target frameworks.",
+    "quote": "Aspose.PSD FOSS for .NET reads and writes PSD and PSB files for metadata-safe inspection and limited structural editing. It exposes the `Aspose.PSD.FileFormats`",
+    "audit": "audit: distinctive terms ['Aspose.PSD', 'Aspose.PSD.FileFormats', 'FileFormats', 'Aspose.PSD.ImageLoader', 'ImageLoader']; found in SUPPORTED fact values: Aspose.PSD -> identity:repository, Aspose.PSD.FileFormats -> inherited_unit:025.code_block, FileFormats -> inherited_unit:025.code_block, Aspose.PSD.ImageLoader -> public_symbol:aspose.psd.imageloader, ImageLoader -> public_symbol:aspose.psd.imageloader; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   }
+  ]
+ },
+ {
+  "case": "cellsjava/clean",
+  "stored": false
+ },
+ {
+  "case": "cellsjava/contradict_version",
+  "role": "mutant",
+  "klass": "contradiction",
+  "stored": true,
+  "verdict": "REJECT",
+  "model_verdict": "REJECT_FACTUAL",
+  "findings": [
+   {
+    "id": "F01",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "Install the published package from Maven Central (`org.aspose:aspose-cells-foss`, version 27.7.0):",
+    "quote": "Install the published package from Maven Central (`org.aspose:aspose-cells-foss`, version 27.7.0):",
+    "audit": "audit: distinctive terms ['org.aspose:aspose-cells-foss', 'org.aspose', '27.7.0']; found in SUPPORTED fact values: org.aspose:aspose-cells-foss -> inherited_unit:015.code_block, org.aspose -> inherited_unit:013.code_block; in no SUPPORTED fact value and not in the original README: ['27.7.0']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F02",
+    "kind": "unsupported_claim",
+    "section": "installation",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "mvn dependency:get -Dartifact=org.aspose:aspose-cells-foss:26.7.0",
+    "quote": "mvn dependency:get -Dartifact=org.aspose:aspose-cells-foss:26.7.0",
+    "audit": "audit: distinctive terms ['org.aspose', '26.7.0']; found in SUPPORTED fact values: org.aspose -> inherited_unit:013.code_block, 26.7.0 -> inherited_unit:013.code_block; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F03",
+    "kind": "unsupported_claim",
+    "section": "dependencies",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "No required third-party package dependencies; in `pom.xml`, every `<dependency>` the POM declares is `test`, `provided` or optional.",
+    "quote": "No required third-party package dependencies; in `pom.xml`, every `<dependency>` the POM declares is `test`, `provided` or optional.",
+    "audit": "audit: distinctive terms ['pom.xml', '<dependency>', 'test', 'provided']; found in SUPPORTED fact values: pom.xml -> inherited_unit:012.paragraph, <dependency> -> dependency:development.org.apache.poi-poi-ooxml, test -> inherited_unit:004.paragraph, provided -> inherited_unit:057.paragraph; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F04",
+    "kind": "unsupported_claim",
+    "section": "dependencies",
+    "owner": "D",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "- Requires Java `17` (`maven.compiler.target` in `pom.xml`).",
+    "quote": "- Requires Java `17` (`maven.compiler.target` in `pom.xml`).",
+    "audit": "audit: distinctive terms ['17', 'maven.compiler.target', 'pom.xml']; found in SUPPORTED fact values: 17 -> inherited_unit:002.badge_row, maven.compiler.target -> inherited_unit:021.list, pom.xml -> inherited_unit:012.paragraph; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F05",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "cells_foss.DiagnosticSeverity",
+    "quote": "| `cells_foss.DiagnosticSeverity` | Represents the severity level of a diagnostic message. |",
+    "audit": "audit: distinctive terms ['cells_foss.DiagnosticSeverity', 'DiagnosticSeverity']; found in SUPPORTED fact values: cells_foss.DiagnosticSeverity -> public_symbol:org.aspose.cells_foss.diagnosticseverity, DiagnosticSeverity -> inherited_unit:043.table; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F06",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "core.DiagnosticSeverity",
+    "quote": "| `core.DiagnosticSeverity` | Represents the severity of a diagnostic entry. |",
+    "audit": "audit: distinctive terms ['core.DiagnosticSeverity', 'DiagnosticSeverity']; found in SUPPORTED fact values: core.DiagnosticSeverity -> public_symbol:org.aspose.cells_foss.core.diagnosticseverity, DiagnosticSeverity -> inherited_unit:043.table; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F07",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 183 types.",
+    "quote": "The verified public surface has 183 types.",
+    "audit": "audit: distinctive terms ['183']; found in SUPPORTED fact values: 183 -> inherited_unit:036.paragraph; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F08",
+    "kind": "unsupported_claim",
+    "section": "scope_limitations",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "- Java 17 or later (`maven.compiler.source`/`maven.compiler.target` are both pinned to `17` in",
+    "quote": "- Java 17 or later (`maven.compiler.source`/`maven.compiler.target` are both pinned to `17` in",
+    "audit": "audit: distinctive terms ['17', 'maven.compiler.source', 'maven.compiler.target']; found in SUPPORTED fact values: 17 -> inherited_unit:002.badge_row, maven.compiler.source -> inherited_unit:021.list, maven.compiler.target -> inherited_unit:021.list; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F09",
+    "kind": "unsupported_claim",
+    "section": "scope_limitations",
+    "owner": "L",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "- `org.junit.jupiter:junit-jupiter` 5.10.2 \u2014 test runner used by the Maven `test` phase; not",
+    "quote": "- `org.junit.jupiter:junit-jupiter` 5.10.2 \u2014 test runner used by the Maven `test` phase; not",
+    "audit": "audit: distinctive terms ['org.junit.jupiter:junit-jupiter', 'org.junit.jupiter', '5.10.2', 'test']; found in SUPPORTED fact values: org.junit.jupiter:junit-jupiter -> dependency:development.org.junit.jupiter-junit-jupiter, org.junit.jupiter -> dependency:development.org.junit.jupiter-junit-jupiter, 5.10.2 -> dependency:development.org.junit.jupiter-junit-jupiter, test -> inherited_unit:004.paragraph; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   }
+  ]
+ },
+ {
+  "case": "cellsts/clean",
+  "stored": false
+ },
+ {
+  "case": "cellsts/contradict_package_name",
+  "stored": false
+ },
+ {
+  "case": "threedts/clean",
+  "role": "unscored_twin",
+  "klass": null,
+  "stored": true,
+  "verdict": "REJECT",
+  "model_verdict": "REJECT_FACTUAL",
+  "findings": [
+   {
+    "id": "F01",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 81 types.",
+    "quote": "The verified public surface has 81 types.",
+    "audit": "audit: distinctive terms ['81']; in no SUPPORTED fact value and not in the original README: ['81']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F02",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 81 types.",
+    "quote": "The verified public surface has 81 types.",
+    "audit": "audit: distinctive terms ['81']; in no SUPPORTED fact value and not in the original README: ['81']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F03",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 81 types.",
+    "quote": "The verified public surface has 81 types.",
+    "audit": "audit: distinctive terms ['81']; in no SUPPORTED fact value and not in the original README: ['81']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F04",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 81 types.",
+    "quote": "The verified public surface has 81 types.",
+    "audit": "audit: distinctive terms ['81']; in no SUPPORTED fact value and not in the original README: ['81']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F05",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 81 types.",
+    "quote": "The verified public surface has 81 types.",
+    "audit": "audit: distinctive terms ['81']; in no SUPPORTED fact value and not in the original README: ['81']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F06",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 81 types.",
+    "quote": "The verified public surface has 81 types.",
+    "audit": "audit: distinctive terms ['81']; in no SUPPORTED fact value and not in the original README: ['81']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F07",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 81 types.",
+    "quote": "The verified public surface has 81 types.",
+    "audit": "audit: distinctive terms ['81']; in no SUPPORTED fact value and not in the original README: ['81']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F08",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 81 types.",
+    "quote": "The verified public surface has 81 types.",
+    "audit": "audit: distinctive terms ['81']; in no SUPPORTED fact value and not in the original README: ['81']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F09",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 81 types.",
+    "quote": "The verified public surface has 81 types.",
+    "audit": "audit: distinctive terms ['81']; in no SUPPORTED fact value and not in the original README: ['81']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F10",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 81 types.",
+    "quote": "The verified public surface has 81 types.",
+    "audit": "audit: distinctive terms ['81']; in no SUPPORTED fact value and not in the original README: ['81']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F11",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 81 types.",
+    "quote": "The verified public surface has 81 types.",
+    "audit": "audit: distinctive terms ['81']; in no SUPPORTED fact value and not in the original README: ['81']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F12",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 81 types.",
+    "quote": "The verified public surface has 81 types.",
+    "audit": "audit: distinctive terms ['81']; in no SUPPORTED fact value and not in the original README: ['81']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F13",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 81 types.",
+    "quote": "The verified public surface has 81 types.",
+    "audit": "audit: distinctive terms ['81']; in no SUPPORTED fact value and not in the original README: ['81']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F14",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 81 types.",
+    "quote": "The verified public surface has 81 types.",
+    "audit": "audit: distinctive terms ['81']; in no SUPPORTED fact value and not in the original README: ['81']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F15",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 81 types.",
+    "quote": "The verified public surface has 81 types.",
+    "audit": "audit: distinctive terms ['81']; in no SUPPORTED fact value and not in the original README: ['81']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F16",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 81 types.",
+    "quote": "The verified public surface has 81 types.",
+    "audit": "audit: distinctive terms ['81']; in no SUPPORTED fact value and not in the original README: ['81']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   }
+  ]
+ },
+ {
+  "case": "threedts/contradict_version",
+  "role": "mutant",
+  "klass": "contradiction",
+  "stored": true,
+  "verdict": "REJECT",
+  "model_verdict": "REJECT_FACTUAL",
+  "findings": [
+   {
+    "id": "F01",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "The verified public surface has 81 types.",
+    "quote": "The verified public surface has 81 types.",
+    "audit": "audit: distinctive terms ['81']; in no SUPPORTED fact value and not in the original README: ['81']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F02",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "### Core API",
+    "quote": "### Core API",
+    "audit": "audit: the quoted claim has no distinctive term (identifier, number or quoted phrase) to look up; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F03",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `BooleanOperation` | BooleanOperation represents a boolean operation such as union, intersection, or difference between two geometries. |",
+    "quote": "| `BooleanOperation` | BooleanOperation represents a boolean operation such as union, intersection, or difference between two geometries. |",
+    "audit": "audit: distinctive terms ['BooleanOperation']; found in SUPPORTED fact values: BooleanOperation -> public_symbol:booleanoperation; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F04",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `ComposeOrder` | ComposeOrder specifies the order in which transformations are applied during composition. |",
+    "quote": "| `ComposeOrder` | ComposeOrder specifies the order in which transformations are applied during composition. |",
+    "audit": "audit: distinctive terms ['ComposeOrder']; found in SUPPORTED fact values: ComposeOrder -> public_symbol:composeorder; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F05",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `ParseException` | ParseException indicates an error that occurred while parsing a 3D file format. |",
+    "quote": "| `ParseException` | ParseException indicates an error that occurred while parsing a 3D file format. |",
+    "audit": "audit: distinctive terms ['ParseException', '3D']; found in SUPPORTED fact values: ParseException -> public_symbol:parseexception, 3D -> identity:repository; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F06",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `RelativeRectangle` | RelativeRectangle defines a rectangle using relative coordinates and dimensions. |",
+    "quote": "| `RelativeRectangle` | RelativeRectangle defines a rectangle using relative coordinates and dimensions. |",
+    "audit": "audit: distinctive terms ['RelativeRectangle']; found in SUPPORTED fact values: RelativeRectangle -> public_symbol:relativerectangle; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F07",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `RotationMode` | RotationMode specifies the method used to interpret rotation values. |",
+    "quote": "| `RotationMode` | RotationMode specifies the method used to interpret rotation values. |",
+    "audit": "audit: distinctive terms ['RotationMode']; found in SUPPORTED fact values: RotationMode -> public_symbol:camera.rotationmode; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F08",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `RotationOrder` | RotationOrder defines the sequence in which rotations around the X, Y, and Z axes are applied. |",
+    "quote": "| `RotationOrder` | RotationOrder defines the sequence in which rotations around the X, Y, and Z axes are applied. |",
+    "audit": "audit: distinctive terms ['RotationOrder']; found in SUPPORTED fact values: RotationOrder -> public_symbol:rotationorder; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F09",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `SemanticAttribute` | SemanticAttribute defines the meaning of a vertex attribute, such as position or normal. |",
+    "quote": "| `SemanticAttribute` | SemanticAttribute defines the meaning of a vertex attribute, such as position or normal. |",
+    "audit": "audit: distinctive terms ['SemanticAttribute']; found in SUPPORTED fact values: SemanticAttribute -> public_symbol:semanticattribute; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F10",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `SplitMeshPolicy` | SplitMeshPolicy specifies how meshes should be split during export or processing. |",
+    "quote": "| `SplitMeshPolicy` | SplitMeshPolicy specifies how meshes should be split during export or processing. |",
+    "audit": "audit: distinctive terms ['SplitMeshPolicy']; found in SUPPORTED fact values: SplitMeshPolicy -> public_symbol:splitmeshpolicy; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F11",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `TransformBuilder` | TransformBuilder provides a fluent interface for constructing transformation matrices. |",
+    "quote": "| `TransformBuilder` | TransformBuilder provides a fluent interface for constructing transformation matrices. |",
+    "audit": "audit: distinctive terms ['TransformBuilder']; found in SUPPORTED fact values: TransformBuilder -> public_symbol:transformbuilder; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F12",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `Vertex` | Vertex represents a single point in a mesh with associated attributes such as position and normal. |",
+    "quote": "| `Vertex` | Vertex represents a single point in a mesh with associated attributes such as position and normal. |",
+    "audit": "audit: distinctive terms ['Vertex']; found in SUPPORTED fact values: Vertex -> inherited_unit:004.paragraph; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F13",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `VertexDeclaration` | VertexDeclaration describes the layout of vertex data for rendering. |",
+    "quote": "| `VertexDeclaration` | VertexDeclaration describes the layout of vertex data for rendering. |",
+    "audit": "audit: distinctive terms ['VertexDeclaration']; found in SUPPORTED fact values: VertexDeclaration -> public_symbol:vertexdeclaration; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F14",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `VertexElementFVector` | VertexElementFVector represents a vertex element containing floating-point vector data. |",
+    "quote": "| `VertexElementFVector` | VertexElementFVector represents a vertex element containing floating-point vector data. |",
+    "audit": "audit: distinctive terms ['VertexElementFVector']; found in SUPPORTED fact values: VertexElementFVector -> public_symbol:vertexelementfvector; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F15",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `VertexElementIntsTemplate` | VertexElementIntsTemplate represents a vertex element containing integer data. |",
+    "quote": "| `VertexElementIntsTemplate` | VertexElementIntsTemplate represents a vertex element containing integer data. |",
+    "audit": "audit: distinctive terms ['VertexElementIntsTemplate']; found in SUPPORTED fact values: VertexElementIntsTemplate -> public_symbol:vertexelementintstemplate; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   },
+   {
+    "id": "F16",
+    "kind": "unsupported_claim",
+    "section": "api_reference",
+    "owner": "M",
+    "status": "BLOCKING",
+    "crit": "factuality",
+    "text": "| `VertexElementSmoothingGroup` | VertexElementSmoothingGroup represents a vertex element containing smoothing group information. |",
+    "quote": "| `VertexElementSmoothingGroup` | VertexElementSmoothingGroup represents a vertex element containing smoothing group information. |",
+    "audit": "audit: distinctive terms ['VertexElementSmoothingGroup']; found in SUPPORTED fact values: VertexElementSmoothingGroup -> public_symbol:vertexelementsmoothinggroup; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised"
+   }
+  ]
+ },
+ {
+  "case": "font/clean",
+  "role": "unscored_twin",
+  "klass": null,
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "font/recorded:broken_install",
+  "role": "real_defect",
+  "klass": "broken_install",
+  "stored": true,
+  "verdict": "ACCEPT",
+  "model_verdict": "ACCEPT",
+  "findings": []
+ },
+ {
+  "case": "duplicate_opening/recorded:duplicate_paragraph",
+  "stored": false
+ }
+]

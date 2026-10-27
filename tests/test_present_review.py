@@ -22,8 +22,8 @@ from tests.test_present import REPO, _entry
 MODEL_ACCEPT = ReviewVerdict.folded(
     (),
     model_verdict="ACCEPT",
-    prompt_version="15",
-    model_served="gpt-oss",
+    prompt_version="16",
+    model_served="qwen3-next",
     request_sha256="a" * 64,
     reply_sha256="b" * 64,
 )
@@ -42,8 +42,8 @@ MODEL_REJECT = ReviewVerdict.folded(
         ),
     ),
     model_verdict="REJECT_PRESENTATION",
-    prompt_version="15",
-    model_served="gpt-oss",
+    prompt_version="16",
+    model_served="qwen3-next",
     request_sha256="a" * 64,
     reply_sha256="b" * 64,
 )
@@ -102,7 +102,7 @@ def test_a_deterministic_only_accept_can_never_seal(
     with pytest.raises(PresentFailure) as raised:
         spy.run(tmp_path)
     assert spy.sealed == []
-    assert "no independent model review" in str(raised.value)
+    assert "no LLM review" in str(raised.value)
     assert "BC-02" in str(
         raised.value
     )  # the check that kept the model from being asked

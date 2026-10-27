@@ -147,7 +147,14 @@ def test_a_quote_true_of_another_section_does_not_locate_this_findings_section()
 ):
     quote = "pip install aspose-widget-foss"
     assert_one_error(reject(raw_finding(quote=quote)), "key_capabilities")
-    assert errors(reject(raw_finding(quote=quote, section_id="installation"))) == []
+    in_installation = raw_finding(
+        "contradiction",
+        quote=quote,
+        section_id="installation",
+        criterion="factuality",
+        fact_ids=["package:name"],
+    )
+    assert errors(reject(in_installation)) == []
 
 
 def test_an_ellipsis_joins_exact_fragments_and_a_fabricated_fragment_fails() -> None:
@@ -188,17 +195,37 @@ def test_fabricated_fact_ids_are_refused() -> None:
 
 
 def test_a_factuality_finding_cites_a_product_fact() -> None:
+    """For every kind that is a statement about the facts; an unsupported claim and a quality
+    judgment have none to cite (tests/readme/review/test_cited_lines.py)."""
     inherited = ["inherited_unit:001.paragraph"]
-    assert_one_error(
-        reject(raw_finding(criterion="factuality", fact_ids=inherited)),
-        "at least one product fact",
-    )
-    assert_one_error(
-        reject(raw_finding(criterion="factuality", fact_ids=[])),
-        "at least one product fact",
-    )
+    for kind in ("contradiction", "omission", "absence", "name_denial"):
+        extra = {
+            "omission": {
+                "omission": {
+                    "kind": "omission",
+                    "section_id": "key_capabilities",
+                    "missing_ids": ["format:png"],
+                    "missing_quotes": [],
+                }
+            },
+            "absence": {"absent": ["PluginHost"]},
+            "name_denial": {"unsupported_names": ["Gadget"]},
+        }.get(kind, {})
+        for cited in (inherited, []):
+            assert_one_error(
+                reject(
+                    raw_finding(kind, criterion="factuality", fact_ids=cited, **extra)
+                ),
+                "at least one product fact",
+            )
     assert (
-        errors(reject(raw_finding(criterion="factuality", fact_ids=["format:png"])))
+        errors(
+            reject(
+                raw_finding(
+                    "contradiction", criterion="factuality", fact_ids=["format:png"]
+                )
+            )
+        )
         == []
     )
 
@@ -381,8 +408,8 @@ def test_model_verdict_vocabulary_matches_the_prompt_contract() -> None:
 # ---------------------------------------------------------------------------
 
 META = {
-    "prompt_version": "15",
-    "model_served": "gpt-oss",
+    "prompt_version": "16",
+    "model_served": "qwen3-next",
     "request_sha256": "a" * 64,
     "reply_sha256": "b" * 64,
 }
@@ -504,7 +531,7 @@ def test_findings_from_reply_are_all_blocking() -> None:
 
 
 def test_reviewer_logic_version_is_four_and_the_filename_is_unchanged() -> None:
-    assert REVIEWER_LOGIC_VERSION == "4"
+    assert REVIEWER_LOGIC_VERSION == "5"
     assert REVIEW_VERDICT_FILENAME == "review_verdict.json"
 
 
@@ -521,9 +548,11 @@ def test_a_model_review_round_trips_with_its_clearance_proofs(tmp_path) -> None:
     assert digest == hashlib.sha256(path.read_bytes()).hexdigest()
     document = json.loads(path.read_text(encoding="utf-8"))
     assert document["schema_version"] == 2
-    assert document["reviewer_logic_version"] == "4"
+    assert document["reviewer_logic_version"] == "5"
     assert document["model_verdict"] == "REJECT_FACTUAL"
-    assert document["prompt_version"] == "15" and document["model_served"] == "gpt-oss"
+    assert (
+        document["prompt_version"] == "16" and document["model_served"] == "qwen3-next"
+    )
     assert (
         document["request_sha256"] == "a" * 64 and document["reply_sha256"] == "b" * 64
     )

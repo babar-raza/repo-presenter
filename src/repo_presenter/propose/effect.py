@@ -320,7 +320,7 @@ def propose_candidate(
         return _refuse(
             True,
             Refusal.REVIEW_REJECTED,
-            "no independent model reviewed this candidate: a deterministic-only verdict is not "
+            "no LLM review of this candidate was made: a deterministic-only verdict is not "
             "the independent review the mission requires, so it is never proposed",
         )
 

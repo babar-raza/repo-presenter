@@ -1,6 +1,7 @@
 """Build the reviewer's forest calibration corpus from real cascade outputs and run the harness.
 
     python scripts/run_reviewer_calibration.py corpus --work NAME=PATH ... --recorded-clones DIR
+        [--lane-r NAME=OUTPUT_DIR,CLONE_DIR[,BC-07,...] ...]
     python scripts/run_reviewer_calibration.py live   --work NAME=PATH ... --cap 200 [--out DIR]
 
 ``--work`` points at the ``.present-work`` directory of a downloaded hosted cascade run (named
@@ -121,7 +122,22 @@ def parse_work(items: list[str]) -> dict[str, Path]:
     return {name: Path(path) for name, path in pairs}
 
 
-def build(work: dict[str, Path], clones: Path | None) -> list[Case]:
+def parse_lane_r(items: list[str]) -> list[tuple[str, Path, Path, tuple[str, ...]]]:
+    """``NAME=OUTPUT_DIR,CLONE_DIR[,CHECK...]``: a per-script Lane R output, the clone supplying its
+    live README, and the blocking checks its candidate is known to fail (inherited text)."""
+    found = []
+    for item in items:
+        name, spec = item.split("=", 1)
+        output, clone, *tolerated = spec.split(",")
+        found.append((name, Path(output), Path(clone), tuple(tolerated)))
+    return found
+
+
+def build(
+    work: dict[str, Path],
+    clones: Path | None,
+    lane_r: list[tuple[str, Path, Path, tuple[str, ...]]] = (),
+) -> list[Case]:
     bases = [
         Base(
             load_cascade_candidate(path, name=name),
@@ -130,6 +146,14 @@ def build(work: dict[str, Path], clones: Path | None) -> list[Case]:
         )
         for name, path in work.items()
     ]
+    for name, output, clone, tolerated in lane_r:
+        source = load_lane_r_candidate(
+            output,
+            facts_path=Path("scripts/_lane_l_output") / output.name / "facts.json",
+            clone=clone,
+            name=name,
+        )
+        bases.append(Base(source, (), tolerated_checks=tolerated))
     recorded = []
     if clones is not None:
         for key, (repo, output, klass, repairs, note, targets) in RECORDED.items():
@@ -190,6 +214,7 @@ def result_record(result: CaseResult) -> dict:
                 "blocking_kinds": list(o.blocking_kinds),
                 "cleared": o.cleared,
                 "model": o.model_served,
+                "evidence": list(o.evidence),
                 "detail": o.detail,
             }
             for o in result.outcomes
@@ -232,6 +257,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("mode", choices=["corpus", "live"])
     parser.add_argument("--work", action="append", default=[], metavar="NAME=PATH")
     parser.add_argument("--recorded-clones", type=Path)
+    parser.add_argument(
+        "--lane-r", action="append", default=[], metavar="NAME=OUT,CLONE[,CHECK]"
+    )
     parser.add_argument("--out", type=Path, default=Path(".calibration"))
     parser.add_argument("--cap", type=int, default=200)
     parser.add_argument("--per-class", type=int, default=2)
@@ -254,13 +282,20 @@ def main(argv: list[str] | None = None) -> int:
         help="the manifests directory (a candidate prompt is tried by pointing here)",
     )
     parser.add_argument(
+        "--results-name",
+        help="the results file name (default results-<tag>.jsonl); a replay of a cached pass "
+        "uses another name so it does not overwrite the first-reply flags",
+    )
+    parser.add_argument(
         "--fresh",
         action="store_true",
         help="a new call store for every review (no cache replay)",
     )
     args = parser.parse_args(argv)
 
-    cases = build(parse_work(args.work), args.recorded_clones)
+    cases = build(
+        parse_work(args.work), args.recorded_clones, parse_lane_r(args.lane_r)
+    )
     if args.mode == "corpus":
         for case in cases:
             print(
@@ -300,7 +335,7 @@ def main(argv: list[str] | None = None) -> int:
         f"{len(selected)} cases selected; ledger holds {physical_calls(ledger_path)} of {args.cap} calls"
     )
     run = run_corpus(selected, reviewer, repeats=args.repeats)
-    out_file = args.out / f"results-{args.tag}.jsonl"
+    out_file = args.out / (args.results_name or f"results-{args.tag}.jsonl")
     with out_file.open("w", encoding="utf-8", newline="\n") as stream:
         for result in run.results:
             stream.write(json.dumps(result_record(result), sort_keys=True) + "\n")

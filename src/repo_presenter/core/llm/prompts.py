@@ -116,6 +116,11 @@ class PromptManifest(BaseModel):
     system: str = Field(min_length=1)
     user_template: str = Field(min_length=1)
     notes: str | None = None
+    #: How the one re-ask carries the rejected reply: ``conversation`` (the reply as an assistant
+    #: turn, then the correction as a user turn) or ``single_user`` (both folded into the one user
+    #: message, for a model that answers a conversation tail with nothing). Never part of the
+    #: store key: the key is the first request's hash.
+    reask_shape: Literal["conversation", "single_user"] = "conversation"
 
     @field_validator("prompt_id")
     @classmethod

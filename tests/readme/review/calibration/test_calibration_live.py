@@ -30,9 +30,10 @@ from tests.readme.review.calibration.synthetic import make_source
 PROMPTS = load_manifests(Path(__file__).resolve().parents[4] / "prompts")
 CONFIG = GatewayConfig("https://gw.example/v1", "sk-test-key-0123456789")
 QUOTE = "- **Export SVG.** It exports vector output to `.svg` through `SvgExporter`."
+QUOTE_LINE = 8  # the line of the synthetic candidate that holds QUOTE
 
 
-def completion(content: Any, model: str = "gpt-oss") -> Any:
+def completion(content: Any, model: str = "qwen3-next") -> Any:
     text = content if isinstance(content, str) else json.dumps(content)
     choice = SimpleNamespace(
         message=SimpleNamespace(content=text), finish_reason="stop"
@@ -61,7 +62,7 @@ def install(monkeypatch: pytest.MonkeyPatch, replies: list[Any]) -> ScriptedClie
 ACCEPT_REPLY = {"verdict": "ACCEPT", "findings": [], "preserve": []}
 
 
-def reject_reply(quote: str = QUOTE) -> dict[str, Any]:
+def reject_reply(lines: list[int] | None = None) -> dict[str, Any]:
     finding = {
         "id": "F01",
         "section_id": "key_capabilities",
@@ -69,7 +70,7 @@ def reject_reply(quote: str = QUOTE) -> dict[str, Any]:
         "criterion": "presentation",
         "claim_kind": "quality",
         "text": "reads badly",
-        "quote": quote,
+        "lines": [QUOTE_LINE] if lines is None else lines,
         "fact_ids": [],
         "repair": "reword",
     }
@@ -101,7 +102,7 @@ def test_an_accept_is_one_counted_call_with_a_valid_first_reply(
     assert outcome.verdict == ACCEPT and outcome.calls == 1 and client.requests == 1
     assert outcome.first_reply_json_valid and outcome.first_reply_contract_valid
     assert (
-        outcome.model_served == "gpt-oss"
+        outcome.model_served == "qwen3-next"
         and physical_calls(tmp_path / "ledger.jsonl") == 1
     )
 
@@ -120,7 +121,7 @@ def test_a_contract_breaking_first_reply_is_re_asked_and_flagged(
     client = install(
         monkeypatch,
         [
-            completion(reject_reply("a sentence the candidate never contains")),
+            completion(reject_reply([9999])),
             completion(ACCEPT_REPLY),
         ],
     )

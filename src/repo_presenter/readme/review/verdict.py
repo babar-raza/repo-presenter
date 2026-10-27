@@ -33,7 +33,10 @@ Verdict = Literal["ACCEPT", "REJECT"]
 #: composition/renderer.py's RENDERER_VERSION serve for their own stages).
 #: "4": the LLM reviewer's finding model, clearance catalogue, contract validation and fold
 #: (plans/PLAN_independent_llm_reviewer.md); review_verdict.json schema 2.
-REVIEWER_LOGIC_VERSION = "4"
+#: "5": findings cite candidate lines and code derives the quote and section; an unsupported claim
+#: and a quality finding need no product fact; a quality finding against renderer-owned text is a
+#: scope error; the unsupported-claim audit; the no-re-roll guard. Reviewer scope only.
+REVIEWER_LOGIC_VERSION = "5"
 REVIEW_VERDICT_FILENAME = "review_verdict.json"
 
 REJECT_VERDICTS = (

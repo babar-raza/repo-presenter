@@ -37,8 +37,8 @@ from repo_presenter.readme.review.independent_reviewer import (
 ACCEPTED_REVIEW = ReviewVerdict.folded(
     (),
     model_verdict="ACCEPT",
-    prompt_version="15",
-    model_served="gpt-oss",
+    prompt_version="16",
+    model_served="qwen3-next",
     request_sha256="a" * 64,
     reply_sha256="b" * 64,
 )
@@ -563,7 +563,7 @@ def test_a_deterministic_only_accept_is_never_proposed() -> None:
     github = FakeGitHub()
     result = _propose(github, review=UNREVIEWED_ACCEPT)
     _assert_refused_without_writes(github, result, Refusal.REVIEW_REJECTED)
-    assert "no independent model reviewed" in result.reason
+    assert "no LLM review of this candidate" in result.reason
 
 
 def test_an_accepted_review_verdict_proceeds() -> None:

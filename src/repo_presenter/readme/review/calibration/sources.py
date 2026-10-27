@@ -18,6 +18,7 @@ from typing import Any
 from repo_presenter.core.facts import FactsDocument, read_facts
 from repo_presenter.core.registry.loader import load_registry, require_listed
 from repo_presenter.core.registry.models import RegistryEntry
+from repo_presenter.extractors.platforms.registry import plugin_for
 from repo_presenter.readme.composition.authoring import SectionTask, authoring_tasks
 from repo_presenter.readme.composition.renderer import render_readme
 from repo_presenter.readme.evidence.facts.inherited import inherited_unit_facts
@@ -144,6 +145,7 @@ def build_source(
             tasks=(),
             scratch=scratch,
         )
+    plugin_for(entry.ecosystem)  # registers the ecosystem spec the renderer looks up
     tasks = authoring_tasks(entry, facts, investigation, dispositions, plan)
     readme = render_readme(entry, facts, plan, units, dispositions)
     bare = SourceCandidate(

@@ -1,3 +1,6 @@
+> NOTE (2026-10-27, owner decision): the gpt-oss route was withdrawn by the owner; the system uses qwen3-next only. This file is kept unchanged as a historical measurement record and its route recommendation (section 7) is superseded; see 2026-10-27-reviewer-calibration-iteration-2.md.
+
+
 # Independent LLM reviewer, Phase 3: live probe and calibration
 
 Date: 2026-10-27. Plan: `plans/PLAN_independent_llm_reviewer.md` (D6, D9 V4-V6, section 4 phase 3).

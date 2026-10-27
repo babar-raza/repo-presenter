@@ -1804,11 +1804,26 @@ entries:
       2026-10-27 (Phase 3). No clearance, rule or threshold was changed. The harness outcome words are
       lower-case ("accept"/"reject") on purpose: tests/readme/review/test_review_invariants.py keeps
       the upper-case verdict literals out of every place that is not the fold.
+    p3b_fixes_and_remeasure_2026_10_27: >
+      Phase 3b (no old-repo source). Code: readme/review/reply.py (resolve_cited_lines, the fact rule for
+      unsupported_claim and quality, the renderer-owned scope check, the audit hook), readme/review/audit.py
+      (distinctive-term audit of an unsupported claim; recorded as evidence, never a clearance; NO clearance
+      was added, the catalogue is still the four), readme/review/packet.py (numbered candidate, call schema
+      with lines and no quote), readme/review/llm_review.py (RerollRefused, blocked_requests.json),
+      core/llm/jobs.py + core/llm/prompts.py (per-manifest reask_shape, default unchanged, not enabled for the
+      reviewer), calibration/{sources,corpus,harness}.py (plugin_for so java/go/cpp/rust/typescript bases load;
+      unscored_twin and baseline_rules), prompts/independent_review.yaml v16 (route qwen3-next by owner decision,
+      max_output_tokens 9000), REVIEWER_LOGIC_VERSION 5. The five authoring manifests had route_rationale
+      reworded to drop the withdrawn model id: their file hash changes, so any sealed bundle sees a
+      prompts.<job> change (authoring scope). Tests: tests/readme/review/{test_cited_lines,test_packet_lines,
+      test_no_reroll}.py, tests/test_withdrawn_model.py, tests/readme/review/calibration/test_calibration_sources.py,
+      tests/core/llm/test_jobs.py. Live result (121 calls, 0 to the withdrawn model): the gate FAILS on qwen3-next;
+      see docs/investigations/2026-10-27-reviewer-calibration-iteration-2.md and DECISION_LOG 2026-10-27 (Phase 3b).
     open_items: >
-      (1) Phase 3 is BUILT and the live pilot has run (see p3_calibration_2026_10_27): the gate FAILS. Open:
-      the D4 contract for unsupported_claim, the re-ask shape for reasoning models, the output budget
-      and quote fidelity (DECISION_LOG 2026-10-27, Phase 3, item 4), then a re-measurement on a larger
-      corpus (at least 4 vetted clean twins). (1b) The tail-of-dotted-symbol name resolution and the mixed
+      (1) Phase 3b did the four fixes and re-measured on qwen3-next only (p3b_fixes_and_remeasure_2026_10_27): the
+      gate still FAILS (recall 0.00 to 0.50, false-reject 0.33). Open: deterministic claim checks for
+      contradictions, a checkable unsupported-claim contract plus renderer-printed-line scope, the 12-line cap,
+      section-by-section review, and at least 4 vetted clean twins (needs fresh hosted cascade runs). (1b) The tail-of-dotted-symbol name resolution and the mixed
       present-plus-unsourced absence bundle are deliberately NOT clearances; calibration (Phase 3)
       decides from data whether either earns one, each with a failing test first.
       (2) The Oct 20 defect classes (example execution, link resolution, API completeness, format

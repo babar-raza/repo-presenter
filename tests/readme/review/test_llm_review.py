@@ -65,7 +65,7 @@ VALIDATION = {
 QUOTE = "Exports SVG through the SvgExporter class."
 
 
-def completion(content: dict[str, Any] | str, model: str = "gpt-oss") -> Any:
+def completion(content: dict[str, Any] | str, model: str = "qwen3-next") -> Any:
     text = content if isinstance(content, str) else json.dumps(content)
     message = SimpleNamespace(content=text)
     choice = SimpleNamespace(message=message, finish_reason="stop")
@@ -86,6 +86,11 @@ class ScriptedClient:
         return self.replies.pop(0)
 
 
+def line_of(text: str, candidate: str = CANDIDATE) -> int:
+    (found,) = [i for i, row in enumerate(candidate.splitlines(), 1) if text in row]
+    return found
+
+
 def finding(kind: str = "quality", **overrides: Any) -> dict[str, Any]:
     """One finding in the call schema's shape for ``kind``: its own typed field, no other."""
     base: dict[str, Any] = {
@@ -95,7 +100,7 @@ def finding(kind: str = "quality", **overrides: Any) -> dict[str, Any]:
         "criterion": "specificity",
         "claim_kind": kind,
         "text": "a reviewer claim",
-        "quote": QUOTE,
+        "lines": [line_of(QUOTE)],
         "fact_ids": ["capability:svg"],
         "repair": "fix it",
     }
@@ -110,6 +115,9 @@ def finding(kind: str = "quality", **overrides: Any) -> dict[str, Any]:
             "missing_ids": ["capability:svg"],
             "missing_quotes": [],
         }
+    if "quote" in overrides:  # a quote is now the lines that hold it; "" is no lines
+        quoted = overrides.pop("quote")
+        overrides["lines"] = [line_of(quoted)] if quoted else []
     base.update(overrides)
     return base
 
@@ -175,7 +183,7 @@ def test_an_accept_reply_is_one_provider_call_and_a_model_reviewed_accept(
     assert verdict.model_verdict == "ACCEPT" and verdict.findings == ()
     assert harness.provider_calls() == 1 and len(client.payloads) == 1
     loaded = PROMPTS["independent_review"]
-    assert verdict.prompt_version == "15" and verdict.model_served == "gpt-oss"
+    assert verdict.prompt_version == "16" and verdict.model_served == "qwen3-next"
     packet = review_packet(
         repository=CONTEXT.repository,
         candidate_readme=CANDIDATE,
@@ -186,19 +194,19 @@ def test_an_accept_reply_is_one_provider_call_and_a_model_reviewed_accept(
         validation=VALIDATION,
     )
     expected = request_hash(
-        loaded, packet, review_schema(loaded, PLAN), model="gpt-oss"
+        loaded, packet, review_schema(loaded, PLAN), model="qwen3-next"
     )
     assert verdict.request_sha256 == expected
     assert verdict.reply_sha256 == canonical_hash(reply())
     payload = client.payloads[0]
-    assert payload["model"] == "gpt-oss"
+    assert payload["model"] == "qwen3-next"
     assert payload["temperature"] == 0.0 and payload["seed"] == 1
     assert payload["response_format"]["type"] == "json_schema"
     (record,) = [
         r for r in load_records(harness.ledger_path) if r.disposition == "provider_call"
     ]
     assert record.job == "independent_review" and record.stage == "S10"
-    assert record.effective_model == "gpt-oss" and record.invocation_id == "inv-1"
+    assert record.effective_model == "qwen3-next" and record.invocation_id == "inv-1"
 
 
 def test_the_verdict_file_records_what_a_reader_needs_to_audit_it(
@@ -209,8 +217,10 @@ def test_the_verdict_file_records_what_a_reader_needs_to_audit_it(
     path = tmp_path / "review_verdict.json"
     write_review_verdict(verdict, path)
     document = json.loads(path.read_text(encoding="utf-8"))
-    assert document["schema_version"] == 2 and document["reviewer_logic_version"] == "4"
-    assert document["prompt_version"] == "15" and document["model_served"] == "gpt-oss"
+    assert document["schema_version"] == 2 and document["reviewer_logic_version"] == "5"
+    assert (
+        document["prompt_version"] == "16" and document["model_served"] == "qwen3-next"
+    )
     assert document["request_sha256"] == verdict.request_sha256
     assert document["reply_sha256"] == verdict.reply_sha256
     assert document["model_verdict"] == "ACCEPT"
@@ -301,9 +311,7 @@ def test_one_cleared_and_one_standing_finding_still_blocks(
 def test_an_invalid_reply_is_re_asked_once_with_the_specific_error_then_accepted(
     harness: Harness, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    paraphrase = finding(
-        "unsupported_claim", quote="Exports SVG using the SvgExporter type."
-    )
+    paraphrase = finding("unsupported_claim", lines=[9999])
     client = install(
         monkeypatch,
         [completion(reply("REJECT_FACTUAL", paraphrase)), completion(reply())],
@@ -314,8 +322,8 @@ def test_an_invalid_reply_is_re_asked_once_with_the_specific_error_then_accepted
     asked = client.payloads[1]["messages"]
     assert asked[-2]["role"] == "assistant"
     assert (
-        "quote is not" in asked[-1]["content"]
-        and "character for character" in asked[-1]["content"]
+        "the candidate has" in asked[-1]["content"]
+        and "do not exist" in asked[-1]["content"]
     )
     assert any(
         record.outcome == "response_invalid"
@@ -326,9 +334,7 @@ def test_an_invalid_reply_is_re_asked_once_with_the_specific_error_then_accepted
 def test_a_reply_still_invalid_after_the_re_ask_is_unavailable_never_accept(
     harness: Harness, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    paraphrase = finding(
-        "unsupported_claim", quote="Exports SVG using the SvgExporter type."
-    )
+    paraphrase = finding("unsupported_claim", lines=[9999])
     client = install(
         monkeypatch,
         [completion(reply("REJECT_FACTUAL", paraphrase))] * 2 + [completion(reply())],
@@ -429,7 +435,7 @@ def test_a_readme_that_orders_the_reviewer_to_accept_still_blocks_when_the_model
                         "quality",
                         section_id="opening",
                         criterion="presentation",
-                        quote=INJECTION,
+                        lines=[line_of(INJECTION, candidate)],
                         text="the opening carries an instruction addressed to a reviewer",
                     ),
                 )
@@ -460,9 +466,7 @@ def test_an_accept_the_model_returns_for_a_readme_is_still_checked_by_the_same_c
     """The reply is never read for instructions it received: a quote the README does not hold is
     rejected whatever the README says, so text in it cannot make a bad finding valid either."""
     harness = Harness(tmp_path, injected_candidate())
-    forged = finding(
-        "unsupported_claim", quote="a sentence the candidate never contains"
-    )
+    forged = finding("unsupported_claim", lines=[9999])
     install(monkeypatch, [completion(reply("REJECT_FACTUAL", forged))] * 2)
     with pytest.raises(ReviewUnavailable):
         harness.review()
@@ -502,7 +506,8 @@ def test_the_packet_matches_the_manifest_field_for_field() -> None:
     )
     assert frozenset(packet) == loaded.manifest.packet.names
     assert (
-        CANDIDATE in packet["candidate_readme"]
+        "0003| Aspose.Widget FOSS renders widgets to PNG and SVG."
+        in packet["candidate_readme"]
         and ORIGINAL in packet["original_readme"]
     )
     jobs_module.render_messages(loaded, packet, review_schema(loaded, PLAN))
@@ -676,24 +681,24 @@ def test_a_stored_reply_the_current_contract_rejects_is_asked_again_not_trusted(
 # ---------------------------------------------------------------------------
 
 
-def test_the_reviewer_routes_to_a_different_model_than_every_authoring_job() -> None:
-    routes = PROMPTS.routes()
-    reviewer = routes["independent_review"]
-    authors = {
-        route
-        for job, route in routes.items()
-        if job not in ("independent_review", "targeted_repair")
-    }
-    assert reviewer == "gpt-oss"
-    assert reviewer not in authors, (
-        "the reviewer may share a model with authoring only through a recorded exception "
-        "(plan D6/D9), never by default"
-    )
-
-
-def test_the_manifest_is_v15_and_carries_no_advisory_tier() -> None:
+def test_the_reviewer_shares_the_authoring_model_and_does_not_claim_otherwise() -> None:
+    """The owner chose one model for the whole system (2026-10-27). What separates the review from
+    authoring is its own job, prompt and evidence-only packet, and the manifest says so."""
     loaded = PROMPTS["independent_review"]
-    assert loaded.manifest.version == "15"
+    assert loaded.manifest.model_route == "qwen3-next"
+    assert set(PROMPTS.routes().values()) == {"qwen3-next"}
+    rationale = " ".join(loaded.manifest.route_rationale.split())
+    assert "NOT model independence" in rationale
+    assert "separate model" not in loaded.manifest.purpose
+    assert "separate model" not in loaded.manifest.system
+    for authoring in ("section_authoring", "presentation_planning"):
+        assert PROMPTS[authoring].manifest.prompt_id != loaded.manifest.prompt_id
+        assert PROMPTS[authoring].sha256 != loaded.sha256
+
+
+def test_the_manifest_is_v16_and_carries_no_advisory_tier() -> None:
+    loaded = PROMPTS["independent_review"]
+    assert loaded.manifest.version == "16"
     assert "advisory" not in loaded.manifest.system.replace(
         "there is no advisory finding", ""
     )

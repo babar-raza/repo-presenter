@@ -161,3 +161,30 @@ trigger a changed causal approach" (§12) are meant to stop. Guard:
  - **Cohort pilot before further single-repo hosted work:** one repository per supported ecosystem (python,
    net, java, cpp, go, rust, typescript), both lanes, stated budget ~150 provider calls (cap 200).
  - A finding count dropping to zero on one repository is not acceptance; the forest rules (§11) are.
+
+## 7. Amendments after calibration (2026-10-27, recorded in `docs/DECISION_LOG.md`)
+
+These supersede the text above where they conflict; the sections above are left as designed.
+
+- **D4 (product fact).** A factuality finding no longer cites a product fact for every kind. A
+  `contradiction` still must (any criterion). An `unsupported_claim` and a `quality` finding cannot
+  (a claim no fact supports has none to cite); what is checkable for them is the cited text, which
+  code derives from the cited lines, so it is verbatim by construction. The other factuality kinds
+  (`omission`, `absence`, `name_denial`) still cite one.
+- **D4 (quotes).** The model cites candidate lines (`lines`), never retypes text; code derives the
+  quote and, for the kinds that are about the quoted text, the section
+  (`readme/review/reply.py::resolve_cited_lines`). A model-supplied quote that is still present is
+  checked verbatim as before.
+- **D3 (unsupported claims).** No clearance is added for `unsupported_claim`. A mechanical audit of
+  the quoted claim's distinctive terms (identifiers, numbers, quoted phrases) against the SUPPORTED
+  fact values and the original README is recorded as the finding's `evidence`
+  (`readme/review/audit.py`), and decides nothing. Reason: the terms of a false claim are often all
+  real, so term overlap cannot prove a claim supported; every such rule is the 27-of-30 shortcut.
+- **D2/D9 (scope).** A `quality` finding whose cited lines are in a renderer-owned section
+  (every deterministic section and the At a Glance diagram) is a reviewer scope error: the reply is
+  contract-invalid, never a finding.
+- **D6 (route).** Binding owner decision 2026-10-27: one model (qwen3-next) for the whole system.
+  D6a (a different model from authoring) is withdrawn and no model independence is claimed.
+  Independence is D6b-e plus the deterministic holdouts.
+- **D7/D8 (no re-roll).** A blocking verdict on a request is never overturned by a fresh,
+  cache-bypassed review of the same request: `llm_review.RerollRefused`. Replay is allowed.

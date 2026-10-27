@@ -86,6 +86,10 @@ class Case:
     mutation: Mutation | None = None
     #: What a finding must mention to be about this case's defect (see ``Mutation.targets``).
     targets: tuple[str, ...] = ()
+    #: Deterministic rules that already fire on this case's twin: a candidate built from a base the
+    #: deterministic stage blocks anyway (its dispositions predate the accounting step). A rule
+    #: that fires on the twin is not a catch of anything injected into it.
+    baseline_rules: tuple[str, ...] = ()
 
     @property
     def readme(self) -> str:
@@ -171,6 +175,17 @@ def _clean_case(base: Base) -> Case:
 def base_cases(base: Base) -> list[Case]:
     """The clean twin, the real-defect cases and the mutants of one base."""
     clean = _clean_case(base)
+    baseline_rules = deterministic_rules(clean)
+    if baseline_rules:
+        # The pipeline would never send this twin to the model, so a verdict on it measures the
+        # base and not the reviewer: it is kept on record, asked, and not scored as clean.
+        clean = replace(
+            clean,
+            role="unscored_twin",
+            baseline_rules=baseline_rules,
+            note="the repaired real candidate; the deterministic stage already blocks it "
+            f"({', '.join(baseline_rules)})",
+        )
     cases = [clean]
     for index, repair in enumerate(base.repairs):
         if repair.klass is None:

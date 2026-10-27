@@ -87,7 +87,11 @@ class Replies:
 
     @property
     def reviewer_calls(self) -> int:
-        return sum(1 for payload in self.payloads if payload["model"] == "gpt-oss")
+        return sum(
+            1
+            for payload in self.payloads
+            if payload["response_format"]["json_schema"]["name"] == "independent_review"
+        )
 
 
 def authored() -> list[Any]:
@@ -98,8 +102,13 @@ def authored() -> list[Any]:
 def review_reply(verdict: str = "ACCEPT", *findings: dict[str, Any]) -> Any:
     return _completion(
         {"verdict": verdict, "findings": list(findings), "preserve": []},
-        model="gpt-oss",
+        model="qwen3-next",
     )
+
+
+#: The line of the fixture's rendered README that holds the opening paragraph (QUOTE, and the
+#: repaired text that replaces it).
+OPENING_LINE = 5
 
 
 def opening_finding(**overrides: Any) -> dict[str, Any]:
@@ -110,10 +119,14 @@ def opening_finding(**overrides: Any) -> dict[str, Any]:
         "criterion": "specificity",
         "claim_kind": "quality",
         "text": "the opening is generic prose",
-        "quote": QUOTE,
+        "lines": [OPENING_LINE],
         "fact_ids": [],
         "repair": "say what the library does",
     }
+    if (
+        "quote" in overrides
+    ):  # the opening paragraph before and after its repair; "" is no lines
+        overrides["lines"] = [OPENING_LINE] if overrides.pop("quote") else []
     base.update(overrides)
     return base
 
@@ -172,7 +185,7 @@ def test_the_model_reviews_a_clean_candidate_once_on_the_one_ledger(
     assert result.provider_calls == 10 and provider.reviewer_calls == 1
     verdict = result.review_verdict
     assert verdict.verdict == "ACCEPT" and verdict.model_reviewed
-    assert verdict.prompt_version == "15" and verdict.model_served == "gpt-oss"
+    assert verdict.prompt_version == "16" and verdict.model_served == "qwen3-next"
     assert run.verdict_file() == verdict
     records = load_records(run.out / "llm_cache" / "ledger.jsonl")
     assert {record.invocation_id for record in records} == {
@@ -181,7 +194,7 @@ def test_the_model_reviews_a_clean_candidate_once_on_the_one_ledger(
     assert [r.job for r in records if r.stage == "S10"] == ["independent_review"]
     assert (
         records[-1].job == "independent_review"
-        and records[-1].effective_model == "gpt-oss"
+        and records[-1].effective_model == "qwen3-next"
     )
 
 
@@ -218,7 +231,7 @@ def test_an_unavailable_review_raises_and_leaves_only_an_unsealable_verdict(
 ) -> None:
     broken = _completion(
         {"verdict": "ACCEPT", "findings": [opening_finding()], "preserve": []},
-        "gpt-oss",
+        "qwen3-next",
     )
     provider = Replies(monkeypatch, *authored(), broken, broken)
     with pytest.raises(ReviewUnavailable) as raised:

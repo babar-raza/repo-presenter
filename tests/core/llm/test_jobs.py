@@ -280,3 +280,73 @@ def test_the_ledger_records_every_physical_attempt(
     # marked rejected; attempt 2: the call succeeds and the output is accepted.
     assert outcomes == ["success", "response_invalid", "success"]
     assert all(r.job == "repository_investigation" for r in records)
+
+
+# --- the re-ask message shape (investigation 2026-10-27, cause 5.1) -----------------------------
+
+
+def _reask_manifest(shape: str | None) -> LoadedManifest:
+    loaded = _manifest()
+    fields = loaded.manifest.model_dump(by_alias=True)
+    if shape is not None:
+        fields["reask_shape"] = shape
+    return LoadedManifest(PromptManifest.model_validate(fields), loaded.path, loaded.sha256)
+
+
+def _reasked_messages(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, shape: str | None
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], Any]:
+    client = _wire(
+        monkeypatch,
+        _completion({"summary": "bad", "fact_ids": ["package:nonexistent"]}),
+        _completion({"summary": "good", "fact_ids": ["package:name"]}),
+    )
+    result = run_job(
+        _reask_manifest(shape), {"repository": "org/repo"}, config=CONFIG, facts=FACTS,
+        ledger=_ledger(tmp_path), store=_store(tmp_path), context=CONTEXT,
+    )
+    first, second = client.chat.completions.requests
+    return first["messages"], second["messages"], result
+
+
+def test_the_default_reask_is_the_conversation_with_the_rejected_reply_as_an_assistant_turn(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    first, second, _ = _reasked_messages(tmp_path, monkeypatch, None)
+    assert [m["role"] for m in second] == ["system", "user", "assistant", "user"]
+    assert second[:2] == first
+    assert "package:nonexistent" in second[2]["content"]
+    assert second[3]["content"].startswith("Fix:")
+
+
+def test_a_single_user_reask_folds_the_rejected_reply_and_the_correction_into_one_user_message(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    first, second, result = _reasked_messages(tmp_path, monkeypatch, "single_user")
+    assert [m["role"] for m in second] == ["system", "user"]
+    assert second[0] == first[0]
+    assert second[1]["content"].startswith(first[1]["content"])
+    assert "package:nonexistent" in second[1]["content"]
+    assert "Fix:" in second[1]["content"]
+    assert second[1]["content"].rindex("Fix:") > second[1]["content"].index("package:nonexistent")
+    assert result.output["fact_ids"] == ["package:name"] and result.attempts == 2
+
+
+def test_the_reask_shape_is_not_part_of_the_store_key_so_replay_is_unchanged(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The store is keyed by the FIRST request's hash; the re-ask payload is never a key. Only the
+    manifest file's own hash (which already carries the shape) is."""
+    from repo_presenter.core.llm.jobs import request_hash
+
+    conversation = request_hash(_reask_manifest(None), {"repository": "org/repo"})
+    single = request_hash(_reask_manifest("single_user"), {"repository": "org/repo"})
+    assert conversation == single  # the loaded sha (the file hash) is what differs in production
+    _, _, result = _reasked_messages(tmp_path, monkeypatch, "single_user")
+    assert result.request_sha256 == single
+    assert _store(tmp_path).get(single) == result.output
+
+
+def test_an_unknown_reask_shape_is_refused() -> None:
+    with pytest.raises(Exception, match="reask_shape"):
+        _reask_manifest("sideways")

@@ -3,7 +3,7 @@ version: "3"
 stage: S3
 purpose: Interpret a bounded fact dossier into what the product is, who uses it, and which problems and workflows the repository evidences, every statement citing fact IDs.
 model_route: qwen3-next
-route_rationale: Of the two general-purpose chat models the recorded catalog lists (qwen3-next, gpt-oss), qwen3-next is the one the legacy gateway characterization found reliable for strict structured JSON output (5 of 5), while gpt-oss's JSON validity swung between 0.4 and 0.8 across reruns; this job returns strict JSON with cited fact IDs, so it routes to qwen3-next. Revisited whenever preflight records a changed catalog.
+route_rationale: The owner designated qwen3-next as the one chat model this system uses (2026-10-27); the legacy gateway characterization also found it reliable for strict structured JSON output (5 of 5); this job returns strict JSON with cited fact IDs, so it routes to qwen3-next. Revisited whenever preflight records a changed catalog.
 sampling:
   temperature: 0.0
   # A ceiling the schema's own bound is derived from, not a target: dossier.output_chars_bound()

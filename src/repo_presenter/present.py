@@ -131,7 +131,7 @@ def _cascade_and_seal(
     if not verdict.model_reviewed:
         failing = ", ".join(check["id"] for check in blocking_failures(result.validation))
         raise PresentFailure(
-            "no independent model review of this candidate was made, and a deterministic-only "
+            "no LLM review of this candidate was made, and a deterministic-only "
             "verdict is never sealed"
             + (f"; blocking checks still fail: {failing}" if failing else "")
             + "; nothing sealed"

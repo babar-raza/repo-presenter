@@ -121,7 +121,10 @@ class Run:
 
 
 def pre_llm(case: Case) -> PreLLM:
-    return PreLLM(deterministic_rules(case), new_blocking_checks(case))
+    rules = tuple(
+        rule for rule in deterministic_rules(case) if rule not in case.baseline_rules
+    )
+    return PreLLM(rules, new_blocking_checks(case))
 
 
 def run_corpus(cases: Sequence[Case], reviewer: Reviewer, *, repeats: int = 1) -> Run:

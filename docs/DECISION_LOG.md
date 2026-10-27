@@ -408,3 +408,55 @@ python candidate passes S9 today); anything about Lane L; the budget for the nex
 **Where the detail lives**: `docs/investigations/2026-10-27-independent-reviewer-calibration.md`,
 `docs/investigations/2026-10-27-reviewer-calibration-data/`, `migration/reuse-manifest.yaml`
 (`p3_calibration_2026_10_27`).
+
+---
+
+## 2026-10-27: Independent LLM reviewer, Phase 3b (the four fixes and the second measurement): still FAILS
+
+**Decided / found** (details, tables and raw data: `docs/investigations/2026-10-27-reviewer-calibration-iteration-2.md`):
+
+1. Owner decision, binding, overrides plan D6a: one model, qwen3-next, for the whole system. The reviewer
+   routes to it (prompt v16) and the manifest says it is NOT model independence; independence rests on a
+   separate job, prompt and ledger attribution, the evidence-only packet, untrusted-data delimiting,
+   temperature 0 with a fixed seed, and deterministic holdouts. The withdrawn model id is gone from `src/`,
+   `prompts/`, `scripts/`, `tests/` and `.github/` and `tests/test_withdrawn_model.py` keeps it out. Cost: the
+   five authoring manifests' `route_rationale` was reworded, which changes their file hash and therefore
+   the `prompts.<job>` dependency (authoring scope) of any sealed bundle; this is consumed-scope invalidation
+   by design and nothing was regenerated here.
+2. D4 amended: a `contradiction` cites a product fact; an `unsupported_claim` and a `quality` finding cannot
+   (24 of 27 iteration-1 fact errors were an honest unsupported claim with no fact), so the contract asks for
+   what is checkable, the cited text. The model cites candidate lines and code derives the quote and the
+   section (`resolve_cited_lines`); the call schema has no `quote`. **No clearance was added** for
+   unsupported claims: term overlap with SUPPORTED facts cannot prove a claim supported (the 27-of-30
+   incident), the structural test that no clearance reads a quote against a fact stays, and a mechanical audit
+   of the claim's distinctive terms is recorded as the finding's `evidence` and decides nothing.
+3. A `quality` finding against renderer-owned text (every deterministic section and At a Glance) is a
+   reviewer scope error: the reply is invalid (re-ask, then `ReviewUnavailable`). It demotes nothing.
+4. Re-ask shape: blast-radius query done (the store key is the first request's hash; 28 stored outputs and 206
+   ledger rows in the repository, none keyed by a re-ask payload). `reask_shape: single_user` exists as a
+   per-manifest option, default unchanged, and is not enabled: its motivation was the withdrawn model.
+5. `max_output_tokens` 9000 (headroom; qwen3-next peaked at 2452). `REVIEWER_LOGIC_VERSION` 4 -> 5, reviewer
+   scope only (asserted).
+6. The no-re-roll invariant is enforced: `RerollRefused` when a request with a blocking verdict has no stored
+   reply; structural tests pin the API (no bypass parameter, two callers, the fresh-store code only in the
+   calibration adapter). Limit, stated: the guard lives beside the call store, so a wholly new store is not seen;
+   production builds the store from the transaction directory.
+7. The harness skipped java/go/cpp/rust/typescript only because it did not call `plugin_for`; fixed. It
+   yielded mutant bases in java and typescript, but still 3 clean twins: every Lane R base's own twin trips a
+   deterministic rule (`live_readme_loss`) and is kept as an unscored twin.
+8. Measurement, 121 of the authorised 150 calls (cap 200), 0 to the withdrawn model, qwen3-next: recall
+   (reviewer alone, on target) contradiction 0.36, content loss 0.00, unsupported claim 0.25, broken install
+   0.50 (target 0.90, all FAIL); false-reject 0.33 on 3 clean twins (FAIL; 0/2 on the vetted twins);
+   JSON-valid first reply 1.00 (PASS); stability 0.90 over 10 cases x 3 fresh (PASS, but 6 of the 10 are ACCEPTed
+   every time); contract-valid first reply 0.68 (was 0.36); unavailable 0.20 (was 0.46). The pipeline passes
+   content loss and broken install only through the deterministic stage. Causes: the model ACCEPTs most
+   defective candidates; with the fact rule removed it files `unsupported_claim` freely (87% of findings,
+   many against renderer-printed lines, 29 duplicates); the 12-line cap causes 8 of 13 invalid first replies.
+9. Recommendation (each needs its failing test first): deterministic claim checks for version, package,
+   format and install claims; a checkable unsupported-claim contract and renderer-printed-line scope; allow a
+   whole-section citation for omission, absence and quality findings; merge identical findings; section-by-
+   section review; fresh hosted cascade runs for more clean twins. Do not enable the gate for cohort or PR work.
+
+**What this does NOT decide**: whether any item of 9 is accepted (supervisor); the Lane L reviewer; the
+budget of a third iteration.
+

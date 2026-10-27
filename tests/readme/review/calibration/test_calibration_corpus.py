@@ -184,3 +184,48 @@ def test_a_recorded_defect_with_no_repair_has_no_twin(tmp_path):
     source = make_source(tmp_path, name="dup")
     (only,) = build_corpus([], [RecordedDefect(source, "duplicate_paragraph", (), "n")])
     assert only.role == "real_defect" and only.twin_of is None
+
+
+# --- a base whose own twin the deterministic stage already blocks -------------------------------
+
+
+def blocked_twin_cases(tmp_path, monkeypatch):
+    from repo_presenter.readme.review.calibration import corpus
+
+    real = corpus.deterministic_rules
+
+    def with_baseline(case):
+        found = set(real(case))
+        found.add(
+            "live_readme_loss"
+        )  # a rule that fires on the twin and on everything built from it
+        return tuple(sorted(found))
+
+    monkeypatch.setattr(corpus, "deterministic_rules", with_baseline)
+    return build_corpus([defective_base(tmp_path)])
+
+
+def test_a_twin_the_deterministic_stage_blocks_is_not_a_clean_twin(
+    tmp_path, monkeypatch
+):
+    cases = blocked_twin_cases(tmp_path, monkeypatch)
+    assert by_role(cases, "clean") == []
+    (twin,) = by_role(cases, "unscored_twin")
+    assert twin.expected == ACCEPT and "live_readme_loss" in twin.baseline_rules
+    assert by_role(cases, "mutant"), (
+        "its mutants are still asked: the reviewer alone is measured"
+    )
+
+
+def test_the_baseline_rule_is_not_a_catch_of_a_mutant(tmp_path, monkeypatch):
+    from repo_presenter.readme.review.calibration.harness import pre_llm
+
+    cases = blocked_twin_cases(tmp_path, monkeypatch)
+    for case in by_role(cases, "mutant"):
+        assert "live_readme_loss" in case.baseline_rules
+        assert "live_readme_loss" not in pre_llm(case).rules
+
+
+def test_a_clean_twin_the_stage_passes_has_no_baseline_rule(cases):
+    for case in cases:
+        assert case.baseline_rules == ()

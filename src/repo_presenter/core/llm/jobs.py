@@ -831,9 +831,17 @@ def _complete_from_first_reply(content: str, first: str) -> str:
 def _re_ask(
     manifest: LoadedManifest, payload: dict[str, Any], previous: str, errors: list[str]
 ) -> dict[str, Any]:
-    """The same request plus the rejected output and the manifest's correction, once."""
+    """The same request plus the rejected output and the manifest's correction, once, in the
+    manifest's ``reask_shape``."""
     template = string.Template(manifest.manifest.rejection_template)
     correction = template.substitute(errors="\n- ".join(errors)).strip()
+    if manifest.manifest.reask_shape == "single_user":
+        system, user = payload["messages"][:2]
+        folded = (
+            f"{user['content']}\n\nYour previous reply to this request was rejected. "
+            f"It was:\n<<<PREVIOUS REPLY\n{previous}\nPREVIOUS REPLY>>>\n\n{correction}"
+        )
+        return {**payload, "messages": [system, {"role": "user", "content": folded}]}
     messages = [
         *payload["messages"],
         {"role": "assistant", "content": previous},

@@ -7,9 +7,11 @@ the planner and reconciler attached to a decision is dropped. The reviewer judge
 against the facts, not against the case its author made for it.
 
 The two README texts are untrusted data (plan D6d). Each is wrapped in a begin/end pair whose label
-embeds the SHA-256 of the wrapped text, so the text cannot contain its own closing line, and nothing
-in a README can close the region early. The wrapped text is the README byte for byte: the contract
-checks a reviewer's quote against the raw candidate, never against this packet.
+embeds the SHA-256 of the README, so the text cannot contain its own closing line, and nothing in a
+README can close the region early. The original is wrapped byte for byte. The candidate's lines are
+shown with their numbers (``0007| text``): a reviewer cites lines, never retypes text, and
+``reply.resolve_cited_lines`` derives the quote and the section from the raw candidate, so the
+number prefix is not part of any quote.
 
 The call schema narrows the manifest's finding to the amendment of plan D2 (a finding carries ONE
 typed claim): ``claim_kind`` plus exactly the typed field that kind needs, and nothing else.
@@ -45,12 +47,18 @@ TYPED_FIELD: Mapping[str, str] = {
 }
 
 
-def delimited(name: str, text: str) -> str:
-    """``text`` between a begin and an end line that carry its own digest."""
+def numbered(text: str) -> str:
+    """``text``'s lines, each prefixed with its 1-based number, as ``resolve_cited_lines`` counts."""
+    return "\n".join(f"{n:04d}| {row}" for n, row in enumerate(text.splitlines(), 1))
+
+
+def delimited(name: str, text: str, *, shown: str | None = None) -> str:
+    """``text`` (or ``shown``, its display form) between a begin and an end line that carry the
+    digest of ``text`` itself."""
     digest = hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
     return (
         f"<<<BEGIN UNTRUSTED {name} sha256:{digest}>>>\n"
-        f"{text}\n"
+        f"{text if shown is None else shown}\n"
         f"<<<END UNTRUSTED {name} sha256:{digest}>>>"
     )
 
@@ -122,7 +130,9 @@ def review_packet(
     shown = frozenset(record["id"] for record in records)
     return {
         "repository": repository,
-        "candidate_readme": delimited("candidate_readme", candidate_readme),
+        "candidate_readme": delimited(
+            "candidate_readme", candidate_readme, shown=numbered(candidate_readme)
+        ),
         "original_readme": delimited("original_readme", original_readme),
         "facts": records,
         "symbol_index": symbol_index(facts, shown),
@@ -141,9 +151,14 @@ def _finding_variant(base: Mapping[str, Any], kind: str) -> dict[str, Any]:
         if field != wanted:
             properties.pop(field, None)
     properties["claim_kind"] = {"enum": [kind]}
+    # The model cites lines; code derives the quote (reply.resolve_cited_lines).
+    properties.pop("quote", None)
     required = [
-        name for name in variant["required"] if name not in TYPED_FIELD.values()
+        name
+        for name in variant["required"]
+        if name not in TYPED_FIELD.values() and name != "quote"
     ]
+    required.append("lines")
     if wanted is not None:
         required.append(wanted)
         if wanted == "omission":

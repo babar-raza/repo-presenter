@@ -560,7 +560,7 @@ def run_cascade(
     passes have been made. Every repair is a ``run_job`` call on this same ledger, so the
     invocation stays the one that made every provider call.
 
-    S10: when S9 leaves no deterministic blocking finding, the independent model reviews the
+    S10: when S9 leaves no deterministic blocking finding, the independent reviewer (its own job, prompt and ledger attribution) reviews the
     candidate (one provider call, two when it needed the one re-ask). Its blocking findings are
     repaired by their causal stage and the candidate re-composed and re-reviewed, at most
     ``review_repair_rounds`` times; ``0`` leaves the repair to the caller (``repair.loop``).
