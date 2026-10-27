@@ -218,4 +218,8 @@ def review_correction(
         dispositions=correction_dispositions(ctx, result.edits),
         validation=holdouts,
         deterministic_findings=(),
+        # Lane L's README is the maintainers' own text plus minimal evidenced edits, not rendered
+        # from facts: installation, license, fenced code and tables are exactly what the model
+        # must be able to review here, unlike Lane R's renderer-printed sections.
+        rendered=False,
     )

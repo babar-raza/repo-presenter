@@ -241,6 +241,9 @@ def test_the_model_is_handed_the_final_readme_the_live_one_the_edits_and_the_hol
     assert call["plan"] == {"sections": []}
     assert call["validation"] is holdouts
     assert call["deterministic_findings"] == ()
+    # The README is the maintainers' own text plus minimal edits, not rendered from facts:
+    # installation, license, fences and tables must be reviewable, unlike Lane R's output.
+    assert call["rendered"] is False
     (row,) = call["dispositions"]["dispositions"]
     assert row["unit_id"] == "inherited_unit:004.paragraph"
     assert row["disposition"] == "CORRECT_WITH_EVIDENCE"
