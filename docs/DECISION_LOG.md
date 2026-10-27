@@ -360,3 +360,51 @@ candidate is invalidated: a reviewer prompt, model or logic change reaches only 
 `prompts/independent_review.yaml`; `tests/readme/review/test_llm_review.py`,
 `tests/test_cascade_s10.py`, `tests/test_present_review.py`; `migration/reuse-manifest.yaml`
 (`p2_job_2026_10_27`).
+
+---
+
+## 2026-10-27: Independent LLM reviewer, Phase 3 (calibration): the gate FAILS, and why
+
+**Decided / found** (`plans/PLAN_independent_llm_reviewer.md` D6, D9 V4-V6; the numbers and raw data are
+in `docs/investigations/2026-10-27-independent-reviewer-calibration.md` and its `-data/` directory):
+
+1. The calibration corpus, the mutation operators, the metrics harness and the live adapter are built
+   (`src/repo_presenter/readme/review/calibration/`, `scripts/run_reviewer_calibration.py`, 75 tests). The
+   always-accept and always-reject stubs fail the corpus gate by test; an oracle passes it. A
+   catch is scored only when a blocking finding mentions the defect (`Case.targets`): a REJECT for an
+   unrelated reason is not a catch, and 6 of gpt-oss's 11 scored rejections were of that kind. The
+   plan's literal "any rejection" recall is reported beside it.
+2. Live, 165 ledger-counted calls (8 probe, 157 calibration; the cap was 8 and 200). Answers: the
+   per-kind `oneOf` call schema is accepted by the gateway (no flattening, `packet.py` unchanged);
+   `max_output_tokens: 6000` is NOT enough for gpt-oss (2 of 99 replies hit the ceiling, 23 exceeded
+   4000); first replies were JSON- and schema-valid 100% of the time but contract-valid only 46% for
+   gpt-oss and 36% for qwen3-next; the packet is 65,000-81,000 prompt tokens.
+3. **Gate result: FAIL** for gpt-oss and for qwen3-next. gpt-oss, reviewer alone and on target: recall
+   0.40 contradiction, 0.00 content loss, 0.00 unsupported claim, 0.00 broken install (targets 0.90);
+   false-reject 0.00 on 2 answered clean twins (limit 0.10); JSON-valid first reply 1.00; stability 0.20
+   on 5 cases (target 0.90), 54% of reviews unavailable. qwen3-next: false-reject 0.67 and worse recall.
+   The pipeline as a whole passes content loss and broken install only because the deterministic stage
+   catches them first. No rule, clearance, threshold or prompt was changed to improve these numbers.
+4. Findings that are decisions for later cards, each needing its failing test first: (a) D4 requires a
+   factuality finding to cite a product fact, but an `unsupported_claim` has none to cite (24 of 27
+   product-fact errors were an honest `unsupported_claim` with empty `fact_ids`), so the plan's own
+   motivating class is unreachable; (b) gpt-oss returns empty content to the re-ask in 26 of 27 cases,
+   because of the `[system, user, assistant, user]` shape in `core/llm/jobs._re_ask`, shared by every
+   job (a single user message returned content 3 of 3); (c) the models cannot reliably copy a quote
+   verbatim into the named section: re-labelling the section by code fixes 6 of 32 invalid gpt-oss
+   replies, so the remedy is to have code derive the quote and section from cited line numbers.
+5. Route: `model_route: gpt-oss` stays PROVISIONAL and is NOT confirmed. It remains the better of the
+   two on precision (D6a independence is the reason to keep it), but the route exception of D6 (fall
+   back to qwen3-next with a stronger deterministic holdout) is also not warranted on this evidence:
+   qwen3-next false-rejects clean candidates with unclearable `quality` findings and shares the authors'
+   blind spots. No cohort or PR work should read the reviewer's verdict until the re-measurement of
+   item 4 passes the same corpus.
+
+**What this does NOT decide**: whether any amendment of item 4 is accepted (supervisor decision, with
+a blast-radius query for (b)); the final corpus size (3 vetted clean twins and 5 repeat cases are too
+few for a trustworthy gate reading; the plan's 4 clean twins were not reachable because no complete
+python candidate passes S9 today); anything about Lane L; the budget for the next live pilot.
+
+**Where the detail lives**: `docs/investigations/2026-10-27-independent-reviewer-calibration.md`,
+`docs/investigations/2026-10-27-reviewer-calibration-data/`, `migration/reuse-manifest.yaml`
+(`p3_calibration_2026_10_27`).
