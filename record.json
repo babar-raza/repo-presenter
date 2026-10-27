@@ -5,7 +5,7 @@
   "provider_repository_id": 1178837520,
   "registry_revision": null,
   "active_transaction_id": "918cb4846361440e928a3067d4de28fb",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "PresentFailure: independent review returned REJECT with 4 blocking finding(s) of 4; nothing sealed; disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:012.paragraph is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:024.list is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:080.paragraph is kept (VERIFIED_PRESERVE) but its text is not printed in the README); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link src/test/java/com/aspose/threed/)",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-27T18:14:00.090377+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:40555587482",
     "acquired_at": "2026-10-27T17:59:34.044138+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-10-27T18:14:34.044138+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "c68cfe15dcf7447e9075fa25303f7131",
+    "transaction_id": "918cb4846361440e928a3067d4de28fb",
+    "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Java",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-27T18:13:58.570342+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-3d-foss/Aspose.3D-FOSS-for-Java",
+    "output_manifest": "candidates/aspose-3d-foss__Aspose.3D-FOSS-for-Java/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:40555587482:aspose-3d-foss/Aspose.3D-FOSS-for-Java": "918cb4846361440e928a3067d4de28fb"
   },
