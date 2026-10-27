@@ -1710,15 +1710,16 @@ next_ready_items:
       - a finding count of zero on one repository is not acceptance; the forest rules of mission section 11 are
     hosted_run_log:
       - run: 40555587482 (java) / 40555603173 (go) / 40555617732 (typescript)
-        cause_class: disposition_coverage/live_readme_loss omission -- kept or lost units not accounted
-          for; SAME shape as the earlier .NET/Python work (accounting.py commits b0c72f9, 4604b62),
-          REPEATED across 3 of 5 new ecosystems in one batch -- the fix does not generalize. Triggers
-          mission section 12's "two equivalent failures" rule: diagnosing the generalization, not
-          patching per finding (agent af8c910c5cdb81762).
+        cause_class: >-
+          disposition_coverage/live_readme_loss omission -- kept or lost units not accounted for;
+          SAME shape as the earlier .NET/Python work (accounting.py commits b0c72f9, 4604b62),
+          REPEATED across 3 of 5 new ecosystems in one batch -- the fix does not generalize.
+          Triggers mission section 12's "two equivalent failures" rule: diagnosing the
+          generalization, not patching per finding (agent af8c910c5cdb81762).
       - run: 40555595204 (cpp)
-        cause_class: authoring rejected an identifier (reference.aspose.org) not in facts; new, under diagnosis
+        cause_class: "authoring rejected an identifier (reference.aspose.org) not in facts; new, under diagnosis"
       - run: 40555609801 (rust)
-        cause_class: deterministic BC-07 still failing, never reached the reviewer (working as designed); what BC-07 found is under diagnosis
+        cause_class: "deterministic BC-07 still failing, never reached the reviewer (working as designed); what BC-07 found is under diagnosis"
 
       - run: 40460371379 / 40461345611
         cause_class: reviewer rejected 50 findings (missing facts, dropped examples) ; new
