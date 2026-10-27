@@ -76,7 +76,7 @@ A model `REJECT_*` whose findings are all cleared is ACCEPT, but the verdict rec
 every clearance and its proof, so the override is auditable. A REJECT with zero findings cannot be cleared
 and blocks. A structural test asserts no assignment to a verdict exists outside the fold.
 
-**D6 — Independence is structural.** (a) A different model from the author: the reviewer routes to `gpt-oss`
+**D6 — Independence is structural. [AMENDED 2026-10-27 by binding owner decision: qwen3-next is the only model and gpt-oss is eliminated; clause (a) below is WITHDRAWN. Author and reviewer share a model; independence rests on (b)-(e) plus the model-free deterministic holdouts and the calibration gate.]** (a) ~~A different model from the author: the reviewer routes to `gpt-oss`
 (authoring stays on `qwen3-next`), *subject to the calibration gate in D9*; if gpt-oss fails the gate the
 reviewer stays on `qwen3-next` with a recorded exception and a stronger deterministic holdout set, and the
 exception is a visible open item, not a silent default. (b) A separate job id and ledger attribution.
