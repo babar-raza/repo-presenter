@@ -20,7 +20,9 @@ and judges nothing it has no fact for. A registry that could not be read leaves 
 `package:published_version` fact, so a version is then held to the manifest alone and the
 candidate records a pending note (`claim_notes`) instead of failing.
 
-Five rules, all deterministic and independent of the LLM:
+Seven rules, all deterministic and independent of the LLM (the last two added in reviewer iteration
+3, after the calibration found the pipeline never saw a wrong version in the renderer's own sentence,
+a wrong package name in prose, or a format the product does not read):
 
 (a) Versions. A version attached to the package name or an install command - ``name==1.2``,
     ``name@1.2``, ``group:artifact:1.2``, ``name version 1.2``, ``--version 1.2``,
@@ -54,6 +56,14 @@ Five rules, all deterministic and independent of the LLM:
     fact states, is flagged: Note-Python's Scope read "distributed under the LicenseRef-Aspose-
     Split license" (pyproject metadata) beside an MIT LICENSE file and an MIT License section.
 
+(f) Prose identity. A code span in prose (not a fence) that extends the package identity -- the same
+    name plus a suffix (``Aspose.3D.FOSS.Core`` beside ``Aspose.3D.FOSS``) -- names a package that is
+    not this one, unless a SUPPORTED fact value (a symbol, import path, dependency or registry
+    confirmed distribution) is that very name or the span is a file.
+(g) Format lists. A sentence listing two or more file extensions in code spans, at least one of them
+    a SUPPORTED ``format`` fact, names only SUPPORTED formats; an extension in such a list that no
+    format fact states is flagged. One extension alone is not a list (BC-04 owns single identifiers).
+
 This module imports nothing from `validation/registry.py`: it reports a line index and a causal
 stage, and the registry maps the line to its shell section.
 """
@@ -82,7 +92,7 @@ _TAIL = re.compile(
     rf"""^
     (?:
         [`'"*)\s]*(?:@|==|=|:|~=)\s*[\^~]?v?          # name@1.2  name==1.2  g:a:1.2
-      | [`'"*)\s]*(?:[\w-]+[\s,]+){{0,4}}(?:version|release)\s+[`'"]?v?   # name ... version 1.2
+      | [`'"*)\s,;:(]*(?:[\w-]+[\s,;:(]+){{0,4}}(?:version|release)\s+[`'"]?v?   # name, version 1.2
       | \s+(?:--version|-v)[\s=]+[`'"]?v?             # dotnet add package N --version 1.2
       | ["']?\s+Version\s*=\s*["']v?                  # <PackageReference Include="N" Version="1.2"
       | \s*=\s*["']\^?~?v?                            # name = "1.2"   (Cargo.toml)
@@ -177,6 +187,12 @@ _VALUE_FLAGS = frozenset(
     }
 )  # fmt: skip
 _PROMPT = re.compile(r"^(?:[$>]\s+|PS>\s+)")
+# A code span that is a file or archive name, not a package: never a near-miss of the identity.
+_FILE_LIKE = re.compile(
+    r"(?i)\.(?:md|txt|rst|json|toml|ya?ml|cfg|ini|lock|py|ts|js|cs|csproj|sln|props|targets|nuspec|"
+    r"pom|xml|gradle|java|go|rs|cpp|hpp|h|sh|ps1|whl|nupkg|dll|jar|so|a|png|svg|gif|jpg|zip)$"
+)
+_EXTENSION_SPAN = re.compile(r"`(\.[A-Za-z0-9]{2,6})`")
 
 
 @dataclass(frozen=True)
@@ -669,6 +685,100 @@ def _identity_findings(
     return findings
 
 
+def _extends_identity(token: str, identity: str) -> bool:
+    """Whether ``token`` is the identity spelled exactly as the fact spells it, then a separator and
+    more (``aspose-3d-foss-core`` for ``aspose-3d-foss``). A sibling product that merely shares the
+    family prefix (``Aspose.3D.Converter``) and a module path spelled another way
+    (``Aspose.Cells_FOSS.Formats``) do not qualify."""
+    lowered, base = token.lower(), identity.lower()
+    return (
+        lowered.startswith(base)
+        and len(lowered) > len(base)
+        and lowered[len(base)] in "-_."
+        and len(lowered) > len(base) + 1
+    )
+
+
+def _prose_name_findings(
+    lines: list[_Line], facts: FactsDocument, identity: Fact
+) -> list[ClaimFinding]:
+    """Rule (f): a code span in prose that extends the package identity names another package."""
+    dependencies = {
+        _pep503(match.group(0))
+        for fact in facts.by_kind("dependency")
+        if (match := _REQUIREMENT_NAME.match(fact.value))
+    }
+    distributions = {
+        _pep503(fact.value)
+        for fact in facts.facts
+        if fact.id.startswith(DISTRIBUTION_FACT_PREFIX) and fact.polarity == "SUPPORTED"
+    }
+    values = {
+        _pep503(fact.value) for fact in facts.facts if fact.polarity == "SUPPORTED"
+    }
+    import_paths = {
+        fact.value.lower() for fact in facts.by_kind("import_path") if fact.polarity == "SUPPORTED"
+    }
+    findings: list[ClaimFinding] = []
+    for line in lines:
+        if line.in_fence:
+            continue
+        for token in dict.fromkeys(span.strip() for span in _CODE_SPAN.findall(line.text)):
+            if not _PACKAGE_ID_SPAN.match(token) or _FILE_LIKE.search(token):
+                continue
+            if (
+                not _extends_identity(token, identity.value)
+                or _same_identity(token, identity.value)
+                or _inside_module(token, identity.value, import_paths)
+                or _pep503(token) in dependencies | distributions | values
+            ):
+                continue
+            findings.append(
+                ClaimFinding(
+                    line.index,
+                    "COMPOSING",
+                    f"the README names the package {token!r}, but the package identity is "
+                    f"{identity.value!r} and no fact states {token!r}",
+                )
+            )
+    return findings
+
+
+def _extension(token: str) -> str:
+    return token.lower().lstrip(".")
+
+
+def _format_findings(lines: list[_Line], facts: FactsDocument) -> list[ClaimFinding]:
+    """Rule (g): in a sentence listing file extensions, each one is a SUPPORTED format."""
+    supported = {
+        _extension(fact.value)
+        for fact in facts.by_kind("format")
+        if fact.polarity == "SUPPORTED"
+    }
+    if not supported:
+        return []
+    findings: list[ClaimFinding] = []
+    for line in lines:
+        if line.in_fence:
+            continue
+        for sentence in _SENTENCES.split(line.text):
+            listed = _EXTENSION_SPAN.findall(sentence)
+            if len(listed) < 2 or not any(_extension(item) in supported for item in listed):
+                continue
+            unsupported = [item for item in listed if _extension(item) not in supported]
+            if unsupported:
+                findings.append(
+                    ClaimFinding(
+                        line.index,
+                        "COMPOSING",
+                        f"the README lists the format(s) {', '.join(dict.fromkeys(unsupported))}, "
+                        "but no SUPPORTED format fact states "
+                        f"{'it' if len(set(unsupported)) == 1 else 'them'}",
+                    )
+                )
+    return findings
+
+
 def install_identity_findings(text: str, facts: FactsDocument) -> list[ClaimFinding]:
     """The install-command near-miss findings alone for ``text`` (a fenced block or a README):
     each install target in a fence that names a near-miss of the SUPPORTED ``package:name``
@@ -692,7 +802,9 @@ def claim_findings(readme: str, facts: FactsDocument) -> list[ClaimFinding]:
         *_publication_findings(lines, facts, identity),
         *_exclusivity_findings(lines, facts),
         *_identity_findings(lines, facts, identity),
+        *_prose_name_findings(lines, facts, identity),
         *_license_findings(lines, facts),
+        *_format_findings(lines, facts),
     ]
 
 
