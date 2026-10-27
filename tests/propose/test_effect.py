@@ -29,6 +29,10 @@ from repo_presenter.propose.effect import (
     propose_candidate,
 )
 from repo_presenter.propose.pull_request import PullRequestContent
+from repo_presenter.readme.review.calibration_status import (
+    Calibration,
+    load_calibration,
+)
 from repo_presenter.readme.review.independent_reviewer import (
     Finding,
     ReviewVerdict,
@@ -41,6 +45,7 @@ ACCEPTED_REVIEW = ReviewVerdict.folded(
     model_served="qwen3-next",
     request_sha256="a" * 64,
     reply_sha256="b" * 64,
+    calibration_status="PASSED",
 )
 UNREVIEWED_ACCEPT = ReviewVerdict(verdict="ACCEPT", findings=())
 REJECTED_REVIEW = ReviewVerdict(
@@ -54,6 +59,17 @@ REJECTED_REVIEW = ReviewVerdict(
         ),
     ),
 )
+
+
+@pytest.fixture(autouse=True)
+def _committed_calibration_permits(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The gate mechanics below are tested with a reviewer whose committed status permits; the
+    calibration gate itself is tested at the end of this file."""
+    monkeypatch.setattr(
+        "repo_presenter.propose.effect.load_calibration",
+        lambda: Calibration("PASSED"),
+    )
+
 
 REPOSITORY = "babar-raza/disposable-target"
 BASE_BRANCH = "main"
@@ -550,7 +566,10 @@ def test_a_rejected_review_verdict_refuses_before_any_token_or_network_call() ->
     github = FakeGitHub()
     result = _propose(github, review=REJECTED_REVIEW, token=None)
     _assert_refused_without_writes(github, result, Refusal.REVIEW_REJECTED)
-    assert "1 blocking finding(s), 1 of them deterministic: claim_contradiction" in result.reason
+    assert (
+        "1 blocking finding(s), 1 of them deterministic: claim_contradiction"
+        in result.reason
+    )
 
 
 def test_a_rejected_review_verdict_refuses_even_with_every_other_gate_clear() -> None:
@@ -938,3 +957,89 @@ def test_the_text_must_come_from_exactly_one_source() -> None:
         _propose(github, pr_title=None, pr_body=None)
     with pytest.raises(ValueError, match="not both"):
         _propose(github, **{**_compose_kwargs([]), "pr_title": "t", "pr_body": "b"})
+
+
+# ---------------------------------------------------------------------------
+# the reviewer's calibration status: no candidate is PR-eligible until it permits
+# ---------------------------------------------------------------------------
+
+UNCALIBRATED_ACCEPT = ReviewVerdict.folded(
+    (),
+    model_verdict="ACCEPT",
+    prompt_version="17",
+    model_served="qwen3-next",
+    request_sha256="a" * 64,
+    reply_sha256="b" * 64,
+    calibration_status="NOT_PASSED",
+)
+
+
+@pytest.mark.parametrize(
+    "review",
+    [
+        UNCALIBRATED_ACCEPT,
+        ReviewVerdict.folded(
+            (),
+            model_verdict="ACCEPT",
+            prompt_version="17",
+            model_served="qwen3-next",
+            request_sha256="a" * 64,
+            reply_sha256="b" * 64,
+        ),
+    ],
+    ids=["recorded-not-passed", "no-recorded-status"],
+)
+def test_an_accept_made_under_an_unpassed_calibration_is_never_proposed(
+    review: ReviewVerdict,
+) -> None:
+    github = FakeGitHub()
+    result = _propose(github, review=review)
+    _assert_refused_without_writes(github, result, Refusal.REVIEW_UNCALIBRATED)
+    assert "calibration gate" in result.reason
+
+
+@pytest.mark.parametrize("status", ["PASSED", "PASSED_WITH_DECLARED_LIMITS"])
+def test_a_permitting_status_on_the_verdict_and_in_the_file_proceeds(
+    status: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(
+        "repo_presenter.propose.effect.load_calibration",
+        lambda: Calibration(status, owner_acceptance="owner, 2026-11-01"),
+    )
+    review = ReviewVerdict.folded(
+        (),
+        model_verdict="ACCEPT",
+        prompt_version="17",
+        model_served="qwen3-next",
+        request_sha256="a" * 64,
+        reply_sha256="b" * 64,
+        calibration_status=status,
+    )
+    assert _propose(FakeGitHub(), review=review).effected is True
+
+
+def test_a_verdict_made_under_a_passing_status_is_refused_once_the_file_no_longer_permits(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        "repo_presenter.propose.effect.load_calibration",
+        lambda: Calibration("NOT_PASSED", problem="revoked"),
+    )
+    github = FakeGitHub()
+    result = _propose(github, review=ACCEPTED_REVIEW)
+    _assert_refused_without_writes(github, result, Refusal.REVIEW_UNCALIBRATED)
+    assert "revoked" in result.reason
+
+
+def test_the_repositorys_committed_file_blocks_the_real_gate_today(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """With the repository's own data/reviewer_calibration.json (not a fixture), nothing is
+    proposed: its status is NOT_PASSED until a passing gate or the owner's committed acceptance."""
+    monkeypatch.setattr(
+        "repo_presenter.propose.effect.load_calibration", load_calibration
+    )
+    assert load_calibration().status == "NOT_PASSED"
+    github = FakeGitHub()
+    result = _propose(github, review=ACCEPTED_REVIEW)
+    _assert_refused_without_writes(github, result, Refusal.REVIEW_UNCALIBRATED)

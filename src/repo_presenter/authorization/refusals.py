@@ -43,6 +43,9 @@ class Refusal(StrEnum):
     # criticism that can veto, with no quiet demotion" has to block the one real effect that
     # exists, or it is not actually a veto.
     REVIEW_REJECTED = "review_rejected"
+    # The reviewer's calibration status (repo_presenter.readme.review.calibration_status): an ACCEPT
+    # of a reviewer that has not passed its calibration gate is not a veto anyone measured.
+    REVIEW_UNCALIBRATED = "review_uncalibrated"
 
 
 class WriteRefusedError(Exception):

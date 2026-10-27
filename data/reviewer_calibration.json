@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "status": "NOT_PASSED",
+  "reviewer_logic_version": "6",
+  "prompt_version": "17",
+  "model": "qwen3-next",
+  "owner_acceptance": "",
+  "failed_gates": [
+    "recall[contradiction]",
+    "recall[content_loss]",
+    "recall[unsupported_claim]",
+    "recall[broken_install]",
+    "false_reject_rate"
+  ],
+  "measured": {
+    "note": "Iteration 2 (121 live calls, commit 1c4922b), whole-document packets, reviewer alone; iteration 3 numbers replace these after the live re-measurement.",
+    "recall_on_target": {
+      "contradiction": 0.36,
+      "content_loss": 0.0,
+      "unsupported_claim": 0.25,
+      "broken_install": 0.5
+    },
+    "false_reject_rate_scored_clean_twins": 0.33,
+    "json_valid_first_reply": 1.0,
+    "stability": 0.9
+  },
+  "source": "docs/investigations/2026-10-27-reviewer-calibration-iteration-2.md"
+}

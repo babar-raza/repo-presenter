@@ -530,8 +530,8 @@ def test_findings_from_reply_are_all_blocking() -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_reviewer_logic_version_is_four_and_the_filename_is_unchanged() -> None:
-    assert REVIEWER_LOGIC_VERSION == "5"
+def test_reviewer_logic_version_is_six_and_the_filename_is_unchanged() -> None:
+    assert REVIEWER_LOGIC_VERSION == "6"
     assert REVIEW_VERDICT_FILENAME == "review_verdict.json"
 
 
@@ -548,7 +548,7 @@ def test_a_model_review_round_trips_with_its_clearance_proofs(tmp_path) -> None:
     assert digest == hashlib.sha256(path.read_bytes()).hexdigest()
     document = json.loads(path.read_text(encoding="utf-8"))
     assert document["schema_version"] == 2
-    assert document["reviewer_logic_version"] == "5"
+    assert document["reviewer_logic_version"] == "6"
     assert document["model_verdict"] == "REJECT_FACTUAL"
     assert (
         document["prompt_version"] == "16" and document["model_served"] == "qwen3-next"

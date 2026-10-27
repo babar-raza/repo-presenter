@@ -217,7 +217,7 @@ def test_the_verdict_file_records_what_a_reader_needs_to_audit_it(
     path = tmp_path / "review_verdict.json"
     write_review_verdict(verdict, path)
     document = json.loads(path.read_text(encoding="utf-8"))
-    assert document["schema_version"] == 2 and document["reviewer_logic_version"] == "5"
+    assert document["schema_version"] == 2 and document["reviewer_logic_version"] == "6"
     assert (
         document["prompt_version"] == "16" and document["model_served"] == "qwen3-next"
     )

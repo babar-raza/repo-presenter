@@ -20,10 +20,15 @@ nothing for a clearance to disprove, so it cannot be cleared. An unknown model v
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from typing import Literal
+from typing import Any, Literal
 
+from repo_presenter.readme.review.calibration_names import (
+    PERMITTING,
+    STATUSES,
+    label_for,
+)
 from repo_presenter.readme.review.findings import Finding
 
 Verdict = Literal["ACCEPT", "REJECT"]
@@ -36,7 +41,10 @@ Verdict = Literal["ACCEPT", "REJECT"]
 #: "5": findings cite candidate lines and code derives the quote and section; an unsupported claim
 #: and a quality finding need no product fact; a quality finding against renderer-owned text is a
 #: scope error; the unsupported-claim audit; the no-re-roll guard. Reviewer scope only.
-REVIEWER_LOGIC_VERSION = "5"
+#: "6": the model reviews one bounded unit of reviewable sections per call (renderer-printed lines are
+#: never sent as reviewable text), findings that repeat are merged, an omission, absence or quality
+#: finding may cite a whole section, and a verdict records the reviewer's calibration status.
+REVIEWER_LOGIC_VERSION = "6"
 REVIEW_VERDICT_FILENAME = "review_verdict.json"
 
 REJECT_VERDICTS = (
@@ -121,8 +129,16 @@ class ReviewVerdict:
     model_served: str | None = None
     request_sha256: str | None = None
     reply_sha256: str | None = None
+    #: The reviewer's calibration status when the review was made (``calibration_status``), or
+    #: ``None`` when none was recorded: read as not calibrated.
+    calibration_status: str | None = None
+    #: One record per model call of a sectionwise review (unit, sections, request and reply hashes,
+    #: the model's own verdict), in review order.
+    unit_reviews: tuple[Mapping[str, Any], ...] = ()
 
     def __post_init__(self) -> None:
+        if self.calibration_status is not None and self.calibration_status not in STATUSES:
+            raise ValueError(f"unknown calibration status {self.calibration_status!r}")
         folded = fold_verdict(model_verdict=self.model_verdict, findings=self.findings)
         if self.verdict != folded.verdict:
             raise ValueError(
@@ -152,6 +168,8 @@ class ReviewVerdict:
         model_served: str | None = None,
         request_sha256: str | None = None,
         reply_sha256: str | None = None,
+        calibration_status: str | None = None,
+        unit_reviews: Sequence[Mapping[str, Any]] = (),
     ) -> ReviewVerdict:
         folded = fold_verdict(model_verdict=model_verdict, findings=findings)
         return cls(
@@ -162,6 +180,8 @@ class ReviewVerdict:
             model_served=model_served,
             request_sha256=request_sha256,
             reply_sha256=reply_sha256,
+            calibration_status=calibration_status,
+            unit_reviews=tuple(unit_reviews),
         )
 
     @property
@@ -177,6 +197,22 @@ class ReviewVerdict:
         """Whether a model reviewed this candidate. A deterministic-only verdict is not the
         independent review the mission requires (section 7 step 7)."""
         return self.model_verdict is not None
+
+    @property
+    def acceptance_label(self) -> str:
+        """``calibrated`` only when the reviewer's recorded calibration status permits it. An ACCEPT
+        under any other status (or none) is ``uncalibrated``: the model's veto was not measured."""
+        return label_for(self.calibration_status)
+
+    @property
+    def pr_eligible(self) -> bool:
+        """Whether this verdict may support a pull request: an ACCEPT that a model reviewed, made
+        while the reviewer's calibration status was PASSED or PASSED_WITH_DECLARED_LIMITS."""
+        return (
+            self.verdict == "ACCEPT"
+            and self.model_reviewed
+            and self.calibration_status in PERMITTING
+        )
 
     @property
     def deterministic_reject_count(self) -> int:

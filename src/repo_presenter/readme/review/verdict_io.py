@@ -2,7 +2,11 @@
 
 Schema 2 records the reviewer's own verdict, the prompt version, the model served and the request
 and reply hashes, and for every finding its ``claim_kind``, ``status`` and clearance proof, so an
-ACCEPT that rests on a REJECT being cleared is auditable from the file alone. Schema 1 (the
+ACCEPT that rests on a REJECT being cleared is auditable from the file alone. It also records the
+reviewer's calibration status when the review was made and the label that follows from it
+(``acceptance_label``: ``uncalibrated`` unless the status permits), and, for a sectionwise review,
+one record per model call. ``acceptance_label`` is derived on write and ignored on read: the label of
+a loaded verdict is recomputed from its recorded status, never trusted from the file. Schema 1 (the
 deterministic-only reviewer) still reads: its ``kind: "deterministic"`` findings become
 ``source: "deterministic"`` and its ``refuted_by.evidence`` becomes ``evidence``. A schema-1
 ``kind: "judgment"`` finding fails the read, because schema 2 has no annotate-only tier and silently
@@ -44,6 +48,9 @@ def write_review_verdict(verdict: ReviewVerdict, path: Path) -> str:
         "model_served": verdict.model_served,
         "request_sha256": verdict.request_sha256,
         "reply_sha256": verdict.reply_sha256,
+        "calibration_status": verdict.calibration_status,
+        "acceptance_label": verdict.acceptance_label,
+        "unit_reviews": [dict(record) for record in verdict.unit_reviews],
         "findings": [finding.to_record() for finding in verdict.findings],
     }
     data = (
@@ -119,9 +126,17 @@ def load_review_verdict(path: Path) -> ReviewVerdict:
                 "model_served",
                 "request_sha256",
                 "reply_sha256",
+                "calibration_status",
             )
         }
     )
+    if schema != 1:
+        unit_reviews = payload.get("unit_reviews", [])
+        if not isinstance(unit_reviews, list) or not all(
+            isinstance(item, dict) for item in unit_reviews
+        ):
+            raise ReviewVerdictError(f"{path}: unit_reviews must be a list of objects")
+        meta["unit_reviews"] = tuple(unit_reviews)
     try:
         return ReviewVerdict(verdict=verdict, findings=tuple(findings), **meta)
     except ValueError as exc:

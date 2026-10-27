@@ -23,6 +23,9 @@ Every gate below runs, in this order, before the first write, and each refusal i
    (`ReviewVerdict.model_reviewed`), refuses with `Refusal.REVIEW_REJECTED`
    before any token or network call; there is no override parameter, because a veto that can be
    bypassed by the caller is not a veto.
+3b. The reviewer's calibration status (`readme/review/calibration_status.py`): the verdict must have
+   been made while the committed status was PASSED or PASSED_WITH_DECLARED_LIMITS, and the committed
+   status must permit it now; otherwise `Refusal.REVIEW_UNCALIBRATED`. No parameter overrides it.
 4. A write-scoped token is supplied (`GH_PROPOSAL_WRITE_TOKEN` - never `GH_TOKEN`).
 5. The authorization record (`core/authorization/proposal.py`): a persisted, reviewed file committed
    to the control repository before this run was triggered, which `load_authorization` loads and
@@ -109,6 +112,7 @@ from repo_presenter.github.token_provenance import (
     verify_pull_request_app as default_verify_pull_request_app,
 )
 from repo_presenter.propose.pull_request import PullRequestContent
+from repo_presenter.readme.review.calibration_status import load_calibration
 from repo_presenter.readme.review.independent_reviewer import ReviewVerdict
 
 AUTHORIZATION_VARIABLE = "REPOSITORY_PRESENTER_PROPOSAL_WRITE_AUTHORIZED"
@@ -322,6 +326,19 @@ def propose_candidate(
             Refusal.REVIEW_REJECTED,
             "no LLM review of this candidate was made: a deterministic-only verdict is not "
             "the independent review the mission requires, so it is never proposed",
+        )
+
+    current = load_calibration()
+    if not review.pr_eligible or not current.permits:
+        return _refuse(
+            True,
+            Refusal.REVIEW_UNCALIBRATED,
+            "the independent reviewer has not passed its calibration gate, so no candidate is "
+            f"eligible for a pull request (committed status {current.status}"
+            f"{': ' + current.problem if current.problem else ''}; this verdict was made under "
+            f"{review.calibration_status or 'no recorded status'}); PASSED, or "
+            "PASSED_WITH_DECLARED_LIMITS with an owner acceptance in data/reviewer_calibration.json, "
+            "is required and no caller can override it",
         )
 
     if not token:
