@@ -82,6 +82,7 @@ from repo_presenter.readme.reconciliation.dispositions import (
     reconciliation_schema,
     write_dispositions,
 )
+from repo_presenter.readme.reconciliation.retained_examples import retain_unverified_examples
 from repo_presenter.readme.review.independent_reviewer import (
     REVIEW_VERDICT_FILENAME,
     ReviewVerdict,
@@ -165,7 +166,7 @@ def _run_reconciliation(
             context=context, call_schema=call_schema,
         )
         outputs.append(result.output)
-    return merge_dispositions(outputs)
+    return retain_unverified_examples(merge_dispositions(outputs), document)
 
 
 def _run_planning(

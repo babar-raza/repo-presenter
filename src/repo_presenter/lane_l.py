@@ -10,7 +10,6 @@ the facts describe the exact revision the run is pinned to.
 from __future__ import annotations
 
 import hashlib
-import re
 from pathlib import Path
 
 from repo_presenter.core.ecosystems import spec_for
@@ -21,8 +20,18 @@ from repo_presenter.core.snapshot.capture import RepositorySnapshot
 from repo_presenter.core.snapshot.inventory import scan
 from repo_presenter.extractors.platforms.registry import plugin_for
 from repo_presenter.readme.evidence.facts.extract import extract_facts
+from repo_presenter.readme.evidence.facts.inherited import inventory_units
 
-_FENCE = re.compile(r"^```(?P<lang>\S*)\n(?P<body>.*?)\n```", re.MULTILINE | re.DOTALL)
+def _fence_parts(source: str) -> tuple[str, str] | None:
+    """The info-string language and body of a fenced block, or ``None`` for an indented block."""
+    lines = source.splitlines()
+    if len(lines) < 2 or not lines[0].startswith(("```", "~~~")):
+        return None
+    fence = lines[0][:3]
+    info = lines[0][3:].strip().split()
+    language = info[0].lower() if info else ""
+    body = lines[1:-1] if lines[-1].strip().startswith(fence) else lines[1:]
+    return language, "\n".join(body) + "\n"
 
 
 def select_examples(
@@ -30,36 +39,34 @@ def select_examples(
 ) -> list[ExampleCandidate]:
     """Every fenced block in ``ecosystem``'s own fence languages, once each by normalized body.
 
-    Deliberately simpler than the old repo's ``selection.py``: Lane L's ``failing_example`` and
-    ``format_overclaim`` detectors read only ``example``/``format`` facts, not content-unit ids.
+    Ported (ADAPT) from the old repo's ``extractors/examples/selection.py``: each candidate's
+    ``unit_id`` is the README block's own inherited-unit ID (``inventory_units``' block ordinal),
+    not the example's ordinal. Reconciliation, planning and the renderer find an example's inherited
+    code block through that ID, so an ordinal-numbered ID pointed every example at a different,
+    unrelated unit.
     """
     aliases = spec_for(ecosystem).example_fences
     candidates: list[ExampleCandidate] = []
     seen: set[str] = set()
-    ordinal = 0
-    for match in _FENCE.finditer(readme_text):
-        lang = match.group("lang").lower()
-        if lang not in aliases:
+    for unit in inventory_units(readme_text):
+        if unit.unit_type != "code_block":
             continue
-        body = match.group("body") + "\n"
-        normalized = "\n".join(
-            line.rstrip() for line in body.splitlines() if line.strip()
-        )
-        if not normalized.strip() or normalized in seen:
+        parts = _fence_parts(unit.source)
+        if parts is None or parts[0] not in aliases or not parts[1].strip():
+            continue
+        normalized = "\n".join(line.rstrip() for line in parts[1].splitlines() if line.strip())
+        if normalized in seen:
             continue
         seen.add(normalized)
-        ordinal += 1
-        start_line = readme_text[: match.start()].count("\n") + 1
-        end_line = start_line + body.count("\n") + 1
         candidates.append(
             ExampleCandidate(
-                ordinal=ordinal,
-                language=lang,
-                code=collapse_blank_runs(body),
+                ordinal=len(candidates) + 1,
+                language=parts[0],
+                code=collapse_blank_runs(parts[1]),
                 source_path=source_path,
-                start_line=start_line,
-                end_line=end_line,
-                unit_id=f"inherited_unit:{ordinal:03d}.code_block",
+                start_line=unit.start_line,
+                end_line=unit.end_line,
+                unit_id=f"inherited_unit:{unit.ordinal:03d}.code_block",
             )
         )
     return candidates

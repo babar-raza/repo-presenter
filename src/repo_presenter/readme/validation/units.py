@@ -37,6 +37,10 @@ from repo_presenter.readme.composition.renderer import (
     ENTERPRISE_SENTENCE_LEAD,
     RenderContext,
 )
+from repo_presenter.readme.composition.retained_examples import (
+    active_retained,
+    block_lines,
+)
 from repo_presenter.readme.validation.deferrals import review_deferrals
 from repo_presenter.readme.validation.failures import Candidate, CausalStage, Failure
 from repo_presenter.readme.validation.text import (
@@ -200,6 +204,13 @@ def unit_failures(candidate: Candidate) -> list[Failure]:
         if line.startswith(("| ", "- `"))
     )
     seen: set[str] = set()
+    # An unverified inherited example is reprinted as the project wrote it, with the renderer's
+    # note, like a kept unit: its prose is not authored here.
+    renderer_lines.update(
+        line
+        for block in active_retained(candidate.facts, candidate.dispositions)
+        for line in block_lines(block)
+    )
     for line in outside_fences(candidate.readme):
         if line in placed_lines or line in renderer_lines:
             continue

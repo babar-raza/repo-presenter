@@ -61,6 +61,11 @@ from repo_presenter.readme.composition.placement import (
     placements,
     renders_verbatim,
 )
+from repo_presenter.readme.composition.retained_examples import (
+    RetainedBlock,
+    active_retained,
+    block_lines,
+)
 from repo_presenter.readme.evidence.facts.assets import CI_BADGE_FACT_ID
 from repo_presenter.readme.evidence.facts.commands import (
     BUILD_COMMAND_FACT_ID,
@@ -125,13 +130,18 @@ class RenderContext:
         self.spec = spec_for(entry.ecosystem)
         self.name = product_name(entry)
         self.by_id: dict[str, Fact] = {fact.id: fact for fact in facts.facts}
+        self.planned: frozenset[str] = frozenset(
+            str(item.get("section_id"))
+            for item in plan.get("sections", [])
+            if item.get("include")
+        )
+        self.retained: dict[str, list[RetainedBlock]] = {}
+        for block in active_retained(facts, dispositions):
+            self.retained.setdefault(block.section, []).append(block)
         self.included: list[Section] = [
             section
             for section in SEMANTIC_SHELL
-            if any(
-                item.get("section_id") == section.id and item.get("include")
-                for item in plan.get("sections", [])
-            )
+            if section.id in self.planned or section.id in self.retained
         ]
         self.rendered_ids: frozenset[str] | None = None
         self.units: dict[tuple[str, str], str] = {
@@ -1017,6 +1027,29 @@ def _example_entry(context: RenderContext, sid: str, example_id: str) -> list[st
     return ["", f"### {heading}", "", *_code_block(context.spec.fence, printed_example(example))]
 
 
+def _with_retained_examples(lines: list[str], blocks: list[RetainedBlock]) -> list[str]:
+    """``lines`` (Additional Examples as planned) followed by the unverified inherited examples.
+
+    They join the section's details block when it has one; otherwise the first prints on its own
+    when the section has nothing else, and the rest sit in a details block of their own."""
+    if not blocks:
+        return lines
+    chunks = [block_lines(block) for block in blocks]
+    if lines and lines[-1] == "</details>":
+        closing = lines.pop()
+        for chunk in chunks:
+            lines.extend(["", *chunk])
+        return [*lines, "", closing]
+    if not any(line.strip() for line in lines):
+        lines, chunks = list(chunks[0]), chunks[1:]
+    if chunks:
+        lines.extend(["", "<details>", f"<summary>{ADDITIONAL_EXAMPLES_SUMMARY}</summary>"])
+        for chunk in chunks:
+            lines.extend(["", *chunk])
+        lines.extend(["", "</details>"])
+    return lines
+
+
 def _section_body(context: RenderContext, section: Section) -> list[str]:
     sid = section.id
     plan = context.plan
@@ -1045,7 +1078,8 @@ def _section_body(context: RenderContext, section: Section) -> list[str]:
     elif sid == "dependencies":
         lines.extend(_dependencies(context))
     elif sid == "quick_start":
-        lines.append(context.unit(sid, "lead_in"))
+        if sid in context.planned:
+            lines.append(context.unit(sid, "lead_in"))
         example = context.fact(plan.get("quick_start_example_id", ""))
         if example is not None:
             lines.append("")
@@ -1056,8 +1090,11 @@ def _section_body(context: RenderContext, section: Section) -> list[str]:
             lines.append(context.unit(sid, "lead_in:2"))
             lines.append("")
             lines.extend(_code_block(context.spec.fence, printed_example(second)))
+        for block in context.retained.get(sid, []):
+            lines.extend(["", *block_lines(block)])
     elif sid == "additional_examples":
-        lines.append(context.unit(sid, "preview"))
+        if sid in context.planned:
+            lines.append(context.unit(sid, "preview"))
         additional = [
             example_id
             for example_id in plan.get("additional_example_ids", [])
@@ -1075,6 +1112,7 @@ def _section_body(context: RenderContext, section: Section) -> list[str]:
                 lines.extend(_example_entry(context, sid, example_id))
             lines.append("")
             lines.append("</details>")
+        lines = _with_retained_examples(lines, context.retained.get(sid, []))
     elif sid == "api_reference":
         lines.extend(_api_reference(context))
     elif sid == "documentation_resources":
