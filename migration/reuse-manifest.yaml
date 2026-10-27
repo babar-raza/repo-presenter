@@ -159,10 +159,9 @@ entries:
       and apply_plan). chain.py + verify.py are not a standalone piece that can be ported
       alone. (1) Inputs: chain.plan_chain consumes CI-sourced command facts (source "ci
       workflow", precondition attribute) that only the old extraction's command_facts()
-      emits; the new readme/evidence/facts/commands.py is trimmed to doc-side parsing and has
-      no ci_jobs/CiJob/CiRun. Porting chain needs the ci_jobs closure (~96 lines of old
-      commands.py) plus assets.is_release_workflow (~8 lines), all extraction apparatus that
-      is itself PENDING_REVIEW. (2) verify.py imports ChainPlan from chain.py and Receipt/
+      emits. [Updated 2026-10-27: readme/evidence/facts/commands.py and assets.py are now the
+      full old modules, so command_facts, ci_jobs/CiJob/CiRun and assets.is_release_workflow
+      exist; the remaining chain prerequisites below are unchanged.] (2) verify.py imports ChainPlan from chain.py and Receipt/
       StepResult/outcomes from receipts.py; receipts.py (190 lines) is needed too, and its
       apply_plan folds receipts into correction facts. (3) The only caller is
       additions.add_dev_commands, which is not ported. (4) Confinement, the decisive point:
@@ -178,7 +177,7 @@ entries:
       in addition to the scope reasons.
     dependencies_for_a_future_port:
       present_in_new_repo: "core/execution.py (profile_environment, secret_free_environment), core/git_safety/{clone.force_rmtree, git.run_git, process.run_bounded}, core/secrets.py, core/toolchains.py, packaging (pyproject pin), docker CLI (Docker Desktop installed on this host; daemon state not checked)"
-      missing: "receipts.py (190 lines); chain.py (~310 lines); commands.py ci_jobs/CiJob/CiRun closure (~96 lines) and assets.is_release_workflow (~8 lines); the CI-sourced command_facts extraction; additions.py (add_dev_commands); enrich.py"
+      missing: "receipts.py (190 lines); chain.py (~310 lines); additions.py (add_dev_commands); enrich.py"
     prerequisites_before_porting:
       - "G4 container isolation for hosted runs, or an explicit owner decision to accept host execution of repository build commands"
       - "additions.py detector port (the only caller), so the runner has an input and a consumer"
@@ -2927,3 +2926,54 @@ entries:
       None for accepted candidates: nothing has run it live. A repaired S4 batch changes the
       dispositions, so S5 and everything downstream of the repaired candidate are asked again;
       other candidates' stores are untouched.
+
+  - component: "components/readme/evidence/facts/extract.py + the slimmed evidence modules (assets, commands, links, product_pages, registry_lag, license, published_version, unpublished)"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    behavior: >
+      Read in full 2026-10-27. extract.py is the single place a facts document is assembled for a
+      snapshot: identity, example and format facts, then manifest facts re-issued with the
+      registry's reading (verified-source-build and source-checkout tiers, published-version and
+      install pinning), symbol-doc filtering, license (file text, else the manifest declaration,
+      settled against each other), registry lag, assets (tests/CI/docs/examples), build and test
+      command, CI matrix, release workflow and CI badge facts, product pages (Enterprise Edition,
+      homepage, banner), documented source install for an unpublished package, inherited units,
+      link facts and the README-settled Enterprise target. A hosted run on
+      aspose-3d-foss/Aspose.3D-FOSS-for-.NET was rejected with 50 findings; 22 were for facts that
+      this orchestrator produces and build_lane_l_facts never did.
+    disposition: >
+      PORT (verbatim apart from import paths) for extract.py, assets.py (18 -> 358 lines),
+      commands.py (171 -> 894), links.py (178 -> 410), product_pages.py (91 -> 251),
+      registry_lag.py (13 -> 108), published_version.py (absent -> 99), unpublished.py (91 -> 249),
+      license.py (38 -> 175, kept at the new name license_text.py because validation/claims.py
+      imports classify_license_text from it). Each trimmed new file was diffed against the old one
+      first: in every case the shared part differed only in comments, so the old module replaces it
+      whole. ADAPT: extract.py imports example_facts from readme/evidence/facts/examples.py (the
+      old extractors/examples/verify.py); links.USER_AGENT names this repository. NOT ported
+      (unchanged): extractors/examples/selection.py (lane_l.select_examples stays), verify_build
+      for net/java (build execution deferred until container isolation; no MeasuredBuild is
+      passed, so the verified-source-build tiers do not fire).
+    target_module: "src/repo_presenter/readme/evidence/facts/{extract,assets,commands,links,product_pages,registry_lag,published_version,unpublished,license_text}.py; src/repo_presenter/lane_l.py::build_lane_l_facts"
+    wiring: >
+      build_lane_l_facts calls extract_facts; it now requires entry (registry entry) as a keyword
+      and derives the snapshot from the clone with core/snapshot/inventory.scan. present.py loads
+      the entry from the registry it already reads. Probe records the orchestrator returns
+      (link and product-page reads) are not persisted by present.py yet.
+    evidence: >
+      Ported 297 tests (test_assets, test_commands, test_extract, test_license, test_links,
+      test_product_pages, test_published_version, test_registry_lag, test_unpublished,
+      test_formats) plus an extended tests/test_present.py end-to-end test; full suite 2549 passed,
+      11 skipped. One ported test needed an adaptation: the net plugin defines no verify_build, so
+      a stub plugin stands in for an ecosystem that measures its own build. Offline replay on the
+      hosted run's clone with link/registry seams stubbed: section_conditions flips banner,
+      documentation_resources, development_testing and enterprise_relationship to True (all False
+      before); all 18 link findings now have a link_target fact; re-rendering the hosted plan with
+      the new facts clears 5 of 50 findings (the plan and dispositions were made without these
+      facts, so the rest need a real S3-S8 rerun).
+    not_yet_done: >
+      A live hosted run with the new facts. Not producible offline for this repository: the
+      NuGet published-version and registry-lag facts (registry read), the live HTTP verdicts of
+      the product-page and link facts (stubbed 200 in the replay), and build/test command facts
+      (the clone has no CI workflow, package.json, Makefile or solution file for the readers to
+      find). quick_start and additional_examples stay False because the .NET example verifier
+      (net_examples.py) is not ported, so every example is UNRESOLVED.
