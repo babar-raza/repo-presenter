@@ -1,18 +1,383 @@
-"""The build-status badge's own fact-ID constant.
-
-Ported (TRIMMED, ADAPT) from the old repository-presenter project's ``components/readme/
-evidence/facts/assets.py`` per migration/reuse-manifest.yaml ("readme/composition/" entry). Only
-``CI_BADGE_FACT_ID`` is ported -- the one symbol ``readme/composition/planning.py`` and
-``renderer.py`` actually import from this module (a shell-owned link target the badge row renders
-from, excluded from every model-assignable link).
-
-The rest of the old module (``asset_facts``, ``ci_badge_fact``, workflow/tree scanning) is
-extraction-time apparatus; see migration/reuse-manifest.yaml's separate, PENDING_REVIEW
-extraction entry.
-"""
+"""Build and test assets read from the tree inventory: tests, CI workflows, docs, examples."""
 
 from __future__ import annotations
 
-from repo_presenter.core.facts import fact_id
+import re
+from collections.abc import Sequence
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any
 
+import yaml
+
+from repo_presenter.core.ecosystems import SuiteFileRule
+from repo_presenter.core.facts import Evidence, Fact, fact_id
+from repo_presenter.core.long_paths import long_path
+
+_MAX_EVIDENCE_PATHS = 5
+# A marker rule reads each candidate's text. A suite past this many candidates, or one file past
+# this size, is not read at all and its size is not stated (TC-TST-01).
+_MAX_SUITE_FILES_READ = 4000
+_MAX_SUITE_FILE_BYTES = 1024 * 1024
+_WORKFLOW_PREFIX = ".github/workflows/"
+_MAX_WORKFLOW_BYTES = 256 * 1024
+# The workflow file names the badge URL carries verbatim: no path separator, no query, no space.
+_WORKFLOW_FILE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*\.ya?ml")
+# A workflow that exists to publish, deploy, scan, or tend the repository is not its build status.
+_NOT_BUILD_STATUS = re.compile(
+    r"(?i)publish|release|deploy|pages|docs?\b|codeql|dependabot|label|stale|sync|mirror|welcome"
+)
+# A run step that builds, tests, or checks the code: the evidence a workflow is a real build.
+_BUILD_STEP = re.compile(
+    r"(?i)\b(pytest|tox|nox|unittest|ctest|cmake|cargo|dotnet|mvn|gradle|gradlew|make|msbuild"
+    r"|go (?:test|build|vet)|npm (?:test|run build|ci|run test)|yarn (?:test|build)"
+    r"|pnpm (?:test|build)|ruff|mypy|python -m (?:pytest|unittest|build)|test|build)\b"
+)
+_PREFERRED_STEMS = ("ci", "build", "test", "tests", "main")
+_BRANCH_GLOB = re.compile(r"[*?\[!]")
+_EVERY_BRANCH = frozenset({"**", "*"})
+_DEFAULT_BRANCHES = frozenset({"main", "master", "**", "*"})
+# The shell-owned link target a build-status badge renders from (renderer.badge_slots): the
+# verified workflow page. A link_target, like the banner and Enterprise targets, so no new fact
+# kind; planning keeps it out of every model-assignable link.
 CI_BADGE_FACT_ID = fact_id("link_target", "badge.ci")
+
+
+@dataclass(frozen=True)
+class _Suite:
+    """What it takes to count a test directory's test sources: the ecosystem's rule, and the
+    checkout whose files a text marker is read from (``None`` when only names are available)."""
+
+    rule: SuiteFileRule | None
+    root: Path | None
+
+
+def _test_sources(paths: Sequence[str], suite: _Suite) -> list[str] | None:
+    """The paths among ``paths`` that are test sources, or ``None`` when that cannot be told.
+
+    TC-TST-01. Undecidable is not zero and not "all of them": an ecosystem that declares no rule,
+    a marker rule with no checkout to read, a file that will not read, and a suite too large to
+    read all return ``None``, and no size is stated.
+    """
+    rule = suite.rule
+    if rule is None:
+        return None
+    candidates = [path for path in paths if rule.accepts_name(path)]
+    if not rule.marker:
+        return candidates
+    if suite.root is None or len(candidates) > _MAX_SUITE_FILES_READ:
+        return None
+    found: list[str] = []
+    for path in candidates:
+        try:
+            file = long_path(suite.root / path)
+            if file.stat().st_size > _MAX_SUITE_FILE_BYTES:
+                return None
+            text = file.read_text("utf-8", errors="replace")
+        except OSError:
+            return None
+        if rule.accepts_text(text):
+            found.append(path)
+    return found
+
+
+def _directory_fact(
+    name: str,
+    prefix: str,
+    paths: Sequence[str],
+    detail: str,
+    suite: _Suite | None = None,
+) -> Fact | None:
+    matches = sorted(path for path in paths if path.startswith(prefix))
+    if not matches:
+        return None
+    evidence_paths = matches
+    summary = f"{len(matches)} files; {detail}"
+    if suite is not None:
+        # "N files" is read as the suite's size (renderer._development_sentences), so it is the
+        # count of test sources, with the directory's own size beside it for the reader of the
+        # evidence. When the sources cannot be told apart the evidence leads with no number.
+        sources = _test_sources(matches, suite)
+        if sources:
+            evidence_paths = sources
+            summary = (
+                f"{len(sources)} files; {detail} "
+                f"({len(sources)} test sources among the {len(matches)} files here)"
+            )
+        else:
+            summary = (
+                f"{detail}; {len(matches)} files here, test sources not told apart"
+            )
+    evidence = tuple(Evidence(path) for path in evidence_paths[:_MAX_EVIDENCE_PATHS])
+    return Fact(
+        fact_id("build_test_asset", name),
+        "build_test_asset",
+        prefix,
+        (*evidence, Evidence(prefix, summary)),
+    )
+
+
+class _LiteralLoader(yaml.SafeLoader):
+    """A YAML loader that never reads a float: ``python-version: 3.10`` is the text ``3.10``,
+    not the number 3.1, which would print a runtime nobody tests against."""
+
+
+_LiteralLoader.yaml_implicit_resolvers = {
+    first: [
+        (tag, pattern) for tag, pattern in resolvers if tag != "tag:yaml.org,2002:float"
+    ]
+    for first, resolvers in yaml.SafeLoader.yaml_implicit_resolvers.items()
+}
+
+
+def is_release_workflow(path: str) -> bool:
+    """Whether a workflow file exists to publish, deploy, scan, or tend the repository rather
+    than to build and test it (the same name test ``ci_badge_fact`` applies)."""
+    return _NOT_BUILD_STATUS.search(path[len(_WORKFLOW_PREFIX) :]) is not None
+
+
+def workflow_documents(
+    clone_path: Path, tree_paths: Sequence[str]
+) -> list[tuple[str, dict[Any, Any]]]:
+    """Every parseable workflow mapping in the clone, as ``(path, document)`` in path order, with
+    scalars kept literal (``_LiteralLoader``). An unreadable, oversized, or non-mapping file is
+    skipped: it names nothing a fact may rest on."""
+    found: list[tuple[str, dict[Any, Any]]] = []
+    for path in sorted(tree_paths):
+        name = path[len(_WORKFLOW_PREFIX) :]
+        if not path.startswith(_WORKFLOW_PREFIX) or not _WORKFLOW_FILE.fullmatch(name):
+            continue
+        file = clone_path / path
+        try:
+            if file.stat().st_size > _MAX_WORKFLOW_BYTES:
+                continue
+            document = yaml.load(file.read_text("utf-8"), Loader=_LiteralLoader)
+        except (OSError, UnicodeDecodeError, yaml.YAMLError):
+            continue
+        if isinstance(document, dict):
+            found.append((path, document))
+    return found
+
+
+def has_test_evidence(tree_paths: Sequence[str]) -> bool:
+    """Whether the tree shows tests: a test directory at the root or nested, or a Go test file."""
+    return (
+        any(path.startswith("tests/") for path in tree_paths)
+        or _nested_directory(tree_paths, _TEST_DIR_NAME) is not None
+        or any(path.endswith("_test.go") for path in tree_paths)
+    )
+
+
+def _triggers(document: dict[Any, Any]) -> dict[str, Any]:
+    """The workflow's ``on`` as a mapping of event name to its config. YAML 1.1 reads the bare
+    key ``on`` as boolean ``True``, so both spellings are tried."""
+    raw = document.get("on", document.get(True))
+    if isinstance(raw, str):
+        return {raw: None}
+    if isinstance(raw, list):
+        return {str(item): None for item in raw if isinstance(item, str)}
+    if isinstance(raw, dict):
+        return {str(key): value for key, value in raw.items()}
+    return {}
+
+
+def _build_step(document: dict[Any, Any]) -> str | None:
+    """The first ``run`` command, in file order, that builds, tests, or checks the code."""
+    jobs = document.get("jobs")
+    if not isinstance(jobs, dict):
+        return None
+    for job in jobs.values():
+        steps = job.get("steps") if isinstance(job, dict) else None
+        for step in steps if isinstance(steps, list) else []:
+            command = step.get("run") if isinstance(step, dict) else None
+            if isinstance(command, str):
+                match = _BUILD_STEP.search(command)
+                if match is not None:
+                    return match.group(0).lower()
+    return None
+
+
+def _branch(push: Any) -> tuple[bool, str | None]:
+    """``(usable, branch)`` for a push trigger.
+
+    A push with no filter, with ``branches: ['**']`` (every branch), or with a
+    ``branches-ignore`` that spares ``main`` and ``master`` runs on the default branch, so its
+    status exists and the badge names no branch. A filter that lists literal branches names
+    ``main``, ``master``, or the first listed. A push that filters only ``tags``, ignores the
+    default branch, or lists only partial globs has no default-branch status to show: unusable.
+    """
+    if not isinstance(push, dict):
+        return True, None
+    branches = push.get("branches")
+    if branches is None:
+        if push.get("tags") is not None or push.get("tags-ignore") is not None:
+            return False, None  # tags only: a branch push does not trigger it
+        ignored = push.get("branches-ignore")
+        if isinstance(ignored, str):
+            ignored = [ignored]
+        if isinstance(ignored, list) and any(b in _DEFAULT_BRANCHES for b in ignored):
+            return False, None
+        return True, None
+    if isinstance(branches, str):
+        branches = [branches]
+    if not isinstance(branches, list):
+        return False, None
+    names = [b for b in branches if isinstance(b, str) and b]
+    if any(b in _EVERY_BRANCH for b in names):
+        return True, None
+    literal = [b for b in names if not _BRANCH_GLOB.search(b)]
+    if not literal:
+        return False, None
+    for preferred in ("main", "master"):
+        if preferred in literal:
+            return True, preferred
+    return True, literal[0]
+
+
+def ci_badge_fact(
+    repository: str, clone_path: Path, tree_paths: Sequence[str]
+) -> Fact | None:
+    """The build-status badge target: the one workflow in the clone that is a real build status.
+
+    plans/idea.md: "real build status ... may not be ... fabricated merely to fill the row." A
+    workflow qualifies only when its file name is safe to put in a badge URL, it is not a
+    publish/deploy/scan workflow, it is triggered by ``push`` (so the default branch has a
+    status; a pull-request-only or manual workflow has none), and one of its steps runs a build,
+    test, or check command. The badge's branch is read from the workflow's own ``push.branches``,
+    never assumed. Several qualifying workflows resolve to the preferred stem (``ci``, ``build``,
+    ``test``...) then the first by name; none qualifying is ``None``, and the row has no build
+    slot. Nothing is read from the network: the file at this revision is the target.
+    """
+    qualifying: list[tuple[str, str, str | None, str]] = []
+    for path in sorted(tree_paths):
+        name = path[len(_WORKFLOW_PREFIX) :]
+        if not path.startswith(_WORKFLOW_PREFIX) or not _WORKFLOW_FILE.fullmatch(name):
+            continue
+        if _NOT_BUILD_STATUS.search(name):
+            continue
+        file = clone_path / path
+        try:
+            if file.stat().st_size > _MAX_WORKFLOW_BYTES:
+                continue
+            document = yaml.safe_load(file.read_text("utf-8"))
+        except (OSError, UnicodeDecodeError, yaml.YAMLError):
+            continue
+        if not isinstance(document, dict):
+            continue
+        triggers = _triggers(document)
+        if "push" not in triggers:
+            continue
+        usable, branch = _branch(triggers["push"])
+        step = _build_step(document)
+        if usable and step is not None:
+            qualifying.append((path, name, branch, step))
+    if not qualifying:
+        return None
+
+    def rank(item: tuple[str, str, str | None, str]) -> tuple[int, str]:
+        stem = item[1].rsplit(".", 1)[0].lower()
+        return (
+            _PREFERRED_STEMS.index(stem)
+            if stem in _PREFERRED_STEMS
+            else len(_PREFERRED_STEMS),
+            item[1],
+        )
+
+    path, name, branch, step = min(qualifying, key=rank)
+    url = f"https://github.com/{repository}/actions/workflows/{name}"
+    where = f"push on {branch}" if branch else "push on every branch"
+    return Fact(
+        CI_BADGE_FACT_ID,
+        "link_target",
+        url,
+        (Evidence(path, f"triggers {where}; runs {step}; build status badge target"),),
+        attributes={
+            "role": "build status badge",
+            "workflow": path,
+            **({"branch": branch} if branch else {}),
+        },
+    )
+
+
+# A repository's own suite often sits a level or two below the root rather than in ``tests/``:
+# a .NET test project (``src/Aspose.PSD.FOSS.Test/``, ``Aspose.Words.Tests/``), a C++ project's
+# ``<name>.Tests/``, a Maven ``src/test/``. G7-W12 (REG-18): the root-only check recorded no
+# build_test_asset for those, so Development and Testing could not render. A directory counts
+# when its own name says so, within two levels, outside any dependency tree.
+_NESTED_DEPTH = 2
+_TEST_DIR_NAME = re.compile(r"(?i)^(?:tests?|__tests__|specs?)$|[._-]tests?$")
+# Only "samples": a nested "example(s)" is as often a package of the library (aspose/example).
+_SAMPLE_DIR_NAME = re.compile(r"(?i)^samples?$")
+_DEPENDENCY_DIRS = frozenset(
+    {
+        "node_modules",
+        "vendor",
+        "third_party",
+        "third-party",
+        "external",
+        "extern",
+        "deps",
+        ".git",
+    }
+)
+
+
+def _nested_directory(paths: Sequence[str], name: re.Pattern[str]) -> str | None:
+    """The directory prefix, within ``_NESTED_DEPTH`` levels, whose name matches ``name`` and which
+    holds the most files; the shallowest, then the first by name, on a tie. ``None`` when none."""
+    counts: dict[str, int] = {}
+    for path in paths:
+        segments = path.split("/")[:-1]
+        if any(segment in _DEPENDENCY_DIRS for segment in segments):
+            continue
+        for depth in range(1, min(len(segments), _NESTED_DEPTH) + 1):
+            if name.search(segments[depth - 1]):
+                prefix = "/".join(segments[:depth]) + "/"
+                counts[prefix] = counts.get(prefix, 0) + 1
+    if not counts:
+        return None
+    return min(counts, key=lambda prefix: (-counts[prefix], prefix.count("/"), prefix))
+
+
+def _asset_directory(
+    name: str,
+    root: str,
+    pattern: re.Pattern[str],
+    paths: Sequence[str],
+    detail: str,
+    suite: _Suite | None = None,
+) -> Fact | None:
+    """The root directory's fact when it exists, else the best nested directory's."""
+    return _directory_fact(name, root, paths, detail, suite) or (
+        _directory_fact(name, nested, paths, detail, suite)
+        if (nested := _nested_directory(paths, pattern)) is not None
+        else None
+    )
+
+
+def asset_facts(
+    tree_paths: Sequence[str],
+    *,
+    suite_files: SuiteFileRule | None = None,
+    root: Path | None = None,
+) -> list[Fact]:
+    """One fact per asset class present in the tree, with the paths that prove it.
+
+    ``suite_files`` is the ecosystem's rule for what a test source is and ``root`` the checkout a
+    text marker is read from; the tests fact states a suite size only when they settle it
+    (TC-TST-01).
+    """
+    suite = _Suite(suite_files, root)
+    candidates = (
+        _asset_directory(
+            "tests", "tests/", _TEST_DIR_NAME, tree_paths, "test suite", suite
+        ),
+        _directory_fact(
+            "ci", ".github/workflows/", tree_paths, "GitHub Actions workflows"
+        ),
+        _directory_fact("docs", "docs/", tree_paths, "documentation directory"),
+        _asset_directory(
+            "examples", "examples/", _SAMPLE_DIR_NAME, tree_paths, "example directory"
+        ),
+    )
+    return [fact for fact in candidates if fact is not None]

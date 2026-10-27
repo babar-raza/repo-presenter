@@ -1,34 +1,67 @@
-"""Link targets of a README: the pure, composition-side subset.
+"""Link targets of the existing README, each resolved and recorded as a fact.
 
-Ported (TRIMMED, ADAPT) from the old repository-presenter project's
-``components/readme/evidence/facts/links.py`` per migration/reuse-manifest.yaml ("readme/
-composition/" entry). Only the pure text-processing functions composition's own planning/
-placement/renderer/dispositions modules actually import are ported: ``LinkTarget``,
-``extract_links`` (Markdown link/image discovery), ``heading_slug``/``heading_slugs`` (GitHub's
-anchor form), and ``link_text`` (the anchor text a fact's own evidence recorded).
+External links get one bounded HTTP request each (HEAD, then GET when HEAD is refused), retried
+only on transient failures; anchors are checked against the README's own headings; relative
+paths against the tree inventory. A link that resolves is SUPPORTED, one that is gone is
+CONTRADICTED, and one that cannot be checked is UNRESOLVED, never assumed.
 
-The live-fetching half of the old module -- ``fetch_status``/``check_external``/``check_relative``/
-``check_anchor``/``link_facts``/``PrivateAddressError`` (one bounded HTTP request per external
-link, SSRF-guarded, to actually verify a target) -- is extraction-time apparatus: it is how a
-``link_target`` fact is first produced (SUPPORTED/CONTRADICTED/UNRESOLVED), not something
-composition, which only ever reads already-extracted facts, needs. That belongs with
-migration/reuse-manifest.yaml's separate "extraction, package ownership, public API verification,
-example execution" entry (PENDING_REVIEW), not this taskcard's pull.
+`extract_links` also discovers a target written as raw HTML - `<a href="...">text</a>` or a bare
+`<img src="...">` - that markdown-it tokenizes as `html_inline` when it sits inside ordinary
+paragraph prose (TB-09, external review D9, 2026-09-08: previously invisible to link checking, a
+gap regex/attribute parsing closes without a new dependency). This reaches the common inline
+prose case and a raw-HTML anchor wrapping a raw-HTML image (a badge/logo link), matching how
+markdown-it itself tokenizes each. A tag CommonMark instead classifies as a whole `html_block` -
+one occupying an entire line by itself, or wrapped in a block-level container tag like `<p>` - is
+a distinct token shape this fix does not reach; no candidate in the sealed portfolio uses one
+(checked directly, 2026-09-09), and closing that gap too is future work, not silently assumed
+covered here.
+
+A link target is untrusted: it is prose from a README this codebase did not write. Before every
+outbound request `fetch_status` makes - the original URL and, since `follow_redirects=True`,
+every hop a redirect leads to - it resolves the target host and refuses to connect if the
+resolved address is loopback, link-local, or otherwise private/reserved (TB-08, external review
+D8, 2026-09-08: neither check existed before this fix, so a link to a private/internal address,
+directly or via a redirect, was fetched like any other). Refused the same way an access-gated
+response already is: UNCHECKED, never a new outcome value, since the boundary is "we would not
+ask", not "this link is broken". A host that fails to resolve at all is not refused here - there
+is nothing to protect against reaching if the name resolves to nothing - and is left to fail
+naturally at the transport layer, exactly as before this fix.
 """
 
 from __future__ import annotations
 
+import ipaddress
 import re
+import socket
+import time
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from typing import Literal
+from urllib.parse import unquote, urlsplit
 
+import httpx
 from markdown_it import MarkdownIt
 from markdown_it.token import Token
 
-from repo_presenter.core.facts import Fact
+from repo_presenter.core.facts import Evidence, Fact, Polarity, fact_id
+from repo_presenter.core.probes import ProbeRecord
+from repo_presenter.core.retry import RetryableOperationError, run_with_retry
 
 LinkKind = Literal["external", "anchor", "relative", "mailto", "other"]
+LinkOutcome = Literal["RESOLVED", "MISSING", "UNCHECKED"]
+REQUEST_TIMEOUT_SECONDS = 15.0
+USER_AGENT = "repo-presenter (+https://github.com/babar-raza/repo-presenter)"
+_TRANSIENT_STATUSES = frozenset({429, 500, 502, 503, 504})
+# A status HEAD alone may not be believed on: the host may refuse the method (403, 405, 501) or
+# answer it with 404 while serving the page perfectly well, which nuget.org does.
+_HEAD_UNCONFIRMED_STATUSES = frozenset({403, 404, 405, 501})
+_ACCESS_GATED_STATUSES = frozenset({401, 403})
 _SLUG_STRIP = re.compile(r"[^\w\- ]")
+_POLARITY: dict[LinkOutcome, Polarity] = {
+    "RESOLVED": "SUPPORTED",
+    "MISSING": "CONTRADICTED",
+    "UNCHECKED": "UNRESOLVED",
+}
 
 
 @dataclass(frozen=True)
@@ -40,6 +73,15 @@ class LinkTarget:
     kind: LinkKind
     line: int
     text: str
+
+
+@dataclass(frozen=True)
+class LinkResult:
+    outcome: LinkOutcome
+    detail: str
+    # What the read cost and what it returned, for the probe record; a local check has neither.
+    status: int | None = None
+    elapsed_ms: int | None = None
 
 
 def _classify(href: str) -> LinkKind:
@@ -61,7 +103,9 @@ def _attr(token: Token, name: str) -> str:
 
 
 _HTML_OPEN_TAG = re.compile(r"(?is)^<(a|img)\b(.*)>\s*$")
-_HTML_ATTR = re.compile(r"""(?is)([a-zA-Z][\w-]*)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+))""")
+_HTML_ATTR = re.compile(
+    r"""(?is)([a-zA-Z][\w-]*)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+))"""
+)
 
 
 def _html_attrs(attrs_text: str) -> dict[str, str]:
@@ -73,7 +117,8 @@ def _html_attrs(attrs_text: str) -> dict[str, str]:
 
 def _html_tag(html: str) -> tuple[str, dict[str, str]] | None:
     """(tag name, attributes) of a raw HTML fragment's own opening ``<a>`` or ``<img>`` tag, or
-    None for anything else."""
+    None for anything else - a closing tag, or an unrelated element. A narrow regex, not a
+    general HTML parse: the one shape a README's raw HTML ever needs for a link target."""
     match = _HTML_OPEN_TAG.match(html.strip())
     if match is None:
         return None
@@ -105,6 +150,9 @@ def _inline_links(inline: Token, line: int, found: list[tuple[str, int, str]]) -
                 index += 1
             found.append((href, line, "".join(text_parts).strip()))
         elif child.type == "html_inline":
+            # TB-09, D9: a target only ever written as raw HTML - `<a href="...">text</a>` or a
+            # bare `<img src="...">` - is invisible to the CommonMark-native cases above, which
+            # markdown-it tokenizes as `html_inline`, never `link_open`/`image`.
             tag = _html_tag(child.content)
             if tag is None:
                 pass
@@ -114,7 +162,9 @@ def _inline_links(inline: Token, line: int, found: list[tuple[str, int, str]]) -
                 href = tag[1].get("href", "")
                 text_parts = []
                 index += 1
-                while index < len(children) and not _is_html_close(children[index], "a"):
+                while index < len(children) and not _is_html_close(
+                    children[index], "a"
+                ):
                     inner = children[index]
                     if inner.type == "image":
                         found.append((_attr(inner, "src"), line, inner.content))
@@ -125,7 +175,11 @@ def _inline_links(inline: Token, line: int, found: list[tuple[str, int, str]]) -
                         inner_tag = _html_tag(inner.content)
                         if inner_tag is not None and inner_tag[0] == "img":
                             found.append(
-                                (inner_tag[1].get("src", ""), line, inner_tag[1].get("alt", ""))
+                                (
+                                    inner_tag[1].get("src", ""),
+                                    line,
+                                    inner_tag[1].get("alt", ""),
+                                )
                             )
                     index += 1
                 found.append((href, line, "".join(text_parts).strip()))
@@ -134,7 +188,9 @@ def _inline_links(inline: Token, line: int, found: list[tuple[str, int, str]]) -
 
 def extract_links(readme_text: str) -> list[LinkTarget]:
     """Every distinct link or image target in document order, with its line and link text."""
-    tokens = MarkdownIt("commonmark").enable(["table", "strikethrough"]).parse(readme_text)
+    tokens = (
+        MarkdownIt("commonmark").enable(["table", "strikethrough"]).parse(readme_text)
+    )
     found: list[tuple[str, int, str]] = []
     line = 1
     for token in tokens:
@@ -148,7 +204,9 @@ def extract_links(readme_text: str) -> list[LinkTarget]:
         if not href or href in seen:
             continue
         seen.add(href)
-        targets.append(LinkTarget(len(targets) + 1, href, _classify(href), at_line, text))
+        targets.append(
+            LinkTarget(len(targets) + 1, href, _classify(href), at_line, text)
+        )
     return targets
 
 
@@ -166,13 +224,206 @@ def heading_slugs(readme_text: str) -> set[str]:
     return slugs
 
 
+class PrivateAddressError(Exception):
+    """A link target resolved to a loopback, link-local, or otherwise private/reserved address."""
+
+
+def _is_private_address(raw: str) -> bool:
+    address = ipaddress.ip_address(raw)
+    return (
+        address.is_private
+        or address.is_loopback
+        or address.is_link_local
+        or address.is_reserved
+        or address.is_multicast
+        or address.is_unspecified
+    )
+
+
+def _reject_private_targets(request: httpx.Request) -> None:
+    """An ``httpx`` request event hook: fires for the original request and, since
+    ``fetch_status`` follows redirects, for every hop - so a redirect to a private address is
+    caught exactly like a direct link to one."""
+    host = request.url.host
+    try:
+        resolved = {str(info[4][0]) for info in socket.getaddrinfo(host, None)}
+    except OSError:
+        return
+    private = {ip for ip in resolved if _is_private_address(ip)}
+    if private:
+        raise PrivateAddressError(
+            f"{host} resolves to a private/reserved address ({private!r})"
+        )
+
+
+def fetch_status(url: str) -> tuple[int, str]:
+    """HEAD, then GET whenever HEAD's answer would condemn the link.
+
+    HEAD is an optimisation, and a negative verdict has to come from the method a reader would
+    actually use. Measured 2026-09-06: `https://www.nuget.org/packages/Aspose.3D.FOSS/` answers
+    HEAD with 404 and GET with 200, so BC-06 called the NuGet badge's own target missing and
+    failed the whole Aspose.3D candidate at EXTRACTING. Confirming costs one extra request only
+    where the first answer was already a failure.
+    """
+    with httpx.Client(
+        timeout=REQUEST_TIMEOUT_SECONDS,
+        headers={"User-Agent": USER_AGENT},
+        follow_redirects=True,
+        event_hooks={"request": [_reject_private_targets]},
+    ) as client:
+        response = client.head(url)
+        if response.status_code in _HEAD_UNCONFIRMED_STATUSES:
+            with client.stream("GET", url) as streamed:
+                return streamed.status_code, str(streamed.url)
+        return response.status_code, str(response.url)
+
+
+def check_external(
+    href: str,
+    *,
+    fetch: Callable[[str], tuple[int, str]] | None = None,
+    sleep: Callable[[float], None] | None = None,
+) -> LinkResult:
+    """Resolve one external link, retrying transient failures under the link_check policy."""
+    fetcher = fetch or fetch_status
+
+    def attempt() -> tuple[int, str]:
+        try:
+            status, final = fetcher(href)
+        except httpx.TransportError as exc:
+            raise RetryableOperationError(f"{type(exc).__name__}: {exc}") from exc
+        if status in _TRANSIENT_STATUSES:
+            raise RetryableOperationError(f"HTTP {status}")
+        return status, final
+
+    started = time.monotonic()
+
+    def since_start() -> int:
+        return int((time.monotonic() - started) * 1000)
+
+    try:
+        status, final = run_with_retry("link_check", attempt, sleep=sleep or time.sleep)
+    except PrivateAddressError as exc:
+        # Never retried: a private/reserved address does not become a public one by asking
+        # again (TB-08, external review D8, 2026-09-08).
+        return LinkResult("UNCHECKED", f"rejected: {exc}", elapsed_ms=since_start())
+    except RetryableOperationError as exc:
+        return LinkResult("UNCHECKED", f"unreachable: {exc}", elapsed_ms=since_start())
+    elapsed = since_start()
+    redirected = f" via {final}" if final != href else ""
+    if 200 <= status < 300:
+        return LinkResult("RESOLVED", f"HTTP {status}{redirected}", status, elapsed)
+    if status in _ACCESS_GATED_STATUSES:
+        return LinkResult(
+            "UNCHECKED", f"HTTP {status} (access-gated){redirected}", status, elapsed
+        )
+    return LinkResult("MISSING", f"HTTP {status}{redirected}", status, elapsed)
+
+
+def check_relative(href: str, tree_paths: Sequence[str]) -> LinkResult:
+    """A repository path (or directory) the tree inventory must contain."""
+    path = unquote(urlsplit(href).path)
+    while path.startswith("./"):
+        path = path[2:]
+    path = path.strip("/")
+    if not path:
+        return LinkResult("MISSING", "empty path")
+    if path in tree_paths or any(entry.startswith(path + "/") for entry in tree_paths):
+        return LinkResult("RESOLVED", f"tree contains {path}")
+    return LinkResult("MISSING", f"tree does not contain {path}")
+
+
+# The anchor text an existing README gave a link, recorded in the fact's evidence by the
+# extractor that read it.
 _LINK_TEXT = re.compile(r"text '(.*)'$")
 
 
 def link_text(fact: Fact) -> str:
-    """The words a reader clicks: the anchor text the source gave this target, else the URL."""
+    """The words a reader clicks: the anchor text the source gave this target, else the URL.
+
+    The renderer prints it and the authoring packet shows it, so a unit is told what is already
+    on the page rather than restating it (docs/RESEARCH_AND_GUIDELINES.md section 27.2 RC1).
+    """
     for evidence in fact.evidence:
         match = _LINK_TEXT.search(evidence.detail or "")
         if match and match.group(1):
             return match.group(1)
     return fact.value
+
+
+def check_anchor(href: str, slugs: set[str]) -> LinkResult:
+    slug = unquote(href[1:]).lower()
+    if slug in slugs:
+        return LinkResult("RESOLVED", f"heading #{slug} exists")
+    return LinkResult("MISSING", f"no heading #{slug}")
+
+
+def link_facts(
+    readme_path: str,
+    readme_bytes: bytes,
+    tree_paths: Sequence[str],
+    *,
+    fetch: Callable[[str], tuple[int, str]] | None = None,
+    sleep: Callable[[float], None] | None = None,
+) -> tuple[list[Fact], list[ProbeRecord]]:
+    """One ``link_target`` fact per distinct link, resolved by its kind, and one probe record
+    per link read over the network.
+
+    ``fetch`` is looked up at call time so a test's patched ``fetch_status`` always applies.
+    The timing, HTTP status, redirect target and error text a probe record carries never reach a
+    fact: they differ between runs without the link's verdict changing, and a fact's evidence is
+    hashed (docs/RESEARCH_AND_GUIDELINES.md section 27.2 RC7). An external link's evidence is its
+    verdict word only.
+    """
+    text = readme_bytes.decode("utf-8", errors="replace")
+    slugs = heading_slugs(text)
+    facts: list[Fact] = []
+    probes: list[ProbeRecord] = []
+    for target in extract_links(text):
+        if target.kind == "external":
+            result = check_external(target.href, fetch=fetch, sleep=sleep)
+            where = target.href
+            probes.append(
+                ProbeRecord(
+                    "link",
+                    target.href,
+                    result.outcome,
+                    status=result.status,
+                    elapsed_ms=result.elapsed_ms,
+                    observation=result.detail,
+                )
+            )
+            # The verdict alone is the fact's evidence (hashed into dependencies.json): the HTTP
+            # status, the redirect target and the transport error text change without the link's
+            # verdict changing, and live in the probe record above instead (TC-INV-02).
+            resolution: str = result.outcome
+        elif target.kind == "anchor":
+            result = check_anchor(target.href, slugs)
+            where = readme_path
+            resolution = f"{result.outcome}: {result.detail}"
+        elif target.kind == "relative":
+            result = check_relative(target.href, tree_paths)
+            where = readme_path
+            resolution = f"{result.outcome}: {result.detail}"
+        else:
+            result = LinkResult("UNCHECKED", f"{target.kind} link not checked")
+            where = readme_path
+            resolution = f"{result.outcome}: {result.detail}"
+        label = target.text[:60] or "(no text)"
+        facts.append(
+            Fact(
+                fact_id("link_target", f"{target.ordinal:03d}"),
+                "link_target",
+                target.href,
+                (
+                    Evidence(
+                        readme_path,
+                        f"line {target.line}; {target.kind}; text {label!r}",
+                    ),
+                    Evidence(where, resolution),
+                ),
+                polarity=_POLARITY[result.outcome],
+                confidence=1.0 if result.outcome != "UNCHECKED" else 0.5,
+            )
+        )
+    return facts, probes
