@@ -40,6 +40,10 @@ from repo_presenter.readme.review.independent_reviewer import ReviewVerdict
 #: LLM reviewer's own prompt hash serves).
 RULESET_VERSION = "independent_reviewer.v2.deterministic_only"
 
+#: Rules whose finding is, by what the rule measures, about a disposition: a kept unit that is not
+#: printed is S4's claim that did not hold. The other rules measure authored text (S6).
+S4_RULES = frozenset({"disposition_coverage"})
+
 
 def _llm_sections(units: Sequence[Mapping[str, Any]]) -> set[str]:
     """The set of sections ``section_authoring`` actually wrote a unit for. A deterministic
@@ -95,7 +99,7 @@ def build_defects(
             {
                 "id": f"{finding.rule}:{index}",
                 "section_id": _locate_section(finding.quote, units, placed),
-                "causal_stage": "S6",
+                "causal_stage": "S4" if finding.rule in S4_RULES else "S6",
                 "criterion": finding.rule,
                 "quote": finding.quote,
                 "message": finding.message,

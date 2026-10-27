@@ -3095,3 +3095,60 @@ entries:
       surfaces only as a failed workflow run. seal's toolchains fingerprint now describes the present
       job (no SDK), not the facts job that executed the examples.
     not_yet_done: "A hosted .NET or Java run with the SDK step (not dispatched). verify_build wiring for net."
+
+  - component: "S9 for the hosted cascade: S4 normalisation, accounting for kept units the render does not print, blocking checks, bounded S4 repair (DEFECT_CLASS_KEPT_BUT_UNPRINTED_2026_10_27)"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    per_file:
+      "components/readme/repair/rounds.py::run_round S4 stage (reconcile_checks as the job's checks, then coordinate_neighbor_promises)": "ADAPT -> cascade._run_reconciliation now passes dispositions.normalize as run_job checks (the half of reconcile_checks that folds a placement the renderer cannot honour). placement_errors, recover_uncited_prose_omits, reconciliation_narrowing and coordinate_neighbor_promises stay DEFERRED: none is implicated in the measured findings, and each changes S4 replies beyond what was measured."
+      "components/readme/repair/rounds.py::run_round S9 (validate_candidate) and the BC-05 S4 patch path": "ADAPT -> cascade.run_cascade runs validation.blocking.validate_candidate after every pass (validation.json) and routes S4-caused failures (validation_defects) plus the reviewer's disposition_coverage findings (defect_bridge S4_RULES) to loop._repair_reconciliation, at most max_rounds=MAX_ROUNDS passes, one attempt per fingerprint (RepairLedger), every call a run_job on the cascade's own ledger so the sealed invocation still holds every provider call. BC-01's snapshot-digest comparison is not run (original_readme left unset): Lane L holds that digest and a digest of the same bytes would pass by construction."
+      "(new, no old counterpart) readme/repair/accounting.py": "NEW. Deterministic, render-preserving: a kept unit whose renderer placement is overlap, a renderer-owned heading, or an uncited Mermaid omission beside a drawn At a Glance diagram becomes SUPERSEDE_REDUNDANT citing the facts the plan or the placement names. The caller re-renders and discards the result unless the README is byte-identical. Not accounted: a dropped list that does not state all its items (validation.units._dropped_list_failures), a section the plan omits, anything with no fact to cite; those are repair work."
+      "independent_reviewer.unprinted_kept_units": "Extracted from disposition_coverage_rule so the accounting and the rule share one test of 'printed'; no rule changed, REVIEWER_LOGIC_VERSION unchanged."
+    measured_defect: >
+      aspose-3d-foss/Aspose.3D-FOSS-for-.NET hosted run 40464255814: 12 reviewer findings stood after
+      the example policy. Per finding (code and files, not narration): 047.paragraph (kept in
+      api_reference; plan hub facts cover its cited facts -> placement overlap, dropped), 059.list
+      (kept in documentation_resources; plan links cover link_target:020..026 -> overlap), 061.list
+      (kept in scope_limitations; material_limitations hands the unit over -> overlap), 068.paragraph
+      (VERIFIED_MOVE to documentation_resources, link_target:025 planned -> overlap),
+      049/051/053.heading ('Main', 'Interfaces', 'Structs'; kept in api_reference, but a heading is
+      never printed as written (placement.renders_verbatim): the renderer owns its headings, so these
+      stayed kept-and-unprinted AND, being kept, accounted nothing for live_readme_loss), 'Development
+      Dependencies' (020.heading SUPERSEDE_REDUNDANT into dependencies with no fact_ids; the
+      reviewer accepts an accounting disposition only with a fact; normalize adds
+      dependency:none, never ran), flowchart TD (008.code_block OMIT_UNSUPPORTED, no fact, rationale
+      'section not rendered' although At a Glance was drawn: the S4 packet said At a Glance 'holds
+      one diagram and nothing else' and offered it as no destination). Root cause: cascade passed no
+      checks= to the S4 job (normalize never ran: it also left 585 Core API rows for 293 types, BC-07)
+      and had no S9 stage.
+    evidence: >
+      Offline replay of the real run3 evidence through the real run_cascade (stored investigation and
+      reconciliation served from the call store, planning/authoring/coherence answered by a scripted
+      client that replays the stored outputs under the new dispositions): all 12 findings clear, 11 of
+      11 blocking checks PASS (BC-07 failed before), README bytes unchanged by the accounting. The
+      14 findings left on that evidence are the example class (Quick Start / Additional Examples
+      headings and the seven example fences); run3's example facts cite pre-fix unit IDs, so the
+      retained-examples stage matches nothing there; they need a real rerun on the post-9798b6b facts.
+      Tests: tests/readme/repair/test_accounting.py (17), tests/test_cascade_s9.py (9),
+      tests/readme/review/test_defect_bridge.py (+2). Falsifiers shown to fail: dropping checks= (3
+      cascade tests), disabling the overlap rule (3), the heading rule (5), the diagram-drawn guard
+      (1), the S4 repair (2), the bridge route (1).
+    blast_radius: >
+      Queried before the wiring over candidates/ and scripts/_lane_r_output/*/dispositions.json; no
+      stored bundle was read for write, resealed or edited. candidates/: 2 repositories. .NET
+      (52b0f00, sealed at reviewer_logic 1, ACCEPT): its 70 dispositions would change in 19 places
+      under normalize (10 fact_ids only, 5 VERIFIED_PRESERVE -> SUPERSEDE_REDUNDANT, 2 SUPERSEDE ->
+      DEFER, 2 OMIT -> DEFER) and the accounting would rewrite 6 more; today's reviewer (v2) would
+      REJECT that sealed README for 7 disposition_coverage findings, which stale_candidates already
+      reports through components.reviewer_logic 1 -> 2. Python: no dispositions.json. Lane R scratch
+      outputs: 35 repositories carry dispositions.json but their stored facts hold 0 inherited units
+      (the pre-2026-10-24 persistence gap), so normalize cannot be evaluated against them offline;
+      they are unsealed scratch and are not re-run by this change. No component version was bumped:
+      none of shell/renderer/normalisation/reviewer_logic names S4 normalisation or S9 accounting,
+      so no sealed bundle is marked stale by this change; a per-stage version in seal's components
+      is the follow-up if the owner wants a re-present to be flagged.
+    not_yet_done: >
+      A real rerun of the .NET repository (the proof of the 12 on a live S4/S5/S6) and the example
+      class. present.py still gates on the reviewer only; validation.json is written and its
+      failures are repaired when S4-caused, not yet a gate. S5/S6 reviewer findings are repaired by
+      loop.settle_candidate, not inside the cascade.

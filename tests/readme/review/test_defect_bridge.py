@@ -185,3 +185,58 @@ def test_every_defect_fingerprint_embeds_the_ruleset_version_for_future_invalida
         facts=_facts(), ecosystem="python", repairer="r2",
     )
     assert a.fingerprint != b.fingerprint
+
+
+def test_a_kept_but_unprinted_unit_is_an_s4_defect_even_when_the_render_placed_nothing() -> None:
+    """``disposition_coverage`` measures a disposition's claim, so its cause is S4 whatever section
+    the quote sits in; before this route it was filed under S6 and then refused as deterministic."""
+    unit = "inherited_unit:059.list"
+    text = "- **[Getting started guide](https://docs.example.com/)** - installation."
+    facts = _facts(Fact(unit, "inherited_unit", text, (Evidence("README.md"),)))
+    plan = _plan("opening")  # the destination is not rendered, so the text is not a placed text
+    dispositions = {"dispositions": [_disposition(unit, "documentation_resources")]}
+    verdict = ReviewVerdict(
+        verdict="REJECT",
+        findings=(
+            Finding(
+                rule="disposition_coverage",
+                kind="deterministic",
+                message=f"{unit} is kept (VERIFIED_PRESERVE) but its text is not printed",
+                refuted_by=Refutation(rule="disposition_coverage", evidence="not printed"),
+                quote=text,
+            ),
+        ),
+    )
+    [defect] = build_defects(
+        verdict, units=[], plan=plan, dispositions=dispositions, facts=facts, ecosystem="python"
+    )
+    assert (defect.stage, defect.repairable) == ("S4", True)
+
+
+def test_the_same_quote_under_another_rule_stays_where_it_was_routed() -> None:
+    """Negative control: only the disposition rule moves to S4. The identical quote and section
+    filed by a claim rule is still an authored-text matter, unrepairable in a deterministic one."""
+    unit = "inherited_unit:059.list"
+    text = "- **[Getting started guide](https://docs.example.com/)** - installation."
+    facts = _facts(Fact(unit, "inherited_unit", text, (Evidence("README.md"),)))
+    verdict = ReviewVerdict(
+        verdict="REJECT",
+        findings=(
+            Finding(
+                rule="claim_contradiction",
+                kind="deterministic",
+                message="m",
+                refuted_by=Refutation(rule="claim_contradiction", evidence="e"),
+                quote=text,
+            ),
+        ),
+    )
+    [defect] = build_defects(
+        verdict,
+        units=[],
+        plan=_plan("opening"),
+        dispositions={"dispositions": [_disposition(unit, "documentation_resources")]},
+        facts=facts,
+        ecosystem="python",
+    )
+    assert defect.stage is None and defect.repairable is False

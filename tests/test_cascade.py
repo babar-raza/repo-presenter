@@ -168,7 +168,7 @@ def _authoring_reply(slots_and_fact_ids: list[tuple[str, str, list[str]]]) -> di
 
 # One reply per authoring task, in authoring_tasks()'s own order for this fixture's real plan.
 _AUTHORING_REPLIES = [
-    _authoring_reply([("opening", "opening", ["inherited_unit:002.paragraph"])]),
+    _authoring_reply([("opening", "opening", ["package:name"])]),
     _authoring_reply(
         [
             ("key_capabilities", "capability:1", ["public_symbol:aspose_widget_foss.widget"]),
@@ -255,7 +255,7 @@ def test_run_cascade_produces_every_artifact_under_one_shared_invocation(
 
     result = run_cascade(
         entry.repository, "python", clone_path, facts_path=facts_path, out_dir=out_dir,
-        config=CONFIG, registry_path=registry_path,
+        config=CONFIG, registry_path=registry_path, max_rounds=1,
     )
 
     assert result.repository == entry.repository

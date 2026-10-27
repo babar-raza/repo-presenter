@@ -301,6 +301,25 @@ def _kept_text_printed(unit_text: str, unit_id: str, readme_text: str) -> bool:
     return False
 
 
+def unprinted_kept_units(
+    readme_text: str,
+    *,
+    facts: FactsDocument,
+    dispositions: Mapping[str, Any],
+) -> list[tuple[str, str]]:
+    """``(unit_id, disposition)`` for each kept unit whose text the README does not print: the
+    one test ``disposition_coverage_rule`` judges by, shared with the stage that accounts for
+    such a unit (``readme.repair.accounting``) so the two can never disagree about "printed"."""
+    units = _inherited_units(facts)
+    return [
+        (unit, str(row.get("disposition")))
+        for row in _dispositions_list(dispositions)
+        if row.get("disposition") in KEPT_DISPOSITIONS
+        and (unit := str(row.get("unit_id", ""))) in units
+        and not _kept_text_printed(units[unit], unit, readme_text)
+    ]
+
+
 def disposition_coverage_rule(
     readme_text: str,
     *,
@@ -324,16 +343,13 @@ def disposition_coverage_rule(
             problems.append(
                 (unit, f"{unit} is named by a disposition but is not an inherited unit")
             )
-    for row in rows:
-        unit = str(row.get("unit_id", ""))
-        kept = row.get("disposition") in KEPT_DISPOSITIONS
-        if (
-            kept
-            and unit in units
-            and not _kept_text_printed(units[unit], unit, readme_text)
-        ):
-            message = f"{unit} is kept ({row.get('disposition')}) but its text is not printed in the README"
-            problems.append((units[unit], message))
+    for unit, disposition in unprinted_kept_units(
+        readme_text, facts=facts, dispositions=dispositions
+    ):
+        message = (
+            f"{unit} is kept ({disposition}) but its text is not printed in the README"
+        )
+        problems.append((units[unit], message))
     return [
         Finding(
             rule="disposition_coverage",

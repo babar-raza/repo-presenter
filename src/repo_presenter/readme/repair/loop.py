@@ -548,16 +548,22 @@ def repair_defect(rc: RepairContext, defect: Defect, repairs: RepairLedger) -> b
     )
 
 
-def composition_id(result: CascadeResult, prompts: PromptRegistry) -> str:
+def composition_hash(
+    source_revision: str, document: FactsDocument, prompts: PromptRegistry
+) -> str:
     """What the repair ledger is scoped to: the revision, the facts, and the prompt set. A rebuilt
     composition on changed evidence starts with no attempts spent."""
     return canonical_hash(
         {
-            "revision": result.source_revision,
-            "facts": result.document.to_json(),
+            "revision": source_revision,
+            "facts": document.to_json(),
             "prompts": dict(sorted(prompts.hashes().items())),
         }
     )
+
+
+def composition_id(result: CascadeResult, prompts: PromptRegistry) -> str:
+    return composition_hash(result.source_revision, result.document, prompts)
 
 
 @dataclass(frozen=True)
@@ -635,6 +641,8 @@ def settle_candidate(
         "config": config,
         "prompts_path": prompts_path,
         "registry_path": registry_path,
+        # this loop owns the rounds; the cascade's own S9 repair would double-spend the calls
+        "max_rounds": 1,
     }
     result = run_cascade(repository, ecosystem, clone_path, **cascade_args)
     repairs = RepairLedger(

@@ -21,6 +21,13 @@ files to ``out_dir`` the six scripts wrote, so every existing downstream reader
 
 Independent review (``readme.review.independent_reviewer``) runs at the end of the same process,
 writing ``review_verdict.json`` beside the other final artifacts -- not a separate pass any more.
+
+S4 runs ``dispositions.normalize`` as the reconciliation job's own checks, and S9 follows the render:
+the kept units the renderer did not print are accounted (``readme.repair.accounting``), the ported
+blocking checks run (``validation.json``), and a failure whose cause is S4 is repaired as a per-unit
+patch and the cascade runs again from the call store, at most ``max_rounds`` passes, all under the
+one invocation. Measured on aspose-3d-foss/Aspose.3D-FOSS-for-.NET (hosted run 40464255814): the
+reviewer's twelve findings on kept-but-unprinted units stood because neither step existed.
 """
 
 from __future__ import annotations
@@ -28,6 +35,7 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 from repo_presenter.core.config import GatewayConfig
 from repo_presenter.core.facts import FactsDocument, read_facts, write_facts
@@ -76,19 +84,39 @@ from repo_presenter.readme.investigation.dossier import (
 )
 from repo_presenter.readme.reconciliation.dispositions import (
     merge_dispositions,
+    normalize,
     reconciliation_batch_facts,
     reconciliation_batches,
     reconciliation_packet,
     reconciliation_schema,
     write_dispositions,
 )
-from repo_presenter.readme.reconciliation.retained_examples import retain_unverified_examples
+from repo_presenter.readme.reconciliation.retained_examples import (
+    retain_unverified_examples,
+)
+from repo_presenter.readme.repair.accounting import (
+    ACCOUNTING_FILENAME,
+    Accounted,
+    account_unprinted_units,
+    accounting_document,
+)
+from repo_presenter.readme.repair.targeted import (
+    MAX_ROUNDS,
+    REPAIRS_FILENAME,
+    Defect,
+    RepairLedger,
+    merge_equivalent,
+    validation_defects,
+)
+from repo_presenter.readme.review.defect_bridge import build_defects
 from repo_presenter.readme.review.independent_reviewer import (
     REVIEW_VERDICT_FILENAME,
     ReviewVerdict,
     review_candidate,
     write_review_verdict,
 )
+from repo_presenter.readme.validation.blocking import validate_candidate
+from repo_presenter.readme.validation.failures import Candidate
 
 DEFAULT_PROMPTS_PATH = Path("prompts")
 DEFAULT_REGISTRY_PATH = Path("data/registry.json")
@@ -112,6 +140,9 @@ class CascadeResult:
     review_verdict: ReviewVerdict
     entry: RegistryEntry
     document: FactsDocument
+    validation: dict[str, Any]
+    accounted: tuple[Accounted, ...]
+    rounds: int
 
 
 def _tree_paths(root: Path) -> list[str]:
@@ -161,9 +192,13 @@ def _run_reconciliation(
         batch_facts = reconciliation_batch_facts(document, batch_units)
         packet = reconciliation_packet(entry, batch_facts, investigation, loaded.manifest, batch_units)
         call_schema = reconciliation_schema(loaded, batch_units, batch_facts, investigation)
+
+        def checks(output: dict, batch_facts=batch_facts) -> list[str]:
+            return normalize(output, batch_facts)
+
         result = run_job(
             loaded, packet, config=config, facts=batch_facts, ledger=ledger, store=store,
-            context=context, call_schema=call_schema,
+            context=context, call_schema=call_schema, checks=checks,
         )
         outputs.append(result.output)
     return retain_unverified_examples(merge_dispositions(outputs), document)
@@ -254,6 +289,155 @@ def _run_coherence(
     return current
 
 
+@dataclass(frozen=True)
+class _Composition:
+    """One pass over S4-S8 and the S9 accounting: the dispositions the README was finally rendered
+    with, and everything the validation and the reviewer read."""
+
+    dispositions: dict[str, Any]
+    plan: dict[str, Any]
+    units_document: dict[str, Any]
+    coherent_units: dict[str, Any]
+    readme: str
+    tasks: list[Any]
+    accounted: list[Accounted]
+
+
+def _candidate(
+    entry: RegistryEntry, document: FactsDocument, plan: dict, units: dict, dispositions: dict,
+    readme: str, tree_paths: list[str], tasks: list[Any],
+) -> Candidate:
+    """What the blocking checks read. ``original_readme`` is left unset: BC-01 compares it with the
+    snapshot's README digest, which Lane L holds and the cascade is not handed, and a digest taken
+    here from the same bytes would pass by construction."""
+    return Candidate(
+        entry=entry,
+        facts=document,
+        plan=plan,
+        units=units,
+        dispositions=dispositions,
+        readme=readme,
+        original_readme=None,
+        source_revision=document.source_revision,
+        readme_sha256=None,
+        tree_paths=tree_paths,
+        tasks=tasks,
+    )
+
+
+def _compose(
+    *, entry: RegistryEntry, document: FactsDocument, investigation: dict, ecosystem: str,
+    tree_paths: list[str], original_bytes: bytes, out_dir: Path, prompts: PromptRegistry,
+    config: GatewayConfig, ledger: Ledger, store: CallStore, context: JobContext,
+) -> _Composition:
+    """S4 through S8, then account for the kept units the render does not print (S9).
+
+    Every artifact lands in ``out_dir``; a repaired S4 batch is read back from the call store, so
+    a second pass asks the provider only for what the repair changed."""
+    common = {"config": config, "ledger": ledger, "store": store, "context": context}
+    dispositions = _run_reconciliation(
+        entry=entry, document=document, investigation=investigation, prompts=prompts, **common
+    )
+    write_dispositions(dispositions, out_dir / "dispositions.json")
+
+    plan = _run_planning(
+        entry=entry, document=document, investigation=investigation, dispositions=dispositions,
+        ecosystem=ecosystem, prompts=prompts, **common,
+    )
+    write_plan(plan, out_dir / "plan.json")
+
+    units_document = _run_authoring(
+        entry=entry, document=document, investigation=investigation, dispositions=dispositions,
+        plan=plan, prompts=prompts, **common,
+    )
+    write_content_units(units_document, out_dir / "content_units.json")
+
+    pre_coherence_readme = render_readme(entry, document, plan, units_document, dispositions)
+    original = original_bytes.decode("utf-8", errors="replace")
+    (out_dir / "README.rendered.md").write_text(pre_coherence_readme, encoding="utf-8", newline="\n")
+    (out_dir / "README.patch.diff").write_text(
+        render_patch(original, pre_coherence_readme), encoding="utf-8", newline="\n"
+    )
+
+    coherent_units = _run_coherence(
+        entry=entry, document=document, investigation=investigation, dispositions=dispositions,
+        plan=plan, units_document=units_document, pre_coherence_readme=pre_coherence_readme,
+        prompts=prompts, **common,
+    )
+    final_readme = render_readme(entry, document, plan, coherent_units, dispositions)
+    tasks = authoring_tasks(entry, document, investigation, dispositions, plan)
+    candidate = _candidate(
+        entry, document, plan, coherent_units, dispositions, final_readme, tree_paths, tasks
+    )
+    settled, accounted = account_unprinted_units(candidate)
+    if accounted:
+        if render_readme(entry, document, plan, coherent_units, settled) == final_readme:
+            dispositions = settled
+        else:
+            accounted = []  # accounting must not change what renders; a change is not applied
+    write_dispositions(dispositions, out_dir / "dispositions.json")
+    (out_dir / ACCOUNTING_FILENAME).write_text(
+        json.dumps(accounting_document(accounted), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    (out_dir / "content_units.coherent.json").write_text(
+        json.dumps(coherent_units, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    (out_dir / "README.coherent.md").write_text(final_readme, encoding="utf-8", newline="\n")
+    return _Composition(
+        dispositions, plan, units_document, coherent_units, final_readme, tasks, accounted
+    )
+
+
+def _s4_defects(
+    *, composed: _Composition, validation: dict[str, Any], verdict: ReviewVerdict,
+    entry: RegistryEntry, document: FactsDocument, prompts: PromptRegistry,
+) -> list[Defect]:
+    """The defects of this pass that a revision of S4 can repair: the failing blocking checks
+    whose cause is reconciliation, and the reviewer's findings on a kept unit
+    (``review.defect_bridge``)."""
+    repairer = prompts["targeted_repair"].sha256
+    units = composed.coherent_units.get("units", [])
+    llm_sections = {str(unit["section"]) for unit in units if unit.get("section")}
+    found = [
+        *validation_defects(validation, llm_sections, repairer),
+        *build_defects(
+            verdict,
+            units=units,
+            plan=composed.plan,
+            dispositions=composed.dispositions,
+            facts=document,
+            ecosystem=entry.ecosystem,
+            repairer=repairer,
+        ),
+    ]
+    return [defect for defect in found if defect.stage == "S4"]
+
+
+def _repair_s4(
+    *, defects: list[Defect], composed: _Composition, investigation: dict, entry: RegistryEntry,
+    document: FactsDocument, prompts: PromptRegistry, config: GatewayConfig, ledger: Ledger,
+    store: CallStore, context: JobContext, repairs: RepairLedger,
+) -> bool:
+    """One targeted repair per fresh S4 defect, each a ``run_job`` call (``repair.loop``'s
+    per-unit patch). True when a stored S4 batch changed, which is what makes another pass
+    worth making."""
+    from repo_presenter.readme.repair.loop import RepairContext, repair_defect
+
+    rc = RepairContext(
+        entry=entry, facts=document, prompts=prompts, config=config, ledger=ledger, store=store,
+        context=context, investigation=investigation, dispositions=composed.dispositions,
+        plan=composed.plan, tasks=composed.tasks, name=product_name(entry),
+    )
+    fresh = merge_equivalent([d for d in defects if not repairs.attempted(d.fingerprint)])
+    for defect in defects:
+        if repairs.attempted(defect.fingerprint):
+            repairs.note_re_raised(defect)
+    changed = [repair_defect(rc, defect, repairs) for defect in fresh]  # every one is attempted
+    return any(changed)
+
+
 def run_cascade(
     repository: str,
     ecosystem: str,
@@ -264,14 +448,26 @@ def run_cascade(
     config: GatewayConfig,
     prompts_path: Path = DEFAULT_PROMPTS_PATH,
     registry_path: Path = DEFAULT_REGISTRY_PATH,
+    max_rounds: int = MAX_ROUNDS,
 ) -> CascadeResult:
-    """Run S3 (investigation) through S8 (coherence) plus the independent review, for one
-    repository, as one process under one invocation. Writes the same artifact files the six
-    separate scripts wrote (``investigation.json``, ``dispositions.json``, ``plan.json``,
-    ``content_units.json``, ``content_units.coherent.json``, ``README.rendered.md``,
+    """Run S3 (investigation) through S8 (coherence), the S9 validation and the independent
+    review, for one repository, as one process under one invocation. Writes the same artifact
+    files the six separate scripts wrote (``investigation.json``, ``dispositions.json``,
+    ``plan.json``, ``content_units.json``, ``content_units.coherent.json``, ``README.rendered.md``,
     ``README.coherent.md``, ``README.patch.diff``, ``review_verdict.json``) under ``out_dir``,
-    and ``facts.json`` (with the real inherited-unit facts merged in) at ``facts_path``.
+    plus ``validation.json``, ``accounting.json`` and ``repairs.json``, and ``facts.json`` (with
+    the real inherited-unit facts merged in) at ``facts_path``.
+
+    S9, after every pass: the kept inherited units the renderer did not print are accounted
+    (``readme.repair.accounting``, deterministic and render-preserving); the ported blocking checks
+    (``readme.validation.blocking``) and the reviewer then judge the README. A failure whose cause
+    is S4 is repaired as a per-unit patch of the stored S4 batch (``readme.repair.loop``), and the
+    cascade runs again from the call store, until nothing fresh is repairable or ``max_rounds``
+    passes have been made. Every repair is a ``run_job`` call on this same ledger, so the
+    invocation stays the one that made every provider call.
     """
+    from repo_presenter.readme.repair.loop import composition_hash
+
     plugin_for(ecosystem)
     base_document = read_facts(facts_path)
     source_revision = run_git(["rev-parse", "HEAD"], cwd=clone_path).stdout.strip()
@@ -295,53 +491,48 @@ def run_cascade(
     out_dir.mkdir(parents=True, exist_ok=True)
     write_investigation(investigation, out_dir / "investigation.json")
 
-    dispositions = _run_reconciliation(
-        entry=entry, document=document, investigation=investigation, prompts=prompts,
-        config=config, ledger=ledger, store=store, context=context,
+    original_bytes = (clone_path / "README.md").read_bytes()
+    original = original_bytes.decode("utf-8", errors="replace")
+    tree_paths = _tree_paths(clone_path)
+    repairs = RepairLedger(
+        out_dir / REPAIRS_FILENAME, composition=composition_hash(source_revision, document, prompts)
     )
-    write_dispositions(dispositions, out_dir / "dispositions.json")
+    write_facts(document, facts_path)
 
-    plan = _run_planning(
-        entry=entry, document=document, investigation=investigation, dispositions=dispositions,
-        ecosystem=ecosystem, prompts=prompts, config=config, ledger=ledger, store=store,
-        context=context,
-    )
-    write_plan(plan, out_dir / "plan.json")
-
-    units_document = _run_authoring(
-        entry=entry, document=document, investigation=investigation, dispositions=dispositions,
-        plan=plan, prompts=prompts, config=config, ledger=ledger, store=store, context=context,
-    )
-    write_content_units(units_document, out_dir / "content_units.json")
-
-    pre_coherence_readme = render_readme(entry, document, plan, units_document, dispositions)
-    original = (clone_path / "README.md").read_bytes().decode("utf-8", errors="replace")
-    (out_dir / "README.rendered.md").write_text(pre_coherence_readme, encoding="utf-8", newline="\n")
-    (out_dir / "README.patch.diff").write_text(
-        render_patch(original, pre_coherence_readme), encoding="utf-8", newline="\n"
-    )
-
-    coherent_units = _run_coherence(
-        entry=entry, document=document, investigation=investigation, dispositions=dispositions,
-        plan=plan, units_document=units_document, pre_coherence_readme=pre_coherence_readme,
-        prompts=prompts, config=config, ledger=ledger, store=store, context=context,
-    )
-    final_readme = render_readme(entry, document, plan, coherent_units, dispositions)
-    (out_dir / "content_units.coherent.json").write_text(
-        json.dumps(coherent_units, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
+    rounds = 0
+    while True:
+        rounds += 1
+        composed = _compose(
+            entry=entry, document=document, investigation=investigation, ecosystem=ecosystem,
+            tree_paths=tree_paths, original_bytes=original_bytes, out_dir=out_dir,
+            prompts=prompts, config=config, ledger=ledger, store=store, context=context,
+        )
+        candidate = _candidate(
+            entry, document, composed.plan, composed.coherent_units, composed.dispositions,
+            composed.readme, tree_paths, composed.tasks,
+        )
+        validation = validate_candidate(candidate, out_dir, [])
+        verdict = review_candidate(
+            readme_text=composed.readme, units=composed.coherent_units.get("units", []),
+            facts=document, dispositions=composed.dispositions, original_readme=original,
+        )
+        write_review_verdict(verdict, out_dir / REVIEW_VERDICT_FILENAME)
+        if rounds >= max_rounds:
+            break
+        defects = _s4_defects(
+            composed=composed, validation=validation, verdict=verdict, entry=entry,
+            document=document, prompts=prompts,
+        )
+        if not defects or not _repair_s4(
+            defects=defects, composed=composed, investigation=investigation, entry=entry,
+            document=document, prompts=prompts, config=config, ledger=ledger, store=store,
+            context=context, repairs=repairs,
+        ):
+            break
+    (out_dir / "validation.json").write_text(
+        json.dumps(validation, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
-    readme_path = out_dir / "README.coherent.md"
-    readme_path.write_text(final_readme, encoding="utf-8", newline="\n")
-
-    facts_hash = write_facts(document, facts_path)
-    del facts_hash  # returned for callers that want it; not needed further here
-
-    verdict = review_candidate(
-        readme_text=final_readme, units=coherent_units.get("units", []), facts=document,
-        dispositions=dispositions, original_readme=original,
-    )
-    write_review_verdict(verdict, out_dir / REVIEW_VERDICT_FILENAME)
 
     invocation.attach_ledger(repository, ledger_path)
     invocation_record_path = workspace / "invocations" / f"{invocation.invocation_id}.json"
@@ -355,8 +546,11 @@ def run_cascade(
         provider_calls=measured.provider_calls,
         out_dir=out_dir,
         facts_path=facts_path,
-        readme_path=readme_path,
+        readme_path=out_dir / "README.coherent.md",
         review_verdict=verdict,
         entry=entry,
         document=document,
+        validation=validation,
+        accounted=tuple(composed.accounted),
+        rounds=rounds,
     )

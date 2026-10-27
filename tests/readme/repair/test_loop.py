@@ -200,6 +200,7 @@ def test_a_rejected_finding_is_repaired_once_through_run_job_and_the_cascade_is_
         out_dir=out_dir,
         config=CONFIG,
         registry_path=registry_path,
+        max_rounds=1,
     )
     assert first.provider_calls == 9
     # The fixture's own real verdict is REJECT, for heading and code-block losses no repair here
@@ -260,6 +261,7 @@ def test_a_rejected_finding_is_repaired_once_through_run_job_and_the_cascade_is_
         out_dir=out_dir,
         config=CONFIG,
         registry_path=registry_path,
+        max_rounds=2,
     )
 
     assert client.chat.completions.replies == []
@@ -306,6 +308,7 @@ def test_a_repair_that_only_restates_the_input_is_unrepairable_and_not_retried(
         out_dir=out_dir,
         config=CONFIG,
         registry_path=registry_path,
+        max_rounds=1,
     )
     prompts = load_manifests(prompts_path)
     units = json.loads(
@@ -383,6 +386,7 @@ def test_a_revision_that_changes_the_plans_slot_set_escalates_once_to_the_plan(
         out_dir=out_dir,
         config=CONFIG,
         registry_path=registry_path,
+        max_rounds=1,
     )
     prompts = load_manifests(prompts_path)
     units = json.loads(
