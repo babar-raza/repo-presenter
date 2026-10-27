@@ -15,8 +15,10 @@ on:
         type: choice
         options: [python, net, java, cpp, go, rust, typescript, nodejs]
 
+# contents: write only so the job's own token can write the durable-state refs
+# (refs/repository-presenter-state/*); it never pushes a branch.
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: present-${{ inputs.repository }}
@@ -58,15 +60,6 @@ jobs:
           key: presenter-state-${{ steps.slug.outputs.slug }}-${{ github.run_id }}
           restore-keys: presenter-state-${{ steps.slug.outputs.slug }}-
 
-      - name: Require the durable-state write token
-        env:
-          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ secrets.REPOSITORY_PRESENTER_STATE_TOKEN }}
-        run: |
-          if [ -z "$REPOSITORY_PRESENTER_STATE_TOKEN" ]; then
-            echo "::error::REPOSITORY_PRESENTER_STATE_TOKEN must be set to write durable state"
-            exit 1
-          fi
-
       - name: Present
         env:
           INPUT_REPOSITORY: ${{ inputs.repository }}
@@ -74,8 +67,7 @@ jobs:
           GITHUB_REPOSITORY_SLUG: ${{ github.repository }}
           GPT_OSS_ENDPOINT: ${{ secrets.GPT_OSS_ENDPOINT }}
           GPT_OSS_API_KEY: ${{ secrets.GPT_OSS_API_KEY }}
-          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ secrets.REPOSITORY_PRESENTER_STATE_TOKEN }}
-          REPOSITORY_PRESENTER_READ_TOKEN: ${{ secrets.REPOSITORY_PRESENTER_READ_TOKEN }}
+          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
         run: |
           python -m repo_presenter.present \
             --repository "$INPUT_REPOSITORY" \
