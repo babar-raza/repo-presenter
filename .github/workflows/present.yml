@@ -92,5 +92,6 @@ jobs:
           path: |
             .present-work
             candidates/${{ steps.slug.outputs.slug }}
+          include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 14
