@@ -4,7 +4,7 @@
   "provider_repository_id": 1138357893,
   "registry_revision": null,
   "active_transaction_id": "95e73af9b45847168cac589f659f3603",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -16,7 +16,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "PresentFailure: independent review returned REJECT with 4 finding(s); nothing sealed",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-27T10:46:55.741630+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:40489172171",
     "acquired_at": "2026-10-27T10:32:39.348343+00:00",
@@ -24,8 +31,21 @@
     "expires_at": "2026-10-27T10:47:39.348343+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "56e09b1aa418495faed360e856a07bfc",
+    "transaction_id": "95e73af9b45847168cac589f659f3603",
+    "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Python",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-27T10:46:55.364501+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-3d-foss/Aspose.3D-FOSS-for-Python",
+    "output_manifest": "candidates/aspose-3d-foss__Aspose.3D-FOSS-for-Python/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:40489172171:aspose-3d-foss/Aspose.3D-FOSS-for-Python": "95e73af9b45847168cac589f659f3603"
   },
