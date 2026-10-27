@@ -1585,6 +1585,20 @@ next_ready_items:
       - id: P3_CALIBRATION
         status: PENDING
         exit: forest corpus + mutation operators + metrics harness; always-ACCEPT and always-REJECT stubs fail the gate; live pilot within budget; recall/FP/stability numbers recorded in docs/.
+    progress_2026_10_27: >
+      P1_CORE built (c82152a), P2_JOB built (25d1c97), P3 calibration iteration 1 RAN (f2e8537, 9393206;
+      165 live calls; docs/investigations/2026-10-27-independent-reviewer-calibration.md) and the gate
+      FAILED for both models: recall 0.00-0.40 per class against a 0.90 target, 54% of gpt-oss reviews
+      unavailable, stability 0.20. Reported as measured; no rule, clearance or threshold was loosened.
+      Pipeline-shaped causes found: (1) D4 demanded a product-fact citation for unsupported_claim, which
+      by definition has none (24 of 27 contract errors) -- a defect in the plan itself; (2) gpt-oss returns
+      empty content on the re-ask in 26 of 27 cases; (3) max_output_tokens 6000 truncates a reasoning model
+      (2 of 99); (4) quote fidelity. The reviewer is NOT enabled for any cohort or PR decision until the
+      gate passes. Real value shown: gpt-oss caught a genuine README-vs-inherited-unit contradiction
+      ("exposes Render" vs "rendering not implemented") that no deterministic rule saw and that
+      qwen3-next accepted.
+    calibration_budget_ledger: iteration 1 spent 165 of a 250 cap; iteration 2 (after the four fixes) authorised at 150, cap 200 -- stated before spending, recorded here.
+    invariant_added_2026_10_27: no re-roll -- a blocking verdict on given candidate bytes is never overturned by a fresh, cache-bypassed review of the SAME bytes (measured stability is 0.20, so resampling until ACCEPT would be exactly the quiet demotion the mission forbids). Replay from the call store is the only second look at identical bytes.
     done_when: plan section 3 D10 -- V1..V7 pass and verdict v2 is sealed in bundles.
     reopening_rule: only a prompt, model route or a new clearance (failing test first); never a rule loosened without a proven false positive and a negative control.
 
