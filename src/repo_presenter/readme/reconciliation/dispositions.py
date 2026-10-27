@@ -66,7 +66,10 @@ from repo_presenter.core.facts import (
 )
 from repo_presenter.core.llm.binding import collect_ids
 from repo_presenter.core.llm.prompts import LoadedManifest, PromptManifest
-from repo_presenter.core.package_registry import DISTRIBUTION_FACT_PREFIX, PUBLISHED_VERSION_FACT_ID
+from repo_presenter.core.package_registry import (
+    DISTRIBUTION_FACT_PREFIX,
+    PUBLISHED_VERSION_FACT_ID,
+)
 from repo_presenter.core.registry.models import RegistryEntry
 from repo_presenter.readme.composition.authoring import (
     _CARRY_SECTIONS,
@@ -88,7 +91,11 @@ from repo_presenter.readme.composition.placement import (
 from repo_presenter.readme.composition.planning import section_conditions
 from repo_presenter.readme.composition.policy import DEFAULT_POLICY, PlanningPolicy
 from repo_presenter.readme.composition.references import dangling_references
-from repo_presenter.readme.composition.source_topics import path_topic, root_heading, source_heading
+from repo_presenter.readme.composition.source_topics import (
+    path_topic,
+    root_heading,
+    source_heading,
+)
 from repo_presenter.readme.evidence.facts.links import extract_links, heading_slug
 from repo_presenter.readme.evidence.facts.product_pages import (
     BANNER_FACT_ID,
@@ -104,6 +111,7 @@ from repo_presenter.readme.reconciliation.destinations import (
     nearest_holdable,
     rehomed,
 )
+from repo_presenter.readme.validation.claims import install_identity_findings
 
 DISPOSITIONS_FILENAME = "dispositions.json"
 # Ported 2026-10-23 for readme/validation/deferrals.py's NOT_CARRIED_BY_NAMED_SECTION class to
@@ -802,7 +810,7 @@ def _prune_incidental_coverage(output: dict[str, Any], ctx: _Coverage) -> None:
             entry["fact_ids"] = sorted(cited - ctx.api_ids)
 
 
-_API_ROW = re.compile(r"^\| `([^`]+)` \|", re.M)
+_API_ROW = re.compile(r"^\| `([^`]+)` \|", re.MULTILINE)
 
 
 def _is_row_table(unit: str, entry: Mapping[str, Any], ctx: _Coverage) -> bool:
@@ -929,6 +937,22 @@ def _example_languages(facts: FactsDocument) -> frozenset[str]:
         return frozenset()
 
 
+def _omits_contradicted_command(entry: Mapping[str, Any], block: str, facts: FactsDocument) -> bool:
+    """Whether an omitted command block is provably contradicted by a SUPPORTED fact the omission
+    cites: the block installs a near-miss of the SUPPORTED ``package:name`` identity
+    (``claims.install_identity_findings``) and the entry cites that identity or a SUPPORTED
+    install fact. Mission section 7 step 3: contradicted content is removable with a specific
+    evidence-backed explanation; anything short of this proof is a dropped verified command."""
+    if not install_identity_findings(block, facts):
+        return False
+    cited = set(entry.get("fact_ids") or [])
+    admitted = [f for f in facts.by_kind("package") if f.id == "package:name"]
+    return any(
+        fact.id in cited and fact.polarity == "SUPPORTED"
+        for fact in (*admitted, *facts.by_kind("install_command"))
+    )
+
+
 def normalize(
     output: dict[str, Any], facts: FactsDocument, policy: PlanningPolicy = DEFAULT_POLICY
 ) -> list[str]:
@@ -979,6 +1003,12 @@ def normalize(
             entry["disposition"] = "DEFER_UNRESOLVED"
             entry["destination_section"] = None
             entry["fact_ids"] = sorted(cited | {unresolved[unit]})
+            continue
+        if (
+            disposition == "OMIT_UNSUPPORTED"
+            and unit in commands
+            and _omits_contradicted_command(entry, units_by_id[unit].value, facts)
+        ):
             continue
         restated = (
             disposition == "DEFER_UNRESOLVED"
@@ -1871,6 +1901,7 @@ def placement_errors(output: dict[str, Any], facts: FactsDocument) -> list[str]:
             and unit in commands
             and build_facts
             and unit not in unpublished
+            and not _omits_contradicted_command(entry, unit_text.get(unit, ""), facts)
         ):
             errors.append(
                 f"{unit}: a command block is never OMIT_UNSUPPORTED while build or install "

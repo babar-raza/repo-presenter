@@ -669,6 +669,17 @@ def _identity_findings(
     return findings
 
 
+def install_identity_findings(text: str, facts: FactsDocument) -> list[ClaimFinding]:
+    """The install-command near-miss findings alone for ``text`` (a fenced block or a README):
+    each install target in a fence that names a near-miss of the SUPPORTED ``package:name``
+    identity. The deterministic proof that a command is contradicted by the package fact, used by
+    reconciliation to let such a command block be omitted instead of deferred."""
+    identity = _fact(facts, "package:name")
+    if identity is None or identity.polarity != "SUPPORTED":
+        return []
+    return _identity_findings(_lines(text), facts, identity)
+
+
 def claim_findings(readme: str, facts: FactsDocument) -> list[ClaimFinding]:
     """Every statement in ``readme`` that a fact in ``facts`` positively contradicts."""
     identity = _fact(facts, "package:name")

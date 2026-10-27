@@ -318,10 +318,10 @@ def test_an_omission_citing_the_install_fact_repairs_the_command_and_nothing_els
     repaired = _by_unit(case.stored_now())
     assert repaired[LEAD_IN]["disposition"] == "OMIT_UNSUPPORTED"
     assert INSTALL_FACT in repaired[LEAD_IN]["fact_ids"]
-    # normalize does not let a reply omit an install-class command block while an install fact
-    # exists (it reads that as the model dropping a verified command): it is folded to a deferral
-    # citing the fact, which still takes the wrong command out of the README
-    assert repaired[COMMAND]["disposition"] == "DEFER_UNRESOLVED"
+    # The command is contradicted by a SUPPORTED fact (it installs a near-miss of package:name) and
+    # the omission cites that fact, so the omission stands: contradicted content is removable
+    # (mission section 7 step 3), and it is not folded to a deferral.
+    assert repaired[COMMAND]["disposition"] == "OMIT_UNSUPPORTED"
     assert repaired[COMMAND]["destination_section"] is None
     assert INSTALL_FACT in repaired[COMMAND]["fact_ids"]
     # every other unit is byte-identical to what was stored
@@ -438,13 +438,11 @@ def test_a_defect_that_names_no_placed_unit_is_recorded_unrepairable_without_a_c
     assert client.chat.completions.replies == []
 
 
-def test_after_the_repair_the_reviewers_loss_rule_still_flags_the_deferred_fence(
+def test_after_the_repair_the_reviewers_loss_rule_accounts_for_the_omitted_fence(
     case: _Case,
 ) -> None:
-    """Characterisation, not an endorsement: a deferral accounts for nothing (``_accounting_units``),
-    so the fence the repair removed is, to ``live_readme_loss``, content lost without an accounting
-    disposition. The repair above is therefore real but not yet enough for the reviewer to ACCEPT
-    this README; the open question is in the report, not decided here."""
+    """End to end, offline: the repaired omission is an accounting disposition, so the removed
+    fence is not content lost without explanation."""
     from repo_presenter.readme.review.independent_reviewer import live_readme_loss_rule
 
     defect = _defect()
@@ -457,4 +455,4 @@ def test_after_the_repair_the_reviewers_loss_rule_still_flags_the_deferred_fence
     findings = live_readme_loss_rule(
         original, candidate, facts=case.facts, dispositions=case.stored_now()
     )
-    assert any("aspose-font[mcp]" in finding.quote for finding in findings)
+    assert not any("aspose-font[mcp]" in finding.quote for finding in findings)
