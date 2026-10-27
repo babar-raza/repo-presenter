@@ -1608,6 +1608,29 @@ next_ready_items:
       that gpt-oss caught; the calibration gate for qwen3-next is therefore the open question, and the
       cure is prompt/contract/packet work and more deterministic holdouts, never a loosened rule.
       Env var names GPT_OSS_* are the gateway credential names, not the model, and are unchanged.
+    calibration_iteration_2_2026_10_27: >
+      qwen3-next only, 121 live calls (1c4922b; docs/investigations/2026-10-27-reviewer-calibration-iteration-2.md).
+      Gate still FAILS: contradiction recall 0.36, content loss 0.00, unsupported claim 0.25, broken install
+      0.50 (reviewer ALONE; content loss and install are 6/6 at pipeline level through the deterministic
+      stage), false-reject on clean twins 0.33 (1 of 3; the rejected one is a known-flawed baseline, the two
+      vetted twins were 0/2). Passes: JSON-valid first reply 1.00, stability 0.90 (weak evidence: 6 of 10
+      cases ACCEPTed all three times). Contract-valid first reply 0.36 -> 0.68; unavailable 0.46 -> 0.20.
+      Root causes: ~70k-token whole-document packets dilute a mid-size model (it ACCEPTs 27 of 41 defective
+      candidates); unsupported_claim is 87 percent of findings, many aimed at renderer-printed text and 29
+      repeated within one reply; the 12-line cap caused 8 of 13 rejected first replies.
+    gate_semantics_decision_2026_10_27: >
+      DECISION (supervisor, recorded so the goalposts are visibly not moved): the mission's veto is a
+      PIPELINE property, so the gate is two-tier and BOTH numbers are always reported. (1) Pipeline coverage:
+      every defect class needs >= 0.90 recall from the deterministic stage plus the reviewer combined;
+      classes decidable by code (version, package, format, install claims, content loss, duplication) must be
+      carried by deterministic checks, with the reviewer-alone number reported but not gated. (2) LLM-only
+      classes (unsupported prose claims, subtle contradiction with inherited text, quality) keep the 0.90
+      recall TARGET; if the best measured qwen3-next result is lower, the product records its measured recall in
+      every verdict and PR eligibility requires an explicit owner acceptance of those declared limits
+      (reviewer_calibration_status PASSED_WITH_DECLARED_LIMITS is settable only by a committed owner file,
+      never by code). Until a status of PASSED or PASSED_WITH_DECLARED_LIMITS exists, no candidate is
+      PR-eligible and a sealed ACCEPT is labelled uncalibrated.
+    iteration_3_authorised: sectionwise review (bounded packets), deterministic claim checks, renderer-owned scope for unsupported_claim, merged duplicate findings, whole-section citations; budget 300 calls, cap 350, stated before spending (sectionwise multiplies calls but cuts tokens per call to about one sixth).
     calibration_budget_ledger: iteration 1 spent 165 of a 250 cap; iteration 2 (after the four fixes) authorised at 150, cap 200 -- stated before spending, recorded here.
     invariant_added_2026_10_27: no re-roll -- a blocking verdict on given candidate bytes is never overturned by a fresh, cache-bypassed review of the SAME bytes (measured stability is 0.20, so resampling until ACCEPT would be exactly the quiet demotion the mission forbids). Replay from the call store is the only second look at identical bytes.
     done_when: plan section 3 D10 -- V1..V7 pass and verdict v2 is sealed in bundles.
