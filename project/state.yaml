@@ -1630,6 +1630,27 @@ next_ready_items:
       (reviewer_calibration_status PASSED_WITH_DECLARED_LIMITS is settable only by a committed owner file,
       never by code). Until a status of PASSED or PASSED_WITH_DECLARED_LIMITS exists, no candidate is
       PR-eligible and a sealed ACCEPT is labelled uncalibrated.
+    iteration_3_result_2026_10_27: >
+      229 live qwen3-next calls (commits fc6be6c..fdc9b83), gate STILL FAILS: false-reject 1/3 first
+      pass, 7/12 over all draws; stability 6/8=0.75 (target 0.90). Real progress, not noise: tier-1
+      pipeline coverage now 0.90+ on every class the deterministic stage can decide (version, package,
+      format, install, content loss, invented API, repeated paragraph), and the two LLM-only classes the
+      prompt/scope work targeted went from 0.00/0.25 to 11/11 each (injected unsupported claim,
+      promotional filler). Real unsupported claim and real contradiction stay at 0/2 and 1/2 -- too few
+      samples to judge, not proven failures.
+    decision_pause_live_iteration_2026_10_27: >
+      SUPERVISOR DECISION: three iterations (165+121+229=515 live calls) have now failed the SAME two
+      gates (false-reject, stability) in a row -- mission section 12's own rule ("two equivalent
+      failures ... trigger supervisor diagnosis and a changed causal approach, not more repetitions")
+      applies. The causal diagnosis is already named by iteration 3 itself: only 3 scored clean twins
+      and 2 real-defect samples exist; no further prompt/scope tuning against that small, mostly-
+      synthetic set is a credible next step. CHANGED APPROACH: stop spending live calibration calls for
+      now; run the COHORT_FIRST_GUARD pilot (both lanes, one repository per ecosystem) instead, which
+      serves two goals at once -- the mission's own portfolio-first requirement, and a real supply of
+      fresh hosted candidates (more clean twins, more real defects) for calibration iteration 4. Status
+      stays NOT_PASSED; data/reviewer_calibration.json is unchanged; no candidate is PR-eligible; a
+      sealed ACCEPT stays labelled uncalibrated. Iteration 4 is reopened once the cohort yields at least
+      3 more real, independently-verified bases.
     iteration_3_authorised: sectionwise review (bounded packets), deterministic claim checks, renderer-owned scope for unsupported_claim, merged duplicate findings, whole-section citations; budget 300 calls, cap 350, stated before spending (sectionwise multiplies calls but cuts tokens per call to about one sixth).
     calibration_budget_ledger: iteration 1 spent 165 of a 250 cap; iteration 2 (after the four fixes) authorised at 150, cap 200 -- stated before spending, recorded here.
     invariant_added_2026_10_27: no re-roll -- a blocking verdict on given candidate bytes is never overturned by a fresh, cache-bypassed review of the SAME bytes (measured stability is 0.20, so resampling until ACCEPT would be exactly the quiet demotion the mission forbids). Replay from the call store is the only second look at identical bytes.
