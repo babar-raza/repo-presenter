@@ -3040,3 +3040,37 @@ entries:
       Consumed-scope only: the example facts' unit references change (facts hash) and the
       dispositions gain the stage for every repository with an UNRESOLVED inherited example; a
       repository with none renders identically.
+
+  - component: "execution-backed example verifiers for .NET and Java (extractors/platforms/net_examples.py, java_examples.py)"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    per_file:
+      "components/readme/extractors/platforms/net_examples.py (378 lines)": "PORT verbatim apart from import paths -> src/repo_presenter/extractors/platforms/net_examples.py"
+      "components/readme/extractors/platforms/java_examples.py (544 lines)": "PORT verbatim apart from import paths -> src/repo_presenter/extractors/platforms/java_examples.py"
+      "tests/.../test_net_examples.py (371 lines)": "PORT -> tests/extractors/platforms/test_net_examples.py (16 tests) plus 2 parametrized cases of the old test_net.py build test, re-pointed at net_examples.verify_net_build (18 total)"
+      "tests/.../test_java.py java_examples tests": "PORT 8 tests -> tests/extractors/platforms/test_java.py, plus 1 new test (no javac -> NOT_VERIFIED)"
+      "net.py / java.py verify_examples": "ADAPT: the stub is replaced by the old plugin bodies (net: detect_manifest then verify_net_examples; java: POM floor, release-vs-target flag, required dependencies then verify_java_examples)"
+      "net.py verify_build": "DEFER: net_examples.verify_net_build is ported but NOT wired. Nothing passes a MeasuredBuild into the facts stage, and extract._source_build_fact holds any plugin that defines verify_build to it, which would drop the executed-example source-build fallback; the earlier decision to defer build execution until container isolation also stands for that path."
+    other_ecosystems: >
+      python, cpp, go, rust, typescript and nodejs already carry real verify_examples
+      (python_examples, cpp_examples, go_examples, rust_examples, typescript_examples,
+      nodejs_examples); .NET and Java were the only stubs. No execution-backed verifier remains
+      unported from the old repository.
+    workflow: >
+      .github/workflows/present.yml installs actions/setup-dotnet@v4 (SDK 10.0.204, the version
+      the verifier was measured against) only when the dispatched ecosystem is net, and
+      actions/setup-java@v4 (temurin 21) only when it is java. Not dispatched.
+    evidence: >
+      Offline tests only (fake dotnet/javac seams; no SDK needed locally). Falsifiers: relabeling
+      FAILED as CONTRADICTED and dropping the MSBuild "Time Elapsed" scrub fail 3 net tests; making
+      the release flags unconditional and dropping the JDK-name exclusion fails 1 java test. Full
+      suite 2565 passed (1 worktree-only canary failure) at 9798b6b before; 2593 passed after.
+    risk: >
+      Example verification runs untrusted repository code. A dotnet build executes the product's
+      MSBuild targets and analyzers; javac runs with -proc:none but the product tree is compiled.
+      core/execution.py is a process and credential boundary, not a sandbox: the child gets an
+      allow-listed, secret-name-filtered environment and a redirected HOME/cache profile, a hard
+      timeout and redacted output. It does not stop the child reading files the runner user can
+      read, using the network, or reading the parent process's environment through /proc (the
+      Present step's job env holds the provider key and the state token).
+    not_yet_done: "A hosted .NET or Java run with the SDK step (not dispatched). verify_build wiring for net."

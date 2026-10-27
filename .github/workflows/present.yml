@@ -40,6 +40,25 @@ jobs:
       - name: Install
         run: python -m pip install -e .
 
+      # Example verification compiles the README's own code against the product, so the SDK it
+      # needs must exist on the runner; each toolchain is installed only for the ecosystem that
+      # uses it. A runner without one still degrades to NOT_VERIFIED (never CONTRADICTED), but
+      # without these steps every .NET and Java example would be unverifiable by construction.
+      # The version is pinned because the receipt records it and a build is only as reproducible
+      # as the toolchain that ran (10.0.204 is the SDK the verifier was measured against).
+      - name: Install the .NET SDK for example compilation
+        if: inputs.ecosystem == 'net'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.204"
+
+      - name: Install the JDK for example compilation
+        if: inputs.ecosystem == 'java'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
       - name: Name this repository's persisted state
         id: slug
         env:
