@@ -52,6 +52,7 @@ _SDK_VERSION = re.compile(r"^(\d+)\.(\d+)\.")
 # MSBuild appends the project that raised a diagnostic in brackets; the diagnostic is the part
 # a disposition acts on.
 _TRAILING_PROJECT = re.compile(r"\s*\[[^\]]*\]\s*$")
+_CS_DIAGNOSTIC = re.compile(r": error CS\d{4}:")
 # The wall-clock cost of this build, on this machine, right now - never reproducible and never
 # evidence about the repository.
 _TIME_ELAPSED = re.compile(r"(?m)^Time Elapsed .*\r?\n?")
@@ -118,7 +119,9 @@ def build_product(
     except (OSError, shutil.Error) as error:
         # The error's text would carry this machine's paths into a receipt; its class does not.
         return MeasuredBuild(
-            False, "", f"not attempted (the sources would not copy: {type(error).__name__})"
+            False,
+            "",
+            f"not attempted (the sources would not copy: {type(error).__name__})",
         )
     result = execute(
         [dotnet, "build", relative],
@@ -131,28 +134,40 @@ def build_product(
             False, "", f"failed (`{spelled}` did not exit within {timeout_seconds:g}s)"
         )
     if result.return_code != 0:
-        return MeasuredBuild(False, "", f"failed (`{spelled}` exited {result.return_code})")
+        return MeasuredBuild(
+            False, "", f"failed (`{spelled}` exited {result.return_code})"
+        )
     return MeasuredBuild(True, spelled, f"succeeded (`{spelled}` exited 0)")
 
 
-def verify_net_build(root: Path, project: Path | None, workspace: Path) -> MeasuredBuild:
+def verify_net_build(
+    root: Path, project: Path | None, workspace: Path
+) -> MeasuredBuild:
     """The governing project's measured build, or an honest "not attempted" when this machine
     cannot run one. Only a project file can be built: a `Directory.Build.props` governs the
     projects beside it and is never a build target."""
     if project is None or project.suffix.lower() not in {".csproj", ".fsproj"}:
-        return MeasuredBuild(False, "", "not attempted (no buildable project file to build)")
+        return MeasuredBuild(
+            False, "", "not attempted (no buildable project file to build)"
+        )
     dotnet = dotnet_executable()
     if dotnet is None:
         return MeasuredBuild(False, "", "not attempted (no dotnet SDK on this machine)")
     fresh = _fresh_workspace(workspace)
     if fresh is None:
-        return MeasuredBuild(False, "", "not attempted (no clean workspace to build in)")
+        return MeasuredBuild(
+            False, "", "not attempted (no clean workspace to build in)"
+        )
     if not _sdk_version(dotnet, fresh):
-        return MeasuredBuild(False, "", "not attempted (the dotnet SDK did not report a version)")
+        return MeasuredBuild(
+            False, "", "not attempted (the dotnet SDK did not report a version)"
+        )
     return build_product(root, project, fresh, dotnet, NET.install_timeout_seconds)
 
 
-def _blocked(candidates: Sequence[ExampleCandidate], detail: str) -> list[ExampleReceipt]:
+def _blocked(
+    candidates: Sequence[ExampleCandidate], detail: str
+) -> list[ExampleReceipt]:
     return [
         ExampleReceipt(
             ordinal=candidate.ordinal,
@@ -191,7 +206,11 @@ def _fresh_workspace(workspace: Path) -> Path | None:
     a repository its candidate. None means every attempt was refused, which is BLOCKED_TOOLCHAIN.
     """
     for suffix in range(_WORKSPACE_ATTEMPTS):
-        candidate = workspace if suffix == 0 else workspace.with_name(f"{workspace.name}-{suffix}")
+        candidate = (
+            workspace
+            if suffix == 0
+            else workspace.with_name(f"{workspace.name}-{suffix}")
+        )
         shutil.rmtree(candidate, ignore_errors=True)
         if candidate.exists():
             continue
@@ -265,10 +284,14 @@ def public_types(source_root: Path) -> dict[str, str]:
             if name in seen and seen[name] != qualified:
                 ambiguous.add(name)
             seen[name] = qualified
-    return {name: qualified for name, qualified in seen.items() if name not in ambiguous}
+    return {
+        name: qualified for name, qualified in seen.items() if name not in ambiguous
+    }
 
 
-def _needed_usings(code: str, declared: Sequence[str], types: dict[str, str]) -> list[str]:
+def _needed_usings(
+    code: str, declared: Sequence[str], types: dict[str, str]
+) -> list[str]:
     """Namespace usings for the product types the snippet names and whose namespace it does not
     already bring in - a `using` targets a namespace, not a single type, so a reference is
     already covered whenever its own namespace is among the ones the snippet already declares
@@ -297,7 +320,9 @@ def verify_net_examples(
     if not candidates:
         return []
     if project is None:
-        return _blocked(candidates, "no project file to reference; nothing to compile against")
+        return _blocked(
+            candidates, "no project file to reference; nothing to compile against"
+        )
     dotnet = dotnet_executable()
     if dotnet is None:
         return _blocked(candidates, "BLOCKED_TOOLCHAIN: no dotnet SDK on this machine")
@@ -307,7 +332,9 @@ def verify_net_examples(
     workspace = fresh
     version = _sdk_version(dotnet, workspace)
     if not version:
-        return _blocked(candidates, "BLOCKED_TOOLCHAIN: the dotnet SDK did not report a version")
+        return _blocked(
+            candidates, "BLOCKED_TOOLCHAIN: the dotnet SDK did not report a version"
+        )
     types = public_types(project.parent)
 
     receipts: list[ExampleReceipt] = []
@@ -342,13 +369,21 @@ def verify_net_examples(
             extra_environment=profile_environment(run_dir),
         )
         if result.timed_out:
-            outcome, detail = "TIMED_OUT", f"no exit within {NET.example_timeout_seconds:g}s"
+            outcome, detail = (
+                "TIMED_OUT",
+                f"no exit within {NET.example_timeout_seconds:g}s",
+            )
         elif result.return_code == 0:
             added = f"; usings supplied: {', '.join(supplied)}" if supplied else ""
             outcome = "EXECUTED"
             detail = f"compiled against {project.name}; SDK {version}{added}"
         else:
-            outcome, detail = "FAILED", _first_error(result.stdout, result.stderr, run_dir)
+            detail = _first_error(result.stdout, result.stderr, run_dir)
+            # Only a C# compiler diagnostic says the example itself is wrong. A build that failed
+            # on restore, the SDK or the harness named no such diagnostic, and "we could not
+            # check" is NOT_VERIFIED, never a false CONTRADICTED.
+            diagnostics = result.stdout + chr(10) + result.stderr
+            outcome = "FAILED" if _CS_DIAGNOSTIC.search(diagnostics) else "NOT_VERIFIED"
         receipts.append(
             ExampleReceipt(
                 ordinal=candidate.ordinal,

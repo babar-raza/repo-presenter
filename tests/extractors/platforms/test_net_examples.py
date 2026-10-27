@@ -16,7 +16,13 @@ from repo_presenter.extractors.platforms import net_examples
 
 def _candidate(ordinal: int, code: str) -> ExampleCandidate:
     return ExampleCandidate(
-        ordinal, "csharp", code, "README.md", 1, 3, f"inherited_unit:{ordinal:03d}.code_block"
+        ordinal,
+        "csharp",
+        code,
+        "README.md",
+        1,
+        3,
+        f"inherited_unit:{ordinal:03d}.code_block",
     )
 
 
@@ -52,7 +58,9 @@ def test_a_machine_without_the_sdk_reports_not_verified(
     assert "BLOCKED_TOOLCHAIN" in (receipts[0].detail or "")
 
 
-def test_a_repository_with_no_project_has_nothing_to_compile_against(tmp_path: Path) -> None:
+def test_a_repository_with_no_project_has_nothing_to_compile_against(
+    tmp_path: Path,
+) -> None:
     receipts = net_examples.verify_net_examples(
         tmp_path, None, [_candidate(1, "var w = 1;")], tmp_path / "run"
     )
@@ -87,7 +95,11 @@ def test_a_snippet_that_compiles_is_executed_and_carries_the_sdk_version(
     # The wrapper references the product's own project and targets what this SDK builds.
     written = (tmp_path / "run" / "example_001" / "Example.csproj").read_text("utf-8")
     assert "net10.0" in written and "Aspose.Widget.csproj" in written
-    assert (tmp_path / "run" / "example_001" / "Program.cs").read_text("utf-8").startswith("var w")
+    assert (
+        (tmp_path / "run" / "example_001" / "Program.cs")
+        .read_text("utf-8")
+        .startswith("var w")
+    )
 
 
 def test_a_compile_error_reports_the_compilers_own_first_diagnostic(
@@ -98,7 +110,9 @@ def test_a_compile_error_reports_the_compilers_own_first_diagnostic(
     def fake(argv: list[str], **kwargs: Any) -> ExecutionResult:
         if argv[1] == "--version":
             return _result(0, stdout="10.0.204\n")
-        return _result(1, stdout="Program.cs(1,9): error CS0246: type 'Widget' not found\n")
+        return _result(
+            1, stdout="Program.cs(1,9): error CS0246: type 'Widget' not found\n"
+        )
 
     monkeypatch.setattr(net_examples, "dotnet_executable", lambda: "dotnet")
     monkeypatch.setattr(net_examples, "execute", fake)
@@ -134,7 +148,8 @@ def test_public_types_drops_a_simple_name_two_files_disagree_on(tmp_path: Path) 
     """Picking one when picking one would be an invention - the same rule java_examples.py's
     own public_types() already applies."""
     (tmp_path / "a.cs").write_text(
-        "namespace Aspose.A\n{\n    public class Style\n    {\n    }\n}\n", encoding="utf-8"
+        "namespace Aspose.A\n{\n    public class Style\n    {\n    }\n}\n",
+        encoding="utf-8",
     )
     (tmp_path / "b.cs").write_text(
         "namespace Aspose.B;\n\npublic class Style\n{\n}\n", encoding="utf-8"
@@ -143,7 +158,9 @@ def test_public_types_drops_a_simple_name_two_files_disagree_on(tmp_path: Path) 
 
 
 @pytest.mark.skipif(sys.platform != "win32", reason="MAX_PATH is a Windows-only limit")
-def test_public_types_reads_a_file_whose_clone_path_exceeds_max_path(tmp_path: Path) -> None:
+def test_public_types_reads_a_file_whose_clone_path_exceeds_max_path(
+    tmp_path: Path,
+) -> None:
     """docs/DECISION_LOG.md 2026-09-26: a real Aspose.Words for .NET source file's own clone
     path measured past Windows' 260-character MAX_PATH and crashed this exact function with a
     plain read_text() FileNotFoundError. A deeply nested namespace directory is a fact about the
@@ -164,18 +181,26 @@ def test_public_types_reads_a_file_whose_clone_path_exceeds_max_path(tmp_path: P
     # fails depends on LongPathsEnabled, so that is not asserted; public_types() must read it.
     assert exceeds_max_path(target)
 
-    assert net_examples.public_types(tmp_path) == {"IVisitor": "Aspose.Words.Deep.IVisitor"}
+    assert net_examples.public_types(tmp_path) == {
+        "IVisitor": "Aspose.Words.Deep.IVisitor"
+    }
 
 
 def test_needed_usings_supplies_only_a_namespace_not_already_declared() -> None:
-    types = {"Workbook": "Aspose.Cells_FOSS.Workbook", "Style": "Aspose.Cells_FOSS.Style"}
+    types = {
+        "Workbook": "Aspose.Cells_FOSS.Workbook",
+        "Style": "Aspose.Cells_FOSS.Style",
+    }
     # Neither namespace declared: both get a using.
     assert net_examples._needed_usings(
         "var w = new Workbook(); var s = new Style();", [], types
     ) == ["using Aspose.Cells_FOSS;"]
     # A using targets the whole namespace, so one already covers every type in it.
     assert (
-        net_examples._needed_usings("var w = new Workbook();", ["Aspose.Cells_FOSS"], types) == []
+        net_examples._needed_usings(
+            "var w = new Workbook();", ["Aspose.Cells_FOSS"], types
+        )
+        == []
     )
     # A name the product does not export is never invented a using for.
     assert net_examples._needed_usings("var x = new Missing();", [], types) == []
@@ -202,7 +227,9 @@ def test_a_missing_using_is_supplied_and_a_real_type_error_still_fails(
         ordinal = int(str(kwargs["workspace"]).rsplit("_", 1)[-1])
         written[ordinal] = (kwargs["workspace"] / "Program.cs").read_text("utf-8")
         if "Missing" in written[ordinal]:
-            return _result(1, stdout="Program.cs(1,9): error CS0246: type 'Missing' not found\n")
+            return _result(
+                1, stdout="Program.cs(1,9): error CS0246: type 'Missing' not found\n"
+            )
         return _result(0)
 
     monkeypatch.setattr(net_examples, "dotnet_executable", lambda: "dotnet")
@@ -210,7 +237,10 @@ def test_a_missing_using_is_supplied_and_a_real_type_error_still_fails(
     receipts = net_examples.verify_net_examples(
         tmp_path,
         project,
-        [_candidate(1, "var w = new Widget();"), _candidate(2, "var m = new Missing();")],
+        [
+            _candidate(1, "var w = new Widget();"),
+            _candidate(2, "var m = new Missing();"),
+        ],
         tmp_path / "run",
     )
     assert [r.outcome for r in receipts] == ["EXECUTED", "FAILED"]
@@ -285,7 +315,10 @@ def test_a_diagnostic_carries_no_path_from_this_machine(
     detail = receipts[0].detail or ""
     assert detail == "Program.cs(1,30): error CS0246: 'Presentation' not found"
     assert str(tmp_path) not in detail
-    assert str(tmp_path) not in receipts[0].stdout and str(tmp_path) not in receipts[0].stderr
+    assert (
+        str(tmp_path) not in receipts[0].stdout
+        and str(tmp_path) not in receipts[0].stderr
+    )
 
 
 def test_two_runs_of_the_same_build_carry_no_clock_of_their_own(
@@ -313,7 +346,9 @@ def test_two_runs_of_the_same_build_carry_no_clock_of_their_own(
                 return _result(0, stdout="10.0.204\n")
             # Candidate 2's workspace is example_002; candidate 1's is example_001.
             if str(kwargs.get("workspace", "")).endswith("example_002"):
-                return _result(1, stdout=failure + f"Time Elapsed {elapsed_seconds}\r\n")
+                return _result(
+                    1, stdout=failure + f"Time Elapsed {elapsed_seconds}\r\n"
+                )
             return _result(0, stdout=success + f"Time Elapsed {elapsed_seconds}\r\n")
 
         monkeypatch.setattr(net_examples, "dotnet_executable", lambda: "dotnet")
@@ -327,9 +362,15 @@ def test_two_runs_of_the_same_build_carry_no_clock_of_their_own(
 
     first = run_once("00:00:25.71")
     second = run_once("00:01:02.44")
-    assert [r.outcome for r in first] == [r.outcome for r in second] == ["EXECUTED", "FAILED"]
+    assert (
+        [r.outcome for r in first]
+        == [r.outcome for r in second]
+        == ["EXECUTED", "FAILED"]
+    )
     assert [r.stdout for r in first] == [r.stdout for r in second]
-    assert "Time Elapsed" not in first[0].stdout and "Time Elapsed" not in first[1].stdout
+    assert (
+        "Time Elapsed" not in first[0].stdout and "Time Elapsed" not in first[1].stdout
+    )
 
 
 def test_a_workspace_windows_will_not_release_does_not_end_the_stage(
@@ -399,6 +440,34 @@ def test_the_manifests_own_build_is_driven_once_and_measured_with_no_example(
     measured = net_examples.verify_net_build(upstream, manifest, tmp_path / "run")
     assert seen.count(product_argv) == 1
     assert measured.verified is (product_exit == 0)
-    expected = "dotnet build src/Aspose.Widget/Aspose.Widget.csproj" if product_exit == 0 else ""
+    expected = (
+        "dotnet build src/Aspose.Widget/Aspose.Widget.csproj"
+        if product_exit == 0
+        else ""
+    )
     assert measured.command == expected
     assert "duration" not in measured.summary.lower()
+
+
+def test_a_build_that_fails_without_a_compiler_diagnostic_is_not_verified_never_failed(
+    tmp_path: Path, project: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A restore or harness failure says nothing about the example: it must not become the
+    CONTRADICTED that omits the example from the README (hosted run 5: a relative NuGet cache
+    path made every example 'fail')."""
+
+    def fake(argv: list[str], **kwargs: Any) -> ExecutionResult:
+        if argv[1] == "--version":
+            return _result(0, stdout="10.0.204\n")
+        return _result(
+            1,
+            stdout="NuGet.targets(782,5): error : 'NUGET_PACKAGES' must contain an absolute path\n",
+        )
+
+    monkeypatch.setattr(net_examples, "dotnet_executable", lambda: "dotnet")
+    monkeypatch.setattr(net_examples, "execute", fake)
+    receipts = net_examples.verify_net_examples(
+        tmp_path, project, [_candidate(1, "var w = new Widget();")], tmp_path / "run"
+    )
+    assert [r.outcome for r in receipts] == ["NOT_VERIFIED"]
+    assert "NUGET_PACKAGES" in (receipts[0].detail or "")

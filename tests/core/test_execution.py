@@ -38,7 +38,9 @@ def test_environment_is_an_allow_list_without_credential_like_names() -> None:
     assert clean["CI"] == "true"
 
 
-def test_examples_run_without_secrets_and_their_output_is_redacted(tmp_path: Path) -> None:
+def test_examples_run_without_secrets_and_their_output_is_redacted(
+    tmp_path: Path,
+) -> None:
     script = tmp_path / "leak.py"
     script.write_text(
         "import os, sys\n"
@@ -53,7 +55,10 @@ def test_examples_run_without_secrets_and_their_output_is_redacted(tmp_path: Pat
         workspace=tmp_path,
         timeout_seconds=60,
         base_environment={"PATH": "x", "GH_TOKEN": "ghp_secret_value_1234567890"},
-        extra_environment={"SYSTEMROOT": "C:/Windows", "PATH": __import__("os").environ["PATH"]},
+        extra_environment={
+            "SYSTEMROOT": "C:/Windows",
+            "PATH": __import__("os").environ["PATH"],
+        },
     )
     assert result.return_code == 0, result.stderr
     lines = result.stdout.splitlines()
@@ -65,7 +70,9 @@ def test_examples_run_without_secrets_and_their_output_is_redacted(tmp_path: Pat
     assert "GH_TOKEN" not in result.environment_names
 
 
-def test_extra_environment_is_filtered_for_credential_like_names_too(tmp_path: Path) -> None:
+def test_extra_environment_is_filtered_for_credential_like_names_too(
+    tmp_path: Path,
+) -> None:
     """TB-08, external review D8, 2026-09-08: extra_environment used to be merged in raw after
     the base was filtered, so a caller-supplied credential-like name bypassed the boundary."""
     script = tmp_path / "leak.py"
@@ -94,7 +101,9 @@ def test_extra_environment_is_filtered_for_credential_like_names_too(tmp_path: P
     assert result.return_code == 0, result.stderr
     lines = result.stdout.splitlines()
     assert lines[0] == "False"  # MY_API_KEY never reached the child's environment
-    assert lines[1] == "kept, not credential-shaped"  # a legitimate overlay name still passes
+    assert (
+        lines[1] == "kept, not credential-shaped"
+    )  # a legitimate overlay name still passes
     assert "MY_API_KEY" not in result.environment_names
     assert "CACHE_DIR" in result.environment_names
     assert "sk-injected-through-the-overlay" not in result.stdout + result.stderr
@@ -161,3 +170,16 @@ def test_a_disposable_profile_points_every_toolchain_cache_inside_the_workspace(
     merged = {**secret_free_environment({"PATH": "p", "GH_TOKEN": "t"}), **overlay}
     assert "GH_TOKEN" not in merged and merged["CI"] == "true"
     assert merged["HOME"] == overlay["HOME"]
+
+
+def test_profile_environment_paths_are_absolute_even_for_a_relative_workspace(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Toolchains reject a relative cache path (NuGet: "'NUGET_PACKAGES' must contain an
+    absolute path"); a relative workspace must still yield absolute overlay paths."""
+    monkeypatch.chdir(tmp_path)
+    overlay = profile_environment(Path("rel") / "workspace")
+    assert overlay
+    for name, value in overlay.items():
+        assert Path(value).is_absolute(), (name, value)
+        assert Path(value).is_dir()

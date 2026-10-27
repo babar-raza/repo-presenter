@@ -73,14 +73,22 @@ def _without_secret_names(mapping: dict[str, str]) -> dict[str, str]:
     (TB-08, external review D8, 2026-09-08: ``execute`` used to merge ``extra_environment`` in raw
     after filtering the base, so a caller-supplied credential-like name bypassed the boundary
     entirely)."""
-    return {name: value for name, value in mapping.items() if not _SECRET_NAME_RE.search(name)}
+    return {
+        name: value
+        for name, value in mapping.items()
+        if not _SECRET_NAME_RE.search(name)
+    }
 
 
 def secret_free_environment(base: dict[str, str] | None = None) -> dict[str, str]:
     """Allow-list process essentials and reject every credential-like name."""
     source = dict(os.environ if base is None else base)
     clean = _without_secret_names(
-        {name: value for name, value in source.items() if name.upper() in _SAFE_ENV_NAMES}
+        {
+            name: value
+            for name, value in source.items()
+            if name.upper() in _SAFE_ENV_NAMES
+        }
     )
     clean["CI"] = "true"
     clean["GIT_TERMINAL_PROMPT"] = "0"
@@ -120,6 +128,10 @@ def profile_environment(workspace: Path) -> dict[str, str]:
     finds its cache path missing usually creates it in the real home instead.
     """
     overlay: dict[str, str] = {}
+    # Absolute, whatever the caller passed: toolchains reject a relative cache path (NuGet fails
+    # with "'NUGET_PACKAGES' must contain an absolute path"), and a relative one would also
+    # resolve against each child's own working directory instead of this workspace.
+    workspace = workspace.resolve()
     for name, relative in _PROFILE_DIRECTORIES.items():
         target = workspace.joinpath(*relative.split("/"))
         target.mkdir(parents=True, exist_ok=True)
@@ -139,7 +151,9 @@ def execute(
     if not argv or not argv[0]:
         raise ValueError("example argv must identify an executable")
     if timeout_seconds <= 0 or timeout_seconds > MAX_TIMEOUT_SECONDS:
-        raise ValueError(f"example timeout must be within (0, {MAX_TIMEOUT_SECONDS:g}] seconds")
+        raise ValueError(
+            f"example timeout must be within (0, {MAX_TIMEOUT_SECONDS:g}] seconds"
+        )
     if not workspace.is_dir():
         raise ValueError(f"example workspace does not exist: {workspace}")
     source = dict(os.environ if base_environment is None else base_environment)
