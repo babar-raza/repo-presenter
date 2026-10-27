@@ -42,6 +42,15 @@ difference in the ``facts`` hash map, the source, or an environment the host obs
 (Python, OS, toolchains, package set) invalidates (G7-W25). The scope name stays ``facts``:
 the manifest schema enumerates scope names, and a new one would be a schema change.
 
+LANE L (``plans/PLAN_lane_l_hosted.md`` L8). A Lane L candidate consumes a different set of inputs
+than a Lane R one: the pinned revision, the live README's bytes (both in ``source``), the fact
+records, the correction engine's version and each detector's version, and the reviewer. They route
+through the same table: ``source`` and ``facts`` invalidate as ever, ``components.correction_engine``
+and every ``detectors.<name>`` are the new ``correction`` scope (a code input, never factual, so it
+leaves the sealed candidate valid with an update available), and a Lane L artifact whose bytes moved
+with no input to explain it routes by :data:`LANE_L_ARTIFACT_SCOPES` first. A prompt, renderer or
+shell a Lane L candidate never consumed is not in its ``dependencies.json`` and so cannot reopen it.
+
 Nothing here is a hash of anything: a scope is derived from the candidate's own consumed
 inputs, so a component the candidate did not consume cannot reopen it and no global
 control-plane hash exists (AGENTS.md; docs/STATE_MACHINE.md section 9).
@@ -120,6 +129,12 @@ SCOPES: tuple[Scope, ...] = (
         "the section-authoring prompt and route, the normalisation logic",
     ),
     Scope(
+        "correction",
+        "COMPOSING",
+        STATE_UPDATE_AVAILABLE,
+        "the Lane L correction engine and its detectors",
+    ),
+    Scope(
         "validator",
         "VALIDATING",
         STATE_UPDATE_AVAILABLE,
@@ -162,12 +177,16 @@ COMPONENT_SCOPES: dict[str, str] = {
     "renderer": "presentation",
     "normalisation": "authoring",
     "reviewer_logic": "reviewer",
+    "correction_engine": "correction",
 }
 # family -> (its per-name rows, the scope of a name it has no row for)
 FAMILY_SCOPES: dict[str, tuple[dict[str, str], str]] = {
     "environment": ({}, "facts"),
     "prompts": (PROMPT_SCOPES, "evidence"),
     "components": (COMPONENT_SCOPES, "presentation"),
+    # Lane L: one row per detector in dependencies.json; a detector this table has never heard of
+    # is still a correction input, never a presentation or evidence one.
+    "detectors": ({}, "correction"),
 }
 # Inputs of the ``facts`` scope that are a proxy for a code change rather than a fact: reopening
 # EXTRACTING, but leaving the candidate valid until the fact records themselves differ.
@@ -205,6 +224,16 @@ ARTIFACT_SCOPES: dict[str, str] = {
     "validation.json": "validator",
     "review.json": "reviewer",
     "review_verdict.json": "reviewer",
+    # Lane L's own artifacts. The live README's bytes are a consumed fact about the source (a
+    # changed one is a changed source, so it invalidates); the edit list is the engine's output.
+    "README.original.md": "facts",
+    "corrections.json": "correction",
+}
+# Lane L's README and patch are written by the correction engine, not by Lane R's authoring stage,
+# so the same artifact name routes to a different scope when it differs in a Lane L bundle.
+LANE_L_ARTIFACT_SCOPES: dict[str, str] = {
+    "README.md": "correction",
+    "README.patch.diff": "correction",
 }
 
 
@@ -225,8 +254,10 @@ def reopening_stage(dependency: str) -> str:
     return STAGE_OVERRIDES.get(dependency) or scope_of(dependency).stage
 
 
-def scope_of_artifact(artifact: str) -> Scope:
-    name = ARTIFACT_SCOPES.get(artifact)
+def scope_of_artifact(artifact: str, lane: str = "R") -> Scope:
+    name = (LANE_L_ARTIFACT_SCOPES if lane == "L" else {}).get(artifact) or ARTIFACT_SCOPES.get(
+        artifact
+    )
     if name is None:
         raise ScopeError(f"no invalidation scope for the sealed artifact {artifact!r}")
     return SCOPE_BY_NAME[name]
@@ -251,7 +282,9 @@ def _stage_index(stage: str) -> int:
     return STATE_ORDER.index(stage)
 
 
-def route(dependencies: Iterable[str], artifacts: Iterable[str] = ()) -> Routing:
+def route(
+    dependencies: Iterable[str], artifacts: Iterable[str] = (), lane: str = "R"
+) -> Routing:
     """Route a change by the inputs that changed, or by the artifacts that differ when no input
     explains the difference (a rerun whose bytes moved with every consumed input unchanged).
 
@@ -272,8 +305,8 @@ def route(dependencies: Iterable[str], artifacts: Iterable[str] = ()) -> Routing
     else:
         basis = "artifacts"
         differing = sorted(set(artifacts))
-        stages = {name: scope_of_artifact(name).stage for name in differing}
-        scopes = {scope_of_artifact(name).name for name in differing}
+        stages = {name: scope_of_artifact(name, lane).stage for name in differing}
+        scopes = {scope_of_artifact(name, lane).name for name in differing}
         invalidating = {name for name in scopes if SCOPE_BY_NAME[name].state == STATE_INVALIDATED}
     if not scopes:
         return Routing((), None, None, None, basis)

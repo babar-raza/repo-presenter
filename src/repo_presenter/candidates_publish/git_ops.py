@@ -115,25 +115,60 @@ def read_committed_file(root: Path, path: str) -> str | None:
         raise RepositoryMetadataError(f"reading {path!r} failed: {exc}") from exc
 
 
-def overlay_bundle(root: Path, slug: str, import_dir: Path) -> None:
-    """Replace ``candidates/<slug>`` in the working tree wholesale with ``import_dir``'s own
-    content - the exact same "replaces candidates/<slug> on each job's checkout wholesale"
-    operation ``propose.yml``'s own "Require a READY_FOR_PROPOSAL bundle" step already performs
-    (there, in bash, against ``base_branch``'s own checkout; here, against this branch's, after
-    :func:`checkout_branch` - see ``effect.py``'s own docstring for why the ordering matters)."""
+def overlay_bundle(root: Path, slug: str, import_dir: Path, lane: str = "R") -> None:
+    """Replace ``lane``'s candidates in ``candidates/<slug>`` in the working tree with
+    ``import_dir``'s own content - the exact same "replaces candidates/<slug> on each job's
+    checkout wholesale" operation ``propose.yml``'s own "Require a READY_FOR_PROPOSAL bundle" step
+    already performs (there, in bash, against ``base_branch``'s own checkout; here, against this
+    branch's, after :func:`checkout_branch` - see ``effect.py``'s own docstring for why the ordering
+    matters).
+
+    Only that lane's part of the slug is replaced (Lane L lives in ``lane-l/``, Lane R is the rest;
+    ``core/candidates.py``): publishing one lane's bundle must never delete the other lane's
+    committed candidate, which the import directory - built by a job that ran one lane - does not
+    carry."""
     if not import_dir.is_dir():
         raise RepositoryMetadataError(
             f"sealed bundle import directory does not exist: {import_dir}"
         )
     target = root / "candidates" / slug
     try:
-        if target.exists():
-            shutil.rmtree(target)
-        shutil.copytree(import_dir, target)
+        _replace_lane(target, import_dir, lane)
     except OSError as exc:
         raise RepositoryMetadataError(
             f"overlaying the sealed bundle onto {target} failed: {exc}"
         ) from exc
+
+
+def _replace_lane(target: Path, import_dir: Path, lane: str) -> None:
+    """``target`` with ``lane``'s entries swapped for ``import_dir``'s; the other lanes' kept."""
+    from repo_presenter.core.candidates import LANE_DIRNAMES, LANE_R, lane_directory
+
+    if lane != LANE_R:
+        lane_target = lane_directory(target, lane)
+        if lane_target.exists():
+            shutil.rmtree(lane_target)
+        lane_source = lane_directory(import_dir, lane)
+        if lane_source.is_dir():
+            shutil.copytree(lane_source, lane_target)
+        return
+    other_lanes = set(LANE_DIRNAMES.values())
+    target.mkdir(parents=True, exist_ok=True)
+    for entry in list(target.iterdir()):
+        if entry.name in other_lanes:
+            continue
+        if entry.is_dir():
+            shutil.rmtree(entry)
+        else:
+            entry.unlink()
+    for entry in import_dir.iterdir():
+        if entry.name in other_lanes:
+            continue
+        destination = target / entry.name
+        if entry.is_dir():
+            shutil.copytree(entry, destination)
+        else:
+            shutil.copy2(entry, destination)
 
 
 def stage_and_commit(root: Path, paths: tuple[str, ...], message: str) -> str | None:

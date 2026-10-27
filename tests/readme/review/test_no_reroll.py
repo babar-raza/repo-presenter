@@ -143,7 +143,9 @@ def test_the_review_api_has_no_cache_bypass_parameter() -> None:
         assert not any(forbidden in name for name in names), names
 
 
-def test_only_the_cascade_and_the_calibration_adapter_call_the_review() -> None:
+def test_only_the_cascade_the_lane_l_review_and_the_calibration_adapter_call_the_review() -> (
+    None
+):
     callers = set()
     for path in sorted(SRC.rglob("*.py")):
         tree = ast.parse(path.read_text(encoding="utf-8"))
@@ -153,7 +155,13 @@ def test_only_the_cascade_and_the_calibration_adapter_call_the_review() -> None:
                 and getattr(node.func, "id", "") == "review_with_model"
             ):
                 callers.add(str(path.relative_to(SRC)).replace("\\", "/"))
-    assert callers == {"cascade.py", "readme/review/calibration/reviewers.py"}
+    # lane_l_review.py is Lane L's call (plans/PLAN_lane_l_hosted.md L5): production,
+    # on the transaction's own call store, with no bypass; it is the second production caller.
+    assert callers == {
+        "cascade.py",
+        "lane_l_review.py",
+        "readme/review/calibration/reviewers.py",
+    }
 
 
 def test_a_fresh_store_per_review_exists_only_in_the_calibration_adapter() -> None:

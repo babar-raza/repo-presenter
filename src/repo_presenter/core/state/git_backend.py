@@ -71,10 +71,20 @@ _COMMIT_IDENTITY_ENV = {
 }
 
 
-def _ref_key(repository: str) -> str:
+LANE_L_REF_SUFFIX = "@lane-l"
+
+
+def _ref_key(repository: str, lane: str = "R") -> str:
     """``org/name`` -> ``org__name``: exactly one slash, matching ``RepositoryRecord``'s own
-    pattern, so this can never collide with a ref-unsafe path."""
-    return repository.replace("/", "__", 1)
+    pattern, so this can never collide with a ref-unsafe path. Lane L's record lives beside Lane
+    R's under ``org__name@lane-l``: ``@`` cannot appear in a GitHub owner or repository name, so
+    no repository can ever own that key, and Lane R's refs are exactly what they were."""
+    key = repository.replace("/", "__", 1)
+    if lane == "R":
+        return key
+    if lane == "L":
+        return key + LANE_L_REF_SUFFIX
+    raise StateBackendError(f"unknown lane {lane!r}: expected 'R' or 'L'")
 
 
 def _is_non_fast_forward(stderr: str) -> bool:
@@ -142,7 +152,12 @@ class GitStateBackend:
     inside an isolated local bare repository without touching the control checkout's own
     ``origin``."""
 
-    def __init__(self, *, remote: str = "origin", token: str | None = None) -> None:
+    def __init__(
+        self, *, remote: str = "origin", token: str | None = None, lane: str = "R"
+    ) -> None:
+        # An unknown lane fails here, before any remote is touched.
+        _ref_key("o/n", lane)
+        self._lane = lane
         self._remote = resolve_state_remote(remote)
         self._token = token
         self._workspace = _StateGitWorkspace()
@@ -307,15 +322,21 @@ class GitStateBackend:
 
     def _parse_record(self, repository: str, payload: str) -> RepositoryRecord:
         try:
-            return RepositoryRecord.model_validate_json(payload)
+            record = RepositoryRecord.model_validate_json(payload)
         except ValidationError as exc:
             raise StateBackendError(
                 f"durable state for {repository!r} is corrupt or unparseable: {exc}"
             ) from exc
+        if record.lane != self._lane:
+            raise StateBackendError(
+                f"durable state for {repository!r} in Lane {self._lane}'s ref says it is Lane "
+                f"{record.lane}: refusing to read another lane's transaction"
+            )
+        return record
 
     def load(self, repository: str) -> RepositoryRecord | None:
         with self._lock:
-            remote_ref = f"{STATE_REF_PREFIX}/{_ref_key(repository)}"
+            remote_ref = f"{STATE_REF_PREFIX}/{_ref_key(repository, self._lane)}"
             sha = self._fetch_remote_sha(remote_ref)
             if sha is None:
                 return None
@@ -327,7 +348,7 @@ class GitStateBackend:
         self, repository: str, record: RepositoryRecord, expected_version: int | None
     ) -> SaveResult:
         with self._lock:
-            remote_ref = f"{STATE_REF_PREFIX}/{_ref_key(repository)}"
+            remote_ref = f"{STATE_REF_PREFIX}/{_ref_key(repository, self._lane)}"
             parent_sha = self._fetch_remote_sha(remote_ref)
 
             if parent_sha is None:
@@ -343,7 +364,11 @@ class GitStateBackend:
                 current_version = current.state_version
 
             new_version = (current_version or 0) + 1
-            new_record = record.model_copy(update={"state_version": new_version})
+            # The lane is the backend's, never the caller's: a default record built for Lane R
+            # and saved through Lane L's backend becomes Lane L's record, and cannot land in R's ref.
+            new_record = record.model_copy(
+                update={"state_version": new_version, "lane": self._lane}
+            )
             payload = new_record.model_dump_json(indent=2) + "\n"
             # Two racing writers computing the identical target state (same tree, parent, pinned
             # commit identity) would otherwise build a byte-identical commit; git pushes that as a

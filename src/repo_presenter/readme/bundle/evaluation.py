@@ -146,6 +146,18 @@ def evaluate(sealed: dict[str, Any], current: dict[str, Any]) -> Evaluation:
             )
             detail = f"prompt {', '.join(fields)} changed"
         changes.append(_change(f"prompts.{name}", detail))
+    # Lane L: each detector's version is its own consumed input, so a changed detector names itself
+    # and reopens the correction scope, not a stage a Lane L candidate never ran.
+    sealed_detectors = dict(sealed.get("detectors", {}))
+    current_detectors = dict(current.get("detectors", {}))
+    for name in sorted(set(sealed_detectors) | set(current_detectors)):
+        if sealed_detectors.get(name) != current_detectors.get(name):
+            changes.append(
+                _change(
+                    f"detectors.{name}",
+                    f"{sealed_detectors.get(name)} -> {current_detectors.get(name)}",
+                )
+            )
     if _differs(sealed.get("contract_version"), current.get("contract_version")):
         changes.append(
             _change(

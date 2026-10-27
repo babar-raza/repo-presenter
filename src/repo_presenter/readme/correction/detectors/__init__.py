@@ -18,6 +18,23 @@ from repo_presenter.readme.correction.model import Detector
 
 DETECTORS: dict[str, Detector] = {}
 
+#: One version per registered detector, recorded in every Lane L bundle's ``dependencies.json`` as
+#: ``detectors.<name>``. Bump a detector's entry when its matching or its edits change meaning: that
+#: reopens the ``correction`` scope of the Lane L candidates (and no other candidate). A detector
+#: with no entry here, or an entry with no detector, fails ``tests/readme/correction/
+#: test_detector_versions.py``, which also pins each module's source so an unversioned logic
+#: change cannot pass quietly.
+DETECTOR_VERSIONS: dict[str, str] = {
+    "broken_link": "1",
+    "enterprise_edition_naming": "1",
+    "failing_example": "1",
+    "format_overclaim": "1",
+    "report_gaps": "1",
+    "second_h1": "1",
+    "stray_fence": "1",
+    "unclosed_details": "1",
+}
+
 
 def detector(name: str) -> Callable[[Detector], Detector]:
     def register(function: Detector) -> Detector:

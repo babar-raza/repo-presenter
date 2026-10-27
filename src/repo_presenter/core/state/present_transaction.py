@@ -54,6 +54,8 @@ from uuid import uuid4
 from repo_presenter.core.candidates import (
     CANDIDATES_DIRNAME,
     CURRENT_FILENAME,
+    LANE_R,
+    lane_directory,
     verify_bundle,
 )
 from repo_presenter.core.errors import IllegalTransitionError, StateBackendError
@@ -200,6 +202,7 @@ def classify_present_outcome(
     exit_code: int,
     *,
     disposition_path: Path | None = None,
+    lane: str = LANE_R,
 ) -> PresentOutcome:
     """Map one local-pipeline invocation's outcome onto this module's typed result.
 
@@ -230,14 +233,16 @@ def classify_present_outcome(
     if disposition_path is not None:
         return _classify_disposition(entry, disposition_path)
 
-    candidates_dir = root / CANDIDATES_DIRNAME / f"{entry.owner}__{entry.name}"
+    candidates_dir = lane_directory(
+        root / CANDIDATES_DIRNAME / f"{entry.owner}__{entry.name}", lane
+    )
     current = candidates_dir / CURRENT_FILENAME
     if not current.is_file():
         # --facts-only, or any other EXIT_OK path that never seals a bundle: real work (at least a
         # snapshot) happened, but nothing conclusive to report beyond that.
         return PresentOutcome(kind="success", target_state="SNAPSHOTTING")
     revision = current.read_text(encoding="utf-8").strip()
-    manifest = verify_bundle(candidates_dir / revision)
+    manifest = verify_bundle(candidates_dir / revision, lane)
     if manifest is None:
         return PresentOutcome(kind="success", target_state="SNAPSHOTTING")
     state = manifest.get("state")
@@ -378,8 +383,12 @@ def _commit_outcome(
     provider_repository_id: int,
     current_state: TransactionState,
     outcome: PresentOutcome,
+    lane: str = LANE_R,
 ) -> None:
-    output_manifest = f"candidates/{repository.replace('/', '__', 1)}/CURRENT"
+    pointer_dir = lane_directory(
+        Path(CANDIDATES_DIRNAME) / repository.replace("/", "__", 1), lane
+    )
+    output_manifest = f"{pointer_dir.as_posix()}/CURRENT"
     input_manifest = f"registry:{repository}"
 
     def mark_failed(record: RepositoryRecord) -> RepositoryRecord:
@@ -464,10 +473,13 @@ def run_present_transaction(
     classify: Callable[[int], PresentOutcome],
     trigger_event_type: TriggerEventType = "workflow_dispatch",
     workflow_run_id: str | None = None,
+    lane: str = LANE_R,
 ) -> int:
     """Run ``run()`` under the durable-state backend's recovery, dedup, and transition-receipt
     discipline. Returns ``run()``'s own exit code, or ``0`` when this trigger deduplicated into an
-    already in-flight transaction without running anything (section 3.2).
+    already in-flight transaction without running anything (section 3.2). ``lane`` names the
+    candidate pointer the committed receipt cites; the lane's own transaction record is the
+    ``backend``'s (``GitStateBackend(lane=...)``): one record per repository per lane.
     """
     recovery_sweep(backend, {repository: provider_repository_id})
 
@@ -507,7 +519,13 @@ def run_present_transaction(
         exit_code = run()
         outcome = classify(exit_code)
         _commit_outcome(
-            backend, repository, lease, provider_repository_id, current_state, outcome
+            backend,
+            repository,
+            lease,
+            provider_repository_id,
+            current_state,
+            outcome,
+            lane,
         )
         return exit_code
     finally:

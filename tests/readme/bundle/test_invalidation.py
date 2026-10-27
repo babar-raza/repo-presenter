@@ -43,6 +43,7 @@ def test_the_scope_table_maps_each_scope_to_a_stage_and_a_state() -> None:
         "presentation",
         "planning",
         "authoring",
+        "correction",
         "validator",
         "reviewer",
     ]

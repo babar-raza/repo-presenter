@@ -11,13 +11,21 @@ The hosted run is two jobs with a trust boundary between them (``.github/workflo
 
     python -m repo_presenter.present --stage facts   --repository <owner>/<repo> --ecosystem <eco>
     python -m repo_presenter.present --stage cascade --repository <owner>/<repo> --ecosystem <eco>
+        [--lane R|L]
 
-``facts`` clones the pinned revision and builds the Lane L facts, which executes untrusted
+Two equal lanes (``plans/PLAN_lane_l_hosted.md``). ``--lane R`` (the default) is the full Lane R
+cascade S3-S10; ``--lane L`` corrects the live README with minimal evidenced edits and has the final
+README independently reviewed (``lane_l_run.py``). They share the facts handoff, the independent
+reviewer, the sealer and the durable-state transaction, and each lane is its own transaction (its own
+state record, its own candidate pointer, its own seal): a failure in one never touches the other.
+
+``facts`` clones the pinned revision and builds the facts (both lanes read them), which executes untrusted
 repository code (example builds); it holds no secrets, needs no state backend and no provider
 configuration, and writes only ``facts.json`` plus a manifest (``facts_handoff.py``). ``cascade``
 holds the provider key and the state token and executes no repository code: it verifies the facts
-artifact, re-clones the SAME pinned revision for README reads, and runs the cascade, the review, the
-seal and the durable transaction. ``--stage combined`` (the default) runs both in one process for
+artifact, re-clones the SAME pinned revision for README reads, and runs the lane (the Lane R cascade,
+or the Lane L correction engine on the validated facts), the review, the seal and the durable
+transaction. ``--stage combined`` (the default) runs both in one process for
 local and offline use only and is refused when ``GITHUB_ACTIONS`` is set.
 """
 
@@ -28,12 +36,14 @@ import os
 import sys
 from collections.abc import Callable, Sequence
 from pathlib import Path
+from typing import Any
 
 from repo_presenter.cascade import (
     DEFAULT_PROMPTS_PATH,
     DEFAULT_REGISTRY_PATH,
     run_cascade,
 )
+from repo_presenter.core.candidates import LANE_L, LANE_R, LANES
 from repo_presenter.core.config import GatewayConfig, load_gateway_config
 from repo_presenter.core.errors import ConfigError, OutputRejectedError, PresenterError
 from repo_presenter.core.facts import write_facts
@@ -51,7 +61,12 @@ from repo_presenter.core.state.present_transaction import (
 )
 from repo_presenter.facts_handoff import FactsManifest, load_handoff, write_handoff
 from repo_presenter.lane_l import build_lane_l_facts
+from repo_presenter.lane_l_run import run_lane_l
 from repo_presenter.readme.bundle.seal import SealInputs, seal_candidate
+from repo_presenter.readme.correction.report import (
+    OUTCOME_REFUSED,
+    lane_r_recommendation,
+)
 from repo_presenter.readme.review.llm_review import blocked_predicate
 from repo_presenter.readme.review.verdict import ReviewUnavailable
 from repo_presenter.readme.validation.blocking import blocking_failures
@@ -151,6 +166,74 @@ def _cascade_and_seal(
     )
 
 
+def _lane_l_and_seal(
+    *,
+    repository: str,
+    ecosystem: str,
+    clone_path: Path,
+    facts_path: Path,
+    workdir: Path,
+    candidates_root: Path,
+    config: GatewayConfig,
+    prompts_path: Path,
+    registry_path: Path,
+) -> None:
+    """Lane L's counterpart of :func:`_cascade_and_seal`: correct the live README, judge the final
+    README, and seal only a candidate a model reviewed and accepted. A defect the engine may not
+    repair is a refusal that names Lane R, never a seal."""
+    result = run_lane_l(
+        repository,
+        ecosystem,
+        clone_path,
+        facts_path=facts_path,
+        out_dir=workdir / "lane-l",
+        config=config,
+        prompts_path=prompts_path,
+        registry_path=registry_path,
+    )
+    verdict = result.review_verdict
+    if verdict.verdict != "ACCEPT":
+        recommendation = (
+            f"; {lane_r_recommendation(result.correction)}"
+            if result.outcome == OUTCOME_REFUSED
+            else ""
+        )
+        raise PresentFailure(
+            f"Lane L: independent review returned {verdict.verdict} with "
+            f"{len(verdict.blocking_findings)} blocking finding(s) of {len(verdict.findings)}; "
+            f"nothing sealed; {blocked_predicate(verdict)}{recommendation}"
+        )
+    if not verdict.model_reviewed:
+        raise PresentFailure(
+            "Lane L: no LLM review of this candidate was made, and a deterministic-only "
+            "verdict is never sealed; nothing sealed"
+        )
+    seal_candidate(
+        SealInputs(
+            entry=result.entry,
+            source_revision=result.source_revision,
+            facts=result.document,
+            prompts=load_manifests(prompts_path),
+            out_dir=result.out_dir,
+            facts_path=result.facts_path,
+            candidates_root=candidates_root,
+            provider_calls=result.provider_calls,
+            invocation=result.invocation,
+            lane=LANE_L,
+        )
+    )
+
+
+def _lane_and_seal(lane: str, **kwargs: Any) -> None:
+    """The one place a lane is chosen: everything either lane needs is passed by name."""
+    if lane == LANE_L:
+        _lane_l_and_seal(**kwargs)
+    elif lane == LANE_R:
+        _cascade_and_seal(**kwargs)
+    else:
+        raise ConfigError(f"unknown lane {lane!r}: expected one of {LANES}")
+
+
 def cascade_pipeline(
     *,
     repository: str,
@@ -163,6 +246,7 @@ def cascade_pipeline(
     prompts_path: Path,
     registry_path: Path,
     expected_facts_sha256: str | None = None,
+    lane: str = LANE_R,
 ) -> None:
     """The credentialed half: runs no repository code and never builds facts. The facts artifact is
     verified and validated first; the clone is re-taken at exactly the revision the artifact records
@@ -181,7 +265,8 @@ def cascade_pipeline(
     )
     facts_path = workdir / "facts.json"
     write_facts(document, facts_path)
-    _cascade_and_seal(
+    _lane_and_seal(
+        lane,
         repository=repository,
         ecosystem=ecosystem,
         clone_path=clone.path,
@@ -204,8 +289,9 @@ def combined_pipeline(
     read_token: str | None,
     prompts_path: Path,
     registry_path: Path,
+    lane: str = LANE_R,
 ) -> None:
-    """Facts and cascade in one process: local and offline use only, never hosted."""
+    """Facts and the lane in one process: local and offline use only, never hosted."""
     clone = pinned_read_only_clone(
         _clone_url(repository), workdir / "clone", token=read_token
     )
@@ -219,7 +305,8 @@ def combined_pipeline(
     )
     facts_path = workdir / "facts.json"
     write_facts(document, facts_path)
-    _cascade_and_seal(
+    _lane_and_seal(
+        lane,
         repository=repository,
         ecosystem=ecosystem,
         clone_path=clone.path,
@@ -240,6 +327,7 @@ def run_present(
     holder_id: str,
     workflow_run_id: str | None,
     pipeline: Callable[[], None],
+    lane: str = LANE_R,
 ) -> int:
     """Run ``pipeline`` under the durable transaction for ``entry``; returns the exit code.
 
@@ -281,7 +369,7 @@ def run_present(
                 else None,
             )
         try:
-            return classify_present_outcome(candidates_root, entry, exit_code)
+            return classify_present_outcome(candidates_root, entry, exit_code, lane=lane)
         except PresenterError as exc:
             # A bundle that fails its own integrity check is a recorded failure, never an
             # exception that leaves the durable record describing an earlier run.
@@ -295,6 +383,7 @@ def run_present(
         run=run,
         classify=classify,
         workflow_run_id=workflow_run_id,
+        lane=lane,
     )
 
 
@@ -309,6 +398,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         description="Present one listed repository under the durable-state transaction.",
     )
     parser.add_argument("--stage", choices=STAGES, default="combined")
+    parser.add_argument(
+        "--lane",
+        choices=LANES,
+        default=LANE_R,
+        help="R: the full Lane R cascade (default). L: correct the live README (Lane L).",
+    )
     parser.add_argument("--repository", required=True)
     parser.add_argument("--ecosystem", required=True)
     parser.add_argument("--workdir", type=Path, default=DEFAULT_WORKDIR)
@@ -377,6 +472,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 read_token=read_token,
                 prompts_path=args.prompts,
                 registry_path=args.registry,
+                lane=args.lane,
             )
         else:
             cascade_pipeline(
@@ -390,9 +486,12 @@ def main(argv: Sequence[str] | None = None) -> int:
                 prompts_path=args.prompts,
                 registry_path=args.registry,
                 expected_facts_sha256=args.expected_facts_sha256,
+                lane=args.lane,
             )
 
-    with GitStateBackend(remote=args.state_remote, token=state_token) as backend:
+    with GitStateBackend(
+        remote=args.state_remote, token=state_token, lane=args.lane
+    ) as backend:
         exit_code = run_present(
             backend=backend,
             entry=entry,
@@ -400,11 +499,14 @@ def main(argv: Sequence[str] | None = None) -> int:
             holder_id=f"present:{args.workflow_run_id or os.getpid()}",
             workflow_run_id=args.workflow_run_id,
             pipeline=pipeline,
+            lane=args.lane,
         )
         record = backend.load(args.repository)
 
     state = record.state if record is not None else "NO_RECORD"
-    print(f"present: {args.repository} exit {exit_code}, durable state {state}")
+    print(
+        f"present: {args.repository} lane {args.lane} exit {exit_code}, durable state {state}"
+    )
     return exit_code
 
 

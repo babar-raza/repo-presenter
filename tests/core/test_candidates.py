@@ -140,7 +140,7 @@ def test_an_older_ready_sibling_that_is_not_current_is_not_counted(tmp_path: Pat
 
 
 def test_verify_bundle_rejects_an_unsupported_schema_version(tmp_path: Path) -> None:
-    bundle = _seal(tmp_path, manifest_overrides={"schema_version": 2})
+    bundle = _seal(tmp_path, manifest_overrides={"schema_version": 3})
     with pytest.raises(BundleError, match="unsupported schema_version"):
         verify_bundle(bundle)
 

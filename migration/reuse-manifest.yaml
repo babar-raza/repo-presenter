@@ -3233,3 +3233,53 @@ entries:
       class. present.py still gates on the reviewer only; validation.json is written and its
       failures are repaired when S4-caused, not yet a gate. S5/S6 reviewer findings are repaired by
       loop.settle_candidate, not inside the cascade.
+
+  - component: "Lane L hosted parity: the correction engine run, sealed, independently reviewed and transacted as an equal lane (LANE_L_HOSTED_PARITY, plans/PLAN_lane_l_hosted.md)"
+    source: old-repository-presenter
+    evaluated_at_shas: []
+    per_file:
+      "components/readme_correction/bundle.py (the correction bundle: README.original.md, README.md, README.patch, corrections.json, validation_delta.json, tree.txt; edit_record, corrections_document)": "ADAPT. Read in full. Kept: the artifact names README.original.md and corrections.json, the per-edit record (kind, detector, line, offsets, original, replacement, rationale, evidence facts with status), the confinement statement and the stability block. Changed, and why: the old bundle lived outside candidates/ with a state no reader counted, precisely so it could not be mistaken for a regenerated candidate; the mission now makes Lane L an equal lane visible in one status model, so it is sealed by the shared sealer in candidates/<slug>/lane-l/ with a lane-aware reader instead. Dropped: validation_delta.json (judges for the Lane R chain this repository does not use), tree.txt, the KIND_FIELD discriminator (the manifest's lane replaces it), send_plan (the PR effect is not wired). New: outcome (CORRECTED, NO_CHANGE_WARRANTED, REFUSED_LANE_R_RECOMMENDED), defect versus opportunity typing of unapplied findings, no machine- or time-specific field."
+      "components/readme_correction/settle.py (correct_settled: drop edits that would fail validation)": "DEFERRED. Not read in this pass. Its absence means WOULD_FAIL_VALIDATION is never produced; the final-README holdouts catch a correction that makes the README worse after the fact and refuse it, instead of dropping the edit beforehand."
+      "components/readme_correction/{send,commands,committed,live_*,pull_request}.py": "DEFERRED. Not read in this pass; the Lane L PR path needs propose/effect.py to take a lane first (see not_yet_done)."
+      "src/repo_presenter/lane_l_run.py": "NEW. The hosted Lane L stage (cascade.py's counterpart): facts + pinned clone -> correct() -> artifacts -> deterministic holdouts -> review_with_model -> verdict. One Invocation, one ledger, every artifact written as bytes."
+      "src/repo_presenter/readme/correction/report.py, src/repo_presenter/lane_l_review.py": "NEW. Outcomes and the closed defect table (report.py, in the model-free correction package); the Lane L holdouts (confinement re-proof, determinism, claim and retention rules over the FINAL text via the reviewer's public rules, unrepaired defects) and the one call into review_with_model."
+      "src/repo_presenter/readme/correction/{engine.py,detectors/__init__.py}": "CORRECTION_ENGINE_VERSION and DETECTOR_VERSIONS added (the consumed-scope inputs); no detector or engine logic changed."
+      "src/repo_presenter/readme/bundle/{seal,invalidation,evaluation}.py": "Lane-aware: Lane L artifact set and dependencies record, the correction scope, detectors.<name> evaluation, per-lane artifact routing. Lane R's dependencies record and artifact set are byte-for-byte what they were; a layout-v1 manifest keeps being written as v1."
+      "src/repo_presenter/core/candidates.py": "Versioned lane reader: lane_directory, manifest_lane, per-lane counting, portfolio_status, counted_by_lane; every existing function keeps its signature with lane defaulting to R."
+      "src/repo_presenter/core/state/{schema,git_backend,present_transaction}.py": "One record per repository per lane (RepositoryRecord.lane default R; GitStateBackend(lane=...) ref key ...@lane-l; the receipt cites the lane's pointer)."
+      "src/repo_presenter/{present.py,.github/workflows/present.yml}": "--lane R|L and a lane input (both, R, L); a step per lane, Lane L after a Lane R failure but not without the facts."
+      "src/repo_presenter/{monitor/drift.py,candidates_publish/git_ops.py}": "lane parameters; the overlay replaces one lane's part of a slug only."
+      "src/repo_presenter/extractors/platforms/python_examples.py": "FIX (a shared defect, not a Lane L feature): the install and venv failure reasons quoted pip's stderr with the checkout's absolute path and CRLF; they now go through _redact, which also normalises CRLF. Required for a cross-machine byte-identical rerun."
+    blast_radius: >
+      Queried before the layout change, over candidates/, scripts/_lane_r_output/, the source and the live
+      durable-state refs (read-only ls-remote and load; nothing dispatched, nothing written). candidates/: 2
+      slug directories, 14 tracked files, 1 sealed bundle (aspose-3d-foss/Aspose.3D-FOSS-for-.NET @52b0f00e,
+      schema 1, READY_FOR_PROPOSAL, CURRENT present), 1 revision directory with no manifest (the Python
+      repository, probes.json only), 0 lane-l directories. scripts/_lane_r_output/: 36 repository directories,
+      untracked, none sealed. Live state refs: 2, both Lane R, both load unchanged under the new record schema.
+      Source modules reading the layout: 6; 5 changed (recheck.py reads it only through a receipt path nobody
+      writes yet). python_examples fix: 13 python registry entries consume it, 0 sealed python bundles, and the
+      only other unscrubbed tool-output sites in the 5 example verifiers: none. No sealed bundle was edited,
+      moved or resealed; the committed bundle's manifest and CURRENT are pinned by digest in
+      tests/core/test_candidates_lanes.py.
+    evidence: >
+      tests/test_lane_l_hosted.py drives the real CLI (--stage facts, then --stage cascade --lane L) against a
+      disposable upstream, the real git-ref state backend and a scripted provider: a README with a broken link
+      becomes a corrected, reviewed, sealed candidate (one BROKEN_LINK edit, every other byte the maintainers');
+      a rerun from another directory, another process identity and a CRLF git setting reproduces every
+      artifact byte for byte with zero provider calls and moves the bundle to READY_FOR_PROPOSAL (a control
+      shows the same setting changes a plain clone); without the restored call store it spends a call and the
+      seal withholds the proof; a README with nothing to correct seals as NO_CHANGE_WARRANTED with an empty
+      patch; a Lane L seal leaves Lane R's bundle, pointer and transaction byte-identical and the reverse; a
+      model REJECT, a deterministic-only verdict, an unusable review and a reviewer outage seal nothing and are
+      recorded (the outage as transient); a failing example is refused before the model is asked, naming Lane R.
+      Mutations each made a named test fail: verify_bundle ignoring the lane, the host in Lane L's dependencies,
+      always-upgrading the manifest, dropping unrepaired defects, one shared state ref, the whole-slug overlay,
+      the transaction ignoring the lane, asking the model past a rejecting holdout, trusting the engine's spans.
+      The path fix's two tests fail on the unfixed verifier.
+    not_yet_done: >
+      No hosted run (nothing dispatched). A Lane L candidate is not PR-eligible: the reviewer calibration gate has
+      not passed, the reviewer prompt is written for Lane R's shape, no Lane L corpus exists, and
+      propose/effect.py (not touched: another change owns it) reads Lane R's CURRENT only. No Lane L recheck
+      runner (recheck_bundle is unported for both lanes). The old engine's claim_* and additions detectors, and
+      settle.py, are not ported.

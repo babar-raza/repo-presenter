@@ -36,6 +36,13 @@ every further differing rerun rather than tracking whether it is genuinely a *ne
 doing so (the old repo's own idempotency bookkeeping) -- an honest, simpler behavior, not a
 missing feature with a silent gap.
 
+Two lanes (``plans/PLAN_lane_l_hosted.md``): ``SealInputs.lane`` selects the artifact set, the
+dependencies record and the tree. Lane R is layout v1, unchanged: its artifacts, its
+``dependencies.json`` and its location. Lane L has its own (``LANE_L_REQUIRED_ARTIFACTS``,
+:func:`lane_l_dependencies_document`, ``candidates/<slug>/lane-l/``). The proof, the update recording
+and the adoption are one mechanism for both. A first seal writes manifest schema 2, which names its
+lane; a bundle already sealed in schema 1 keeps being rewritten as schema 1 (:func:`_manifest_header`).
+
 The bundle lives at ``candidates/<owner>__<name>/<revision>/`` at the repository root (matching
 ``recheck.py``'s own already-ported ``receipt_path()``), committed to git -- unlike
 ``scripts/_lane_r_output/``, which stays gitignored working output.
@@ -54,6 +61,13 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from repo_presenter.core.candidates import (
+    LANE_L,
+    LANE_LESS_SCHEMA_VERSION,
+    LANE_R,
+    LANE_SCHEMA_VERSION,
+    lane_directory,
+)
 from repo_presenter.core.errors import PresenterError
 from repo_presenter.core.facts import FactsDocument
 from repo_presenter.core.llm.ledger import parse_records
@@ -70,6 +84,7 @@ from repo_presenter.core.noop_proof import (
 from repo_presenter.core.registry.models import RegistryEntry
 from repo_presenter.core.secrets import ConfiguredSecret, scan_for_secrets
 from repo_presenter.core.toolchains import toolchain_fingerprint
+from repo_presenter.lane_l_review import LANE_L_REVIEW_VERSION
 from repo_presenter.readme.bundle.invalidation import (
     STATE_INVALIDATED,
     STATE_UPDATE_AVAILABLE,
@@ -79,6 +94,8 @@ from repo_presenter.readme.bundle.invalidation import route as route_scopes
 from repo_presenter.readme.composition.authoring import NORMALISATION_VERSION
 from repo_presenter.readme.composition.components.shell import SHELL_VERSION
 from repo_presenter.readme.composition.renderer import RENDERER_VERSION
+from repo_presenter.readme.correction.detectors import DETECTOR_VERSIONS
+from repo_presenter.readme.correction.engine import CORRECTION_ENGINE_VERSION
 from repo_presenter.readme.evidence.facts.inherited import INHERITED_UNITS_VERSION
 from repo_presenter.readme.review.independent_reviewer import REVIEWER_LOGIC_VERSION
 
@@ -111,6 +128,22 @@ OPTIONAL_ARTIFACTS: tuple[str, ...] = (
     "content_units.json",
     "content_units.coherent.json",
 )
+# Lane L's artifacts (plans/PLAN_lane_l_hosted.md L3). The corrected README is the candidate; the
+# live README it was made from is a consumed input and is sealed beside it so the edit list can be
+# re-checked by anyone holding only the bundle; corrections.json is the edit list and the report;
+# holdouts.json the deterministic review. There is no plan, no dispositions and no content units:
+# Lane L has none of those.
+LANE_L_REQUIRED_ARTIFACTS: tuple[str, ...] = (
+    "README.md",
+    "README.original.md",
+    "README.patch.diff",
+    "corrections.json",
+    "holdouts.json",
+    "facts.json",
+    "review_verdict.json",
+    LEDGER_BUNDLE_FILENAME,
+)
+LANE_L_OPTIONAL_ARTIFACTS: tuple[str, ...] = ()
 REPLAY_EXEMPT = frozenset({LEDGER_BUNDLE_FILENAME, BUNDLE_MANIFEST_NAME})
 
 
@@ -140,6 +173,8 @@ class SealInputs:
     provider_calls: int
     invocation: Invocation
     secrets: Sequence[ConfiguredSecret] = ()
+    # The lane this candidate belongs to; its bundle is sealed in that lane's tree only.
+    lane: str = LANE_R
 
 
 @dataclass(frozen=True)
@@ -150,8 +185,13 @@ class SealResult:
     no_op_proof: dict[str, Any] | None = None
 
 
-def bundle_directory(candidates_root: Path, entry: RegistryEntry, revision: str) -> Path:
-    return candidates_root / CANDIDATES_DIRNAME / f"{entry.owner}__{entry.name}" / revision
+def bundle_directory(
+    candidates_root: Path, entry: RegistryEntry, revision: str, lane: str = LANE_R
+) -> Path:
+    """``candidates/<slug>/<revision>`` for Lane R (layout v1), ``candidates/<slug>/lane-l/
+    <revision>`` for Lane L; the lane's ``CURRENT`` pointer is this directory's parent's."""
+    repository_dir = candidates_root / CANDIDATES_DIRNAME / f"{entry.owner}__{entry.name}"
+    return lane_directory(repository_dir, lane) / revision
 
 
 def _sha256(data: bytes) -> str:
@@ -202,8 +242,18 @@ def code_dependencies(prompts: PromptRegistry) -> dict[str, Any]:
     }
 
 
-def dependencies_document(inputs: SealInputs) -> dict[str, Any]:
-    """Exactly the inputs this candidate consumed, so a future recheck can tell what changed."""
+def dependencies_document(
+    inputs: SealInputs, staged: Mapping[str, bytes] | None = None
+) -> dict[str, Any]:
+    """Exactly the inputs this candidate consumed, so a future recheck can tell what changed.
+
+    Lane R's document is what it has always been, byte for byte: adding a key would make every
+    rerun of a sealed layout-v1 bundle differ from it. Lane L's is its own
+    (:func:`lane_l_dependencies_document`), built from the staged artifacts."""
+    if inputs.lane == LANE_L:
+        if staged is None:
+            raise SealError("seal: a Lane L dependencies record is built from its staged artifacts")
+        return lane_l_dependencies_document(inputs, staged)
     code = code_dependencies(inputs.prompts)
     return {
         "schema_version": 1,
@@ -215,6 +265,64 @@ def dependencies_document(inputs: SealInputs) -> dict[str, Any]:
         },
         "prompts": code["prompts"],
         "components": code["components"],
+    }
+
+
+def lane_l_dependencies_document(inputs: SealInputs, staged: Mapping[str, bytes]) -> dict[str, Any]:
+    """What a Lane L candidate consumed: the pinned revision and the live README's bytes (the
+    ``source``), the fact records, the correction engine and each detector, the review's prompt and
+    logic. Nothing about the machine that sealed it: the correction is a pure function of those
+    inputs, so a rerun on another host, another Python or another working directory writes the same
+    bytes (plan L4). A prompt or renderer Lane L never ran is not here, and cannot reopen it."""
+    try:
+        review = inputs.prompts["independent_review"]
+    except KeyError as exc:
+        raise SealError("seal: the prompt registry has no independent_review manifest") from exc
+    return {
+        "schema_version": 1,
+        "lane": LANE_L,
+        "source": {
+            "revision": inputs.source_revision,
+            "readme_sha256": _sha256(staged["README.original.md"]),
+        },
+        "environment": {"inherited_units_version": INHERITED_UNITS_VERSION},
+        "facts": {
+            fact.id: _sha256(_canonical_json(asdict(fact)))
+            for fact in sorted(inputs.facts.facts, key=lambda fact: fact.id)
+        },
+        "prompts": {
+            "independent_review": {
+                "sha256": review.sha256,
+                "version": review.manifest.version,
+                "model_route": review.manifest.model_route,
+            }
+        },
+        "components": {
+            "correction_engine": CORRECTION_ENGINE_VERSION,
+            "correction_review": LANE_L_REVIEW_VERSION,
+            "reviewer_logic": REVIEWER_LOGIC_VERSION,
+        },
+        "detectors": dict(sorted(DETECTOR_VERSIONS.items())),
+    }
+
+
+def lane_l_manifest_summary(staged: Mapping[str, bytes]) -> dict[str, Any]:
+    """The manifest's own one-glance record of what the Lane L run did, read from the sealed
+    ``corrections.json`` so it cannot disagree with it: the outcome (``CORRECTED`` or
+    ``NO_CHANGE_WARRANTED``, plan L2), the edits applied, the defects left unrepaired (always 0 in a
+    sealed candidate: a defect refuses the run) and the opportunities reported but not written."""
+    try:
+        report = json.loads(staged["corrections.json"].decode("utf-8"))
+    except (KeyError, ValueError) as exc:
+        raise SealError(f"seal: corrections.json is unreadable: {exc}") from exc
+    unapplied = report.get("unapplied", [])
+    return {
+        "correction": {
+            "outcome": report.get("outcome"),
+            "edits": len(report.get("edits", [])),
+            "defects": sum(1 for item in unapplied if item.get("defect")),
+            "opportunities": sum(1 for item in unapplied if not item.get("defect")),
+        }
     }
 
 
@@ -232,7 +340,18 @@ def _artifact_sources(inputs: SealInputs) -> dict[str, Path]:
     """bundle filename -> the real file it is read from, across this repository's two real
     evidence locations (``out_dir`` and ``facts_path``'s own directory)."""
     out_dir = inputs.out_dir
-    sources = {
+    if inputs.lane == LANE_L:
+        return {
+            "README.md": out_dir / "README.corrected.md",
+            "README.original.md": out_dir / "README.original.md",
+            "README.patch.diff": out_dir / "README.patch.diff",
+            "corrections.json": out_dir / "corrections.json",
+            "holdouts.json": out_dir / "holdouts.json",
+            "facts.json": inputs.facts_path,
+            "review_verdict.json": out_dir / "review_verdict.json",
+            LEDGER_BUNDLE_FILENAME: out_dir / "llm_cache" / LEDGER_BUNDLE_FILENAME,
+        }
+    return {
         "README.md": _readme_source(out_dir),
         "README.patch.diff": out_dir / "README.patch.diff",
         "facts.json": inputs.facts_path,
@@ -244,23 +363,38 @@ def _artifact_sources(inputs: SealInputs) -> dict[str, Path]:
         "content_units.json": out_dir / "content_units.json",
         "content_units.coherent.json": out_dir / "content_units.coherent.json",
     }
-    return sources
 
 
 def _staged_artifacts(inputs: SealInputs) -> dict[str, bytes]:
+    if inputs.lane not in (LANE_R, LANE_L):
+        raise SealError(f"seal: unknown lane {inputs.lane!r}")
     sources = _artifact_sources(inputs)
+    required = LANE_L_REQUIRED_ARTIFACTS if inputs.lane == LANE_L else REQUIRED_ARTIFACTS
+    optional = LANE_L_OPTIONAL_ARTIFACTS if inputs.lane == LANE_L else OPTIONAL_ARTIFACTS
     staged: dict[str, bytes] = {}
-    for name in REQUIRED_ARTIFACTS:
+    for name in required:
         path = sources[name]
         if not path.is_file():
             raise SealError(f"seal: the cascade output has no {name} (expected at {path})")
         staged[name] = path.read_bytes()
-    for name in OPTIONAL_ARTIFACTS:
+    for name in optional:
         path = sources[name]
         if path.is_file():
             staged[name] = path.read_bytes()
-    staged[DEPENDENCIES_FILENAME] = _canonical_json(dependencies_document(inputs))
+    staged[DEPENDENCIES_FILENAME] = _canonical_json(dependencies_document(inputs, staged))
     return staged
+
+
+def _manifest_header(inputs: SealInputs, existing: Mapping[str, Any] | None) -> dict[str, Any]:
+    """The manifest's version (and lane). A first seal writes the current layout, which names its
+    lane. A bundle already sealed in layout v1 keeps writing layout v1 (no ``lane`` key; it is Lane
+    R by definition): rewriting it into another version would be a reseal of a bundle that has not
+    changed, and no sealed bundle is edited or resealed for the sake of a layout."""
+    if existing is not None and existing.get("schema_version") == LANE_LESS_SCHEMA_VERSION:
+        if inputs.lane != LANE_R:
+            raise SealError("seal: a layout-v1 bundle is Lane R and cannot be sealed as another lane")
+        return {"schema_version": LANE_LESS_SCHEMA_VERSION}
+    return {"schema_version": LANE_SCHEMA_VERSION, "lane": inputs.lane}
 
 
 def _write_bundle(
@@ -271,12 +405,13 @@ def _write_bundle(
     state: str = STATE_ACCEPTED,
     proof: dict[str, Any] | None = None,
     extra: Mapping[str, Any] | None = None,
+    existing: Mapping[str, Any] | None = None,
 ) -> SealResult:
     files = {
         name: {"sha256": _sha256(data), "bytes": len(data)} for name, data in sorted(staged.items())
     }
     manifest = {
-        "schema_version": 1,
+        **_manifest_header(inputs, existing),
         "repository": inputs.entry.repository,
         "revision": inputs.source_revision,
         "state": state,
@@ -288,6 +423,7 @@ def _write_bundle(
         "ledger_totals": ledger_totals(
             parse_records(staged[LEDGER_BUNDLE_FILENAME].decode("utf-8"), LEDGER_BUNDLE_FILENAME)
         ),
+        **(lane_l_manifest_summary(staged) if inputs.lane == LANE_L else {}),
         **dict(extra or {}),
     }
     bundle.parent.mkdir(parents=True, exist_ok=True)
@@ -378,7 +514,7 @@ def _record_update(
     exactly as proven, with the new difference waiting beside it until a later rerun reproduces
     it byte for byte with zero calls (:func:`_adopt_update`)."""
     try:
-        routing = route_scopes((), differing)
+        routing = route_scopes((), differing, inputs.lane)
     except ScopeError as exc:
         raise SealError(f"seal: {exc}") from exc
     if routing.state is None or routing.triggering_scope is None:
@@ -438,7 +574,13 @@ def _adopt_update(
     adopted["previous_proof"] = existing.get("no_op_proof")
     adopted["adopted_at"] = proof["proven_at"]
     return _write_bundle(
-        bundle, staged, inputs=inputs, state=STATE_READY, proof=proof, extra={"adopted": adopted}
+        bundle,
+        staged,
+        inputs=inputs,
+        state=STATE_READY,
+        proof=proof,
+        extra={"adopted": adopted},
+        existing=existing,
     )
 
 
@@ -473,7 +615,9 @@ def seal_candidate(inputs: SealInputs) -> SealResult:
     proof stay exactly as proven until genuinely adopted; only the manifest's own
     ``state``/``update``/``adopted`` fields change. Also raises :class:`NotImplementedError`
     when byte-identical artifacts are not fresh or not zero-call -- never faking the proof."""
-    bundle = bundle_directory(inputs.candidates_root, inputs.entry, inputs.source_revision)
+    bundle = bundle_directory(
+        inputs.candidates_root, inputs.entry, inputs.source_revision, inputs.lane
+    )
     existing = _read_manifest(bundle / BUNDLE_MANIFEST_NAME)
     staged = _staged_artifacts(inputs)
     if existing is None:
@@ -484,7 +628,7 @@ def seal_candidate(inputs: SealInputs) -> SealResult:
         if not _is_waiting_state(existing):
             # Nothing was proven or waiting yet -- a plain re-seal with the new content, same as
             # the first seal would have been had this content been the first one staged.
-            return _write_bundle(bundle, staged, inputs=inputs)
+            return _write_bundle(bundle, staged, inputs=inputs, existing=existing)
         waiting = existing.get("update") or {}
         if (
             inputs.provider_calls == 0
@@ -513,4 +657,6 @@ def seal_candidate(inputs: SealInputs) -> SealResult:
         inputs.out_dir / "llm_cache" / LEDGER_BUNDLE_FILENAME, inputs.invocation.invocation_id
     )
     proof = _proof(existing["sealed_by"], inputs, measured)
-    return _write_bundle(bundle, staged, inputs=inputs, state=STATE_READY, proof=proof)
+    return _write_bundle(
+        bundle, staged, inputs=inputs, state=STATE_READY, proof=proof, existing=existing
+    )

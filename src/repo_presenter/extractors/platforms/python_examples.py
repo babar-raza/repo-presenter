@@ -114,7 +114,9 @@ WORKSPACE_TOKEN = "<workspace>"
 def _redact(text: str, workspace: Path, *bases: Path) -> str:
     """The run's own absolute path replaced by a stable token, in either separator, then every
     other absolute path this machine could print (the checkout, a temp or home directory) cut
-    back to its file name."""
+    back to its file name, and the platform's CRLF line ends made LF (a Windows pipe and a Linux
+    one would otherwise seal different bytes for the same tool message)."""
+    text = text.replace("\r\n", "\n")
     for variant in sorted({str(workspace), str(workspace.resolve())}, key=len, reverse=True):
         text = text.replace(variant, WORKSPACE_TOKEN).replace(
             variant.replace("\\", "/"), WORKSPACE_TOKEN
@@ -486,7 +488,8 @@ def verify_python_examples(
         extra_environment=install_environment,
     )
     if bootstrap.return_code != 0:
-        return _all_not_verified(candidates, f"venv creation failed: {_clip(bootstrap.stderr)}")
+        reason = _redact(_clip(bootstrap.stderr), workspace, root).strip()
+        return _all_not_verified(candidates, f"venv creation failed: {reason}")
     python = _venv_python(venv)
     pip = [sys.executable, "-m", "pip"]
     if interpreter.label:
@@ -522,7 +525,8 @@ def verify_python_examples(
         # *source* install kind and never as a registry command (section 27.9 item (0)/(24)).
         fallback = _source_roots(root, tree_paths)
         if not fallback:
-            return _all_not_verified(candidates, f"package install failed: {_clip(install.stderr)}")
+            reason = _redact(_clip(install.stderr), workspace, root).strip()
+            return _all_not_verified(candidates, f"package install failed: {reason}")
         # The build carried the dependency resolution with it, so the source tree alone is a
         # library with none of what it imports: every Aspose.BarCode example then failed with
         # `ModuleNotFoundError: No module named 'PIL'` (2026-09-07), an honest failure of a

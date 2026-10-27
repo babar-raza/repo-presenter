@@ -157,6 +157,33 @@ def test_an_uninstallable_package_leaves_every_candidate_unverified(tmp_path: Pa
     assert receipts[0].detail.startswith("package install failed")
 
 
+def test_an_install_failure_reason_names_no_machine_path_and_no_platform_newline(
+    tmp_path: Path,
+) -> None:
+    """Hosted Lane L, rerun from another directory: pip's own error quoted the checkout by
+    absolute path (and a Windows pipe ended it with CRLF), so the sealed facts.json carried the
+    machine and no rerun elsewhere could be byte-identical (mission section 7 step 8). The reason
+    keeps pip's message and loses where it happened."""
+    root = tmp_path / "repo-with-a-distinctive-name"
+    root.mkdir()
+    (root / "README.md").write_text("# x\n", encoding="utf-8")  # no setup.py, no pyproject.toml
+    run = tmp_path / "run-with-another-distinctive-name"
+    receipts = verify_python_examples(root, ["README.md"], [_candidate(1, "print(1)\n")], run)
+    (receipt,) = receipts
+    assert receipt.outcome == "NOT_VERIFIED" and receipt.detail.startswith("package install failed")
+    assert "not installable" in receipt.detail  # pip's message is kept
+    for machine in ("repo-with-a-distinctive-name", "another-distinctive-name", str(tmp_path)):
+        assert machine not in receipt.detail
+    assert "\r" not in receipt.detail and receipt.detail == receipt.detail.strip()
+
+
+def test_redaction_makes_a_windows_pipe_s_line_ends_the_same_as_a_linux_one(tmp_path: Path) -> None:
+    redact = python_examples._redact
+    assert redact("a\r\nb\r\n", tmp_path / "w", tmp_path / "r") == redact(
+        "a\nb\n", tmp_path / "w", tmp_path / "r"
+    )
+
+
 def test_a_workspace_windows_will_not_release_does_not_end_the_stage(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

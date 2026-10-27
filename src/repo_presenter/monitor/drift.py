@@ -44,7 +44,9 @@ from typing import Any, Literal
 from repo_presenter.core.candidates import (
     CANDIDATES_DIRNAME,
     CURRENT_FILENAME,
+    LANE_R,
     BundleError,
+    lane_directory,
     verify_bundle,
 )
 from repo_presenter.core.registry.models import RegistryEntry
@@ -119,11 +121,15 @@ def observe_drift(
     read_tree: TreeReader = fetch_tree,
     freshness_observe: RegistryObserve | None = None,
     now: datetime | None = None,
+    lane: str = LANE_R,
 ) -> list[RepositoryDrift]:
     """Observe each entry in order. A failure on one entry is recorded, never raised past it.
 
     ``freshness_observe`` (the registry probe) enables the 30-day freshness check for bundles
     older than ``FRESHNESS_MAX_AGE``; left ``None`` the check does not run and no registry is read.
+    ``lane`` selects whose ``CURRENT`` candidate is observed (Lane R by default); a repository is
+    observed once per lane, the caller choosing which (a Lane L bundle consumes the same README,
+    manifest and cited paths, so the same relevance rules judge it).
     """
     return [
         observe_repository(
@@ -134,6 +140,7 @@ def observe_drift(
             read_tree=read_tree,
             freshness_observe=freshness_observe,
             now=now,
+            lane=lane,
         )
         for entry in entries
     ]
@@ -148,8 +155,10 @@ def observe_repository(
     read_tree: TreeReader = fetch_tree,
     freshness_observe: RegistryObserve | None = None,
     now: datetime | None = None,
+    lane: str = LANE_R,
 ) -> RepositoryDrift:
-    """Read one repository's head, then classify it against its ``CURRENT`` sealed bundle."""
+    """Read one repository's head, then classify it against its ``CURRENT`` sealed bundle in
+    ``lane``."""
     repository = entry.repository
     try:
         read = read_head(repository, token=token)
@@ -163,12 +172,12 @@ def observe_repository(
         return RepositoryDrift(
             repository, entry.mode, "UNREACHABLE", None, read.branch, None, message
         )
-    bundle_revision, manifest, problem = current_bundle(root, repository)
+    bundle_revision, manifest, problem = current_bundle(root, repository, lane)
     if bundle_revision is None or manifest is None:
         return RepositoryDrift(
             repository, entry.mode, "NO_BUNDLE", read.sha, read.branch, None, problem
         )
-    bundle = bundle_directory(root, repository) / bundle_revision
+    bundle = bundle_directory(root, repository, lane) / bundle_revision
     scope = load_scope(bundle, bundle_revision, manifest)
     classification = classify_change(
         scope,
@@ -255,13 +264,16 @@ def _with_freshness(
     return Classification("RELEVANT_CHANGE", f"freshness: {result.detail}")
 
 
-def bundle_directory(root: Path, repository: str) -> Path:
-    """The repository's candidate directory (``CURRENT`` and one directory per revision)."""
-    return root / CANDIDATES_DIRNAME / repository.replace("/", "__")
+def bundle_directory(root: Path, repository: str, lane: str = LANE_R) -> Path:
+    """The repository's candidate directory in ``lane`` (``CURRENT`` and one directory per
+    revision)."""
+    return lane_directory(
+        root / CANDIDATES_DIRNAME / repository.replace("/", "__"), lane
+    )
 
 
 def current_bundle(
-    root: Path, repository: str
+    root: Path, repository: str, lane: str = LANE_R
 ) -> tuple[str | None, dict[str, Any] | None, str | None]:
     """The revision ``CURRENT`` names and its verified manifest, when it has a sealed,
     self-consistent bundle.
@@ -271,7 +283,7 @@ def current_bundle(
     counting, so a superseded revision directory left behind can never stand in for the current
     bundle.
     """
-    directory = bundle_directory(root, repository)
+    directory = bundle_directory(root, repository, lane)
     pointer = directory / CURRENT_FILENAME
     if not pointer.is_file():
         return None, None, "no CURRENT pointer"
@@ -282,7 +294,7 @@ def current_bundle(
     if not _REVISION.fullmatch(revision):
         return None, None, "CURRENT does not name a 40-character revision"
     try:
-        manifest = verify_bundle(directory / revision)
+        manifest = verify_bundle(directory / revision, lane)
     except (BundleError, OSError) as exc:
         return None, None, f"CURRENT bundle fails verification: {exc}"
     if manifest is None:

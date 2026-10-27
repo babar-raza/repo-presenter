@@ -29,6 +29,11 @@ from repo_presenter.readme.correction.text_gate import narration
 
 NL = chr(10)
 
+#: Bump whenever ``collect``/``assemble``/``correct`` or the apply and confinement logic change
+#: meaning (the same contract ``RENDERER_VERSION`` serves Lane R). A Lane L bundle records it as
+#: ``components.correction_engine``, so a bump reopens only the ``correction`` scope.
+CORRECTION_ENGINE_VERSION = "1"
+
 
 class CorrectionError(PresenterError):
     """The engine could not honestly correct this README (a violated invariant, never a skip)."""

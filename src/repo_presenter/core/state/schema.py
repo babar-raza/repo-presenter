@@ -333,6 +333,10 @@ class RepositoryRecord(BaseModel):
 
     schema_version: Literal[1] = 1
     repository: str = Field(pattern=REPOSITORY_PATTERN)
+    # The lane this transaction record belongs to. One repository has one record per lane (Lane R
+    # and Lane L are two equal transactions, ``plans/PLAN_lane_l_hosted.md`` L9); a record written
+    # before the lane existed is Lane R, so the default reads every existing record unchanged.
+    lane: Literal["R", "L"] = "R"
     provider_repository_id: int = Field(gt=0)
     registry_revision: str | None = None
     active_transaction_id: str | None = None

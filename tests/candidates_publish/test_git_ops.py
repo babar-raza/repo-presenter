@@ -207,3 +207,48 @@ def test_overlay_refuses_a_missing_import_directory(
     checkout_branch(clone, BRANCH, "main", token=None)
     with pytest.raises(RepositoryMetadataError):
         overlay_bundle(clone, SLUG, tmp_path / "does-not-exist")
+
+
+def _lane_l_import(tmp_path: Path, revision: str) -> Path:
+    """What a job that ran only Lane L carries: a Lane L bundle under ``lane-l/``, no Lane R."""
+    directory = tmp_path / f"import-lane-l-{revision}"
+    lane = directory / "lane-l"
+    (lane / revision).mkdir(parents=True)
+    (lane / "CURRENT").write_text(revision + "\n", encoding="utf-8")
+    (lane / revision / "README.md").write_text(f"# lane l {revision}\n", encoding="utf-8")
+    return directory
+
+
+def test_publishing_lane_r_keeps_the_committed_lane_l_candidate(
+    tmp_path: Path, clone: Path
+) -> None:
+    """Falsifier for the old wholesale replace: a Lane R import carries no Lane L tree, and
+    replacing ``candidates/<slug>`` wholesale would delete Lane L's committed candidate."""
+    checkout_branch(clone, BRANCH, "main", token=None)
+    lane_l = clone / "candidates" / SLUG / "lane-l"
+    (lane_l / ("c" * 40)).mkdir(parents=True)
+    (lane_l / "CURRENT").write_text("c" * 40 + "\n", encoding="utf-8")
+    (lane_l / ("c" * 40) / "README.md").write_text("# lane l\n", encoding="utf-8")
+
+    overlay_bundle(clone, SLUG, _import_dir(tmp_path, "b" * 40))
+
+    assert read_committed_file(clone, f"candidates/{SLUG}/CURRENT") == "b" * 40 + "\n"
+    assert not (clone / "candidates" / SLUG / ("a" * 40)).exists()  # Lane R was replaced
+    assert (lane_l / "CURRENT").read_text(encoding="utf-8") == "c" * 40 + "\n"
+    assert (lane_l / ("c" * 40) / "README.md").read_text(encoding="utf-8") == "# lane l\n"
+
+
+def test_publishing_lane_l_replaces_only_the_lane_l_tree(tmp_path: Path, clone: Path) -> None:
+    checkout_branch(clone, BRANCH, "main", token=None)
+    overlay_bundle(clone, SLUG, _lane_l_import(tmp_path, "d" * 40), "L")
+    lane_l = clone / "candidates" / SLUG / "lane-l"
+    assert (lane_l / "CURRENT").read_text(encoding="utf-8") == "d" * 40 + "\n"
+
+    overlay_bundle(clone, SLUG, _lane_l_import(tmp_path, "e" * 40), "L")
+    assert (lane_l / "CURRENT").read_text(encoding="utf-8") == "e" * 40 + "\n"
+    assert not (lane_l / ("d" * 40)).exists()  # the superseded Lane L revision is replaced
+    # Lane R is exactly what the remote committed.
+    assert read_committed_file(clone, f"candidates/{SLUG}/CURRENT") == "a" * 40 + "\n"
+    assert (clone / "candidates" / SLUG / ("a" * 40) / "README.md").read_text(
+        encoding="utf-8"
+    ) == "# old\n"

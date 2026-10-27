@@ -9,11 +9,19 @@ name: present
 #           only hand a facts.json plus a manifest to the next job.
 #   present holds the provider key and the write-scoped state token. It installs no toolchain and
 #           executes no repository code: it verifies and validates the facts artifact as hostile
-#           input, re-clones the SAME pinned revision to read the README, then runs the cascade,
-#           the review, the seal and the durable transaction.
+#           input, re-clones the SAME pinned revision to read the README, then runs the chosen
+#           lane(s), the review, the seal and the durable transaction.
+#
+# Two equal lanes (plans/PLAN_lane_l_hosted.md). Both read the one facts artifact. Lane R is the
+# full reconstruction cascade; Lane L corrects the live README with minimal evidenced edits and has
+# the FINAL README independently reviewed. "both" runs R then L in the present job, each as its own
+# process: its own durable-state record, its own candidate pointer, its own seal. Lane L runs
+# whether or not Lane R failed (neither lane is measured by the other's delivery); the job is red
+# if either lane failed.
 #
 # tests/test_present.py parses this file and fails if the facts job gains a secret or write scope,
-# or the present job gains a toolchain step.
+# or the present job gains a toolchain step; tests/test_present_lanes.py fails if a lane step is
+# missing, runs the other lane's flag, or can be skipped because the other lane failed.
 on:
   workflow_dispatch:
     inputs:
@@ -26,6 +34,12 @@ on:
         required: true
         type: choice
         options: [python, net, java, cpp, go, rust, typescript, nodejs]
+      lane:
+        description: "R: full reconstruction. L: correct the live README. both: R then L."
+        required: true
+        type: choice
+        options: [both, R, L]
+        default: both
 
 permissions:
   contents: read
@@ -135,6 +149,7 @@ jobs:
           path: |
             candidates/${{ steps.slug.outputs.slug }}
             .present-work/cascade/llm_cache
+            .present-work/lane-l/llm_cache
           key: presenter-state-${{ steps.slug.outputs.slug }}-${{ github.run_id }}
           restore-keys: presenter-state-${{ steps.slug.outputs.slug }}-
 
@@ -142,12 +157,18 @@ jobs:
       # checks its manifest and digest (also against the digest the facts job published as a job
       # output), validates it as data, and re-clones the recorded revision for README reads only.
       - name: Fetch the facts
+        id: fetch_facts
         uses: actions/download-artifact@v4
         with:
           name: present-facts-${{ github.run_id }}
           path: .present-facts
 
-      - name: Present
+      # Each lane is its own process, so its own durable-state record, candidate pointer and seal.
+      # Lane L carries a status function (!cancelled()) so it runs whether or not Lane R failed:
+      # neither lane is measured by the other's delivery. It still needs the facts, so it is gated
+      # on the fetch step's outcome. The job is red if either lane is.
+      - name: Present (Lane R)
+        if: ${{ inputs.lane != 'L' }}
         env:
           INPUT_REPOSITORY: ${{ inputs.repository }}
           INPUT_ECOSYSTEM: ${{ inputs.ecosystem }}
@@ -159,6 +180,28 @@ jobs:
         run: |
           python -m repo_presenter.present \
             --stage cascade \
+            --lane R \
+            --repository "$INPUT_REPOSITORY" \
+            --ecosystem "$INPUT_ECOSYSTEM" \
+            --state-remote "https://github.com/${GITHUB_REPOSITORY_SLUG}.git" \
+            --workdir .present-work \
+            --facts-dir .present-facts \
+            --expected-facts-sha256 "$FACTS_SHA256"
+
+      - name: Present (Lane L)
+        if: ${{ !cancelled() && steps.fetch_facts.outcome == 'success' && inputs.lane != 'R' }}
+        env:
+          INPUT_REPOSITORY: ${{ inputs.repository }}
+          INPUT_ECOSYSTEM: ${{ inputs.ecosystem }}
+          GITHUB_REPOSITORY_SLUG: ${{ github.repository }}
+          FACTS_SHA256: ${{ needs.facts.outputs.facts_sha256 }}
+          GPT_OSS_ENDPOINT: ${{ secrets.GPT_OSS_ENDPOINT }}
+          GPT_OSS_API_KEY: ${{ secrets.GPT_OSS_API_KEY }}
+          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
+        run: |
+          python -m repo_presenter.present \
+            --stage cascade \
+            --lane L \
             --repository "$INPUT_REPOSITORY" \
             --ecosystem "$INPUT_ECOSYSTEM" \
             --state-remote "https://github.com/${GITHUB_REPOSITORY_SLUG}.git" \
@@ -173,6 +216,7 @@ jobs:
           path: |
             candidates/${{ steps.slug.outputs.slug }}
             .present-work/cascade/llm_cache
+            .present-work/lane-l/llm_cache
           key: presenter-state-${{ steps.slug.outputs.slug }}-${{ github.run_id }}
 
       - name: Keep the run's evidence

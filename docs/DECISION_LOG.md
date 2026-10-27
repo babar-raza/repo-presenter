@@ -460,3 +460,74 @@ python candidate passes S9 today); anything about Lane L; the budget for the nex
 **What this does NOT decide**: whether any item of 9 is accepted (supervisor); the Lane L reviewer; the
 budget of a third iteration.
 
+
+
+---
+
+## 2026-10-27: Lane L hosted parity (L1-L10): a second, equal lane that is corrected, reviewed, sealed and has its own transaction
+
+**Decided / built** (`plans/PLAN_lane_l_hosted.md` is the design; this records the decisions and what they cost):
+
+1. **A Lane L candidate** is the live README with the engine's minimal evidenced edits, judged as a whole. Its
+   outcomes are `CORRECTED`, `NO_CHANGE_WARRANTED` (legitimate: the live README is the candidate, still
+   model-reviewed, never an invented improvement) and a refusal that is not a candidate,
+   `REFUSED_LANE_R_RECOMMENDED` (a defect no deterministic edit may repair; named, never masked; which findings
+   are defects is a closed table where an unknown detector is a defect). Artifacts: corrected README, the live
+   README's bytes, patch, `corrections.json` (edit list and report), `holdouts.json`, facts, review verdict, ledger.
+2. **The final README is what is reviewed, not the delta.** Model-free holdouts first (confinement re-proved from
+   the edit list, determinism, the reviewer's own claim and retention rules over the final text, any unrepaired
+   defect); only a candidate that clears them reaches `review_with_model`, unchanged (same job, route, fold,
+   no-re-roll guard). `ReviewUnavailable` is a retryable failure; a deterministic-only verdict never seals.
+3. **The lane dimension is a versioned, additive layout.** Layout v1 IS Lane R and is not moved; Lane L lives in
+   `candidates/<slug>/lane-l/` with its own `CURRENT`; manifest schema 1 reads as Lane R, schema 2 names its lane
+   and a reader refuses a manifest in the wrong lane's tree. A bundle sealed in schema 1 keeps being rewritten as
+   schema 1 by its own proof; Lane R's `dependencies.json` gained no key. `CURRENT` is per lane (one pointer cannot
+   name two revisions). One status model (`portfolio_status`, a row per repository per lane); counts are separate
+   per lane; the drift monitor and the candidates-publish overlay take a lane (the overlay no longer replaces the
+   whole slug, so publishing one lane cannot delete the other's committed candidate).
+4. **Blast radius, queried first** (counts in the plan, section 6): 2 slugs, 14 tracked files, 1 sealed bundle
+   (schema 1, READY_FOR_PROPOSAL), 36 untracked scratch repositories, 2 live durable-state refs (both Lane R, both
+   load unchanged). No sealed bundle was edited, moved or resealed; the committed bundle's manifest and `CURRENT`
+   are pinned by digest in a test.
+5. **Consumed-scope invalidation for Lane L**: source revision and the live README's bytes and the fact records
+   invalidate; the correction engine and each detector are the new `correction` scope (stage COMPOSING, update
+   available, never invalidating); the review prompt and logic are reviewer scope; a prompt or renderer Lane L
+   never ran cannot reopen it. Lane L's dependencies name no host, Python or toolchain so a rerun elsewhere
+   writes the same bytes. Detector versions are pinned to their module sources by test.
+6. **One durable transaction per lane.** `GitStateBackend(lane=...)` keeps Lane L's record in
+   `.../records/<owner>__<name>@lane-l` (`@` cannot be in a GitHub name, so no repository can own the key; a `__`
+   suffix could have); the record names its lane; a record of the other lane in a lane's ref is refused; the
+   existing refs are exactly what they were.
+7. **Hosted**: `present.py --lane R|L` (default R); `present.yml` has a `lane` input (`both` default). Both lanes
+   read the one secret-free facts artifact; Lane L runs in the credentialed job on validated facts only, executes
+   no repository code and builds no facts. `both` runs two processes; Lane L runs after a Lane R failure (status
+   function) but not without the facts.
+8. **A shared defect found by the cross-machine requirement and fixed**: the Python example verifier quoted pip's
+   error with the checkout's absolute path and a CRLF (`python_examples._redact`), so two machines sealed different
+   `facts.json` for one revision. Blast radius: the only two unscrubbed tool-output sites of the five example
+   verifiers; 13 Python registry entries; 0 sealed Python bundles. Hosted Linux runs share a workspace path, which
+   is why no hosted run showed it.
+9. A structural test (`tests/readme/review/test_no_reroll.py`) listed the only two callers of `review_with_model`;
+   Lane L's `lane_l_review.py` is now the second production caller and the list says so.
+
+**What this does NOT decide**: PR eligibility of a Lane L candidate (needs the reviewer calibration gate, a Lane L
+corpus, and `propose/effect.py` accepting a lane; the reviewer prompt is written for Lane R's shape, with the
+renderer-owned-section and plan/dispositions wording, and is uncalibrated for Lane L); a Lane L recheck runner
+(`recheck_bundle` is unported for both lanes); the cohort pilot and any hosted run (none was dispatched; nothing
+here was run on a runner); the reviewer's own scope, which `readme/review/scope.py` defines by Lane R's shell
+(installation, license, badges, navigation, every fenced block and table row are "renderer-printed" and never
+shown to the model): true of a Lane R candidate, false of a Lane L one, so for Lane L the model never sees that
+text and only the deterministic holdouts cover it until the reviewer API can be told the candidate is not
+renderer-owned (that file is not touched here); the `claim_*` and `additions` detectors the old engine had (not ported), so a real
+README with a wrong version or install command is refused with a Lane R recommendation rather than repaired.
+
+**Two things the state card should say differently**: its "zero provider calls" rerun is a call-store replay of a
+stochastic reviewer (mission section 7 step 8 distinguishes that from repeatability), so the cache restore is part
+of the proof; and "a lane dimension in CURRENT" is a `CURRENT` per lane.
+
+**Where the detail lives**: `plans/PLAN_lane_l_hosted.md`; `src/repo_presenter/{lane_l_run,present}.py`,
+`lane_l_review.py`, `readme/correction/report.py`, `readme/bundle/{seal,invalidation,evaluation}.py`, `core/candidates.py`,
+`core/state/{git_backend,schema,present_transaction}.py`, `.github/workflows/present.yml`;
+`tests/test_lane_l_hosted.py`, `tests/test_lane_l_review.py`, `tests/test_present_lanes.py`, `tests/core/test_candidates_lanes.py`,
+`tests/core/state/test_lane_state.py`, `tests/readme/bundle/test_seal_lane_l.py`,
+`tests/readme/correction/test_lane_l_{report,determinism}.py`; `migration/reuse-manifest.yaml` (the "Lane L hosted parity" entry).
