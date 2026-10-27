@@ -23,6 +23,7 @@ from pathlib import Path
 
 from repo_presenter.core.config import load_gateway_config
 from repo_presenter.core.llm.prompts import load_manifests
+from repo_presenter.extractors.platforms.registry import plugin_for
 from repo_presenter.readme.review.calibration.corpus import (
     Base,
     Case,
@@ -341,6 +342,8 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.cache_corpus is not None and args.cache_corpus.is_file():
         cases = pickle.loads(args.cache_corpus.read_bytes())
+        for ecosystem in sorted({case.ecosystem for case in cases}):
+            plugin_for(ecosystem)  # registers the spec the blocking checks look up
     else:
         cases = build(
             parse_work(args.work), args.recorded_clones, parse_lane_r(args.lane_r)

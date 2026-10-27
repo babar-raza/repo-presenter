@@ -1,0 +1,144 @@
+cases 109, calls 41, units 249, tokens 664451
+calls/case 0.38, tokens/case 6096
+first replies 39: json 1.0 contract 0.9487179487179487; stability None (n=0)
+clean n=3 llm_reject=1 unavailable=0 accepted(pipeline)=2 yield=0.6666666666666666; unscored 9 rejected 4
+content_loss_rate 0.0
+  add_promotional_filler       n=11 pipeline_on_target=11/11 reviewer_on_target=11/11 reviewer_any=11/11 unavailable=0
+  break_install_command        n= 8 pipeline_on_target=8/8 reviewer_on_target=0/8 reviewer_any=1/8 unavailable=0
+  contradict_format            n= 7 pipeline_on_target=7/7 reviewer_on_target=5/7 reviewer_any=5/7 unavailable=0
+  contradict_package_name      n=11 pipeline_on_target=11/11 reviewer_on_target=0/11 reviewer_any=4/11 unavailable=0
+  contradict_version           n=10 pipeline_on_target=10/10 reviewer_on_target=2/10 reviewer_any=3/10 unavailable=0
+  drop_section                 n=11 pipeline_on_target=11/11 reviewer_on_target=0/11 reviewer_any=4/11 unavailable=0
+  duplicate_paragraph          n=11 pipeline_on_target=11/11 reviewer_on_target=4/11 reviewer_any=6/11 unavailable=0
+  inject_unsupported_claim     n=11 pipeline_on_target=11/11 reviewer_on_target=11/11 reviewer_any=11/11 unavailable=0
+  invent_api_name              n=11 pipeline_on_target=11/11 reviewer_on_target=10/11 reviewer_any=10/11 unavailable=0
+  real:broken_install          n= 1 pipeline_on_target=1/1 reviewer_on_target=0/1 reviewer_any=1/1 unavailable=0
+  real:contradiction           n= 2 pipeline_on_target=1/2 reviewer_on_target=1/2 reviewer_any=1/2 unavailable=0
+  real:duplicate_paragraph     n= 1 pipeline_on_target=1/1 reviewer_on_target=0/1 reviewer_any=1/1 unavailable=0
+  real:unsupported_claim       n= 2 pipeline_on_target=0/2 reviewer_on_target=0/2 reviewer_any=1/2 unavailable=0
+   PASS pipeline[break_install_command]: 1.00 (need >= 0.90, n=8)
+   PASS pipeline[contradict_format]: 1.00 (need >= 0.90, n=7)
+   PASS pipeline[contradict_package_name]: 1.00 (need >= 0.90, n=11)
+   PASS pipeline[contradict_version]: 1.00 (need >= 0.90, n=10)
+   PASS pipeline[drop_section]: 1.00 (need >= 0.90, n=11)
+   PASS pipeline[duplicate_paragraph]: 1.00 (need >= 0.90, n=11)
+   PASS pipeline[invent_api_name]: 1.00 (need >= 0.90, n=11)
+   PASS pipeline[real:broken_install]: 1.00 (need >= 0.90, n=1)
+   PASS pipeline[real:duplicate_paragraph]: 1.00 (need >= 0.90, n=1)
+   PASS reviewer_alone[add_promotional_filler]: 1.00 (need >= 0.90, n=11)
+   PASS reviewer_alone[inject_unsupported_claim]: 1.00 (need >= 0.90, n=11)
+   FAIL reviewer_alone[real:contradiction]: 0.50 (need >= 0.90, n=2)
+   FAIL reviewer_alone[real:unsupported_claim]: 0.00 (need >= 0.90, n=2)
+   FAIL false_reject_rate: 0.33 (need <= 0.10, n=3)
+   PASS json_valid_first_reply: 1.00 (need >= 0.90, n=39)
+   FAIL stability: not measured (need >= 0.90, n=0)
+status NOT_PASSED
+run5/clean                                    clean         None                       pre=- llm=accept      calls=0 units=2
+run5/real:unsupported_claim:0                 real_defect   real:unsupported_claim     pre=- llm=reject      calls=0 units=2
+run5/inject_unsupported_claim                 mutant        inject_unsupported_claim   pre=- llm=reject      calls=0 units=2
+run5/contradict_version                       mutant        contradict_version         pre=Y llm=accept      calls=0 units=2
+run5/contradict_package_name                  mutant        contradict_package_name    pre=Y llm=accept      calls=0 units=2
+run5/contradict_format                        mutant        contradict_format          pre=Y llm=reject      calls=0 units=2
+run5/drop_section                             mutant        drop_section               pre=Y llm=reject      calls=0 units=2
+run5/duplicate_paragraph                      mutant        duplicate_paragraph        pre=Y llm=reject      calls=0 units=2
+run5/break_install_command                    mutant        break_install_command      pre=Y llm=accept      calls=0 units=2
+run5/invent_api_name                          mutant        invent_api_name            pre=Y llm=reject      calls=0 units=2
+run5/add_promotional_filler                   mutant        add_promotional_filler     pre=- llm=reject      calls=0 units=2
+run7/clean                                    clean         None                       pre=- llm=accept      calls=0 units=3
+run7/real:unsupported_claim:0                 real_defect   real:unsupported_claim     pre=- llm=accept      calls=0 units=3
+run7/real:contradiction:1                     real_defect   real:contradiction         pre=- llm=reject      calls=0 units=3
+run7/real:contradiction:2                     real_defect   real:contradiction         pre=- llm=accept      calls=0 units=3
+run7/inject_unsupported_claim                 mutant        inject_unsupported_claim   pre=- llm=reject      calls=0 units=3
+run7/contradict_version                       mutant        contradict_version         pre=Y llm=accept      calls=0 units=3
+run7/contradict_package_name                  mutant        contradict_package_name    pre=Y llm=accept      calls=0 units=3
+run7/contradict_format                        mutant        contradict_format          pre=Y llm=reject      calls=0 units=3
+run7/drop_section                             mutant        drop_section               pre=Y llm=accept      calls=0 units=2
+run7/duplicate_paragraph                      mutant        duplicate_paragraph        pre=Y llm=reject      calls=0 units=3
+run7/break_install_command                    mutant        break_install_command      pre=Y llm=accept      calls=0 units=3
+run7/invent_api_name                          mutant        invent_api_name            pre=Y llm=reject      calls=0 units=3
+run7/add_promotional_filler                   mutant        add_promotional_filler     pre=- llm=reject      calls=0 units=3
+run9/clean                                    clean         None                       pre=- llm=reject      calls=0 units=3
+run9/inject_unsupported_claim                 mutant        inject_unsupported_claim   pre=- llm=reject      calls=0 units=3
+run9/contradict_version                       mutant        contradict_version         pre=Y llm=reject      calls=0 units=3
+run9/contradict_package_name                  mutant        contradict_package_name    pre=Y llm=reject      calls=0 units=3
+run9/contradict_format                        mutant        contradict_format          pre=Y llm=reject      calls=0 units=3
+run9/drop_section                             mutant        drop_section               pre=Y llm=reject      calls=0 units=2
+run9/duplicate_paragraph                      mutant        duplicate_paragraph        pre=Y llm=reject      calls=0 units=3
+run9/invent_api_name                          mutant        invent_api_name            pre=Y llm=reject      calls=0 units=3
+run9/add_promotional_filler                   mutant        add_promotional_filler     pre=- llm=reject      calls=0 units=3
+run2/clean                                    unscored_twin None                       pre=- llm=accept      calls=0 units=2
+run2/inject_unsupported_claim                 mutant        inject_unsupported_claim   pre=- llm=reject      calls=0 units=2
+run2/contradict_version                       mutant        contradict_version         pre=Y llm=accept      calls=0 units=2
+run2/contradict_package_name                  mutant        contradict_package_name    pre=Y llm=accept      calls=0 units=2
+run2/contradict_format                        mutant        contradict_format          pre=Y llm=accept      calls=0 units=2
+run2/drop_section                             mutant        drop_section               pre=Y llm=accept      calls=0 units=1
+run2/duplicate_paragraph                      mutant        duplicate_paragraph        pre=Y llm=accept      calls=0 units=2
+run2/break_install_command                    mutant        break_install_command      pre=Y llm=accept      calls=0 units=2
+run2/invent_api_name                          mutant        invent_api_name            pre=Y llm=accept      calls=0 units=2
+run2/add_promotional_filler                   mutant        add_promotional_filler     pre=- llm=reject      calls=0 units=2
+run3/clean                                    unscored_twin None                       pre=- llm=accept      calls=0 units=3
+run3/inject_unsupported_claim                 mutant        inject_unsupported_claim   pre=- llm=reject      calls=0 units=3
+run3/contradict_version                       mutant        contradict_version         pre=Y llm=accept      calls=0 units=3
+run3/contradict_package_name                  mutant        contradict_package_name    pre=Y llm=accept      calls=0 units=3
+run3/contradict_format                        mutant        contradict_format          pre=Y llm=accept      calls=0 units=3
+run3/drop_section                             mutant        drop_section               pre=Y llm=reject      calls=0 units=2
+run3/duplicate_paragraph                      mutant        duplicate_paragraph        pre=Y llm=reject      calls=0 units=3
+run3/break_install_command                    mutant        break_install_command      pre=Y llm=accept      calls=0 units=3
+run3/invent_api_name                          mutant        invent_api_name            pre=Y llm=reject      calls=0 units=3
+run3/add_promotional_filler                   mutant        add_promotional_filler     pre=- llm=reject      calls=0 units=3
+cellsnet/clean                                unscored_twin None                       pre=- llm=accept      calls=0 units=2
+cellsnet/inject_unsupported_claim             mutant        inject_unsupported_claim   pre=- llm=reject      calls=0 units=2
+cellsnet/contradict_version                   mutant        contradict_version         pre=Y llm=accept      calls=0 units=2
+cellsnet/contradict_package_name              mutant        contradict_package_name    pre=Y llm=accept      calls=0 units=2
+cellsnet/drop_section                         mutant        drop_section               pre=Y llm=accept      calls=0 units=2
+cellsnet/duplicate_paragraph                  mutant        duplicate_paragraph        pre=Y llm=accept      calls=0 units=2
+cellsnet/break_install_command                mutant        break_install_command      pre=Y llm=accept      calls=0 units=2
+cellsnet/invent_api_name                      mutant        invent_api_name            pre=Y llm=reject      calls=0 units=2
+cellsnet/add_promotional_filler               mutant        add_promotional_filler     pre=- llm=reject      calls=0 units=2
+cellspy/clean                                 unscored_twin None                       pre=- llm=accept      calls=0 units=2
+cellspy/inject_unsupported_claim              mutant        inject_unsupported_claim   pre=- llm=reject      calls=0 units=2
+cellspy/contradict_version                    mutant        contradict_version         pre=Y llm=accept      calls=0 units=2
+cellspy/contradict_package_name               mutant        contradict_package_name    pre=Y llm=accept      calls=0 units=2
+cellspy/contradict_format                     mutant        contradict_format          pre=Y llm=reject      calls=0 units=2
+cellspy/drop_section                          mutant        drop_section               pre=Y llm=accept      calls=0 units=2
+cellspy/duplicate_paragraph                   mutant        duplicate_paragraph        pre=Y llm=accept      calls=0 units=2
+cellspy/break_install_command                 mutant        break_install_command      pre=Y llm=accept      calls=0 units=2
+cellspy/invent_api_name                       mutant        invent_api_name            pre=Y llm=reject      calls=0 units=2
+cellspy/add_promotional_filler                mutant        add_promotional_filler     pre=- llm=reject      calls=0 units=2
+psdnet/clean                                  unscored_twin None                       pre=- llm=accept      calls=0 units=1
+psdnet/inject_unsupported_claim               mutant        inject_unsupported_claim   pre=- llm=reject      calls=0 units=1
+psdnet/contradict_version                     mutant        contradict_version         pre=Y llm=accept      calls=0 units=1
+psdnet/contradict_package_name                mutant        contradict_package_name    pre=Y llm=accept      calls=0 units=1
+psdnet/drop_section                           mutant        drop_section               pre=Y llm=accept      calls=0 units=1
+psdnet/duplicate_paragraph                    mutant        duplicate_paragraph        pre=Y llm=accept      calls=0 units=1
+psdnet/break_install_command                  mutant        break_install_command      pre=Y llm=accept      calls=0 units=1
+psdnet/invent_api_name                        mutant        invent_api_name            pre=Y llm=reject      calls=0 units=1
+psdnet/add_promotional_filler                 mutant        add_promotional_filler     pre=- llm=reject      calls=0 units=1
+cellsjava/clean                               unscored_twin None                       pre=- llm=reject      calls=2 units=2
+cellsjava/inject_unsupported_claim            mutant        inject_unsupported_claim   pre=- llm=reject      calls=1 units=2
+cellsjava/contradict_version                  mutant        contradict_version         pre=Y llm=reject      calls=0 units=2
+cellsjava/contradict_package_name             mutant        contradict_package_name    pre=Y llm=reject      calls=0 units=2
+cellsjava/drop_section                        mutant        drop_section               pre=Y llm=accept      calls=2 units=2
+cellsjava/duplicate_paragraph                 mutant        duplicate_paragraph        pre=Y llm=reject      calls=3 units=3
+cellsjava/break_install_command               mutant        break_install_command      pre=Y llm=reject      calls=0 units=2
+cellsjava/invent_api_name                     mutant        invent_api_name            pre=Y llm=reject      calls=1 units=2
+cellsjava/add_promotional_filler              mutant        add_promotional_filler     pre=- llm=reject      calls=1 units=2
+cellsts/clean                                 unscored_twin None                       pre=- llm=reject      calls=2 units=2
+cellsts/inject_unsupported_claim              mutant        inject_unsupported_claim   pre=- llm=reject      calls=2 units=2
+cellsts/contradict_package_name               mutant        contradict_package_name    pre=Y llm=reject      calls=0 units=2
+cellsts/contradict_format                     mutant        contradict_format          pre=Y llm=reject      calls=1 units=2
+cellsts/drop_section                          mutant        drop_section               pre=Y llm=accept      calls=1 units=1
+cellsts/duplicate_paragraph                   mutant        duplicate_paragraph        pre=Y llm=accept      calls=2 units=2
+cellsts/invent_api_name                       mutant        invent_api_name            pre=Y llm=reject      calls=1 units=2
+cellsts/add_promotional_filler                mutant        add_promotional_filler     pre=- llm=reject      calls=1 units=2
+threedts/clean                                unscored_twin None                       pre=- llm=reject      calls=3 units=3
+threedts/inject_unsupported_claim             mutant        inject_unsupported_claim   pre=- llm=reject      calls=1 units=3
+threedts/contradict_version                   mutant        contradict_version         pre=Y llm=reject      calls=1 units=3
+threedts/contradict_package_name              mutant        contradict_package_name    pre=Y llm=reject      calls=0 units=3
+threedts/drop_section                         mutant        drop_section               pre=Y llm=reject      calls=3 units=2
+threedts/duplicate_paragraph                  mutant        duplicate_paragraph        pre=Y llm=reject      calls=3 units=3
+threedts/invent_api_name                      mutant        invent_api_name            pre=Y llm=reject      calls=1 units=3
+threedts/add_promotional_filler               mutant        add_promotional_filler     pre=- llm=reject      calls=1 units=3
+font/clean                                    unscored_twin None                       pre=Y llm=reject      calls=4 units=4
+font/recorded:broken_install                  real_defect   real:broken_install        pre=Y llm=reject      calls=0 units=4
+duplicate_opening/recorded:duplicate_paragraph real_defect   real:duplicate_paragraph   pre=Y llm=reject      calls=4 units=3

@@ -188,3 +188,37 @@ These supersede the text above where they conflict; the sections above are left 
   Independence is D6b-e plus the deterministic holdouts.
 - **D7/D8 (no re-roll).** A blocking verdict on a request is never overturned by a fresh,
   cache-bypassed review of the same request: `llm_review.RerollRefused`. Replay is allowed.
+
+## 8. Amendments after calibration iteration 3 (2026-10-27, recorded in `docs/DECISION_LOG.md`)
+
+These supersede the text above where they conflict.
+
+- **D7 (what one call sees).** The reviewer no longer reads the whole document in one call. A review is
+  split into units (`readme/review/sectionwise.py`): one section or a small group of adjacent ones whose
+  author-written text fits `UNIT_CHARS`. A unit's packet is that text, the facts it may cite, the part of the
+  original README that shares words with it, and its plan entries: about 10,000 to 15,000 tokens.
+  The dispositions and the deterministic validation result are no longer sent.
+- **D2/D9 (renderer-owned text, by construction).** A unit shows only the lines an author wrote
+  (`readme/review/scope.py`): no heading, table, fence, `<details>`, badge, "Not verified" note, member
+  bullet, diagram, deterministic section, nor a sentence the renderer appended to an authored line. A line a
+  unit did not show cannot be cited by any claim kind (contract error), so no finding can be about
+  renderer-printed text.
+- **D4 (citations).** A contradiction or an unsupported claim cites at most 12 lines; an omission, an absence
+  or a quality finding may cite a whole section (its first and last shown line). A whole-section citation of
+  an omission or absence is a locator and not a quote, so a string the section does contain is never
+  treated as quoted by the finding that says it is missing (`absence_present` still clears it). A finding
+  names a section of its own unit. Findings of one kind on the same lines are one finding.
+- **D5 (the merge).** Unit replies are merged into one reply (findings renumbered before any clearance is
+  issued; an insufficient unit blocks the whole review, retryably) and folded once. A unit that stays
+  unavailable makes the review unavailable unless another unit's blocking finding already rejects it.
+- **D8 (what a verdict records).** `reviewer_calibration` status and the `uncalibrated` label, and one
+  record per unit (request and reply hashes, the unit's own verdict). Replay stays at zero calls; the
+  no-re-roll record is kept per unit request. `REVIEWER_LOGIC_VERSION` 6.
+- **D9 V5 (two-tier gate).** Measured and reported as the supervisor decided: pipeline coverage for the
+  classes code decides, reviewer-alone recall for the classes only a model judges; a catch is on target only
+  when a blocking finding cites lines holding the defect's own text.
+- **D10 (calibration status).** `data/reviewer_calibration.json`, read by code, fail closed; PASSED or
+  PASSED_WITH_DECLARED_LIMITS (owner acceptance in a committed file; code never writes it) is required for a
+  calibrated label and for pull-request eligibility.
+- **New deterministic holdouts** (claims rules for the version in the renderer's sentence, a package name in
+  prose and a format list; a repeated paragraph), each with the blast radius measured on every README on disk.

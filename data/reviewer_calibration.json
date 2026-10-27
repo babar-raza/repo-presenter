@@ -6,23 +6,61 @@
   "model": "qwen3-next",
   "owner_acceptance": "",
   "failed_gates": [
-    "recall[contradiction]",
-    "recall[content_loss]",
-    "recall[unsupported_claim]",
-    "recall[broken_install]",
-    "false_reject_rate"
+    "false_reject_rate",
+    "stability",
+    "reviewer_alone[real:contradiction]",
+    "reviewer_alone[real:unsupported_claim]"
   ],
   "measured": {
-    "note": "Iteration 2 (121 live calls, commit 1c4922b), whole-document packets, reviewer alone; iteration 3 numbers replace these after the live re-measurement.",
-    "recall_on_target": {
-      "contradiction": 0.36,
-      "content_loss": 0.0,
-      "unsupported_claim": 0.25,
-      "broken_install": 0.5
+    "source": "docs/investigations/2026-10-27-reviewer-calibration-iteration-3.md",
+    "measured_on": "2026-10-27",
+    "corpus": {
+      "cases": 109,
+      "scored_clean_twins": 3,
+      "unscored_twins": 9,
+      "note": "run9 is a known-flawed baseline; n is 1 to 11 per defect label; one gateway, one day"
     },
-    "false_reject_rate_scored_clean_twins": 0.33,
-    "json_valid_first_reply": 1.0,
-    "stability": 0.9
-  },
-  "source": "docs/investigations/2026-10-27-reviewer-calibration-iteration-2.md"
+    "tier1_pipeline_on_target_recall": {
+      "contradict_version": "10/10",
+      "contradict_package_name": "11/11",
+      "contradict_format": "7/7",
+      "break_install_command": "8/8",
+      "drop_section": "11/11",
+      "invent_api_name": "11/11",
+      "duplicate_paragraph": "11/11",
+      "real:broken_install": "1/1",
+      "real:duplicate_paragraph": "1/1"
+    },
+    "tier1_reviewer_alone_on_target_recall_not_gated": {
+      "contradict_version": "2/10",
+      "contradict_package_name": "0/11",
+      "contradict_format": "5/7",
+      "break_install_command": "0/8",
+      "drop_section": "0/11",
+      "invent_api_name": "10/11",
+      "duplicate_paragraph": "4/11"
+    },
+    "tier2_reviewer_alone_on_target_recall": {
+      "inject_unsupported_claim": "11/11",
+      "add_promotional_filler": "11/11",
+      "real:unsupported_claim": "0/2",
+      "real:contradiction": "1/2"
+    },
+    "false_reject_rate_scored_clean_twins": {
+      "first_pass": "1/3",
+      "all_12_fresh_and_first_draws": "7/12",
+      "note": "run5's twin carries format claims no format fact states (U3D, AMF, HTML5 export); run9 is a flawed baseline"
+    },
+    "json_valid_first_reply_units": "125/125",
+    "contract_valid_first_reply_units": "123/125",
+    "reviews_ended_unavailable": "0/109",
+    "stability_3_fresh_reviews_identical_verdict": "6/8",
+    "cost": {
+      "provider_calls_pass1": 127,
+      "provider_calls_stability": 68,
+      "provider_calls_prompt_development": 34,
+      "mean_prompt_tokens_per_call": 17025,
+      "calls_per_fresh_review": 2.83
+    }
+  }
 }

@@ -105,6 +105,18 @@ entries:
       confirmed zero review/judge/acceptance code in this repository), so no candidate's prior
       pipeline-level pass is being reopened by this module's own existence -- a REJECT it finds
       against one candidate is a new finding against that one candidate only.
+    iteration_3_2026_10_27: >
+      Reviewer logic 6 / prompt v17 (docs/investigations/2026-10-27-reviewer-calibration-iteration-3.md). All ADD
+      (built here, nothing ported): readme/review/scope.py (the lines an author wrote; renderer-printed text and
+      sentences excluded by construction), evidence.py (facts, original excerpt and support hints per unit),
+      sectionwise.py (units, bounded packets, call schema), calibration_status.py + calibration_names.py (the
+      committed status file, fail closed, reader only); extended: llm_review.py (one run_job per unit, merge,
+      per-unit no-re-roll record), reply.py (scoped citations, whole-section citation, merge of repeated
+      findings), verdict.py/verdict_io.py (calibration status, label, unit records), independent_reviewer.py
+      (duplicate_paragraph rule), validation/claims.py (rules f and g, version tail; blast radius 0 added over 41
+      READMEs), propose/effect.py (REVIEW_UNCALIBRATED gate), calibration/{harness,reviewers,corpus}.py (two-tier
+      report, on-target by defect text, per-unit validity and tokens). The clearance catalogue is unchanged.
+      Gate: still NOT_PASSED (false-reject, stability, two real-defect tier-2 classes); data/reviewer_calibration.json.
 
   - component: "components/readme/acceptance/judge.py"
     source: old-repository-presenter

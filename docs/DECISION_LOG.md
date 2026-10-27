@@ -531,3 +531,43 @@ of the proof; and "a lane dimension in CURRENT" is a `CURRENT` per lane.
 `tests/test_lane_l_hosted.py`, `tests/test_lane_l_review.py`, `tests/test_present_lanes.py`, `tests/core/test_candidates_lanes.py`,
 `tests/core/state/test_lane_state.py`, `tests/readme/bundle/test_seal_lane_l.py`,
 `tests/readme/correction/test_lane_l_{report,determinism}.py`; `migration/reuse-manifest.yaml` (the "Lane L hosted parity" entry).
+
+
+---
+
+## 2026-10-27: Independent LLM reviewer, iteration 3 (deterministic claim checks, sectionwise review, calibration status): the gate still FAILS, differently
+
+**Decided / found** (details, tables and raw data: `docs/investigations/2026-10-27-reviewer-calibration-iteration-3.md`; plan amendments in `plans/PLAN_independent_llm_reviewer.md` section 8):
+
+1. **Why the pipeline missed `contradict_version` and `contradict_package_name`**: the version rule did not read the renderer's own sentence
+   (a comma before "version"), the identity rule read install commands inside fences only, and nothing read a format list. `validation/claims.py`
+   now does (BC-14 and `claim_contradiction`). Blast radius queried before commit over 41 READMEs on disk: 0 findings added, 0 removed. Two
+   false positives found while writing it (a sibling product sharing the family prefix; a module path) are negative controls.
+2. **One bounded unit per call.** A review is split into units of author-written text (<= 4,500 characters); a unit never shows a line the renderer
+   printed (headings, tables, fences, diagram, deterministic sections, member bullets, sentences the renderer appends to authored lines), and a line
+   not shown cannot be cited by any claim kind. This replaces the "do not criticise renderer text" instruction with a check. The model sees the
+   facts the text may cite (symbols with their extracted docstrings), the part of the original that shares its words and per-line support hints
+   (a search aid; it decides nothing and never names an inherited unit). Dispositions and validation are no longer sent. **The closed clearance
+   catalogue is unchanged**; no hint, audit or overlap clears anything.
+3. **Contract**: whole-section citations for omission, absence and quality (a locator, not a quote, so `absence_present` still works); the 12-line
+   cap stays for contradiction and unsupported claim; a finding names a section of its own unit; identical findings merge; unit replies merge
+   (ids renumbered before any clearance) and fold once; an unavailable unit makes the review unavailable unless another unit already rejects it;
+   the no-re-roll record is per unit request. `REVIEWER_LOGIC_VERSION` 6, prompt v17, reviewer scope only.
+4. **Calibration status is a committed file the code reads and never writes** (`data/reviewer_calibration.json`, `NOT_PASSED`): fail closed;
+   `PASSED_WITH_DECLARED_LIMITS` needs a non-empty owner acceptance in the committed file; a verdict records the status and an `uncalibrated`
+   label; `propose_candidate` refuses with `REVIEW_UNCALIBRATED` unless the verdict and the file both permit. Not done here (bundle code belongs to the
+   Lane L change): the sealed manifest itself does not yet repeat the label; the sealed `review_verdict.json` (already hashed in the manifest) carries it.
+5. **New deterministic holdout**: a prose paragraph printed twice. **Measurement now scores a catch only when a blocking finding cites lines holding the
+   defect's own text** (the smoke run counted a finding about another sentence as catching a real contradiction).
+6. **Result**, 229 calls of the authorised 300 (cap 350), all qwen3-next: tier 1 pipeline on-target recall 1.00 for version, package name, format,
+   install, content loss, invented name and repeated paragraph; tier 2 reviewer alone 11/11 injected unsupported claims and 11/11 filler, 0/2 and
+   1/2 on the two real-defect classes; false-reject 1/3 on the first pass and 7/12 over all draws of the 3 scored twins (one flawed, one adjudicated as
+   carrying a probable real unsupported format claim); stability 6/8 = 0.75; JSON-valid first reply 1.00; contract-valid 0.98; unavailable 0/109;
+   17,025 mean prompt tokens per call. Failing gates: false-reject, stability, and the two real-defect classes (n = 2 each).
+7. **Honesty about method**: the prompt and evidence were adjusted on 34 calls over the same three scored twins; run7's twin gained a repair that the
+   smoke run found and a reading of inherited unit 061 confirmed. No further clean twins are derivable offline (the sealed hosted bundles of runs 1, 5, 6, 7 are one
+   stale candidate; run2/run3 and every Lane R base trip a deterministic rule on their own twin).
+
+**What this does NOT decide**: whether to run fresh hosted cascades for more clean twins (needed before the gate can be read); the owner's
+acceptance of any declared limit (unavailable while shared gates fail); Lane L calibration (`review_with_model(..., rendered=False)` exists for
+a maintainers' README, uncalibrated).
