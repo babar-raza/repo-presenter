@@ -1540,6 +1540,25 @@ next_ready_items:
       DEFERRED, not blocking: metadata/visual assets (DEFERRED in the manifest).
       Full suite at 1b1a1ac: 2217 passed, 11 skipped.
 
+    hosted_run_findings_2026_10_27: >
+      First two live hosted runs (40460371379, 40461345611, aspose-3d-foss/.NET). WORKED: durable
+      state recorded FAILED_INTERNAL with lease released; run 2 restored the cache and replayed
+      with ZERO provider calls (11 cache_reuse, 39 s vs ~8 min), proving candidate/call-store
+      persistence. FOUND: the independent reviewer REJECTed with 50 deterministic findings, and a
+      diagnosis proved ALL 50 real (no rule false positive). Classes: A (22) license/link/banner/
+      development facts never assembled, S2 -- the old extract.py orchestrator (468 lines) was
+      never fully ported and several evidence modules are slimmed (assets 18 vs 358, commands 171
+      vs 894, links 178 vs 410, product_pages 91 vs 251, registry_lag 13 vs 108, license_text 38
+      vs 175, published_version absent); B (16) examples all UNRESOLVED (no dotnet on runner) so
+      Quick Start is dropped -- needs a NOT_VERIFIED policy; D (11) S4 marks units keep but nothing
+      prints them; C (1) Mermaid omitted without a cited fact. IMPORTANT CORRECTION: the
+      previously recorded 36 Lane L / 34 Lane R "accepted" candidates and the first-ever sealed
+      candidate were produced BEFORE these preservation rules existed and carry the same gaps;
+      they are pipeline-level false greens, not evidence the product meets mission section 11.
+      The salvage is therefore NOT complete: the fact-extraction orchestrator is a genuine
+      unported dependency. Work order: A (port extraction), D+C (S9 validate and S4 repair wired
+      into the cascade), B (NOT_VERIFIED example policy).
+
   - id: PORT_BUNDLE_INTEGRITY_LAYER
     status: IN_PROGRESS
     priority: high
