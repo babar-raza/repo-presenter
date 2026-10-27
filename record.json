@@ -4,7 +4,7 @@
   "provider_repository_id": 1178837115,
   "registry_revision": null,
   "active_transaction_id": "75063506c30143c58ee317e5750b8f6f",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -16,7 +16,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "PresentFailure: independent review returned REJECT with 50 finding(s); nothing sealed",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-27T06:27:07.360091+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:40460371379",
     "acquired_at": "2026-10-27T06:19:22.139738+00:00",
@@ -24,8 +31,21 @@
     "expires_at": "2026-10-27T06:34:22.139738+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "249d1dd92dc6483a9f5048ed2813d391",
+    "transaction_id": "75063506c30143c58ee317e5750b8f6f",
+    "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-.NET",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-27T06:27:06.864979+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-3d-foss/Aspose.3D-FOSS-for-.NET",
+    "output_manifest": "candidates/aspose-3d-foss__Aspose.3D-FOSS-for-.NET/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:40460371379:aspose-3d-foss/Aspose.3D-FOSS-for-.NET": "75063506c30143c58ee317e5750b8f6f"
   },
