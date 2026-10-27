@@ -29,12 +29,16 @@ from repo_presenter.readme.composition.audience import (
 )
 from repo_presenter.readme.composition.authoring import (
     SectionTask,
+    citable,
     recover_opening_duplicates_preserved,
     restates_own_title,
     section_spellings,
     slot_records,
     uncarried_units,
     unit_checks,
+)
+from repo_presenter.readme.composition.authoring_retry import (
+    withdraw_out_of_slot_citations,
 )
 from repo_presenter.readme.composition.components.identity import product_name
 from repo_presenter.readme.composition.output_bounds import (
@@ -530,6 +534,56 @@ def recover_coherence_missing_units(
     return output
 
 
+def recover_coherence_out_of_slot_citations(
+    output: dict[str, Any],
+    *,
+    existing_units: list[dict[str, Any]],
+    tasks: list[SectionTask],
+    facts: FactsDocument,
+) -> dict[str, Any] | None:
+    """Last-resort correction for S8 coherence's own ``run_job`` call: a unit whose revision now
+    cites a fact outside its own slot's set (the coherence schema only bounds a citation to the
+    batch's union, so a unit can name another slot's fact) loses that citation and the sentence it
+    supports, when the rest of the unit remains; otherwise it is reverted, in full, to its
+    pre-coherence text and fact_ids, which passed this slot's checks, provided those cite nothing
+    outside the slot either. Nothing is added or reworded; a unit neither can mend is left for the
+    checks to refuse."""
+    units = output.get("units")
+    if not isinstance(units, list):
+        return None
+    existing_by_key = {
+        (str(unit.get("section")), str(unit.get("slot"))): unit for unit in existing_units
+    }
+    changed = False
+    for task in tasks:
+        if task.is_batch:
+            continue
+        for unit in units:
+            if not isinstance(unit, dict) or unit.get("section") != task.section_id:
+                continue
+            slot = str(unit.get("slot"))
+            if slot not in task.slots:
+                continue
+            allowed = frozenset(citable(task, slot))
+            cited = unit.get("fact_ids")
+            if not isinstance(cited, list) or all(fact_id in allowed for fact_id in cited):
+                continue
+            if withdraw_out_of_slot_citations(unit, allowed, facts):
+                changed = True
+                continue
+            existing = existing_by_key.get((task.section_id, slot))
+            earlier = existing.get("fact_ids") if existing is not None else None
+            if (
+                existing is not None
+                and isinstance(earlier, list)
+                and all(fact_id in allowed for fact_id in earlier)
+            ):
+                unit["text"] = existing.get("text", unit.get("text"))
+                unit["fact_ids"] = list(earlier)
+                changed = True
+    return output if changed else None
+
+
 def recover_coherence_regressions(
     output: dict[str, Any],
     *,
@@ -553,6 +607,12 @@ def recover_coherence_regressions(
     )
     if missing_fixed is not None:
         output = missing_fixed
+        changed = True
+    slot_fixed = recover_coherence_out_of_slot_citations(
+        output, existing_units=existing_units, tasks=tasks, facts=facts
+    )
+    if slot_fixed is not None:
+        output = slot_fixed
         changed = True
     content_fixed = recover_coherence_content_loss(
         output, existing_units=existing_units, facts=facts

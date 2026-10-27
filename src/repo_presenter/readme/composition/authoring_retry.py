@@ -49,7 +49,7 @@ import json
 import re
 import string
 from collections import Counter
-from collections.abc import Mapping, Sequence
+from collections.abc import Collection, Mapping, Sequence
 from typing import Any
 
 from repo_presenter.core.facts import FactsDocument
@@ -58,6 +58,7 @@ from repo_presenter.core.llm.prompts import LoadedManifest
 from repo_presenter.readme.composition.authoring import (
     SectionTask,
     authoring_schema,
+    citable,
     restated_command_lines,
     restates_own_title,
     slots_clause,
@@ -354,3 +355,73 @@ def recover_restating_sentences(
             unit["text"] = kept
             changed = True
     return output if changed else None
+
+
+_SPELLING_MIN_CHARS = 3
+
+
+def withdraw_out_of_slot_citations(
+    unit: dict[str, Any], allowed: Collection[str], facts: FactsDocument
+) -> bool:
+    """Remove, from ``unit`` in place, every citation outside ``allowed`` together with the
+    sentences that spell the cited fact's own value; ``False`` (``unit`` untouched) when that is
+    not possible.
+
+    Only deletions: no citation is added and no word of a remaining sentence changes. A citation
+    is removed only when some sentence spells its value, so the sentence it supports is known and
+    goes with it; a fact no sentence spells could be supporting any sentence, so nothing is
+    guessed and the unit is left for the caller to fail closed. A unit with nothing left is left
+    alone too. The caller re-validates the result through the real checks."""
+    text, cited = unit.get("text"), unit.get("fact_ids")
+    if not isinstance(text, str) or not isinstance(cited, list):
+        return False
+    outside = [fact_id for fact_id in cited if fact_id not in allowed]
+    if not outside:
+        return False
+    by_id = {fact.id: fact for fact in facts.facts}
+    phrases: list[str] = []
+    for fact_id in outside:
+        fact = by_id.get(fact_id)
+        value = " ".join(fact.value.split()).lower() if fact is not None else ""
+        if len(value) < _SPELLING_MIN_CHARS or value not in text.lower():
+            return False
+        phrases.append(value)
+    kept = _without_sentences_naming(text, phrases)
+    if kept is None:
+        return False
+    unit["text"] = kept
+    unit["fact_ids"] = [fact_id for fact_id in cited if fact_id in allowed]
+    return True
+
+
+def recover_out_of_slot_citations(
+    output: dict[str, Any], *, task: SectionTask, facts: FactsDocument
+) -> dict[str, Any] | None:
+    """Last-resort correction for ``section_authoring``'s own ``run_job`` call (``recover=``): a
+    unit that cites a fact outside its own slot's set (``citable``) loses that citation and the
+    sentence it supports (:func:`withdraw_out_of_slot_citations`), when others remain. Returns
+    ``None`` when nothing was removed."""
+    units = output.get("units")
+    if not isinstance(units, list):
+        return None
+    changed = False
+    for unit in units:
+        if not isinstance(unit, dict) or unit.get("slot") not in task.slots:
+            continue
+        if withdraw_out_of_slot_citations(unit, citable(task, str(unit["slot"])), facts):
+            changed = True
+    return output if changed else None
+
+
+def recover_authoring_output(
+    output: dict[str, Any], *, task: SectionTask, facts: FactsDocument
+) -> dict[str, Any] | None:
+    """The one ``recover=`` for a section_authoring task other than the opening: every last-resort
+    correction of this module, in order."""
+    restated = recover_restating_sentences(output, task=task, facts=facts)
+    withdrawn = recover_out_of_slot_citations(
+        output if restated is None else restated, task=task, facts=facts
+    )
+    if withdrawn is not None:
+        return withdrawn
+    return restated

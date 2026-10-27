@@ -63,7 +63,7 @@ from jsonschema import Draft202012Validator
 from openai import APIConnectionError, APIStatusError, APITimeoutError
 
 from repo_presenter.core.config import GatewayConfig
-from repo_presenter.core.errors import ConfigError, JobError
+from repo_presenter.core.errors import ConfigError, JobError, OutputRejectedError
 from repo_presenter.core.facts import FactsDocument
 from repo_presenter.core.llm import transport
 from repo_presenter.core.llm.binding import (
@@ -734,7 +734,7 @@ def run_job(
     message = f"{job}: output rejected {asked}; last rejection: {'; '.join(rejection)}"
     if recovered_rejection:
         message += f"; recover's correction was rejected too: {'; '.join(recovered_rejection)}"
-    raise JobError(message)
+    raise OutputRejectedError(message)
 
 
 def _narrowing(

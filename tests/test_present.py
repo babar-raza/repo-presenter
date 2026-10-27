@@ -22,7 +22,12 @@ from support import (
 
 from repo_presenter import present
 from repo_presenter.core.candidates import CANDIDATES_DIRNAME, CURRENT_FILENAME
-from repo_presenter.core.errors import ConfigError, NotAllowlistedError
+from repo_presenter.core.errors import (
+    ConfigError,
+    JobError,
+    NotAllowlistedError,
+    OutputRejectedError,
+)
 from repo_presenter.core.facts import Evidence, Fact, FactsDocument
 from repo_presenter.core.registry.models import ProviderIdentity, RegistryEntry
 from repo_presenter.core.state.git_backend import GitStateBackend
@@ -142,6 +147,70 @@ def test_a_rejected_candidate_records_a_named_failure_not_a_silent_drop(
     alerts = evaluate_repository_health(REPO, record)
     assert [a.kind for a in alerts] == ["transaction_failed"]
     assert alerts[0].repository == REPO
+
+
+def test_a_model_output_rejection_is_recorded_as_a_retryable_failure(
+    remote: Path, tmp_path: Path
+) -> None:
+    entry = _entry()
+
+    def pipeline() -> None:
+        raise OutputRejectedError(
+            "section_authoring: output rejected twice; last rejection: unit capability:4: "
+            "cites facts outside its slot's planned set (format:output.3mf)"
+        )
+
+    with GitStateBackend(remote=str(remote)) as backend:
+        exit_code = run_present(
+            backend=backend,
+            entry=entry,
+            candidates_root=tmp_path / "work",
+            holder_id="present:run-4",
+            workflow_run_id="run-4",
+            pipeline=pipeline,
+        )
+        record = backend.load(REPO)
+
+    assert exit_code == 1
+    assert record is not None
+    assert record.state == "FAILED_INTERNAL"
+    assert record.lease is None
+    assert record.failure is not None
+    assert record.failure.classification == "transient"
+    assert "retryable" in record.failure.detail
+    assert "format:output.3mf" in record.failure.detail
+
+
+@pytest.mark.parametrize(
+    "error",
+    [
+        PresentFailure("independent review returned REJECT with 1 finding(s); nothing sealed"),
+        JobError("section_authoring: output truncated at the manifest's max_output_tokens"),
+    ],
+)
+def test_other_typed_failures_keep_the_validation_failed_classification(
+    remote: Path, tmp_path: Path, error: Exception
+) -> None:
+    entry = _entry()
+
+    def pipeline() -> None:
+        raise error
+
+    with GitStateBackend(remote=str(remote)) as backend:
+        run_present(
+            backend=backend,
+            entry=entry,
+            candidates_root=tmp_path / "work",
+            holder_id="present:run-5",
+            workflow_run_id="run-5",
+            pipeline=pipeline,
+        )
+        record = backend.load(REPO)
+
+    assert record is not None
+    assert record.failure is not None
+    assert record.failure.classification == "validation_failed"
+    assert record.state == "FAILED_INTERNAL"
 
 
 def test_an_untyped_defect_propagates_and_still_releases_the_lease(

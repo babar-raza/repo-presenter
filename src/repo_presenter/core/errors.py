@@ -38,6 +38,12 @@ class JobError(PresenterError):
     """A job's output was rejected after its one bounded re-ask, or the provider failed for good."""
 
 
+class OutputRejectedError(JobError):
+    """The model answered and every bounded ask (the re-ask, the narrowed ask, ``recover``) was
+    still rejected by the job's own checks. Unlike a truncation or a refused request, the same
+    request can be answered differently next time, so a caller may treat it as retryable."""
+
+
 class ProviderCallBudgetError(GatewayError):
     """This process reached its provider-call ceiling (``core/llm/ledger.py``'s
     ``PROVIDER_CALL_BUDGET``); the refused call is never sent, so the run stops with no further

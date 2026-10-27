@@ -22,7 +22,7 @@ from typing import Any
 import pytest
 
 from repo_presenter.core.config import GatewayConfig
-from repo_presenter.core.errors import JobError
+from repo_presenter.core.errors import JobError, OutputRejectedError
 from repo_presenter.core.facts import Evidence, Fact, FactsDocument
 from repo_presenter.core.llm import jobs as jobs_module
 from repo_presenter.core.llm.jobs import CallStore, JobContext, run_job
@@ -175,7 +175,7 @@ def test_two_rejections_with_no_recover_fails_the_job_closed(
         _completion({"summary": "bad", "fact_ids": ["nope:one"]}),
         _completion({"summary": "still bad", "fact_ids": ["nope:two"]}),
     )
-    with pytest.raises(JobError, match="output rejected twice"):
+    with pytest.raises(OutputRejectedError, match="output rejected twice"):
         run_job(
             _manifest(), {"repository": "org/repo"}, config=CONFIG, facts=FACTS,
             ledger=_ledger(tmp_path), store=_store(tmp_path), context=CONTEXT,

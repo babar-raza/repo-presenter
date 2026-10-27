@@ -57,7 +57,7 @@ from repo_presenter.readme.composition.authoring import (
 )
 from repo_presenter.readme.composition.authoring_retry import (
     authoring_narrowing,
-    recover_restating_sentences,
+    recover_authoring_output,
 )
 from repo_presenter.readme.composition.coherence import (
     apply_coherence,
@@ -243,7 +243,7 @@ def _run_authoring(
                 return recover_opening_duplicates_preserved(
                     output, dispositions=dispositions, facts=document
                 )
-            return recover_restating_sentences(output, task=task, facts=document)
+            return recover_authoring_output(output, task=task, facts=document)
 
         result = run_job(
             loaded, task.packet, config=config, facts=document, ledger=ledger, store=store,

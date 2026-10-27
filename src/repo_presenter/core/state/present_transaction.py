@@ -66,6 +66,7 @@ from repo_presenter.core.state.cas import (
 )
 from repo_presenter.core.state.recovery import recovery_sweep, resume_recoverable
 from repo_presenter.core.state.schema import (
+    FailureClassification,
     FailureRecord,
     LeaseRecord,
     RepositoryRecord,
@@ -144,6 +145,9 @@ class PresentOutcome:
     # "failed": attached to the committed failure state as FailureRecord.
     # "non_processable": the disposition's reason code and resume predicate, for the run output.
     detail: str | None = None
+    # "failed": the FailureRecord classification; None keeps "validation_failed". Informational
+    # only - no transition rule reads it.
+    failure_class: FailureClassification | None = None
 
 
 def _now_iso() -> str:
@@ -382,7 +386,7 @@ def _commit_outcome(
         return record.model_copy(
             update={
                 "failure": FailureRecord(
-                    classification="validation_failed",
+                    classification=outcome.failure_class or "validation_failed",
                     detail=outcome.detail or "present reported a failure",
                     # Informational only: neither FAILED_INTERNAL nor INVALIDATED is auto-resumed
                     # by recovery_sweep; a later trigger re-enters through this module's own
