@@ -3073,4 +3073,25 @@ entries:
       timeout and redacted output. It does not stop the child reading files the runner user can
       read, using the network, or reading the parent process's environment through /proc (the
       Present step's job env holds the provider key and the state token).
+    isolation_followup: >
+      Structural fix for the risk above (2026-10-27, committed with src/repo_presenter/facts_handoff.py):
+      hosted present is now two jobs. `facts` (permissions contents: read, no secrets.* reference, no
+      state cache) installs the toolchain, clones the pinned revision, runs example execution via
+      `present --stage facts`, and uploads facts.json plus facts-manifest.json {repository, ecosystem,
+      source_revision, facts_sha256} and publishes the digest as a job output. `present` (needs: facts;
+      holds GPT_OSS_* and the contents: write token; no toolchain step) runs `present --stage cascade`:
+      it verifies the manifest and digest (also against the job output), validates facts.json through
+      read_facts plus shape checks (string fields, repository-relative evidence paths, size caps),
+      re-clones the SAME revision with clone_pinned (a moved default branch fails closed) for README and
+      inherited-unit reads, then runs cascade, review, seal and the durable transaction. `--stage
+      combined` is local-only and exits 2 when GITHUB_ACTIONS is true. tests/test_present.py parses
+      present.yml and asserts the facts job has no secrets/token/cache and only contents: read, and the
+      present job has no setup-dotnet/java/go/node step; each assertion is shown to fail when violated.
+      Residual: the facts job still executes untrusted code, so it can emit a hostile facts.json (the
+      present job treats it as data and validates it, but a well-formed lie about the repository is
+      not detectable by shape) and can exfiltrate its own read-only token and the runner's data; it
+      has no provider key and no write scope. The digest detects transit corruption, not a compromised
+      facts job. A facts-job failure leaves no durable-state record (the present job is skipped), so it
+      surfaces only as a failed workflow run. seal's toolchains fingerprint now describes the present
+      job (no SDK), not the facts job that executed the examples.
     not_yet_done: "A hosted .NET or Java run with the SDK step (not dispatched). verify_build wiring for net."

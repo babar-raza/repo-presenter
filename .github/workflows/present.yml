@@ -1,7 +1,19 @@
 name: present
 
-# One repository, one durable transaction, run on a hosted GitHub Actions runner. Dispatchable by
-# hand here; a scheduled trigger is an owner decision (cadence and provider spend) not yet made.
+# One repository, one durable transaction, run on hosted GitHub Actions runners in TWO jobs with a
+# trust boundary between them. Dispatchable by hand here; a scheduled trigger is an owner decision
+# (cadence and provider spend) not yet made.
+#
+#   facts   executes the upstream repository's own code (example builds: dotnet, javac, ...). It
+#           references no secret, has a read-only token, installs the ecosystem toolchain, and can
+#           only hand a facts.json plus a manifest to the next job.
+#   present holds the provider key and the write-scoped state token. It installs no toolchain and
+#           executes no repository code: it verifies and validates the facts artifact as hostile
+#           input, re-clones the SAME pinned revision to read the README, then runs the cascade,
+#           the review, the seal and the durable transaction.
+#
+# tests/test_present.py parses this file and fails if the facts job gains a secret or write scope,
+# or the present job gains a toolchain step.
 on:
   workflow_dispatch:
     inputs:
@@ -15,19 +27,21 @@ on:
         type: choice
         options: [python, net, java, cpp, go, rust, typescript, nodejs]
 
-# contents: write only so the job's own token can write the durable-state refs
-# (refs/repository-presenter-state/*); it never pushes a branch.
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: present-${{ inputs.repository }}
   cancel-in-progress: false
 
 jobs:
-  present:
+  facts:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    outputs:
+      facts_sha256: ${{ steps.digest.outputs.sha256 }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -41,7 +55,7 @@ jobs:
         run: python -m pip install -e .
 
       # Example verification compiles the README's own code against the product, so the SDK it
-      # needs must exist on the runner; each toolchain is installed only for the ecosystem that
+      # needs must exist on this runner; each toolchain is installed only for the ecosystem that
       # uses it. A runner without one still degrades to NOT_VERIFIED (never CONTRADICTED), but
       # without these steps every .NET and Java example would be unverifiable by construction.
       # The version is pinned because the receipt records it and a build is only as reproducible
@@ -58,6 +72,50 @@ jobs:
         with:
           distribution: temurin
           java-version: "21"
+
+      - name: Build the facts
+        env:
+          INPUT_REPOSITORY: ${{ inputs.repository }}
+          INPUT_ECOSYSTEM: ${{ inputs.ecosystem }}
+        run: |
+          python -m repo_presenter.present \
+            --stage facts \
+            --repository "$INPUT_REPOSITORY" \
+            --ecosystem "$INPUT_ECOSYSTEM" \
+            --workdir .present-work \
+            --facts-dir .present-facts
+
+      - name: Record the facts digest
+        id: digest
+        run: echo "sha256=$(sha256sum .present-facts/facts.json | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+
+      - name: Hand the facts to the present job
+        uses: actions/upload-artifact@v4
+        with:
+          name: present-facts-${{ github.run_id }}
+          path: .present-facts
+          if-no-files-found: error
+          retention-days: 7
+
+  present:
+    needs: facts
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    # contents: write only so the job's own token can write the durable-state refs
+    # (refs/repository-presenter-state/*); it never pushes a branch.
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install
+        run: python -m pip install -e .
 
       - name: Name this repository's persisted state
         id: slug
@@ -79,20 +137,33 @@ jobs:
           key: presenter-state-${{ steps.slug.outputs.slug }}-${{ github.run_id }}
           restore-keys: presenter-state-${{ steps.slug.outputs.slug }}-
 
+      # The artifact is untrusted input from the job that ran repository code: the Present step
+      # checks its manifest and digest (also against the digest the facts job published as a job
+      # output), validates it as data, and re-clones the recorded revision for README reads only.
+      - name: Fetch the facts
+        uses: actions/download-artifact@v4
+        with:
+          name: present-facts-${{ github.run_id }}
+          path: .present-facts
+
       - name: Present
         env:
           INPUT_REPOSITORY: ${{ inputs.repository }}
           INPUT_ECOSYSTEM: ${{ inputs.ecosystem }}
           GITHUB_REPOSITORY_SLUG: ${{ github.repository }}
+          FACTS_SHA256: ${{ needs.facts.outputs.facts_sha256 }}
           GPT_OSS_ENDPOINT: ${{ secrets.GPT_OSS_ENDPOINT }}
           GPT_OSS_API_KEY: ${{ secrets.GPT_OSS_API_KEY }}
           REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
         run: |
           python -m repo_presenter.present \
+            --stage cascade \
             --repository "$INPUT_REPOSITORY" \
             --ecosystem "$INPUT_ECOSYSTEM" \
             --state-remote "https://github.com/${GITHUB_REPOSITORY_SLUG}.git" \
-            --workdir .present-work
+            --workdir .present-work \
+            --facts-dir .present-facts \
+            --expected-facts-sha256 "$FACTS_SHA256"
 
       - name: Save the sealed bundle and call store for the next run
         if: always()
