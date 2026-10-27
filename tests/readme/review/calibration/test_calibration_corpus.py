@@ -93,11 +93,17 @@ def test_a_mutant_the_deterministic_stage_misses_is_what_the_model_must_catch(ca
         for c in by_role(cases, "mutant")
         if not deterministic_rules(c) and not new_blocking_checks(c)
     }
-    assert {
-        "inject_unsupported_claim",
-        "contradict_version",
-        "add_promotional_filler",
-    } <= escapes
+    assert {"inject_unsupported_claim", "add_promotional_filler"} <= escapes
+    # Reviewer iteration 3: a wrong version or package name is decidable from the facts, so the
+    # deterministic stage carries it (it did not before the claims rules read the renderer's
+    # sentence and prose package names).
+    assert not {"contradict_version", "contradict_package_name"} & escapes
+
+
+def test_a_wrong_version_or_package_name_is_blocked_before_a_model_is_asked(cases):
+    for operator in ("contradict_version", "contradict_package_name"):
+        (mutant,) = [c for c in cases if c.operator == operator]
+        assert "claim_contradiction" in deterministic_rules(mutant), operator
 
 
 def test_a_repair_that_does_not_match_exactly_is_an_error(tmp_path):
