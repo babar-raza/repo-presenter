@@ -1652,6 +1652,23 @@ next_ready_items:
       - a lane dimension in the bundle manifest and CURRENT so both lanes' candidates appear in one status model; existing bundles stay valid as Lane R through a versioned reader
       - blast-radius query over candidates/ before the layout change (non-negotiable #3); no reseal
       - the same durable-state transaction and the same facts/isolation split as Lane R
+    built_2026_10_27: >
+      BUILT offline (commit 47ddce2; plans/PLAN_lane_l_hosted.md L1-L10): Lane L candidate = live README plus
+      minimal evidenced edits; outcomes CORRECTED, NO_CHANGE_WARRANTED (legitimate, still model-reviewed)
+      and a refusal naming Lane R when a detector finds an unrepairable defect; the FINAL README is judged
+      (model-free holdouts first, then review_with_model); layout candidates/<slug>/lane-l/ with its own
+      CURRENT, v1 bundles read as Lane R unchanged (blast radius: 1 sealed bundle, none edited); one status
+      model with a row per lane; state record per lane; present.py --lane R|L and a present.yml lane input
+      (both/R/L). 108 new tests, 9 mutations each caught. NOT run hosted. Also fixed a shared defect:
+      python_examples quoted pip stderr with machine paths and CRLF, so facts.json differed per machine.
+    corrections_to_this_card: >
+      (1) "zero provider calls" is a call-store REPLAY, not model repeatability (mission section 7 step 8
+      distinguishes them); (2) "CURRENT with a lane dimension" means CURRENT PER LANE; (3) done_when
+      depends on the reviewer, which is uncalibrated, so a hosted Lane L pass is not acceptance until the
+      reviewer gate holds; (4) propose/effect.py reads Lane R only and must learn the lane before any PR;
+      (5) review/scope.py treats installation, license, fences and tables as renderer-printed, true for
+      Lane R and false for Lane L: lane-aware scope handed to the reviewer iteration-3 agent.
+    remaining: first hosted Lane L run per ecosystem (needs the owner-set secrets already present), lane-aware propose/effect.py, lane-aware reviewer scope.
     done_when: one hosted Lane L candidate per ecosystem in the cohort passes the reviewer and a rerun is byte-identical with zero provider calls.
 
   - id: COHORT_FIRST_GUARD
