@@ -36,6 +36,7 @@ from pathlib import Path
 
 from repo_presenter.core.examples import ExampleCandidate, ExampleReceipt
 from repo_presenter.core.execution import ExecutionResult, execute, profile_environment
+from repo_presenter.core.receipt_paths import scrub_machine_paths
 from repo_presenter.core.toolchains import resolve_tool, subprocess_path
 
 _MAX_OUTPUT_CHARS = 4000
@@ -186,11 +187,7 @@ def _scrub(text: str, run_dir: Path, source_root: Path) -> str:
     directory must not appear in it - and a path that differs per machine would move a sealed
     candidate's bytes for a reason that is not the repository.
     """
-    cleaned = text
-    for base in {run_dir, run_dir.resolve(), source_root, source_root.resolve()}:
-        for rendered in (str(base), base.as_posix()):
-            cleaned = cleaned.replace(rendered + "\\", "").replace(rendered + "/", "")
-            cleaned = cleaned.replace(rendered, "")
+    cleaned = scrub_machine_paths(text, run_dir, source_root)
     return cleaned
 
 

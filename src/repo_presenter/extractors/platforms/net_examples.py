@@ -28,6 +28,7 @@ from repo_presenter.core.ecosystems import NET
 from repo_presenter.core.examples import ExampleCandidate, ExampleReceipt, MeasuredBuild
 from repo_presenter.core.execution import ExecutionResult, execute, profile_environment
 from repo_presenter.core.long_paths import long_path
+from repo_presenter.core.receipt_paths import scrub_machine_paths
 from repo_presenter.core.toolchains import resolve_tool
 
 _MAX_OUTPUT_CHARS = 4000
@@ -219,7 +220,7 @@ def _fresh_workspace(workspace: Path) -> Path | None:
     return None
 
 
-def _scrub(text: str, run_dir: Path) -> str:
+def _scrub(text: str, *bases: Path) -> str:
     """This machine's paths, and this run's own clock, out of a compiler's output.
 
     MSBuild prints absolute paths and appends the project in brackets. A receipt becomes a
@@ -238,12 +239,7 @@ def _scrub(text: str, run_dir: Path) -> str:
     the toolchain that ran it - but how long this machine took to run it is not evidence of
     anything the repository did.
     """
-    cleaned = text
-    for base in {run_dir, run_dir.resolve()}:
-        for rendered in (str(base), base.as_posix()):
-            cleaned = cleaned.replace(rendered + "\\", "").replace(rendered + "/", "")
-            cleaned = cleaned.replace(rendered, "")
-    return _TIME_ELAPSED.sub("", cleaned)
+    return _TIME_ELAPSED.sub("", scrub_machine_paths(text, *bases))
 
 
 def _sdk_version(dotnet: str, workspace: Path) -> str:
@@ -341,6 +337,7 @@ def verify_net_examples(
     for candidate in candidates:
         run_dir = workspace / f"example_{candidate.ordinal:03d}"
         run_dir.mkdir()
+        machine = (run_dir, workspace, root, project.parent)
         (run_dir / "Example.csproj").write_text(
             _PROJECT.format(
                 framework=_sdk_framework(version),
@@ -378,7 +375,7 @@ def verify_net_examples(
             outcome = "EXECUTED"
             detail = f"compiled against {project.name}; SDK {version}{added}"
         else:
-            detail = _first_error(result.stdout, result.stderr, run_dir)
+            detail = _first_error(result.stdout, result.stderr, *machine)
             # Only a C# compiler diagnostic says the example itself is wrong. A build that failed
             # on restore, the SDK or the harness named no such diagnostic, and "we could not
             # check" is NOT_VERIFIED, never a false CONTRADICTED.
@@ -389,8 +386,8 @@ def verify_net_examples(
                 ordinal=candidate.ordinal,
                 outcome=outcome,  # type: ignore[arg-type]
                 return_code=result.return_code,
-                stdout=_clip(_scrub(result.stdout, run_dir)),
-                stderr=_clip(_scrub(result.stderr, run_dir)),
+                stdout=_clip(_scrub(result.stdout, *machine)),
+                stderr=_clip(_scrub(result.stderr, *machine)),
                 detail=detail,
                 fixtures=(),
                 # The usings the harness put above the snippet: printed in front of it, so the
@@ -401,13 +398,13 @@ def verify_net_examples(
     return receipts
 
 
-def _first_error(stdout: str, stderr: str, run_dir: Path) -> str:
+def _first_error(stdout: str, stderr: str, *bases: Path) -> str:
     """The compiler's own first diagnostic, which names the type or member that is missing.
 
     Reported without this machine's paths and without MSBuild's trailing project bracket, so the
     diagnostic a reader and a disposition see is the diagnostic and nothing else.
     """
-    for line in _scrub(stdout + "\n" + stderr, run_dir).splitlines():
+    for line in _scrub(stdout + "\n" + stderr, *bases).splitlines():
         if ": error " in line:
             return _TRAILING_PROJECT.sub("", line.strip())[:400]
     return "the build failed without naming a diagnostic"

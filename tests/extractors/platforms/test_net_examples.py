@@ -471,3 +471,116 @@ def test_a_build_that_fails_without_a_compiler_diagnostic_is_not_verified_never_
     )
     assert [r.outcome for r in receipts] == ["NOT_VERIFIED"]
     assert "NUGET_PACKAGES" in (receipts[0].detail or "")
+
+
+_HOSTED_DIAGNOSTIC = (
+    "Program.cs(3,41): error CS1503: Argument 2: cannot convert from "
+    "'Aspose.ThreeD.FileFormat' to 'System.Threading.CancellationToken'"
+)
+
+
+def _failing_build(
+    monkeypatch: pytest.MonkeyPatch, printed_prefix: Any
+) -> None:
+    """A build that fails the way the hosted .NET SDK reports it: an absolute directory in front
+    of the file name, and the project in brackets."""
+
+    def fake(argv: list[str], **kwargs: Any) -> ExecutionResult:
+        if argv[1] == "--version":
+            return _result(0, stdout="10.0.401\n")
+        directory = Path(kwargs["workspace"]).resolve()
+        noisy = (
+            f"{printed_prefix(directory)}Program.cs(3,41): error CS1503: Argument 2: "
+            "cannot convert from 'Aspose.ThreeD.FileFormat' to "
+            f"'System.Threading.CancellationToken' [{directory / 'Example.csproj'}]\n"
+        )
+        return _result(1, stdout=noisy, stderr=noisy)
+
+    monkeypatch.setattr(net_examples, "dotnet_executable", lambda: "dotnet")
+    monkeypatch.setattr(net_examples, "execute", fake)
+
+
+def test_the_hosted_checkout_root_path_scrubs_to_the_bare_diagnostic(
+    tmp_path: Path, project: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Hosted run 40474666141: a relative run directory made the tool print the checkout root, and
+    the old scrub - which removed the run directory's relative spelling first or its absolute one
+    first depending on set order - left `/home/runner/work/.../Program.cs(3,41)` in the receipt."""
+    monkeypatch.chdir(tmp_path)
+    _failing_build(monkeypatch, lambda directory: f"{directory}/")
+    candidate = _candidate(3, "Scene.FromFile(a, b);")
+    for _ in range(5):
+        receipts = net_examples.verify_net_examples(
+            tmp_path, project, [candidate], Path("runs") / "present"
+        )
+        assert receipts[0].outcome == "FAILED"
+        assert receipts[0].detail == _HOSTED_DIAGNOSTIC
+        assert receipts[0].stdout.strip() == _HOSTED_DIAGNOSTIC + " [Example.csproj]"
+        assert str(tmp_path) not in receipts[0].stderr + receipts[0].stdout
+
+
+@pytest.mark.parametrize(
+    "prefix",
+    [
+        lambda directory: "/home/runner/work/repo-presenter/repo-presenter/",
+        lambda directory: f"{directory}{chr(92)}",
+        lambda directory: chr(92).join(["C:", "Users", "runneradmin", "work", "repo", ""]),
+        lambda directory: f"{directory.as_posix()}/",
+        lambda directory: f"{directory.parent.parent}/",
+    ],
+)
+def test_every_spelling_of_where_the_build_ran_leaves_the_diagnostic_alone(
+    tmp_path: Path, project: Path, monkeypatch: pytest.MonkeyPatch, prefix: Any
+) -> None:
+    _failing_build(monkeypatch, prefix)
+    receipts = net_examples.verify_net_examples(
+        tmp_path, project, [_candidate(3, "Scene.FromFile(a, b);")], tmp_path / "run"
+    )
+    assert receipts[0].detail == _HOSTED_DIAGNOSTIC
+    assert str(tmp_path) not in receipts[0].stdout + receipts[0].stderr
+    assert "runneradmin" not in receipts[0].stdout + receipts[0].stderr
+    assert "/home/runner" not in receipts[0].stdout + receipts[0].stderr
+
+
+def test_the_same_failing_build_from_two_workspace_roots_has_byte_identical_receipts(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The seal's no-op proof: two machines, two roots, one repository, one set of bytes."""
+    receipts: list[list[net_examples.ExampleReceipt]] = []
+    for name in ("machine_a", "a_much_longer_machine_b_root"):
+        root = tmp_path / name / "work" / "repo-presenter"
+        source = root / "src" / "Aspose.Widget"
+        source.mkdir(parents=True)
+        project = source / "Aspose.Widget.csproj"
+        project.write_text('<Project Sdk="Microsoft.NET.Sdk" />', encoding="utf-8")
+        monkeypatch.chdir(root)
+        _failing_build(monkeypatch, lambda directory: f"{directory}/")
+        receipts.append(
+            net_examples.verify_net_examples(
+                root,
+                project,
+                [_candidate(3, "Scene.FromFile(a, b);")],
+                Path("runs") / name,
+            )
+        )
+    first, second = receipts
+    assert first == second
+    assert first[0].detail == _HOSTED_DIAGNOSTIC
+    assert first[0].stdout == second[0].stdout and first[0].stderr == second[0].stderr
+
+
+def test_a_diagnostic_with_no_path_in_it_is_unchanged_by_the_scrub(
+    tmp_path: Path, project: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def fake(argv: list[str], **kwargs: Any) -> ExecutionResult:
+        if argv[1] == "--version":
+            return _result(0, stdout="10.0.401\n")
+        return _result(1, stdout=_HOSTED_DIAGNOSTIC + "\n")
+
+    monkeypatch.setattr(net_examples, "dotnet_executable", lambda: "dotnet")
+    monkeypatch.setattr(net_examples, "execute", fake)
+    receipts = net_examples.verify_net_examples(
+        tmp_path, project, [_candidate(3, "x")], tmp_path / "run"
+    )
+    assert receipts[0].detail == _HOSTED_DIAGNOSTIC
+    assert receipts[0].stdout == _HOSTED_DIAGNOSTIC + "\n"

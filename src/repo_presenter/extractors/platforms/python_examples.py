@@ -31,8 +31,13 @@ from packaging.specifiers import InvalidSpecifier, SpecifierSet
 from packaging.version import InvalidVersion, Version
 
 from repo_presenter.core.ecosystems import PYTHON
-from repo_presenter.core.examples import ExampleCandidate, ExampleReceipt, FixtureBinding
+from repo_presenter.core.examples import (
+    ExampleCandidate,
+    ExampleReceipt,
+    FixtureBinding,
+)
 from repo_presenter.core.execution import ExecutionResult, execute, profile_environment
+from repo_presenter.core.receipt_paths import scrub_machine_paths
 from repo_presenter.core.toolchains import installed_pythons
 
 # The spec owns the numbers; these names keep the module readable and the failure message
@@ -106,12 +111,15 @@ def _clip(text: str) -> str:
 WORKSPACE_TOKEN = "<workspace>"
 
 
-def _redact(text: str, workspace: Path) -> str:
-    """The run's own absolute path replaced by a stable token, in either separator."""
-    literal = str(workspace)
-    return text.replace(literal, WORKSPACE_TOKEN).replace(
-        literal.replace("\\", "/"), WORKSPACE_TOKEN
-    )
+def _redact(text: str, workspace: Path, *bases: Path) -> str:
+    """The run's own absolute path replaced by a stable token, in either separator, then every
+    other absolute path this machine could print (the checkout, a temp or home directory) cut
+    back to its file name."""
+    for variant in sorted({str(workspace), str(workspace.resolve())}, key=len, reverse=True):
+        text = text.replace(variant, WORKSPACE_TOKEN).replace(
+            variant.replace("\\", "/"), WORKSPACE_TOKEN
+        )
+    return scrub_machine_paths(text, *bases)
 
 
 def _string_literals(code: str) -> list[str]:
@@ -589,8 +597,8 @@ def verify_python_examples(
             ordinal=candidate.ordinal,
             outcome=outcome,  # type: ignore[arg-type]
             return_code=result.return_code,
-            stdout=_redact(_clip(result.stdout), workspace),
-            stderr=_redact(_clip(result.stderr), workspace),
+            stdout=_redact(_clip(result.stdout), workspace, root),
+            stderr=_redact(_clip(result.stderr), workspace, root),
             detail=detail,
             fixtures=tuple(fixtures),
             # `source_note` is set only when the real package install failed and this example ran

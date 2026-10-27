@@ -51,6 +51,7 @@ from typing import Any
 
 from repo_presenter.core.examples import ExampleCandidate, ExampleReceipt
 from repo_presenter.core.execution import ExecutionResult, execute, profile_environment
+from repo_presenter.core.receipt_paths import scrub_machine_paths
 from repo_presenter.core.toolchains import (
     REGISTRY_VARIABLE,
     recorded_tool,
@@ -314,11 +315,7 @@ def _scrub(text: str, *bases: Path) -> str:
     must not appear in it - and a path that differs per machine would move a sealed candidate's
     bytes for a reason that is not the repository.
     """
-    cleaned = text
-    for base in {path for original in bases for path in (original, original.resolve())}:
-        for rendered in (str(base), base.as_posix()):
-            cleaned = cleaned.replace(rendered + "\\", "").replace(rendered + "/", "")
-            cleaned = cleaned.replace(rendered, "")
+    cleaned = scrub_machine_paths(text, *bases)
     return cleaned
 
 

@@ -38,7 +38,12 @@ from pathlib import Path
 
 from repo_presenter.core.examples import ExampleCandidate, ExampleReceipt
 from repo_presenter.core.execution import ExecutionResult, execute, profile_environment
-from repo_presenter.core.toolchains import REGISTRY_VARIABLE, recorded_path, resolve_tool
+from repo_presenter.core.receipt_paths import scrub_machine_paths
+from repo_presenter.core.toolchains import (
+    REGISTRY_VARIABLE,
+    recorded_path,
+    resolve_tool,
+)
 
 _REGISTRY_VARIABLE = REGISTRY_VARIABLE  # the name the registry tests set (core/toolchains.py)
 
@@ -140,11 +145,7 @@ def _scrub(text: str, *paths: Path) -> str:
     keeping it makes the fresh-process no-op proof (BC-11) impossible for any crate whose examples
     compile at all.
     """
-    cleaned = text
-    for base in {path for source in paths for path in (source, source.resolve())}:
-        for rendered in (str(base), base.as_posix()):
-            cleaned = cleaned.replace(rendered + "\\", "").replace(rendered + "/", "")
-            cleaned = cleaned.replace(rendered, "")
+    cleaned = scrub_machine_paths(text, *paths)
     return _FINISHED_IN.sub(r"\g<head>", cleaned)
 
 

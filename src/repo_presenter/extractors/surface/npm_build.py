@@ -17,10 +17,11 @@ import shutil
 from collections.abc import Sequence
 from pathlib import Path
 
-from repo_presenter.extractors.surface.npm_package import read_json
 from repo_presenter.core.examples import ExampleCandidate, ExampleReceipt, MeasuredBuild
 from repo_presenter.core.execution import execute, profile_environment
+from repo_presenter.core.receipt_paths import scrub_machine_paths
 from repo_presenter.core.toolchains import resolve_tool
+from repo_presenter.extractors.surface.npm_package import read_json
 
 MAX_OUTPUT_CHARS = 4000
 _WORKSPACE_ATTEMPTS = 5
@@ -74,11 +75,7 @@ def scrub(text: str, workspace: Path) -> str:
     must not appear in it - and a path that differs per machine would move a sealed candidate's
     bytes for a reason that is not the repository.
     """
-    cleaned = text
-    for base in {workspace, workspace.resolve()}:
-        for rendered in (str(base), base.as_posix()):
-            cleaned = cleaned.replace(rendered + "\\", "").replace(rendered + "/", "")
-            cleaned = cleaned.replace(rendered, "")
+    cleaned = scrub_machine_paths(text, workspace)
     return cleaned
 
 
