@@ -132,7 +132,8 @@ def test_a_typed_finding_keeps_the_section_it_names() -> None:
 def test_an_impossible_citation_is_refused_with_the_reason(
     span: tuple[Any, ...], fragment: str
 ) -> None:
-    _, problems = resolved(cited("quality", *span))
+    # an unsupported claim cites the smallest span (a quality finding may cite a whole section)
+    _, problems = resolved(cited("unsupported_claim", *span))
     assert any(fragment in problem for problem in problems), problems
 
 

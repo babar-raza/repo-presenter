@@ -144,6 +144,8 @@ def test_python_and_maven_spellings_of_the_identity_are_judged_the_same_way() ->
         "Types live in `Aspose.ThreeD`.",
         # a file, not a package
         "Read `Aspose.3D.FOSS.csproj` and `Aspose.3D.FOSS.md`.",
+        # build artefacts named after the package
+        "Unpack `Aspose.3D.FOSS.tar.gz`, then open `Aspose.3D.FOSS.egg-info`.",
         # a different, shorter name is not an extension of the identity
         "See the `Aspose` brand site.",
         # a sibling product that only shares the family prefix (3D-.NET's converter tool)

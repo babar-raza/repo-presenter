@@ -94,7 +94,7 @@ def test_changed_candidate_bytes_are_a_new_request_and_may_be_reviewed(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     harness = blocked_harness(tmp_path, monkeypatch)
-    harness.candidate = CANDIDATE.replace("MIT.", "MIT licence.")
+    harness.candidate = CANDIDATE.replace("Renders a Widget", "Renders every Widget")
     install(monkeypatch, [completion(reply())])
     assert harness.review(invocation="inv-2").verdict == "ACCEPT"
 

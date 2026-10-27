@@ -185,7 +185,7 @@ def test_the_model_reviews_a_clean_candidate_once_on_the_one_ledger(
     assert result.provider_calls == 10 and provider.reviewer_calls == 1
     verdict = result.review_verdict
     assert verdict.verdict == "ACCEPT" and verdict.model_reviewed
-    assert verdict.prompt_version == "16" and verdict.model_served == "qwen3-next"
+    assert verdict.prompt_version == "17" and verdict.model_served == "qwen3-next"
     assert run.verdict_file() == verdict
     records = load_records(run.out / "llm_cache" / "ledger.jsonl")
     assert {record.invocation_id for record in records} == {
@@ -385,7 +385,7 @@ def test_a_finding_no_stage_can_revise_is_recorded_unrepairable_and_blocks(
         *authored(),
         review_reply(
             "REJECT_PRESENTATION",
-            opening_finding(section_id="structure", causal_stage="unclear", quote=""),
+            opening_finding(section_id="opening", causal_stage="unclear", quote=""),
         ),
     )
     result = run.cascade()

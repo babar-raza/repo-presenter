@@ -56,7 +56,10 @@ REJECT_VERDICTS = (
     "REJECT_LINKS",
     "REJECT_COHERENCE",
 )
-MODEL_VERDICTS = ("ACCEPT", *REJECT_VERDICTS, "INSUFFICIENT_EVIDENCE")
+INSUFFICIENT_EVIDENCE = "INSUFFICIENT_EVIDENCE"
+MODEL_VERDICTS = ("ACCEPT", *REJECT_VERDICTS, INSUFFICIENT_EVIDENCE)
+#: The model's own ACCEPT, as the vocabulary the merge of unit verdicts speaks; it decides nothing.
+MODEL_ACCEPT = MODEL_VERDICTS[0]
 
 
 @dataclass(frozen=True)
@@ -87,7 +90,7 @@ def fold_verdict(
         return Fold(
             "REJECT", False, f"{len(deterministic)} deterministic finding(s) block"
         )
-    if model_verdict == "INSUFFICIENT_EVIDENCE":
+    if model_verdict == INSUFFICIENT_EVIDENCE:
         return Fold(
             "REJECT", True, "the reviewer found the inputs insufficient to review"
         )
@@ -137,7 +140,10 @@ class ReviewVerdict:
     unit_reviews: tuple[Mapping[str, Any], ...] = ()
 
     def __post_init__(self) -> None:
-        if self.calibration_status is not None and self.calibration_status not in STATUSES:
+        if (
+            self.calibration_status is not None
+            and self.calibration_status not in STATUSES
+        ):
             raise ValueError(f"unknown calibration status {self.calibration_status!r}")
         folded = fold_verdict(model_verdict=self.model_verdict, findings=self.findings)
         if self.verdict != folded.verdict:

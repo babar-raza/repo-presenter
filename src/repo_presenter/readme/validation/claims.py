@@ -190,7 +190,8 @@ _PROMPT = re.compile(r"^(?:[$>]\s+|PS>\s+)")
 # A code span that is a file or archive name, not a package: never a near-miss of the identity.
 _FILE_LIKE = re.compile(
     r"(?i)\.(?:md|txt|rst|json|toml|ya?ml|cfg|ini|lock|py|ts|js|cs|csproj|sln|props|targets|nuspec|"
-    r"pom|xml|gradle|java|go|rs|cpp|hpp|h|sh|ps1|whl|nupkg|dll|jar|so|a|png|svg|gif|jpg|zip)$"
+    r"pom|xml|gradle|java|go|rs|cpp|hpp|h|sh|ps1|whl|nupkg|dll|jar|so|a|png|svg|gif|jpg|zip|gz|tgz|"
+    r"tar|exe|msi|pdf|html|csv)$|[-.](?:info|egg|dist)$"
 )
 _EXTENSION_SPAN = re.compile(r"`(\.[A-Za-z0-9]{2,6})`")
 

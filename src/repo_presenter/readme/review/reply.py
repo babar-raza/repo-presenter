@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Collection, Mapping, Sequence
-from dataclasses import replace
+from dataclasses import dataclass, replace
 from typing import Any
 
 from repo_presenter.core.facts import FactsDocument
@@ -73,9 +73,23 @@ FACTLESS_KINDS = frozenset({"unsupported_claim", "quality"})
 RENDERER_OWNED = frozenset(
     {section.id for section in SEMANTIC_SHELL if section.owner == "D"} | {"at_a_glance"}
 )
-#: Most lines one finding may cite; a longer span is not a pointer to a defect.
+#: Most lines a contradiction or an unsupported claim may cite; a longer span is not a pointer to a
+#: defect. An omission, an absence or a quality finding is about a whole section and may cite one.
 MAX_CITED_LINES = 12
+WHOLE_SECTION_KINDS = frozenset({"omission", "absence", "quality"})
+#: The manifest's bound on a finding's ``text``; the merged-findings note stays inside it.
+TEXT_LIMIT = 600
 _ID = re.compile(r"F[0-9]{2}")
+
+
+@dataclass(frozen=True)
+class ReviewScope:
+    """What one review unit showed: the sections it covers and the candidate lines it numbered. A
+    finding may name only these sections and cite only these lines (a line the unit did not show was
+    printed by the renderer or belongs to another unit)."""
+
+    sections: frozenset[str]
+    lines: frozenset[int]
 
 
 def valid_section_ids(plan: Mapping[str, Any] | None = None) -> frozenset[str]:
@@ -109,13 +123,35 @@ def _cited_section(candidate: str, first: int, last: int) -> str | list[str]:
     return "opening" if not headings or last < headings[0] else "structure"
 
 
-def resolve_cited_lines(reply: Any, candidate_readme: str) -> list[str]:
+def _hidden(first: int, last: int, rows: list[str], scope: ReviewScope) -> list[int]:
+    return [
+        n
+        for n in range(first, last + 1)
+        if rows[n - 1].strip() and n not in scope.lines
+    ]
+
+
+def _numbers(numbers: list[int]) -> str:
+    shown = ", ".join(str(n) for n in numbers[:6])
+    return shown + (" ..." if len(numbers) > 6 else "")
+
+
+def resolve_cited_lines(
+    reply: Any, candidate_readme: str, scope: ReviewScope | None = None
+) -> list[str]:
     """Replace each finding's model-written ``quote`` with the candidate's own text for the lines it
     cites (``lines``: ``[line]`` or ``[first, last]``, 1-based, as the numbered candidate in the
     packet shows them), and, for the kinds that are about the quoted text, set ``section_id`` to the
     section those lines are in. Edits ``reply`` in place, like a ``run_job`` check, and is idempotent,
     so a stored reply replays identically. Returns the reasons a citation cannot be used; a finding
     without ``lines`` is left to ``validate_review_reply``, which still demands a verbatim quote.
+
+    With a ``scope`` (a sectionwise review unit) a line the unit did not show cannot be cited, for
+    any kind. A contradiction or an unsupported claim cites at most ``MAX_CITED_LINES`` lines, every
+    one shown; an omission, absence or quality finding may cite a whole section, whose first and last
+    line must be shown. A whole-section citation of an omission or absence locates the section and is
+    not a quote (``quote`` stays empty), so a string the section does contain is never treated as
+    quoted by the finding that says it is missing.
     """
     findings = reply.get("findings") if isinstance(reply, Mapping) else None
     if not isinstance(findings, list):
@@ -136,31 +172,112 @@ def resolve_cited_lines(reply: Any, candidate_readme: str) -> list[str]:
             problems.append(f"finding {label}: lines must be whole numbers")
             continue
         first, last = cited[0], cited[-1]
+        kind = finding.get("claim_kind")
+        whole = kind in WHOLE_SECTION_KINDS
         if first < 1 or last < 1:
             problems.append(f"finding {label}: line numbers start at 1")
-        elif last < first:
+            continue
+        if last < first:
             problems.append(
                 f"finding {label}: the first line after the last ({first} > {last})"
             )
-        elif last > len(rows):
+            continue
+        if last > len(rows):
             problems.append(
                 f"finding {label}: the candidate has {len(rows)} lines; lines {first}-{last} do not exist"
             )
-        elif last - first + 1 > MAX_CITED_LINES:
+            continue
+        if not whole and last - first + 1 > MAX_CITED_LINES:
             problems.append(
                 f"finding {label}: cite at most {MAX_CITED_LINES} lines; lines {first}-{last} are {last - first + 1}"
             )
-        elif not any(row.strip() for row in rows[first - 1 : last]):
+            continue
+        if not any(row.strip() for row in rows[first - 1 : last]):
             problems.append(f"finding {label}: lines {first}-{last} are blank")
+            continue
+        if scope is not None:
+            if whole:
+                ends = sorted({first, last} - scope.lines)
+                if ends:
+                    problems.append(
+                        f"finding {label}: the first and last line of a whole-section citation "
+                        f"must be lines you were shown; line {_numbers(ends)} was not shown to you"
+                    )
+                    continue
+            else:
+                hidden = _hidden(first, last, rows, scope)
+                if hidden:
+                    problems.append(
+                        f"finding {label}: lines {_numbers(hidden)} were not shown to you "
+                        "(renderer-printed text or another review unit); cite only the numbered lines"
+                    )
+                    continue
+        where = _cited_section(candidate_readme, first, last)
+        if isinstance(where, list):
+            problems.extend(f"finding {label}: {reason}" for reason in where)
+            continue
+        if whole and last - first + 1 > MAX_CITED_LINES:
+            if kind == "quality":
+                finding["quote"] = "\n".join(
+                    rows[n - 1]
+                    for n in range(first, last + 1)
+                    if scope is None or n in scope.lines
+                )
+            else:
+                finding["quote"] = ""
         else:
-            where = _cited_section(candidate_readme, first, last)
-            if isinstance(where, list):
-                problems.extend(f"finding {label}: {reason}" for reason in where)
-                continue
             finding["quote"] = "\n".join(rows[first - 1 : last])
-            if finding.get("claim_kind") not in ("omission", "absence"):
-                finding["section_id"] = where
+        if kind not in ("omission", "absence"):
+            finding["section_id"] = where
     return problems
+
+
+def _repeat_key(finding: Mapping[str, Any]) -> tuple[Any, ...]:
+    omission = finding.get("omission")
+    return (
+        finding.get("claim_kind"),
+        finding.get("section_id") if not finding.get("lines") else None,
+        tuple(finding.get("lines") or ()),
+        tuple(finding.get("absent") or ()),
+        tuple(finding.get("unsupported_names") or ()),
+        None
+        if not isinstance(omission, Mapping)
+        else (
+            omission.get("section_id"),
+            tuple(omission.get("missing_ids") or ()),
+            tuple(omission.get("missing_quotes") or ()),
+        ),
+    )
+
+
+def merge_repeated_findings(reply: Any) -> None:
+    """Fold findings of one claim kind that cite the same lines (or name the same typed claim) into
+    the first of them. A repeat adds no defect: iteration 2 saw one reply file the same finding 29
+    times. The first finding stays BLOCKING and its text records how many repeats it absorbed. Edits
+    ``reply`` in place and is idempotent."""
+    findings = reply.get("findings") if isinstance(reply, Mapping) else None
+    if not isinstance(findings, list):
+        return
+    kept: dict[tuple[Any, ...], dict[str, Any]] = {}
+    absorbed: dict[tuple[Any, ...], int] = {}
+    ordered: list[Any] = []
+    for finding in findings:
+        if not isinstance(finding, dict):
+            ordered.append(finding)
+            continue
+        key = _repeat_key(finding)
+        if key in kept:
+            absorbed[key] = absorbed.get(key, 0) + 1
+            continue
+        kept[key] = finding
+        ordered.append(finding)
+    for key, count in absorbed.items():
+        first = kept[key]
+        note = f" (+{count} identical findings merged)"
+        text = str(first.get("text", ""))
+        if not text.endswith(note):
+            first["text"] = text[: TEXT_LIMIT - len(note)] + note
+    findings[:] = ordered
 
 
 def _strings(value: Any) -> list[str] | None:
@@ -187,6 +304,7 @@ def _finding_errors(
     candidate_readme: str,
     facts: FactsDocument,
     sections: Collection[str],
+    scoped: bool = False,
 ) -> list[str]:
     if not isinstance(finding, Mapping):
         return ["a finding must be an object"]
@@ -200,9 +318,15 @@ def _finding_errors(
         bad("id must look like F01")
     section = finding.get("section_id")
     if not isinstance(section, str) or section not in sections:
-        bad(
-            f"section_id must be a shell or plan section or 'structure'; got {section!r}"
-        )
+        if scoped:
+            bad(
+                f"section_id {section!r} is not a section of this review unit "
+                f"({', '.join(sorted(sections))})"
+            )
+        else:
+            bad(
+                f"section_id must be a shell or plan section or 'structure'; got {section!r}"
+            )
         section = None
     if finding.get("causal_stage") not in CAUSAL_STAGES:
         bad(f"causal_stage must be one of {', '.join(CAUSAL_STAGES)}")
@@ -324,8 +448,11 @@ def validate_review_reply(
     candidate_readme: str,
     facts: FactsDocument,
     plan: Mapping[str, Any] | None = None,
+    scope: ReviewScope | None = None,
+    max_findings: int = MAX_FINDINGS,
 ) -> list[str]:
-    """Why a parsed reply may not be used; empty when it holds. Pure; safe as ``run_job`` checks."""
+    """Why a parsed reply may not be used; empty when it holds. Pure; safe as ``run_job`` checks.
+    With a ``scope`` a finding names only that review unit's sections."""
     if not isinstance(reply, Mapping):
         return ["the reply must be one JSON object"]
     errors: list[str] = []
@@ -337,13 +464,13 @@ def validate_review_reply(
         return [*errors, "findings must be a list"]
     if _strings(reply.get("preserve")) is None:
         errors.append("preserve must be a list of strings")
-    if len(findings) > MAX_FINDINGS:
-        errors.append(f"at most {MAX_FINDINGS} findings; got {len(findings)}")
+    if len(findings) > max_findings:
+        errors.append(f"at most {max_findings} findings; got {len(findings)}")
     if verdict == "ACCEPT" and findings:
         errors.append("an ACCEPT verdict carries no findings")
     if verdict in REJECT_VERDICTS and not findings:
         errors.append(f"a {verdict} verdict carries at least one finding")
-    sections = valid_section_ids(plan)
+    sections = valid_section_ids(plan) if scope is None else scope.sections
     seen: set[str] = set()
     for finding in findings:
         errors.extend(
@@ -352,6 +479,7 @@ def validate_review_reply(
                 candidate_readme=candidate_readme,
                 facts=facts,
                 sections=sections,
+                scoped=scope is not None,
             )
         )
         label = finding.get("id") if isinstance(finding, Mapping) else None
@@ -418,11 +546,20 @@ def review_from_reply(
     model_served: str,
     request_sha256: str,
     reply_sha256: str,
+    max_findings: int = MAX_FINDINGS,
+    calibration_status: str | None = None,
+    unit_reviews: Sequence[Mapping[str, Any]] = (),
 ) -> ReviewVerdict:
     """The verdict for one reply: validate, clear what a registered clearance proves false, fold.
-    Raises ``ReviewUnavailable`` (retryable, never an ACCEPT) when the reply breaks the contract."""
+    Raises ``ReviewUnavailable`` (retryable, never an ACCEPT) when the reply breaks the contract.
+    For a sectionwise review ``reply`` is the units' merged reply, which may hold more findings than
+    one unit's reply may (``max_findings``)."""
     errors = validate_review_reply(
-        reply, candidate_readme=candidate_readme, facts=facts, plan=plan
+        reply,
+        candidate_readme=candidate_readme,
+        facts=facts,
+        plan=plan,
+        max_findings=max_findings,
     )
     if errors:
         raise ReviewUnavailable("the reviewer's reply broke the contract", errors)
@@ -438,4 +575,6 @@ def review_from_reply(
         model_served=model_served,
         request_sha256=request_sha256,
         reply_sha256=reply_sha256,
+        calibration_status=calibration_status,
+        unit_reviews=unit_reviews,
     )

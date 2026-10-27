@@ -12,6 +12,7 @@ fresh ``store_dir`` per repeat is what bypasses the cache for a repeatability me
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 from repo_presenter.core.config import GatewayConfig
 from repo_presenter.core.errors import JobError, ProviderCallBudgetError
@@ -52,6 +53,7 @@ def oracle(case: Case) -> ReviewOutcome:
         first_reply_json_valid=True,
         first_reply_contract_valid=True,
         evidence=case.targets,
+        quotes=(evidence_text(case.defect_text),) if case.defect_text else (),
     )
 
 
@@ -60,18 +62,40 @@ def physical_calls(ledger_path: Path) -> int:
     return sum(1 for record in load_records(ledger_path) if is_physical_attempt(record))
 
 
-def _first_reply_flags(appended: list) -> tuple[bool | None, bool | None]:
-    sent = [record for record in appended if is_physical_attempt(record)]
-    if not sent or sent[0].outcome != "success":
-        return None, None
-    invalid = [record for record in appended if record.outcome == "response_invalid"]
-    if not invalid:
-        return True, True
-    lines = invalid[0].rejection
-    broken_json = any(
-        line.startswith(("output is not a JSON object", "$")) for line in lines
+def _unit_flags(appended: list) -> tuple[int, int, int]:
+    """``(first replies sent, schema-valid, contract-valid)`` over the review units in ``appended``.
+
+    A sectionwise review makes one logical call per unit (``logical_call_id`` is the hash of the
+    unit's first request). The first reply of a unit is valid when the job never recorded a rejection
+    for it; it is schema-valid unless the first rejection is a JSON or schema error."""
+    by_unit: dict[str, list] = {}
+    for record in appended:
+        by_unit.setdefault(record.logical_call_id, []).append(record)
+    replies = json_valid = contract_valid = 0
+    for records in by_unit.values():
+        sent = [record for record in records if is_physical_attempt(record)]
+        if not sent or sent[0].outcome != "success":
+            continue
+        replies += 1
+        invalid = [record for record in records if record.outcome == "response_invalid"]
+        if not invalid:
+            json_valid += 1
+            contract_valid += 1
+            continue
+        broken_json = any(
+            line.startswith(("output is not a JSON object", "$"))
+            for line in invalid[0].rejection
+        )
+        json_valid += not broken_json
+    return replies, json_valid, contract_valid
+
+
+def _tokens(appended: list) -> int:
+    return sum(
+        (record.prompt_tokens or 0) + (record.completion_tokens or 0)
+        for record in appended
+        if is_physical_attempt(record)
     )
-    return not broken_json, False
 
 
 class LiveReviewer:
@@ -132,8 +156,17 @@ class LiveReviewer:
             detail = f"{error.reason}: {'; '.join(error.errors)}"[:400]
         except JobError as error:
             detail = str(error)[:400]
-        json_valid, contract_valid = _first_reply_flags(ledger.appended)
+        replies, json_ok, contract_ok = _unit_flags(ledger.appended)
+        json_valid = (json_ok == replies) if replies else None
+        contract_valid = (contract_ok == replies) if replies else None
         calls = ledger.physical_calls_made
+        flags: dict[str, Any] = {
+            "unit_replies": replies,
+            "unit_json_valid": json_ok,
+            "unit_contract_valid": contract_ok,
+            "tokens": _tokens(ledger.appended),
+            "units": len(verdict.unit_reviews) if verdict is not None else 0,
+        }
         if verdict is None or verdict.retryable:
             return ReviewOutcome(
                 UNAVAILABLE,
@@ -141,6 +174,7 @@ class LiveReviewer:
                 json_valid,
                 contract_valid,
                 detail=detail or (verdict.fold.reason if verdict else ""),
+                **flags,
             )
         return ReviewOutcome(
             ACCEPT if verdict.verdict == "ACCEPT" else REJECT,
@@ -151,7 +185,9 @@ class LiveReviewer:
             evidence=tuple(
                 evidence_text(f.quote, f.message) for f in verdict.blocking_findings
             ),
+            quotes=tuple(evidence_text(f.quote) for f in verdict.blocking_findings),
             cleared=sum(1 for f in verdict.findings if f.status == "CLEARED"),
             model_served=verdict.model_served or "",
             detail=verdict.fold.reason,
+            **flags,
         )

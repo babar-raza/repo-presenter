@@ -29,6 +29,8 @@ reasoning). Every rule is deterministic and reuses an already-proven primitive w
 - ``claim_contradiction``: a factual holdout, via ``readme.validation.claims.claim_findings``.
 - ``duplicate_opening_paragraph``: a preservation holdout, via
   ``readme.composition.authoring.preserved_opening_text`` + ``readme.composition.coverage.states_all``.
+- ``duplicate_paragraph``: the same prose paragraph (120 characters or more) printed twice; the model
+  caught none of four injected repeats in iteration 2, and a repeat is provable by comparing text.
 - ``disposition_coverage``: every inherited unit has exactly one disposition, names no unknown unit,
   and a kept unit's text is printed in the README (the old ``judge.py`` J4 clause, rebuilt here as
   a rule over this repository's own evidence shapes).
@@ -81,6 +83,8 @@ from repo_presenter.readme.composition.coverage import states_all
 from repo_presenter.readme.composition.list_coverage import list_items, missing_items
 from repo_presenter.readme.evidence.facts.links import extract_links
 from repo_presenter.readme.review.findings import Finding
+from repo_presenter.readme.review.matching import plain
+from repo_presenter.readme.review.scope import reviewable_lines
 from repo_presenter.readme.review.verdict import (
     REVIEW_VERDICT_FILENAME,
     REVIEWER_LOGIC_VERSION,
@@ -110,6 +114,7 @@ __all__ = [
     "claim_contradiction_rule",
     "disposition_coverage_rule",
     "duplicate_opening_paragraph_rule",
+    "duplicate_paragraph_rule",
     "fold_verdict",
     "heading_printed",
     "live_readme_loss_rule",
@@ -177,6 +182,48 @@ def duplicate_opening_paragraph_rule(
             ]
         break
     return []
+
+
+#: Shortest prose paragraph a repeat is a defect for: a short sentence is repeated legitimately.
+MIN_DUPLICATE_CHARS = 120
+_LIST_ITEM = re.compile(r"^\s*(?:[-*+]|\d+[.)])\s")
+
+
+def duplicate_paragraph_rule(readme_text: str) -> list[Finding]:
+    """Preservation holdout: the candidate does not print the same author-written prose paragraph
+    twice. Paragraphs are read from the lines a reviewer may be shown (``review.scope``: no fence,
+    table, heading, HTML or renderer-owned section), a list item is not a paragraph, and the texts are
+    compared as a reader sees them (Markdown syntax, case and spacing aside)."""
+    rows = readme_text.splitlines()
+    paragraphs: list[list[str]] = []
+    previous = None
+    for number in reviewable_lines(readme_text):
+        row = rows[number - 1]
+        if _LIST_ITEM.match(row):
+            previous = None
+            continue
+        if previous is not None and number == previous + 1:
+            paragraphs[-1].append(row)
+        else:
+            paragraphs.append([row])
+        previous = number
+    seen: dict[str, list[str]] = {}
+    for lines in paragraphs:
+        text = "\n".join(lines)
+        key = " ".join(plain(text).casefold().split())
+        if len(key) >= MIN_DUPLICATE_CHARS:
+            seen.setdefault(key, []).append(text)
+    return [
+        Finding(
+            rule="duplicate_paragraph",
+            source="deterministic",
+            message="the candidate prints the same prose paragraph more than once",
+            evidence=f"the paragraph occurs {len(copies)} times",
+            quote=copies[0],
+        )
+        for copies in seen.values()
+        if len(copies) > 1
+    ]
 
 
 #: Kept units must print verbatim (judge.py J4); these dispositions account for a live loss (J6).
@@ -469,6 +516,7 @@ def review_candidate(
         *duplicate_opening_paragraph_rule(
             units, dispositions=dispositions, facts=facts
         ),
+        *duplicate_paragraph_rule(readme_text),
         *disposition_coverage_rule(readme_text, facts=facts, dispositions=dispositions),
         *live_readme_loss_rule(
             original_readme, readme_text, facts=facts, dispositions=dispositions

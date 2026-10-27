@@ -90,6 +90,10 @@ class Case:
     #: deterministic stage blocks anyway (its dispositions predate the accounting step). A rule
     #: that fires on the twin is not a catch of anything injected into it.
     baseline_rules: tuple[str, ...] = ()
+    #: The text that IS the defect (the injected span, or the span a repair removes): a rejection is
+    #: on target when it cites lines holding it. Empty when the defect is an absence (a dropped
+    #: section) and only keywords can locate it.
+    defect_text: str = ""
 
     @property
     def readme(self) -> str:
@@ -203,6 +207,7 @@ def base_cases(base: Base) -> list[Case]:
                 twin_of=clean.case_id,
                 note=f"recorded in the candidate as written: {repair.reason}",
                 targets=repair.targets,
+                defect_text=repair.old.strip(),
             )
         )
     for name, operator in OPERATORS.items():
@@ -222,6 +227,7 @@ def base_cases(base: Base) -> list[Case]:
                 note=mutation.note,
                 mutation=mutation,
                 targets=mutation.targets,
+                defect_text=mutation.replacement.strip(),
             )
         )
     return cases
@@ -261,6 +267,7 @@ def recorded_cases(recorded: RecordedDefect) -> list[Case]:
         twin_of=clean.case_id if recorded.repairs else None,
         note=recorded.note,
         targets=recorded.targets,
+        defect_text=recorded.repairs[0].old.strip() if recorded.repairs else "",
     )
     return [clean, defect] if recorded.repairs else [defect]
 

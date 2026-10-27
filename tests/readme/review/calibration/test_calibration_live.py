@@ -171,7 +171,9 @@ def test_the_harness_counts_the_live_calls_and_stops_at_the_cap(tmp_path, monkey
     cases = build_corpus([Base(make_source(tmp_path))])
     install(monkeypatch, [completion(ACCEPT_REPLY)] * len(cases))
     run = run_corpus(cases, reviewer(tmp_path, cap=4))
-    assert len(run.results) == 4 and "cap is 4" in run.stopped
+    # a case whose reviewable text equals an earlier case's (a mutant of renderer-printed text such
+    # as the install line) is the same request: it replays for free and costs no call
+    assert len(run.results) >= 4 and "cap is 4" in run.stopped
     metrics = compute_metrics(run)
     assert metrics.calls == 4 == physical_calls(tmp_path / "ledger.jsonl")
 
@@ -195,3 +197,47 @@ def test_a_fresh_store_per_call_makes_every_repeat_a_real_call(
         1,
     ] and client.requests == 3
     assert compute_metrics(run).stability == 1.0
+
+
+def test_a_sectionwise_review_counts_first_replies_per_unit_and_sums_tokens(
+    tmp_path, clean, monkeypatch
+):
+    from functools import partial
+
+    from repo_presenter.readme.review import llm_review
+    from repo_presenter.readme.review.sectionwise import plan_units
+
+    monkeypatch.setattr(llm_review, "plan_units", partial(plan_units, max_chars=150))
+    units = plan_units(clean.readme, max_chars=150)
+    assert len(units) >= 3
+    # unit 1 answers cleanly; unit 2's first reply is not JSON and its re-ask is; unit 3 cites a
+    # line it was not shown, then answers; the rest answer cleanly
+    replies = [
+        completion(ACCEPT_REPLY),
+        completion("not json"),
+        completion(ACCEPT_REPLY),
+        completion(reject_reply([1])),
+        completion(ACCEPT_REPLY),
+        *[completion(ACCEPT_REPLY)] * (len(units) - 3),
+    ]
+    client = install(monkeypatch, replies)
+    outcome = reviewer(tmp_path)(clean)
+    assert outcome.verdict == ACCEPT and outcome.units == len(units)
+    assert outcome.calls == len(units) + 2 == client.requests
+    assert outcome.unit_replies == len(units)
+    assert outcome.unit_json_valid == len(units) - 1  # the "not json" unit
+    assert (
+        outcome.unit_contract_valid == len(units) - 2
+    )  # that one and the unseen-line unit
+    assert (
+        outcome.first_reply_json_valid is False
+        and outcome.first_reply_contract_valid is False
+    )
+    assert outcome.tokens == 15 * outcome.calls
+    metrics = compute_metrics(run_corpus([clean], lambda case: outcome))
+    assert (
+        metrics.first_replies == len(units)
+        and metrics.first_reply_json_valid == len(units) - 1
+    )
+    assert metrics.first_reply_contract_valid == len(units) - 2
+    assert metrics.tokens == outcome.tokens and metrics.units == len(units)

@@ -202,7 +202,9 @@ def test_a_rejection_that_names_the_defect_is_a_catch(cases):
         if case.role == "clean":
             return ReviewOutcome(ACCEPT)
         return ReviewOutcome(
-            REJECT, evidence=("the text says " + case.targets[0] + " here",)
+            REJECT,
+            evidence=("the text says " + case.targets[0] + " here",),
+            quotes=(case.defect_text.lower(),) if case.defect_text else (),
         )
 
     metrics = compute_metrics(run_corpus(cases, reviewer))
@@ -220,3 +222,61 @@ def replace_stability(metrics):
         repeated_cases=1,
         stable_cases=1,
     )
+
+
+# --- on target: a rejection must cite the defect itself ---------------------------------------------
+
+
+def test_a_rejection_citing_the_defect_text_is_on_target_and_one_citing_other_text_is_not(
+    cases,
+):
+    from repo_presenter.readme.review.calibration.harness import on_target
+
+    (mutant,) = [c for c in cases if c.operator == "inject_unsupported_claim"]
+    assert mutant.defect_text and mutant.defect_text in mutant.readme
+    cites_defect = ReviewOutcome(
+        REJECT,
+        quotes=(f"the opening ... {mutant.defect_text.lower()}",),
+        evidence=("x",),
+    )
+    # keywords that match the case's targets, but about other text: the old scoring counted this
+    shares_words = ReviewOutcome(
+        REJECT,
+        quotes=("an unrelated sentence about widgets",),
+        evidence=(" ".join(mutant.targets),),
+    )
+    assert on_target(mutant, cites_defect)
+    assert not on_target(mutant, shares_words)
+    assert not on_target(mutant, ReviewOutcome(ACCEPT, quotes=(mutant.defect_text,)))
+
+
+def test_a_case_with_no_defect_text_is_scored_by_its_keywords(cases):
+    from repo_presenter.readme.review.calibration.harness import on_target
+
+    (dropped,) = [c for c in cases if c.operator == "drop_section"]
+    assert dropped.defect_text == "" and dropped.targets
+    assert on_target(
+        dropped, ReviewOutcome(REJECT, evidence=(f"the {dropped.targets[0]} is gone",))
+    )
+    assert not on_target(dropped, ReviewOutcome(REJECT, evidence=("something else",)))
+
+
+def test_every_injected_defect_records_the_text_that_is_the_defect(cases):
+    by_operator = {c.operator: c for c in cases if c.role == "mutant"}
+    for operator in (
+        "inject_unsupported_claim",
+        "contradict_version",
+        "contradict_package_name",
+        "contradict_format",
+        "break_install_command",
+        "invent_api_name",
+        "add_promotional_filler",
+        "duplicate_paragraph",
+    ):
+        case = by_operator[operator]
+        assert case.defect_text and case.defect_text in case.readme, operator
+
+
+def test_the_oracle_cites_the_defect_text(cases):
+    metrics = compute_metrics(run_corpus(cases, oracle))
+    assert all(s.llm_target_recall() == 1.0 for s in metrics.per_defect.values())

@@ -17,6 +17,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import pickle
 import sys
 from pathlib import Path
 
@@ -35,6 +36,7 @@ from repo_presenter.readme.review.calibration.harness import (
     Run,
     compute_metrics,
     evaluate_gates,
+    evaluate_tiers,
     pre_llm,
     run_corpus,
 )
@@ -67,6 +69,17 @@ REPAIRS: dict[str, tuple[Repair, ...]] = {
             klass="contradiction",
             targets=("aspose.threed.render", "rendering"),
         ),
+        Repair(
+            "The Render module provides classes and methods for rendering 3D scenes, with "
+            "integration into the `Scene` class to support visualization and export workflows.",
+            "The Render module declares the rendering types of the public API; rendering is not "
+            "implemented in this FOSS build.",
+            "says the Render module provides rendering; inherited_unit:061 states rendering is "
+            "not implemented in this FOSS build (found by the sectionwise reviewer's smoke run, "
+            "read and confirmed against the unit)",
+            klass="contradiction",
+            targets=("render module", "visualization"),
+        ),
     ),
     "run5": (
         Repair(
@@ -83,7 +96,9 @@ REPAIRS: dict[str, tuple[Repair, ...]] = {
 #: receipt for the package name) and BC-07 (a dangling colon and a 'below' pointer inside two
 #: inherited units kept verbatim) fail. Neither can be repaired by editing text (the inherited
 #: units must print as written), so the python twin carries them as a stated baseline.
-TOLERATED = {"run9": ("BC-02", "BC-07")}
+#: run2 and run3 are earlier hosted .NET candidates (same repository, older cascade): BC-07 reports
+#: their API table, and their dispositions predate the accounting step, so each is an unscored twin.
+TOLERATED = {"run9": ("BC-02", "BC-07"), "run2": ("BC-07",), "run3": ("BC-07",)}
 RECORDED = {
     "font": (
         "aspose-font-foss__Aspose.Font-FOSS-for-Python",
@@ -215,7 +230,13 @@ def result_record(result: CaseResult) -> dict:
                 "cleared": o.cleared,
                 "model": o.model_served,
                 "evidence": list(o.evidence),
+                "quotes": list(o.quotes),
                 "detail": o.detail,
+                "units": o.units,
+                "unit_replies": o.unit_replies,
+                "unit_json_valid": o.unit_json_valid,
+                "unit_contract_valid": o.unit_contract_valid,
+                "tokens": o.tokens,
             }
             for o in result.outcomes
         ],
@@ -250,6 +271,19 @@ def print_metrics(run: Run) -> None:
     for scope in ("llm", "pipeline"):
         for gate in evaluate_gates(metrics, scope=scope):
             print(f"  [{scope}] {gate.line()}")
+    print(
+        f"  units asked {metrics.units}, tokens {metrics.tokens} "
+        f"({metrics.tokens_per_case if metrics.tokens_per_case is not None else 'n/a'} per case)"
+    )
+    for label, stats in metrics.per_defect.items():
+        print(
+            f"  defect {label:28s} n={stats.n} pipeline_on_target={stats.pipeline_target_recall()} "
+            f"reviewer_alone_on_target={stats.llm_target_recall()} unavailable={stats.unavailable}"
+        )
+    tiers = evaluate_tiers(metrics)
+    for gate in (*tiers.pipeline, *tiers.llm_only, *tiers.shared):
+        print(f"  [tier] {gate.line()}")
+    print(f"  two-tier status: {tiers.status}")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -266,6 +300,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--repeats", type=int, default=1)
     parser.add_argument(
         "--only", help="comma-separated case ids; default is the stratified sample"
+    )
+    parser.add_argument(
+        "--all",
+        action="store_true",
+        help="ask every case, in corpus order (a clean twin before its mutants, so a mutant "
+        "replays the units it leaves untouched at no cost)",
     )
     parser.add_argument(
         "--tag",
@@ -287,15 +327,26 @@ def main(argv: list[str] | None = None) -> int:
         "uses another name so it does not overwrite the first-reply flags",
     )
     parser.add_argument(
+        "--cache-corpus",
+        type=Path,
+        help="a pickle of the built corpus: read when it exists, written when it does not (the "
+        "build re-renders and re-validates every base and takes minutes)",
+    )
+    parser.add_argument(
         "--fresh",
         action="store_true",
         help="a new call store for every review (no cache replay)",
     )
     args = parser.parse_args(argv)
 
-    cases = build(
-        parse_work(args.work), args.recorded_clones, parse_lane_r(args.lane_r)
-    )
+    if args.cache_corpus is not None and args.cache_corpus.is_file():
+        cases = pickle.loads(args.cache_corpus.read_bytes())
+    else:
+        cases = build(
+            parse_work(args.work), args.recorded_clones, parse_lane_r(args.lane_r)
+        )
+        if args.cache_corpus is not None:
+            args.cache_corpus.write_bytes(pickle.dumps(cases))
     if args.mode == "corpus":
         for case in cases:
             print(
@@ -309,11 +360,12 @@ def main(argv: list[str] | None = None) -> int:
 
     from repo_presenter.core.llm.fallback import ModelSelection, RouteDecision
 
-    selected = (
-        [c for c in cases if c.case_id in set(args.only.split(","))]
-        if args.only
-        else stratified(cases, args.per_class)
-    )
+    if args.only:
+        selected = [c for c in cases if c.case_id in set(args.only.split(","))]
+    elif args.all:
+        selected = list(cases)
+    else:
+        selected = stratified(cases, args.per_class)
     models = None
     if args.model:
         route = load_manifests(args.prompts)["independent_review"].manifest.model_route
