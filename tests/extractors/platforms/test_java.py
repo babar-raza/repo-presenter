@@ -6,9 +6,6 @@ migration/reuse-manifest.yaml.
 
 Tests deliberately NOT ported, matching the trims documented in ``extractors/platforms/java.py``'s
 own docstring:
-- Every ``java_examples``-backed test (``compilation_unit``, ``public_types``,
-  ``unbound_variables``, ``_release_flags``, the javac-verification tests): ``java_examples.py``
-  (the toolchain-backed example compiler) was not ported this pass.
 - ``test_the_surface_is_read_from_the_main_tree_and_excludes_internal_packages``: needs the
   unported tree-sitter surface engine; this plugin's ``surface_facts`` always returns ``[]``.
 - The ``extract_links`` cross-check inside the old javadoc-prose test (a different, unported
@@ -24,10 +21,10 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from repo_presenter.extractors.platforms import java
-from repo_presenter.extractors.platforms.registry import known_ecosystems, plugin_for
 from repo_presenter.core.ecosystems import spec_for
 from repo_presenter.core.facts import Fact
+from repo_presenter.extractors.platforms import java, java_examples
+from repo_presenter.extractors.platforms.registry import known_ecosystems, plugin_for
 
 POM = """<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0">
@@ -245,9 +242,8 @@ def test_a_missing_verifier_reports_not_verified_rather_than_failure(tmp_path: P
 
 
 def test_the_plugin_imports_only_core_and_the_shared_surface_facades(tmp_path: Path) -> None:
-    """This pull's java.py imports only core/, the shared surface facades, and stdlib - no
-    sibling platform module, and (unlike the old repo) no tree-sitter grammars or execution
-    toolchain, since surface_facts/verify_examples were deliberately not ported this pass."""
+    """java.py imports only core/, the shared surface facades, stdlib, and its own
+    java_format_declarations.py and java_examples.py siblings - no OTHER sibling platform module."""
     import ast
 
     source = Path(java.__file__).read_text("utf-8")
@@ -256,9 +252,12 @@ def test_the_plugin_imports_only_core_and_the_shared_surface_facades(tmp_path: P
         for node in ast.walk(ast.parse(source))
         if isinstance(node, ast.ImportFrom) and node.module
     }
-    allowed_sibling = "repo_presenter.extractors.platforms.java_format_declarations"
+    allowed_siblings = {
+        "repo_presenter.extractors.platforms.java_format_declarations",
+        "repo_presenter.extractors.platforms.java_examples",
+    }
     assert not any(
-        ".platforms." in name and not name.endswith(".java") and name != allowed_sibling
+        ".platforms." in name and not name.endswith(".java") and name not in allowed_siblings
         for name in imported
     )
     assert all(
@@ -273,7 +272,7 @@ def test_the_plugin_imports_only_core_and_the_shared_surface_facades(tmp_path: P
                 "xml.etree",
             )
         )
-        or name == allowed_sibling
+        or name in allowed_siblings
         for name in imported
     ), sorted(imported)
 
@@ -406,3 +405,228 @@ def test_a_parent_only_pom_declares_no_identity_of_its_own(tmp_path: Path) -> No
     facts = _facts_of(tmp_path, pom.replace("<artifactId>commons-lang3</artifactId>", ""))
     assert "package:name" not in facts
     assert "install_command:maven" not in facts
+
+
+def test_a_statement_snippet_is_wrapped_and_a_declared_type_keeps_its_file_name() -> None:
+    """javac names a public type's file after it; a run of statements needs a `main` around it."""
+    name, source, supplied = java_examples.compilation_unit(
+        'import org.aspose.widget.Widget;\nWidget w = new Widget();\nw.save("out.txt");\n',
+        ("java.io",),
+        {"Widget": "org.aspose.widget.Widget"},
+    )
+    assert name == "Example.java"
+    # The snippet's own import is kept and wins: a single-type import takes precedence over any
+    # on-demand one, and `Widget` is already imported, so nothing is added for it.
+    assert source.startswith("import org.aspose.widget.Widget;\nimport java.io.*;\n")
+    assert supplied == ["import java.io.*;"]
+    assert "public static void main(String[] args) throws Exception" in source
+    assert 'w.save("out.txt");' in source
+
+    name, source, _ = java_examples.compilation_unit(
+        "package demo;\nimport org.aspose.widget.Widget;\n\npublic class Demo {\n"
+        "    public static void main(String[] a) { new Widget(); }\n}\n"
+    )
+    assert name == "Demo.java"
+    # The package declaration is dropped: a unit compiled outside its declared directory is a
+    # javac complaint about the layout, never about the example.
+    assert "package demo;" not in source
+    assert source.count("public class Demo") == 1
+
+
+def test_a_snippet_is_given_the_product_types_it_names_and_nothing_else(tmp_path: Path) -> None:
+    """Java has no implicit usings; the .NET wrapper enables C#'s, so this is the same
+    accommodation, made explicit and recorded.
+
+    Measured 2026-09-06 on Aspose.3D for Java, where five of ten README examples name `Scene`,
+    `File` and `FileInputStream` with no import line at all, and on Aspose.Slides for Java, where
+    seven of eight name `Color` and `SaveFormat` - types in `…foss.drawing` and `…foss.export`
+    while the snippet reaches only `…foss`. Resolving by name rather than by wildcard is what
+    makes the second case work without the ambiguity eighty wildcards would cause on Aspose.PDF.
+    """
+    _repository(tmp_path)
+    source_root = tmp_path / "src" / "main" / "java"
+    assert java_examples.root_package(source_root) == "org.aspose.widget"
+    # The index is file names and directories, and `internal` is still part of the tree here -
+    # what the surface excludes and what the compiler can see are different questions.
+    assert java_examples.public_types(source_root) == {
+        "Widget": "org.aspose.widget.Widget",
+        "Buffer": "org.aspose.widget.internal.Buffer",
+    }
+
+    name, source, supplied = java_examples.compilation_unit(
+        "Widget w = new Widget();\nList<String> names = new ArrayList<>();\n",
+        ("java.io", "java.util"),
+        {"Widget": "org.aspose.widget.Widget", "List": "org.aspose.widget.List"},
+    )
+    assert name == "Example.java"
+    # `List` stays java.util's: a name the supplied on-demand imports already provide is never
+    # redirected to a product type, however unambiguous that type is.
+    assert supplied == [
+        "import java.io.*;",
+        "import java.util.*;",
+        "import org.aspose.widget.Widget;",
+    ]
+    assert "org.aspose.widget.List" not in source
+
+
+def test_a_jdk_type_no_product_type_claims_is_imported_by_name() -> None:
+    """A fence reaching java.nio.file or java.time compiles; a product type of that name wins.
+
+    Measured 2026-09-16 on Aspose.Slides for Java: `example:005` and `:007` name `Files` and
+    `Path`, `:006` names `LocalDateTime`, and all three were NOT_VERIFIED - "the fence uses
+    `Files`, `Path` without binding it" - so three of eight examples were lost to two import
+    lines, the API Reference lost their symbols, and the independent review's F07 then called
+    the candidate short of the original's examples. Resolving by name rather than by a third
+    on-demand package is what keeps Aspose.PDF for Java's own `org.aspose.pdf.drawing.Path`
+    meaning what it says: the product is resolved first and the JDK is reached only for a name
+    no product type claims.
+    """
+    _, _, supplied = java_examples.compilation_unit(
+        'byte[] png = Files.readAllBytes(Path.of("photo.png"));\n'
+        'author.getComments().addComment("x", slide, point, LocalDateTime.now());\n',
+        ("java.io", "java.util"),
+        {"Widget": "org.aspose.widget.Widget"},
+    )
+    assert supplied == [
+        "import java.io.*;",
+        "import java.util.*;",
+        "import java.nio.file.Files;",
+        "import java.nio.file.Path;",
+        "import java.time.LocalDateTime;",
+    ]
+
+    # The control, and the reason this is not a third on-demand package: Aspose.PDF for Java
+    # declares `Path` itself, so the product type is imported and the JDK one never is.
+    _, source, supplied = java_examples.compilation_unit(
+        'Path path = new Path();\nFiles.readAllBytes(Path.of("x"));\n',
+        ("java.io",),
+        {"Path": "org.aspose.pdf.drawing.Path"},
+    )
+    assert supplied == [
+        "import java.io.*;",
+        "import org.aspose.pdf.drawing.Path;",
+        "import java.nio.file.Files;",
+    ]
+    assert "java.nio.file.Path" not in source
+
+    # A snippet that binds the name itself is left alone, exactly as for a product type.
+    _, _, supplied = java_examples.compilation_unit(
+        'import java.nio.file.Path;\nPath.of("x");\n', ("java.io",), {}
+    )
+    assert supplied == ["import java.io.*;"]
+
+
+def test_a_simple_name_two_packages_declare_is_dropped_rather_than_guessed(tmp_path: Path) -> None:
+    """An on-demand import of both would be a javac ambiguity error; picking one is an invention."""
+    source_root = tmp_path / "src" / "main" / "java"
+    for package in ("a", "b"):
+        (source_root / package).mkdir(parents=True)
+        (source_root / package / "Shape.java").write_text("", encoding="utf-8", newline="\n")
+    (source_root / "a" / "Scene.java").write_text("", encoding="utf-8", newline="\n")
+    assert java_examples.public_types(source_root) == {"Scene": "a.Scene"}
+
+
+def test_a_required_dependency_blocks_the_compiler_rather_than_failing_the_example(
+    tmp_path: Path,
+) -> None:
+    """javac resolves no artifacts, so a missing jar would look like the example's defect."""
+    from repo_presenter.core.examples import ExampleCandidate
+
+    _repository(tmp_path)
+    candidates = [ExampleCandidate(1, "java", "new Widget();", "README.md", 1, 3, "unit:001")]
+    receipts = java_examples.verify_java_examples(
+        java.PLUGIN.source_root(tmp_path),
+        "21",
+        False,
+        ["org.apache.poi:poi-ooxml"],
+        candidates,
+        tmp_path / "run",
+        300.0,
+    )
+    assert [receipt.outcome for receipt in receipts] == ["NOT_VERIFIED"]
+    assert "BLOCKED_TOOLCHAIN" in receipts[0].detail
+    assert "poi-ooxml" in receipts[0].detail
+
+
+def test_only_unbound_variables_make_a_fence_an_excerpt_rather_than_a_falsehood() -> None:
+    """Real diagnostic text from the currently-sealed Aspose.3D-FOSS-for-Java candidate
+    (Example.java:10/13, both `scene`, Taskcard F Tier 0 - the same class `rust_examples.py`'s
+    `unbound_values()` and `cpp_examples.py`'s `unbound_identifiers()` already exclude)."""
+    output = (
+        "Example.java:10: error: cannot find symbol\n"
+        '        scene.save("output.stl", FileFormat.STLASCII);\n'
+        "        ^\n"
+        "  symbol:   variable scene\n"
+        "  location: class Example\n"
+        "Example.java:13: error: cannot find symbol\n"
+        '        scene.save("output.stl", new StlSaveOptions());\n'
+        "        ^\n"
+        "  symbol:   variable scene\n"
+        "  location: class Example\n"
+        "2 errors\n"
+    )
+    assert java_examples.unbound_variables(output) == ["scene", "scene"]
+
+
+def test_a_fence_that_names_a_missing_type_or_method_is_not_an_excerpt() -> None:
+    """A missing type or method is a real defect - `_needed_imports()` already resolves a type
+    that genuinely exists before compilation ever runs, so a `cannot find symbol` naming one
+    past that point means it does not, and must not be excused as missing context."""
+    missing_type = (
+        "Example.java:4: error: cannot find symbol\n"
+        "        Missing value = new Missing();\n"
+        "        ^\n"
+        "  symbol:   class Missing\n"
+        "  location: class Example\n"
+    )
+    assert java_examples.unbound_variables(missing_type) == []
+    missing_method = (
+        "Example.java:6: error: cannot find symbol\n"
+        "        scene.explode();\n"
+        "               ^\n"
+        "  symbol:   method explode()\n"
+        "  location: variable scene of type Scene\n"
+    )
+    assert java_examples.unbound_variables(missing_method) == []
+    mixed = (
+        "Example.java:3: error: cannot find symbol\n"
+        "        scene.save();\n"
+        "        ^\n"
+        "  symbol:   variable scene\n"
+        "  location: class Example\n"
+        "Example.java:5: error: incompatible types: int cannot be converted to String\n"
+        "        String s = 1;\n"
+        "                   ^\n"
+    )
+    assert java_examples.unbound_variables(mixed) == []
+    assert java_examples.unbound_variables("1 error\n") == []
+
+
+def test_the_floor_becomes_the_javac_flags_the_pom_itself_implies() -> None:
+    """`maven.compiler.release` is `--release`; `target`/`source` are `-source`/`-target`.
+
+    Measured 2026-09-06 on Aspose.PDF for Java, whose POM declares `target`/`source` 11 while its
+    sources call APIs `--release 11` refuses: every one of its nine examples failed inside the
+    product's own `Interpreter.java` until the flags matched what Maven actually does.
+    """
+    assert java_examples._release_flags("21", True) == ["--release", "21"]
+    assert java_examples._release_flags("11", False) == ["-source", "11", "-target", "11"]
+    # A floor the POM states as a range or a word is no javac flag at all, not a guess.
+    assert java_examples._release_flags("1.8.0_402", True) == []
+
+
+
+def test_a_machine_without_a_jdk_reports_not_verified_never_a_compile_failure(
+    tmp_path: Path, monkeypatch: Any
+) -> None:
+    """NOT_VERIFIED is not FALSE: a missing javac blocks the check and contradicts nothing."""
+    from repo_presenter.core.examples import ExampleCandidate
+
+    _repository(tmp_path)
+    monkeypatch.setattr(java_examples, "javac_executable", lambda: None)
+    candidates = [ExampleCandidate(1, "java", "new Widget();", "README.md", 1, 3, "unit:001")]
+    receipts = java_examples.verify_java_examples(
+        java.PLUGIN.source_root(tmp_path), "21", False, [], candidates, tmp_path / "run", 300.0
+    )
+    assert [receipt.outcome for receipt in receipts] == ["NOT_VERIFIED"]
+    assert "no Java compiler" in receipts[0].detail

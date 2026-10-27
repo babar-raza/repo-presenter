@@ -10,9 +10,9 @@ migration/reuse-manifest.yaml (identical reasoning to ``net.py``'s docstring, no
 
 ``surface_facts`` is wired to the shared tree-sitter ``extractors/surface/extractor.py`` +
 vendored engine, which the parallel C++/Go/Rust/TypeScript task pulled into this repository in
-full. ``verify_examples`` (compiling README examples with javac against the product's own
-sources) still needs ``java_examples.py``, which was NOT ported this pass even though the
-toolchain runner it would call is now present (see ``net.py``'s docstring for the same note).
+full. ``verify_examples`` compiles README examples with javac against the product's own sources
+through the ported ``java_examples.py``; a machine without a JDK answers NOT_VERIFIED, never
+CONTRADICTED.
 """
 
 from __future__ import annotations
@@ -23,6 +23,17 @@ from pathlib import Path
 from typing import Any, Final
 from xml.etree import ElementTree
 
+from repo_presenter.core.ecosystems import SPECS, EcosystemSpec, SuiteFileRule
+from repo_presenter.core.examples import (
+    ExampleCandidate,
+    ExampleReceipt,
+    FormatClaim,
+    FormatDeclaration,
+)
+from repo_presenter.core.facts import Evidence, Fact, fact_id
+from repo_presenter.core.grammars import get_parser
+from repo_presenter.core.probes import ProbeRecord
+from repo_presenter.extractors.platforms.java_examples import verify_java_examples
 from repo_presenter.extractors.platforms.java_format_declarations import (
     format_declarations as java_format_declarations,
 )
@@ -34,16 +45,6 @@ from repo_presenter.extractors.surface.registry import (
     observe,
     repository_of,
 )
-from repo_presenter.core.ecosystems import SPECS, EcosystemSpec, SuiteFileRule
-from repo_presenter.core.examples import (
-    ExampleCandidate,
-    ExampleReceipt,
-    FormatClaim,
-    FormatDeclaration,
-)
-from repo_presenter.core.facts import Evidence, Fact, fact_id
-from repo_presenter.core.grammars import get_parser
-from repo_presenter.core.probes import ProbeRecord
 
 JAVA: Final = EcosystemSpec(
     ecosystem="java",
@@ -556,22 +557,32 @@ class JavaPlugin:
         candidates: Sequence[ExampleCandidate],
         workspace: Path,
     ) -> list[ExampleReceipt]:
-        """NOT_VERIFIED for every candidate: the javac-backed verifier was not ported this pass
-        (see this module's docstring)."""
-        return [
-            ExampleReceipt(
-                ordinal=candidate.ordinal,
-                outcome="NOT_VERIFIED",
-                return_code=None,
-                stdout="",
-                stderr="",
-                detail=(
-                    "example compilation was not ported in this pull (no sandboxed javac runner); "
-                    "this plugin only ever reports NOT_VERIFIED here"
-                ),
-            )
-            for candidate in candidates
+        """Compile each candidate against the product's own sources in a disposable workspace.
+
+        A toolchain this machine lacks is NOT_VERIFIED, which the facts stage records as
+        UNRESOLVED - never CONTRADICTED, because "we could not check" is not "we checked and it
+        is false".
+        """
+        manifest = self.detect_manifest(root)
+        pom = _read_pom(manifest) if manifest is not None else None
+        identity = read_identity(root, self.ecosystem, manifest) if manifest is not None else None
+        required = [
+            coordinate
+            for coordinate, _version, scope, optional in (_dependencies(pom) if pom else [])
+            if scope not in _DEVELOPMENT_SCOPES and not optional
         ]
+        return verify_java_examples(
+            self.source_root(root),
+            identity.floor if identity is not None else "",
+            # `maven.compiler.release` restricts the JDK API the code may call; `target`/`source`
+            # only set the language level and the bytecode version. javac spells the two
+            # differently, and treating them alike fails a build Maven performs.
+            pom is not None and _floor_property(pom) == _FLOOR_PROPERTIES[0],
+            required,
+            candidates,
+            workspace,
+            JAVA.example_timeout_seconds,
+        )
 
     def format_claims(self, code: str) -> Sequence[FormatClaim]:
         """Not yet built; a claim this plugin cannot read is no claim at all."""
