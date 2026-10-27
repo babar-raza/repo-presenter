@@ -13,11 +13,12 @@ migration/reuse-manifest.yaml.
 the parallel C++/Go/Rust/TypeScript porting task pulled into this repository in full (see that
 task's reuse-manifest entry); this module only had to restore the few lines that call it.
 
-``verify_examples``/``verify_build`` (compiling README examples and driving ``dotnet build``)
-still depend on ``net_examples.py``, which was NOT ported this pass (see ``python.py``'s
-identical note for ``python_examples.py``) even though the toolchain runner it would call
-(``core/execution.py``/``core/toolchains.py``) is now present in this repository too, courtesy of
-the same parallel task.
+``verify_examples`` compiles README examples against the product's own project through the
+ported ``net_examples.py`` (toolchain runner: ``core/execution.py``/``core/toolchains.py``); a
+machine without a dotnet SDK answers NOT_VERIFIED, never CONTRADICTED. The plugin deliberately
+defines no ``verify_build``: ``net_examples.verify_net_build`` is ported but not wired, because
+nothing passes a ``MeasuredBuild`` into the facts stage yet and a plugin that has one is then
+held to it (``extract._source_build_fact``), which would drop the executed-example fallback.
 """
 
 from __future__ import annotations
@@ -28,6 +29,17 @@ from pathlib import Path
 from typing import Any
 from xml.etree import ElementTree
 
+from repo_presenter.core.ecosystems import NET
+from repo_presenter.core.examples import (
+    ExampleCandidate,
+    ExampleReceipt,
+    FormatClaim,
+    FormatDeclaration,
+)
+from repo_presenter.core.facts import Evidence, Fact, fact_id
+from repo_presenter.core.grammars import get_parser
+from repo_presenter.core.probes import ProbeRecord
+from repo_presenter.extractors.platforms.net_examples import verify_net_examples
 from repo_presenter.extractors.platforms.net_format_declarations import (
     format_declarations as net_format_declarations,
 )
@@ -40,16 +52,6 @@ from repo_presenter.extractors.surface.registry import (
     observe,
     repository_of,
 )
-from repo_presenter.core.ecosystems import NET
-from repo_presenter.core.examples import (
-    ExampleCandidate,
-    ExampleReceipt,
-    FormatClaim,
-    FormatDeclaration,
-)
-from repo_presenter.core.facts import Evidence, Fact, fact_id
-from repo_presenter.core.grammars import get_parser
-from repo_presenter.core.probes import ProbeRecord
 
 _PARSER_LANGUAGE = "csharp"
 
@@ -385,22 +387,15 @@ class NetPlugin:
         candidates: Sequence[ExampleCandidate],
         workspace: Path,
     ) -> list[ExampleReceipt]:
-        """NOT_VERIFIED for every candidate: the dotnet-build-backed verifier was not ported this
-        pass (see this module's docstring)."""
-        return [
-            ExampleReceipt(
-                ordinal=candidate.ordinal,
-                outcome="NOT_VERIFIED",
-                return_code=None,
-                stdout="",
-                stderr="",
-                detail=(
-                    "example compilation was not ported in this pull (no sandboxed dotnet build "
-                    "runner); this plugin only ever reports NOT_VERIFIED here"
-                ),
-            )
-            for candidate in candidates
-        ]
+        """Compile each candidate against the product's own project in a disposable profile.
+
+        A toolchain this machine lacks is NOT_VERIFIED, which the facts stage records as
+        UNRESOLVED - never CONTRADICTED, because "we could not check" is not "we checked and it
+        is false". The wrapper's framework is the verifier's to choose from the SDK it found; the
+        package's floor is a fact about the package, not a build setting.
+        """
+        project = self.detect_manifest(root)
+        return verify_net_examples(root, project, candidates, workspace)
 
     def format_claims(self, code: str) -> Sequence[FormatClaim]:
         """Not yet built; a claim this plugin cannot read is no claim at all."""

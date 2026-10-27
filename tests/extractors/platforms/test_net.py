@@ -3,14 +3,12 @@
 Ported (REUSE for manifest/registry coverage) from the old repository-presenter project's
 ``tests/components/readme/extractors/platforms/test_net.py`` per migration/reuse-manifest.yaml.
 
-Three tests from the old file are deliberately NOT ported, matching the trims documented in
-``extractors/platforms/net.py``'s own docstring:
+Three tests from the old file are deliberately NOT ported or not wired:
+- ``test_the_manifests_own_build_is_driven_once_and_measured_with_no_example`` is kept in
+  ``test_net_examples.py`` against ``net_examples.verify_net_build`` directly: the plugin defines
+  no ``verify_build`` (see ``net.py``'s docstring for why).
 - ``test_surface_facts_come_from_the_shared_extractor_with_slug_safe_values`` (needs the
   unported tree-sitter surface engine; this plugin's ``surface_facts`` always returns ``[]``).
-- ``test_the_manifests_own_build_is_driven_once_and_measured_with_no_example`` (needs the
-  unported ``net_examples``/``core.execution`` toolchain runner; this plugin defines no
-  ``verify_build`` at all, so ``extractors.platforms.registry.verify_build`` answers
-  "not attempted" for it, which is covered by that module's own test).
 - ``test_the_plugin_imports_no_sibling_ecosystem`` is replaced by a version matching this
   plugin's real (smaller) import set, since the old assertion encoded the old repo's import
   list verbatim.
@@ -21,12 +19,10 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-import pytest
-
-from repo_presenter.extractors.platforms import net
-from repo_presenter.extractors.platforms.registry import known_ecosystems, plugin_for
 from repo_presenter.core.examples import ExampleCandidate
 from repo_presenter.core.facts import Fact
+from repo_presenter.extractors.platforms import net
+from repo_presenter.extractors.platforms.registry import known_ecosystems, plugin_for
 
 CSPROJ = """<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
@@ -295,9 +291,8 @@ def test_a_package_the_registry_does_not_carry_contradicts_the_install_claim(
 
 
 def test_a_missing_verifier_reports_not_verified_rather_than_failure(tmp_path: Path) -> None:
-    """A check this plugin cannot run is UNRESOLVED (NOT_VERIFIED), never CONTRADICTED - true
-    both for the old repo's "no toolchain on this machine" case and this pull's deliberate
-    non-port of the dotnet-build-backed verifier."""
+    """A check this plugin cannot run is UNRESOLVED (NOT_VERIFIED), never CONTRADICTED: here the
+    repository has no project file to compile against."""
     candidates = [
         ExampleCandidate(1, "csharp", "var w = new Widget();", "README.md", 1, 3, "unit:001")
     ]
@@ -326,11 +321,8 @@ def test_a_project_with_no_package_id_takes_the_msbuild_default_name(tmp_path: P
 
 
 def test_the_plugin_imports_only_core_and_the_shared_surface_facades(tmp_path: Path) -> None:
-    """This pull's net.py imports only core/, the shared surface facades, stdlib, and its own
-    net_format_declarations.py sibling (added 2026-10-22, same pattern as python.py's own
-    python_format_declarations.py sibling) - no OTHER sibling platform module, and (unlike the
-    old repo) no tree-sitter grammars or execution toolchain, since surface_facts/verify_examples
-    were deliberately not ported this pass."""
+    """net.py imports only core/, the shared surface facades, stdlib, and its own
+    net_format_declarations.py and net_examples.py siblings - no OTHER sibling platform module."""
     import ast
 
     source = Path(net.__file__).read_text("utf-8")
@@ -339,9 +331,12 @@ def test_the_plugin_imports_only_core_and_the_shared_surface_facades(tmp_path: P
         for node in ast.walk(ast.parse(source))
         if isinstance(node, ast.ImportFrom) and node.module
     }
-    allowed_sibling = "repo_presenter.extractors.platforms.net_format_declarations"
+    allowed_siblings = {
+        "repo_presenter.extractors.platforms.net_format_declarations",
+        "repo_presenter.extractors.platforms.net_examples",
+    }
     assert not any(
-        ".platforms." in name and not name.endswith(".net") and name != allowed_sibling
+        ".platforms." in name and not name.endswith(".net") and name not in allowed_siblings
         for name in imported
     )
     assert all(
@@ -356,7 +351,7 @@ def test_the_plugin_imports_only_core_and_the_shared_surface_facades(tmp_path: P
                 "xml.etree",
             )
         )
-        or name == allowed_sibling
+        or name in allowed_siblings
         for name in imported
     ), sorted(imported)
 
