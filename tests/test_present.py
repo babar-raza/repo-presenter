@@ -20,6 +20,7 @@ from repo_presenter.core.state.git_backend import GitStateBackend
 from repo_presenter.core.state.health import evaluate_repository_health
 from repo_presenter.lane_l import build_lane_l_facts
 from repo_presenter.present import PresentFailure, main, run_present
+from repo_presenter.readme.evidence.facts import links
 
 REPO = "example/Aspose.Widget-FOSS-for-Python"
 PROVIDER_ID = 4242
@@ -172,13 +173,33 @@ def test_a_repository_outside_the_allow_list_is_refused_before_any_work(
     assert not (tmp_path / "work").exists()
 
 
-def test_lane_l_facts_describe_the_pinned_clone_and_its_readme(tmp_path: Path) -> None:
+
+
+def test_lane_l_facts_describe_the_pinned_clone_and_its_readme(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    asked: list[str] = []
+
+    def fetch(url: str, transport: object = None) -> tuple[int, str]:
+        asked.append(url)
+        return 200, url
+
+    monkeypatch.setattr(links, "fetch_status", fetch)
     clone = init_git_repository(tmp_path / "clone")
     (clone / "README.md").write_text(
-        "# Example\n\nA plain description.\n", encoding="utf-8"
+        "# Example\n\nA plain description. See [the docs](https://example.org/docs).\n",
+        encoding="utf-8",
+    )
+    (clone / "LICENSE").write_text(
+        "MIT License\n\nPermission is hereby granted.\n", encoding="utf-8"
     )
     (clone / "example_widget.py").write_text(
         "def render():\n    return 1\n", encoding="utf-8"
+    )
+    workflows = clone / ".github" / "workflows"
+    workflows.mkdir(parents=True)
+    (workflows / "ci.yml").write_text(
+        "on: [push]\njobs:\n  test:\n    steps:\n      - run: pytest\n", encoding="utf-8"
     )
     revision = commit_all(clone, "seed")
 
@@ -188,8 +209,18 @@ def test_lane_l_facts_describe_the_pinned_clone_and_its_readme(tmp_path: Path) -
         "python",
         source_revision=revision,
         workspace=tmp_path / "examples",
+        entry=_entry(),
     )
 
     assert document.repository == REPO
     assert document.source_revision == revision
-    assert any(fact.kind == "identity" for fact in document.facts)
+    ids = {fact.id for fact in document.facts}
+    assert {
+        "license:spdx",
+        "link_target:badge.ci",
+        "link_target:product.enterprise",
+        "link_target:product.homepage",
+        "link_target:product.banner",
+        "build_test_asset:test-command",
+    } <= ids
+    assert "https://example.org/docs" in asked

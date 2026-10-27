@@ -76,6 +76,7 @@ def cascade_pipeline(
         ecosystem,
         source_revision=clone.revision,
         workspace=workdir / "examples",
+        entry=require_listed(load_registry(registry_path), repository),
     )
     facts_path = workdir / "facts.json"
     write_facts(document, facts_path)
