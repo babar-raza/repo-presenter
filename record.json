@@ -5,7 +5,7 @@
   "provider_repository_id": 1178837520,
   "registry_revision": null,
   "active_transaction_id": "43ddf84922c94bcd8a0910734bb42ea0",
-  "state": "ACCEPTED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "ACCEPTED",
+    "occurred_at": "2026-10-28T05:10:20.706906+00:00",
+    "resume_predicate": null,
+    "recovery_count": 1
+  },
   "lease": null,
   "last_transition": {
     "transition_id": "4df4db859f9d4dae92391ffa1c38271b",
@@ -33,9 +40,9 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 11,
+  "state_version": 12,
   "recent_trigger_dedup_keys": {
     "run:40635877718:aspose-3d-foss/Aspose.3D-FOSS-for-Java": "43ddf84922c94bcd8a0910734bb42ea0"
   },
-  "recovery_count": 0
+  "recovery_count": 1
 }
