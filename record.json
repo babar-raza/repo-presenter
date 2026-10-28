@@ -18,10 +18,10 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (code block 'add_subdirectory(Aspose.Cells.Foss.Cpp)')",
+    "classification": "transient",
+    "detail": "model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected twice; last rejection: no disposition for inherited units: inherited_unit:024.paragraph, inherited_unit:025.heading, inherited_unit:026.code_block, inherited_unit:027.paragraph, inherited_unit:028.html_block, inherited_unit:029.heading, inherited_unit:030.code_block, inherited_unit:031.heading, inherited_unit:032.code_block, inherited_unit:033.heading, inherited_unit:034.code_block, inherited_unit:035.heading, inherited_unit:036.code_block; inherited_unit:014.paragraph: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"In an MSBuild-based Visual Studio project:\". Cite the supporting fact IDs or place the unit; do not omit it without a cited reason; inherited_unit:018.paragraph: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"On Linux, macOS, or with a non-MSVC toolchain, build from source instead — the library itself is\\na plain, dependency-free CMake target and targets C++17 on MSVC, GCC, and Clang alike:\". Cite the supporting fact IDs or place the unit; do not omit it without a cited reason; inherited_unit:019.code_block: uncited_prose_omit: OMIT_UNSUPPORTED on a code_block needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"```cmake\\nadd_subdirectory(Aspose.Cells.Foss.Cpp)\\ntarget_link_libraries(your_target PRIVATE aspose_cells_foss)\\n```\". Cite the supporting fact IDs or place the unit; do not omit it without a cited reason",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-10-28T17:10:42.492110+00:00",
+    "occurred_at": "2026-10-28T17:30:07.221042+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 22,
+  "state_version": 23,
   "recent_trigger_dedup_keys": {
     "run:40555595204:aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp": "a355a427933a4c5e8d543429f22050e0",
     "run:40571540396:aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp": "886cefd3f4934c8b90359a383ef158f6",
