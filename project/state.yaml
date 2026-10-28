@@ -1674,6 +1674,18 @@ next_ready_items:
       this "for C++" -> "for Cpp" wording; this is a model/prompt-effectiveness question for this
       one defect shape, not an architecture gap. The candidate stays honestly unsealed rather than
       falsely sealed -- correct behavior, not a regression.
+    superseded_by_2026_10_28: >
+      The "no-op" above was itself a symptom of a deeper misrouting bug, found later the same day:
+      BC-12 hardcoded causal_stage COMPOSING even when the misspelling sat inside a placed
+      inherited unit's own verbatim text, so S6 (section_authoring) was asked to revise a sentence
+      it never wrote and literally could not touch -- see RUST_LANE_R_F01_F02_F03_ROOT_CAUSED's
+      sibling card and commit 4ada3b1 for the RECONCILING-routing fix. Re-run 40723536134 after
+      that fix shows the routing now correctly reaches S4/reconciliation and a real repair IS
+      attempted -- but it still fails, for a THIRD, different reason: the repair's revised_output
+      returned only the one changed disposition instead of the complete array, which silently
+      dropped three unrelated units into an uncited omission and rejected on THAT, twice. prompt
+      v12 -> v13 adds an explicit rule that revised_output must carry every existing entry forward
+      unless the defect names it. Not yet re-verified live -- see next_step below.
 
   - id: BC07_UNIT_ROUTING_PROVEN
     status: DONE
@@ -1809,12 +1821,48 @@ next_ready_items:
       repair attempt yet in THIS run: review_repair_rounds (2) was spent on the ORIGINAL three
       findings before these were the last ones standing, so the prompt fix (v12) has not been
       tested against them specifically.
+    second_live_reverify_2026_10_28: >
+      Re-run 40723519169, read directly. Still REJECT, 2 findings -- the SAME two as the previous
+      read (enterprise-edition sentence, samples/development_testing paragraph), confirming they
+      are real and stable, not sampling noise. repairs.json shows review_repair_rounds (2) were
+      spent on: an EARLIER-round scope_limitations/S6/factuality finding (unrepairable, a no-op --
+      defect_fingerprint hashes on (source, section, stage, criterion, context), not on the
+      specific quote, so a fresh finding in an already-tried bucket is treated as already-tried
+      and not reattempted; worth watching across the portfolio but not chased now) and the
+      samples/ sentence (repaired again, closer wording -- "including round-trip workbook
+      creation, saving, loading, and printing" -- yet still re-raised in the final review). The
+      enterprise-edition sentence has now gone through TWO hosted runs without ever once reaching
+      an actual repair attempt, purely because rounds kept being spent on other findings first.
     next_step: >
-      dispatch another fresh hosted run (same repository, lane R) so these two remaining findings
-      get their own repair attempt under prompt v12 -- the enterprise-edition sentence is exactly
-      the "quote the inherited unit's own wording instead of composing new phrasing" case v12
-      was written for. Read the result directly again; only an ACCEPT verdict plus an
-      independently-read no_op_proof makes this card DONE.
+      dispatch another fresh hosted run; if the enterprise-edition sentence still never reaches a
+      repair attempt after a third try, that queuing behavior (not the content) becomes the next
+      root cause to investigate -- review_repair_rounds may need to be higher, or defect
+      prioritization may need to favor a finding that has never been attempted over one already
+      marked unrepairable in the same bucket. Only an ACCEPT verdict plus an independently-read
+      no_op_proof makes this card DONE.
+
+  - id: JAVA_LANE_R_FIRST_ATTEMPT_2026_10_28
+    status: IN_PROGRESS
+    purpose: >
+      First-ever Lane R hosted attempt on aspose-cells-foss/Aspose.Cells-FOSS-for-Java (already
+      sealed and no-op-proven on Lane L), per OWNER_FULL_PORTFOLIO_BAR_2026_10_28 -- widening
+      real coverage rather than re-polishing the one Rust candidate indefinitely.
+    result_read_directly: >
+      Run 40723588078: REJECT, but never reached the independent LLM reviewer at all -- these are
+      readme/review/independent_reviewer.py's own deterministic "preservation holdout" (J6,
+      live_readme_loss_rule) findings, which carry an empty finding_id/claim_kind by construction
+      because they are not LLM-authored, found before S10 is ever asked to judge. Two real pieces
+      of the live upstream README have no accounting disposition at all and are simply gone from
+      the candidate: the heading "Project Structure" and the directory-tree code block under it.
+      validation.json's own BC-01..BC-14 checks all PASS, so this is not a BC-check gap -- it is a
+      genuine, not-yet-investigated reconciliation/planning gap: a live heading outside the fixed
+      semantic shell's known sections apparently can fall through disposition-making entirely
+      without an explicit kept-or-omitted decision ever being recorded for it.
+    next_step: >
+      investigate why "Project Structure" (and its code block) received no disposition at all --
+      whether reconciliation never considered it, or considered and dropped it without recording
+      why -- and fix the root cause with a failing test and falsifier, the same discipline as every
+      other fix today. Not yet triaged as a portfolio-wide pattern or a one-repository quirk.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED

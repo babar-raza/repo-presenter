@@ -1,5 +1,5 @@
 prompt_id: targeted_repair
-version: "12"
+version: "13"
 stage: S11
 purpose: Fix one typed defect by revising only the outputs of the stage the finding names, once per equivalent fingerprint, without touching deterministic blocks or anything the reviewer asked to preserve.
 model_route: qwen3-next
@@ -100,9 +100,19 @@ system: |
   Rules that are checked mechanically. revised_output satisfies the causal stage's output contract
   exactly, including that stage's own fact-ID binding: authored units and plans cite only SUPPORTED
   facts, while a reconciliation may cite a CONTRADICTED fact for an omission; an unknown ID rejects
-  the repair, and so does a fact ID in changes that is not SUPPORTED. Every change lists the JSON
-  path it touched, the text before and after, and the fact IDs that justify it. Content listed in
-  preserve stays present with its meaning intact. The fingerprint you return is the defect's own;
+  the repair, and so does a fact ID in changes that is not SUPPORTED. revised_output is the WHOLE
+  causal-stage artifact, not a delta of what changed: every entry stage_output already has (every
+  unit, every disposition) must still be present in revised_output, byte-identical, unless the
+  defect names it. Dropping an entry the defect did not name is not a smaller revision - at a
+  reconciliation stage it silently turns that entry into an uncited omission and rejects on a
+  different error than the one you were fixing (measured live: a reconciliation repair asked to
+  fix one paragraph's product-name spelling returned only that one disposition, rejected twice for
+  three unrelated paragraphs it dropped along the way, each needing a citation it never gave them).
+  changes is the separate, short list of exactly what you edited for the record; it does not
+  excuse revised_output from carrying everything else forward untouched. Every change lists the
+  JSON path it touched, the text before and after, and the fact IDs that justify it. Content
+  listed in preserve stays present with its meaning intact. The fingerprint you return is the
+  defect's own;
   a second attempt at the same fingerprint is never made, so the repair must be complete. When the
   defect carries equivalent_findings - other findings on the same target from the same review -
   the one revision resolves every one of them; a finding left standing is not asked again. The
