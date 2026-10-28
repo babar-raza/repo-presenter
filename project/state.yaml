@@ -1689,7 +1689,16 @@ next_ready_items:
       reviewer gate holds; (4) propose/effect.py reads Lane R only and must learn the lane before any PR;
       (5) review/scope.py treats installation, license, fences and tables as renderer-printed, true for
       Lane R and false for Lane L: lane-aware scope handed to the reviewer iteration-3 agent.
-    remaining: first hosted Lane L run per ecosystem (needs the owner-set secrets already present), lane-aware propose/effect.py, lane-aware reviewer scope.
+    first_hosted_lane_l_runs_2026_10_28: >
+      DONE, correctly: runs 40632858003 (aspose-3d-foss/Python) and 40632862742 (aspose-3d-foss/.NET),
+      the FIRST Lane L hosted runs ever. Neither sealed, and neither is a bug: Python's lane_l_unrepaired_defect
+      correctly found the exact OBJ-export TypeError (example 8, lines 274-286) that started this
+      entire mission, and correctly refused rather than fabricate a minimal-edit fix, recommending
+      Lane R. .NET's refusal flagged an unverified U3D format claim for human confirmation. Both are the
+      designed refusal path (plans/PLAN_lane_l_hosted.md) working as intended, not a defect to fix.
+      Still needed to prove a SEALED Lane L candidate: repositories whose live README has only
+      correctable defects, not unrepairable ones.
+    remaining: a sealed Lane L candidate (needs a repository with only correctable defects), lane-aware propose/effect.py, lane-aware reviewer scope (handed to the reviewer iteration-3 agent).
     done_when: one hosted Lane L candidate per ecosystem in the cohort passes the reviewer and a rerun is byte-identical with zero provider calls.
 
   - id: COHORT_FIRST_GUARD
