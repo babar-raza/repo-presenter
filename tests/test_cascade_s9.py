@@ -222,6 +222,76 @@ def test_a_superseded_dependency_heading_gains_the_fact_that_accounts_for_it(
     assert lost_after == []
 
 
+def test_an_uncited_omit_on_a_paragraph_is_rejected_and_reasked_not_accepted(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Measured live (aspose-cells-foss/Aspose.Cells-FOSS-for-Java, hosted run 40723588078): S4's
+    own job checks ran ``normalize`` alone, which has no quarrel with an OMIT_UNSUPPORTED that
+    cites no fact (its whole claim is that none exists), so the reply was accepted unchanged. The
+    content then surfaced three stages later as a deterministic "live content lost" block
+    (independent_reviewer.live_readme_loss_rule), the one check built to catch this having never
+    run. The job's checks must be reconcile_checks (normalize + placement_errors), which rejects
+    an uncited OMIT_UNSUPPORTED on a paragraph and forces a real re-ask."""
+    paragraph = "inherited_unit:001.paragraph"
+    base = make_facts()
+    facts = FactsDocument(
+        base.repository,
+        base.source_revision,
+        (
+            *(f for f in base.facts if f.kind != "inherited_unit"),
+            Fact(
+                paragraph,
+                "inherited_unit",
+                "The project layout follows a conventional Maven directory structure.",
+                (Evidence("README.md", "section 'Widget > Project Structure'"),),
+            ),
+        ),
+    )
+    bad_reply = {
+        "dispositions": [
+            {
+                "unit_id": paragraph,
+                "disposition": "OMIT_UNSUPPORTED",
+                "destination_section": None,
+                "fact_ids": [],
+                "rationale": "The project layout is unsupported; no such fact exists.",
+            }
+        ]
+    }
+    fixed_reply = {
+        "dispositions": [
+            {
+                "unit_id": paragraph,
+                "disposition": "VERIFIED_PRESERVE",
+                "destination_section": "scope_limitations",
+                "fact_ids": [],
+                "rationale": "Kept as written; no fact contradicts it.",
+            }
+        ]
+    }
+    ledger = Ledger(tmp_path / "ledger.jsonl")
+    store = CallStore(tmp_path / "calls")
+    prompts = load_manifests(PROMPTS_PATH)
+    client = _FakeClient([_completion(bad_reply), _completion(fixed_reply)])
+    monkeypatch.setattr(jobs_module.transport, "build_client", lambda config: client)
+    stage = _run_reconciliation(
+        entry=make_entry(),
+        document=facts,
+        investigation={},
+        prompts=prompts,
+        config=CONFIG,
+        ledger=ledger,
+        store=store,
+        context=JobContext(make_entry().repository, facts.source_revision),
+    )
+    # The bad reply was rejected and a second completion consumed: the final output is the FIXED
+    # reply's disposition, not the unrepaired OMIT_UNSUPPORTED the model first returned.
+    assert client.chat.completions.replies == []
+    [entry] = stage["dispositions"]
+    assert entry["disposition"] == "VERIFIED_PRESERVE"
+    assert entry["destination_section"] == "scope_limitations"
+
+
 # --- S9: the render's unprinted kept units are accounted --------------------------------------
 
 README_WITH_SUBHEADING = README + "\n### Main\n"

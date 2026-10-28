@@ -27,7 +27,8 @@ causal stage into the same repair (``review_repair_rounds`` rounds at most, each
 call on the one ledger), and a candidate that still blocks is BLOCKED with the verdict's exact
 findings. A review that cannot be obtained raises ``ReviewUnavailable``.
 
-S4 runs ``dispositions.normalize`` as the reconciliation job's own checks, and S9 follows the render:
+S4 runs ``dispositions.reconcile_checks`` (normalize, then placement_errors) as the reconciliation
+job's own checks, and S9 follows the render:
 the kept units the renderer did not print are accounted (``readme.repair.accounting``), the ported
 blocking checks run (``validation.json``), and a failure whose causal stage any of S4/S5/S6 names is
 repaired by that stage's own revision (a per-unit reconciliation patch, a plan revision, or a section
@@ -95,7 +96,7 @@ from repo_presenter.readme.investigation.dossier import (
 )
 from repo_presenter.readme.reconciliation.dispositions import (
     merge_dispositions,
-    normalize,
+    reconcile_checks,
     reconciliation_batch_facts,
     reconciliation_batches,
     reconciliation_packet,
@@ -213,7 +214,17 @@ def _run_reconciliation(
         call_schema = reconciliation_schema(loaded, batch_units, batch_facts, investigation)
 
         def checks(output: dict, batch_facts=batch_facts) -> list[str]:
-            return normalize(output, batch_facts)
+            # reconcile_checks, not normalize alone: this job's own docstring at the top of this
+            # file already says "S4 runs dispositions.normalize as the reconciliation job's own
+            # checks" -- true of this orchestrator but not of placement_errors(), which
+            # normalize() alone never runs. Measured live (aspose-cells-foss/Aspose.Cells-FOSS-
+            # for-Java, hosted run 40723588078): an OMIT_UNSUPPORTED on a real paragraph and code
+            # block, both citing no fact at all, was accepted here unchecked -- placement_errors()
+            # run directly against the same facts and dispositions catches it immediately (and 7
+            # more like it) as uncited_prose_omit. The content then surfaced three stages later as
+            # a deterministic "live content lost" block (S10's own preservation holdout), the
+            # defect having already slipped past the one stage built to catch it at its source.
+            return reconcile_checks(output, batch_facts)
 
         result = run_job(
             loaded, packet, config=config, facts=batch_facts, ledger=ledger, store=store,

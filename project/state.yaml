@@ -1842,7 +1842,7 @@ next_ready_items:
       no_op_proof makes this card DONE.
 
   - id: JAVA_LANE_R_FIRST_ATTEMPT_2026_10_28
-    status: IN_PROGRESS
+    status: DONE
     purpose: >
       First-ever Lane R hosted attempt on aspose-cells-foss/Aspose.Cells-FOSS-for-Java (already
       sealed and no-op-proven on Lane L), per OWNER_FULL_PORTFOLIO_BAR_2026_10_28 -- widening
@@ -1854,15 +1854,51 @@ next_ready_items:
       because they are not LLM-authored, found before S10 is ever asked to judge. Two real pieces
       of the live upstream README have no accounting disposition at all and are simply gone from
       the candidate: the heading "Project Structure" and the directory-tree code block under it.
-      validation.json's own BC-01..BC-14 checks all PASS, so this is not a BC-check gap -- it is a
-      genuine, not-yet-investigated reconciliation/planning gap: a live heading outside the fixed
-      semantic shell's known sections apparently can fall through disposition-making entirely
-      without an explicit kept-or-omitted decision ever being recorded for it.
+      validation.json's own BC-01..BC-14 checks all PASS, so this is not a BC-check gap.
+    root_cause_found: >
+      inherited_unit:032.heading/033.paragraph/034.code_block each HAD a disposition
+      (OMIT_UNSUPPORTED, a real, specific rationale: "no such fact exists") -- it was never
+      missing. ``readme/review/independent_reviewer.py``'s own ``_accounting_units`` correctly
+      refuses to count an OMIT_UNSUPPORTED with empty ``fact_ids`` as accounted for (by design,
+      per BC12_REPAIR_ROUTING_PROVEN's earlier ``_spelled_supported_facts`` fix: an empty
+      citation has let a FALSE "unsupported" reason through before). But the REAL defect is one
+      stage earlier: ``readme/reconciliation/dispositions.py``'s own ``reconcile_checks``
+      (normalize + placement_errors) is the function documented as "the job's own checks for the
+      runner" and already contains ``placement_errors``'s ``UNCITED_PROSE_OMIT`` rule, which
+      independently (confirmed by running it directly against this exact run's real facts and
+      dispositions) DOES reject an uncited OMIT_UNSUPPORTED on a paragraph, with 8 total
+      violations found in this one candidate. cascade.py's own ``_run_reconciliation`` wired only
+      ``dispositions.normalize`` as the S4 job's acceptance check, never ``placement_errors`` --
+      the one stage built to catch this never ran at the point where catching it was still cheap,
+      so an invalid, uncited disposition was silently accepted and only surfaced three stages
+      later as a deterministic "live content lost" block.
+    fix: >
+      cascade.py: ``_run_reconciliation``'s ``checks`` now calls ``reconcile_checks`` (the whole
+      function, not ``normalize`` alone); import swapped accordingly; the module's own top
+      docstring corrected to match (it had documented the narrower, wrong behavior as intended).
+      New test (tests/test_cascade_s9.py::test_an_uncited_omit_on_a_paragraph_is_rejected_and_reasked_not_accepted):
+      scripts a bad (uncited OMIT_UNSUPPORTED) reply then a fixed one; asserts the SECOND
+      completion is consumed (proving reject-and-reask, not silent accept) and the final
+      disposition is the fixed one. Falsifier confirmed: reverting to ``normalize`` alone makes
+      the test fail by accepting the bad reply unchanged on the first attempt. Full suite clean
+      (3303 passed, 11 skipped).
+    same_root_cause_explains_bc12_too: >
+      Re-examined BC12_REPAIR_ROUTING_PROVEN's "superseded_by" note in light of this: run
+      40728130060's BC-12 repair for inherited_unit:012.paragraph was rejected twice for THREE
+      OTHER units (014/024/027.paragraph) the reply supposedly "dropped" -- but
+      ``core/llm/binding.py``'s ``merge_partial_units`` (confirmed by reading its code) correctly
+      merges a unit_ids-bound patch reply back into the stored batch, so those three were never
+      dropped by the repair at all: dispositions.json (read directly) shows they were ALREADY
+      OMIT_UNSUPPORTED with empty fact_ids in the ORIGINAL, pre-repair batch -- the exact same
+      latent defect this card's fix closes. The targeted_repair prompt v12->v13 change (previous
+      card) was a real, defensible hardening (it stops a non-patch repair from ever being ABLE to
+      drop untouched entries) but was NOT what was actually blocking Cpp's BC-12 candidate; this
+      cascade.py fix is. Not yet re-verified live with this fix landed -- next step below.
     next_step: >
-      investigate why "Project Structure" (and its code block) received no disposition at all --
-      whether reconciliation never considered it, or considered and dropped it without recording
-      why -- and fix the root cause with a failing test and falsifier, the same discipline as every
-      other fix today. Not yet triaged as a portfolio-wide pattern or a one-repository quirk.
+      dispatch fresh hosted re-runs (Cpp and Java both) with this fix landed; read
+      review_verdict.json and repairs.json directly again. If BC-12 and the Java preservation
+      findings both clear now, that confirms the diagnosis; if either persists, the specific
+      remaining rejection reason is the next thing to read, not assumed.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
