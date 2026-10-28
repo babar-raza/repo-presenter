@@ -1658,7 +1658,7 @@ next_ready_items:
     reopening_rule: only a prompt, model route or a new clearance (failing test first); never a rule loosened without a proven false positive and a negative control.
 
   - id: BC12_REPAIR_ROUTING_PROVEN
-    status: DONE
+    status: IN_PROGRESS
     purpose: >
       RECORDED 2026-10-28, closing a real investigation (commit d2ca65b). A structural blocking
       check (BC-12, canonical product-name spelling) had no repair path at all: cascade.py's
@@ -1686,6 +1686,22 @@ next_ready_items:
       dropped three unrelated units into an uncited omission and rejected on THAT, twice. prompt
       v12 -> v13 adds an explicit rule that revised_output must carry every existing entry forward
       unless the defect names it. Not yet re-verified live -- see next_step below.
+    actual_root_cause_2026_10_28: >
+      The "dropped three units" above was a misdiagnosis, corrected the same day
+      (JAVA_LANE_R_FIRST_ATTEMPT_2026_10_28's root_cause_found/same_root_cause_explains_bc12_too):
+      those three were already uncited OMIT_UNSUPPORTED in the ORIGINAL pre-repair batch, because
+      cascade.py's S4 job checked only ``normalize``, never ``placement_errors`` -- fixed in
+      commit 7b9b77d. Re-run 40730367161 after THAT fix: BC-12 is finally GONE (confirmed, not
+      assumed, by reading review_verdict.json and validation.json directly) -- the canonical-name
+      repair for inherited_unit:012.paragraph went through clean. The run still REJECTs, but now
+      on a FOURTH, different unit entirely: inherited_unit:019.code_block (a CMake
+      add_subdirectory() snippet), OMIT_UNSUPPORTED with empty fact_ids and a "superseded by the
+      installation section" rationale -- the same accounting gap, on a code_block kind
+      UNCITED_PROSE_OMIT never covered (paragraph/list only). Fixed: widened to a local
+      ``_UNCITED_OMIT_KINDS`` (paragraph/list/code_block) without touching the shared
+      ``_PROSE_UNIT_KINDS`` ``_omission_gap`` also reads, so that function's own, different
+      behavior is untouched. New test, falsifier confirmed. Not yet re-verified live with this
+      fourth fix landed.
 
   - id: BC07_UNIT_ROUTING_PROVEN
     status: DONE

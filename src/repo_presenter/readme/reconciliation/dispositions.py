@@ -1729,6 +1729,15 @@ def _supersede_lead_in(entry: dict[str, Any], destination: str) -> None:
 UNCITED_PROSE_OMIT = "uncited_prose_omit"
 _PROSE_UNIT_KINDS = frozenset({"paragraph", "list"})
 UNCITED_REDUNDANT_DIAGRAM = "uncited_redundant_diagram"
+# UNCITED_PROSE_OMIT's own kind set, local to placement_errors: a code_block is substantive
+# content too (measured live, aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, run 40730367161 -- a
+# CMake add_subdirectory() snippet OMIT_UNSUPPORTED with empty fact_ids and a "superseded by the
+# installation section" rationale, which is a SUPERSEDE_REDUNDANT claim wearing the wrong
+# disposition, uncited either way). Kept separate from the shared _PROSE_UNIT_KINDS, which
+# _omission_gap above also reads for a different purpose (whether to suggest spelled-but-uncited
+# facts); widening that shared constant would have silently also stopped suggesting candidates
+# for an uncited code_block omission, the opposite of what this fix wants.
+_UNCITED_OMIT_KINDS = _PROSE_UNIT_KINDS | frozenset({"code_block"})
 
 
 def uncited_omit_candidates(unit_text: str, facts: FactsDocument) -> list[str]:
@@ -1921,7 +1930,7 @@ def placement_errors(output: dict[str, Any], facts: FactsDocument) -> list[str]:
         if (
             disposition == "OMIT_UNSUPPORTED"
             and not cited
-            and unit.rsplit(".", 1)[-1] in _PROSE_UNIT_KINDS
+            and unit.rsplit(".", 1)[-1] in _UNCITED_OMIT_KINDS
         ):
             kind = unit.rsplit(".", 1)[-1]
             raw_text = unit_text.get(unit, "(text not in the facts)")

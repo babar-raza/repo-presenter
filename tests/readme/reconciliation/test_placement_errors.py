@@ -261,6 +261,17 @@ def test_an_omission_with_a_cited_fact_is_not_refused_for_that_reason() -> None:
     assert not any("uncited_prose_omit" in e for e in errors)
 
 
+def test_an_uncited_omission_of_a_code_block_is_refused() -> None:
+    """Measured live (aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, run 40730367161): a CMake
+    add_subdirectory() snippet was OMIT_UNSUPPORTED with empty fact_ids and a "superseded by the
+    installation section" rationale -- a real claim, just uncited, on a kind the original rule
+    (paragraph/list only) never covered."""
+    facts = _facts(_unit("inherited_unit:019.code_block", "```cmake\nadd_subdirectory(x)\n```"))
+    document = {"dispositions": [_entry("inherited_unit:019.code_block", "OMIT_UNSUPPORTED")]}
+    errors = placement_errors(document, facts)
+    assert any("uncited_prose_omit" in e for e in errors)
+
+
 def test_an_uncited_redundant_diagram_code_block_is_refused() -> None:
     """Measured live (aspose-cells-foss/Aspose.Cells-FOSS-for-Java, hosted run 40730382891): a
     live Mermaid diagram superseded by the renderer's own at_a_glance diagram cited no fact and
