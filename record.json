@@ -5,7 +5,7 @@
   "provider_repository_id": 1224468949,
   "registry_revision": null,
   "active_transaction_id": "5710f09c894647639224edb9bf1f052b",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "PresentFailure: Lane L: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README lists the format(s) .htm, but no SUPPORTED format fact states it)",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-28T05:05:54.987903+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:40635893845",
     "acquired_at": "2026-10-28T05:05:51.944345+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-10-28T05:20:51.944345+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "6f52a5df5ed248beb66eeb1763c26253",
+    "transaction_id": "5710f09c894647639224edb9bf1f052b",
+    "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-28T05:05:54.559764+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript",
+    "output_manifest": "candidates/aspose-cells-foss__Aspose.Cells-FOSS-for-TypeScript/lane-l/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:40635893845:aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript": "5710f09c894647639224edb9bf1f052b"
   },
