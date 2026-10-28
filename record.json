@@ -5,7 +5,7 @@
   "provider_repository_id": 1301317734,
   "registry_revision": null,
   "active_transaction_id": "ec3d875c55dc43acafcdc5b8cf0e0be4",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "PresentFailure: Lane L: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README lists the format(s) .xls, but no SUPPORTED format fact states it)",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-28T04:37:38.035421+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:40633293097",
     "acquired_at": "2026-10-28T04:37:34.110180+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-10-28T04:52:34.110180+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "6982d579f50d45d5b49231aa176b08d7",
+    "transaction_id": "ec3d875c55dc43acafcdc5b8cf0e0be4",
+    "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Rust",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-28T04:37:37.581210+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust",
+    "output_manifest": "candidates/aspose-cells-foss__Aspose.Cells-FOSS-for-Rust/lane-l/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:40633293097:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust": "ec3d875c55dc43acafcdc5b8cf0e0be4"
   },
