@@ -387,6 +387,18 @@ def _positive_registry_reading(facts: FactsDocument) -> bool:
     return False
 
 
+def _names_a_genuinely_unpublished_version(sentence: str, facts: FactsDocument) -> bool:
+    """Whether ``sentence`` disclaims a SPECIFIC version the registry reading confirms is not the
+    published one -- "this tree is 26.8.0, not yet released" is accurate when 26.8.0 differs from
+    the registry's own current release, even though some other version IS published. A sentence
+    naming no version, or naming the actual published version, is not this case."""
+    published = _fact(facts, PUBLISHED_VERSION_FACT_ID)
+    if published is None or published.polarity != "SUPPORTED":
+        return False
+    named = _VERSION_RE.findall(sentence)
+    return bool(named) and all(version != published.value for version in named)
+
+
 def _publication_findings(
     lines: list[_Line], facts: FactsDocument, identity: Fact
 ) -> list[ClaimFinding]:
@@ -412,6 +424,11 @@ def _publication_findings(
                 continue
             if _names_another_package(sentence, known):
                 continue  # about a package no registry reading here covers: nothing contradicts it
+            if _names_a_genuinely_unpublished_version(sentence, facts):
+                continue  # "this tree is 26.8.0, not yet released" is true when 26.8.0 isn't the
+                # registry's own published version -- a version-scoped disclaimer, not a claim
+                # that nothing is published (Slides-Java, live: published_version 26.7.0 while
+                # this tree is 26.8.0, caught by a real hosted Lane L run, 40636319184)
             raw = _NOT_PUBLISHED.search(sentence)
             index = paragraph.line_at(begin + (raw.start() if raw else 0))
             if index in flagged:

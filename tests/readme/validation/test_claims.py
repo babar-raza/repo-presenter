@@ -214,6 +214,38 @@ def test_not_published_passes_when_the_observation_agrees_or_there_is_none() -> 
     assert claim_findings(CPP_README, unreleased) == []
 
 
+def test_a_version_scoped_not_published_claim_is_true_and_not_flagged() -> None:
+    """Slides-Java, live hosted run 40636319184: "this source tree is 26.8.0, not yet released
+    to Maven Central" is accurate when the registry's own published_version is 26.7.0 -- the
+    sentence names ITS version, not a blanket claim that nothing is published."""
+    readme = (
+        "## Installation\n\n"
+        "This source tree is `26.8.0`, not yet released to Maven Central; build it from a "
+        "source checkout instead.\n"
+    )
+    facts = _facts(
+        _fact("package:name", "package", "aspose_slides_foss_java"),
+        _fact("package:published_version", "package", "26.7.0", "current stable release"),
+    )
+    assert claim_findings(readme, facts) == []
+
+
+def test_a_blanket_not_published_claim_beside_a_named_different_version_is_still_flagged() -> None:
+    """Negative control: naming a version must not become a blanket exemption -- a sentence that
+    also claims the package itself is unavailable, with no version named for that claim, is
+    unchanged by the fix."""
+    readme = (
+        "## Installation\n\n"
+        "`aspose_slides_foss_java` is not yet published on any package registry.\n"
+    )
+    facts = _facts(
+        _fact("package:name", "package", "aspose_slides_foss_java"),
+        _fact("package:published_version", "package", "26.7.0", "current stable release"),
+    )
+    [finding] = claim_findings(readme, facts)
+    assert "not published" in finding.detail
+
+
 def test_a_not_published_sentence_about_something_else_is_left_alone() -> None:
     readme = "ARM64 wheels are not published for Linux yet.\n"
     assert claim_findings(readme, _cpp("package registry: found on nuget")) == []
