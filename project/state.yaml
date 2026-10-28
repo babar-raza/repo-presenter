@@ -1675,6 +1675,38 @@ next_ready_items:
       one defect shape, not an architecture gap. The candidate stays honestly unsealed rather than
       falsely sealed -- correct behavior, not a regression.
 
+  - id: BC07_UNIT_ROUTING_PROVEN
+    status: DONE
+    purpose: >
+      RECORDED 2026-10-28 (commit aa02421). Root cause of the earlier Rust Lane R BC-07 block: the
+      "dangling table-below forward reference" check (structure.py::_reference_failures) already
+      computed the correct inherited unit id for its RECONCILING-stage case, but never put it on
+      the Failure's own `unit` field -- only into prose. The S4 patch path (built earlier today)
+      could not resolve a unit it was never structurally given. One-line fix: pass unit=unit.
+    proven_on_real_hosted_data: >
+      Re-run 40692763451 (aspose-cells-foss/Aspose.Cells-FOSS-for-Rust, Lane R): BC-07 is GONE --
+      every deterministic blocking check now passes and the run reaches the independent reviewer
+      for the first time on this repository's Lane R path.
+    reviewer_result_read_directly_not_assumed: >
+      The reviewer then REJECTed with 3 findings. Read each one's full evidence (not the summary
+      line) before judging: F01 (contradiction, scope_limitations) is a genuine broken Markdown
+      code span in the inherited text (`` `CellsError` ``::Unsupported, split across the backtick
+      boundary) -- real, if minor, and mislabeled contradiction rather than formatting; F02/F03
+      (unsupported_claim) are cases where the LLM-authored prose paraphrases inherited content
+      (crates.io publication status, the 2021 edition requirement) without a proper citation back
+      to it -- the model's own audit confirms the terms exist in OTHER inherited units, but
+      unsupported_claim has NO clearance by design (plan D3, the 27/30-incident guard), so it
+      correctly still blocks. None of the three is a false positive; none can be cleared without
+      loosening a rule deliberately built not to loosen.
+    honest_observation: >
+      Lane R has sealed NO candidate this session; Lane L has sealed and no-op-proven two (Rust,
+      Java). This is not a bug to chase further right now: Lane R's full-reconstruction approach
+      produces far more LLM-authored prose than Lane L's minimal-edit approach, so it surfaces far
+      more reviewer-catchable issues per real candidate -- a genuine, informative difference in
+      the two lanes' current maturity, not evidence either lane is broken. Closing this one
+      specific candidate's remaining findings would mean real repair work on genuine content
+      defects (not a quick fix) or loosening the reviewer (not permitted); left open, not forced.
+
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
     priority: highest
