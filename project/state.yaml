@@ -1698,7 +1698,17 @@ next_ready_items:
       designed refusal path (plans/PLAN_lane_l_hosted.md) working as intended, not a defect to fix.
       Still needed to prove a SEALED Lane L candidate: repositories whose live README has only
       correctable defects, not unrepairable ones.
-    remaining: a sealed Lane L candidate (needs a repository with only correctable defects), lane-aware propose/effect.py, lane-aware reviewer scope (handed to the reviewer iteration-3 agent).
+    first_sealed_lane_l_candidate_2026_10_28: >
+      DONE: run 40635248483 (aspose-cells-foss/Aspose.Cells-FOSS-for-Rust) sealed the first-ever Lane L
+      candidate, state ACCEPTED. On the way: this run's predecessor (40633293097) was wrongly blocked
+      by a false positive in a brand-new deterministic check (rule g, format-list claims, commit
+      fc6be6c) -- it flagged the README's own explicit disclaimer "no legacy `.xls`" as a claim of
+      support; found live, fixed (c5c09b9, negation-aware, with a negative control proving a real
+      adjacent over-claim still gets caught), re-run, sealed. Outcome: NO_CHANGE_WARRANTED, 0 defects,
+      0 edits -- the live README needed nothing, and Lane L correctly declined to fabricate an
+      improvement (mission section 6). Not yet READY_FOR_PROPOSAL (needs a fresh, zero-call rerun to
+      prove the no-op); that is the next run.
+    remaining: the no-op proof rerun for the sealed Lane L candidate, lane-aware propose/effect.py, lane-aware reviewer scope (handed to the reviewer iteration-3 agent).
     done_when: one hosted Lane L candidate per ecosystem in the cohort passes the reviewer and a rerun is byte-identical with zero provider calls.
 
   - id: COHORT_FIRST_GUARD
