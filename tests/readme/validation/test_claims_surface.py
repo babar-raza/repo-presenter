@@ -225,3 +225,25 @@ def test_a_fenced_block_listing_extensions_is_code_not_a_claim() -> None:
 
 def test_a_format_list_is_silent_without_any_supported_format_fact() -> None:
     assert claim_findings(readme("Handles `.fbx`, `.iges` and `.step`."), facts()) == []
+
+
+@pytest.mark.parametrize(
+    "sentence",
+    [
+        # the real sentence from hosted run 40633293097 (Cells-Rust): an explicit disclaimer,
+        # not a claim of support.
+        "Reads and writes `.fbx` (OOXML/SpreadsheetML) only — no legacy `.iges` (BIFF).",
+        "Does not support `.iges` files, only `.fbx`.",
+        "Unlike other tools, `.fbx` is supported but not `.iges`.",
+    ],
+)
+def test_a_disclaimed_format_is_not_a_claim(sentence: str) -> None:
+    assert claim_findings(readme(sentence), facts(*FORMATS)) == []
+
+
+def test_a_claim_right_next_to_a_disclaimed_one_is_still_flagged() -> None:
+    # the disclaimer covers only the format it names; an unrelated over-claim beside it must
+    # still be caught, so the fix cannot be a blanket "sentence has 'no' in it" exemption.
+    sentence = "Reads and writes `.fbx`, `.gltf` and `.step`, but not `.iges`."
+    [finding] = claim_findings(readme(sentence), facts(*FORMATS))
+    assert ".step" in finding.detail

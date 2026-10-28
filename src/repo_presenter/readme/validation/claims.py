@@ -749,8 +749,24 @@ def _extension(token: str) -> str:
     return token.lower().lstrip(".")
 
 
+# A format named within a couple of words after one of these, in the same sentence, is disclaimed
+# rather than claimed - "reads `.xlsx` only, no legacy `.xls`" states `.xls` is NOT supported, the
+# opposite of a claim rule (g) should hold to the facts (a real README read this way live,
+# hosted run 40633293097: Cells-Rust's own ".xls (BIFF)" disclaimer was flagged as an over-claim).
+_NEGATION_CUE = re.compile(
+    r"\b(?:no|not|never|without|excluding|except(?:\s+for)?|other\s+than|unlike|unsupported|"
+    r"cannot|can't|doesn't|does\s+not)\b(?:\s+\w+){0,2}\s*$",
+    re.IGNORECASE,
+)
+
+
+def _disclaimed(sentence: str, start: int) -> bool:
+    return _NEGATION_CUE.search(sentence[:start]) is not None
+
+
 def _format_findings(lines: list[_Line], facts: FactsDocument) -> list[ClaimFinding]:
-    """Rule (g): in a sentence listing file extensions, each one is a SUPPORTED format."""
+    """Rule (g): in a sentence listing file extensions, each claimed one is a SUPPORTED format.
+    An extension the sentence disclaims (see ``_NEGATION_CUE``) is not a claim at all."""
     supported = {
         _extension(fact.value)
         for fact in facts.by_kind("format")
@@ -763,7 +779,11 @@ def _format_findings(lines: list[_Line], facts: FactsDocument) -> list[ClaimFind
         if line.in_fence:
             continue
         for sentence in _SENTENCES.split(line.text):
-            listed = _EXTENSION_SPAN.findall(sentence)
+            listed = [
+                match.group(1)
+                for match in _EXTENSION_SPAN.finditer(sentence)
+                if not _disclaimed(sentence, match.start())
+            ]
             if len(listed) < 2 or not any(_extension(item) in supported for item in listed):
                 continue
             unsupported = [item for item in listed if _extension(item) not in supported]
