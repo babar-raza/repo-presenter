@@ -1715,9 +1715,19 @@ next_ready_items:
       true; the run's own ledger.jsonl confirms 4 cache_reuse records, 0 live calls. Mission section
       7 step 8's zero-drift byte-identical zero-provider-call rerun, satisfied for Lane L, hosted,
       for the first time.
+    lane_l_cohort_widening_2026_10_28: >
+      4 more Lane L hosted runs: Java SEALED (ACCEPTED, run 40635877718) -- a second real sealed
+      Lane L candidate, different repo/ecosystem from Rust. Cpp and Go correctly refused on genuine
+      unrepairable example-compile defects (a real C++ operator[] type mismatch; a real undefined
+      Go function `generateSmallPNG`) -- same correct-refusal pattern as the first Python/.NET runs.
+      TypeScript correctly held open a real, minor extraction gap: the README claims both `.html`
+      and `.htm` are recognized, but the format-fact extractor only confirmed `.html` -- almost
+      certainly a true, safe alias (most HTML parsers treat them the same) that the extractor
+      should also confirm rather than something Lane L should guess-correct; not fixed yet, not
+      urgent (correct, conservative refusal, not a false positive).
     remaining: lane-aware propose/effect.py, lane-aware reviewer scope (handed to the reviewer
-      iteration-3 agent), widening Lane L hosted runs across the rest of the cohort to build real
-      portfolio evidence for both lanes.
+      iteration-3 agent), the .htm/.html alias extraction gap, continuing to widen both lanes
+      across the registry.
     done_when: one hosted Lane L candidate per ecosystem in the cohort passes the reviewer and a rerun is byte-identical with zero provider calls.
 
   - id: COHORT_FIRST_GUARD
