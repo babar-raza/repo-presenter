@@ -1842,7 +1842,7 @@ next_ready_items:
       no_op_proof makes this card DONE.
 
   - id: JAVA_LANE_R_FIRST_ATTEMPT_2026_10_28
-    status: DONE
+    status: IN_PROGRESS
     purpose: >
       First-ever Lane R hosted attempt on aspose-cells-foss/Aspose.Cells-FOSS-for-Java (already
       sealed and no-op-proven on Lane L), per OWNER_FULL_PORTFOLIO_BAR_2026_10_28 -- widening
@@ -1894,11 +1894,26 @@ next_ready_items:
       card) was a real, defensible hardening (it stops a non-patch repair from ever being ABLE to
       drop untouched entries) but was NOT what was actually blocking Cpp's BC-12 candidate; this
       cascade.py fix is. Not yet re-verified live with this fix landed -- next step below.
+    live_reverify_2026_10_28: >
+      Re-run 40730382891 (Java), read directly: real progress, diagnosis confirmed -- the
+      "Project Structure" heading and its paragraph/code-block ARE gone now, no longer reported
+      lost. But a DIFFERENT, previously-hidden instance of the exact same accounting gap surfaced
+      behind it: inherited_unit:008.code_block (a live Mermaid diagram) was SUPERSEDE_REDUNDANT
+      into at_a_glance with empty fact_ids -- a disposition kind and shape placement_errors never
+      checked at all (UNCITED_PROSE_OMIT only ever covered OMIT_UNSUPPORTED). Confirmed by running
+      placement_errors directly against this run's own facts and dispositions. Fixed: a new
+      placement_errors rule, uncited_redundant_diagram, requires a citation for SUPERSEDE_REDUNDANT
+      on a code_block specifically (prose lead-ins stay exempt, matching the badge_row disposition
+      elsewhere in this same portfolio which already cites real facts for the same kind of
+      supersession -- proving the model can do this correctly when asked). New tests in
+      tests/readme/reconciliation/test_placement_errors.py (positive, cited-negative-control, and
+      a prose-is-exempt control), falsifier confirmed.
     next_step: >
-      dispatch fresh hosted re-runs (Cpp and Java both) with this fix landed; read
-      review_verdict.json and repairs.json directly again. If BC-12 and the Java preservation
-      findings both clear now, that confirms the diagnosis; if either persists, the specific
-      remaining rejection reason is the next thing to read, not assumed.
+      dispatch fresh hosted re-runs (Cpp and Java both) with this second fix landed; read
+      review_verdict.json, repairs.json and validation.json directly again. Diagrams superseded
+      without citation are plausibly common across the portfolio (most candidates likely have
+      one), so this fix may unblock several repositories at once, not only Java -- worth checking
+      broadly once Java itself clears.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED

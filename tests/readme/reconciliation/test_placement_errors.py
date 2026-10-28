@@ -261,6 +261,61 @@ def test_an_omission_with_a_cited_fact_is_not_refused_for_that_reason() -> None:
     assert not any("uncited_prose_omit" in e for e in errors)
 
 
+def test_an_uncited_redundant_diagram_code_block_is_refused() -> None:
+    """Measured live (aspose-cells-foss/Aspose.Cells-FOSS-for-Java, hosted run 40730382891): a
+    live Mermaid diagram superseded by the renderer's own at_a_glance diagram cited no fact and
+    was accepted, then reported as live content lost three stages later -- the same class of
+    unaccounted loss as an uncited OMIT_UNSUPPORTED, just on a different disposition and kind."""
+    facts = _facts(_unit("inherited_unit:008.code_block", "```mermaid\nflowchart TD\n```"))
+    document = {
+        "dispositions": [
+            _entry(
+                "inherited_unit:008.code_block",
+                "SUPERSEDE_REDUNDANT",
+                "at_a_glance",
+                rationale="Rendered by at_a_glance.",
+            )
+        ]
+    }
+    errors = placement_errors(document, facts)
+    assert any("uncited_redundant_diagram" in e for e in errors)
+
+
+def test_a_redundant_diagram_with_a_cited_fact_is_not_refused_for_that_reason() -> None:
+    facts = _facts(_unit("inherited_unit:008.code_block", "```mermaid\nflowchart TD\n```"))
+    document = {
+        "dispositions": [
+            _entry(
+                "inherited_unit:008.code_block",
+                "SUPERSEDE_REDUNDANT",
+                "at_a_glance",
+                fact_ids=["package:name"],
+                rationale="Rendered by at_a_glance.",
+            )
+        ]
+    }
+    errors = placement_errors(document, facts)
+    assert not any("uncited_redundant_diagram" in e for e in errors)
+
+
+def test_a_redundant_paragraph_lead_in_is_not_held_to_the_diagram_citation_rule() -> None:
+    """The new rule is scoped to code_block (substantial, independently-checkable content) --
+    a lead-in paragraph superseded into the section it introduces still needs no citation."""
+    facts = _facts(_unit("inherited_unit:009.paragraph", "See the diagram below."))
+    document = {
+        "dispositions": [
+            _entry(
+                "inherited_unit:009.paragraph",
+                "SUPERSEDE_REDUNDANT",
+                "at_a_glance",
+                rationale="Lead-in for the diagram.",
+            )
+        ]
+    }
+    errors = placement_errors(document, facts)
+    assert not any("uncited_redundant_diagram" in e for e in errors)
+
+
 def test_a_placing_disposition_into_an_unholdable_destination_is_refused() -> None:
     facts = _facts(_unit("inherited_unit:020.paragraph", "Some claim."))
     document = {

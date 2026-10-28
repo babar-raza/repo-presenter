@@ -1728,6 +1728,7 @@ def _supersede_lead_in(entry: dict[str, Any], destination: str) -> None:
 
 UNCITED_PROSE_OMIT = "uncited_prose_omit"
 _PROSE_UNIT_KINDS = frozenset({"paragraph", "list"})
+UNCITED_REDUNDANT_DIAGRAM = "uncited_redundant_diagram"
 
 
 def uncited_omit_candidates(unit_text: str, facts: FactsDocument) -> list[str]:
@@ -1939,6 +1940,28 @@ def placement_errors(output: dict[str, Any], facts: FactsDocument) -> list[str]:
                 "fact ID that shows the claim unsupported, or the unit must be placed in a section "
                 f"the shell can hold; the unit's exact text is {text}.{candidate_clause} Cite the "
                 "supporting fact IDs or place the unit; do not omit it without a cited reason"
+            )
+        if (
+            disposition == "SUPERSEDE_REDUNDANT"
+            and not cited
+            and unit.rsplit(".", 1)[-1] == "code_block"
+        ):
+            # Measured live (aspose-cells-foss/Aspose.Cells-FOSS-for-Java, hosted run
+            # 40730382891): a live diagram code block was correctly superseded by the renderer's
+            # own at_a_glance diagram, but cited no fact, so independent_reviewer.py's own
+            # accounting check (which requires a citation from every ACCOUNTING_DISPOSITIONS kind,
+            # not only OMIT_UNSUPPORTED -- the earlier badge_row disposition already cites its
+            # license/link_target facts correctly, proving a model can) never counted it as
+            # accounted for and reported it as live content lost three stages later. SUPERSEDE_
+            # REDUNDANT on prose already escapes this (a heading or a short lead-in rarely has an
+            # independent fact of its own); a diagram is substantial content making its own claim
+            # about the product's shape, so it gets the same citation requirement as an omission.
+            errors.append(
+                f"{unit}: {UNCITED_REDUNDANT_DIAGRAM}: SUPERSEDE_REDUNDANT on a code_block needs "
+                "at least one fact ID showing what the destination section regenerates it from "
+                "(the same facts that section's own content is built from); an empty fact_ids "
+                "leaves the supersession unaccounted for later, as if the content had simply "
+                "vanished"
             )
         if (
             disposition == "OMIT_UNSUPPORTED"
