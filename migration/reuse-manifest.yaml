@@ -1317,6 +1317,66 @@ entries:
       a clone to read the live README from. Verified against one repository so far.
     invalidation_impact: not yet pulled into any running pipeline; no invalidation surface yet.
 
+  - component: "readme/reconciliation/dispositions.py (normalize() bug fix: uncited
+      OMIT_UNSUPPORTED that spells a real SUPPORTED fact)"
+    source: "new engineering, found live against the 2026-10-28 cohort re-run
+      (project/state.yaml INDEPENDENT_LLM_REVIEWER.hosted_run_log runs 40571540396 cpp,
+      40571532257 java, 40571547837 go)"
+    evaluated_at_shas: []
+    behavior: >
+      Real S4 citation bug, not the S9 accounting-backfill shape 0f98ca2 fixed: an
+      OMIT_UNSUPPORTED disposition with empty fact_ids and a rationale claiming "not supported
+      by facts", while the unit's own text spells a SUPPORTED package or link_target fact's
+      value verbatim (Cpp: a NuGet PackageReference block naming
+      package:distribution.aspose.cells.cpp.foss; Go: a paragraph naming link_target:044,
+      "docs/usage.md", found independently in the same cohort's Go re-run evidence -- two
+      ecosystem shapes, not a C++ special case). normalize()'s own self-audit
+      (_omission_gap/ctx.named) only recognized a verbatim public_symbol/import_path match,
+      never package/link_target, so coverage_findings() and normalize() were both blind to this
+      shape and live_readme_loss_rule correctly reported the content lost (its own
+      _accounting_units requires fact_ids truthy). Fixed with a new, narrowly-scoped fold
+      (_spelled_supported_facts, _OMISSION_CITABLE_KINDS = {package, link_target}, length-
+      guarded against trivial matches): backfills the real citation onto the existing
+      OMIT_UNSUPPORTED disposition -- never invents a destination, never changes the
+      disposition value, never fires for a unit with no literal match.
+    evidence: >
+      3 new tests in tests/readme/reconciliation/test_dispositions.py:
+      test_normalize_backfills_an_omit_unsupported_that_spells_a_supported_package (Cpp shape),
+      test_normalize_backfills_an_omit_unsupported_that_spells_a_supported_link_target (Go
+      shape, a different fact kind and unit kind), and a negative control,
+      test_normalize_leaves_a_genuinely_unsupported_omission_uncited, proving a real omission
+      stays uncited. Also investigated (not fixed, out of write_paths / needs a separate card):
+      why repair did not already resolve the remaining Java (1) / Go (4) live_readme_loss
+      findings after 0f98ca2 -- read ledger.jsonl, dispositions.json vs
+      dispositions.composed.json and review_verdict.json from the actual downloaded re-run
+      artifacts (gh run download 40571532257 / 40571547837). Java: repair WAS attempted (2
+      targeted_repair logical calls, both exhausted retries) -- the real cause is an S6
+      rendering defect (a kept, correctly-cited paragraph's embedded markdown link is emitted
+      as plain text, dropping its href) that an S4 disposition patch cannot reach. Go: zero
+      targeted_repair calls -- 3 of the 4 units (a heading, a directory-tree code block, a
+      second heading) are genuinely uncited with no fact at all to backfill; the 4th
+      (docs/usage.md) is this exact bug and is resolved by the fix above. Both are real,
+      honestly-reported Lane R capability gaps (a placement/rendering capability this card does
+      not build), not further reconciliation or repair-routing bugs -- see docs/DECISION_LOG.md
+      2026-10-28 "Re-run confirmed..." for the full account.
+    disposition: "ADAPT (a new, additive fold in an already-ported function; the function and
+      its surrounding module remain REUSE/PORT as recorded above)"
+    reason: >
+      A false "not supported by facts" claim on content that literally spells a real, verified
+      fact is a correctness defect regardless of which hosted run exposed it
+      first; fixing it deterministically at the stage that is actually wired into the live S4
+      checks (normalize(), called by cascade.py's _run_reconciliation) is the only fix that
+      takes effect on the next real hosted run -- coverage_findings()/placement_errors() are not
+      wired into that per-call checks path, so widening only the self-audit would not have
+      changed what a live cascade run produces.
+    target_module: src/repo_presenter/readme/reconciliation/dispositions.py
+    smallest_first_integration_test: tests/readme/reconciliation/test_dispositions.py -- 9
+      passing (5 pre-existing + 3 new + the pre-existing strict-superset test unaffected)
+    portfolio_consumers: every S4 source_reconciliation call across every ecosystem; the fix is
+      scoped to package/link_target fact kinds, so it generalizes without any ecosystem check.
+    invalidation_impact: additive only -- a disposition that already had fact_ids, or whose
+      text matches nothing, is untouched; no existing accepted candidate is invalidated.
+
   - component: "readme/composition/references.py + dispositions.py's refusal/repair half
       (coordinate_neighbor_promises, uncited_omit_candidates, dangling_pointers,
       unprinted_commands, placement_errors, reconcile_checks)"

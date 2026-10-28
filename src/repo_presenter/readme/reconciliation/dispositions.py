@@ -656,6 +656,34 @@ def _supersession_gap(
     return (PLAN_DEPENDENT, f"what {destination} carries is chosen by the plan, after this stage")
 
 
+# Real hosted defect (2026-10-27, run 40571540396, C++; recurs on 40571547837, Go): an
+# OMIT_UNSUPPORTED with an empty ``fact_ids`` whose rationale claims "not supported by facts" or
+# "redundant", while the unit's own text spells a SUPPORTED ``package`` or ``link_target`` fact's
+# value verbatim (a NuGet ``PackageReference`` naming the repository's own verified distribution
+# package; a Go paragraph naming the repository's own verified ``docs/usage.md`` link). The claim
+# is false -- a matching fact DOES exist -- so ``live_readme_loss_rule``'s own ``_accounting_units``
+# (``readme/review/independent_reviewer.py``) correctly refuses to count it as accounted for (it
+# requires ``fact_ids`` truthy), and the content is reported lost even though a disposition exists.
+# Scoped to the two fact kinds this shape was actually found with, cross-ecosystem; kept narrow and
+# additive -- the disposition itself is never loosened, only an already-true citation is attached,
+# the same way the PLACING-only backfill below attaches a named symbol it finds.
+_OMISSION_CITABLE_KINDS = frozenset({"package", "link_target"})
+_MIN_SPELLED_VALUE_CHARS = 4
+
+
+def _spelled_supported_facts(unit_text: str, facts: FactsDocument) -> frozenset[str]:
+    """SUPPORTED ``package``/``link_target`` fact IDs whose value is spelled verbatim inside
+    ``unit_text``, long enough that a match cannot be a trivial coincidence."""
+    return frozenset(
+        fact.id
+        for fact in facts.facts
+        if fact.polarity == "SUPPORTED"
+        and fact.kind in _OMISSION_CITABLE_KINDS
+        and len(fact.value) >= _MIN_SPELLED_VALUE_CHARS
+        and fact.value in unit_text
+    )
+
+
 def _omission_gap(unit_id: str, entry: Mapping[str, Any], ctx: _Coverage) -> tuple[str, str] | None:
     """Why an OMIT_UNSUPPORTED is not a failed support lookup, or ``None`` when it stands."""
     kind = _unit_kind(unit_id)
@@ -1182,6 +1210,22 @@ def normalize(
         if not named:
             continue
         entry["fact_ids"] = sorted(set(entry.get("fact_ids") or []) | named)
+    for entry in output.get("dispositions", []):
+        if entry.get("disposition") != "OMIT_UNSUPPORTED" or entry.get("fact_ids"):
+            continue
+        unit_fact = units_by_id.get(str(entry.get("unit_id", "?")))
+        if unit_fact is None:
+            continue
+        cited = _spelled_supported_facts(unit_fact.value, facts)
+        if not cited:
+            continue
+        entry["fact_ids"] = sorted(cited)
+        entry["rationale"] = (
+            "Redundant with the verified facts it names: "
+            + ", ".join(sorted(cited))
+            + ". "
+            + str(entry.get("rationale") or "")
+        )[:_RATIONALE_LIMIT]
     _prune_incidental_coverage(output, coverage)
     return errors
 

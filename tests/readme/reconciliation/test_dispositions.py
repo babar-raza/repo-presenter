@@ -3,6 +3,8 @@ instruction ("port coverage_findings() together with normalize(), never separate
 
 from __future__ import annotations
 
+from dataclasses import replace
+
 from repo_presenter.core.facts import Evidence, Fact, FactsDocument
 from repo_presenter.readme.reconciliation.dispositions import coverage_findings, normalize
 
@@ -166,3 +168,115 @@ def test_normalize_is_a_strict_superset_of_what_coverage_findings_would_otherwis
     normalize(output, FACTS)
     after = coverage_findings(output, FACTS)
     assert after == []
+
+
+# Real hosted defect (run 40571540396, C++; recurs on 40571547837, Go, project/state.yaml
+# INDEPENDENT_LLM_REVIEWER.hosted_run_log): an OMIT_UNSUPPORTED with empty fact_ids, claiming "not
+# supported by facts", while the unit's own text spells a SUPPORTED package or link_target fact's
+# value verbatim. Two distinct ecosystem shapes, proving the fix is general, not a C++ special case.
+_CPP_PACKAGE_FACTS = replace(
+    FACTS,
+    facts=(
+        *FACTS.facts,
+        Fact(
+            "package:distribution.aspose.widget.cpp.foss",
+            "package",
+            "Aspose.Widget.Cpp.FOSS",
+            (Evidence("README.md"),),
+        ),
+        Fact(
+            "inherited_unit:010.code_block",
+            "inherited_unit",
+            '```xml\n<PackageReference Include="Aspose.Widget.Cpp.FOSS" Version="1.0.0" />\n```',
+            (Evidence("README.md", "section 'Widget > Installation'"),),
+            attributes={"section": "Widget > Installation"},
+        ),
+        Fact(
+            "inherited_unit:011.code_block",
+            "inherited_unit",
+            "```\nTotally unsupported legacy content naming nothing real.\n```",
+            (Evidence("README.md", "section 'Widget > Installation'"),),
+            attributes={"section": "Widget > Installation"},
+        ),
+    ),
+)
+
+_GO_LINK_FACTS = replace(
+    FACTS,
+    facts=(
+        *FACTS.facts,
+        Fact("link_target:044", "link_target", "docs/usage.md", (Evidence("README.md"),)),
+        Fact(
+            "inherited_unit:020.paragraph",
+            "inherited_unit",
+            "See docs/usage.md for detailed documentation.",
+            (Evidence("README.md", "section 'Widget > Detailed Documentation'"),),
+            attributes={"section": "Widget > Detailed Documentation"},
+        ),
+    ),
+)
+
+
+def test_normalize_backfills_an_omit_unsupported_that_spells_a_supported_package() -> None:
+    """C++ shape: a NuGet PackageReference block omitted as "not supported by facts" while its
+    own text spells the repository's verified distribution package verbatim. normalize() must
+    attach that real citation -- never invent a destination, never loosen the disposition -- so
+    the disposition is no longer a false claim and live_readme_loss_rule's own accounting (which
+    requires fact_ids truthy) stops reporting the block as a live, unaccounted-for loss."""
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:010.code_block",
+                "disposition": "OMIT_UNSUPPORTED",
+                "destination_section": None,
+                "fact_ids": [],
+                "rationale": "The XML snippet is not supported by facts and is not placeable.",
+            }
+        ]
+    }
+    normalize(output, _CPP_PACKAGE_FACTS)
+    entry = output["dispositions"][0]
+    assert entry["disposition"] == "OMIT_UNSUPPORTED"
+    assert entry["fact_ids"] == ["package:distribution.aspose.widget.cpp.foss"]
+    assert entry["rationale"]  # the false "not supported by facts" claim is gone
+
+
+def test_normalize_backfills_an_omit_unsupported_that_spells_a_supported_link_target() -> None:
+    """Go shape (a different fact kind, a different unit kind -- proving the fix generalises,
+    not a C++-only patch): a paragraph naming a verified docs link, omitted uncited."""
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:020.paragraph",
+                "disposition": "OMIT_UNSUPPORTED",
+                "destination_section": None,
+                "fact_ids": [],
+                "rationale": "The usage.md paragraph is not supported by any fact.",
+            }
+        ]
+    }
+    normalize(output, _GO_LINK_FACTS)
+    entry = output["dispositions"][0]
+    assert entry["disposition"] == "OMIT_UNSUPPORTED"
+    assert entry["fact_ids"] == ["link_target:044"]
+
+
+def test_normalize_leaves_a_genuinely_unsupported_omission_uncited() -> None:
+    """Negative control: content that spells no SUPPORTED package/link_target fact must stay
+    exactly as uncited -- the reviewer rule is never loosened for a real omission."""
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:011.code_block",
+                "disposition": "OMIT_UNSUPPORTED",
+                "destination_section": None,
+                "fact_ids": [],
+                "rationale": "Nothing supports this legacy snippet.",
+            }
+        ]
+    }
+    normalize(output, _CPP_PACKAGE_FACTS)
+    entry = output["dispositions"][0]
+    assert entry["disposition"] == "OMIT_UNSUPPORTED"
+    assert entry["fact_ids"] == []
+    assert entry["rationale"] == "Nothing supports this legacy snippet."

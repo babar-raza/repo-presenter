@@ -642,3 +642,80 @@ fresh hosted pass.
 net/python); `tests/readme/repair/test_accounting_uncited.py`, `tests/readme/composition/test_retained_examples.py`,
 `tests/readme/review/test_scope.py` (updated); `migration/reuse-manifest.yaml` (the matching entry, with the
 full per-run measured-defect breakdown and blast-radius query).
+
+---
+
+## 2026-10-28: Re-run confirmed the S9 fix on real hosted data; two further things investigated, one fixed, one confirmed as a real capability gap (not a bug)
+
+**Context**: the 2026-10-28 cohort re-run (java 40571532257, go 40571547837, typescript 40571563106, cpp
+40571540396, rust 40571555199, all after `0f98ca2`) confirmed the S9 generalization fix on real hosted data
+(commit `adbfcb9`) and surfaced two further things, both investigated against the actual downloaded evidence,
+never from code alone.
+
+**Bug 1 (Cpp, run 40571540396) — fixed**: two inherited code blocks (a NuGet `PackageReference` snippet, a CMake
+`find_package` snippet) were `OMIT_UNSUPPORTED` with empty `fact_ids` and the rationale "is not supported by
+facts and is not placeable", yet the repository's own `package:distribution.aspose.cells.cpp.foss` fact
+(`SUPPORTED`, value `"Aspose.Cells.Cpp.FOSS"`) is spelled verbatim inside the first block's own text. The claim
+is false — a matching fact exists — so `live_readme_loss_rule`'s own `_accounting_units`
+(`readme/review/independent_reviewer.py`), which requires `fact_ids` truthy before counting a disposition as
+accounting for anything, correctly refused to count it, and the content was reported lost even though a
+disposition existed. Root cause located precisely: `normalize()`'s own self-audit (`_omission_gap`, via
+`ctx.named` = `composition.authoring.inherited_unit_named_symbols`) only recognizes a verbatim match against a
+SUPPORTED `public_symbol`/`import_path` fact — never a `package` or `link_target` fact — so this exact shape is
+invisible to both `coverage_findings()`'s own self-audit and to `normalize()`'s folds. Confirmed NOT a
+packet-construction bug: `package:distribution.aspose.cells.cpp.foss` (kind `package`) is in
+`prompts/source_reconciliation.yaml`'s own `fact_kinds` list and was `SUPPORTED`, so the model saw it in the
+packet and simply failed to cite it on this hosted run — a deterministic backfill is the right fix regardless
+of why the model missed it, the same way `_omits_contradicted_command` and the existing `PLACING`-only
+named-symbol backfill already fix a model's missed citation deterministically rather than trusting it to get
+every call right. Fixed in `normalize()` with a new, narrowly-scoped fold (`_spelled_supported_facts`,
+`_OMISSION_CITABLE_KINDS = {"package", "link_target"}`): an `OMIT_UNSUPPORTED` disposition with empty
+`fact_ids` whose unit text spells a `SUPPORTED` `package` or `link_target` fact's value verbatim (length-guarded
+against trivial matches) gets that fact backfilled as its citation and an honest rationale — the disposition
+value is never changed, never loosened, and a unit with no such match is left exactly as uncited as before.
+Proven general with two independent ecosystem shapes, not a C++ special case: a C++ `package` match (the real
+defect) and a Go `link_target` match (`link_target:044` = `"docs/usage.md"`, found independently to be the
+exact same shape in the Go re-run's own `OMIT_UNSUPPORTED` units 069/071 — see below), plus a negative control
+proving a genuinely unsupported block stays uncited.
+
+**Investigation 2 (why repair didn't already fix the remaining Java/Go `live_readme_loss` findings) — real
+evidence read, not inferred from code**: downloaded the actual re-run artifacts (`40571532257` java,
+`40571547837` go) via `gh run download`, not just the first-cohort runs, and read `ledger.jsonl`,
+`dispositions.json` vs `dispositions.composed.json`, and `review_verdict.json` directly.
+- **Java (1 remaining: the dropped `src/test/java/com/aspose/threed/` link)**: repair WAS attempted — two
+  `targeted_repair` logical calls are in the ledger (stage `S11`/S4-routed), each retried once by `run_job`'s
+  own re-ask, both ultimately `response_invalid`. The model oscillated between `OMIT_UNSUPPORTED` with no
+  citable fact (rejected: `uncited_prose_omit`) and `VERIFIED_PRESERVE`/`VERIFIED_MOVE` that keeps the paragraph
+  verbatim (rejected by `repair/loop.py`'s own `refuse_noop`: the defect is that the paragraph's embedded
+  markdown link was rendered as plain text by S6/composition, not that the disposition is wrong — S4's own
+  disposition already correctly cites `build_test_asset:tests`/`link_target:030` and places the paragraph
+  verbatim). This is case **(a)**: repair rounds exhausted because the actual cause is an S6 rendering defect
+  (a kept paragraph's embedded link loses its href) that an S4 disposition patch structurally cannot reach —
+  a real Lane R gap (S4's patch repair never touches how a kept unit's own markdown is re-emitted), not a
+  routing bug, and not fixed here (out of this card's `write_paths`; needs its own card against S6/composition).
+- **Go (4 remaining: 2 headings, 1 directory-tree code block, 1 `docs/usage.md` link)**: zero `targeted_repair`
+  ledger entries — repair was never invoked, confirmed by the ledger, not assumed. Traced why: three of the four
+  findings' own units (045 `Project Structure` heading, 047 the directory-tree code block, and the 070 heading)
+  are `OMIT_UNSUPPORTED` with empty `fact_ids` whose rationale claims redundancy but names nothing a fact backs
+  — genuinely unsupported content with no literal fact match in its own text (a free-hand ASCII directory tree,
+  bare headings), so this is real case **(a)**: content with no accounting path, not a routing gap; a
+  `defect_bridge` bug was considered (whether `live_readme_loss` findings about content missing from every kept
+  unit can ever be located and routed to S4) but a repairable disposition-level fix for *this* content would
+  still need something to cite, which does not exist, so widening the router alone would not have produced a
+  different outcome for these three. The fourth (`docs/usage.md`, units 069/071) is the exact same shape Bug 1
+  fixes: `link_target:044` (`SUPPORTED`, value `"docs/usage.md"`) is spelled verbatim in both units' own text,
+  uncited — this one the normalize() fix above resolves the same way it resolves the Cpp case, confirming the
+  fix generalizes across ecosystems on real hosted evidence, not just a crafted test.
+
+**What this does NOT decide**: the Java S6 link-stripping defect (a kept unit's own markdown link losing its
+href on render) and the Go directory-tree/heading content with no fact at all — both need a real Lane R
+placement/rendering capability this card does not build, not a reconciliation or repair-routing fix. Neither
+historical run's own JSON evidence was rewritten; the fix is proven against fresh unit tests reproducing both
+ecosystem shapes plus a negative control, per `AGENTS.md`'s falsifier discipline, not by editing downloaded
+artifacts.
+
+**Where the detail lives**: `src/repo_presenter/readme/reconciliation/dispositions.py` (`_spelled_supported_facts`,
+`_OMISSION_CITABLE_KINDS`, the new fold in `normalize()`); `tests/readme/reconciliation/test_dispositions.py`
+(3 new tests: C++ package match, Go link_target match, negative control); `project/state.yaml`'s
+`INDEPENDENT_LLM_REVIEWER.hosted_run_log` (the run IDs and the supervisor's own re-run record); evidence read
+from `C:\Users\babar\AppData\Local\Temp\cohort2\{40571540396,40571532257,40571547837}\`.
