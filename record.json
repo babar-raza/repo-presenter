@@ -5,7 +5,7 @@
   "provider_repository_id": 1246258574,
   "registry_revision": null,
   "active_transaction_id": "5379ebc9ca2f4233b6641f1b1592a5f7",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "PresentFailure: Lane L: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the example verifier recorded a failure for the example on lines 174-187: example 2: FAILED; example_002.cpp:10:48: error: no match for ‘operator[]’ (operand types are ‘Aspose::Cells_FOSS::WorksheetCollection’ and ‘const char [9]’)); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (possible Enterprise Edition naming violation ('commercial product'); the product name and its platform are not both spelled out on this line, so the fix is not guessed); Lane L left 2 defect(s) it may not repair (failing_example line 174: the example verifier recorded a failure for the example on lines 174-187: example 2: FAILED; example_002.cpp:10:48: error: no match for ‘operator[]’ (operand types are ‘Aspose::Cells_FOSS::WorksheetCollection’ and ‘const char [9]’); enterprise_edition_naming line 567: possible Enterprise Edition naming violation ('commercial product'); the product name and its platform are not both spelled out on this line, so the fix is not guessed); Lane R is the recommended lane for this repository",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-28T05:05:42.596776+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:40635882707",
     "acquired_at": "2026-10-28T05:05:39.226835+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-10-28T05:20:39.226835+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "010b4e8fe3fc41eb989062f3a9410c2d",
+    "transaction_id": "5379ebc9ca2f4233b6641f1b1592a5f7",
+    "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-28T05:05:42.232506+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp",
+    "output_manifest": "candidates/aspose-cells-foss__Aspose.Cells-FOSS-for-Cpp/lane-l/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:40635882707:aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp": "5379ebc9ca2f4233b6641f1b1592a5f7"
   },
