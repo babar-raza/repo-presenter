@@ -1708,7 +1708,16 @@ next_ready_items:
       0 edits -- the live README needed nothing, and Lane L correctly declined to fabricate an
       improvement (mission section 6). Not yet READY_FOR_PROPOSAL (needs a fresh, zero-call rerun to
       prove the no-op); that is the next run.
-    remaining: the no-op proof rerun for the sealed Lane L candidate, lane-aware propose/effect.py, lane-aware reviewer scope (handed to the reviewer iteration-3 agent).
+    no_op_proof_lane_l_2026_10_28: >
+      DONE, independently verified (not trusted from a log line): run 40635543465, state
+      READY_FOR_PROPOSAL, manifest.json's no_op_proof has provider_calls: 0, fresh_process: true
+      (first_run and rerun carry genuinely different boot_id/pid/nonce identities), byte_identical:
+      true; the run's own ledger.jsonl confirms 4 cache_reuse records, 0 live calls. Mission section
+      7 step 8's zero-drift byte-identical zero-provider-call rerun, satisfied for Lane L, hosted,
+      for the first time.
+    remaining: lane-aware propose/effect.py, lane-aware reviewer scope (handed to the reviewer
+      iteration-3 agent), widening Lane L hosted runs across the rest of the cohort to build real
+      portfolio evidence for both lanes.
     done_when: one hosted Lane L candidate per ecosystem in the cohort passes the reviewer and a rerun is byte-identical with zero provider calls.
 
   - id: COHORT_FIRST_GUARD
