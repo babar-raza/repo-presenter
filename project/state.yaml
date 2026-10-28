@@ -1787,9 +1787,34 @@ next_ready_items:
       has NOT yet been re-verified against a real provider call. Not ACCEPTED until a fresh
       hosted Lane R run on this same repository is independently read and either reaches ACCEPT
       or produces a new, different, honestly-recorded finding.
-    next_step: dispatch a fresh hosted run (facts + present, lane R) for aspose-cells-foss/
-      Aspose.Cells-FOSS-for-Rust and read review_verdict.json and the bundle's no_op_proof
-      directly; only then does this card's status become DONE.
+    first_live_reverify_2026_10_28: >
+      Re-run 40720887022, read directly (review_verdict.json, repairs.json), not assumed. Real
+      progress, not yet ACCEPT: the original F01 (CellsError backtick render bug) is CONFIRMED
+      GONE. The original F02 (crates.io/Cargo.toml) is also gone -- round 1's repair correctly
+      rewrote the CellsError sentence to `Result<(), CellsError>` and the crates.io sentence
+      cleared too. The original F03 (samples/ "every feature area" overclaim) was repaired to
+      "provides examples for de-facto verification" -- closer to the inherited wording but still
+      re-raised once more in the SAME merged development_testing quote, on a term the mechanical
+      audit (readme/review/audit.py distinctive_terms) cannot even see: audit.py's own regexes
+      only extract identifiers, numbers and quoted phrases, never ordinary prose, so it does not
+      itself decide the claim unsupported -- the reviewer model's own read of the paragraph does,
+      and something in that merged quote still reads as unverified to it.
+      A DIFFERENT, previously-unseen finding also surfaced: the enterprise_relationship "context"
+      unit ("It adds broader format coverage (including legacy XLS, CSV, and ODS), full feature
+      completeness, and commercial support.") is, word for word, inherited_unit:075.paragraph's
+      own real wording (cited in its own fact_ids) -- not invented -- yet was independently
+      authored with "It adds" in place of the source's "which adds" rather than placed verbatim,
+      so it is not an exact placed-text match and routes to S6 (COMPOSING), correctly per how
+      that routing works, not a misrouting bug. Neither of these two final-round findings had a
+      repair attempt yet in THIS run: review_repair_rounds (2) was spent on the ORIGINAL three
+      findings before these were the last ones standing, so the prompt fix (v12) has not been
+      tested against them specifically.
+    next_step: >
+      dispatch another fresh hosted run (same repository, lane R) so these two remaining findings
+      get their own repair attempt under prompt v12 -- the enterprise-edition sentence is exactly
+      the "quote the inherited unit's own wording instead of composing new phrasing" case v12
+      was written for. Read the result directly again; only an ACCEPT verdict plus an
+      independently-read no_op_proof makes this card DONE.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED

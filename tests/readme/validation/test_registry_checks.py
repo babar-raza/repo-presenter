@@ -2575,6 +2575,40 @@ def test_bc12_names_the_section_and_routes_to_composing(tmp_path: Path) -> None:
     assert [f["section_id"] for f in failure["failures"]] == ["scope_limitations"]
 
 
+def test_bc12_routes_a_placed_inherited_units_own_misspelling_to_reconciliation(
+    tmp_path: Path,
+) -> None:
+    """Proven real gap (hosted Lane R run 40687656250, aspose-cells-foss/Aspose.Cells-FOSS-for-
+    Cpp): the upstream repository's own inherited text spelled the product name differently from
+    the registry's canonical form. BC-12 hardcoded COMPOSING regardless, so the repair it produced
+    had nothing in S6's own stage output to revise -- a no-op, rejected twice. A misspelling a
+    placed inherited unit carries verbatim must route to RECONCILING with a resolvable unit_id,
+    the same as BC-07's dangling-reference finding above."""
+    misspelled = "Aspose.3D.FOSS opens every format."
+    facts = FactsDocument(
+        ENTRY.repository,
+        REVISION,
+        tuple(
+            Fact(f.id, f.kind, misspelled, f.evidence, polarity=f.polarity)
+            if f.id == "inherited_unit:002.paragraph"
+            else f
+            for f in BASE_FACTS
+        ),
+    )
+    failing = _failed(
+        validate_candidate(_candidate(facts=facts), tmp_path, ()), "BC-12"
+    )
+    assert failing["causal_stage"] == "RECONCILING"
+    assert any(
+        "inherited_unit:002.paragraph is kept as written" in d
+        for d in failing["details"]
+    )
+    reconciling = next(
+        f for f in failing["failures"] if f["causal_stage"] == "RECONCILING"
+    )
+    assert reconciling["unit_id"] == "inherited_unit:002.paragraph"
+
+
 def test_canonical_name_pattern_is_built_from_the_name_alone() -> None:
     pattern = canonical_name_pattern("Aspose.Words FOSS for .NET")
     found = [

@@ -589,12 +589,35 @@ def _is_technical_identifier(
 def canonical_name_failures(candidate: Candidate) -> list[Failure]:
     """BC-12: every product-identity position in the prose spells the registry's canonical product
     name exactly; no separator, case, or suffix variant of it. Code spans and fences are not judged:
-    exact technical identifiers belong there."""
+    exact technical identifiers belong there.
+
+    A misspelling inside a sentence a placed inherited unit carries verbatim is the upstream
+    repository's own wording, which only reconciliation can revise with evidence (RECONCILING,
+    naming the unit, the same ``_reference_failures`` pattern just above) -- S6 authoring never
+    wrote that sentence and cannot change it. Measured live (aspose-cells-foss/Aspose.Cells-FOSS-
+    for-Cpp, run 40687656250): this check hardcoded "COMPOSING" unconditionally, so the only real
+    BC-12 finding this portfolio has produced so far routed to section_authoring with nothing in
+    its own stage output to revise -- a no-op repair, rejected twice, exactly as this file's own
+    docstring on ``_reference_failures`` already warns an unrouted check will produce."""
     canonical = product_name(candidate.entry)
     pattern = canonical_name_pattern(canonical)
     text = visible_prose(candidate.readme)
     tail = _name_tail(canonical)
     source = candidate.readme.splitlines()
+    # A minimal probe of the pattern/technical-identifier logic alone (every existing BC-12 unit
+    # test below this one) hands a bare entry+readme double with no plan, units, dispositions or
+    # facts at all; placement is simply unknown there, so it degrades to the old COMPOSING-only
+    # behavior rather than erroring, the same "unknown degrades, never crashes" rule this project
+    # already applies to a missing toolchain or a cache miss.
+    placed = (
+        [
+            (p.unit_id, normalized(p.text))
+            for p in placements_of(candidate)
+            if p.outcome == "placed"
+        ]
+        if all(hasattr(candidate, attr) for attr in ("plan", "units", "dispositions", "facts"))
+        else []
+    )
     failures: list[Failure] = []
     seen: set[tuple[str, str | None]] = set()
     for match in pattern.finditer(text):
@@ -622,11 +645,31 @@ def canonical_name_failures(candidate: Candidate) -> list[Failure]:
         if (found, section) in seen:
             continue
         seen.add((found, section))
-        failures.append(
-            Failure(
-                "COMPOSING",
-                f"product name {found!r} is not the canonical name {canonical!r}",
-                section,
-            )
+        normalized_row = normalized(row)
+        unit = next(
+            (
+                unit_id
+                for unit_id, unit_text in placed
+                if normalized_row and normalized_row in unit_text
+            ),
+            None,
         )
+        if unit is not None:
+            failures.append(
+                Failure(
+                    "RECONCILING",
+                    f"{unit} is kept as written but spells the product name {found!r}, not "
+                    f"the canonical {canonical!r}",
+                    section,
+                    unit=unit,
+                )
+            )
+        else:
+            failures.append(
+                Failure(
+                    "COMPOSING",
+                    f"product name {found!r} is not the canonical name {canonical!r}",
+                    section,
+                )
+            )
     return failures
