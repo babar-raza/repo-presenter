@@ -5,7 +5,7 @@
   "provider_repository_id": 1178837115,
   "registry_revision": null,
   "active_transaction_id": "9adf220ef2124350b10d4a47c50caa60",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "PresentFailure: Lane L: independent review returned REJECT with 7 blocking finding(s) of 7; nothing sealed; lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the README marks 'U3D' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the README marks 'RVM' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the README marks 'U3D' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the README marks 'RVM' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the README marks 'AMF' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the README marks 'HTML5' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the example verifier recorded a failure for the example on lines 165-173: example 3: FAILED; Program.cs(3,41): error CS1503: Argument 2: cannot convert from 'Aspose.ThreeD.FileFormat' to 'System.Threading.CancellationToken'); Lane L left 7 defect(s) it may not repair (format_overclaim line 34: the README marks 'U3D' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim; format_overclaim line 36: the README marks 'RVM' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim; format_overclaim line 56: the README marks 'U3D' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim; format_overclaim line 58: the README marks 'RVM' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim; format_overclaim line 59: the README marks 'AMF' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim (+2 more)); Lane R is the recommended lane for this repository",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-28T04:33:59.909982+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:40632862742",
     "acquired_at": "2026-10-28T04:33:56.609743+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-10-28T04:48:56.609743+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "3d31a2f9eb5d4bb08c68e96737d704c1",
+    "transaction_id": "9adf220ef2124350b10d4a47c50caa60",
+    "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-.NET",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-28T04:33:59.556115+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-3d-foss/Aspose.3D-FOSS-for-.NET",
+    "output_manifest": "candidates/aspose-3d-foss__Aspose.3D-FOSS-for-.NET/lane-l/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:40632862742:aspose-3d-foss/Aspose.3D-FOSS-for-.NET": "9adf220ef2124350b10d4a47c50caa60"
   },
