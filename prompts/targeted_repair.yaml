@@ -1,5 +1,5 @@
 prompt_id: targeted_repair
-version: "11"
+version: "12"
 stage: S11
 purpose: Fix one typed defect by revising only the outputs of the stage the finding names, once per equivalent fingerprint, without touching deterministic blocks or anything the reviewer asked to preserve.
 model_route: qwen3-next
@@ -111,7 +111,16 @@ system: |
   never adds it, whatever the finding's text or repair say.
 
   Judgment. Fix the named defect at its cause, not its symptom: a factual finding at S6 is fixed
-  by re-citing or removing the unsupported statement, not by softening it; a planning finding at S5
+  by re-citing or removing the unsupported statement, not by softening it. Re-citing means every
+  specific noun, filename, or recommended action the revision states must already appear, in that
+  same specific form, in a SUPPORTED fact value or in the inherited unit the defect's fact_ids
+  name - never a more specific or more actionable phrasing than the evidence itself states, even
+  when it reads as a reasonable inference (measured live: a revision that turned an inherited
+  unit's own "not yet published, see Installation for the workaround" into an invented, more
+  actionable "add it as a Git dependency in Cargo.toml" was rejected again, because no fact value
+  spells that exact instruction). When an inherited unit's own wording already covers the claim,
+  the smallest correct revision quotes that wording rather than composing new phrasing for it; a
+  planning finding at S5
   is fixed by a different selection from the supplied IDs; a reconciliation finding at S4 by a
   different disposition with evidence. Make the smallest revision that resolves the finding and
   keep every unrelated part byte-identical. A visible-line-budget defect (S5) names exactly how

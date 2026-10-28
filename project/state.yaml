@@ -1707,6 +1707,90 @@ next_ready_items:
       specific candidate's remaining findings would mean real repair work on genuine content
       defects (not a quick fix) or loosening the reviewer (not permitted); left open, not forced.
 
+  - id: OWNER_FULL_PORTFOLIO_BAR_2026_10_28
+    status: IN_PROGRESS
+    priority: highest
+    purpose: >
+      Owner correction, 2026-10-28 (overrides the framing of "mechanism proof is enough" this
+      session had been drifting toward): "Lane L must be able to seal (no op proven) all
+      candidates. Lane R must be able to do the same for all candidates." A single sealed-and-
+      no-op-proven candidate per lane, or a lane correctly blocking on one repository's real
+      findings, is not itself evidence the lane is ready for the portfolio -- it is one data
+      point. The bar is the full registry (36 entries, data/registry.json), both lanes, each
+      candidate actually sealed and no-op-proven under the CURRENT mechanism (hosted facts+present
+      split, durable-state transaction, independent LLM+deterministic review, byte-identical
+      zero-provider-call rerun) -- not merely composed and judged acceptable by agent/supervisor
+      reading, which is the OLD bar.
+    correcting_a_real_confusion: >
+      progress.lane_l_accepted: 36, progress.lane_r_accepted: 34 (current_gate
+      P1_PORTFOLIO_SCALE, accepted 2026-10-21) look like this bar is already met. They are not:
+      that gate's own acceptance note says plainly "no automated rerun/no-op proof exists yet for
+      any candidate -- every ACCEPT in this sweep was a one-time manual/agent-assisted
+      verification" and "reviewed... means supervisor judgment reading the evidence, never an
+      independently built non-authoring reviewer, which this repository does not yet have at
+      all." That gate is not reopened or invalidated (mission non-negotiable #3, accepted fairly
+      against the bar that then existed) -- but it does not satisfy today's bar, and treating its
+      36/36 as if it does would be exactly the false-green confusion the owner has twice now
+      warned this project against repeating from the old repo. The real count against TODAY's bar,
+      measured this session: Lane L sealed and no-op-proven on 2 of 36 (Rust, Java); Lane R has
+      reached the independent reviewer for the first time on 1 of 36 (Rust) and is not yet sealed
+      on any.
+    acceptance: >
+      every one of the 36 registry entries has, for BOTH Lane L and Lane R, a hosted run whose
+      candidate reaches independent-review ACCEPT and whose bundle's no_op_proof field (zero
+      provider calls, a fresh process with a distinct boot_id/pid/nonce, byte-identical output)
+      is independently read from the artifact, never trusted from a log line or an agent's report.
+    discipline_carried_forward: >
+      no global reseal, no rule loosened to force an ACCEPT, no stopping at "it correctly blocked
+      on a real finding" as if that were the deliverable -- a correct block is the system working,
+      not the job done. The job is done when the content itself is fixed (a real repair, or a
+      real re-authoring that does not reintroduce the same defect class) and the candidate seals.
+      Triage every failure into exactly one of: a genuine pipeline/prompt bug (fix at the root,
+      with a failing test and falsifier, then re-verify live) or a real content gap the repair
+      loop has not yet closed (keep iterating the repair mechanism itself, not the one candidate).
+
+  - id: RUST_LANE_R_F01_F02_F03_ROOT_CAUSED
+    status: IN_PROGRESS
+    purpose: >
+      RECORDED 2026-10-28. Root-caused all three findings from BC07_UNIT_ROUTING_PROVEN's Rust
+      Lane R run (40692763451) rather than accepting them as a permanent stopping point, per
+      OWNER_FULL_PORTFOLIO_BAR_2026_10_28.
+    f01_fixed_commit_pending: >
+      Real renderer defect, not a content problem: RenderContext.prose() (composition/renderer.py)
+      wraps a known public_symbol token in a code span but, unlike an already-excluded dot, never
+      excluded an adjacent "::" -- so a Rust/C++ `Namespace::Member` compound where only
+      "Namespace" is a registered symbol ("CellsError" is; the enum variant "Unsupported" is not
+      separately tracked) rendered as a broken half-wrapped span,
+      `` `CellsError` ``::Unsupported, instead of plain text. This is why the first repair attempt
+      on F01 returned the content unit byte-identical (repairs.json: before == after) -- there was
+      truly nothing in the authored text for a content-level repair to fix; the defect was never
+      S6's to fix. Fixed by excluding ":" on both sides of the wrap boundary, the same way "."
+      already is. Falsifier confirmed: reverting the boundary chars reproduces the exact broken
+      span on a synthetic fixture built from the real facts (tests/readme/composition/
+      test_renderer_scoped_symbols.py, 2 tests, both passing with the fix and one failing without
+      it). Full suite re-run clean (3302 passed, 11 skipped) before this record was written.
+    f02_f03_prompt_fix_pending_live_reverify: >
+      Different root cause, same shape: both are the targeted_repair job, when asked to fix an
+      unsupported_claim, replacing an inherited unit's own already-correct, already-SUPPORTED
+      wording with a newly-composed paraphrase that introduces a MORE SPECIFIC claim than any
+      fact value states ("not yet published... see Installation for the workaround" rewritten as
+      the invented, more actionable "add it as a Git dependency in Cargo.toml"; "the de-facto
+      verification suite" rewritten as the invented "smoke tests demonstrating every feature
+      area") -- each repair attempt "fixed" the wording but kept inventing a new unsupported
+      specific, so the same claim kind kept getting re-raised. prompts/targeted_repair.yaml
+      bumped 11 -> 12: the Judgment section now states explicitly that re-citing means every
+      specific noun or recommended action in the revision must already appear, in that same
+      specific form, in a SUPPORTED fact value or the named inherited unit, never a more specific
+      or more actionable phrasing than the evidence states -- and that when the inherited unit's
+      own wording already covers the claim, the smallest correct revision quotes it rather than
+      composing new phrasing. This is a prompt-judgment fix, not a deterministic guarantee: it
+      has NOT yet been re-verified against a real provider call. Not ACCEPTED until a fresh
+      hosted Lane R run on this same repository is independently read and either reaches ACCEPT
+      or produces a new, different, honestly-recorded finding.
+    next_step: dispatch a fresh hosted run (facts + present, lane R) for aspose-cells-foss/
+      Aspose.Cells-FOSS-for-Rust and read review_verdict.json and the bundle's no_op_proof
+      directly; only then does this card's status become DONE.
+
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
     priority: highest

@@ -266,7 +266,14 @@ class RenderContext:
         if not wrapped:
             return text
         pattern = "|".join(re.escape(token) for token in sorted(wrapped, key=len, reverse=True))
-        compiled = re.compile(rf"(?<![`\w.])(?:{pattern})(\(\))?(?![`\w])")
+        # Boundaries exclude a colon on either side, the same way a dot already is on the left:
+        # a Rust/C++ `Namespace::Member` compound where only one half is a known token (measured
+        # live on aspose-cells-foss/Aspose.Cells-FOSS-for-Rust's independent review, finding F01 --
+        # "CellsError" alone is a registered public_symbol, "Unsupported" is not, so the old
+        # boundary let "CellsError" match with "::Unsupported" right behind it, wrapping only the
+        # known half and leaving a broken code span: `` `CellsError`::Unsupported ``) must render
+        # fully plain rather than half-wrapped, the same choice already made for a dotted compound.
+        compiled = re.compile(rf"(?<![`\w.:])(?:{pattern})(\(\))?(?![`\w:])")
         pieces = re.split(r"(`[^`\n]*`)", text)
         return "".join(
             piece if index % 2 else compiled.sub(lambda m: f"`{m.group(0)}`", piece)
