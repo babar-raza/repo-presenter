@@ -85,7 +85,12 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: "21"
+          # A floating "21" resolves to the latest available patch at request time, not a fixed
+          # one: measured live (hosted runs 40635877718 and 40636304596, four minutes apart) as
+          # 21.0.12.1 then 21.0.13, each embedded verbatim in every example's compiled-against
+          # receipt (java_examples.py) -- so a Java candidate could never reach the no-op proof.
+          # Pinned exactly, like the .NET SDK below.
+          java-version: "21.0.12"
 
       - name: Build the facts
         env:

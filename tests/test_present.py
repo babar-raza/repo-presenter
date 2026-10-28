@@ -725,6 +725,40 @@ def test_widening_the_facts_job_token_fails_the_structure_check() -> None:
         assert_facts_job_is_unprivileged(workflow)
 
 
+_TOOLCHAIN_VERSION_KEYS = {
+    "setup-dotnet": "dotnet-version",
+    "setup-java": "java-version",
+    "setup-go": "go-version",
+    "setup-node": "node-version",
+}
+
+
+def test_every_toolchain_step_pins_an_exact_patch_version() -> None:
+    """A bare major version (e.g. java-version: '21') resolves to whatever patch is latest at
+    request time, not a fixed one: measured live (hosted runs 40635877718 and 40636304596, four
+    minutes apart) resolving to 21.0.12.1 then 21.0.13, each embedded verbatim in every example's
+    compiled-against receipt -- so a candidate whose example verifier records the live toolchain
+    version can never reach the byte-identical no-op proof. Every pin must name at least three
+    dot-separated numeric components (major.minor.patch), the same shape as the already-correct
+    .NET pin ("10.0.204")."""
+    workflow = _load_workflow()
+    facts = workflow["jobs"]["facts"]
+    found_any = False
+    for step in facts["steps"]:
+        uses = str(step.get("uses", ""))
+        action = next((name for name in _TOOLCHAIN_VERSION_KEYS if name in uses), None)
+        if action is None:
+            continue
+        found_any = True
+        key = _TOOLCHAIN_VERSION_KEYS[action]
+        version = str(step.get("with", {}).get(key, ""))
+        parts = version.split(".")
+        assert len(parts) >= 3 and all(part.isdigit() for part in parts[:3]), (
+            f"{action}'s {key}={version!r} is not pinned to an exact patch version"
+        )
+    assert found_any, "expected at least one toolchain step to check"
+
+
 def test_a_toolchain_step_in_the_present_job_fails_the_structure_check() -> None:
     workflow = _load_workflow()
     workflow["jobs"]["present"]["steps"].insert(
