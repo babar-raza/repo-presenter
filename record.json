@@ -5,7 +5,7 @@
   "provider_repository_id": 1280393633,
   "registry_revision": null,
   "active_transaction_id": "3c76d49492124f1e8bbc12e86c591a8b",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "PresentFailure: Lane L: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the README marks 'SVG' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the README marks 'PNG' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim); Lane L left 2 defect(s) it may not repair (format_overclaim line 43: the README marks 'SVG' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim; format_overclaim line 44: the README marks 'PNG' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim); Lane R is the recommended lane for this repository",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-28T05:10:07.664539+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:40636309634",
     "acquired_at": "2026-10-28T05:10:04.937034+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-10-28T05:25:04.937034+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "d7cce83150f24f54975b2720ebaf0ad4",
+    "transaction_id": "3c76d49492124f1e8bbc12e86c591a8b",
+    "repository": "aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-28T05:10:07.324327+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python",
+    "output_manifest": "candidates/aspose-barcode-foss__Aspose.BarCode-FOSS-for-Python/lane-l/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:40636309634:aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python": "3c76d49492124f1e8bbc12e86c591a8b"
   },
