@@ -230,6 +230,26 @@ def test_a_version_scoped_not_published_claim_is_true_and_not_flagged() -> None:
     assert claim_findings(readme, facts) == []
 
 
+def test_a_version_scoped_disclaimer_is_not_defeated_by_an_unrelated_later_version_mention() -> (
+    None
+):
+    """The real hosted sentence (run 40679544351): one long, em-dash-joined sentence whose
+    trailing clause names the actual published version (26.7.0) for an unrelated reason (when a
+    feature shipped), not as part of the publication claim. Scanning the whole sentence for any
+    version wrongly saw that later 26.7.0 and refused the exemption; only text near the "not
+    published" phrase itself should be read as naming what it disclaims."""
+    readme = (
+        "## Installation\n\n"
+        "This source tree is `26.8.0`, not yet released to Maven Central — the save-format "
+        "refusal described under Scope and Limitations is also new in 26.8.0, not in 26.7.0.\n"
+    )
+    facts = _facts(
+        _fact("package:name", "package", "aspose_slides_foss_java"),
+        _fact("package:published_version", "package", "26.7.0", "current stable release"),
+    )
+    assert claim_findings(readme, facts) == []
+
+
 def test_a_blanket_not_published_claim_beside_a_named_different_version_is_still_flagged() -> None:
     """Negative control: naming a version must not become a blanket exemption -- a sentence that
     also claims the package itself is unavailable, with no version named for that claim, is
