@@ -19,9 +19,9 @@
   "proposal": null,
   "failure": {
     "classification": "validation_failed",
-    "detail": "PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-12; nothing sealed",
+    "detail": "PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (code block 'add_subdirectory(Aspose.Cells.Foss.Cpp)')",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-10-28T16:41:13.906601+00:00",
+    "occurred_at": "2026-10-28T17:10:42.492110+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 19,
+  "state_version": 20,
   "recent_trigger_dedup_keys": {
     "run:40555595204:aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp": "a355a427933a4c5e8d543429f22050e0",
     "run:40571540396:aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp": "886cefd3f4934c8b90359a383ef158f6",
