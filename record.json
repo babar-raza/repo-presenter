@@ -5,7 +5,7 @@
   "provider_repository_id": 1213521112,
   "registry_revision": null,
   "active_transaction_id": "1ad135f9d5d6476abb2eda7682ee94e2",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "PresentFailure: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (heading 'Project Structure'); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (code block '├── src/main/java/org/aspose/cells_foss/  # Public')",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-28T16:19:29.690752+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:40723588078",
     "acquired_at": "2026-10-28T16:13:04.664930+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-10-28T16:28:04.664930+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "64988bde52924f9fbf3f3e03690654ac",
+    "transaction_id": "1ad135f9d5d6476abb2eda7682ee94e2",
+    "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Java",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-28T16:19:29.133300+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-cells-foss/Aspose.Cells-FOSS-for-Java",
+    "output_manifest": "candidates/aspose-cells-foss__Aspose.Cells-FOSS-for-Java/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:40723588078:aspose-cells-foss/Aspose.Cells-FOSS-for-Java": "1ad135f9d5d6476abb2eda7682ee94e2"
   },
