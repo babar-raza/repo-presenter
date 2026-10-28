@@ -719,3 +719,81 @@ artifacts.
 (3 new tests: C++ package match, Go link_target match, negative control); `project/state.yaml`'s
 `INDEPENDENT_LLM_REVIEWER.hosted_run_log` (the run IDs and the supervisor's own re-run record); evidence read
 from `C:\Users\babar\AppData\Local\Temp\cohort2\{40571540396,40571532257,40571547837}\`.
+
+---
+
+## 2026-10-28: A structural blocking check gets the same bounded repair chance an S4 defect gets; the root cause was a routing gap, not a masking repair
+
+**Decision**: widen `cascade.py`'s S9 settle loop (renamed `_s4_defects`/`_repair_s4` to
+`_settle_defects`/`_repair_defects`) so it attempts a repair for ANY `validation_defects` result
+whose causal stage `repair_defect` (`readme/repair/loop.py`) actually dispatches on — S4
+reconciliation, S5 planning, or S6 authoring — instead of only S4. The filter is now
+`defect.repairable` (`stage is not None`), the identical test `_review_defects` already applies to
+the reviewer's own S10 findings; BC-12 (and any other structural check) is never loosened or
+bypassed — `validate_candidate` still judges the recomposed README exactly as before.
+
+**Why**: a real hosted re-run (aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, run 40679621466) failed
+BC-12 ("product-name position spells the canonical name") in `development_testing`, and
+`present.py` reported the run never reached the independent reviewer. The puzzle: the FIRST run of
+the same repository (40571540396) reached the reviewer and reported a REJECT from `live_readme_loss`
+instead, never mentioning BC-12 — and the only code change between the two runs relevant to this
+repository/path is commit `48995fe` (a dispositions.py citation backfill fold, touching nothing in
+`structure.py`/`blocking.py`). Downloaded and diffed BOTH runs' full artifact sets (`gh run download
+40571540396`, `40679621466`) to prove the cause rather than guess it:
+- `README.coherent.md` line 211 is **byte-for-byte identical** in both runs ("Aspose.Cells FOSS for
+  C++ is published on NuGet as `Aspose.Cells.Cpp.FOSS`...").
+- `validation.json`'s BC-12 record is **identical** in both runs: `FAIL`, `development_testing`,
+  `"product name 'Aspose.Cells FOSS' is not the canonical name 'Aspose.Cells FOSS for Cpp'"`.
+- `repairs.json` (run1 only; run2 had none at the point of failure) shows exactly ONE attempt,
+  `disposition_coverage:0`, stage `S4` — BC-12 was never attempted in either run.
+- `review_verdict.json` in run1 carries `"source": "deterministic"`, `"model_served": null`,
+  `"reason": "2 deterministic finding(s) block"` — this is `review_candidate`'s own deterministic
+  pre-screen verdict (S9's `live_readme_loss`/`disposition_coverage` rules), NOT the LLM reviewer.
+  Run2's equivalent file is `"verdict": "ACCEPT"`, `"findings": []`, also `model_served: null` — the
+  pre-screen found nothing (commit `48995fe` fixed its one real defect), but the LLM was still never
+  asked, because `run_cascade`'s own outer loop guards S10 with
+  `while not verdict.blocking_findings and not blocking_failures(settled.validation)`, and
+  `blocking_failures(validation)` is non-empty (BC-12) in BOTH runs.
+
+So BC-12 was blocking, identically, in both runs, every round, from the first pass onward — it was
+never masked by a repair, never fixed and re-broken, and no check ordering or caching differed.
+The only thing that differed is which `present.py` message surfaced: `_cascade_and_seal` raises on
+the FIRST failing condition it finds — `verdict.verdict != "ACCEPT"` — and run1's deterministic
+pre-screen found its own (real, separate, now-fixed) REJECT first, so the message named
+`live_readme_loss` and never reached the second condition (`not verdict.model_reviewed`, which
+names the still-failing blocking checks) that would have named BC-12. Run2's pre-screen passed
+(ACCEPT, 0 findings), so for the first time the message fell through to the second condition and
+finally named BC-12 — a defect that had been there, unrepaired and unreported by name, since before
+Bug 1 was ever fixed.
+
+The real, generalizable gap `cascade.py`'s own code confirmed this against: `_s4_defects` computed
+every `validation_defects` result (which already routes a `COMPOSING`-stage check naming an
+LLM-owned section to `S6`, exactly as `repair_defect` can revise) and then threw away everything
+except `stage == "S4"` before ever calling `_repair_defects`. BC-12 is no different in kind from an
+S4 disposition-citation defect or a reviewer's own S6 finding — `repair_defect` already dispatches
+all three stages identically — but the S9 settle loop only ever gave the S4 shape a bounded repair
+attempt. The outer S10 loop cannot make up the difference either: it depends on
+`blocking_failures(validation)` already being empty before the model is even asked, so a non-S4
+blocking check had no path to a bounded repair anywhere in the cascade.
+
+**What this does NOT decide**: the real "C++" vs "Cpp" text in the repository's own fixtures was
+never hand-edited (per the task's own constraint) — the fix is routing, not a text patch, and BC-12
+itself is unchanged. `readme/repair/loop.py::settle_candidate` (a separate, currently-unwired
+wrapper around `run_cascade` that `present.py` does not call) has the same restriction — it builds
+defects only from the reviewer's verdict, never from `validation_defects` — left as a known,
+out-of-scope follow-up since it is not on the path that produced either hosted run. No sealed
+candidate is affected: `candidates/` holds exactly one sealed bundle
+(`aspose-3d-foss__Aspose.3D-FOSS-for-.NET@52b0f00e`), unrelated to this repository and this check,
+and this change only widens which defects get a repair *attempt* inside the cascade — it cannot
+change what `validate_candidate`/`seal_candidate` ultimately accept.
+
+**Where the detail lives**: `src/repo_presenter/cascade.py` (`_settle_defects`, `_repair_defects`,
+and the module docstring); `tests/test_cascade_s9.py`
+(`test_a_failure_routed_to_any_of_s4_s5_s6_reaches_the_settle_repair`, extended with a real BC-12
+case; two new end-to-end tests: `test_a_structural_defect_is_now_repaired_the_same_way_an_s4_defect_is`
+— the falsifier, reverting the filter to `stage == "S4"` makes all three fail — and
+`test_a_repair_that_still_fails_bc12_blocks_again_and_is_never_retried`, the negative control
+proving BC-12 is never loosened: a repair accepted by `unit_checks` but still spelling the name
+wrong is recorded `repaired` yet re-raises and blocks again, never retried a second time); evidence
+read from `gh run download 40571540396`/`40679621466` (both runs' full artifact sets, not committed,
+read from the session scratchpad).

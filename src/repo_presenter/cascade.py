@@ -29,10 +29,16 @@ findings. A review that cannot be obtained raises ``ReviewUnavailable``.
 
 S4 runs ``dispositions.normalize`` as the reconciliation job's own checks, and S9 follows the render:
 the kept units the renderer did not print are accounted (``readme.repair.accounting``), the ported
-blocking checks run (``validation.json``), and a failure whose cause is S4 is repaired as a per-unit
-patch and the cascade runs again from the call store, at most ``max_rounds`` passes, all under the
-one invocation. Measured on aspose-3d-foss/Aspose.3D-FOSS-for-.NET (hosted run 40464255814): the
-reviewer's twelve findings on kept-but-unprinted units stood because neither step existed.
+blocking checks run (``validation.json``), and a failure whose causal stage any of S4/S5/S6 names is
+repaired by that stage's own revision (a per-unit reconciliation patch, a plan revision, or a section
+revision -- ``readme.repair.loop.repair_defect``'s own dispatch) and the cascade runs again from the
+call store, at most ``max_rounds`` passes, all under the one invocation. Measured on
+aspose-3d-foss/Aspose.3D-FOSS-for-.NET (hosted run 40464255814): the reviewer's twelve findings on
+kept-but-unprinted units stood because neither step existed. A second measurement, aspose-cells-foss/
+Aspose.Cells-FOSS-for-Cpp (hosted runs 40571540396, 40679621466): a structural check (BC-12, causal
+stage COMPOSING/S6) failed identically both runs and was never attempted here at all, because this
+loop used to repair S4 defects only -- widened to every stage ``repair_defect`` supports, the same
+``defect.repairable`` test S10's own repair routing already applies.
 """
 
 from __future__ import annotations
@@ -409,13 +415,29 @@ def _compose(
     )
 
 
-def _s4_defects(
+def _settle_defects(
     *, composed: _Composition, validation: dict[str, Any], verdict: ReviewVerdict,
     entry: RegistryEntry, document: FactsDocument, prompts: PromptRegistry,
 ) -> list[Defect]:
-    """The defects of this pass that a revision of S4 can repair: the failing blocking checks
-    whose cause is reconciliation, and the reviewer's findings on a kept unit
-    (``review.defect_bridge``)."""
+    """The defects of this pass that ``repair_defect`` (``readme.repair.loop``) may act on: every
+    failing blocking check, routed to whichever causal stage it names -- S4 reconciliation, S5
+    planning, or S6 authoring, exactly the three ``repair_defect`` dispatches on -- and the
+    (deterministic) reviewer's own findings on a kept unit (``review.defect_bridge``).
+
+    Not S4 alone: a structural check (e.g. BC-12, causal stage COMPOSING/S6) that names an
+    LLM-owned section is exactly as repairable as an S4 disposition defect, and the two hosted
+    aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp runs (40571540396, 40679621466) proved what
+    withholding that chance costs: BC-12 failed identically on 'development_testing' every round
+    of both runs (confirmed from each run's own downloaded validation.json), yet was computed by
+    ``validation_defects`` and then silently discarded here before a repair was ever attempted --
+    the only reason one run's failure message named a different (also real, now-fixed) defect
+    instead of BC-12 is that ``present.py`` raises on the first blocking condition it finds, not
+    that BC-12 ever had a repair chance in either run. The outer S10 loop cannot make up the
+    difference either: ``run_cascade`` never even calls the model while a blocking check fails, so
+    a non-S4 blocking check had no path to a bounded repair at all. A non-repairable stage (S3, or
+    none) still falls out exactly as before -- this only widens which *repairable* stages reach
+    the loop, the same ``defect.repairable`` test ``_review_defects`` already applies to the
+    reviewer's own findings."""
     repairer = prompts["targeted_repair"].sha256
     units = composed.coherent_units.get("units", [])
     llm_sections = {str(unit["section"]) for unit in units if unit.get("section")}
@@ -431,17 +453,20 @@ def _s4_defects(
             repairer=repairer,
         ),
     ]
-    return [defect for defect in found if defect.stage == "S4"]
+    return [defect for defect in found if defect.repairable]
 
 
-def _repair_s4(
+def _repair_defects(
     *, defects: list[Defect], composed: _Composition, investigation: dict, entry: RegistryEntry,
     document: FactsDocument, prompts: PromptRegistry, config: GatewayConfig, ledger: Ledger,
     store: CallStore, context: JobContext, repairs: RepairLedger,
 ) -> bool:
-    """One targeted repair per fresh S4 defect, each a ``run_job`` call (``repair.loop``'s
-    per-unit patch). True when a stored S4 batch changed, which is what makes another pass
-    worth making."""
+    """One targeted repair per fresh defect, each a ``run_job`` call routed by its own causal
+    stage (``repair.loop.repair_defect``: S4's per-unit patch, S5's plan revision, or S6's section
+    revision). True when a stored stage output changed, which is what makes another pass worth
+    making. Already stage-agnostic before this fix -- ``run_cascade``'s own S10 loop already calls
+    this with S4/S5/S6 defects from ``_review_defects``; only its *caller inside the S9 settle
+    loop* (``_settle_defects``, née ``_s4_defects``) used to withhold everything but S4."""
     from repo_presenter.readme.repair.loop import RepairContext, repair_defect
 
     rc = RepairContext(
@@ -496,11 +521,11 @@ def _settle_s9(
         write_review_verdict(verdict, out_dir / REVIEW_VERDICT_FILENAME)
         if rounds >= max_rounds:
             break
-        defects = _s4_defects(
+        defects = _settle_defects(
             composed=composed, validation=validation, verdict=verdict, entry=entry,
             document=document, prompts=prompts,
         )
-        if not defects or not _repair_s4(
+        if not defects or not _repair_defects(
             defects=defects, composed=composed, investigation=investigation, entry=entry,
             document=document, prompts=prompts, config=config, ledger=ledger, store=store,
             context=context, repairs=repairs,
@@ -626,7 +651,7 @@ def run_cascade(
             settled=settled, verdict=verdict, entry=entry, document=document, prompts=prompts,
             repairs=repairs,
         )
-        if not defects or not _repair_s4(
+        if not defects or not _repair_defects(
             defects=defects, composed=settled.composed, investigation=investigation, entry=entry,
             document=document, prompts=prompts, config=config, ledger=ledger, store=store,
             context=context, repairs=repairs,

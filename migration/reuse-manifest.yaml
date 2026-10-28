@@ -3448,3 +3448,53 @@ entries:
       propose/effect.py (not touched: another change owns it) reads Lane R's CURRENT only. No Lane L recheck
       runner (recheck_bundle is unported for both lanes). The old engine's claim_* and additions detectors, and
       settle.py, are not ported.
+
+  - component: "cascade.py S9 settle loop: a structural blocking check (BC-12) now gets the same bounded repair chance an S4 defect gets (docs/DECISION_LOG.md 2026-10-28)"
+    source: this-repository
+    evaluated_at_shas: ["9576df8"]
+    per_file:
+      "src/repo_presenter/cascade.py (_s4_defects/_repair_s4 -> _settle_defects/_repair_defects)": "FIX. Read in full, including both call sites (the S9 settle loop and S10's outer repair loop). Root cause proven from both hosted runs' downloaded artifacts (aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, 40571540396 and 40679621466), not guessed: BC-12 fails identically in both runs' validation.json, on the byte-identical README.coherent.md line, every round -- it was never masked by a repair in run1. The real gap was `_s4_defects`'s own filter (`defect.stage == 'S4'`), which discarded every `validation_defects` result whose stage was S5/S6 before a repair was ever attempted, even though `repair_defect` (readme/repair/loop.py) already dispatches S4/S5/S6 identically for a reviewer's own S10 finding (via `_review_defects`'s `defect.repairable` filter). Widened to the same `defect.repairable` test; renamed both functions (the old S4-only names were already inaccurate, since `_repair_s4` is also called from the S10 outer loop with mixed-stage review defects). BC-12 itself (structure.py::canonical_name_failures) is untouched -- it still judges the recomposed README on every pass, exactly as before."
+    blast_radius: >
+      Queried before the change: candidates/ holds exactly one sealed bundle
+      (aspose-3d-foss__Aspose.3D-FOSS-for-.NET@52b0f00e, READY_FOR_PROPOSAL), a different repository
+      and not implicated by this check at all -- this change cannot affect it, since it only widens
+      which defects get a repair *attempt* inside run_cascade before validate_candidate/
+      seal_candidate judge the result, and neither of those two functions changed. Checked every
+      BC-xx judge in readme/validation/blocking.py for which causal_stage its own Failure objects
+      can carry (via STATE_STAGES: INVESTIGATING/S3, RECONCILING/S4, PLANNING/S5, COMPOSING/S6):
+      BC-04 (unit_failures, COMPOSING), BC-05 (disposition_failures, RECONCILING/PLANNING/
+      COMPOSING), BC-07 (structure_failures, COMPOSING), BC-12 (canonical_name_failures,
+      COMPOSING), and BC-03/BC-06 (example_failures/link_failures, PLANNING) can all report an
+      S5/S6-mappable causal stage, the exact same shape BC-12 hit -- every one of them was equally
+      silently dropped by the old filter whenever that stage named an LLM-owned section, and all
+      now get the same bounded repair chance. No sealed candidate, no committed fixture, and no
+      already-accepted test behavior changed: the one existing test this touched (renamed
+      `test_a_failure_routed_to_any_of_s4_s5_s6_reaches_the_settle_repair`) used a BC-07 failure
+      with `section_id: None`, which routes to no LLM-owned section either way and still falls out
+      after the fix -- extended in place, not weakened, to also prove a
+      section-bearing BC-12 case now survives the filter.
+    evidence: >
+      tests/test_cascade_s9.py: the extended routing test
+      (test_a_failure_routed_to_any_of_s4_s5_s6_reaches_the_settle_repair) proves _settle_defects
+      now returns both an S4 (BC-05) and an S6 (BC-12) defect from one validation.json, while a
+      BC-07 with no section still falls out. Two new end-to-end tests drive the real run_cascade
+      over a scripted BC-12 violation in scope_limitations ("Aspose.Widget FOSS for Py", a tail
+      that canonicalise_name_variants deliberately does not auto-correct, matching the real "for
+      C++"/"for Cpp" shape exactly): test_a_structural_defect_is_now_repaired_the_same_way_an_s4_
+      defect_is shows the defect is now attempted, repaired via the S6 section-authoring mechanism,
+      and BC-12 passes on the recomposed README; test_a_repair_that_still_fails_bc12_blocks_again_
+      and_is_never_retried is the negative control proving BC-12 is never loosened -- a repair that
+      satisfies unit_checks but still spells the name wrong is recorded "repaired" (the repair's own
+      checks do not re-judge BC-12) yet is re-raised and blocked again by validate_candidate's own
+      next-pass BC-12, and its one spent fingerprint is never retried. Falsifier: reverting the
+      filter back to `defect.stage == "S4"` makes all three tests fail (confirmed). Full suite:
+      PYTHONPATH=src python -m pytest -q, before and after, both green (counts in the commit).
+    not_yet_done: >
+      readme/repair/loop.py::settle_candidate (a separate, currently-unwired wrapper around
+      run_cascade that present.py never calls) has the identical restriction -- it builds defects
+      only from the reviewer's own verdict (build_defects), never from validation_defects at all --
+      left untouched since it is not on the path that produced either hosted run; a future card
+      should decide whether it is still needed alongside run_cascade's own S9/S10 loops or should be
+      retired. No fresh hosted re-run of Aspose.Cells-FOSS-for-Cpp was dispatched to confirm BC-12
+      now gets repaired live (this project's own live-provider-call constraint for this diagnosis);
+      the fix is proven offline against the downloaded evidence and a fresh scripted reproduction.

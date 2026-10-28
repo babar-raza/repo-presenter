@@ -17,7 +17,7 @@ from typing import Any
 import pytest
 
 import repo_presenter.cascade as cascade_module
-from repo_presenter.cascade import _run_reconciliation, _s4_defects, run_cascade
+from repo_presenter.cascade import _run_reconciliation, _settle_defects, run_cascade
 from repo_presenter.core.facts import Evidence, Fact, FactsDocument, write_facts
 from repo_presenter.core.llm import jobs as jobs_module
 from repo_presenter.core.llm.jobs import CallStore, JobContext
@@ -25,7 +25,11 @@ from repo_presenter.core.llm.ledger import Ledger, load_records
 from repo_presenter.core.llm.prompts import load_manifests
 from repo_presenter.extractors.platforms.registry import plugin_for
 from repo_presenter.readme.composition.authoring import merge_units
-from repo_presenter.readme.repair.targeted import REPAIRS_FILENAME, RepairLedger
+from repo_presenter.readme.repair.targeted import (
+    REPAIRS_FILENAME,
+    RepairLedger,
+    validation_defects,
+)
 from repo_presenter.readme.review.defect_bridge import build_defects
 from repo_presenter.readme.review.independent_reviewer import (
     ReviewVerdict,
@@ -445,9 +449,17 @@ def test_a_defect_is_attempted_once_and_a_refused_repair_is_never_retried(
     )
 
 
-def test_only_a_failure_whose_cause_is_reconciliation_reaches_the_s4_repair(
+def test_a_failure_routed_to_any_of_s4_s5_s6_reaches_the_settle_repair(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    """The real hosted gap (aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, runs 40571540396 and
+    40679621466): BC-12 failed identically both runs with causal_stage COMPOSING on
+    'development_testing', an LLM-owned section -- ``validation_defects`` routes that to S6, the
+    same stage ``repair_defect`` already revises a reviewer's own S6 finding by, yet the settle
+    loop discarded every non-S4 defect before a repair was ever attempted. A BC-07 failure naming
+    no section (``section_id: None``) still cannot be routed to any LLM-owned section and so still
+    falls out -- this proves the fix widens which *repairable* stage reaches the loop, not that
+    everything now repairs."""
     run = _Run(tmp_path, monkeypatch)
     first = run.first_pass()
     composed = SimpleNamespace(
@@ -483,10 +495,25 @@ def test_only_a_failure_whose_cause_is_reconciliation_reaches_the_s4_repair(
                     {"section_id": None, "causal_stage": "COMPOSING", "detail": "y"}
                 ],
             },
+            {
+                "id": "BC-12",
+                "name": "Every product-name position spells the registry's canonical "
+                "product name",
+                "verdict": "FAIL",
+                "causal_stage": "COMPOSING",
+                "details": ["product name 'Widget FOSS' is not the canonical name"],
+                "failures": [
+                    {
+                        "section_id": "opening",
+                        "causal_stage": "COMPOSING",
+                        "detail": "product name 'Widget FOSS' is not the canonical name",
+                    }
+                ],
+            },
         ],
     }
     no_findings = ReviewVerdict(verdict="ACCEPT", findings=())
-    defects = _s4_defects(
+    defects = _settle_defects(
         composed=composed,
         validation=validation,
         verdict=no_findings,
@@ -495,5 +522,138 @@ def test_only_a_failure_whose_cause_is_reconciliation_reaches_the_s4_repair(
         prompts=load_manifests(PROMPTS_PATH),
     )
     assert [(d.source, d.label, d.stage) for d in defects] == [
-        ("validation", "BC-05", "S4")
+        ("validation", "BC-05", "S4"),
+        ("validation", "BC-12", "S6"),
     ]
+
+
+# --- S9: a BC-12 structural defect now gets the same bounded repair chance as S4 -----------------
+
+# scope_limitations, not opening: the opening paragraph sits before the shell's first "## "
+# heading, so ``validation/text.py::located`` can never attribute a failure in it to a section
+# (always None, by this shell's own design) -- not an LLM-owned section ``validation_defects`` can
+# route to, regardless of this fix. scope_limitations has a real heading, exactly like the real
+# hosted finding's own section ('development_testing').
+_SCOPE_SLOT_INDEX = 4
+_BC12_TEXT = "Aspose.Widget FOSS for Py avoids any native build dependency for the reader."
+_BC12_FIXED_TEXT = "The library avoids any native build dependency for the reader."
+_BC12_STILL_WRONG_TEXT = "Aspose.Widget FOSS for Py requires no native build dependency at all."
+
+
+def _scope_reply_with_text(text: str) -> dict[str, Any]:
+    reply = json.loads(json.dumps(_AUTHORING_REPLIES[_SCOPE_SLOT_INDEX]))
+    reply["units"][0]["text"] = text
+    return reply
+
+
+def _replies_with_scope_text(text: str) -> list[dict[str, Any]]:
+    """The fixture's 9 replies, with the scope_limitations unit's text replaced and the coherence
+    batch's own echo rebuilt from that same text -- the violation must survive coherence
+    unchanged, or it would never reach BC-12 at all."""
+    replies = _first_replies()
+    scope = _scope_reply_with_text(text)
+    replies[3 + _SCOPE_SLOT_INDEX] = scope
+    authoring = [*replies[3:7], scope]
+    merged = merge_units(dict(zip(LABELS, authoring, strict=True)))
+    replies[8] = {"units": merged["units"], "omitted": []}
+    return replies
+
+
+def _bc12_defect(run: _Run) -> Any:
+    validation = run.json("validation.json")
+    units = run.json("content_units.coherent.json")["units"]
+    llm_sections = {str(unit["section"]) for unit in units if unit.get("section")}
+    prompts = load_manifests(PROMPTS_PATH)
+    [defect] = [
+        d
+        for d in validation_defects(validation, llm_sections, prompts["targeted_repair"].sha256)
+        if d.label == "BC-12"
+    ]
+    return defect
+
+
+def _bc12_repair_reply(fingerprint: str, before: str, after: str) -> dict[str, Any]:
+    scope = _scope_reply_with_text(after)["units"]
+    return {
+        "causal_stage": "S6",
+        "fingerprint": fingerprint,
+        "revised_output": {"units": scope, "omitted": []},
+        "changes": [
+            {"id": "R01", "path": "units[0].text", "before": before, "after": after, "fact_ids": []}
+        ],
+    }
+
+
+def _bc12_coherence_echo(text: str) -> dict[str, Any]:
+    authoring = [*_AUTHORING_REPLIES[:_SCOPE_SLOT_INDEX], _scope_reply_with_text(text)]
+    merged = merge_units(dict(zip(LABELS, authoring, strict=True)))
+    return {"units": merged["units"], "omitted": []}
+
+
+def test_a_structural_defect_is_now_repaired_the_same_way_an_s4_defect_is(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The falsifier for the real hosted gap: before this fix, a BC-12 structural failure got no
+    repair attempt at all (``_s4_defects`` dropped every non-S4 stage), so ``repairs.json`` stayed
+    empty and the candidate was permanently BLOCKED on the first pass, exactly as both hosted
+    Aspose.Cells-FOSS-for-Cpp runs (40571540396, 40679621466) show. After the fix the same
+    structural finding gets ONE bounded repair attempt, by the same ``S6`` section-authoring
+    mechanism a reviewer's own finding already used -- never loosening BC-12 itself, which still
+    judges the recomposed README on its own next pass."""
+    run = _Run(tmp_path, monkeypatch)
+    first = run.first_pass(_replies_with_scope_text(_BC12_TEXT))
+    bc12 = next(c for c in run.json("validation.json")["checks"] if c["id"] == "BC-12")
+    assert bc12["verdict"] == "FAIL"
+    assert first.rounds == 1
+    assert not (run.out / REPAIRS_FILENAME).exists()  # max_rounds=1: no attempt is made yet
+    defect = _bc12_defect(run)
+    assert defect.stage == "S6"
+
+    client = run.script(
+        [
+            _bc12_repair_reply(defect.fingerprint, _BC12_TEXT, _BC12_FIXED_TEXT),
+            _bc12_coherence_echo(_BC12_FIXED_TEXT),
+        ]
+    )
+    second = run.cascade()
+
+    assert client.chat.completions.replies == []
+    assert second.rounds == 2
+    attempt = RepairLedger(run.out / REPAIRS_FILENAME).attempts[defect.fingerprint]
+    assert (attempt["outcome"], attempt["stage"]) == ("repaired", "S6")
+    written = run.json("validation.json")
+    assert next(c for c in written["checks"] if c["id"] == "BC-12")["verdict"] == "PASS"
+    assert _BC12_FIXED_TEXT in (run.out / "README.coherent.md").read_text(encoding="utf-8")
+
+
+
+
+def test_a_repair_that_still_fails_bc12_blocks_again_and_is_never_retried(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Negative control: BC-12 is never loosened to make the repair's own acceptance easier. The
+    repair's checks (``unit_checks``, same as authoring) do not re-run BC-12 -- that is
+    ``validate_candidate``'s job, on the README the NEXT pass recomposes from the repaired text.
+    A reworded reply that still spells the name wrong genuinely changes the text (so it is not a
+    no-op) and satisfies ``unit_checks``, so the repair ledger truthfully records it as
+    'repaired' -- but BC-12 itself still fails on the recomposed README, the defect is re-raised,
+    and its one spent fingerprint is never given a second attempt."""
+    run = _Run(tmp_path, monkeypatch)
+    first = run.first_pass(_replies_with_scope_text(_BC12_TEXT))
+    defect = _bc12_defect(run)
+
+    client = run.script(
+        [
+            _bc12_repair_reply(defect.fingerprint, _BC12_TEXT, _BC12_STILL_WRONG_TEXT),
+            _bc12_coherence_echo(_BC12_STILL_WRONG_TEXT),
+        ]
+    )
+    second = run.cascade()
+
+    assert client.chat.completions.replies == []
+    assert second.rounds == 2
+    attempt = RepairLedger(run.out / REPAIRS_FILENAME).attempts[defect.fingerprint]
+    assert attempt["outcome"] == "repaired"  # the repair's own checks do not judge BC-12
+    assert attempt["re_raised"] == [defect.label]  # but it blocks again the very next pass
+    bc12 = next(c for c in run.json("validation.json")["checks"] if c["id"] == "BC-12")
+    assert bc12["verdict"] == "FAIL"  # validate_candidate's own BC-12 was never weakened
