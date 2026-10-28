@@ -46,6 +46,8 @@ from repo_presenter.readme.composition.renderer import (
     collapse_document_blank_runs,
     render_readme,
 )
+from repo_presenter.readme.reconciliation.patch import failing_units
+from repo_presenter.readme.repair.targeted import validation_defects
 from repo_presenter.readme.validation import units as unit_checks_module
 from repo_presenter.readme.validation.blocking import (
     blocking_failures,
@@ -2985,6 +2987,57 @@ def test_bc07_routes_a_kept_sentence_whose_referent_was_dropped_to_reconciliatio
         "inherited_unit:002.paragraph is kept as written" in d
         for d in failing["details"]
     )
+    # The repair loop (reconciliation/patch.py::failing_units) reads unit_id as a field, never
+    # by parsing the sentence above back out of detail: the finding must carry it structurally.
+    reconciling = next(
+        f for f in failing["failures"] if f["causal_stage"] == "RECONCILING"
+    )
+    assert reconciling["unit_id"] == "inherited_unit:002.paragraph"
+
+
+def test_bc07s_reconciling_finding_now_routes_to_a_real_s4_patch_target(
+    tmp_path: Path,
+) -> None:
+    """Proven real gap (hosted Lane R run 40688097016, aspose-cells-foss/
+    Aspose.Cells-FOSS-for-Rust): BC-07's own dangling-'table below'-reference finding named its
+    inherited unit in the message text, yet the S4 patch router could not resolve a target because
+    ``Failure.unit`` was never set, and ``readme.reconciliation.patch.failing_units`` reads fields,
+    never prose. ``validation_defects`` must now carry a resolvable ``unit_id`` end to end."""
+    sentence = "The table below summarizes the supported surface."
+    facts = FactsDocument(
+        ENTRY.repository,
+        REVISION,
+        tuple(
+            Fact(f.id, f.kind, sentence, f.evidence, polarity=f.polarity)
+            if f.id == "inherited_unit:002.paragraph"
+            else f
+            for f in BASE_FACTS
+        ),
+    )
+    document = validate_candidate(_candidate(facts=facts), tmp_path, ())
+    defects = validation_defects(document, llm_sections=set())
+    bc07 = next(d for d in defects if d.label == "BC-07")
+    assert bc07.stage == "S4"
+    assert failing_units(bc07.record) == ["inherited_unit:002.paragraph"]
+
+    # Negative control: the sibling branch of the same check (an authored sentence whose dangling
+    # reference matches no inherited unit at all) must still name no unit, never fabricate one --
+    # it falls out of validation_defects as a COMPOSING/S6 defect with no resolvable S4 target.
+    composing_document = validate_candidate(
+        _candidate(_candidate().readme + "\n" + sentence + "\n"), tmp_path, ()
+    )
+    composing_check = _failed(composing_document, "BC-07")
+    assert composing_check["causal_stage"] == "COMPOSING"
+    assert all(
+        "unit_id" not in f
+        for f in composing_check["failures"]
+        if "dangling reference" in f["detail"]
+    )
+    composing_defects = validation_defects(
+        composing_document, llm_sections={"api_reference"}
+    )
+    composing_bc07 = next(d for d in composing_defects if d.label == "BC-07")
+    assert failing_units(composing_bc07.record) == []
 
 
 # ---- wave 3: BC-12 read a qualified name, a namespace and a path as the product name -----------

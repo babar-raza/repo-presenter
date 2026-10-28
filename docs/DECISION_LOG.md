@@ -797,3 +797,82 @@ proving BC-12 is never loosened: a repair accepted by `unit_checks` but still sp
 wrong is recorded `repaired` yet re-raises and blocks again, never retried a second time); evidence
 read from `gh run download 40571540396`/`40679621466` (both runs' full artifact sets, not committed,
 read from the session scratchpad).
+
+---
+
+## 2026-10-28: BC-07's own RECONCILING finding named its inherited unit in the message text but never carried it as a field, so the S4 patch router it was already wired into (`d2ca65b`, above) could never resolve a target
+
+**Decision**: `readme/validation/structure.py::_reference_failures` (BC-07, the "dangling
+`table below`/similar forward-reference" sub-check) now passes `unit=unit` to the `Failure` it
+already builds for the RECONCILING case, instead of only interpolating the same `unit` value into
+`detail`'s prose. No other file changes meaning: `Failure` (`validation/failures.py`) already
+declares a `unit` field for exactly this purpose ("the inherited unit a reconciliation failure is
+about... never prose parsed back out of `detail`"), `blocking.py::validate_candidate` already
+serialises `failure.unit` into the failure record's `unit_id` key when it is not `None`, and
+`reconciliation/patch.py::failing_units` already reads only that field — every downstream piece of
+plumbing this needed was already built (mostly today, by `71e54d5`/`5c68d19`/`4604b62`/`0f98ca2`/
+`d2ca65b`). `_reference_failures` computed the right unit, every time, and then silently dropped it
+on the floor before constructing the `Failure` — a one-keyword-argument gap, not a design gap.
+
+**Why**: a real hosted Lane R run (40688097016, aspose-cells-foss/Aspose.Cells-FOSS-for-Rust) was
+blocked by BC-07's finding `"inherited_unit:048.paragraph is kept as written but says 'table
+below' but no table follows it in this section: ...'"` (`causal_stage` RECONCILING). `repairs.json`
+showed stage-S4 routing already worked (`d2ca65b` wired it) but the one attempt was recorded
+`unrepairable`: `"no stored disposition of an inherited unit is named by this defect; a
+whole-batch revision would regenerate unrelated units"` — even though the finding's own `detail`
+text literally names `inherited_unit:048.paragraph`. The same defect shape was independently found
+the same day on this repository's Lane L run (a dangling "table below" reference), confirming a
+real, recurring README defect class, not a fluke.
+
+Traced the chain rather than guessing: `_repair_reconciliation` (`readme/repair/loop.py`) calls
+`_named_units`, which calls `patch.failing_units(defect.record)` first (a validation-source
+`Defect.record` has no `quote` field, so `_named_units`'s own quote-matching fallback — built for
+the reviewer's LLM findings, not validator findings — can never fire here; `failing_units` reading
+a field is the *only* path for this defect class). `failing_units` reads `failure.get("unit_id")`
+for each entry in `record["failures"]`. Those entries are exactly what `blocking.py::validate_candidate`
+serialises per `Failure`: `{"section_id": ..., "causal_stage": ..., "detail": ...,
+**({"unit_id": failure.unit} if failure.unit is not None else {})}`. `install.py`'s own BC-02
+reconciliation check (`Failure("RECONCILING", detail, unit=unit)`, line 282) already does this
+correctly, proving the field and the serialisation path both work and are exercised elsewhere —
+`structure.py`'s sibling check was simply the one call site that never threaded the value through,
+even though its own docstring already said "RECONCILING, naming the unit" and its own `unit`
+variable already held the right value two lines above the `Failure(...)` call that dropped it.
+
+**Why this is the fix and not a parsing shim**: the task's own framing asked whether the cleaner
+fix is a structural field on `Failure`/the check rather than parsing prose downstream. The field
+already exists, is already documented as the non-prose channel, and is already read exactly that
+way by `failing_units` and populated exactly that way by a sibling check — so the correct, smallest
+fix is wiring the one call site that forgot it, not adding a new field or any text-extraction logic
+anywhere. No prose parsing was added or needed.
+
+**Tests**: `tests/readme/validation/test_registry_checks.py`:
+`test_bc07_routes_a_kept_sentence_whose_referent_was_dropped_to_reconciliation` (existing) extended
+to assert the RECONCILING failure's own record now carries `unit_id ==
+"inherited_unit:002.paragraph"`, not only the prose `detail`. New test
+`test_bc07s_reconciling_finding_now_routes_to_a_real_s4_patch_target` drives the real production
+path end to end — `validate_candidate` → `readme.repair.targeted.validation_defects` →
+`readme.reconciliation.patch.failing_units` — and asserts the BC-07 defect now resolves to
+`["inherited_unit:002.paragraph"]` and routes `S4`. Its negative control: the same check's sibling
+branch (a dangling reference that matches no inherited unit, i.e. genuinely-authored prose) still
+serialises no `unit_id` and `failing_units` still returns `[]` — the fix never fabricates a target
+when none exists. Falsifier confirmed by hand: stashing the one-line `structure.py` change makes
+both the extended existing test and the new test fail with the exact symptom reported
+(`unit_id` missing / `failing_units` empty), restoring it makes both pass; `_named_units`'s and
+`patch_scope`'s own existing "names no unit" fallbacks (`tests/readme/reconciliation/test_patch.py`)
+were re-run unchanged and still pass, proving the fix adds a real target without weakening the
+"never fabricate" guard those tests already enforce.
+
+**What this does NOT decide**: `readme/repair/loop.py::settle_candidate`'s separate,
+currently-unwired `build_defects`/`review.defect_bridge` path (noted as a known follow-up in
+`d2ca65b`'s entry above) is untouched — this fix is in `structure.py`'s check itself, so both the
+wired `validate_candidate`/`validation_defects` path and any future caller of the check benefit
+identically; it was not necessary to touch `defect_bridge.py` (confirmed by reading it: it never
+parses a finding's own text for a unit id for any finding source — it only matches a structured
+`quote` field against `composition/placement.py`'s placed texts, which is the correct structural
+equivalent for the reviewer's LLM-finding shape and was already free of the bug this card fixes).
+No fresh hosted re-run of Aspose.Cells-FOSS-for-Rust was dispatched to confirm the repair now
+succeeds live (this project's live-provider-call constraint); the fix is proven offline against a
+reproduction of the exact finding text and the exact routing chain the hosted run exercised.
+
+**Where the detail lives**: `src/repo_presenter/readme/validation/structure.py`
+(`_reference_failures`); `tests/readme/validation/test_registry_checks.py`.

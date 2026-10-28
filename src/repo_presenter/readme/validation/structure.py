@@ -189,7 +189,16 @@ def _reference_failures(candidate: Candidate) -> list[Failure]:
     """A sentence that points at a table, list, example or section the README does not have
     (composition/references.py). A sentence a placed inherited unit carries was kept while its
     referent was dropped or moved, which only reconciliation can undo (RECONCILING, naming the
-    unit); any other sentence is authored prose, routed to the section that holds it (COMPOSING)."""
+    unit); any other sentence is authored prose, routed to the section that holds it (COMPOSING).
+
+    ``unit`` is passed to ``Failure``'s own ``unit`` field, not only interpolated into ``detail``:
+    a real hosted Lane R run (aspose-cells-foss/Aspose.Cells-FOSS-for-Rust, run 40688097016) hit a
+    RECONCILING finding here that named its unit in the message text yet the patch router
+    (``reconciliation/patch.py::failing_units``) read ``unit_id`` from ``Failure`` fields only --
+    by design (``validation/failures.py``'s ``Failure`` docstring: "never prose parsed back out of
+    ``detail``") -- so the one field this function forgot to set made the unit structurally
+    unnamed and the S4 patch repair fell back to "no stored disposition ... is named by this
+    defect", exactly as if the check had never known which unit it was."""
     placed = [
         (p.unit_id, normalized(p.text))
         for p in placements_of(candidate)
@@ -218,6 +227,7 @@ def _reference_failures(candidate: Candidate) -> list[Failure]:
                     f"{unit} is kept as written but {reference.reason}: "
                     f"{reference.sentence[:140]!r}",
                     located_in,
+                    unit=unit,
                 )
             )
         else:

@@ -3498,3 +3498,47 @@ entries:
       retired. No fresh hosted re-run of Aspose.Cells-FOSS-for-Cpp was dispatched to confirm BC-12
       now gets repaired live (this project's own live-provider-call constraint for this diagnosis);
       the fix is proven offline against the downloaded evidence and a fresh scripted reproduction.
+
+  - component: "validation/structure.py BC-07: the RECONCILING finding's own Failure now carries unit_id as a field, so the S4 patch router d2ca65b wired this check into can actually resolve a target (docs/DECISION_LOG.md 2026-10-28, second entry)"
+    source: this-repository
+    evaluated_at_shas: ["5be966d"]
+    per_file:
+      "src/repo_presenter/readme/validation/structure.py (_reference_failures)": "FIX. Read in full, including the Failure dataclass (validation/failures.py) it builds for and the one sibling check (validation/install.py:282, `Failure('RECONCILING', detail, unit=unit)`) that already does this correctly. Root cause proven from a real hosted Lane R run (40688097016, aspose-cells-foss/Aspose.Cells-FOSS-for-Rust) whose BC-07 finding named its inherited unit in the message text but failed S4 patch routing with 'no stored disposition of an inherited unit is named by this defect' -- traced the full chain (readme/repair/loop.py::_named_units -> readme/reconciliation/patch.py::failing_units -> the validation.json failure record's own unit_id key -> readme/validation/blocking.py::validate_candidate's serialisation -> Failure.unit) and found every link already wired except this one: `_reference_failures` computed the right `unit` value and then built its `Failure` without passing it, despite the function's own docstring already promising 'RECONCILING, naming the unit'. One keyword argument (`unit=unit`) added; no other file needed a change -- `Failure` already declares the field, `blocking.py` already serialises it, `patch.py::failing_units` already reads only that field (never prose), and `readme/review/defect_bridge.py` was read and confirmed to already do the structural equivalent (matching a finding's `quote` field against placed texts) for its own, separate (reviewer/LLM) finding shape, so it needed no change either."
+    blast_radius: >
+      Queried before the change: the only other failures _reference_failures builds are the
+      COMPOSING-stage 'dangling reference' case (no unit matched -- correctly left with no unit_id,
+      unchanged) and every other BC-xx check's own Failure construction (grepped every `Failure(`
+      call site in readme/validation/: only install.py's BC-02 RECONCILING case already passed
+      `unit=`; none of the others claim RECONCILING for a finding that names a unit without this
+      field, so no other check silently drops a unit_id this fix would newly expose or change).
+      candidates/ holds exactly one sealed bundle (aspose-3d-foss__Aspose.3D-FOSS-for-.NET@52b0f00e,
+      unrelated repository, unrelated check) -- unaffected, since validate_candidate's own output
+      shape for this field was already `unit_id` optionally present; adding it where it was
+      previously (wrongly) absent only lets a previously-impossible S4 patch target exist, it
+      cannot change what any already-passing check judges or what any already-sealed candidate was
+      accepted on.
+    evidence: >
+      tests/readme/validation/test_registry_checks.py:
+      test_bc07_routes_a_kept_sentence_whose_referent_was_dropped_to_reconciliation (existing,
+      extended) now asserts the RECONCILING failure's own record carries
+      unit_id == "inherited_unit:002.paragraph". New test
+      test_bc07s_reconciling_finding_now_routes_to_a_real_s4_patch_target drives the real
+      production chain (validate_candidate -> readme.repair.targeted.validation_defects ->
+      readme.reconciliation.patch.failing_units) and asserts the BC-07 defect resolves to
+      ["inherited_unit:002.paragraph"] with stage S4; its negative control (the same check's
+      sibling branch, a dangling reference naming no real inherited unit) still serialises no
+      unit_id and failing_units still returns [], proving the fix never fabricates a target.
+      Falsifier confirmed by hand (git stash the one-line structure.py change): both the extended
+      existing test and the new test fail with the exact reported symptom (unit_id missing /
+      failing_units empty); restoring the change makes both pass again. tests/readme/reconciliation/
+      test_patch.py's own "names no unit" tests (test_a_defect_that_names_no_unit_keeps_the_whole_
+      batch_repair, etc.) were re-run unchanged and still pass. Full suite: PYTHONPATH=src python -m
+      pytest -q, before and after, both green (counts recorded in the commit that lands this entry).
+    not_yet_done: >
+      No fresh hosted re-run of Aspose.Cells-FOSS-for-Rust was dispatched to confirm the real S4
+      patch attempt now succeeds live end to end (this project's live-provider-call constraint for
+      this diagnosis) -- the fix is proven offline against a reproduction of the exact finding text
+      and the exact routing chain the hosted run exercised, not against a fresh hosted call.
+      readme/repair/loop.py::settle_candidate's own unwired build_defects/review.defect_bridge path
+      (noted in the prior entry, d2ca65b) remains out of scope -- unaffected either way, since this
+      fix lives inside the check itself and benefits every current and future caller of it.
