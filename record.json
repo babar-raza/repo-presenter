@@ -5,7 +5,7 @@
   "provider_repository_id": 1301317734,
   "registry_revision": null,
   "active_transaction_id": "045f76c313b546d79c3eccb3b0af43f3",
-  "state": "FAILED_INTERNAL",
+  "state": "SNAPSHOTTING",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -33,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "6982d579f50d45d5b49231aa176b08d7",
-    "transaction_id": "ec3d875c55dc43acafcdc5b8cf0e0be4",
+    "transition_id": "60a40a2fb00c428d800525bd05948b2a",
+    "transaction_id": "045f76c313b546d79c3eccb3b0af43f3",
     "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Rust",
-    "from_state": "OBSERVED",
-    "to_state": "FAILED_INTERNAL",
-    "event": "present.yml hosted transaction failed",
-    "occurred_at": "2026-10-28T04:37:37.581210+00:00",
+    "from_state": "FAILED_INTERNAL",
+    "to_state": "SNAPSHOTTING",
+    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
+    "occurred_at": "2026-10-28T04:59:19.294301+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust",
     "output_manifest": "candidates/aspose-cells-foss__Aspose.Cells-FOSS-for-Rust/lane-l/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 4,
+  "state_version": 5,
   "recent_trigger_dedup_keys": {
     "run:40633293097:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust": "ec3d875c55dc43acafcdc5b8cf0e0be4",
     "run:40635248483:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust": "045f76c313b546d79c3eccb3b0af43f3"
