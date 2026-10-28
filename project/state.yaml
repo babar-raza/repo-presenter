@@ -1657,6 +1657,24 @@ next_ready_items:
     done_when: plan section 3 D10 -- V1..V7 pass and verdict v2 is sealed in bundles.
     reopening_rule: only a prompt, model route or a new clearance (failing test first); never a rule loosened without a proven false positive and a negative control.
 
+  - id: BC12_REPAIR_ROUTING_PROVEN
+    status: DONE
+    purpose: >
+      RECORDED 2026-10-28, closing a real investigation (commit d2ca65b). A structural blocking
+      check (BC-12, canonical product-name spelling) had no repair path at all: cascade.py's
+      _s4_defects filtered every check to stage == "S4" before any repair attempt, so a
+      COMPOSING/S6-owned structural finding could never be routed to repair, only hard-refused.
+      Widened to defect.repairable (S4/S5/S6), the identical test S10's own findings already use.
+    proven_on_real_hosted_data: >
+      Re-run 40687656250 (aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, Lane R): repairs.json shows
+      a genuine attempt (label BC-12, stage S6, section development_testing) -- the routing fix
+      works. The repair itself was correctly REFUSED: the model's revised_output matched the
+      unrepaired text unchanged (a no-op), and the system does not accept a non-fix as a fix.
+      Left open, lower priority: the targeted_repair prompt did not produce an actual edit for
+      this "for C++" -> "for Cpp" wording; this is a model/prompt-effectiveness question for this
+      one defect shape, not an architecture gap. The candidate stays honestly unsealed rather than
+      falsely sealed -- correct behavior, not a regression.
+
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
     priority: highest
