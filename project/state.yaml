@@ -2734,13 +2734,15 @@ next_ready_items:
       gap (a test project legitimately has its own, different name from the main package -- the
       same shape as this card's own still-open .htm/.html alias gap) rather than a genuine
       content defect; not yet triaged, recorded plainly rather than guessed at.
-      aspose-email-foss/Python (41121214915): failed in 8 seconds at "Present (Lane L)" with
-      durable state FAILED_INTERNAL and no further detail printed (present.py's CLI prints only
-      one summary line to stdout); the artifact download was blocked both times by the same GH
-      Actions egress-quota exhaustion seen earlier this session ("HTTP 503: Egress is over the
-      account limit"), and no durable-state git ref exists yet for this repository to read as a
-      fallback. Genuinely unread -- flagged honestly as unknown, not assumed to be any particular
-      cause, pending either the egress quota resetting or a fresh re-dispatch.
+      aspose-email-foss/Python (41121214915): the egress quota reset; re-downloaded and read
+      directly. REJECTED, correctly -- the same designed lane_l_unrepaired_defect refusal as
+      aspose-3d-foss/.NET above: a real format_overclaim (the README marks 'CFB' supported, no
+      confirming fact) and a real failing_example (a genuine Python NameError in example 5).
+      corrections.json/README.corrected.md show the correction engine genuinely ran and produced
+      real output before the refusal -- the earlier "FAILED_INTERNAL in 8 seconds, unknown cause"
+      note above was a misreading (a REJECT via this rule is recorded as a failed transaction at
+      the durable-state level, the same as every other correct Lane L refusal this session has
+      seen; it is not a crash). Not a new finding -- the exact already-documented, correct path.
 
   - id: COHORT_FIRST_GUARD
     status: ACTIVE
