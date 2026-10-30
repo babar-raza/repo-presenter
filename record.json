@@ -5,7 +5,7 @@
   "provider_repository_id": 1230713255,
   "registry_revision": null,
   "active_transaction_id": "1cdbb7d202354426b00f87c1c5e8f4ba",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected three times (the third a narrowed ask for the units a rejection actually named); last rejection: inherited_unit:049.code_block: uncited_prose_omit: OMIT_UNSUPPORTED on a code_block needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"```\\nvar-package-output/\\n├── Roboto-Beta-Bold.ttf                         (Instanced static font)\\n├── stat-evidence.json                           (STAT policy decisions & diagnostics)\\n├── review-manifest.json                         (Release-ready review manifest)\\n└── comparison-board.png                         (Side-by-side visual comparison board)\\n```\". Cite the supporting fact IDs or place the unit; do not omit it without a cited reason",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-30T21:52:54.347571+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:41133481238",
     "acquired_at": "2026-10-30T21:47:28.379838+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-10-30T22:02:28.379838+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "39fcb396cde14039916d6405a9826dbf",
+    "transaction_id": "1cdbb7d202354426b00f87c1c5e8f4ba",
+    "repository": "aspose-font-foss/Aspose.Font-FOSS-for-Python",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-30T21:52:53.969563+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-font-foss/Aspose.Font-FOSS-for-Python",
+    "output_manifest": "candidates/aspose-font-foss__Aspose.Font-FOSS-for-Python/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:41133481238:aspose-font-foss/Aspose.Font-FOSS-for-Python": "1cdbb7d202354426b00f87c1c5e8f4ba"
   },
