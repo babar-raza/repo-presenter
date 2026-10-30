@@ -5,7 +5,7 @@
   "provider_repository_id": 1199624632,
   "registry_revision": null,
   "active_transaction_id": "ac5c327b41da4b8594830ce658c68815",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: presentation_planning: output rejected twice; last rejection: link 'link_target:015' is assigned more than once; never the same target twice; link 'link_target:016' is assigned more than once; never the same target twice",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-30T23:00:10.816859+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:41140569249",
     "acquired_at": "2026-10-30T22:49:58.444695+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-10-30T23:04:58.444695+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "7af2eae1daaf4487845d1df58ffef7fd",
+    "transaction_id": "ac5c327b41da4b8594830ce658c68815",
+    "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Python",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-30T23:00:10.567835+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-words-foss/Aspose.Words-FOSS-for-Python",
+    "output_manifest": "candidates/aspose-words-foss__Aspose.Words-FOSS-for-Python/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:41140569249:aspose-words-foss/Aspose.Words-FOSS-for-Python": "ac5c327b41da4b8594830ce658c68815"
   },
