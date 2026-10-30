@@ -2699,6 +2699,49 @@ next_ready_items:
       on: aspose-barcode-foss/Python (41130099384, Lane R), aspose-html-foss/Python
       (41130110127, Lane R), aspose-gis-foss/.Net (41130121031, Lane R), aspose-note-foss/Python
       (41130131434, Lane L), aspose-psd-foss/.NET (41130142104, Lane L). Not yet read.
+    fifteenth_fix_a_real_crash_found_and_two_more_findings_2026_10_30: >
+      aspose-gis-foss/.Net (41130121031): crashed with a RAW, uncaught Python traceback (not a
+      classified failure) -- read directly from the job log: cascade.py line 184's
+      _document_with_inherited_units did `(clone_path / "README.md").read_bytes()` with no
+      existence check, and this repository genuinely has no README.md at its pinned revision
+      (confirmed: ls shows only a .sln, a .gitignore, and two project directories). present.py's
+      own run() wrapper only ever catches a PresenterError, so this propagated all the way to a
+      bare FileNotFoundError and exit 1 with a traceback instead of a legible FAILED_INTERNAL
+      detail. Fixed: an explicit is_file() check raises PresenterError with a clear message.
+      Falsifier confirmed (reverted the fix, the new test failed with the raw FileNotFoundError
+      instead of the expected PresenterError; restored, it passed). 1 new test in
+      tests/test_cascade.py. Full suite run before commit -- see next card entry for the result.
+      aspose-barcode-foss/Python (41130099384): REJECTED at S4/S6 -- a scope_limitations unit
+      (slot limitation:4) wrote "...running pip install." in free prose three times across all
+      three asks (attempts 2 and 3 byte-identical, so authoring_narrowing's own repeated-unit
+      note fired and the model still did not change it), rejected each time for "text contains a
+      command". A single occurrence so far, not yet confirmed recurring; recorded plainly.
+      aspose-note-foss/Python (41130131434, Lane L): REJECTED, correctly -- the same designed
+      lane_l_unrepaired_defect refusal as every other correct Lane L refusal this session (a
+      real failing example, AttributeError, plus a real Enterprise Edition naming concern no
+      deterministic edit can safely resolve).
+      aspose-psd-foss/.NET (41130142104, Lane L): REJECTED with 9 findings. 8 of the 9 are the
+      EXACT same claim_contradiction shape aspose-pdf-foss/.NET's own run showed once already
+      this round: the README names real sub-packages/sample projects
+      ("Aspose.PSD.FOSS.Samples.Basic/.Layers/.StructuralEditing/.Streams") that genuinely exist
+      (confirmed: facts.json's own inherited_unit:038.code_block shows "dotnet run --project
+      samples/Aspose.PSD.FOSS.Samples.Basic", a real path), but no fact kind in this pipeline
+      extracts or verifies sample/test sub-project names at all -- only the main package
+      identity ("Aspose.PSD.FOSS") is ever a Fact, so validation/claims.py's own rule (f)
+      (_prose_name_findings: a code span that extends the package identity, with no fact backing
+      it, is flagged as naming "another package") correctly flags what it can see, but has no
+      way to see these are real. Two occurrences now confirms recurrence -- this is likely the
+      single highest-value fix left in the backlog, since multi-project .NET/other-ecosystem
+      solutions (test projects, sample projects) are common across the portfolio and this blocks
+      Lane L sealing outright. The real fix is extraction, not loosening the check: a new pass
+      that reads the repo's own project files (.sln/.csproj, or the ecosystem-appropriate
+      equivalent) and records each sub-project's real name as a fact rule (f) can then check
+      against, the same "verify, don't guess" discipline this whole investigation chain has used
+      throughout -- not yet attempted, a real, scoped task for its own pass. The 9th finding
+      (line 55) is different and worth noting separately: the README says the package is "not
+      published to NuGet yet", but a package-registry reading says it IS listed -- a genuine,
+      narrower contradiction (the live README may simply be stale relative to the registry's
+      current state), not the sub-project-name shape.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED

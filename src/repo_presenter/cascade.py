@@ -50,6 +50,7 @@ from pathlib import Path
 from typing import Any
 
 from repo_presenter.core.config import GatewayConfig
+from repo_presenter.core.errors import PresenterError
 from repo_presenter.core.facts import FactsDocument, read_facts, write_facts
 from repo_presenter.core.git_safety.git import run_git
 from repo_presenter.core.llm.jobs import CallStore, JobContext, run_job
@@ -181,7 +182,17 @@ def _document_with_inherited_units(
     """The one real inherited-unit merge this process needs -- computed once, not re-derived by
     every stage the way six separate processes each had to."""
     tree_paths = _tree_paths(clone_path)
-    readme_bytes = (clone_path / "README.md").read_bytes()
+    readme_path = clone_path / "README.md"
+    if not readme_path.is_file():
+        # Measured live (aspose-gis-foss/Aspose.GIS.FOSS-for-.Net, run 41130121031): a registry
+        # entry whose repository genuinely has no README.md at its pinned revision crashed with
+        # a raw, uncaught FileNotFoundError and a Python traceback instead of a legible,
+        # classified failure -- present.py's own run() wrapper only ever catches a PresenterError.
+        raise PresenterError(
+            f"{repository}: no README.md at the pinned revision ({clone_path}); this cascade "
+            "has nothing to reconcile without one"
+        )
+    readme_bytes = readme_path.read_bytes()
     public_symbol_facts = [f for f in base.facts if f.kind == "public_symbol"]
     inherited = inherited_unit_facts("README.md", readme_bytes, public_symbol_facts, tree_paths)
     kept = tuple(f for f in base.facts if f.kind != "inherited_unit")

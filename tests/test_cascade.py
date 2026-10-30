@@ -239,6 +239,30 @@ def _write_registry(path: Path, *entries) -> None:
     path.write_text(Registry(entries=tuple(entries)).model_dump_json(), encoding="utf-8")
 
 
+def test_run_cascade_raises_a_clear_error_when_the_repository_has_no_readme(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Measured live (aspose-gis-foss/Aspose.GIS.FOSS-for-.Net, run 41130121031): a registry
+    entry whose repository genuinely has no README.md at its pinned revision crashed with a raw,
+    uncaught FileNotFoundError and a Python traceback -- run_present's own run() wrapper only
+    ever catches a PresenterError, so this never became a legible, classified failure."""
+    from repo_presenter.core.errors import PresenterError
+
+    clone = tmp_path / "clone"
+    clone.mkdir()
+    entry = make_entry()
+    facts_path = tmp_path / "facts.json"
+    write_facts(make_facts(), facts_path)
+    registry_path = tmp_path / "registry.json"
+    _write_registry(registry_path, entry)
+
+    with pytest.raises(PresenterError, match="no README.md"):
+        run_cascade(
+            entry.repository, "python", clone, facts_path=facts_path, out_dir=tmp_path / "out",
+            config=CONFIG, registry_path=registry_path, max_rounds=1,
+        )
+
+
 def test_run_cascade_produces_every_artifact_under_one_shared_invocation(
     tmp_path: Path, clone_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
