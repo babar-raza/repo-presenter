@@ -5,7 +5,7 @@
   "provider_repository_id": 1250546660,
   "registry_revision": null,
   "active_transaction_id": "63e486e493f6430da6c8f97328990c3e",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "PresentFailure: Lane L: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README names the package 'Aspose.Pdf.Foss.Tests', but the package identity is 'Aspose.PDF.FOSS' and no fact states 'Aspose.Pdf.Foss.Tests')",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-30T20:12:59.464680+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:41121225716",
     "acquired_at": "2026-10-30T20:12:49.279990+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-10-30T20:27:49.279990+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "67da56223e86496ebcd11e177f2a7e1c",
+    "transaction_id": "63e486e493f6430da6c8f97328990c3e",
+    "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-30T20:12:59.261071+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET",
+    "output_manifest": "candidates/aspose-pdf-foss__Aspose.PDF-FOSS-for-.NET/lane-l/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:41121225716:aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET": "63e486e493f6430da6c8f97328990c3e"
   },
