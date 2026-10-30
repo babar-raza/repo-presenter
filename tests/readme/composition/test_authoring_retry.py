@@ -22,6 +22,7 @@ from repo_presenter.readme.composition.authoring import SectionTask
 from repo_presenter.readme.composition.authoring_retry import (
     failing_slots,
     recover_restating_sentences,
+    recover_targeted_repair_restatements,
     repeated_slots,
 )
 
@@ -120,6 +121,75 @@ def test_a_unit_that_restates_nothing_is_not_touched() -> None:
         "omitted": [],
     }
     assert recover_restating_sentences(fine, task=task, facts=_facts()) is None
+
+
+# ---------------------------------------------------------------------------------------------
+# recover_targeted_repair_restatements: the same recovery, wrapped for targeted_repair's own
+# {"revised_output": {...}} shape. Real hosted defect (aspose-cells-foss/Aspose.Cells-FOSS-for-
+# Rust, run 41112836454): a targeted repair correctly fixed a factuality finding by rewriting a
+# unit, but the fix itself restated a command the renderer prints verbatim right after it --
+# rejected for a different, real reason the job's two asks were already spent on the original
+# finding, and loop.py's own _repair_section passed only the narrower, title-only
+# recover_title_verbatim_opening as its recover=, never this restatement recovery.
+# ---------------------------------------------------------------------------------------------
+
+
+def test_recover_targeted_repair_restatements_fixes_the_wrapped_revised_output() -> None:
+    task = _task(
+        "development_testing", ("summary",), slot_render_lines={"summary": ("cargo test --all-targets",)}
+    )
+    output = {
+        "revised_output": {
+            "units": [
+                {
+                    "section": "development_testing",
+                    "slot": "summary",
+                    "text": "cargo test --all-targets reports 0 tests. CI runs the samples as "
+                    "smoke tests instead.",
+                    "fact_ids": ["identity:repository"],
+                }
+            ],
+            "omitted": [],
+        },
+        "changes": [],
+    }
+    repaired = recover_targeted_repair_restatements(output, task=task, facts=_facts())
+    assert repaired is not None
+    assert repaired["revised_output"]["units"][0]["text"] == (
+        "CI runs the samples as smoke tests instead."
+    )
+    assert repaired["changes"] == []
+
+
+def test_recover_targeted_repair_restatements_is_none_when_revised_output_is_not_a_dict() -> None:
+    task = _task("development_testing", ("summary",))
+    assert recover_targeted_repair_restatements({}, task=task, facts=_facts()) is None
+    assert (
+        recover_targeted_repair_restatements(
+            {"revised_output": "not a dict"}, task=task, facts=_facts()
+        )
+        is None
+    )
+
+
+def test_recover_targeted_repair_restatements_is_none_when_nothing_restates() -> None:
+    task = _task(
+        "development_testing", ("summary",), slot_render_lines={"summary": ("cargo test --all-targets",)}
+    )
+    output = {
+        "revised_output": {
+            "units": [
+                {
+                    "section": "development_testing",
+                    "slot": "summary",
+                    "text": "CI runs the samples as smoke tests.",
+                    "fact_ids": ["identity:repository"],
+                }
+            ],
+            "omitted": [],
+        }
+    }
+    assert recover_targeted_repair_restatements(output, task=task, facts=_facts()) is None
 
 
 # ---------------------------------------------------------------------------------------------

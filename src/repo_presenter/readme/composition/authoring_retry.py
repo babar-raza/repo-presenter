@@ -357,6 +357,35 @@ def recover_restating_sentences(
     return output if changed else None
 
 
+def recover_targeted_repair_restatements(
+    output: dict[str, Any], *, task: SectionTask, facts: FactsDocument
+) -> dict[str, Any] | None:
+    """Last-resort correction for a ``targeted_repair`` job's own final rejected attempt: the same
+    recovery ``section_authoring``'s own ``recover=`` already gives a fresh draft
+    (:func:`recover_restating_sentences`), applied to ``targeted_repair``'s wrapped
+    ``revised_output`` shape instead of a bare units list.
+
+    Measured live (aspose-cells-foss/Aspose.Cells-FOSS-for-Rust, run 41112836454): a targeted
+    repair fixing a real factuality finding ("tests are not reported by the standard test runner")
+    rewrote the unit to say ``cargo test --all-targets`` reports 0 tests -- correct per the
+    finding's own repair text -- but in doing so restated that exact command, which the renderer
+    already prints verbatim in a fenced block right after the unit. Rejected for a real but
+    different reason than the one the repair was fixing, and the job's own two asks were spent on
+    the original finding, not this new restatement -- ``repair/loop.py``'s own ``_repair_section``
+    passed only ``recover_title_verbatim_opening`` (a narrower, title-only recovery) as its
+    ``recover=``, never this module's own general restatement recovery.
+    """
+    revised = output.get("revised_output")
+    if not isinstance(revised, dict):
+        return None
+    fixed = recover_restating_sentences(revised, task=task, facts=facts)
+    if fixed is None:
+        return None
+    output = dict(output)
+    output["revised_output"] = fixed
+    return output
+
+
 _SPELLING_MIN_CHARS = 3
 
 

@@ -69,6 +69,9 @@ from repo_presenter.readme.composition.authoring import (
     repair_title_verbatim_opening_errors,
     unit_checks,
 )
+from repo_presenter.readme.composition.authoring_retry import (
+    recover_targeted_repair_restatements,
+)
 from repo_presenter.readme.composition.components.identity import product_name
 from repo_presenter.readme.composition.placement import PLACED, placements
 from repo_presenter.readme.composition.planning import (
@@ -514,6 +517,20 @@ def _repair_section(rc: RepairContext, defect: Defect, repairs: RepairLedger) ->
             fact.id for fact in facts if fact.kind in {"identity", "package"}
         ),
     )
+    def recover(candidate: dict[str, Any]) -> dict[str, Any] | None:
+        changed = False
+        title_fixed = recover_title_verbatim_opening(candidate, slot_titles=task.slot_titles)
+        if title_fixed is not None:
+            candidate = title_fixed
+            changed = True
+        restated_fixed = recover_targeted_repair_restatements(
+            candidate, task=task, facts=rc.facts
+        )
+        if restated_fixed is not None:
+            candidate = restated_fixed
+            changed = True
+        return candidate if changed else None
+
     outcome = _targeted_call(
         rc,
         defect,
@@ -524,7 +541,7 @@ def _repair_section(rc: RepairContext, defect: Defect, repairs: RepairLedger) ->
         allowed=task.accepted_ids,
         slot_facts=task.slot_facts,
         carried=task.must_carry,
-        recover=partial(recover_title_verbatim_opening, slot_titles=task.slot_titles),
+        recover=recover,
     )
     if isinstance(outcome, JobError):
         if probe.conflicts:
