@@ -2636,8 +2636,37 @@ next_ready_items:
       dedicated investigation once the review-repair convergence theme's own open items are
       triaged, since it looks likely to recur across any ecosystem whose api_reference has many
       public symbols.
-
-  - id: LANE_L_HOSTED_PARITY
+    fourteenth_fix_confirmed_live_a_heading_accounting_gap_now_confirmed_recurring_2026_10_30: >
+      Re-dispatched aspose-words-foss/.NET (41125275923). CONFIRMED: the dangling_pointer
+      oscillation is completely gone -- every source_reconciliation call in this run's own
+      ledger succeeded on ask 1 or the universal ask 2, none needed the narrowed third ask at all
+      this time (the model got it right earlier, so the steer's own text was never even read;
+      the fix still stands, just not exercised this particular run). The run progressed much
+      further than before -- past S4, S5, S6 (with a real reject-then-recover cycle), and a real
+      targeted_repair -- but still failed, on review_verdict.json's own fresh evidence: 4
+      deterministic live_readme_loss findings, headings this time ("Supported formats",
+      "Additional Examples", "The story behind this code", "Contributing"). Confirmed via
+      dispositions.composed.json: "Contributing" is SUPERSEDE_REDUNDANT into enterprise_
+      relationship (a placeable section) with empty fact_ids -- the EXACT shape .NET's run
+      41112824093 showed once already this round (its own "## Examples" heading into
+      additional_examples). Two occurrences now confirms recurrence. Root cause (confirmed by
+      reading the code, not yet fixed): dispositions.py's _supersession_gap returns None
+      immediately for ANY heading-kind unit ("kind not in _CONTENT_KINDS"), so _judge/
+      _fold_uncovered never compute a gap for a heading at all, and the existing SUPERSEDE_
+      REDUNDANT-into-placeable fold (which already exists and already works for paragraph/list/
+      table/code_block, folding them to VERIFIED_PRESERVE/REWRITE) never gets a chance to run for
+      a heading. Meanwhile independent_reviewer.py's own accounting rule does not exempt headings
+      (confirmed earlier this session by a deliberate existing test). Deliberately NOT guessed at
+      a fix in this same pass: the two candidate approaches (widen _judge to compute a gap for
+      this one heading+placeable+SUPERSEDE_REDUNDANT shape so the existing fold already in _fold_
+      uncovered applies, which would literally place the heading's own text as a new unit in the
+      destination section -- semantically uncertain without checking how placement.py/the
+      renderer actually handles a heading-kind VERIFIED_PRESERVE; versus a documented, heading-
+      specific sentinel rationale closer to RECOVERED_COVERAGE_RATIONALE's own narrow, deliberate
+      pattern) both carry real semantic risk this session's own non-negotiable #5 ("no agent may
+      silently loosen a check") warns against rushing. Recorded precisely rather than patched
+      blindly; this is the next well-scoped investigation, now with two confirmed occurrences to
+      design a falsifying test against.
     status: PLANNED
     priority: highest
     due: immediately after INDEPENDENT_LLM_REVIEWER.P3_CALIBRATION, before any cohort or PR work
