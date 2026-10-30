@@ -5,7 +5,7 @@
   "provider_repository_id": 1193857039,
   "registry_revision": null,
   "active_transaction_id": "514b58ce797e43c6a9b869fd29c1f89d",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; duplicate_paragraph [quality] blocks until rule duplicate_paragraph no longer finds it (the paragraph occurs 2 times)",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-30T23:18:59.721851+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:41142584634",
     "acquired_at": "2026-10-30T23:09:09.340963+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-10-30T23:24:09.340963+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "d239efeaa2dc48c2b426ee797f4d131a",
+    "transaction_id": "514b58ce797e43c6a9b869fd29c1f89d",
+    "repository": "aspose-email-foss/Aspose.Email-FOSS-for-Cpp",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-30T23:18:59.337537+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-email-foss/Aspose.Email-FOSS-for-Cpp",
+    "output_manifest": "candidates/aspose-email-foss__Aspose.Email-FOSS-for-Cpp/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:41142584634:aspose-email-foss/Aspose.Email-FOSS-for-Cpp": "514b58ce797e43c6a9b869fd29c1f89d"
   },
