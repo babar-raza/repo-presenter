@@ -5,7 +5,7 @@
   "provider_repository_id": 1185448261,
   "registry_revision": null,
   "active_transaction_id": "1e333ad4250b44d9a344769a33adb6f4",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected three times (the third a narrowed ask for the units a rejection actually named); last rejection: inherited_unit:037.paragraph: dangling_pointer: VERIFIED_MOVE keeps it as written in additional_examples, but its sentence \"Every example below was compiled against this tree and run.\" says 'example below' but no code follows it in this section; and \"The flagship example below wires two shapes together with a connector; more usage examples are collapsed below it.\" says 'example below' but no code follows it in this section. Kept units print after the section's own content, so a pointer to what follows is answered only by a unit kept right after it in the same section: keep that unit there too, or choose VERIFIED_REWRITE (the wording is re-authored from facts, without the pointer), or OMIT_UNSUPPORTED citing the fact that shows the claim unsupported",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-30T19:13:58.533274+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:41112860184",
     "acquired_at": "2026-10-30T19:10:14.025662+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-10-30T19:25:14.025662+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "cf74f7ab8e1843b9b2675e7b347f93b0",
+    "transaction_id": "1e333ad4250b44d9a344769a33adb6f4",
+    "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Java",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-30T19:13:58.147029+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-slides-foss/Aspose.Slides-FOSS-for-Java",
+    "output_manifest": "candidates/aspose-slides-foss__Aspose.Slides-FOSS-for-Java/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:41112860184:aspose-slides-foss/Aspose.Slides-FOSS-for-Java": "1e333ad4250b44d9a344769a33adb6f4"
   },
