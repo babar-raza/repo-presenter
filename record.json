@@ -5,7 +5,7 @@
   "provider_repository_id": 1137426093,
   "registry_revision": null,
   "active_transaction_id": "327346ac5fcc49a59aa877115e8614cc",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "PresentFailure: Lane L: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the example verifier recorded a failure for the example on lines 104-111: example 1: FAILED; AttributeError); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (possible Enterprise Edition naming violation ('commercial product'); the product name and its platform are not both spelled out on this line, so the fix is not guessed); Lane L left 2 defect(s) it may not repair (failing_example line 104: the example verifier recorded a failure for the example on lines 104-111: example 1: FAILED; AttributeError; enterprise_edition_naming line 451: possible Enterprise Edition naming violation ('commercial product'); the product name and its platform are not both spelled out on this line, so the fix is not guessed); Lane R is the recommended lane for this repository",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-30T21:20:11.659710+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:41130131434",
     "acquired_at": "2026-10-30T21:20:07.766849+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-10-30T21:35:07.766849+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "fc6d24d5187c428b9180cc09ecf5a0be",
+    "transaction_id": "327346ac5fcc49a59aa877115e8614cc",
+    "repository": "aspose-note-foss/Aspose.Note-FOSS-for-Python",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-30T21:20:11.162829+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-note-foss/Aspose.Note-FOSS-for-Python",
+    "output_manifest": "candidates/aspose-note-foss__Aspose.Note-FOSS-for-Python/lane-l/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:41130131434:aspose-note-foss/Aspose.Note-FOSS-for-Python": "327346ac5fcc49a59aa877115e8614cc"
   },
