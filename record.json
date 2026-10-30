@@ -5,7 +5,7 @@
   "provider_repository_id": 1243409232,
   "registry_revision": null,
   "active_transaction_id": "2699b3b14d5d481c9dfbc98a19ff7d4f",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "PresentFailure: Lane L: independent review returned REJECT with 13 blocking finding(s) of 13; nothing sealed; lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (9 examples fail with a syntax or indentation error: the library source itself may not parse (an upstream defect for an issue to the maintainers, not a README edit): example:001, example:002, example:003, example:004, example:005, example:006); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the README marks 'PDF' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the README marks 'DVI' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the README marks 'SVG' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the example verifier recorded a failure for the example on lines 110-117: example 1: FAILED; IndentationError); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the example verifier recorded a failure for the example on lines 123-131: example 2: FAILED; IndentationError); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the example verifier recorded a failure for the example on lines 140-147: example 3: FAILED; IndentationError); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the example verifier recorded a failure for the example on lines 151-159: example 4: FAILED; IndentationError); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the example verifier recorded a failure for the example on lines 163-170: example 5: FAILED; IndentationError); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the example verifier recorded a failure for the example on lines 175-183: example 6: FAILED; IndentationError); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the example verifier recorded a failure for the example on lines 187-195: example 7: FAILED; IndentationError); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the example verifier recorded a failure for the example on lines 199-207: example 8: FAILED; IndentationError); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the example verifier recorded a failure for the example on lines 211-220: example 9: FAILED; IndentationError); Lane L left 13 defect(s) it may not repair (failing_example line 0: 9 examples fail with a syntax or indentation error: the library source itself may not parse (an upstream defect for an issue to the maintainers, not a README edit): example:001, example:002, example:003, example:004, example:005, example:006; format_overclaim line 44: the README marks 'PDF' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim; format_overclaim line 45: the README marks 'DVI' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim; format_overclaim line 46: the README marks 'SVG' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim; failing_example line 110: the example verifier recorded a failure for the example on lines 110-117: example 1: FAILED; IndentationError (+8 more)); Lane R is the recommended lane for this repository",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-30T21:47:27.077400+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:41133501088",
     "acquired_at": "2026-10-30T21:47:24.784847+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-10-30T22:02:24.784847+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "0094df0c0090409ebf026320471404c7",
+    "transaction_id": "2699b3b14d5d481c9dfbc98a19ff7d4f",
+    "repository": "aspose-tex-foss/Aspose.TeX-FOSS-for-Python",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-30T21:47:26.797999+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-tex-foss/Aspose.TeX-FOSS-for-Python",
+    "output_manifest": "candidates/aspose-tex-foss__Aspose.TeX-FOSS-for-Python/lane-l/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:41133501088:aspose-tex-foss/Aspose.TeX-FOSS-for-Python": "2699b3b14d5d481c9dfbc98a19ff7d4f"
   },
