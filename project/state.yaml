@@ -2437,6 +2437,40 @@ next_ready_items:
       to other repositories in the 36-repository portfolio -- this new gap is downstream of a
       repair round and therefore shows up only when S10 finds a real repairable defect, not on
       every run.
+    twelfth_fix_built_and_cpp_sealed_live_2026_10_30: >
+      Built recover_coherence_stray_identifiers (src/repo_presenter/readme/composition/
+      coherence.py), reusing unit_checks's own allowed/members/methods/nouns/recorded/
+      cited_inherited setup exactly rather than guessing a separate notion of "accepted" -- the
+      recovery can only remove what the real check would also flag, never disagree with the job
+      it is correcting. Reverts a unit with a stray identifier to its pre-coherence text, safe
+      because that text already passed this exact rule once, by construction, when section_
+      authoring's own run_job call first accepted it. Threaded through recover_coherence_
+      regressions via a new name= keyword (default "" so every existing caller, none of which
+      passed name=, is provably unaffected -- a direct test pins this down) and cascade.py's one
+      real call site. 5 new tests; full suite (3337 passed, 11 skipped) clean before commit
+      (b35c8c6). Dispatched Cpp run 41109510803 to verify live: review_verdict.json shows verdict
+      ACCEPT, 0 findings, 5 real unit_reviews each with a distinct request_sha256 -- independently
+      cross-checked against the ledger's own independent_review rows (5 real provider calls,
+      matching hashes exactly, not an S9 sentinel). manifest.json confirms state ACCEPTED, lane R,
+      12 real provider_calls + 215 cache_reuses this run. This is Cpp's first genuine seal this
+      session, after eleven prior fixes (renderer boundary, BC-12 misrouting, S4 checks wiring,
+      batch convergence, uncited defer, the prompt recommending it, unwired coordination function,
+      citation loophole, silent-unit narrowing, prompt fact-kind fix, rejection-aware
+      reconciliation_narrowing, rendering_fact_ids's installation blind spot) each closed a real,
+      different, verified root cause along the way. no_op_proof is null (not yet proven -- a
+      separate re-run step, not assumed from one clean seal). Dispatched run 41111068716
+      immediately after to attempt the no-op proof; not yet read.
+    next_step: >
+      Read run 41111068716's manifest.json directly once it completes: confirm no_op_proof shows
+      byte_identical true, provider_calls 0, fresh_process true, with genuinely distinct boot_id/
+      pid/nonce/invocation_id between first_run and rerun. If confirmed, this is the first fully
+      no-op-proven Cpp seal this session and the fourth such confirmed seal overall (after Java,
+      .NET, and whichever others this session has independently verified) -- update this card and
+      the portfolio-wide tally plainly, then continue widening hosted Lane R (and Lane L, per the
+      owner's "both lanes" requirement, not yet actively worked this session) coverage across the
+      remaining 36-repository portfolio. If the no-op proof does not confirm cleanly, read the
+      exact evidence and classify it honestly rather than assuming the one clean seal already
+      proves it.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
