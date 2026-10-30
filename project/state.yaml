@@ -2529,6 +2529,44 @@ next_ready_items:
       strengthening reconciliation_narrowing's own ask() prompt-building (dispositions.py's
       _reconciliation_ask) to name VERIFIED_REWRITE explicitly when the rejection is dangling_
       pointer, not just quote the rejection text and hope the model infers it.
+    net_rust_typescript_results_a_recurring_convergence_theme_2026_10_30: >
+      .NET (41112824093): REJECTED, NOT the no-op rerun it was dispatched to be -- the already-
+      sealed candidate (manifest.json proven_at 2026-10-30T15:59:28Z, earlier today, real
+      no_op_proof) was re-verified from scratch and this time failed on a NEW deterministic
+      finding: inherited_unit:018.heading ("## Examples") is SUPERSEDE_REDUNDANT into
+      additional_examples (a PLACEABLE section) with empty fact_ids, reported as live content
+      lost by independent_reviewer.py's own accounting rule. Root cause not the same as Go/
+      Python's uncited-heading gap (that was OMIT_UNSUPPORTED on a heading): dispositions.py's
+      _supersession_gap/_judge/_fold_uncovered skip EVERY heading-kind unit outright (kind not in
+      _CONTENT_KINDS), so a heading superseded into a placeable section never gets folded toward a
+      cited disposition the way a code_block or paragraph would -- normalize() and independent_
+      reviewer.py disagree about whether a heading needs evidence when the destination is
+      placeable (not simply the deterministic-vs-placeable headings normalize() already handles
+      elsewhere via _SHELL_OWNED exemptions). Genuinely new, not yet root-caused -- this repository
+      presumably had no such heading before, or facts/content upstream changed between 15:59 and
+      now (consumed-scope invalidation, not a regression from this session's own fixes, which
+      touch unrelated code). Rust (41112836454): REACHED S10 for the first time this run (3 real
+      independent_review calls), found 2 real factuality findings (F01: an Enterprise-Edition-only
+      feature sentence wrongly attributed to the FOSS scope_limitations claim; F02: a development_
+      testing claim contradicting the actual test-runner output) -- both genuine, repair-worthy.
+      targeted_repair (S11) tried both and failed BOTH: F02's fix itself restated a command the
+      renderer already prints verbatim (a regression into the EXISTING "restated command" rule,
+      not a new bug); F01's fix came back a byte-identical no-op, correctly refused as a non-fix.
+      TypeScript (41112847917): also reached S10, found 1 real factuality finding (a scope_
+      limitations claim says "Excel 97-2003 XLS format only" when facts show .xlsx/.html) --
+      repaired correctly the first time (repairs.json: outcome "repaired", the XLS text genuinely
+      corrected to .xlsx), but repairs.json's own "re_raised": ["F01"] field shows the SAME finding
+      came back on a later review round after recomposition, and the run exhausted its repair
+      rounds still on F01 -- the same symptom shape as Cpp's eleventh/twelfth fixes (a repair
+      succeeds, then something in the S4-S8 recomposition reverts or re-introduces it), not yet
+      traced to a specific stage. Taken together with Slides-Java's oscillation and Cpp's own two
+      narrowing/recovery gaps already fixed this session, this is now a recurring, cross-
+      repository THEME, not isolated incidents: S10's review-repair convergence loop has multiple,
+      separate failure modes (no narrowing at S8 -- fixed; no narrowing at S11 targeted_repair --
+      not yet addressed; a fix that reverts on recomposition -- not yet traced) each surfacing on a
+      different repository. Recorded plainly as a theme rather than guessed at with one more quick
+      patch; the next investigation should pick ONE of these (most likely S11's own missing
+      narrowing, the same shape already proven twice) with the same rigor as the prior fixes.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
