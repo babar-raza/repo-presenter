@@ -5,7 +5,7 @@
   "provider_repository_id": 1203447266,
   "registry_revision": null,
   "active_transaction_id": "d19808bd67164e80b3ed9f9afdb9c69c",
-  "state": "READY_FOR_PROPOSAL",
+  "state": "INVALIDATED",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (heading 'Examples')",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-30T19:26:50.331731+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:41112824093",
     "acquired_at": "2026-10-30T19:10:43.082036+00:00",
@@ -26,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "5f05a713de124252a6e39e029524035c",
-    "transaction_id": "4d97c04cbe1e480eb97290b5bf8555e9",
+    "transition_id": "475bd84b41cf4a75a2de8ad16f0e847a",
+    "transaction_id": "d19808bd67164e80b3ed9f9afdb9c69c",
     "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-.NET",
-    "from_state": "PROVING_NO_OP",
-    "to_state": "READY_FOR_PROPOSAL",
-    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
-    "occurred_at": "2026-10-30T15:59:30.683907+00:00",
+    "from_state": "READY_FOR_PROPOSAL",
+    "to_state": "INVALIDATED",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-30T19:26:50.029315+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-cells-foss/Aspose.Cells-FOSS-for-.NET",
     "output_manifest": "candidates/aspose-cells-foss__Aspose.Cells-FOSS-for-.NET/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 18,
+  "state_version": 19,
   "recent_trigger_dedup_keys": {
     "run:41079914003:aspose-cells-foss/Aspose.Cells-FOSS-for-.NET": "4d97c04cbe1e480eb97290b5bf8555e9",
     "run:41112824093:aspose-cells-foss/Aspose.Cells-FOSS-for-.NET": "d19808bd67164e80b3ed9f9afdb9c69c"
