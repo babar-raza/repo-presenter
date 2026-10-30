@@ -2567,6 +2567,35 @@ next_ready_items:
       different repository. Recorded plainly as a theme rather than guessed at with one more quick
       patch; the next investigation should pick ONE of these (most likely S11's own missing
       narrowing, the same shape already proven twice) with the same rigor as the prior fixes.
+    thirteenth_fix_verified_live_on_rust_a_new_finding_surfaced_2026_10_30: >
+      Dispatched Rust run 41118892620 to verify recover_targeted_repair_restatements live.
+      Confirmed working exactly as diagnosed: repairs.json's F02 entry (the command-restatement
+      defect) shows outcome "repaired", and its own before/after text proves the fix -- "before"
+      still restates "cargo test --all-targets reports 0 tests" (the model's own first reply,
+      unrecovered), "after" has that sentence stripped, replaced with "The repository currently
+      has no unit or integration test suite." review_verdict.json's fresh findings list no longer
+      contains that defect at all -- real, confirmed progress, not assumed. Two things remain,
+      read honestly rather than claimed fixed: F01 (the Enterprise-Edition feature misattribution)
+      still fails with "revised_output matches the causal stage's own output unchanged" -- the
+      model's repair reply is a genuine no-op, a different failure mode than command-restatement
+      (nothing to recover from a textually unchanged reply; this needs either a stronger repair
+      prompt or an S11 narrowing/retry mechanism, the theme's own open item). And a genuinely NEW,
+      different factuality finding surfaced in the same section once F02 cleared:
+      "WorksheetsMut.remove_at" should be "WorksheetsMut::remove_at" (Rust's :: for an associated
+      function, not .) -- not yet attempted by a repair round. Both are real, separate, not yet
+      root-caused; recorded plainly rather than chased further in this same pass, per the owner's
+      own "check for recurrence, then move efficiently across the portfolio" discipline this
+      session has followed throughout.
+    next_step: >
+      Pick up the backlog in whatever order is most efficient: .NET's heading-into-placeable-
+      section accounting gap (genuinely new, not yet root-caused), Rust's remaining F01 no-op-
+      repair failure and its new WorksheetsMut syntax finding, TypeScript's re-raised finding (not
+      yet traced to a stage), and Slides-Java's oscillation finding (one occurrence so far). None
+      of these block widening further: dispatch runs on repositories not yet attempted this
+      session (most of the 36-repository portfolio) in parallel with picking one of the above to
+      root-cause next. Lane L has still not been actively worked at all this session -- the
+      owner's mandate is explicit that both lanes must reach the same bar, so Lane L hosted
+      dispatches are due, not optional once Lane R coverage looks reasonable.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
