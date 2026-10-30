@@ -2056,7 +2056,7 @@ next_ready_items:
       no_op_proof makes this card DONE.
 
   - id: JAVA_LANE_R_FIRST_ATTEMPT_2026_10_28
-    status: IN_PROGRESS
+    status: DONE
     purpose: >
       First-ever Lane R hosted attempt on aspose-cells-foss/Aspose.Cells-FOSS-for-Java (already
       sealed and no-op-proven on Lane L), per OWNER_FULL_PORTFOLIO_BAR_2026_10_28 -- widening
@@ -2178,10 +2178,16 @@ next_ready_items:
       replays entirely from cache (byte-identical, zero fresh provider calls), which has not
       been attempted yet. Reporting this as "sealed," not as "sealed and no-op-proven," because
       the two are not the same claim and this project's own standard requires both.
-    next_step: >
-      dispatch one more Java run (same repository/ecosystem) to attempt the no-op proof against
-      this exact revision; read manifest.json's no_op_proof field directly afterward rather than
-      assuming a successful run means it passed. Once confirmed, this card is genuinely DONE.
+    no_op_proof_confirmed_2026_10_30: >
+      Re-run 41077851414 (same repository, same revision c65329e7257b1311abb9686d7e4957a8cc002955):
+      manifest.json's own no_op_proof field read directly, not assumed from a green run --
+      byte_identical: true, provider_calls: 0 (both top-level and in the rerun block), fresh_
+      process: true, with genuinely distinct identity between the two runs (first_run boot:
+      ff76d61b.../pid 2638 vs rerun boot:dcda0bb9.../pid 2305 -- a real second process, not the
+      same one reporting twice). This is the first fully sealed-and-no-op-proven Lane R
+      candidate this session, independently confirmed end to end: real independent review
+      (model_reviewed genuinely true), zero findings, and a byte-identical, zero-provider-call
+      rerun from a fresh process.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
