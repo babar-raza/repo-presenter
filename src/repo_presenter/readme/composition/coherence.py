@@ -28,14 +28,24 @@ from repo_presenter.readme.composition.audience import (
     unsupported_audience_sentences,
 )
 from repo_presenter.readme.composition.authoring import (
+    _EXCEPTION_SUFFIXES,
     SectionTask,
+    allowed_identifiers,
     citable,
+    cited_inherited_identifiers,
+    identifier_allowed,
+    identifier_tokens,
+    mask_allowed_values,
+    prose_nouns,
     recover_opening_duplicates_preserved,
     restates_own_title,
     section_spellings,
     slot_records,
+    stray_identifiers,
+    surface_members,
     uncarried_units,
     unit_checks,
+    verified_members,
 )
 from repo_presenter.readme.composition.authoring_retry import (
     withdraw_out_of_slot_citations,
@@ -495,6 +505,89 @@ def recover_coherence_audience_claims(
     return output if changed else None
 
 
+def _has_stray_identifier(
+    text: str, task: SectionTask, unit_fact_ids: Sequence[str], facts: FactsDocument, name: str
+) -> bool:
+    """Whether ``text`` names an identifier-shaped token ``unit_checks``'s own stray-identifier
+    rule would refuse -- the exact same allowed/members/methods/nouns/recorded/cited_inherited
+    setup that rule uses, so this never disagrees with the check it is recovering from."""
+    allowed = allowed_identifiers(facts, name)
+    members = verified_members(facts)
+    methods = surface_members(facts)
+    nouns = prose_nouns(facts, name)
+    recorded = " ".join(support_texts(task.accepted_ids, facts))
+    cited_inherited = cited_inherited_identifiers(
+        facts,
+        unit_fact_ids
+        if task.section_id == "scope_limitations"
+        else [fact_id for fact_id in unit_fact_ids if fact_id in task.must_carry],
+    )
+
+    def unaccepted(token: str, cited: frozenset[str] = cited_inherited) -> bool:
+        return (
+            not identifier_allowed(token, allowed, members, methods)
+            and token not in nouns
+            and token not in cited
+            and not (token.endswith(_EXCEPTION_SUFFIXES) and token in recorded)
+        )
+
+    return bool(stray_identifiers(identifier_tokens(mask_allowed_values(text, allowed)), unaccepted))
+
+
+def recover_coherence_stray_identifiers(
+    output: dict[str, Any],
+    *,
+    existing_units: list[dict[str, Any]],
+    tasks: list[SectionTask],
+    facts: FactsDocument,
+    name: str,
+) -> dict[str, Any] | None:
+    """Last-resort correction for S8 coherence's own ``run_job`` call: a unit whose coherence
+    revision now names an identifier-shaped token no fact, noun, or verified member accepts
+    (``unit_checks``'s own stray-identifier rule) is reverted, in full, to its pre-coherence text
+    and fact_ids -- the same revert-to-known-good pattern as ``recover_coherence_title_
+    restatements``, safe here because the pre-coherence unit already passed this exact rule once,
+    by construction, when ``section_authoring``'s own ``run_job`` call first accepted it.
+
+    Measured live (aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, run 41102257446): a coherence
+    revision of api_reference/intro claimed the API listing is "grouped exactly as
+    reference.aspose.org organizes them" -- a real stray identifier (an external site's domain
+    name, not a fact), repeated byte for byte on the universal re-ask. Neither a narrowed third
+    ask (this job's own ``run_job`` call carries no ``narrow=``) nor this module's other
+    ``recover_coherence_*`` passes (all structural/fact-driven, none built to re-run ``unit_
+    checks``'s own identifier-acceptance rule) covered it.
+
+    ``name`` is required (the empty default on ``recover_coherence_regressions`` is only so its
+    existing callers, none of which pass ``name=``, keep their exact prior behaviour): without a
+    real product name, ``allowed_identifiers``/``prose_nouns`` cannot be trusted to scope "allowed"
+    the way the real check does, so this pass does nothing rather than risk a wrong revert."""
+    if not name:
+        return None
+    units = output.get("units")
+    if not isinstance(units, list):
+        return None
+    existing_by_key = {
+        (str(unit.get("section")), str(unit.get("slot"))): unit for unit in existing_units
+    }
+    tasks_by_section = {task.section_id: task for task in tasks if not task.is_batch}
+    changed = False
+    for unit in units:
+        if not isinstance(unit, dict) or not isinstance(unit.get("text"), str):
+            continue
+        task = tasks_by_section.get(str(unit.get("section")))
+        existing = existing_by_key.get((str(unit.get("section")), str(unit.get("slot"))))
+        if task is None or existing is None:
+            continue
+        if not _has_stray_identifier(unit["text"], task, unit.get("fact_ids", []), facts, name):
+            continue
+        unit["text"] = existing.get("text", unit.get("text"))
+        existing_fact_ids = existing.get("fact_ids")
+        if isinstance(existing_fact_ids, list) and existing_fact_ids:
+            unit["fact_ids"] = list(existing_fact_ids)
+        changed = True
+    return output if changed else None
+
+
 def recover_coherence_missing_units(
     output: dict[str, Any], *, existing_units: list[dict[str, Any]], tasks: list[SectionTask]
 ) -> dict[str, Any] | None:
@@ -590,6 +683,7 @@ def recover_coherence_regressions(
     existing_units: list[dict[str, Any]],
     facts: FactsDocument,
     tasks: list[SectionTask],
+    name: str = "",
     dispositions: Mapping[str, Any] | None = None,
 ) -> dict[str, Any] | None:
     """The one ``recover=`` callable ``repair/rounds.py``'s S8 call site passes: all of S8
@@ -637,6 +731,12 @@ def recover_coherence_regressions(
     )
     if audience_fixed is not None:
         output = audience_fixed
+        changed = True
+    stray_fixed = recover_coherence_stray_identifiers(
+        output, existing_units=existing_units, tasks=tasks, facts=facts, name=name
+    )
+    if stray_fixed is not None:
+        output = stray_fixed
         changed = True
     return output if changed else None
 

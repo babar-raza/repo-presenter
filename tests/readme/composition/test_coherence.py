@@ -11,7 +11,11 @@ from __future__ import annotations
 
 from repo_presenter.core.facts import Evidence, Fact, FactsDocument
 from repo_presenter.readme.composition.authoring import SectionTask
-from repo_presenter.readme.composition.coherence import coherence_checks, recover_coherence_regressions
+from repo_presenter.readme.composition.coherence import (
+    coherence_checks,
+    recover_coherence_regressions,
+    recover_coherence_stray_identifiers,
+)
 from tests.readme.composition.synthetic import make_facts
 
 _PRESERVED = (
@@ -130,5 +134,163 @@ def test_recover_coherence_regressions_without_dispositions_is_unaffected() -> N
     }
     result = recover_coherence_regressions(
         output, existing_units=output["units"], facts=facts, tasks=[_opening_task()]
+    )
+    assert result is None
+
+
+# Real hosted defect (aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, run 41102257446): a coherence
+# revision of api_reference/intro claimed the listing is "grouped exactly as reference.aspose.org
+# organizes them" -- a real stray identifier (an external site's domain, not a fact), repeated
+# byte for byte on the universal re-ask, since S8's own run_job call carries no narrow= and none
+# of the other recover_coherence_* passes are built to re-run unit_checks's own stray-identifier
+# rule.
+_CLEAN_INTRO = "The library's public types are listed below, with Widget as the entry point."
+_STRAY_INTRO = (
+    "The library's public types are listed below, grouped exactly as reference.example.org "
+    "organizes them."
+)
+
+
+def _api_reference_task() -> SectionTask:
+    return SectionTask(
+        section_id="api_reference",
+        packet={},
+        accepted_ids=frozenset({"public_symbol:aspose_widget_foss.widget"}),
+        slots=("intro",),
+    )
+
+
+def test_coherence_checks_rejects_a_revision_naming_an_unaccepted_external_site() -> None:
+    facts = make_facts()
+    output = {
+        "units": [
+            {
+                "section": "api_reference",
+                "slot": "intro",
+                "text": _STRAY_INTRO,
+                "fact_ids": ["public_symbol:aspose_widget_foss.widget"],
+            }
+        ]
+    }
+    errors = coherence_checks(output, [_api_reference_task()], facts, "Aspose Widget FOSS")
+    assert any("identifiers that are not accepted fact values" in error for error in errors)
+
+
+def test_recover_coherence_stray_identifiers_reverts_to_the_clean_pre_coherence_text() -> None:
+    facts = make_facts()
+    existing = [
+        {
+            "section": "api_reference",
+            "slot": "intro",
+            "text": _CLEAN_INTRO,
+            "fact_ids": ["public_symbol:aspose_widget_foss.widget"],
+        }
+    ]
+    output = {
+        "units": [
+            {
+                "section": "api_reference",
+                "slot": "intro",
+                "text": _STRAY_INTRO,
+                "fact_ids": ["public_symbol:aspose_widget_foss.widget"],
+            }
+        ]
+    }
+    result = recover_coherence_stray_identifiers(
+        output,
+        existing_units=existing,
+        tasks=[_api_reference_task()],
+        facts=facts,
+        name="Aspose Widget FOSS",
+    )
+    assert result is not None
+    assert result["units"][0]["text"] == _CLEAN_INTRO
+
+
+def test_recover_coherence_stray_identifiers_leaves_a_clean_unit_untouched() -> None:
+    facts = make_facts()
+    existing = [
+        {
+            "section": "api_reference",
+            "slot": "intro",
+            "text": _CLEAN_INTRO,
+            "fact_ids": ["public_symbol:aspose_widget_foss.widget"],
+        }
+    ]
+    output = {
+        "units": [
+            {
+                "section": "api_reference",
+                "slot": "intro",
+                "text": _CLEAN_INTRO,
+                "fact_ids": ["public_symbol:aspose_widget_foss.widget"],
+            }
+        ]
+    }
+    result = recover_coherence_stray_identifiers(
+        output,
+        existing_units=existing,
+        tasks=[_api_reference_task()],
+        facts=facts,
+        name="Aspose Widget FOSS",
+    )
+    assert result is None
+
+
+def test_recover_coherence_regressions_wires_the_stray_identifier_pass_through_name() -> None:
+    facts = make_facts()
+    existing = [
+        {
+            "section": "api_reference",
+            "slot": "intro",
+            "text": _CLEAN_INTRO,
+            "fact_ids": ["public_symbol:aspose_widget_foss.widget"],
+        }
+    ]
+    output = {
+        "units": [
+            {
+                "section": "api_reference",
+                "slot": "intro",
+                "text": _STRAY_INTRO,
+                "fact_ids": ["public_symbol:aspose_widget_foss.widget"],
+            }
+        ]
+    }
+    result = recover_coherence_regressions(
+        output,
+        existing_units=existing,
+        facts=facts,
+        tasks=[_api_reference_task()],
+        name="Aspose Widget FOSS",
+    )
+    assert result is not None
+    assert result["units"][0]["text"] == _CLEAN_INTRO
+
+
+def test_recover_coherence_regressions_without_a_name_changes_nothing() -> None:
+    """The default empty name keeps every existing caller (none of which pass name=) working
+    exactly as before; it simply never recovers this one new defect class without one."""
+    facts = make_facts()
+    existing = [
+        {
+            "section": "api_reference",
+            "slot": "intro",
+            "text": _CLEAN_INTRO,
+            "fact_ids": ["public_symbol:aspose_widget_foss.widget"],
+        }
+    ]
+    output = {
+        "units": [
+            {
+                "section": "api_reference",
+                "slot": "intro",
+                "text": _STRAY_INTRO,
+                "fact_ids": ["public_symbol:aspose_widget_foss.widget"],
+            }
+        ]
+    }
+    result = recover_coherence_regressions(
+        output, existing_units=existing, facts=facts, tasks=[_api_reference_task()]
     )
     assert result is None

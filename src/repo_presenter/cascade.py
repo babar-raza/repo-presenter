@@ -330,7 +330,7 @@ def _run_coherence(
         def recover(output: dict, batch_tasks=batch_tasks, existing=existing) -> dict | None:
             return recover_coherence_regressions(
                 output, existing_units=existing, facts=document, tasks=batch_tasks,
-                dispositions=dispositions,
+                name=name, dispositions=dispositions,
             )
 
         result = run_job(
