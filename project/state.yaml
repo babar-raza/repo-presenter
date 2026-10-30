@@ -2494,6 +2494,22 @@ next_ready_items:
       field alone). Lane L has not been actively worked this session at all -- the owner's mandate
       is explicit that both lanes must reach the same bar, so Lane L hosted dispatches are equally
       due, not a lower priority than further Lane R widening.
+    widening_dispatch_2026_10_30: >
+      Dispatched four runs: aspose-cells-foss/.NET (41112824093, a same-revision rerun attempting
+      the no_op_proof that .NET's earlier real seal did not yet have -- net_and_python_results
+      above), aspose-cells-foss/Rust (41112836454, not yet attempted this session),
+      aspose-cells-foss/TypeScript (41112847917, not yet attempted this session), and
+      aspose-slides-foss/Java (41112860184, a different product family entirely, to broaden
+      coverage beyond the aspose-cells-foss family this whole session has focused on so far). Not
+      yet read.
+    next_step: >
+      Read all four dispatches' results directly once they complete -- review_verdict.json,
+      manifest.json's no_op_proof, and the ledger's own independent_review rows, never assumed
+      from a green run. Record each honestly (sealed/no-op-proven, sealed-not-proven, or a real
+      REJECT with its genuine cause) and keep widening; do not spend more than one more root-cause
+      investigation cycle per genuinely new finding before checking whether it is the same shape
+      already seen (Go/Python's uncited-heading accounting gap already recurred twice) rather than
+      a fresh one.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
