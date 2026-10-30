@@ -1733,12 +1733,43 @@ next_ready_items:
       a repository with enough inherited units or dense enough content to strain even a 20-unit
       batch, and reconciliation_narrowing remains the correct fix to build when there is time to
       do it carefully. Not yet re-verified live.
+    mitigation_confirmed_live_2026_10_30: >
+      Re-run 41055845427: the convergence crash is GONE -- classification is "validation_failed",
+      not "transient"/FAILED_INTERNAL, meaning source_reconciliation completed successfully this
+      time (the halved batch worked) and the run proceeded all the way to the independent
+      reviewer, which actually ran and returned REJECT with 4 blocking findings. Read directly
+      from the durable-state record's own failure.detail (git fetch
+      refs/repository-presenter-state/records/aspose-cells-foss__Aspose.Cells-FOSS-for-Cpp), not
+      assumed: all 4 are live_readme_loss (deterministic preservation holdout) findings on code
+      blocks, all installation-method alternatives from the live README -- `nuget install
+      Aspose.Cells.Cpp.FOSS`, a `<PackageReference ...>` XML snippet, a CMake `set(..._DIR ...)`
+      path hint, and the same `add_subdirectory(Aspose.Cells.Foss.Cpp)` block as before.
+    blocked_on_deeper_verification_2026_10_30: >
+      `gh run download` for this run's artifacts (both present-cpp-* and present-facts-*) failed
+      twice with "HTTP 503: Egress is over the account limit" -- a real, external GitHub Actions
+      artifact-bandwidth quota, not a code or auth problem (`gh api .../artifacts` lists the
+      files and their real sizes fine; only the blob-storage download itself is throttled).
+      Likely exhausted by this session's own many repeated large-artifact downloads today. This
+      blocks reading dispositions.composed.json directly, so the real disposition each of these
+      4 units was given (and therefore the exact cause) is NOT YET CONFIRMED -- do not treat the
+      hypothesis below as verified.
+    unconfirmed_hypothesis: >
+      Given S4's own checks now correctly reject an uncited OMIT_UNSUPPORTED on a code_block
+      (this session's earlier fix) and the job still converged to something `reconcile_checks`
+      accepted, the likely disposition for these 4 units is DEFER_UNRESOLVED -- the same category
+      found separately on Java's directory-tree block (JAVA_LANE_R_FIRST_ATTEMPT_2026_10_28's
+      third_live_reverify note): it needs no citation and nothing in placement_errors checks it
+      at all, so it can pass S4 clean and still ship as a silent loss, caught only three stages
+      later by live_readme_loss_rule. NOT CONFIRMED without reading dispositions.composed.json
+      directly -- stated here as the leading hypothesis to check first, not as a finding.
     next_step: >
-      dispatch a fresh Cpp run with the lowered batch size; read the real result directly. If it
-      converges, record that as a working interim measure and open a dedicated, scoped card for
-      porting reconciliation_narrowing properly rather than leaving it an implicit TODO in a
-      comment. If it still fails to converge, that is itself strong evidence the narrowing port is
-      not optional and should be prioritized next.
+      retry the artifact download once the egress quota resets (unknown reset window; try again
+      later rather than repeating downloads in a tight loop) and read dispositions.composed.json
+      directly to confirm or refute the DEFER_UNRESOLVED hypothesis. If confirmed, the fix is
+      narrow and clear: placement_errors (or an S9 blocking check) must refuse a DEFER_UNRESOLVED
+      on real content unless its reason is a genuine, recognized ambiguity (an UNRESOLVED
+      example, the one case this already exists for) -- a sealed candidate should never carry a
+      deferred disposition at all. Do not guess-fix this without the confirming read.
 
   - id: BC07_UNIT_ROUTING_PROVEN
     status: DONE
