@@ -18,10 +18,10 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "transient",
-    "detail": "model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected three times (the third a narrowed ask for the units a rejection actually named); last rejection: inherited_unit:046.paragraph: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"The primary entry point is `Document`, loaded from a file, stream, or created empty, and edited through its node tree (`Section`, `Body`, `Paragraph`, `Run`, `Table`, and more) or the cursor-based `DocumentBuilder`. The table below covers the full public surface; the curated detail beneath it groups the classes used most often day to day.\". Cite the supporting fact IDs or place the unit; do not omit it without a cited reason",
+    "classification": "validation_failed",
+    "detail": "PresentFailure: independent review returned REJECT with 4 blocking finding(s) of 4; nothing sealed; live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (heading 'Supported formats'); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (heading 'Additional Examples'); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (heading 'The story behind this code'); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (heading 'Contributing')",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-10-30T20:16:41.100511+00:00",
+    "occurred_at": "2026-10-30T21:00:24.161595+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 4,
+  "state_version": 5,
   "recent_trigger_dedup_keys": {
     "run:41121235240:aspose-words-foss/Aspose.Words-FOSS-for-.NET": "371aa95f80574c74828e7d250840db93",
     "run:41125275923:aspose-words-foss/Aspose.Words-FOSS-for-.NET": "d43f7964ae9940cbadd859e7dcc3bb37"
