@@ -5,7 +5,7 @@
   "provider_repository_id": 1037981320,
   "registry_revision": null,
   "active_transaction_id": "4f81f55eb8ca49b5bf2bfeb31fa1b818",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (heading 'Development')",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-30T15:43:38.900018+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:41079931367",
     "acquired_at": "2026-10-30T15:22:16.007695+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-10-30T15:37:16.007695+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "02fca75253ab4d39817c82d437bbbc80",
+    "transaction_id": "4f81f55eb8ca49b5bf2bfeb31fa1b818",
+    "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Python",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-30T15:43:38.504826+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-cells-foss/Aspose.Cells-FOSS-for-Python",
+    "output_manifest": "candidates/aspose-cells-foss__Aspose.Cells-FOSS-for-Python/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:41079931367:aspose-cells-foss/Aspose.Cells-FOSS-for-Python": "4f81f55eb8ca49b5bf2bfeb31fa1b818"
   },
