@@ -1798,12 +1798,39 @@ next_ready_items:
       test_placement_errors.py, falsifier confirmed. The SAME check, run directly against Java's
       run 41060033053, also catches its directory-tree code block (inherited_unit:034) -- one fix
       for two repositories' real findings, not a one-off patch.
+    sixth_fix_the_prompt_itself_told_it_to_2026_10_30: >
+      Re-run of both (Cpp 41064356193, Java 41064370926): the new check correctly fires at S4's
+      OWN job-acceptance time now (caught immediately, read from the durable-state record's own
+      failure.detail: "source_reconciliation: output rejected twice; ... uncited_redundant_defer"
+      on the SAME units for both repositories), but the model repeated the identical mistake on
+      its one universal re-ask and the job gave up. Before reaching for reconciliation_narrowing
+      (the still-unported S4 third-ask mechanism, now with three convergent symptoms pointing at
+      it), read prompts/source_reconciliation.yaml directly first -- and found the actual cause
+      sitting in plain text: its own rejection_template says "where you cannot find such a
+      record, empty the array and choose DEFER_UNRESOLVED", and the system prompt separately says
+      "if the closest fact you can find is not close enough, cite nothing and choose
+      OMIT_UNSUPPORTED or DEFER_UNRESOLVED" -- neither sentence distinguishes a code block from
+      prose, so the model was correctly following its own explicit instructions each time it hit
+      this new rejection, and would keep doing so on a third or fourth ask too. This was never a
+      model-reliability gap; it was this project's own prompt recommending the exact disposition
+      the new check now (correctly) refuses.
+    fix: >
+      prompts/source_reconciliation.yaml bumped 9 -> 10: the rejection_template and both system-
+      prompt mentions of the OMIT-or-DEFER fallback now say explicitly that DEFER_UNRESOLVED on a
+      code block means a tracked example still UNRESOLVED and nothing else, and that an
+      alternative install/build/dependency snippet redundant with the installation section's own
+      verified command is SUPERSEDE_REDUNDANT citing that command's fact, even when the snippet's
+      own wording differs. No code change; the mechanism and the check were already right -- the
+      prompt was telling the model to do the thing the check now (correctly) refuses. Full suite
+      clean.
     next_step: >
-      full suite running; once clean, commit, push, and dispatch fresh Cpp and Java re-runs. Read
-      results directly (artifact download is working again). This is the fifth distinct real
-      root cause found and fixed in this one investigation chain (renderer boundary, BC-12
-      misrouting, S4 checks wiring, S4 batch convergence, and now this) -- each one real,
-      verified, falsifier-proven; none a guess papered over the symptom.
+      dispatch fresh Cpp and Java re-runs with the corrected prompt; read results directly. This
+      is the sixth distinct real root cause found and fixed in this one investigation chain
+      (renderer boundary, BC-12 misrouting, S4 checks wiring, S4 batch convergence, uncited
+      defer, and now the prompt that was recommending it) -- each one real, verified, falsifier-
+      or live-confirmed; none a guess papered over the symptom. If this does NOT resolve it,
+      reconciliation_narrowing moves from "likely needed" to "confirmed needed," having run out
+      of cheaper, more targeted explanations.
 
   - id: BC07_UNIT_ROUTING_PROVEN
     status: DONE

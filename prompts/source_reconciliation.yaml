@@ -1,5 +1,5 @@
 prompt_id: source_reconciliation
-version: "9"
+version: "10"
 stage: S4
 purpose: Decide exactly one disposition for every material inherited unit of the existing README, with evidence and a destination section, so that nothing valuable is dropped silently and nothing unsupported is carried forward.
 model_route: qwen3-next
@@ -16,7 +16,7 @@ schema_preface: "Output schema. Your entire response is one JSON object that val
 rejection_template: |
   That output was rejected before use for these exact reasons:
   - $errors
-  Return one corrected JSON object matching the output schema, complete: a disposition for every unit of the original request in its original order - the units that were not rejected included, unchanged - and never only the corrected ones. Every unit ID appears exactly once, and every entry of every fact_ids array is the "id" of a record in the Facts list, copied character for character - never a key of this packet, a field name, a disposition value, a section ID, or a path you inferred. Where you cannot find such a record, empty the array and choose DEFER_UNRESOLVED; an OMIT_UNSUPPORTED paragraph or list needs a cited fact ID as its reason, or a placement. Nothing else may change.
+  Return one corrected JSON object matching the output schema, complete: a disposition for every unit of the original request in its original order - the units that were not rejected included, unchanged - and never only the corrected ones. Every unit ID appears exactly once, and every entry of every fact_ids array is the "id" of a record in the Facts list, copied character for character - never a key of this packet, a field name, a disposition value, a section ID, or a path you inferred. Where you cannot find such a record, empty the array and choose DEFER_UNRESOLVED - except a code block, which DEFER_UNRESOLVED covers only when it is the text of an example fact whose polarity is UNRESOLVED; a code block that is not that is never DEFER_UNRESOLVED without a citation, whatever the budget pressure. An OMIT_UNSUPPORTED paragraph or list needs a cited fact ID as its reason, or a placement. Nothing else may change.
 packet:
   fields:
     - name: repository
@@ -102,7 +102,12 @@ system: |
   claim unsupported) or a placement instead; an uncited prose omission is rejected. Other units may
   cite the facts you searched or leave fact_ids empty and say so. DEFER_UNRESOLVED marks a
   material claim the facts neither support nor contradict; it is listed for the owner and never
-  rendered. NON_CONTENT covers separators, empty lines, and HTML comments.
+  rendered. For a code block specifically, that means an example fact whose polarity is
+  UNRESOLVED (the pipeline tried to verify it and could not) - never a code block you simply have
+  no fact for. An install, build, or dependency snippet that is a real alternative to the
+  installation section's own verified command is not unresolved: it is SUPERSEDE_REDUNDANT, citing
+  whichever install_command or build_test_asset fact that section already renders, even when your
+  own wording differs from it. NON_CONTENT covers separators, empty lines, and HTML comments.
 
   Rules that are checked mechanically. Every unit ID appears exactly once. The four placing
   dispositions (PRESERVE, REWRITE, MOVE, CORRECT) require a destination_section whose entry in
@@ -124,10 +129,11 @@ system: |
   ID; a heading; a file name; or a module, package or namespace path you infer because it looks
   like the symbols you were shown - "public_symbol:aspose.page.common" is not a fact ID unless
   that exact string is the id of a record in the Facts list. Construct nothing: if the closest
-  fact you can find is not close enough, cite nothing and choose OMIT_UNSUPPORTED or
-  DEFER_UNRESOLVED. An unknown ID rejects the whole output. A material unit with no safe
-  destination fails the transaction closed; do not invent a section for it. Code blocks whose
-  example fact is CONTRADICTED are never placed.
+  fact you can find is not close enough, cite nothing and choose OMIT_UNSUPPORTED - or, for a
+  code block that is a tracked example still UNRESOLVED, DEFER_UNRESOLVED; a code block that is
+  not that example never is, whatever is closest. An unknown ID rejects the whole output. A
+  material unit with no safe destination fails the transaction closed; do not invent a section
+  for it. Code blocks whose example fact is CONTRADICTED are never placed.
   A disposition cites at most 16 fact IDs and never repeats one. The public symbols a placed unit
   names are added by code, so cite the facts that carry its decision, not every symbol it mentions.
   Each rationale is one short sentence of at most 160 characters; the output is long because the
