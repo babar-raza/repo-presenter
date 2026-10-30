@@ -2258,6 +2258,34 @@ next_ready_items:
       rejection-aware Narrowing is the one remaining piece, and building it becomes the clear next
       major task rather than a hypothesis. Also: dispatch a same-revision .NET rerun to confirm
       its no-op proof, the same way Java's was confirmed.
+    live_reverify_2026_10_30_net_sealed_cpp_root_cause_found: >
+      .NET's no-op proof confirmed, independently: manifest.json (run 41085555578, same revision
+      f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2 as its seal) -- byte_identical: true, provider_
+      calls: 0, fresh_process: true, distinct boot_id/pid/nonce from the sealing run. SECOND
+      fully sealed-and-no-op-proven Lane R candidate this session, confirmed the same way Java
+      was. Cpp (41085518158): the silent-unit narrowing worked as predicted -- but now THREE
+      sibling units (015/017/019, not just 013) hit the SAME uncited_redundant_defer rejection,
+      twice, same as before. Before building the full rejection-aware Narrowing on the strength
+      of this alone, read the real facts first: aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp has
+      NO SUPPORTED install_command fact at all (install_command:cmake is UNRESOLVED) -- the
+      deterministic installation section actually renders from a package/distribution fact
+      instead ("The library is published on NuGet as `Aspose.Cells.Cpp.FOSS`.", confirmed in a
+      prior run's own rendered README). The prompt's own guidance ("cite whichever install_
+      command or build_test_asset fact that section renders") was telling the model to cite a
+      fact kind that, for this repository, does not exist as SUPPORTED -- while a SIBLING unit in
+      the very same batch (013, the plain nuget install block) had already correctly cited the
+      package fact instead, successfully. The model was not failing to generalize a rule it
+      lacked; the rule itself pointed at the wrong fact kind for this repository's actual
+      content. prompts/source_reconciliation.yaml bumped 10 -> 11: the SUPERSEDE_REDUNDANT
+      guidance now names the package/distribution fact as the common case when no install_command
+      resolved, with this exact measured case as a worked example. Full suite clean.
+    next_step: >
+      dispatch a fresh Cpp run with prompt v11; read directly. If 015/017/019 now cite the same
+      package fact 013 already uses successfully, this closes without ever needing the full
+      Narrowing build -- the real cause was a wrong fact-kind pointer in the prompt, not a
+      missing retry mechanism, a materially cheaper fix than the one this card was about to
+      commit to building. If it still fails, THAT is the point to build the fuller mechanism,
+      now genuinely out of cheaper explanations rather than assumed out of them.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
