@@ -45,7 +45,6 @@ loop used to repair S4 defects only -- widened to every stage ``repair_defect`` 
 from __future__ import annotations
 
 import json
-from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -101,6 +100,7 @@ from repo_presenter.readme.reconciliation.dispositions import (
     reconcile_checks,
     reconciliation_batch_facts,
     reconciliation_batches,
+    reconciliation_narrowing,
     reconciliation_packet,
     reconciliation_schema,
     write_dispositions,
@@ -228,27 +228,15 @@ def _run_reconciliation(
             # defect having already slipped past the one stage built to catch it at its source.
             return reconcile_checks(output, batch_facts)
 
-        def narrow(
-            unit_ids: Sequence[str], batch_units=batch_units, batch_facts=batch_facts
-        ) -> tuple[dict, dict]:
-            # core/llm/jobs.py's own generic third-ask path for a unit_ids-bound job
-            # (source_reconciliation.yaml declares binding: unit_ids): when the universal re-ask
-            # still leaves some units with no disposition at all (not merely a wrong one -- that
-            # needs the fuller, still-unbuilt reconciliation_narrowing this module's own top
-            # docstring names "Still deferred"), jobs.py asks again for only those, naming them
-            # here, and splices the reply back in (core/llm/binding.py's add_silent_units).
-            # Measured live, the exact shape this closes: aspose-cells-foss/Aspose.Cells-FOSS-
-            # for-Cpp, run 40735967256 -- a 20-unit batch left 13 units with no disposition at
-            # all on both the original ask and the universal re-ask.
-            narrowed = [unit for unit in batch_units if unit.id in set(unit_ids)]
-            narrowed_facts = reconciliation_batch_facts(batch_facts, narrowed)
-            narrowed_packet = reconciliation_packet(
-                entry, narrowed_facts, investigation, loaded.manifest, narrowed
-            )
-            narrowed_schema = reconciliation_schema(
-                loaded, narrowed, narrowed_facts, investigation
-            )
-            return narrowed_packet, narrowed_schema
+        # reconciliation_narrowing, not the plain silence-only callable this replaced: a
+        # rejection-aware third ask for exactly the units a rejection names, whether their
+        # disposition was missing entirely or simply wrong, leaving every other unit's own
+        # already-correct entry untouched. Measured live why the plain, silence-only form is not
+        # enough on its own (aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, run 41090058316): a
+        # prompt fix that correctly resolved three named units' wrong dispositions also flipped a
+        # fourth, previously-correct sibling's answer, because the universal re-ask regenerates
+        # the WHOLE batch rather than touching only what was named.
+        narrow = reconciliation_narrowing(entry, batch_units, batch_facts, investigation, loaded)
 
         result = run_job(
             loaded, packet, config=config, facts=batch_facts, ledger=ledger, store=store,

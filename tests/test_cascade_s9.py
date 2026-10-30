@@ -422,6 +422,80 @@ def test_a_unit_left_silent_by_both_asks_is_filled_by_a_narrowed_third(
     assert by_unit[silent]["disposition"] == "VERIFIED_PRESERVE"
 
 
+def test_a_wrong_disposition_repeated_is_narrowed_without_touching_a_correct_sibling(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Measured live (aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, run 41090058316): a whole-
+    batch universal re-ask that correctly fixes one unit can quietly flip an already-correct
+    sibling in the very same reply. reconciliation_narrowing's whole point is a narrowed third
+    ask that touches only the unit a rejection actually names -- the correct sibling's own entry
+    must come through byte-for-byte, not regenerated."""
+    correct = "inherited_unit:001.paragraph"
+    wrong = "inherited_unit:002.code_block"
+    base = make_facts()
+    facts = FactsDocument(
+        base.repository,
+        base.source_revision,
+        (
+            *(f for f in base.facts if f.kind != "inherited_unit"),
+            Fact(correct, "inherited_unit", "A real limitation.", (Evidence("README.md", None),)),
+            Fact(
+                wrong, "inherited_unit", "```bash\nnuget install Widget.FOSS\n```",
+                (Evidence("README.md", None),),
+            ),
+        ),
+    )
+    correct_entry = {
+        "unit_id": correct,
+        "disposition": "OMIT_UNSUPPORTED",
+        "destination_section": None,
+        "fact_ids": ["package:name"],
+        "rationale": "Redundant with the verified package fact.",
+    }
+    wrong_entry = {
+        "unit_id": wrong,
+        "disposition": "DEFER_UNRESOLVED",
+        "destination_section": None,
+        "fact_ids": [],
+        "rationale": "Rendered deterministically by the installation section.",
+    }
+    first_reply = {"dispositions": [correct_entry, wrong_entry]}
+    fixed_entry = {
+        "unit_id": wrong,
+        "disposition": "VERIFIED_PRESERVE",
+        "destination_section": "scope_limitations",
+        "fact_ids": [],
+        "rationale": "Kept as written; no fact contradicts it.",
+    }
+    narrowed_reply = {"dispositions": [fixed_entry]}
+    ledger = Ledger(tmp_path / "ledger.jsonl")
+    store = CallStore(tmp_path / "calls")
+    prompts = load_manifests(PROMPTS_PATH)
+    # ask 1, the universal re-ask (ask 2, identical -- repeated, not merely silent), then the
+    # narrowed third ask for "wrong" alone.
+    client = _FakeClient(
+        [_completion(first_reply), _completion(first_reply), _completion(narrowed_reply)]
+    )
+    monkeypatch.setattr(jobs_module.transport, "build_client", lambda config: client)
+    stage = _run_reconciliation(
+        entry=make_entry(),
+        document=facts,
+        investigation={},
+        prompts=prompts,
+        config=CONFIG,
+        ledger=ledger,
+        store=store,
+        context=JobContext(make_entry().repository, facts.source_revision),
+    )
+    assert client.chat.completions.replies == []
+    by_unit = {entry["unit_id"]: entry for entry in stage["dispositions"]}
+    # The correct sibling comes through untouched, byte-for-byte.
+    assert by_unit[correct] == correct_entry
+    # The named unit is fixed, not left repeating the same rejected disposition.
+    assert by_unit[wrong]["disposition"] == "VERIFIED_PRESERVE"
+    assert by_unit[wrong]["destination_section"] == "scope_limitations"
+
+
 # --- S9: the render's unprinted kept units are accounted --------------------------------------
 
 README_WITH_SUBHEADING = README + "\n### Main\n"

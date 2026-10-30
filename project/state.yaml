@@ -2307,15 +2307,43 @@ next_ready_items:
       its simpler, silence-only auto-built form); what remains is the rejection-aware pending()/
       ask()/merge()/repeated() for dispositions.py's own "dispositions" list and "unit_id" key,
       not a new mechanism from scratch.
+    tenth_fix_reconciliation_narrowing_built_2026_10_30: >
+      Built dispositions.py's own reconciliation_narrowing: pending() parses a unit_id out of
+      every one of this module's own "{unit}: reason" rejection lines (confirmed uniform across
+      every errors.append in placement_errors/coverage_findings) plus core/llm/binding.py's "no
+      disposition for inherited units: a, b, c"/"more than one disposition for: a, b, c" lines,
+      bailing to an empty list (no narrowing, fail as before) the moment any line names no unit
+      at all, the same conservative rule authoring_retry.py's own failing_slots uses. ask()
+      builds a packet scoped to only the named units, each one's own text prefixed with why its
+      last answer was rejected and, when repeated verbatim, told so explicitly (reconciliation_
+      packet has no free-text "objective" field the way a section_authoring task does, so the
+      correction travels with the unit's own text, the one field the model reads once per
+      narrowed unit). merge() replaces each named unit's entry in place, preserving document
+      order (a real contract, not cosmetic -- reconciliation_batches' own docstring), appends one
+      the base never had at all, and refuses (returns the reply unchanged, to be caught by the
+      ordinary binding/schema checks) a narrowed reply that does not exactly cover what was
+      asked. Wired into cascade.py's _run_reconciliation in place of the plain silence-only
+      callable this session's ninth fix had added.
+    caught_one_real_bug_while_writing_the_test: >
+      The first version of the new integration test (a correct sibling untouched, a wrong,
+      repeated disposition narrowed and fixed) failed even with the real mechanism wired in --
+      traced with temporary debug prints (not left in) to normalize()'s own OMIT_NAMES_SUPPORTED
+      fold silently reverting the test's chosen "fix" (OMIT_UNSUPPORTED citing a package fact)
+      back to DEFER_UNRESOLVED in place, because that specific disposition was not evidence this
+      module's own deterministic rules found sufficient for that exact code block's text -- the
+      merge/narrowing mechanism itself was already working correctly; the test fixture had picked
+      a disposition the real system would not have accepted either. Switched the test's "fix" to
+      an unambiguously valid VERIFIED_PRESERVE; both the new test and the ninth fix's own test
+      pass, and a direct falsifier (narrow=None) reproduces the original "rejected twice, no
+      narrowing" failure for both. 11 further direct unit tests for pending()/merge()/repeated()
+      (tests/readme/reconciliation/test_narrowing.py). Full suite clean.
     next_step: >
-      build reconciliation_narrowing properly, with unit tests for pending() (parsing a unit_id
-      out of both this module's own "{unit}: reason" rejection lines and core/llm/binding.py's
-      "no disposition for inherited units: a, b, c" line), ask() (reusing the narrowed-packet/
-      schema construction already written inline in cascade.py's own narrow callable), merge()
-      (replacing, not only adding, the named units' entries in the merged batch), and repeated()
-      -- then wire it into cascade.py's _run_reconciliation in place of the plain silence-only
-      callable, verify the full suite, and re-dispatch Cpp to confirm it stops regressing a
-      correct sibling while fixing a named one.
+      dispatch a fresh Cpp run with this fix landed; read directly. If the three sibling units
+      this whole investigation chain has been chasing (015/017/019, or whichever units a
+      rejection names this time) get fixed without flipping a correct sibling, this closes the
+      real, structural gap this chain traced back through ten fixes. If something still persists,
+      read it on its own evidence, the same discipline as every fix before it -- this mechanism
+      closes the "whole-batch regeneration" failure mode specifically, not every possible defect.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED

@@ -30,15 +30,18 @@ constant and gap-reason label these use).
 ``_variant_chars``/``_batch_size``). This is what builds and fires one real
 ``source_reconciliation`` call; see ``scripts/run_lane_r_reconciliation.py``.
 
-**Still deferred** (not ported, with the reason): ``reconciliation_narrowing`` (the narrowed
-re-ask repair path for a partially-rejected batch), ``placement_errors``, ``dangling_pointers``,
-``coordinate_neighbor_promises``, ``recover_uncited_prose_omits`` and their own supporting
-functions (the refusal-message/repair half that reacts to what ``coverage_findings`` reports,
-rather than the self-audit itself -- these also need ``composition/references.py``'s
-``dangling_references``, not ported). This split follows the manifest's own instruction
-precisely: the self-audit (what counts as provable) travels with ``normalize`` intact; the
-separate refusal-message/repair layer built on top of it does not, and firing one real call does
-not need it either.
+**Ported later still** (each on the date its own gap was measured live and closed, not left as a
+known-but-unported fix): ``placement_errors``, ``dangling_pointers``, ``coordinate_neighbor_
+promises`` and ``recover_uncited_prose_omits`` (the refusal-message/repair half that reacts to
+what ``coverage_findings`` reports, once this repository's own ``composition/references.py``
+existed to give it ``dangling_references``) -- and, 2026-10-30, ``reconciliation_narrowing`` (the
+narrowed re-ask for a batch left with some unit's disposition still wrong or missing after the
+job's own two universal asks, modeled on ``composition/authoring_retry.py``'s
+``authoring_narrowing`` for section_authoring's identical problem). Each of these, once ported,
+still needed wiring into ``cascade.py``'s own call sites separately -- ``placement_errors`` into
+``_run_reconciliation``'s ``checks``, ``coordinate_neighbor_promises`` into its return value, and
+``reconciliation_narrowing`` into its ``narrow=`` argument -- a real, measured gap each time
+(project/state.yaml's own record of each), not a hypothetical one.
 """
 
 from __future__ import annotations
@@ -65,6 +68,7 @@ from repo_presenter.core.facts import (
     bounded_records,
 )
 from repo_presenter.core.llm.binding import collect_ids
+from repo_presenter.core.llm.narrowing import Narrowing
 from repo_presenter.core.llm.prompts import LoadedManifest, PromptManifest
 from repo_presenter.core.package_registry import (
     DISTRIBUTION_FACT_PREFIX,
@@ -1517,6 +1521,176 @@ def _sections_packet(facts: FactsDocument) -> list[dict[str, Any]]:
         shown["placeable"] = record["id"] in holdable
         sections.append(shown)
     return sections
+
+
+_UNIT_ERROR = re.compile(r"\A(inherited_unit:\d+\.[a-z_]+): ")
+_MISSING_UNITS = re.compile(r"\Ano disposition for inherited units: (.+)\Z")
+_DUPLICATED_UNITS = re.compile(r"\Amore than one disposition for: (.+)\Z")
+
+
+def _rejected_unit_ids(rejection: Sequence[str]) -> list[str]:
+    """The inherited units a reconciliation rejection names, in first-seen order; empty when any
+    line names none - a defect no narrowed ask can address (a schema error, an unknown fact ID),
+    so the job fails as it always did. Every check in this module names its unit as the line's
+    own leading ``{unit_id}: `` (confirmed against every ``errors.append`` in this file); the two
+    exceptions are core/llm/binding.py's own binding_errors, whose "no disposition for..."/"more
+    than one disposition for..." lines name a comma-separated list instead."""
+    found: list[str] = []
+    for error in rejection:
+        match = _UNIT_ERROR.match(error)
+        if match:
+            if match.group(1) not in found:
+                found.append(match.group(1))
+            continue
+        listed = _MISSING_UNITS.match(error) or _DUPLICATED_UNITS.match(error)
+        if listed:
+            for unit_id in listed.group(1).split(", "):
+                if unit_id not in found:
+                    found.append(unit_id)
+            continue
+        return []
+    return found
+
+
+def _reconciliation_ask(
+    unit_ids: Sequence[str],
+    _content: str,
+    rejection: Sequence[str],
+    repeated: Sequence[str],
+    *,
+    entry: RegistryEntry,
+    batch_units: Sequence[Fact],
+    batch_facts: FactsDocument,
+    investigation: Mapping[str, Any],
+    manifest: LoadedManifest,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """The narrowed packet and schema for only ``unit_ids``, each unit's own text prefixed with
+    why its last disposition was rejected (reconciliation_packet carries no free-text "objective"
+    field the way a section_authoring task does, so the correction travels with the unit's own
+    text instead - the only field the model reads once per narrowed unit)."""
+    wanted = frozenset(unit_ids)
+    narrowed_units = [unit for unit in batch_units if unit.id in wanted]
+    narrowed_facts = reconciliation_batch_facts(batch_facts, narrowed_units)
+    packet = reconciliation_packet(
+        entry, narrowed_facts, investigation, manifest.manifest, narrowed_units
+    )
+    also_repeated = frozenset(repeated)
+    for record in packet["inherited_units"]:
+        reasons = [line for line in rejection if line.startswith(f"{record['id']}: ")]
+        note = (
+            f"[Your last disposition for this unit was rejected: {'; '.join(reasons)}] "
+            if reasons
+            else ""
+        )
+        if record["id"] in also_repeated:
+            note += (
+                "[Your last two answers for this unit gave the identical, still-rejected "
+                "disposition; change it, not merely restate it.] "
+            )
+        if note:
+            record["text"] = note + record["text"]
+    schema = reconciliation_schema(manifest, narrowed_units, narrowed_facts, investigation)
+    return packet, schema
+
+
+def _reconciliation_merge(merged: str, narrowed: str, unit_ids: Sequence[str]) -> str:
+    """``merged`` with each of ``unit_ids`` replaced (not merely added) by the narrowed reply's own
+    entry, every other unit kept exactly as ``merged`` had it, in its original position - document
+    order is a real contract here (``reconciliation_batches``' own docstring), not cosmetic. A
+    narrowed reply that does not exactly cover ``unit_ids`` is returned as it stands, to be refused
+    by the ordinary binding/schema checks rather than quietly repaired (the same rule
+    authoring_retry.py's own ``_merge`` applies to a section_authoring narrowed reply)."""
+    try:
+        base, extra = json.loads(merged), json.loads(narrowed)
+    except json.JSONDecodeError:
+        return narrowed
+    if not (isinstance(base, dict) and isinstance(extra, dict)):
+        return narrowed
+    wanted = frozenset(unit_ids)
+    replacements = {
+        str(unit["unit_id"]): unit
+        for unit in extra.get("dispositions", [])
+        if isinstance(unit, dict) and unit.get("unit_id") in wanted
+    }
+    if frozenset(replacements) != wanted:
+        return narrowed
+    base_entries = [unit for unit in base.get("dispositions", []) if isinstance(unit, dict)]
+    present = {str(unit.get("unit_id")) for unit in base_entries}
+    merged_entries = [
+        replacements.get(str(unit.get("unit_id")), unit) for unit in base_entries
+    ]
+    merged_entries.extend(
+        replacements[unit_id] for unit_id in unit_ids if unit_id not in present
+    )
+    return json.dumps({"dispositions": merged_entries})
+
+
+def _reconciliation_repeated(first: str, second: str, unit_ids: Sequence[str]) -> list[str]:
+    """The ``unit_ids`` whose disposition ``second`` gives exactly as ``first`` did - the universal
+    re-ask quoted the complete defect list, so a unit returned unchanged was not changed by being
+    told (authoring_retry.py's ``repeated_slots``, the same rule for this module's own shape)."""
+    try:
+        before_doc, after_doc = json.loads(first), json.loads(second)
+    except json.JSONDecodeError:
+        return []
+    before = {
+        str(u.get("unit_id")): u
+        for u in before_doc.get("dispositions", [])
+        if isinstance(u, dict)
+    }
+    after = {
+        str(u.get("unit_id")): u for u in after_doc.get("dispositions", []) if isinstance(u, dict)
+    }
+    return [
+        unit_id
+        for unit_id in unit_ids
+        if unit_id in before and before[unit_id] == after.get(unit_id)
+    ]
+
+
+def reconciliation_narrowing(
+    entry: RegistryEntry,
+    batch_units: Sequence[Fact],
+    batch_facts: FactsDocument,
+    investigation: Mapping[str, Any],
+    manifest: LoadedManifest,
+) -> Narrowing:
+    """The ``narrow`` argument of ``run_job`` for one source_reconciliation batch call: after the
+    job's two asks, one more for only the units a rejection actually names, never a whole-batch
+    regeneration.
+
+    This module's own top docstring has named this "Still deferred" since the day the S4 job-
+    wiring half was ported; built now because a whole-batch reply has a real, measured cost a
+    narrower one does not: aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, hosted run 41090058316 --
+    a prompt fix that correctly resolved three named units' dispositions also flipped a fourth,
+    previously-correct sibling's answer in the very same reply. Modeled on composition/
+    authoring_retry.py's ``authoring_narrowing`` for section_authoring's identical problem;
+    ``core/llm/jobs.py``'s own ``Narrowing``/``narrow=`` machinery already proved itself on this
+    exact job for the simpler, silence-only case this session's own ninth fix wired in - this
+    supplies the fuller, rejection-aware half that mechanism cannot build on its own."""
+
+    def ask(
+        unit_ids: Sequence[str], content: str, rejection: Sequence[str], repeated: Sequence[str]
+    ) -> tuple[Mapping[str, Any], dict[str, Any]]:
+        return _reconciliation_ask(
+            unit_ids,
+            content,
+            rejection,
+            repeated,
+            entry=entry,
+            batch_units=batch_units,
+            batch_facts=batch_facts,
+            investigation=investigation,
+            manifest=manifest,
+        )
+
+    return Narrowing(
+        pending=lambda content, rejection: _rejected_unit_ids(rejection),
+        ask=ask,
+        merge=_reconciliation_merge,
+        subject="the units a rejection actually named",
+        repeated=_reconciliation_repeated,
+    )
 
 
 def merge_dispositions(outputs: Sequence[dict[str, Any]]) -> dict[str, Any]:
