@@ -5,7 +5,7 @@
   "provider_repository_id": 1276658443,
   "registry_revision": null,
   "active_transaction_id": "fbc76990855041eb8011727b165ee2bd",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected three times (the third a narrowed ask for the units a rejection actually named); last rejection: inherited_unit:164.paragraph: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"Use `dry_run=True` to preview removal or `keep=\\\"last\\\"` to retain the last selected\\ncopy. Returned indices refer to the original document and are sorted ascending.\". Cite the supporting fact IDs or place the unit; do not omit it without a cited reason",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-30T23:23:06.226269+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:41142404776",
     "acquired_at": "2026-10-30T23:08:56.685694+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-10-30T23:23:56.685694+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "75912a00a701439baec3c18bc9a3b215",
+    "transaction_id": "fbc76990855041eb8011727b165ee2bd",
+    "repository": "aspose-pdf-foss/Aspose-PDF-FOSS-for-Python",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-30T23:23:05.853266+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-pdf-foss/Aspose-PDF-FOSS-for-Python",
+    "output_manifest": "candidates/aspose-pdf-foss__Aspose-PDF-FOSS-for-Python/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:41142404776:aspose-pdf-foss/Aspose-PDF-FOSS-for-Python": "fbc76990855041eb8011727b165ee2bd"
   },
