@@ -2279,13 +2279,43 @@ next_ready_items:
       content. prompts/source_reconciliation.yaml bumped 10 -> 11: the SUPERSEDE_REDUNDANT
       guidance now names the package/distribution fact as the common case when no install_command
       resolved, with this exact measured case as a worked example. Full suite clean.
+    v11_result_real_progress_but_whack_a_mole_2026_10_30: >
+      Re-run 41090058316, read from the durable-state record directly (no artifact; failed
+      before writing one): genuine, confirmed progress AND a new regression in the same batch.
+      Units 015/017/019 -- the three the prompt fix targeted -- are GONE from the rejection
+      entirely; v11 worked for exactly what it was aimed at. But inherited_unit:013.code_block,
+      which had been correctly citing the package fact in every prior run, flipped to the SAME
+      uncited_redundant_defer mistake this run -- and a different unit entirely
+      (inherited_unit:008.code_block, the at_a_glance Mermaid diagram) is newly caught as an
+      uncited OMIT_UNSUPPORTED. Same temperature=0/seed=1 determinism, but a materially different
+      prompt makes a materially different full-batch reply; fixing the three named units'
+      reasoning seems to have shifted how the model handles their batch-mates, breaking one that
+      already worked. This is precisely the shape a smaller, SURGICAL retry (asking again only
+      for the units that are actually wrong, leaving a correct sibling's answer untouched) is
+      built to prevent, and precisely what whole-batch re-generation by prompt tuning cannot
+      reliably avoid -- confirmed now by evidence, not assumed in advance.
+    decision_build_the_full_narrowing_2026_10_30: >
+      Four cheaper interventions (batch-size mitigation, repair-round increase, the silent-unit
+      narrowing wiring, two prompt refinements) have each produced real, independently-verified
+      progress, and each has also run into this same wall: a whole-batch reply can un-fix a
+      correct sibling while fixing a named one. The next step is building dispositions.py's own
+      documented-but-never-ported reconciliation_narrowing (this module's top docstring, "Still
+      deferred") -- a genuine rejection-aware third ask for only the specific units a rejection
+      names, leaving every other unit's already-correct entry untouched, modeled on composition/
+      authoring_retry.py's authoring_narrowing for S6's identical problem. core/llm/jobs.py's
+      Narrowing/narrow= machinery already exists and is proven (this session's own ninth fix used
+      its simpler, silence-only auto-built form); what remains is the rejection-aware pending()/
+      ask()/merge()/repeated() for dispositions.py's own "dispositions" list and "unit_id" key,
+      not a new mechanism from scratch.
     next_step: >
-      dispatch a fresh Cpp run with prompt v11; read directly. If 015/017/019 now cite the same
-      package fact 013 already uses successfully, this closes without ever needing the full
-      Narrowing build -- the real cause was a wrong fact-kind pointer in the prompt, not a
-      missing retry mechanism, a materially cheaper fix than the one this card was about to
-      commit to building. If it still fails, THAT is the point to build the fuller mechanism,
-      now genuinely out of cheaper explanations rather than assumed out of them.
+      build reconciliation_narrowing properly, with unit tests for pending() (parsing a unit_id
+      out of both this module's own "{unit}: reason" rejection lines and core/llm/binding.py's
+      "no disposition for inherited units: a, b, c" line), ask() (reusing the narrowed-packet/
+      schema construction already written inline in cascade.py's own narrow callable), merge()
+      (replacing, not only adding, the named units' entries in the merged batch), and repeated()
+      -- then wire it into cascade.py's _run_reconciliation in place of the plain silence-only
+      callable, verify the full suite, and re-dispatch Cpp to confirm it stops regressing a
+      correct sibling while fixing a named one.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
