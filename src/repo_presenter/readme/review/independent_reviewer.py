@@ -446,7 +446,17 @@ def _accounting_units(
 ) -> list[str]:
     """The text of every inherited unit whose disposition accounts for a loss: an accounting
     disposition that cites at least one fact and states a rationale. A kept, deferred or
-    non-content disposition, or one without evidence, accounts for nothing."""
+    non-content disposition, or one without evidence, accounts for nothing.
+
+    A heading is NOT an exception to this, deliberately: tests/readme/review/
+    test_preservation_rules.py::test_live_loss_is_not_accounted_for_without_evidence_or_by_a_kept_disposition
+    already proves a dropped heading with no fact_ids must still be reported lost, the same as a
+    paragraph. Tried and reverted a broad heading exemption (measured live, aspose-cells-foss/
+    Aspose.Cells-FOSS-for-Go, run 41079947007: a "## Project Structure" heading dropped with no
+    fact_ids) -- the right fix for that real case is forcing reconciliation to land on real
+    evidence the same way every other uncited omission in this chain was fixed (a repair attempt,
+    not a quieter bar), not exempting the one kind the existing test says must not be exempt.
+    """
     units = _inherited_units(facts)
     return [
         units[str(row.get("unit_id"))]

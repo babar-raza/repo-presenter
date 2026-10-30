@@ -2189,6 +2189,76 @@ next_ready_items:
       (model_reviewed genuinely true), zero findings, and a byte-identical, zero-provider-call
       rerun from a fresh process.
 
+  - id: PORTFOLIO_WIDENING_2026_10_30
+    status: IN_PROGRESS
+    purpose: >
+      With Java sealed and no-op-proven, and Cpp's one remaining unit correctly recorded as
+      needing reconciliation_narrowing rather than another patch, per OWNER_FULL_PORTFOLIO_BAR_
+      2026_10_28 the right next move is widening real hosted coverage rather than continuing to
+      spend every cycle on the two repositories already tried. Dispatched three fresh Lane R
+      runs on ecosystems not yet attempted this session, same product family for comparability:
+      aspose-cells-foss for .NET (41079914003), Python (41079931367), Go (41079947007).
+    go_result_a_real_finding_a_tried_and_reverted_fix: >
+      Go (41079947007) REJECTed: "## Project Structure" heading, OMIT_UNSUPPORTED with no
+      fact_ids and a real rationale ("not placed by deterministic code and no fact supports its
+      presence"), reported as live content lost. Tried exempting a heading kind from
+      independent_reviewer.py's _accounting_units fact_ids requirement (the same shape as every
+      other fix in this chain) -- the full test suite immediately refused it:
+      tests/readme/review/test_preservation_rules.py already has a deliberate test proving a
+      dropped heading with no fact_ids must still be reported lost, same as a paragraph. Reverted
+      before committing; the attempt and why it was wrong are kept in _accounting_units's own
+      docstring rather than only in this record. This heading is a genuine, correctly-blocking
+      finding, the same shape as Java's earlier directory-tree case: the right fix is forcing
+      reconciliation toward real evidence via the repair loop (now with 4 rounds, not 2), not a
+      quieter accounting bar. Also found, separately, in the SAME candidate (not yet repaired or
+      investigated): several VERIFIED_MOVE headings ("Formulas and the Calculation Engine",
+      "Data Validation", "Streaming Large Files", "Styling", "Structured Tables", "Constraints")
+      claim to be moved as "task-named subheadings" into additional_examples, but the rendered
+      README shows differently-worded task headings instead (confirmed by grep against the real
+      rendered output) -- a disposition claiming verbatim-ish preservation (VERIFIED_MOVE) for
+      content that composition then substantially retitles. Not yet root-caused; flagged here
+      rather than guessed at.
+    net_and_python_results_second_seal_and_a_recurring_finding: >
+      .NET (41079914003): a SECOND real seal this session, independently verified the same way as
+      Java -- review_verdict.json ACCEPT with zero findings, the sealed bundle's own ledger.jsonl
+      shows 3 real independent_review calls, manifest.json's no_op_proof is null (sealed, not yet
+      no-op-proven; a same-revision rerun would confirm it, not yet dispatched). Python
+      (41079931367): REJECT, never reaching review (no independent_review call in the ledger) --
+      a "## Development" heading, OMIT_UNSUPPORTED with no fact_ids, reported as live content
+      lost. The SAME shape as Go's "Project Structure" heading, now seen on two of the three
+      widening repositories: a heading dropped with a real but uncitable rationale, correctly
+      held to the same evidence bar as a paragraph (the attempted exemption above was wrong and
+      reverted). Combined with Cpp's still-stuck code_block, this is now real, convergent, cross-
+      repository evidence that the S4 job's own 2-ask budget is not enough for a meaningful
+      fraction of the portfolio's real content.
+    ninth_fix_the_cheap_half_of_the_narrowing_mechanism_was_already_built: >
+      Before attempting the full, bespoke reconciliation_narrowing this module's own docstring
+      names "Still deferred" (modeled on composition/authoring_retry.py's authoring_narrowing for
+      S6's equivalent problem), checked core/llm/jobs.py's own generic path first: for ANY job
+      whose manifest declares binding: unit_ids (source_reconciliation.yaml does), run_job already
+      has a built-in third, narrowed ask for units left SILENT (no disposition at all) by both the
+      original ask and the universal re-ask -- core/llm/binding.py's silent_unit_ids/
+      add_silent_units are fully generic over any unit-id-keyed list, "dispositions" included, not
+      only S6's "units". cascade.py's own _run_reconciliation simply never supplied the one
+      callable this generic path needs (narrow=, a function from the still-missing unit IDs to a
+      narrowed packet and schema) -- an ELEVENTH instance of this chain's own recurring pattern:
+      a mechanism already existing, generic, and correct, just never wired to the one caller that
+      needed it. This closes exactly Cpp's ORIGINAL finding (run 40735967256, 13 units silent on
+      one 20-unit batch) for real, not only via the batch-size mitigation. It does NOT close Go/
+      Python's heading case or Cpp's current nuget-install case, both of which have a disposition
+      already (just a wrong one, repeated) -- silent-unit narrowing cannot help there; that
+      residual still needs the FULLER, rejection-aware Narrowing (pending() reading WHICH unit a
+      rejection names, not only which unit never appears at all), not yet built. New test
+      (test_a_unit_left_silent_by_both_asks_is_filled_by_a_narrowed_third), falsifier confirmed.
+    next_step: >
+      dispatch the three repositories again (Cpp, Go, Python) with this ninth fix landed; read
+      results directly. Expect: Cpp's original silence class resolved (if it recurs at all);
+      Go/Python's heading findings and Cpp's nuget finding to persist, since this fix does not
+      reach them. If they persist as expected, that confirms (not just suggests) the fuller
+      rejection-aware Narrowing is the one remaining piece, and building it becomes the clear next
+      major task rather than a hypothesis. Also: dispatch a same-revision .NET rerun to confirm
+      its no-op proof, the same way Java's was confirmed.
+
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
     priority: highest

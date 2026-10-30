@@ -45,6 +45,7 @@ loop used to repair S4 defects only -- widened to every stage ``repair_defect`` 
 from __future__ import annotations
 
 import json
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -227,9 +228,31 @@ def _run_reconciliation(
             # defect having already slipped past the one stage built to catch it at its source.
             return reconcile_checks(output, batch_facts)
 
+        def narrow(
+            unit_ids: Sequence[str], batch_units=batch_units, batch_facts=batch_facts
+        ) -> tuple[dict, dict]:
+            # core/llm/jobs.py's own generic third-ask path for a unit_ids-bound job
+            # (source_reconciliation.yaml declares binding: unit_ids): when the universal re-ask
+            # still leaves some units with no disposition at all (not merely a wrong one -- that
+            # needs the fuller, still-unbuilt reconciliation_narrowing this module's own top
+            # docstring names "Still deferred"), jobs.py asks again for only those, naming them
+            # here, and splices the reply back in (core/llm/binding.py's add_silent_units).
+            # Measured live, the exact shape this closes: aspose-cells-foss/Aspose.Cells-FOSS-
+            # for-Cpp, run 40735967256 -- a 20-unit batch left 13 units with no disposition at
+            # all on both the original ask and the universal re-ask.
+            narrowed = [unit for unit in batch_units if unit.id in set(unit_ids)]
+            narrowed_facts = reconciliation_batch_facts(batch_facts, narrowed)
+            narrowed_packet = reconciliation_packet(
+                entry, narrowed_facts, investigation, loaded.manifest, narrowed
+            )
+            narrowed_schema = reconciliation_schema(
+                loaded, narrowed, narrowed_facts, investigation
+            )
+            return narrowed_packet, narrowed_schema
+
         result = run_job(
             loaded, packet, config=config, facts=batch_facts, ledger=ledger, store=store,
-            context=context, call_schema=call_schema, checks=checks,
+            context=context, call_schema=call_schema, checks=checks, narrow=narrow,
         )
         outputs.append(result.output)
     # coordinate_neighbor_promises is documented (dispositions.py's own module docstring, and its

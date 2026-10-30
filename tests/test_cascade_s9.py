@@ -358,6 +358,70 @@ def test_a_moved_lead_in_follows_its_omitted_payload_not_left_stranded(
     assert by_unit[lead]["destination_section"] is None
 
 
+def test_a_unit_left_silent_by_both_asks_is_filled_by_a_narrowed_third(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Measured live (aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, run 40735967256): a batch left
+    13 units with no disposition at all on both the original ask and the universal re-ask, and
+    source_reconciliation's own job call had no third, narrowed ask to recover them -- it simply
+    gave up. core/llm/jobs.py already has a generic third-ask path for exactly a silent unit_ids
+    job; _run_reconciliation only had to supply the one callable jobs.py cannot build on its own
+    (a narrowed packet and schema for the still-missing units), via run_job's narrow= parameter."""
+    kept = "inherited_unit:001.paragraph"
+    silent = "inherited_unit:002.paragraph"
+    base = make_facts()
+    facts = FactsDocument(
+        base.repository,
+        base.source_revision,
+        (
+            *(f for f in base.facts if f.kind != "inherited_unit"),
+            Fact(kept, "inherited_unit", "A real limitation.", (Evidence("README.md", None),)),
+            Fact(silent, "inherited_unit", "Another real limitation.", (Evidence("README.md", None),)),
+        ),
+    )
+    kept_entry = {
+        "unit_id": kept,
+        "disposition": "VERIFIED_PRESERVE",
+        "destination_section": "scope_limitations",
+        "fact_ids": [],
+        "rationale": "Kept as written; no fact contradicts it.",
+    }
+    missing_reply = {"dispositions": [kept_entry]}
+    narrowed_reply = {
+        "dispositions": [
+            {
+                "unit_id": silent,
+                "disposition": "VERIFIED_PRESERVE",
+                "destination_section": "scope_limitations",
+                "fact_ids": [],
+                "rationale": "Kept as written; no fact contradicts it.",
+            }
+        ]
+    }
+    ledger = Ledger(tmp_path / "ledger.jsonl")
+    store = CallStore(tmp_path / "calls")
+    prompts = load_manifests(PROMPTS_PATH)
+    # Two identical silent replies (ask 1, the universal re-ask) then the narrowed third ask.
+    client = _FakeClient(
+        [_completion(missing_reply), _completion(missing_reply), _completion(narrowed_reply)]
+    )
+    monkeypatch.setattr(jobs_module.transport, "build_client", lambda config: client)
+    stage = _run_reconciliation(
+        entry=make_entry(),
+        document=facts,
+        investigation={},
+        prompts=prompts,
+        config=CONFIG,
+        ledger=ledger,
+        store=store,
+        context=JobContext(make_entry().repository, facts.source_revision),
+    )
+    assert client.chat.completions.replies == []
+    by_unit = {entry["unit_id"]: entry for entry in stage["dispositions"]}
+    assert set(by_unit) == {kept, silent}
+    assert by_unit[silent]["disposition"] == "VERIFIED_PRESERVE"
+
+
 # --- S9: the render's unprinted kept units are accounted --------------------------------------
 
 README_WITH_SUBHEADING = README + "\n### Main\n"
