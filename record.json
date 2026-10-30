@@ -5,7 +5,7 @@
   "provider_repository_id": 1276603134,
   "registry_revision": null,
   "active_transaction_id": "61d0f0555b8d437f873ea3eb8aa436bf",
-  "state": "ACCEPTED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "ACCEPTED",
+    "occurred_at": "2026-10-30T22:05:34.269216+00:00",
+    "resume_predicate": null,
+    "recovery_count": 1
+  },
   "lease": null,
   "last_transition": {
     "transition_id": "38b3e2cd0ff84e03aac30cee5e8e17bf",
@@ -33,9 +40,9 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 11,
+  "state_version": 12,
   "recent_trigger_dedup_keys": {
     "run:41130110127:aspose-html-foss/Aspose.HTML-FOSS-for-Python": "61d0f0555b8d437f873ea3eb8aa436bf"
   },
-  "recovery_count": 0
+  "recovery_count": 1
 }
