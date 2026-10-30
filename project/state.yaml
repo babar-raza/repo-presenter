@@ -2596,6 +2596,46 @@ next_ready_items:
       root-cause next. Lane L has still not been actively worked at all this session -- the
       owner's mandate is explicit that both lanes must reach the same bar, so Lane L hosted
       dispatches are due, not optional once Lane R coverage looks reasonable.
+    fourteenth_fix_the_dangling_pointer_oscillation_recurred_so_it_was_fixed_2026_10_30: >
+      Dispatched aspose-words-foss/.NET (41121235240, Lane R) as part of this round's widening.
+      It hit the EXACT same oscillation shape Slides-Java showed one occurrence of earlier this
+      session: inherited_unit:046.paragraph went silent (ask 1) -> VERIFIED_MOVE, rejected
+      dangling_pointer (ask 2, the universal re-ask) -> OMIT_UNSUPPORTED, uncited, rejected
+      uncited_prose_omit (ask 3, the narrowed ask, correctly scoped to this one unit). Two
+      occurrences now confirms the recurrence this session's own discipline waits for before
+      fixing rather than patching on one data point. Root cause: dangling_pointer's own rejection
+      text already names VERIFIED_REWRITE as the no-citation-needed fix, but the narrowed ask
+      (dispositions.py's _reconciliation_ask) only ever quotes the rejection verbatim, with no
+      extra steer -- and twice now, told that exact text, the model reached for OMIT_UNSUPPORTED
+      instead, missing that VERIFIED_REWRITE needs no citation at all. Fixed: _reconciliation_ask
+      now adds an explicit, additional note ("This is the last ask for this unit...") naming
+      VERIFIED_REWRITE as preferred specifically when a unit's rejection contains dangling_
+      pointer, since this is the unit's last chance (no ask 4 exists). 2 new tests in tests/
+      readme/reconciliation/test_narrowing.py (the steer appears for a dangling_pointer rejection,
+      and is absent for an unrelated one); full suite clean before commit. Not yet re-verified
+      live -- next step below.
+    two_more_findings_from_this_rounds_widening_2026_10_30: >
+      aspose-imaging-foss/.NET (41121245347, Lane R): failed fast at S6 (section_authoring) with
+      error_class TruncatedOutput ("output truncated at the manifest's max_output_tokens") --
+      run_job's own "never retry" rule for this exact failure (core/llm/jobs.py). Genuinely
+      different from every reconciliation/coherence finding so far: section_authoring has no
+      batch-splitting mechanism at all for a single section's own task (unlike coherence_batches'
+      own _COHERENCE_BATCH_CHARS/_COHERENCE_BATCH_UNITS caps, added earlier this session's own
+      history for exactly this failure mode at S8). A section with many slots (api_reference's
+      hub slots, the same shape that needed Cpp's own batching earlier) can apparently still
+      overrun the budget at S6 with no analogous cap. Not yet root-caused in depth; flagged
+      plainly as a real, structural, not-yet-fixed gap, the likely next infrastructure fix after
+      the review-repair convergence theme. aspose-email-foss/Python and aspose-pdf-foss/.NET's
+      own results are recorded under LANE_L_HOSTED_PARITY's lane_l_results_2026_10_30 (both were
+      Lane L dispatches).
+    next_step: >
+      Dispatch a fresh aspose-words-foss/.NET (or aspose-slides-foss/Java) run to verify the
+      fourteenth fix live -- confirm the dangling_pointer steer actually gets the model to choose
+      VERIFIED_REWRITE on its last ask, the same real-evidence discipline as every fix before it.
+      Separately, section_authoring's own missing batch-size cap (Imaging-.NET) is worth a
+      dedicated investigation once the review-repair convergence theme's own open items are
+      triaged, since it looks likely to recur across any ecosystem whose api_reference has many
+      public symbols.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
@@ -2677,6 +2717,30 @@ next_ready_items:
       aspose-email-foss/Python (41121214915), aspose-pdf-foss/.NET (41121225716). Also dispatched
       two more Lane R widening runs: aspose-words-foss/.NET (41121235240), aspose-imaging-foss/.NET
       (41121245347). Not yet read.
+    lane_l_results_2026_10_30: >
+      aspose-3d-foss/.NET (41121204379): REJECTED, correctly -- read .present-work/lane-l/
+      review_verdict.json directly (the candidates/ directory in this artifact holds an old,
+      unrelated Lane R seal from 2026-10-26 restored by the cache; the live result is under
+      .present-work). 7 real deterministic findings, all rule lane_l_unrepaired_defect: the
+      README claims U3D/RVM/AMF/HTML5 support with no confirming fact, plus a real failing
+      example (a genuine C# CS1503 type-mismatch compile error). Every finding's own repair field
+      says "Lane R can rewrite what Lane L is not allowed to; this README is not sealed" -- the
+      exact designed refusal path this card's own first_hosted_lane_l_runs entry already
+      documented, not a new defect. aspose-pdf-foss/.NET (41121225716): REJECTED with a
+      DIFFERENT, not-yet-seen rule: claim_contradiction (not lane_l_unrepaired_defect, and its
+      own repair field is empty, unlike every lane_l_unrepaired_defect finding above) -- "the
+      README names the package 'Aspose.Pdf.Foss.Tests', but the package identity is
+      'Aspose.PDF.FOSS' and no fact states 'Aspose.Pdf.Foss.Tests'". This may be a real extraction
+      gap (a test project legitimately has its own, different name from the main package -- the
+      same shape as this card's own still-open .htm/.html alias gap) rather than a genuine
+      content defect; not yet triaged, recorded plainly rather than guessed at.
+      aspose-email-foss/Python (41121214915): failed in 8 seconds at "Present (Lane L)" with
+      durable state FAILED_INTERNAL and no further detail printed (present.py's CLI prints only
+      one summary line to stdout); the artifact download was blocked both times by the same GH
+      Actions egress-quota exhaustion seen earlier this session ("HTTP 503: Egress is over the
+      account limit"), and no durable-state git ref exists yet for this repository to read as a
+      fallback. Genuinely unread -- flagged honestly as unknown, not assumed to be any particular
+      cause, pending either the egress quota resetting or a fresh re-dispatch.
 
   - id: COHORT_FIRST_GUARD
     status: ACTIVE

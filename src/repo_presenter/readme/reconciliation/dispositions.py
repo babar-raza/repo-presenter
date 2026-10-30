@@ -1603,6 +1603,21 @@ def _reconciliation_ask(
                 "[Your last two answers for this unit gave the identical, still-rejected "
                 "disposition; change it, not merely restate it.] "
             )
+        # Measured live, twice (aspose-slides-foss/Java run 41112860184, aspose-words-foss/.NET
+        # run 41121235240): told a disposition was rejected as dangling_pointer -- a message that
+        # already names VERIFIED_REWRITE as an option needing no citation at all -- both replies
+        # chose OMIT_UNSUPPORTED uncited instead, failing a second, different check
+        # (uncited_prose_omit) on this same, final narrowed ask. The model appears to read
+        # "OMIT_UNSUPPORTED citing the fact that shows the claim unsupported" as the easier
+        # choice when no such fact comes to mind, missing that VERIFIED_REWRITE needs no fact at
+        # all. This is the last ask this unit gets, so the steer is explicit rather than implicit.
+        if any(f": {DANGLING_POINTER}: " in reason for reason in reasons):
+            note += (
+                "[This is the last ask for this unit. VERIFIED_REWRITE needs no cited fact at "
+                "all - only wording, re-authored from the facts you already have, that states "
+                "the same claim without a forward pointer. Prefer it over OMIT_UNSUPPORTED "
+                "unless you can name a specific fact ID that shows the claim itself is false.] "
+            )
         if note:
             record["text"] = note + record["text"]
     schema = reconciliation_schema(manifest, narrowed_units, narrowed_facts, investigation)

@@ -5,15 +5,23 @@ where it was found and fixed: aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, run 4
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
+from repo_presenter.core.facts import Evidence, Fact, FactsDocument
+from repo_presenter.core.llm.prompts import load_manifests
 from repo_presenter.readme.reconciliation.dispositions import (
+    DANGLING_POINTER,
+    _reconciliation_ask,
     _reconciliation_merge,
     _reconciliation_repeated,
     _rejected_unit_ids,
 )
+from tests.readme.composition.synthetic import make_entry, make_facts
 
 A = "inherited_unit:001.paragraph"
 B = "inherited_unit:002.code_block"
+
+PROMPTS_PATH = Path(__file__).resolve().parents[3] / "prompts"
 
 
 def test_a_units_own_prefixed_rejection_line_names_it() -> None:
@@ -92,3 +100,77 @@ def test_repeated_is_empty_when_the_second_reply_actually_changed() -> None:
     first = json.dumps({"dispositions": [_entry(B, "DEFER_UNRESOLVED")]})
     second = json.dumps({"dispositions": [_entry(B, "VERIFIED_PRESERVE")]})
     assert _reconciliation_repeated(first, second, [B]) == []
+
+
+# Measured live, twice (aspose-slides-foss/Java run 41112860184, aspose-words-foss/.NET run
+# 41121235240): told a disposition was rejected as dangling_pointer, both narrowed-ask replies
+# chose OMIT_UNSUPPORTED uncited instead of the VERIFIED_REWRITE the rejection message already
+# names, failing a second, different check on this same, final ask.
+def test_the_narrowed_ask_steers_explicitly_toward_verified_rewrite_on_a_dangling_pointer() -> (
+    None
+):
+    unit = "inherited_unit:046.paragraph"
+    facts = FactsDocument(
+        make_facts().repository,
+        make_facts().source_revision,
+        (
+            *(f for f in make_facts().facts if f.kind != "inherited_unit"),
+            Fact(
+                unit,
+                "inherited_unit",
+                "The table below covers the full API.",
+                (Evidence("README.md", None),),
+            ),
+        ),
+    )
+    manifest = load_manifests(PROMPTS_PATH)["source_reconciliation"]
+    rejection = [
+        f"{unit}: {DANGLING_POINTER}: VERIFIED_MOVE keeps it as written in api_reference, but "
+        "its sentence \"The table below covers the full API.\" says 'below' but no table "
+        "follows it in this section. Kept units print after the section's own content, so a "
+        "pointer to what follows is answered only by a unit kept right after it in the same "
+        "section: keep that unit there too, or choose VERIFIED_REWRITE (the wording is "
+        "re-authored from facts, without the pointer), or OMIT_UNSUPPORTED citing the fact that "
+        "shows the claim unsupported"
+    ]
+    packet, _schema = _reconciliation_ask(
+        [unit],
+        "",
+        rejection,
+        [],
+        entry=make_entry(),
+        batch_units=[fact for fact in facts.facts if fact.kind == "inherited_unit"],
+        batch_facts=facts,
+        investigation={},
+        manifest=manifest,
+    )
+    (record,) = packet["inherited_units"]
+    assert "VERIFIED_REWRITE needs no cited fact at all" in record["text"]
+    assert "This is the last ask for this unit" in record["text"]
+
+
+def test_the_narrowed_ask_adds_no_extra_steer_for_an_unrelated_rejection() -> None:
+    unit = "inherited_unit:050.paragraph"
+    facts = FactsDocument(
+        make_facts().repository,
+        make_facts().source_revision,
+        (
+            *(f for f in make_facts().facts if f.kind != "inherited_unit"),
+            Fact(unit, "inherited_unit", "A plain paragraph.", (Evidence("README.md", None),)),
+        ),
+    )
+    manifest = load_manifests(PROMPTS_PATH)["source_reconciliation"]
+    rejection = [f"{unit}: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs a fact ID"]
+    packet, _schema = _reconciliation_ask(
+        [unit],
+        "",
+        rejection,
+        [],
+        entry=make_entry(),
+        batch_units=[fact for fact in facts.facts if fact.kind == "inherited_unit"],
+        batch_facts=facts,
+        investigation={},
+        manifest=manifest,
+    )
+    (record,) = packet["inherited_units"]
+    assert "VERIFIED_REWRITE needs no cited fact at all" not in record["text"]
