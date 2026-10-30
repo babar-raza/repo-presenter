@@ -2825,6 +2825,30 @@ next_ready_items:
       aspose-slides-foss/.NET (41140560040, Lane R), aspose-words-foss/Python (41140569249, Lane
       R), aspose-3d-foss/Python (41140578883, Lane L), aspose-psd-foss/Python (41140588251, Lane
       L). Not yet read.
+    round_five_results_2026_10_30: >
+      aspose-pdf-foss/Python (41140550585): a dispatch mistake, not a pipeline defect -- the
+      facts job itself refused with "aspose-pdf-foss/Aspose.PDF-FOSS-for-Python is not in the
+      registry allow-list"; data/registry.json's own entry for this repository/ecosystem uses a
+      HYPHEN ("Aspose-PDF-FOSS-for-Python"), not the dot every other aspose-pdf-foss ecosystem
+      uses ("Aspose.PDF-FOSS-for-.NET/Cpp/Java/TypeScript") -- the same hyphen-vs-dot split as
+      aspose-pdf-foss/Go. Re-dispatched with the correct slug as 41142404776; not yet read.
+      aspose-slides-foss/.NET (41140560040): REJECTED at S4, all three asks, on two prose
+      paragraphs (032, 033) describing the examples below them -- uncited_prose_omit, the model
+      choosing OMIT_UNSUPPORTED with no citation each time instead of placing or rewriting them.
+      A single occurrence of a shape related to, but not identical to, dangling_pointer; recorded
+      plainly, not yet investigated. aspose-words-foss/Python (41140569249): a genuinely
+      DIFFERENT, new finding -- the FIRST S5 (presentation_planning) failure this session: output
+      rejected twice (presentation_planning carries no narrow= at all, the same gap _repair_plan's
+      own _targeted_call call site has for repairs -- a planning-stage sibling of the S8/S11
+      narrowing gaps already found and fixed this session), "link 'link_target:015' is assigned
+      more than once; never the same target twice" for two separate link targets. Not yet
+      investigated; likely the next instance of the "missing narrowing" theme, at a stage none of
+      this session's fixes have touched yet. aspose-3d-foss/Python (Lane L): REJECTED, correctly
+      -- the exact, already-documented OBJ-export TypeError (example 8) this card's own
+      first_hosted_lane_l_runs_2026_10_28 entry first found, not a new defect. aspose-psd-foss/
+      Python (Lane L): REJECTED, correctly -- a real broken link plus four real failing examples
+      ("the package would not build" against the repository source tree), the designed
+      lane_l_unrepaired_defect refusal pattern.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
