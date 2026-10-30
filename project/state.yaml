@@ -2792,6 +2792,33 @@ next_ready_items:
       all fail with the same IndentationError (the finding's own evidence says this looks like an
       upstream parse defect, not a README issue) plus 4 real format_overclaim findings; the exact
       designed lane_l_unrepaired_defect refusal pattern, not a new defect.
+    sixteenth_fix_confirmed_live_two_new_findings_surfaced_2026_10_30: >
+      Dispatched aspose-3d-foss/Java (41137892169) and aspose-page-foss/Python (41137901672) to
+      verify the identity-fact steer live. CONFIRMED working on both: Java's unit 008 (the
+      mermaid diagram) is completely gone from the FINAL rejection -- the run progressed all the
+      way to S9 this time (review_verdict.json exists, where it never did before) and now fails
+      on a single, unrelated deterministic finding: a live link "AGENTS.md" lost without an
+      accounting disposition -- genuinely new, not yet investigated. Page-Python's own unit 008
+      cleared too (read directly from the narrowed ask's own attempt-3 content: the model took a
+      different but equally valid path, VERIFIED_MOVE citing identity:ecosystem instead of
+      SUPERSEDE_REDUNDANT, and the unit is absent from attempt 3's rejection list entirely) --
+      but the SAME narrowed batch had a second unit (013.code_block, "pip install aspose-page-
+      foss") that remained stuck, revealing a related but genuinely different, not-yet-fixed
+      root cause: read directly from facts.json, this unit's own install_command:pip fact has
+      polarity UNRESOLVED (the registry could not confirm ownership), so rendering_fact_ids
+      returns empty for "installation" here too, just like the eleventh fix's own Cpp case --
+      but the model cited "package:name" this time, not a package:distribution.* fact, so the
+      eleventh fix's own fallback does not cover it, and normalize() force-reverts the entry to
+      DEFER_UNRESOLVED, rejected by uncited_redundant_defer -- confirmed directly by reproducing
+      normalize()/placement_errors() against the real facts.json. The deeper issue:
+      uncited_redundant_defer's own exemption (code_units_by_polarity) only ever checks tracked
+      EXAMPLE facts for UNRESOLVED status, never install_command facts, so a code_block whose own
+      matching install command is genuinely unresolved (the facts truly do not confirm or deny
+      it) has no path to the DEFER_UNRESOLVED disposition that would actually be correct for it.
+      A single occurrence so far; recorded plainly rather than fixed in this same pass, given how
+      much this session has already covered -- a reasonable next investigation, same shape as
+      the eleventh/fourteenth/sixteenth fixes before it (a real root cause, a real exemption gap,
+      verifiable empirically before writing anything).
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
