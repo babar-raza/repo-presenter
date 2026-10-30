@@ -1636,8 +1636,17 @@ def _reconciliation_ask(
         # name; the one thing the diagram always carries is the product's own identity, which
         # IS available now. Confirmed directly against real facts.json/normalize()/
         # placement_errors() that citing it passes cleanly.
-        if neutral_fact_id is not None and any(
-            f": {UNCITED_REDUNDANT_DIAGRAM}: " in reason for reason in reasons
+        # Measured live again (aspose-slides-foss/Cpp, run 41142566929): the SAME unit can reach
+        # this narrowed ask having oscillated through OTHER dispositions first (OMIT_UNSUPPORTED,
+        # then DEFER_UNRESOLVED, each rejected by a DIFFERENT rule -- uncited_prose_omit,
+        # uncited_redundant_defer), so the one rejection line this ask actually carries never says
+        # uncited_redundant_diagram at all, even though the unit is a mermaid diagram and the
+        # model's own final answer this round is still an uncited SUPERSEDE_REDUNDANT. Checking
+        # the unit's own text, not only the last rejection's wording, catches this regardless of
+        # which disposition the model oscillated through to get here.
+        if neutral_fact_id is not None and (
+            any(f": {UNCITED_REDUNDANT_DIAGRAM}: " in reason for reason in reasons)
+            or _is_mermaid(record["text"])
         ):
             note += (
                 f"[This is the last ask for this unit. Cite {neutral_fact_id!r} - the diagram "

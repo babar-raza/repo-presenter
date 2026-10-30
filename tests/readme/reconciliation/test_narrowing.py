@@ -237,3 +237,41 @@ def test_the_narrowed_ask_adds_no_diagram_steer_for_an_unrelated_rejection() -> 
     )
     (record,) = packet["inherited_units"]
     assert "Cite 'identity:repository'" not in record["text"]
+
+
+# Measured live again (aspose-slides-foss/Cpp, run 41142566929): the same mermaid unit oscillated
+# through OMIT_UNSUPPORTED then DEFER_UNRESOLVED before its narrowed ask, so the one rejection
+# line this ask actually carries says uncited_redundant_defer, never uncited_redundant_diagram --
+# yet the unit is still a mermaid diagram and still at risk of the same uncited-SUPERSEDE_
+# REDUNDANT ending. The steer must fire from the unit's own text, not only the last rejection's
+# wording.
+def test_the_narrowed_ask_names_the_identity_fact_for_a_mermaid_unit_even_when_the_last_rejection_was_different() -> (
+    None
+):
+    unit = "inherited_unit:008.code_block"
+    facts = FactsDocument(
+        make_facts().repository,
+        make_facts().source_revision,
+        (
+            *(f for f in make_facts().facts if f.kind != "inherited_unit"),
+            Fact(unit, "inherited_unit", "```mermaid\nflowchart LR\n```", (Evidence("README.md", None),)),
+        ),
+    )
+    manifest = load_manifests(PROMPTS_PATH)["source_reconciliation"]
+    rejection = [
+        f"{unit}: uncited_redundant_defer: DEFER_UNRESOLVED on a code_block that is not a "
+        "tracked example is never correct"
+    ]
+    packet, _schema = _reconciliation_ask(
+        [unit],
+        "",
+        rejection,
+        [],
+        entry=make_entry(),
+        batch_units=[fact for fact in facts.facts if fact.kind == "inherited_unit"],
+        batch_facts=facts,
+        investigation={},
+        manifest=manifest,
+    )
+    (record,) = packet["inherited_units"]
+    assert "Cite 'identity:repository'" in record["text"]

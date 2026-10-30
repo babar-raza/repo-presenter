@@ -2854,6 +2854,35 @@ next_ready_items:
       foss/Python (41142575744, Lane R), aspose-email-foss/Cpp (41142584634, Lane R),
       aspose-email-foss/.Net (41142593331, Lane L). Also still watching aspose-pdf-foss/Python's
       re-dispatch (41142404776, corrected slug). Not yet read.
+    seventeenth_fix_the_diagram_steer_needed_to_key_off_the_unit_not_the_rejection_2026_10_30: >
+      aspose-slides-foss/Cpp (41142566929): the sixteenth fix's own diagram unit (008) reached
+      the narrowed ask again, but oscillated through OMIT_UNSUPPORTED then DEFER_UNRESOLVED
+      first, each rejected by a DIFFERENT rule (uncited_prose_omit, then uncited_redundant_defer)
+      -- so the ONE rejection line the narrowed ask actually carried never said uncited_
+      redundant_diagram at all, and the identity-fact steer (gated on that exact rejection
+      string) never fired, even though the unit's own final answer this round was still an
+      uncited SUPERSEDE_REDUNDANT into at_a_glance -- confirmed directly from the cached content:
+      attempt 3 gave SUPERSEDE_REDUNDANT, fact_ids empty, destination at_a_glance, the exact
+      unfixed shape. Fixed: the steer now also fires whenever the unit's own text is a mermaid
+      diagram (_is_mermaid), regardless of which specific rejection reached this ask -- the
+      guidance is always safe to offer for this content kind, never contradicts whatever else
+      the ask already says. 1 new test (the steer fires for a mermaid unit even when the last
+      rejection was unrelated); the 2 original tests (fires on uncited_redundant_diagram, absent
+      for an unrelated rejection on a non-diagram unit) still pass unchanged. Full suite run
+      before commit -- see next entry. aspose-pdf-foss/Python (41142404776, corrected slug):
+      REJECTED at S4, all three asks, on inherited_unit:164.paragraph (a usage note about
+      dry_run/keep parameters) -- uncited_prose_omit, a single occurrence of the same "OMIT_
+      UNSUPPORTED with no citation" shape seen elsewhere, not yet investigated. aspose-email-
+      foss/Cpp (41142584634): reached S9 for the first time and found a genuinely NEW
+      deterministic finding, duplicate_paragraph -- the same prose paragraph (describing
+      mapi_message vs. the lower-level reader/writer classes) printed twice in the candidate.
+      aspose-slides-foss/Python (41142575744): the EXACT same duplicate_paragraph finding, a
+      different paragraph, in a different repository -- two occurrences now confirms this is a
+      real, recurring coherence/authoring defect (the same content placed into two different
+      sections, or duplicated across a repair round), not investigated yet but now a real
+      candidate for the next root-cause pass. aspose-email-foss/.Net (Lane L): REJECTED,
+      correctly -- real format_overclaim findings (CFB, MSG formats claimed with no confirming
+      fact), the designed refusal pattern.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
