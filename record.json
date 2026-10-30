@@ -5,7 +5,7 @@
   "provider_repository_id": 1359836523,
   "registry_revision": null,
   "active_transaction_id": "2e7a505898484cddb6abd5333eb93e50",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "JobError: section_authoring: output truncated at the manifest's max_output_tokens (8000); raise the budget or bound the output, never retry",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-30T20:19:41.294305+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:41121245347",
     "acquired_at": "2026-10-30T20:12:38.191623+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-10-30T20:27:38.191623+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "64c040fab0374b3ab20d237498d44e63",
+    "transaction_id": "2e7a505898484cddb6abd5333eb93e50",
+    "repository": "aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-30T20:19:40.811812+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET",
+    "output_manifest": "candidates/aspose-imaging-foss__Aspose.Imaging-FOSS-for-.NET/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:41121245347:aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET": "2e7a505898484cddb6abd5333eb93e50"
   },
