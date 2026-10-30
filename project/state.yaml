@@ -2390,6 +2390,53 @@ next_ready_items:
       session; if something still persists, read it on its own evidence and classify it honestly
       -- a genuine remaining content gap vs. something still worth root-causing -- rather than
       guessing or declaring victory early.
+    eleventh_fix_confirmed_live_twelfth_gap_found_2026_10_30: >
+      Dispatched run 41102257446. CONFIRMED: the eleventh fix worked exactly as diagnosed -- for
+      the first time this session, Cpp cleared S4/reconciliation entirely (ledger shows only
+      cache_reuse/success for source_reconciliation; zero rejections) and reached S10 (independent
+      review), with real independent_review calls (5, one per unit, reply_sha256 present,
+      model_served "qwen3-next" -- genuinely model-reviewed, not an S9 sentinel). S10 found 3 real,
+      legitimate BLOCKING factuality findings in key_capabilities (S6 had hallucinated specific
+      exception-throwing behavior -- WorkbookSaveException, InvalidFileFormatException,
+      FormulaException -- and two extra document-property type names no fact ties to those
+      operations); a real targeted_repair (S11) correctly fixed all three (repairs.json: outcome
+      "repaired", label "F01+F02+F03"). The run still failed afterward, but for a THIRD,
+      completely separate reason, read from the ledger and the raw rejected-N.json cache files
+      directly (not summarized): recomposing S4-S8 after the repair re-ran S8 (coherence), which
+      revises api_reference/intro against the repaired candidate. The model's own intro text
+      claimed the API listing is "grouped exactly as reference.aspose.org organizes them" --
+      authoring.py's own stray-identifier check correctly flagged "reference.aspose.org" as not an
+      accepted fact value (a real, legitimate finding: nothing supports that claim about an
+      external site's organization). The universal re-ask (attempt 2) reproduced the identical
+      text and the identical single-line rejection verbatim -- and unlike S4's reconciliation job
+      and S6's own authoring job (both of which now carry a `narrow=` rejection-aware third ask --
+      reconciliation_narrowing this session, authoring_narrowing already existing), S8's own
+      coherence run_job call (cascade.py's _run_coherence) passes no `narrow=` argument at all.
+      Confirmed failing_slots() would correctly identify "intro" as the one failing slot for this
+      exact rejection line (tested directly against the real content/rejection pair) -- the gap is
+      structural (nothing wired), not a bug in the narrowing logic itself. recover_coherence_
+      regressions (coherence.py's own last-resort fix, tried after ask 2) does not cover this
+      class either -- its six recover_coherence_* passes are all structural/fact-driven (missing
+      units, out-of-slot citations, content loss, carried units, title restatements, audience
+      claims), none of them rejection-text-driven the way reconciliation_narrowing or a stray-
+      identifier strip would need to be. Building either a real `coherence_narrowing` (mirroring
+      reconciliation_narrowing's rejection-aware pattern, parameterized over the batch's several
+      SectionTasks rather than authoring_narrowing's single task) or a new recover_coherence_
+      stray_identifiers pass (reusing authoring.py's own stray_identifiers/identifier_allowed
+      machinery, which needs its allowed/members/methods/nouns/cited_inherited context rebuilt
+      per unit -- not a quick, safe-to-guess patch) is real, scoped engineering, not attempted in
+      this same investigation pass to avoid rushing a half-understood fix into exactly the kind of
+      check this chain has repeatedly had to get right the first time.
+    next_step: >
+      Treat the coherence-stage narrowing/recovery gap as its own scoped task, the same shape as
+      reconciliation_narrowing was before it was built: read _run_coherence, coherence_checks, and
+      unit_checks's stray-identifier setup fully before writing anything, write a failing test and
+      falsifier first, then wire either a coherence_narrowing (preferred, consistent with the
+      session's established pattern) or the recover_coherence_stray_identifiers pass. Meanwhile,
+      the eleventh fix is independently verified live and should not block widening hosted coverage
+      to other repositories in the 36-repository portfolio -- this new gap is downstream of a
+      repair round and therefore shows up only when S10 finds a real repairable defect, not on
+      every run.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
