@@ -2510,6 +2510,25 @@ next_ready_items:
       investigation cycle per genuinely new finding before checking whether it is the same shape
       already seen (Go/Python's uncited-heading accounting gap already recurred twice) rather than
       a fresh one.
+    slides_java_result_a_new_oscillation_finding_2026_10_30: >
+      aspose-slides-foss/Java (41112860184): failed fast (facts 44s, present 4m6s), never reaching
+      S10 -- source_reconciliation (S4) rejected all three asks, read directly from rejected-1/2/
+      3.json. inherited_unit:037.paragraph (a prose paragraph pointing forward to "the example
+      below") OSCILLATED across three genuinely different dispositions, never repeating one byte
+      for byte (so reconciliation_narrowing's own repeated_units note never applied): ask 1
+      VERIFIED_PRESERVE -> dangling_pointer (the pointed-to example is not kept right after it);
+      ask 2 (universal re-ask) OMIT_UNSUPPORTED, empty fact_ids -> uncited_prose_omit; ask 3 (the
+      narrowed ask, correctly scoped to just this one unit, confirming reconciliation_narrowing's
+      own mechanism worked exactly as built) VERIFIED_MOVE -> dangling_pointer again, the same
+      complaint as ask 1. The original rejection explicitly names the fix that was never tried in
+      any of the three asks: VERIFIED_REWRITE ("the wording is re-authored from facts, without the
+      pointer"). A single occurrence so far, not yet confirmed as a recurring portfolio-wide shape
+      the way Go/Python's uncited-heading gap was -- recorded plainly rather than root-caused
+      immediately, per the owner's own "don't spend more than one cycle before checking for
+      recurrence" discipline. If this shape recurs on another repository, the likely real fix is
+      strengthening reconciliation_narrowing's own ask() prompt-building (dispositions.py's
+      _reconciliation_ask) to name VERIFIED_REWRITE explicitly when the rejection is dangling_
+      pointer, not just quote the rejection text and hope the model infers it.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
