@@ -5,7 +5,7 @@
   "provider_repository_id": 1213521112,
   "registry_revision": null,
   "active_transaction_id": "be64ad26960943aca84876b6734cf7a1",
-  "state": "FAILED_INTERNAL",
+  "state": "SNAPSHOTTING",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -33,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "64988bde52924f9fbf3f3e03690654ac",
-    "transaction_id": "1ad135f9d5d6476abb2eda7682ee94e2",
+    "transition_id": "4629c880e25f41709ebcb4fb2a2edcdd",
+    "transaction_id": "be64ad26960943aca84876b6734cf7a1",
     "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Java",
-    "from_state": "OBSERVED",
-    "to_state": "FAILED_INTERNAL",
-    "event": "present.yml hosted transaction failed",
-    "occurred_at": "2026-10-28T16:19:29.133300+00:00",
+    "from_state": "FAILED_INTERNAL",
+    "to_state": "SNAPSHOTTING",
+    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
+    "occurred_at": "2026-10-30T14:54:10.728088+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-cells-foss/Aspose.Cells-FOSS-for-Java",
     "output_manifest": "candidates/aspose-cells-foss__Aspose.Cells-FOSS-for-Java/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 19,
+  "state_version": 20,
   "recent_trigger_dedup_keys": {
     "run:40723588078:aspose-cells-foss/Aspose.Cells-FOSS-for-Java": "1ad135f9d5d6476abb2eda7682ee94e2",
     "run:40730382891:aspose-cells-foss/Aspose.Cells-FOSS-for-Java": "4d06896d4a1a43f59ae1659ef6354078",
