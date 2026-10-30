@@ -74,7 +74,16 @@ from repo_presenter.readme.review.verdict import (
 
 JOB = "independent_review"
 #: Re-reviews after a repair: a candidate that still blocks after this many repair rounds is BLOCKED.
-MAX_REVIEW_REPAIR_ROUNDS = 2
+#: Raised 2 -> 4, 2026-10-30 (measured live, aspose-cells-foss, Rust and Cpp): each round repairs
+#: whichever findings its own fingerprint bucket has not already tried, so a REAL, still-
+#: unrepaired finding can keep losing its turn to an earlier one already marked unrepairable in
+#: the same bucket (Rust's RUST_LANE_R_F01_F02_F03_ROOT_CAUSED: an enterprise-edition sentence
+#: went two full hosted runs without ever once reaching a repair attempt), and halving the S4
+#: batch size to fix a separate convergence gap means a repository's real defects are now more
+#: likely to span multiple reconciliation batches, each needing its own repair call within the
+#: same round budget. More rounds never costs a candidate that already passes; it only gives a
+#: real, still-queued finding more chances before the candidate gives up on it.
+MAX_REVIEW_REPAIR_ROUNDS = 4
 #: Beside the call store: the requests that got a blocking verdict (the no-re-roll invariant).
 BLOCKED_FILENAME = "blocked_requests.json"
 #: Finding ids are ``F`` and two digits, so a merged reply holds at most this many findings.

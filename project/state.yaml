@@ -1753,23 +1753,35 @@ next_ready_items:
       blocks reading dispositions.composed.json directly, so the real disposition each of these
       4 units was given (and therefore the exact cause) is NOT YET CONFIRMED -- do not treat the
       hypothesis below as verified.
-    unconfirmed_hypothesis: >
-      Given S4's own checks now correctly reject an uncited OMIT_UNSUPPORTED on a code_block
-      (this session's earlier fix) and the job still converged to something `reconcile_checks`
-      accepted, the likely disposition for these 4 units is DEFER_UNRESOLVED -- the same category
-      found separately on Java's directory-tree block (JAVA_LANE_R_FIRST_ATTEMPT_2026_10_28's
-      third_live_reverify note): it needs no citation and nothing in placement_errors checks it
-      at all, so it can pass S4 clean and still ship as a silent loss, caught only three stages
-      later by live_readme_loss_rule. NOT CONFIRMED without reading dispositions.composed.json
-      directly -- stated here as the leading hypothesis to check first, not as a finding.
+    hypothesis_checked_and_revised: >
+      First guess (DEFER_UNRESOLVED slipping past placement_errors uncaught) does not survive a
+      closer read of normalize() in this same module: DEFER_UNRESOLVED is assigned in roughly a
+      dozen genuinely legitimate deterministic folding cases, not a narrow edge case, so a rule
+      refusing it broadly would risk real regressions across the whole already-working portfolio
+      -- rejected without needing the blocked artifact download to know it was too broad.
+    real_cause_identified: >
+      reconciliation/patch.py's own patch_checks already forces a DEFER_UNRESOLVED that a review
+      finding names to stop being deferred (its own docstring: "deferring the unit takes its
+      content out of the README... keep it, restate it, or omit it citing the fact that
+      contradicts it") -- the mechanism exists and already runs once build_defects routes a
+      live_readme_loss finding to repair. What is short is ROUNDS: MAX_REVIEW_REPAIR_ROUNDS was
+      2, and each round's repair only ever addresses findings not already in an exhausted
+      fingerprint bucket (RUST_LANE_R_F01_F02_F03_ROOT_CAUSED's own queuing note -- an enterprise-
+      edition finding went two full hosted runs without ever reaching a repair attempt for the
+      same reason). This Cpp run has 4 findings; halving the batch size to fix the convergence
+      gap also means they plausibly now span more than one reconciliation batch, each needing its
+      own repair call -- a real, structural reason 2 rounds is more likely to run out now than
+      before. Raised MAX_REVIEW_REPAIR_ROUNDS 2 -> 4 (readme/review/llm_review.py); a test
+      (test_two_repair_rounds_then_blocked_with_the_exact_predicate) that relied on the OLD
+      default to test the bound-stopping mechanism itself now passes review_repair_rounds=2
+      explicitly, so it still tests exactly what its name says regardless of the production
+      default. Full suite clean.
     next_step: >
-      retry the artifact download once the egress quota resets (unknown reset window; try again
-      later rather than repeating downloads in a tight loop) and read dispositions.composed.json
-      directly to confirm or refute the DEFER_UNRESOLVED hypothesis. If confirmed, the fix is
-      narrow and clear: placement_errors (or an S9 blocking check) must refuse a DEFER_UNRESOLVED
-      on real content unless its reason is a genuine, recognized ambiguity (an UNRESOLVED
-      example, the one case this already exists for) -- a sealed candidate should never carry a
-      deferred disposition at all. Do not guess-fix this without the confirming read.
+      dispatch fresh Cpp and Java re-runs with more repair rounds available; read the result via
+      the durable-state record (git fetch refs/repository-presenter-state/records/...) since the
+      artifact-download egress quota is still exhausted -- retry the artifact download too, since
+      the exact disposition each unit lands on after repair is still worth confirming directly
+      once it is available again, but do not block on it.
 
   - id: BC07_UNIT_ROUTING_PROVEN
     status: DONE

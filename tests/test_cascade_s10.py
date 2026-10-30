@@ -363,7 +363,7 @@ def test_two_repair_rounds_then_blocked_with_the_exact_predicate(
             ),
         ),
     )
-    result = run.cascade()
+    result = run.cascade(review_repair_rounds=2)
 
     assert (
         provider.replies == []
