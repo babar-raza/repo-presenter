@@ -4,7 +4,7 @@
   "lane": "R",
   "provider_repository_id": 1203447266,
   "registry_revision": null,
-  "active_transaction_id": "4d97c04cbe1e480eb97290b5bf8555e9",
+  "active_transaction_id": "d19808bd67164e80b3ed9f9afdb9c69c",
   "state": "READY_FOR_PROPOSAL",
   "source": null,
   "surfaces": {},
@@ -18,7 +18,13 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": null,
-  "lease": null,
+  "lease": {
+    "holder_id": "present:41112824093",
+    "acquired_at": "2026-10-30T19:10:43.082036+00:00",
+    "heartbeat_at": "2026-10-30T19:10:43.082036+00:00",
+    "expires_at": "2026-10-30T19:25:43.082036+00:00",
+    "fencing_token": 1
+  },
   "last_transition": {
     "transition_id": "5f05a713de124252a6e39e029524035c",
     "transaction_id": "4d97c04cbe1e480eb97290b5bf8555e9",
@@ -33,9 +39,10 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 17,
+  "state_version": 18,
   "recent_trigger_dedup_keys": {
-    "run:41079914003:aspose-cells-foss/Aspose.Cells-FOSS-for-.NET": "4d97c04cbe1e480eb97290b5bf8555e9"
+    "run:41079914003:aspose-cells-foss/Aspose.Cells-FOSS-for-.NET": "4d97c04cbe1e480eb97290b5bf8555e9",
+    "run:41112824093:aspose-cells-foss/Aspose.Cells-FOSS-for-.NET": "d19808bd67164e80b3ed9f9afdb9c69c"
   },
   "recovery_count": 1
 }
