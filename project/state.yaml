@@ -1875,6 +1875,31 @@ next_ready_items:
       guess papered over the symptom. If a genuinely new finding keeps surfacing after each one
       closes, that pattern itself is the next thing worth naming plainly to the owner rather than
       silently continuing to chase it indefinitely.
+    live_reverify_2026_10_30_java_sealed_cpp_still_stuck: >
+      Re-run of both. Java (41074988720): a real seal -- see JAVA_LANE_R_FIRST_ATTEMPT_2026_10_28's
+      own record (independently verified: ledger shows 2 real independent_review calls, BC-07's
+      dangling lead-in is gone, review_verdict.json is ACCEPT with zero findings). Not yet no-op-
+      proven (manifest.json's own no_op_proof field is null) -- that is a separate, still-open
+      step, not assumed from a successful seal. Cpp (41074973761): still stuck, read from the
+      durable-state record (no artifact this time, since the run failed before writing one) --
+      inherited_unit:013.code_block (the nuget install command) is STILL rejected twice at S4's
+      own job-acceptance step for the SAME uncited_redundant_defer reason, across now four
+      separate attempts (the original batch-silence case, two prompt/rule iterations, and this
+      one) spanning two different fixes each aimed at this exact unit. This is the strongest
+      evidence yet that this one specific unit needs the real reconciliation_narrowing mechanism
+      (a genuine third, narrowed ask), not another prompt or rule patch -- four fixes have each
+      made real, independently-verified progress elsewhere while this one unit alone keeps
+      failing the same way.
+    next_step: >
+      stop patching this one unit with more prompt/rule iterations -- the evidence is now
+      convergent and strong enough to justify actually building reconciliation_narrowing
+      (dispositions.py's own module docstring already names it "Still deferred"; core/llm/
+      narrowing.py's Narrowing class and composition/authoring_retry.py's authoring_narrowing
+      are the exact, already-proven template for S6's equivalent problem). This is a real,
+      scoped engineering task, not a quick fix; until it is built, Cpp's Lane R candidate stays
+      honestly unsealed rather than forcing another patch at the symptom. Meanwhile, Java's real
+      seal is reason to widen hosted coverage to more of the 36-repository portfolio rather than
+      spending every cycle on this one repository's one remaining unit.
 
   - id: BC07_UNIT_ROUTING_PROVEN
     status: DONE
@@ -2139,11 +2164,24 @@ next_ready_items:
       BC12_REPAIR_ROUTING_PROVEN's seventh fix (coordinate_neighbor_promises wired into
       cascade.py at last) for the root cause and fix, shared verbatim across both repositories'
       real candidates.
+    first_lane_r_seal_this_session_2026_10_30: >
+      Re-run 41074988720: GitHub reports "success" (not just a non-error exit -- worth not
+      trusting that alone either, so verified independently). review_verdict.json: verdict
+      ACCEPT, findings []. The sealed bundle's own ledger.jsonl (candidates/aspose-cells-foss__
+      Aspose.Cells-FOSS-for-Java/c65329e7257b1311abb9686d7e4957a8cc002955/ledger.jsonl) shows 2
+      real independent_review calls -- model_reviewed is genuinely true, not the S9 sentinel
+      caught twice before. BC-07's dangling lead-in is gone, confirming the seventh fix
+      (coordinate_neighbor_promises) closed it for real, not by coincidence.
+      manifest.json read directly: "no_op_proof": null, "provider_calls": 10. This is a real
+      SEAL (ACCEPTED state, genuine review, zero findings) -- the first Lane R seal this
+      session -- but NOT YET no-op-proven: that needs a second run of the SAME revision that
+      replays entirely from cache (byte-identical, zero fresh provider calls), which has not
+      been attempted yet. Reporting this as "sealed," not as "sealed and no-op-proven," because
+      the two are not the same claim and this project's own standard requires both.
     next_step: >
-      dispatch a fresh Java re-run with the seventh and eighth fixes landed; read directly. If
-      BC-07 clears and nothing new and genuine surfaces, this card is close to DONE -- a real
-      seal needs ACCEPT with model_reviewed genuinely true and an independently-read no_op_proof,
-      not assumed from either field alone.
+      dispatch one more Java run (same repository/ecosystem) to attempt the no-op proof against
+      this exact revision; read manifest.json's no_op_proof field directly afterward rather than
+      assuming a successful run means it passed. Once confirmed, this card is genuinely DONE.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
