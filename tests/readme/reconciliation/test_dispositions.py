@@ -6,7 +6,12 @@ from __future__ import annotations
 from dataclasses import replace
 
 from repo_presenter.core.facts import Evidence, Fact, FactsDocument
-from repo_presenter.readme.reconciliation.dispositions import coverage_findings, normalize
+from repo_presenter.readme.reconciliation.dispositions import (
+    coverage_findings,
+    normalize,
+    placement_errors,
+    rendering_fact_ids,
+)
 
 FACTS = FactsDocument(
     "org/Aspose.Widget-FOSS-for-Python",
@@ -185,6 +190,12 @@ _CPP_PACKAGE_FACTS = replace(
             (Evidence("README.md"),),
         ),
         Fact(
+            "build_test_asset:examples",
+            "build_test_asset",
+            "ctest",
+            (Evidence("CMakeLists.txt"),),
+        ),
+        Fact(
             "inherited_unit:010.code_block",
             "inherited_unit",
             '```xml\n<PackageReference Include="Aspose.Widget.Cpp.FOSS" Version="1.0.0" />\n```',
@@ -280,3 +291,102 @@ def test_normalize_leaves_a_genuinely_unsupported_omission_uncited() -> None:
     assert entry["disposition"] == "OMIT_UNSUPPORTED"
     assert entry["fact_ids"] == []
     assert entry["rationale"] == "Nothing supports this legacy snippet."
+
+
+# Real hosted defect (aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, run 41095849129): a repository
+# with no single SUPPORTED install_command fact (C++'s install story is a choice of NuGet/CMake
+# snippets, never one canonical command) still has the installation section render a real
+# sentence -- renderer.py's own _installation() falls back to the package's distribution fact
+# when no install_command resolved. rendering_fact_ids("installation", ...) did not know this, so
+# it reported installation as rendering nothing, and normalize()'s generic "destination renders
+# nothing" fold forced every SUPERSEDE_REDUNDANT citing that exact fact back to DEFER_UNRESOLVED
+# -- which placement_errors's uncited_redundant_defer then refused outright: an unwinnable loop
+# for a model giving the one answer the actual rendered README supports.
+def test_rendering_fact_ids_counts_the_distribution_fact_when_no_install_command_exists() -> None:
+    assert rendering_fact_ids("installation", _CPP_PACKAGE_FACTS) == [
+        "package:distribution.aspose.widget.cpp.foss"
+    ]
+
+
+def test_rendering_fact_ids_prefers_a_real_install_command_when_one_is_supported() -> None:
+    """The distribution fallback is only for when nothing else renders; an existing, tested
+    install_command path must not be disturbed by it."""
+    facts = replace(
+        _CPP_PACKAGE_FACTS,
+        facts=(
+            *_CPP_PACKAGE_FACTS.facts,
+            Fact("install_command:001", "install_command", "pip install aspose-widget-foss", (Evidence("x"),)),
+        ),
+    )
+    assert rendering_fact_ids("installation", facts) == ["install_command:001"]
+
+
+def test_normalize_no_longer_force_defers_a_supersede_citing_the_distribution_fact() -> None:
+    """The force-revert this bug caused is gone: a SUPERSEDE_REDUNDANT entry citing the
+    distribution fact is no longer silently rewritten to DEFER_UNRESOLVED just because
+    rendering_fact_ids used to come back empty."""
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:010.code_block",
+                "disposition": "SUPERSEDE_REDUNDANT",
+                "destination_section": "installation",
+                "fact_ids": ["package:distribution.aspose.widget.cpp.foss"],
+                "rationale": "Superseded by the installation section's distribution sentence.",
+            }
+        ]
+    }
+    normalize(output, _CPP_PACKAGE_FACTS)
+    entry = output["dispositions"][0]
+    assert entry["disposition"] != "DEFER_UNRESOLVED"
+
+
+def test_supersede_redundant_by_installation_is_still_refused_when_the_literal_block_is_not_what_it_renders() -> (
+    None
+):
+    """Fixing the force-revert must not paper over the real gap: the installation section's
+    distribution sentence never reproduces a code block's literal text (a PackageReference
+    snippet is not the sentence "published on NuGet as Aspose.Widget.Cpp.FOSS"), so
+    SUPERSEDE_REDUNDANT by installation for that exact block is still wrong -- now refused for
+    the real reason (uncovered_supersession), not the old, misleading uncited_redundant_defer."""
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:010.code_block",
+                "disposition": "SUPERSEDE_REDUNDANT",
+                "destination_section": "installation",
+                "fact_ids": ["package:distribution.aspose.widget.cpp.foss"],
+                "rationale": "Superseded by the installation section's distribution sentence.",
+            }
+        ]
+    }
+    normalize(output, _CPP_PACKAGE_FACTS)
+    errors = placement_errors(output, _CPP_PACKAGE_FACTS)
+    assert any("uncovered_supersession" in e for e in errors)
+    assert not any("uncited_redundant_defer" in e for e in errors)
+
+
+def test_verified_preserve_into_development_testing_is_the_clean_answer_for_the_alternative_snippet() -> (
+    None
+):
+    """The disposition prompts/source_reconciliation.yaml now actually recommends for this shape
+    passes both normalize() and placement_errors() cleanly, citing the distribution fact as the
+    evidence it is a real, supported install path even though no section renders its exact
+    text."""
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:010.code_block",
+                "disposition": "VERIFIED_PRESERVE",
+                "destination_section": "development_testing",
+                "fact_ids": ["package:distribution.aspose.widget.cpp.foss"],
+                "rationale": "A real alternative install path for this ecosystem.",
+            }
+        ]
+    }
+    norm_errors = normalize(output, _CPP_PACKAGE_FACTS)
+    place_errors = placement_errors(output, _CPP_PACKAGE_FACTS)
+    assert norm_errors == []
+    assert place_errors == []
+    entry = output["dispositions"][0]
+    assert entry["disposition"] == "VERIFIED_PRESERVE"

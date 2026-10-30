@@ -1,5 +1,5 @@
 prompt_id: source_reconciliation
-version: "11"
+version: "12"
 stage: S4
 purpose: Decide exactly one disposition for every material inherited unit of the existing README, with evidence and a destination section, so that nothing valuable is dropped silently and nothing unsupported is carried forward.
 model_route: qwen3-next
@@ -104,19 +104,21 @@ system: |
   material claim the facts neither support nor contradict; it is listed for the owner and never
   rendered. For a code block specifically, that means an example fact whose polarity is
   UNRESOLVED (the pipeline tried to verify it and could not) - never a code block you simply have
-  no fact for. An install, build, or dependency snippet that is a real alternative to the
-  installation section's own content is not unresolved: it is SUPERSEDE_REDUNDANT, citing
-  whichever fact that section actually renders from - an install_command or build_test_asset fact
-  when one is SUPPORTED, but just as often the package fact that names the distribution (the
-  installation section may render nothing more than "published on <registry> as <package
-  name>" when no install_command resolved; measured live, aspose-cells-foss/Aspose.Cells-FOSS-
-  for-Cpp: three sibling snippets - a PackageReference block, a CMake config find_package block,
-  and a CMake add_subdirectory source-build block, each a real alternative to the exact same
-  NuGet install already superseded by citing the package's own distribution fact - kept landing
-  DEFER_UNRESOLVED because install_command had nothing SUPPORTED to point at, when the package
-  fact the first sibling in the same batch already cited correctly was sitting right there).
-  Whatever fact kind the installation section actually used, cite that one, even when your own
-  wording differs from it. NON_CONTENT covers separators, empty lines, and HTML comments.
+  no fact for. An install, build, or dependency snippet is SUPERSEDE_REDUNDANT by installation
+  only when the installation section actually prints that exact command - true when an
+  install_command fact is SUPPORTED and this block's lines match it. When installation renders no
+  more than a one-sentence "published on <registry> as <package name>" (the package's own
+  distribution fact, no install_command resolved), that sentence never reproduces any code block's
+  literal text, so no code block is SUPERSEDE_REDUNDANT by installation in that case - not even
+  the block for the one ecosystem the sentence is naming. Such a block, and any sibling alternative
+  for a different build system (measured live, aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp: a
+  NuGet PackageReference block, a CMake config find_package block, and a CMake add_subdirectory
+  source-build block, none of them the literal text any section prints), is kept as written
+  instead - VERIFIED_PRESERVE or VERIFIED_MOVE into development_testing, citing the package's
+  distribution fact to show it is a real, supported install path even though no section renders
+  its exact text. Do not choose DEFER_UNRESOLVED for it either: the facts take a clear position
+  (the distribution fact supports it as a real alternative), so nothing here is actually
+  unresolved. NON_CONTENT covers separators, empty lines, and HTML comments.
 
   Rules that are checked mechanically. Every unit ID appears exactly once. The four placing
   dispositions (PRESERVE, REWRITE, MOVE, CORRECT) require a destination_section whose entry in

@@ -2337,13 +2337,59 @@ next_ready_items:
       pass, and a direct falsifier (narrow=None) reproduces the original "rejected twice, no
       narrowing" failure for both. 11 further direct unit tests for pending()/merge()/repeated()
       (tests/readme/reconciliation/test_narrowing.py). Full suite clean.
+    tenth_fix_verified_live_eleventh_root_cause_found_2026_10_30: >
+      Dispatched Cpp run 41095849129 to test the narrowing mechanism live. It worked exactly as
+      designed -- the first time ask 3 (a real narrowed ask, naming units 013/015/017/019) was
+      ever reached against real data -- but the run still failed, with rejection text that looked
+      identical to the old uncited_redundant_defer complaint. Read the full rejected-1/2/3.json
+      cache files directly (not summarized): the model's own content on EVERY attempt, including
+      attempt 1, already answered SUPERSEDE_REDUNDANT/installation citing
+      package:distribution.aspose.cells.cpp.foss -- never DEFER_UNRESOLVED at all. Reproduced
+      normalize()+placement_errors() directly against the real facts.json and the real attempt-1
+      content (scratch script, deleted after use) to find out how a SUPERSEDE_REDUNDANT entry
+      was being checked as if it were DEFER_UNRESOLVED. Root cause, confirmed by bisecting with
+      temporary debug prints (removed before commit): rendering_fact_ids("installation", facts)
+      returned [] for this repository (no single SUPPORTED install_command fact exists; C++'s
+      install story is a choice of NuGet/CMake snippets, never one canonical command), so
+      normalize()'s generic "destination renders nothing" fold (dispositions.py, the deterministic
+      per-section block) force-reverted the SUPERSEDE_REDUNDANT to DEFER_UNRESOLVED/None before
+      placement_errors ever ran -- which then correctly refused the now-DEFER_UNRESOLVED entry
+      via uncited_redundant_defer. The cached rejection text was real and correctly computed; it
+      was just checking a different disposition than the one the model, or the "content" field
+      of the cache file, actually showed. Fixed rendering_fact_ids to also count SUPPORTED
+      package:distribution.* facts for "installation" specifically when no install_command fact
+      exists, matching renderer.py's own _installation()/_published_distributions(), which falls
+      back to exactly that fact kind to print the one-sentence "published as X" line in this
+      shape. Re-ran the repro after the fix: the force-revert is gone, but a second, genuine gap
+      surfaced honestly -- _supersession_gap's own UNRENDERED_COMMAND check (unconditional for
+      destination=installation + kind=code_block) still correctly refuses SUPERSEDE_REDUNDANT for
+      these units, because the installation section's one-sentence distribution line never
+      reproduces a code block's literal text. This is NOT a bug: SUPERSEDE_REDUNDANT by
+      installation was never the right disposition for an alternative, non-canonical install
+      snippet in this shape -- prompts/source_reconciliation.yaml v11 was itself giving wrong
+      guidance (recommending exactly this), carried over uncaught from the ninth fix because the
+      rendering_fact_ids bug was masking the real check underneath it the whole time. Verified
+      empirically (candidate dispositions tried directly against normalize()+placement_errors()
+      on the real facts.json) that VERIFIED_PRESERVE/VERIFIED_MOVE into development_testing,
+      citing the distribution fact, is the clean, uniform answer across all four units -- the
+      alternative snippet is kept as written, filed where the shell can hold arbitrary kept
+      command blocks, with the distribution fact as evidence it is a real supported install path
+      even though no section renders its exact text. Rewrote the v11 guidance accordingly; bumped
+      to v12. Added 5 new tests to test_dispositions.py: rendering_fact_ids's new fallback and its
+      install_command-present negative control, the force-revert bug's own falsifier (confirmed
+      fixed), the real uncovered_supersession gap proven still correctly refused (so the fix did
+      not loosen a real check), and the VERIFIED_PRESERVE/development_testing answer proven clean
+      end to end. Full suite re-run clean.
     next_step: >
-      dispatch a fresh Cpp run with this fix landed; read directly. If the three sibling units
-      this whole investigation chain has been chasing (015/017/019, or whichever units a
-      rejection names this time) get fixed without flipping a correct sibling, this closes the
-      real, structural gap this chain traced back through ten fixes. If something still persists,
-      read it on its own evidence, the same discipline as every fix before it -- this mechanism
-      closes the "whole-batch regeneration" failure mode specifically, not every possible defect.
+      dispatch a fresh Cpp run with the rendering_fact_ids fix and the v12 prompt landed; read the
+      result directly, the same discipline as every fix before it (never assume ACCEPT from the
+      verdict field alone -- check the ledger for real independent_review calls, read manifest.
+      json's no_op_proof directly before calling anything sealed). This is the eleventh distinct
+      real root cause found and fixed in this one investigation chain. If Cpp clears S4 entirely
+      this time, that is the first time this repository has gotten past reconciliation at all this
+      session; if something still persists, read it on its own evidence and classify it honestly
+      -- a genuine remaining content gap vs. something still worth root-causing -- rather than
+      guessing or declaring victory early.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED

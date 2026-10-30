@@ -274,9 +274,25 @@ def rendering_fact_ids(section: str, facts: FactsDocument) -> list[str]:
         pair = banner_target(facts.facts)
         return sorted(fact.id for fact in pair) if pair is not None else []
     kinds = RENDERING_FACT_KINDS.get(section, ())
-    return sorted(
+    ids = {
         fact.id for fact in facts.facts if fact.kind in kinds and fact.polarity == "SUPPORTED"
-    )
+    }
+    if section == "installation" and not ids:
+        # Measured live (aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, run 41095849129): a
+        # repository with no single verified install_command (C++'s install story is a choice of
+        # NuGet/CMake snippets, never one canonical command) still has installation render a real
+        # sentence -- renderer.py's own _installation() falls back to _published_sentence() from
+        # the package:distribution.* facts (DISTRIBUTION_FACT_PREFIX) whenever no install_command
+        # exists. Without this, the generic "destination renders nothing" fold (just below) forced
+        # every SUPERSEDE_REDUNDANT citing that exact fact back to DEFER_UNRESOLVED, which
+        # placement_errors's uncited_redundant_defer then refused outright -- an unwinnable loop
+        # for a model giving the one answer the actual rendered README supports.
+        ids = {
+            fact.id
+            for fact in facts.facts
+            if fact.id.startswith(DISTRIBUTION_FACT_PREFIX) and fact.polarity == "SUPPORTED"
+        }
+    return sorted(ids)
 
 
 # ---------------------------------------------------------------------------------------------
