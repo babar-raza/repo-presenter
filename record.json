@@ -5,7 +5,7 @@
   "provider_repository_id": 1185437353,
   "registry_revision": null,
   "active_transaction_id": "dfba251a636d4bdc9e7801be9dbc3cb4",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected three times (the third a narrowed ask for the units a rejection actually named); last rejection: inherited_unit:032.paragraph: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"Every example below was compiled and executed against this revision, and the values quoted after each\\none were read out of the `.pptx` it wrote by an independent ZIP/XML reader — not by asking the\\nlibrary to read its own file back.\". Cite the supporting fact IDs or place the unit; do not omit it without a cited reason; inherited_unit:033.paragraph: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"Three namespaces cover every sample on this page, and each sample below assumes all three:\". Cite the supporting fact IDs or place the unit; do not omit it without a cited reason",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-30T22:54:07.249303+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:41140560040",
     "acquired_at": "2026-10-30T22:50:48.435224+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-10-30T23:05:48.435224+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "39b7b92a6f5449d6bb11d35f2eb6176b",
+    "transaction_id": "dfba251a636d4bdc9e7801be9dbc3cb4",
+    "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-.NET",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-30T22:54:07.000218+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-slides-foss/Aspose.Slides-FOSS-for-.NET",
+    "output_manifest": "candidates/aspose-slides-foss__Aspose.Slides-FOSS-for-.NET/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:41140560040:aspose-slides-foss/Aspose.Slides-FOSS-for-.NET": "dfba251a636d4bdc9e7801be9dbc3cb4"
   },
