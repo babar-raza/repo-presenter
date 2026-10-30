@@ -1702,6 +1702,43 @@ next_ready_items:
       ``_PROSE_UNIT_KINDS`` ``_omission_gap`` also reads, so that function's own, different
       behavior is untouched. New test, falsifier confirmed. Not yet re-verified live with this
       fourth fix landed.
+    fifth_finding_s4_convergence_gap_2026_10_29: >
+      Session continued after a system crash and restart (2026-10-30); state checked against git
+      and the live hosted runs before continuing, per the owner's "check the state and continue"
+      instruction. The dispatch made just before the crash (40735967256, Cpp) had already
+      completed and failed differently: FAILED_INTERNAL, "source_reconciliation: output rejected
+      twice; last rejection: no disposition for inherited units: [13 units,
+      inherited_unit:024.paragraph..036.code_block]" plus the same uncited_prose_omit shape on
+      three more units (014/018/019) -- read directly from the durable-state record's own
+      failure.detail (git ref refs/repository-presenter-state/records/...), since the Action log
+      itself never prints the exception. Root cause: this batch (up to 40 units,
+      _RECONCILIATION_BATCH) is schema-bounded against a token OVERFLOW (the historical PDF-
+      TypeScript/Cells-Go/PDF-.NET defect _RECONCILIATION_BATCH already exists to prevent), but
+      nothing bounds the model's own COMPLIANCE -- it fully covered roughly the first ~20 units
+      (with the now-correctly-caught citation defects) and went silent on the rest, on BOTH the
+      original ask and jobs.py's own universal second-ask merge (_complete_from_first_reply, which
+      only fills units the OTHER of the two replies covered -- no help when both miss the same
+      ones). The real fix is dispositions.py's own documented-but-never-ported
+      ``reconciliation_narrowing`` (this module's top docstring, "Still deferred") -- the S4
+      counterpart of ``authoring_narrowing`` (composition/authoring_retry.py), which already
+      solves exactly this for S6 via a genuine third, narrowed ask for only the still-missing
+      units. Not built this session: it is a real, multi-function port (pending/ask/merge/repeated
+      against dispositions.py's own packet/schema shape), not a quick fix, and attempting it
+      hastily risks a worse defect than documenting the gap honestly.
+    interim_mitigation_2026_10_29: >
+      _RECONCILIATION_BATCH lowered 40 -> 20: this run's own evidence shows the model reliably
+      covered roughly the first 20 units before going silent, so halving the batch keeps the
+      whole task inside the region already shown reliable, at the cost of more calls per
+      repository. Full suite clean. This is a mitigation, not the real fix -- it may still fail on
+      a repository with enough inherited units or dense enough content to strain even a 20-unit
+      batch, and reconciliation_narrowing remains the correct fix to build when there is time to
+      do it carefully. Not yet re-verified live.
+    next_step: >
+      dispatch a fresh Cpp run with the lowered batch size; read the real result directly. If it
+      converges, record that as a working interim measure and open a dedicated, scoped card for
+      porting reconciliation_narrowing properly rather than leaving it an implicit TODO in a
+      comment. If it still fails to converge, that is itself strong evidence the narrowing port is
+      not optional and should be prioritized next.
 
   - id: BC07_UNIT_ROUTING_PROVEN
     status: DONE
@@ -1930,6 +1967,41 @@ next_ready_items:
       without citation are plausibly common across the portfolio (most candidates likely have
       one), so this fix may unblock several repositories at once, not only Java -- worth checking
       broadly once Java itself clears.
+    third_live_reverify_deeper_problem_found_2026_10_29: >
+      Session continued after a system crash and restart; the Java re-run dispatched just before
+      the crash (40735982359, after BOTH the diagram fix and the code_block-OMIT widening) had
+      already completed. Read directly: REJECT, and "Project Structure" is back, differently --
+      not a regression of the fix (that fix is about CITATION completeness, never touched) but
+      genuine run-to-run MODEL NON-DETERMINISM in which DISPOSITION it picks for content with no
+      matching fact kind at all. Confirmed by reading dispositions.composed.json directly across
+      the two runs: inherited_unit:034.code_block (the directory-tree block) was OMIT_UNSUPPORTED
+      with a real rationale in the first run, DEFER_UNRESOLVED in this one; 033.paragraph went
+      from OMIT_UNSUPPORTED to VERIFIED_MOVE-with-empty-fact_ids. DEFER_UNRESOLVED is not in
+      ACCOUNTING_DISPOSITIONS (correctly -- a sealed candidate should not ship deferred content at
+      all, so live_readme_loss_rule is right to call it lost, not a bug in the check), and
+      VERIFIED_MOVE with empty fact_ids is a KEPT disposition, not an accounting one, so it is
+      judged by a different rule (J4, printed verbatim) entirely.
+    real_shape_of_this_gap: >
+      This repository's own "Project Structure" section (a heading, prose, and a literal
+      directory-tree code block) describes something NO fact kind in this extraction pipeline
+      models at all -- there is no "directory_structure" or equivalent fact, so reconciliation has
+      no evidence to cite under ANY disposition, and the model visibly flails between
+      OMIT_UNSUPPORTED, DEFER_UNRESOLVED and VERIFIED_MOVE run to run because none of them is
+      really correct without something to cite. This is a different, deeper class than the four
+      citation/routing/coverage bugs fixed today (BC12_REPAIR_ROUTING_PROVEN): those were real
+      code defects with a clean fix. This is a genuine capability gap -- either a new fact kind
+      (extracting the repository's real directory structure, verifiable against the actual
+      cloned tree) or a principled, narrowly-scoped clearance for structural content no fact kind
+      covers, checked deterministically (not just trusted), the same discipline every other
+      clearance in this project already follows. Not attempted this session: it is a scoped
+      feature addition, not a bug fix, and deserves its own careful design rather than a rushed
+      patch layered onto an already-long investigation chain.
+    next_step: >
+      open a dedicated card for this once BC12_REPAIR_ROUTING_PROVEN's S4 convergence gap
+      (reconciliation_narrowing) is resolved or explicitly deferred -- do not conflate the two;
+      this one needs new extraction or clearance design, not a repair-loop fix. Lower priority
+      than the convergence gap, which blocks Cpp outright; this one is "flails but is at least
+      visible," never silently wrong.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED

@@ -137,7 +137,7 @@ _INSTALL_COMMAND = re.compile(
     re.IGNORECASE | re.MULTILINE,
 )
 
-_RECONCILIATION_BATCH = 40
+_RECONCILIATION_BATCH = 20
 # S4 output budget. A reply is bounded by construction, not by a measured average: the schema
 # caps each disposition's fact_ids at RECONCILIATION_FACT_IDS_PER_DISPOSITION, and a batch is
 # only as large as the longest reply the schema admits still fits max_output_tokens, counted at
@@ -146,6 +146,16 @@ _RECONCILIATION_BATCH = 40
 # request then answered 4,666. A disposition's citations were bounded only by the batch's citable
 # set (739 IDs there), so a repeating list could run to the whole budget. The same class ran away
 # on Cells-Go (2026-09-11, 1,047 repeated IDs) and PDF-.NET (F27).
+#
+# Lowered 40 -> 20, 2026-10-29 (measured live, aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, run
+# 40735967256): a 40-unit batch is schema-bounded against a token OVERFLOW, but nothing bounds
+# the model's own compliance -- it fully covered roughly the first 20 units (with real but
+# citation-level defects, now correctly caught) and then went silent on the remaining ~13+,
+# twice, on both the original ask and its one universal re-ask (reconciliation_narrowing, S4's
+# own third narrowed ask for exactly the still-missing units, is the real fix for this and
+# remains unported -- see this module's own top docstring, "Still deferred"). Halving the batch
+# keeps the whole task inside the region this run's own evidence showed was reliably covered,
+# at the cost of more calls per repository.
 RECONCILIATION_FACT_IDS_PER_DISPOSITION = 16
 # The healthy 40-unit reply measured 4.2 characters per token (19,616 characters, 4,666 tokens,
 # qwen3-next). Identifier-dense JSON packs fewer, so the bound uses this floor, never that average.
