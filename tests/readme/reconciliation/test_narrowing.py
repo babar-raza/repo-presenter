@@ -11,6 +11,7 @@ from repo_presenter.core.facts import Evidence, Fact, FactsDocument
 from repo_presenter.core.llm.prompts import load_manifests
 from repo_presenter.readme.reconciliation.dispositions import (
     DANGLING_POINTER,
+    UNCITED_REDUNDANT_DIAGRAM,
     _reconciliation_ask,
     _reconciliation_merge,
     _reconciliation_repeated,
@@ -174,3 +175,65 @@ def test_the_narrowed_ask_adds_no_extra_steer_for_an_unrelated_rejection() -> No
     )
     (record,) = packet["inherited_units"]
     assert "VERIFIED_REWRITE needs no cited fact at all" not in record["text"]
+
+
+# Measured live, three times in one batch (aspose-3d-foss/Java run 41133510789, aspose-3d-foss/
+# TypeScript run 41133521004, aspose-page-foss/Python's own unit 008): told SUPERSEDE_REDUNDANT
+# on a diagram code_block needed a fact ID, every reply left fact_ids empty, byte-identical
+# across all three asks -- at_a_glance's own content is an S5 planning choice that does not
+# exist yet at S4, so there is no fixed content fact to cite; the identity fact is.
+def test_the_narrowed_ask_names_a_real_identity_fact_on_an_uncited_redundant_diagram() -> None:
+    unit = "inherited_unit:008.code_block"
+    facts = FactsDocument(
+        make_facts().repository,
+        make_facts().source_revision,
+        (
+            *(f for f in make_facts().facts if f.kind != "inherited_unit"),
+            Fact(unit, "inherited_unit", "```mermaid\nflowchart LR\n```", (Evidence("README.md", None),)),
+        ),
+    )
+    manifest = load_manifests(PROMPTS_PATH)["source_reconciliation"]
+    rejection = [
+        f"{unit}: {UNCITED_REDUNDANT_DIAGRAM}: SUPERSEDE_REDUNDANT on a code_block needs at "
+        "least one fact ID showing what the destination section regenerates it from"
+    ]
+    packet, _schema = _reconciliation_ask(
+        [unit],
+        "",
+        rejection,
+        [],
+        entry=make_entry(),
+        batch_units=[fact for fact in facts.facts if fact.kind == "inherited_unit"],
+        batch_facts=facts,
+        investigation={},
+        manifest=manifest,
+    )
+    (record,) = packet["inherited_units"]
+    assert "Cite 'identity:repository'" in record["text"]
+
+
+def test_the_narrowed_ask_adds_no_diagram_steer_for_an_unrelated_rejection() -> None:
+    unit = "inherited_unit:009.code_block"
+    facts = FactsDocument(
+        make_facts().repository,
+        make_facts().source_revision,
+        (
+            *(f for f in make_facts().facts if f.kind != "inherited_unit"),
+            Fact(unit, "inherited_unit", "```bash\necho hi\n```", (Evidence("README.md", None),)),
+        ),
+    )
+    manifest = load_manifests(PROMPTS_PATH)["source_reconciliation"]
+    rejection = [f"{unit}: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs a fact ID"]
+    packet, _schema = _reconciliation_ask(
+        [unit],
+        "",
+        rejection,
+        [],
+        entry=make_entry(),
+        batch_units=[fact for fact in facts.facts if fact.kind == "inherited_unit"],
+        batch_facts=facts,
+        investigation={},
+        manifest=manifest,
+    )
+    (record,) = packet["inherited_units"]
+    assert "Cite 'identity:repository'" not in record["text"]

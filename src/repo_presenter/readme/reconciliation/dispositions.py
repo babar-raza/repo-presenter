@@ -1591,6 +1591,14 @@ def _reconciliation_ask(
         entry, narrowed_facts, investigation, manifest.manifest, narrowed_units
     )
     also_repeated = frozenset(repeated)
+    neutral_fact_id = next(
+        (
+            fact.id
+            for fact in batch_facts.facts
+            if fact.kind == "identity" and fact.polarity == "SUPPORTED"
+        ),
+        None,
+    )
     for record in packet["inherited_units"]:
         reasons = [line for line in rejection if line.startswith(f"{record['id']}: ")]
         note = (
@@ -1617,6 +1625,24 @@ def _reconciliation_ask(
                 "all - only wording, re-authored from the facts you already have, that states "
                 "the same claim without a forward pointer. Prefer it over OMIT_UNSUPPORTED "
                 "unless you can name a specific fact ID that shows the claim itself is false.] "
+            )
+        # Measured live, three times in one batch (aspose-3d-foss/Java run 41133510789, aspose-
+        # 3d-foss/TypeScript run 41133521004, aspose-page-foss/Python's own unit 008): told
+        # SUPERSEDE_REDUNDANT on a diagram code_block needed a fact ID "showing what the
+        # destination section regenerates it from", every reply left fact_ids empty, byte-
+        # identical across all three asks. at_a_glance's own diagram (renderer.py's
+        # draw_at_a_glance) is built from plan.get("at_a_glance") -- an S5 planning choice that
+        # does not exist yet when S4 reconciliation runs, so there is no fixed content fact to
+        # name; the one thing the diagram always carries is the product's own identity, which
+        # IS available now. Confirmed directly against real facts.json/normalize()/
+        # placement_errors() that citing it passes cleanly.
+        if neutral_fact_id is not None and any(
+            f": {UNCITED_REDUNDANT_DIAGRAM}: " in reason for reason in reasons
+        ):
+            note += (
+                f"[This is the last ask for this unit. Cite {neutral_fact_id!r} - the diagram "
+                "carries the product's own identity, which that fact states, even when the "
+                "specific capabilities it will show are not yet decided.] "
             )
         if note:
             record["text"] = note + record["text"]

@@ -2749,6 +2749,49 @@ next_ready_items:
       Python (41133491255, Lane R), aspose-tex-foss/Python (41133501088, Lane L),
       aspose-3d-foss/Java (41133510789, Lane R), aspose-3d-foss/TypeScript (41133521004, Lane R).
       Not yet read.
+    html_foss_python_sealed_and_fully_no_op_proven_2026_10_30: >
+      aspose-html-foss/Python (41130110127) finished at 33m18s, genuinely ACCEPTED -- read
+      review_verdict.json directly: verdict ACCEPT, 0 findings, 3 real unit_reviews, each
+      request_sha256 cross-checked against the ledger's own independent_review rows (success or
+      cache_reuse, matching exactly) -- genuinely model-reviewed, not an S9 sentinel. Dispatched a
+      same-revision rerun (41135548038) immediately: manifest.json's no_op_proof confirms
+      byte_identical true, provider_calls 0, fresh_process true, with genuinely distinct process
+      identities between first_run (boot:b18f47b0.../pid 2302) and rerun (boot:cdc256de.../pid
+      2386). state: READY_FOR_PROPOSAL. A new, fully sealed and no-op-proven Lane R candidate --
+      the fourth this session (after Java, Cpp and .NET's own earlier, now possibly-invalidated
+      seal), independently verified end to end the same way as every other confirmed seal.
+    sixteenth_fix_the_uncited_diagram_rejection_had_no_fixable_citation_2026_10_30: >
+      The four remaining Lane R runs this round (font-foss/Python, page-foss/Python, aspose-3d-
+      foss/Java, aspose-3d-foss/TypeScript) all failed at S4, three of them (3d-Java, 3d-
+      TypeScript, page-foss) on the EXACT same shape: a mermaid diagram code_block SUPERSEDE_
+      REDUNDANT into at_a_glance, rejected uncited_redundant_diagram, the model giving the
+      IDENTICAL empty-fact_ids answer across all three asks including the narrowed one
+      (confirmed on aspose-3d-foss/Java: byte-for-byte identical disposition on attempts 1, 2,
+      and 3). Root cause: renderer.py's own draw_at_a_glance() builds the diagram from
+      plan.get("at_a_glance") -- an S5 planning choice that does not exist yet when S4
+      reconciliation runs, so there is genuinely no fixed content fact a model could cite at this
+      stage; the existing rejection message ("cite a fact showing what the destination section
+      regenerates it from") asks for something that cannot exist yet. First tried exempting this
+      exact shape from the citation requirement entirely (mermaid + at_a_glance) -- caught before
+      running it live, by reproducing normalize()/placement_errors() directly against the real
+      aspose-3d-foss/Java facts.json: the fix would just move the SAME failure downstream to S9/
+      S10 (independent_reviewer.py's own ACCOUNTING_DISPOSITIONS requires fact_ids regardless of
+      kind), reproducing the EXACT original defect uncited_redundant_diagram was built to prevent
+      (hosted run 40730382891). Reverted that attempt. The real fix, verified empirically the
+      same way before writing it: the diagram always carries the product's own identity even
+      when its capabilities are not yet chosen, and citing any real identity:* fact passes
+      normalize()/placement_errors() cleanly (confirmed directly against the real facts.json).
+      _reconciliation_ask now names the batch's own first SUPPORTED identity fact explicitly on
+      the narrowed ask when the rejection is uncited_redundant_diagram, the same steer pattern as
+      the dangling_pointer fix. 2 new tests in tests/readme/reconciliation/test_narrowing.py (the
+      steer names a real fact ID for this rejection, and is absent for an unrelated one). Full
+      suite run before commit -- see next entry. aspose-font-foss/Python's own failure is
+      different (OMIT_UNSUPPORTED, uncited, on a code_block that is a directory-tree ASCII
+      listing, not a diagram) -- a single occurrence of a related but distinct shape, recorded
+      plainly, not yet fixed. aspose-tex-foss/Python (Lane L): REJECTED, correctly -- 9 examples
+      all fail with the same IndentationError (the finding's own evidence says this looks like an
+      upstream parse defect, not a README issue) plus 4 real format_overclaim findings; the exact
+      designed lane_l_unrepaired_defect refusal pattern, not a new defect.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
