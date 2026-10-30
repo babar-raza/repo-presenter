@@ -1776,12 +1776,34 @@ next_ready_items:
       default to test the bound-stopping mechanism itself now passes review_repair_rounds=2
       explicitly, so it still tests exactly what its name says regardless of the production
       default. Full suite clean.
+    live_reverify_2026_10_30_and_real_fifth_fix: >
+      Re-run 41060017964, with MAX_REVIEW_REPAIR_ROUNDS=4 live: the artifact-download quota reset
+      (gh run download succeeded this time), so read directly rather than via the coarser
+      durable-state record. Real progress -- one of the original 4 findings (nuget install) is
+      gone -- but 3 remain, all the same shape: the more repair rounds DID help some, confirming
+      that diagnosis was real, but not sufficient alone. dispositions.composed.json (read
+      directly) shows the exact cause for the 3 survivors: inherited_unit:015/017/019.code_block
+      (a NuGet PackageReference snippet, a CMake find_package path hint, add_subdirectory()) are
+      each DEFER_UNRESOLVED, destination null, empty fact_ids, sharing one copy-pasted rationale
+      ("rendered deterministically by the installation section") that actually argues for
+      SUPERSEDE_REDUNDANT into "installation", not for deferring at all -- the model using
+      DEFER_UNRESOLVED as a lazy catch-all for content it does not know how to place, exactly the
+      shape the first (withdrawn) hypothesis guessed, just on a narrower, now-confirmed target: a
+      code_block DEFER_UNRESOLVED with no citation and no tracked example backing it (checked via
+      _example_status, the same signal normalize()'s dozen LEGITIMATE DEFER_UNRESOLVED cases are
+      genuinely tied to). Fixed: a new placement_errors rule scoped to exactly that shape (not a
+      blanket ban -- a paragraph/list defer and a defer tied to a real UNRESOLVED example both
+      stay exempt, each proven by its own negative-control test). Confirmed against the real
+      run's own facts+dispositions before writing the test. 4 new tests in
+      test_placement_errors.py, falsifier confirmed. The SAME check, run directly against Java's
+      run 41060033053, also catches its directory-tree code block (inherited_unit:034) -- one fix
+      for two repositories' real findings, not a one-off patch.
     next_step: >
-      dispatch fresh Cpp and Java re-runs with more repair rounds available; read the result via
-      the durable-state record (git fetch refs/repository-presenter-state/records/...) since the
-      artifact-download egress quota is still exhausted -- retry the artifact download too, since
-      the exact disposition each unit lands on after repair is still worth confirming directly
-      once it is available again, but do not block on it.
+      full suite running; once clean, commit, push, and dispatch fresh Cpp and Java re-runs. Read
+      results directly (artifact download is working again). This is the fifth distinct real
+      root cause found and fixed in this one investigation chain (renderer boundary, BC-12
+      misrouting, S4 checks wiring, S4 batch convergence, and now this) -- each one real,
+      verified, falsifier-proven; none a guess papered over the symptom.
 
   - id: BC07_UNIT_ROUTING_PROVEN
     status: DONE
@@ -2024,27 +2046,26 @@ next_ready_items:
       all, so live_readme_loss_rule is right to call it lost, not a bug in the check), and
       VERIFIED_MOVE with empty fact_ids is a KEPT disposition, not an accounting one, so it is
       judged by a different rule (J4, printed verbatim) entirely.
-    real_shape_of_this_gap: >
-      This repository's own "Project Structure" section (a heading, prose, and a literal
-      directory-tree code block) describes something NO fact kind in this extraction pipeline
-      models at all -- there is no "directory_structure" or equivalent fact, so reconciliation has
-      no evidence to cite under ANY disposition, and the model visibly flails between
-      OMIT_UNSUPPORTED, DEFER_UNRESOLVED and VERIFIED_MOVE run to run because none of them is
-      really correct without something to cite. This is a different, deeper class than the four
-      citation/routing/coverage bugs fixed today (BC12_REPAIR_ROUTING_PROVEN): those were real
-      code defects with a clean fix. This is a genuine capability gap -- either a new fact kind
-      (extracting the repository's real directory structure, verifiable against the actual
-      cloned tree) or a principled, narrowly-scoped clearance for structural content no fact kind
-      covers, checked deterministically (not just trusted), the same discipline every other
-      clearance in this project already follows. Not attempted this session: it is a scoped
-      feature addition, not a bug fix, and deserves its own careful design rather than a rushed
-      patch layered onto an already-long investigation chain.
+    real_shape_of_this_gap_revised: >
+      First framing (a genuine capability gap needing a new fact kind or a bespoke clearance) was
+      itself premature, written before BC12_REPAIR_ROUTING_PROVEN's fifth fix was found. The model
+      flailing between OMIT_UNSUPPORTED/DEFER_UNRESOLVED/VERIFIED_MOVE run to run was not evidence
+      that no correct disposition exists -- it was evidence that an uncited DEFER_UNRESOLVED was
+      an available escape hatch nothing checked, so the model took it instead of committing to one
+      of the real options every one of its other attempts also tried (OMIT_UNSUPPORTED, VERIFIED_
+      MOVE). The new placement_errors rule (uncited_redundant_defer, same commit as BC12's fifth
+      fix) is the SAME fix for this repository: run directly against this run's own facts and
+      dispositions, it catches inherited_unit:034.code_block (the directory-tree block) too. No
+      new fact kind was needed; the content never genuinely lacked a disposition, it lacked a
+      check forcing one to be real.
     next_step: >
-      open a dedicated card for this once BC12_REPAIR_ROUTING_PROVEN's S4 convergence gap
-      (reconciliation_narrowing) is resolved or explicitly deferred -- do not conflate the two;
-      this one needs new extraction or clearance design, not a repair-loop fix. Lower priority
-      than the convergence gap, which blocks Cpp outright; this one is "flails but is at least
-      visible," never silently wrong.
+      dispatch a fresh Java re-run once the fix lands; read the result directly (the artifact
+      quota has reset). If the repair loop, now with more rounds and nowhere left to silently
+      defer, converges on a real disposition (even OMIT_UNSUPPORTED with a citation, or placement
+      into scope_limitations), this card closes as a normal bug fix, not a deferred feature. If it
+      still cannot land on anything citable after a real attempt, THEN the "no fact kind models
+      this" question becomes live again -- but only after the cheap, already-built mechanism has
+      had a genuine chance.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED

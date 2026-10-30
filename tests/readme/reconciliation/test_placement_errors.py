@@ -327,6 +327,60 @@ def test_a_redundant_paragraph_lead_in_is_not_held_to_the_diagram_citation_rule(
     assert not any("uncited_redundant_diagram" in e for e in errors)
 
 
+def test_an_uncited_deferral_of_a_non_example_code_block_is_refused() -> None:
+    """Measured live (aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, run 41060017964): three
+    alternative install snippets (NuGet PackageReference, CMake find_package path hint,
+    add_subdirectory()) each landed DEFER_UNRESOLVED, destination null, uncited, with a
+    rationale that actually argued for SUPERSEDE_REDUNDANT -- a code_block the pipeline never
+    tried to verify as an example has no structural ambiguity to defer."""
+    facts = _facts(_unit("inherited_unit:020.code_block", "```cmake\nadd_subdirectory(x)\n```"))
+    document = {"dispositions": [_entry("inherited_unit:020.code_block", "DEFER_UNRESOLVED")]}
+    errors = placement_errors(document, facts)
+    assert any("uncited_redundant_defer" in e for e in errors)
+
+
+def test_a_deferred_tracked_example_is_not_held_to_the_defer_citation_rule() -> None:
+    """DEFER_UNRESOLVED is legitimate for a code block the pipeline tried and failed to verify
+    as an example -- that is a real, structural ambiguity, not a lazy catch-all."""
+    facts = _facts(
+        _unit("inherited_unit:020.code_block", "```cmake\nadd_subdirectory(x)\n```"),
+        Fact(
+            "example:001",
+            "example",
+            "add_subdirectory(x)",
+            (Evidence("README.md", "unit inherited_unit:020.code_block"),),
+            polarity="UNRESOLVED",
+        ),
+    )
+    document = {"dispositions": [_entry("inherited_unit:020.code_block", "DEFER_UNRESOLVED")]}
+    errors = placement_errors(document, facts)
+    assert not any("uncited_redundant_defer" in e for e in errors)
+
+
+def test_a_deferred_cited_code_block_is_not_refused_for_that_reason() -> None:
+    facts = _facts(_unit("inherited_unit:020.code_block", "```cmake\nadd_subdirectory(x)\n```"))
+    document = {
+        "dispositions": [
+            _entry(
+                "inherited_unit:020.code_block",
+                "DEFER_UNRESOLVED",
+                fact_ids=["package:name"],
+            )
+        ]
+    }
+    errors = placement_errors(document, facts)
+    assert not any("uncited_redundant_defer" in e for e in errors)
+
+
+def test_a_deferred_paragraph_is_not_held_to_the_defer_citation_rule() -> None:
+    """Scoped to code_block only -- normalize() assigns DEFER_UNRESOLVED to many paragraph/list
+    units deterministically, and this rule must not relitigate those."""
+    facts = _facts(_unit("inherited_unit:021.paragraph", "Some genuinely ambiguous claim."))
+    document = {"dispositions": [_entry("inherited_unit:021.paragraph", "DEFER_UNRESOLVED")]}
+    errors = placement_errors(document, facts)
+    assert not any("uncited_redundant_defer" in e for e in errors)
+
+
 def test_a_placing_disposition_into_an_unholdable_destination_is_refused() -> None:
     facts = _facts(_unit("inherited_unit:020.paragraph", "Some claim."))
     document = {

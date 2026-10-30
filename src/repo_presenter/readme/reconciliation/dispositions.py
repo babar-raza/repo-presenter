@@ -1924,6 +1924,7 @@ def placement_errors(output: dict[str, Any], facts: FactsDocument) -> list[str]:
     contradicted = contradicted_code_units(facts)
     commands = command_block_units(facts)
     unpublished = unpublished_registry_blocks(facts)
+    example_status = _example_status(facts)
     inherited = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
     unit_text = {unit_id: fact.value for unit_id, fact in inherited.items()}
     build_facts = sorted(
@@ -1981,6 +1982,33 @@ def placement_errors(output: dict[str, Any], facts: FactsDocument) -> list[str]:
                 "(the same facts that section's own content is built from); an empty fact_ids "
                 "leaves the supersession unaccounted for later, as if the content had simply "
                 "vanished"
+            )
+        if (
+            disposition == "DEFER_UNRESOLVED"
+            and not cited
+            and unit.rsplit(".", 1)[-1] == "code_block"
+            and unit not in example_status
+        ):
+            # Measured live (aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, run 41060017964): three
+            # alternative install snippets (a NuGet PackageReference, a CMake find_package path
+            # hint, add_subdirectory()) each landed DEFER_UNRESOLVED, destination null, empty
+            # fact_ids, with the SAME copy-pasted rationale ("rendered deterministically by the
+            # installation section") that actually argues for SUPERSEDE_REDUNDANT into
+            # "installation", not for deferring at all. DEFER_UNRESOLVED is a real, common,
+            # legitimate disposition elsewhere in this module (normalize() assigns it
+            # deterministically in a dozen genuine cases) -- but every one of those is either a
+            # verified example's own unresolved status (example_status, checked here) or a
+            # non-code_block kind; a code_block the pipeline never even tried to verify as an
+            # example has no structural ambiguity to defer. Scoped narrowly to avoid the false
+            # start of banning DEFER_UNRESOLVED broadly (see RUST_LANE_R_F01_F02_F03_ROOT_CAUSED's
+            # own correction of that first instinct).
+            errors.append(
+                f"{unit}: uncited_redundant_defer: DEFER_UNRESOLVED on a code_block that is not "
+                "a tracked example needs at least one fact ID showing what is genuinely unresolved "
+                "about it, or a real disposition (VERIFIED_PRESERVE/MOVE if it is kept as written, "
+                "SUPERSEDE_REDUNDANT if another section already renders it, OMIT_UNSUPPORTED with "
+                "a cited reason if nothing supports it); an uncited deferral with no destination "
+                "leaves it unaccounted for later, as if the content had simply vanished"
             )
         if (
             disposition == "OMIT_UNSUPPORTED"
