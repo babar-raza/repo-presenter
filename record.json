@@ -18,10 +18,10 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "PresentFailure: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (heading 'Project Structure'); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (code block '├── src/main/java/org/aspose/cells_foss/  # Public')",
+    "classification": "transient",
+    "detail": "model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected twice; last rejection: inherited_unit:034.code_block: uncited_redundant_defer: DEFER_UNRESOLVED on a code_block that is not a tracked example needs at least one fact ID showing what is genuinely unresolved about it, or a real disposition (VERIFIED_PRESERVE/MOVE if it is kept as written, SUPERSEDE_REDUNDANT if another section already renders it, OMIT_UNSUPPORTED with a cited reason if nothing supports it); an uncited deferral with no destination leaves it unaccounted for later, as if the content had simply vanished",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-10-30T13:13:21.890853+00:00",
+    "occurred_at": "2026-10-30T13:38:03.737328+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 13,
+  "state_version": 14,
   "recent_trigger_dedup_keys": {
     "run:40723588078:aspose-cells-foss/Aspose.Cells-FOSS-for-Java": "1ad135f9d5d6476abb2eda7682ee94e2",
     "run:40730382891:aspose-cells-foss/Aspose.Cells-FOSS-for-Java": "4d06896d4a1a43f59ae1659ef6354078",
