@@ -5,7 +5,7 @@
   "provider_repository_id": 1332915817,
   "registry_revision": null,
   "active_transaction_id": "f9239bf8d6c043b8b47a2828310455e9",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "PresentFailure: Lane L: independent review returned REJECT with 9 blocking finding(s) of 9; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README says the package is not published ('The package metadata is defined in this repository, but Aspose.PSD.FOSS is not published to NuGet yet.'), but a package-registry reading lists it); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README names the package 'Aspose.PSD.FOSS.Samples.Basic', but the package identity is 'Aspose.PSD.FOSS' and no fact states 'Aspose.PSD.FOSS.Samples.Basic'); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README names the package 'Aspose.PSD.FOSS.Samples.Layers', but the package identity is 'Aspose.PSD.FOSS' and no fact states 'Aspose.PSD.FOSS.Samples.Layers'); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README names the package 'Aspose.PSD.FOSS.Samples.StructuralEditing', but the package identity is 'Aspose.PSD.FOSS' and no fact states 'Aspose.PSD.FOSS.Samples.StructuralEditing'); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README names the package 'Aspose.PSD.FOSS.Samples.Streams', but the package identity is 'Aspose.PSD.FOSS' and no fact states 'Aspose.PSD.FOSS.Samples.Streams'); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README names the package 'Aspose.PSD.FOSS.Samples.Basic', but the package identity is 'Aspose.PSD.FOSS' and no fact states 'Aspose.PSD.FOSS.Samples.Basic'); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README names the package 'Aspose.PSD.FOSS.Samples.Layers', but the package identity is 'Aspose.PSD.FOSS' and no fact states 'Aspose.PSD.FOSS.Samples.Layers'); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README names the package 'Aspose.PSD.FOSS.Samples.StructuralEditing', but the package identity is 'Aspose.PSD.FOSS' and no fact states 'Aspose.PSD.FOSS.Samples.StructuralEditing'); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README names the package 'Aspose.PSD.FOSS.Samples.Streams', but the package identity is 'Aspose.PSD.FOSS' and no fact states 'Aspose.PSD.FOSS.Samples.Streams')",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-30T21:20:14.365937+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:41130142104",
     "acquired_at": "2026-10-30T21:20:11.711978+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-10-30T21:35:11.711978+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "0f3d8c50d12c40029199245fb630d1e4",
+    "transaction_id": "f9239bf8d6c043b8b47a2828310455e9",
+    "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-.NET",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-30T21:20:14.001654+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-psd-foss/Aspose.PSD-FOSS-for-.NET",
+    "output_manifest": "candidates/aspose-psd-foss__Aspose.PSD-FOSS-for-.NET/lane-l/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:41130142104:aspose-psd-foss/Aspose.PSD-FOSS-for-.NET": "f9239bf8d6c043b8b47a2828310455e9"
   },
