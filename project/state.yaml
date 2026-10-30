@@ -2667,6 +2667,34 @@ next_ready_items:
       silently loosen a check") warns against rushing. Recorded precisely rather than patched
       blindly; this is the next well-scoped investigation, now with two confirmed occurrences to
       design a falsifying test against.
+    tried_and_reverted_the_verified_preserve_fold_2026_10_30: >
+      Attempted the first candidate approach above (widen _judge to give a heading+SUPERSEDE_
+      REDUNDANT+placeable-destination unit a gap, letting the existing _fold_uncovered branch
+      fold it to VERIFIED_PRESERVE) and checked it against placement.py directly before running
+      it live: renders_verbatim() returns "unit_type not in _RENDERED_ELSEWHERE" for a non-code_
+      block kind, and _RENDERED_ELSEWHERE already contains "heading" -- so a heading-kind unit
+      marked PLACED (VERIFIED_PRESERVE/MOVE) is placed as Placement(..., "owned_elsewhere") and
+      its literal text is NEVER actually inserted anywhere in the rendered README, by design.
+      Folding to VERIFIED_PRESERVE would not make the heading's text reappear, so live_readme_
+      loss_rule's own "is this heading findable in the candidate" check would still fail --
+      worse, VERIFIED_PRESERVE is not even in independent_reviewer.py's ACCOUNTING_DISPOSITIONS
+      set ({SUPERSEDE_REDUNDANT, CORRECT_WITH_EVIDENCE, VERIFIED_REWRITE, OMIT_UNSUPPORTED}), so
+      _accounting_units would not even consider the row. Reverted before running any test or
+      dispatch -- SUPERSEDE_REDUNDANT (the disposition the model already chose) is correct; the
+      real, narrower gap is that ACCOUNTING_DISPOSITIONS requires a real fact_id citation and
+      there is no natural fact representing "this heading's semantic territory is now owned by
+      the destination section's own shell-assigned title," since that title is a fixed string,
+      not a Fact record. The second candidate approach (a documented, heading-specific sentinel
+      citation, narrowly scoped like RECOVERED_COVERAGE_RATIONALE) remains the more promising
+      direction, but deliberately not built on a guess in this same pass -- it changes what the
+      accounting check accepts as evidence, which is exactly the class of change this session's
+      own "never loosen a check" discipline treats as needing its own dedicated investigation,
+      including checking whether the *other* headings already superseded into deterministic
+      sections (navigation, identity, installation, etc., which DO have real rendering_fact_ids
+      to cite) reveal why a placeable destination's own heading-replacement case has never had an
+      equivalent citable fact in the first place.
+
+  - id: LANE_L_HOSTED_PARITY
     status: PLANNED
     priority: highest
     due: immediately after INDEPENDENT_LLM_REVIEWER.P3_CALIBRATION, before any cohort or PR work
