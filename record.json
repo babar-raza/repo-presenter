@@ -5,7 +5,7 @@
   "provider_repository_id": 1280393633,
   "registry_revision": null,
   "active_transaction_id": "d6359e88b22f4a22b5dccadc051b4f39",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit limitation:4: text contains a command ('pip install')",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-30T21:30:19.131576+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:41130099384",
     "acquired_at": "2026-10-30T21:19:40.263390+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-10-30T21:34:40.263390+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "227ab0f7fe2d44d9bb72b6a15cae5395",
+    "transaction_id": "d6359e88b22f4a22b5dccadc051b4f39",
+    "repository": "aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-30T21:30:18.746703+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python",
+    "output_manifest": "candidates/aspose-barcode-foss__Aspose.BarCode-FOSS-for-Python/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:41130099384:aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python": "d6359e88b22f4a22b5dccadc051b4f39"
   },
