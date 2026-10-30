@@ -18,10 +18,10 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link src/test/java/com/aspose/threed/)",
+    "classification": "transient",
+    "detail": "model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected three times (the third a narrowed ask for the units a rejection actually named); last rejection: inherited_unit:008.code_block: uncited_redundant_diagram: SUPERSEDE_REDUNDANT on a code_block needs at least one fact ID showing what the destination section regenerates it from (the same facts that section's own content is built from); an empty fact_ids leaves the supersession unaccounted for later, as if the content had simply vanished",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-10-28T11:27:43.715998+00:00",
+    "occurred_at": "2026-10-30T21:49:09.883468+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 10,
+  "state_version": 11,
   "recent_trigger_dedup_keys": {
     "run:40555587482:aspose-3d-foss/Aspose.3D-FOSS-for-Java": "918cb4846361440e928a3067d4de28fb",
     "run:40571532257:aspose-3d-foss/Aspose.3D-FOSS-for-Java": "f858c28995dd41d18dbd51ef2a3f61d7",
