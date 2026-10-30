@@ -12,6 +12,7 @@ from __future__ import annotations
 
 from repo_presenter.core.facts import Evidence, Fact, FactsDocument
 from repo_presenter.readme.reconciliation.dispositions import (
+    RECOVERED_COVERAGE_RATIONALE,
     coordinate_neighbor_promises,
     dangling_pointers,
     placement_errors,
@@ -339,6 +340,28 @@ def test_an_uncited_deferral_of_a_non_example_code_block_is_refused() -> None:
     assert any("uncited_redundant_defer" in e for e in errors)
 
 
+def test_the_recovered_coverage_sentinel_is_not_held_to_the_defer_citation_rule() -> None:
+    """Negative control found by the failing-test discipline itself: widening the rule to catch
+    a cited-but-wrong DEFER_UNRESOLVED (test above) first broke a real, documented historical
+    fixture (tests/readme/reconciliation/test_patch.py's wave-4 3D-Java case) whose code block is
+    genuinely "not provably carried by the section named" -- RECOVERED_COVERAGE_RATIONALE is the
+    one deterministic, code-assigned sentinel reserved for exactly that, distinct from anything a
+    model writes freely, so it stays exempt even though it is cited."""
+    facts = _facts(_unit("inherited_unit:020.code_block", "```cmake\nadd_subdirectory(x)\n```"))
+    document = {
+        "dispositions": [
+            _entry(
+                "inherited_unit:020.code_block",
+                "DEFER_UNRESOLVED",
+                fact_ids=["install_command:maven"],
+                rationale=RECOVERED_COVERAGE_RATIONALE,
+            )
+        ]
+    }
+    errors = placement_errors(document, facts)
+    assert not any("uncited_redundant_defer" in e for e in errors)
+
+
 def test_a_deferred_tracked_example_is_not_held_to_the_defer_citation_rule() -> None:
     """DEFER_UNRESOLVED is legitimate for a code block the pipeline tried and failed to verify
     as an example -- that is a real, structural ambiguity, not a lazy catch-all."""
@@ -357,7 +380,12 @@ def test_a_deferred_tracked_example_is_not_held_to_the_defer_citation_rule() -> 
     assert not any("uncited_redundant_defer" in e for e in errors)
 
 
-def test_a_deferred_cited_code_block_is_not_refused_for_that_reason() -> None:
+def test_a_deferred_code_block_with_a_citation_is_still_refused() -> None:
+    """Measured live (aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, run 41068602255): a cited
+    DEFER_UNRESOLVED ("fact_ids": ["package:distribution..."], rationale "rendered
+    deterministically by the installation section") is just as wrong as an uncited one --
+    DEFER_UNRESOLVED means the facts neither support nor contradict the claim, which cannot be
+    true of a disposition that cites a fact in support of it. A citation does not excuse this."""
     facts = _facts(_unit("inherited_unit:020.code_block", "```cmake\nadd_subdirectory(x)\n```"))
     document = {
         "dispositions": [
@@ -369,7 +397,7 @@ def test_a_deferred_cited_code_block_is_not_refused_for_that_reason() -> None:
         ]
     }
     errors = placement_errors(document, facts)
-    assert not any("uncited_redundant_defer" in e for e in errors)
+    assert any("uncited_redundant_defer" in e for e in errors)
 
 
 def test_a_deferred_paragraph_is_not_held_to_the_defer_citation_rule() -> None:

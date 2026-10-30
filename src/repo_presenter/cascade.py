@@ -95,6 +95,7 @@ from repo_presenter.readme.investigation.dossier import (
     write_investigation,
 )
 from repo_presenter.readme.reconciliation.dispositions import (
+    coordinate_neighbor_promises,
     merge_dispositions,
     reconcile_checks,
     reconciliation_batch_facts,
@@ -231,7 +232,17 @@ def _run_reconciliation(
             context=context, call_schema=call_schema, checks=checks,
         )
         outputs.append(result.output)
-    return retain_unverified_examples(merge_dispositions(outputs), document)
+    # coordinate_neighbor_promises is documented (dispositions.py's own module docstring, and its
+    # own docstring: "Runs once, after merge_dispositions() folds every batch into one flat
+    # document -- the one point a neighbor's own final disposition is visible regardless of
+    # which batch produced it") to run exactly here -- it never had, in this orchestrator.
+    # Measured live (aspose-cells-foss/Aspose.Cells-FOSS-for-Java, run 41068618078): a lead-in
+    # paragraph ("Gradle (Groovy DSL):") was VERIFIED_MOVE into quick_start while the code block
+    # it introduces was independently OMIT_UNSUPPORTED with no destination -- a lead-in moved
+    # without its payload, BC-07's own dangling-colon check catching what this function exists to
+    # prevent at the source.
+    merged = retain_unverified_examples(merge_dispositions(outputs), document)
+    return coordinate_neighbor_promises(merged, document)
 
 
 def _run_planning(

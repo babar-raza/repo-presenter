@@ -292,6 +292,72 @@ def test_an_uncited_omit_on_a_paragraph_is_rejected_and_reasked_not_accepted(
     assert entry["destination_section"] == "scope_limitations"
 
 
+def test_a_moved_lead_in_follows_its_omitted_payload_not_left_stranded(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Measured live (aspose-cells-foss/Aspose.Cells-FOSS-for-Java, run 41068618078):
+    coordinate_neighbor_promises exists, is correct and tested, but was never called from this
+    orchestrator at all -- a lead-in paragraph ("Gradle (Groovy DSL):") was VERIFIED_MOVE into
+    quick_start while the code block it introduces was independently OMIT_UNSUPPORTED with no
+    destination, leaving the lead-in's colon with nothing following it in quick_start. BC-07's
+    own dangling-colon check then blocked the candidate before it ever reached review."""
+    lead = "inherited_unit:040.paragraph"
+    payload = "inherited_unit:041.code_block"
+    base = make_facts()
+    facts = FactsDocument(
+        base.repository,
+        base.source_revision,
+        (
+            *(f for f in base.facts if f.kind != "inherited_unit"),
+            Fact(
+                lead, "inherited_unit", "Gradle (Groovy DSL):",
+                (Evidence("README.md", "section 'Widget > Installation'"),),
+            ),
+            Fact(
+                payload, "inherited_unit", "```groovy\nimplementation 'x:y:1.0'\n```",
+                (Evidence("README.md", "section 'Widget > Installation'"),),
+            ),
+        ),
+    )
+    reply = {
+        "dispositions": [
+            {
+                "unit_id": lead,
+                "disposition": "VERIFIED_MOVE",
+                "destination_section": "quick_start",
+                "fact_ids": [],
+                "rationale": "Introduces the Gradle example in quick_start.",
+            },
+            {
+                "unit_id": payload,
+                "disposition": "OMIT_UNSUPPORTED",
+                "destination_section": None,
+                "fact_ids": ["package:name"],
+                "rationale": "Redundant with the verified package fact.",
+            },
+        ]
+    }
+    ledger = Ledger(tmp_path / "ledger.jsonl")
+    store = CallStore(tmp_path / "calls")
+    prompts = load_manifests(PROMPTS_PATH)
+    client = _FakeClient([_completion(reply)])
+    monkeypatch.setattr(jobs_module.transport, "build_client", lambda config: client)
+    stage = _run_reconciliation(
+        entry=make_entry(),
+        document=facts,
+        investigation={},
+        prompts=prompts,
+        config=CONFIG,
+        ledger=ledger,
+        store=store,
+        context=JobContext(make_entry().repository, facts.source_revision),
+    )
+    by_unit = {entry["unit_id"]: entry for entry in stage["dispositions"]}
+    # The lead-in follows its payload into omission rather than being left moved alone.
+    assert by_unit[lead]["disposition"] == "OMIT_UNSUPPORTED"
+    assert by_unit[lead]["destination_section"] is None
+
+
 # --- S9: the render's unprinted kept units are accounted --------------------------------------
 
 README_WITH_SUBHEADING = README + "\n### Main\n"

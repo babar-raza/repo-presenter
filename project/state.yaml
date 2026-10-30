@@ -1823,14 +1823,58 @@ next_ready_items:
       own wording differs. No code change; the mechanism and the check were already right -- the
       prompt was telling the model to do the thing the check now (correctly) refuses. Full suite
       clean.
+    live_reverify_2026_10_30_seventh_and_eighth_fixes: >
+      Re-run of both (Cpp 41068602255, Java 41068618078), both downloaded and read directly (the
+      artifact-egress quota stayed clear this time): real, substantial progress on both. Cpp is
+      down to ONE finding; Java reached ACCEPT on review_verdict.json's verdict field, but
+      checked (not assumed) model_reviewed by scanning the ledger for an independent_review job --
+      there was none, so this was the same S9-sentinel pattern as before, not a real seal.
+      validation.json confirms why: BC-07 fails (a genuinely new, different finding, not a
+      regression) -- a lead-in paragraph ("Gradle (Groovy DSL):") landed VERIFIED_MOVE into
+      quick_start while the code block it introduces landed OMIT_UNSUPPORTED with no destination,
+      so the lead-in's own colon has nothing following it where it was moved to.
+    seventh_fix_a_real_fixing_function_never_wired_in: >
+      dispositions.py's own coordinate_neighbor_promises exists, is correct, and is directly
+      tested (tests/readme/reconciliation/test_placement_errors.py already exercises it) -- it
+      was simply never called from cascade.py's _run_reconciliation at all, despite its own
+      docstring stating exactly where it belongs ("Runs once, after merge_dispositions() folds
+      every batch into one flat document"). Confirmed directly: running it by hand against this
+      run's own facts and the pre-fix dispositions correctly settles the lead-in to follow its
+      payload into OMIT_UNSUPPORTED. Wired into _run_reconciliation's own return, chained after
+      retain_unverified_examples(merge_dispositions(...)), matching its documented contract
+      exactly. New test (test_a_moved_lead_in_follows_its_omitted_payload_not_left_stranded),
+      falsifier confirmed.
+    eighth_fix_a_citation_does_not_excuse_defer_either_but_one_real_sentinel_still_does: >
+      Cpp's one remaining finding (inherited_unit:013.code_block, the nuget install command) is
+      DEFER_UNRESOLVED again, but this time WITH a citation ("fact_ids":
+      ["package:distribution.aspose.cells.cpp.foss"]) -- the earlier fix only refused an UNCITED
+      deferral, and this is evidence the distinction was wrong: DEFER_UNRESOLVED means (this
+      module's own system prompt) "the facts neither support nor contradict" the claim, which
+      cannot be true of a disposition that cites a real fact in support of it. First attempt
+      dropped the "not cited" condition unconditionally -- the full suite immediately caught the
+      real cost: tests/readme/reconciliation/test_patch.py's wave-4 3D-Java fixture (a genuine,
+      documented historical case, the old repo's own ``_recover_uncovered`` fold) legitimately
+      cites install_command:maven on a DEFER_UNRESOLVED code block whose rationale is the exact
+      string RECOVERED_COVERAGE_RATIONALE ("Not provably carried by the section named; held for
+      the owner.") -- a deterministic, code-assigned sentinel for genuine uncertainty, not a
+      model's free claim of redundancy. Distinguishing the two precisely: Cpp's wrong case has a
+      free-form, model-authored rationale ("rendered deterministically by the installation
+      section"); the legitimate case has this one exact, code-controlled constant. Final rule:
+      refused regardless of citation UNLESS the rationale is exactly RECOVERED_COVERAGE_RATIONALE
+      (not a fragile text-similarity match -- an exact sentinel comparison) or the unit is a
+      tracked example. New test for the sentinel exemption added alongside the positive case; the
+      caught regression itself is kept as a worked example in this record rather than only in the
+      commit history, since it is exactly the kind of mistake the full-suite-before-commit
+      discipline exists to catch. Falsifier confirmed both ways; full suite clean.
     next_step: >
-      dispatch fresh Cpp and Java re-runs with the corrected prompt; read results directly. This
-      is the sixth distinct real root cause found and fixed in this one investigation chain
-      (renderer boundary, BC-12 misrouting, S4 checks wiring, S4 batch convergence, uncited
-      defer, and now the prompt that was recommending it) -- each one real, verified, falsifier-
-      or live-confirmed; none a guess papered over the symptom. If this does NOT resolve it,
-      reconciliation_narrowing moves from "likely needed" to "confirmed needed," having run out
-      of cheaper, more targeted explanations.
+      dispatch fresh Cpp and Java re-runs with both fixes landed; read results directly. This is
+      the seventh and eighth distinct real root causes found and fixed in this one investigation
+      chain (renderer boundary, BC-12 misrouting, S4 checks wiring, S4 batch convergence, uncited
+      defer, the prompt recommending it, an unwired coordination function, and the citation
+      loophole in the defer rule) -- each real, verified, falsifier- or live-confirmed; none a
+      guess papered over the symptom. If a genuinely new finding keeps surfacing after each one
+      closes, that pattern itself is the next thing worth naming plainly to the owner rather than
+      silently continuing to chase it indefinitely.
 
   - id: BC07_UNIT_ROUTING_PROVEN
     status: DONE
@@ -2085,14 +2129,21 @@ next_ready_items:
       dispositions, it catches inherited_unit:034.code_block (the directory-tree block) too. No
       new fact kind was needed; the content never genuinely lacked a disposition, it lacked a
       check forcing one to be real.
+    live_reverify_directory_tree_resolved_new_finding_surfaced_2026_10_30: >
+      Re-run 41068618078, read directly: the directory-tree finding is GONE -- the Project
+      Structure heading, paragraph and code block are no longer reported lost. review_verdict.json
+      showed verdict ACCEPT, but model_reviewed was checked (not assumed) via the ledger, which
+      has no independent_review job call -- the same S9-sentinel pattern caught before, not a
+      real seal. validation.json names why: BC-07 fails on a different, genuinely new unit (a
+      "Gradle (Groovy DSL):" lead-in moved away from its own omitted code block) -- see
+      BC12_REPAIR_ROUTING_PROVEN's seventh fix (coordinate_neighbor_promises wired into
+      cascade.py at last) for the root cause and fix, shared verbatim across both repositories'
+      real candidates.
     next_step: >
-      dispatch a fresh Java re-run once the fix lands; read the result directly (the artifact
-      quota has reset). If the repair loop, now with more rounds and nowhere left to silently
-      defer, converges on a real disposition (even OMIT_UNSUPPORTED with a citation, or placement
-      into scope_limitations), this card closes as a normal bug fix, not a deferred feature. If it
-      still cannot land on anything citable after a real attempt, THEN the "no fact kind models
-      this" question becomes live again -- but only after the cheap, already-built mechanism has
-      had a genuine chance.
+      dispatch a fresh Java re-run with the seventh and eighth fixes landed; read directly. If
+      BC-07 clears and nothing new and genuine surfaces, this card is close to DONE -- a real
+      seal needs ACCEPT with model_reviewed genuinely true and an independently-read no_op_proof,
+      not assumed from either field alone.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
