@@ -3105,6 +3105,46 @@ next_ready_items:
       section's own accepted set -- is a separate, architecturally deeper candidate, not forced
       into a rushed fix this pass. Pivoting to the next confirmed-recurring finding per the
       standing mandate (duplicate_paragraph or the claim_contradiction sub-project-name gap).
+    twentieth_fix_duplicate_paragraph_generalized_falsifier_confirmed_2026_10_30: >
+      Root-caused duplicate_paragraph (confirmed recurring on aspose-email-foss/Cpp, 41142584634,
+      and aspose-slides-foss/Python, 41142575744) to an EXISTING, already-solved defect class,
+      narrowed to one section by a hard-coded string. Read independent_reviewer.py's own
+      duplicate_paragraph_rule directly: it is a review-time (S10) holdout only, with no repair
+      hand-off by design. Reproduced the email-foss/Cpp finding directly against the real
+      artifact: duplicate_paragraph_rule(README.coherent.md) reproduces it exactly (1 finding,
+      same quote); duplicate_paragraph_rule(README.rendered.md, the PRE-coherence render) finds
+      nothing -- proving S8 coherence is where the duplicate is introduced, not S6. Traced the
+      real content_units.coherent.json: inherited_unit:043.paragraph is VERIFIED_PRESERVE into
+      api_reference (rendered verbatim there), and the SAME content_units' own api_reference/
+      intro unit cites that same fact_id and restates its substance near-verbatim as fresh
+      prose -- the renderer then prints it twice. authoring.py already has a deterministic
+      check+recovery for EXACTLY this shape -- preserved_opening_text() / unit_checks()'s own
+      restates-the-preserved-paragraph rule / recover_opening_duplicates_preserved() -- proven
+      and tested, but hard-coded to task.section_id == "opening" alone (the only place this
+      defect had previously been observed). Generalized cleanly: added preserved_section_text
+      (dispositions, facts, section) with preserved_opening_text now a thin section="opening"
+      wrapper (zero behavior change, confirmed by full suite); widened unit_checks's own gate
+      from the opening-only condition to any section via preserved_section_text(...,
+      task.section_id); added recover_preserved_duplicates(output, *, section, dispositions,
+      facts) with recover_opening_duplicates_preserved now delegating to it with
+      section="opening" (same literals, same logic, zero behavior change); wired the new
+      function into cascade.py's S6 recover= for every non-opening section, and added
+      coherence.py's own recover_every_section_duplicates_preserved(output, *, tasks,
+      dispositions, facts) -- looping every batch's own tasks -- into S8's
+      recover_coherence_regressions, which is the stage that actually introduced this specific
+      live defect (coherence_checks already calls unit_checks with dispositions=... per section,
+      so the WIDENED check is exercised there automatically; only the RECOVERY side needed new
+      wiring). 10 new tests across test_authoring.py and test_coherence.py, grounded in the real
+      email-foss/Cpp text (preserved_section_text reads it; unit_checks rejects the real
+      restating intro and allows a genuinely distinct one; recover_preserved_duplicates trims
+      correctly and ignores a different section's unit; recover_coherence_regressions fixes a
+      non-opening section end to end). Falsifier confirmed: reverted only the three touched
+      source files (cascade.py, authoring.py, coherence.py), kept the new tests -- collection
+      fails with ImportError exactly as expected; re-applied after. Full suite: 3359 passed, 11
+      skipped, exit 0, run before this commit. NOT YET verified live against a fresh hosted
+      run -- ready for review, not accepted, until aspose-email-foss/Cpp and/or aspose-
+      slides-foss/Python re-runs show the duplicate_paragraph finding gone via review_verdict.json
+      read directly.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED

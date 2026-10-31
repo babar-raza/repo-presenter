@@ -65,6 +65,7 @@ from repo_presenter.readme.composition.authoring import (
     authoring_tasks,
     merge_units,
     recover_opening_duplicates_preserved,
+    recover_preserved_duplicates,
     unit_checks,
     write_content_units,
 )
@@ -306,6 +307,11 @@ def _run_authoring(
                 return recover_opening_duplicates_preserved(
                     output, dispositions=dispositions, facts=document
                 )
+            preserved_fixed = recover_preserved_duplicates(
+                output, section=task.section_id, dispositions=dispositions, facts=document
+            )
+            if preserved_fixed is not None:
+                return preserved_fixed
             return recover_authoring_output(output, task=task, facts=document)
 
         result = run_job(

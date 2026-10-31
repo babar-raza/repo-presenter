@@ -38,6 +38,7 @@ from repo_presenter.readme.composition.authoring import (
     mask_allowed_values,
     prose_nouns,
     recover_opening_duplicates_preserved,
+    recover_preserved_duplicates,
     restates_own_title,
     section_spellings,
     slot_records,
@@ -677,6 +678,29 @@ def recover_coherence_out_of_slot_citations(
     return output if changed else None
 
 
+def recover_every_section_duplicates_preserved(
+    output: dict[str, Any],
+    *,
+    tasks: list[SectionTask],
+    dispositions: Mapping[str, Any],
+    facts: FactsDocument,
+) -> dict[str, Any] | None:
+    """:func:`recover_preserved_duplicates`, applied once per authored section, for S8
+    coherence's own multi-section output (every section but "opening", which
+    ``recover_opening_duplicates_preserved`` already covers)."""
+    changed = False
+    for task in tasks:
+        if task.section_id == "opening":
+            continue
+        fixed = recover_preserved_duplicates(
+            output, section=task.section_id, dispositions=dispositions, facts=facts
+        )
+        if fixed is not None:
+            output = fixed
+            changed = True
+    return output if changed else None
+
+
 def recover_coherence_regressions(
     output: dict[str, Any],
     *,
@@ -695,6 +719,12 @@ def recover_coherence_regressions(
         )
         if opening_fixed is not None:
             output = opening_fixed
+            changed = True
+        every_section_fixed = recover_every_section_duplicates_preserved(
+            output, tasks=tasks, dispositions=dispositions, facts=facts
+        )
+        if every_section_fixed is not None:
+            output = every_section_fixed
             changed = True
     missing_fixed = recover_coherence_missing_units(
         output, existing_units=existing_units, tasks=tasks

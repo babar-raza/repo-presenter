@@ -138,6 +138,71 @@ def test_recover_coherence_regressions_without_dispositions_is_unaffected() -> N
     assert result is None
 
 
+# Real hosted defect (aspose-email-foss/Aspose.Email-FOSS-for-Cpp, run 41142584634): S8
+# coherence's own revision of api_reference/intro restated inherited_unit:043.paragraph
+# (VERIFIED_PRESERVE into api_reference) nearly verbatim, so the renderer printed it twice --
+# a duplicate_paragraph review REJECT, since this fix only reached "opening" before. Proves
+# recover_coherence_regressions now fixes a NON-opening section too, through the same
+# multi-section recover_every_section_duplicates_preserved pass.
+
+
+def _api_reference_task() -> SectionTask:
+    return SectionTask(
+        section_id="api_reference",
+        packet={},
+        accepted_ids=frozenset({"package:name"}),
+        slots=("intro",),
+    )
+
+
+def _facts_with_preserved_api_reference() -> FactsDocument:
+    base = make_facts()
+    preserved = Fact(
+        "inherited_unit:043.paragraph",
+        "inherited_unit",
+        _PRESERVED,
+        (Evidence("README.md", "section 'API Reference'"),),
+    )
+    return FactsDocument(base.repository, base.source_revision, (*base.facts, preserved))
+
+
+def _dispositions_preserving_api_reference() -> dict[str, object]:
+    return {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:043.paragraph",
+                "disposition": "VERIFIED_PRESERVE",
+                "destination_section": "api_reference",
+                "fact_ids": [],
+                "rationale": "test fixture",
+            }
+        ]
+    }
+
+
+def test_recover_coherence_regressions_trims_a_duplicated_api_reference_unit() -> None:
+    facts = _facts_with_preserved_api_reference()
+    output = {
+        "units": [
+            {
+                "section": "api_reference",
+                "slot": "intro",
+                "text": _AUTHORED_WITH_NEW_SENTENCE,
+                "fact_ids": ["package:name"],
+            }
+        ]
+    }
+    result = recover_coherence_regressions(
+        output,
+        existing_units=output["units"],
+        facts=facts,
+        tasks=[_api_reference_task()],
+        dispositions=_dispositions_preserving_api_reference(),
+    )
+    assert result is not None
+    assert result["units"][0]["text"] == "It also provides a built-in validator via Widget.validate()."
+
+
 # Real hosted defect (aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, run 41102257446): a coherence
 # revision of api_reference/intro claimed the listing is "grouped exactly as reference.aspose.org
 # organizes them" -- a real stray identifier (an external site's domain, not a fact), repeated

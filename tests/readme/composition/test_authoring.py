@@ -8,7 +8,9 @@ from repo_presenter.readme.composition.authoring import (
     allowed_identifiers,
     identifier_tokens,
     preserved_opening_text,
+    preserved_section_text,
     recover_opening_duplicates_preserved,
+    recover_preserved_duplicates,
     unit_checks,
 )
 from tests.readme.composition.synthetic import make_facts
@@ -295,5 +297,164 @@ def test_recover_opening_duplicates_preserved_returns_none_without_a_preserved_u
     }
     result = recover_opening_duplicates_preserved(
         output, dispositions={"dispositions": []}, facts=make_facts()
+    )
+    assert result is None
+
+
+# ---------------------------------------------------------------------------------------------
+# preserved_section_text / recover_preserved_duplicates: the same duplicate-preserved-paragraph
+# defect proven above for "opening" alone, generalized to any section. Grounded in the real
+# aspose-email-foss/Aspose.Email-FOSS-for-Cpp run (41142584634): inherited_unit:043.paragraph is
+# VERIFIED_PRESERVE into "api_reference", and S6's own "intro" unit there cited it and restated
+# its substance nearly verbatim -- the renderer printed it twice, once as the preserved
+# paragraph and once as the authored intro, a duplicate_paragraph REJECT that "opening"'s own
+# check (hard-coded to that one section) could not have caught had it happened there instead.
+# ---------------------------------------------------------------------------------------------
+
+_PRESERVED_EMAIL_CPP_043 = (
+    "mapi_message is the primary high-level entry point for creating, editing, and reloading "
+    "messages; the lower-level msg_reader/msg_document/msg_writer and "
+    "cfb_reader/cfb_document/cfb_writer classes expose the underlying MSG and CFB container "
+    "structure directly for callers that need it."
+)
+_AUTHORED_EMAIL_CPP_INTRO_RESTATING = (
+    "`mapi_message` is the primary high-level entry point for creating, editing, and reloading "
+    "messages; the lower-level `msg_reader`/`msg_document`/`msg_writer` and "
+    "`cfb_reader`/`cfb_document`/`cfb_writer` classes expose the underlying MSG and CFB "
+    "container structure directly for callers that need it."
+)
+
+
+def _api_reference_task(accepted_ids: frozenset[str]) -> SectionTask:
+    return SectionTask(
+        section_id="api_reference", packet={}, accepted_ids=accepted_ids, slots=("intro",)
+    )
+
+
+def _facts_with_preserved_api_reference(text: str) -> FactsDocument:
+    base = make_facts()
+    preserved = Fact(
+        "inherited_unit:043.paragraph",
+        "inherited_unit",
+        text,
+        (Evidence("README.md", "section 'API Reference'"),),
+    )
+    return FactsDocument(base.repository, base.source_revision, (*base.facts, preserved))
+
+
+def _dispositions_preserving_api_reference() -> dict[str, object]:
+    return {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:043.paragraph",
+                "disposition": "VERIFIED_PRESERVE",
+                "destination_section": "api_reference",
+                "fact_ids": [],
+                "rationale": "test fixture",
+            }
+        ]
+    }
+
+
+def test_preserved_section_text_reads_the_preserved_unit_for_a_non_opening_section() -> None:
+    facts = _facts_with_preserved_api_reference(_PRESERVED_EMAIL_CPP_043)
+    assert preserved_section_text(
+        _dispositions_preserving_api_reference(), facts, "api_reference"
+    ) == _PRESERVED_EMAIL_CPP_043
+
+
+def test_preserved_section_text_empty_without_a_preserved_unit_in_that_section() -> None:
+    assert preserved_section_text({"dispositions": []}, make_facts(), "api_reference") == ""
+
+
+def test_unit_checks_rejects_an_api_reference_unit_that_restates_the_preserved_paragraph() -> (
+    None
+):
+    """Grounded in the real aspose-email-foss/Cpp run: the "intro" unit cites
+    inherited_unit:043.paragraph and restates it, which the renderer already preserves
+    verbatim in the same section."""
+    facts = _facts_with_preserved_api_reference(_PRESERVED_EMAIL_CPP_043)
+    task = _api_reference_task(frozenset({"package:name"}))
+    output = {
+        "units": [
+            {
+                "section": "api_reference",
+                "slot": "intro",
+                "text": _AUTHORED_EMAIL_CPP_INTRO_RESTATING,
+                "fact_ids": ["inherited_unit:043.paragraph"],
+            }
+        ]
+    }
+    errors = unit_checks(
+        output,
+        task,
+        facts,
+        "Aspose Email FOSS for Cpp",
+        dispositions=_dispositions_preserving_api_reference(),
+    )
+    assert any("restates the inherited paragraph" in error for error in errors)
+
+
+def test_unit_checks_allows_an_api_reference_unit_that_genuinely_differs() -> None:
+    facts = _facts_with_preserved_api_reference(_PRESERVED_EMAIL_CPP_043)
+    task = _api_reference_task(frozenset({"package:name"}))
+    output = {
+        "units": [
+            {
+                "section": "api_reference",
+                "slot": "intro",
+                "text": "The public headers live under include/aspose/email/.",
+                "fact_ids": ["package:name"],
+            }
+        ]
+    }
+    errors = unit_checks(
+        output,
+        task,
+        facts,
+        "Aspose Email FOSS for Cpp",
+        dispositions=_dispositions_preserving_api_reference(),
+    )
+    assert not any("restates the inherited paragraph" in error for error in errors)
+
+
+def test_recover_preserved_duplicates_trims_an_api_reference_unit_to_its_new_sentence() -> None:
+    preserved = "Aspose Widget FOSS for Cpp exposes widget_reader and widget_writer classes."
+    authored = preserved + " It also provides a built-in validator via Widget::validate()."
+    facts = _facts_with_preserved_api_reference(preserved)
+    output = {
+        "units": [{"section": "api_reference", "slot": "intro", "text": authored}]
+    }
+    result = recover_preserved_duplicates(
+        output,
+        section="api_reference",
+        dispositions=_dispositions_preserving_api_reference(),
+        facts=facts,
+    )
+    assert result is not None
+    assert result["units"][0]["text"] == (
+        "It also provides a built-in validator via Widget::validate()."
+    )
+
+
+def test_recover_preserved_duplicates_ignores_a_unit_from_a_different_section() -> None:
+    """A unit belonging to a DIFFERENT section than the one being recovered is left alone, even
+    if its own text happens to be identical to the preserved paragraph -- recovery only ever
+    touches the section the preserved unit was actually dispositioned into."""
+    facts = _facts_with_preserved_api_reference(_PRESERVED_EMAIL_CPP_043)
+    output = {
+        "units": [
+            {
+                "section": "opening",
+                "slot": "opening",
+                "text": _AUTHORED_EMAIL_CPP_INTRO_RESTATING,
+            }
+        ]
+    }
+    result = recover_preserved_duplicates(
+        output,
+        section="api_reference",
+        dispositions=_dispositions_preserving_api_reference(),
+        facts=facts,
     )
     assert result is None

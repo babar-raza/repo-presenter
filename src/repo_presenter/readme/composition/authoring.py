@@ -311,16 +311,33 @@ def carried_units(dispositions: dict[str, Any], section: str, facts: FactsDocume
     ]
 
 
+def preserved_section_text(
+    dispositions: Mapping[str, Any], facts: FactsDocument, section: str
+) -> str:
+    """The inherited prose reconciliation dispositioned straight into ``section`` -- the text the
+    renderer prints verbatim right beside that section's own freshly authored units. Empty when
+    no such unit exists, which is the common case outside a duplicate-preserved defect.
+
+    Measured live (aspose-email-foss/Aspose.Email-FOSS-for-Cpp, run 41142584634): the same
+    defect this module already caught for "opening" (``preserved_opening_text``, below) recurs
+    in "api_reference" -- inherited_unit:043.paragraph is VERIFIED_PRESERVE into api_reference,
+    and S6's own "intro" unit there cites it and restates its substance nearly verbatim, so the
+    renderer prints it twice: once as the preserved paragraph, once as the authored intro. The
+    check was hard-coded to "opening" alone; this generalizes it to any section.
+    """
+    texts = {fact.id: fact.value for fact in facts.facts if fact.kind == "inherited_unit"}
+    return "\n\n".join(
+        texts[unit_id]
+        for unit_id in _placed_units(dispositions, section)
+        if unit_id in texts and unit_id.endswith(_CARRIABLE_SUFFIXES)
+    )
+
+
 def preserved_opening_text(dispositions: Mapping[str, Any], facts: FactsDocument) -> str:
     """The inherited prose reconciliation dispositioned straight into "opening" -- the text the
     renderer prints verbatim right beside this section's own freshly authored unit. Empty when
     no such unit exists, which is the common case outside the known duplicate-opening defect."""
-    texts = {fact.id: fact.value for fact in facts.facts if fact.kind == "inherited_unit"}
-    return "\n\n".join(
-        texts[unit_id]
-        for unit_id in _placed_units(dispositions, "opening")
-        if unit_id in texts and unit_id.endswith(_CARRIABLE_SUFFIXES)
-    )
+    return preserved_section_text(dispositions, facts, "opening")
 
 
 def carried_substance(must_carry: Iterable[str], facts: FactsDocument) -> dict[str, str]:
@@ -1352,18 +1369,16 @@ def unit_checks(
 ) -> list[str]:
     """Why the section's units may not be used, beyond schema and binding; empty when they hold."""
     errors: list[str] = []
-    if task.section_id == "opening" and dispositions is not None:
-        preserved = preserved_opening_text(dispositions, facts)
+    if dispositions is not None:
+        preserved = preserved_section_text(dispositions, facts, task.section_id)
         if preserved:
             for unit in output.get("units", []):
                 text = str(unit.get("text", ""))
                 if text and (states_all(preserved, text) or states_all(text, preserved)):
                     errors.append(
                         f"unit {unit.get('slot')}: restates the inherited paragraph the "
-                        "renderer already preserves verbatim right beside \"opening\"'s own "
-                        "unit; state only what that paragraph does not already say (name the "
-                        "specific classes, methods, or actions the facts carry), never the "
-                        "product's identity, license, or dependency-freedom again"
+                        f"renderer already preserves verbatim in this section; state only what "
+                        "that paragraph does not already say"
                     )
     allowed = allowed_identifiers(facts, name)
     members = verified_members(facts)
@@ -1755,6 +1770,44 @@ def recover_title_verbatim_opening(
     return output if _strip_title_verbatim_opening_units(units, slot_titles) else None
 
 
+def recover_preserved_duplicates(
+    output: dict[str, Any],
+    *,
+    section: str,
+    dispositions: Mapping[str, Any],
+    facts: FactsDocument,
+) -> dict[str, Any] | None:
+    """Last-resort correction for one task's own final rejected attempt: trims a unit of
+    ``section`` whose sentences an inherited paragraph the renderer already preserves verbatim
+    in the SAME section states just as well, keeping only the sentences that paragraph does not
+    already say. Returns ``None`` (never fabricates replacement content) when nothing would be
+    left to keep -- the job then fails closed, exactly as it would with no ``recover`` at all.
+
+    Generalizes what was ``recover_opening_duplicates_preserved``, hard-coded to "opening"
+    alone; see :func:`preserved_section_text` for the live defect that motivated widening it."""
+    preserved = preserved_section_text(dispositions, facts, section)
+    if not preserved:
+        return None
+    units = output.get("units")
+    if not isinstance(units, list):
+        return None
+    shown = Destinations.of({section: preserved})
+    changed = False
+    for unit in units:
+        if not isinstance(unit, dict) or not isinstance(unit.get("text"), str):
+            continue
+        if unit.get("section") not in (section, None):
+            continue
+        text = unit["text"]
+        if not (states_all(preserved, text) or states_all(text, preserved)):
+            continue
+        remainder = uncovered(f"{section}:revised.paragraph", text, shown, section).strip()
+        if remainder and remainder != text:
+            unit["text"] = remainder
+            changed = True
+    return output if changed else None
+
+
 def recover_opening_duplicates_preserved(
     output: dict[str, Any],
     *,
@@ -1766,25 +1819,9 @@ def recover_opening_duplicates_preserved(
     just as well, keeping only the sentences that paragraph does not already say. Returns
     ``None`` (never fabricates replacement content) when nothing would be left to keep -- the
     job then fails closed, exactly as it would with no ``recover`` at all."""
-    preserved = preserved_opening_text(dispositions, facts)
-    if not preserved:
-        return None
-    units = output.get("units")
-    if not isinstance(units, list):
-        return None
-    shown = Destinations.of({"opening": preserved})
-    changed = False
-    for unit in units:
-        if not isinstance(unit, dict) or not isinstance(unit.get("text"), str):
-            continue
-        text = unit["text"]
-        if not (states_all(preserved, text) or states_all(text, preserved)):
-            continue
-        remainder = uncovered("opening:revised.paragraph", text, shown, "opening").strip()
-        if remainder and remainder != text:
-            unit["text"] = remainder
-            changed = True
-    return output if changed else None
+    return recover_preserved_duplicates(
+        output, section="opening", dispositions=dispositions, facts=facts
+    )
 
 
 def recover_section_authoring_output(
