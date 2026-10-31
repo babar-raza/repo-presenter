@@ -5,7 +5,7 @@
   "provider_repository_id": 1213521112,
   "registry_revision": null,
   "active_transaction_id": "5cc574388fe2484da3d458279ef167b6",
-  "state": "OBSERVED",
+  "state": "SNAPSHOTTING",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -25,8 +25,21 @@
     "expires_at": "2026-10-31T00:40:40.500707+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "b8c5dbee735140098965e00a7e92dcca",
+    "transaction_id": "5cc574388fe2484da3d458279ef167b6",
+    "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Java",
+    "from_state": "OBSERVED",
+    "to_state": "SNAPSHOTTING",
+    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
+    "occurred_at": "2026-10-31T00:25:55.946146+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-cells-foss/Aspose.Cells-FOSS-for-Java",
+    "output_manifest": "candidates/aspose-cells-foss__Aspose.Cells-FOSS-for-Java/lane-l/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:41150003767:aspose-cells-foss/Aspose.Cells-FOSS-for-Java": "5cc574388fe2484da3d458279ef167b6"
   },
