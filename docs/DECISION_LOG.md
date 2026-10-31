@@ -1290,3 +1290,49 @@ reply from the model on its own.
 **Where the detail lives**: `src/repo_presenter/readme/review/reply.py` (`_finding_errors`,
 `needs_fact`), `src/repo_presenter/readme/review/llm_review.py` (the `independent_review` `run_job`
 call site, confirmed to have no `recover=` wired — deliberately left that way here).
+
+---
+
+## 2026-11-01: installation code block omitted when superseded by a contradicted install command (merged `fix/installation-contradicted-command-omit`)
+
+**Decision**: merge `fix/installation-contradicted-command-omit` to main. `normalize()`'s generic
+"destination renders nothing" fold now folds to `OMIT_UNSUPPORTED` (citing the contradicted fact)
+instead of `DEFER_UNRESOLVED` when `destination == "installation"`, `rendering_fact_ids` comes back
+empty, and a CONTRADICTED `install_command` fact exists.
+
+**Why**: measured live (aspose-3d-foss/Aspose.3D-FOSS-for-Java, hosted run 41180364402): the only
+`install_command` fact is CONTRADICTED and this ecosystem (plain Maven/Gradle) has no
+`package:distribution.*` fallback, so `rendering_fact_ids("installation", ...)` came back empty for
+six units (three Maven/Gradle dependency snippets and their lead-in paragraphs) even though
+`renderer.py`'s own `_installation()` still prints a real sentence here ("The package `X` is not yet
+published..."). The model's own `SUPERSEDE_REDUNDANT` answer was substantively correct; normalize()
+force-reverted it to `DEFER_UNRESOLVED`, and `placement_errors`'s own `uncited_redundant_defer` then
+refused the three code_block units outright across all 3 asks — an unwinnable loop.
+
+**Evidence**: downloaded the real hosted-run evidence artifact and reproduced the exact failure
+against the real `facts.json`/model reply before writing anything (not guessed). 3 new tests in
+`test_dispositions.py`, including a negative control (no CONTRADICTED fact at all keeps the prior
+`DEFER_UNRESOLVED` behavior, untouched). Falsifier: reverting just the new branch reproduces the
+exact live rejection (`DEFER_UNRESOLVED` instead of `OMIT_UNSUPPORTED`) in the new test, nothing else.
+A fresh agent, cold, in an isolated worktree, independently confirmed: diff scope exactly matches the
+claim; `command_block_units` never matches the xml/kotlin/groovy-fenced Maven/Gradle blocks (so the
+separate "a command block is never OMIT_UNSUPPORTED while build/install facts exist" guard never
+fires, despite this repo having 6 SUPPORTED `build_test_asset` facts); both `_omission_gap` and the
+`UNCITED_PROSE_OMIT` check independently confirmed to pass the fix's output for both `code_block` and
+`paragraph` kinds; full suite 3450 passed, 13 skipped, exit 0 (matching the commit's own claim). One
+noted, unexercised theoretical edge case (a CONTRADICTED install_command fact coexisting with a total
+absence of any `package:name` fact) — not found possible in any real extractor, not blocking.
+
+**Evidence (hosted re-run from the branch, not main)**: aspose-3d-foss/Aspose.3D-FOSS-for-Java Lane R
+(run 41233168620). The durable record's `failure.detail` for this run names no
+`uncited_redundant_defer`/`DEFER_UNRESOLVED` anywhere; the candidate now reaches `independent_review`
+and gets a full REJECT with 5 unrelated content-quality findings (F01–F05, across
+`documentation_resources`/`scope_limitations`/`development_testing`) — progress, not a regression,
+and out of scope here.
+
+**What this does NOT decide**: the 5 content-quality findings this hosted re-run surfaced are not
+investigated or fixed here.
+
+**Where the detail lives**: `src/repo_presenter/readme/reconciliation/dispositions.py`
+(`_matching_unresolved_install` is a separate, related fix from the same session, not part of this
+one — see its own entry), `tests/readme/reconciliation/test_dispositions.py`.
