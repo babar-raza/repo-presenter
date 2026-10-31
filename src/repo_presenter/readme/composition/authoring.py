@@ -338,8 +338,18 @@ def preserved_section_text(
     defect this module already caught for "opening" (``preserved_opening_text``, below) recurs
     in "api_reference" -- inherited_unit:043.paragraph is VERIFIED_PRESERVE into api_reference,
     and S6's own "intro" unit there cites it and restates its substance nearly verbatim, so the
-    renderer prints it twice: once as the preserved paragraph, once as the authored intro. The
-    check was hard-coded to "opening" alone; this generalizes it to any section.
+    renderer prints it twice: once as the preserved paragraph, once as the authored intro.
+
+    NOT wired into ``unit_checks`` for any section but "opening" (see that function): live
+    verification (aspose-slides-foss/Python, run 41164865868) found that merging EVERY
+    VERIFIED_PRESERVE/VERIFIED_MOVE text destined to a multi-slot, list-heavy section (dozens
+    of per-class member lists, for "api_reference") into one comparison blob produces real
+    false positives -- a unit citing no inherited unit at all (only a ``public_symbol`` fact)
+    was flagged as "restating" fragments scattered across that merged corpus. This function
+    itself stays correct and useful per call (it is exactly what "opening" needs, one section
+    at a time); the unsafe part was calling it for every section without first scoping the
+    comparison to what each unit actually cites. Kept as a building block for a properly-scoped
+    follow-up, not wired in generally.
     """
     texts = {fact.id: fact.value for fact in facts.facts if fact.kind == "inherited_unit"}
     return "\n\n".join(
@@ -1388,7 +1398,7 @@ def unit_checks(
 ) -> list[str]:
     """Why the section's units may not be used, beyond schema and binding; empty when they hold."""
     errors: list[str] = []
-    if dispositions is not None:
+    if task.section_id == "opening" and dispositions is not None:
         preserved = preserved_section_text(dispositions, facts, task.section_id)
         if preserved:
             for unit in output.get("units", []):
@@ -1396,8 +1406,10 @@ def unit_checks(
                 if text and (states_all(preserved, text) or states_all(text, preserved)):
                     errors.append(
                         f"unit {unit.get('slot')}: restates the inherited paragraph the "
-                        f"renderer already preserves verbatim in this section; state only what "
-                        "that paragraph does not already say"
+                        "renderer already preserves verbatim right beside \"opening\"'s own "
+                        "unit; state only what that paragraph does not already say (name the "
+                        "specific classes, methods, or actions the facts carry), never the "
+                        "product's identity, license, or dependency-freedom again"
                     )
     allowed = allowed_identifiers(facts, name)
     members = verified_members(facts)

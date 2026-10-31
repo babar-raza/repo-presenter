@@ -15,6 +15,7 @@ from repo_presenter.readme.composition.coherence import (
     coherence_checks,
     recover_coherence_regressions,
     recover_coherence_stray_identifiers,
+    recover_every_section_duplicates_preserved,
 )
 from tests.readme.composition.synthetic import make_facts
 
@@ -141,9 +142,12 @@ def test_recover_coherence_regressions_without_dispositions_is_unaffected() -> N
 # Real hosted defect (aspose-email-foss/Aspose.Email-FOSS-for-Cpp, run 41142584634): S8
 # coherence's own revision of api_reference/intro restated inherited_unit:043.paragraph
 # (VERIFIED_PRESERVE into api_reference) nearly verbatim, so the renderer printed it twice --
-# a duplicate_paragraph review REJECT, since this fix only reached "opening" before. Proves
-# recover_coherence_regressions now fixes a NON-opening section too, through the same
-# multi-section recover_every_section_duplicates_preserved pass.
+# a duplicate_paragraph review REJECT, since this fix only reached "opening" before.
+# recover_every_section_duplicates_preserved fixes this shape correctly in isolation (tested
+# directly below), but is NOT wired into recover_coherence_regressions: live verification
+# (aspose-slides-foss/Python, run 41164865868) found that applying it blindly to every section
+# produces real false positives on multi-slot, list-heavy sections (see its own docstring).
+# Kept as a tested, correct building block for a properly-scoped follow-up.
 
 
 def _api_reference_task() -> SectionTask:
@@ -180,7 +184,31 @@ def _dispositions_preserving_api_reference() -> dict[str, object]:
     }
 
 
-def test_recover_coherence_regressions_trims_a_duplicated_api_reference_unit() -> None:
+def test_recover_every_section_duplicates_preserved_trims_an_api_reference_unit() -> None:
+    facts = _facts_with_preserved_api_reference()
+    output = {
+        "units": [
+            {
+                "section": "api_reference",
+                "slot": "intro",
+                "text": _AUTHORED_WITH_NEW_SENTENCE,
+                "fact_ids": ["package:name"],
+            }
+        ]
+    }
+    result = recover_every_section_duplicates_preserved(
+        output,
+        tasks=[_api_reference_task()],
+        dispositions=_dispositions_preserving_api_reference(),
+        facts=facts,
+    )
+    assert result is not None
+    assert result["units"][0]["text"] == "It also provides a built-in validator via Widget.validate()."
+
+
+def test_recover_coherence_regressions_does_not_fix_a_non_opening_section() -> None:
+    """Pins the reverted (safe) behavior: recover_coherence_regressions only ever fixes
+    "opening" by default now, even when dispositions cover another section too."""
     facts = _facts_with_preserved_api_reference()
     output = {
         "units": [
@@ -199,8 +227,7 @@ def test_recover_coherence_regressions_trims_a_duplicated_api_reference_unit() -
         tasks=[_api_reference_task()],
         dispositions=_dispositions_preserving_api_reference(),
     )
-    assert result is not None
-    assert result["units"][0]["text"] == "It also provides a built-in validator via Widget.validate()."
+    assert result is None
 
 
 # Real hosted defect (aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, run 41102257446): a coherence

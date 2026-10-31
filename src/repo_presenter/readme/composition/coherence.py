@@ -687,7 +687,17 @@ def recover_every_section_duplicates_preserved(
 ) -> dict[str, Any] | None:
     """:func:`recover_preserved_duplicates`, applied once per authored section, for S8
     coherence's own multi-section output (every section but "opening", which
-    ``recover_opening_duplicates_preserved`` already covers)."""
+    ``recover_opening_duplicates_preserved`` already covers).
+
+    NOT wired into :func:`recover_coherence_regressions` -- live verification (aspose-email-
+    foss/Cpp run 41164858109, aspose-slides-foss/Python run 41164865868) found that merging
+    every VERIFIED_PRESERVE/VERIFIED_MOVE text in a multi-slot, list-heavy section (such as
+    "api_reference" with dozens of per-class member lists) into one comparison blob produces
+    real false positives: a unit that cites none of those inherited units at all (e.g. one
+    naming only a ``public_symbol`` fact) can still spuriously "state" fragments scattered
+    across the merged corpus. Kept here, tested standalone, as a correct building block for a
+    properly-scoped follow-up (e.g. comparing a unit only against the inherited units its own
+    ``fact_ids`` name), not for blind per-section use."""
     changed = False
     for task in tasks:
         if task.section_id == "opening":
@@ -719,12 +729,6 @@ def recover_coherence_regressions(
         )
         if opening_fixed is not None:
             output = opening_fixed
-            changed = True
-        every_section_fixed = recover_every_section_duplicates_preserved(
-            output, tasks=tasks, dispositions=dispositions, facts=facts
-        )
-        if every_section_fixed is not None:
-            output = every_section_fixed
             changed = True
     missing_fixed = recover_coherence_missing_units(
         output, existing_units=existing_units, tasks=tasks

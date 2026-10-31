@@ -398,12 +398,18 @@ def test_preserved_section_text_excludes_a_verified_rewrite_unit() -> None:
     assert preserved_section_text(dispositions, facts, "key_capabilities") == ""
 
 
-def test_unit_checks_rejects_an_api_reference_unit_that_restates_the_preserved_paragraph() -> (
+def test_unit_checks_does_not_flag_an_api_reference_unit_that_restates_the_preserved_paragraph() -> (
     None
 ):
-    """Grounded in the real aspose-email-foss/Cpp run: the "intro" unit cites
-    inherited_unit:043.paragraph and restates it, which the renderer already preserves
-    verbatim in the same section."""
+    """unit_checks's own restated-preserved-paragraph check stays "opening"-only, not wired to
+    any other section by default. Grounded in a real regression: generalizing this check to
+    "api_reference" (to catch the real aspose-email-foss/Cpp "intro" defect this fixture
+    reproduces) was built, live-verified, and REVERTED the same round -- live runs
+    (aspose-slides-foss/Python, run 41164865868) showed merging every section's
+    VERIFIED_PRESERVE/VERIFIED_MOVE text into one comparison blob produces real false
+    positives on multi-slot, list-heavy sections. See preserved_section_text's own docstring.
+    This test pins the reverted (safe) behavior: unit_checks does NOT flag this unit outside
+    "opening", even though the shape is the real, still-unfixed defect."""
     facts = _facts_with_preserved_api_reference(_PRESERVED_EMAIL_CPP_043)
     task = _api_reference_task(frozenset({"package:name"}))
     output = {
@@ -423,7 +429,7 @@ def test_unit_checks_rejects_an_api_reference_unit_that_restates_the_preserved_p
         "Aspose Email FOSS for Cpp",
         dispositions=_dispositions_preserving_api_reference(),
     )
-    assert any("restates the inherited paragraph" in error for error in errors)
+    assert not any("restates the inherited paragraph" in error for error in errors)
 
 
 def test_unit_checks_allows_an_api_reference_unit_that_genuinely_differs() -> None:

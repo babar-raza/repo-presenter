@@ -3187,6 +3187,52 @@ next_ready_items:
       "verify live, never trust tests alone" rule is load-bearing, not ceremonial. Full suite:
       3360 passed, 11 skipped, exit 0, run before this commit. Re-dispatching both repositories
       again to confirm the correction live before calling this fix done.
+    twentieth_fix_second_live_round_found_a_second_false_positive_generalization_reverted_2026_10_30: >
+      Re-dispatched both repositories (aspose-email-foss/Cpp 41164858109, aspose-slides-
+      foss/Python 41164865868) after the VERIFIED_REWRITE narrowing. BOTH STILL FAILED at
+      section_authoring (read via the same durable-state-record fallback, since the GH Actions
+      log never carries OutputRejectedError detail -- only present.py's own run() catches it,
+      recording failure.detail into the durable record, never stdout). email-foss/Cpp:
+      key_capabilities now passes (first regression confirmed fixed), but "unit intro" in
+      api_reference now fails closed after three real, inspected attempts (read every
+      rejected-N.json directly) -- the model genuinely never produced a non-restating intro
+      across all three tries plus the narrowed ask, so recover_preserved_duplicates correctly
+      returned None (nothing novel to keep, the same by-design fail-closed behavior
+      test_recover_opening_duplicates_preserved_returns_none_when_fully_redundant already
+      proves for "opening"). This alone is arguably correct, if harsh, behavior -- the check
+      fired on a genuine duplicate with nothing to salvage. But slides-foss/Python exposed a
+      SECOND, more serious false positive: five DIFFERENT "type:public_symbol:*" units (each
+      documenting one class) all rejected as "restating the inherited paragraph." Read the real
+      dispositions.composed.json and the real rejected call directly: api_reference there
+      carries roughly 45 separate VERIFIED_PRESERVE lists (per-class member enumerations,
+      inherited_unit:089.001.list etc.), and preserved_section_text concatenates ALL of them
+      into ONE blob; the rejected IParagraphFormat unit's own fact_ids
+      (["public_symbol:slides_foss.iparagraphformat"]) cite NO inherited_unit at all, confirming
+      definitively this is not a real restatement -- states_all() spuriously matched the short
+      summary sentence against fragments scattered across the 45-list merged corpus, not
+      against anything that unit actually drew from.
+      DECISION: generalizing this check beyond "opening" is unsafe as designed -- merging every
+      section's preserved text into one blob is fundamentally unsound for any multi-slot,
+      list-heavy section, and TWO independent false-positive mechanisms surfaced on first
+      contact with real portfolio data in this one verification round alone (VERIFIED_REWRITE
+      contamination, now fixed; cross-unit blob contamination, not yet fixed). Reverted the
+      wiring while keeping the narrowing fix and the new infrastructure as correct, tested,
+      standalone building blocks for a properly-scoped follow-up (most likely: compare a unit
+      only against the specific inherited units its OWN fact_ids name, not the whole section) --
+      unit_checks's gate is back to task.section_id == "opening" only (original wording
+      restored too); cascade.py's S6 recover= dropped the non-opening branch;
+      coherence.py's recover_every_section_duplicates_preserved is defined and tested in
+      isolation but no longer called from recover_coherence_regressions. Updated every touched
+      docstring to record this plainly, adjusted the tests that exercised the now-removed
+      integration points to pin the REVERTED (safe) behavior instead of asserting the
+      generalization fires, and added test_recover_coherence_regressions_does_not_fix_a_non_
+      opening_section as an explicit guard against silently re-introducing this risk. The real,
+      correctly-diagnosed api_reference/043.paragraph defect (email-foss/Cpp) remains UNFIXED,
+      deferred for a follow-up that scopes the comparison per-citation rather than per-section --
+      this is the discipline this session has followed for other complex findings (the diagram
+      steer's model-compliance limit, BC-08's cache-staleness layer): record plainly, do not
+      force a fix past what live evidence has actually proven safe. Full suite: 3361 passed, 11
+      skipped, exit 0, run before this commit.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
