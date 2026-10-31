@@ -5,7 +5,7 @@
   "provider_repository_id": 1359836523,
   "registry_revision": null,
   "active_transaction_id": "e3ccbb1266164de686d842bee4e28504",
-  "state": "FAILED_INTERNAL",
+  "state": "SNAPSHOTTING",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -33,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "67d22b7739954e959d110b231d6d1a85",
-    "transaction_id": "76367e7db79b426b88515353b37d5da1",
+    "transition_id": "0fce84c5709e44868140445075e5da84",
+    "transaction_id": "e3ccbb1266164de686d842bee4e28504",
     "repository": "aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET",
-    "from_state": "OBSERVED",
-    "to_state": "FAILED_INTERNAL",
-    "event": "present.yml hosted transaction failed",
-    "occurred_at": "2026-10-31T00:25:45.031757+00:00",
+    "from_state": "FAILED_INTERNAL",
+    "to_state": "SNAPSHOTTING",
+    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
+    "occurred_at": "2026-10-31T07:28:52.661718+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET",
     "output_manifest": "candidates/aspose-imaging-foss__Aspose.Imaging-FOSS-for-.NET/lane-l/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 4,
+  "state_version": 5,
   "recent_trigger_dedup_keys": {
     "run:41150011232:aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET": "76367e7db79b426b88515353b37d5da1",
     "run:41180657552:aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET": "e3ccbb1266164de686d842bee4e28504"
