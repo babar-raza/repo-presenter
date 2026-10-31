@@ -3064,9 +3064,47 @@ next_ready_items:
       ignores a slot the original lacks); falsifier confirmed by reverting only the source change
       (git checkout on the two touched source files, keeping the new tests) -- collection fails
       with ImportError exactly as expected, re-applied after. Full suite: 3352 passed, 11 skipped,
-      exit 0, run before this commit. NOT YET verified live against a fresh hosted run -- ready
-      for review, not accepted, until a live aspose-pdf-foss/Cpp or /Go re-run shows BC-08 passing
-      end to end (not just repair routing firing) via validation.json read directly.
+      exit 0, run before this commit.
+    nineteenth_fix_live_verified_insufficient_deeper_staleness_cause_found_2026_10_30: >
+      Dispatched aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp (41159634975) to verify the nineteenth
+      fix live. BC-08 STILL FAILS, same message, read directly from validation.json. repairs.json
+      shows the fix DID fire (a new llm_cache file, 804eab27d972.rejected-2-fix.json, appeared --
+      the recovered reply restored inherited_unit:028.paragraph into fact_ids as designed) but
+      the recovered reply was ALSO rejected, for a NEW reason the original rejection never had:
+      "cites facts outside this section's set: inherited_unit:028.paragraph". Net effect: no
+      regression (BC-08 was already failing, unrepairable, before and after), but no fix either.
+      Root-caused the new rejection to a THIRD, deeper layer, confirmed empirically, not guessed:
+      called section_selections() directly against this run's own real facts.json, plan.json,
+      investigation.json and dispositions.composed.json (the exact inputs the cascade used) --
+      inherited_unit:028.paragraph is genuinely absent from development_testing's own
+      accepted_ids, while inherited_unit:033.list/123.paragraph/072.paragraph (also cited by
+      various cached attempts for this same slot) ARE present. Read carried_units() directly:
+      it only forwards a disposition's unit_id into accepted_ids for SUPERSEDE_REDUNDANT
+      (destined for the section) or VERIFIED_PRESERVE/VERIFIED_MOVE; _placed_units() separately
+      covers VERIFIED_REWRITE. inherited_unit:028.paragraph's disposition in THIS run's own
+      dispositions.composed.json is CORRECT_WITH_EVIDENCE -- structurally never admitted by
+      either path. Yet the CACHED S6 original (the one `_repair_section`'s `original` reads,
+      confirmed by my own recover function's output literally containing
+      "inherited_unit:028.paragraph" alongside the three ids that ARE genuinely accepted) already
+      self-cited it, undetected, before this repair round ever ran -- meaning either an earlier
+      cascade run cached this exact section_authoring reply back when 028's own disposition (or
+      accepted_ids) was different, and the call store's own request-hash keying never re-validates
+      a served cache hit's citations against the CURRENT disposition state, since the packet a
+      hash is computed from does not encode a fact/unit that was never in accepted_ids to begin
+      with -- a genuine citation can silently go stale as later reconciliation work (this
+      session's own fixes included) shifts an inherited unit's disposition, invisible until
+      something downstream (here, BC-08's own repair path) tries to re-validate the citation.
+      Confirmed two OTHER cached section_authoring replies for this exact slot in the same
+      artifact (04517d7a95be.json, 7fdaa74c97c6.json) each handle unit 028 differently (one omits
+      it citing "rendered in a separate paragraph", the other omits it citing "not used in any
+      unit") -- direct proof this call has been re-asked and re-cached multiple times across this
+      session's many upstream fixes, consistent with staleness rather than a single clean-room
+      authoring decision. The nineteenth fix itself is kept (it is independently correct, tested,
+      falsifier-confirmed, and caused no regression here) but is INSUFFICIENT for this specific
+      defect; this third layer -- cache invalidation incompleteness for citations outside a
+      section's own accepted set -- is a separate, architecturally deeper candidate, not forced
+      into a rushed fix this pass. Pivoting to the next confirmed-recurring finding per the
+      standing mandate (duplicate_paragraph or the claim_contradiction sub-project-name gap).
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
