@@ -1,0 +1,42 @@
+{
+  "confinement": {
+    "edits": 0,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "4e311891fdb4ba0324606b78c594c0d6dd4ea912aa0034ea9cfff6bb45105c17",
+  "edits": [],
+  "lane": "L",
+  "original_sha256": "4e311891fdb4ba0324606b78c594c0d6dd4ea912aa0034ea9cfff6bb45105c17",
+  "outcome": "NO_CHANGE_WARRANTED",
+  "readme_path": "README.md",
+  "repository": "aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python",
+  "schema_version": 1,
+  "source_revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {},
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 43,
+      "reason": "the README marks 'SVG' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o1[\"SVG string\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 44,
+      "reason": "the README marks 'PNG' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o2[\"PNG image bytes\"]"
+    }
+  ]
+}
