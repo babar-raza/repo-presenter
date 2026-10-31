@@ -2999,6 +2999,23 @@ next_ready_items:
       OMIT_UNSUPPORTED shape, mirroring the SUPERSEDE_REDUNDANT one) proving normalize() plus
       live_readme_loss_rule together now account for this shape too. 665 tests across the
       directly-affected suites pass; full suite run before commit -- see next entry.
+    eighteenth_fix_fully_confirmed_on_both_real_repositories_2026_10_30: >
+      Dispatched aspose-pdf-foss/Cpp (41156451223) to verify the widened fix. CONFIRMED,
+      completely: read validation.json directly -- BC-01 through BC-07, BC-09, BC-12, BC-14 all
+      PASS, including BC-04 (fact citation) and BC-05 (disposition coverage), which the four
+      headings now clear; review_verdict.json's own deterministic pass (model_served null,
+      unit_reviews empty -- read correctly as "S10 never reached" rather than mistaken for a
+      sentinel ACCEPT, since the ledger confirms zero independent_review calls this run) shows
+      zero live_readme_loss findings, where the SAME four headings blocked it twice before. The
+      eighteenth fix is now fully confirmed on both repositories it was tested against (aspose-
+      cells-foss/.NET, aspose-pdf-foss/Cpp) and both disposition shapes it covers.
+      The run still failed, for a genuinely different, unrelated reason: BC-08 ("Protected
+      content preserved") -- inherited_unit:028.paragraph is CORRECT_WITH_EVIDENCE, keeping the
+      command "cmake --preset windows-msvc-debug", but the candidate does not actually render
+      it. This is the SAME BC-08 check that blocked aspose-pdf-foss/Go earlier this round (a
+      different command, not yet confirmed as the identical root cause) -- two occurrences in
+      the same product family, not yet investigated. A real, separate candidate for the next
+      root-cause pass, independent of everything the heading-accounting fix touched.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
