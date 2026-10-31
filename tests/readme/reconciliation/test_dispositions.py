@@ -489,3 +489,102 @@ def test_normalize_leaves_defer_unresolved_alone_when_no_contradicted_fact_expla
     normalize(output, facts)
     entry = output["dispositions"][0]
     assert entry["disposition"] == "DEFER_UNRESOLVED"
+
+
+# Real hosted defect (aspose-page-foss/Aspose.Page-FOSS-for-Python, run 41137901672, unit
+# 013.code_block "pip install aspose-page-foss"): the only install_command fact here is
+# UNRESOLVED (the registry could not confirm ownership), so rendering_fact_ids("installation", ...)
+# comes back empty the same way the CONTRADICTED case above does -- but DEFER_UNRESOLVED is the
+# actually-correct disposition for a genuinely unresolved claim, not a defect to repair around. The
+# real gap was never reaching DEFER_UNRESOLVED; it was uncited_redundant_defer's own exemption
+# (example_status) never recognizing an install_command's own UNRESOLVED status the way it already
+# recognizes a tracked example's.
+_UNRESOLVED_INSTALL_FACTS = replace(
+    FACTS,
+    facts=(
+        *FACTS.facts,
+        Fact(
+            "install_command:pip",
+            "install_command",
+            "pip install aspose-widget-foss",
+            (Evidence("README.md"),),
+            polarity="UNRESOLVED",
+        ),
+        Fact(
+            "inherited_unit:013.code_block",
+            "inherited_unit",
+            "```bash\npip install aspose-widget-foss\n```",
+            (Evidence("README.md", "section 'Widget > Installation'")),
+            attributes={"section": "Widget > Installation"},
+        ),
+    ),
+)
+
+
+def test_rendering_fact_ids_is_still_empty_for_installation_with_only_an_unresolved_fact() -> None:
+    """Same shape as the CONTRADICTED case above: rendering_fact_ids itself stays accurate (an
+    UNRESOLVED install_command is not something installation renders as a command) -- normalize()
+    is the layer that must know better, not this function."""
+    assert rendering_fact_ids("installation", _UNRESOLVED_INSTALL_FACTS) == []
+
+
+def test_normalize_defers_a_supersede_citing_an_unresolved_install_command_with_a_backfilled_citation() -> (
+    None
+):
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:013.code_block",
+                "disposition": "SUPERSEDE_REDUNDANT",
+                "destination_section": "installation",
+                "fact_ids": ["package:name"],
+                "rationale": "Superseded by the installation section's verified install command.",
+            }
+        ]
+    }
+    norm_errors = normalize(output, _UNRESOLVED_INSTALL_FACTS)
+    place_errors = placement_errors(output, _UNRESOLVED_INSTALL_FACTS)
+    entry = output["dispositions"][0]
+    assert entry["disposition"] == "DEFER_UNRESOLVED"
+    assert entry["destination_section"] is None
+    assert "install_command:pip" in entry["fact_ids"]
+    assert norm_errors == []
+    assert place_errors == []
+
+
+def test_normalize_does_not_backfill_an_unresolved_install_citation_for_an_unmatched_block() -> None:
+    """The match is literal and code-computed (_matching_unresolved_install), never trusted from
+    the model's own citation: a code block whose text does not match the UNRESOLVED install
+    command's own command lines gets no backfill and no exemption, even though it targets the
+    same installation destination -- it stays the plain, uncited DEFER_UNRESOLVED and is still
+    refused by uncited_redundant_defer, proving the fix cannot be gamed by citing the right fact
+    on the wrong block."""
+    facts = replace(
+        _UNRESOLVED_INSTALL_FACTS,
+        facts=(
+            *_UNRESOLVED_INSTALL_FACTS.facts,
+            Fact(
+                "inherited_unit:020.code_block",
+                "inherited_unit",
+                "```bash\necho hello world\n```",
+                (Evidence("README.md", "section 'Widget > Usage'")),
+                attributes={"section": "Widget > Usage"},
+            ),
+        ),
+    )
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:020.code_block",
+                "disposition": "SUPERSEDE_REDUNDANT",
+                "destination_section": "installation",
+                "fact_ids": ["install_command:pip"],
+                "rationale": "Superseded by the installation section.",
+            }
+        ]
+    }
+    normalize(output, facts)
+    place_errors = placement_errors(output, facts)
+    entry = output["dispositions"][0]
+    assert entry["disposition"] == "DEFER_UNRESOLVED"
+    assert any("uncited_redundant_defer" in e for e in place_errors)
