@@ -1256,3 +1256,37 @@ re-run is not fixed here; neither is the `run_lane_r_planning.py`/`repair/loop.p
 `src/repo_presenter/readme/composition/planning.py` (`recover_planning_output`,
 `recover_duplicate_link_assignments`, pre-existing, now wired),
 `tests/readme/composition/test_planning_recovery.py`, `tests/test_cascade_s9.py`.
+
+---
+
+## 2026-11-01: `independent_review` F02 (Words-.NET) investigated — not a bug, no fix made
+
+**Finding**: the fix-queue item opened by the `fix/presentation-planning-recover-wiring` merge
+(aspose-words-foss/Aspose.Words-FOSS-for-.NET, run 41204961354, `finding F02: a contradiction
+finding must cite at least one product fact (not only inherited text)`) is the reviewer's own
+anti-circularity rule (`reply.py`'s `_finding_errors`, `needs_fact` for `claim_kind == "contradiction"`)
+working as designed, not a defect.
+
+**Evidence**: downloaded the run's own evidence artifact and read the real rejected reply
+(`llm_cache/calls/190578db959d.rejected-2.json`). The model's `F02` finding (`claim_kind:
+"contradiction"`) claims the authored `scope_limitations` text wrongly credits the commercial
+edition with "document comparison, mail merge, and document protection," and cites only
+`inherited_unit:067.list` (the live README's own inherited feature list) as evidence — no extracted
+product fact. The deterministic check correctly refuses this: citing the README's own unverified
+prose as proof the README is wrong is circular, exactly the shape of self-grading
+`docs/MISSION_AUTHORITY.md`'s new "Do not repeat the predecessor projects' mistakes" section (lesson
+1) warns against. Loosening the rule, or adding a `recover=` that drops/rewrites the finding to make
+the reply pass, would risk hiding a genuine defect the same way the old repo's acceptance-integrity
+bug did — the two candidate "fixes" considered (drop the finding and flip to ACCEPT when
+`findings` empties; backfill a synthetic product-fact citation) were both rejected for this reason,
+not attempted.
+
+**What this does NOT decide**: whether a real `capability`/`format`-kind extracted fact *should*
+exist for "document comparison"/"mail merge are not in this FOSS package" (which would let a future
+correct finding cite it) is a separate, unexplored extractor-scope question, not resolved here. The
+record's own `transient`/retryable classification stands: a plain re-run may simply get a compliant
+reply from the model on its own.
+
+**Where the detail lives**: `src/repo_presenter/readme/review/reply.py` (`_finding_errors`,
+`needs_fact`), `src/repo_presenter/readme/review/llm_review.py` (the `independent_review` `run_job`
+call site, confirmed to have no `recover=` wired — deliberately left that way here).
