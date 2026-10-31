@@ -1,0 +1,429 @@
+{
+  "additional_example_ids": [
+    "example:004",
+    "example:005",
+    "example:007",
+    "example:008",
+    "example:009",
+    "example:010"
+  ],
+  "api_hubs": [
+    {
+      "fact_ids": [
+        "public_symbol:cells.get",
+        "public_symbol:cells.set",
+        "public_symbol:cells.all",
+        "public_symbol:cells.remove"
+      ],
+      "symbol_fact_id": "public_symbol:cells"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cell.value",
+        "public_symbol:cell.asstring",
+        "public_symbol:cell.asfloat64",
+        "public_symbol:cell.asint",
+        "public_symbol:cell.formula",
+        "public_symbol:cell.getformula",
+        "public_symbol:cell.setformula",
+        "public_symbol:cell.styleid",
+        "public_symbol:cell.getstyle",
+        "public_symbol:cell.setstyle"
+      ],
+      "symbol_fact_id": "public_symbol:cell"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:style.font",
+        "public_symbol:style.fill",
+        "public_symbol:style.alignment",
+        "public_symbol:style.border"
+      ],
+      "symbol_fact_id": "public_symbol:style"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:font.name",
+        "public_symbol:font.size",
+        "public_symbol:font.bold",
+        "public_symbol:font.italic",
+        "public_symbol:font.color"
+      ],
+      "symbol_fact_id": "public_symbol:font"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fill.type",
+        "public_symbol:fill.color"
+      ],
+      "symbol_fact_id": "public_symbol:fill"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:alignment.horizontal",
+        "public_symbol:alignment.vertical",
+        "public_symbol:alignment.wraptext"
+      ],
+      "symbol_fact_id": "public_symbol:alignment"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:border.top",
+        "public_symbol:border.bottom",
+        "public_symbol:border.left",
+        "public_symbol:border.right",
+        "public_symbol:border.color"
+      ],
+      "symbol_fact_id": "public_symbol:border"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:datavalidation.type",
+        "public_symbol:datavalidation.ref",
+        "public_symbol:datavalidation.formula1",
+        "public_symbol:datavalidation.formula2",
+        "public_symbol:datavalidation.allowblank",
+        "public_symbol:datavalidation.showerrormessage",
+        "public_symbol:datavalidation.errortitle",
+        "public_symbol:datavalidation.errormessage",
+        "public_symbol:datavalidation.errorstyle"
+      ],
+      "symbol_fact_id": "public_symbol:datavalidation"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:table.name",
+        "public_symbol:table.range",
+        "public_symbol:table.hasheaderrow",
+        "public_symbol:table.stylename"
+      ],
+      "symbol_fact_id": "public_symbol:table"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:streamingreader.processrows",
+        "public_symbol:streamingreader.processrowswithfilter",
+        "public_symbol:streamingreader.processrowswithrange",
+        "public_symbol:streamingreader.processrowswithcolumns"
+      ],
+      "symbol_fact_id": "public_symbol:streamingreader"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:newworkbook",
+        "public_symbol:loadworkbook",
+        "public_symbol:workbook.worksheets",
+        "public_symbol:workbook.save",
+        "public_symbol:workbook.importfromcsv",
+        "public_symbol:workbook.exporttocsv",
+        "public_symbol:workbook.setpassword",
+        "public_symbol:workbook.verifypassword",
+        "public_symbol:workbook.checkpassword"
+      ],
+      "symbol_fact_id": "public_symbol:workbook"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheet.cells",
+        "public_symbol:worksheet.name",
+        "public_symbol:worksheet.index",
+        "public_symbol:worksheet.addtable",
+        "public_symbol:worksheet.adddatavalidation",
+        "public_symbol:worksheet.addpicture",
+        "public_symbol:worksheet.addchart",
+        "public_symbol:worksheet.addpivottable",
+        "public_symbol:worksheet.addconditionalformatting",
+        "public_symbol:worksheet.fromcsv",
+        "public_symbol:worksheet.tocsv"
+      ],
+      "symbol_fact_id": "public_symbol:worksheet"
+    }
+  ],
+  "at_a_glance": {
+    "capability_titles": [
+      "Cell data read and write",
+      "Formula evaluation",
+      "Styling and formatting",
+      "Data validation",
+      "Structured tables",
+      "CSV import and export",
+      "Streaming large files",
+      "Password-based encryption"
+    ],
+    "input_format_ids": [
+      "format:input.xlsx",
+      "format:input.csv"
+    ],
+    "output_format_ids": [
+      "format:output.xlsx",
+      "format:output.csv"
+    ]
+  },
+  "core_capabilities": [
+    {
+      "fact_ids": [
+        "example:002",
+        "example:003",
+        "public_symbol:cells.get",
+        "public_symbol:cells.set",
+        "public_symbol:cell.value",
+        "public_symbol:cell.asstring",
+        "public_symbol:cell.asfloat64",
+        "public_symbol:cell.asint"
+      ],
+      "shared_fact_ids": [],
+      "title": "Cell data read and write"
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:cell.setformula",
+        "public_symbol:cell.getformula",
+        "public_symbol:calculateformula"
+      ],
+      "shared_fact_ids": [],
+      "title": "Formula evaluation"
+    },
+    {
+      "fact_ids": [
+        "example:008",
+        "public_symbol:style",
+        "public_symbol:font",
+        "public_symbol:fill",
+        "public_symbol:alignment",
+        "public_symbol:border",
+        "public_symbol:cell.setstyle"
+      ],
+      "shared_fact_ids": [],
+      "title": "Styling and formatting"
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "public_symbol:datavalidation",
+        "public_symbol:worksheet.adddatavalidation"
+      ],
+      "shared_fact_ids": [],
+      "title": "Data validation"
+    },
+    {
+      "fact_ids": [
+        "example:009",
+        "public_symbol:newtable",
+        "public_symbol:worksheet.addtable",
+        "public_symbol:table"
+      ],
+      "shared_fact_ids": [],
+      "title": "Structured tables"
+    },
+    {
+      "fact_ids": [
+        "example:010",
+        "format:input.csv",
+        "format:output.csv",
+        "public_symbol:workbook.importfromcsv",
+        "public_symbol:workbook.exporttocsv",
+        "public_symbol:worksheet.tocsv"
+      ],
+      "shared_fact_ids": [],
+      "title": "CSV import and export"
+    },
+    {
+      "fact_ids": [
+        "example:007",
+        "public_symbol:newstreamingreader",
+        "public_symbol:streamingreader.processrows",
+        "public_symbol:streamingreader.processrowswithfilter",
+        "public_symbol:streamingreader.processrowswithrange",
+        "public_symbol:streamingreader.processrowswithcolumns"
+      ],
+      "shared_fact_ids": [],
+      "title": "Streaming large files"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook.setpassword",
+        "public_symbol:workbook.verifypassword",
+        "public_symbol:workbook.checkpassword"
+      ],
+      "shared_fact_ids": [],
+      "title": "Password-based encryption"
+    }
+  ],
+  "deviations": [],
+  "flagship_example_id": "example:004",
+  "links": [
+    {
+      "link_fact_id": "link_target:001",
+      "section_id": "dependencies"
+    },
+    {
+      "link_fact_id": "link_target:003",
+      "section_id": "license"
+    },
+    {
+      "link_fact_id": "link_target:005",
+      "section_id": "api_reference"
+    },
+    {
+      "link_fact_id": "link_target:006",
+      "section_id": "api_reference"
+    },
+    {
+      "link_fact_id": "link_target:038",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:039",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:040",
+      "section_id": "api_reference"
+    },
+    {
+      "link_fact_id": "link_target:044",
+      "section_id": "api_reference"
+    },
+    {
+      "link_fact_id": "link_target:042",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:041",
+      "section_id": "documentation_resources"
+    }
+  ],
+  "material_limitations": [
+    {
+      "fact_ids": [
+        "public_symbol:cells.get",
+        "public_symbol:cells.set"
+      ],
+      "unit_ids": [
+        "inherited_unit:057.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:calculateformula"
+      ],
+      "unit_ids": [
+        "inherited_unit:057.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "example:010",
+        "public_symbol:workbook.importfromcsv"
+      ],
+      "unit_ids": [
+        "inherited_unit:057.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook.sourcexml",
+        "public_symbol:workbook.stylesxml"
+      ],
+      "unit_ids": [
+        "inherited_unit:057.list"
+      ]
+    }
+  ],
+  "quick_start_example_id": "example:002",
+  "second_quick_start_example_id": "example:003",
+  "sections": [
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "identity"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "badges"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "banner"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "opening"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "navigation"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "at_a_glance"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "key_capabilities"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "installation"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "dependencies"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "quick_start"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "additional_examples"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "api_reference"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "documentation_resources"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "scope_limitations"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "development_testing"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "third_party_notices"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "license"
+    }
+  ]
+}

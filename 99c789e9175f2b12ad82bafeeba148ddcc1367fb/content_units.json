@@ -1,0 +1,654 @@
+{
+  "omitted": [],
+  "schema_version": 1,
+  "units": [
+    {
+      "fact_ids": [
+        "format:input.xlsx",
+        "format:output.xlsx",
+        "format:input.csv",
+        "format:output.csv",
+        "public_symbol:workbook.importfromcsv",
+        "public_symbol:workbook.exporttocsv",
+        "public_symbol:worksheet.tocsv",
+        "public_symbol:newstreamingreader",
+        "public_symbol:streamingreader.processrows",
+        "public_symbol:streamingreader.processrowswithfilter",
+        "public_symbol:streamingreader.processrowswithrange",
+        "public_symbol:streamingreader.processrowswithcolumns",
+        "public_symbol:calculateformula",
+        "public_symbol:workbook.setpassword",
+        "public_symbol:workbook.verifypassword",
+        "public_symbol:workbook.checkpassword"
+      ],
+      "section": "opening",
+      "slot": "opening",
+      "text": "Aspose.Cells FOSS for Go reads and writes .xlsx and .csv files. It converts data between these formats using Workbook.ImportFromCSV, Workbook.ExportToCSV, and Worksheet.ToCSV. It processes large spreadsheets efficiently with StreamingReader.ProcessRows and its variants. It calculates formulas with CalculateFormula and supports password protection via Workbook.SetPassword, Workbook.VerifyPassword, and Workbook.CheckPassword."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "example:003",
+        "public_symbol:cell.asfloat64",
+        "public_symbol:cell.asint",
+        "public_symbol:cell.asstring",
+        "public_symbol:cell.value",
+        "public_symbol:cells.get",
+        "public_symbol:cells.set"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "Cell data read and write is performed using Cells.Get and Cells.Set with A1-style references, supporting string, float64, int, and bool values, and Cell.Value, Cell.AsString, Cell.AsFloat64, and Cell.AsInt provide typed access to cell contents."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:calculateformula",
+        "public_symbol:cell.getformula",
+        "public_symbol:cell.setformula"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:2",
+      "text": "Formula evaluation uses Cell.SetFormula to assign formulas, Cell.GetFormula to retrieve them, and CalculateFormula to compute results for supported functions including SUM, AVERAGE, MAX, and MIN over single cells or A1-style ranges."
+    },
+    {
+      "fact_ids": [
+        "example:008",
+        "public_symbol:alignment",
+        "public_symbol:border",
+        "public_symbol:cell.setstyle",
+        "public_symbol:fill",
+        "public_symbol:font",
+        "public_symbol:style"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "Styling and formatting combine Font, Fill, Alignment, and Border properties into a Style applied to cells via Cell.SetStyle, with automatic deduplication of identical styles during save."
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "public_symbol:datavalidation",
+        "public_symbol:worksheet.adddatavalidation"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:4",
+      "text": "Data validation restricts cell ranges to dropdown lists or numeric ranges using DataValidation rules attached to a Worksheet via Worksheet.AddDataValidation, with support for custom error messages, titles, and error styles."
+    },
+    {
+      "fact_ids": [
+        "example:009",
+        "public_symbol:newtable",
+        "public_symbol:table",
+        "public_symbol:worksheet.addtable"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "Structured tables are created using Worksheet.AddTable with NewTable, supporting header rows and built-in table styles via the Table object."
+    },
+    {
+      "fact_ids": [
+        "example:010",
+        "format:input.csv",
+        "format:output.csv",
+        "public_symbol:workbook.exporttocsv",
+        "public_symbol:workbook.importfromcsv",
+        "public_symbol:worksheet.tocsv"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:6",
+      "text": "CSV import and export moves data to and from .csv files using Workbook.ImportFromCSV and Workbook.ExportToCSV with a caller-supplied delimiter, and Worksheet.ToCSV exports a single worksheet."
+    },
+    {
+      "fact_ids": [
+        "example:007",
+        "public_symbol:newstreamingreader",
+        "public_symbol:streamingreader.processrows",
+        "public_symbol:streamingreader.processrowswithcolumns",
+        "public_symbol:streamingreader.processrowswithfilter",
+        "public_symbol:streamingreader.processrowswithrange"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:7",
+      "text": "Streaming large files uses NewStreamingReader to process rows one at a time via StreamingReader.ProcessRows, StreamingReader.ProcessRowsWithFilter, StreamingReader.ProcessRowsWithRange, or StreamingReader.ProcessRowsWithColumns, keeping memory proportional to one row's width."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook.checkpassword",
+        "public_symbol:workbook.setpassword",
+        "public_symbol:workbook.verifypassword"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:8",
+      "text": "Password-based encryption uses Workbook.SetPassword to apply ECMA-376 Agile Encryption (SHA-512 key derivation, AES-256-CBC) during save, with Workbook.VerifyPassword and Workbook.CheckPassword for password validation."
+    },
+    {
+      "fact_ids": [
+        "example:002"
+      ],
+      "section": "quick_start",
+      "slot": "lead_in",
+      "text": "Create a new Excel file, write values to cells A1 and B1, and save it as hello.xlsx by importing the Aspose.Cells FOSS for Go package and using its NewWorkbook, Worksheets, Cells.Set, and Save methods."
+    },
+    {
+      "fact_ids": [
+        "example:003"
+      ],
+      "section": "quick_start",
+      "slot": "lead_in:2",
+      "text": "Load an existing Excel file, read the value in cell A1, update it, and save the changes to a new file by importing the Aspose.Cells FOSS for Go package and using its LoadWorkbook, Worksheets, Cells.Get, Cells.Set, and Save methods."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "example:005",
+        "example:007",
+        "example:008",
+        "example:009",
+        "example:010",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:go_version",
+        "package:name",
+        "package:published_version"
+      ],
+      "section": "additional_examples",
+      "slot": "preview",
+      "text": "The following examples demonstrate core workflows: creating formulas, applying data validation, streaming large files, styling cells, building structured tables, and importing CSV data."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:go_version",
+        "package:name",
+        "package:published_version"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:004",
+      "text": "Create formulas and evaluate them with the calculation engine."
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:go_version",
+        "package:name",
+        "package:published_version"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:005",
+      "text": "Apply list-type data validation to a cell range."
+    },
+    {
+      "fact_ids": [
+        "example:007",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:go_version",
+        "package:name",
+        "package:published_version"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:007",
+      "text": "Stream rows from a large Excel file efficiently."
+    },
+    {
+      "fact_ids": [
+        "example:008",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:go_version",
+        "package:name",
+        "package:published_version"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:008",
+      "text": "Apply custom font and fill styles to cells."
+    },
+    {
+      "fact_ids": [
+        "example:009",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:go_version",
+        "package:name",
+        "package:published_version"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:009",
+      "text": "Create a structured table with a built-in style."
+    },
+    {
+      "fact_ids": [
+        "example:010",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:go_version",
+        "package:name",
+        "package:published_version"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:010",
+      "text": "Import data from a CSV file into a new worksheet."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:071.paragraph"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "Aspose.Cells FOSS for Go provides workbook and worksheet management through the Workbook and Worksheet types, with cells accessed via Worksheet.Cells. Supporting types include Style, DataValidation, Table, and StreamingReader for styling, validation, structured ranges, and low-memory row processing."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cells",
+        "public_symbol:cells.get",
+        "public_symbol:cells.set",
+        "public_symbol:cells.all",
+        "public_symbol:cells.remove"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:cells",
+      "text": "The Cells collection provides access to individual cells through Cells.Get, Cells.Set, Cells.All, and Cells.Remove methods."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cell",
+        "public_symbol:cell.value",
+        "public_symbol:cell.asstring",
+        "public_symbol:cell.asfloat64",
+        "public_symbol:cell.asint",
+        "public_symbol:cell.formula",
+        "public_symbol:cell.getformula",
+        "public_symbol:cell.setformula",
+        "public_symbol:cell.styleid",
+        "public_symbol:cell.getstyle",
+        "public_symbol:cell.setstyle"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:cell",
+      "text": "A Cell represents a single cell with value, formula, and style properties accessible through Cell.Value, Cell.AsString, Cell.AsFloat64, Cell.AsInt, Cell.Formula, Cell.GetFormula, Cell.SetFormula, Cell.StyleID, Cell.GetStyle, and Cell.SetStyle."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:style",
+        "public_symbol:style.font",
+        "public_symbol:style.fill",
+        "public_symbol:style.alignment",
+        "public_symbol:style.border"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:style",
+      "text": "Style encapsulates formatting attributes including Font, Fill, Alignment, and Border through Style.Font, Style.Fill, Style.Alignment, and Style.Border."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:font",
+        "public_symbol:font.name",
+        "public_symbol:font.size",
+        "public_symbol:font.bold",
+        "public_symbol:font.italic",
+        "public_symbol:font.color"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:font",
+      "text": "Font defines text appearance with properties Font.Name, Font.Size, Font.Bold, Font.Italic, and Font.Color."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fill",
+        "public_symbol:fill.type",
+        "public_symbol:fill.color"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:fill",
+      "text": "Fill specifies cell background formatting with Fill.Type and Fill.Color properties."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:alignment",
+        "public_symbol:alignment.horizontal",
+        "public_symbol:alignment.vertical",
+        "public_symbol:alignment.wraptext"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:alignment",
+      "text": "Alignment controls text positioning with Alignment.Horizontal, Alignment.Vertical, and Alignment.WrapText properties."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:border",
+        "public_symbol:border.top",
+        "public_symbol:border.bottom",
+        "public_symbol:border.left",
+        "public_symbol:border.right",
+        "public_symbol:border.color"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:border",
+      "text": "Border defines cell border formatting through Border.Top, Border.Bottom, Border.Left, Border.Right, and Border.Color properties."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:datavalidation",
+        "public_symbol:datavalidation.type",
+        "public_symbol:datavalidation.ref",
+        "public_symbol:datavalidation.formula1",
+        "public_symbol:datavalidation.formula2",
+        "public_symbol:datavalidation.allowblank",
+        "public_symbol:datavalidation.showerrormessage",
+        "public_symbol:datavalidation.errortitle",
+        "public_symbol:datavalidation.errormessage",
+        "public_symbol:datavalidation.errorstyle"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:datavalidation",
+      "text": "DataValidation applies input constraints with DataValidation.Type, DataValidation.Ref, DataValidation.Formula1, DataValidation.Formula2, DataValidation.AllowBlank, DataValidation.ShowErrorMessage, DataValidation.ErrorTitle, DataValidation.ErrorMessage, and DataValidation.ErrorStyle properties."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:table",
+        "public_symbol:table.name",
+        "public_symbol:table.range",
+        "public_symbol:table.hasheaderrow",
+        "public_symbol:table.stylename"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:table",
+      "text": "Table represents a structured range with Table.Name, Table.Range, Table.HasHeaderRow, and Table.StyleName properties."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:streamingreader",
+        "public_symbol:streamingreader.processrows",
+        "public_symbol:streamingreader.processrowswithfilter",
+        "public_symbol:streamingreader.processrowswithrange",
+        "public_symbol:streamingreader.processrowswithcolumns"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:streamingreader",
+      "text": "StreamingReader enables low-memory row processing through StreamingReader.ProcessRows, StreamingReader.ProcessRowsWithFilter, StreamingReader.ProcessRowsWithRange, and StreamingReader.ProcessRowsWithColumns methods."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook",
+        "public_symbol:newworkbook",
+        "public_symbol:loadworkbook",
+        "public_symbol:workbook.worksheets",
+        "public_symbol:workbook.save",
+        "public_symbol:workbook.importfromcsv",
+        "public_symbol:workbook.exporttocsv",
+        "public_symbol:workbook.setpassword",
+        "public_symbol:workbook.verifypassword",
+        "public_symbol:workbook.checkpassword"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:workbook",
+      "text": "Workbook manages spreadsheets with NewWorkbook and LoadWorkbook constructors, Workbook.Worksheets for accessing worksheets, Workbook.Save for saving files, Workbook.ImportFromCSV and Workbook.ExportToCSV for CSV operations, and Workbook.SetPassword, Workbook.VerifyPassword, and Workbook.CheckPassword for password handling."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheet",
+        "public_symbol:worksheet.cells",
+        "public_symbol:worksheet.name",
+        "public_symbol:worksheet.index",
+        "public_symbol:worksheet.addtable",
+        "public_symbol:worksheet.adddatavalidation",
+        "public_symbol:worksheet.addpicture",
+        "public_symbol:worksheet.addchart",
+        "public_symbol:worksheet.addpivottable",
+        "public_symbol:worksheet.addconditionalformatting",
+        "public_symbol:worksheet.fromcsv",
+        "public_symbol:worksheet.tocsv"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:worksheet",
+      "text": "Worksheet represents a spreadsheet tab with Worksheet.Cells for cell access, Worksheet.Name and Worksheet.Index for identification, Worksheet.AddTable, Worksheet.AddDataValidation, Worksheet.AddPicture, Worksheet.AddChart, Worksheet.AddPivotTable, and Worksheet.AddConditionalFormatting for adding elements, and Worksheet.FromCSV and Worksheet.ToCSV for CSV operations."
+    },
+    {
+      "fact_ids": [
+        "link_target:038",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:go_version",
+        "package:name",
+        "package:published_version"
+      ],
+      "section": "documentation_resources",
+      "slot": "link:link_target:038",
+      "text": "The getting started guide covers loading, editing, styling, and saving spreadsheets in Go."
+    },
+    {
+      "fact_ids": [
+        "link_target:039",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:go_version",
+        "package:name",
+        "package:published_version"
+      ],
+      "section": "documentation_resources",
+      "slot": "link:link_target:039",
+      "text": "The how-to guides and FAQ provide Go knowledge base articles, troubleshooting guides, and step-by-step instructions for Aspose.Cells FOSS for Go."
+    },
+    {
+      "fact_ids": [
+        "link_target:042",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:go_version",
+        "package:name",
+        "package:published_version"
+      ],
+      "section": "documentation_resources",
+      "slot": "link:link_target:042",
+      "text": "The issue tracker on GitHub allows reporting bugs and submitting feature requests for Aspose.Cells FOSS for Go."
+    },
+    {
+      "fact_ids": [
+        "link_target:041",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:go_version",
+        "package:name",
+        "package:published_version"
+      ],
+      "section": "documentation_resources",
+      "slot": "link:link_target:041",
+      "text": "AGENTS.md outlines the repository's contribution guide for AI-assisted development, including source-of-truth conventions and areas requiring review before changes."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "inherited_unit:056.heading",
+        "inherited_unit:057.list",
+        "inherited_unit:073.list",
+        "inherited_unit:075.paragraph",
+        "install_command:go",
+        "package:go_version",
+        "package:name",
+        "package:published_version",
+        "public_symbol:calculateformula",
+        "public_symbol:cells.get",
+        "public_symbol:cells.set",
+        "public_symbol:workbook.importfromcsv"
+      ],
+      "section": "scope_limitations",
+      "slot": "scope",
+      "text": "Aspose.Cells FOSS for Go reads and writes Excel files in XLSX format, supports A1-style cell references, and provides formula calculation for SUM, AVERAGE, MAX, and MIN, as well as CSV import and XML access for round-trip fidelity."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "inherited_unit:057.list",
+        "package:go_version",
+        "package:name",
+        "package:published_version",
+        "public_symbol:cells.get",
+        "public_symbol:cells.set"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:1",
+      "text": "Cell references are A1-style strings only; tuple or array indices are not supported, and Cells.Get and Cells.Set operate exclusively with this reference style."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "inherited_unit:057.list",
+        "package:go_version",
+        "package:name",
+        "package:published_version",
+        "public_symbol:calculateformula"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:2",
+      "text": "CalculateFormula supports only SUM, AVERAGE, MAX, and MIN; any other formula returns an error rather than being evaluated."
+    },
+    {
+      "fact_ids": [
+        "example:010",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "inherited_unit:057.list",
+        "package:go_version",
+        "package:name",
+        "package:published_version",
+        "public_symbol:workbook.importfromcsv"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:3",
+      "text": "CSV import via Workbook.ImportFromCSV stores every field as a Go string and does not infer numeric or boolean types the way Cells.Set does when called directly with typed values."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "inherited_unit:057.list",
+        "public_symbol:workbook.sourcexml",
+        "public_symbol:workbook.stylesxml"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:4",
+      "text": "Generated XML follows ECMA-376's own element ordering; this preserves round-trip compatibility but isn't independently configurable."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "inherited_unit:057.list",
+        "inherited_unit:073.list"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:5",
+      "text": "Generated XML follows ECMA-376's own element ordering; this preserves round-trip compatibility but isn't independently configurable."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "inherited_unit:056.heading",
+        "inherited_unit:057.list",
+        "inherited_unit:073.list",
+        "inherited_unit:075.paragraph",
+        "install_command:go",
+        "package:go_version",
+        "package:name",
+        "package:published_version"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:6",
+      "text": "No third-party dependencies — Go standard library only, and the software is provided without warranty under the MIT License."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:build-command",
+        "build_test_asset:docs",
+        "build_test_asset:examples",
+        "build_test_asset:test-command",
+        "build_test_asset:tests",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "inherited_unit:046.paragraph",
+        "inherited_unit:060.paragraph",
+        "package:go_version",
+        "package:name",
+        "package:published_version"
+      ],
+      "section": "development_testing",
+      "slot": "summary",
+      "text": "Aspose.Cells FOSS for Go requires Go version 1.24.5 and uses the standard Go toolchain for building and testing. The library source code resides in the aspose/cells_foss directory, with integration tests in tests/, runnable examples in examples/, and a verification tool in verify/. The examples directory contains a separate go.mod file."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:058.paragraph"
+      ],
+      "section": "enterprise_relationship",
+      "slot": "context",
+      "text": "It adds the complete Excel formula function library, additional file-format coverage, and commercial support."
+    }
+  ]
+}
