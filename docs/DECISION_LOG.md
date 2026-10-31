@@ -1336,3 +1336,43 @@ investigated or fixed here.
 **Where the detail lives**: `src/repo_presenter/readme/reconciliation/dispositions.py`
 (`_matching_unresolved_install` is a separate, related fix from the same session, not part of this
 one — see its own entry), `tests/readme/reconciliation/test_dispositions.py`.
+
+---
+
+## 2026-11-01: installation code block deferred when matching an UNRESOLVED install command (merged `fix/unresolved-install-command-defer`)
+
+**Decision**: merge `fix/unresolved-install-command-defer` to main. `normalize()`'s "installation"
+fold now backfills a citation and keeps `DEFER_UNRESOLVED` (instead of leaving it uncited) when a
+code block's own command lines literally match a genuinely UNRESOLVED `install_command` fact;
+`placement_errors`'s own `uncited_redundant_defer` exemption is widened the same way `example_status`
+already works -- keyed by the unit itself, never by what a disposition cites.
+
+**Why**: measured live (aspose-page-foss/Aspose.Page-FOSS-for-Python, hosted run 41137901672, unit
+013.code_block "pip install aspose-page-foss"): `install_command:pip` is UNRESOLVED (the registry
+could not confirm ownership) -- `DEFER_UNRESOLVED` is the objectively correct disposition for this,
+but the only existing exemption from `uncited_redundant_defer` was a tracked example's own UNRESOLVED
+status, never an install_command's, so the model's answer was refused outright across all 3 asks.
+
+**Evidence**: 3 new tests including a dedicated gaming-resistance test (a disposition citing the
+right UNRESOLVED fact on the WRONG, unmatched code block gets no exemption and stays rejected,
+proving `unresolved_install_units` is keyed by the unit's own text, never by what a disposition
+claims). Falsifier confirmed. A fresh agent, cold, in an isolated worktree, independently verified:
+diff scope, the literal-match helper's correctness, the gaming-resistance property, full suite 3453
+passed/13 skipped/exit 0. One noted, out-of-scope limitation: the earlier (already-merged) CONTRADICTED
+branch in the same fold is a global check (any CONTRADICTED install_command fact anywhere in the
+facts, not specific to the current unit) and would preempt this new UNRESOLVED branch for a repo
+that happens to carry both a CONTRADICTED and an unrelated UNRESOLVED install_command fact
+simultaneously -- a plausible but not-yet-observed shape, belonging to the earlier fix's own scope,
+not fixed here.
+
+**Evidence (hosted re-run from the branch, not main)**: aspose-page-foss/Aspose.Page-FOSS-for-Python
+Lane R (run 41236483023). The durable record's `failure.detail` names no `uncited_redundant_defer`
+anywhere; the candidate now reaches `independent_review` and fails there on an unrelated
+`live_readme_loss` finding for the same code block -- progress, not a regression, a new, unrelated,
+not-yet-investigated fix-queue item.
+
+**What this does NOT decide**: the newly-exposed `live_readme_loss` finding, or the noted
+CONTRADICTED/UNRESOLVED-coexistence limitation above.
+
+**Where the detail lives**: `src/repo_presenter/readme/reconciliation/dispositions.py`
+(`_matching_unresolved_install`), `tests/readme/reconciliation/test_dispositions.py`.
