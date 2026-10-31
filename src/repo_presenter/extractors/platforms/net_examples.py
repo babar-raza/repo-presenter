@@ -54,13 +54,67 @@ _SDK_VERSION = re.compile(r"^(\d+)\.(\d+)\.")
 # a disposition acts on.
 _TRAILING_PROJECT = re.compile(r"\s*\[[^\]]*\]\s*$")
 _CS_DIAGNOSTIC = re.compile(r": error CS\d{4}:")
-# A diagnostic filed against the example itself (the harness always names it Program.cs), as
-# opposed to one in the product's own sources, which the ProjectReference rebuilds on every run.
-_PROGRAM_DIAGNOSTIC = re.compile(r"(?:^|[\s\\/])Program\.cs\(\d+,\d+\): error (CS\d{4}):", re.M)
-# CS0103 is "the name does not exist in the current context": a README fragment that uses a local
-# it never declares (`bytes`, `cancellationToken`). It says the snippet is a fragment, not that
-# the product has no such API; a wrong type or member is CS0246 / CS0117 / CS1061 and stays FAILED.
-_FRAGMENT_ONLY_CODES = frozenset({"CS0103"})
+# One compiler diagnostic that names a file: `<path>(line,col): error CSnnnn: <message>`. The path
+# may contain spaces, hence the lazy match up to the first `(line,col): error CS`.
+_FILED_DIAGNOSTIC = re.compile(
+    r"^(?P<file>.*?)\((?P<line>\d+),(?P<col>\d+)\): error (?P<code>CS\d{4}): (?P<message>.*)$"
+)
+# The harness always names the example Program.cs; any other file is the product's own source,
+# which the ProjectReference rebuilds on every run.
+_EXAMPLE_FILE = "Program.cs"
+_UNDECLARED_NAME = re.compile(r"The name '(?P<name>[^']+)' does not exist")
+
+
+def _is_fragment(diagnostic: re.Match[str], program: str) -> bool:
+    """Whether a diagnostic in the example says "this snippet is a fragment" rather than "this API
+    is not there". Only CS0103 (an undeclared name) can, and only for a name that is a local
+    (lower-case or underscore initial: `bytes`, `cancellationToken`) or an unqualified call to a
+    placeholder method (`GetUploadStream()`). A name that is followed by anything but a call, such
+    as `RemovedStatic.Foo()` or `RenamedEnum.Value`, is a class the product no longer has, which is
+    a contradiction, so it stays FAILED. Anything this cannot read stays FAILED too."""
+    if diagnostic["code"] != "CS0103":
+        return False
+    named = _UNDECLARED_NAME.match(diagnostic["message"])
+    if named is None:
+        return False
+    name = named["name"]
+    if name[:1].islower() or name[:1] == "_":
+        return True
+    lines = program.splitlines()
+    index, column = int(diagnostic["line"]) - 1, int(diagnostic["col"]) - 1
+    if not 0 <= index < len(lines) or lines[index][column : column + len(name)] != name:
+        return False
+    return lines[index][column + len(name) :].lstrip().startswith("(")
+
+
+def classify_build_failure(diagnostics: str, program: str) -> tuple[str, str]:
+    """``(outcome, reason)`` for a build that failed. Only a diagnostic filed against the example
+    itself can say the example is wrong. A diagnostic in the product's own sources means the
+    product did not build, so the example was not checked (hosted Words-.NET, all five examples:
+    CS0234 in the product's ArrayUtil.cs). A diagnostic that names no file at all keeps the
+    long-standing FAILED reading. A CONTRADICTED example is never kept in the README, so calling a
+    fragment or a product-build failure a contradiction deleted real examples and the headings
+    around them (hosted Imaging-.NET: `bytes`, `cancellationToken`, `GetUploadStream`)."""
+    own: list[re.Match[str]] = []
+    in_product = 0
+    unfiled = 0
+    for line in diagnostics.splitlines():
+        found = _FILED_DIAGNOSTIC.match(line.strip())
+        if found is not None:
+            base = found["file"].replace(chr(92), "/").rsplit("/", 1)[-1].strip()
+            if base == _EXAMPLE_FILE:
+                own.append(found)
+            else:
+                in_product += 1
+        elif _CS_DIAGNOSTIC.search(line):
+            unfiled += 1
+    if own:
+        if unfiled or not all(_is_fragment(found, program) for found in own):
+            return "FAILED", ""
+        return "NOT_VERIFIED", "fragment, not a contradiction"
+    if in_product and not unfiled:
+        return "NOT_VERIFIED", "the product's own build failed, so the example was not checked"
+    return ("FAILED" if in_product or unfiled else "NOT_VERIFIED"), ""
 # The wall-clock cost of this build, on this machine, right now - never reproducible and never
 # evidence about the repository.
 _TIME_ELAPSED = re.compile(r"(?m)^Time Elapsed .*\r?\n?")
@@ -383,27 +437,14 @@ def verify_net_examples(
             detail = f"compiled against {project.name}; SDK {version}{added}"
         else:
             detail = _first_error(result.stdout, result.stderr, *machine)
-            # Only a C# compiler diagnostic filed against the example itself says the example is
-            # wrong. A build that failed on restore, the SDK or the harness named no such
-            # diagnostic, and "we could not check" is NOT_VERIFIED, never a false CONTRADICTED. The
-            # same holds for a diagnostic in the product's own sources (the product did not build,
-            # so nothing about the example was checked: hosted Words-.NET, all five examples) and
-            # for a snippet whose only complaint is an undeclared local (a README fragment:
-            # hosted Imaging-.NET, `bytes` / `cancellationToken`). A CONTRADICTED example is never
-            # kept in the README, so calling these contradictions deleted real examples and the
-            # headings around them.
-            diagnostics = result.stdout + chr(10) + result.stderr
-            own_codes = set(_PROGRAM_DIAGNOSTIC.findall(diagnostics))
-            if own_codes and not own_codes <= _FRAGMENT_ONLY_CODES:
-                outcome = "FAILED"
-            elif own_codes:
-                outcome = "NOT_VERIFIED"
-                detail = f"fragment, not a contradiction: {detail}"
-            elif _CS_DIAGNOSTIC.search(diagnostics):
-                outcome = "NOT_VERIFIED"
-                detail = f"the product's own build failed, so the example was not checked: {detail}"
-            else:
-                outcome = "NOT_VERIFIED"
+            # A build that failed on restore, the SDK or the harness named no compiler diagnostic,
+            # and "we could not check" is NOT_VERIFIED, never a false CONTRADICTED; see
+            # classify_build_failure for the rest.
+            outcome, reason = classify_build_failure(
+                result.stdout + chr(10) + result.stderr, program
+            )
+            if reason:
+                detail = f"{reason}: {detail}"
         receipts.append(
             ExampleReceipt(
                 ordinal=candidate.ordinal,

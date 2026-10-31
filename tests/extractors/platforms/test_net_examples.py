@@ -591,13 +591,19 @@ def test_a_diagnostic_with_no_path_in_it_is_unchanged_by_the_scrub(
 # Hosted runs, 2026-10-30: every README example of Words-.NET failed with a CS0234 in the PRODUCT's
 # own `Aspose.Foundation/.../ArrayUtil.cs` (the product project did not build, so nothing about the
 # example was checked), and three of Imaging-.NET's four examples failed with CS0103 on `bytes`,
-# `cancellationToken` and `GetUploadStream` (README fragments that use a local they never declare).
+# `cancellationToken` and `GetUploadStream` (README fragments that use a name they never declare).
 # Both were recorded FAILED -> CONTRADICTED, and a CONTRADICTED example is never kept: Quick Start,
 # Additional Examples and the headings around them were dropped and `live_readme_loss` rejected
 # the candidate. A wrong type or member (CS0246 / CS0117 / CS1061 / CS1503) in the example itself is
-# still a contradiction.
+# still a contradiction, and so is CS0103 on a class the product no longer has
+# (`RemovedStatic.Foo()`): independent review of this change found that gap.
 
-_WINDOWS_PROGRAM = "C:" + chr(92) + "w" + chr(92) + "example_001" + chr(92) + "Program.cs"
+BACKSLASH = chr(92)
+_WINDOWS_PROGRAM = "C:" + BACKSLASH + "w" + BACKSLASH + "example_001" + BACKSLASH + "Program.cs"
+_SPACED_PROGRAM = (
+    "C:" + BACKSLASH + "Users" + BACKSLASH + "John Doe" + BACKSLASH + "w" + BACKSLASH + "Program.cs"
+)
+_UNDECLARED = "error CS0103: The name '{name}' does not exist in the current context"
 
 
 def _build_says(monkeypatch: pytest.MonkeyPatch, output: str) -> None:
@@ -610,27 +616,52 @@ def _build_says(monkeypatch: pytest.MonkeyPatch, output: str) -> None:
     monkeypatch.setattr(net_examples, "execute", fake)
 
 
-def _outcome(tmp_path: Path, project: Path) -> Any:
+def _outcome(tmp_path: Path, project: Path, code: str = "x") -> Any:
     return net_examples.verify_net_examples(
-        tmp_path, project, [_candidate(1, "x")], tmp_path / "run"
+        tmp_path, project, [_candidate(1, code)], tmp_path / "run"
     )[0]
 
 
 @pytest.mark.parametrize(
-    "diagnostic",
+    ("code", "diagnostic"),
     [
-        "Program.cs(3,9): error CS0103: The name 'bytes' does not exist in the current context",
-        "/w/example_001/Program.cs(3,9): error CS0103: The name 'cancellationToken' does not exist",
-        _WINDOWS_PROGRAM + "(3,9): error CS0103: The name 'GetUploadStream' does not exist",
+        ("var n = bytes.Length;", "Program.cs(1,9): " + _UNDECLARED.format(name="bytes")),
+        (
+            "await Run(cancellationToken);",
+            "/w/example_001/Program.cs(1,11): " + _UNDECLARED.format(name="cancellationToken"),
+        ),
+        (
+            "using var s = GetUploadStream();",
+            _WINDOWS_PROGRAM + "(1,15): " + _UNDECLARED.format(name="GetUploadStream"),
+        ),
+        ("var n = x;", _SPACED_PROGRAM + "(1,9): " + _UNDECLARED.format(name="x")),
     ],
 )
-def test_an_example_that_only_names_an_undeclared_local_is_a_fragment_not_a_contradiction(
-    tmp_path: Path, project: Path, monkeypatch: pytest.MonkeyPatch, diagnostic: str
+def test_an_example_that_only_uses_an_undeclared_local_or_placeholder_call_is_a_fragment(
+    tmp_path: Path, project: Path, monkeypatch: pytest.MonkeyPatch, code: str, diagnostic: str
 ) -> None:
     _build_says(monkeypatch, diagnostic)
-    receipt = _outcome(tmp_path, project)
+    receipt = _outcome(tmp_path, project, code)
     assert receipt.outcome == "NOT_VERIFIED"
     assert "fragment" in receipt.detail and "CS0103" in receipt.detail
+
+
+@pytest.mark.parametrize(
+    ("code", "diagnostic"),
+    [
+        # a class or enum the product no longer has: the name is a qualifier, not a placeholder call
+        ("RemovedStatic.Foo();", "Program.cs(1,1): " + _UNDECLARED.format(name="RemovedStatic")),
+        ("var m = RenamedEnum.Value;", "Program.cs(1,9): " + _UNDECLARED.format(name="RenamedEnum")),
+        # a diagnostic that points past the program, or at other text, cannot be read as a fragment
+        ("var a = 1;", "Program.cs(9,1): " + _UNDECLARED.format(name="Gone")),
+        ("var a = 1;", "Program.cs(1,1): " + _UNDECLARED.format(name="Gone")),
+    ],
+)
+def test_cs0103_on_a_class_the_product_no_longer_has_is_still_a_contradiction(
+    tmp_path: Path, project: Path, monkeypatch: pytest.MonkeyPatch, code: str, diagnostic: str
+) -> None:
+    _build_says(monkeypatch, diagnostic)
+    assert _outcome(tmp_path, project, code).outcome == "FAILED"
 
 
 def test_a_failure_in_the_products_own_sources_says_nothing_about_the_example(
@@ -650,7 +681,7 @@ def test_a_failure_in_the_products_own_sources_says_nothing_about_the_example(
 def test_a_wrong_type_or_member_in_the_example_is_still_a_contradiction(
     tmp_path: Path, project: Path, monkeypatch: pytest.MonkeyPatch, code: str
 ) -> None:
-    _build_says(monkeypatch, f"Program.cs(3,9): error {code}: the API is not what the README says")
+    _build_says(monkeypatch, f"Program.cs(1,9): error {code}: the API is not what the README says")
     assert _outcome(tmp_path, project).outcome == "FAILED"
 
 
@@ -660,10 +691,26 @@ def test_an_undeclared_local_beside_a_real_api_error_is_still_a_contradiction(
     """One genuine API error is enough: the fragment allowance never masks it."""
     _build_says(
         monkeypatch,
-        "Program.cs(3,9): error CS0103: The name 'bytes' does not exist in the current context\n"
-        "Program.cs(4,9): error CS1061: 'Scene' does not contain a definition for 'Frobnicate'",
+        "Program.cs(1,9): " + _UNDECLARED.format(name="bytes") + "\n"
+        "Program.cs(2,9): error CS1061: 'Scene' does not contain a definition for 'Frobnicate'",
     )
+    code = "var n = bytes.Length;\nscene.Frobnicate();"
+    assert _outcome(tmp_path, project, code).outcome == "FAILED"
+
+
+def test_a_diagnostic_that_names_no_file_keeps_its_long_standing_failed_reading(
+    tmp_path: Path, project: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """`CSC : error CS5001` names no file, so it is neither the example's own nor the product's:
+    it is not reinterpreted, and it also keeps a fragment beside it from being excused."""
+    _build_says(monkeypatch, "CSC : error CS5001: Program does not contain a static 'Main' method")
     assert _outcome(tmp_path, project).outcome == "FAILED"
+    _build_says(
+        monkeypatch,
+        "Program.cs(1,9): " + _UNDECLARED.format(name="bytes") + "\n"
+        "CSC : error CS5001: Program does not contain a static 'Main' method",
+    )
+    assert _outcome(tmp_path, project, "var n = bytes.Length;").outcome == "FAILED"
 
 
 def test_a_look_alike_file_name_is_not_the_example(
