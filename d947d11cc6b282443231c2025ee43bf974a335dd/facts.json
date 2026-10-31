@@ -1,0 +1,2130 @@
+{
+  "facts": [
+    {
+      "attributes": {
+        "role": "build command",
+        "source": "toolchain convention"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "build command; standard `dotnet build Aspose.Imaging.Foss.sln` for the project declared in Aspose.Imaging.Foss.sln; no workflow step or script names it",
+          "path": "Aspose.Imaging.Foss.sln"
+        }
+      ],
+      "id": "build_test_asset:build-command",
+      "kind": "build_test_asset",
+      "polarity": "SUPPORTED",
+      "value": "dotnet build Aspose.Imaging.Foss.sln"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": null,
+          "path": ".github/workflows/ci.yml"
+        },
+        {
+          "detail": null,
+          "path": ".github/workflows/release.yml"
+        },
+        {
+          "detail": "2 files; GitHub Actions workflows",
+          "path": ".github/workflows/"
+        }
+      ],
+      "id": "build_test_asset:ci",
+      "kind": "build_test_asset",
+      "polarity": "SUPPORTED",
+      "value": ".github/workflows/"
+    },
+    {
+      "attributes": {
+        "role": "ci matrix",
+        "workflow": ".github/workflows/ci.yml"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "job build-and-test strategy.matrix axes os",
+          "path": ".github/workflows/ci.yml"
+        }
+      ],
+      "id": "build_test_asset:ci-matrix",
+      "kind": "build_test_asset",
+      "polarity": "SUPPORTED",
+      "value": "os=ubuntu-latest,windows-latest"
+    },
+    {
+      "attributes": {
+        "role": "release workflow",
+        "workflow": ".github/workflows/release.yml"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "release step; job publish runs nuget push",
+          "path": ".github/workflows/release.yml"
+        }
+      ],
+      "id": "build_test_asset:release-workflow",
+      "kind": "build_test_asset",
+      "polarity": "SUPPORTED",
+      "value": ".github/workflows/release.yml"
+    },
+    {
+      "attributes": {
+        "role": "test command",
+        "source": "toolchain convention"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "test command; standard `dotnet test Aspose.Imaging.Foss.sln` for the project declared in Aspose.Imaging.Foss.sln, which has tests in the tree; no workflow step or script names it",
+          "path": "Aspose.Imaging.Foss.sln"
+        }
+      ],
+      "id": "build_test_asset:test-command",
+      "kind": "build_test_asset",
+      "polarity": "SUPPORTED",
+      "value": "dotnet test Aspose.Imaging.Foss.sln"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": null,
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        },
+        {
+          "detail": null,
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        },
+        {
+          "detail": null,
+          "path": "tests/Aspose.Imaging.Foss.Tests/RobustnessTests.cs"
+        },
+        {
+          "detail": "3 files; test suite (3 test sources among the 7 files here)",
+          "path": "tests/"
+        }
+      ],
+      "id": "build_test_asset:tests",
+      "kind": "build_test_asset",
+      "polarity": "SUPPORTED",
+      "value": "tests/"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "no `PackageReference` a consumer would install is declared",
+          "path": "src/Aspose.Imaging.Foss/Aspose.Imaging.Foss.csproj"
+        }
+      ],
+      "id": "dependency:none",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "none"
+    },
+    {
+      "attributes": null,
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "lines 158-168; csharp fence; unit inherited_unit:029.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 1: NOT_VERIFIED; fragment, not a contradiction: Program.cs(8,38): error CS0103: The name 'bytes' does not exist in the current context",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:001",
+      "kind": "example",
+      "polarity": "UNRESOLVED",
+      "value": "using Aspose.Imaging.Foss;\n\n// From a file path\nvar info = ImageProbe.ProbeFile(\"photo.jpg\");\nConsole.WriteLine($\"{info.Format}: {info.Width}x{info.Height}, {info.BitDepth}-bit\");\n\n// From a stream (seekable or not) or a byte array\nvar format = ImageProbe.DetectFormat(bytes);\nvar info2 = ImageProbe.Probe(stream);\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "lines 184-189; csharp fence; unit inherited_unit:035.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 2: NOT_VERIFIED; fragment, not a contradiction: Program.cs(3,58): error CS0103: The name 'cancellationToken' does not exist in the current context",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:002",
+      "kind": "example",
+      "polarity": "UNRESOLVED",
+      "value": "using Aspose.Imaging.Foss;\n\nvar info = await ImageProbe.ProbeFileAsync(\"upload.png\", cancellationToken);\nConsole.WriteLine($\"{info.Format}: {info.Width}x{info.Height}\");\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 197-202; csharp fence; unit inherited_unit:038.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 3: EXECUTED; compiled against Aspose.Imaging.Foss.csproj; SDK 10.0.403",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:003",
+      "kind": "example",
+      "polarity": "SUPPORTED",
+      "value": "using Aspose.Imaging.Foss;\n\nvar info = ImageProbe.ProbeFile(\"animation.gif\");\nConsole.WriteLine($\"{info.Format}: {info.FrameCount} frame(s)\");\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "lines 209-214; csharp fence; unit inherited_unit:041.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 4: NOT_VERIFIED; fragment, not a contradiction: Program.cs(3,27): error CS0103: The name 'GetUploadStream' does not exist in the current context",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:004",
+      "kind": "example",
+      "polarity": "UNRESOLVED",
+      "value": "using Aspose.Imaging.Foss;\n\nusing var networkStream = GetUploadStream(); // CanSeek == false\nvar format = ImageProbe.DetectFormat(networkStream);\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "admitted registry entry",
+          "path": "data/registry.json"
+        }
+      ],
+      "id": "identity:ecosystem",
+      "kind": "identity",
+      "polarity": "SUPPORTED",
+      "value": "net"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "admitted registry entry",
+          "path": "data/registry.json"
+        }
+      ],
+      "id": "identity:family",
+      "kind": "identity",
+      "polarity": "SUPPORTED",
+      "value": "imaging"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "admitted registry entry",
+          "path": "data/registry.json"
+        }
+      ],
+      "id": "identity:platform",
+      "kind": "identity",
+      "polarity": "SUPPORTED",
+      "value": "net"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "admitted registry entry",
+          "path": "data/registry.json"
+        }
+      ],
+      "id": "identity:repository",
+      "kind": "identity",
+      "polarity": "SUPPORTED",
+      "value": "aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "pinned default-branch revision",
+          "path": "source/snapshot.json"
+        }
+      ],
+      "id": "identity:revision",
+      "kind": "identity",
+      "polarity": "SUPPORTED",
+      "value": "d947d11cc6b282443231c2025ee43bf974a335dd"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 1-1; heading",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:001.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "# Aspose.Imaging FOSS for .NET"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 3-3; badge_row; under Aspose.Imaging FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:002.badge_row",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "[![CI](https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET/actions/workflows/ci.yml/badge.svg)](https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Contributors](https://img.shields.io/github/contributors/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET.svg)](https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET/graphs/contributors)"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 5-5; badge_row; under Aspose.Imaging FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:003.badge_row",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "[![Aspose.Imaging FOSS for .NET](https://products.aspose.org/media/imaging/net/banner-readme.png)](https://products.aspose.org/imaging/net/)"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 7-12; paragraph; under Aspose.Imaging FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:004.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging FOSS for .NET is a free, open-source .NET library \u2014 an Aspose.Imaging\nalternative that does zero-dependency image format detection and header probing. `ImageProbe`\nidentifies a file's format and reads its basic properties \u2014 dimensions, bit depth, and frame\ncount \u2014 directly from the file header, so you know what a file is and how big it is, fast,\nwithout pulling in a full imaging stack to decode a single pixel. It has no NuGet dependencies\nand targets `netstandard2.0` and `net8.0`."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 14-14; heading; under Aspose.Imaging FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:005.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## Navigation"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Navigation"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 16-26; list; under Aspose.Imaging FOSS for .NET > Navigation",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:006.list",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "- [At a Glance](#at-a-glance)\n- [Key Capabilities](#key-capabilities)\n- [Installation](#installation)\n- [Dependencies](#dependencies)\n- [Quick Start](#quick-start)\n- [Additional Examples](#additional-examples)\n- [API Reference](#api-reference)\n- [Documentation & Resources](#documentation--resources)\n- [Scope and Limitations](#scope-and-limitations)\n- [Development and Testing](#development-and-testing)\n- [License](#license)"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 28-28; heading; under Aspose.Imaging FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:007.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## At a Glance"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > At a Glance"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 30-52; code_block; under Aspose.Imaging FOSS for .NET > At a Glance",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:008.code_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "```mermaid\n%%{init: {\"flowchart\": {\"useMaxWidth\": true}}}%%\nflowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"Image files<br/>(PNG, JPEG,<br/>GIF, BMP)\"]\n    i2[\"Image files<br/>(ICO, TIFF,<br/>WEBP)\"]\n    i3[\"Image files<br/>(PSD, EMF,<br/>WMF)\"]\n    i4[\"Image files<br/>(DICOM, DJVU,<br/>AVIF, HEIC)\"]\n  end\n  PRODUCT[\"Aspose.Imaging FOSS for .NET\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Format detection,<br/>tolerant of<br/>bad input\"]\n    c2[\"Dimension,<br/>bit-depth,<br/>frame count\"]\n    c3[\"Sync/async<br/>probing\"]\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"Images<br/>(ImageFormat,<br/>ImageInfo)\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n```"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 54-54; heading; under Aspose.Imaging FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:009.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## Key Capabilities"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Key Capabilities"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 56-85; list; under Aspose.Imaging FOSS for .NET > Key Capabilities",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:010.list",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "- Detects 14 image formats as a free, open source Aspose.Imaging alternative to a full decode\n  pipeline \u2014 `ImageProbe.DetectFormat()` reads only the file's signature bytes and returns an\n  `ImageFormat` value, so identifying a file never requires pulling in a full imaging stack.\n- `ImageProbe.Probe()` reads a format's real header fields directly into an `ImageInfo` \u2014\n  width, height, bit depth, and frame count \u2014 for PNG, JPEG, GIF, BMP, WEBP (lossy, lossless,\n  and extended), ICO, TIFF, PSD, EMF, WMF, DICOM, DJVU, AVIF, and HEIC/HEIF, as a free open\n  source .NET image manipulation API with no decode step.\n- Counts real multi-frame and multi-page content where the container format actually carries\n  it: GIF walks its image-descriptor blocks, ICO its directory entries, TIFF its IFD chain, and\n  a bundled multi-page DJVU (DJVM) its `FORM:DJVU` page components \u2014 not the DIRM file count,\n  which also includes shared dictionaries and thumbnails.\n- DICOM parsing covers Implicit VR Little Endian and Explicit VR Little/Big Endian transfer\n  syntaxes \u2014 including the common compressed ones, whose non-pixel elements are encoded\n  Explicit VR Little Endian \u2014 and reads `Rows`/`Columns`/`BitsAllocated` directly from the data\n  set, stopping rather than guessing if it reaches a sequence or encapsulated pixel data\n  element with an undefined length first.\n- AVIF and HEIC/HEIF dimensions come from the primary image's `ispe` (image spatial extent)\n  property: `pitm` names the primary item and `ipma` links it to its `ipco` properties, so grid\n  images (such as iPhone photos) report the full canvas rather than a tile. Without those\n  associations the largest `ispe` is used. AVIF is detected by an `avif`/`avis` major brand, or\n  by a compatible `avif`/`avis` brand under a generic major brand such as `mif1`; HEIC/HEIF by\n  `heic`, `heix`, `hevc`, `hevx`, `heim`, `heis`, `hevm`, `hevs`, or `mif1`/`mif2` without AVIF.\n- Every number in an `ImageInfo` is either positive or `null`: zero, negative, or out-of-range\n  header fields are reported as unknown instead of being passed through.\n- `Probe()` never throws on a signature match it can't fully parse \u2014 malformed or truncated\n  input comes back as an `ImageInfo` with only `Format` set, never an exception, so a probing\n  pipeline can run unattended over untrusted input.\n- Both synchronous and async entry points exist for the same operation \u2014\n  `ProbeFile()`/`ProbeFileAsync()` and `Probe()`/`ProbeAsync()` \u2014 so a probe can run on an ASP.NET\n  request thread without blocking it."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Key Capabilities"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 87-90; paragraph; under Aspose.Imaging FOSS for .NET > Key Capabilities",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:011.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "Most .NET image libraries make you fully decode an image just to answer \"is this a JPEG, and\nhow big is it?\". `ImageSharp.Image.Identify` covers common raster formats well, but nothing\nelse in the .NET FOSS ecosystem does the same for PSD, EMF/WMF, or DICOM \u2014 this library covers\nthat full range in one place."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Key Capabilities"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 92-107; table; under Aspose.Imaging FOSS for .NET > Key Capabilities",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:012.table",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "| Format | Detect | Width / Height | Bit depth | Frame count |\n|--------|:------:|:---------------:|:---------:|:-----------:|\n| PNG    | \u2705 | \u2705 | \u2705 | \u2014 |\n| JPEG   | \u2705 | \u2705 | \u2705 | \u2014 |\n| GIF    | \u2705 | \u2705 | \u2014 | \u2705 |\n| BMP    | \u2705 | \u2705 | \u2705 | \u2014 |\n| WEBP (lossy / lossless / extended) | \u2705 | \u2705 | \u2014 | \u2014 |\n| ICO    | \u2705 | \u2705 | \u2705 | \u2705 |\n| TIFF   | \u2705 | \u2705 | \u2705 | \u2705 |\n| PSD    | \u2705 | \u2705 | \u2705 | \u2014 |\n| EMF    | \u2705 | \u2705 (from bounds) | \u2014 | \u2014 |\n| WMF (placeable) | \u2705 | \u2705 (assumes 96 DPI) | \u2014 | \u2014 |\n| DICOM  | \u2705 | \u2705 (Rows/Columns) | \u2705 (BitsAllocated) | \u2014 |\n| DJVU (single-page / multi-page DJVM) | \u2705 | \u2705 | \u2014 | \u2705 |\n| AVIF (still / animated) | \u2705 | \u2705 | \u2014 | \u2014 |\n| HEIC / HEIF | \u2705 | \u2705 | \u2014 | \u2014 |"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Key Capabilities"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 109-112; paragraph; under Aspose.Imaging FOSS for .NET > Key Capabilities",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:013.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "Frame count is marked \u2705 only where the container format genuinely records more than one\nframe or page (GIF, ICO, TIFF, and multi-page DJVU); every other format's `FrameCount` comes\nback as a fixed `1` on a successful parse, which this table does not count as a real frame\ncount."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 114-114; heading; under Aspose.Imaging FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:014.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## Installation"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Installation"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 116-116; paragraph; under Aspose.Imaging FOSS for .NET > Installation",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:015.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "Build and install from a clone of the repository:"
+    },
+    {
+      "attributes": {
+        "repository_files": "Aspose.Imaging.Foss.csproj,src/Aspose.Imaging.Foss/Aspose.Imaging.Foss.csproj",
+        "section": "Aspose.Imaging FOSS for .NET > Installation"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 118-122; code_block; under Aspose.Imaging FOSS for .NET > Installation",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:016.code_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "```bash\ngit clone https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET.git\ncd Aspose.Imaging-FOSS-for-.NET\ndotnet build src/Aspose.Imaging.Foss/Aspose.Imaging.Foss.csproj -c Release\n```"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Installation"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 124-124; paragraph; under Aspose.Imaging FOSS for .NET > Installation",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:017.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "Reference the built assembly from another project, or add the project directly:"
+    },
+    {
+      "attributes": {
+        "repository_files": "Aspose.Imaging.Foss,Aspose.Imaging.Foss.csproj",
+        "section": "Aspose.Imaging FOSS for .NET > Installation"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 126-128; code_block; under Aspose.Imaging FOSS for .NET > Installation",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:018.code_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "```xml\n<ProjectReference Include=\"..\\Aspose.Imaging-FOSS-for-.NET\\src\\Aspose.Imaging.Foss\\Aspose.Imaging.Foss.csproj\" />\n```"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Installation"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 130-132; paragraph; under Aspose.Imaging FOSS for .NET > Installation",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:019.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "The library multi-targets `netstandard2.0` and `net8.0` \u2014 see\n[Dependencies](#dependencies) below for the full required, native, and development-only\nbreakdown."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 134-134; heading; under Aspose.Imaging FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:020.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## Dependencies"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Dependencies"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 136-136; heading; under Aspose.Imaging FOSS for .NET > Dependencies",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:021.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "### Required Package Dependencies"
+    },
+    {
+      "attributes": {
+        "repository_files": "Aspose.Imaging.Foss.csproj,src/Aspose.Imaging.Foss/Aspose.Imaging.Foss.csproj",
+        "section": "Aspose.Imaging FOSS for .NET > Dependencies > Required Package Dependencies"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 138-140; paragraph; under Aspose.Imaging FOSS for .NET > Dependencies > Required Package Dependencies",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:022.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "No required third-party package dependencies. The library builds from\n`src/Aspose.Imaging.Foss/Aspose.Imaging.Foss.csproj`, which declares zero `<PackageReference>`\nentries \u2014 every format's header parsing is implemented natively within the library."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Dependencies"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 142-142; heading; under Aspose.Imaging FOSS for .NET > Dependencies",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:023.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "### Native and System Requirements"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Dependencies > Native and System Requirements"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 144-144; list; under Aspose.Imaging FOSS for .NET > Dependencies > Native and System Requirements",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:024.list",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "- Targets `netstandard2.0` and `net8.0` (see [Installation](#installation))."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Dependencies"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 146-146; heading; under Aspose.Imaging FOSS for .NET > Dependencies",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:025.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "### Development Dependencies"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Dependencies > Development Dependencies"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 148-150; list; under Aspose.Imaging FOSS for .NET > Dependencies > Development Dependencies",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:026.list",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "- `Microsoft.NET.Test.Sdk` 17.12.0, `xunit` 2.9.2, and `xunit.runner.visualstudio` 2.8.2 \u2014 the\n  xUnit test host and adapter used only by the test project.\n- `coverlet.collector` 6.0.2 \u2014 code-coverage collection for the test suite."
+    },
+    {
+      "attributes": {
+        "repository_files": "Aspose.Imaging.Foss.Tests.csproj,tests/Aspose.Imaging.Foss.Tests/Aspose.Imaging.Foss.Tests.csproj",
+        "section": "Aspose.Imaging FOSS for .NET > Dependencies > Development Dependencies"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 152-154; paragraph; under Aspose.Imaging FOSS for .NET > Dependencies > Development Dependencies",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:027.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "None of these are referenced by the main library project; they apply only to\n`tests/Aspose.Imaging.Foss.Tests/Aspose.Imaging.Foss.Tests.csproj` and are never shipped with\nthe library."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 156-156; heading; under Aspose.Imaging FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:028.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## Quick Start"
+    },
+    {
+      "attributes": {
+        "repository_files": "Aspose.Imaging.Foss",
+        "section": "Aspose.Imaging FOSS for .NET > Quick Start"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 158-168; code_block; under Aspose.Imaging FOSS for .NET > Quick Start",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:029.code_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "```csharp\nusing Aspose.Imaging.Foss;\n\n// From a file path\nvar info = ImageProbe.ProbeFile(\"photo.jpg\");\nConsole.WriteLine($\"{info.Format}: {info.Width}x{info.Height}, {info.BitDepth}-bit\");\n\n// From a stream (seekable or not) or a byte array\nvar format = ImageProbe.DetectFormat(bytes);\nvar info2 = ImageProbe.Probe(stream);\n```"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Quick Start"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 170-172; paragraph; under Aspose.Imaging FOSS for .NET > Quick Start",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:030.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "`Probe` never throws on malformed or truncated input \u2014 if a file matches a format's signature\nbut its header can't be fully parsed, you get back an `ImageInfo` with just the `Format` set\nrather than an exception."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 174-174; heading; under Aspose.Imaging FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:031.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## Additional Examples"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Additional Examples"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 176-177; html_block; under Aspose.Imaging FOSS for .NET > Additional Examples",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:032.html_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "<details>\n<summary>View Additional Examples</summary>"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Additional Examples"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 179-179; heading; under Aspose.Imaging FOSS for .NET > Additional Examples",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:033.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "### Probe a File Asynchronously"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Additional Examples > Probe a File Asynchronously"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 181-182; paragraph; under Aspose.Imaging FOSS for .NET > Additional Examples > Probe a File Asynchronously",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:034.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "`ProbeFileAsync()` and `ProbeAsync()` mirror their synchronous counterparts for use on a thread\nthat shouldn't block on I/O, such as an ASP.NET request handler:"
+    },
+    {
+      "attributes": {
+        "repository_files": "Aspose.Imaging.Foss",
+        "section": "Aspose.Imaging FOSS for .NET > Additional Examples > Probe a File Asynchronously"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 184-189; code_block; under Aspose.Imaging FOSS for .NET > Additional Examples > Probe a File Asynchronously",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:035.code_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "```csharp\nusing Aspose.Imaging.Foss;\n\nvar info = await ImageProbe.ProbeFileAsync(\"upload.png\", cancellationToken);\nConsole.WriteLine($\"{info.Format}: {info.Width}x{info.Height}\");\n```"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Additional Examples"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 191-191; heading; under Aspose.Imaging FOSS for .NET > Additional Examples",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:036.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "### Count Frames in a Multi-Frame GIF or a Multi-Page DJVU"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Additional Examples > Count Frames in a Multi-Frame GIF or a Multi-Page DJVU"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 193-195; paragraph; under Aspose.Imaging FOSS for .NET > Additional Examples > Count Frames in a Multi-Frame GIF or a Multi-Page DJVU",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:037.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "`FrameCount` is only populated with a real count for formats whose container actually records\none \u2014 an animated GIF's image-descriptor blocks, or the page components of a bundled\nmulti-page DJVU (DJVM) document:"
+    },
+    {
+      "attributes": {
+        "repository_files": "Aspose.Imaging.Foss",
+        "section": "Aspose.Imaging FOSS for .NET > Additional Examples > Count Frames in a Multi-Frame GIF or a Multi-Page DJVU"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 197-202; code_block; under Aspose.Imaging FOSS for .NET > Additional Examples > Count Frames in a Multi-Frame GIF or a Multi-Page DJVU",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:038.code_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "```csharp\nusing Aspose.Imaging.Foss;\n\nvar info = ImageProbe.ProbeFile(\"animation.gif\");\nConsole.WriteLine($\"{info.Format}: {info.FrameCount} frame(s)\");\n```"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Additional Examples"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 204-204; heading; under Aspose.Imaging FOSS for .NET > Additional Examples",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:039.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "### Detect a Format From an Unseekable Stream"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Additional Examples > Detect a Format From an Unseekable Stream"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 206-207; paragraph; under Aspose.Imaging FOSS for .NET > Additional Examples > Detect a Format From an Unseekable Stream",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:040.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "`DetectFormat` and `Probe` both buffer a non-seekable stream internally, so detection works the\nsame way over a network or compressed stream as it does over a file:"
+    },
+    {
+      "attributes": {
+        "repository_files": "Aspose.Imaging.Foss",
+        "section": "Aspose.Imaging FOSS for .NET > Additional Examples > Detect a Format From an Unseekable Stream"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 209-214; code_block; under Aspose.Imaging FOSS for .NET > Additional Examples > Detect a Format From an Unseekable Stream",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:041.code_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "```csharp\nusing Aspose.Imaging.Foss;\n\nusing var networkStream = GetUploadStream(); // CanSeek == false\nvar format = ImageProbe.DetectFormat(networkStream);\n```"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Additional Examples > Detect a Format From an Unseekable Stream"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 216-216; html_block; under Aspose.Imaging FOSS for .NET > Additional Examples > Detect a Format From an Unseekable Stream",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:042.html_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "</details>"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 218-218; heading; under Aspose.Imaging FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:043.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## API Reference"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > API Reference"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 220-221; paragraph; under Aspose.Imaging FOSS for .NET > API Reference",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:044.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "`ImageProbe` is the library's single entry point; it returns an `ImageFormat` value and an\n`ImageInfo` record for every supported format."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > API Reference"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 223-224; html_block; under Aspose.Imaging FOSS for .NET > API Reference",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:045.html_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "<details>\n<summary>View the Full API Surface</summary>"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > API Reference"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 226-226; heading; under Aspose.Imaging FOSS for .NET > API Reference",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:046.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "#### Detailed Member Reference"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > API Reference > Detailed Member Reference"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 228-244; list; under Aspose.Imaging FOSS for .NET > API Reference > Detailed Member Reference",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:047.list",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "- `ImageFormat` \u2014 enum of the 14 detectable formats, plus `Unknown` for anything unmatched.\n- `ImageInfo` \u2014 immutable result of a probe: `Format`, and the nullable `Width`, `Height`,\n  `BitDepth`, and `FrameCount` the format's header actually carried.\n- `ImageProbe` \u2014 static entry point: `DetectFormat`, `Probe`, `ProbeFile`, `ProbeAsync`, and\n  `ProbeFileAsync`.\n\n- `ImageProbe.DetectFormat(Stream stream) -> ImageFormat` / `DetectFormat(byte[] data) -> ImageFormat`\n  \u2014 signature-only match, no dimension parsing.\n- `ImageProbe.Probe(Stream stream) -> ImageInfo` / `Probe(byte[] data) -> ImageInfo` / `Probe(FileInfo file) -> ImageInfo`\n  \u2014 full header parse for whichever format's signature matches.\n- `ImageProbe.ProbeFile(string path) -> ImageInfo` \u2014 opens the file and calls `Probe`.\n- `ImageProbe.ProbeAsync(Stream stream, CancellationToken cancellationToken = default) -> Task<ImageInfo>` /\n  `ProbeFileAsync(string path, CancellationToken cancellationToken = default) -> Task<ImageInfo>`\n  \u2014 async counterparts of `Probe`/`ProbeFile`.\n- `ImageInfo(ImageFormat format, int? width = null, int? height = null, int? bitDepth = null, int? frameCount = null)`\n  \u2014 the only public constructor; every field besides `Format` is nullable because not every\n  format's header carries all four."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > API Reference > Detailed Member Reference"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 246-246; html_block; under Aspose.Imaging FOSS for .NET > API Reference > Detailed Member Reference",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:048.html_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "</details>"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 248-248; heading; under Aspose.Imaging FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:049.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## Documentation & Resources"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Documentation & Resources"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 250-258; list; under Aspose.Imaging FOSS for .NET > Documentation & Resources",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:050.list",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "- **[Getting started guide](https://docs.aspose.org/imaging/net/)** \u2014 installation and a\n  first probe, walked through step by step.\n- **[How-to guides & FAQ](https://kb.aspose.org/imaging/net/)** \u2014 task-focused answers for\n  common format-detection questions.\n- **[Full API reference](https://reference.aspose.org/imaging/net/)** \u2014 the complete browsable\n  reference for `ImageFormat`, `ImageInfo`, and `ImageProbe`.\n- Found a bug or have a feature request?\n  [Open an issue](https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET/issues)\n  on GitHub."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 260-260; heading; under Aspose.Imaging FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:051.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## Scope and Limitations"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Scope and Limitations"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 262-279; list; under Aspose.Imaging FOSS for .NET > Scope and Limitations",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:052.list",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "- **Detection and metadata only.** `ImageProbe` identifies a format and reads its header fields;\n  it never decodes pixel data, so there is no rendering, editing, or format-conversion\n  capability anywhere in the library.\n- **Frame count reflects only what the container itself records.** It is a real, computed count\n  for GIF, ICO, TIFF, and bundled multi-page DJVU (DJVM); every other supported format reports a\n  fixed `1` for a successfully parsed header, since none of their headers carry a genuine frame\n  or page count. An indirect (multi-file) DJVM document, or a truncated bundled one, reports\n  `FrameCount` as `null`, since its pages can't all be seen from the one file.\n- **Non-placeable WMF is detected but not dimensioned.** The classic (non-placeable) WMF header\n  carries no bounding rectangle, so `Probe` returns a format-only `ImageInfo` for it; only the\n  placeable WMF header (identified by its own magic number) yields `Width`/`Height`.\n  Placeable-WMF dimensions assume a conventional 96 DPI target, since the header only stores\n  units-per-inch bounds.\n- **DICOM parsing stops at the first undefined-length element.** A sequence or encapsulated\n  pixel-data element with an undefined length ends the walk rather than being parsed, since\n  `Rows`/`Columns`/`BitsAllocated` always precede such elements in a conformant file.\n- **CDR support is planned but not yet implemented** \u2014 no `CdrFormatHandler` exists in the\n  current source tree."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Scope and Limitations"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 281-283; paragraph; under Aspose.Imaging FOSS for .NET > Scope and Limitations",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:053.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "These limitations apply only to Aspose.Imaging FOSS \u2014 they don't carry over to\n[Aspose.Imaging for .NET \u2014 Enterprise Edition](https://products.aspose.com/imaging/net/), which\nadds full decoding, editing, rendering, and conversion across a much broader format range."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 285-285; heading; under Aspose.Imaging FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:054.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## Development and Testing"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Development and Testing"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 287-287; paragraph; under Aspose.Imaging FOSS for .NET > Development and Testing",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:055.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "Run the test suite from the repository root:"
+    },
+    {
+      "attributes": {
+        "repository_files": "Aspose.Imaging.Foss.Tests.csproj,tests/Aspose.Imaging.Foss.Tests/Aspose.Imaging.Foss.Tests.csproj",
+        "section": "Aspose.Imaging FOSS for .NET > Development and Testing"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 289-291; code_block; under Aspose.Imaging FOSS for .NET > Development and Testing",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:056.code_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "```bash\ndotnet test tests/Aspose.Imaging.Foss.Tests/Aspose.Imaging.Foss.Tests.csproj\n```"
+    },
+    {
+      "attributes": {
+        "repository_files": ".github/workflows/release.yml,release.yml",
+        "section": "Aspose.Imaging FOSS for .NET > Development and Testing"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 293-296; paragraph; under Aspose.Imaging FOSS for .NET > Development and Testing",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:057.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "The test project targets `net9.0` and references the library via a plain `ProjectReference` \u2014\nno packaged dependency is required to build or test the library itself. A tagged\n`v<major>.<minor>.<patch>` push runs [`.github/workflows/release.yml`](.github/workflows/release.yml),\nwhich builds and publishes the package."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > Development and Testing"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 298-300; paragraph; under Aspose.Imaging FOSS for .NET > Development and Testing",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:058.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "Adding a new format means implementing `IFormatHandler` (signature match + header parse) under\n`src/Aspose.Imaging.Foss/Formats` and registering it in `ImageProbe`. Pull requests for new\nformats or wider tag/chunk coverage on existing ones are welcome."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 302-302; heading; under Aspose.Imaging FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:059.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## License"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.Imaging FOSS for .NET > License"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 304-306; paragraph; under Aspose.Imaging FOSS for .NET > License",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:060.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "This project is licensed under the [MIT License](LICENSE). The MIT License permits use,\ncopying, modification, distribution, sublicensing, and commercial use, provided its copyright\nand permission notice are retained. The software is provided without warranty."
+    },
+    {
+      "attributes": {
+        "install_kind": "source"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "install command for the package id declared by the manifest",
+          "path": "src/Aspose.Imaging.Foss/Aspose.Imaging.Foss.csproj"
+        },
+        {
+          "detail": "package registry: distribution not found on nuget",
+          "path": "https://api.nuget.org/v3-flatcontainer/aspose.imaging.foss/index.json"
+        },
+        {
+          "detail": "verified source build: an example executed against this revision, proving the source compiles even though the registry does not yet list the package",
+          "path": "examples.json"
+        }
+      ],
+      "id": "install_command:dotnet",
+      "kind": "install_command",
+      "polarity": "SUPPORTED",
+      "value": "git clone https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET.git\ncd Aspose.Imaging-FOSS-for-.NET\ndotnet build"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": null,
+          "path": "LICENSE"
+        }
+      ],
+      "id": "license:file",
+      "kind": "license",
+      "polarity": "SUPPORTED",
+      "value": "LICENSE"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "license text states this license",
+          "path": "LICENSE"
+        }
+      ],
+      "id": "license:spdx",
+      "kind": "license",
+      "polarity": "SUPPORTED",
+      "value": "MIT"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; external; text 'CI'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED",
+          "path": "https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET/actions/workflows/ci.yml/badge.svg"
+        }
+      ],
+      "id": "link_target:001",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET/actions/workflows/ci.yml/badge.svg"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; external; text 'CI'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED",
+          "path": "https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET/actions/workflows/ci.yml"
+        }
+      ],
+      "id": "link_target:002",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET/actions/workflows/ci.yml"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; external; text 'License: MIT'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED",
+          "path": "https://img.shields.io/badge/License-MIT-blue.svg"
+        }
+      ],
+      "id": "link_target:003",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://img.shields.io/badge/License-MIT-blue.svg"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; relative; text 'License: MIT'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: tree contains LICENSE",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:004",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "LICENSE"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; external; text 'Contributors'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED",
+          "path": "https://img.shields.io/github/contributors/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET.svg"
+        }
+      ],
+      "id": "link_target:005",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://img.shields.io/github/contributors/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET.svg"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; external; text 'Contributors'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED",
+          "path": "https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET/graphs/contributors"
+        }
+      ],
+      "id": "link_target:006",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET/graphs/contributors"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 5; external; text 'Aspose.Imaging FOSS for .NET'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED",
+          "path": "https://products.aspose.org/media/imaging/net/banner-readme.png"
+        }
+      ],
+      "id": "link_target:007",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://products.aspose.org/media/imaging/net/banner-readme.png"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 5; external; text 'Aspose.Imaging FOSS for .NET'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED",
+          "path": "https://products.aspose.org/imaging/net/"
+        }
+      ],
+      "id": "link_target:008",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://products.aspose.org/imaging/net/"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; anchor; text 'At a Glance'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: heading #at-a-glance exists",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:009",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "#at-a-glance"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 17; anchor; text 'Key Capabilities'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: heading #key-capabilities exists",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:010",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "#key-capabilities"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; anchor; text 'Installation'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: heading #installation exists",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:011",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "#installation"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 19; anchor; text 'Dependencies'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: heading #dependencies exists",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:012",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "#dependencies"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 20; anchor; text 'Quick Start'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: heading #quick-start exists",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:013",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "#quick-start"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; anchor; text 'Additional Examples'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: heading #additional-examples exists",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:014",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "#additional-examples"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 22; anchor; text 'API Reference'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: heading #api-reference exists",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:015",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "#api-reference"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 23; anchor; text 'Documentation & Resources'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: heading #documentation--resources exists",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:016",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "#documentation--resources"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 24; anchor; text 'Scope and Limitations'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: heading #scope-and-limitations exists",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:017",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "#scope-and-limitations"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 25; anchor; text 'Development and Testing'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: heading #development-and-testing exists",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:018",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "#development-and-testing"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 26; anchor; text 'License'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: heading #license exists",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:019",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "#license"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 250; external; text 'Getting started guide'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED",
+          "path": "https://docs.aspose.org/imaging/net/"
+        }
+      ],
+      "id": "link_target:020",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://docs.aspose.org/imaging/net/"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 252; external; text 'How-to guides & FAQ'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED",
+          "path": "https://kb.aspose.org/imaging/net/"
+        }
+      ],
+      "id": "link_target:021",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://kb.aspose.org/imaging/net/"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 254; external; text 'Full API reference'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED",
+          "path": "https://reference.aspose.org/imaging/net/"
+        }
+      ],
+      "id": "link_target:022",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://reference.aspose.org/imaging/net/"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 256; external; text 'Open an issue'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED",
+          "path": "https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET/issues"
+        }
+      ],
+      "id": "link_target:023",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET/issues"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 281; external; text 'Aspose.Imaging for .NET \u2014 Enterprise Edition'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED",
+          "path": "https://products.aspose.com/imaging/net/"
+        }
+      ],
+      "id": "link_target:024",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://products.aspose.com/imaging/net/"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 293; relative; text '.github/workflows/release.yml'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: tree contains .github/workflows/release.yml",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:025",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": ".github/workflows/release.yml"
+    },
+    {
+      "attributes": {
+        "branch": "main",
+        "role": "build status badge",
+        "workflow": ".github/workflows/ci.yml"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "triggers push on main; runs dotnet; build status badge target",
+          "path": ".github/workflows/ci.yml"
+        }
+      ],
+      "id": "link_target:badge.ci",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET/actions/workflows/ci.yml"
+    },
+    {
+      "attributes": {
+        "role": "banner illustration"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "RESOLVED; banner illustration",
+          "path": "https://products.aspose.org/media/imaging/net/banner-readme.png"
+        }
+      ],
+      "id": "link_target:product.banner",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://products.aspose.org/media/imaging/net/banner-readme.png"
+    },
+    {
+      "attributes": {
+        "level": "platform",
+        "platform": "net",
+        "role": "enterprise"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "RESOLVED; enterprise target; platform level; slug net",
+          "path": "https://products.aspose.com/imaging/net/"
+        }
+      ],
+      "id": "link_target:product.enterprise",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://products.aspose.com/imaging/net/"
+    },
+    {
+      "attributes": {
+        "role": "product homepage"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "RESOLVED; product homepage",
+          "path": "https://products.aspose.org/imaging/net/"
+        }
+      ],
+      "id": "link_target:product.homepage",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://products.aspose.org/imaging/net/"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package id declared by the project file",
+          "path": "src/Aspose.Imaging.Foss/Aspose.Imaging.Foss.csproj"
+        }
+      ],
+      "id": "package:name",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss"
+    },
+    {
+      "attributes": {
+        "floor_declaration": "TargetFrameworks"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "target frameworks the project declares",
+          "path": "src/Aspose.Imaging.Foss/Aspose.Imaging.Foss.csproj"
+        }
+      ],
+      "id": "package:target_framework",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "netstandard2.0;net8.0"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; module; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageFormat.cs"
+        }
+      ],
+      "id": "public_symbol:aspose",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; module; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageFormat.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; module; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageFormat.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; enum; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageFormat.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageformat",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageFormat"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; class; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageInfo.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageinfo",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageInfo"
+    },
+    {
+      "attributes": {
+        "signature": "int?",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 8; method; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageInfo.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageinfo.bitdepth",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageInfo.BitDepth"
+    },
+    {
+      "attributes": {
+        "signature": "ImageFormat",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 5; method; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageInfo.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageinfo.format",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageInfo.Format"
+    },
+    {
+      "attributes": {
+        "signature": "int?",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 9; method; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageInfo.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageinfo.framecount",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageInfo.FrameCount"
+    },
+    {
+      "attributes": {
+        "signature": "int?",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 7; method; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageInfo.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageinfo.height",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageInfo.Height"
+    },
+    {
+      "attributes": {
+        "signature": "ImageInfo(ImageFormat format, int? width, int? height, int? bitDepth, int? frameCount)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 11; method; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageInfo.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageinfo.imageinfo",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageInfo.ImageInfo"
+    },
+    {
+      "attributes": {
+        "signature": "int?",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; method; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageInfo.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageinfo.width",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageInfo.Width"
+    },
+    {
+      "attributes": {
+        "symbol_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 10; class; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageprobe",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageProbe"
+    },
+    {
+      "attributes": {
+        "signature": "DetectFormat(Stream stream)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 32; method; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageprobe.detectformat",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageProbe.DetectFormat"
+    },
+    {
+      "attributes": {
+        "signature": "Probe(Stream stream)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 41; method; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageprobe.probe",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageProbe.Probe"
+    },
+    {
+      "attributes": {
+        "signature": "ProbeAsync(Stream stream, CancellationToken cancellationToken)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 89; method; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageprobe.probeasync",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageProbe.ProbeAsync"
+    },
+    {
+      "attributes": {
+        "signature": "ProbeFile(string path)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 83; method; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageprobe.probefile",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageProbe.ProbeFile"
+    },
+    {
+      "attributes": {
+        "signature": "ProbeFileAsync(string path, CancellationToken cancellationToken)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 115; method; public by declaration",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.imaging.foss.imageprobe.probefileasync",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Imaging.Foss.ImageProbe.ProbeFileAsync"
+    }
+  ],
+  "repository": "aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET",
+  "schema_version": 1,
+  "source_revision": "d947d11cc6b282443231c2025ee43bf974a335dd"
+}
