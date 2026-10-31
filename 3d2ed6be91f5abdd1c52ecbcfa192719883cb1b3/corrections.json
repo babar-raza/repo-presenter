@@ -1,0 +1,57 @@
+{
+  "confinement": {
+    "edits": 1,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "4fee37b3fea564aa114009bd351b9fa776647357ee2278f28c770f4c32f87562",
+  "edits": [
+    {
+      "detector": "enterprise_edition_naming",
+      "end": 39040,
+      "evidence": [
+        {
+          "fact_id": "link_target:product.enterprise",
+          "kind": "link_target",
+          "status": "SUPPORTED",
+          "value": "https://products.aspose.com/3d/java/"
+        }
+      ],
+      "index": 0,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 634,
+      "original": "the commercial Aspose.3D for Java",
+      "rationale": "line 634 names the aspose.com product with a substitute for its proper name ('the commercial Aspose.3D for Java'); the mission naming rule requires \"Enterprise Edition\" with no substitute wording",
+      "replacement": "Aspose.3D for Java — Enterprise Edition",
+      "start": 39007
+    }
+  ],
+  "lane": "L",
+  "original_sha256": "105243c34b3a3996904b9477d4bc1bb01dacd80122294c487d7041d5841ae64b",
+  "outcome": "CORRECTED",
+  "readme_path": "README.md",
+  "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Java",
+  "schema_version": 1,
+  "source_revision": "3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {
+    "FALSE_CLAIM_FIX": 1
+  },
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "format:input.glb",
+        "format:output.glb"
+      ],
+      "line": 0,
+      "reason": "2 verified format(s) named nowhere in the README; would fill At a Glance or Key Capabilities: format:input.glb, format:output.glb",
+      "text": ""
+    }
+  ]
+}
