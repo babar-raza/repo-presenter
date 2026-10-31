@@ -80,7 +80,7 @@ from markdown_it.token import Token
 from repo_presenter.core.facts import FactsDocument
 from repo_presenter.readme.composition.authoring import preserved_opening_text
 from repo_presenter.readme.composition.coverage import (
-    hard_tokens,
+    carries_hard_tokens,
     partly_printed,
     states_all,
 )
@@ -369,7 +369,7 @@ def _kept_text_printed(
     # correctly judged lost, not waved through on a family resemblance.
     if unit_id.rsplit(".", 1)[-1] not in {"paragraph", "list", "table"}:
         return False
-    carries_all = all(token in readme_text for token in hard_tokens(unit_text))
+    carries_all = carries_hard_tokens(unit_text, readme_text)
     return (
         carries_all
         and partly_printed(unit_text, readme_text)
