@@ -155,10 +155,29 @@ def _squash(text: str) -> str:
     return f" {_NON_WORD.sub(' ', text.lower()).strip()} "
 
 
+def _carries_link(href: str, document: str) -> bool:
+    """Whether ``document`` holds ``href`` as a link, not merely as a word. A relative target such
+    as ``AGENTS.md`` is also an ordinary word, so its bare appearance in prose does not carry the
+    link (the 3D-Java sentence ``see [AGENTS.md](AGENTS.md)`` was trimmed as already stated because
+    the word "AGENTS.md" appeared elsewhere, and the link was lost). An absolute URL still counts
+    when it is printed bare, since that is how a URL is written."""
+    if f"]({href}" in document or f"](<{href}" in document or f'href="{href}' in document:
+        return True
+    return href.startswith(("http://", "https://", "mailto:")) and href in document
+
+
+def carries_hard_tokens(text: str, document: str) -> bool:
+    """Whether ``document`` holds every command, URL and link target ``text`` carries."""
+    plain = [span.strip() for span in _SPAN.findall(text) if COMMAND.match(span)]
+    plain.extend(url.rstrip(".,;:") for url in _URL.findall(text))
+    return all(token in document for token in plain if token) and all(
+        _carries_link(href, document) for href in item_links(text) if href
+    )
+
+
 def _carries_all(text: str, shown: Destinations) -> bool:
     """Whether the document holds every command and link ``text`` carries."""
-    tokens = hard_tokens(text)
-    return not tokens or all(token in shown.document for token in tokens)
+    return carries_hard_tokens(text, shown.document)
 
 
 def _uncovered_items(

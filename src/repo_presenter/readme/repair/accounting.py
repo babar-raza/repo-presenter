@@ -33,7 +33,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any, NamedTuple
 
-from repo_presenter.readme.composition.coverage import hard_tokens, states_all
+from repo_presenter.readme.composition.coverage import carries_hard_tokens, states_all
 from repo_presenter.readme.composition.list_coverage import stems
 from repo_presenter.readme.composition.placement import (
     PLACED,
@@ -382,7 +382,7 @@ def _section_covering(
     fragment for a stem-overlap test to mean anything."""
     if len(stems(text)) < _MIN_STEMS_FOR_REDUNDANCY:
         return None
-    if not all(token in candidate.readme for token in hard_tokens(text)):
+    if not carries_hard_tokens(text, candidate.readme):
         return None
     texts = section_texts(candidate.readme)
     for section in _included_sections(candidate.plan):
