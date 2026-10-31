@@ -5,7 +5,7 @@
   "provider_repository_id": 1203447266,
   "registry_revision": null,
   "active_transaction_id": "d19808bd67164e80b3ed9f9afdb9c69c",
-  "state": "INVALIDATED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -18,12 +18,12 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (heading 'Examples')",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-10-30T19:26:50.331731+00:00",
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "INVALIDATED",
+    "occurred_at": "2026-10-31T01:13:34.295100+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 2
   },
   "lease": null,
   "last_transition": {
@@ -40,10 +40,10 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 20,
+  "state_version": 21,
   "recent_trigger_dedup_keys": {
     "run:41079914003:aspose-cells-foss/Aspose.Cells-FOSS-for-.NET": "4d97c04cbe1e480eb97290b5bf8555e9",
     "run:41112824093:aspose-cells-foss/Aspose.Cells-FOSS-for-.NET": "d19808bd67164e80b3ed9f9afdb9c69c"
   },
-  "recovery_count": 1
+  "recovery_count": 2
 }
