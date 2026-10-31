@@ -13,6 +13,7 @@ not tracked anywhere in this repository, so the summary says so instead of inven
 
 from __future__ import annotations
 
+import subprocess
 from collections import Counter
 from collections.abc import Callable, Iterable, Iterator
 from contextlib import contextmanager
@@ -28,6 +29,7 @@ from repo_presenter.core.candidates import (
     NO_BUNDLE,
     lane_status,
 )
+from repo_presenter.core.state.bundle_store import BUNDLE_REF_PREFIX, bundle_ref
 from repo_presenter.core.state.git_backend import GitStateBackend
 
 NO_RECORD = "NO_RECORD"
@@ -51,6 +53,19 @@ class MatrixRow:
     record_l: str
     committed_r: str
     committed_l: str
+    stored_r: bool = False
+    stored_l: bool = False
+
+
+def stored_bundle_refs(remote: str = "origin") -> frozenset[str]:
+    """The ref names under the durable bundle prefix on ``remote`` (one ``git ls-remote``)."""
+    listed = subprocess.run(
+        ["git", "ls-remote", remote, f"{BUNDLE_REF_PREFIX}/*"],
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout
+    return frozenset(line.split("\t")[1] for line in listed.splitlines() if "\t" in line)
 
 
 @contextmanager
@@ -71,9 +86,13 @@ def backend_reader(remote: str = "origin") -> Iterator[StateReader]:
 
 
 def build_matrix(
-    entries: Iterable[_Entry], read_state: StateReader, root: Path
+    entries: Iterable[_Entry],
+    read_state: StateReader,
+    root: Path,
+    stored_refs: Iterable[str] = (),
 ) -> list[MatrixRow]:
     candidates = root / CANDIDATES_DIRNAME
+    stored = frozenset(stored_refs)
     rows: list[MatrixRow] = []
     for entry in entries:
         slug_dir = candidates / entry.repository.replace("/", "__")
@@ -90,6 +109,8 @@ def build_matrix(
                 record_l=read_state(entry.repository, LANE_L) or NO_RECORD,
                 committed_r=committed[LANE_R],
                 committed_l=committed[LANE_L],
+                stored_r=bundle_ref(entry.repository, LANE_R) in stored,
+                stored_l=bundle_ref(entry.repository, LANE_L) in stored,
             )
         )
     return rows
@@ -113,6 +134,8 @@ def summarize(rows: Iterable[MatrixRow]) -> dict[str, object]:
         "both_lanes_pipeline_good": sorted(good_r & good_l),
         "committed_bundles_lane_r": sum(1 for row in rows if row.committed_r != NO_BUNDLE),
         "committed_bundles_lane_l": sum(1 for row in rows if row.committed_l != NO_BUNDLE),
+        "durable_bundles_lane_r": sum(1 for row in rows if row.stored_r),
+        "durable_bundles_lane_l": sum(1 for row in rows if row.stored_l),
         "owner_reviewed": "not tracked: no owner review record exists in this repository",
     }
 
@@ -120,12 +143,13 @@ def summarize(rows: Iterable[MatrixRow]) -> dict[str, object]:
 def render(rows: Iterable[MatrixRow], summary: dict[str, object]) -> str:
     lines = [
         f"{'repository':<58} {'eco':<10} {'mode':<8} {'R record':<20} {'L record':<20} "
-        f"{'R bundle':<10} {'L bundle':<10}"
+        f"{'R bundle':<10} {'L bundle':<10} {'R stored':<9} {'L stored':<9}"
     ]
     for row in rows:
         lines.append(
             f"{row.repository:<58} {row.ecosystem:<10} {row.mode:<8} {row.record_r:<20} "
-            f"{row.record_l:<20} {row.committed_r:<10} {row.committed_l:<10}"
+            f"{row.record_l:<20} {row.committed_r:<10} {row.committed_l:<10} "
+            f"{'yes' if row.stored_r else '-':<9} {'yes' if row.stored_l else '-':<9}"
         )
     lines.append("")
     lines.extend(f"{key}: {value}" for key, value in summary.items())

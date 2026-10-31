@@ -19,6 +19,7 @@ from repo_presenter.core.portfolio_matrix import (
     build_matrix,
     summarize,
 )
+from repo_presenter.core.git_safety.git import run_git
 from repo_presenter.core.state.git_backend import GitStateBackend
 from repo_presenter.core.state.schema import RepositoryRecord
 
@@ -91,3 +92,28 @@ def test_the_real_git_backend_reader_returns_each_lanes_own_state(tmp_path: Path
     assert by_repo[A.repository].record_r == "ACCEPTED"
     assert by_repo[A.repository].record_l == "OBSERVED"
     assert by_repo[B.repository].record_r == NO_RECORD
+
+
+def test_stored_bundle_refs_mark_each_lane_separately(tmp_path: Path) -> None:
+    """A good record says nothing about whether a bundle survives; the durable refs do."""
+    from repo_presenter.core.state.bundle_store import bundle_ref
+
+    refs = {bundle_ref(A.repository, "R"), bundle_ref(B.repository, "L")}
+    rows = build_matrix([A, B, C], _reader({}), tmp_path, refs)
+    by_repo = {row.repository: row for row in rows}
+    assert (by_repo[A.repository].stored_r, by_repo[A.repository].stored_l) == (True, False)
+    assert (by_repo[B.repository].stored_r, by_repo[B.repository].stored_l) == (False, True)
+    assert (by_repo[C.repository].stored_r, by_repo[C.repository].stored_l) == (False, False)
+    summary = summarize(rows)
+    assert summary["durable_bundles_lane_r"] == 1 and summary["durable_bundles_lane_l"] == 1
+
+
+def test_stored_bundle_refs_lists_the_remote_refs(tmp_path: Path) -> None:
+    from repo_presenter.core.portfolio_matrix import stored_bundle_refs
+    from repo_presenter.core.state.bundle_store import bundle_ref
+
+    remote = init_git_repository(tmp_path / "remote")
+    head = run_git(["rev-parse", "HEAD"], cwd=remote).stdout.strip()
+    ref = bundle_ref(A.repository, "L")
+    assert run_git(["update-ref", ref, head], cwd=remote).returncode == 0
+    assert stored_bundle_refs(str(remote)) == frozenset({ref})
