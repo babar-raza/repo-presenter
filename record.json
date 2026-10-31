@@ -19,9 +19,9 @@
   "proposal": null,
   "failure": {
     "classification": "transient",
-    "detail": "model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: presentation_planning: output rejected twice; last rejection: link 'link_target:001' is assigned more than once; never the same target twice; link 'link_target:002' is assigned more than once; never the same target twice; link 'link_target:003' is assigned more than once; never the same target twice; link 'link_target:007' is assigned more than once; never the same target twice; link 'link_target:010' is assigned more than once; never the same target twice; link 'link_target:012' is assigned more than once; never the same target twice; link 'link_target:014' is assigned more than once; never the same target twice; link 'link_target:017' is assigned more than once; never the same target twice; link 'link_target:022' is assigned more than once; never the same target twice; link 'link_target:023' is assigned more than once; never the same target twice; link 'link_target:025' is assigned more than once; never the same target twice; link 'link_target:026' is assigned more than once; never the same target twice",
+    "detail": "no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): unit u3 (scope_limitations, development_testing): the reviewer's reply broke the contract after the one re-ask; independent_review: output rejected twice; last rejection: finding F02: a contradiction finding must cite at least one product fact (not only inherited text)",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-10-31T07:33:31.293175+00:00",
+    "occurred_at": "2026-10-31T13:42:15.986349+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 16,
+  "state_version": 17,
   "recent_trigger_dedup_keys": {
     "run:41121235240:aspose-words-foss/Aspose.Words-FOSS-for-.NET": "371aa95f80574c74828e7d250840db93",
     "run:41125275923:aspose-words-foss/Aspose.Words-FOSS-for-.NET": "d43f7964ae9940cbadd859e7dcc3bb37",
