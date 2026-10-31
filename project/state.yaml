@@ -3271,10 +3271,24 @@ next_ready_items:
       exempt a name). Falsifier confirmed: reverted only claims.py, kept the new tests -- the
       positive test fails with the exact original finding reproduced, both negative controls
       keep passing throughout (proving they test the right boundary, not a tautology); restored
-      after. Full suite: 3364 passed, 11 skipped, exit 0, run before this commit. NOT YET
-      verified live -- ready for review, not accepted, until fresh hosted Lane L re-runs of both
-      repositories show the sub-project-name finding(s) gone via the real verdict file read
-      directly.
+      after. Full suite: 3364 passed, 11 skipped, exit 0, run before this commit.
+    twenty_first_fix_live_verified_confirmed_precise_2026_10_30: >
+      Dispatched both live verification runs (aspose-pdf-foss/.NET 41167960925, aspose-psd-
+      foss/.NET 41167968081), Lane L. Read .present-work/lane-l/review_verdict.json directly for
+      both, not the bare pass/fail. aspose-pdf-foss/.NET: genuine ACCEPT -- model_served
+      "qwen3-next", 7 real unit_reviews each with a real request/reply sha256 pair and 0
+      findings, top-level findings: [] -- confirmed NOT the S9-sentinel shape (model_served null
+      would mean S10 never ran; here it plainly did, on every unit). The sub-project-name
+      finding is genuinely gone and the Lane L candidate sealed. aspose-psd-foss/.NET: REJECT,
+      exactly as it should be -- findings: [ONE entry], and read it directly: it is precisely
+      the "not published" claim_contradiction this fix was never meant to touch (same quote,
+      same line 55, same wording this card already recorded before this fix existed). Zero
+      sub-project-name findings present. unit_reviews: [] / model_served: null here correctly
+      means a deterministic BC-level finding blocked before S10 ever ran (the established
+      reading, not a sentinel false-positive). Both outcomes precisely match the predicted,
+      surgical scope of the fix: 8 false findings cleared across both repositories, the one
+      genuinely real defect on PSD-.NET untouched. Twenty-first fix CONFIRMED, live, on both
+      originally-affected repositories.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
