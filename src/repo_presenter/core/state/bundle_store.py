@@ -144,6 +144,21 @@ def publish_bundle(
         raise BundleStoreError(str(exc)) from exc
 
 
+def _require_contained(ref: str, relative: str, target: Path) -> None:
+    """Refuse a stored path that is absolute, drive-qualified, uses a backslash or a ``..`` part,
+    or would resolve outside ``target`` on this machine."""
+    separators = chr(92)
+    if (
+        not relative
+        or Path(relative).is_absolute()
+        or ":" in relative
+        or separators in relative
+        or ".." in Path(relative).parts
+        or not (target / relative).resolve().is_relative_to(target.resolve())
+    ):
+        raise BundleStoreError(f"{ref}: refusing unsafe path {relative!r}")
+
+
 def _current_revision(lane_root: Path) -> str:
     current = lane_root / CURRENT_FILENAME
     if not current.is_file():
@@ -170,12 +185,18 @@ def export_bundle(
             if sha is None:
                 raise BundleStoreError(f"no stored bundle at {ref}")
             listing = _git(backend, ["ls-tree", "-r", "-z", sha], "ls-tree").split("\0")
+            entries = []
             for entry in filter(None, listing):
                 meta, relative = entry.split("\t", 1)
-                blob = meta.split()[2]
-                parts = Path(relative).parts
-                if Path(relative).is_absolute() or ".." in parts:
-                    raise BundleStoreError(f"{ref}: refusing unsafe path {relative!r}")
+                entries.append((meta.split()[2], relative))
+            # Every path is checked before the first byte is written, so a bad entry can never
+            # leave a partial export; the destination must start empty so a stale file from an
+            # earlier export can never be mistaken for part of this bundle.
+            for _blob, relative in entries:
+                _require_contained(ref, relative, target)
+            if target.exists() and any(target.iterdir()):
+                raise BundleStoreError(f"{target}: the export destination is not empty")
+            for blob, relative in entries:
                 data = subprocess.run(
                     ["git", "--git-dir", str(backend._git_cwd), "cat-file", "blob", blob],
                     stdin=subprocess.DEVNULL,

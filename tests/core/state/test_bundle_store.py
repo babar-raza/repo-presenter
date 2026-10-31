@@ -189,3 +189,45 @@ def test_a_relative_candidates_path_publishes(
     published = publish_bundle(REPO, "R", Path("candidates") / SLUG, remote=str(remote))
     assert published.changed and published.files == 3
     assert _tree_files(remote, published.ref)[0] == "7" * 40 + "/README.md"
+
+
+@pytest.mark.parametrize(
+    "relative",
+    [
+        "../evil.txt",
+        "a/../../evil.txt",
+        "/abs/evil.txt",
+        "D:evil.txt",
+        "C:/evil.txt",
+        "a" + chr(92) + "evil.txt",
+        "",
+    ],
+)
+def test_an_unsafe_stored_path_is_refused_before_anything_is_written(
+    tmp_path: Path, relative: str
+) -> None:
+    from repo_presenter.core.state.bundle_store import _require_contained
+
+    with pytest.raises(BundleStoreError, match="unsafe path"):
+        _require_contained("refs/x", relative, tmp_path / "out")
+
+
+def test_ordinary_nested_bundle_paths_are_accepted(tmp_path: Path) -> None:
+    from repo_presenter.core.state.bundle_store import _require_contained
+
+    for relative in ("CURRENT", "abc/manifest.json", "abc/sub/dir/file.json"):
+        _require_contained("refs/x", relative, tmp_path / "out")
+
+
+def test_export_refuses_a_destination_that_already_holds_files(
+    tmp_path: Path, remote: Path
+) -> None:
+    source = tmp_path / "candidates" / SLUG
+    _seal(source, "R", "6" * 40, b"x\n")
+    publish_bundle(REPO, "R", source, remote=str(remote))
+    stale = tmp_path / "out" / SLUG
+    stale.mkdir(parents=True)
+    (stale / "stale.txt").write_text("left over", encoding="utf-8")
+    with pytest.raises(BundleStoreError, match="not empty"):
+        export_bundle(REPO, "R", tmp_path / "out", remote=str(remote))
+    assert sorted(p.name for p in stale.iterdir()) == ["stale.txt"]
