@@ -5,7 +5,7 @@
   "provider_repository_id": 1250546660,
   "registry_revision": null,
   "active_transaction_id": "60019b396aef47d6b813e421dd442b66",
-  "state": "ACCEPTED",
+  "state": "INVALIDATED",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "sealed locally; bundle not durably published (a rerun republishes from the restored bundle with zero provider calls): BundleStoreError: hash-object 10a363830fea952c29df20fdb37d35ad3a881433/README.md failed: fatal: could not open 'candidates/aspose-pdf-foss__Aspose.PDF-FOSS-for-.NET/lane-l/10a363830fea952c29df20fdb37d35ad3a881433/README.md' for reading: No such file or directory",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-31T06:41:19.291018+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:41177479590",
     "acquired_at": "2026-10-31T06:41:02.288607+00:00",
@@ -26,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "2ccc39ff297e48e294d78751924e3791",
+    "transition_id": "7e7035a10ddf4651bebae847eb879665",
     "transaction_id": "60019b396aef47d6b813e421dd442b66",
     "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET",
-    "from_state": "REVIEWING",
-    "to_state": "ACCEPTED",
-    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
-    "occurred_at": "2026-10-31T04:20:11.012599+00:00",
+    "from_state": "ACCEPTED",
+    "to_state": "INVALIDATED",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-31T06:41:18.873674+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET",
     "output_manifest": "candidates/aspose-pdf-foss__Aspose.PDF-FOSS-for-.NET/lane-l/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 17,
+  "state_version": 18,
   "recent_trigger_dedup_keys": {
     "run:41121225716:aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET": "63e486e493f6430da6c8f97328990c3e",
     "run:41167960925:aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET": "60019b396aef47d6b813e421dd442b66"
