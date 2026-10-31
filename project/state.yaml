@@ -2907,6 +2907,13 @@ next_ready_items:
       name 'doc'/'page'/'createTable'/'g'", suggesting the README's examples assume shared
       variables from a preceding snippet that is not actually in scope for each standalone
       block) -- a real, substantial content problem only Lane R could fix, not a Lane L defect.
+      aspose-pdf-foss/Java (41147002918): reached S9 for the first time and found a genuinely
+      NEW deterministic finding, disposition_coverage (distinct from live_readme_loss/duplicate_
+      paragraph seen so far): inherited_unit:050.html_block (a "<details><summary>View the Core
+      API Surface</summary>" collapsible wrapper) is kept VERIFIED_PRESERVE but its text is not
+      actually printed anywhere in the candidate README -- the inverse of live_readme_loss (a
+      disposition claims content survives when it does not, rather than content vanishing with
+      no disposition at all). A single occurrence; not yet investigated.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
