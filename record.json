@@ -18,10 +18,10 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "transient",
-    "detail": "model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected three times (the third a narrowed ask for the units a rejection actually named); last rejection: inherited_unit:037.paragraph: dangling_pointer: VERIFIED_MOVE keeps it as written in additional_examples, but its sentence \"Every example below was compiled against this tree and run.\" says 'example below' but no code follows it in this section; and \"The flagship example below wires two shapes together with a connector; more usage examples are collapsed below it.\" says 'example below' but no code follows it in this section. Kept units print after the section's own content, so a pointer to what follows is answered only by a unit kept right after it in the same section: keep that unit there too, or choose VERIFIED_REWRITE (the wording is re-authored from facts, without the pointer), or OMIT_UNSUPPORTED citing the fact that shows the claim unsupported",
+    "classification": "validation_failed",
+    "detail": "PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (code block \"Export format 'Pdf' is not supported. Writable for\")",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-10-30T19:13:58.533274+00:00",
+    "occurred_at": "2026-10-31T07:41:02.852871+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 4,
+  "state_version": 5,
   "recent_trigger_dedup_keys": {
     "run:41112860184:aspose-slides-foss/Aspose.Slides-FOSS-for-Java": "1e333ad4250b44d9a344769a33adb6f4",
     "run:41180170192:aspose-slides-foss/Aspose.Slides-FOSS-for-Java": "f422e69edfe14c2c98b60607b4fcc1b2"
