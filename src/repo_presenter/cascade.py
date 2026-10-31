@@ -87,6 +87,7 @@ from repo_presenter.readme.composition.planning import (
     plan_checks,
     planning_packet,
     planning_schema,
+    recover_planning_output,
     write_plan,
 )
 from repo_presenter.readme.composition.renderer import render_patch, render_readme
@@ -280,9 +281,12 @@ def _run_planning(
     def checks(output: dict) -> list[str]:
         return plan_checks(output, document, dispositions=dispositions, ecosystem=ecosystem)
 
+    def recover(output: dict) -> dict | None:
+        return recover_planning_output(output, document)
+
     result = run_job(
         loaded, packet, config=config, facts=document, ledger=ledger, store=store,
-        context=context, call_schema=call_schema, checks=checks,
+        context=context, call_schema=call_schema, checks=checks, recover=recover,
     )
     return result.output
 

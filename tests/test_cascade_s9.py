@@ -931,3 +931,66 @@ def test_a_repair_that_still_fails_bc12_blocks_again_and_is_never_retried(
     assert attempt["re_raised"] == [defect.label]  # but it blocks again the very next pass
     bc12 = next(c for c in run.json("validation.json")["checks"] if c["id"] == "BC-12")
     assert bc12["verdict"] == "FAIL"  # validate_candidate's own BC-12 was never weakened
+
+
+# --- S5: presentation_planning's own recover= is actually wired ------------------------------
+
+
+def test_a_persistent_duplicate_link_assignment_is_recovered_at_presentation_planning(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Measured live (aspose-words-foss/Aspose.Words-FOSS-for-.NET, hosted run 41180018042, branch
+    fix/link-budget-tiers): once an earlier blocker cleared, the run reached presentation_planning
+    and failed there because the model assigned the same link_target fact to two links entries.
+    planning.py's own recover_planning_output already existed for exactly this shape, but
+    cascade.py's _run_planning never passed recover= into its run_job call -- dead code, never
+    reachable on a real run. Drives the real cascade end to end, with the model repeating the same
+    duplicate-link plan on both its first attempt and its own re-ask (the shape a persistent model
+    mistake takes, not a one-off reply this test could sidestep), to prove the wiring itself."""
+    plugin_for("python")
+    entry = make_entry()
+    clone = tmp_path / "clone"
+    clone.mkdir()
+    (clone / "README.md").write_text(README, encoding="utf-8", newline="\n")
+    base_facts = make_facts()
+    link_fact = Fact(
+        "link_target:001",
+        "link_target",
+        "https://docs.example.com/widget",
+        (Evidence("README.md"),),
+    )
+    facts = FactsDocument(
+        base_facts.repository, base_facts.source_revision, (*base_facts.facts, link_fact)
+    )
+    facts_path = tmp_path / "facts.json"
+    write_facts(facts, facts_path)
+    registry_path = tmp_path / "registry.json"
+    _write_registry(registry_path, entry)
+    out = tmp_path / "out"
+
+    duplicate_links_plan = {
+        **_PLANNING_REPLY,
+        "links": [
+            {"link_fact_id": "link_target:001", "section_id": "scope_limitations"},
+            {"link_fact_id": "link_target:001", "section_id": "scope_limitations"},
+        ],
+    }
+    base_replies = _scripted_replies()
+    client = _FakeClient(
+        [
+            *base_replies[:2],
+            _completion(duplicate_links_plan),
+            _completion(duplicate_links_plan),
+            *base_replies[3:],
+        ]
+    )
+    monkeypatch.setattr(jobs_module.transport, "build_client", lambda config: client)
+
+    run_cascade(
+        entry.repository, "python", clone, facts_path=facts_path, out_dir=out,
+        config=CONFIG, registry_path=registry_path, max_rounds=1,
+    )
+
+    assert client.chat.completions.replies == []
+    plan = json.loads((out / "plan.json").read_text(encoding="utf-8"))
+    assert plan["links"] == [{"link_fact_id": "link_target:001", "section_id": "scope_limitations"}]
