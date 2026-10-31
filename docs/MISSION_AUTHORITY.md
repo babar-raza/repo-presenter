@@ -54,6 +54,69 @@ BC-04/BC-14 validators. No component from that chain may be pulled with a `REUSE
 disposition in `migration/reuse-manifest.yaml`; at most `ADAPT` or `FIXTURE_ONLY`,
 and only behind an independent re-verification this repo builds itself.
 
+## Do not repeat the predecessor projects' mistakes (owner instruction, 2026-11-01)
+
+This repository is the **third** iteration: `babar-raza/foss-readme-optimizer` →
+the old `repository-presenter` repo (trashed) → this repo. Both predecessors
+were trashed, not merely superseded, and the owner's explicit instruction is
+that this project must not get stuck in the same kind of loop, or repeat the
+same mistakes, as either of them. The concrete, independently re-verified
+failure modes from the immediate predecessor (`docs/history-reconstruction.md`,
+2026-10-21) are the operative lessons; `foss-readme-optimizer`'s own specific
+failure modes have not yet been independently inspected from this repo and must
+not be assumed beyond what `migration/reuse-manifest.yaml` already states about
+it (a transitive, not-yet-inspected salvage source) — do not fabricate detail
+for it that isn't independently confirmed.
+
+From the old `repository-presenter` repo, confirmed directly against its own
+evidence, not trusted from its own framing of itself:
+
+1. **Self-grading hid 27 of 30 sealed reviews' real defects.** An overbroad
+   demotion rule folded `REJECT` to `ACCEPT` whenever a finding's quoted span
+   matched a literal SUPPORTED fact value, conflating "this phrase is factually
+   correct" with "this finding has no merit" — hiding a dropped security
+   warning and a false API claim among others. This is exactly non-negotiable
+   #5 above (no agent/harness/reviewer may silently grade or overrule its own
+   negative finding); it was violated at scale, silently, for over a month.
+2. **A fix landed, but nothing already sealed was ever re-checked against it.**
+   The acceptance-integrity bug was fixed 2026-10-10; the 28 candidates sealed
+   before that fix were never independently re-verified against the fixed
+   logic — the project kept treating them as valid output regardless. A fix
+   is not complete until its effect on already-produced state is checked, not
+   just its effect on new output going forward.
+3. **An elaborate plan was authored, then abandoned after step one.** The
+   "Lane R dependability rebuild" (8 cards C1–C8, 9 metrics, floors) only ever
+   executed card C1; C2 through C8 never ran. Planning depth is not progress;
+   a plan this repository adopts must be tracked to actual completion or
+   explicitly abandoned with a reason, never left to quietly stall.
+4. **Scope was narrowed quietly, then the narrowing was confirmed broken
+   anyway.** Lane L was internally demoted to non-primary on 2026-10-14, six
+   days *before* the owner's own in-person review concluded Lane L "is also
+   broken like Lane R, so it is not a deliverable." Silently lowering the bar
+   on a lane does not make its output trustworthy — it was still broken when
+   someone actually looked.
+5. **Automated "ACCEPT" was not trustworthy even after the known bug was
+   fixed; manual review still found far more wrong.** The owner's own
+   2026-10-20 manual pass found 71/366 example facts CONTRADICTED, 8
+   contradicted + 80 unresolved links, and 30 missing-API findings across 19
+   repositories that the automated chain had not caught. Owner- or
+   human-reviewed status is never assumed from a pipeline's own green state.
+6. **Self-measuring metrics were circular at least once already.** The old
+   repo's own earlier dependability audit counted only the units the model
+   chose to keep (so deferring everything scored 100%), and some of its
+   metrics were restatements of the very gates they were meant to test. A
+   metric that cannot fail by construction is not a metric; this was caught
+   and fixed once already in the predecessor and must not be reintroduced here.
+
+**How this applies going forward:** before trusting any "ACCEPT"/sealed/green
+state in this repository, ask whether it could be hiding the same shape of
+defect as (1) or (6) above; before marking a fix complete, apply lesson (2) by
+checking its effect on already-produced candidates, not just new runs; before
+treating a multi-step plan as in progress, apply lesson (3) by confirming the
+later steps actually ran, not just the first one; never narrow a lane's scope
+or ambition quietly per lesson (4) — any such narrowing is a decision-log
+entry, named and justified, not a silent default.
+
 ## Still-valid outcome requirements (distilled from `idea.md`)
 
 A README candidate (either lane) must, at minimum:
