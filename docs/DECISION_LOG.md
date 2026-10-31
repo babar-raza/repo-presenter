@@ -876,3 +876,47 @@ reproduction of the exact finding text and the exact routing chain the hosted ru
 
 **Where the detail lives**: `src/repo_presenter/readme/validation/structure.py`
 (`_reference_failures`); `tests/readme/validation/test_registry_checks.py`.
+
+---
+
+## 2026-10-31: An independent status review found the pipeline's headline status unsupported; adopt evidence-gated status words, a branch-and-live-check push gate, and derived counts
+
+**Decision**: the following working rules are adopted, owner-approved on 2026-10-31 after an
+independent status review (re-verified against primary evidence in the same session):
+(1) the words "confirmed", "sealed" and "accepted" are used for a candidate only when a committed
+bundle exists, `data/reviewer_calibration.json` is PASSED, and the owner has reviewed it; otherwise
+the wording is "observed on run <id>" / "ready for review"; (2) a change that touches the hosted
+path goes on a branch and gets one live check before it merges to `main`; (3) the repository is
+searched for the constraint or keyword before a fix is built; (4) two failed rounds on one finding
+class, any revert, or a broken `main` means stop and report; (5) portfolio counts come from a
+derived command over the registry, the origin state refs and `candidates/`, never from typed
+values; (6) a fix is verified (tests plus live evidence) by an agent other than its author;
+(7) any revert, regression or push to `main` gets a same-day entry here; (8) no portfolio-widening
+dispatches until calibration iteration 4 is run or the owner waives it in writing.
+
+**Why**: verified facts at the time of the review. `data/reviewer_calibration.json` is NOT_PASSED
+(three iterations on 2026-10-27, `fdc9b83` last; iteration 4 never run although the precondition in
+`project/state.yaml` "at least 3 more real, independently-verified bases" is very likely met).
+`candidates/` holds one full bundle (3D-.NET, `6f8f9cb`, a manual seal) whose `review_verdict.json`
+is a 100-byte logic-v1 deterministic ACCEPT, with no model review; it dropped all 9 runnable
+examples and has overlapping opening paragraphs and contradictory format claims. The hosted
+workflow (`.github/workflows/present.yml`) has no step that commits a candidate; output survives
+only as a 14-day artifact and an evictable cache, plus one `record.json` per repository on the
+origin state refs. Latest durable records (49, fetched 2026-10-31): Lane R good state
+(ACCEPTED/READY_FOR_PROPOSAL) 4 of 36, Lane L 4 of 36, both lanes 1 (Cells-Java). 130 hosted runs
+since 2026-10-27: 16 green, 114 red. The `state.yaml` counters `lane_r_accepted: 34`,
+`lane_l_accepted: 36` and `repositories_independently_reviewed: 36` come from the 2026-10-21
+manual sweep (`evidence/build/P1_PORTFOLIO_SCALE/`), not from hosted runs or a derived command.
+Regressions found only by live checks, each pushed before it was checked: `968eb55` generalized
+the duplicate-preserved-paragraph check beyond "opening" and produced two false positives
+(VERIFIED_REWRITE contamination; blob contamination in list-heavy `api_reference`), reverted in
+`694bf6d`; `b72fe9e` added `uniqueItems` to `authoring_schema`, which the gateway answers with
+HTTP 400 (documented at `readme/investigation/dossier.py:56`), so Lane R section_authoring failed
+on `main`; the correction is `4f9258b` (branch `fix/restore-main-bound-citations`).
+
+**What this does NOT decide**: the calibration route (larger corpus, second-model reviewer, or
+declared limits), the persistence mechanism for candidates and its token, taskcards versus amending
+`AGENTS.md`, the pilot repository, and per-defect upstream authorization. Those stay with the owner.
+
+**Where the detail lives**: `project/state.yaml` (PORTFOLIO_WIDENING_2026_10_30 entries, now
+annotated), `data/reviewer_calibration.json`, `docs/investigations/2026-10-27-reviewer-calibration-iteration-3.md`.

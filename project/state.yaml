@@ -1,6 +1,8 @@
 schema_version: 1
 project: repo-presenter
-updated_at: "2026-10-21T19:00:00Z"
+updated_at: "2026-10-31T00:00:00Z"
+# 2026-10-31 owner-approved correction: current_gate, active_work_item and the progress counters below
+# were last set on 2026-10-21 and do not describe the hosted-era state; see progress.counters_status.
 
 authority:
   mission: plans/repository_presenter_fresh_start_supervisor_prompt.md
@@ -10,6 +12,17 @@ authority:
   history: docs/history-reconstruction.md
 
 progress:
+  counters_status: >
+    STALE, do not quote. repositories_independently_reviewed, lane_l_accepted, lane_r_accepted and
+    the related counters below come from the 2026-10-21 manual agent sweep
+    (evidence/build/P1_PORTFOLIO_SCALE/), before qwen3-next, the LLM reviewer and every hosted run;
+    nothing in src/, ops/ or scripts/ computes them. Observed on 2026-10-31 from the origin state
+    refs (49 records, latest run per repository and lane, so a later run overwrites an earlier one):
+    Lane R in ACCEPTED/READY_FOR_PROPOSAL 4 of 36 (Cells-.NET, Cells-Cpp, Cells-Java, HTML-Python);
+    Lane L 4 of 36 (3D-Java, Cells-Java, Cells-Rust, PDF-.NET); both lanes 1 (Cells-Java). Lane R
+    has a record for 28 repositories, Lane L for 21. None has been reviewed by the owner, reviewer
+    calibration is NOT_PASSED, and only one bundle (3D-.NET, deterministic-only ACCEPT) is committed
+    under candidates/. These are pipeline-level observations, not acceptances.
   unit: authorizable README candidates (independently verified by this repo's own reviewer, not inherited from the old repo's judge)
   registry_total: 36
   repositories_with_composed_candidates: 36
@@ -3318,6 +3331,13 @@ next_ready_items:
       commit. NOT YET verified live -- ready for review, not accepted, until a fresh hosted
       aspose-imaging-foss/.NET re-run shows section_authoring no longer failing with
       TruncatedOutput.
+      SUPERSEDED 2026-10-31: this approach is wrong and must not be reused. The live run
+      (41169943876) failed with "JobError: section_authoring: gateway answered HTTP 400" because the
+      gateway rejects uniqueItems (documented at readme/investigation/dossier.py:56, probed
+      2026-10-05, found only after the fix was pushed). The correction is commit 4f9258b on branch
+      fix/restore-main-bound-citations: authoring_schema restored, output_bounds.bound_authoring_
+      citations (maxItems only) applied to the initial ask and to repair's request-hash lookup.
+      Status of that correction is recorded in docs/DECISION_LOG.md (2026-10-31).
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
