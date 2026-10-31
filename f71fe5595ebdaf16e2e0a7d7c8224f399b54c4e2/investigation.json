@@ -1,0 +1,170 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:platform",
+      "package:target_framework",
+      "install_command:dotnet"
+    ],
+    "text": "Developers building .NET 8+ applications who need to generate, modify, and export Excel workbooks without requiring Microsoft Excel or native Office installations."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:aspose.cells_foss.workbook",
+        "public_symbol:aspose.cells_foss.worksheet",
+        "public_symbol:aspose.cells_foss.cells",
+        "public_symbol:aspose.cells_foss.cell"
+      ],
+      "text": "Create new workbooks and modify existing ones using Workbook, Worksheet, Cells, and Cell APIs to set values, formulas, and formatting.",
+      "title": "Create and edit workbooks"
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:aspose.cells_foss.style",
+        "public_symbol:aspose.cells_foss.font",
+        "public_symbol:aspose.cells_foss.fillpattern",
+        "public_symbol:aspose.cells_foss.border"
+      ],
+      "text": "Apply styles including fonts, colors, fills, borders, alignment, and locking to cells and ranges using Style and related APIs.",
+      "title": "Apply cell and range styling"
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "public_symbol:aspose.cells_foss.loadoptions",
+        "public_symbol:aspose.cells_foss.loaddiagnostics"
+      ],
+      "text": "Load potentially corrupted Excel files using LoadOptions with repair flags and inspect LoadDiagnostics for data loss risk.",
+      "title": "Load malformed files with diagnostics"
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:aspose.cells_foss.pdfsaveoptions",
+        "public_symbol:aspose.cells_foss.saveformat"
+      ],
+      "text": "Export workbooks to PDF format using PdfSaveOptions or SaveFormat.Pdf.",
+      "title": "Export to PDF"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.cells_foss.autofilter",
+        "public_symbol:aspose.cells_foss.listobject",
+        "public_symbol:aspose.cells_foss.validation",
+        "public_symbol:aspose.cells_foss.conditionalformattingcollection",
+        "public_symbol:aspose.cells_foss.hyperlink",
+        "public_symbol:aspose.cells_foss.definedname",
+        "public_symbol:aspose.cells_foss.comment",
+        "public_symbol:aspose.cells_foss.picture",
+        "public_symbol:aspose.cells_foss.shape",
+        "public_symbol:aspose.cells_foss.chart",
+        "public_symbol:aspose.cells_foss.pagesetup"
+      ],
+      "text": "Configure filters, tables, validations, conditional formatting, hyperlinks, defined names, comments, pictures, shapes, charts, and page setup.",
+      "title": "Configure worksheet features"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "text": "Only .xlsx is supported as the spreadsheet file format for load and save."
+    },
+    {
+      "fact_ids": [
+        "example:001"
+      ],
+      "text": "The library stores formulas but does not include a formula calculation engine."
+    },
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "text": "PDF export is supported, but there is no general HTML export or image export API."
+    },
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "text": "Macros, VBA, and pivot tables are outside the supported public API surface."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:platform",
+        "example:001"
+      ],
+      "text": "Enables programmatic Excel workbook creation and modification in .NET without Microsoft Excel dependencies."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "public_symbol:aspose.cells_foss.loadoptions",
+        "public_symbol:aspose.cells_foss.loaddiagnostics"
+      ],
+      "text": "Supports loading malformed Excel files with repair options and diagnostic reporting."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:aspose.cells_foss.pdfsaveoptions"
+      ],
+      "text": "Provides Excel-to-PDF export capability using a built-in renderer."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:family",
+      "identity:platform",
+      "identity:repository",
+      "package:name",
+      "package:published_version",
+      "package:target_framework",
+      "license:spdx",
+      "example:001"
+    ],
+    "text": "Aspose.Cells FOSS for .NET is an MIT-licensed .NET 8+ library for creating, loading, editing, and saving Excel .xlsx workbooks and exporting them to PDF."
+  },
+  "uncertainties": [
+    "The exact set of supported .xlsx features is not fully enumerated in the fact dossier.",
+    "Whether conditional formatting rules are evaluated or only stored is not specified.",
+    "The behavior of repair options on specific corruption types is not detailed.",
+    "The extent of chart rendering fidelity in PDF export is not specified.",
+    "Whether validation rules are enforced or only stored is not stated.",
+    "The support status of Excel tables (ListObject) beyond basic CRUD is unclear.",
+    "The behavior of workbook/worksheet protection in FOSS is not detailed.",
+    "Whether formula parsing is supported without calculation is not explicitly stated."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:aspose.cells_foss.workbook",
+        "public_symbol:aspose.cells_foss.worksheet",
+        "public_symbol:aspose.cells_foss.cells",
+        "public_symbol:aspose.cells_foss.cell",
+        "public_symbol:aspose.cells_foss.style",
+        "public_symbol:aspose.cells_foss.saveformat"
+      ],
+      "name": "Create and save workbook",
+      "text": "Create a new workbook, populate cells with values and formulas, apply header styling, and save as .xlsx and PDF."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "public_symbol:aspose.cells_foss.loadoptions",
+        "public_symbol:aspose.cells_foss.loaddiagnostics",
+        "public_symbol:aspose.cells_foss.workbook"
+      ],
+      "name": "Load and repair workbook",
+      "text": "Load a potentially malformed workbook using LoadOptions with repair flags, inspect diagnostics for data loss risk, then save the repaired workbook."
+    }
+  ]
+}

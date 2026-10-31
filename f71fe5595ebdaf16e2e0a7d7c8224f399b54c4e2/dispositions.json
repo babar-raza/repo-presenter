@@ -1,0 +1,390 @@
+{
+  "dispositions": [
+    {
+      "destination_section": "identity",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:published_version",
+        "package:registry_lag",
+        "package:target_framework",
+        "package:version"
+      ],
+      "rationale": "The H1 product name is rendered deterministically by the identity section.",
+      "unit_id": "inherited_unit:001.heading"
+    },
+    {
+      "destination_section": "badges",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:001",
+        "link_target:002",
+        "link_target:003",
+        "link_target:004",
+        "link_target:005",
+        "link_target:006",
+        "link_target:007",
+        "link_target:008",
+        "link_target:009",
+        "link_target:010",
+        "link_target:011",
+        "link_target:012",
+        "link_target:013",
+        "link_target:014",
+        "link_target:015",
+        "link_target:016",
+        "link_target:017",
+        "link_target:018",
+        "link_target:019",
+        "link_target:020",
+        "link_target:022",
+        "link_target:023",
+        "link_target:product.banner",
+        "link_target:product.enterprise",
+        "link_target:product.homepage"
+      ],
+      "rationale": "The badge row is rendered deterministically by the badges section.",
+      "unit_id": "inherited_unit:002.badge_row"
+    },
+    {
+      "destination_section": "banner",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:009",
+        "link_target:010",
+        "link_target:product.banner",
+        "link_target:product.enterprise",
+        "link_target:product.homepage"
+      ],
+      "rationale": "The banner image links to the Aspose product homepage and is supported by verified enterprise relationship targets.",
+      "unit_id": "inherited_unit:003.badge_row"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "package:name",
+        "package:published_version",
+        "package:target_framework",
+        "license:spdx",
+        "example:001"
+      ],
+      "rationale": "The paragraph's substance is covered by the product_summary fact_ids and example:001, supporting a rewritten opening summary.",
+      "unit_id": "inherited_unit:004.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_REWRITE",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:platform",
+        "install_command:dotnet",
+        "package:target_framework",
+        "public_symbol:aspose.cells_foss"
+      ],
+      "rationale": "The platform and target framework details are covered by identity and package facts, supporting inclusion in the opening summary.",
+      "unit_id": "inherited_unit:005.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_REWRITE",
+      "fact_ids": [
+        "package:target_framework"
+      ],
+      "rationale": "The removal of netstandard2.0 and requirement for .NET 8+ is a material limitation supported by the package target framework fact.",
+      "unit_id": "inherited_unit:006.paragraph"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision"
+      ],
+      "rationale": "The Navigation heading is rendered deterministically by the navigation section.",
+      "unit_id": "inherited_unit:007.heading"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision"
+      ],
+      "rationale": "The navigation list is rendered deterministically by the navigation section.",
+      "unit_id": "inherited_unit:008.list"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The Key Capabilities heading is placeable and matches the section heading; no facts contradict it.",
+      "unit_id": "inherited_unit:009.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_REWRITE",
+      "fact_ids": [
+        "example:001",
+        "public_symbol:aspose.cells_foss.workbook",
+        "public_symbol:aspose.cells_foss.worksheet",
+        "public_symbol:aspose.cells_foss.cells",
+        "public_symbol:aspose.cells_foss.cell",
+        "example:002",
+        "public_symbol:aspose.cells_foss.loadoptions",
+        "public_symbol:aspose.cells_foss.loaddiagnostics",
+        "public_symbol:aspose.cells_foss.pdfsaveoptions",
+        "public_symbol:aspose.cells_foss.saveformat",
+        "public_symbol:aspose.cells_foss.autofilter",
+        "public_symbol:aspose.cells_foss.listobject",
+        "public_symbol:aspose.cells_foss.validation",
+        "public_symbol:aspose.cells_foss.conditionalformattingcollection",
+        "public_symbol:aspose.cells_foss.hyperlink",
+        "public_symbol:aspose.cells_foss.definedname"
+      ],
+      "rationale": "The list items are supported by capabilities and public symbols, and are re-authored to match the capabilities section's action-led style.",
+      "unit_id": "inherited_unit:010.list"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "rationale": "The Installation heading is rendered deterministically by the installation section.",
+      "unit_id": "inherited_unit:011.heading"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "rationale": "The dotnet add package command is rendered deterministically by the installation section.",
+      "unit_id": "inherited_unit:012.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "CORRECT_WITH_EVIDENCE",
+      "fact_ids": [
+        "package:version",
+        "package:published_version"
+      ],
+      "rationale": "The version in the snippet (26.10.0.0) matches the package:version fact, and the registry's stable release (26.10.0) is documented in package:published_version;",
+      "unit_id": "inherited_unit:013.code_block"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The Quick Start heading is placeable and matches the section heading; no facts contradict it.",
+      "unit_id": "inherited_unit:014.heading"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "The example code block is verified as a supported example and matches the quick start requirement.",
+      "unit_id": "inherited_unit:015.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
+      "unit_id": "inherited_unit:016.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "The second example code block is verified as a supported example and matches the Additional Examples requirement.",
+      "unit_id": "inherited_unit:017.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:018.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "DEFER_UNRESOLVED",
+      "fact_ids": [
+        "link_target:019",
+        "build_test_asset:examples"
+      ],
+      "rationale": "The paragraph about runnable samples is supported by the examples directory and link_target facts.",
+      "unit_id": "inherited_unit:019.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "DEFER_UNRESOLVED",
+      "fact_ids": [
+        "link_target:019",
+        "build_test_asset:examples"
+      ],
+      "rationale": "The list of covered feature areas is supported by the examples directory and link_target facts.",
+      "unit_id": "inherited_unit:020.list"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "The paragraph introduces an example command already superseded by the verified Quick Start example.",
+      "unit_id": "inherited_unit:021.paragraph"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "The code block is an example already superseded by the verified Quick Start example.",
+      "unit_id": "inherited_unit:022.code_block"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:019",
+        "link_target:020",
+        "link_target:022"
+      ],
+      "rationale": "Heading owned by the renderer: documentation resources prints its own headings, so this inherited heading is not printed as written.",
+      "unit_id": "inherited_unit:023.heading"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "VERIFIED_REWRITE",
+      "fact_ids": [
+        "link_target:019",
+        "link_target:020",
+        "link_target:022"
+      ],
+      "rationale": "The list items are verified documentation targets already covered under Documentation & Resources.",
+      "unit_id": "inherited_unit:024.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading matches the Scope and Limitations section and is supported by inherited and fact-based limitations.",
+      "unit_id": "inherited_unit:025.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "install_command:dotnet",
+        "example:001"
+      ],
+      "rationale": "Each list item is supported by facts about format support, formula handling, export, and API surface.",
+      "unit_id": "inherited_unit:026.list"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The heading matches the Development and Testing section and is supported by build_test_asset facts.",
+      "unit_id": "inherited_unit:027.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:target_framework",
+        "build_test_asset:build-command"
+      ],
+      "rationale": "The SDK requirement and target framework are supported by package and build_test_asset facts.",
+      "unit_id": "inherited_unit:028.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "build_test_asset:build-command"
+      ],
+      "rationale": "The paragraph introduces a build command already superseded by the verified build command.",
+      "unit_id": "inherited_unit:029.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:build-command"
+      ],
+      "rationale": "The code block is a build command already superseded by the verified build command.",
+      "unit_id": "inherited_unit:030.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "build_test_asset:examples"
+      ],
+      "rationale": "The paragraph introduces a sample build command already superseded by the verified examples build.",
+      "unit_id": "inherited_unit:031.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:examples"
+      ],
+      "rationale": "The code block is a sample build command already superseded by the verified examples build.",
+      "unit_id": "inherited_unit:032.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "DEFER_UNRESOLVED",
+      "fact_ids": [],
+      "rationale": "No fact confirms or denies the presence of a tests/ directory or behavioral test coverage.",
+      "unit_id": "inherited_unit:033.paragraph"
+    },
+    {
+      "destination_section": "enterprise_relationship",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:product.enterprise"
+      ],
+      "rationale": "The heading introduces license content that belongs under Enterprise Relationship per policy.",
+      "unit_id": "inherited_unit:034.heading"
+    },
+    {
+      "destination_section": "enterprise_relationship",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "license:spdx",
+        "link_target:023",
+        "link_target:product.enterprise"
+      ],
+      "rationale": "The license statement is supported by SPDX and file facts and belongs under Enterprise Relationship.",
+      "unit_id": "inherited_unit:035.paragraph"
+    }
+  ]
+}
