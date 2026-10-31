@@ -354,6 +354,43 @@ def test_normalize_fixes_an_uncited_redundant_heading_so_live_loss_accounts_for_
     assert findings == []
 
 
+# Measured live (aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp, run 41154207665, verifying the fix
+# above): the model chose OMIT_UNSUPPORTED for this exact shape instead of SUPERSEDE_REDUNDANT --
+# a heading the model considers covered elsewhere, not placed into any section at all. Headings
+# are also absent from _UNCITED_OMIT_KINDS, so this slipped past placement_errors the same way.
+def test_normalize_fixes_an_uncited_omitted_heading_so_live_loss_accounts_for_it() -> None:
+    from repo_presenter.readme.reconciliation.dispositions import normalize
+
+    facts = _facts(*UNITS, Fact("identity:ecosystem", "identity", "python", (Evidence("x"),)))
+    candidate = _without(LIVE, USAGE_SECTION)
+    rows = [_row(unit.id) for unit in UNITS if unit.id not in _DROPPED]
+    rows.append(
+        _row(
+            "inherited_unit:005.heading",
+            "OMIT_UNSUPPORTED",
+            destination_section=None,
+            fact_ids=[],
+            rationale="Omitted because the installation section renders this content from facts.",
+        )
+    )
+    rows.append(
+        _row(
+            "inherited_unit:006.paragraph",
+            "OMIT_UNSUPPORTED",
+            fact_ids=["link_target:docs"],
+            rationale="dead link",
+        )
+    )
+    output = {"dispositions": rows}
+    normalize(output, facts)
+    heading_entry = next(
+        row for row in output["dispositions"] if row["unit_id"] == "inherited_unit:005.heading"
+    )
+    assert heading_entry["fact_ids"] == ["identity:ecosystem"]
+    findings = live_readme_loss_rule(LIVE, candidate, facts=facts, dispositions=output)
+    assert findings == []
+
+
 def test_live_loss_rejects_a_lost_code_block() -> None:
     candidate = LIVE.replace("pip install widget-foss", "uv add widget-foss")
     messages = _messages(

@@ -2977,6 +2977,28 @@ next_ready_items:
       itself runs clean. Falsifier confirmed (reverting the fix fails the new test exactly as
       expected). 664 tests across the directly-affected suites pass; full suite run before
       commit -- see next entry.
+    eighteenth_fix_confirmed_on_net_widened_after_cpp_showed_a_second_shape_2026_10_30: >
+      Dispatched aspose-cells-foss/.NET (41154200601) and aspose-pdf-foss/Cpp (41154207665) to
+      verify the eighteenth fix live. .NET: CONFIRMED, fully -- review_verdict.json shows a
+      genuine ACCEPT, 0 findings, 3 real unit_reviews; dispositions.json confirms
+      inherited_unit:018.heading ("## Examples") now carries fact_ids: ["identity:ecosystem"],
+      exactly the fix's own assignment. The candidate's own state is VALID_UPDATE_AVAILABLE, not
+      a fresh seal at a new revision -- correct, expected behavior: the source revision has not
+      changed, so this is a legitimate update proposal against the already-sealed candidate
+      (consumed-scope invalidation, not a reseal), ready for review rather than owner-accepted.
+      aspose-pdf-foss/Cpp: all 4 headings STILL rejected, unchanged -- read dispositions.json
+      directly: the model chose OMIT_UNSUPPORTED for these headings, not SUPERSEDE_REDUNDANT
+      (destination_section: None, a genuinely different disposition shape the eighteenth fix's
+      own condition did not cover). Widened the fix: the same identity-fact citation now applies
+      to BOTH disposition shapes (SUPERSEDE_REDUNDANT into a placeable section, or OMIT_
+      UNSUPPORTED with no destination) -- both are already in ACCOUNTING_DISPOSITIONS, and
+      headings are absent from _UNCITED_OMIT_KINDS the same way they are absent from the gap/fold
+      machinery, so an uncited OMIT_UNSUPPORTED heading slipped past placement_errors
+      identically. Verified empirically against the real aspose-pdf-foss/Cpp facts.json before
+      widening (normalize/placement_errors pass cleanly), added a second end-to-end test (the
+      OMIT_UNSUPPORTED shape, mirroring the SUPERSEDE_REDUNDANT one) proving normalize() plus
+      live_readme_loss_rule together now account for this shape too. 665 tests across the
+      directly-affected suites pass; full suite run before commit -- see next entry.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED

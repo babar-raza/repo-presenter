@@ -1052,30 +1052,39 @@ def normalize(
         disposition = entry.get("disposition")
         cited = set(entry.get("fact_ids") or [])
         if (
-            disposition == "SUPERSEDE_REDUNDANT"
-            and not cited
+            not cited
             and unit.rsplit(".", 1)[-1] == "heading"
-            and destination in placeable
             and identity_fact_id is not None
+            and (
+                (disposition == "SUPERSEDE_REDUNDANT" and destination in placeable)
+                or disposition == "OMIT_UNSUPPORTED"
+            )
         ):
             # Measured live, three times (aspose-cells-foss/Aspose.Cells-FOSS-for-.NET run
             # 41112824093, aspose-words-foss/Aspose.Words-FOSS-for-.NET run 41125275923,
-            # aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp run 41149996795): a heading superseded into
-            # a placeable section (the destination's own authored title serves its role instead)
-            # is never caught by this module's own gap/fold machinery at all -- _supersession_gap
-            # returns None outright for every heading-kind unit ("kind not in _CONTENT_KINDS"),
-            # so _judge/_fold_uncovered never even look at it. independent_reviewer.py's own
-            # accounting rule does not exempt headings (a deliberate test proves a dropped
-            # heading with no fact_ids must still be reported lost), so this reached S9's
-            # deterministic live_readme_loss check with no citation, three stages after the
-            # original disposition and long past the point a re-ask could fix it.
+            # aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp runs 41149996795 and 41154207665): a
+            # heading superseded into a placeable section (the destination's own authored title
+            # serves its role instead), or omitted because the content it named is rendered
+            # elsewhere, is never caught by this module's own gap/fold machinery at all --
+            # _supersession_gap returns None outright for every heading-kind unit ("kind not in
+            # _CONTENT_KINDS"), so _judge/_fold_uncovered never even look at it, and headings are
+            # also absent from _UNCITED_OMIT_KINDS, so an uncited OMIT_UNSUPPORTED heading passes
+            # placement_errors the same way. independent_reviewer.py's own accounting rule does
+            # not exempt headings (a deliberate test proves a dropped heading with no fact_ids
+            # must still be reported lost), so this reached S9's deterministic live_readme_loss
+            # check with no citation, three stages after the original disposition and long past
+            # the point a re-ask could fix it. The run that first measured this fix live
+            # (41154207665) proved SUPERSEDE_REDUNDANT alone was not the whole shape: the model
+            # chose OMIT_UNSUPPORTED for these same four headings instead, which this module's
+            # own gap machinery never reaches either, and which is just as genuinely in
+            # ACCOUNTING_DISPOSITIONS as SUPERSEDE_REDUNDANT.
             #
             # Tried and reverted (see project/state.yaml) folding the disposition itself to
             # VERIFIED_PRESERVE: placement.py's own renders_verbatim() never re-prints a heading's
             # literal text regardless of disposition (_RENDERED_ELSEWHERE), and VERIFIED_PRESERVE
             # is not even in independent_reviewer.py's own ACCOUNTING_DISPOSITIONS set, so that
-            # fix would not have satisfied the accounting check at all. SUPERSEDE_REDUNDANT is
-            # already the right disposition and already in ACCOUNTING_DISPOSITIONS; confirmed
+            # fix would not have satisfied the accounting check at all. Both dispositions here
+            # are already the right ones and already in ACCOUNTING_DISPOSITIONS; confirmed
             # directly (by reading live_readme_loss_rule/_accounting_units) that a citation is
             # the ONLY thing missing -- _accounting_units never checks whether the cited unit's
             # text is findable in the candidate, only that the disposition cites something real
