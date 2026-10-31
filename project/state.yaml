@@ -3233,6 +3233,48 @@ next_ready_items:
       steer's model-compliance limit, BC-08's cache-staleness layer): record plainly, do not
       force a fix past what live evidence has actually proven safe. Full suite: 3361 passed, 11
       skipped, exit 0, run before this commit.
+    twenty_first_fix_claim_contradiction_sub_project_names_falsifier_confirmed_2026_10_30: >
+      Root-caused the claim_contradiction sub-project-name gap (confirmed recurring on aspose-
+      pdf-foss/.NET, run 41121225716; aspose-psd-foss/.NET, run 41130142104) to a precise,
+      narrow mechanism, confirmed against the real cached artifacts before writing anything.
+      Read validation/claims.py's rule (f) (_prose_name_findings) directly: it exempts a code
+      span extending the package identity only when it equals the identity, sits inside a known
+      module path, or pep503-matches a dependency/distribution/SUPPORTED-fact value -- nothing
+      exempts a real sub-project or sample-project name, since no fact kind in this pipeline
+      extracts or records one. Confirmed directly, not guessed: loaded both repositories' real
+      facts.json and ran claim_findings() against their actual README.corrected.md --
+      reproduced both REJECTs exactly (PDF-.NET: one finding, "Aspose.Pdf.Foss.Tests"; PSD-.NET:
+      eight findings, the four Samples.* names each appearing twice). Then confirmed, by direct
+      string search over both repositories' own facts.json, that EVERY flagged name is quoted
+      byte-for-byte inside a SUPPORTED inherited_unit fact (PDF-.NET's "Aspose.Pdf.Foss.Tests"
+      in inherited_unit:227.code_block and :228.paragraph; PSD-.NET's four Samples.* names each
+      in :031.list, :036.table, and :038.code_block) -- proof these are quoted from the pinned
+      source, not invented, since an inherited_unit fact's own text is the repository's real,
+      evidence-carrying README content.
+      Given this session's own hard lesson earlier this round (a plausible-looking
+      generalization of a DIFFERENT check caused two real false positives on first contact with
+      real data), deliberately chose the NARROWEST fix that proves grounding rather than a new
+      fact kind (a wider surface: extraction code to write and keep correct, a kind whose own
+      absence needs separate handling, and a path open to its own false-negative risk of
+      letting a genuinely wrong name through unverified). Added
+      _quoted_from_source(token, facts) to claims.py: true only when ``token`` appears verbatim
+      inside a SUPPORTED inherited_unit fact's own value. Wired as one more exemption clause in
+      _prose_name_findings. Verified against both runs' real data before writing a single test:
+      PDF-.NET now shows 0 findings (was 1); PSD-.NET now shows 1 finding -- the genuinely real,
+      UNRELATED "not published" claim this fix correctly leaves untouched, not the eight
+      sub-project-name findings (now 0, was 8).
+      3 new tests in test_claims_surface.py: the positive case (grounded in the real PDF-.NET
+      text, generalized onto the existing fixture identity); a negative control proving an
+      UNGROUNDED name extending the identity is still flagged (the exemption is not a blanket
+      allowance); a second negative control proving a CONTRADICTED-polarity inherited_unit does
+      NOT grant grounding (only a SUPPORTED one, the extractor's own positive confirmation, may
+      exempt a name). Falsifier confirmed: reverted only claims.py, kept the new tests -- the
+      positive test fails with the exact original finding reproduced, both negative controls
+      keep passing throughout (proving they test the right boundary, not a tautology); restored
+      after. Full suite: 3364 passed, 11 skipped, exit 0, run before this commit. NOT YET
+      verified live -- ready for review, not accepted, until fresh hosted Lane L re-runs of both
+      repositories show the sub-project-name finding(s) gone via the real verdict file read
+      directly.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED

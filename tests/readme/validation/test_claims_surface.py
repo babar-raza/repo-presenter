@@ -174,6 +174,59 @@ def test_a_dependency_or_registry_confirmed_distribution_in_prose_is_not_a_wrong
     assert claim_findings(readme(sentence), document) == []
 
 
+def test_a_name_quoted_verbatim_from_a_supported_inherited_unit_is_not_a_wrong_name() -> None:
+    """Grounded in two real hosted REJECTs, confirmed recurring (aspose-pdf-foss/.NET run
+    41121225716; aspose-psd-foss/.NET run 41130142104): each repository's own real README
+    genuinely names its own test/sample sub-projects (`Aspose.Pdf.Foss.Tests`,
+    `Aspose.PSD.FOSS.Samples.Basic`), confirmed present verbatim in a SUPPORTED inherited_unit
+    fact in both repositories' own facts.json -- quoted from the pinned source, not invented --
+    yet no fact kind states them as a package identity, so rule (f) flagged them as naming
+    "another package" with no fact backing. A name quoted verbatim from a SUPPORTED
+    inherited_unit fact is no longer flagged."""
+    document = facts(
+        fact(
+            "inherited_unit:227.code_block",
+            "inherited_unit",
+            "```bash\ndotnet test tests/Aspose.3D.FOSS.Tests.csproj\n```",
+        )
+    )
+    sentence = "The test project (`Aspose.3D.FOSS.Tests`) is an xUnit suite."
+    assert claim_findings(readme(sentence), document) == []
+
+
+def test_a_name_not_found_in_any_inherited_unit_is_still_a_wrong_name() -> None:
+    """The new exemption is narrow: a name that does NOT appear verbatim in any inherited_unit
+    fact is still flagged, same as before -- this is not a blanket allowance for anything that
+    extends the identity."""
+    document = facts(
+        fact(
+            "inherited_unit:227.code_block",
+            "inherited_unit",
+            "```bash\ndotnet test tests/Aspose.3D.FOSS.Tests.csproj\n```",
+        )
+    )
+    sentence = "Add the `Aspose.3D.FOSS.Lite` package to your project."
+    [finding] = claim_findings(readme(sentence), document)
+    assert "Aspose.3D.FOSS.Lite" in finding.detail
+
+
+def test_a_name_in_a_contradicted_inherited_unit_is_still_a_wrong_name() -> None:
+    """Only a SUPPORTED inherited_unit fact grounds a name -- one the extractor itself marked
+    CONTRADICTED (the pinned source was checked and this unit's own text does not hold) proves
+    nothing, so it must not exempt a name quoted inside it."""
+    document = facts(
+        fact(
+            "inherited_unit:227.code_block",
+            "inherited_unit",
+            "```bash\ndotnet test tests/Aspose.3D.FOSS.Tests.csproj\n```",
+            polarity="CONTRADICTED",
+        )
+    )
+    sentence = "The test project (`Aspose.3D.FOSS.Tests`) is an xUnit suite."
+    [finding] = claim_findings(readme(sentence), document)
+    assert "Aspose.3D.FOSS.Tests" in finding.detail
+
+
 def test_the_wrong_name_rule_is_silent_without_an_identity_fact() -> None:
     bare = FactsDocument(
         "org/x", REVISION, (fact("package:version", "package", "1.0.0"),)

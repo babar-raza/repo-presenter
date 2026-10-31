@@ -668,6 +668,31 @@ def _inside_module(target: str, identity: str, import_paths: set[str]) -> bool:
     return lowered in import_paths or lowered.startswith(identity.lower().rstrip("/") + "/")
 
 
+def _quoted_from_source(token: str, facts: FactsDocument) -> bool:
+    """Whether ``token`` appears verbatim inside a SUPPORTED ``inherited_unit`` fact's own text
+    -- proof it is quoted from the pinned source README, not invented, even though no Fact
+    states it as a package identity.
+
+    No fact kind extracts or verifies a sample/test sub-project name (``Aspose.Pdf.Foss.Tests``,
+    ``Aspose.PSD.FOSS.Samples.Basic``): confirmed recurring live (aspose-pdf-foss/.NET, run
+    41121225716; aspose-psd-foss/.NET, run 41130142104) -- each repository's own real README
+    genuinely names its own test/sample sub-projects, and ``_prose_name_findings`` correctly has
+    no fact to credit them with, since this pipeline has nowhere else to record "this sub-project
+    name is real." Rather than invent a new fact kind (a wider, riskier surface -- extraction
+    code to write and keep correct, and a kind whose own absence would need separate handling),
+    this checks the narrowest thing that actually proves the name is real: confirmed verbatim
+    against both repositories' own facts.json that every flagged name (``Aspose.Pdf.Foss.Tests``;
+    ``Aspose.PSD.FOSS.Samples.Basic/.Layers/.StructuralEditing/.Streams``) is quoted exactly,
+    character for character, inside a SUPPORTED inherited_unit fact -- the pinned source material
+    itself, carrying its own evidence path. A token the model merely invented could not pass this:
+    it would have to coincidentally match the pinned repository's own real text byte for byte."""
+    return any(
+        token in fact.value
+        for fact in facts.by_kind("inherited_unit")
+        if fact.polarity == "SUPPORTED"
+    )
+
+
 def _identity_findings(
     lines: list[_Line], facts: FactsDocument, identity: Fact
 ) -> list[ClaimFinding]:
@@ -765,6 +790,7 @@ def _prose_name_findings(
                 or _same_identity(token, identity.value)
                 or _inside_module(token, identity.value, import_paths)
                 or _pep503(token) in dependencies | distributions | values
+                or _quoted_from_source(token, facts)
             ):
                 continue
             findings.append(
