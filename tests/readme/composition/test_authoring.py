@@ -367,6 +367,37 @@ def test_preserved_section_text_empty_without_a_preserved_unit_in_that_section()
     assert preserved_section_text({"dispositions": []}, make_facts(), "api_reference") == ""
 
 
+def test_preserved_section_text_excludes_a_verified_rewrite_unit() -> None:
+    """Regression test for a real false positive this generalization caused, caught live before
+    being declared done: dispatched hosted re-runs of aspose-email-foss/Cpp (41162828042) and
+    aspose-slides-foss/Python (41162835931) to verify the fix, and BOTH instead failed with
+    every "key_capabilities" unit newly rejected as "restating" inherited_unit:010.list -- a
+    VERIFIED_REWRITE list, whose RAW pre-rewrite text (a long enumeration) every capability's own
+    short, elaborating sentence trivially "states" part of, even though the renderer never prints
+    that raw text (only the model's own rewritten list). VERIFIED_REWRITE must never contribute
+    to preserved_section_text; only VERIFIED_PRESERVE/VERIFIED_MOVE render the raw text verbatim."""
+    base = make_facts()
+    rewritten_list = Fact(
+        "inherited_unit:010.list",
+        "inherited_unit",
+        "- Create, edit and save slide decks\n- Render slides to images\n- Export to PDF",
+        (Evidence("README.md", "section 'Features'"),),
+    )
+    facts = FactsDocument(base.repository, base.source_revision, (*base.facts, rewritten_list))
+    dispositions = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:010.list",
+                "disposition": "VERIFIED_REWRITE",
+                "destination_section": "key_capabilities",
+                "fact_ids": [],
+                "rationale": "test fixture",
+            }
+        ]
+    }
+    assert preserved_section_text(dispositions, facts, "key_capabilities") == ""
+
+
 def test_unit_checks_rejects_an_api_reference_unit_that_restates_the_preserved_paragraph() -> (
     None
 ):

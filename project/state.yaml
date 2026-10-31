@@ -3145,6 +3145,48 @@ next_ready_items:
       run -- ready for review, not accepted, until aspose-email-foss/Cpp and/or aspose-
       slides-foss/Python re-runs show the duplicate_paragraph finding gone via review_verdict.json
       read directly.
+    twentieth_fix_live_run_caught_a_real_regression_narrowed_and_corrected_2026_10_30: >
+      Dispatched both live verification runs (aspose-email-foss/Cpp 41162828042, aspose-
+      slides-foss/Python 41162835931). BOTH FAILED -- not with duplicate_paragraph gone or
+      present, but with section_authoring (S6) itself now failing closed on "key_capabilities":
+      every capability unit (4 of 4 on email-foss/Cpp, 2 of 2 narrowed-and-still-failing on
+      slides-foss/Python) rejected as "restates the inherited paragraph the renderer already
+      preserves verbatim in this section." Read the durable-state failure record directly (git
+      fetch refs/repository-presenter-state/records/<slug> + git show, since artifact stdout
+      only prints a one-line summary, never the OutputRejectedError detail -- the detail lives
+      in the record's own failure.detail field) to get the exact rejection text, since the GH
+      Actions log itself showed no traceback at all (present.py's own run() catches
+      OutputRejectedError and records detail into the durable record, not stdout).
+      Root-caused precisely, against the REAL dispositions.composed.json of both runs: both
+      repositories route an inherited_unit:*.list fact into key_capabilities with disposition
+      VERIFIED_REWRITE (010.list on slides-foss/Python, confirmed by direct inspection) --
+      preserved_section_text's own _placed_units() call admits VERIFIED_REWRITE alongside
+      VERIFIED_PRESERVE/VERIFIED_MOVE (it always has; this is a latent defect in the ORIGINAL
+      "opening"-only code too, just never exercised there), so the RAW pre-rewrite list text
+      (a long enumeration) became "preserved" ground truth -- but VERIFIED_REWRITE means the
+      renderer prints the MODEL's own corrected rewrite, never the raw text, so comparing an
+      authored capability unit's short elaborating sentence against the raw enumeration is
+      comparing against something never actually rendered, and states_all() trivially matched
+      since a short sentence elaborating one list item is, in the loose sentence-overlap sense
+      states_all uses, "stated by" a longer list enumerating the same items.
+      Corrected: narrowed preserved_section_text to only VERIFIED_PRESERVE/VERIFIED_MOVE
+      (the same two dispositions independent_reviewer.py's own KEPT_DISPOSITIONS already treats
+      as "renders verbatim, unchanged" -- the only two for which the raw inherited text IS what
+      renders), reading dispositions directly rather than through _placed_units(). Verified
+      empirically against both runs' real facts/dispositions before and after: key_capabilities
+      now returns "" (empty, no false positive) on both, while api_reference (the real,
+      originally-targeted defect) is UNCHANGED, still returning inherited_unit:043.paragraph's
+      text on email-foss/Cpp. Added a dedicated regression test
+      (test_preserved_section_text_excludes_a_verified_rewrite_unit, grounded in this exact
+      VERIFIED_REWRITE-list shape) and falsifier-confirmed it (reverting only this function's
+      body back to the _placed_units() form makes the new test fail with the exact raw-list
+      text, exactly as expected; restored after). This is recorded as what it is: a real,
+      user-visible regression from the twentieth fix, caught ONLY by the live-verification step
+      the owner's own discipline requires, not by the unit tests written alongside the original
+      fix (which never exercised a VERIFIED_REWRITE unit in a non-"opening" section) -- proof the
+      "verify live, never trust tests alone" rule is load-bearing, not ceremonial. Full suite:
+      3360 passed, 11 skipped, exit 0, run before this commit. Re-dispatching both repositories
+      again to confirm the correction live before calling this fix done.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED

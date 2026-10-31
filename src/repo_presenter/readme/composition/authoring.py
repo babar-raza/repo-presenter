@@ -311,12 +311,28 @@ def carried_units(dispositions: dict[str, Any], section: str, facts: FactsDocume
     ]
 
 
+_VERBATIM_PRESERVED_DISPOSITIONS = frozenset({"VERIFIED_PRESERVE", "VERIFIED_MOVE"})
+
+
 def preserved_section_text(
     dispositions: Mapping[str, Any], facts: FactsDocument, section: str
 ) -> str:
     """The inherited prose reconciliation dispositioned straight into ``section`` -- the text the
     renderer prints verbatim right beside that section's own freshly authored units. Empty when
     no such unit exists, which is the common case outside a duplicate-preserved defect.
+
+    Only VERIFIED_PRESERVE/VERIFIED_MOVE qualify (never VERIFIED_REWRITE, whose rendered text is
+    the MODEL's own corrected rewrite, not the raw inherited text this reads) -- confirmed live
+    the hard way (aspose-slides-foss/Aspose.Slides-FOSS-for-Python, run 41162835931; aspose-
+    email-foss/Aspose.Email-FOSS-for-Cpp, run 41162828042): first using ``_placed_units``'s
+    wider set (which also admits VERIFIED_REWRITE) spuriously rejected every "key_capabilities"
+    unit in both runs, because inherited_unit:010.list there is VERIFIED_REWRITE -- its RAW,
+    pre-rewrite text is a long enumeration, and every capability's own authored sentence,
+    elaborating on one item of it, trivially "states" something already in that raw enumeration,
+    though the text actually rendered (the model's rewritten list) is never compared at all.
+    Narrowed to the same two dispositions placement.py's own ``_RENDERED_ELSEWHERE``-adjacent
+    ``KEPT_DISPOSITIONS`` already treats as "renders verbatim, unchanged" -- the only two for
+    which the raw inherited text IS what the renderer actually prints.
 
     Measured live (aspose-email-foss/Aspose.Email-FOSS-for-Cpp, run 41142584634): the same
     defect this module already caught for "opening" (``preserved_opening_text``, below) recurs
@@ -327,9 +343,12 @@ def preserved_section_text(
     """
     texts = {fact.id: fact.value for fact in facts.facts if fact.kind == "inherited_unit"}
     return "\n\n".join(
-        texts[unit_id]
-        for unit_id in _placed_units(dispositions, section)
-        if unit_id in texts and unit_id.endswith(_CARRIABLE_SUFFIXES)
+        texts[entry["unit_id"]]
+        for entry in dispositions.get("dispositions", [])
+        if entry.get("destination_section") == section
+        and entry.get("disposition") in _VERBATIM_PRESERVED_DISPOSITIONS
+        and entry.get("unit_id") in texts
+        and str(entry.get("unit_id")).endswith(_CARRIABLE_SUFFIXES)
     )
 
 
