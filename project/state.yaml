@@ -3016,6 +3016,31 @@ next_ready_items:
       different command, not yet confirmed as the identical root cause) -- two occurrences in
       the same product family, not yet investigated. A real, separate candidate for the next
       root-cause pass, independent of everything the heading-accounting fix touched.
+    bc_08_investigated_confirmed_recurring_two_stacked_causes_found_2026_10_30: >
+      Confirmed recurring: aspose-pdf-foss/Go's own BC-08 failure (41146995071, re-downloaded to
+      read validation.json directly) is the SAME shape as Cpp's -- a paragraph (VERIFIED_REWRITE
+      this time, not CORRECT_WITH_EVIDENCE) keeps "go run ./_examples/feature_showcase" per its
+      own disposition, but the candidate does not render it. Root cause (confirmed by reading
+      validation/units.py's protected_fragments/protected_failures directly): BC-08 protects
+      every inline code span matching a command pattern (validation/text.py's own SPAN/COMMAND
+      regexes) found inside ANY kept-or-rewritten unit's text, but section_authoring (S6) gives
+      the model no instruction that these specific embedded spans must survive its own rewrite --
+      VERIFIED_REWRITE and CORRECT_WITH_EVIDENCE both let S6 reword the unit, and the model
+      simply drops the embedded command sentence while fixing or restating everything else.
+      Confirmed this is a genuinely different root cause from everything the heading-accounting
+      fix touched (different check, different stage history -- BC-08 is validate_candidate's own
+      S9 check, not independent_reviewer.py's accounting bar). Repair ROUTING works correctly
+      (repairs.json: source "validation", stage "S6", the same causal_stage-based routing the
+      earlier BC12_REPAIR_ROUTING_PROVEN investigation fixed this session) -- but the repair
+      ATTEMPT itself failed for a SECOND, separate reason: the model's own fix reply named
+      "Aspose_PDF_FOSS.lib", a near-miss of the accepted "Aspose_PDF_FOSS"/"aspose_pdf_foss"
+      spellings (an added ".lib" suffix), rejected by the stray-identifier rule, twice, with no
+      narrowing or recovery for this specific near-miss-suffix shape. Two real, stacked causes,
+      both confirmed by reading the real code and real evidence, neither guessed at. Not fixed in
+      this pass -- the depth here (a content-dropping gap at S6, discovered only through a repair
+      attempt that itself failed for an unrelated reason) warrants its own dedicated,
+      unhurried investigation rather than a rushed fix layered on top of what is already the
+      eighteenth root cause closed this session.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
