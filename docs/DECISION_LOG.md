@@ -1039,3 +1039,123 @@ verified examples)", while every aspose.org candidate carries 5 to 6. That budge
 
 **Where the detail lives**: `src/repo_presenter/core/state/bundle_store.py`, `net_examples.py`
 (`classify_build_failure`), `tests/core/state/test_bundle_store.py`, `tests/extractors/platforms/`.
+
+---
+
+## 2026-10-31: `format_overclaim` only flags a claim as a defect with evidence of absence (merged `1392d0e`)
+
+**Decision**: merge `fix/format-overclaim-evidence` to main. The detector previously treated *any*
+table/diagram claim lacking a matching SUPPORTED fact as a hard, sealing-blocking defect — including
+when the repo's extracted facts hold no format/capability fact at all (an extractor gap, not evidence
+the claim is false). It now requires a `has_picture` signal (at least one SUPPORTED fact of the
+relevant kind exists for this repo) before an unmatched or UNRESOLVED claim can count as a defect;
+otherwise it is reported as `NO_EVIDENCE_OF_ABSENCE` (added to both `REPORT_ONLY_REASONS` and
+`NOT_A_DEFECT_REASONS`) and does not block. A CONTRADICTED match is still always a hard defect,
+checked ahead of the `has_picture` gate, so a real contradiction blocks even with zero other facts.
+Detector version bumped 1→2 with its source-hash pin updated.
+
+**Why**: 53 of 65 Lane L over-claim findings across the hosted portfolio came from repos whose facts
+hold no format/capability fact at all — an extractor gap read as a defect, refusing the whole
+candidate (Barcode, Email-.Net, Imaging, PDF-Cpp, PDF-TypeScript, Slides-Java, TeX). 3D-.NET, the one
+real over-claim the owner's ruling names, has sixteen SUPPORTED formats and simply lacks U3D/RVM/AMF/
+HTML5, so it still correctly blocks.
+
+**Evidence**: 91/91 `tests/readme/correction/` tests pass (fresh checkout). A different, fresh agent
+independently reviewed the diff cold (no prior context), traced the priority order (SUPPORTED →
+not flagged; CONTRADICTED → hard defect before any `has_picture` check; UNRESOLVED or
+`not has_picture` → report-only; otherwise → hard defect), confirmed the version/hash-pin wiring, and
+verified by tracing the code path that a claim with zero matching facts of any kind in a fact-rich
+(`has_picture=True`) repo is still a hard defect, not silently allowed — returned PASS with no
+concerns. Two hosted Lane L live checks confirm the fix in production: aspose-imaging-foss/
+Aspose.Imaging-FOSS-for-.NET (run 41180657552) and aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python
+(run 41180663528) both transitioned REVIEWING → ACCEPTED, where both were previously REJECTed purely
+on false format-overclaim findings (BMP/GIF/JPEG/PNG/... for Imaging; SVG/PNG for Barcode).
+
+**What this does NOT decide**: calibration iteration 4, or whether either ACCEPTED record is
+owner-reviewed (it is not — "ACCEPTED" here is the pipeline-level reviewer state, never an owner
+acceptance).
+
+**Where the detail lives**: `src/repo_presenter/readme/correction/detectors/format_overclaim.py`,
+`model.py`, `report.py`, `tests/readme/correction/detectors/test_format_overclaim.py`.
+
+---
+
+## 2026-10-31: link-carry-aware loss checking merged (`fix/link-carry-check`)
+
+**Decision**: merge `fix/link-carry-check` to main (merge commit `4397f33`, non-fast-forward since
+the branch had diverged from a since-merged main). `coverage.py` / `accounting.py` /
+`independent_reviewer.py` add `_carries_link`/`carries_hard_tokens` so a link-carrying omission check
+credits a link that was actually carried into the output under different surrounding prose, instead
+of only matching exact text equality.
+
+**Why**: link-text-equality checks were producing false `live_readme_loss` findings on links that
+were genuinely carried into the output, just reworded around.
+
+**Evidence**: a different, fresh agent reviewed the diff cold, confirmed the change narrows (never
+broadens) leniency versus the prior bare-substring check, ran the shipped tests (6/6 pass) plus a
+self-constructed mutation falsifier (reverting the new link-context check to pure substring equality
+fails exactly the 2 tests that target this fix, confirming the suite isn't vacuous), and ran the
+broader `tests/readme/composition/ tests/readme/repair/ tests/readme/review/` suite (681 pass, no
+collateral breakage) — PASS, with one explicitly pre-existing, not-introduced-by-this-diff residual
+note (an unanchored substring match that could treat `TODO.md.bak` as carrying a link to `TODO.md`;
+the old code had the identical weakness for every href, so this is a follow-up, not a regression).
+Hosted re-run on the branch (aspose-3d-foss/Aspose.3D-FOSS-for-Java, run 41180364402) confirms the fix
+in production: the `live_readme_loss` finding on link `AGENTS.md` (false: it was carried, just
+reworded) is gone, and the run now progresses to `source_reconciliation`, where it fails on a
+separate, pre-existing, unrelated defect — `uncited_redundant_defer`: `DEFER_UNRESOLVED` on a
+code_block that isn't a tracked example — progress, not a regression. That defect is a new,
+unrelated fix-queue item (code_block disposition in source reconciliation), out of scope here.
+
+**What this does NOT decide**: the newly-exposed `uncited_redundant_defer` defect, or the
+unanchored-substring-match follow-up noted above; neither is fixed in this branch.
+
+**Where the detail lives**: `src/repo_presenter/readme/composition/coverage.py`,
+`src/repo_presenter/readme/repair/accounting.py`, `src/repo_presenter/readme/review/independent_reviewer.py`,
+`tests/readme/composition/test_link_carry.py`.
+
+---
+
+## 2026-10-31: link-budget word-count tiers, backed by a rerunnable calibration script (merged `fix/link-budget-tiers`)
+
+**Decision**: merge `fix/link-budget-tiers` to main (merge commit, non-fast-forward since the branch
+had diverged from a since-merged main). `link_budget.py`'s `_automatic_total` replaces the flat
+`AUTOMATIC_TOTAL_CAP=4` ceiling on auto-inserted Aspose links with word-count tiers
+`(300,2),(500,3),(2000,4),(3000,5)`, else 6, each still clamped to `min(tier_value,
+AUTOMATIC_TOTAL_CAP)`.
+
+**Why**: aspose.org's own sealed candidates carry 4-5 contextual Aspose links against this project's
+flat ceiling of 2-3 for a typical-sized README, and the flat tiers were producing deterministic BC-06
+failures (hosted Words-.NET: "4 Aspose links exceed the ceiling of 3") before a candidate ever reached
+model review.
+
+**Evidence quality fix**: a fresh agent's first review found the tier logic itself sound (exact
+boundaries traced and matched by test, cap clamped everywhere, monotonically no worse than the old
+tiers for any word count under the default cap, 137+121+331 tests passing) but raised a CONCERN per
+AGENTS.md ("evidence records come from tooling, never from model narration"): the docstring and a
+test docstring asserted specific numbers (35 candidates, 586-word minimum, "23 of 35" failures) with
+no script or artifact in the repo a reviewer could rerun to check them. Fixed by adding
+`scripts/link_budget_calibration.py`, a read-only script that measures the real aspose.org sibling
+checkout and prints the same counts on demand; the docstrings now cite it and state what it reports
+as of 2026-10-31 rather than asserting fixed prose. Rerunning it (in an isolated worktree, to avoid a
+branch-checkout race with concurrent verification agents in the shared working directory) gives: 35
+candidates, none under 586 visible words, 33 of 35 needing exactly 4 contextual links (1 needs 5, 1
+needs 1); under the old tiers previously shipped on main, 23 of 35 fail BC-06 with zero verified
+examples; under these new tiers, only 1 of 35 still fails (the one needing 5 against a cap still
+fixed at 4 — a real residual gap, not fixed here). A second fresh-agent pass on this follow-up
+commit confirmed the script is genuine (not hardcoded) and its output matches the docstrings
+exactly, with 455 (`tests/readme/composition/ tests/readme/validation/`) plus 140
+(the two specific files) tests passing — PASS, no concerns.
+
+**Evidence (hosted re-run from the branch, not main)**: aspose-words-foss/Aspose.Words-FOSS-for-.NET
+(run 41180018042) previously failed deterministically on BC-06 before this fix; on the branch it
+clears BC-06 and reaches `presentation_planning`, where it now fails on a separate, pre-existing
+model-output defect (the model assigns several `link_target:NNN` ids to more than one citation) —
+progress, not a regression, and a new, unrelated fix-queue item (duplicate link-target assignment at
+presentation-planning), out of scope here.
+
+**What this does NOT decide**: the newly-exposed duplicate-link-target-assignment defect, or the
+residual words/net-shaped gap (needs 5 contextual links, cap stays at 4) — neither is fixed here.
+
+**Where the detail lives**: `src/repo_presenter/readme/composition/link_budget.py`,
+`scripts/link_budget_calibration.py`, `tests/readme/composition/test_siblings.py`,
+`tests/readme/validation/test_registry_checks.py`.
