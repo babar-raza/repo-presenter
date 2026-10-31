@@ -277,3 +277,49 @@ def test_a_fixture_the_example_only_writes_never_becomes_an_input() -> None:
     ]
     facts = format_facts(candidates, receipts, format_claims, "examples.json")
     assert [f.id for f in facts] == ["format:output.pdf"]
+
+
+# Real hosted finding (aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript): the README correctly claims
+# both .html and .htm are recognized, but the extractor only ever confirms .html -- the product's
+# own source literally compares against the string "html", never also "htm". format_overclaim then
+# held the candidate open as an unrepairable defect for a true, safe claim: every real HTML
+# reader/writer treats .htm and .html as the same format. format_facts now asserts that one,
+# deterministic alias itself, never the reverse.
+def test_a_supported_html_format_also_supports_the_htm_alias() -> None:
+    candidates = [_candidate(1, 'doc.save("out.html")\n', 10)]
+    receipts = [_receipt(1, "EXECUTED")]
+    facts = format_facts(candidates, receipts, format_claims, "examples.json")
+    by_id = {f.id: f for f in facts}
+    assert by_id["format:output.html"].polarity == "SUPPORTED"
+    assert by_id["format:output.htm"].polarity == "SUPPORTED"
+    assert by_id["format:output.htm"].value == ".htm"
+    assert [e.detail for e in by_id["format:output.htm"].evidence] == [
+        "alias of format:output.html (.html)"
+    ]
+
+
+def test_an_unresolved_html_format_does_not_imply_the_htm_alias() -> None:
+    """Scoped to SUPPORTED only: an UNRESOLVED .html claim (one static source, or an unverified
+    example) is not confident enough to assert an alias from, and already report-only per
+    format_overclaim's own NO_EVIDENCE_OF_ABSENCE path -- no need to synthesize anything here."""
+    candidates = [_candidate(1, 'doc.save("out.html")\n', 10)]
+    receipts = [_receipt(1, "FAILED")]
+    facts = format_facts(candidates, receipts, format_claims, "examples.json")
+    by_id = {f.id: f for f in facts}
+    assert by_id["format:output.html"].polarity == "UNRESOLVED"
+    assert "format:output.htm" not in by_id
+
+
+def test_real_htm_evidence_is_never_overwritten_by_the_alias() -> None:
+    """If a product ever genuinely declares/registers .htm itself, that real fact stands exactly
+    as computed -- the alias fold only fills a gap, it never replaces real evidence."""
+    candidates = [
+        _candidate(1, 'doc.save("out.html")\ndoc.save("out2.htm")\n', 10),
+    ]
+    receipts = [_receipt(1, "EXECUTED")]
+    facts = format_facts(candidates, receipts, format_claims, "examples.json")
+    by_id = {f.id: f for f in facts}
+    assert by_id["format:output.html"].polarity == "SUPPORTED"
+    assert by_id["format:output.htm"].polarity == "SUPPORTED"
+    # the real, syntax-tree-sourced evidence, not the alias's synthesized one
+    assert all("alias of" not in (e.detail or "") for e in by_id["format:output.htm"].evidence)

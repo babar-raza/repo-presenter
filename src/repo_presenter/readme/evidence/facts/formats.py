@@ -26,6 +26,47 @@ from repo_presenter.core.examples import (
 )
 from repo_presenter.core.facts import Evidence, Fact, fact_id
 
+#: ``.htm``/``.html`` name the same format everywhere this tool has measured: every real HTML
+#: parser/writer treats them identically, even when a product's own source only ever spells the
+#: literal string ``"html"`` (never also ``"htm"``) in its own format-dispatch code -- the one
+#: alias this module may assert without a claim or a static source naming it, because it is a
+#: deterministic fact about file extensions, not an inference from README prose.
+_HTM_HTML_ALIAS = ".htm"
+_HTM_HTML_CANONICAL = ".html"
+
+
+def _htm_alias_facts(facts: Sequence[Fact], evidence: dict[tuple[str, str], list[Evidence]]) -> list[Fact]:
+    """A SUPPORTED ``.htm`` fact for each direction whose ``.html`` fact is SUPPORTED, unless a
+    fact already exists for ``.htm`` in that direction (real evidence is never overwritten).
+
+    Measured live (aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript, run in the ninth cascade this
+    session's history records): the README correctly claims both ``.html`` and ``.htm`` are
+    recognized, but the extractor only ever confirmed ``.html`` -- the product's own source
+    literally compares against ``"html"``, never also ``"htm"`` -- so format_overclaim held the
+    candidate open as an unrepairable Lane R defect for a true, safe claim. ``.htm``/``.html`` are
+    the same format everywhere; this fold is a deterministic extension-alias rule, not a guess
+    from unverified prose, and never applies in the other direction (a SUPPORTED ``.htm`` fact
+    never implies ``.html``, since no real product has been measured declaring ``.htm`` alone).
+    """
+    aliases: list[Fact] = []
+    for fact in facts:
+        if fact.value != _HTM_HTML_CANONICAL or fact.polarity != "SUPPORTED":
+            continue
+        direction = fact.id.split(".", 1)[0].removeprefix("format:")
+        if (direction, _HTM_HTML_ALIAS) in evidence:
+            continue
+        aliases.append(
+            Fact(
+                fact_id("format", direction, _HTM_HTML_ALIAS.lstrip(".")),
+                "format",
+                _HTM_HTML_ALIAS,
+                (Evidence(fact.evidence[0].path, f"alias of {fact.id} ({_HTM_HTML_CANONICAL})"),),
+                polarity="SUPPORTED",
+                confidence=fact.confidence,
+            )
+        )
+    return aliases
+
 
 def format_facts(
     candidates: Sequence[ExampleCandidate],
@@ -122,4 +163,5 @@ def format_facts(
                 confidence=1.0 if key in supported else 0.5,
             )
         )
+    facts.extend(_htm_alias_facts(facts, evidence))
     return facts
