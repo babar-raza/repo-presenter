@@ -5,7 +5,7 @@
   "provider_repository_id": 1280033370,
   "registry_revision": null,
   "active_transaction_id": "27084422c2ed489697485041c13baa1e",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "PresentFailure: independent review returned REJECT with 4 blocking finding(s) of 4; nothing sealed; live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (heading 'Visual Studio (NuGet)'); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (heading 'From a Release Archive'); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (heading 'Rendering Devices'); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (heading 'Outlines, Named Destinations, and Metadata')",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-31T00:59:06.067524+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:41149996795",
     "acquired_at": "2026-10-31T00:28:50.781745+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-10-31T00:43:50.781745+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "a0159438849c413db29673cac0f00cf6",
+    "transaction_id": "27084422c2ed489697485041c13baa1e",
+    "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-31T00:59:05.595676+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp",
+    "output_manifest": "candidates/aspose-pdf-foss__Aspose.PDF-FOSS-for-Cpp/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:41149996795:aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp": "27084422c2ed489697485041c13baa1e"
   },
