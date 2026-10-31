@@ -1159,3 +1159,43 @@ residual words/net-shaped gap (needs 5 contextual links, cap stays at 4) — nei
 **Where the detail lives**: `src/repo_presenter/readme/composition/link_budget.py`,
 `scripts/link_budget_calibration.py`, `tests/readme/composition/test_siblings.py`,
 `tests/readme/validation/test_registry_checks.py`.
+
+---
+
+## 2026-10-31: structural parity measurement and durable-bundle counts merged (`feat/aspose-parity`, `feat/matrix-durable-bundles`)
+
+**Decision**: merge both to main. `core/aspose_parity.py` + `scripts/aspose_parity.py` measure how
+close our candidate is to the equivalent finalized aspose.org README — counts (lines, code fences,
+`<details>` blocks, links, Aspose links, Mermaid diagrams) and heading *names*, read either from an
+explicit `--readme` path or restored from this repo's own durable bundle ref via `export_bundle`,
+compared against the sibling aspose.org checkout. `core/portfolio_matrix.py` gains
+`stored_bundle_refs(remote)` (one read-only `git ls-remote`) and `MatrixRow.stored_r`/`stored_l`, so
+`scripts/portfolio_status.py` can report how many repositories actually have a durable bundle, not
+just a pipeline-level record state.
+
+**Why**: the sibling `aspose.org` checkout is private/read-only and must never have its body text
+copied into this public repository (only counts and heading names may ever leave it); the portfolio
+matrix's existing three sources (registry, record state, `candidates/`) did not yet surface the
+durable-bundle layer added earlier this session.
+
+**Evidence**: two different, fresh agents independently reviewed each diff cold. For
+`feat/aspose-parity`: read `measure`/`compare`/`render` line by line and confirmed the only four
+`print()` call sites in the whole diff emit counts, ratios, a bool, or heading names — never body
+prose, never a link URL, never a code-block body; ran the real CLI against the live sibling checkout
+(6 repositories) and inspected every printed line to confirm no leak; 7/7 tests pass. One non-blocking
+defense-in-depth nit: `reference_path` does not itself validate `family`/`platform` against
+path-traversal characters (relies on upstream registry validation, whose platform regex technically
+permits a literal `..` token) — can resolve at most one directory higher inside the already-trusted
+aspose.org reports tree, never escape it, and requires a contrived entry in this repo's own
+first-party `registry.json`, not externally reachable input; tracked as a fix-queue follow-up, not
+blocking. For `feat/matrix-durable-bundles`: confirmed `stored_bundle_refs` is read-only (a single
+`git ls-remote`), that the push side (`publish_bundle`) and read side use the identical `bundle_ref`
+function so Lane R/L counts cannot cross-contaminate, that `build_matrix`'s new parameter defaults to
+`()` with five pre-existing call sites proving backward compatibility by actually passing, and that
+8/8 new tests plus 668/668 across `tests/core/` pass with no collateral breakage.
+
+**What this does NOT decide**: the `reference_path` defense-in-depth nit is not fixed here.
+
+**Where the detail lives**: `src/repo_presenter/core/aspose_parity.py`, `scripts/aspose_parity.py`,
+`tests/core/test_aspose_parity.py`, `src/repo_presenter/core/portfolio_matrix.py`,
+`scripts/portfolio_status.py`, `tests/core/test_portfolio_matrix.py`.
