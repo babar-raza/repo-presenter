@@ -131,13 +131,18 @@ def measure_content(markdown: str, verified_code_sha256s: Iterable[str] = ()) ->
 def _automatic_total(units: int, cap: int) -> int:
     """The automatic ceiling for a document of ``units`` (visible words plus verified examples).
 
-    Calibrated against the portfolio's own finalized READMEs (independent measurement, 2026-10-31,
-    all 35 aspose.org candidates): none has fewer than 586 visible words, and every one that carries
-    the fixed Documentation & Resources section needs four contextual Aspose links (a products, a
-    docs, a kb and a reference link) beside the banner and the Enterprise Edition link. The earlier
-    tiers (up to 600 units 2, up to 1,200 units 3) gave 3 to a document of 1,153 words and no
-    verified example, which is the Words-.NET BC-06 failure, and would have failed 23 of those 35
-    reference READMEs. A ceiling stays a ceiling: a short document is still held to fewer links.
+    Calibrated against the portfolio's own finalized READMEs, measured directly off the sibling
+    aspose.org checkout by ``scripts/link_budget_calibration.py`` (rerun it to reproduce; this is
+    not a fixed number, it is what that script prints against whatever the checkout holds today).
+    As of 2026-10-31 it reports 35 candidates, none under 586 visible words, and all but one needing
+    four contextual Aspose links (a products, a docs, a kb and a reference link) beside the banner
+    and the Enterprise Edition link. Under the earlier flat tiers (600/1,200/2,000/3,000 unit
+    boundaries, still the shipped tiers on ``main`` at the time of this measurement) the script
+    reports 23 of those 35 failing BC-06 with zero verified examples, including a document of 1,153
+    words getting only 3 -- the Words-.NET BC-06 failure that motivated this change. Under these
+    tiers the same script reports only 1 of 35 failing BC-06 (a document needing 5 contextual links
+    against a cap still fixed at 4, a real residual gap, not fixed here). A ceiling stays a ceiling:
+    a short document is still held to fewer links.
     """
     for bound, total in ((300, 2), (500, 3), (2_000, 4), (3_000, 5)):
         if units <= bound:

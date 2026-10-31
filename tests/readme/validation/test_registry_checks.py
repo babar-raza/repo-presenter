@@ -1868,10 +1868,11 @@ def test_the_ceiling_is_derived_from_this_documents_size_and_examples() -> None:
 
 
 def test_the_portfolios_fixed_four_contextual_links_fit_a_real_sized_readme() -> None:
-    """Independent measurement of all 35 finalized aspose.org candidates (2026-10-31): every one has
-    at least 586 visible words and the fixed Documentation & Resources set of four contextual Aspose
-    links (products, docs, kb, reference). The old tiers gave 3 to a document of 600 to 1,200 units
-    and no verified example, which failed hosted Words-.NET (1,153 words); a fifth link is still over."""
+    """``scripts/link_budget_calibration.py`` against the sibling aspose.org checkout (as of
+    2026-10-31: 35 candidates, none under 586 visible words, all but one needing the fixed
+    Documentation & Resources set of four contextual Aspose links -- products, docs, kb, reference).
+    The old tiers gave 3 to a document of 600 to 1,200 units and no verified example, which failed
+    hosted Words-.NET (1,153 words); a fifth link is still over."""
     four = [
         _link_fact("p", "https://products.aspose.org/3d/python/"),
         _link_fact("d", "https://docs.aspose.org/3d/python/"),
