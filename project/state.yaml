@@ -2924,6 +2924,21 @@ next_ready_items:
       repositories only tested on Lane R so far: aspose-cells-foss/Java (41150003767),
       aspose-imaging-foss/.NET (41150011232), aspose-barcode-foss/Python (41150018498). Not yet
       read.
+    round_eight_lane_l_results_2026_10_30: >
+      aspose-cells-foss/Java (41150003767, Lane L): a REAL SEAL, independently verified -- read
+      the lane-l manifest.json directly (not the stale Lane R one restored alongside it in the
+      same candidates/ directory): state ACCEPTED, outcome NO_CHANGE_WARRANTED (0 defects, 0
+      edits, the live README genuinely needs nothing), 2 real provider_calls. review_verdict.json
+      confirms model_served "qwen3-next", verdict ACCEPT, 2 real unit_reviews. no_op_proof is
+      null; dispatched a same-revision rerun (41151565266) to prove it, not yet read.
+      aspose-imaging-foss/.NET and aspose-barcode-foss/Python (Lane L): both REJECTED, correctly
+      -- real format_overclaim findings (26 and 2 respectively), the designed lane_l_unrepaired_
+      defect refusal pattern, not new defects. aspose-pdf-foss/Cpp (41149996795, Lane R) is still
+      running -- this is the true, confirmed MILESTONE close: every one of the 36 repository/
+      ecosystem pairs in data/registry.json has now had at least one real hosted dispatch this
+      session on at least one lane (Lane R for most; Lane L is sparser but growing). Not every
+      pair is sealed -- most of the open findings recorded across this card and LANE_L_HOSTED_
+      PARITY remain genuinely open -- but first-pass coverage of the full portfolio is complete.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
