@@ -3289,6 +3289,35 @@ next_ready_items:
       surgical scope of the fix: 8 false findings cleared across both repositories, the one
       genuinely real defect on PSD-.NET untouched. Twenty-first fix CONFIRMED, live, on both
       originally-affected repositories.
+    twenty_second_fix_fact_ids_array_bound_falsifier_confirmed_2026_10_30: >
+      Root-caused this card's own earlier speculative note ("section_authoring's own missing
+      batch-size cap... Imaging-.NET") precisely, and DISPROVED the hypothesis it had recorded
+      before building anything -- never guess. Read aspose-imaging-foss/Aspose.Imaging-FOSS-for-
+      .NET's own cached run (41121245347) directly: plan.json's api_hubs count is 1 (not many),
+      and that one hub's own fact_ids count is 1 -- the task that failed (api_reference, slots
+      "intro" + one hub) was genuinely tiny, not large. So a batch-size cap, the hypothesis this
+      card recorded, would not have helped at all. Read the actual truncated reply
+      (llm_cache/calls/0462e8bb92a4.rejected-1.json) instead of guessing: its "hub:..." unit's
+      own fact_ids array repeated its ONE allowed fact id hundreds of times with no sign of
+      stopping, consuming the entire call's token budget on a single-fact slot. This is the
+      EXACT SAME disease prompts/section_authoring.yaml's own text field already documents and
+      fixes (maxLength: 2200, with a comment reading "under constrained decoding an unbounded
+      string has no terminating condition at any max_output_tokens, so a single runaway unit can
+      consume the whole call's budget with no retry possible") -- just hitting the fact_ids
+      ARRAY instead of the text STRING, a field the original fix never touched.
+      Built the direct analogue: authoring_schema()'s per-slot fact_ids override now sets
+      maxItems to len(citable(task, slot)) (citable() already returns a deduplicated, sorted
+      list, so this is a real, tight upper bound -- a valid reply never needs more entries nor
+      the same one twice) and uniqueItems: true; the empty-allowed branch gets maxItems: 1 to
+      match its existing single-empty-string shape. 3 new tests in test_authoring.py, loading
+      the REAL prompts/section_authoring.yaml manifest (not a synthetic stand-in) and
+      reproducing the exact hub-slot shape (2 allowed ids once citable()'s own neutral-kind
+      admission is accounted for, confirmed empirically rather than assumed); falsifier
+      confirmed (reverting only authoring.py makes all 3 new tests fail with KeyError:
+      'maxItems', restored after). Full suite: 3367 passed, 11 skipped, exit 0, run before this
+      commit. NOT YET verified live -- ready for review, not accepted, until a fresh hosted
+      aspose-imaging-foss/.NET re-run shows section_authoring no longer failing with
+      TruncatedOutput.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED

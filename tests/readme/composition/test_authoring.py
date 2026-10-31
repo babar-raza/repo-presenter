@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 from repo_presenter.core.facts import Evidence, Fact, FactsDocument
+from repo_presenter.core.llm.prompts import load_manifests
 from repo_presenter.readme.composition.authoring import (
     SectionTask,
     allowed_identifiers,
+    authoring_schema,
     identifier_tokens,
     preserved_opening_text,
     preserved_section_text,
@@ -13,7 +15,10 @@ from repo_presenter.readme.composition.authoring import (
     recover_preserved_duplicates,
     unit_checks,
 )
+from support import REPO_ROOT
 from tests.readme.composition.synthetic import make_facts
+
+SECTION_AUTHORING = load_manifests(REPO_ROOT / "prompts")["section_authoring"]
 
 
 def test_identifier_tokens_finds_dotted_and_coordinate_shapes() -> None:
@@ -495,3 +500,77 @@ def test_recover_preserved_duplicates_ignores_a_unit_from_a_different_section() 
         facts=facts,
     )
     assert result is None
+
+
+# ---------------------------------------------------------------------------------------------
+# authoring_schema's own fact_ids array bound: the same "unbounded field under constrained
+# decoding has no stopping point" disease the base manifest's own text.maxLength: 2200 was
+# added for, hitting an array instead of a string. Real hosted defect (aspose-imaging-foss/
+# Aspose.Imaging-FOSS-for-.NET, run 41121245347): section_authoring failed with TruncatedOutput
+# ("output truncated at the manifest's max_output_tokens"); the truncated reply's own
+# "hub:public_symbol:aspose.imaging.foss" unit had a fact_ids array that repeated its one
+# allowed fact id hundreds of times with no sign of stopping, consuming the whole call's token
+# budget on a single-fact slot.
+# ---------------------------------------------------------------------------------------------
+
+
+def _hub_task() -> SectionTask:
+    return SectionTask(
+        section_id="api_reference",
+        packet={},
+        accepted_ids=frozenset({"public_symbol:aspose.imaging.foss", "package:name"}),
+        slots=("intro", "hub:public_symbol:aspose.imaging.foss"),
+        slot_facts={
+            "hub:public_symbol:aspose.imaging.foss": frozenset(
+                {"public_symbol:aspose.imaging.foss"}
+            )
+        },
+    )
+
+
+def test_authoring_schema_bounds_a_single_fact_slots_fact_ids_array() -> None:
+    """citable() always admits the section's neutral identity:/package: facts alongside the
+    slot's own one public_symbol -- the real hub slot's allowed set was genuinely 2, never
+    unbounded, matching the real run exactly."""
+    schema = authoring_schema(SECTION_AUTHORING, _hub_task())
+    hub_item = schema["properties"]["units"]["prefixItems"][1]
+    fact_ids = hub_item["properties"]["fact_ids"]
+    assert fact_ids["maxItems"] == 2
+    assert fact_ids["uniqueItems"] is True
+    assert fact_ids["items"]["enum"] == [
+        "package:name",
+        "public_symbol:aspose.imaging.foss",
+    ]
+
+
+def test_authoring_schema_bounds_fact_ids_to_the_slots_own_allowed_count() -> None:
+    task = SectionTask(
+        section_id="key_capabilities",
+        packet={},
+        accepted_ids=frozenset(
+            {"public_symbol:a", "public_symbol:b", "public_symbol:c", "package:name"}
+        ),
+        slots=("capability:1",),
+        slot_facts={
+            "capability:1": frozenset({"public_symbol:a", "public_symbol:b"})
+        },
+    )
+    schema = authoring_schema(SECTION_AUTHORING, task)
+    fact_ids = schema["properties"]["units"]["prefixItems"][0]["properties"]["fact_ids"]
+    # citable() also admits every neutral (identity:/package:) accepted id, so 3 here
+    # (public_symbol:a, public_symbol:b, package:name), never an unbounded array.
+    assert fact_ids["maxItems"] == 3
+    assert fact_ids["uniqueItems"] is True
+
+
+def test_authoring_schema_bounds_fact_ids_to_one_when_nothing_is_citable() -> None:
+    task = SectionTask(
+        section_id="scope_limitations",
+        packet={},
+        accepted_ids=frozenset(),
+        slots=("scope",),
+    )
+    schema = authoring_schema(SECTION_AUTHORING, task)
+    fact_ids = schema["properties"]["units"]["prefixItems"][0]["properties"]["fact_ids"]
+    assert fact_ids["maxItems"] == 1
+    assert fact_ids["items"] == {"type": "string", "maxLength": 0}
