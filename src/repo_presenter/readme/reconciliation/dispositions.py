@@ -1023,19 +1023,40 @@ def _omits_contradicted_command(entry: Mapping[str, Any], block: str, facts: Fac
 def _collapsible_wrapper_bounds(
     output: dict[str, Any], units_by_id: Mapping[str, Fact]
 ) -> dict[str, tuple[str | None, str | None]]:
-    """Per renderer-owned destination, the (outermost opening unit id, outermost closing unit
-    id) among this disposition set's own html_block units matching the wrapper shape: the
-    lowest-ordinal open match and the highest-ordinal close match.
+    """Per renderer-owned destination, the (sole opening unit id, sole closing unit id) among
+    this disposition set's own ``PLACING``-disposed html_block units matching the wrapper shape --
+    ``None`` for a side with zero matches, and -- deliberately -- also ``None`` for a side with
+    more than one, rather than guessing which is the renderer's own outermost pair.
 
-    Adversarial finding from an independent verifier (2026-11-01, on the first version of this
-    fold, which matched the wrapper SHAPE alone with no positional bound): a per-example
+    Adversarial finding #1, independent verifier (2026-11-01, on the first version of this fold,
+    which matched the wrapper SHAPE alone with no positional check at all): a per-example
     collapsible toggle an author legitimately nests inside additional_examples ("click to see
     output", a plausible real idiom) matches the same opening/closing shape as the renderer's own
-    single outermost wrapper, and the shape-only fold would have silently flattened every one of
-    them, not just the one genuine renderer-owned pair. A nested, per-example toggle sits strictly
-    between the section's own outermost open and close in document order (inherited_unit IDs are
-    assigned in document order), so it can never be the single lowest-ordinal open or the single
-    highest-ordinal close -- only the renderer's own outermost pair can be.
+    single outermost wrapper, and would have been flattened right along with it. Fixed by this
+    function's whole existence: a nested, per-example toggle means there is now MORE than one
+    open-shaped (or close-shaped) ``PLACING`` match for that destination, which this function
+    refuses to pick between -- see adversarial finding #2 below for why this is "more than one",
+    not "pick the ordinal extreme", which was this function's own first version and was itself
+    independently found unsound before ever merging.
+
+    Adversarial finding #2, a second independent verifier (2026-11-01, on the ordinal-extreme
+    version of this function that preceded this one): the ordinal-extreme version silently chose
+    the lowest/highest-ordinal candidate even when that choice was never actually CONFIRMED to be
+    the renderer's own wrapper -- if the model disposed the real wrapper some other way entirely
+    (``OMIT_UNSUPPORTED``, destination ``None``, invisible to this per-destination scan), the
+    "extreme" among the remaining candidates was just whichever nested toggle happened to sort
+    first or last, and got wrongly folded. This version never guesses: ambiguity (more than one
+    ``PLACING`` candidate of a given shape) means no fold for that side, full stop, rather than a
+    confident-looking but unconfirmed pick. The real, single-pair case this whole fold exists for
+    (hosted runs 41147002918, 41236496887) is cardinality exactly one on both sides and is
+    unaffected; a repository matching neither shape at all is unaffected either.
+
+    Not fully closed, and not claimed to be: a single legitimate nested toggle, PLACING-disposed
+    into the exact same destination, while the real wrapper is independently disposed some other
+    way entirely (destination ``None``), still has cardinality one and would still be folded --
+    this residual case has never been observed live, needs two independent, compounding model
+    choices to construct at all, and is recorded here rather than hidden, per this project's own
+    stop rule and "report observations, not claims of progress."
     """
     opens: dict[str, list[tuple[int, str]]] = {dest: [] for dest in _RENDERER_OWNED_COLLAPSIBLES}
     closes: dict[str, list[tuple[int, str]]] = {dest: [] for dest in _RENDERER_OWNED_COLLAPSIBLES}
@@ -1058,8 +1079,8 @@ def _collapsible_wrapper_bounds(
             closes[destination].append((ordinal, unit))
     return {
         destination: (
-            min(opens[destination], default=(0, None))[1],
-            max(closes[destination], default=(0, None))[1],
+            opens[destination][0][1] if len(opens[destination]) == 1 else None,
+            closes[destination][0][1] if len(closes[destination]) == 1 else None,
         )
         for destination in _RENDERER_OWNED_COLLAPSIBLES
     }

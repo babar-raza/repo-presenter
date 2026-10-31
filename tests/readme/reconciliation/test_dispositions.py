@@ -630,11 +630,19 @@ def test_normalize_leaves_a_details_wrapper_alone_outside_the_two_renderer_owned
     assert entry["disposition"] == "VERIFIED_PRESERVE"
 
 
-# Adversarial finding from an independent verifier (2026-11-01): matching the wrapper SHAPE alone,
-# with no positional check, would also fold a genuine per-example "click to see output" toggle an
-# author legitimately nests inside additional_examples -- a real, plausible idiom, not merely
-# theoretical. Proves the fix is bounded to the single outermost opening/closing pair only.
-def test_normalize_leaves_a_nested_per_example_toggle_alone_between_the_outer_wrapper() -> None:
+# Adversarial finding #1 from an independent verifier (2026-11-01): matching the wrapper SHAPE
+# alone, with no positional check, would also fold a genuine per-example "click to see output"
+# toggle an author legitimately nests inside additional_examples -- a real, plausible idiom, not
+# merely theoretical. A second independent verifier then found that an ordinal-extreme positional
+# check (lowest/highest ordinal among PLACING candidates) was still unsound: if the real wrapper
+# is disposed some other way entirely (destination None, invisible to this scan), the "extreme"
+# among the remaining candidates is just whichever nested toggle sorts first/last, and gets
+# wrongly folded anyway. The shipped fix never guesses: more than one PLACING candidate of a given
+# shape for a destination means ambiguous, and NEITHER is folded -- proven here by asserting none
+# of the four candidates (not even the two genuinely outermost ones) become SUPERSEDE_REDUNDANT
+# when nested toggles make the pool ambiguous. The unambiguous single-pair case (the real defect
+# this whole fix exists for) is covered by the two positive tests above, which stay unaffected.
+def test_normalize_leaves_an_ambiguous_wrapper_pool_alone_entirely() -> None:
     facts = replace(
         FACTS,
         facts=(
@@ -686,11 +694,13 @@ def test_normalize_leaves_a_nested_per_example_toggle_alone_between_the_outer_wr
     }
     normalize(output, facts)
     by_id = {e["unit_id"]: e for e in output["dispositions"]}
-    assert by_id["inherited_unit:040.html_block"]["disposition"] == "SUPERSEDE_REDUNDANT"
-    assert by_id["inherited_unit:043.html_block"]["disposition"] == "SUPERSEDE_REDUNDANT"
-    # the nested, per-example toggle is never folded by THIS fix as the renderer's own wrapper
-    # (whatever an unrelated, pre-existing uncited-content rule separately does with a bare,
-    # fact-less VERIFIED_PRESERVE is out of this fix's scope -- the one thing this test proves is
-    # that it is never silently treated as renderer-owned and superseded away)
-    assert by_id["inherited_unit:041.html_block"]["disposition"] != "SUPERSEDE_REDUNDANT"
-    assert by_id["inherited_unit:042.html_block"]["disposition"] != "SUPERSEDE_REDUNDANT"
+    # ambiguous (2 opens, 2 closes): this fix folds none of them, not even the genuinely outermost
+    # pair -- a false negative (the real wrapper might still need a human/Lane-R fix) is far safer
+    # than a false positive (silently stripping a legitimate nested toggle)
+    for unit in (
+        "inherited_unit:040.html_block",
+        "inherited_unit:041.html_block",
+        "inherited_unit:042.html_block",
+        "inherited_unit:043.html_block",
+    ):
+        assert by_id[unit]["disposition"] != "SUPERSEDE_REDUNDANT", unit
