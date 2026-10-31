@@ -390,3 +390,102 @@ def test_verified_preserve_into_development_testing_is_the_clean_answer_for_the_
     assert place_errors == []
     entry = output["dispositions"][0]
     assert entry["disposition"] == "VERIFIED_PRESERVE"
+
+
+# Real hosted defect (aspose-3d-foss/Aspose.3D-FOSS-for-Java, run 41180364402): a repository whose
+# only install_command fact is CONTRADICTED (no SUPPORTED install_command, no package:distribution.*
+# fallback either -- that fallback is this repository's own aspose-cells-foss/Cpp shape, not every
+# ecosystem's) still has the Installation section render a real sentence: renderer.py's own
+# _installation() falls to its "not yet published" branch, built from the CONTRADICTED fact and
+# package:name, not from nothing. Without this, every SUPERSEDE_REDUNDANT citing the Maven/Gradle
+# alternative snippets this fact contradicts was force-deferred by normalize()'s generic "destination
+# renders nothing" fold, which placement_errors's own uncited_redundant_defer then refused outright
+# for each code_block among them -- the exact unwinnable loop the distribution-fact fix above closed
+# for a different gap, reopened here by this one.
+_CONTRADICTED_INSTALL_FACTS = replace(
+    FACTS,
+    facts=(
+        *FACTS.facts,
+        Fact("package:version", "package", "26.5.0", (Evidence("README.md"),)),
+        Fact(
+            "install_command:maven",
+            "install_command",
+            "mvn dependency:get -Dartifact=org.aspose:aspose-3d-foss:26.5.0",
+            (Evidence("README.md"),),
+            polarity="CONTRADICTED",
+        ),
+        Fact("build_test_asset:tests", "build_test_asset", "mvn test", (Evidence(".github/workflows/x.yml"),)),
+        Fact(
+            "inherited_unit:014.code_block",
+            "inherited_unit",
+            '```xml\n<dependency>\n  <groupId>org.aspose</groupId>\n</dependency>\n```',
+            (Evidence("README.md", "section 'Widget > Installation'")),
+            attributes={"section": "Widget > Installation"},
+        ),
+    ),
+)
+
+
+def test_rendering_fact_ids_is_still_empty_for_installation_with_only_a_contradicted_fact() -> None:
+    """The gap this fix closes is downstream of rendering_fact_ids, which stays accurate: a
+    CONTRADICTED install_command is not something installation renders as a command, so this
+    function reporting nothing is correct -- normalize() is the layer that must know better."""
+    assert rendering_fact_ids("installation", _CONTRADICTED_INSTALL_FACTS) == []
+
+
+def test_normalize_omits_a_supersede_citing_a_contradicted_install_command_instead_of_deferring() -> (
+    None
+):
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:014.code_block",
+                "disposition": "SUPERSEDE_REDUNDANT",
+                "destination_section": "installation",
+                "fact_ids": ["package:name", "package:version"],
+                "rationale": "Superseded by the installation section's verified install command.",
+            }
+        ]
+    }
+    norm_errors = normalize(output, _CONTRADICTED_INSTALL_FACTS)
+    place_errors = placement_errors(output, _CONTRADICTED_INSTALL_FACTS)
+    entry = output["dispositions"][0]
+    assert entry["disposition"] == "OMIT_UNSUPPORTED"
+    assert entry["destination_section"] is None
+    assert "install_command:maven" in entry["fact_ids"]
+    assert norm_errors == []
+    assert place_errors == []
+
+
+def test_normalize_leaves_defer_unresolved_alone_when_no_contradicted_fact_explains_the_gap() -> (
+    None
+):
+    """The fix is narrowly scoped to a genuine CONTRADICTED fact; a repository with simply no
+    install_command fact at all (UNRESOLVED/absent, not CONTRADICTED) keeps the old behavior --
+    nothing here claims to repair that separate, unproven case."""
+    facts = replace(
+        FACTS,
+        facts=tuple(f for f in FACTS.facts) + (
+            Fact(
+                "inherited_unit:014.code_block",
+                "inherited_unit",
+                '```xml\n<dependency>\n  <groupId>org.aspose</groupId>\n</dependency>\n```',
+                (Evidence("README.md", "section 'Widget > Installation'")),
+                attributes={"section": "Widget > Installation"},
+            ),
+        ),
+    )
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:014.code_block",
+                "disposition": "SUPERSEDE_REDUNDANT",
+                "destination_section": "installation",
+                "fact_ids": ["package:name"],
+                "rationale": "Superseded by the installation section's verified install command.",
+            }
+        ]
+    }
+    normalize(output, facts)
+    entry = output["dispositions"][0]
+    assert entry["disposition"] == "DEFER_UNRESOLVED"

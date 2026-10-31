@@ -1040,6 +1040,9 @@ def normalize(
     install_ids = sorted(
         f.id for f in facts.by_kind("install_command") if f.polarity == "SUPPORTED"
     )
+    contradicted_install = next(
+        (f for f in facts.by_kind("install_command") if f.polarity == "CONTRADICTED"), None
+    )
     build_ids = sorted(f.id for f in facts.by_kind("build_test_asset") if f.polarity == "SUPPORTED")
     absent = {
         section for section, holds in section_conditions(facts, policy).items() if holds is False
@@ -1259,6 +1262,30 @@ def normalize(
             continue
         ids = rendering_fact_ids(destination, facts)
         if not ids:
+            if destination == "installation" and contradicted_install is not None:
+                # Measured live (aspose-3d-foss/Aspose.3D-FOSS-for-Java, hosted run 41180364402,
+                # units 013-018): with no SUPPORTED install_command and no package:distribution.*
+                # fallback (DISTRIBUTION_FACT_PREFIX, just above in rendering_fact_ids), renderer.py's
+                # own _installation() still prints a real sentence here -- "The package `X` is not
+                # yet published..." -- built from the CONTRADICTED install fact itself, not from
+                # nothing. Without this, every SUPERSEDE_REDUNDANT/PLACING disposition citing the
+                # Maven/Gradle snippets this fact contradicts was forced to DEFER_UNRESOLVED, which
+                # placement_errors's own uncited_redundant_defer then refused outright for every
+                # code_block among them -- the same unwinnable loop the DISTRIBUTION_FACT_PREFIX
+                # fallback above fixed for a different repository, reached here by a different gap.
+                # command_block_units(facts) never matches a Maven/Gradle dependency block (fenced
+                # xml/kotlin/groovy, not _COMMAND_FENCES), so this never trips the deterministic
+                # "a command block is never OMIT_UNSUPPORTED while build/install facts exist" guard
+                # a few lines below -- confirmed directly against this run's own facts and README.
+                entry["disposition"] = "OMIT_UNSUPPORTED"
+                entry["destination_section"] = None
+                entry["fact_ids"] = sorted(cited | {contradicted_install.id})
+                entry["rationale"] = (
+                    f"Omitted: {contradicted_install.id} is on record as CONTRADICTED, so the "
+                    "Installation section renders no verified command this duplicates. "
+                    + str(entry.get("rationale") or "")
+                )[:_RATIONALE_LIMIT]
+                continue
             entry["disposition"] = "DEFER_UNRESOLVED"
             entry["destination_section"] = None
             continue
