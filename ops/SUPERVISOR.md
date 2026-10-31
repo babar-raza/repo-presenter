@@ -142,3 +142,13 @@ Not yet ported from foss-mcp, because this repository has at most one taskcard
   `gatecli.py review`.
 - A `REJECT`/`REWORK REQUIRED` verdict is never converted to `ACCEPT` because
   a defect is inconvenient to fix (mission §4, `AGENTS.md` non-negotiable #5).
+- **Never idle-wait on one in-flight thing with nothing else going.** A hosted
+  run, a dispatched verifier subagent, and a background test suite all notify
+  on completion — waiting for that notification is not a reason to stop
+  working. While one is in flight, start the next ranked fix-queue item's
+  investigation, dispatch another independent check, or do other useful prep
+  work in parallel, same as the portfolio-first framing (`AGENTS.md`
+  non-negotiable #8) already asks for across repositories, applied here across
+  time. Report genuine status when asked, but do not spend a turn only
+  reporting "still waiting" when there was other real work available to start
+  (owner correction, 2026-11-01).
