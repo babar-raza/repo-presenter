@@ -43,7 +43,7 @@ from repo_presenter.cascade import (
     DEFAULT_REGISTRY_PATH,
     run_cascade,
 )
-from repo_presenter.core.candidates import LANE_L, LANE_R, LANES
+from repo_presenter.core.candidates import CANDIDATES_DIRNAME, LANE_L, LANE_R, LANES
 from repo_presenter.core.config import GatewayConfig, load_gateway_config
 from repo_presenter.core.errors import ConfigError, OutputRejectedError, PresenterError
 from repo_presenter.core.facts import write_facts
@@ -51,6 +51,7 @@ from repo_presenter.core.git_safety.clone import clone_pinned, pinned_read_only_
 from repo_presenter.core.llm.prompts import load_manifests
 from repo_presenter.core.registry.loader import load_registry, require_listed
 from repo_presenter.core.registry.models import RegistryEntry
+from repo_presenter.core.state.bundle_store import publish_bundle
 from repo_presenter.core.state.cas import StateBackend
 from repo_presenter.core.state.git_backend import GitStateBackend
 from repo_presenter.core.state.present_transaction import (
@@ -328,11 +329,17 @@ def run_present(
     workflow_run_id: str | None,
     pipeline: Callable[[], None],
     lane: str = LANE_R,
+    publish: Callable[[], None] | None = None,
 ) -> int:
     """Run ``pipeline`` under the durable transaction for ``entry``; returns the exit code.
 
     Any typed failure of the pipeline becomes a recorded failed transaction (never a silently
     dropped lease); an untyped exception is a defect and propagates after the lease is released.
+
+    ``publish`` runs once the pipeline has sealed, still inside the transaction: it makes the sealed
+    bundle durable (``core/state/bundle_store.py``). A candidate whose bundle could not be stored
+    is recorded as a failure, not as ready, because a result that only lives in an expiring cache
+    is not a result.
     """
     failure: dict[str, str] = {}
 
@@ -357,6 +364,17 @@ def run_present(
         except PresenterError as exc:
             failure["detail"] = f"{type(exc).__name__}: {exc}"
             return 1
+        if publish is not None:
+            try:
+                publish()
+            except PresenterError as exc:
+                failure["detail"] = (
+                    "sealed locally; bundle not durably published (a rerun republishes from the "
+                    f"restored bundle with zero provider calls): {type(exc).__name__}: {exc}"
+                )
+                failure["class"] = "transient"
+                print(f"::error::{failure['detail']}", file=sys.stderr)
+                return 1
         return 0
 
     def classify(exit_code: int) -> PresentOutcome:
@@ -489,6 +507,19 @@ def main(argv: Sequence[str] | None = None) -> int:
                 lane=args.lane,
             )
 
+    def publish() -> None:
+        publication = publish_bundle(
+            args.repository,
+            args.lane,
+            args.candidates_root / CANDIDATES_DIRNAME / args.repository.replace("/", "__"),
+            remote=args.state_remote,
+            token=state_token,
+        )
+        print(
+            f"bundle: {publication.ref} {publication.commit[:12]} "
+            f"({publication.files} files, {'pushed' if publication.changed else 'unchanged'})"
+        )
+
     with GitStateBackend(
         remote=args.state_remote, token=state_token, lane=args.lane
     ) as backend:
@@ -500,6 +531,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             workflow_run_id=args.workflow_run_id,
             pipeline=pipeline,
             lane=args.lane,
+            publish=publish,
         )
         record = backend.load(args.repository)
 

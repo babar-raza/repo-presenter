@@ -39,6 +39,7 @@ from repo_presenter.facts_handoff import (
     write_handoff,
 )
 from repo_presenter.lane_l import build_lane_l_facts
+from repo_presenter.core.state.bundle_store import BundleStoreError
 from repo_presenter.present import PresentFailure, main, run_present
 from repo_presenter.readme.evidence.facts import links
 
@@ -115,6 +116,88 @@ def test_a_sealed_candidate_commits_accepted_and_releases_the_lease(
     assert record.last_transition.from_state == "REVIEWING"
     assert record.last_transition.to_state == "ACCEPTED"
     assert evaluate_repository_health(REPO, record) == []
+
+
+def test_a_sealed_bundle_is_published_after_the_pipeline_and_before_the_record_commits(
+    remote: Path, tmp_path: Path
+) -> None:
+    entry = _entry()
+    workdir = tmp_path / "work"
+    calls: list[str] = []
+
+    def pipeline() -> None:
+        calls.append("pipeline")
+        _write_sealed_bundle(workdir, entry, "ACCEPTED")
+
+    with GitStateBackend(remote=str(remote)) as backend:
+        exit_code = run_present(
+            backend=backend,
+            entry=entry,
+            candidates_root=workdir,
+            holder_id="present:run-pub",
+            workflow_run_id="run-pub",
+            pipeline=pipeline,
+            publish=lambda: calls.append("publish"),
+        )
+        record = backend.load(REPO)
+
+    assert exit_code == 0 and record is not None and record.state == "ACCEPTED"
+    assert calls == ["pipeline", "publish"]
+
+
+def test_a_bundle_that_cannot_be_published_is_a_visible_failure_not_a_ready_candidate(
+    remote: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A result that lives only in an expiring cache is not a result: if the sealed bundle cannot be
+    stored durably, the run is red and the record says so instead of reading as accepted."""
+    entry = _entry()
+    workdir = tmp_path / "work"
+
+    def pipeline() -> None:
+        _write_sealed_bundle(workdir, entry, "ACCEPTED")
+
+    def publish() -> None:
+        raise BundleStoreError("push of refs/x failed: remote unreachable")
+
+    with GitStateBackend(remote=str(remote)) as backend:
+        exit_code = run_present(
+            backend=backend,
+            entry=entry,
+            candidates_root=workdir,
+            holder_id="present:run-pubfail",
+            workflow_run_id="run-pubfail",
+            pipeline=pipeline,
+            publish=publish,
+        )
+        record = backend.load(REPO)
+
+    assert exit_code == 1
+    assert record is not None and record.state == "FAILED_INTERNAL"
+    assert record.failure is not None
+    assert "not durably published" in record.failure.detail
+    assert "remote unreachable" in record.failure.detail
+    assert "::error::sealed locally" in capsys.readouterr().err
+
+
+def test_nothing_is_published_when_the_pipeline_fails(remote: Path, tmp_path: Path) -> None:
+    entry = _entry()
+    published: list[str] = []
+
+    def pipeline() -> None:
+        raise PresentFailure("independent review returned REJECT with 1 finding(s); nothing sealed")
+
+    with GitStateBackend(remote=str(remote)) as backend:
+        exit_code = run_present(
+            backend=backend,
+            entry=entry,
+            candidates_root=tmp_path / "work",
+            holder_id="present:run-nopub",
+            workflow_run_id="run-nopub",
+            pipeline=pipeline,
+            publish=lambda: published.append("x"),
+        )
+
+    assert exit_code == 1 and published == []
 
 
 def test_a_rejected_candidate_records_a_named_failure_not_a_silent_drop(
