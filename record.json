@@ -5,7 +5,7 @@
   "provider_repository_id": 1245412430,
   "registry_revision": null,
   "active_transaction_id": "56267f90eb494405ba4c90f0c676ddb5",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:050.html_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README)",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-31T00:21:57.363751+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:41147002918",
     "acquired_at": "2026-10-30T23:53:41.423774+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-10-31T00:08:41.423774+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "2445223d97374714abda70495bbd3b3e",
+    "transaction_id": "56267f90eb494405ba4c90f0c676ddb5",
+    "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-Java",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-31T00:21:56.937675+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-pdf-foss/Aspose.PDF-FOSS-for-Java",
+    "output_manifest": "candidates/aspose-pdf-foss__Aspose.PDF-FOSS-for-Java/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:41147002918:aspose-pdf-foss/Aspose.PDF-FOSS-for-Java": "56267f90eb494405ba4c90f0c676ddb5"
   },
