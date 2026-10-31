@@ -1867,6 +1867,33 @@ def test_the_ceiling_is_derived_from_this_documents_size_and_examples() -> None:
     assert not any("exceed" in str(f) for f in link_failures(long))
 
 
+def test_the_portfolios_fixed_four_contextual_links_fit_a_real_sized_readme() -> None:
+    """``scripts/link_budget_calibration.py`` against the sibling aspose.org checkout (as of
+    2026-10-31: 35 candidates, none under 586 visible words, all but one needing the fixed
+    Documentation & Resources set of four contextual Aspose links -- products, docs, kb, reference).
+    The old tiers gave 3 to a document of 600 to 1,200 units and no verified example, which failed
+    hosted Words-.NET (1,153 words); a fifth link is still over."""
+    four = [
+        _link_fact("p", "https://products.aspose.org/3d/python/"),
+        _link_fact("d", "https://docs.aspose.org/3d/python/"),
+        _link_fact("k", "https://kb.aspose.org/3d/python/"),
+        _link_fact("r", "https://reference.aspose.org/3d/python/"),
+    ]
+    five = [*four, _link_fact("b", "https://blog.aspose.org/3d/python/")]
+    nl = chr(10)
+    words = " ".join(["word"] * 1153)
+
+    def over(links: list) -> bool:
+        row = " ".join(f"[{link.id[-1]}]({link.value})" for link in links)
+        candidate = _candidate(
+            readme=nl.join(["# T", "", words, "", row, ""]), facts=_with_links(*links)
+        )
+        return any("exceed" in str(f) for f in link_failures(candidate))
+
+    assert not over(four)
+    assert over(five)
+
+
 def test_the_per_surface_and_per_domain_slots_are_enforced() -> None:
     nl = chr(10)
     words = " ".join(["word"] * 1300)
