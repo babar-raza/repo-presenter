@@ -5,7 +5,7 @@
   "provider_repository_id": 1250546660,
   "registry_revision": null,
   "active_transaction_id": "60019b396aef47d6b813e421dd442b66",
-  "state": "ACCEPTED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -18,12 +18,12 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "PresentFailure: Lane L: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README names the package 'Aspose.Pdf.Foss.Tests', but the package identity is 'Aspose.PDF.FOSS' and no fact states 'Aspose.Pdf.Foss.Tests')",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-10-30T20:12:59.464680+00:00",
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "ACCEPTED",
+    "occurred_at": "2026-10-31T06:40:59.649112+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 1
   },
   "lease": null,
   "last_transition": {
@@ -40,10 +40,10 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 14,
+  "state_version": 15,
   "recent_trigger_dedup_keys": {
     "run:41121225716:aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET": "63e486e493f6430da6c8f97328990c3e",
     "run:41167960925:aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET": "60019b396aef47d6b813e421dd442b66"
   },
-  "recovery_count": 0
+  "recovery_count": 1
 }
