@@ -82,6 +82,7 @@ from repo_presenter.readme.composition.coherence import (
     recover_coherence_regressions,
 )
 from repo_presenter.readme.composition.components.identity import product_name
+from repo_presenter.readme.composition.output_bounds import bound_authoring_citations
 from repo_presenter.readme.composition.planning import (
     plan_checks,
     planning_packet,
@@ -296,7 +297,7 @@ def _run_authoring(
     tasks = authoring_tasks(entry, document, investigation, dispositions, plan)
     outputs: dict[str, dict] = {}
     for task in tasks:
-        call_schema = authoring_schema(loaded, task)
+        call_schema = bound_authoring_citations(authoring_schema(loaded, task), task)
 
         def checks(output: dict, task=task) -> list[str]:
             return unit_checks(output, task, document, name, dispositions=dispositions)

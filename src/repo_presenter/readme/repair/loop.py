@@ -74,6 +74,7 @@ from repo_presenter.readme.composition.authoring_retry import (
     recover_targeted_repair_restatements,
 )
 from repo_presenter.readme.composition.components.identity import product_name
+from repo_presenter.readme.composition.output_bounds import bound_authoring_citations
 from repo_presenter.readme.composition.placement import PLACED, placements
 from repo_presenter.readme.composition.planning import (
     plan_checks,
@@ -492,7 +493,7 @@ def _repair_section(rc: RepairContext, defect: Defect, repairs: RepairLedger) ->
     key = request_hash(
         loaded,
         task.packet,
-        authoring_schema(loaded, task),
+        bound_authoring_citations(authoring_schema(loaded, task), task),
         model=effective_model(loaded, rc.context),
     )
     original = rc.store.get(key)

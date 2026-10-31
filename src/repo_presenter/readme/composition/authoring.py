@@ -678,34 +678,11 @@ def authoring_schema(manifest: LoadedManifest, task: SectionTask) -> dict[str, A
     units["maxItems"] = len(task.slots)
     item = units["items"]
 
-    def _fact_ids_schema(slot: str) -> dict[str, Any]:
-        """One slot's own ``fact_ids`` array, capped to the number of facts it could ever
-        validly cite.
-
-        Measured live (aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET, run 41121245347):
-        section_authoring failed with TruncatedOutput, and the truncated reply's own
-        ``fact_ids`` array for a single-fact hub slot repeated that one fact id hundreds of
-        times with no sign of stopping -- the exact disease ``text``'s own ``maxLength: 2200``
-        (above) was added for ("under constrained decoding an unbounded string has no
-        terminating condition at any max_output_tokens"), here hitting an unbounded ARRAY
-        instead of an unbounded string. ``allowed`` (from :func:`citable`) is already a
-        deduplicated, sorted list of every fact this slot may cite, so a valid reply never
-        needs more entries than that nor the same one twice."""
+    def _fact_id_items(slot: str) -> dict[str, Any]:
         allowed = citable(task, slot)
         if allowed:
-            return {
-                "type": "array",
-                "minItems": 1,
-                "maxItems": len(allowed),
-                "uniqueItems": True,
-                "items": {"type": "string", "enum": allowed},
-            }
-        return {
-            "type": "array",
-            "minItems": 1,
-            "maxItems": 1,
-            "items": {"type": "string", "maxLength": 0},
-        }
+            return {"type": "string", "enum": allowed}
+        return {"type": "string", "maxLength": 0}
 
     units["prefixItems"] = [
         {
@@ -714,7 +691,10 @@ def authoring_schema(manifest: LoadedManifest, task: SectionTask) -> dict[str, A
                 **item["properties"],
                 "section": {"const": task.section_id},
                 "slot": {"const": slot},
-                "fact_ids": _fact_ids_schema(slot),
+                "fact_ids": {
+                    **item["properties"]["fact_ids"],
+                    "items": _fact_id_items(slot),
+                },
             },
         }
         for slot in task.slots
