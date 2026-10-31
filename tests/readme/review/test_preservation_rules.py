@@ -312,6 +312,48 @@ def test_live_loss_is_not_accounted_for_without_evidence_or_by_a_kept_dispositio
         assert any("heading 'Usage'" in message for message in messages), change
 
 
+# Measured live, three times (aspose-cells-foss/Aspose.Cells-FOSS-for-.NET run 41112824093,
+# aspose-words-foss/Aspose.Words-FOSS-for-.NET run 41125275923, aspose-pdf-foss/Aspose.PDF-FOSS-
+# for-Cpp run 41149996795): a heading SUPERSEDE_REDUNDANT into a placeable section, uncited, was
+# never caught by dispositions.py's own gap/fold machinery (headings are skipped outright) nor by
+# this rule's own accounting bar (deliberately not exempt), so it reached this deterministic
+# check with no path back to being accounted for. normalize() now assigns a real identity fact
+# to this exact disposition+kind shape; this test proves the full chain -- the end-to-end
+# behavior this session's own root-cause fixes are measured against -- not just that normalize()
+# itself runs clean.
+def test_normalize_fixes_an_uncited_redundant_heading_so_live_loss_accounts_for_it() -> None:
+    from repo_presenter.readme.reconciliation.dispositions import normalize
+
+    facts = _facts(*UNITS, Fact("identity:ecosystem", "identity", "python", (Evidence("x"),)))
+    candidate = _without(LIVE, USAGE_SECTION)
+    rows = [_row(unit.id) for unit in UNITS if unit.id not in _DROPPED]
+    rows.append(
+        _row(
+            "inherited_unit:005.heading",
+            "SUPERSEDE_REDUNDANT",
+            destination_section="development_testing",
+            fact_ids=[],
+            rationale="Superseded by the Development and Testing section heading.",
+        )
+    )
+    rows.append(
+        _row(
+            "inherited_unit:006.paragraph",
+            "OMIT_UNSUPPORTED",
+            fact_ids=["link_target:docs"],
+            rationale="dead link",
+        )
+    )
+    output = {"dispositions": rows}
+    normalize(output, facts)
+    heading_entry = next(
+        row for row in output["dispositions"] if row["unit_id"] == "inherited_unit:005.heading"
+    )
+    assert heading_entry["fact_ids"] == ["identity:ecosystem"]
+    findings = live_readme_loss_rule(LIVE, candidate, facts=facts, dispositions=output)
+    assert findings == []
+
+
 def test_live_loss_rejects_a_lost_code_block() -> None:
     candidate = LIVE.replace("pip install widget-foss", "uv add widget-foss")
     messages = _messages(

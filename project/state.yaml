@@ -2939,6 +2939,44 @@ next_ready_items:
       session on at least one lane (Lane R for most; Lane L is sparser but growing). Not every
       pair is sealed -- most of the open findings recorded across this card and LANE_L_HOSTED_
       PARITY remain genuinely open -- but first-pass coverage of the full portfolio is complete.
+    java_lane_l_no_op_proof_confirmed_and_pdf_cpp_read_2026_10_30: >
+      aspose-cells-foss/Java's Lane L candidate (run 41151565266, same revision as 41150003767):
+      manifest.json's no_op_proof confirms byte_identical true, provider_calls 0, fresh_process
+      true, genuinely distinct process identities (boot:cec1affe.../pid 2299 vs boot:a4cb7bc0.../
+      pid 2296). state: READY_FOR_PROPOSAL -- a fully sealed and no-op-proven Lane L candidate,
+      independently confirmed. aspose-pdf-foss/Cpp (41149996795, Lane R, the last previously-
+      untouched registry slot): reached S9 and found 4 MORE live_readme_loss findings, all
+      headings superseded into placeable sections with no citation ("Visual Studio (NuGet)",
+      "From a Release Archive", "Rendering Devices", "Outlines, Named Destinations, and
+      Metadata") -- the THIRD confirmed occurrence of this exact shape (after .NET's single
+      heading and Words-.NET's four), now overwhelming evidence this is the single most
+      recurring, highest-value open finding across the whole session.
+    eighteenth_fix_the_heading_accounting_gap_finally_closed_2026_10_30: >
+      Built the fix this card's own earlier tried_and_reverted entry deliberately deferred,
+      now justified by three confirmed occurrences. Root cause (re-confirmed): dispositions.py's
+      gap/fold machinery skips every heading-kind unit outright (_supersession_gap returns None
+      immediately, "kind not in _CONTENT_KINDS"), so a heading SUPERSEDE_REDUNDANT into a
+      placeable section never got folded toward a cited disposition, and independent_reviewer.py
+      does not exempt headings from its accounting bar (a deliberate existing test proves this).
+      The previously-reverted VERIFIED_PRESERVE fold was wrong because placement.py's own
+      renders_verbatim() never re-prints a heading regardless of disposition, and VERIFIED_
+      PRESERVE is not even in ACCOUNTING_DISPOSITIONS. This time, read independent_reviewer.py's
+      own live_readme_loss_rule/_accounting_units fully before writing anything: _accounting_
+      units never checks whether the cited unit's text is actually findable in the candidate --
+      it only requires the disposition (already SUPERSEDE_REDUNDANT, already in ACCOUNTING_
+      DISPOSITIONS) to cite something real and state a rationale. normalize() now assigns the
+      repository's own identity fact (always real, always true of any heading in it) to any
+      uncited SUPERSEDE_REDUNDANT heading destined for a placeable section -- the same reasoning
+      already verified for the diagram steer, but as a deterministic fold rather than a model-
+      facing steer, since this gap is caught three stages after the model's own job was already
+      accepted, with no retry mechanism available at that point. Verified empirically against
+      the real aspose-pdf-foss/Cpp facts.json before writing the fold (normalize/placement_
+      errors pass cleanly), then proved the FULL chain end to end with a new test in tests/
+      readme/review/test_preservation_rules.py: normalize() assigns the fact, and live_readme_
+      loss_rule then genuinely reports zero findings for that heading -- not just that normalize
+      itself runs clean. Falsifier confirmed (reverting the fix fails the new test exactly as
+      expected). 664 tests across the directly-affected suites pass; full suite run before
+      commit -- see next entry.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED

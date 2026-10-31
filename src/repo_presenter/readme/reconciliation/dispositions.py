@@ -1023,7 +1023,12 @@ def normalize(
     Glance is superseded by the renderer's own diagram. Returns the units that cannot be folded
     because the section renders nothing here.
     """
-    deterministic = set(section_ids()) - placeable_section_ids()
+    placeable = placeable_section_ids()
+    deterministic = set(section_ids()) - placeable
+    identity_fact_id = next(
+        (fact.id for fact in facts.facts if fact.kind == "identity" and fact.polarity == "SUPPORTED"),
+        None,
+    )
     coverage = coverage_context(facts)
     unresolved = code_units_by_polarity(facts, "UNRESOLVED")
     contradicted = code_units_by_polarity(facts, "CONTRADICTED")
@@ -1046,6 +1051,38 @@ def normalize(
         destination = entry.get("destination_section")
         disposition = entry.get("disposition")
         cited = set(entry.get("fact_ids") or [])
+        if (
+            disposition == "SUPERSEDE_REDUNDANT"
+            and not cited
+            and unit.rsplit(".", 1)[-1] == "heading"
+            and destination in placeable
+            and identity_fact_id is not None
+        ):
+            # Measured live, three times (aspose-cells-foss/Aspose.Cells-FOSS-for-.NET run
+            # 41112824093, aspose-words-foss/Aspose.Words-FOSS-for-.NET run 41125275923,
+            # aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp run 41149996795): a heading superseded into
+            # a placeable section (the destination's own authored title serves its role instead)
+            # is never caught by this module's own gap/fold machinery at all -- _supersession_gap
+            # returns None outright for every heading-kind unit ("kind not in _CONTENT_KINDS"),
+            # so _judge/_fold_uncovered never even look at it. independent_reviewer.py's own
+            # accounting rule does not exempt headings (a deliberate test proves a dropped
+            # heading with no fact_ids must still be reported lost), so this reached S9's
+            # deterministic live_readme_loss check with no citation, three stages after the
+            # original disposition and long past the point a re-ask could fix it.
+            #
+            # Tried and reverted (see project/state.yaml) folding the disposition itself to
+            # VERIFIED_PRESERVE: placement.py's own renders_verbatim() never re-prints a heading's
+            # literal text regardless of disposition (_RENDERED_ELSEWHERE), and VERIFIED_PRESERVE
+            # is not even in independent_reviewer.py's own ACCOUNTING_DISPOSITIONS set, so that
+            # fix would not have satisfied the accounting check at all. SUPERSEDE_REDUNDANT is
+            # already the right disposition and already in ACCOUNTING_DISPOSITIONS; confirmed
+            # directly (by reading live_readme_loss_rule/_accounting_units) that a citation is
+            # the ONLY thing missing -- _accounting_units never checks whether the cited unit's
+            # text is findable in the candidate, only that the disposition cites something real
+            # and states a rationale. A heading's own identity fact is always real and always
+            # true of it, the same reasoning already verified for the diagram steer.
+            entry["fact_ids"] = [identity_fact_id]
+            continue
         if unit in unpublished:
             if disposition != "OMIT_UNSUPPORTED":
                 entry["rationale"] = (
