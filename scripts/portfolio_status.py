@@ -15,7 +15,13 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from repo_presenter.core.portfolio_matrix import backend_reader, build_matrix, render, summarize
+from repo_presenter.core.portfolio_matrix import (
+    backend_reader,
+    build_matrix,
+    render,
+    stored_bundle_refs,
+    summarize,
+)
 from repo_presenter.core.registry.loader import load_registry
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -29,7 +35,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     entries = load_registry(args.registry).entries
     with backend_reader(args.remote) as read_state:
-        rows = build_matrix(entries, read_state, REPO_ROOT)
+        rows = build_matrix(entries, read_state, REPO_ROOT, stored_bundle_refs(args.remote))
     summary = summarize(rows)
     if args.json:
         print(json.dumps({"rows": [asdict(row) for row in rows], "summary": summary}, indent=2))
