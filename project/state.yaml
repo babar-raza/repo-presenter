@@ -23,6 +23,8 @@ progress:
     has a record for 28 repositories, Lane L for 21. None has been reviewed by the owner, reviewer
     calibration is NOT_PASSED, and only one bundle (3D-.NET, deterministic-only ACCEPT) is committed
     under candidates/. These are pipeline-level observations, not acceptances.
+    Reproduce with: python scripts/portfolio_status.py (read-only; reads the registry, the state
+    remote's per-lane records and candidates/; about 2 minutes).
   unit: authorizable README candidates (independently verified by this repo's own reviewer, not inherited from the old repo's judge)
   registry_total: 36
   repositories_with_composed_candidates: 36

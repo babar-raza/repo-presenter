@@ -931,3 +931,11 @@ Unseekable Stream"). Words-.NET: no LLM review made, deterministic-only verdict,
 Those are separate findings and were not touched. A fresh agent that did not write the change
 checked out `4f9258b` detached and ran the full suite: 3,371 passed, 11 skipped; it also confirmed
 every call site that hashes or sends the authoring schema agrees. Merged to `main` fast-forward.
+
+**Addendum (derived matrix merged)**: `scripts/portfolio_status.py` / `core/portfolio_matrix.py` merged
+fast-forward from `e6bd2d9`. A fresh agent that did not write it recomputed the counts from the
+fetched origin refs with its own script and matched the tool exactly (Lane R attempted 28 / good 4,
+Lane L attempted 21 / good 4, both lanes 1 = Cells-Java, committed bundles R 1 / L 0), and ran the
+full suite: 3,377 passed, 11 skipped. Known limitations it found, not fixed here: the committed-bundle
+count treats a `CORRUPT_BUNDLE` as committed (the per-row column shows the true status); it reads
+records only for registry entries; it does 72 sequential fetches and a transient error aborts the run.
