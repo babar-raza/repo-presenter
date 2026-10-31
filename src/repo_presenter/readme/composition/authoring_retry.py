@@ -386,6 +386,61 @@ def recover_targeted_repair_restatements(
     return output
 
 
+def recover_targeted_repair_dropped_citation(
+    output: dict[str, Any], *, original: Mapping[str, Any]
+) -> dict[str, Any] | None:
+    """Last-resort correction for a ``targeted_repair`` job's own final rejected attempt: restore
+    an ``inherited_unit:*`` citation a revised unit's own fact_ids dropped relative to the same
+    slot's original fact_ids.
+
+    Measured live (aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp, run 41156451223): a BC-08 repair
+    correctly restored a dropped protected command, but its own reply also re-cited the unit's
+    fact_ids from ``[inherited_unit:028.paragraph]`` to ``[package:name]`` -- a change the repair
+    was never asked for. ``cited_inherited_identifiers`` only exempts tokens spelled verbatim
+    inside a SUPPORTED ``inherited_unit`` fact named in a unit's own fact_ids; dropping that
+    citation un-exempted the unit's own already-rendered filenames (``aspose_pdf_foss.lib``,
+    ``libaspose_pdf_foss.a``), rejecting the repair for an identifier violation the original,
+    accepted unit never had. A targeted repair's job is to patch the content a defect names, not
+    to re-decide which facts a unit cites, so any ``inherited_unit:*`` id the original unit cited
+    is restored (added back, never removed) for the same slot in the revised unit.
+    """
+    revised = output.get("revised_output")
+    if not isinstance(revised, dict):
+        return None
+    original_units = {
+        unit.get("slot"): unit
+        for unit in original.get("units", [])
+        if isinstance(unit, dict)
+    }
+    changed = False
+    fixed_units = []
+    for unit in revised.get("units", []):
+        if not isinstance(unit, dict):
+            fixed_units.append(unit)
+            continue
+        prior = original_units.get(unit.get("slot"))
+        if isinstance(prior, dict):
+            dropped = [
+                fact_id
+                for fact_id in prior.get("fact_ids", [])
+                if isinstance(fact_id, str)
+                and fact_id.startswith("inherited_unit:")
+                and fact_id not in unit.get("fact_ids", [])
+            ]
+            if dropped:
+                unit = dict(unit)
+                unit["fact_ids"] = [*unit.get("fact_ids", []), *dropped]
+                changed = True
+        fixed_units.append(unit)
+    if not changed:
+        return None
+    fixed_revised = dict(revised)
+    fixed_revised["units"] = fixed_units
+    output = dict(output)
+    output["revised_output"] = fixed_revised
+    return output
+
+
 _SPELLING_MIN_CHARS = 3
 
 

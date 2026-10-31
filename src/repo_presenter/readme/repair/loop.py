@@ -70,6 +70,7 @@ from repo_presenter.readme.composition.authoring import (
     unit_checks,
 )
 from repo_presenter.readme.composition.authoring_retry import (
+    recover_targeted_repair_dropped_citation,
     recover_targeted_repair_restatements,
 )
 from repo_presenter.readme.composition.components.identity import product_name
@@ -528,6 +529,12 @@ def _repair_section(rc: RepairContext, defect: Defect, repairs: RepairLedger) ->
         )
         if restated_fixed is not None:
             candidate = restated_fixed
+            changed = True
+        citation_fixed = recover_targeted_repair_dropped_citation(
+            candidate, original=original
+        )
+        if citation_fixed is not None:
+            candidate = citation_fixed
             changed = True
         return candidate if changed else None
 

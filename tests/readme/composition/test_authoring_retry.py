@@ -22,6 +22,7 @@ from repo_presenter.readme.composition.authoring import SectionTask
 from repo_presenter.readme.composition.authoring_retry import (
     failing_slots,
     recover_restating_sentences,
+    recover_targeted_repair_dropped_citation,
     recover_targeted_repair_restatements,
     repeated_slots,
 )
@@ -190,6 +191,109 @@ def test_recover_targeted_repair_restatements_is_none_when_nothing_restates() ->
         }
     }
     assert recover_targeted_repair_restatements(output, task=task, facts=_facts()) is None
+
+
+# ---------------------------------------------------------------------------------------------
+# recover_targeted_repair_dropped_citation: restores an inherited_unit:* citation a repair's own
+# reply dropped relative to the original unit. Real hosted defect (aspose-pdf-foss/Aspose.PDF-
+# FOSS-for-Cpp, run 41156451223): a BC-08 repair correctly restored a dropped protected command,
+# but its own reply also re-cited the unit from inherited_unit:028.paragraph to package:name --
+# un-exempting that unit's own already-accepted filenames (cited_inherited_identifiers only
+# exempts tokens spelled verbatim inside an inherited_unit fact named in a unit's own fact_ids),
+# which then failed the repair as a fresh identifier violation the original unit never had.
+# ---------------------------------------------------------------------------------------------
+
+
+def _original_with_inherited_citation() -> dict[str, object]:
+    return {
+        "units": [
+            {
+                "section": "development_testing",
+                "slot": "summary",
+                "text": "The static library lands at `build/libaspose_pdf_foss.a` (or "
+                "`aspose_pdf_foss.lib` on MSVC), built out-of-source under `build/`.",
+                "fact_ids": ["inherited_unit:028.paragraph"],
+            }
+        ],
+        "omitted": [],
+    }
+
+
+def test_recover_targeted_repair_dropped_citation_restores_the_inherited_unit_id() -> None:
+    original = _original_with_inherited_citation()
+    output = {
+        "revised_output": {
+            "units": [
+                {
+                    "section": "development_testing",
+                    "slot": "summary",
+                    "text": "The static library lands at `build/libaspose_pdf_foss.a` (or "
+                    "`build/Aspose_PDF_FOSS.lib` on MSVC), built out-of-source under `build/`. "
+                    "`CMakePresets.json` also carries host-conditional Windows-MSVC presets -- "
+                    "e.g. `cmake --preset windows-msvc-debug`.",
+                    "fact_ids": ["package:name"],
+                }
+            ],
+            "omitted": [],
+        },
+        "changes": [],
+    }
+    repaired = recover_targeted_repair_dropped_citation(output, original=original)
+    assert repaired is not None
+    assert repaired["revised_output"]["units"][0]["fact_ids"] == [
+        "package:name",
+        "inherited_unit:028.paragraph",
+    ]
+    assert repaired["changes"] == []
+
+
+def test_recover_targeted_repair_dropped_citation_is_none_when_nothing_was_dropped() -> None:
+    original = _original_with_inherited_citation()
+    output = {
+        "revised_output": {
+            "units": [
+                {
+                    "section": "development_testing",
+                    "slot": "summary",
+                    "text": "unchanged",
+                    "fact_ids": ["inherited_unit:028.paragraph"],
+                }
+            ],
+            "omitted": [],
+        }
+    }
+    assert recover_targeted_repair_dropped_citation(output, original=original) is None
+
+
+def test_recover_targeted_repair_dropped_citation_is_none_when_revised_output_is_not_a_dict() -> (
+    None
+):
+    original = _original_with_inherited_citation()
+    assert recover_targeted_repair_dropped_citation({}, original=original) is None
+    assert (
+        recover_targeted_repair_dropped_citation(
+            {"revised_output": "not a dict"}, original=original
+        )
+        is None
+    )
+
+
+def test_recover_targeted_repair_dropped_citation_ignores_a_slot_the_original_lacks() -> None:
+    original = _original_with_inherited_citation()
+    output = {
+        "revised_output": {
+            "units": [
+                {
+                    "section": "development_testing",
+                    "slot": "a_new_slot",
+                    "text": "new content",
+                    "fact_ids": ["package:name"],
+                }
+            ],
+            "omitted": [],
+        }
+    }
+    assert recover_targeted_repair_dropped_citation(output, original=original) is None
 
 
 # ---------------------------------------------------------------------------------------------

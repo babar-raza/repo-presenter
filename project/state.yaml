@@ -3041,6 +3041,32 @@ next_ready_items:
       attempt that itself failed for an unrelated reason) warrants its own dedicated,
       unhurried investigation rather than a rushed fix layered on top of what is already the
       eighteenth root cause closed this session.
+    nineteenth_fix_bc_08_dropped_citation_built_falsifier_confirmed_2026_10_30: >
+      Root-caused the second of BC-08's two stacked causes to a single, precise mechanism: read
+      cited_inherited_identifiers() directly -- it exempts a unit's tokens from the generic
+      identifier-allow check only when the unit's own fact_ids still name the SUPPORTED
+      inherited_unit fact whose raw text spells them. The PDF-Cpp repair's own rejected-2.json
+      (read directly, not guessed) shows its reply's R02 change swapped fact_ids from
+      [inherited_unit:028.paragraph] to [package:name] while separately restoring the missing
+      BC-08 command -- an edit the repair was never asked to make, and the one that un-exempted
+      the unit's own already-rendered filenames (aspose_pdf_foss.lib, libaspose_pdf_foss.a),
+      which the renderer and the ORIGINAL accepted unit had carried the entire time. Confirmed
+      empirically against the real facts.json (allowed_identifiers/identifier_allowed, run
+      directly in a REPL) that aspose_pdf_foss.lib fails the same check even in its original
+      lowercase form -- it was never "allowed" in general, only exempted via the dropped
+      citation, proving the citation, not the casing, is the root cause. Built
+      recover_targeted_repair_dropped_citation() in authoring_retry.py (restores any
+      inherited_unit:* id the original unit cited but the revised unit's own fact_ids no longer
+      do, for the same slot, additive only -- a targeted repair patches content, it does not
+      re-decide citations) and wired it into repair/loop.py's _repair_section recover= chain
+      alongside the existing title/restatement recoveries. 4 new tests in
+      test_authoring_retry.py (restores correctly, no-op when nothing dropped, non-dict guard,
+      ignores a slot the original lacks); falsifier confirmed by reverting only the source change
+      (git checkout on the two touched source files, keeping the new tests) -- collection fails
+      with ImportError exactly as expected, re-applied after. Full suite: 3352 passed, 11 skipped,
+      exit 0, run before this commit. NOT YET verified live against a fresh hosted run -- ready
+      for review, not accepted, until a live aspose-pdf-foss/Cpp or /Go re-run shows BC-08 passing
+      end to end (not just repair routing firing) via validation.json read directly.
 
   - id: LANE_L_HOSTED_PARITY
     status: PLANNED
