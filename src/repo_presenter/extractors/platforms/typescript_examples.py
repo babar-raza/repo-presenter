@@ -291,6 +291,26 @@ def _flags(root: Path) -> list[str]:
     return flags
 
 
+# TS2304 "Cannot find name 'doc'": the snippet uses a local it never declares. Only a lower-case
+# name counts: a README fragment omits the line that creates `doc` or `bytes`, which says the
+# snippet is a fragment. A capitalised name (`Document`, `Scene`) is a type or class, and that
+# may be an export the package does not have, so it stays a contradiction. Measured on hosted
+# runs 2026-10-30: 92 of the 184 CONTRADICTED example facts were TS2304 on a bare local, 107 of
+# them in PDF-TypeScript alone ("Cannot find name 'doc'").
+_UNDECLARED_LOCAL = re.compile(r": error TS2304: Cannot find name '[a-z_][A-Za-z0-9_]*'\.?\s*$")
+
+
+def _only_undeclared_locals(diagnostics: Sequence[str]) -> bool:
+    return bool(diagnostics) and all(_UNDECLARED_LOCAL.search(line) for line in diagnostics)
+
+
+def own_diagnostics_outcome(mine: Sequence[str]) -> tuple[str, str]:
+    """The receipt outcome and detail for an example the compiler filed diagnostics against."""
+    if _only_undeclared_locals(mine):
+        return "NOT_VERIFIED", f"fragment, not a contradiction: {mine[0][:360]}"
+    return "FAILED", mine[0][:400]
+
+
 def split_diagnostics(output: str, example: str) -> tuple[list[str], list[str]]:
     """The compiler's diagnostics, separated into the example's own and the library's.
 
@@ -413,7 +433,7 @@ def verify_typescript_examples(
         if result.timed_out:
             outcome, detail = "TIMED_OUT", f"no exit within {timeout_seconds:g}s"
         elif mine:
-            outcome, detail = "FAILED", mine[0][:400]
+            outcome, detail = own_diagnostics_outcome(mine)
         elif result.return_code != 0 and not theirs:
             # The compiler refused, and named no file: nothing was checked, so nothing is proven
             # either way. Measured 2026-09-06 on the hosted runner, whose tsc is 7.0.2: a

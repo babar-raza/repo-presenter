@@ -54,6 +54,13 @@ _SDK_VERSION = re.compile(r"^(\d+)\.(\d+)\.")
 # a disposition acts on.
 _TRAILING_PROJECT = re.compile(r"\s*\[[^\]]*\]\s*$")
 _CS_DIAGNOSTIC = re.compile(r": error CS\d{4}:")
+# A diagnostic filed against the example itself (the harness always names it Program.cs), as
+# opposed to one in the product's own sources, which the ProjectReference rebuilds on every run.
+_PROGRAM_DIAGNOSTIC = re.compile(r"(?:^|[\s\\/])Program\.cs\(\d+,\d+\): error (CS\d{4}):", re.M)
+# CS0103 is "the name does not exist in the current context": a README fragment that uses a local
+# it never declares (`bytes`, `cancellationToken`). It says the snippet is a fragment, not that
+# the product has no such API; a wrong type or member is CS0246 / CS0117 / CS1061 and stays FAILED.
+_FRAGMENT_ONLY_CODES = frozenset({"CS0103"})
 # The wall-clock cost of this build, on this machine, right now - never reproducible and never
 # evidence about the repository.
 _TIME_ELAPSED = re.compile(r"(?m)^Time Elapsed .*\r?\n?")
@@ -376,11 +383,27 @@ def verify_net_examples(
             detail = f"compiled against {project.name}; SDK {version}{added}"
         else:
             detail = _first_error(result.stdout, result.stderr, *machine)
-            # Only a C# compiler diagnostic says the example itself is wrong. A build that failed
-            # on restore, the SDK or the harness named no such diagnostic, and "we could not
-            # check" is NOT_VERIFIED, never a false CONTRADICTED.
+            # Only a C# compiler diagnostic filed against the example itself says the example is
+            # wrong. A build that failed on restore, the SDK or the harness named no such
+            # diagnostic, and "we could not check" is NOT_VERIFIED, never a false CONTRADICTED. The
+            # same holds for a diagnostic in the product's own sources (the product did not build,
+            # so nothing about the example was checked: hosted Words-.NET, all five examples) and
+            # for a snippet whose only complaint is an undeclared local (a README fragment:
+            # hosted Imaging-.NET, `bytes` / `cancellationToken`). A CONTRADICTED example is never
+            # kept in the README, so calling these contradictions deleted real examples and the
+            # headings around them.
             diagnostics = result.stdout + chr(10) + result.stderr
-            outcome = "FAILED" if _CS_DIAGNOSTIC.search(diagnostics) else "NOT_VERIFIED"
+            own_codes = set(_PROGRAM_DIAGNOSTIC.findall(diagnostics))
+            if own_codes and not own_codes <= _FRAGMENT_ONLY_CODES:
+                outcome = "FAILED"
+            elif own_codes:
+                outcome = "NOT_VERIFIED"
+                detail = f"fragment, not a contradiction: {detail}"
+            elif _CS_DIAGNOSTIC.search(diagnostics):
+                outcome = "NOT_VERIFIED"
+                detail = f"the product's own build failed, so the example was not checked: {detail}"
+            else:
+                outcome = "NOT_VERIFIED"
         receipts.append(
             ExampleReceipt(
                 ordinal=candidate.ordinal,

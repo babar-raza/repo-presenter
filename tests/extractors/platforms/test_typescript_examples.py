@@ -362,6 +362,62 @@ def test_an_example_calling_a_member_that_does_not_exist_fails(tmp_path: Path) -
     assert "explode" in receipts[0].detail
 
 
+# Hosted runs, 2026-10-30: 92 of 184 CONTRADICTED example facts were TS2304 "Cannot find name" on a
+# bare local (107 in PDF-TypeScript alone, "Cannot find name 'doc'"): the README fragment omits the
+# line that creates `doc`. A CONTRADICTED example is never kept, so these deleted real examples and
+# the sections holding them. A snippet that merely uses an undeclared local is a fragment.
+_TS2304 = "example_001.ts(3,1): error TS2304: Cannot find name '{name}'."
+
+
+def test_only_undeclared_lower_case_locals_make_a_fragment() -> None:
+    only = typescript_examples._only_undeclared_locals
+    assert only([_TS2304.format(name="doc")])
+    assert only([_TS2304.format(name="doc"), _TS2304.format(name="bytes_1")])
+    assert not only([])
+    assert not only([_TS2304.format(name="Document")])  # a type: may be a missing export
+    assert not only([_TS2304.format(name="doc"), "example_001.ts(4,1): error TS2339: Property"])
+    assert not only(["example_001.ts(3,1): error TS2552: Cannot find name 'doc'. Did you mean"])
+
+
+def test_the_outcome_for_own_diagnostics_separates_fragments_from_contradictions() -> None:
+    fragment = typescript_examples.own_diagnostics_outcome([_TS2304.format(name="doc")])
+    assert fragment[0] == "NOT_VERIFIED" and "fragment" in fragment[1] and "doc" in fragment[1]
+    wrong_api = "example_001.ts(4,3): error TS2339: Property 'explode' does not exist on type 'Widget'."
+    assert typescript_examples.own_diagnostics_outcome([wrong_api])[0] == "FAILED"
+    mixed = typescript_examples.own_diagnostics_outcome([_TS2304.format(name="doc"), wrong_api])
+    assert mixed[0] == "FAILED"
+    assert typescript_examples.own_diagnostics_outcome([_TS2304.format(name="Gadget")])[0] == "FAILED"
+
+
+@needs_tsc
+def test_a_snippet_using_a_local_it_never_declares_is_a_fragment_not_a_contradiction(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "repository"
+    root.mkdir()
+    barrel = _repository(root)
+    fragment = "import { Widget } from './dist';\ndoc.save('out.obj');\n"
+    candidate = ExampleCandidate(1, "typescript", fragment, "README.md", 1, 3, "unit:001")
+    receipts = typescript_examples.verify_typescript_examples(
+        root, barrel, [candidate], tmp_path / "run", 180.0
+    )
+    assert [receipt.outcome for receipt in receipts] == ["NOT_VERIFIED"]
+    assert "fragment" in receipts[0].detail and "doc" in receipts[0].detail
+
+
+@needs_tsc
+def test_a_missing_class_is_still_a_contradiction(tmp_path: Path) -> None:
+    root = tmp_path / "repository"
+    root.mkdir()
+    barrel = _repository(root)
+    missing = "const g = new Gadget();\n"
+    candidate = ExampleCandidate(1, "typescript", missing, "README.md", 1, 2, "unit:001")
+    receipts = typescript_examples.verify_typescript_examples(
+        root, barrel, [candidate], tmp_path / "run", 180.0
+    )
+    assert [receipt.outcome for receipt in receipts] == ["FAILED"]
+
+
 def _building_repository(root: Path, build_script: bool) -> Path:
     barrel = _repository(root)
     manifest = {**MANIFEST, "scripts": {"build": "tsc"}} if build_script else MANIFEST

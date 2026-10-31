@@ -584,3 +584,93 @@ def test_a_diagnostic_with_no_path_in_it_is_unchanged_by_the_scrub(
     )
     assert receipts[0].detail == _HOSTED_DIAGNOSTIC
     assert receipts[0].stdout == _HOSTED_DIAGNOSTIC + "\n"
+
+
+# --- fragment and product-build failures are not contradictions ---------------------------------
+#
+# Hosted runs, 2026-10-30: every README example of Words-.NET failed with a CS0234 in the PRODUCT's
+# own `Aspose.Foundation/.../ArrayUtil.cs` (the product project did not build, so nothing about the
+# example was checked), and three of Imaging-.NET's four examples failed with CS0103 on `bytes`,
+# `cancellationToken` and `GetUploadStream` (README fragments that use a local they never declare).
+# Both were recorded FAILED -> CONTRADICTED, and a CONTRADICTED example is never kept: Quick Start,
+# Additional Examples and the headings around them were dropped and `live_readme_loss` rejected
+# the candidate. A wrong type or member (CS0246 / CS0117 / CS1061 / CS1503) in the example itself is
+# still a contradiction.
+
+_WINDOWS_PROGRAM = "C:" + chr(92) + "w" + chr(92) + "example_001" + chr(92) + "Program.cs"
+
+
+def _build_says(monkeypatch: pytest.MonkeyPatch, output: str) -> None:
+    def fake(argv: list[str], **kwargs: Any) -> ExecutionResult:
+        if argv[1] == "--version":
+            return _result(0, stdout="10.0.401\n")
+        return _result(1, stdout=output + "\n")
+
+    monkeypatch.setattr(net_examples, "dotnet_executable", lambda: "dotnet")
+    monkeypatch.setattr(net_examples, "execute", fake)
+
+
+def _outcome(tmp_path: Path, project: Path) -> Any:
+    return net_examples.verify_net_examples(
+        tmp_path, project, [_candidate(1, "x")], tmp_path / "run"
+    )[0]
+
+
+@pytest.mark.parametrize(
+    "diagnostic",
+    [
+        "Program.cs(3,9): error CS0103: The name 'bytes' does not exist in the current context",
+        "/w/example_001/Program.cs(3,9): error CS0103: The name 'cancellationToken' does not exist",
+        _WINDOWS_PROGRAM + "(3,9): error CS0103: The name 'GetUploadStream' does not exist",
+    ],
+)
+def test_an_example_that_only_names_an_undeclared_local_is_a_fragment_not_a_contradiction(
+    tmp_path: Path, project: Path, monkeypatch: pytest.MonkeyPatch, diagnostic: str
+) -> None:
+    _build_says(monkeypatch, diagnostic)
+    receipt = _outcome(tmp_path, project)
+    assert receipt.outcome == "NOT_VERIFIED"
+    assert "fragment" in receipt.detail and "CS0103" in receipt.detail
+
+
+def test_a_failure_in_the_products_own_sources_says_nothing_about_the_example(
+    tmp_path: Path, project: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _build_says(
+        monkeypatch,
+        "/w/src/Aspose.Foundation/Utils/ArrayUtil.cs(7,14): error CS0234: The type or namespace "
+        "name 'Collections' does not exist in the namespace 'System'",
+    )
+    receipt = _outcome(tmp_path, project)
+    assert receipt.outcome == "NOT_VERIFIED"
+    assert "product's own build failed" in receipt.detail
+
+
+@pytest.mark.parametrize("code", ["CS0246", "CS0117", "CS1061", "CS1503"])
+def test_a_wrong_type_or_member_in_the_example_is_still_a_contradiction(
+    tmp_path: Path, project: Path, monkeypatch: pytest.MonkeyPatch, code: str
+) -> None:
+    _build_says(monkeypatch, f"Program.cs(3,9): error {code}: the API is not what the README says")
+    assert _outcome(tmp_path, project).outcome == "FAILED"
+
+
+def test_an_undeclared_local_beside_a_real_api_error_is_still_a_contradiction(
+    tmp_path: Path, project: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """One genuine API error is enough: the fragment allowance never masks it."""
+    _build_says(
+        monkeypatch,
+        "Program.cs(3,9): error CS0103: The name 'bytes' does not exist in the current context\n"
+        "Program.cs(4,9): error CS1061: 'Scene' does not contain a definition for 'Frobnicate'",
+    )
+    assert _outcome(tmp_path, project).outcome == "FAILED"
+
+
+def test_a_look_alike_file_name_is_not_the_example(
+    tmp_path: Path, project: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A product file called MyProgram.cs is product code, not the harness's Program.cs."""
+    _build_says(monkeypatch, "/w/src/MyProgram.cs(1,1): error CS1061: product code is broken")
+    receipt = _outcome(tmp_path, project)
+    assert receipt.outcome == "NOT_VERIFIED"
+    assert "product's own build failed" in receipt.detail
