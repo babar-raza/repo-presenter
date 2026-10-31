@@ -5,7 +5,7 @@
   "provider_repository_id": 1245479016,
   "registry_revision": null,
   "active_transaction_id": "b1c88f87aee44a0cb4410dab0f8a811e",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-08; nothing sealed",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-10-31T00:10:44.793434+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:41146995071",
     "acquired_at": "2026-10-30T23:55:11.027990+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-10-31T00:10:11.027990+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "eb0b72bf2c67450b9bc02d8485be5a8d",
+    "transaction_id": "b1c88f87aee44a0cb4410dab0f8a811e",
+    "repository": "aspose-pdf-foss/Aspose-PDF-FOSS-for-Go",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-10-31T00:10:44.400983+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-pdf-foss/Aspose-PDF-FOSS-for-Go",
+    "output_manifest": "candidates/aspose-pdf-foss__Aspose-PDF-FOSS-for-Go/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:41146995071:aspose-pdf-foss/Aspose-PDF-FOSS-for-Go": "b1c88f87aee44a0cb4410dab0f8a811e"
   },
