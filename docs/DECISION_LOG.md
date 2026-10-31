@@ -1418,3 +1418,64 @@ surfaced is already covered by the separate, in-flight `fix/renderer-owned-detai
 
 **Where the detail lives**: `src/repo_presenter/readme/evidence/facts/formats.py`
 (`_htm_alias_facts`), `tests/readme/evidence/facts/test_formats.py`.
+
+---
+
+## 2026-11-01: a renderer-owned collapsible wrapper is no longer kept-but-unprinted (merged `fix/renderer-owned-details-wrapper`)
+
+**Decision**: merge `fix/renderer-owned-details-wrapper` to main. `normalize()` now recognizes an
+inherited `html_block` unit that IS the `api_reference`/`additional_examples` sections' own
+`<details>/<summary>` collapsible wrapper (renderer.py's own fixed, unconditional
+`API_SURFACE_SUMMARY`/`ADDITIONAL_EXAMPLES_SUMMARY` labels -- never the original README's wording)
+and folds it from `VERIFIED_PRESERVE`/`VERIFIED_MOVE` to `SUPERSEDE_REDUNDANT`, but only when there
+is exactly one opening-shaped and exactly one closing-shaped candidate per destination --
+deliberately failing closed (no fold at all) on ambiguity rather than guessing.
+
+**Why**: measured live (aspose-pdf-foss/Aspose.PDF-FOSS-for-Java, hosted run 41147002918): the
+model kept `inherited_unit:050.html_block` ("View the Core API Surface") as VERIFIED_PRESERVE into
+`api_reference`, but the renderer always prints "View the Complete Public API Surface" there
+instead -- the preserved text never actually appeared, an unrepairable `disposition_coverage`
+defect. A sibling unit's original wording happened to be byte-identical to the renderer's own
+`additional_examples` label, which is exactly why this was never caught generally before: the same
+shape, masked by coincidence on that one unit.
+
+**Evidence, in three rounds, each closing a real gap a fresh independent verifier found cold**:
+1. First version (shape-only match): an independent verifier found it would also fold a genuine,
+   legitimate per-example "click to see output" `<details>` toggle an author might nest inside
+   `additional_examples` -- a real, plausible idiom, not merely theoretical.
+2. Second version (ordinal-extreme bound: lowest-ordinal open, highest-ordinal close): a second
+   independent verifier reproduced concretely that if the model disposed the TRUE wrapper some
+   other way (`OMIT_UNSUPPORTED`, destination `None`, invisible to the per-destination scan) while
+   a nested toggle was disposed `PLACING` into the same destination, the "extreme" was just
+   whichever nested toggle sorted first/last, and got wrongly folded.
+3. Third, shipped version (cardinality-exactly-one): never guesses among ambiguous candidates --
+   more than one `PLACING` match of a given shape for a destination means no fold for that side at
+   all. A third independent verifier confirmed this closes the second verifier's exact reproduced
+   scenario (multiple nested toggles), does not regress the original single-pair defect, and
+   confirmed the one remaining, explicitly disclosed residual gap (a single nested toggle
+   PLACING-disposed into the same destination while the true wrapper is independently routed to
+   destination `None`) is genuinely as narrow as stated -- not hidden, not worse than disclosed,
+   never observed live, and requires two independent, compounding model choices to construct at all.
+
+Full suite green at every round (3454, 3455, 3455 passed respectively as the fix evolved; 13
+skipped; exit 0 each time). Broader reconciliation/review/repair/cascade check: 676 passed.
+
+**Evidence (hosted re-run from the branch, not main)**: aspose-pdf-foss/Aspose.PDF-FOSS-for-Java
+Lane R, run 41237173263 -- the durable record's `last_transition.to_state` is **`ACCEPTED`**
+(pipeline-level, not owner-reviewed; its `failure` field is stale from the PREVIOUS run, confirmed
+by `last_transition.occurred_at` matching this run's own completion time, not the earlier failure's).
+This fix alone cleared the last blocking defect for this specific candidate. Independently
+corroborated on a second, different repository: aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript Lane R
+(run 41236496887, surfaced while re-checking the separate `fix/htm-html-format-alias` merge) hit the
+exact same `disposition_coverage` shape on a different unit ("View Selected API Surface"); confirmed
+directly against that run's own real facts/dispositions that this fix resolves it too, with zero
+`normalize()`/`placement_errors()` errors.
+
+**What this does NOT decide**: the disclosed residual gap (single nested toggle + true wrapper
+disposed to destination `None`) is not closed here, by design -- recorded as a known, narrow,
+never-observed-live limitation rather than chased further, per this project's own stop rule and the
+"forest, not trees" framing (`AGENTS.md` non-negotiable #8).
+
+**Where the detail lives**: `src/repo_presenter/readme/reconciliation/dispositions.py`
+(`_collapsible_wrapper_bounds`, whose own docstring carries the full three-round history),
+`tests/readme/reconciliation/test_dispositions.py`.
