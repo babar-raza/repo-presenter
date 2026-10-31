@@ -5,7 +5,7 @@
   "provider_repository_id": 1250546660,
   "registry_revision": null,
   "active_transaction_id": "60019b396aef47d6b813e421dd442b66",
-  "state": "INVALIDATED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -19,11 +19,11 @@
   "proposal": null,
   "failure": {
     "classification": "transient",
-    "detail": "sealed locally; bundle not durably published (a rerun republishes from the restored bundle with zero provider calls): BundleStoreError: hash-object 10a363830fea952c29df20fdb37d35ad3a881433/README.md failed: fatal: could not open 'candidates/aspose-pdf-foss__Aspose.PDF-FOSS-for-.NET/lane-l/10a363830fea952c29df20fdb37d35ad3a881433/README.md' for reading: No such file or directory",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-10-31T06:41:19.291018+00:00",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "INVALIDATED",
+    "occurred_at": "2026-10-31T06:48:45.419182+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 2
   },
   "lease": null,
   "last_transition": {
@@ -40,10 +40,10 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 19,
+  "state_version": 20,
   "recent_trigger_dedup_keys": {
     "run:41121225716:aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET": "63e486e493f6430da6c8f97328990c3e",
     "run:41167960925:aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET": "60019b396aef47d6b813e421dd442b66"
   },
-  "recovery_count": 1
+  "recovery_count": 2
 }
