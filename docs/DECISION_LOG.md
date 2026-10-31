@@ -1376,3 +1376,45 @@ CONTRADICTED/UNRESOLVED-coexistence limitation above.
 
 **Where the detail lives**: `src/repo_presenter/readme/reconciliation/dispositions.py`
 (`_matching_unresolved_install`), `tests/readme/reconciliation/test_dispositions.py`.
+
+---
+
+## 2026-11-01: .htm/.html format alias asserted deterministically (merged `fix/htm-html-format-alias`)
+
+**Decision**: merge `fix/htm-html-format-alias` to main. `format_facts()` now synthesizes a
+SUPPORTED `.htm` fact for any direction whose `.html` fact is SUPPORTED, unless real `.htm`
+evidence already exists -- never the reverse, never overwriting real evidence.
+
+**Why**: measured and recorded in this project's own `project/state.yaml` history
+(aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript): the README correctly claims both `.html` and `.htm`
+are recognized, but the product's own source only ever contains the literal string `"html"` in its
+format-dispatch code, never also `"htm"` -- so the extractor only ever produced a fact for `.html`.
+`.htm`/`.html` are the same format everywhere this tool has measured; this fold asserts that one
+deterministic alias, not an inference from unverified prose.
+
+**Evidence**: 3 new tests (positive case, an UNRESOLVED `.html` negative control, and a real-`.htm`-
+evidence-is-never-overwritten negative control). Falsifier confirmed. A fresh agent, cold, in an
+isolated worktree, independently verified: diff scope, correctness of the SUPPORTED-only guard, the
+evidence-dict gap check, direction extraction, no duplicate/conflicting facts (confirmed with the
+verifier's own constructed adversarial test), full suite 3453 passed/13 skipped/exit 0, and the
+one-directional design as a deliberate, evidence-bounded scope limit rather than a gap. One
+tangential, non-blocking finding: `format_overclaim`'s own loose substring matching already
+tolerated `.htm` as a substring of `.html`, so this fix's practical value is less about unblocking
+that specific detector and more about making the `FactsDocument` itself honestly reflect real `.htm`
+support for any other consumer that reads `format` facts directly.
+
+**Evidence (hosted re-run from the branch, not main)**: aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript
+Lane R (run 41236496887). The durable record's `failure.detail` names no `.htm`/format-overclaim
+finding anywhere; the candidate now reaches `independent_review` and fails there on
+`disposition_coverage` for `inherited_unit:037.html_block` ("View Selected API Surface") -- the
+EXACT same renderer-owned-collapsible-wrapper shape independently found and fixed on
+aspose-pdf-foss/Aspose.PDF-FOSS-for-Java this same session (`fix/renderer-owned-details-wrapper`),
+confirmed directly: reproducing this run's own real facts/dispositions through that fix's
+`normalize()` folds the unit to `SUPERSEDE_REDUNDANT` with zero errors -- a second, independent,
+real-world confirmation of that fix, not a new open item.
+
+**What this does NOT decide**: nothing new; the `disposition_coverage` finding this hosted run
+surfaced is already covered by the separate, in-flight `fix/renderer-owned-details-wrapper`.
+
+**Where the detail lives**: `src/repo_presenter/readme/evidence/facts/formats.py`
+(`_htm_alias_facts`), `tests/readme/evidence/facts/test_formats.py`.
