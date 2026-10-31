@@ -135,6 +135,15 @@ PLACING = frozenset(
 _SHELL_OWNED = frozenset({"heading", "badge_row"})
 _RENDERER_OWNED_LINK_IDS = frozenset({BANNER_FACT_ID, HOMEPAGE_FACT_ID, ENTERPRISE_FACT_ID})
 _COMMAND_FENCES = frozenset({"bash", "sh", "shell", "console", "zsh", "powershell", "pwsh", "cmd"})
+# renderer.py's own ADDITIONAL_EXAMPLES_SUMMARY/API_SURFACE_SUMMARY: these two sections always
+# render their OWN <details>/<summary> collapsible wrapper with a fixed label, never the
+# inherited README's own wording (renderer.py lines ~735/1053/1117, unconditional). An inherited
+# html_block that IS this wrapper -- the opening tag with its <summary>, or the bare closing tag
+# -- is structurally renderer-owned the same way a banner or the Enterprise Edition sentence is,
+# regardless of what label the original README's own wrapper happened to use.
+_DETAILS_WRAPPER_OPEN = re.compile(r"(?is)^\s*<details>\s*(?:<summary>.*?</summary>\s*)?$")
+_DETAILS_WRAPPER_CLOSE = re.compile(r"(?is)^\s*</details>\s*$")
+_RENDERER_OWNED_COLLAPSIBLES = frozenset({"api_reference", "additional_examples"})
 _INSTALL_COMMAND = re.compile(
     r"^\s*(?:[$>]\s*)?(?:python3?\s+-m\s+)?(?:pip3?\s+install|npm\s+install|dotnet\s+add|"
     r"cargo\s+add|go\s+get|git\s+clone)\b",
@@ -1187,6 +1196,31 @@ def normalize(
                         RECOVERED_FENCE_RATIONALE + str(entry.get("rationale") or "")
                     )[:_RATIONALE_LIMIT]
                     continue
+        if (
+            disposition in PLACING
+            and destination in _RENDERER_OWNED_COLLAPSIBLES
+            and unit.rsplit(".", 1)[-1] == "html_block"
+        ):
+            # Measured live (aspose-pdf-foss/Aspose.PDF-FOSS-for-Java, hosted run 41147002918,
+            # disposition_coverage): inherited_unit:050.html_block ("<details><summary>View the
+            # Core API Surface</summary>") was kept VERIFIED_PRESERVE into api_reference, but the
+            # renderer prints its OWN fixed wrapper there ("View the Complete Public API
+            # Surface") instead -- the preserved text never actually appears, an unrepairable
+            # "disposition claims content survives when it does not" defect every time the
+            # original wrapper's wording happens to differ from the renderer's own fixed label.
+            # A SIBLING unit (032.html_block, "View Additional Examples") coincidentally matches
+            # the renderer's own ADDITIONAL_EXAMPLES_SUMMARY text byte-for-byte, which is exactly
+            # why this was never caught generally before now: the same bug, masked by luck.
+            unit_fact = units_by_id.get(unit)
+            is_wrapper = unit_fact is not None and (
+                _DETAILS_WRAPPER_OPEN.match(unit_fact.value)
+                or _DETAILS_WRAPPER_CLOSE.match(unit_fact.value)
+            )
+            if is_wrapper:
+                entry["disposition"] = "SUPERSEDE_REDUNDANT"
+                if identity_fact_id is not None:
+                    entry["fact_ids"] = sorted(cited | {identity_fact_id})
+                continue
         if disposition in PLACING and (
             destination == "banner" or (unit.endswith(".badge_row") and BANNER_FACT_ID in cited)
         ):
