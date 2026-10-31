@@ -32,8 +32,8 @@ PINS: dict[str, tuple[tuple[str, ...], str]] = {
         "a7e4ac68af4dd93d9992462a7dd35f30ea6a01941869460bd599209a7953ca15",
     ),
     "format_overclaim.py": (
-        ("1",),
-        "9d2d17bdd4bf3a4743cde4c722e76398abc8221b78623272072d448d51550e71",
+        ("2",),
+        "cbc9ef5e78b4e753ec6eba68a4d1164acc2de900fd441525dcd4941348fafb90",
     ),
     "gaps.py": (
         ("1",),

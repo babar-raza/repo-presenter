@@ -190,3 +190,56 @@ def test_an_api_reference_row_whose_prose_merely_contains_the_word_supported_is_
     facts = make_facts()  # no format/capability facts at all
     result = format_overclaim(make_context(readme, facts))
     assert result.findings == ()
+
+
+# --- evidence of absence ------------------------------------------------------------------------
+#
+# 53 of the 65 format over-claim findings behind the hosted Lane L refusals came from repositories
+# whose extracted facts hold no format or capability at all (Barcode, Email-.Net, Imaging, PDF-Cpp,
+# PDF-TypeScript, Slides-Java, TeX): an extractor gap read as a defect, which refuses the whole
+# candidate as `lane_l_unrepaired_defect`. A claim is a defect when a CONTRADICTED fact says so, or
+# when the facts hold a real picture of the formats and this one is not in it (3D-.NET: sixteen
+# SUPPORTED formats and not U3D / RVM / AMF / HTML5, the owner's 2026-10-20 ruling).
+
+from repo_presenter.readme.correction.report import is_defect
+
+
+def test_a_claim_in_a_repository_with_no_format_facts_is_reported_but_is_not_a_defect(
+    make_context: Any, make_facts: Any
+) -> None:
+    result = format_overclaim(make_context(TABLE_README, make_facts()))
+    assert result.findings, "the claim is still reported for review"
+    assert all(f.report_only_reason == "NO_EVIDENCE_OF_ABSENCE" for f in result.findings)
+    assert not any(is_defect(f) for f in result.findings)
+
+
+def test_a_claim_matching_only_an_unresolved_fact_is_not_a_defect(
+    make_context: Any, make_facts: Any, make_fact: Any
+) -> None:
+    facts = make_facts(
+        make_fact("format:stl", ".stl", evidence=(("io.py", None),)),
+        make_fact("format:obj", ".obj", polarity="UNRESOLVED", evidence=(("io.py", None),)),
+    )
+    result = format_overclaim(make_context(TABLE_README, facts))
+    obj = next(f for f in result.findings if f.line == 8)
+    assert obj.fact_ids == ("format:obj",) and not is_defect(obj)
+
+
+def test_a_claim_absent_from_a_real_picture_of_the_formats_is_still_a_defect(
+    make_context: Any, make_facts: Any, make_fact: Any
+) -> None:
+    """The negative control: the repository has SUPPORTED formats and OBJ is not among them."""
+    facts = make_facts(make_fact("format:stl", ".stl", evidence=(("io.py", None),)))
+    (finding,) = format_overclaim(make_context(TABLE_README, facts)).findings
+    assert finding.line == 8 and is_defect(finding) and not finding.report_only_reason
+
+
+def test_a_contradicted_claim_is_a_defect_even_with_no_other_format_facts(
+    make_context: Any, make_facts: Any, make_fact: Any
+) -> None:
+    facts = make_facts(
+        make_fact("format:obj", ".obj", polarity="CONTRADICTED", evidence=(("io.py", "rejected"),))
+    )
+    findings = format_overclaim(make_context(TABLE_README, facts)).findings
+    contradicted = next(f for f in findings if f.fact_ids == ("format:obj",))
+    assert is_defect(contradicted)

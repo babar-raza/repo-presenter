@@ -63,6 +63,7 @@ NOT_A_DEFECT_REASONS: frozenset[str] = frozenset(
         "NO_BUILD_RECEIPT",
         "BUILD_RECEIPT_FAILED",
         "DOCS_HOLDS_NO_DOCUMENTATION",
+        "NO_EVIDENCE_OF_ABSENCE",
     }
 )
 RULE_UNREPAIRED_DEFECT = "lane_l_unrepaired_defect"

@@ -145,6 +145,13 @@ def _matches(token: str, fact_value: str) -> bool:
 @detector(DETECTOR)
 def format_overclaim(ctx: Context) -> DetectorResult:
     relevant = [fact for fact in ctx.facts.facts if fact.kind in _CLAIMED_KINDS]
+    # Evidence of absence needs a picture to be absent from. 53 of 65 over-claim findings across the
+    # hosted Lane L refusals came from repositories whose facts hold no format or capability at all
+    # (Barcode, Email-.Net, Imaging, PDF-Cpp, PDF-TypeScript, Slides-Java, TeX): an extractor gap
+    # read as a defect, which refuses the whole candidate. 3D-.NET, whose facts hold sixteen
+    # SUPPORTED formats and not U3D / RVM / AMF / HTML5, is the real over-claim the owner's ruling
+    # names and stays a defect.
+    has_picture = any(fact.polarity == "SUPPORTED" for fact in relevant)
     findings: list[Finding] = []
     seen: set[tuple[int, str]] = set()
     for number, label, raw in [*_table_claims(ctx), *_mermaid_claims(ctx)]:
@@ -168,6 +175,26 @@ def format_overclaim(ctx: Context) -> DetectorResult:
                     f"as CONTRADICTED ({contradicted.value}); the claim is not backed by a "
                     "verified fact",
                     (contradicted.id,),
+                )
+            )
+            continue
+        unresolved = next((fact for fact in matching if fact.polarity == "UNRESOLVED"), None)
+        if unresolved is not None or not has_picture:
+            findings.append(
+                Finding(
+                    DETECTOR,
+                    number,
+                    raw.strip(),
+                    f"the README marks {label!r} supported; "
+                    + (
+                        f"{unresolved.id} is on record as UNRESOLVED, so it is neither confirmed "
+                        "nor refuted"
+                        if unresolved is not None
+                        else "the extracted facts hold no format or capability at all, so it is "
+                        "neither confirmed nor refuted"
+                    ),
+                    (unresolved.id,) if unresolved is not None else (),
+                    report_only_reason="NO_EVIDENCE_OF_ABSENCE",
                 )
             )
             continue

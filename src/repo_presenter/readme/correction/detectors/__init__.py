@@ -28,7 +28,7 @@ DETECTOR_VERSIONS: dict[str, str] = {
     "broken_link": "1",
     "enterprise_edition_naming": "1",
     "failing_example": "1",
-    "format_overclaim": "1",
+    "format_overclaim": "2",
     "report_gaps": "1",
     "second_h1": "1",
     "stray_fence": "1",

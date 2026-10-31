@@ -74,6 +74,10 @@ REPORT_ONLY_REASONS: dict[str, str] = {
     "OVERLAPS_ANOTHER_CORRECTION": "it overlaps another correction",
     "DIAGRAM_LABEL_NOT_PORTABLE": "a label holds & < or >, which no Mermaid 11.4-12.1 draws",
     "DIAGRAM_CONTRACT_FAILS": "the redrawn diagram would fail the At a Glance contract anew",
+    "NO_EVIDENCE_OF_ABSENCE": (
+        "no fact contradicts the claim and the extracted facts do not cover it, so it is "
+        "reported for review rather than treated as a defect"
+    ),
 }
 #: A diagram body is a few dozen lines, never more than this.
 MAX_DIAGRAM = 8000
