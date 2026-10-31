@@ -5,7 +5,7 @@
   "provider_repository_id": 1280393633,
   "registry_revision": null,
   "active_transaction_id": "62a747d76a664c6da531174307712765",
-  "state": "FAILED_INTERNAL",
+  "state": "SNAPSHOTTING",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -33,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "d7cce83150f24f54975b2720ebaf0ad4",
-    "transaction_id": "3c76d49492124f1e8bbc12e86c591a8b",
+    "transition_id": "00f95f9df361469d851af359450942f2",
+    "transaction_id": "62a747d76a664c6da531174307712765",
     "repository": "aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python",
-    "from_state": "OBSERVED",
-    "to_state": "FAILED_INTERNAL",
-    "event": "present.yml hosted transaction failed",
-    "occurred_at": "2026-10-28T05:10:07.324327+00:00",
+    "from_state": "FAILED_INTERNAL",
+    "to_state": "SNAPSHOTTING",
+    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
+    "occurred_at": "2026-10-31T07:28:23.854724+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python",
     "output_manifest": "candidates/aspose-barcode-foss__Aspose.BarCode-FOSS-for-Python/lane-l/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 7,
+  "state_version": 8,
   "recent_trigger_dedup_keys": {
     "run:40636309634:aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python": "3c76d49492124f1e8bbc12e86c591a8b",
     "run:41150018498:aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python": "a3b9f9a3282d47b7a4d89a336977dedb",
