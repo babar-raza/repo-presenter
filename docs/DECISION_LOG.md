@@ -920,3 +920,14 @@ declared limits), the persistence mechanism for candidates and its token, taskca
 
 **Where the detail lives**: `project/state.yaml` (PORTFOLIO_WIDENING_2026_10_30 entries, now
 annotated), `data/reviewer_calibration.json`, `docs/investigations/2026-10-27-reviewer-calibration-iteration-3.md`.
+
+**Addendum, same day (live check of the correction `4f9258b`)**: dispatched from the branch, not
+`main`: run 41173975804 (Imaging-.NET, the original target) and run 41173983873 (Words-.NET, which
+reached composition before). Both now reach composition, validation and review, so the HTTP 400
+is gone and section_authoring completes. Neither is sealed. Imaging-.NET: independent review REJECT
+with 4 blocking `live_readme_loss` omissions (headings "Additional Examples", "Probe a File
+Asynchronously", "Count Frames in a Multi-Frame GIF or a Multi-Page DJVU", "Detect a Format From an
+Unseekable Stream"). Words-.NET: no LLM review made, deterministic-only verdict, BC-06 still fails.
+Those are separate findings and were not touched. A fresh agent that did not write the change
+checked out `4f9258b` detached and ran the full suite: 3,371 passed, 11 skipped; it also confirmed
+every call site that hashes or sends the authoring schema agrees. Merged to `main` fast-forward.
