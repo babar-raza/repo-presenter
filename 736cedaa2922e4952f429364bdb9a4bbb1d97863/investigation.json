@@ -1,0 +1,184 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:platform",
+      "install_command:maven",
+      "dependency:none"
+    ],
+    "text": "Java developers building server-side or desktop applications that require PDF document generation, manipulation, and extraction without third-party runtime dependencies."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "example:005",
+        "public_symbol:org.aspose.pdf",
+        "public_symbol:org.aspose",
+        "public_symbol:org"
+      ],
+      "text": "Create PDFs from scratch using Document and Page APIs, add paragraphs, tables, and text fragments, and save to file or stream.",
+      "title": "Create and edit PDF documents"
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "example:004",
+        "public_symbol:org.aspose.pdf"
+      ],
+      "text": "Extract plain text using TextAbsorber and images using XImage from existing PDF documents page by page.",
+      "title": "Extract text and images"
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:006",
+        "example:007",
+        "example:008",
+        "example:009",
+        "public_symbol:org.aspose.pdf"
+      ],
+      "text": "Fill AcroForm fields, add and modify widget annotations, radio button options, and border styles using Form and Annotation APIs.",
+      "title": "Work with forms and annotations"
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "package:java_release",
+        "build_test_asset:docs"
+      ],
+      "text": "Render PDF pages to raster images using device classes and convert to/from HTML and XML using save options.",
+      "title": "Render and convert pages"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.pdf",
+        "public_symbol:org.aspose"
+      ],
+      "text": "Encrypt documents with AES/RC4, sign with PKCS#7, and optimize resources using built-in security and optimization APIs.",
+      "title": "Secure and optimize documents"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.pdf"
+      ],
+      "text": "Build and inspect document outlines, bookmarks, and tagged PDF structure trees using dedicated APIs.",
+      "title": "Manage document structure"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "text": "No OCR support; text recognition in scanned images requires a dedicated OCR library."
+    },
+    {
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "text": "No conversion to non-PDF formats beyond HTML/XML; DOCX, XLSX, PPTX, EPUB, and similar are unsupported."
+    },
+    {
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "text": "Concurrency is not supported for a single Document instance; use one Document per thread for parallel processing."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "dependency:none",
+        "example:003",
+        "example:006"
+      ],
+      "text": "Enables programmatic PDF creation, text extraction, form filling, annotation handling, and page operations using a single pure-Java dependency with no external runtime libraries."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "license:spdx",
+        "example:001",
+        "example:009",
+        "public_symbol:org.aspose.pdf"
+      ],
+      "text": "Supports ISO 32000-1:2008-compliant PDF processing including AcroForm fields, annotations, digital signatures, encryption, and PDF/A conversion."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "example:005",
+        "package:java_release",
+        "build_test_asset:build-command"
+      ],
+      "text": "Provides document optimization, resource management, and conversion to/from HTML/XML and raster formats for integration into document workflows."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:family",
+      "identity:platform",
+      "identity:repository",
+      "license:spdx",
+      "package:name",
+      "package:version"
+    ],
+    "text": "Aspose.PDF FOSS for Java is a free, open-source, pure-Java library for creating, reading, and modifying PDF documents compliant with ISO 32000-1:2008."
+  },
+  "uncertainties": [
+    "The exact set of public API types beyond the documented 1026 public types is not enumerated in the facts.",
+    "Whether PDF/X validation and conversion has dedicated test coverage is not confirmed by the facts.",
+    "The behavior of text replacement with complex bidirectional scripts is partially implemented but edge cases are not fully specified.",
+    "The scope of XFA form rendering limitations beyond dynamic layout is not detailed beyond flattening capability.",
+    "The exact resource optimization strategies beyond basic stream recompression are not fully specified.",
+    "The availability of helper classes for public-key-encrypted PDFs beyond ICustomSecurityHandler is not confirmed.",
+    "The exact behavior of multi-frame TIFF handling when setSelectedFrame is not called is not specified.",
+    "The thread-safety guarantees for facades like PdfFileEditor are not explicitly stated beyond Document instances."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "build_test_asset:build-command",
+        "build_test_asset:test-command",
+        "build_test_asset:ci",
+        "build_test_asset:ci-matrix",
+        "build_test_asset:tests",
+        "dependency:development.org.junit.jupiter-junit-jupiter"
+      ],
+      "name": "Build and test",
+      "text": "Build the project with 'mvn package' and run tests with 'mvn -B clean test' using JUnit 5 in CI pipelines defined under .github/workflows/."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:release-workflow",
+        "package:java_release",
+        "package:published_version"
+      ],
+      "name": "Release to Maven Central",
+      "text": "Releases are published to Maven Central via the maven-central-release.yml workflow, targeting Java 11 and version 26.9.0."
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "public_symbol:org.aspose.pdf",
+        "public_symbol:org.aspose"
+      ],
+      "name": "Create and modify PDFs",
+      "text": "Developers instantiate Document, add pages with Page, insert text via TextFragment, and save to PDF using doc.save()."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "example:004",
+        "example:006",
+        "public_symbol:org.aspose.pdf"
+      ],
+      "name": "Extract content",
+      "text": "Extract text using TextAbsorber, images using XImage, and form field values using Form and Field APIs."
+    }
+  ]
+}

@@ -1,0 +1,1349 @@
+{
+  "dispositions": [
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "license:spdx",
+        "package:name",
+        "package:version"
+      ],
+      "rationale": "The H1 product name is supported by the product_summary fact_ids and belongs in the opening section.",
+      "unit_id": "inherited_unit:001.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "link_target:001",
+        "link_target:002",
+        "link_target:003",
+        "link_target:004",
+        "link_target:005",
+        "link_target:007",
+        "link_target:008",
+        "link_target:badge.ci"
+      ],
+      "rationale": "Redundant with the verified facts it names: link_target:001, link_target:002, link_target:003, link_target:004, link_target:005, link_target:007, link_target:00",
+      "unit_id": "inherited_unit:002.badge_row"
+    },
+    {
+      "destination_section": "banner",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:product.banner",
+        "link_target:product.enterprise",
+        "link_target:product.homepage"
+      ],
+      "rationale": "The banner image links to a verified aspose.com product page and belongs in enterprise_relationship.",
+      "unit_id": "inherited_unit:003.badge_row"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:platform",
+        "dependency:none",
+        "license:spdx"
+      ],
+      "rationale": "The paragraph's substance is supported by identity, dependency, and license facts and belongs in the opening.",
+      "unit_id": "inherited_unit:004.paragraph"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision"
+      ],
+      "rationale": "The Navigation heading is rendered by the deterministic navigation section and is redundant.",
+      "unit_id": "inherited_unit:005.heading"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision"
+      ],
+      "rationale": "The navigation list is rendered by the deterministic navigation section and is redundant.",
+      "unit_id": "inherited_unit:006.list"
+    },
+    {
+      "destination_section": "at_a_glance",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The At a Glance heading is rendered by the deterministic at_a_glance section and is redundant.",
+      "unit_id": "inherited_unit:007.heading"
+    },
+    {
+      "destination_section": "at_a_glance",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "build_test_asset:docs",
+        "example:001",
+        "example:002",
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:006",
+        "example:007",
+        "example:008",
+        "example:009",
+        "package:java_release",
+        "public_symbol:org",
+        "public_symbol:org.aspose",
+        "public_symbol:org.aspose.pdf"
+      ],
+      "rationale": "Superseded by the At a Glance diagram the renderer draws from the verified formats and capabilities.",
+      "unit_id": "inherited_unit:008.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The Key Capabilities heading is rendered by the deterministic key_capabilities section and is redundant.",
+      "unit_id": "inherited_unit:009.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_REWRITE",
+      "fact_ids": [
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:006",
+        "example:001",
+        "example:002",
+        "example:007",
+        "example:008",
+        "example:009",
+        "public_symbol:org.aspose.pdf",
+        "public_symbol:org.aspose"
+      ],
+      "rationale": "The list items are supported by example and public_symbol facts and are re-authored in key_capabilities.",
+      "unit_id": "inherited_unit:010.list"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "rationale": "The Installation heading is rendered by the deterministic installation section and is redundant.",
+      "unit_id": "inherited_unit:011.heading"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "rationale": "The paragraph is redundant because the installation section renders the exact Maven command.",
+      "unit_id": "inherited_unit:012.paragraph"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "rationale": "The Maven dependency snippet is redundant because the installation section renders the exact command.",
+      "unit_id": "inherited_unit:013.code_block"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "rationale": "The Gradle label is redundant because the installation section renders the exact command.",
+      "unit_id": "inherited_unit:014.paragraph"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "rationale": "The Gradle implementation snippet is redundant because the installation section renders the exact command.",
+      "unit_id": "inherited_unit:015.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:build-command"
+      ],
+      "rationale": "The 'To build from source instead:' label is supported by the build-command fact and belongs in development_testing.",
+      "unit_id": "inherited_unit:016.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:build-command"
+      ],
+      "rationale": "The source build command snippet is supported by the build-command fact and belongs in development_testing.",
+      "unit_id": "inherited_unit:017.code_block"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:development.org.junit.jupiter-junit-jupiter",
+        "dependency:none"
+      ],
+      "rationale": "The Dependencies heading is rendered by the deterministic dependencies section and is redundant.",
+      "unit_id": "inherited_unit:018.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:development.org.junit.jupiter-junit-jupiter",
+        "dependency:none"
+      ],
+      "rationale": "The Required Package Dependencies heading is rendered by the deterministic dependencies section and is redundant.",
+      "unit_id": "inherited_unit:019.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:none"
+      ],
+      "rationale": "Kept in development_testing: scope_limitations holds no install material. The statement about no required third-party dependencies is supported and belongs i...",
+      "unit_id": "inherited_unit:020.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Native and System Requirements' heading is superseded by the 'Scope and Limitations' section which renders system requirements from facts.",
+      "unit_id": "inherited_unit:021.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "CORRECT_WITH_EVIDENCE",
+      "fact_ids": [
+        "package:java_release",
+        "build_test_asset:ci-matrix"
+      ],
+      "rationale": "Java 11 requirement is verified by package:java_release and build_test_asset:ci-matrix facts; moved to scope_limitations as a system requirement.",
+      "unit_id": "inherited_unit:022.list"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:development.org.junit.jupiter-junit-jupiter",
+        "dependency:none"
+      ],
+      "rationale": "The 'Development Dependencies' heading is superseded by the 'Dependencies' section which renders dependency information from facts.",
+      "unit_id": "inherited_unit:023.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "CORRECT_WITH_EVIDENCE",
+      "fact_ids": [
+        "dependency:development.org.junit.jupiter-junit-jupiter",
+        "build_test_asset:test-command"
+      ],
+      "rationale": "JUnit Jupiter 5.10.2 is verified as a development dependency used by the Maven test phase; placed in development_testing as it's relevant to testing workflow.",
+      "unit_id": "inherited_unit:024.list"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Quick Start' heading is superseded by the 'Quick Start' section which renders minimal examples from facts.",
+      "unit_id": "inherited_unit:025.heading"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
+      "unit_id": "inherited_unit:026.paragraph"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "Printed by the example section from the verified example fact it cites, with any usings the compiler needed supplied above the inherited code.",
+      "unit_id": "inherited_unit:027.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Additional Examples' heading is superseded by the 'Additional Examples' section which renders further verified examples.",
+      "unit_id": "inherited_unit:028.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "Not printed again: additional examples already states this material from the facts it cites, so the kept unit is redundant.",
+      "unit_id": "inherited_unit:029.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:030.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "Printed by the example section from the verified example fact it cites, with any usings the compiler needed supplied above the inherited code.",
+      "unit_id": "inherited_unit:031.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The HTML details/summary block has no supporting fact and serves no deterministic purpose in the new structure.",
+      "unit_id": "inherited_unit:032.html_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:033.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "Printed by the example section from the verified example fact it cites, with any usings the compiler needed supplied above the inherited code.",
+      "unit_id": "inherited_unit:034.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:004"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:035.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:004"
+      ],
+      "rationale": "Printed by the example section from the verified example fact it cites, with any usings the compiler needed supplied above the inherited code.",
+      "unit_id": "inherited_unit:036.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:005"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:037.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:005"
+      ],
+      "rationale": "Printed by the example section from the verified example fact it cites, with any usings the compiler needed supplied above the inherited code.",
+      "unit_id": "inherited_unit:038.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:006"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:039.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:006"
+      ],
+      "rationale": "Printed by the example section from the verified example fact it cites, with any usings the compiler needed supplied above the inherited code.",
+      "unit_id": "inherited_unit:040.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:007"
+      ],
+      "rationale": "The heading and code block are superseded by the verified example example:007 under Additional Examples.",
+      "unit_id": "inherited_unit:041.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:007"
+      ],
+      "rationale": "The code block is superseded by the verified example example:007 under Additional Examples.",
+      "unit_id": "inherited_unit:042.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:008"
+      ],
+      "rationale": "The heading and code block are superseded by the verified example example:008 under Additional Examples.",
+      "unit_id": "inherited_unit:043.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:008"
+      ],
+      "rationale": "The code block is superseded by the verified example example:008 under Additional Examples.",
+      "unit_id": "inherited_unit:044.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:009"
+      ],
+      "rationale": "The heading and code block are superseded by the verified example example:009 under Additional Examples.",
+      "unit_id": "inherited_unit:045.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:009"
+      ],
+      "rationale": "The code block is superseded by the verified example example:009 under Additional Examples.",
+      "unit_id": "inherited_unit:046.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:007",
+        "example:008",
+        "example:009"
+      ],
+      "rationale": "The HTML block is superseded by the verified examples example:007, example:008, and example:009 under Additional Examples.",
+      "unit_id": "inherited_unit:047.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading 'API Reference' is the canonical section heading for the API Reference section.",
+      "unit_id": "inherited_unit:048.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_REWRITE",
+      "fact_ids": [
+        "public_symbol:org",
+        "public_symbol:org.aspose",
+        "public_symbol:org.aspose.pdf"
+      ],
+      "rationale": "The paragraph introduces the API reference tables and is supported by the public_symbol facts; the unsupported count '1026 public types' is removed and replaced",
+      "unit_id": "inherited_unit:049.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The HTML block is part of the API reference section's collapsible structure.",
+      "unit_id": "inherited_unit:050.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading 'Core API' is a valid subsection heading under API Reference.",
+      "unit_id": "inherited_unit:051.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table lists core API classes supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:052.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:org",
+        "public_symbol:org.aspose",
+        "public_symbol:org.aspose.pdf"
+      ],
+      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "unit_id": "inherited_unit:053.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table lists core API interfaces supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:054.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading 'Enumerations' is a valid subsection heading under API Reference.",
+      "unit_id": "inherited_unit:055.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table lists core API enumerations supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:056.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:org",
+        "public_symbol:org.aspose",
+        "public_symbol:org.aspose.pdf"
+      ],
+      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "unit_id": "inherited_unit:057.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table lists annotation classes supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:058.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading 'Enumerations' is a valid subsection heading under the Annotations section.",
+      "unit_id": "inherited_unit:059.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table lists annotation enumerations supported by the public_symbol facts.",
+      "unit_id": "inherited_unit:060.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Devices' heading and its table are superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:061.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Devices' table is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:062.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Enumerations' heading under 'Devices' is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:063.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Enumerations' table under 'Devices' is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:064.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Drawing' heading and its table are superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:065.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Drawing' table is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:066.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Enumerations' heading under 'Drawing' is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:067.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Enumerations' table under 'Drawing' is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:068.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Engine' heading and its table are superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:069.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Engine' table is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:070.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Interfaces' heading and its table are superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:071.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Interfaces' table is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:072.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Enumerations' heading under 'Interfaces' is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:073.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Enumerations' table under 'Interfaces' is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:074.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Facades' heading and its table are superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:075.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Facades' table is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:076.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Enumerations' heading under 'Facades' is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:077.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Enumerations' table under 'Facades' is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:078.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Forms' heading and its table are superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:079.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'Forms' table is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:080.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Enumerations' heading is superseded by the API Reference section's structured public surface inventory.",
+      "unit_id": "inherited_unit:081.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The enumeration table is superseded by the API Reference section's structured public surface inventory.",
+      "unit_id": "inherited_unit:082.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'HTML' heading is superseded by the API Reference section's structured public surface inventory.",
+      "unit_id": "inherited_unit:083.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The HTML class table is superseded by the API Reference section's structured public surface inventory.",
+      "unit_id": "inherited_unit:084.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Logicalstructure' heading is superseded by the API Reference section's structured public surface inventory.",
+      "unit_id": "inherited_unit:085.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The logical structure class table is superseded by the API Reference section's structured public surface inventory.",
+      "unit_id": "inherited_unit:086.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Operators' heading is superseded by the API Reference section's structured public surface inventory.",
+      "unit_id": "inherited_unit:087.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The operators class table is superseded by the API Reference section's structured public surface inventory.",
+      "unit_id": "inherited_unit:088.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Interfaces' heading is superseded by the API Reference section's structured public surface inventory.",
+      "unit_id": "inherited_unit:089.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The interfaces table is superseded by the API Reference section's structured public surface inventory.",
+      "unit_id": "inherited_unit:090.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Optimization' heading is superseded by the API Reference section's structured public surface inventory.",
+      "unit_id": "inherited_unit:091.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The optimization class table is superseded by the API Reference section's structured public surface inventory.",
+      "unit_id": "inherited_unit:092.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Printing' heading is superseded by the API Reference section's structured public surface inventory.",
+      "unit_id": "inherited_unit:093.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The printing class table is superseded by the API Reference section's structured public surface inventory.",
+      "unit_id": "inherited_unit:094.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Enumerations' heading is superseded by the API Reference section's structured public surface inventory.",
+      "unit_id": "inherited_unit:095.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The printing enumeration table is superseded by the API Reference section's structured public surface inventory.",
+      "unit_id": "inherited_unit:096.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Security' heading is superseded by the API Reference section's structured public surface inventory.",
+      "unit_id": "inherited_unit:097.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The security class table is superseded by the API Reference section's structured public surface inventory.",
+      "unit_id": "inherited_unit:098.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Interfaces' heading is superseded by the API Reference section's structured public surface inventory.",
+      "unit_id": "inherited_unit:099.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The security interface table is superseded by the API Reference section's structured public surface inventory.",
+      "unit_id": "inherited_unit:100.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Enumerations' heading is superseded by the API Reference section which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:101.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The enumeration table is superseded by the API Reference section which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:102.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Tagged' heading is superseded by the API Reference section which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:103.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Tagged class table is superseded by the API Reference section which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:104.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Interfaces' heading is superseded by the API Reference section which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:105.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The interface table is superseded by the API Reference section which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:106.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Text' heading is superseded by the API Reference section which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:107.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Text class table is superseded by the API Reference section which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:108.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Enumerations' heading is superseded by the API Reference section which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:109.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The enumeration table is superseded by the API Reference section which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:110.table"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "No fact supports the existence or content of a 'Detailed Member Reference' section; it is not rendered by deterministic code.",
+      "unit_id": "inherited_unit:111.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "No fact supports the existence or content of a 'Document and Pages' section; it is not rendered by deterministic code.",
+      "unit_id": "inherited_unit:112.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The list items map to verified public symbols and belong in the API Reference section.",
+      "unit_id": "inherited_unit:113.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The list items map to verified public symbols and belong in the API Reference section.",
+      "unit_id": "inherited_unit:113.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The list items map to verified public symbols and belong in the API Reference section.",
+      "unit_id": "inherited_unit:113.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The list items map to verified public symbols and belong in the API Reference section.",
+      "unit_id": "inherited_unit:113.004.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "No fact supports the existence or content of a 'Text' section under this heading; it is not rendered by deterministic code.",
+      "unit_id": "inherited_unit:114.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The list items map to verified public symbols and belong in the API Reference section.",
+      "unit_id": "inherited_unit:115.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The list items map to verified public symbols and belong in the API Reference section.",
+      "unit_id": "inherited_unit:115.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The list items map to verified public symbols and belong in the API Reference section.",
+      "unit_id": "inherited_unit:115.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Forms' heading is superseded by the API Reference section which enumerates public symbols; the shell re-authors this section from facts.",
+      "unit_id": "inherited_unit:116.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Form' facade methods are superseded by the API Reference section which enumerates public symbols; the shell re-authors this section from facts.",
+      "unit_id": "inherited_unit:117.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Field' facade methods are superseded by the API Reference section which enumerates public symbols; the shell re-authors this section from facts.",
+      "unit_id": "inherited_unit:117.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'RadioButtonOptionField' methods are superseded by the API Reference section which enumerates public symbols; the shell re-authors this section from facts.",
+      "unit_id": "inherited_unit:117.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Facades' heading is superseded by the API Reference section which enumerates public symbols; the shell re-authors this section from facts.",
+      "unit_id": "inherited_unit:118.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'PdfFileEditor' facade methods are superseded by the API Reference section which enumerates public symbols; the shell re-authors this section from facts.",
+      "unit_id": "inherited_unit:119.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'PdfContentEditor' facade methods are superseded by the API Reference section which enumerates public symbols; the shell re-authors this section from facts.",
+      "unit_id": "inherited_unit:119.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'PdfBookmarkEditor' facade methods are superseded by the API Reference section which enumerates public symbols; the shell re-authors this section from facts",
+      "unit_id": "inherited_unit:119.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'PdfExtractor' facade methods are superseded by the API Reference section which enumerates public symbols; the shell re-authors this section from facts.",
+      "unit_id": "inherited_unit:119.004.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'PdfConverter' facade methods are superseded by the API Reference section which enumerates public symbols; the shell re-authors this section from facts.",
+      "unit_id": "inherited_unit:119.005.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Security' heading is superseded by the API Reference section which enumerates public symbols; the shell re-authors this section from facts.",
+      "unit_id": "inherited_unit:120.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'PdfSigner' facade methods are superseded by the API Reference section which enumerates public symbols; the shell re-authors this section from facts.",
+      "unit_id": "inherited_unit:121.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'PdfFileSecurity' facade methods are superseded by the API Reference section which enumerates public symbols; the shell re-authors this section from facts.",
+      "unit_id": "inherited_unit:121.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The 'StandardSecurityHandler' facade methods are superseded by the API Reference section which enumerates public symbols; the shell re-authors this section from",
+      "unit_id": "inherited_unit:121.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Rendering and Devices' heading is superseded by the API Reference section which enumerates public symbols; the shell re-authors this section from facts.",
+      "unit_id": "inherited_unit:122.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'PageDevice' facade methods are superseded by the API Reference section which enumerates public symbols; the shell re-authors this section from facts.",
+      "unit_id": "inherited_unit:123.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'TiffDevice' facade methods are superseded by the API Reference section which enumerates public symbols; the shell re-authors this section from facts.",
+      "unit_id": "inherited_unit:123.002.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "No evidence supports the presence of a closing </details> tag in the generated README; it is promotional markdown from the inherited README.",
+      "unit_id": "inherited_unit:124.html_block"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "link_target:022",
+        "link_target:023",
+        "link_target:024",
+        "link_target:025",
+        "link_target:026",
+        "link_target:027",
+        "link_target:028",
+        "link_target:029",
+        "link_target:030",
+        "link_target:031",
+        "link_target:032",
+        "link_target:033",
+        "link_target:034",
+        "link_target:035",
+        "link_target:036",
+        "link_target:037"
+      ],
+      "rationale": "The 'Documentation & Resources' heading is preserved as the section heading for the Documentation & Resources section, and all listed resources are verified by",
+      "unit_id": "inherited_unit:125.heading"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "link_target:022",
+        "link_target:023",
+        "link_target:024",
+        "link_target:025",
+        "link_target:026",
+        "link_target:027",
+        "link_target:028",
+        "link_target:029",
+        "link_target:030",
+        "link_target:031",
+        "link_target:032",
+        "link_target:033",
+        "link_target:034",
+        "link_target:035",
+        "link_target:036",
+        "link_target:037"
+      ],
+      "rationale": "The list items under 'Documentation & Resources' are preserved as they are verified by the link_target facts and belong in the Documentation & Resources section",
+      "unit_id": "inherited_unit:126.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading '## Scope and Limitations' is retained as written to introduce the limitations section.",
+      "unit_id": "inherited_unit:127.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
+      "unit_id": "inherited_unit:128.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "rationale": "Not printed again: scope limitations already states this material from the facts it cites, so the kept unit is redundant.",
+      "unit_id": "inherited_unit:129.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
+      "unit_id": "inherited_unit:130.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The list of partially implemented features is retained as written; facts confirm some items (e.g., concurrency, text replacement, PDF/X) but not all details, so",
+      "unit_id": "inherited_unit:131.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "rationale": "Not printed again: scope limitations already states this material from the facts it cites, so the kept unit is redundant.",
+      "unit_id": "inherited_unit:132.paragraph"
+    },
+    {
+      "destination_section": "enterprise_relationship",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:product.enterprise"
+      ],
+      "rationale": "The sentence about the Enterprise Edition is moved to the enterprise_relationship section as it relates to product tiers.",
+      "unit_id": "inherited_unit:133.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The heading '## Development and Testing' is retained as written to introduce the development and testing section.",
+      "unit_id": "inherited_unit:134.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:build-command",
+        "build_test_asset:test-command",
+        "build_test_asset:ci",
+        "build_test_asset:release-workflow",
+        "dependency:development.org.junit.jupiter-junit-jupiter"
+      ],
+      "rationale": "The paragraph about Maven, Java 11+, JUnit 5, CI workflows, and release workflow is supported by the build_test_asset and dependency facts.",
+      "unit_id": "inherited_unit:135.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:build-command",
+        "build_test_asset:test-command"
+      ],
+      "rationale": "The Maven commands code block is supported by the build_test_asset facts for build and test commands.",
+      "unit_id": "inherited_unit:136.code_block"
+    },
+    {
+      "destination_section": "enterprise_relationship",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:product.enterprise"
+      ],
+      "rationale": "The heading '## License' is moved to the enterprise_relationship section to align with the license fact and现",
+      "unit_id": "inherited_unit:137.heading"
+    },
+    {
+      "destination_section": "enterprise_relationship",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "license:file",
+        "license:spdx",
+        "link_target:product.enterprise"
+      ],
+      "rationale": "The license paragraph is supported by the license facts and现",
+      "unit_id": "inherited_unit:138.paragraph"
+    }
+  ]
+}
