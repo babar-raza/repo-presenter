@@ -939,3 +939,56 @@ Lane L attempted 21 / good 4, both lanes 1 = Cells-Java, committed bundles R 1 /
 full suite: 3,377 passed, 11 skipped. Known limitations it found, not fixed here: the committed-bundle
 count treats a `CORRUPT_BUNDLE` as committed (the per-row column shows the true status); it reads
 records only for registry entries; it does 72 sequential fetches and a transient error aborts the run.
+
+---
+
+## 2026-10-31: Owner delegates the open decisions and sets the target; decisions taken
+
+**Owner direction**: the owner withdrew the "ask the owner" posture ("analyze everything yourself and
+take appropriate decisions") and set the target: aspose.org has finalized README candidates, and this
+project must autonomously produce candidates for both lanes matching their structure and quality.
+
+**What the reference is (verified by read-only investigation of the sibling checkout)**: the canonical
+store `aspose.org/reports/repo-presenter-regen-full/{family}/{platform}/readme.md` holds 37 candidates,
+35 of the 36 registry products (GIS/.NET has none). All share one fixed 12-section template
+(`data/readme_template_contract.json`) and are gated by deterministic checks
+(`readme_refresh_checks.py`). 31 of the products had an earlier version merged upstream (Aug/Sep); the
+current ones mostly sit at AWAITING_REVIEW (human approval pending); four were pushed on 2026-10-10.
+Its example policy: run each block, ship the ones it cannot run with a recorded BLOCKED-WITH-REASON
+(240 of 285 blocks) rather than dropping them. Structure already largely agrees with this repository's
+renderer (same section order, banner, link caps, Enterprise Edition rule). The measured gap is content:
+this repository drops anything UNRESOLVED, so outputs lose Quick Start / Additional Examples (hosted
+Words-.NET run lacks both; Imaging-.NET is rejected by `live_readme_loss`), run 204 lines against
+300 (Imaging-.NET) and 1,275 against 935 (Words-.NET), and the committed 3D-.NET bundle has 2 code
+fences against 11.
+
+**Decisions**:
+1. *Reference and lanes.* The aspose.org candidates are the quality reference for Lane R. Lane L keeps
+   its mission definition (minimal, evidenced correction of the live README; quality bar is no defect
+   and no regression, not conversion to the template). If the owner wants Lane L to converge on the
+   template, that changes the lane definition and is stated, not assumed. No aspose.org text is copied
+   into this repository; comparison tooling reads the sibling checkout at run time and commits metrics
+   only.
+2. *First fix: examples.* Original examples whose fact is UNRESOLVED (not CONTRADICTED) are kept with a
+   recorded "not verified" reason instead of being dropped, as aspose.org does. CONTRADICTED examples
+   are still refused.
+3. *Persistence.* A sealed bundle is pushed to a git ref in the existing state-ref family (no GitHub App
+   token, no PR), pointed at from the durable record, with an export command to materialize it.
+4. *Calibration.* Not re-run now. Status stays NOT_PASSED and outputs stay labelled uncalibrated.
+   Iteration 4 runs after parity is shown on the pilot set, using the aspose.org candidates as a local-only
+   reference corpus (far larger n than the 3 clean twins before). Rule 8 of the adopted rules is amended:
+   dispatches are allowed to verify a specific change on named repositories (at most three per change);
+   coverage sweeps stay paused until the pilot set reaches parity.
+5. *Process.* `AGENTS.md` is amended to describe what is actually done (work items in `state.yaml` plus
+   this log; branch, live check and independent verifier) instead of per-fix taskcards.
+6. *Pilot set.* Imaging-.NET, 3D-.NET, Words-.NET: each has an aspose.org candidate, the hosted facts job
+   has a .NET toolchain so examples can actually run, and each already reaches review. Cells-Java stays the
+   first delivery candidate later (both lanes good, registry mode `full`).
+7. *Upstream effects.* No issue or PR is filed on any Aspose repository without an explicit instruction
+   naming that action.
+
+**What this does NOT decide**: whether upstream PRs should be opened for finished candidates, and
+whether Lane L should adopt the template (items 1 and 7).
+
+**Where the detail lives**: this log; the investigation outputs are recorded in the entries that follow
+as each change lands.
