@@ -56,6 +56,17 @@ accepted" property from `ops/SUPERVISOR.md` even in a single-session context.
 7. Report observations, not claims of progress (mission §13). A workflow is
    not "succeeded" until its hosted run and exact downstream effect are
    inspected.
+8. The objective, not just the process: maximize the number of candidates both
+   lanes produce across the whole portfolio (the "forest," mission plan §6),
+   never optimize for one repository or one defect class in isolation. Each
+   candidate's structure, tone, and presentation follow aspose.org's own
+   README-refresh skill output (mission plan §10: "optional acceleration, not
+   another authority" — it informs structure/tone/presentation only, same as
+   item 2's live-upstream-README reference; repository evidence still wins
+   for factual truth). A fix that clears one hosted-run failure but does not
+   move the portfolio-wide candidate count, or that drifts from this
+   structural/tone reference, is incomplete relative to this goal even if its
+   own tests are green.
 
 ## Taskcard discipline (minimum, adapted from `foss-mcp`)
 
