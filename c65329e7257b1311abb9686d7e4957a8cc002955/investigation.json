@@ -1,0 +1,171 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "package:name",
+      "install_command:maven",
+      "package:published_version",
+      "license:spdx"
+    ],
+    "text": "Java developers building applications that require reading, writing, and editing Excel .xlsx workbooks without a commercial license, especially those using Maven for dependency management."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss",
+        "example:001"
+      ],
+      "text": "Create, load, rename, and manage worksheets via Workbook and Worksheet APIs, including visibility control and tab color.",
+      "title": "Workbook and worksheet management"
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "text": "Read and write string, numeric, boolean, date/time, and formula values to cells, preserving formula expressions across load/save.",
+      "title": "Cell value and formula handling"
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "text": "Apply full cell formatting including font, borders, fill, alignment, number format, and protection via Style objects.",
+      "title": "Cell styling and formatting"
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "text": "Define data validation rules and apply conditional formatting to worksheet ranges using CellArea and related collections.",
+      "title": "Data validation and conditional formatting"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "text": "Embed images (JPEG, PNG, GIF, BMP) and add cell comments with author, text, visibility, and size control.",
+      "title": "Embedded content support"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "text": "Create 18 chart types programmatically; preserve ChartEx types loaded from existing workbooks verbatim.",
+      "title": "Chart and shape rendering"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "text": "Configure print layout, freeze panes, and apply workbook/worksheet protection with passwords.",
+      "title": "Page setup and print configuration"
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "text": "Load damaged workbooks with repair options and inspect diagnostics for repair details and preservation notes.",
+      "title": "Repair and diagnostics"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "text": "Saving is limited to .xlsx format only."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "text": "ChartEx types (Waterfall, Treemap, Sunburst, Histogram, Box and Whisker, Funnel, Map) cannot be created programmatically."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "text": "Formulas are stored and round-tripped but the library is not a full spreadsheet calculation engine."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "dependency:none",
+        "example:001",
+        "example:002",
+        "example:003"
+      ],
+      "text": "Enables programmatic Excel workbook manipulation in pure Java without runtime dependencies on Apache POI or other third-party libraries."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "text": "Supports robust loading of corrupted or non-standard Excel files via strict mode toggles and repair options, with diagnostics reporting."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "text": "Provides data validation and conditional formatting capabilities for enforcing and styling data entry rules in spreadsheets."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:family",
+      "identity:platform",
+      "identity:repository",
+      "package:name",
+      "package:version",
+      "package:java_release",
+      "dependency:none",
+      "license:spdx"
+    ],
+    "text": "Aspose.Cells FOSS for Java is a free, open-source Java library for creating, loading, modifying, and saving Excel .xlsx workbooks, targeting Java 17 and using Apache POI only in test scope."
+  },
+  "uncertainties": [
+    "The exact set of unimplemented XML-mapper skeleton classes and their impact on metadata fidelity is not fully specified.",
+    "Whether ListObject totals rows and column definitions are fully supported beyond basic creation and styling is unclear.",
+    "The behavior of outline grouping for rows/columns in complex hierarchies is not detailed.",
+    "Support for Excel tables with structured references beyond basic ListObject operations is not specified.",
+    "The scope of 'a handful of public XML-mapper classes' that are unimplemented skeletons is not quantified.",
+    "Whether all 38 AutoShapeType geometries support full round-trip preservation is not confirmed.",
+    "The exact set of supported Excel functions in formulas is not listed.",
+    "Whether workbook-level defined names support complex formulas or external references is not specified."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "build_test_asset:test-command",
+        "build_test_asset:tests",
+        "build_test_asset:build-command"
+      ],
+      "name": "Build and test",
+      "text": "Developers run 'mvn test' to execute unit tests in src/test/ and 'mvn package' to build the library."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:release-workflow",
+        "package:published_version"
+      ],
+      "name": "Release workflow",
+      "text": "Releases are published to Maven Central using the maven-central-release.yml workflow."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "name": "Create and style workbook",
+      "text": "Developers instantiate a Workbook, add worksheets, write cell values, apply styles, and save as .xlsx."
+    }
+  ]
+}

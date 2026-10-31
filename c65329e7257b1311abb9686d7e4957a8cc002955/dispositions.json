@@ -1,0 +1,559 @@
+{
+  "dispositions": [
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "package:name",
+        "package:version",
+        "package:java_release",
+        "dependency:none",
+        "license:spdx"
+      ],
+      "rationale": "The H1 heading matches the canonical product name supported by the product_summary fact group.",
+      "unit_id": "inherited_unit:001.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "link_target:001",
+        "link_target:002",
+        "link_target:003",
+        "link_target:004",
+        "link_target:005",
+        "link_target:006",
+        "link_target:007",
+        "link_target:008"
+      ],
+      "rationale": "Redundant with the verified facts it names: link_target:001, link_target:002, link_target:003, link_target:004, link_target:005, link_target:006, link_target:00",
+      "unit_id": "inherited_unit:002.badge_row"
+    },
+    {
+      "destination_section": "banner",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:009",
+        "link_target:010",
+        "link_target:product.banner",
+        "link_target:product.enterprise",
+        "link_target:product.homepage"
+      ],
+      "rationale": "The banner image links to the enterprise product page; moved to enterprise_relationship per policy for product illustrations.",
+      "unit_id": "inherited_unit:003.badge_row"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "package:name",
+        "package:version",
+        "package:java_release",
+        "dependency:none",
+        "license:spdx",
+        "build_test_asset:test-command",
+        "build_test_asset:build-command"
+      ],
+      "rationale": "The paragraph's substance is covered by product_summary and workflows; rewritten to avoid duplication while preserving key facts.",
+      "unit_id": "inherited_unit:004.paragraph"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision"
+      ],
+      "rationale": "The Navigation heading is rendered by the deterministic navigation section; the inherited unit is redundant.",
+      "unit_id": "inherited_unit:005.heading"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision"
+      ],
+      "rationale": "The navigation list is rendered by the deterministic navigation section; the inherited unit is redundant.",
+      "unit_id": "inherited_unit:006.list"
+    },
+    {
+      "destination_section": "at_a_glance",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The At a Glance heading is rendered by the deterministic at_a_glance section; the inherited unit is redundant.",
+      "unit_id": "inherited_unit:007.heading"
+    },
+    {
+      "destination_section": "at_a_glance",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:003",
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "rationale": "Superseded by the At a Glance diagram the renderer draws from the verified formats and capabilities.",
+      "unit_id": "inherited_unit:008.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The Key Capabilities heading is placeable and matches the section; preserved as-is.",
+      "unit_id": "inherited_unit:009.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_REWRITE",
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss",
+        "example:001",
+        "example:002",
+        "example:003"
+      ],
+      "rationale": "The list's substance is covered by the capabilities investigation; rewritten to match the deterministic key_capabilities content.",
+      "unit_id": "inherited_unit:010.list"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "rationale": "The Installation heading is rendered by the deterministic installation section; the inherited unit is redundant.",
+      "unit_id": "inherited_unit:011.heading"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "rationale": "The paragraph introducing the install command is redundant with the deterministic installation section.",
+      "unit_id": "inherited_unit:012.paragraph"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "rationale": "The Maven dependency snippet is rendered by the deterministic installation section; the inherited unit is redundant.",
+      "unit_id": "inherited_unit:013.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "package:name",
+        "package:published_version",
+        "package:version"
+      ],
+      "rationale": "Lead-in of the omitted block that follows (inherited_unit:015.code_block): withheld with it, never alone.",
+      "unit_id": "inherited_unit:014.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "package:name",
+        "package:published_version",
+        "package:version"
+      ],
+      "rationale": "Redundant with the verified facts it names: package:name, package:published_version, package:version. The Gradle snippet is unsupported by facts; no Gradle inst",
+      "unit_id": "inherited_unit:015.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "package:java_release",
+        "dependency:none"
+      ],
+      "rationale": "Kept in development_testing: scope_limitations holds no install material. The paragraph is moved to scope_limitations; it clarifies Java 17 targeting and Apa...",
+      "unit_id": "inherited_unit:016.paragraph"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:development.org.apache.poi-poi-ooxml",
+        "dependency:development.org.junit.jupiter-junit-jupiter",
+        "dependency:none"
+      ],
+      "rationale": "The Dependencies heading is rendered by the deterministic dependencies section; the inherited unit is redundant.",
+      "unit_id": "inherited_unit:017.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:development.org.apache.poi-poi-ooxml",
+        "dependency:development.org.junit.jupiter-junit-jupiter",
+        "dependency:none"
+      ],
+      "rationale": "The Required Package Dependencies heading is redundant with the deterministic dependencies section.",
+      "unit_id": "inherited_unit:018.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:none"
+      ],
+      "rationale": "Kept in development_testing: scope_limitations holds no install material. The paragraph is preserved as-is in scope_limitations; it states the absence of req...",
+      "unit_id": "inherited_unit:019.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The Native and System Requirements heading is unsupported; no facts about native or system requirements exist.",
+      "unit_id": "inherited_unit:020.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:development.org.apache.poi-poi-ooxml",
+        "dependency:development.org.junit.jupiter-junit-jupiter",
+        "dependency:none"
+      ],
+      "rationale": "The dependency list is rendered deterministically from facts; this inherited list duplicates that content.",
+      "unit_id": "inherited_unit:021.list"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:development.org.apache.poi-poi-ooxml",
+        "dependency:development.org.junit.jupiter-junit-jupiter",
+        "dependency:none"
+      ],
+      "rationale": "The 'Development Dependencies' heading is superseded by the 'Dependencies' section rendered from facts.",
+      "unit_id": "inherited_unit:022.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:development.org.apache.poi-poi-ooxml",
+        "dependency:development.org.junit.jupiter-junit-jupiter",
+        "dependency:none"
+      ],
+      "rationale": "The dependency list is rendered deterministically from facts; this inherited list duplicates that content.",
+      "unit_id": "inherited_unit:023.list"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The 'Quick Start' heading is retained as the section heading for the Quick Start section.",
+      "unit_id": "inherited_unit:024.heading"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
+      "unit_id": "inherited_unit:025.paragraph"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "Printed by the example section from the verified example fact it cites, with any usings the compiler needed supplied above the inherited code.",
+      "unit_id": "inherited_unit:026.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
+      "unit_id": "inherited_unit:027.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "Printed by the example section from the verified example fact it cites, with any usings the compiler needed supplied above the inherited code.",
+      "unit_id": "inherited_unit:028.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The 'Additional Examples' heading is retained as the section heading for the Additional Examples section.",
+      "unit_id": "inherited_unit:029.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
+      "unit_id": "inherited_unit:030.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "Printed by the example section from the verified example fact it cites, with any usings the compiler needed supplied above the inherited code.",
+      "unit_id": "inherited_unit:031.code_block"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "build_test_asset:docs",
+        "build_test_asset:tests"
+      ],
+      "rationale": "The 'Project Structure' heading is unsupported and its substance is covered by 'Scope and Limitations' and 'Development and Testing'.",
+      "unit_id": "inherited_unit:032.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "build_test_asset:tests",
+        "build_test_asset:docs"
+      ],
+      "rationale": "The paragraph describes the public API location and test/javadoc layout, supported by build_test_asset:tests and build_test_asset:docs.",
+      "unit_id": "inherited_unit:033.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "build_test_asset:tests",
+        "build_test_asset:docs"
+      ],
+      "rationale": "The directory tree describes the project layout, supported by build_test_asset:tests and build_test_asset:docs.",
+      "unit_id": "inherited_unit:034.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The 'API Reference' heading is retained as the section heading for the API Reference section.",
+      "unit_id": "inherited_unit:035.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "rationale": "The paragraph about the public entry point and type count is supported by public_symbol:org.aspose.cells_foss.",
+      "unit_id": "inherited_unit:036.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The HTML details block is unsupported and its content is superseded by the API Reference table rendered from facts.",
+      "unit_id": "inherited_unit:037.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The 'Core API' heading is retained as a subsection heading for the API Reference section.",
+      "unit_id": "inherited_unit:038.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "rationale": "The table of public API classes is supported by public_symbol:org.aspose.cells_foss and matches the verified public surface.",
+      "unit_id": "inherited_unit:039.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "link_target:018",
+        "link_target:025",
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "rationale": "The 'Interfaces' heading is unsupported and introduces no content supported by facts.",
+      "unit_id": "inherited_unit:040.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table of interfaces is redundant with the API reference section that will list all public symbols.",
+      "unit_id": "inherited_unit:041.table"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The heading '#### Enumerations' is not supported as a section heading; sections are owned by deterministic code.",
+      "unit_id": "inherited_unit:042.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table of enumerations is redundant with the API reference section that will list all public symbols.",
+      "unit_id": "inherited_unit:043.table"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The closing HTML tag </details> is unsupported and unnecessary in the new structure.",
+      "unit_id": "inherited_unit:044.html_block"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading '## Documentation & Resources' is redundant with the deterministic documentation_resources section.",
+      "unit_id": "inherited_unit:045.heading"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "link_target:023",
+        "link_target:024",
+        "link_target:025",
+        "link_target:026",
+        "link_target:027",
+        "link_target:028"
+      ],
+      "rationale": "The list of documentation links is redundant with the documentation_resources section and is supported by the link_target facts.",
+      "unit_id": "inherited_unit:046.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading '## Scope and Limitations' is redundant with the deterministic scope_limitations section.",
+      "unit_id": "inherited_unit:047.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss",
+        "install_command:maven"
+      ],
+      "rationale": "The list of limitations is supported by facts about public symbols and the save format limitation.",
+      "unit_id": "inherited_unit:048.list"
+    },
+    {
+      "destination_section": "enterprise_relationship",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:product.enterprise"
+      ],
+      "rationale": "The paragraph about the Enterprise Edition is supported by the enterprise product link and belongs in enterprise_relationship.",
+      "unit_id": "inherited_unit:049.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The heading '## Development and Testing' is redundant with the deterministic development_testing section.",
+      "unit_id": "inherited_unit:050.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:test-command",
+        "package:java_release"
+      ],
+      "rationale": "The paragraph about JDK 17+ and Maven is supported by the test command and Java release facts.",
+      "unit_id": "inherited_unit:051.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:test-command"
+      ],
+      "rationale": "The 'mvn test' command is directly supported by the test-command fact.",
+      "unit_id": "inherited_unit:052.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:build-command"
+      ],
+      "rationale": "The paragraph about other common commands is supported by the build-command fact.",
+      "unit_id": "inherited_unit:053.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:build-command"
+      ],
+      "rationale": "The build and package commands are supported by the build-command fact.",
+      "unit_id": "inherited_unit:054.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:release-workflow"
+      ],
+      "rationale": "The paragraph about Maven Central release workflow is supported by the release-workflow fact.",
+      "unit_id": "inherited_unit:055.paragraph"
+    },
+    {
+      "destination_section": "license",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "license:file",
+        "license:spdx"
+      ],
+      "rationale": "The heading '## License' is redundant with the deterministic license section.",
+      "unit_id": "inherited_unit:056.heading"
+    },
+    {
+      "destination_section": "enterprise_relationship",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "license:spdx",
+        "link_target:product.enterprise"
+      ],
+      "rationale": "The license paragraph is supported by the license facts and belongs in enterprise_relationship alongside the Enterprise Edition reference.",
+      "unit_id": "inherited_unit:057.paragraph"
+    }
+  ]
+}
