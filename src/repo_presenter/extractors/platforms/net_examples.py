@@ -71,7 +71,13 @@ def _is_fragment(diagnostic: re.Match[str], program: str) -> bool:
     (lower-case or underscore initial: `bytes`, `cancellationToken`) or an unqualified call to a
     placeholder method (`GetUploadStream()`). A name that is followed by anything but a call, such
     as `RemovedStatic.Foo()` or `RenamedEnum.Value`, is a class the product no longer has, which is
-    a contradiction, so it stays FAILED. Anything this cannot read stays FAILED too."""
+    a contradiction, so it stays FAILED. Anything this cannot read stays FAILED too.
+
+    Accepted residual risk (independent review, 2026-10-31): a removed class spelled with a
+    lower-case initial (`widgets.Create()`) is read as an undeclared local. C# types are
+    Pascal-case, while `doc.Save()` on a local the README fragment never declares is the commonest
+    real fragment, so refusing every lower-case name followed by a dot would bring back the
+    deleted-examples problem this exists to fix."""
     if diagnostic["code"] != "CS0103":
         return False
     named = _UNDECLARED_NAME.match(diagnostic["message"])
