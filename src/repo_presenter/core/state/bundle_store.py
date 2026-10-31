@@ -98,7 +98,9 @@ def publish_bundle(
     inventory and digests) and carry a ``CURRENT`` pointer; otherwise nothing is pushed. When the
     ref already holds an identical tree the call is a no-op and reports ``changed=False``.
     """
-    lane_root = lane_directory(repository_dir, lane)
+    # Absolute, because the git plumbing below runs with the backend's own workspace as its working
+    # directory: a relative candidates root (present.py defaults to ".") would not resolve there.
+    lane_root = lane_directory(repository_dir, lane).resolve()
     if verify_bundle(lane_root / _current_revision(lane_root), lane) is None:
         raise BundleStoreError(f"{lane_root}: no verifiable sealed bundle to publish")
     files = _bundle_files(lane_root, lane)

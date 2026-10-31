@@ -176,3 +176,16 @@ def test_the_real_committed_bundle_round_trips_unchanged(tmp_path: Path, remote:
     for relative in original_files:
         assert (exported / relative).read_bytes() == (source / relative).read_bytes()
     assert lane_status(tmp_path / "out" / SLUG, "R").status == lane_status(source, "R").status
+
+
+def test_a_relative_candidates_path_publishes(
+    tmp_path: Path, remote: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The first live run of the publish step failed with 'could not open candidates/<slug>/...':
+    present.py defaults the candidates root to "." so the path it passes is relative, while every
+    other test here used an absolute tmp_path, and the git plumbing runs in another directory."""
+    _seal(tmp_path / "candidates" / SLUG, "R", "7" * 40, b"relative\n")
+    monkeypatch.chdir(tmp_path)
+    published = publish_bundle(REPO, "R", Path("candidates") / SLUG, remote=str(remote))
+    assert published.changed and published.files == 3
+    assert _tree_files(remote, published.ref)[0] == "7" * 40 + "/README.md"
