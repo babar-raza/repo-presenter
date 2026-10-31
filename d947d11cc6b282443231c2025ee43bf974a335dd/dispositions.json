@@ -1,0 +1,597 @@
+{
+  "dispositions": [
+    {
+      "destination_section": "identity",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:target_framework"
+      ],
+      "rationale": "The H1 product name is rendered from facts in the identity section.",
+      "unit_id": "inherited_unit:001.heading"
+    },
+    {
+      "destination_section": "badges",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:001",
+        "link_target:002",
+        "link_target:003",
+        "link_target:004",
+        "link_target:005",
+        "link_target:006",
+        "link_target:007",
+        "link_target:008",
+        "link_target:009",
+        "link_target:010",
+        "link_target:011",
+        "link_target:012",
+        "link_target:013",
+        "link_target:014",
+        "link_target:015",
+        "link_target:016",
+        "link_target:017",
+        "link_target:018",
+        "link_target:019",
+        "link_target:020",
+        "link_target:021",
+        "link_target:022",
+        "link_target:023",
+        "link_target:024",
+        "link_target:025",
+        "link_target:badge.ci",
+        "link_target:product.banner",
+        "link_target:product.enterprise",
+        "link_target:product.homepage"
+      ],
+      "rationale": "The badge row is rendered from facts in the badges section.",
+      "unit_id": "inherited_unit:002.badge_row"
+    },
+    {
+      "destination_section": "banner",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:007",
+        "link_target:008",
+        "link_target:product.banner",
+        "link_target:product.homepage"
+      ],
+      "rationale": "The banner image links to the enterprise product page and is supported by verified product links.",
+      "unit_id": "inherited_unit:003.badge_row"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:repository",
+        "identity:ecosystem",
+        "package:name",
+        "package:target_framework",
+        "dependency:none",
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "rationale": "The paragraph's substance is covered by the product summary and dependency facts; rewritten to match deterministic content.",
+      "unit_id": "inherited_unit:004.paragraph"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision"
+      ],
+      "rationale": "The navigation heading is rendered by deterministic code in the navigation section.",
+      "unit_id": "inherited_unit:005.heading"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision"
+      ],
+      "rationale": "The navigation list is rendered by deterministic code in the navigation section.",
+      "unit_id": "inherited_unit:006.list"
+    },
+    {
+      "destination_section": "at_a_glance",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The At a Glance heading is rendered by deterministic code in the at_a_glance section.",
+      "unit_id": "inherited_unit:007.heading"
+    },
+    {
+      "destination_section": "at_a_glance",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The diagram is a canonical product identity artifact; identity:ecosystem confirms the product's own diagram, and the at_a_glance section is defined to hold one,",
+      "unit_id": "inherited_unit:008.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The Key Capabilities heading is rendered by deterministic code in the key_capabilities section.",
+      "unit_id": "inherited_unit:009.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose.imaging"
+      ],
+      "rationale": "The capabilities list is re-authored from facts in the key_capabilities section.",
+      "unit_id": "inherited_unit:010.list"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The paragraph supports the claim about format coverage gaps in other .NET FOSS libraries; moved to key_capabilities to reinforce the library's value.",
+      "unit_id": "inherited_unit:011.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "dependency:none",
+        "example:003",
+        "package:name",
+        "public_symbol:aspose",
+        "public_symbol:aspose.imaging",
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "rationale": "No fact supports the table; format support details are covered in capabilities and limitations.",
+      "unit_id": "inherited_unit:012.table"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The frame-count clarification is covered by the limitations list and is supported by the public_symbol:aspose.imaging.foss fact.",
+      "unit_id": "inherited_unit:013.paragraph"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "rationale": "The Installation heading is rendered by deterministic code in the installation section.",
+      "unit_id": "inherited_unit:014.heading"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "rationale": "The installation paragraph is superseded by the install_command fact.",
+      "unit_id": "inherited_unit:015.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:build-command"
+      ],
+      "rationale": "The code block is a build command variant; placed in development_testing where build instructions are rendered.",
+      "unit_id": "inherited_unit:016.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "build_test_asset:build-command"
+      ],
+      "rationale": "The paragraph introduces alternative integration paths; placed in development_testing alongside build instructions.",
+      "unit_id": "inherited_unit:017.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:build-command"
+      ],
+      "rationale": "The ProjectReference snippet is a valid integration path; placed in development_testing for completeness.",
+      "unit_id": "inherited_unit:018.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "package:target_framework"
+      ],
+      "rationale": "The multi-targeting detail is supported by the package:target_framework fact; placed in development_testing.",
+      "unit_id": "inherited_unit:019.paragraph"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:none"
+      ],
+      "rationale": "The Dependencies heading is rendered by deterministic code in the dependencies section.",
+      "unit_id": "inherited_unit:020.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:none"
+      ],
+      "rationale": "The 'Required Package Dependencies' heading is superseded by the deterministic Dependencies section.",
+      "unit_id": "inherited_unit:021.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:none"
+      ],
+      "rationale": "The claim of zero third-party dependencies is rendered by the dependency:none fact in the Dependencies section.",
+      "unit_id": "inherited_unit:022.paragraph"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:none"
+      ],
+      "rationale": "The 'Native and System Requirements' heading is superseded by the Dependencies section which covers target frameworks.",
+      "unit_id": "inherited_unit:023.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:none",
+        "package:target_framework"
+      ],
+      "rationale": "The target framework list is rendered by the package:target_framework fact in the Dependencies section.",
+      "unit_id": "inherited_unit:024.list"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Development Dependencies' heading is superseded by the Development and Testing section.",
+      "unit_id": "inherited_unit:025.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "build_test_asset:test-command"
+      ],
+      "rationale": "The test dependencies list is superseded by the build_test_asset:test-command fact in the Development and Testing section.",
+      "unit_id": "inherited_unit:026.list"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The explanatory paragraph about test-only dependencies is superseded by the Development and Testing section.",
+      "unit_id": "inherited_unit:027.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
+      "unit_id": "inherited_unit:028.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:001",
+        "example:003"
+      ],
+      "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
+      "unit_id": "inherited_unit:029.code_block"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss.imageinfo"
+      ],
+      "rationale": "The paragraph describes robust error handling behavior of ImageInfo, supported by the public_symbol fact.",
+      "unit_id": "inherited_unit:030.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "DEFER_UNRESOLVED",
+      "fact_ids": [],
+      "rationale": "The 'Additional Examples' heading is placeable but the section is not rendered at this revision per unavailable condition; no fact confirms placement.",
+      "unit_id": "inherited_unit:031.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
+      "unit_id": "inherited_unit:032.html_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
+      "unit_id": "inherited_unit:033.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "rationale": "Not printed again: scope limitations already states this material from the facts it cites, so the kept unit is redundant.",
+      "unit_id": "inherited_unit:034.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:002",
+        "example:003"
+      ],
+      "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
+      "unit_id": "inherited_unit:035.code_block"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "inherited_unit:052.list",
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "rationale": "Heading owned by the renderer: scope limitations prints its own headings, so this inherited heading is not printed as written.",
+      "unit_id": "inherited_unit:036.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "rationale": "Not printed again: scope limitations already states this material from the facts it cites, so the kept unit is redundant.",
+      "unit_id": "inherited_unit:037.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "The FrameCount example code block is verified by example:003 and moved to scope_limitations to support the frame count limitation.",
+      "unit_id": "inherited_unit:038.code_block"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "inherited_unit:052.list",
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "rationale": "Heading owned by the renderer: scope limitations prints its own headings, so this inherited heading is not printed as written.",
+      "unit_id": "inherited_unit:039.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "rationale": "Not printed again: scope limitations already states this material from the facts it cites, so the kept unit is redundant.",
+      "unit_id": "inherited_unit:040.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:003",
+        "example:004",
+        "public_symbol:aspose.imaging.foss.imageprobe"
+      ],
+      "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
+      "unit_id": "inherited_unit:041.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "NON_CONTENT",
+      "fact_ids": [],
+      "rationale": "Closing `</details>` tag is non-content HTML used for collapsible sections.",
+      "unit_id": "inherited_unit:042.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:015"
+      ],
+      "rationale": "The '## API Reference' heading is superseded by the deterministic 'API Reference' section heading.",
+      "unit_id": "inherited_unit:043.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Describes `ImageProbe` as the single entry point and its return types, matching verified public symbols.",
+      "unit_id": "inherited_unit:044.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "NON_CONTENT",
+      "fact_ids": [],
+      "rationale": "Opening `<details><summary>` HTML is non-content used for collapsible sections.",
+      "unit_id": "inherited_unit:045.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:015"
+      ],
+      "rationale": "The '#### Detailed Member Reference' heading is superseded by the deterministic 'API Reference' section.",
+      "unit_id": "inherited_unit:046.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Lists verified public types and members with accurate signatures and semantics.",
+      "unit_id": "inherited_unit:047.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "NON_CONTENT",
+      "fact_ids": [],
+      "rationale": "Closing `</details>` tag is non-content HTML used for collapsible sections.",
+      "unit_id": "inherited_unit:048.html_block"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:016"
+      ],
+      "rationale": "The '## Documentation & Resources' heading is superseded by the deterministic 'Documentation & Resources' section.",
+      "unit_id": "inherited_unit:049.heading"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:020",
+        "link_target:021",
+        "link_target:022",
+        "link_target:023"
+      ],
+      "rationale": "Not printed again: documentation resources already states this material from the facts it cites, so the kept unit is redundant.",
+      "unit_id": "inherited_unit:050.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:017"
+      ],
+      "rationale": "The '## Scope and Limitations' heading is superseded by the deterministic 'Scope and Limitations' section.",
+      "unit_id": "inherited_unit:051.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "rationale": "Lists verified limitations: detection-only, frame-count behavior, WMF, DICOM, and CDR status.",
+      "unit_id": "inherited_unit:052.list"
+    },
+    {
+      "destination_section": "enterprise_relationship",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:024",
+        "link_target:product.enterprise"
+      ],
+      "rationale": "Relates FOSS scope to Enterprise Edition; verified product target exists at products.aspose.com.",
+      "unit_id": "inherited_unit:053.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:018"
+      ],
+      "rationale": "The '## Development and Testing' heading is superseded by the deterministic 'Development and Testing' section.",
+      "unit_id": "inherited_unit:054.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:test-command"
+      ],
+      "rationale": "Introduces the test command, which matches the verified `dotnet test Aspose.Imaging.Foss.sln` command.",
+      "unit_id": "inherited_unit:055.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:test-command"
+      ],
+      "rationale": "The test command code block matches the verified `dotnet test Aspose.Imaging.Foss.sln` command.",
+      "unit_id": "inherited_unit:056.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:tests",
+        "build_test_asset:release-workflow"
+      ],
+      "rationale": "Describes test project setup and release workflow, supported by test and release workflow facts.",
+      "unit_id": "inherited_unit:057.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "rationale": "Describes how to add new format handlers, consistent with the library's public API structure.",
+      "unit_id": "inherited_unit:058.paragraph"
+    },
+    {
+      "destination_section": "license",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "license:file",
+        "license:spdx",
+        "link_target:019"
+      ],
+      "rationale": "The '## License' heading is superseded by the deterministic 'License' section.",
+      "unit_id": "inherited_unit:059.heading"
+    },
+    {
+      "destination_section": "enterprise_relationship",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "license:file",
+        "license:spdx",
+        "link_target:product.enterprise"
+      ],
+      "rationale": "The license paragraph is moved to 'enterprise_relationship' because the FOSS license is already covered in the license section, and this paragraph serves to tie",
+      "unit_id": "inherited_unit:060.paragraph"
+    }
+  ]
+}

@@ -1,0 +1,160 @@
+{
+  "audience": {
+    "fact_ids": [
+      "example:003",
+      "public_symbol:aspose.imaging.foss",
+      "identity:platform"
+    ],
+    "text": "Developers needing fast, non-blocking image format detection and metadata extraction without full decoding, especially in web or batch processing pipelines."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss",
+        "public_symbol:aspose.imaging",
+        "public_symbol:aspose"
+      ],
+      "text": "Detects 14 image formats by reading only signature bytes using `ImageProbe.DetectFormat()` without decoding pixels.",
+      "title": "Format detection"
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "Reads width, height, bit depth, and frame count directly from file headers for PNG, JPEG, GIF, BMP, WEBP, ICO, TIFF, PSD, EMF, WMF, DICOM, DJVU, AVIF, and HEIC/HEIF.",
+      "title": "Header probing"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "Accurately counts frames in GIF, ICO, TIFF, and multi-page DJVU by walking their container structures.",
+      "title": "Multi-frame counting"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "Provides both synchronous and asynchronous entry points (`ProbeFile`/`ProbeFileAsync`, `Probe`/`ProbeAsync`) for non-blocking I/O.",
+      "title": "Async support"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "Returns partial `ImageInfo` with only `Format` set for malformed or truncated files instead of throwing exceptions.",
+      "title": "Robust error handling"
+    },
+    {
+      "fact_ids": [
+        "dependency:none",
+        "package:name"
+      ],
+      "text": "No external NuGet package dependencies; all format parsing is implemented natively within the library.",
+      "title": "Zero dependencies"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "Only performs format detection and header probing; does not decode, render, edit, or convert pixel data."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "Frame count is only real for GIF, ICO, TIFF, and multi-page DJVU; other formats report fixed `1`."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "Classic (non-placeable) WMF headers lack bounding rectangle, so `Width`/`Height` are null for them."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "DICOM parsing stops at the first undefined-length element, such as a sequence or encapsulated pixel data."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "CDR format support is planned but not yet implemented; no handler exists in the current source tree."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "install_command:dotnet",
+        "example:003"
+      ],
+      "text": "Avoids full image decoding just to determine format and basic properties like dimensions, bit depth, and frame count."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging",
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "Provides format support for less common .NET imaging formats like PSD, EMF/WMF, DICOM, DJVU, AVIF, and HEIC/HEIF without external dependencies."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "Enables safe, unattended processing of untrusted files by returning partial results instead of throwing exceptions on malformed headers."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:repository",
+      "identity:ecosystem",
+      "identity:family",
+      "package:name",
+      "license:spdx"
+    ],
+    "text": "Aspose.Imaging.Foss is a free, open-source .NET library for image format detection and header probing with zero dependencies."
+  },
+  "uncertainties": [
+    "The exact set of DICOM transfer syntaxes supported beyond Implicit VR LE and Explicit VR LE/BLE is not fully specified.",
+    "Whether AVIF grid images report tile or full-canvas dimensions depends on `ispe`/`ipma`/`ipco` associations, but exact behavior for edge cases is unclear.",
+    "The behavior of `Probe()` on streams with partial or corrupted data beyond signature match is not detailed for all formats.",
+    "The scope of `ImageProbe`'s async behavior under high concurrency or with cancellation tokens is not elaborated.",
+    "The exact handling of truncated multi-frame formats (e.g., GIF with incomplete image descriptors) is not fully described.",
+    "Whether `Probe()` buffers non-seekable streams fully or uses streaming techniques is implied but not explicit.",
+    "The versioning scheme and release frequency for the package are not stated.",
+    "The exact set of formats for which `FrameCount` is `null` (e.g., indirect DJVM) is not exhaustively listed."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "build_test_asset:build-command",
+        "build_test_asset:test-command",
+        "build_test_asset:tests",
+        "install_command:dotnet"
+      ],
+      "name": "Build and test",
+      "text": "Clone the repository and run `dotnet build Aspose.Imaging.Foss.sln` followed by `dotnet test Aspose.Imaging.Foss.sln` to validate functionality."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:ci",
+        "build_test_asset:ci-matrix"
+      ],
+      "name": "CI validation",
+      "text": "Continuous integration runs on Ubuntu and Windows using workflows defined in `.github/workflows/`."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:release-workflow"
+      ],
+      "name": "Release publishing",
+      "text": "Tagged pushes trigger `.github/workflows/release.yml` to build and publish the package."
+    }
+  ]
+}
