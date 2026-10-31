@@ -22,7 +22,10 @@ progress:
     Lane L 4 of 36 (3D-Java, Cells-Java, Cells-Rust, PDF-.NET); both lanes 1 (Cells-Java). Lane R
     has a record for 28 repositories, Lane L for 21. None has been reviewed by the owner, reviewer
     calibration is NOT_PASSED, and only one bundle (3D-.NET, deterministic-only ACCEPT) is committed
-    under candidates/. These are pipeline-level observations, not acceptances.
+    under candidates/. Since 2026-10-31 sealed bundles are also stored durably on origin as
+    refs/repository-presenter-state/bundles/* (nine backfilled from expiring artifacts, see
+    docs/DECISION_LOG.md); restore one with core/state/bundle_store.export_bundle.
+    These are pipeline-level observations, not acceptances.
     Reproduce with: python scripts/portfolio_status.py (read-only; reads the registry, the state
     remote's per-lane records and candidates/; about 2 minutes).
   unit: authorizable README candidates (independently verified by this repo's own reviewer, not inherited from the old repo's judge)

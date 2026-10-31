@@ -992,3 +992,50 @@ whether Lane L should adopt the template (items 1 and 7).
 
 **Where the detail lives**: this log; the investigation outputs are recorded in the entries that follow
 as each change lands.
+
+---
+
+## 2026-10-31: Durable bundles and example-failure classification merged; first parity measurement against aspose.org
+
+**Decision**: two changes merged to `main` (tip `b1eb1e4`), each with a branch, an independent verifier
+(a fresh agent that did not write it) and live hosted checks before merging.
+
+1. *Durable bundles* (`470f820`..`2753fdc`). `core/state/bundle_store.py` publishes a sealed bundle to
+   `refs/repository-presenter-state/bundles/<key>` (same key and `@lane-l` suffix as the record ref) inside
+   the transaction, before the record commits; a bundle that cannot be stored is a visible failure
+   (`::error::` and a failed record), never a ready candidate. `export_bundle` restores it byte for byte.
+   The first live run (41177479590, PDF-.NET Lane L) failed because `present.py` passes a relative
+   candidates path and the git plumbing runs in another directory (every unit test used absolute paths);
+   fixed in `3223c54`, then run 41177983444 pushed the bundle and an export from the real origin verified
+   as READY_FOR_PROPOSAL. Independent review also hardened export (all paths checked before the first
+   write, absolute / drive-qualified / backslash / `..` paths refused, empty destination required).
+   Backfill: the nine good records' artifacts (which expire 2026-11-13/14) were published to nine bundle
+   refs: 3D-Java L, Cells-.NET R, Cells-Cpp R, Cells-Java R and L, Cells-Rust L, HTML-Python R, Imaging-.NET R,
+   PDF-.NET L. Eight are the sealed-stage bundle (manifest state ACCEPTED, before the second-run no-op
+   proof); PDF-.NET L is the no-op-proven one. All are pipeline-level artifacts of an uncalibrated
+   reviewer, not accepted candidates.
+2. *Example classification* (`9610373`, `b9eb8ea`, `b1eb1e4`). Root cause of the dropped examples was not
+   "unverified examples are dropped" (the retained-examples path already keeps UNRESOLVED ones) but the
+   verifiers labelling fragments and product-build failures CONTRADICTED, which is never kept. Hosted
+   Words-.NET: all five examples failed with CS0234 in the product's own `ArrayUtil.cs`; Imaging-.NET:
+   three failed with CS0103 on `bytes`, `cancellationToken`, `GetUploadStream`. .NET now counts only a
+   diagnostic filed against `Program.cs`; CS0103 is a fragment only for a local or an unqualified
+   placeholder call, never a qualifier (`RemovedStatic.Foo()`, found by independent review); a
+   product-file diagnostic is NOT_VERIFIED; a diagnostic naming no file keeps its FAILED reading.
+   TypeScript: TS2304 on a lower-case local only. Accepted residual risk: a removed lower-case class
+   (`widgets.Create()`) reads as a local.
+
+**Observed on live runs (pipeline-level, uncalibrated reviewer)**: Imaging-.NET Lane R went from REJECT (four
+`live_readme_loss` headings) to a model-reviewed ACCEPT with zero findings, twice (41177736649 and, with the
+hardened rule, 41178722091). Against the aspose.org candidate (metrics only): 251 lines against 307, 9 code
+fences against 8, 2 `<details>` each, 13 links against 12, 6 Aspose links each, one Mermaid diagram each,
+shared headings in the same order; ours lacks three headings (Development dependencies and two example
+sub-headings). Words-.NET regained Quick Start and Additional Examples (both absent before) but is
+blocked by BC-06: "4 Aspose links exceed the ceiling of 3 (auto budget from 1153 visible words and 0
+verified examples)", while every aspose.org candidate carries 5 to 6. That budget (`link_budget.py`,
+`AUTOMATIC_TOTAL_CAP`) is the next gap; it is not touched here.
+
+**What this does NOT decide**: the link-ceiling policy, calibration iteration 4, or any upstream effect.
+
+**Where the detail lives**: `src/repo_presenter/core/state/bundle_store.py`, `net_examples.py`
+(`classify_build_failure`), `tests/core/state/test_bundle_store.py`, `tests/extractors/platforms/`.
