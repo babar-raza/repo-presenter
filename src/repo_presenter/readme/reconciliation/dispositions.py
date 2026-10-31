@@ -1020,6 +1020,51 @@ def _omits_contradicted_command(entry: Mapping[str, Any], block: str, facts: Fac
     )
 
 
+def _collapsible_wrapper_bounds(
+    output: dict[str, Any], units_by_id: Mapping[str, Fact]
+) -> dict[str, tuple[str | None, str | None]]:
+    """Per renderer-owned destination, the (outermost opening unit id, outermost closing unit
+    id) among this disposition set's own html_block units matching the wrapper shape: the
+    lowest-ordinal open match and the highest-ordinal close match.
+
+    Adversarial finding from an independent verifier (2026-11-01, on the first version of this
+    fold, which matched the wrapper SHAPE alone with no positional bound): a per-example
+    collapsible toggle an author legitimately nests inside additional_examples ("click to see
+    output", a plausible real idiom) matches the same opening/closing shape as the renderer's own
+    single outermost wrapper, and the shape-only fold would have silently flattened every one of
+    them, not just the one genuine renderer-owned pair. A nested, per-example toggle sits strictly
+    between the section's own outermost open and close in document order (inherited_unit IDs are
+    assigned in document order), so it can never be the single lowest-ordinal open or the single
+    highest-ordinal close -- only the renderer's own outermost pair can be.
+    """
+    opens: dict[str, list[tuple[int, str]]] = {dest: [] for dest in _RENDERER_OWNED_COLLAPSIBLES}
+    closes: dict[str, list[tuple[int, str]]] = {dest: [] for dest in _RENDERER_OWNED_COLLAPSIBLES}
+    for entry in output.get("dispositions", []):
+        unit = str(entry.get("unit_id", "?"))
+        destination = entry.get("destination_section")
+        if (
+            destination not in _RENDERER_OWNED_COLLAPSIBLES
+            or unit.rsplit(".", 1)[-1] != "html_block"
+            or entry.get("disposition") not in PLACING
+        ):
+            continue
+        unit_fact = units_by_id.get(unit)
+        ordinal = _unit_ordinal(unit)
+        if unit_fact is None or ordinal is None:
+            continue
+        if _DETAILS_WRAPPER_OPEN.match(unit_fact.value):
+            opens[destination].append((ordinal, unit))
+        elif _DETAILS_WRAPPER_CLOSE.match(unit_fact.value):
+            closes[destination].append((ordinal, unit))
+    return {
+        destination: (
+            min(opens[destination], default=(0, None))[1],
+            max(closes[destination], default=(0, None))[1],
+        )
+        for destination in _RENDERER_OWNED_COLLAPSIBLES
+    }
+
+
 def normalize(
     output: dict[str, Any], facts: FactsDocument, policy: PlanningPolicy = DEFAULT_POLICY
 ) -> list[str]:
@@ -1045,6 +1090,7 @@ def normalize(
     commands = command_block_units(facts)
     unpublished = unpublished_registry_blocks(facts)
     units_by_id = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
+    wrapper_bounds = _collapsible_wrapper_bounds(output, units_by_id)
     fence_languages = _example_languages(facts)
     install_ids = sorted(
         f.id for f in facts.by_kind("install_command") if f.polarity == "SUPPORTED"
@@ -1211,12 +1257,14 @@ def normalize(
             # A SIBLING unit (032.html_block, "View Additional Examples") coincidentally matches
             # the renderer's own ADDITIONAL_EXAMPLES_SUMMARY text byte-for-byte, which is exactly
             # why this was never caught generally before now: the same bug, masked by luck.
-            unit_fact = units_by_id.get(unit)
-            is_wrapper = unit_fact is not None and (
-                _DETAILS_WRAPPER_OPEN.match(unit_fact.value)
-                or _DETAILS_WRAPPER_CLOSE.match(unit_fact.value)
-            )
-            if is_wrapper:
+            #
+            # Bounded to the outermost pair only (wrapper_bounds, _collapsible_wrapper_bounds):
+            # matching the wrapper SHAPE alone, with no positional check, would also fold a
+            # genuine per-example "click to see output" toggle an author legitimately nests
+            # inside additional_examples -- a real, plausible idiom this project's own README
+            # contract never forbids, caught by an independent verifier on the first version of
+            # this fold before it ever merged.
+            if unit in wrapper_bounds.get(destination, (None, None)):
                 entry["disposition"] = "SUPERSEDE_REDUNDANT"
                 if identity_fact_id is not None:
                     entry["fact_ids"] = sorted(cited | {identity_fact_id})

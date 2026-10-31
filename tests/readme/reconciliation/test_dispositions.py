@@ -628,3 +628,69 @@ def test_normalize_leaves_a_details_wrapper_alone_outside_the_two_renderer_owned
     normalize(output, facts)
     entry = output["dispositions"][0]
     assert entry["disposition"] == "VERIFIED_PRESERVE"
+
+
+# Adversarial finding from an independent verifier (2026-11-01): matching the wrapper SHAPE alone,
+# with no positional check, would also fold a genuine per-example "click to see output" toggle an
+# author legitimately nests inside additional_examples -- a real, plausible idiom, not merely
+# theoretical. Proves the fix is bounded to the single outermost opening/closing pair only.
+def test_normalize_leaves_a_nested_per_example_toggle_alone_between_the_outer_wrapper() -> None:
+    facts = replace(
+        FACTS,
+        facts=(
+            *FACTS.facts,
+            Fact(
+                "inherited_unit:040.html_block",
+                "inherited_unit",
+                "<details>\n<summary>View Additional Examples</summary>",
+                (Evidence("README.md", "section 'Widget > Additional Examples'"),),
+                attributes={"section": "Widget > Additional Examples"},
+            ),
+            Fact(
+                "inherited_unit:041.html_block",
+                "inherited_unit",
+                "<details>\n<summary>Click to see output</summary>",
+                (Evidence("README.md", "section 'Widget > Additional Examples'"),),
+                attributes={"section": "Widget > Additional Examples"},
+            ),
+            Fact(
+                "inherited_unit:042.html_block",
+                "inherited_unit",
+                "</details>",
+                (Evidence("README.md", "section 'Widget > Additional Examples'"),),
+                attributes={"section": "Widget > Additional Examples"},
+            ),
+            Fact(
+                "inherited_unit:043.html_block",
+                "inherited_unit",
+                "</details>",
+                (Evidence("README.md", "section 'Widget > Additional Examples'"),),
+                attributes={"section": "Widget > Additional Examples"},
+            ),
+        ),
+    )
+    _entry = lambda unit, disposition: {  # noqa: E731
+        "unit_id": unit,
+        "disposition": disposition,
+        "destination_section": "additional_examples",
+        "fact_ids": [],
+        "rationale": "As written.",
+    }
+    output = {
+        "dispositions": [
+            _entry("inherited_unit:040.html_block", "VERIFIED_PRESERVE"),  # outer open
+            _entry("inherited_unit:041.html_block", "VERIFIED_PRESERVE"),  # nested, per-example
+            _entry("inherited_unit:042.html_block", "VERIFIED_PRESERVE"),  # nested, per-example
+            _entry("inherited_unit:043.html_block", "VERIFIED_PRESERVE"),  # outer close
+        ]
+    }
+    normalize(output, facts)
+    by_id = {e["unit_id"]: e for e in output["dispositions"]}
+    assert by_id["inherited_unit:040.html_block"]["disposition"] == "SUPERSEDE_REDUNDANT"
+    assert by_id["inherited_unit:043.html_block"]["disposition"] == "SUPERSEDE_REDUNDANT"
+    # the nested, per-example toggle is never folded by THIS fix as the renderer's own wrapper
+    # (whatever an unrelated, pre-existing uncited-content rule separately does with a bare,
+    # fact-less VERIFIED_PRESERVE is out of this fix's scope -- the one thing this test proves is
+    # that it is never silently treated as renderer-owned and superseded away)
+    assert by_id["inherited_unit:041.html_block"]["disposition"] != "SUPERSEDE_REDUNDANT"
+    assert by_id["inherited_unit:042.html_block"]["disposition"] != "SUPERSEDE_REDUNDANT"
