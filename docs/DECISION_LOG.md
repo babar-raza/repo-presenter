@@ -1199,3 +1199,60 @@ function so Lane R/L counts cannot cross-contaminate, that `build_matrix`'s new 
 **Where the detail lives**: `src/repo_presenter/core/aspose_parity.py`, `scripts/aspose_parity.py`,
 `tests/core/test_aspose_parity.py`, `src/repo_presenter/core/portfolio_matrix.py`,
 `scripts/portfolio_status.py`, `tests/core/test_portfolio_matrix.py`.
+
+---
+
+## 2026-10-31: `presentation_planning`'s own `recover=` is now actually wired (merged `fix/presentation-planning-recover-wiring`)
+
+**Decision**: merge `fix/presentation-planning-recover-wiring` to main. `cascade.py`'s `_run_planning`
+now passes `recover=recover_planning_output` into its `run_job` call.
+
+**Why**: `planning.py`'s `recover_planning_output` (combining `recover_duplicate_link_assignments`
+and `recover_uncited_capability_titles`) already existed, documented as "the single `recover=`
+combining both deterministic last resorts" — but nothing ever imported or passed it into the one
+`run_job` call site that runs presentation_planning. Dead code, never reachable on a real run. This
+is exactly the duplicate-link-target-assignment item the `fix/link-budget-tiers` merge surfaced and
+left open (see the entry above): once the model assigns the same `link_target` fact to more than one
+`links` entry and repeats the mistake on its own re-ask, the job had no recovery and failed outright
+with `OutputRejectedError`, refusing the whole candidate.
+
+**Evidence**: a fresh agent, cold, in an isolated worktree, independently confirmed: the diff is
+exactly the claimed one-line `recover=recover` wiring plus its import, with no unrelated changes;
+`recover_duplicate_link_assignments` keeps the first assignment of each target and drops later
+repeats without mutating the caller's dict; the two new tests
+(`tests/readme/composition/test_planning_recovery.py`, 5 unit tests on the recovery functions
+directly, and `tests/test_cascade_s9.py`'s new
+`test_a_persistent_duplicate_link_assignment_is_recovered_at_presentation_planning`, a full
+`run_cascade` integration test with a fake model that repeats the duplicate-link plan on both
+attempts) pass; the falsifier (temporarily removing just the `recover=recover,` kwarg) reproduces the
+exact live failure text verbatim (`output rejected twice; last rejection: link 'link_target:001' is
+assigned more than once; never the same target twice`) before the wiring is restored; the full suite
+is 3447 passed, 13 skipped (up from 3441, +6 new tests), exit 0. The reviewer also confirmed the
+safety property directly from `run_job`'s own code: `recover`'s correction is re-parsed from the raw
+rejected reply (never an aliased live object) and re-validated from scratch through the identical
+`plan_checks` before being accepted — it is never trusted on `recover`'s own say-so, so it can only
+ever strip an exact duplicate repeat or add a citation whose fact value already literally spells the
+title's term; a model emitting anything else still fails outright, not silently waved through.
+
+**Evidence (hosted re-run from the branch, not main)**: aspose-words-foss/Aspose.Words-FOSS-for-.NET
+Lane R (run 41204961354). The durable record (`refs/repository-presenter-state/records/
+aspose-words-foss__Aspose.Words-FOSS-for-.NET`) shows `failure.detail` for this run names no
+duplicate-link-target error anywhere; the candidate now reaches `independent_review` and fails there
+on a separate, pre-existing, already-documented reviewer-contract issue (`finding F02: a contradiction
+finding must cite at least one product fact`, the same shape recorded in the 2026-10-27
+reviewer-calibration data under `docs/investigations/`), classified `transient`/retryable — progress,
+not a regression, and unrelated to this fix.
+
+**Open follow-up, noted but not acted on**: the same reviewer flagged that `scripts/run_lane_r_planning.py`
+(a standalone manual debug script) and `readme/repair/loop.py`'s `_repair_plan` (which looks up an
+already-accepted plan via a different job, `targeted_repair`) also reference the `presentation_planning`
+prompt manifest without this `recover=`; neither is the automated `run_cascade` pipeline this bug lived
+in, so both are out of scope here — a possible future card, not a defect in this one.
+
+**What this does NOT decide**: the `independent_review` F02 contract issue surfaced on this hosted
+re-run is not fixed here; neither is the `run_lane_r_planning.py`/`repair/loop.py` follow-up.
+
+**Where the detail lives**: `src/repo_presenter/cascade.py`,
+`src/repo_presenter/readme/composition/planning.py` (`recover_planning_output`,
+`recover_duplicate_link_assignments`, pre-existing, now wired),
+`tests/readme/composition/test_planning_recovery.py`, `tests/test_cascade_s9.py`.
