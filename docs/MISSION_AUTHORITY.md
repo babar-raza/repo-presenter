@@ -6,6 +6,35 @@ distilled 2026-10-21 per `plans/repository_presenter_fresh_start_supervisor_prom
 source governs when two documents disagree, and extracts the still-valid outcome
 requirements from the old repository's `plans/idea.md`.
 
+## Exit plan: this repository is a temporary salvage/rebuild workspace (owner instruction, 2026-11-01)
+
+The end state the owner wants is **one** maintained repository, named
+`repository-presenter`, hosted on both GitHub and GitLab. This repository
+(`repo-presenter`, the "new repository" this file otherwise refers to) is not
+that end state — it is a temporary workspace whose job is to salvage every
+usable component from the old `repository-presenter` repo and rebuild the
+rest from scratch, under this file's own authority and the predecessor
+failure modes recorded below ("Do not repeat the predecessor projects'
+mistakes"). Once this repository is ready (judged against the mission's own
+non-negotiables, the portfolio objective in `AGENTS.md` non-negotiable #8,
+and the owner's own review — never a pipeline's own green state, per that
+section's lesson 5), the live `repository-presenter` repo on GitHub and
+GitLab is to be **completely and promptly overwritten** with this
+repository's content, retiring the old one outright rather than merging or
+reconciling histories.
+
+**This is a future, owner-triggered action, not a standing instruction to act
+now.** Nothing in the current taskcard/branch/merge workflow should attempt
+or prepare the overwrite itself (no force-push to the old repo, no history
+rewrite, no GitLab remote configuration) until the owner explicitly says this
+repository is ready and gives the go-ahead — consistent with the Git Safety
+Protocol's bar for destructive, hard-to-reverse, cross-repository actions.
+What it does change now: "done" for this whole effort is not "this repo's own
+tests pass" — it is "this repo is good enough to become the one
+`repository-presenter` repo everyone uses," which is the portfolio-wide,
+forest-level framing non-negotiable #8 already states, now with its own
+concrete exit criterion.
+
 ## Authority order (binding, highest first)
 
 1. **`plans/repository_presenter_fresh_start_supervisor_prompt.md`** (the mission
