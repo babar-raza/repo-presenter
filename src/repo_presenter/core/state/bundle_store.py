@@ -194,7 +194,10 @@ def export_bundle(
             # earlier export can never be mistaken for part of this bundle.
             for _blob, relative in entries:
                 _require_contained(ref, relative, target)
-            if target.exists() and any(target.iterdir()):
+            # Lane R's root is the repository directory, which is also the parent of Lane L's own
+            # directory, so Lane L's presence there is not a stale Lane R file.
+            sibling = LANE_DIRNAMES[LANE_L] if lane == LANE_R else None
+            if target.exists() and any(p.name != sibling for p in target.iterdir()):
                 raise BundleStoreError(f"{target}: the export destination is not empty")
             for blob, relative in entries:
                 data = subprocess.run(

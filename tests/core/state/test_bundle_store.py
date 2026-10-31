@@ -231,3 +231,18 @@ def test_export_refuses_a_destination_that_already_holds_files(
     with pytest.raises(BundleStoreError, match="not empty"):
         export_bundle(REPO, "R", tmp_path / "out", remote=str(remote))
     assert sorted(p.name for p in stale.iterdir()) == ["stale.txt"]
+
+
+def test_both_lanes_export_into_one_root_in_either_order(tmp_path: Path, remote: Path) -> None:
+    """Lane R's root is the repository directory that also holds Lane L's sibling directory, so
+    exporting Lane L first must not make the later Lane R export look like it is overwriting."""
+    source = tmp_path / "candidates" / SLUG
+    _seal(source, "R", "1" * 40, b"lane r\n")
+    _seal(source, "L", "2" * 40, b"lane l\n")
+    publish_bundle(REPO, "R", source, remote=str(remote))
+    publish_bundle(REPO, "L", source, remote=str(remote))
+    out = tmp_path / "out"
+    export_bundle(REPO, "L", out, remote=str(remote))
+    export_bundle(REPO, "R", out, remote=str(remote))
+    assert lane_status(out / SLUG, "R").status == "READY_FOR_PROPOSAL"
+    assert lane_status(out / SLUG, "L").status == "READY_FOR_PROPOSAL"
