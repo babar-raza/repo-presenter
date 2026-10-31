@@ -135,6 +135,15 @@ PLACING = frozenset(
 _SHELL_OWNED = frozenset({"heading", "badge_row"})
 _RENDERER_OWNED_LINK_IDS = frozenset({BANNER_FACT_ID, HOMEPAGE_FACT_ID, ENTERPRISE_FACT_ID})
 _COMMAND_FENCES = frozenset({"bash", "sh", "shell", "console", "zsh", "powershell", "pwsh", "cmd"})
+# renderer.py's own ADDITIONAL_EXAMPLES_SUMMARY/API_SURFACE_SUMMARY: these two sections always
+# render their OWN <details>/<summary> collapsible wrapper with a fixed label, never the
+# inherited README's own wording (renderer.py lines ~735/1053/1117, unconditional). An inherited
+# html_block that IS this wrapper -- the opening tag with its <summary>, or the bare closing tag
+# -- is structurally renderer-owned the same way a banner or the Enterprise Edition sentence is,
+# regardless of what label the original README's own wrapper happened to use.
+_DETAILS_WRAPPER_OPEN = re.compile(r"(?is)^\s*<details>\s*(?:<summary>.*?</summary>\s*)?$")
+_DETAILS_WRAPPER_CLOSE = re.compile(r"(?is)^\s*</details>\s*$")
+_RENDERER_OWNED_COLLAPSIBLES = frozenset({"api_reference", "additional_examples"})
 _INSTALL_COMMAND = re.compile(
     r"^\s*(?:[$>]\s*)?(?:python3?\s+-m\s+)?(?:pip3?\s+install|npm\s+install|dotnet\s+add|"
     r"cargo\s+add|go\s+get|git\s+clone)\b",
@@ -1031,6 +1040,72 @@ def _matching_unresolved_install(
     return None
 
 
+def _collapsible_wrapper_bounds(
+    output: dict[str, Any], units_by_id: Mapping[str, Fact]
+) -> dict[str, tuple[str | None, str | None]]:
+    """Per renderer-owned destination, the (sole opening unit id, sole closing unit id) among
+    this disposition set's own ``PLACING``-disposed html_block units matching the wrapper shape --
+    ``None`` for a side with zero matches, and -- deliberately -- also ``None`` for a side with
+    more than one, rather than guessing which is the renderer's own outermost pair.
+
+    Adversarial finding #1, independent verifier (2026-11-01, on the first version of this fold,
+    which matched the wrapper SHAPE alone with no positional check at all): a per-example
+    collapsible toggle an author legitimately nests inside additional_examples ("click to see
+    output", a plausible real idiom) matches the same opening/closing shape as the renderer's own
+    single outermost wrapper, and would have been flattened right along with it. Fixed by this
+    function's whole existence: a nested, per-example toggle means there is now MORE than one
+    open-shaped (or close-shaped) ``PLACING`` match for that destination, which this function
+    refuses to pick between -- see adversarial finding #2 below for why this is "more than one",
+    not "pick the ordinal extreme", which was this function's own first version and was itself
+    independently found unsound before ever merging.
+
+    Adversarial finding #2, a second independent verifier (2026-11-01, on the ordinal-extreme
+    version of this function that preceded this one): the ordinal-extreme version silently chose
+    the lowest/highest-ordinal candidate even when that choice was never actually CONFIRMED to be
+    the renderer's own wrapper -- if the model disposed the real wrapper some other way entirely
+    (``OMIT_UNSUPPORTED``, destination ``None``, invisible to this per-destination scan), the
+    "extreme" among the remaining candidates was just whichever nested toggle happened to sort
+    first or last, and got wrongly folded. This version never guesses: ambiguity (more than one
+    ``PLACING`` candidate of a given shape) means no fold for that side, full stop, rather than a
+    confident-looking but unconfirmed pick. The real, single-pair case this whole fold exists for
+    (hosted runs 41147002918, 41236496887) is cardinality exactly one on both sides and is
+    unaffected; a repository matching neither shape at all is unaffected either.
+
+    Not fully closed, and not claimed to be: a single legitimate nested toggle, PLACING-disposed
+    into the exact same destination, while the real wrapper is independently disposed some other
+    way entirely (destination ``None``), still has cardinality one and would still be folded --
+    this residual case has never been observed live, needs two independent, compounding model
+    choices to construct at all, and is recorded here rather than hidden, per this project's own
+    stop rule and "report observations, not claims of progress."
+    """
+    opens: dict[str, list[tuple[int, str]]] = {dest: [] for dest in _RENDERER_OWNED_COLLAPSIBLES}
+    closes: dict[str, list[tuple[int, str]]] = {dest: [] for dest in _RENDERER_OWNED_COLLAPSIBLES}
+    for entry in output.get("dispositions", []):
+        unit = str(entry.get("unit_id", "?"))
+        destination = entry.get("destination_section")
+        if (
+            destination not in _RENDERER_OWNED_COLLAPSIBLES
+            or unit.rsplit(".", 1)[-1] != "html_block"
+            or entry.get("disposition") not in PLACING
+        ):
+            continue
+        unit_fact = units_by_id.get(unit)
+        ordinal = _unit_ordinal(unit)
+        if unit_fact is None or ordinal is None:
+            continue
+        if _DETAILS_WRAPPER_OPEN.match(unit_fact.value):
+            opens[destination].append((ordinal, unit))
+        elif _DETAILS_WRAPPER_CLOSE.match(unit_fact.value):
+            closes[destination].append((ordinal, unit))
+    return {
+        destination: (
+            opens[destination][0][1] if len(opens[destination]) == 1 else None,
+            closes[destination][0][1] if len(closes[destination]) == 1 else None,
+        )
+        for destination in _RENDERER_OWNED_COLLAPSIBLES
+    }
+
+
 def normalize(
     output: dict[str, Any], facts: FactsDocument, policy: PlanningPolicy = DEFAULT_POLICY
 ) -> list[str]:
@@ -1056,6 +1131,7 @@ def normalize(
     commands = command_block_units(facts)
     unpublished = unpublished_registry_blocks(facts)
     units_by_id = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
+    wrapper_bounds = _collapsible_wrapper_bounds(output, units_by_id)
     fence_languages = _example_languages(facts)
     install_ids = sorted(
         f.id for f in facts.by_kind("install_command") if f.polarity == "SUPPORTED"
@@ -1207,6 +1283,33 @@ def normalize(
                         RECOVERED_FENCE_RATIONALE + str(entry.get("rationale") or "")
                     )[:_RATIONALE_LIMIT]
                     continue
+        if (
+            disposition in PLACING
+            and destination in _RENDERER_OWNED_COLLAPSIBLES
+            and unit.rsplit(".", 1)[-1] == "html_block"
+        ):
+            # Measured live (aspose-pdf-foss/Aspose.PDF-FOSS-for-Java, hosted run 41147002918,
+            # disposition_coverage): inherited_unit:050.html_block ("<details><summary>View the
+            # Core API Surface</summary>") was kept VERIFIED_PRESERVE into api_reference, but the
+            # renderer prints its OWN fixed wrapper there ("View the Complete Public API
+            # Surface") instead -- the preserved text never actually appears, an unrepairable
+            # "disposition claims content survives when it does not" defect every time the
+            # original wrapper's wording happens to differ from the renderer's own fixed label.
+            # A SIBLING unit (032.html_block, "View Additional Examples") coincidentally matches
+            # the renderer's own ADDITIONAL_EXAMPLES_SUMMARY text byte-for-byte, which is exactly
+            # why this was never caught generally before now: the same bug, masked by luck.
+            #
+            # Bounded to the outermost pair only (wrapper_bounds, _collapsible_wrapper_bounds):
+            # matching the wrapper SHAPE alone, with no positional check, would also fold a
+            # genuine per-example "click to see output" toggle an author legitimately nests
+            # inside additional_examples -- a real, plausible idiom this project's own README
+            # contract never forbids, caught by an independent verifier on the first version of
+            # this fold before it ever merged.
+            if unit in wrapper_bounds.get(destination, (None, None)):
+                entry["disposition"] = "SUPERSEDE_REDUNDANT"
+                if identity_fact_id is not None:
+                    entry["fact_ids"] = sorted(cited | {identity_fact_id})
+                continue
         if disposition in PLACING and (
             destination == "banner" or (unit.endswith(".badge_row") and BANNER_FACT_ID in cited)
         ):

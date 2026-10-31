@@ -588,3 +588,220 @@ def test_normalize_does_not_backfill_an_unresolved_install_citation_for_an_unmat
     entry = output["dispositions"][0]
     assert entry["disposition"] == "DEFER_UNRESOLVED"
     assert any("uncited_redundant_defer" in e for e in place_errors)
+    entry = output["dispositions"][0]
+    assert entry["disposition"] == "DEFER_UNRESOLVED"
+
+
+# Real hosted defect (aspose-pdf-foss/Aspose.PDF-FOSS-for-Java, run 41147002918,
+# disposition_coverage): inherited_unit:050.html_block ("<details><summary>View the Core API
+# Surface</summary>") was kept VERIFIED_PRESERVE into api_reference, but renderer.py always
+# prints its OWN fixed wrapper there (API_SURFACE_SUMMARY, "View the Complete Public API
+# Surface") -- the preserved text never actually appears. A sibling unit whose original wording
+# happened to be byte-identical to the renderer's own ADDITIONAL_EXAMPLES_SUMMARY masked the same
+# bug by coincidence, which is why this was never caught generally before.
+def test_normalize_supersedes_a_details_wrapper_the_renderer_always_prints_itself() -> None:
+    facts = replace(
+        FACTS,
+        facts=(
+            *FACTS.facts,
+            Fact(
+                "inherited_unit:050.html_block",
+                "inherited_unit",
+                "<details>\n<summary>View the Core API Surface</summary>",
+                (Evidence("README.md", "section 'Widget > API Reference'"),),
+                attributes={"section": "Widget > API Reference"},
+            ),
+        ),
+    )
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:050.html_block",
+                "disposition": "VERIFIED_PRESERVE",
+                "destination_section": "api_reference",
+                "fact_ids": [],
+                "rationale": "The HTML block is part of the API reference section's own structure.",
+            }
+        ]
+    }
+    norm_errors = normalize(output, facts)
+    place_errors = placement_errors(output, facts)
+    entry = output["dispositions"][0]
+    assert entry["disposition"] == "SUPERSEDE_REDUNDANT"
+    assert entry["fact_ids"]
+    assert norm_errors == []
+    assert place_errors == []
+
+
+def test_normalize_supersedes_the_bare_closing_details_tag_too() -> None:
+    facts = replace(
+        FACTS,
+        facts=(
+            *FACTS.facts,
+            Fact(
+                "inherited_unit:051.html_block",
+                "inherited_unit",
+                "</details>",
+                (Evidence("README.md", "section 'Widget > Additional Examples'"),),
+                attributes={"section": "Widget > Additional Examples"},
+            ),
+        ),
+    )
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:051.html_block",
+                "disposition": "VERIFIED_MOVE",
+                "destination_section": "additional_examples",
+                "fact_ids": [],
+                "rationale": "Closes the collapsible block.",
+            }
+        ]
+    }
+    normalize(output, facts)
+    entry = output["dispositions"][0]
+    assert entry["disposition"] == "SUPERSEDE_REDUNDANT"
+
+
+def test_normalize_leaves_a_real_html_block_alone_even_targeting_api_reference() -> None:
+    """Negative control: the fold is scoped to the renderer's own wrapper shape, not every
+    html_block that happens to target api_reference -- real HTML content is never silently
+    reclassified."""
+    facts = replace(
+        FACTS,
+        facts=(
+            *FACTS.facts,
+            Fact(
+                "inherited_unit:052.html_block",
+                "inherited_unit",
+                '<img src="diagram.png" alt="Architecture">',
+                (Evidence("README.md", "section 'Widget > API Reference'"),),
+                attributes={"section": "Widget > API Reference"},
+            ),
+        ),
+    )
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:052.html_block",
+                "disposition": "VERIFIED_PRESERVE",
+                "destination_section": "api_reference",
+                "fact_ids": [],
+                "rationale": "A real architecture diagram, kept as written.",
+            }
+        ]
+    }
+    normalize(output, facts)
+    entry = output["dispositions"][0]
+    assert entry["disposition"] == "VERIFIED_PRESERVE"
+
+
+def test_normalize_leaves_a_details_wrapper_alone_outside_the_two_renderer_owned_sections() -> (
+    None
+):
+    """Negative control: scope_limitations (or any section other than api_reference/
+    additional_examples) never generates its own fixed collapsible wrapper, so a details tag
+    aimed there is not touched by this fold."""
+    facts = replace(
+        FACTS,
+        facts=(
+            *FACTS.facts,
+            Fact(
+                "inherited_unit:053.html_block",
+                "inherited_unit",
+                "<details>\n<summary>Known limitations</summary>",
+                (Evidence("README.md", "section 'Widget > Limitations'")),
+                attributes={"section": "Widget > Limitations"},
+            ),
+        ),
+    )
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:053.html_block",
+                "disposition": "VERIFIED_PRESERVE",
+                "destination_section": "scope_limitations",
+                "fact_ids": [],
+                "rationale": "A real, repository-authored collapsible limitations note.",
+            }
+        ]
+    }
+    normalize(output, facts)
+    entry = output["dispositions"][0]
+    assert entry["disposition"] == "VERIFIED_PRESERVE"
+
+
+# Adversarial finding #1 from an independent verifier (2026-11-01): matching the wrapper SHAPE
+# alone, with no positional check, would also fold a genuine per-example "click to see output"
+# toggle an author legitimately nests inside additional_examples -- a real, plausible idiom, not
+# merely theoretical. A second independent verifier then found that an ordinal-extreme positional
+# check (lowest/highest ordinal among PLACING candidates) was still unsound: if the real wrapper
+# is disposed some other way entirely (destination None, invisible to this scan), the "extreme"
+# among the remaining candidates is just whichever nested toggle sorts first/last, and gets
+# wrongly folded anyway. The shipped fix never guesses: more than one PLACING candidate of a given
+# shape for a destination means ambiguous, and NEITHER is folded -- proven here by asserting none
+# of the four candidates (not even the two genuinely outermost ones) become SUPERSEDE_REDUNDANT
+# when nested toggles make the pool ambiguous. The unambiguous single-pair case (the real defect
+# this whole fix exists for) is covered by the two positive tests above, which stay unaffected.
+def test_normalize_leaves_an_ambiguous_wrapper_pool_alone_entirely() -> None:
+    facts = replace(
+        FACTS,
+        facts=(
+            *FACTS.facts,
+            Fact(
+                "inherited_unit:040.html_block",
+                "inherited_unit",
+                "<details>\n<summary>View Additional Examples</summary>",
+                (Evidence("README.md", "section 'Widget > Additional Examples'"),),
+                attributes={"section": "Widget > Additional Examples"},
+            ),
+            Fact(
+                "inherited_unit:041.html_block",
+                "inherited_unit",
+                "<details>\n<summary>Click to see output</summary>",
+                (Evidence("README.md", "section 'Widget > Additional Examples'"),),
+                attributes={"section": "Widget > Additional Examples"},
+            ),
+            Fact(
+                "inherited_unit:042.html_block",
+                "inherited_unit",
+                "</details>",
+                (Evidence("README.md", "section 'Widget > Additional Examples'"),),
+                attributes={"section": "Widget > Additional Examples"},
+            ),
+            Fact(
+                "inherited_unit:043.html_block",
+                "inherited_unit",
+                "</details>",
+                (Evidence("README.md", "section 'Widget > Additional Examples'"),),
+                attributes={"section": "Widget > Additional Examples"},
+            ),
+        ),
+    )
+    _entry = lambda unit, disposition: {  # noqa: E731
+        "unit_id": unit,
+        "disposition": disposition,
+        "destination_section": "additional_examples",
+        "fact_ids": [],
+        "rationale": "As written.",
+    }
+    output = {
+        "dispositions": [
+            _entry("inherited_unit:040.html_block", "VERIFIED_PRESERVE"),  # outer open
+            _entry("inherited_unit:041.html_block", "VERIFIED_PRESERVE"),  # nested, per-example
+            _entry("inherited_unit:042.html_block", "VERIFIED_PRESERVE"),  # nested, per-example
+            _entry("inherited_unit:043.html_block", "VERIFIED_PRESERVE"),  # outer close
+        ]
+    }
+    normalize(output, facts)
+    by_id = {e["unit_id"]: e for e in output["dispositions"]}
+    # ambiguous (2 opens, 2 closes): this fix folds none of them, not even the genuinely outermost
+    # pair -- a false negative (the real wrapper might still need a human/Lane-R fix) is far safer
+    # than a false positive (silently stripping a legitimate nested toggle)
+    for unit in (
+        "inherited_unit:040.html_block",
+        "inherited_unit:041.html_block",
+        "inherited_unit:042.html_block",
+        "inherited_unit:043.html_block",
+    ):
+        assert by_id[unit]["disposition"] != "SUPERSEDE_REDUNDANT", unit
