@@ -129,7 +129,17 @@ def measure_content(markdown: str, verified_code_sha256s: Iterable[str] = ()) ->
 
 
 def _automatic_total(units: int, cap: int) -> int:
-    for bound, total in ((600, 2), (1_200, 3), (2_000, 4), (3_000, 5)):
+    """The automatic ceiling for a document of ``units`` (visible words plus verified examples).
+
+    Calibrated against the portfolio's own finalized READMEs (independent measurement, 2026-10-31,
+    all 35 aspose.org candidates): none has fewer than 586 visible words, and every one that carries
+    the fixed Documentation & Resources section needs four contextual Aspose links (a products, a
+    docs, a kb and a reference link) beside the banner and the Enterprise Edition link. The earlier
+    tiers (up to 600 units 2, up to 1,200 units 3) gave 3 to a document of 1,153 words and no
+    verified example, which is the Words-.NET BC-06 failure, and would have failed 23 of those 35
+    reference READMEs. A ceiling stays a ceiling: a short document is still held to fewer links.
+    """
+    for bound, total in ((300, 2), (500, 3), (2_000, 4), (3_000, 5)):
         if units <= bound:
             return min(total, cap)
     return min(6, cap)
