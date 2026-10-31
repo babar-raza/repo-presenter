@@ -1011,6 +1011,26 @@ def _omits_contradicted_command(entry: Mapping[str, Any], block: str, facts: Fac
     )
 
 
+def _matching_unresolved_install(
+    unit_id: str, units_by_id: Mapping[str, Fact], facts: FactsDocument
+) -> Fact | None:
+    """The UNRESOLVED ``install_command`` fact whose own command lines this unit's text matches,
+    or ``None``. Deliberately a literal match, same rigor as ``_supersession_gap``'s own
+    installation check: a model citing an unrelated UNRESOLVED install fact to dodge
+    ``uncited_redundant_defer`` could not pass this, since the match is code-computed, not
+    trusted from the model's own say-so."""
+    unit_fact = units_by_id.get(unit_id)
+    if unit_fact is None:
+        return None
+    lines = set(_command_lines(unit_fact.value))
+    if not lines:
+        return None
+    for fact in facts.by_kind("install_command"):
+        if fact.polarity == "UNRESOLVED" and lines <= set(_command_lines(fact.value)):
+            return fact
+    return None
+
+
 def normalize(
     output: dict[str, Any], facts: FactsDocument, policy: PlanningPolicy = DEFAULT_POLICY
 ) -> list[str]:
@@ -1286,6 +1306,31 @@ def normalize(
                     + str(entry.get("rationale") or "")
                 )[:_RATIONALE_LIMIT]
                 continue
+            if destination == "installation":
+                # Measured live (aspose-page-foss/Aspose.Page-FOSS-for-Python, hosted run
+                # 41137901672, unit 013.code_block "pip install aspose-page-foss"): the ONLY
+                # install_command fact here is UNRESOLVED (the registry could not confirm
+                # ownership), so rendering_fact_ids comes back empty the same way the CONTRADICTED
+                # case above does, but DEFER_UNRESOLVED is the actually-correct disposition for a
+                # genuinely unresolved claim -- the facts truly neither confirm nor deny it. The
+                # gap was never here (DEFER_UNRESOLVED was always reachable): it was
+                # uncited_redundant_defer's own exemption (example_status) never recognizing an
+                # install_command's own UNRESOLVED status the way it already recognizes an
+                # example's, so this DEFER_UNRESOLVED was refused outright with no path to fix it.
+                # Fixed on both ends: backfill the citation here (never trusted from the model's
+                # own say-so -- _matching_unresolved_install is a literal code-computed match), and
+                # placement_errors's own exemption, just below, now recognizes it.
+                unresolved_install = _matching_unresolved_install(unit, units_by_id, facts)
+                if unresolved_install is not None:
+                    entry["disposition"] = "DEFER_UNRESOLVED"
+                    entry["destination_section"] = None
+                    entry["fact_ids"] = sorted(cited | {unresolved_install.id})
+                    entry["rationale"] = (
+                        f"Deferred: {unresolved_install.id} is on record as UNRESOLVED, so "
+                        "neither confirmed nor refuted. "
+                        + str(entry.get("rationale") or "")
+                    )[:_RATIONALE_LIMIT]
+                    continue
             entry["disposition"] = "DEFER_UNRESOLVED"
             entry["destination_section"] = None
             continue
@@ -2239,6 +2284,14 @@ def placement_errors(output: dict[str, Any], facts: FactsDocument) -> list[str]:
     unpublished = unpublished_registry_blocks(facts)
     example_status = _example_status(facts)
     inherited = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
+    # Keyed by unit, like example_status just above, never by what a disposition cites: a model
+    # citing an arbitrary UNRESOLVED install_command fact on an unrelated code block must not be
+    # able to borrow this exemption for a unit whose own text does not actually match it.
+    unresolved_install_units = {
+        unit_id
+        for unit_id in inherited
+        if _matching_unresolved_install(unit_id, inherited, facts) is not None
+    }
     unit_text = {unit_id: fact.value for unit_id, fact in inherited.items()}
     build_facts = sorted(
         fact.id
@@ -2300,8 +2353,17 @@ def placement_errors(output: dict[str, Any], facts: FactsDocument) -> list[str]:
             disposition == "DEFER_UNRESOLVED"
             and unit.rsplit(".", 1)[-1] == "code_block"
             and unit not in example_status
+            and unit not in unresolved_install_units
             and entry.get("rationale") != RECOVERED_COVERAGE_RATIONALE
         ):
+            # Measured live (aspose-page-foss/Aspose.Page-FOSS-for-Python, run 41137901672, unit
+            # 013.code_block): an install_command fact's own UNRESOLVED status is exactly as
+            # legitimate a reason to defer as a tracked example's own UNRESOLVED status
+            # (example_status, checked just above) -- keyed by the unit itself, the same way
+            # example_status is, never by what a disposition cites, so a model citing an
+            # unrelated UNRESOLVED install fact on a code block whose own text does not match it
+            # gets no exemption from this.
+            #
             # Measured live (aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, runs 41060017964 and
             # 41068602255): alternative install snippets (a NuGet PackageReference, a CMake
             # find_package path hint, add_subdirectory(), a nuget CLI command) each landed
