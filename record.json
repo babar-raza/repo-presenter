@@ -19,9 +19,9 @@
   "proposal": null,
   "failure": {
     "classification": "validation_failed",
-    "detail": "PresentFailure: independent review returned REJECT with 4 blocking finding(s) of 4; nothing sealed; live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (heading 'Supported formats'); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (heading 'Additional Examples'); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (heading 'The story behind this code'); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (heading 'Contributing')",
+    "detail": "PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-06; nothing sealed",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-10-30T21:00:24.161595+00:00",
+    "occurred_at": "2026-10-31T05:58:07.467900+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 7,
+  "state_version": 8,
   "recent_trigger_dedup_keys": {
     "run:41121235240:aspose-words-foss/Aspose.Words-FOSS-for-.NET": "371aa95f80574c74828e7d250840db93",
     "run:41125275923:aspose-words-foss/Aspose.Words-FOSS-for-.NET": "d43f7964ae9940cbadd859e7dcc3bb37",
