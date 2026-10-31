@@ -4,7 +4,7 @@
   "lane": "L",
   "provider_repository_id": 1332915817,
   "registry_revision": null,
-  "active_transaction_id": "f9239bf8d6c043b8b47a2828310455e9",
+  "active_transaction_id": "2e2548c6b5f64dc7a45053919c318772",
   "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
@@ -25,7 +25,13 @@
     "resume_predicate": null,
     "recovery_count": 0
   },
-  "lease": null,
+  "lease": {
+    "holder_id": "present:41167968081",
+    "acquired_at": "2026-10-31T04:18:37.803970+00:00",
+    "heartbeat_at": "2026-10-31T04:18:37.803970+00:00",
+    "expires_at": "2026-10-31T04:33:37.803970+00:00",
+    "fencing_token": 1
+  },
   "last_transition": {
     "transition_id": "0f3d8c50d12c40029199245fb630d1e4",
     "transaction_id": "f9239bf8d6c043b8b47a2828310455e9",
@@ -40,9 +46,10 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 3,
+  "state_version": 4,
   "recent_trigger_dedup_keys": {
-    "run:41130142104:aspose-psd-foss/Aspose.PSD-FOSS-for-.NET": "f9239bf8d6c043b8b47a2828310455e9"
+    "run:41130142104:aspose-psd-foss/Aspose.PSD-FOSS-for-.NET": "f9239bf8d6c043b8b47a2828310455e9",
+    "run:41167968081:aspose-psd-foss/Aspose.PSD-FOSS-for-.NET": "2e2548c6b5f64dc7a45053919c318772"
   },
   "recovery_count": 0
 }
