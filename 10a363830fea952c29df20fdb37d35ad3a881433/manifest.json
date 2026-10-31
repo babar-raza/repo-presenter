@@ -35,8 +35,8 @@
       "sha256": "7dbdf82131c862f450f8094dccc8a4248f5a768f6750fdef4ef933c41523ab4d"
     },
     "ledger.jsonl": {
-      "bytes": 8211,
-      "sha256": "6a422d461bf10d3ac46bd4e42189ae4d1f0214c99d2f01835e8d7b40498035f4"
+      "bytes": 24255,
+      "sha256": "2a97177be262beab15d8d0e6813f5c5c0c7a2ead2857774287944dbe20eb38f4"
     },
     "review_verdict.json": {
       "bytes": 3714,
@@ -46,26 +46,54 @@
   "lane": "L",
   "ledger_totals": {
     "audit_only": 0,
-    "cache_reuses": 0,
+    "cache_reuses": 14,
     "provider_calls": 7,
-    "records": 7,
+    "records": 21,
     "total_tokens": 126024
   },
-  "no_op_proof": null,
-  "provider_calls": 7,
+  "no_op_proof": {
+    "byte_identical": true,
+    "first_run": {
+      "identity": {
+        "boot_id": "boot:064bae91-b0bc-4dd9-aa2d-5f7b25d7ed13",
+        "nonce": "690a3c3cbeba4b69b39a0238f5cb41cc",
+        "pid": 2714,
+        "started": "proc:10226"
+      },
+      "invocation_id": "c071965506fa413d8b6655945115245c",
+      "started_at": "2026-10-31T06:41:17Z"
+    },
+    "fresh_process": true,
+    "proven_at": "2026-10-31T06:49:01Z",
+    "provider_calls": 0,
+    "rerun": {
+      "cache_reuses": 7,
+      "identity": {
+        "boot_id": "boot:680c47d8-6ab9-4651-bf54-fe5bc2ebe4c7",
+        "nonce": "4f84f1dd1b68417694d682b7621360f3",
+        "pid": 2778,
+        "started": "proc:6143"
+      },
+      "invocation_id": "ee9e4be5435b4ff0bbffef89ef63b38f",
+      "provider_calls": 0,
+      "records": 7,
+      "started_at": "2026-10-31T06:49:01Z"
+    }
+  },
+  "provider_calls": 0,
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET",
   "revision": "10a363830fea952c29df20fdb37d35ad3a881433",
   "schema_version": 2,
-  "sealed_at": "2026-10-31T04:19:56Z",
+  "sealed_at": "2026-10-31T06:49:01Z",
   "sealed_by": {
     "identity": {
-      "boot_id": "boot:f8bdaed7-f618-41e0-ad68-9fe5c1c774fd",
-      "nonce": "325ff6b78d5f40cd8735648aeaa5007e",
-      "pid": 2326,
-      "started": "proc:15022"
+      "boot_id": "boot:680c47d8-6ab9-4651-bf54-fe5bc2ebe4c7",
+      "nonce": "4f84f1dd1b68417694d682b7621360f3",
+      "pid": 2778,
+      "started": "proc:6143"
     },
-    "invocation_id": "bb50e2bfef0448978fb86ec2a2ae8309",
-    "started_at": "2026-10-31T04:19:19Z"
+    "invocation_id": "ee9e4be5435b4ff0bbffef89ef63b38f",
+    "started_at": "2026-10-31T06:49:01Z"
   },
-  "state": "ACCEPTED"
+  "state": "READY_FOR_PROPOSAL"
 }
