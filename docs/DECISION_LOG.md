@@ -2160,3 +2160,35 @@ upstream repository's own README links to a release-notes file that does not exi
 
 **Where the detail lives**: the durable record for aspose-cells-foss/Aspose.Cells-FOSS-for-
 .NET@lane-l.
+
+---
+
+### 2026-11-01: `fix/lead-in-unresolved-example-coordination` merged -- a pre-existing, now
+slightly-widened gap found and honestly disclosed, not chased
+
+**Decision**: merged to `main`. `coordinate_neighbor_promises`'s own `_settle_lead_in` now also
+coordinates a lead-in with a payload whose example is `UNRESOLVED` (not only `SUPPORTED`),
+closing the real aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET BC-07 defect this entry's own earlier
+report named.
+
+**What the independent cold verifier found, and why it did not block the merge**: the SAME
+`verified_example` flag this fix widens also gates a DIFFERENT, untested branch in `_settle_
+lead_in` (reached when the LEAD-IN's own disposition is `DEFER_UNRESOLVED`, not the payload's) --
+that branch promotes the lead-in with no `_bare_lead_in` gate at all, unlike its own sibling
+`elif` branch immediately below it, which does require `_bare_lead_in` (the lead-in's own
+sentence making no specific, checkable claim) before promoting. The verifier constructed a
+concrete case (a lead-in asserting "the library fully supports PDF version 2.0 extraction:",
+`DEFER_UNRESOLVED`, beside a `SUPERSEDE_REDUNDANT` payload) where this ungated branch silently
+promotes the lead-in's own specific, unverified claim, and confirmed `placement_errors` does not
+catch it either (`coverage_findings`'s own `plan_dependent` gap for a `SUPERSEDE_REDUNDANT`-into-
+placeable fold is filtered out before becoming an error, by design, for an unrelated reason).
+Per AGENTS.md's non-negotiable #5, checked rather than dismissed: the verifier confirmed, with
+the SUPPORTED polarity (entirely unchanged by this diff), that this exact silent promotion
+already happens identically on unmodified `main` -- this fix only extends an already-latent,
+already-untested shortcut to one more input shape (`UNRESOLVED`), it does not create the gap.
+Logged as a separate, real follow-up (gate that branch the same way its own sibling already
+does, or pin the current behavior deliberately with a test), not attempted here. Full suite:
+3478 passed, 13 skipped, exit 0.
+
+**Where the detail lives**: `src/repo_presenter/readme/reconciliation/dispositions.py`
+(`_settle_lead_in`, the `state == "DEFER_UNRESOLVED"` branch around line 2194).
