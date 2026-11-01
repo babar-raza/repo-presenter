@@ -1848,3 +1848,65 @@ a real, pre-existing blind spot, unrelated to this fix, not touched here.
 **Where the detail lives**: `src/repo_presenter/readme/repair/accounting.py`
 (`_uncited_kept_heading_identity`, whose own docstring carries the two-location history),
 `tests/readme/repair/test_accounting_uncited.py`.
+
+---
+
+### 2026-11-01: live-verified the heading-identity-citation merge; two new, real, deliberately-not-fixed findings surfaced behind it
+
+**What this does**: dispatched a fresh `present.yml` (`both` lanes) run for aspose-slides-foss/
+Aspose.Slides-FOSS-for-.NET on merged `main` (run 41290354317) specifically to confirm the merged
+fix's real effect, per this project's own "verify live, never trust tests alone" rule.
+
+**Confirmed**: the original defect is gone. The durable record's `failure.detail` no longer
+mentions `inherited_unit:029.heading`/`disposition_coverage`/`live_readme_loss` at all -- the
+candidate progressed past S9 entirely, now blocking on two different, earlier-invisible checks
+(`BC-06`, `BC-12`) that `validation.json` already showed failing on the UNFIXED run too (so
+neither is a regression this merge caused; both were always there, simply masked behind the
+heading defect that failed the candidate first).
+
+**New finding A -- real, root-caused, NOT fixed (architecturally deep, matches an already-
+deferred class)**: `BC-06`'s own repair (`readme/repair/loop.py::_repair_plan`) failed with "the
+causing plan is not in the call store" -- it recomputes the S5 planning call's own request hash
+from the CURRENT `rc.dispositions` and looks up the cache by that hash; when `present.yml`
+restores a previous run's sealed bundle/call store and the dispositions have since changed (as
+this very fix did), the recomputed hash no longer matches what is cached, and the repair fails
+closed before ever asking the model anything. This is the same root architecture issue already
+logged (`nineteenth_fix_live_verified_insufficient_deeper_staleness_cause_found`, this log, 2026-
+10-30): "a genuine citation can silently go stale as later reconciliation work shifts a unit's
+disposition, invisible until something downstream tries to re-validate it" -- here the symptom is
+a repair lookup miss rather than a citation mismatch, but the cause is identical. Not fixed, for
+the same reason as before: this needs the deeper, already-deferred cache-invalidation fix, not a
+narrow patch on top. Recorded as a SECOND independent confirmation that this architectural item is
+real and recurring, strengthening (not newly establishing) the case for eventually prioritizing it.
+
+**New finding B -- real, root-caused, NOT fixed (naive fix would contradict an existing, deliberate
+test)**: `BC-12`'s own `canonical_name_failures` (`readme/validation/structure.py`) flagged
+"Aspose.Slides FOSS" as not matching the canonical "Aspose.Slides FOSS for .NET" inside this
+repository's own "Related Aspose FOSS Products" list (`documentation_resources`): "- **[Aspose.
+Slides FOSS for Java](...)** -- Aspose.Slides FOSS for Java provides a Java API...". Reproduced
+directly (`canonical_name_pattern`/`_is_technical_identifier` called against the real README
+text): the regex's own optional tail only ever tries to consume THIS repository's own tail
+("for .NET"); "for Java" doesn't match it, so the match stops at the bare head, which is then
+compared against the full canonical and correctly fails by the check's own narrow logic. The
+repair (S6, `documentation_resources`) then correctly refused to "fix" it (a no-op, rejected
+twice) -- there is nothing to fix; a sibling product's own, different, equally-canonical name is
+not a misspelling. Checked for an easy fix and found none that would not contradict an EXISTING,
+deliberate test: `test_bc12_fails_a_product_name_variant_in_prose`'s own parametrization
+explicitly requires "Aspose.3D FOSS for Java" (used as the bare subject of a sentence describing
+THIS product's own capabilities) to FAIL -- i.e. the check's job is precisely to catch a sentence
+that confuses which product it is describing, which lexical pattern-matching alone cannot
+distinguish from a correctly-structured "related products" list item (each with its own distinct
+link target, correctly describing a genuinely different repository) without new, structural
+(list-item + link-target) awareness this check does not have today. Not attempted here --
+recorded as a real, well-scoped, but not a quick fix, same discipline as the duplicate_paragraph
+generalization this log already reverted once rather than force past what was safely designed.
+
+**What this does NOT decide**: whether either new finding is worth the investment of (A) the
+deeper cache-invalidation fix or (B) teaching `canonical_name_failures` genuine structural
+(list-item/link-target) awareness -- both are logged as separate, real, future fix-queue
+candidates, not attempted here.
+
+**Where the detail lives**: real downloaded artifacts (`gh run download 41290354317`); `readme/
+repair/loop.py::_repair_plan` (finding A); `readme/validation/structure.py::canonical_name_
+failures`/`canonical_name_pattern`/`_is_technical_identifier`, `tests/readme/validation/
+test_registry_checks.py::test_bc12_fails_a_product_name_variant_in_prose` (finding B).
