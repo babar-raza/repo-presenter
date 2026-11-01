@@ -290,6 +290,22 @@ def test_a_placement_into_a_section_absent_at_this_revision_is_advisory() -> Non
     assert (finding.class_id, finding.decision) == ("SECTION_ABSENT", "ADVISORY")
 
 
+def test_a_section_absent_rationale_spelling_the_authored_heading_is_advisory() -> None:
+    """Measured live (aspose-psd-foss/Aspose.PSD-FOSS-for-.NET, run 41290980069): the model's own
+    rationale names the section by its authored heading text ("Documentation & Resources"), not
+    by its section_id with underscores turned to spaces ("documentation resources") -- the
+    ampersand means neither of ``_section_absent``'s two existing forms matches, so this fell
+    through to the blocking UNCLASSIFIED class even though the cause is exactly SECTION_ABSENT."""
+    facts = _facts(_unit(1, "list", "- `documentation/README.md`"))
+    deferred = _deferred(
+        "inherited_unit:001.list",
+        "The list of documentation files is superseded by the deterministic 'Documentation & "
+        "Resources' section, which is not rendered at this revision.",
+    )
+    finding = _only(review_deferrals({"dispositions": [deferred]}, facts))
+    assert (finding.class_id, finding.decision) == ("SECTION_ABSENT", "ADVISORY")
+
+
 def test_a_colon_lead_in_whose_block_was_withheld_is_advisory() -> None:
     """Sealed Aspose.Cells-Rust and Words-Python: a sentence promising the block that follows it,
     withheld with that block so the document never promises absent content."""
