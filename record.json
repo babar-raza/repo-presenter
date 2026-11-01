@@ -5,7 +5,7 @@
   "provider_repository_id": 1199624632,
   "registry_revision": null,
   "active_transaction_id": "3debcff9f8504ff8bab548dc7ebbe4d7",
-  "state": "OBSERVED",
+  "state": "SNAPSHOTTING",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -25,8 +25,21 @@
     "expires_at": "2026-11-01T10:39:36.194687+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "a4d163b332ae4bab8f089db9c0e4f515",
+    "transaction_id": "3debcff9f8504ff8bab548dc7ebbe4d7",
+    "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Python",
+    "from_state": "OBSERVED",
+    "to_state": "SNAPSHOTTING",
+    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
+    "occurred_at": "2026-11-01T10:25:03.950776+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-words-foss/Aspose.Words-FOSS-for-Python",
+    "output_manifest": "candidates/aspose-words-foss__Aspose.Words-FOSS-for-Python/lane-l/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:41295863252:aspose-words-foss/Aspose.Words-FOSS-for-Python": "3debcff9f8504ff8bab548dc7ebbe4d7"
   },
