@@ -2172,7 +2172,24 @@ def _settle_lead_in(
         return
     kind = _unit_kind(payload)
     target = neighbor.get("destination_section")
-    verified_example = kind == "code_block" and examples.get(payload, ("", ""))[0] == "SUPPORTED"
+    # Widened 2026-11-01 (aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET, run 41298091280): an
+    # UNRESOLVED example's code_block may legitimately be kept/superseded into an example
+    # section with a "not verified" caveat (the same accepted shape _omits_contradicted_command's
+    # own sibling folds already rely on elsewhere) -- this function's own name says "payload",
+    # not "verified payload", and the two existing branches above (OMIT_UNSUPPORTED, DEFER_
+    # UNRESOLVED) already coordinate the pair regardless of the example's own polarity. Only this
+    # one condition, named ``verified_example``, required SUPPORTED specifically, so a lead-in
+    # whose payload's example was merely UNRESOLVED (neither confirmed nor denied, not
+    # CONTRADICTED) was left uncoordinated: VERIFIED_PRESERVE into "opening" alone, with its own
+    # payload independently SUPERSEDE_REDUNDANT into "quick_start" -- two different sections,
+    # BC-07's dangling-colon rule correctly catching the lead-in left with nothing following it
+    # in its own section. CONTRADICTED is deliberately still excluded (not in this set): that
+    # shape already has its own, different, correct path (the `block == "OMIT_UNSUPPORTED"`
+    # branch above, reached when the contradicted example is genuinely omitted, not kept).
+    verified_example = kind == "code_block" and examples.get(payload, ("", ""))[0] in {
+        "SUPPORTED",
+        "UNRESOLVED",
+    }
     if state == "DEFER_UNRESOLVED":
         if verified_example and target in _EXAMPLE_SECTIONS and block in _KEPT_OR_COVERED:
             _supersede_lead_in(entry, str(target))
