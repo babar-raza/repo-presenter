@@ -128,6 +128,73 @@ def test_a_lead_in_follows_its_placed_payload_into_the_payloads_section() -> Non
     assert lead["destination_section"] == "development_testing"
 
 
+def test_a_lead_in_follows_an_unresolved_example_superseded_into_quick_start() -> None:
+    """Measured live (aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET, run 41298091280): the payload's
+    own example is UNRESOLVED (neither confirmed nor denied), kept SUPERSEDE_REDUNDANT into
+    quick_start with a "not verified" caveat -- a disposition shape this function's own general
+    fallback does not reach either (SUPERSEDE_REDUNDANT is not in PLACING), so an UNRESOLVED-
+    example payload coordinated with nothing, leaving its lead-in alone in "opening" with
+    nothing following it there, which BC-07's dangling-colon rule correctly caught."""
+    facts = _facts(
+        _unit("inherited_unit:012.paragraph", "Create a new PDF, then extract its text:"),
+        _unit("inherited_unit:013.code_block", "```csharp\nvar doc = new Document();\n```"),
+        Fact(
+            "example:001",
+            "example",
+            "var doc = new Document();",
+            (Evidence("README.md", "lines 1-3; unit inherited_unit:013.code_block"),),
+            polarity="UNRESOLVED",
+        ),
+    )
+    document = {
+        "dispositions": [
+            _entry("inherited_unit:012.paragraph", "VERIFIED_PRESERVE", "opening"),
+            _entry(
+                "inherited_unit:013.code_block",
+                "SUPERSEDE_REDUNDANT",
+                "quick_start",
+                fact_ids=["example:001"],
+            ),
+        ]
+    }
+    coordinate_neighbor_promises(document, facts)
+    lead = next(e for e in document["dispositions"] if e["unit_id"] == "inherited_unit:012.paragraph")
+    assert lead["disposition"] == "SUPERSEDE_REDUNDANT"
+    assert lead["destination_section"] == "quick_start"
+
+
+def test_a_lead_in_is_not_followed_when_the_example_is_contradicted() -> None:
+    """Negative control: CONTRADICTED stays out of this widening on purpose -- that shape has its
+    own, different, correct path (the block == OMIT_UNSUPPORTED branch, reached when a
+    contradicted example is genuinely omitted, not kept)."""
+    facts = _facts(
+        _unit("inherited_unit:012.paragraph", "Create a new PDF, then extract its text:"),
+        _unit("inherited_unit:013.code_block", "```csharp\nvar doc = new Document();\n```"),
+        Fact(
+            "example:001",
+            "example",
+            "var doc = new Document();",
+            (Evidence("README.md", "lines 1-3; unit inherited_unit:013.code_block"),),
+            polarity="CONTRADICTED",
+        ),
+    )
+    document = {
+        "dispositions": [
+            _entry("inherited_unit:012.paragraph", "VERIFIED_PRESERVE", "opening"),
+            _entry(
+                "inherited_unit:013.code_block",
+                "SUPERSEDE_REDUNDANT",
+                "quick_start",
+                fact_ids=["example:001"],
+            ),
+        ]
+    }
+    coordinate_neighbor_promises(document, facts)
+    lead = next(e for e in document["dispositions"] if e["unit_id"] == "inherited_unit:012.paragraph")
+    assert lead["disposition"] == "VERIFIED_PRESERVE"
+    assert lead["destination_section"] == "opening"
+
+
 def test_a_colonless_unit_beside_an_omitted_block_is_not_a_lead_in() -> None:
     facts = _facts(
         _unit("inherited_unit:014.paragraph", "This is an ordinary sentence."),
