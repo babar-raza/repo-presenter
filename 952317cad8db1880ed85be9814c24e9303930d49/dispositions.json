@@ -1,0 +1,434 @@
+{
+  "dispositions": [
+    {
+      "destination_section": "identity",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:license",
+        "package:name",
+        "package:published_version",
+        "package:python_requires",
+        "package:version"
+      ],
+      "rationale": "The H1 product name is rendered by the identity section from identity and package facts.",
+      "unit_id": "inherited_unit:001.heading"
+    },
+    {
+      "destination_section": "badges",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:001",
+        "link_target:002",
+        "link_target:003",
+        "link_target:004",
+        "link_target:005",
+        "link_target:006",
+        "link_target:007",
+        "link_target:008",
+        "link_target:009",
+        "link_target:010",
+        "link_target:011",
+        "link_target:013",
+        "link_target:014",
+        "link_target:015",
+        "link_target:product.banner",
+        "link_target:product.homepage"
+      ],
+      "rationale": "The badge row is rendered by the badges section from link_target and package facts.",
+      "unit_id": "inherited_unit:002.badge_row"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "link_target:008",
+        "link_target:009"
+      ],
+      "rationale": "The product illustration banner is supported by link_target facts and moves to the opening section to introduce the product.",
+      "unit_id": "inherited_unit:003.badge_row"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "package:name",
+        "package:version",
+        "package:published_version",
+        "license:spdx",
+        "package:license"
+      ],
+      "rationale": "The product summary paragraph is supported by product_summary facts and re-authored for the opening section.",
+      "unit_id": "inherited_unit:004.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Features' heading is superseded by the key_capabilities section, which re-authors the feature list.",
+      "unit_id": "inherited_unit:005.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:003",
+        "example:004",
+        "example:006",
+        "public_symbol:aspose.cells_foss.workbook",
+        "public_symbol:aspose.cells_foss.worksheet",
+        "public_symbol:aspose.cells_foss.cells",
+        "public_symbol:aspose.cells_foss.style",
+        "public_symbol:aspose.cells_foss.chart",
+        "public_symbol:aspose.cells_foss.datavalidation",
+        "public_symbol:aspose.cells_foss.save_workbook_as_csv",
+        "public_symbol:aspose.cells_foss.save_workbook_as_json",
+        "public_symbol:aspose.cells_foss.save_workbook_as_markdown",
+        "public_symbol:aspose.cells_foss.pdfsaveoptions",
+        "public_symbol:aspose.cells_foss.encrypt_xlsx"
+      ],
+      "rationale": "The features list is supported by capabilities facts and moves to the key_capabilities section.",
+      "unit_id": "inherited_unit:006.list"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "rationale": "The 'Installation' heading is rendered by the installation section from install_command facts.",
+      "unit_id": "inherited_unit:007.heading"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "rationale": "The installation paragraph is superseded by the installation section, which renders the exact install command.",
+      "unit_id": "inherited_unit:008.paragraph"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "rationale": "The pip install command block matches the verified install_command fact and is superseded by the installation section.",
+      "unit_id": "inherited_unit:009.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:development.dev.pytest-7.0.0",
+        "dependency:development.dev.pytest-cov-4.0.0",
+        "dependency:olefile-0.46",
+        "dependency:pycryptodome-3.15.0",
+        "install_command:pip",
+        "package:python_requires"
+      ],
+      "rationale": "Not printed again: development testing already states this material from the facts it cites, so the kept unit is redundant.",
+      "unit_id": "inherited_unit:010.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'PDF support' heading is not printed in the README despite being kept via VERIFIED_MOVE; since no evidence supports its presence, it must be omitted.",
+      "unit_id": "inherited_unit:011.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "Kept in development_testing: additional_examples holds no install material. The PDF support paragraph introduces the skia-python example and moves to additio...",
+      "unit_id": "inherited_unit:012.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "Kept in development_testing: additional_examples holds no install material. The skia-python install command is a real alternative path and moves to additiona...",
+      "unit_id": "inherited_unit:013.code_block"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Quick start' heading is superseded by the quick_start section, which renders a minimal example.",
+      "unit_id": "inherited_unit:014.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:015.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "The workbook creation example is verified as SUPPORTED and moves to additional_examples.",
+      "unit_id": "inherited_unit:016.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:017.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "The workbook reading example is verified as SUPPORTED and moves to additional_examples.",
+      "unit_id": "inherited_unit:018.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:019.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "The cell styling example is verified as SUPPORTED and moves to additional_examples.",
+      "unit_id": "inherited_unit:020.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:004"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:021.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:004"
+      ],
+      "rationale": "The validation list code block is supported by example:004 and belongs in additional_examples.",
+      "unit_id": "inherited_unit:022.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "example:005"
+      ],
+      "rationale": "Omitted with the example it introduced: that example is contradicted (example:005), so its heading has nothing left to introduce.",
+      "unit_id": "inherited_unit:023.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "example:005"
+      ],
+      "rationale": "Lead-in of the omitted block that follows (inherited_unit:025.code_block): withheld with it, never alone.",
+      "unit_id": "inherited_unit:024.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "example:005"
+      ],
+      "rationale": "The export code block is contradicted by example:005 (polarity: CONTRADICTED) and must be omitted.",
+      "unit_id": "inherited_unit:025.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:006"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:026.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:006"
+      ],
+      "rationale": "The encryption code block is supported by example:006 and belongs in additional_examples.",
+      "unit_id": "inherited_unit:027.code_block"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "format:input.xlsx",
+        "format:output.xlsx"
+      ],
+      "rationale": "The 'Supported formats' heading and table are superseded by the scope_limitations section which re-authors these limitations.",
+      "unit_id": "inherited_unit:028.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "format:input.xlsx",
+        "format:output.xlsx"
+      ],
+      "rationale": "The format support table is superseded by the scope_limitations section which re-authors these limitations.",
+      "unit_id": "inherited_unit:029.table"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose.cells_foss.load_csv_workbook"
+      ],
+      "rationale": "The CSV import paragraph is supported by load_csv_workbook and adds detail not covered elsewhere.",
+      "unit_id": "inherited_unit:030.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:pip",
+        "format:input.xlsx",
+        "public_symbol:aspose.cells_foss.xml_loader"
+      ],
+      "rationale": "The 'Scope' heading is superseded by the scope_limitations section which re-authors these limitations.",
+      "unit_id": "inherited_unit:031.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:pip",
+        "format:input.xlsx",
+        "public_symbol:aspose.cells_foss.xml_loader",
+        "public_symbol:aspose.cells_foss.skiapdfrenderer"
+      ],
+      "rationale": "The scope list is superseded by the scope_limitations section which re-authors these limitations.",
+      "unit_id": "inherited_unit:032.list"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:010",
+        "link_target:011",
+        "link_target:013",
+        "link_target:014"
+      ],
+      "rationale": "Heading owned by the renderer: documentation resources prints its own headings, so this inherited heading is not printed as written.",
+      "unit_id": "inherited_unit:033.heading"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "VERIFIED_REWRITE",
+      "fact_ids": [
+        "link_target:010",
+        "link_target:011",
+        "link_target:013",
+        "link_target:014"
+      ],
+      "rationale": "The examples and API list items are supported by link targets and belong in documentation_resources.",
+      "unit_id": "inherited_unit:034.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Development' heading text is not printed in the README despite being kept in development_testing; omitting it resolves the coverage gap.",
+      "unit_id": "inherited_unit:035.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "build_test_asset:examples",
+        "dependency:development.dev.pytest-7.0.0",
+        "dependency:development.dev.pytest-cov-4.0.0"
+      ],
+      "rationale": "The development setup paragraph is supported by build/test assets and belongs in development_testing.",
+      "unit_id": "inherited_unit:036.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "build_test_asset:examples",
+        "dependency:development.dev.pytest-7.0.0",
+        "dependency:development.dev.pytest-cov-4.0.0"
+      ],
+      "rationale": "The development install and test code block is supported by build/test assets and belongs in development_testing.",
+      "unit_id": "inherited_unit:037.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:examples"
+      ],
+      "rationale": "The output files paragraph adds repository-specific detail about generated workbooks.",
+      "unit_id": "inherited_unit:038.paragraph"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "license:file",
+        "license:spdx",
+        "third_party_notices:file"
+      ],
+      "rationale": "The 'License' heading and its paragraph are supported by license and third-party notices facts and belong in documentation_resources.",
+      "unit_id": "inherited_unit:039.heading"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "license:file",
+        "license:spdx",
+        "third_party_notices:file"
+      ],
+      "rationale": "The license paragraph is supported by license and third-party notices facts and belongs in documentation_resources.",
+      "unit_id": "inherited_unit:040.paragraph"
+    }
+  ]
+}
