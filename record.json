@@ -4,7 +4,7 @@
   "lane": "L",
   "provider_repository_id": 1193864496,
   "registry_revision": null,
-  "active_transaction_id": "b167de0e0d0f4b47828ca9a0ca8892f3",
+  "active_transaction_id": "87e597b0a8c04e7dbf2ddc20cf10074c",
   "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
@@ -25,7 +25,13 @@
     "resume_predicate": null,
     "recovery_count": 0
   },
-  "lease": null,
+  "lease": {
+    "holder_id": "present:41298086175",
+    "acquired_at": "2026-11-01T10:45:21.664290+00:00",
+    "heartbeat_at": "2026-11-01T10:45:21.664290+00:00",
+    "expires_at": "2026-11-01T11:00:21.664290+00:00",
+    "fencing_token": 1
+  },
   "last_transition": {
     "transition_id": "41b713091874454abc4406cd130658f3",
     "transaction_id": "b167de0e0d0f4b47828ca9a0ca8892f3",
@@ -40,9 +46,10 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 3,
+  "state_version": 4,
   "recent_trigger_dedup_keys": {
-    "run:41142593331:aspose-email-foss/Aspose.Email-FOSS-for-.Net": "b167de0e0d0f4b47828ca9a0ca8892f3"
+    "run:41142593331:aspose-email-foss/Aspose.Email-FOSS-for-.Net": "b167de0e0d0f4b47828ca9a0ca8892f3",
+    "run:41298086175:aspose-email-foss/Aspose.Email-FOSS-for-.Net": "87e597b0a8c04e7dbf2ddc20cf10074c"
   },
   "recovery_count": 0
 }
