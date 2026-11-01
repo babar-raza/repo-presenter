@@ -1656,3 +1656,68 @@ separate, more general fix-queue item -- not attempted here.
 **Where the detail lives**: `src/repo_presenter/readme/reconciliation/dispositions.py`
 (`_preceding_contradicted_example`, whose own docstring carries the full three-round history),
 `tests/readme/reconciliation/test_dispositions.py`.
+
+---
+
+### 2026-11-01: Slides-Cpp `uncovered_supersession` on a NuGet install snippet -- investigated, root-caused as a model-compliance gap, no pipeline fix (reverted before merge)
+
+**Decision**: no code change. Documented the investigation directly in
+`src/repo_presenter/readme/reconciliation/dispositions.py`'s own top-of-file comment, next to the
+`RECOVERED_COVERAGE_RATIONALE`/`_recover_uncovered` porting note it extends.
+
+**Why**: the pre-existing, already-blocked live check from `fix/file-like-native-build-extensions`
+(aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp, run 41276299775) was investigated to completion.
+Real failure (durable state record, `failure.detail`, read directly): `inherited_unit:033.code_block`
+(a PowerShell `Install-Package Aspose.Slides.Cpp.FOSS` snippet under "Install From NuGet on
+Windows") was `SUPERSEDE_REDUNDANT` into `installation`, which renders only the verified CMake
+command -- rejected as `uncovered_supersession` three attempts running. Read the ledger directly:
+the model's own narrowed retry oscillated between that same `SUPERSEDE_REDUNDANT` and an equally-
+rejected free-form `DEFER_UNRESOLVED` (refused by `uncited_redundant_defer`), never once trying the
+one, zero-ambiguity escape hatch the rejection text names explicitly on both attempts: `VERIFIED_
+MOVE`/`VERIFIED_PRESERVE` into `development_testing` -- a `PLACING`-into-`placeable` disposition
+`_fold_uncovered`'s own existing branch accepts immediately, no further gap, no retry needed.
+
+Found this is a documented, half-ported gap: the old repository's own `_recover_uncovered` fold
+(a last-attempt deferral with a typed `RECOVERED_COVERAGE_RATIONALE` sentinel, per TC-DSP-01) was
+never ported here -- confirmed by this module's own top-of-file comment and by
+`tests/readme/reconciliation/test_patch.py`'s wave-4 3D-Java fixture, which still simulates the
+fold's effect by hand because it does not exist. Implemented it (first as a new `_fold_uncovered`
+branch, then relocated to the later, more specific per-entry pass after seeing it fire too early
+and swallow the already-fixed `contradicted_install`/`unresolved_install_command` backfills) and
+reproduced the real defect fixed, byte-for-byte, against the real downloaded `facts.json`.
+
+**Reverted before merge**: `test_supersede_redundant_by_installation_is_still_refused_when_the_
+literal_block_is_not_what_it_renders` (same file, pre-existing, already guarding a *different*
+prior regression) failed. Its own docstring: fixing an earlier over-eager force-revert "must not
+paper over the real gap" -- a `PackageReference` XML snippet in the exact same shape (`SUPERSEDE_
+REDUNDANT` into `installation`, gap persists, `ids` non-empty) must stay a loud, blocking
+`uncovered_supersession`, not a silent deferral, because the *same* zero-ambiguity escape hatch
+(`VERIFIED_MOVE` into `development_testing`) is still reachable there too. Checked directly: both
+shapes are structurally indistinguishable from the pipeline's own point of view (`nearest_holdable`
+resolves a valid home for both; neither is a tracked example; neither matches an UNRESOLVED install
+fact). No principled rule separates "truly stuck" from "available escape not taken" here, so any
+fold general enough to fix the Slides-Cpp case reopens the regression the sibling test exists to
+block. Per AGENTS.md's non-negotiable #5 ("no agent...may silently overrule its own negative
+finding"), did not narrow the fold further to dodge the conflict without evidence that a narrower
+rule is actually correct -- reverted the code change entirely and kept only the documentation.
+
+This is recorded as what it is: a genuine, cold-reproduced, real-evidence finding that is a model-
+compliance gap (the model had the exact fix named for it, twice, and did not take it), not a
+pipeline defect -- the same category as the already-logged diagram-steer model-compliance limit,
+recorded plainly rather than forced into a fix that would reopen an already-settled regression.
+
+**Evidence**: real downloaded run artifacts (`gh run download 41276299775`), the real durable
+state record (`git show refs/repository-presenter-state/records/aspose-slides-foss__Aspose.Slides-
+FOSS-for-Cpp:record.json`), the real `llm_cache/ledger.jsonl` (all three reconciliation attempts
+for the failing batch, confirming the oscillation), and a cold repro script run twice (against the
+unfixed code, reproducing the real rejection byte-for-byte; against the reverted code, confirming
+no regression). Full suite: 3471 passed, 13 skipped, exit 0, confirmed unchanged by the documentation-
+only diff.
+
+**What this does NOT decide**: whether the `source_reconciliation` prompt/narrowing template
+itself should be strengthened to push the model toward the named escape hatch more mechanically --
+not attempted here, and not clearly warranted given the diagram-steer precedent of not chasing
+model compliance with prompt hacks absent stronger evidence it would generalize.
+
+**Where the detail lives**: `src/repo_presenter/readme/reconciliation/dispositions.py`'s own
+top-of-file comment (`RECOVERED_COVERAGE_RATIONALE`).

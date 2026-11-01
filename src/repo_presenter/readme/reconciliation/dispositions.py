@@ -128,6 +128,25 @@ DISPOSITIONS_FILENAME = "dispositions.json"
 # deferrals.py's NOT_CARRIED_BY_NAMED_SECTION class is correctly registered but dormant until that
 # fold exists -- the same honest "ported, not yet exercised by an upstream producer" boundary this
 # repository already uses for several other components.
+#
+# Investigated again 2026-11-01 (aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp, run 41276299775):
+# a NuGet-on-Windows install snippet, SUPERSEDE_REDUNDANT into installation (which renders only
+# the verified CMake command), was rejected as uncovered_supersession three attempts running, the
+# model oscillating between that and an equally-refused free-form DEFER_UNRESOLVED, never trying
+# the one open, zero-ambiguity escape hatch the rejection names explicitly both times: VERIFIED_
+# MOVE into development_testing (a PLACEABLE section -- _fold_uncovered's own SUPERSEDE_REDUNDANT-
+# into-placeable branch would accept it immediately, no further gap). A general "still-gapped
+# code_block into a deterministic section -> defer" fold was tried here to close this and reverted
+# before merge: test_supersede_redundant_by_installation_is_still_refused_when_the_literal_block_
+# is_not_what_it_renders (same file) already fixed an identical-shaped prior regression (a
+# PackageReference XML snippet, same gap, same open escape hatch) in the OTHER direction -- it
+# insists placement_errors keep reporting uncovered_supersession rather than silently defer, since
+# a legitimate placement is genuinely still reachable and auto-deferring would hide content a
+# correct reply could have kept. The two shapes are structurally indistinguishable from the
+# pipeline's own point of view (same gap reason is not required; same escape hatch exists in both);
+# no principled rule distinguishes "truly stuck" from "available escape not taken" here. This is a
+# model-compliance gap, not a pipeline defect -- recorded plainly rather than forced into a fold
+# that would reopen the regression the sibling test guards against.
 RECOVERED_COVERAGE_RATIONALE = "Not provably carried by the section named; held for the owner. "
 PLACING = frozenset(
     {"VERIFIED_PRESERVE", "VERIFIED_REWRITE", "VERIFIED_MOVE", "CORRECT_WITH_EVIDENCE"}
