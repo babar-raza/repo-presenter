@@ -1721,3 +1721,76 @@ model compliance with prompt hacks absent stronger evidence it would generalize.
 
 **Where the detail lives**: `src/repo_presenter/readme/reconciliation/dispositions.py`'s own
 top-of-file comment (`RECOVERED_COVERAGE_RATIONALE`).
+
+---
+
+### 2026-11-01: six-repository portfolio-impact sweep on `main` -- one confirmed real win, one new root-caused fix, two confirmed-recurring deferrals, one not-a-bug, one new pending candidate
+
+**What this does**: dispatched fresh `present.yml` (`both` lanes) runs on `main` for six repositories
+spanning five ecosystems (aspose-cells-foss/Python, aspose-slides-foss/.NET, aspose-words-foss/.NET,
+aspose-pdf-foss/Cpp, aspose-email-foss/Cpp, aspose-3d-foss/.NET) to measure today's merged fixes'
+real portfolio effect and surface new defects, per AGENTS.md non-negotiable #4 (blast-radius query
+before, targeted recheck after). All six GitHub Actions jobs showed red; triaged each one's real
+durable-state record individually rather than taking the red job status at face value.
+
+**Finding 0 -- a real, confirmed portfolio win, and an operational correction to this session's own
+"authoritative signal" heuristic**: aspose-cells-foss/Aspose.Cells-FOSS-for-Python's Lane R is
+genuinely **ACCEPTED** on `main` as of this sweep (`last_transition.to_state: ACCEPTED`,
+`occurred_at` matching this exact run, `present: ... lane R exit 0, durable state ACCEPTED` read
+directly from the hosted job's own log) -- the job showed red only because Lane L failed
+separately on 3 genuine, correct findings about the real upstream repository (a failing example,
+an unverified TSV format claim, a broken `RELEASE_NOTES.md` link; Lane L's own "may not repair"
+design, not a pipeline defect). Discovered, and corrected for, a real gap in this session's own
+"trust `last_transition`, not `failure.detail`, for freshness" rule: when a repository's record
+is ALREADY in a terminal failure state (e.g. `FAILED_INTERNAL` from a prior run) and a NEW run
+fails again, `present_transaction.py`'s own `_commit_outcome` (`hops = _failure_hops(current_state)`
+comes back empty, since the registry has no `FAILED_INTERNAL -> FAILED_INTERNAL` self-loop) takes
+a deliberate, documented fallback path (`refresh_failure`) that updates `failure.detail`/
+`failure.occurred_at` WITHOUT writing a new `last_transition` -- by design ("the record must still
+describe THIS failure, not the first one it ever recorded"), not a bug. Confirmed this against
+all five of today's remaining failures via `recent_trigger_dedup_keys[run:<id>]` matching
+`active_transaction_id`: freshness must be checked via the dedup-key match or `failure.occurred_at`
+when `last_transition.occurred_at` predates the run, never via `last_transition` alone when `state`
+is a repeat terminal failure. Recorded here since it would otherwise mislead any future investigation
+that repeats this session's own prior heuristic unconditionally.
+
+**Finding 1 -- real, root-caused, fixed**: see `fix/verified-move-heading-identity-citation`
+(aspose-slides-foss/Aspose.Slides-FOSS-for-.NET, run 41284665612) -- a third shape of the
+already-known heading-accounting gap (`VERIFIED_MOVE`/`VERIFIED_PRESERVE`, not just
+`SUPERSEDE_REDUNDANT`/`OMIT_UNSUPPORTED`), where a citation backfill alone cannot close the gap
+because `disposition_coverage_rule` never consults `fact_ids` for a kept disposition. Fixed,
+tested, falsifier-confirmed; cold independent verification in progress before merge.
+
+**Finding 2 -- confirmed recurring, already deferred, not re-investigated**:
+aspose-email-foss/Aspose.Email-FOSS-for-Cpp's `duplicate_paragraph` finding on this run is the
+exact same `inherited_unit:043.paragraph` (API Reference) case this decision log's own
+`twentieth_fix_second_live_round_found_a_second_false_positive_generalization_reverted` entry
+already found, root-caused, and deliberately deferred pending a per-citation (not per-section)
+generalization. No new investigation added; the existing deferral stands.
+
+**Finding 3 -- same shape as an already-decided not-a-bug, not re-investigated in full**:
+aspose-3d-foss/Aspose.3D-FOSS-for-.NET's three `llm:factuality`/S6/`fact_ids: []` findings (format-
+support overclaims) match this log's own `3D-Java F01-F05... already-working repair loop, not a
+pipeline bug` entry's shape exactly (same causal stage, same claim kind, a repair round already
+fired and changed the text). Treated as the same category without a full fresh reproduction,
+given the strength of the existing precedent; not logged as a separate root-cause investigation.
+
+**Finding 4 -- already known, not re-investigated**: aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp's
+`BC-08` failure is the same already-extensively-investigated (eighteenth/nineteenth fix chain),
+deliberately deferred cache-staleness/content-dropping defect. No new ground covered.
+
+**Finding 5 -- new, pending, NOT fixed (insufficient evidence for a fix yet)**:
+aspose-words-foss/Aspose.Words-FOSS-for-.NET's Lane R failed at `independent_review` itself (not
+reconciliation): the model's own REJECT reply's finding F05 (`claim_kind: contradiction`, citing
+only `inherited_unit:013.paragraph`) was rejected twice running (job's own 2-attempt limit, no
+narrowing mechanism) for "a contradiction finding must cite at least one product fact (not only
+inherited text)". Read directly: F05's claim ("adds the full feature set of Aspose.Words for
+.NET... not present in this FOSS package") is a correct, self-evident FOSS-vs-commercial-edition
+contradiction that plausibly only needs a product/identity fact backfilled alongside the inherited
+citation -- but this is a single occurrence, not confirmed recurring, so per this session's own
+standing discipline (never fix from one data point) this is logged as a new fix-queue candidate,
+not acted on.
+
+**Where the detail lives**: durable-state records for each of the six repositories (`git show
+refs/repository-presenter-state/records/<slug>[@lane-l]:record.json`); `fix/verified-move-
+heading-identity-citation`'s own commit for Finding 1; this entry for Findings 0 and 5.
