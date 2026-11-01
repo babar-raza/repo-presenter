@@ -234,6 +234,29 @@ def test_the_wrong_name_rule_is_silent_without_an_identity_fact() -> None:
     assert claim_findings(readme("`Aspose.3D.FOSS.Core` is great."), bare) == []
 
 
+# Real hosted false positive (claim_findings/_prose_name_findings, measured against
+# aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp's own real build-instructions text): a cross-platform
+# build section honestly names the SAME static-library artifact under both its Unix suffix
+# (already exempted via `_FILE_LIKE`'s existing ".a") and its MSVC suffix (".lib") -- not a
+# second, unverified package, a file extension `_FILE_LIKE` was simply missing.
+@pytest.mark.parametrize("extension", ["lib", "dylib", "o", "obj"])
+def test_a_native_build_artifact_extending_the_identity_is_not_a_wrong_name(
+    extension: str,
+) -> None:
+    document = facts()
+    sentence = f"The build also produces `Aspose.3D.FOSS.{extension}` on that platform."
+    assert claim_findings(readme(sentence), document) == []
+
+
+def test_a_non_file_like_name_extending_the_identity_is_still_a_wrong_name() -> None:
+    """Negative control: the widened _FILE_LIKE exemption is scoped to file extensions, not a
+    blanket allowance for anything appended to the identity with a separator."""
+    document = facts()
+    sentence = "Add the `Aspose.3D.FOSS.Lite` package to your project."
+    [finding] = claim_findings(readme(sentence), document)
+    assert "Aspose.3D.FOSS.Lite" in finding.detail
+
+
 # --- a format list -----------------------------------------------------------------------------
 
 
