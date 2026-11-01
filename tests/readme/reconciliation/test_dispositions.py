@@ -10,6 +10,7 @@ from repo_presenter.readme.reconciliation.dispositions import (
     coverage_findings,
     normalize,
     placement_errors,
+    reconciliation_batch_facts,
     rendering_fact_ids,
 )
 
@@ -984,3 +985,63 @@ def test_normalize_does_not_reach_past_a_fine_code_block_to_an_earlier_contradic
     # the nearest code_block (142, the git-clone one) is not CONTRADICTED -- the fix must not
     # reach past it to the farther, unrelated example:040
     assert entry["fact_ids"] == []
+
+
+# Known, disclosed coverage limit (not a correctness bug), confirmed by a SECOND live hosted
+# occurrence on the exact repository this fold was built for (aspose-pdf-foss/Aspose-PDF-FOSS-
+# for-Python, run 41276313821, unit 193.paragraph commenting on 191.code_block's own CONTRADICTED
+# example): reconciliation_batch_facts deliberately narrows inherited_unit facts to one batch at
+# a time (a real, already-fixed bug elsewhere depends on this); when the companion code_block
+# falls in an EARLIER batch than the paragraph, it is invisible here, and the fold safely does
+# nothing -- proven by feeding the exact batch-scoped shape the real pipeline actually uses.
+def test_normalize_safely_skips_the_backfill_when_the_example_is_in_an_earlier_batch() -> None:
+    facts = replace(
+        FACTS,
+        facts=(
+            *FACTS.facts,
+            Fact(
+                "example:050",
+                "example",
+                "with Document('batch.pdf') as document:\n    removed = document.remove_duplicates()",
+                (Evidence("README.md", "unit inherited_unit:163.code_block"),),
+                polarity="CONTRADICTED",
+            ),
+            Fact(
+                "inherited_unit:163.code_block",
+                "inherited_unit",
+                "```python\nwith Document('batch.pdf') as document:\n    removed = document.remove_duplicates()\n```",
+                (Evidence("README.md", "section 'Widget > Additional Examples > Find Visually Duplicate Pages'"),),
+                attributes={"section": "Widget > Additional Examples > Find Visually Duplicate Pages"},
+            ),
+            Fact(
+                "inherited_unit:164.paragraph",
+                "inherited_unit",
+                'Use `dry_run=True` to preview removal or `keep="last"` to retain the last selected copy.',
+                (Evidence("README.md", "section 'Widget > Additional Examples > Find Visually Duplicate Pages'"),),
+                attributes={"section": "Widget > Additional Examples > Find Visually Duplicate Pages"},
+            ),
+        ),
+    )
+    # The real pipeline's own call shape: a reconciliation batch that starts AFTER the companion
+    # code_block, exactly as the real, live batch boundary fell (unit 191 in one batch, 193 --
+    # this fixture's 164 -- starting the next).
+    paragraph_only = next(f for f in facts.by_kind("inherited_unit") if f.id == "inherited_unit:164.paragraph")
+    batch_facts = reconciliation_batch_facts(facts, [paragraph_only])
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:164.paragraph",
+                "disposition": "OMIT_UNSUPPORTED",
+                "destination_section": None,
+                "fact_ids": [],
+                "rationale": "No fact supports the claim about dry_run or keep parameters.",
+            }
+        ]
+    }
+    norm_errors = normalize(output, batch_facts)
+    place_errors = placement_errors(output, batch_facts)
+    entry = output["dispositions"][0]
+    # no crash, no wrong citation -- just correctly unable to help, same as before this fix existed
+    assert entry["fact_ids"] == []
+    assert norm_errors == []
+    assert any("uncited_prose_omit" in e for e in place_errors)

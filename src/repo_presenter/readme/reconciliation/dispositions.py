@@ -1059,6 +1059,24 @@ def _preceding_contradicted_example(
     backward past the nearer, non-contradicted candidate instead of stopping there. This version
     finds the single nearest code_block regardless of polarity, and only ever cites it if that
     exact one is the contradicted one -- never a farther, structurally unrelated example.
+
+    Known, disclosed coverage limit (not a correctness bug -- confirmed by a second, live hosted
+    occurrence on the exact repository this fold was built for, aspose-pdf-foss/Aspose-PDF-FOSS-
+    for-Python run 41276313821, unit 193.paragraph commenting on 191.code_block's own CONTRADICTED
+    example:059): ``units_by_id`` here is whatever ``normalize()`` was itself called with, which
+    for the real hosted path is ``reconciliation_batch_facts``'s own deliberately batch-scoped
+    ``inherited_unit`` facts (its own docstring: "A batch's own call must see ... only its own
+    units"), never the whole document. ``example`` facts are a different kind and are NOT
+    batch-scoped, so ``contradicted`` itself is always complete -- but if the preceding code_block
+    happens to fall in an EARLIER reconciliation batch than this paragraph (confirmed live: unit
+    191 was in a different batch than 193), it is invisible to ``units_by_id`` and this function
+    safely returns ``None`` -- a missed backfill, never a wrong one. Reproduced directly: feeding
+    the real batch-scoped facts for this exact live case reproduces the exact live rejection
+    byte-for-byte. Closing this needs threading whole-document unit visibility into this one fold
+    without reopening the batch-isolation bug ``reconciliation_batch_facts`` itself exists to
+    prevent (``binding_errors`` demanding full coverage per batch) -- a separate, more general
+    problem (any fold needing cross-batch context would hit it, not just this one), not attempted
+    here.
     """
     unit_fact = units_by_id.get(unit_id)
     ordinal = _unit_ordinal(unit_id)
