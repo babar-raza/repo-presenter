@@ -1600,3 +1600,59 @@ budget chasing a clean end-to-end confirmation this defect's own shape does not 
 
 **Where the detail lives**: `src/repo_presenter/readme/validation/claims.py` (`_FILE_LIKE`),
 `tests/readme/validation/test_claims_surface.py`.
+
+---
+
+## 2026-11-01: an omission commenting on a contradicted example gets its citation backfilled (merged `fix/omit-companion-contradicted-example`)
+
+**Decision**: merge `fix/omit-companion-contradicted-example` to main. `normalize()` now backfills
+the citation for an uncited `OMIT_UNSUPPORTED` paragraph that comments on the code example
+directly above it in the same section, when that example's own fact is CONTRADICTED -- scoped to
+the single nearest preceding code_block, regardless of its polarity, so it never reaches past a
+fine code_block to cite an earlier, unrelated one.
+
+**Why**: measured live (aspose-pdf-foss/Aspose.PDF-FOSS-for-Python, hosted run 41142404776, unit
+164.paragraph, "Use `dry_run=True`..."): the model's own disposition and rationale were already
+correct in substance ("no fact supports the claim about dry_run or keep parameters"), but
+`fact_ids` stayed empty because neither parameter name is a package or link_target fact's own
+value, the only two kinds the existing `_spelled_supported_facts` backfill (added earlier this
+session) can match. The example this paragraph comments on is CONTRADICTED -- the clearest
+possible citation available, deterministically findable from the unit's own position.
+
+**Evidence, in three rounds, each closing a real gap found cold**:
+1. First version (search backward for the nearest preceding CONTRADICTED code_block, skipping
+   non-contradicted ones): a first independent verifier found it could misattribute a paragraph
+   to a FARTHER, unrelated CONTRADICTED example when a NEARER, non-contradicted code_block sits
+   between them -- reproduced directly against a real section shape in aspose-words-foss/.NET's
+   own facts.json (a NuGet snippet, a paragraph, a "build from source" alternative, another
+   paragraph).
+2. Second, shipped version (find the single nearest code_block regardless of polarity; cite it
+   only if that exact one is contradicted): a second independent verifier confirmed this closes
+   the first gap (constructed a 3-code_block adversarial case; confirmed the 2-code_block
+   nearer-one-contradicted case still works) with no further issue found.
+3. While live-checking this exact fix, a SECOND real occurrence of the same shape surfaced on the
+   SAME repository (run 41276313821, unit 193.paragraph commenting on 191.code_block's own
+   CONTRADICTED example) -- but did not get backfilled. Root-caused directly (not guessed):
+   `reconciliation_batches` splits units into contiguous ranges, unit 191 fell in an earlier batch
+   than 193, and `reconciliation_batch_facts` deliberately narrows `normalize()`'s own view of
+   `inherited_unit` facts to the current batch only (an existing, documented design that prevents
+   a different real bug -- `binding_errors` demanding full coverage per batch). The companion
+   code_block was simply invisible to this call, so the fold safely did nothing -- confirmed by
+   feeding the real batch-scoped facts for this exact case and reproducing the exact rejection
+   byte-for-byte. This is a genuine coverage limit (a missed backfill, never a wrong one), not a
+   correctness bug; disclosed directly in the function's own docstring rather than hidden, with a
+   dedicated test proving the cross-batch case is a safe no-op. Fully closing it needs threading
+   whole-document unit visibility into this fold without reopening the batch-isolation design --
+   a separate, more general problem (any fold needing cross-batch context would hit it), logged
+   as a new fix-queue item, not attempted here.
+
+Full suite green at every round (3464, 3465, 3466 passed respectively; 13 skipped; exit 0 each
+time). Broader reconciliation/review/repair/cascade check: 684 passed.
+
+**What this does NOT decide**: the batch-boundary coverage limit (any fold needing visibility
+into a different reconciliation batch's own units hits the same wall) is logged as its own,
+separate, more general fix-queue item -- not attempted here.
+
+**Where the detail lives**: `src/repo_presenter/readme/reconciliation/dispositions.py`
+(`_preceding_contradicted_example`, whose own docstring carries the full three-round history),
+`tests/readme/reconciliation/test_dispositions.py`.
