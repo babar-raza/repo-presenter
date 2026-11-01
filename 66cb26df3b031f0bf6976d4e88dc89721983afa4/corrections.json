@@ -1,0 +1,104 @@
+{
+  "confinement": {
+    "edits": 0,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "ae56f632fba7ee468f7a617b24a35050e045d588313174fabc4c4e3f46c925fc",
+  "edits": [],
+  "lane": "L",
+  "original_sha256": "ae56f632fba7ee468f7a617b24a35050e045d588313174fabc4c4e3f46c925fc",
+  "outcome": "NO_CHANGE_WARRANTED",
+  "readme_path": "README.md",
+  "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript",
+  "schema_version": 1,
+  "source_revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {},
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "public_symbol:aperturemode",
+        "public_symbol:bindpoint",
+        "public_symbol:booleanoperation",
+        "public_symbol:composeorder",
+        "public_symbol:fmatrix4",
+        "public_symbol:fvector2",
+        "public_symbol:iindexedvertexelement",
+        "public_symbol:inamedobject"
+      ],
+      "line": 0,
+      "reason": "28 of 81 verified public types are named nowhere in the README; would fill API Reference: public_symbol:aperturemode, public_symbol:bindpoint, public_symbol:booleanoperation, public_symbol:composeorder, public_symbol:fmatrix4, public_symbol:fvector2, public_symbol:iindexedvertexelement, public_symbol:inamedobject (+20 more)",
+      "text": ""
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 34,
+      "reason": "the README marks 'OBJ' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "i1[\"An existing OBJ, STL, or glTF file (.gltf/.glb)\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 34,
+      "reason": "the README marks 'STL' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "i1[\"An existing OBJ, STL, or glTF file (.gltf/.glb)\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 35,
+      "reason": "the README marks 'FBX' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "i2[\"An existing FBX or COLLADA file\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 36,
+      "reason": "the README marks '3MF' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "i3[\"An existing 3MF (3D Manufacturing Format) archive\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 56,
+      "reason": "the README marks 'STL' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o1[\"STL or glTF file\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 57,
+      "reason": "the README marks 'FBX' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o2[\"FBX or COLLADA file\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 58,
+      "reason": "the README marks '3MF' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o3[\"3MF (3D Manufacturing Format) archive\"]"
+    }
+  ]
+}
