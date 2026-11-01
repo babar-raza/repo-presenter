@@ -5,7 +5,7 @@
   "provider_repository_id": 1381084812,
   "registry_revision": null,
   "active_transaction_id": "9a2805b2c6d2484e9b00f1b379bc1419",
-  "state": "OBSERVED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,12 +17,19 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "OBSERVED",
+    "occurred_at": "2026-11-01T10:05:12.881932+00:00",
+    "resume_predicate": null,
+    "recovery_count": 1
+  },
   "lease": null,
   "last_transition": null,
-  "state_version": 2,
+  "state_version": 3,
   "recent_trigger_dedup_keys": {
     "run:41130121031:aspose-gis-foss/Aspose.GIS.FOSS-for-.Net": "9a2805b2c6d2484e9b00f1b379bc1419"
   },
-  "recovery_count": 0
+  "recovery_count": 1
 }
