@@ -5,7 +5,7 @@
   "provider_repository_id": 1203447266,
   "registry_revision": null,
   "active_transaction_id": "82b4155bd8ec4895bf39fc5495e53073",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "PresentFailure: Lane L: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (Aspose.Cells.FOSS is shown at version 26.10.0.0, but the registry's current stable release is 26.10.0); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it ('RELEASE_NOTES_V26.10.0.md' is not in the tree and no unique file stands in for it); Lane L left 1 defect(s) it may not repair (broken_link line 127: 'RELEASE_NOTES_V26.10.0.md' is not in the tree and no unique file stands in for it); Lane R is the recommended lane for this repository",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-01T11:00:52.597470+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:41298080767",
     "acquired_at": "2026-11-01T11:00:49.174256+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-11-01T11:15:49.174256+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "9df7e9bee0ac4c0daf0bc103ca4dbcef",
+    "transaction_id": "82b4155bd8ec4895bf39fc5495e53073",
+    "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-.NET",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-11-01T11:00:52.139116+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-cells-foss/Aspose.Cells-FOSS-for-.NET",
+    "output_manifest": "candidates/aspose-cells-foss__Aspose.Cells-FOSS-for-.NET/lane-l/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:41298080767:aspose-cells-foss/Aspose.Cells-FOSS-for-.NET": "82b4155bd8ec4895bf39fc5495e53073"
   },
