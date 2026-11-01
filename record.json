@@ -5,7 +5,7 @@
   "provider_repository_id": 1276603134,
   "registry_revision": null,
   "active_transaction_id": "8100ab683f55429b8ccaf18af729550d",
-  "state": "OBSERVED",
+  "state": "SNAPSHOTTING",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -25,8 +25,21 @@
     "expires_at": "2026-11-01T10:43:25.944883+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "975f9d3ce1d64c4495664a3040bc9b33",
+    "transaction_id": "8100ab683f55429b8ccaf18af729550d",
+    "repository": "aspose-html-foss/Aspose.HTML-FOSS-for-Python",
+    "from_state": "OBSERVED",
+    "to_state": "SNAPSHOTTING",
+    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
+    "occurred_at": "2026-11-01T10:28:48.379231+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-html-foss/Aspose.HTML-FOSS-for-Python",
+    "output_manifest": "candidates/aspose-html-foss__Aspose.HTML-FOSS-for-Python/lane-l/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:41295846898:aspose-html-foss/Aspose.HTML-FOSS-for-Python": "8100ab683f55429b8ccaf18af729550d"
   },
