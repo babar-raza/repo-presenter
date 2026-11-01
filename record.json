@@ -5,7 +5,7 @@
   "provider_repository_id": 1345974189,
   "registry_revision": null,
   "active_transaction_id": "f2dd0b321c364d5f8a3b3aaa734b701e",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected three times (the third a narrowed ask for the units a rejection actually named); last rejection: inherited_unit:169.paragraph: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"A gradient stroke's ramp is pinned to page space, not to the path, so its colour\\nat a point depends on where that point is rather than on how far along the\\noutline it lies.\". Cite the supporting fact IDs or place the unit; do not omit it without a cited reason; inherited_unit:170.paragraph: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"A radial gradient runs from its focal point out to the circle `(cx, cy, r)`; a\\nfocus outside that circle is pulled onto it, as SVG does. Gradient coordinates\\nare in the page's **default** user space and are not affected by `transform()` —\\na PDF pattern matrix is relative to the content stream's default space, not the\\nCTM. `extend` (default `[true, true]`) pads the ramp beyond its endpoints, and a\\nuniform stop `opacity` folds into the graphics state — on that gradient's own\\nchannel alone (`ca` for a fill, `CA` for a stroke), so a translucent gradient\\nstroke does not fade the fill of the same path. A gradient with one stop, a\\nzero-length axis, or a zero radius is drawn as a solid colour. Stops with\\n*differing* `opacity` are exact too, rendered through a luminosity `/SMask` — a\\ngrayscale twin of the shading inside a transparency group, the same construct the\\nSVG importer uses. Both alpha forms **override** an earlier `setOpacity()` in\\ntheir channel rather than multiplying with it, and like every graphics-state\\nsetting the mask stays in force until a `restore()`, so wrap the paint in\\n`save()`/`restore()` if later drawing must be unmasked.\". Cite the supporting fact IDs or place the unit; do not omit it without a cited reason; inherited_unit:181.paragraph: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"`PlaceOn(page, [x, y, w, h], opts?)` takes `fit` (`'stretch'`, the default,\\nfills the rect exactly; `'contain'` scales uniformly and centres), `opacity`,\\n`rotation` (degrees counter-clockwise about the rect's origin, as `AddText`\\ntakes), and the `tag`/`alt`/`artifact` marking options `AddBarcode` and\\n`AddSVGObject` take — so a placed template can be tagged or artifacted in a\\ntagged document.\". Cite the supporting fact IDs or place the unit; do not omit it without a cited reason; inherited_unit:182.paragraph: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"The first `PlaceOn` builds the form and **freezes** the template: drawing into\\n`tpl.page` afterwards throws, since every placement must show the same content.\\nBuild a second template if you need a variant. A template never drawn into is\\nrefused rather than placed, and one never placed costs nothing in the saved\\nfile.\". Cite the supporting fact IDs or place the unit; do not omit it without a cited reason; inherited_unit:183.paragraph: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"Logical structure *inside* a template is not supported — `MarkContent` and a\\n`tag:` on the template's own page would reference a page that is never written.\\nTag the placement instead.\". Cite the supporting fact IDs or place the unit; do not omit it without a cited reason; inherited_unit:188.paragraph: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"Generate 1D (Code128, EAN-13, UPC-A, EAN-8) and 2D (QR, PDF417, Data Matrix) barcodes and place them\\non a page as crisp vector graphics (default) or a 1-bit `/ImageMask` stencil:\". Cite the supporting fact IDs or place the unit; do not omit it without a cited reason",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-01T12:16:47.610329+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:41304473088",
     "acquired_at": "2026-11-01T12:02:48.537070+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-11-01T12:17:48.537070+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "aec1c5d862b04ff580a5c683976de4c2",
+    "transaction_id": "f2dd0b321c364d5f8a3b3aaa734b701e",
+    "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-11-01T12:16:47.149549+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
+    "output_manifest": "candidates/aspose-pdf-foss__Aspose.PDF-FOSS-for-TypeScript/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:41304473088:aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript": "f2dd0b321c364d5f8a3b3aaa734b701e"
   },
