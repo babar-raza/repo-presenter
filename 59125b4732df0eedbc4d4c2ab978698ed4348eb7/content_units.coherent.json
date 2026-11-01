@@ -1,0 +1,513 @@
+{
+  "coherence": {
+    "applied": true,
+    "revised": []
+  },
+  "omitted": [
+    {
+      "fact_id": "inherited_unit:010.list",
+      "reason": "The inherited list is not cited by any slot in this section and is not required to be listed here per the section's scope.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:065.paragraph",
+      "reason": "The license information is unrelated to the commercial product's additional capabilities and does not belong in the enterprise relationship context sentence.",
+      "section": "enterprise_relationship"
+    }
+  ],
+  "schema_version": 1,
+  "units": [
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:published_version",
+        "package:target_framework",
+        "package:version",
+        "dependency:none",
+        "example:001",
+        "example:002",
+        "example:003",
+        "example:004",
+        "public_symbol:aspose.email.foss",
+        "public_symbol:aspose.email.foss.msg.mapimessage",
+        "public_symbol:aspose.email.foss.cfb.cfbreader"
+      ],
+      "section": "opening",
+      "slot": "opening",
+      "text": "Aspose.Email FOSS for .Net reads and writes MSG files using the MapiMessage class, and converts between MSG and EML formats. It reads CFB containers using the CfbReader class to inspect structured storage. It creates new messages, adds recipients, attachments, and properties, and saves them to streams or files. It loads existing messages from streams or files and exposes their properties, recipients, and attachments for inspection and modification."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:aspose.email.foss.msg.mapimessage"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "It reads MSG files from streams or files using MapiMessage.FromStream or MapiMessage.FromFile, and writes them back to streams or files using MapiMessage.Save, preserving the original MAPI structure and metadata."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "public_symbol:aspose.email.foss.msg.mapimessage"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:2",
+      "text": "It creates new messages from scratch using MapiMessage.Create, then populates sender information, recipients, and attachments before saving the complete message to a file or stream."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "public_symbol:aspose.email.foss.msg.mapimessage"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "It converts standard EML files (RFC 5322 / MIME) into MapiMessage objects using MapiMessage.LoadFromEml and serializes MapiMessage instances back to EML format using MapiMessage.SaveToEml, without requiring external MIME parsers."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:aspose.email.foss.cfb.cfbreader"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:4",
+      "text": "It inspects Compound File Binary (CFB) containers by loading them via CfbReader.FromFile or CfbReader.FromStream, then traverses the internal directory tree and accesses streams and storages using IterTree, IterStreams, and IterStorages."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.msg.mapimessage"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "It accesses arbitrary MAPI properties beyond the strongly-typed members exposed by MapiMessage using SetProperty and GetPropertyValue, enabling full control over custom or extended properties stored in MSG files."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "public_symbol:aspose.email.foss.msg.mapimessage"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:6",
+      "text": "It attaches recipients using AddRecipient with To, Cc, and Bcc types, and attaches files or embedded messages using AddAttachment and AddEmbeddedMessageAttachment, supporting multiple attachment methods such as by value, embedded, or storage."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "package:published_version",
+        "package:target_framework"
+      ],
+      "section": "quick_start",
+      "slot": "lead_in",
+      "text": "This example reads a MSG file and prints its subject line using Aspose.Email.Foss version 26.7.0 targeting net8.0."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "example:003",
+        "example:004",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:published_version",
+        "package:target_framework",
+        "package:version"
+      ],
+      "section": "additional_examples",
+      "slot": "preview",
+      "text": "The following examples demonstrate creating and saving MSG messages, converting EML to MSG, and inspecting CFB container structures."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:published_version",
+        "package:target_framework",
+        "package:version"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:002",
+      "text": "Create and save an MSG message with sender, recipient, and attachment."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:published_version",
+        "package:target_framework",
+        "package:version"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:003",
+      "text": "Convert an EML file to MSG and back to EML."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:published_version",
+        "package:target_framework",
+        "package:version"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:004",
+      "text": "Inspect the CFB container structure of a MSG file."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss",
+        "public_symbol:aspose.email.foss.cfb.cfbreader",
+        "public_symbol:aspose.email.foss.cfb.cfbwriter",
+        "public_symbol:aspose.email.foss.msg.msgreader",
+        "public_symbol:aspose.email.foss.msg.msgwriter",
+        "public_symbol:aspose.email.foss.msg.mapimessage",
+        "inherited_unit:040.paragraph"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "Aspose.Email FOSS for .Net exposes Aspose.Email.Foss.Msg.MapiMessage as the high-level entry point for creating, editing, and converting messages, while Aspose.Email.Foss.Cfb.CfbReader, Aspose.Email.Foss.Cfb.CfbWriter, Aspose.Email.Foss.Msg.MsgReader, and Aspose.Email.Foss.Msg.MsgWriter provide lower-level access to the underlying CFB and MSG structures."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss",
+        "public_symbol:aspose.email.foss.cfb.cfbdocument",
+        "public_symbol:aspose.email.foss.cfb.cfbreader",
+        "public_symbol:aspose.email.foss.cfb.cfbwriter",
+        "public_symbol:aspose.email.foss.msg.msgreader",
+        "public_symbol:aspose.email.foss.msg.msgwriter"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.email.foss",
+      "text": "The Aspose.Email.Foss namespace provides direct access to CFB and MSG formats through Aspose.Email.Foss.Cfb.CfbReader for reading structured storage, Aspose.Email.Foss.Cfb.CfbWriter for writing it, Aspose.Email.Foss.Cfb.CfbDocument for in-memory construction, Aspose.Email.Foss.Msg.MsgReader for parsing MSG files, and Aspose.Email.Foss.Msg.MsgWriter for serializing MSG documents."
+    },
+    {
+      "fact_ids": [
+        "link_target:020"
+      ],
+      "section": "documentation_resources",
+      "slot": "link:link_target:020",
+      "text": "The getting started guide covers installation, walkthroughs, and feature guides for this library."
+    },
+    {
+      "fact_ids": [
+        "link_target:021"
+      ],
+      "section": "documentation_resources",
+      "slot": "link:link_target:021",
+      "text": "The how-to guides and FAQ provide task-focused answers for common MSG, CFB, and EML questions."
+    },
+    {
+      "fact_ids": [
+        "link_target:022"
+      ],
+      "section": "documentation_resources",
+      "slot": "link:link_target:022",
+      "text": "The full API reference offers the complete, browsable reference for all 29 public types."
+    },
+    {
+      "fact_ids": [
+        "link_target:023"
+      ],
+      "section": "documentation_resources",
+      "slot": "link:link_target:023",
+      "text": "The public API summary lists the repository's own stable-namespace and primary-type list."
+    },
+    {
+      "fact_ids": [
+        "link_target:024"
+      ],
+      "section": "documentation_resources",
+      "slot": "link:link_target:024",
+      "text": "The changelog documents the release history."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "inherited_unit:021.list",
+        "inherited_unit:057.list",
+        "install_command:dotnet",
+        "package:name",
+        "package:published_version",
+        "package:target_framework",
+        "package:version"
+      ],
+      "section": "scope_limitations",
+      "slot": "scope",
+      "text": "Aspose.Email FOSS for .Net reads and writes local email files in formats supported by the library, including EML, MSG, MHTML, and OST, and converts between them; it is a file-based library for .NET 8.0 and later with no network protocol or server connectivity."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:057.list",
+        "install_command:dotnet"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:1",
+      "text": "It does not support IMAP, SMTP, or POP3 and does not connect to mail servers, as stated in the inherited list of limitations."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:057.list",
+        "install_command:dotnet"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:2",
+      "text": "It does not parse or generate Transport Neutral Encapsulation Format files (winmail.dat), as stated in the inherited list of limitations."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:057.list",
+        "install_command:dotnet"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:3",
+      "text": "It does not provide a dedicated calendar or appointment API, though calendar-specific MAPI properties can be accessed generically via SetProperty and GetPropertyValue, as stated in the inherited list of limitations."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:057.list",
+        "package:target_framework"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:4",
+      "text": "It requires .NET 8.0 or later and does not support classic .NET Framework 4.x, as stated in the inherited list of limitations."
+    },
+    {
+      "fact_ids": [
+        "identity:platform",
+        "package:target_framework",
+        "build_test_asset:tests",
+        "inherited_unit:023.list",
+        "inherited_unit:024.paragraph",
+        "inherited_unit:062.paragraph"
+      ],
+      "section": "development_testing",
+      "slot": "summary",
+      "text": "Aspose.Email FOSS for .Net targets net8.0 and is built using the dotnet CLI. The test project at tests/Aspose.Email.Foss.Tests/Aspose.Email.Foss.Tests.csproj uses Microsoft.NET.Test.Sdk 17.8.0, xunit 2.5.3, and xunit.runner.visualstudio 2.5.3 for the xUnit test host and adapter, along with coverlet.collector 6.0.0 for code-coverage collection; none of these dependencies are referenced by the main library project and they are never shipped with the published package. The test suite asserts CFB round-trips, MSG reading, and EML round-trip conversion through CfbRoundTripTests, MsgReaderTests, MapiMessageTests, MapiMessageEmlTests, and MetadataSmokeTests. Runnable example programs including create_msg_and_eml.cs, msg_reader.cs, and msg_summary.cs reside under examples/ and each has its own project file."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:058.paragraph"
+      ],
+      "section": "enterprise_relationship",
+      "slot": "context",
+      "text": "it adds broader format and protocol coverage: direct IMAP/SMTP/POP3 mail-server connectivity, TNEF (winmail.dat) support, calendar and appointment APIs, and classic .NET Framework support alongside this edition's MSG, CFB, and EML processing."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.cfb.cfbconstants"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.email.foss.cfb.cfbconstants",
+      "text": "CfbConstants provides constant values used in Compound File Binary format processing."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.cfb.cfbdocument"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.email.foss.cfb.cfbdocument",
+      "text": "CfbDocument represents a Compound File Binary structure and provides methods to load it from files, streams, or readers."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.cfb.cfbexception"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.email.foss.cfb.cfbexception",
+      "text": "CfbException represents errors that occur during Compound File Binary format processing."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.cfb.cfbnode"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.email.foss.cfb.cfbnode",
+      "text": "CfbNode represents a node in a Compound File Binary structure with properties such as name, class identifier, timestamps, and state bits."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.cfb.cfbreader"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.email.foss.cfb.cfbreader",
+      "text": "CfbReader provides functionality to read and navigate a Compound File Binary structure, including accessing directory entries, streams, and storage nodes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.cfb.cfbstorage"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.email.foss.cfb.cfbstorage",
+      "text": "CfbStorage represents a storage node in a Compound File Binary structure that can contain child storages and streams."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.cfb.cfbstream"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.email.foss.cfb.cfbstream",
+      "text": "CfbStream represents a stream node in a Compound File Binary structure that holds binary data."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.cfb.cfbwriter"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.email.foss.cfb.cfbwriter",
+      "text": "CfbWriter provides functionality to write a Compound File Binary structure."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.cfb.directoryentry"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.email.foss.cfb.directoryentry",
+      "text": "DirectoryEntry represents an entry in the directory of a Compound File Binary structure."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.cfb.directoryentrynamecomparer"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.email.foss.cfb.directoryentrynamecomparer",
+      "text": "DirectoryEntryNameComparer provides a comparer for directory entries based on their names."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.cfb.header"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.email.foss.cfb.header",
+      "text": "Header represents the header information of a Compound File Binary structure."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.msg.mapiattachment"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.email.foss.msg.mapiattachment",
+      "text": "MapiAttachment represents an attachment in a MAPI message."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.msg.mapimessage"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.email.foss.msg.mapimessage",
+      "text": "MapiMessage represents a MAPI message and provides access to its properties, recipients, and attachments."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.msg.mapiproperty"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.email.foss.msg.mapiproperty",
+      "text": "MapiProperty represents a single property in a MAPI message."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.msg.mapipropertycollection"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.email.foss.msg.mapipropertycollection",
+      "text": "MapiPropertyCollection represents a collection of MAPI properties."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.msg.mapirecipient"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.email.foss.msg.mapirecipient",
+      "text": "MapiRecipient represents a recipient in a MAPI message."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.msg.msgconstants"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.email.foss.msg.msgconstants",
+      "text": "MsgConstants provides constant values used in MSG format processing."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.msg.msgdocument"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.email.foss.msg.msgdocument",
+      "text": "MsgDocument represents an MSG format file and provides methods to load it from files, streams, or readers."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.msg.msgexception"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.email.foss.msg.msgexception",
+      "text": "MsgException represents errors that occur during MSG format processing."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.msg.msgreader"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.email.foss.msg.msgreader",
+      "text": "MsgReader provides functionality to read and navigate an MSG format file."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.msg.msgstorage"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.email.foss.msg.msgstorage",
+      "text": "MsgStorage represents a storage node in an MSG format file."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.msg.msgstoragerole"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.email.foss.msg.msgstoragerole",
+      "text": "MsgStorageRole specifies the role of a storage node in an MSG format file."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.msg.msgstream"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.email.foss.msg.msgstream",
+      "text": "MsgStream represents a stream node in an MSG format file."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.msg.msgwriter"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.email.foss.msg.msgwriter",
+      "text": "MsgWriter provides functionality to write an MSG format file."
+    }
+  ]
+}

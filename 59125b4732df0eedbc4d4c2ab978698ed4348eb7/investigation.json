@@ -1,0 +1,170 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:platform",
+      "package:target_framework",
+      "dependency:none",
+      "install_command:dotnet"
+    ],
+    "text": "Developers building .NET services, desktop tools, or CLI utilities that need to read, create, convert, or inspect Outlook MSG, CFB, and EML data without requiring Microsoft Outlook or third-party packages."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:003",
+        "public_symbol:aspose.email.foss"
+      ],
+      "text": "Load MSG files from streams or paths using MapiMessage.FromStream or FromFile, and save messages using Save methods.",
+      "title": "Read and write MSG files"
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "public_symbol:aspose.email.foss"
+      ],
+      "text": "Build new messages with MapiMessage.Create, set sender, recipients, body, and attachments, then persist to disk.",
+      "title": "Create messages programmatically"
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "public_symbol:aspose.email.foss"
+      ],
+      "text": "Parse EML files into MapiMessage objects using LoadFromEml and serialize back to EML using SaveToEml natively.",
+      "title": "Convert between MSG and EML"
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:aspose.email.foss"
+      ],
+      "text": "Open CFB files with CfbReader and traverse directory trees using IterTree, IterStorages, and IterStreams.",
+      "title": "Inspect CFB containers"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss"
+      ],
+      "text": "Set and retrieve low-level MAPI properties via SetProperty and GetPropertyValue beyond strongly-typed members.",
+      "title": "Access arbitrary MAPI properties"
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "public_symbol:aspose.email.foss"
+      ],
+      "text": "Add recipients and attachments—including embedded messages—using AddRecipient and AddAttachment methods.",
+      "title": "Attach recipients and files"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "text": "No IMAP, SMTP, or POP3 support; the library only processes local files and does not connect to mail servers."
+    },
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "text": "No TNEF (winmail.dat) support; the library does not parse or generate Transport Neutral Encapsulation Format."
+    },
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "text": "No dedicated calendar or appointment API; calendar-specific MAPI properties can only be accessed generically."
+    },
+    {
+      "fact_ids": [
+        "package:target_framework"
+      ],
+      "text": "Requires .NET 8.0 or later; classic .NET Framework (4.x) is not supported."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "dependency:none",
+        "example:001",
+        "example:002",
+        "example:004"
+      ],
+      "text": "Enables deterministic parsing and generation of Outlook MSG files and CFB containers without external dependencies or Microsoft Outlook installation."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "public_symbol:aspose.email.foss"
+      ],
+      "text": "Supports native round-trip conversion between MSG and EML formats without requiring external MIME parsers."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:aspose.email.foss"
+      ],
+      "text": "Provides low-level access to CFB structure for forensic inspection or repair of malformed MSG files."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:repository",
+      "identity:ecosystem",
+      "identity:platform",
+      "identity:family",
+      "package:name",
+      "package:target_framework",
+      "dependency:none"
+    ],
+    "text": "Aspose.Email FOSS for .NET is a free, open-source .NET 8.0+ library for deterministic processing of Outlook MSG files, Compound File Binary (CFB) containers, and EML messages with no external dependencies."
+  },
+  "uncertainties": [
+    "The exact set of public symbols beyond Aspose.Email.Foss is not fully enumerated in the fact dossier.",
+    "Whether CfbReader/Writer and MsgReader/Writer are part of the public surface beyond MapiMessage is implied but not directly confirmed.",
+    "The behavior of strict parsing mode and ValidationIssues population is described in the README but not demonstrated in examples.",
+    "The full list of supported MAPI property types and flags is not specified in the fact dossier.",
+    "Whether embedded message attachments support nested CFB structures beyond one level is not demonstrated.",
+    "The exact MIME parsing behavior for non-standard EML files is not specified beyond RFC 5322 compliance.",
+    "The repository's PUBLIC_API.md file is referenced but not included in the fact dossier.",
+    "The exact test coverage for edge cases in MSG/EML round-trips is not detailed beyond test class names."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:aspose.email.foss"
+      ],
+      "name": "Read MSG subject",
+      "text": "Open an MSG file stream and load it with MapiMessage.FromStream to access message properties like Subject."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "public_symbol:aspose.email.foss"
+      ],
+      "name": "Create and save MSG",
+      "text": "Create a MapiMessage programmatically, set sender, recipients, body, and attachments, then save to disk as MSG."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "public_symbol:aspose.email.foss"
+      ],
+      "name": "Convert EML to MSG",
+      "text": "Load an EML file using MapiMessage.LoadFromEml and persist it as MSG using Save, then regenerate EML with SaveToEml."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:aspose.email.foss"
+      ],
+      "name": "Inspect CFB structure",
+      "text": "Use CfbReader.FromFile to open a MSG file and traverse its directory tree to inspect sector size and entry hierarchy."
+    }
+  ]
+}
