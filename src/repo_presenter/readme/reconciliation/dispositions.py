@@ -1044,27 +1044,41 @@ def _preceding_contradicted_example(
     unit_id: str, units_by_id: Mapping[str, Fact], contradicted: Mapping[str, str]
 ) -> str | None:
     """The CONTRADICTED example fact of the nearest preceding code_block in this unit's own
-    section, or ``None``. A paragraph commenting on the parameters/behaviour of the code example
-    directly above it is only ever sensible evidence against *that* example, never any other --
-    scoped to the same section and the single nearest-ordinal code_block, never a blanket search.
+    section, or ``None`` -- but only when that NEAREST code_block, of any polarity, is itself the
+    contradicted one. A paragraph commenting on the parameters/behaviour of the code example
+    directly above it is only ever sensible evidence against *that* example, never a farther one
+    an earlier, unrelated code_block in the same loosely-scoped section happens to own.
+
+    Adversarial finding, independent verifier (2026-11-01, on the first version of this function,
+    which searched for the nearest preceding CONTRADICTED code_block, skipping past any
+    intervening non-contradicted ones): a real section can hold more than one code_block (e.g.
+    aspose-words-foss/.NET's own "Getting started": a NuGet install snippet, a paragraph, a
+    "build from source" alternative, another paragraph) -- confirmed directly against that real
+    facts.json. The first version would misattribute a paragraph commenting on the SECOND,
+    perfectly fine code_block to the FIRST, unrelated CONTRADICTED one, because it kept searching
+    backward past the nearer, non-contradicted candidate instead of stopping there. This version
+    finds the single nearest code_block regardless of polarity, and only ever cites it if that
+    exact one is the contradicted one -- never a farther, structurally unrelated example.
     """
     unit_fact = units_by_id.get(unit_id)
     ordinal = _unit_ordinal(unit_id)
     if unit_fact is None or ordinal is None:
         return None
     section = str((unit_fact.attributes or {}).get("section") or "")
-    best: tuple[int, str] | None = None
+    nearest: tuple[int, str] | None = None
     for other_id, other_fact in units_by_id.items():
-        if other_id not in contradicted or _unit_kind(other_id) != "code_block":
+        if _unit_kind(other_id) != "code_block":
             continue
         other_ordinal = _unit_ordinal(other_id)
         if other_ordinal is None or other_ordinal >= ordinal:
             continue
         if str((other_fact.attributes or {}).get("section") or "") != section:
             continue
-        if best is None or other_ordinal > best[0]:
-            best = (other_ordinal, other_id)
-    return contradicted[best[1]] if best is not None else None
+        if nearest is None or other_ordinal > nearest[0]:
+            nearest = (other_ordinal, other_id)
+    if nearest is None:
+        return None
+    return contradicted.get(nearest[1])
 
 
 def _collapsible_wrapper_bounds(

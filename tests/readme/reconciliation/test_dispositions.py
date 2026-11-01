@@ -918,3 +918,69 @@ def test_normalize_does_not_backfill_across_a_different_section() -> None:
     normalize(output, facts)
     entry = output["dispositions"][0]
     assert entry["fact_ids"] == []
+
+
+# Adversarial finding, independent verifier (2026-11-01): a real section can hold more than one
+# code_block (confirmed against aspose-words-foss/.NET's own real "Getting started" section: a
+# NuGet install snippet, a paragraph, a "build from source" alternative, another paragraph). The
+# first version of this fix searched backward past a non-contradicted code_block to an EARLIER,
+# unrelated CONTRADICTED one -- proves the fix now stops at the nearest code_block regardless of
+# polarity, never attributing a farther, structurally unrelated example's citation.
+def test_normalize_does_not_reach_past_a_fine_code_block_to_an_earlier_contradicted_one() -> None:
+    facts = replace(
+        FACTS,
+        facts=(
+            *FACTS.facts,
+            Fact(
+                "example:040",
+                "example",
+                "dotnet add package Aspose.Widget.Foss",
+                (Evidence("README.md", "unit inherited_unit:140.code_block"),),
+                polarity="CONTRADICTED",
+            ),
+            Fact(
+                "inherited_unit:140.code_block",
+                "inherited_unit",
+                "```bash\ndotnet add package Aspose.Widget.Foss\n```",
+                (Evidence("README.md", "section 'Widget > Getting Started'"),),
+                attributes={"section": "Widget > Getting Started"},
+            ),
+            Fact(
+                "inherited_unit:141.paragraph",
+                "inherited_unit",
+                "Or build from source instead:",
+                (Evidence("README.md", "section 'Widget > Getting Started'"),),
+                attributes={"section": "Widget > Getting Started"},
+            ),
+            Fact(
+                "inherited_unit:142.code_block",
+                "inherited_unit",
+                "```bash\ngit clone https://github.com/example/widget\n```",
+                (Evidence("README.md", "section 'Widget > Getting Started'"),),
+                attributes={"section": "Widget > Getting Started"},
+            ),
+            Fact(
+                "inherited_unit:143.paragraph",
+                "inherited_unit",
+                "Clone with `--depth 1` for a faster, shallow checkout.",
+                (Evidence("README.md", "section 'Widget > Getting Started'"),),
+                attributes={"section": "Widget > Getting Started"},
+            ),
+        ),
+    )
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:143.paragraph",
+                "disposition": "OMIT_UNSUPPORTED",
+                "destination_section": None,
+                "fact_ids": [],
+                "rationale": "No fact supports the claim about a shallow checkout.",
+            }
+        ]
+    }
+    normalize(output, facts)
+    entry = output["dispositions"][0]
+    # the nearest code_block (142, the git-clone one) is not CONTRADICTED -- the fix must not
+    # reach past it to the farther, unrelated example:040
+    assert entry["fact_ids"] == []
