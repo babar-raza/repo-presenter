@@ -5,7 +5,7 @@
   "provider_repository_id": 1185437353,
   "registry_revision": null,
   "active_transaction_id": "2b04ee7928ff49808541b496976b3ca9",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "PresentFailure: Lane L: independent review returned REJECT with 3 blocking finding(s) of 3; nothing sealed; lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the example verifier recorded a failure for the example on lines 175-179: example 2: FAILED; CSC : error CS5001: Program does not contain a static 'Main' method suitable for an entry point); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (possible Enterprise Edition naming violation ('commercial product'); the product name and its platform are not both spelled out on this line, so the fix is not guessed); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (possible Enterprise Edition naming violation ('commercial product'); the product name and its platform are not both spelled out on this line, so the fix is not guessed); Lane L left 3 defect(s) it may not repair (failing_example line 175: the example verifier recorded a failure for the example on lines 175-179: example 2: FAILED; CSC : error CS5001: Program does not contain a static 'Main' method suitable for an entry point; enterprise_edition_naming line 511: possible Enterprise Edition naming violation ('commercial product'); the product name and its platform are not both spelled out on this line, so the fix is not guessed; enterprise_edition_naming line 519: possible Enterprise Edition naming violation ('commercial product'); the product name and its platform are not both spelled out on this line, so the fix is not guessed); Lane R is the recommended lane for this repository",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-01T07:46:56.973510+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:41284665612",
     "acquired_at": "2026-11-01T07:46:53.067571+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-11-01T08:01:53.067571+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "51e6c6267b7e4934a4595189b80beb43",
+    "transaction_id": "2b04ee7928ff49808541b496976b3ca9",
+    "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-.NET",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-11-01T07:46:56.551772+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-slides-foss/Aspose.Slides-FOSS-for-.NET",
+    "output_manifest": "candidates/aspose-slides-foss__Aspose.Slides-FOSS-for-.NET/lane-l/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:41284665612:aspose-slides-foss/Aspose.Slides-FOSS-for-.NET": "2b04ee7928ff49808541b496976b3ca9"
   },
