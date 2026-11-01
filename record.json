@@ -18,10 +18,10 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "transient",
-    "detail": "model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected three times (the third a narrowed ask for the units a rejection actually named); last rejection: inherited_unit:032.paragraph: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"Every example below was compiled and executed against this revision, and the values quoted after each\\none were read out of the `.pptx` it wrote by an independent ZIP/XML reader — not by asking the\\nlibrary to read its own file back.\". Cite the supporting fact IDs or place the unit; do not omit it without a cited reason; inherited_unit:033.paragraph: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"Three namespaces cover every sample on this page, and each sample below assumes all three:\". Cite the supporting fact IDs or place the unit; do not omit it without a cited reason",
+    "classification": "validation_failed",
+    "detail": "PresentFailure: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:029.heading is kept (VERIFIED_MOVE) but its text is not printed in the README); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (heading 'Why the !')",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-10-30T22:54:07.249303+00:00",
+    "occurred_at": "2026-11-01T07:46:47.327973+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 4,
+  "state_version": 5,
   "recent_trigger_dedup_keys": {
     "run:41140560040:aspose-slides-foss/Aspose.Slides-FOSS-for-.NET": "dfba251a636d4bdc9e7801be9dbc3cb4",
     "run:41284665612:aspose-slides-foss/Aspose.Slides-FOSS-for-.NET": "e12398acdb094b118c07725fbe56827b"
