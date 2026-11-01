@@ -4,7 +4,7 @@
   "lane": "L",
   "provider_repository_id": 1243409232,
   "registry_revision": null,
-  "active_transaction_id": "2699b3b14d5d481c9dfbc98a19ff7d4f",
+  "active_transaction_id": "070b39158bce4e4a8b06e247102fb782",
   "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
@@ -25,7 +25,13 @@
     "resume_predicate": null,
     "recovery_count": 0
   },
-  "lease": null,
+  "lease": {
+    "holder_id": "present:41290984824",
+    "acquired_at": "2026-11-01T09:14:08.062766+00:00",
+    "heartbeat_at": "2026-11-01T09:14:08.062766+00:00",
+    "expires_at": "2026-11-01T09:29:08.062766+00:00",
+    "fencing_token": 1
+  },
   "last_transition": {
     "transition_id": "0094df0c0090409ebf026320471404c7",
     "transaction_id": "2699b3b14d5d481c9dfbc98a19ff7d4f",
@@ -40,9 +46,10 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 3,
+  "state_version": 4,
   "recent_trigger_dedup_keys": {
-    "run:41133501088:aspose-tex-foss/Aspose.TeX-FOSS-for-Python": "2699b3b14d5d481c9dfbc98a19ff7d4f"
+    "run:41133501088:aspose-tex-foss/Aspose.TeX-FOSS-for-Python": "2699b3b14d5d481c9dfbc98a19ff7d4f",
+    "run:41290984824:aspose-tex-foss/Aspose.TeX-FOSS-for-Python": "070b39158bce4e4a8b06e247102fb782"
   },
   "recovery_count": 0
 }
