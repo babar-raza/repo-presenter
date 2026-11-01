@@ -1910,3 +1910,62 @@ candidates, not attempted here.
 repair/loop.py::_repair_plan` (finding A); `readme/validation/structure.py::canonical_name_
 failures`/`canonical_name_pattern`/`_is_technical_identifier`, `tests/readme/validation/
 test_registry_checks.py::test_bc12_fails_a_product_name_variant_in_prose` (finding B).
+
+---
+
+### 2026-11-01: a second five-repository fresh sweep -- one fix (SECTION_ABSENT), one new deferred finding, three confirmed matches to already-established non-bug patterns
+
+**What this does**: dispatched five more fresh `present.yml` (`both` lanes) runs on `main`, each
+against a repository/ecosystem not yet tried this session (aspose-3d-foss/Java, aspose-font-foss/
+Python, aspose-note-foss/Python, aspose-psd-foss/.NET, aspose-tex-foss/Python), continuing the
+portfolio-wide sweep per AGENTS.md non-negotiable #8. Also confirmed, in passing: aspose-3d-foss/
+Aspose.3D-FOSS-for-Java's Lane L genuinely re-ran and re-confirmed ACCEPTED today (`present: ...
+lane L exit 0, durable state ACCEPTED`, a fresh bundle pushed) -- its durable record's own
+`last_transition` stays dated 2026-10-28 because a repeat success landing on the SAME terminal
+state it already held has no registered self-loop to record through, the exact same `last_
+transition`-can-be-stale-on-a-repeat-terminal-state property this log already found for
+`FAILED_INTERNAL`, now confirmed for `ACCEPTED` too -- not a new defect, generalizing an already-
+recorded one.
+
+**Fixed**: see `fix/section-absent-authored-heading-title` -- aspose-psd-foss/Aspose.PSD-FOSS-for-
+.NET's Lane R blocked on BC-05 with a deferred unit classified `UNCLASSIFIED` (hard `BLOCK`) even
+though its own rationale correctly named a genuinely section-absent cause; the classifier's own
+string match for the absent section's name never recognized the section's own authored heading
+text ("Documentation & Resources"), only its bare `section_id` or an underscore-to-space
+conversion of it, neither of which can produce an ampersand. Fixed, tested, falsifier-confirmed;
+independent cold verification in progress before merge.
+
+**New finding -- real, root-caused, NOT fixed (same discipline as BC-06/BC-12 above: real but not
+a quick, safe fix)**: aspose-note-foss/Aspose.Note-FOSS-for-Python's Lane R `live_readme_loss`
+finding (`link tools/regenerate_pdf_goldens.py`) is a genuinely different shape from anything
+fixed today: four units (`inherited_unit:094-097`, two paragraphs and two code blocks) are
+disposed `SUPERSEDE_REDUNDANT`/`VERIFIED_PRESERVE` into `development_testing`, uncited -- and the
+content IS genuinely, correctly printed there (confirmed directly: the exact command and link
+text appear in the real candidate README at lines 477/512/516). The loss is not a rendering
+defect; it is that `live_readme_loss_rule`'s own link-accounting (`_accounting_units`) requires
+non-empty `fact_ids` on an `ACCOUNTING_DISPOSITIONS` member to count a unit as covering anything,
+and `account_unprinted_units` (the mechanism that backfills exactly this kind of missing citation)
+is scoped to UNPRINTED kept units only (`unprinted_kept_units`) -- a unit that IS printed, just
+uncited, is invisible to it by design. `development_testing` is not fact-driven the same way
+`scope_limitations`/`key_capabilities` are (`_section_covering`'s own fact lookup would find
+nothing to cite there either), so this is the same "no precise fact available" shape the heading
+fix above closed for headings, but for printed, uncited, non-heading content -- a new, different
+accounting path, not a guard widening. Not attempted here: this is a genuinely new function to
+design and prove safe (the heading fix alone took two regression rounds against pre-existing
+negative controls before it was safe), not a quick follow-on.
+
+**Confirmed matches to already-established non-bug patterns, not re-investigated in full**:
+aspose-3d-foss/Aspose.3D-FOSS-for-Java's `llm:factuality`/S6/empty-`fact_ids` findings (7 of them,
+7 repair rounds already fired) match the `3D-Java F01-F05`/`3D-.NET` entries' own "already-working
+repair loop" shape exactly. aspose-tex-foss/Aspose.TeX-FOSS-for-Python's 5 `live_readme_loss`
+findings are all `DEFER_UNRESOLVED` code blocks citing a real `CONTRADICTED` example fact each --
+the same, deliberately-by-design `Page-Python`-entry exclusion (`DEFER_UNRESOLVED` is not in
+`ACCOUNTING_DISPOSITIONS`, on purpose). aspose-font-foss/Aspose.Font-FOSS-for-Python's
+`source_reconciliation` rejection (a file-tree/structure diagram code block, oscillating between
+`OMIT_UNSUPPORTED`-uncited and `DEFER_UNRESOLVED`-forbidden across all 3 attempts, never trying a
+real placement) matches the Slides-Cpp `uncovered_supersession` entry's own model-compliance-gap
+shape, generalizing it from headings to a code block with nothing citable at all.
+
+**Where the detail lives**: `src/repo_presenter/readme/validation/deferrals.py`
+(`_section_absent`, `_SECTION_TITLES`), `tests/readme/validation/test_deferrals.py`; this entry
+for the Note-Python finding and the three confirmed non-bug matches.
