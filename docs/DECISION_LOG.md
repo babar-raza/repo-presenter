@@ -2205,3 +2205,42 @@ already-known, already-deferred `duplicate_paragraph` finding (confirmed recurri
 repository now: email-foss/Cpp, slides-foss/Python, and this one). No new investigation needed.
 
 **Where the detail lives**: the durable record for aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET.
+
+---
+
+### 2026-11-01: a fifth five-repository fresh sweep -- two more full real wins, one confirmed-
+recurring already-known gap, two genuine upstream content issues, one more model-compliance match
+
+**What this does**: dispatched five more fresh `present.yml` (`both` lanes) runs on `main`
+(aspose-3d-foss/Python, aspose-cells-foss/Cpp, aspose-pdf-foss/Java, aspose-pdf-foss/Python,
+aspose-pdf-foss/TypeScript).
+
+**Confirmed real wins, no fix needed**: aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp's and
+aspose-pdf-foss/Aspose.PDF-FOSS-for-Java's Lane R are both genuine, fresh `exit 0, durable state
+ACCEPTED` today (the eighth and ninth real wins confirmed this session).
+
+**Confirmed recurrence of an already-known, deliberately-narrow gap, not re-investigated**:
+aspose-pdf-foss/Aspose-PDF-FOSS-for-Python's and aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript's
+Lane R `source_reconciliation` rejections are both `uncited_prose_omit` on a paragraph describing
+a function's own parameter names (`pages=`, `dry_run=`, `uniform=`) with no fact to cite -- the
+same shape this session's own `_spelled_supported_facts`/`_OMISSION_CITABLE_KINDS` fold (merged
+earlier, scoped deliberately narrow to `package`/`link_target` fact kinds only) was already known
+not to cover: a parameter name is neither of those fact kinds. Confirms the already-logged
+limitation is real and recurring across ecosystems; not widened here without new design work.
+
+**Confirmed genuine upstream content issues, not pipeline defects**:
+- aspose-pdf-foss/Aspose.PDF-FOSS-for-Java's Lane L `claim_contradiction` ("shown at version
+  26.6.0, but the registry's current stable release is 26.9.0") is a real, true staleness: both
+  `package:version` and `package:published_version` facts agree on `26.9.0`, so `26.6.0` is
+  simply an outdated number somewhere in the upstream README, not a padding/format artifact like
+  the earlier Cells-.NET finding.
+- aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp's Lane L failing example (a genuine upstream C++
+  compile error) correctly blocks Lane L, recommending Lane R (which already succeeded).
+
+**Confirmed match to the model-compliance-gap category, not a pipeline defect**: aspose-3d-foss/
+Aspose.3D-FOSS-for-Python's Lane R oscillated between `uncited_prose_omit` and `dangling_pointer`
+for the same forward-referencing sentence ("The full public class index is listed below by
+module.") across its 3 attempts, never landing on any of the dispositions named in its own
+rejection text -- the same category as the already-logged Slides-Cpp/Font-Python findings.
+
+**Where the detail lives**: real downloaded artifacts for each run.
