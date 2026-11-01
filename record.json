@@ -5,7 +5,7 @@
   "provider_repository_id": 1243409232,
   "registry_revision": null,
   "active_transaction_id": "7fbe8b443d7349608a1963beb5c044cd",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "PresentFailure: independent review returned REJECT with 5 blocking finding(s) of 5; nothing sealed; live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (code block 'from aspose_tex import TeXJob, TeXOptions, DviDevi'); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (code block 'from pathlib import Path'); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (code block 'from aspose_tex import TeXJob, TeXOptions, SvgDevi'); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (code block 'from pathlib import Path'); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (code block 'from aspose_tex import TeXJob, TeXOptions, SvgDevi')",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-01T09:14:03.060470+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:41290984824",
     "acquired_at": "2026-11-01T08:58:11.164838+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-11-01T09:13:11.164838+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "503c33834f264a8087ffeced32642a52",
+    "transaction_id": "7fbe8b443d7349608a1963beb5c044cd",
+    "repository": "aspose-tex-foss/Aspose.TeX-FOSS-for-Python",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-11-01T09:14:02.743043+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-tex-foss/Aspose.TeX-FOSS-for-Python",
+    "output_manifest": "candidates/aspose-tex-foss__Aspose.TeX-FOSS-for-Python/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:41290984824:aspose-tex-foss/Aspose.TeX-FOSS-for-Python": "7fbe8b443d7349608a1963beb5c044cd"
   },
