@@ -1,0 +1,82 @@
+{
+  "confinement": {
+    "edits": 2,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "b72c828b7052164e4eaeadb47db7623122c885bb4d23027631c8d39ba3f97ea0",
+  "edits": [
+    {
+      "detector": "enterprise_edition_naming",
+      "end": 1142,
+      "evidence": [
+        {
+          "fact_id": "link_target:product.enterprise",
+          "kind": "link_target",
+          "status": "SUPPORTED",
+          "value": "https://products.aspose.com/words/python-net/"
+        }
+      ],
+      "index": 0,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 11,
+      "original": "the commercial Aspose.Words for Python",
+      "rationale": "line 11 names the aspose.com product with a substitute for its proper name ('the commercial Aspose.Words for Python'); the mission naming rule requires \"Enterprise Edition\" with no substitute wording",
+      "replacement": "Aspose.Words for Python — Enterprise Edition",
+      "start": 1104
+    },
+    {
+      "detector": "enterprise_edition_naming",
+      "end": 27953,
+      "evidence": [
+        {
+          "fact_id": "link_target:product.enterprise",
+          "kind": "link_target",
+          "status": "SUPPORTED",
+          "value": "https://products.aspose.com/words/python-net/"
+        }
+      ],
+      "index": 1,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 625,
+      "original": "the commercial Aspose.Words",
+      "rationale": "line 625 names the aspose.com product with a substitute for its proper name ('the commercial Aspose.Words'); the mission naming rule requires \"Enterprise Edition\" with no substitute wording",
+      "replacement": "Aspose.Words — Enterprise Edition",
+      "start": 27926
+    }
+  ],
+  "lane": "L",
+  "original_sha256": "9ef65e92ae664d9bf8cac9c98aa002fec48938cd547af00708e4f5536aeef1c0",
+  "outcome": "CORRECTED",
+  "readme_path": "README.md",
+  "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Python",
+  "schema_version": 1,
+  "source_revision": "2d2efee2787cb9e56d071d17f8d7b740dce8b784",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {
+    "FALSE_CLAIM_FIX": 2
+  },
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "public_symbol:apiexamples.convert_document.convertdocument",
+        "public_symbol:apiexamples.docs_examples_base.docsexamplesbase",
+        "public_symbol:apiexamples.loading_document.loadingdocument",
+        "public_symbol:apiexamples.loading_markdown.loadingmarkdown",
+        "public_symbol:apiexamples.working_with_images.workingwithimages",
+        "public_symbol:apiexamples.working_with_markdown_save_options.workingwithmarkdownsaveoptions",
+        "public_symbol:apiexamples.working_with_ooxml_save_options.workingwithooxmlsaveoptions",
+        "public_symbol:apiexamples.working_with_pdf_save_options.workingwithpdfsaveoptions"
+      ],
+      "line": 0,
+      "reason": "50 of 198 verified public types are named nowhere in the README; would fill API Reference: public_symbol:apiexamples.convert_document.convertdocument, public_symbol:apiexamples.docs_examples_base.docsexamplesbase, public_symbol:apiexamples.loading_document.loadingdocument, public_symbol:apiexamples.loading_markdown.loadingmarkdown, public_symbol:apiexamples.working_with_images.workingwithimages, public_symbol:apiexamples.working_with_markdown_save_options.workingwithmarkdownsaveoptions, public_symbol:apiexamples.working_with_ooxml_save_options.workingwithooxmlsaveoptions, public_symbol:apiexamples.working_with_pdf_save_options.workingwithpdfsaveoptions (+42 more)",
+      "text": ""
+    }
+  ]
+}
