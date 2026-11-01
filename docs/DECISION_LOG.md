@@ -1969,3 +1969,44 @@ shape, generalizing it from headings to a code block with nothing citable at all
 **Where the detail lives**: `src/repo_presenter/readme/validation/deferrals.py`
 (`_section_absent`, `_SECTION_TITLES`), `tests/readme/validation/test_deferrals.py`; this entry
 for the Note-Python finding and the three confirmed non-bug matches.
+
+---
+
+### 2026-11-01: `fix/section-absent-authored-heading-title` merged -- a real pre-existing substring-match risk found, confirmed not newly introduced, not chased further
+
+**Decision**: merged to `main`.
+
+**Why**: fixes the real, live-evidenced PSD-.NET bug (above) exactly as designed: `SECTION_
+ABSENT`'s matcher now also recognizes a section's own authored heading text, not only its
+`section_id` or an underscore-to-space conversion of it.
+
+**What the independent cold verifier found, and how it was resolved without blocking the merge**:
+the verifier confirmed the fix correct for the stated case, then found and reproduced a real,
+separate concern: `_section_absent` matches on bare substring containment of a title in free-text
+rationale, with no check that the unit's own source section is actually the one named -- every
+other positional matcher in this file (`_build_path`, `_at_a_glance`, `_install_steps`, etc.)
+corroborates via `ctx.parts`/`ctx.sections`, this one does not. The verifier constructed a working
+adversarial rationale (an unrelated, genuinely novel defect whose free text happens to echo an
+absent section's title as an aside) that gets silently downgraded from blocking `UNCLASSIFIED` to
+non-blocking `SECTION_ABSENT`/`ADVISORY`. Per AGENTS.md's non-negotiable #5, this finding was not
+dismissed on say-so: checked deterministically, by running the identical adversarial input against
+unmodified `main`'s own PRE-EXISTING matching form (`"documentation resources"`, the underscore-to-
+space conversion, no ampersand) -- confirmed it ALREADY misclassifies the same way, unconditionally,
+today, before this fix ever touched the file. This fix extends an already-shipped design's reachable
+phrasings by two or three (the section titles), it does not introduce a new category of risk; of the
+three genuinely new matches, `development_testing`'s title is provably inert (`_build_path`, checked
+first, always matches first on the same substrings "development"/"testing"), leaving only
+`documentation_resources` and `third_party_notices` as the real marginal addition. A structural fix
+(requiring the unit's own source heading to corroborate, matching the file's other matchers) was
+considered and rejected: the real target case's own upstream heading is literally "Documentation"
+(the README's own section name), which does not match the shell's canonical title "Documentation &
+Resources" either -- that corroboration requirement would most likely have broken the exact case
+this fix exists to close. Full suite: 3476 passed, 13 skipped, exit 0.
+
+**What this does NOT decide**: whether `_section_absent`'s whole design (free-text substring
+matching, no structural corroboration) should eventually be tightened across the board, for both
+the pre-existing forms and the new one -- a real, legitimate, but genuinely pre-existing question,
+not created by this merge, not attempted here.
+
+**Where the detail lives**: `src/repo_presenter/readme/validation/deferrals.py`
+(`_section_absent`, `_SECTION_TITLES`).
