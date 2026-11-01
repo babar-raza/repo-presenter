@@ -1,0 +1,51 @@
+{
+  "confinement": {
+    "edits": 0,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "a5faac70e76cbeac20a4c110a1ce7a692411639a7c44ef2ab2679e4657144f00",
+  "edits": [],
+  "lane": "L",
+  "original_sha256": "a5faac70e76cbeac20a4c110a1ce7a692411639a7c44ef2ab2679e4657144f00",
+  "outcome": "NO_CHANGE_WARRANTED",
+  "readme_path": "README.md",
+  "repository": "aspose-html-foss/Aspose.HTML-FOSS-for-Python",
+  "schema_version": 1,
+  "source_revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {},
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 29,
+      "reason": "the README marks 'HTML' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "i1[\"An existing HTML document (string, bytes, or file)\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 30,
+      "reason": "the README marks 'CSS' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "i2[\"Existing CSS (stylesheet text)\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 51,
+      "reason": "the README marks 'HTML' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o1[\"Serialized HTML (string)\"]"
+    }
+  ]
+}
