@@ -10,6 +10,7 @@ from repo_presenter.readme.reconciliation.dispositions import (
     coverage_findings,
     normalize,
     placement_errors,
+    reconciliation_batch_facts,
     rendering_fact_ids,
 )
 
@@ -805,3 +806,242 @@ def test_normalize_leaves_an_ambiguous_wrapper_pool_alone_entirely() -> None:
         "inherited_unit:043.html_block",
     ):
         assert by_id[unit]["disposition"] != "SUPERSEDE_REDUNDANT", unit
+
+
+# Real hosted defect (aspose-pdf-foss/Aspose.PDF-FOSS-for-Python, run 41142404776,
+# uncited_prose_omit): a paragraph commenting on the dry_run/keep parameters of the code example
+# directly above it was OMIT_UNSUPPORTED with an insightful, correct rationale ("no fact supports
+# the claim about dry_run or keep parameters") but no citation, because neither parameter name is
+# a package or link_target fact's own value (_spelled_supported_facts, scoped to those two kinds
+# only, cannot help here). The example it comments on is CONTRADICTED -- the clearest possible
+# citation available, deterministically findable from the unit's own position.
+_CONTRADICTED_EXAMPLE_FACTS = replace(
+    FACTS,
+    facts=(
+        *FACTS.facts,
+        Fact(
+            "example:050",
+            "example",
+            "with Document('batch.pdf') as document:\n    removed = document.remove_duplicates()",
+            (Evidence("README.md", "unit inherited_unit:163.code_block"),),
+            polarity="CONTRADICTED",
+        ),
+        Fact(
+            "inherited_unit:163.code_block",
+            "inherited_unit",
+            "```python\nwith Document('batch.pdf') as document:\n    removed = document.remove_duplicates()\n```",
+            (Evidence("README.md", "section 'Widget > Additional Examples > Find Visually Duplicate Pages'"),),
+            attributes={"section": "Widget > Additional Examples > Find Visually Duplicate Pages"},
+        ),
+        Fact(
+            "inherited_unit:164.paragraph",
+            "inherited_unit",
+            'Use `dry_run=True` to preview removal or `keep="last"` to retain the last selected copy.',
+            (Evidence("README.md", "section 'Widget > Additional Examples > Find Visually Duplicate Pages'"),),
+            attributes={"section": "Widget > Additional Examples > Find Visually Duplicate Pages"},
+        ),
+    ),
+)
+
+
+def test_normalize_backfills_an_omission_commenting_on_a_contradicted_example() -> None:
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:164.paragraph",
+                "disposition": "OMIT_UNSUPPORTED",
+                "destination_section": None,
+                "fact_ids": [],
+                "rationale": "No fact supports the claim about dry_run or keep parameters.",
+            }
+        ]
+    }
+    norm_errors = normalize(output, _CONTRADICTED_EXAMPLE_FACTS)
+    place_errors = placement_errors(output, _CONTRADICTED_EXAMPLE_FACTS)
+    entry = output["dispositions"][0]
+    assert entry["disposition"] == "OMIT_UNSUPPORTED"
+    assert entry["fact_ids"] == ["example:050"]
+    assert norm_errors == []
+    assert place_errors == []
+
+
+def test_normalize_does_not_backfill_a_companion_whose_example_is_merely_unresolved() -> None:
+    """Scoped to CONTRADICTED only, the real, evidenced case: an UNRESOLVED companion example
+    means the facts neither confirm nor deny the claim, which is not the same thing as evidence
+    the claim is false -- nothing here claims to repair that separate, unproven case."""
+    facts = replace(
+        _CONTRADICTED_EXAMPLE_FACTS,
+        facts=tuple(
+            f if f.id != "example:050" else replace(f, polarity="UNRESOLVED")
+            for f in _CONTRADICTED_EXAMPLE_FACTS.facts
+        ),
+    )
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:164.paragraph",
+                "disposition": "OMIT_UNSUPPORTED",
+                "destination_section": None,
+                "fact_ids": [],
+                "rationale": "No fact supports the claim about dry_run or keep parameters.",
+            }
+        ]
+    }
+    normalize(output, facts)
+    entry = output["dispositions"][0]
+    assert entry["fact_ids"] == []
+
+
+def test_normalize_does_not_backfill_across_a_different_section() -> None:
+    """The lookup is scoped to the same section: a CONTRADICTED example in a different part of
+    the document is never a plausible citation for an unrelated paragraph, even if it happens to
+    have a lower ordinal."""
+    facts = replace(
+        _CONTRADICTED_EXAMPLE_FACTS,
+        facts=tuple(
+            f
+            if f.id != "inherited_unit:163.code_block"
+            else replace(f, attributes={"section": "Widget > A Completely Different Section"})
+            for f in _CONTRADICTED_EXAMPLE_FACTS.facts
+        ),
+    )
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:164.paragraph",
+                "disposition": "OMIT_UNSUPPORTED",
+                "destination_section": None,
+                "fact_ids": [],
+                "rationale": "No fact supports the claim about dry_run or keep parameters.",
+            }
+        ]
+    }
+    normalize(output, facts)
+    entry = output["dispositions"][0]
+    assert entry["fact_ids"] == []
+
+
+# Adversarial finding, independent verifier (2026-11-01): a real section can hold more than one
+# code_block (confirmed against aspose-words-foss/.NET's own real "Getting started" section: a
+# NuGet install snippet, a paragraph, a "build from source" alternative, another paragraph). The
+# first version of this fix searched backward past a non-contradicted code_block to an EARLIER,
+# unrelated CONTRADICTED one -- proves the fix now stops at the nearest code_block regardless of
+# polarity, never attributing a farther, structurally unrelated example's citation.
+def test_normalize_does_not_reach_past_a_fine_code_block_to_an_earlier_contradicted_one() -> None:
+    facts = replace(
+        FACTS,
+        facts=(
+            *FACTS.facts,
+            Fact(
+                "example:040",
+                "example",
+                "dotnet add package Aspose.Widget.Foss",
+                (Evidence("README.md", "unit inherited_unit:140.code_block"),),
+                polarity="CONTRADICTED",
+            ),
+            Fact(
+                "inherited_unit:140.code_block",
+                "inherited_unit",
+                "```bash\ndotnet add package Aspose.Widget.Foss\n```",
+                (Evidence("README.md", "section 'Widget > Getting Started'"),),
+                attributes={"section": "Widget > Getting Started"},
+            ),
+            Fact(
+                "inherited_unit:141.paragraph",
+                "inherited_unit",
+                "Or build from source instead:",
+                (Evidence("README.md", "section 'Widget > Getting Started'"),),
+                attributes={"section": "Widget > Getting Started"},
+            ),
+            Fact(
+                "inherited_unit:142.code_block",
+                "inherited_unit",
+                "```bash\ngit clone https://github.com/example/widget\n```",
+                (Evidence("README.md", "section 'Widget > Getting Started'"),),
+                attributes={"section": "Widget > Getting Started"},
+            ),
+            Fact(
+                "inherited_unit:143.paragraph",
+                "inherited_unit",
+                "Clone with `--depth 1` for a faster, shallow checkout.",
+                (Evidence("README.md", "section 'Widget > Getting Started'"),),
+                attributes={"section": "Widget > Getting Started"},
+            ),
+        ),
+    )
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:143.paragraph",
+                "disposition": "OMIT_UNSUPPORTED",
+                "destination_section": None,
+                "fact_ids": [],
+                "rationale": "No fact supports the claim about a shallow checkout.",
+            }
+        ]
+    }
+    normalize(output, facts)
+    entry = output["dispositions"][0]
+    # the nearest code_block (142, the git-clone one) is not CONTRADICTED -- the fix must not
+    # reach past it to the farther, unrelated example:040
+    assert entry["fact_ids"] == []
+
+
+# Known, disclosed coverage limit (not a correctness bug), confirmed by a SECOND live hosted
+# occurrence on the exact repository this fold was built for (aspose-pdf-foss/Aspose-PDF-FOSS-
+# for-Python, run 41276313821, unit 193.paragraph commenting on 191.code_block's own CONTRADICTED
+# example): reconciliation_batch_facts deliberately narrows inherited_unit facts to one batch at
+# a time (a real, already-fixed bug elsewhere depends on this); when the companion code_block
+# falls in an EARLIER batch than the paragraph, it is invisible here, and the fold safely does
+# nothing -- proven by feeding the exact batch-scoped shape the real pipeline actually uses.
+def test_normalize_safely_skips_the_backfill_when_the_example_is_in_an_earlier_batch() -> None:
+    facts = replace(
+        FACTS,
+        facts=(
+            *FACTS.facts,
+            Fact(
+                "example:050",
+                "example",
+                "with Document('batch.pdf') as document:\n    removed = document.remove_duplicates()",
+                (Evidence("README.md", "unit inherited_unit:163.code_block"),),
+                polarity="CONTRADICTED",
+            ),
+            Fact(
+                "inherited_unit:163.code_block",
+                "inherited_unit",
+                "```python\nwith Document('batch.pdf') as document:\n    removed = document.remove_duplicates()\n```",
+                (Evidence("README.md", "section 'Widget > Additional Examples > Find Visually Duplicate Pages'"),),
+                attributes={"section": "Widget > Additional Examples > Find Visually Duplicate Pages"},
+            ),
+            Fact(
+                "inherited_unit:164.paragraph",
+                "inherited_unit",
+                'Use `dry_run=True` to preview removal or `keep="last"` to retain the last selected copy.',
+                (Evidence("README.md", "section 'Widget > Additional Examples > Find Visually Duplicate Pages'"),),
+                attributes={"section": "Widget > Additional Examples > Find Visually Duplicate Pages"},
+            ),
+        ),
+    )
+    # The real pipeline's own call shape: a reconciliation batch that starts AFTER the companion
+    # code_block, exactly as the real, live batch boundary fell (unit 191 in one batch, 193 --
+    # this fixture's 164 -- starting the next).
+    paragraph_only = next(f for f in facts.by_kind("inherited_unit") if f.id == "inherited_unit:164.paragraph")
+    batch_facts = reconciliation_batch_facts(facts, [paragraph_only])
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:164.paragraph",
+                "disposition": "OMIT_UNSUPPORTED",
+                "destination_section": None,
+                "fact_ids": [],
+                "rationale": "No fact supports the claim about dry_run or keep parameters.",
+            }
+        ]
+    }
+    norm_errors = normalize(output, batch_facts)
+    place_errors = placement_errors(output, batch_facts)
+    entry = output["dispositions"][0]
+    # no crash, no wrong citation -- just correctly unable to help, same as before this fix existed
+    assert entry["fact_ids"] == []
+    assert norm_errors == []
+    assert any("uncited_prose_omit" in e for e in place_errors)

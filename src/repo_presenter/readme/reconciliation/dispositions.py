@@ -1040,6 +1040,65 @@ def _matching_unresolved_install(
     return None
 
 
+def _preceding_contradicted_example(
+    unit_id: str, units_by_id: Mapping[str, Fact], contradicted: Mapping[str, str]
+) -> str | None:
+    """The CONTRADICTED example fact of the nearest preceding code_block in this unit's own
+    section, or ``None`` -- but only when that NEAREST code_block, of any polarity, is itself the
+    contradicted one. A paragraph commenting on the parameters/behaviour of the code example
+    directly above it is only ever sensible evidence against *that* example, never a farther one
+    an earlier, unrelated code_block in the same loosely-scoped section happens to own.
+
+    Adversarial finding, independent verifier (2026-11-01, on the first version of this function,
+    which searched for the nearest preceding CONTRADICTED code_block, skipping past any
+    intervening non-contradicted ones): a real section can hold more than one code_block (e.g.
+    aspose-words-foss/.NET's own "Getting started": a NuGet install snippet, a paragraph, a
+    "build from source" alternative, another paragraph) -- confirmed directly against that real
+    facts.json. The first version would misattribute a paragraph commenting on the SECOND,
+    perfectly fine code_block to the FIRST, unrelated CONTRADICTED one, because it kept searching
+    backward past the nearer, non-contradicted candidate instead of stopping there. This version
+    finds the single nearest code_block regardless of polarity, and only ever cites it if that
+    exact one is the contradicted one -- never a farther, structurally unrelated example.
+
+    Known, disclosed coverage limit (not a correctness bug -- confirmed by a second, live hosted
+    occurrence on the exact repository this fold was built for, aspose-pdf-foss/Aspose-PDF-FOSS-
+    for-Python run 41276313821, unit 193.paragraph commenting on 191.code_block's own CONTRADICTED
+    example:059): ``units_by_id`` here is whatever ``normalize()`` was itself called with, which
+    for the real hosted path is ``reconciliation_batch_facts``'s own deliberately batch-scoped
+    ``inherited_unit`` facts (its own docstring: "A batch's own call must see ... only its own
+    units"), never the whole document. ``example`` facts are a different kind and are NOT
+    batch-scoped, so ``contradicted`` itself is always complete -- but if the preceding code_block
+    happens to fall in an EARLIER reconciliation batch than this paragraph (confirmed live: unit
+    191 was in a different batch than 193), it is invisible to ``units_by_id`` and this function
+    safely returns ``None`` -- a missed backfill, never a wrong one. Reproduced directly: feeding
+    the real batch-scoped facts for this exact live case reproduces the exact live rejection
+    byte-for-byte. Closing this needs threading whole-document unit visibility into this one fold
+    without reopening the batch-isolation bug ``reconciliation_batch_facts`` itself exists to
+    prevent (``binding_errors`` demanding full coverage per batch) -- a separate, more general
+    problem (any fold needing cross-batch context would hit it, not just this one), not attempted
+    here.
+    """
+    unit_fact = units_by_id.get(unit_id)
+    ordinal = _unit_ordinal(unit_id)
+    if unit_fact is None or ordinal is None:
+        return None
+    section = str((unit_fact.attributes or {}).get("section") or "")
+    nearest: tuple[int, str] | None = None
+    for other_id, other_fact in units_by_id.items():
+        if _unit_kind(other_id) != "code_block":
+            continue
+        other_ordinal = _unit_ordinal(other_id)
+        if other_ordinal is None or other_ordinal >= ordinal:
+            continue
+        if str((other_fact.attributes or {}).get("section") or "") != section:
+            continue
+        if nearest is None or other_ordinal > nearest[0]:
+            nearest = (other_ordinal, other_id)
+    if nearest is None:
+        return None
+    return contradicted.get(nearest[1])
+
+
 def _collapsible_wrapper_bounds(
     output: dict[str, Any], units_by_id: Mapping[str, Fact]
 ) -> dict[str, tuple[str | None, str | None]]:
@@ -1475,6 +1534,32 @@ def normalize(
             "Redundant with the verified facts it names: "
             + ", ".join(sorted(cited))
             + ". "
+            + str(entry.get("rationale") or "")
+        )[:_RATIONALE_LIMIT]
+    for entry in output.get("dispositions", []):
+        if entry.get("disposition") != "OMIT_UNSUPPORTED" or entry.get("fact_ids"):
+            continue
+        unit = str(entry.get("unit_id", "?"))
+        if _unit_kind(unit) != "paragraph":
+            continue
+        # Measured live (aspose-pdf-foss/Aspose.PDF-FOSS-for-Python, hosted run 41142404776,
+        # uncited_prose_omit): inherited_unit:164.paragraph ("Use `dry_run=True`... or
+        # `keep="last"`...") is the trailing usage note for inherited_unit:163.code_block's own
+        # example, which is CONTRADICTED -- the model's own rationale already reasoned this
+        # correctly ("no fact supports the claim about dry_run or keep parameters") but cited
+        # nothing, because neither parameter name is a package or link_target fact's own value
+        # (_spelled_supported_facts, just above, is scoped to those two kinds only and cannot
+        # help here). A paragraph commenting on the exact example right above it, once that
+        # example is proven CONTRADICTED, has the clearest possible citation available: the
+        # example fact itself, the same "backfill a real citation deterministically, regardless
+        # of why the model missed it" principle as _omits_contradicted_command.
+        example_id = _preceding_contradicted_example(unit, units_by_id, contradicted)
+        if example_id is None:
+            continue
+        entry["fact_ids"] = [example_id]
+        entry["rationale"] = (
+            f"Omitted: {example_id} (the example this paragraph comments on) is on record as "
+            "CONTRADICTED. "
             + str(entry.get("rationale") or "")
         )[:_RATIONALE_LIMIT]
     _prune_incidental_coverage(output, coverage)
