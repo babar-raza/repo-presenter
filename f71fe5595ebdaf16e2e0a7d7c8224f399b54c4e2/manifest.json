@@ -97,5 +97,51 @@
     "invocation_id": "b1ef43a7c4d147b6b05c14d01d630396",
     "started_at": "2026-10-30T15:59:24Z"
   },
-  "state": "READY_FOR_PROPOSAL"
+  "state": "VALID_UPDATE_AVAILABLE",
+  "update": {
+    "available": true,
+    "changed": [
+      "README.md",
+      "README.patch.diff",
+      "content_units.coherent.json",
+      "content_units.json",
+      "dependencies.json",
+      "dispositions.json",
+      "plan.json",
+      "review_verdict.json"
+    ],
+    "classification": "presentation",
+    "earliest_affected_stage": "RECONCILING",
+    "files": {
+      "README.md": "a75a52302cd901748a9c92c7e566a80b8a5b69b8fe0c3a36919d4a6677ac2d41",
+      "README.patch.diff": "2dbfb1ea79c68c6e242930fca0fba14ca3699edd35c71b9ba4b10c25bd87a89d",
+      "content_units.coherent.json": "25aa16795bdb50e909baaaaa50de5d6f1233d75a9e0ee56464759b9cdfd5e130",
+      "content_units.json": "e7b49a1393e9d1cfbafd0675bb6b22cda887a9d600b16af408c594d3289a7880",
+      "dependencies.json": "fde45ee1ee1bb5c5149f4715eca9a04e730d7afd646e070704eee52e29461b39",
+      "dispositions.json": "b4b862fae6a338a31ae4bde481d64ff24a3f56dd99d3d7c80c915a9ed2b2d4b0",
+      "facts.json": "5675a6a9064d8f9c4558b500de11a2a6d5338a02bd648dfa27d742d717166368",
+      "investigation.json": "34edebdb76aa305336d70f64780fe6d66b997a15a968eb00a54126e6093f7ac9",
+      "plan.json": "d1b00295e17e5ac36b0e87ca20a1c1c6cdfcf59a8278488f1fc3a59b3c4fc914",
+      "review_verdict.json": "ff0b38d63eb77838a405b9af644ca111573e1d27ec76342efb37167588358fbe"
+    },
+    "recorded_at": "2026-11-01T11:00:43Z",
+    "recorded_by": {
+      "identity": {
+        "boot_id": "boot:5ba94708-d397-48e4-87e5-601f1bd7a5dc",
+        "nonce": "4c25212873544cbd986bd05cccd036cd",
+        "pid": 2305,
+        "started": "proc:2616"
+      },
+      "invocation_id": "4a2de8efafd64705bf82d23172f2b8fb",
+      "started_at": "2026-11-01T10:35:37Z"
+    },
+    "scope_basis": "artifacts",
+    "scopes": [
+      "reconciliation",
+      "planning",
+      "authoring",
+      "reviewer"
+    ],
+    "triggering_scope": "reconciliation"
+  }
 }
