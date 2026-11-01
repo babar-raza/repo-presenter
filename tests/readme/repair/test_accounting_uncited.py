@@ -241,3 +241,110 @@ def test_the_accounting_never_changes_what_renders_and_the_reviewer_agrees() -> 
 
     before, after = verdict(candidate.dispositions), verdict(settled)
     assert len(after.findings) < len(before.findings)
+
+
+def _facts_with_prose_heading() -> FactsDocument:
+    """``_facts_linked()`` plus a heading that introduces no code block at all (the next unit is
+    the end of the document, not a code_block) -- ``_payload_row`` finds nothing for it, the same
+    shape measured live on aspose-slides-foss/Aspose.Slides-FOSS-for-.NET run 41284665612
+    ("### Why the `!`", a heading over explanatory prose, not an example)."""
+    base = _facts_linked()
+    return FactsDocument(
+        base.repository,
+        base.source_revision,
+        (*base.facts, Fact("inherited_unit:013.heading", "inherited_unit", "### Why the `!`", (Evidence("README.md"),))),
+    )
+
+
+def _moved_prose_heading() -> dict[str, Any]:
+    """A heading with no code-block payload (see ``_facts_with_prose_heading``) kept
+    ``VERIFIED_MOVE`` into ``additional_examples``, uncited: ``_decide``'s own heading branch
+    (``_heading_facts``/``_example_heading``) finds nothing to cite, and there is no payload
+    relationship for ``_payload_row`` to find either -- the identity fallback is the only
+    remaining, correct answer."""
+    dispositions = _superseded_headings()
+    dispositions["dispositions"].append(
+        _entry("013.heading", "VERIFIED_MOVE", "additional_examples", [])
+    )
+    return dispositions
+
+
+def test_a_kept_moved_heading_with_no_precise_fact_falls_back_to_the_identity_fact() -> (
+    None
+):
+    settled, accounted = account_unprinted_units(
+        _candidate(_moved_prose_heading(), _facts_with_prose_heading())
+    )
+    row = _by_unit(settled)["013.heading"]
+    assert row["disposition"] == "SUPERSEDE_REDUNDANT"
+    assert row["fact_ids"] == ["identity:repository"]
+    assert [a.reason for a in accounted if a.unit_id.endswith("013.heading")] == [
+        "uncited_kept_heading_identity"
+    ]
+
+
+def test_the_identity_fallback_never_overrides_a_precise_example_heading_citation() -> (
+    None
+):
+    """The more specific ``_decide``/``_example_heading`` path must win when it can resolve the
+    heading; the identity fallback is reached only when it returns None, never instead of it."""
+    dispositions = _dispositions(
+        **{
+            "009.heading": _entry(
+                "009.heading", "VERIFIED_MOVE", "additional_examples", []
+            ),
+        }
+    )
+    settled, accounted = account_unprinted_units(
+        _candidate(dispositions, _facts_linked())
+    )
+    row = _by_unit(settled)["009.heading"]
+    assert row["fact_ids"] == ["example:002"]
+    assert [a.reason for a in accounted if a.unit_id.endswith("009.heading")] == [
+        "owned_elsewhere"
+    ]
+
+
+def test_the_identity_fallback_overwrites_an_already_present_but_irrelevant_citation() -> (
+    None
+):
+    """A cold independent review of an earlier version of this fix (reconciliation/dispositions.py,
+    since reverted in favor of this module) found a real gap: gating the fallback on ``not cited``
+    left an ALREADY-cited VERIFIED_MOVE/VERIFIED_PRESERVE heading untouched, still failing
+    disposition_coverage_rule for the identical reason, since that rule never consults fact_ids
+    for a kept disposition in the first place. This function must not repeat that gap: an
+    existing, unhelpful citation does not block the fallback."""
+    dispositions = _moved_prose_heading()
+    dispositions["dispositions"] = [
+        _entry(
+            "013.heading", "VERIFIED_MOVE", "additional_examples", ["identity:repository"]
+        )
+        if row["unit_id"].endswith("013.heading")
+        else row
+        for row in dispositions["dispositions"]
+    ]
+    settled, accounted = account_unprinted_units(
+        _candidate(dispositions, _facts_with_prose_heading())
+    )
+    row = _by_unit(settled)["013.heading"]
+    assert row["disposition"] == "SUPERSEDE_REDUNDANT"
+    assert row["fact_ids"] == ["identity:repository"]
+    assert [a.reason for a in accounted if a.unit_id.endswith("013.heading")] == [
+        "uncited_kept_heading_identity"
+    ]
+
+
+def test_the_identity_fallback_leaves_a_printed_heading_alone() -> None:
+    """Negative control: a heading disposed VERIFIED_MOVE/VERIFIED_PRESERVE that genuinely does
+    print as a heading (``heading_printed``) must not be touched at all -- there is no defect to
+    account for."""
+    candidate = _candidate(_moved_prose_heading(), _facts_with_prose_heading())
+    candidate = dataclasses.replace(
+        candidate,
+        readme=candidate.readme.replace(
+            "## Additional Examples", "## Additional Examples\n\n### Why the `!`"
+        ),
+    )
+    settled, accounted = account_unprinted_units(candidate)
+    assert _by_unit(settled)["013.heading"]["fact_ids"] == []
+    assert not any(a.unit_id.endswith("013.heading") for a in accounted)

@@ -354,50 +354,6 @@ def test_normalize_fixes_an_uncited_redundant_heading_so_live_loss_accounts_for_
     assert findings == []
 
 
-# Measured live (aspose-slides-foss/Aspose.Slides-FOSS-for-.NET, run 41284665612): a THIRD shape
-# of the same gap, worse than the other two -- a heading VERIFIED_MOVE into a placeable section,
-# uncited. A citation backfill alone cannot fix this one: disposition_coverage_rule's own
-# unprinted_kept_units never consults fact_ids for a KEPT_DISPOSITIONS unit, only whether the
-# heading's own text is printed as a heading (heading_printed()), which is false for ANY heading
-# regardless of citation -- the same rendering limitation the fix above already found for
-# SUPERSEDE_REDUNDANT/OMIT_UNSUPPORTED, just reached from VERIFIED_MOVE this time. normalize()
-# must flip the disposition itself to SUPERSEDE_REDUNDANT, not only backfill the citation.
-def test_normalize_fixes_an_uncited_verified_move_heading_so_both_preservation_rules_clear() -> (
-    None
-):
-    from repo_presenter.readme.reconciliation.dispositions import normalize
-
-    facts = _facts(*UNITS, Fact("identity:ecosystem", "identity", "python", (Evidence("x"),)))
-    candidate = _without(LIVE, USAGE_SECTION)
-    rows = [_row(unit.id) for unit in UNITS if unit.id not in _DROPPED]
-    rows.append(
-        _row(
-            "inherited_unit:005.heading",
-            "VERIFIED_MOVE",
-            destination_section="development_testing",
-            fact_ids=[],
-            rationale="Moved to the Development and Testing section.",
-        )
-    )
-    rows.append(
-        _row(
-            "inherited_unit:006.paragraph",
-            "OMIT_UNSUPPORTED",
-            fact_ids=["link_target:docs"],
-            rationale="dead link",
-        )
-    )
-    output = {"dispositions": rows}
-    normalize(output, facts)
-    heading_entry = next(
-        row for row in output["dispositions"] if row["unit_id"] == "inherited_unit:005.heading"
-    )
-    assert heading_entry["disposition"] == "SUPERSEDE_REDUNDANT"
-    assert heading_entry["fact_ids"] == ["identity:ecosystem"]
-    assert disposition_coverage_rule(candidate, facts=facts, dispositions=output) == []
-    assert live_readme_loss_rule(LIVE, candidate, facts=facts, dispositions=output) == []
-
-
 # Measured live (aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp, run 41154207665, verifying the fix
 # above): the model chose OMIT_UNSUPPORTED for this exact shape instead of SUPERSEDE_REDUNDANT --
 # a heading the model considers covered elsewhere, not placed into any section at all. Headings
