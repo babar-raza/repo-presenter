@@ -188,10 +188,19 @@ _VALUE_FLAGS = frozenset(
 )  # fmt: skip
 _PROMPT = re.compile(r"^(?:[$>]\s+|PS>\s+)")
 # A code span that is a file or archive name, not a package: never a near-miss of the identity.
+# Real hosted false positive (claim_findings/_prose_name_findings, measured against
+# aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp's own real build-instructions text): the README
+# correctly names the CMake static-library artifact under both its Unix name ("libaspose_pdf_
+# foss.a", already exempted via ".a") and its MSVC name ("aspose_pdf_foss.lib") -- the same
+# build target, the same CMake project() identity it extends, just the other OS's linker-archive
+# suffix. ".dll"/".so"/".a" were already here (Windows/Unix shared and Unix static libraries);
+# ".lib" (Windows static/import library), ".dylib" (macOS shared library), and ".o"/".obj"
+# (Unix/Windows object files) are the exact same category, the native-build-artifact siblings an
+# honest cross-platform build section spells out right next to the ones already exempted.
 _FILE_LIKE = re.compile(
     r"(?i)\.(?:md|txt|rst|json|toml|ya?ml|cfg|ini|lock|py|ts|js|cs|csproj|sln|props|targets|nuspec|"
-    r"pom|xml|gradle|java|go|rs|cpp|hpp|h|sh|ps1|whl|nupkg|dll|jar|so|a|png|svg|gif|jpg|zip|gz|tgz|"
-    r"tar|exe|msi|pdf|html|csv)$|[-.](?:info|egg|dist)$"
+    r"pom|xml|gradle|java|go|rs|cpp|hpp|h|sh|ps1|whl|nupkg|dll|jar|so|a|lib|dylib|o|obj|png|svg|gif|"
+    r"jpg|zip|gz|tgz|tar|exe|msi|pdf|html|csv)$|[-.](?:info|egg|dist)$"
 )
 _EXTENSION_SPAN = re.compile(r"`(\.[A-Za-z0-9]{2,6})`")
 
