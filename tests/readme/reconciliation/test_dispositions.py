@@ -805,3 +805,116 @@ def test_normalize_leaves_an_ambiguous_wrapper_pool_alone_entirely() -> None:
         "inherited_unit:043.html_block",
     ):
         assert by_id[unit]["disposition"] != "SUPERSEDE_REDUNDANT", unit
+
+
+# Real hosted defect (aspose-pdf-foss/Aspose.PDF-FOSS-for-Python, run 41142404776,
+# uncited_prose_omit): a paragraph commenting on the dry_run/keep parameters of the code example
+# directly above it was OMIT_UNSUPPORTED with an insightful, correct rationale ("no fact supports
+# the claim about dry_run or keep parameters") but no citation, because neither parameter name is
+# a package or link_target fact's own value (_spelled_supported_facts, scoped to those two kinds
+# only, cannot help here). The example it comments on is CONTRADICTED -- the clearest possible
+# citation available, deterministically findable from the unit's own position.
+_CONTRADICTED_EXAMPLE_FACTS = replace(
+    FACTS,
+    facts=(
+        *FACTS.facts,
+        Fact(
+            "example:050",
+            "example",
+            "with Document('batch.pdf') as document:\n    removed = document.remove_duplicates()",
+            (Evidence("README.md", "unit inherited_unit:163.code_block"),),
+            polarity="CONTRADICTED",
+        ),
+        Fact(
+            "inherited_unit:163.code_block",
+            "inherited_unit",
+            "```python\nwith Document('batch.pdf') as document:\n    removed = document.remove_duplicates()\n```",
+            (Evidence("README.md", "section 'Widget > Additional Examples > Find Visually Duplicate Pages'"),),
+            attributes={"section": "Widget > Additional Examples > Find Visually Duplicate Pages"},
+        ),
+        Fact(
+            "inherited_unit:164.paragraph",
+            "inherited_unit",
+            'Use `dry_run=True` to preview removal or `keep="last"` to retain the last selected copy.',
+            (Evidence("README.md", "section 'Widget > Additional Examples > Find Visually Duplicate Pages'"),),
+            attributes={"section": "Widget > Additional Examples > Find Visually Duplicate Pages"},
+        ),
+    ),
+)
+
+
+def test_normalize_backfills_an_omission_commenting_on_a_contradicted_example() -> None:
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:164.paragraph",
+                "disposition": "OMIT_UNSUPPORTED",
+                "destination_section": None,
+                "fact_ids": [],
+                "rationale": "No fact supports the claim about dry_run or keep parameters.",
+            }
+        ]
+    }
+    norm_errors = normalize(output, _CONTRADICTED_EXAMPLE_FACTS)
+    place_errors = placement_errors(output, _CONTRADICTED_EXAMPLE_FACTS)
+    entry = output["dispositions"][0]
+    assert entry["disposition"] == "OMIT_UNSUPPORTED"
+    assert entry["fact_ids"] == ["example:050"]
+    assert norm_errors == []
+    assert place_errors == []
+
+
+def test_normalize_does_not_backfill_a_companion_whose_example_is_merely_unresolved() -> None:
+    """Scoped to CONTRADICTED only, the real, evidenced case: an UNRESOLVED companion example
+    means the facts neither confirm nor deny the claim, which is not the same thing as evidence
+    the claim is false -- nothing here claims to repair that separate, unproven case."""
+    facts = replace(
+        _CONTRADICTED_EXAMPLE_FACTS,
+        facts=tuple(
+            f if f.id != "example:050" else replace(f, polarity="UNRESOLVED")
+            for f in _CONTRADICTED_EXAMPLE_FACTS.facts
+        ),
+    )
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:164.paragraph",
+                "disposition": "OMIT_UNSUPPORTED",
+                "destination_section": None,
+                "fact_ids": [],
+                "rationale": "No fact supports the claim about dry_run or keep parameters.",
+            }
+        ]
+    }
+    normalize(output, facts)
+    entry = output["dispositions"][0]
+    assert entry["fact_ids"] == []
+
+
+def test_normalize_does_not_backfill_across_a_different_section() -> None:
+    """The lookup is scoped to the same section: a CONTRADICTED example in a different part of
+    the document is never a plausible citation for an unrelated paragraph, even if it happens to
+    have a lower ordinal."""
+    facts = replace(
+        _CONTRADICTED_EXAMPLE_FACTS,
+        facts=tuple(
+            f
+            if f.id != "inherited_unit:163.code_block"
+            else replace(f, attributes={"section": "Widget > A Completely Different Section"})
+            for f in _CONTRADICTED_EXAMPLE_FACTS.facts
+        ),
+    )
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:164.paragraph",
+                "disposition": "OMIT_UNSUPPORTED",
+                "destination_section": None,
+                "fact_ids": [],
+                "rationale": "No fact supports the claim about dry_run or keep parameters.",
+            }
+        ]
+    }
+    normalize(output, facts)
+    entry = output["dispositions"][0]
+    assert entry["fact_ids"] == []

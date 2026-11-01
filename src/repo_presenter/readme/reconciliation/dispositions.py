@@ -1040,6 +1040,33 @@ def _matching_unresolved_install(
     return None
 
 
+def _preceding_contradicted_example(
+    unit_id: str, units_by_id: Mapping[str, Fact], contradicted: Mapping[str, str]
+) -> str | None:
+    """The CONTRADICTED example fact of the nearest preceding code_block in this unit's own
+    section, or ``None``. A paragraph commenting on the parameters/behaviour of the code example
+    directly above it is only ever sensible evidence against *that* example, never any other --
+    scoped to the same section and the single nearest-ordinal code_block, never a blanket search.
+    """
+    unit_fact = units_by_id.get(unit_id)
+    ordinal = _unit_ordinal(unit_id)
+    if unit_fact is None or ordinal is None:
+        return None
+    section = str((unit_fact.attributes or {}).get("section") or "")
+    best: tuple[int, str] | None = None
+    for other_id, other_fact in units_by_id.items():
+        if other_id not in contradicted or _unit_kind(other_id) != "code_block":
+            continue
+        other_ordinal = _unit_ordinal(other_id)
+        if other_ordinal is None or other_ordinal >= ordinal:
+            continue
+        if str((other_fact.attributes or {}).get("section") or "") != section:
+            continue
+        if best is None or other_ordinal > best[0]:
+            best = (other_ordinal, other_id)
+    return contradicted[best[1]] if best is not None else None
+
+
 def _collapsible_wrapper_bounds(
     output: dict[str, Any], units_by_id: Mapping[str, Fact]
 ) -> dict[str, tuple[str | None, str | None]]:
@@ -1475,6 +1502,32 @@ def normalize(
             "Redundant with the verified facts it names: "
             + ", ".join(sorted(cited))
             + ". "
+            + str(entry.get("rationale") or "")
+        )[:_RATIONALE_LIMIT]
+    for entry in output.get("dispositions", []):
+        if entry.get("disposition") != "OMIT_UNSUPPORTED" or entry.get("fact_ids"):
+            continue
+        unit = str(entry.get("unit_id", "?"))
+        if _unit_kind(unit) != "paragraph":
+            continue
+        # Measured live (aspose-pdf-foss/Aspose.PDF-FOSS-for-Python, hosted run 41142404776,
+        # uncited_prose_omit): inherited_unit:164.paragraph ("Use `dry_run=True`... or
+        # `keep="last"`...") is the trailing usage note for inherited_unit:163.code_block's own
+        # example, which is CONTRADICTED -- the model's own rationale already reasoned this
+        # correctly ("no fact supports the claim about dry_run or keep parameters") but cited
+        # nothing, because neither parameter name is a package or link_target fact's own value
+        # (_spelled_supported_facts, just above, is scoped to those two kinds only and cannot
+        # help here). A paragraph commenting on the exact example right above it, once that
+        # example is proven CONTRADICTED, has the clearest possible citation available: the
+        # example fact itself, the same "backfill a real citation deterministically, regardless
+        # of why the model missed it" principle as _omits_contradicted_command.
+        example_id = _preceding_contradicted_example(unit, units_by_id, contradicted)
+        if example_id is None:
+            continue
+        entry["fact_ids"] = [example_id]
+        entry["rationale"] = (
+            f"Omitted: {example_id} (the example this paragraph comments on) is on record as "
+            "CONTRADICTED. "
             + str(entry.get("rationale") or "")
         )[:_RATIONALE_LIMIT]
     _prune_incidental_coverage(output, coverage)
