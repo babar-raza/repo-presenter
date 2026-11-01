@@ -1553,3 +1553,50 @@ improved, for repositories with this shape of content; not investigated further 
 **Where the detail lives**: `src/repo_presenter/readme/review/defect_bridge.py` (confirmed
 correctly routing every `causal_stage` to the right repair dispatch), `src/repo_presenter/readme/
 repair/loop.py`, this run's own `repairs.json`/`review_verdict.json`.
+
+---
+
+## 2026-11-01: native build-artifact extensions exempted from the wrong-name claim rule (merged `fix/file-like-native-build-extensions`)
+
+**Decision**: merge `fix/file-like-native-build-extensions` to main. `claim_findings`/
+`_prose_name_findings`'s own `_FILE_LIKE` regex now also exempts `.lib`, `.dylib`, `.o`, and
+`.obj` -- the direct platform-siblings of the already-exempted `.dll`/`.so`/`.a` (Windows/Unix
+shared and Unix static libraries), the exact same category of native build artifact.
+
+**Why**: measured against aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp's own real candidate text
+(`evidence/build/P1_PORTFOLIO_SCALE/.../lane_r_candidate.md`): the README honestly names the SAME
+static-library artifact under both its Unix suffix (`libaspose_pdf_foss.a`, already exempted) and
+its MSVC suffix (`aspose_pdf_foss.lib`, not exempted before this fix) -- the second form was
+wrongly flagged as an unverified second package.
+
+**Evidence**: reproduced directly against current code with the real sentence and the real CMake
+`project()` identity (`aspose_pdf_foss`, itself confirmed by the README's own `.a` sibling
+mention): `claim_findings` returns one finding before the fix, zero after. 5 new tests (4
+parametrized over `lib`/`dylib`/`o`/`obj`, 1 negative control). Falsifier confirmed. A fresh agent,
+cold, in an isolated worktree, independently re-verified the real-world false positive end to end
+(reproducing it on `main`, confirming it's gone on the branch), the regex anchoring, the falsifier,
+and the full suite (3466 passed/13 skipped/exit 0). One narrow, honestly-flagged, *unconfirmed*
+residual concern: `.lib` is a plausible (but not observed in-portfolio) suffix for a legitimate
+.NET/NuGet `X.Lib`-style sub-package name, which this exemption would now also hide if a README
+ever falsely claimed one -- `.o`/`.obj`/`.dylib` carry no such risk the verifier could construct.
+
+**Evidence (hosted re-run from the branch, not main) -- inconclusive, documented honestly**: two
+live-check attempts (aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp run 41274861054, aspose-slides-foss/
+Aspose.Slides-FOSS-for-Cpp run 41276299775) were both blocked by unrelated, pre-existing earlier-
+stage defects before the pipeline ever reached the validation stage this fix touches: PDF-Cpp by
+the already-documented BC-08 staleness issue (`docs/DECISION_LOG.md`'s own `nineteenth_fix_live_
+verified_insufficient_deeper_staleness_cause_found` entry, `project/state.yaml`); Slides-Cpp by a
+separate S4 `uncovered_supersession` rejection on an unrelated PowerShell install snippet. Neither
+run's own failure reason names `claim_findings`/a wrong-name finding, so this fix cannot be shown
+to have caused a new regression on either, but it also cannot be shown to have let either
+candidate progress further -- this specific defect may never have caused an *observed* hosted
+failure on its own (both repos' earlier hosted attempts were already blocked by other issues first).
+Merging on the strength of the direct, repeated, cold-reproduced code-level evidence (mission's own
+"evidence from tooling" bar, satisfied without a hosted run) rather than spending further hosted-run
+budget chasing a clean end-to-end confirmation this defect's own shape does not require.
+
+**What this does NOT decide**: the BC-08 staleness issue (PDF-Cpp) and the PowerShell
+`uncovered_supersession` issue (Slides-Cpp) are pre-existing and not addressed here.
+
+**Where the detail lives**: `src/repo_presenter/readme/validation/claims.py` (`_FILE_LIKE`),
+`tests/readme/validation/test_claims_surface.py`.
