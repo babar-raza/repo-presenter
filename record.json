@@ -18,10 +18,10 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "transient",
-    "detail": "model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: presentation_planning: output rejected twice; last rejection: link 'link_target:015' is assigned more than once; never the same target twice; link 'link_target:016' is assigned more than once; never the same target twice",
+    "classification": "validation_failed",
+    "detail": "PresentFailure: independent review returned REJECT with 5 blocking finding(s) of 5; nothing sealed; F01 [unsupported_claim] in key_capabilities blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in key_capabilities blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in key_capabilities blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F04 [unsupported_claim] in key_capabilities blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F05 [unsupported_claim] in key_capabilities blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-10-30T23:00:10.816859+00:00",
+    "occurred_at": "2026-11-01T10:24:31.392917+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 4,
+  "state_version": 5,
   "recent_trigger_dedup_keys": {
     "run:41140569249:aspose-words-foss/Aspose.Words-FOSS-for-Python": "ac5c327b41da4b8594830ce658c68815",
     "run:41295863252:aspose-words-foss/Aspose.Words-FOSS-for-Python": "92b17e82b55a41479065b1801134c005"
