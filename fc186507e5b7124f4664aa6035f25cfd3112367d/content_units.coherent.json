@@ -1,0 +1,671 @@
+{
+  "coherence": {
+    "applied": true,
+    "revised": []
+  },
+  "omitted": [
+    {
+      "fact_id": "inherited_unit:010.list",
+      "reason": "The inherited list is not cited by any capability unit and is not used to describe any capability; it is omitted because the section relies on explicit fact citations per slot.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:008.code_block",
+      "reason": "The section does not include Mermaid diagrams; this is handled by the renderer.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:027.paragraph",
+      "reason": "The section does not reference the examples directory; this is handled by the renderer.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:016.list",
+      "reason": "The list item names identifiers not present in any accepted fact value; describing them would introduce unsupported specifics.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "inherited_unit:020.list",
+      "reason": "The list item names identifiers not present in any accepted fact value; describing them would introduce unsupported specifics.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "inherited_unit:044.heading",
+      "reason": "The heading is rendered by the deterministic renderer and must not be repeated in prose.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "inherited_unit:045.paragraph",
+      "reason": "The paragraph is rendered by the deterministic renderer and must not be repeated in prose.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "inherited_unit:046.code_block",
+      "reason": "The code block is rendered by the deterministic renderer and must not be repeated in prose.",
+      "section": "development_testing"
+    }
+  ],
+  "schema_version": 1,
+  "units": [
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:version",
+        "format:input.htm",
+        "format:input.html",
+        "format:output.htm",
+        "format:output.html",
+        "public_symbol:workbook.constructor",
+        "public_symbol:workbook.load",
+        "public_symbol:workbook.save",
+        "public_symbol:workbook.tohtml",
+        "public_symbol:cell.putvalue",
+        "public_symbol:cell.setformula",
+        "public_symbol:worksheet.getcell2",
+        "public_symbol:style",
+        "public_symbol:font",
+        "public_symbol:fill",
+        "public_symbol:border",
+        "public_symbol:alignment",
+        "public_symbol:autofilter",
+        "public_symbol:datavalidation",
+        "public_symbol:conditionalformat",
+        "public_symbol:hyperlink",
+        "public_symbol:comment",
+        "public_symbol:worksheet.addcomment",
+        "public_symbol:worksheet.addhyperlink",
+        "public_symbol:worksheet.adddatavalidation",
+        "public_symbol:worksheet.addconditionalformat"
+      ],
+      "section": "opening",
+      "slot": "opening",
+      "text": "Aspose.Cells FOSS for TypeScript reads and writes Excel files using the .xlsx format. It converts workbooks to .html and .htm files for output, and loads .html and .htm files as input. It provides methods to create, modify, and save workbooks, including setting cell values and formulas, applying styles, and managing worksheet elements such as comments, hyperlinks, data validation, and conditional formatting."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook.constructor",
+        "public_symbol:workbook.load",
+        "public_symbol:workbook.save"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "It loads Excel workbooks from a file path using Workbook.load and saves them with Workbook.save, and it constructs new workbooks with Workbook.constructor."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cell.formula",
+        "public_symbol:cell.putvalue",
+        "public_symbol:cell.setformula",
+        "public_symbol:cell.value",
+        "public_symbol:worksheet.getcell2"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:2",
+      "text": "It reads and writes cell values and formulas using Cell.putValue and Cell.setFormula, and retrieves cells by reference or coordinate with Worksheet.getCell2, exposing their value and formula properties."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:alignment",
+        "public_symbol:border",
+        "public_symbol:fill",
+        "public_symbol:font",
+        "public_symbol:protection",
+        "public_symbol:style"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "It applies formatting to cells using Style, Font, Fill, Border, Alignment, and Protection objects, assigning them via Cell.setStyle."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheet.mergecells",
+        "public_symbol:worksheet.setautofilter",
+        "public_symbol:worksheet.setcolumnwidth",
+        "public_symbol:worksheet.setrowheight",
+        "public_symbol:worksheet.setrowhidden"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:4",
+      "text": "It configures worksheet layout and behavior by setting column widths and row heights, merging cells, hiding rows, and enabling auto filters through Worksheet methods."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:comment",
+        "public_symbol:hyperlink",
+        "public_symbol:worksheet.addcomment",
+        "public_symbol:worksheet.adddatavalidation",
+        "public_symbol:worksheet.addhyperlink"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "It adds hyperlinks, comments, and data validation to worksheets using Worksheet.addHyperlink, Worksheet.addComment, and Worksheet.addDataValidation, referencing Hyperlink and Comment objects."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:colorscalerule",
+        "public_symbol:conditionalformat",
+        "public_symbol:databarrule",
+        "public_symbol:iconsetrule",
+        "public_symbol:worksheet.addconditionalformat"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:6",
+      "text": "It applies conditional formatting rules to cell ranges using Worksheet.addConditionalFormat with ColorScaleRule, DataBarRule, and IconSetRule objects."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook.tocsv",
+        "public_symbol:workbook.tojson",
+        "public_symbol:workbook.tomarkdown"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:7",
+      "text": "It exports workbook data as text using Workbook.toCsv, Workbook.toJson, and Workbook.toMarkdown, each returning a string representation of the data."
+    },
+    {
+      "fact_ids": [
+        "format:input.html",
+        "format:output.html",
+        "public_symbol:workbook.load",
+        "public_symbol:workbook.tohtml"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:8",
+      "text": "It imports HTML files with Workbook.load and exports workbooks to HTML using Workbook.toHtml, supporting the .html format for both input and output."
+    },
+    {
+      "fact_ids": [
+        "example:001"
+      ],
+      "section": "quick_start",
+      "slot": "lead_in",
+      "text": "Create a new Excel file with product data and formatted headers, then save it as products.xlsx."
+    },
+    {
+      "fact_ids": [
+        "example:002"
+      ],
+      "section": "quick_start",
+      "slot": "lead_in:2",
+      "text": "Load an existing Excel file, update a cell value, and save the changes to updated.xlsx."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:version"
+      ],
+      "section": "additional_examples",
+      "slot": "preview",
+      "text": "Aspose.Cells FOSS for TypeScript supports loading Excel workbooks and saving them as HTML. The following examples demonstrate common workflows."
+    },
+    {
+      "fact_ids": [
+        "example:003"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:003",
+      "text": "Load an Excel file and save it as HTML."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:version",
+        "public_symbol:workbook",
+        "public_symbol:workbook.constructor",
+        "public_symbol:workbook.load",
+        "public_symbol:workbook.save",
+        "public_symbol:workbook.tocsv",
+        "public_symbol:workbook.tohtml",
+        "public_symbol:workbook.tojson",
+        "public_symbol:workbook.tomarkdown",
+        "public_symbol:workbook.worksheets",
+        "inherited_unit:034.paragraph"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "Aspose.Cells FOSS for TypeScript provides the Workbook class as the main entry point for working with Excel files, and the Worksheet, Cell, and Style classes for manipulating individual sheets, cells, and formatting. It supports loading and saving Excel files and converting them to other formats."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook",
+        "public_symbol:workbook.constructor",
+        "public_symbol:workbook.load",
+        "public_symbol:workbook.save",
+        "public_symbol:workbook.tocsv",
+        "public_symbol:workbook.tohtml",
+        "public_symbol:workbook.tojson",
+        "public_symbol:workbook.tomarkdown",
+        "public_symbol:workbook.worksheets"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:workbook",
+      "text": "The Workbook class can be created using its constructor, loaded from a file using Workbook.load, and saved using Workbook.save. It exposes a worksheets collection for accessing individual worksheets, and provides methods to export the workbook to HTML, CSV, JSON, and Markdown formats."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheet",
+        "public_symbol:worksheet.addcomment",
+        "public_symbol:worksheet.addconditionalformat",
+        "public_symbol:worksheet.adddatavalidation",
+        "public_symbol:worksheet.addhyperlink",
+        "public_symbol:worksheet.getcell2",
+        "public_symbol:worksheet.putvalue",
+        "public_symbol:worksheet.setautofilter",
+        "public_symbol:worksheet.setcellstyle"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:worksheet",
+      "text": "The Worksheet class provides methods to access and modify cell content and formatting, including Worksheet.getCell2 to retrieve a cell, Worksheet.putValue to set a cell value, and Worksheet.setCellStyle to apply a style. It also supports adding hyperlinks, comments, data validation rules, conditional formats, and setting an auto filter."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cell",
+        "public_symbol:cell.formula",
+        "public_symbol:cell.hyperlink",
+        "public_symbol:cell.putvalue",
+        "public_symbol:cell.setformula",
+        "public_symbol:cell.setstyle",
+        "public_symbol:cell.sharedstringmap",
+        "public_symbol:cell.value"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:cell",
+      "text": "The Cell class allows reading and writing cell values, formulas, hyperlinks, and shared string map references. It supports setting cell style using Cell.setStyle and retrieving the underlying value, formula, hyperlink, and shared string map via their respective properties."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:style",
+        "public_symbol:style.constructor",
+        "public_symbol:style.getalignment",
+        "public_symbol:style.getborder",
+        "public_symbol:style.getfill",
+        "public_symbol:style.getfont",
+        "public_symbol:style.setbold",
+        "public_symbol:style.setfontcolor",
+        "public_symbol:style.setforegroundcolor"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:style",
+      "text": "The Style class provides methods to configure font, fill, border, and alignment properties. It supports setting bold, font color, and foreground color, and exposes getters for alignment, border, fill, and font settings."
+    },
+    {
+      "fact_ids": [
+        "link_target:019"
+      ],
+      "section": "documentation_resources",
+      "slot": "link:link_target:019",
+      "text": "The getting started guide covers installation, walkthroughs, and feature guides for this library."
+    },
+    {
+      "fact_ids": [
+        "link_target:020"
+      ],
+      "section": "documentation_resources",
+      "slot": "link:link_target:020",
+      "text": "The how-to guides and FAQ provide task-focused answers for common spreadsheet-processing questions."
+    },
+    {
+      "fact_ids": [
+        "link_target:021"
+      ],
+      "section": "documentation_resources",
+      "slot": "link:link_target:021",
+      "text": "The full API reference offers the complete, browsable reference for every public class."
+    },
+    {
+      "fact_ids": [
+        "link_target:022"
+      ],
+      "section": "documentation_resources",
+      "slot": "link:link_target:022",
+      "text": "Users can open issues on GitHub to report bugs or submit feature requests."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:041.heading",
+        "inherited_unit:042.list",
+        "inherited_unit:043.paragraph",
+        "install_command:npm",
+        "package:name",
+        "package:version",
+        "public_symbol:workbook.tocsv",
+        "public_symbol:workbook.tojson",
+        "public_symbol:workbook.tomarkdown"
+      ],
+      "section": "scope_limitations",
+      "slot": "scope",
+      "text": "Aspose.Cells FOSS for TypeScript reads and writes Excel files using the Workbook class, supporting export to CSV, JSON, and Markdown formats via Workbook.toCsv, Workbook.toJson, and Workbook.toMarkdown."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:042.list",
+        "install_command:npm",
+        "public_symbol:workbook.tocsv",
+        "public_symbol:workbook.tojson",
+        "public_symbol:workbook.tomarkdown"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:1",
+      "text": "Text export is available as a returned string, not as a direct file-write helper — pass the result of Workbook.toCsv, Workbook.toJson, or Workbook.toMarkdown to your own file-writing code, and there is no corresponding import path back into a Workbook."
+    },
+    {
+      "fact_ids": [
+        "identity:repository",
+        "inherited_unit:043.paragraph",
+        "install_command:npm"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:2",
+      "text": "This limitation does not apply to Aspose.Cells for .NET — Enterprise Edition."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "inherited_unit:041.heading",
+        "inherited_unit:042.list",
+        "inherited_unit:043.paragraph",
+        "install_command:npm",
+        "package:name",
+        "package:version",
+        "public_symbol:workbook.tocsv",
+        "public_symbol:workbook.tojson",
+        "public_symbol:workbook.tomarkdown"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:3",
+      "text": "The package excel-cells version 1.0.0 is installed via git clone and npm install from the aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript repository."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:version",
+        "build_test_asset:examples",
+        "inherited_unit:012.paragraph",
+        "inherited_unit:018.list"
+      ],
+      "section": "development_testing",
+      "slot": "summary",
+      "text": "The toolchain requires Node.js 18 or later and TypeScript 5 or later, with dependencies handling ZIP containers, XML parsing, and ZIP entry operations. TypeScript compilation and type checking depend on type definitions and the TypeScript compiler, while running examples or tests directly uses runtime environments that support TypeScript execution. The package excel-cells version 1.0.0 is part of the aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript repository, and the examples/ directory contains test assets for validation."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:043.paragraph"
+      ],
+      "section": "enterprise_relationship",
+      "slot": "context",
+      "text": "It adds a full commercial spreadsheet engine, broader format coverage, and active support beyond this FOSS TypeScript edition's own scope."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:alignment"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:alignment",
+      "text": "Alignment represents the alignment settings for cell content."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:autofilter"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:autofilter",
+      "text": "AutoFilter provides filtering capabilities for a range of cells in a worksheet."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:border"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:border",
+      "text": "Border defines the border properties for a cell or range of cells."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:borderline"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:borderline",
+      "text": "BorderLine specifies the style and color of a border line."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cell"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:cell",
+      "text": "Cell represents a single cell in a worksheet."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cellcoordinates"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:cellcoordinates",
+      "text": "CellCoordinates holds the row and column indices of a cell."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cellrange"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:cellrange",
+      "text": "CellRange defines a rectangular range of cells in a worksheet."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cellvalue"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:cellvalue",
+      "text": "CellValue represents the data stored in a cell."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cells"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:cells",
+      "text": "Cells is a collection of Cell objects in a worksheet."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:colorscalerule"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:colorscalerule",
+      "text": "ColorScaleRule applies a color scale conditional formatting to a range of cells."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:comment"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:comment",
+      "text": "Comment represents a comment attached to a cell."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:commentcollection"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:commentcollection",
+      "text": "CommentCollection is a collection of Comment objects in a worksheet."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:conditionalformat"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:conditionalformat",
+      "text": "ConditionalFormat applies conditional formatting rules to a range of cells."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:conditionalformatcollection"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:conditionalformatcollection",
+      "text": "ConditionalFormatCollection is a collection of ConditionalFormat objects in a worksheet."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:conditionalformatrule"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:conditionalformatrule",
+      "text": "ConditionalFormatRule defines a rule for conditional formatting."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:databarrule"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:databarrule",
+      "text": "DataBarRule applies a data bar conditional formatting to a range of cells."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:datavalidation"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:datavalidation",
+      "text": "DataValidation enforces data entry restrictions on a range of cells."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:datavalidationcollection"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:datavalidationcollection",
+      "text": "DataValidationCollection is a collection of DataValidation objects in a worksheet."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:encryptiontype"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:encryptiontype",
+      "text": "EncryptionType specifies the encryption algorithm used for a workbook."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fill"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:fill",
+      "text": "Fill defines the fill properties for a cell or range of cells."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:filtercolumn"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:filtercolumn",
+      "text": "FilterColumn represents a filtered column in an AutoFilter range."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:font"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:font",
+      "text": "Font specifies the font properties for text in a cell."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:hyperlink"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:hyperlink",
+      "text": "Hyperlink represents a hyperlink attached to a cell."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:hyperlinkcollection"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:hyperlinkcollection",
+      "text": "HyperlinkCollection is a collection of Hyperlink objects in a worksheet."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:iconsetrule"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:iconsetrule",
+      "text": "IconSetRule applies an icon set conditional formatting to a range of cells."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:protection"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:protection",
+      "text": "Protection specifies the protection settings for a cell."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:saveformat"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:saveformat",
+      "text": "SaveFormat specifies the format used when saving a workbook."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:style"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:style",
+      "text": "Style defines the formatting style for a cell or range of cells."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:workbook",
+      "text": "Workbook represents an Excel workbook."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheet"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:worksheet",
+      "text": "Worksheet represents a worksheet in a workbook."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheetcollection"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:worksheetcollection",
+      "text": "WorksheetCollection is a collection of Worksheet objects in a workbook."
+    }
+  ]
+}

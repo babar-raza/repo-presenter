@@ -1,0 +1,414 @@
+{
+  "additional_example_ids": [
+    "example:003"
+  ],
+  "api_hubs": [
+    {
+      "fact_ids": [
+        "public_symbol:workbook.load",
+        "public_symbol:workbook.save",
+        "public_symbol:workbook.constructor",
+        "public_symbol:workbook.worksheets",
+        "public_symbol:workbook.tohtml",
+        "public_symbol:workbook.tocsv",
+        "public_symbol:workbook.tojson",
+        "public_symbol:workbook.tomarkdown"
+      ],
+      "symbol_fact_id": "public_symbol:workbook"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheet.getcell2",
+        "public_symbol:worksheet.putvalue",
+        "public_symbol:worksheet.setcellstyle",
+        "public_symbol:worksheet.setautofilter",
+        "public_symbol:worksheet.addhyperlink",
+        "public_symbol:worksheet.addcomment",
+        "public_symbol:worksheet.adddatavalidation",
+        "public_symbol:worksheet.addconditionalformat"
+      ],
+      "symbol_fact_id": "public_symbol:worksheet"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cell.putvalue",
+        "public_symbol:cell.setformula",
+        "public_symbol:cell.setstyle",
+        "public_symbol:cell.value",
+        "public_symbol:cell.formula",
+        "public_symbol:cell.hyperlink",
+        "public_symbol:cell.sharedstringmap"
+      ],
+      "symbol_fact_id": "public_symbol:cell"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:style.constructor",
+        "public_symbol:style.setbold",
+        "public_symbol:style.setfontcolor",
+        "public_symbol:style.setforegroundcolor",
+        "public_symbol:style.getalignment",
+        "public_symbol:style.getborder",
+        "public_symbol:style.getfill",
+        "public_symbol:style.getfont"
+      ],
+      "symbol_fact_id": "public_symbol:style"
+    }
+  ],
+  "at_a_glance": {
+    "capability_titles": [
+      "Load and save Excel workbooks",
+      "Read and write cell data",
+      "Apply cell and worksheet formatting",
+      "Configure worksheet features",
+      "Add hyperlinks, comments, and data validation",
+      "Apply conditional formatting rules",
+      "Export to text formats",
+      "Import and export HTML"
+    ],
+    "input_format_ids": [
+      "format:input.htm",
+      "format:input.html"
+    ],
+    "output_format_ids": [
+      "format:output.htm",
+      "format:output.html"
+    ]
+  },
+  "core_capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:workbook.load",
+        "public_symbol:workbook.save",
+        "public_symbol:workbook.constructor"
+      ],
+      "shared_fact_ids": [
+        "public_symbol:workbook.load"
+      ],
+      "title": "Load and save Excel workbooks"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cell.putvalue",
+        "public_symbol:cell.setformula",
+        "public_symbol:worksheet.getcell2",
+        "public_symbol:cell.value",
+        "public_symbol:cell.formula"
+      ],
+      "shared_fact_ids": [],
+      "title": "Read and write cell data"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:style",
+        "public_symbol:font",
+        "public_symbol:fill",
+        "public_symbol:border",
+        "public_symbol:alignment",
+        "public_symbol:protection"
+      ],
+      "shared_fact_ids": [],
+      "title": "Apply cell and worksheet formatting"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheet.setcolumnwidth",
+        "public_symbol:worksheet.setrowheight",
+        "public_symbol:worksheet.mergecells",
+        "public_symbol:worksheet.setrowhidden",
+        "public_symbol:worksheet.setautofilter"
+      ],
+      "shared_fact_ids": [],
+      "title": "Configure worksheet features"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheet.addhyperlink",
+        "public_symbol:worksheet.addcomment",
+        "public_symbol:worksheet.adddatavalidation",
+        "public_symbol:hyperlink",
+        "public_symbol:comment"
+      ],
+      "shared_fact_ids": [],
+      "title": "Add hyperlinks, comments, and data validation"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheet.addconditionalformat",
+        "public_symbol:conditionalformat",
+        "public_symbol:colorscalerule",
+        "public_symbol:databarrule",
+        "public_symbol:iconsetrule"
+      ],
+      "shared_fact_ids": [],
+      "title": "Apply conditional formatting rules"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook.tocsv",
+        "public_symbol:workbook.tojson",
+        "public_symbol:workbook.tomarkdown"
+      ],
+      "shared_fact_ids": [],
+      "title": "Export to text formats"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook.load",
+        "public_symbol:workbook.tohtml",
+        "format:input.html",
+        "format:output.html"
+      ],
+      "shared_fact_ids": [
+        "public_symbol:workbook.load"
+      ],
+      "title": "Import and export HTML"
+    }
+  ],
+  "deviations": [
+    {
+      "fact_ids": [
+        "inherited_unit:037.table"
+      ],
+      "section_id": "api_reference",
+      "text": "The full API table from inherited_unit:037.table was omitted because its completeness and symbol coverage could not be verified against the fact set."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:030.html_block",
+        "inherited_unit:032.html_block"
+      ],
+      "section_id": "additional_examples",
+      "text": "The <details> UI elements from inherited_unit:030.html_block and inherited_unit:032.html_block were omitted because they are promotional UI not supported by facts."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:035.html_block",
+        "inherited_unit:038.html_block"
+      ],
+      "section_id": "api_reference",
+      "text": "The <details> UI elements from inherited_unit:035.html_block and inherited_unit:038.html_block were omitted because they are promotional UI not supported by facts."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:047.paragraph"
+      ],
+      "section_id": "development_testing",
+      "text": "The reference to agents.md from inherited_unit:047.paragraph was omitted because no fact confirms agents.md exists or is relevant documentation."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:031.table"
+      ],
+      "section_id": "additional_examples",
+      "text": "The example table from inherited_unit:031.table was omitted because its completeness and file existence could not be verified."
+    }
+  ],
+  "flagship_example_id": "example:003",
+  "links": [
+    {
+      "link_fact_id": "link_target:019",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:020",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:021",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:022",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:006",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "link_fact_id": "link_target:001",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:002",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:003",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:004",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:018",
+      "section_id": "additional_examples"
+    },
+    {
+      "link_fact_id": "link_target:007",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:008",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:009",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:010",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:011",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:012",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:013",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:014",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:015",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:016",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:017",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:024",
+      "section_id": "development_testing"
+    }
+  ],
+  "material_limitations": [
+    {
+      "fact_ids": [
+        "install_command:npm",
+        "public_symbol:workbook.tocsv",
+        "public_symbol:workbook.tojson",
+        "public_symbol:workbook.tomarkdown"
+      ],
+      "unit_ids": [
+        "inherited_unit:042.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "install_command:npm",
+        "identity:repository"
+      ],
+      "unit_ids": [
+        "inherited_unit:043.paragraph"
+      ]
+    }
+  ],
+  "quick_start_example_id": "example:001",
+  "second_quick_start_example_id": "example:002",
+  "sections": [
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "identity"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "badges"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "banner"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "opening"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "navigation"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "at_a_glance"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "key_capabilities"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "installation"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "dependencies"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "quick_start"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "additional_examples"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "api_reference"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "documentation_resources"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "scope_limitations"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "development_testing"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "third_party_notices"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "license"
+    }
+  ]
+}
