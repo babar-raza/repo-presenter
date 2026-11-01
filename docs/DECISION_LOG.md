@@ -2192,3 +2192,16 @@ does, or pin the current behavior deliberately with a test), not attempted here.
 
 **Where the detail lives**: `src/repo_presenter/readme/reconciliation/dispositions.py`
 (`_settle_lead_in`, the `state == "DEFER_UNRESOLVED"` branch around line 2194).
+
+---
+
+### 2026-11-01: live-verified the lead-in coordination merge
+
+**What this does**: dispatched a fresh `present.yml` (Lane R) run for aspose-pdf-foss/
+Aspose.PDF-FOSS-for-.NET on merged `main` (run 41303579390).
+
+**Confirmed**: the BC-07 dangling-colon finding is gone -- the candidate progressed to the single,
+already-known, already-deferred `duplicate_paragraph` finding (confirmed recurring on a fourth
+repository now: email-foss/Cpp, slides-foss/Python, and this one). No new investigation needed.
+
+**Where the detail lives**: the durable record for aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET.
