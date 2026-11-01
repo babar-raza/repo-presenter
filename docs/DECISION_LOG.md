@@ -2144,3 +2144,19 @@ payloads.
 
 **Where the detail lives**: real downloaded artifacts for each run; `fix/dotnet-four-part-
 version-padding`'s own commit; the next entry for the lead-in coordination fix.
+
+---
+
+### 2026-11-01: live-verified the version-padding merge
+
+**What this does**: dispatched a fresh `present.yml` (Lane L) run for aspose-cells-foss/
+Aspose.Cells-FOSS-for-.NET on merged `main` (run 41302284239).
+
+**Confirmed**: the version-mismatch finding is gone -- the candidate progressed to a single,
+different, genuine upstream content defect instead (`lane_l_unrepaired_defect [contradiction]`:
+`'RELEASE_NOTES_V26.10.0.md' is not in the tree and no unique file stands in for it`), which Lane
+L correctly refuses to repair on its own, recommending Lane R. Not a pipeline defect; the
+upstream repository's own README links to a release-notes file that does not exist in the tree.
+
+**Where the detail lives**: the durable record for aspose-cells-foss/Aspose.Cells-FOSS-for-
+.NET@lane-l.
