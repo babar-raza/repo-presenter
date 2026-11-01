@@ -1,0 +1,502 @@
+{
+  "additional_example_ids": [],
+  "api_hubs": [
+    {
+      "fact_ids": [
+        "public_symbol:autofilter",
+        "public_symbol:autofilter.set_range",
+        "public_symbol:autofilter.get_range",
+        "public_symbol:autofilter.clear",
+        "public_symbol:autofilter.filter_columns",
+        "public_symbol:autofilter.get_filter_columns",
+        "public_symbol:autofilter.get_sort_state",
+        "public_symbol:autofilter.sort_state"
+      ],
+      "symbol_fact_id": "public_symbol:autofilter"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cell",
+        "public_symbol:cell.get_string_value",
+        "public_symbol:cell.get_double_value",
+        "public_symbol:cell.get_bool_value",
+        "public_symbol:cell.get_date_time_value",
+        "public_symbol:cell.value",
+        "public_symbol:cell.formula_cached_value",
+        "public_symbol:cell.style"
+      ],
+      "symbol_fact_id": "public_symbol:cell"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cellmut",
+        "public_symbol:cellmut.put_value_string",
+        "public_symbol:cellmut.put_value_i32",
+        "public_symbol:cellmut.put_value_bool",
+        "public_symbol:cellmut.put_value_date_time",
+        "public_symbol:cellmut.put_formula_with_cached_value",
+        "public_symbol:cellmut.set_style",
+        "public_symbol:cellmut.set_value"
+      ],
+      "symbol_fact_id": "public_symbol:cellmut"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cellstyle",
+        "public_symbol:cellstyle.font",
+        "public_symbol:cellstyle.fill",
+        "public_symbol:cellstyle.borders",
+        "public_symbol:cellstyle.number_format",
+        "public_symbol:cellstyle.horizontal_alignment",
+        "public_symbol:cellstyle.vertical_alignment",
+        "public_symbol:cellstyle.wrap_text"
+      ],
+      "symbol_fact_id": "public_symbol:cellstyle"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:chart",
+        "public_symbol:chart.chart_type",
+        "public_symbol:chart.data_range",
+        "public_symbol:chart.get_chart_type",
+        "public_symbol:chart.get_data_range",
+        "public_symbol:chart.delete"
+      ],
+      "symbol_fact_id": "public_symbol:chart"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:chartcollection",
+        "public_symbol:chartcollection.add",
+        "public_symbol:chartcollection.count",
+        "public_symbol:chartcollection.get",
+        "public_symbol:chartcollection.item"
+      ],
+      "symbol_fact_id": "public_symbol:chartcollection"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:charttype",
+        "public_symbol:charttype"
+      ],
+      "symbol_fact_id": "public_symbol:charttype"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:conditionalformattingcollection",
+        "public_symbol:conditionalformattingcollection.add",
+        "public_symbol:conditionalformattingcollection.count",
+        "public_symbol:conditionalformattingcollection.get"
+      ],
+      "symbol_fact_id": "public_symbol:conditionalformattingcollection"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:definedname",
+        "public_symbol:definedname.get_formula",
+        "public_symbol:definedname.get_name",
+        "public_symbol:definedname.set_formula",
+        "public_symbol:definedname.set_name"
+      ],
+      "symbol_fact_id": "public_symbol:definedname"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:formatcondition",
+        "public_symbol:formatcondition.set_type",
+        "public_symbol:formatcondition.set_priority",
+        "public_symbol:formatcondition.get_style",
+        "public_symbol:formatcondition.set_style"
+      ],
+      "symbol_fact_id": "public_symbol:formatcondition"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:hyperlink",
+        "public_symbol:hyperlink.address",
+        "public_symbol:hyperlink.area",
+        "public_symbol:hyperlink.get_address",
+        "public_symbol:hyperlink.get_area"
+      ],
+      "symbol_fact_id": "public_symbol:hyperlink"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:loadoptions",
+        "public_symbol:loadoptions.try_repair_package",
+        "public_symbol:loadoptions.try_repair_xml",
+        "public_symbol:loadoptions.default"
+      ],
+      "symbol_fact_id": "public_symbol:loadoptions"
+    }
+  ],
+  "at_a_glance": {
+    "capability_titles": [
+      "Read and write XLSX files",
+      "Cell value management",
+      "Styling and formatting",
+      "Worksheet management",
+      "Data validation and conditional formatting",
+      "Charts and shapes",
+      "Document properties and protection",
+      "Auto-filters and tables"
+    ],
+    "input_format_ids": [
+      "format:input.xlsx"
+    ],
+    "output_format_ids": [
+      "format:output.xlsx"
+    ]
+  },
+  "core_capabilities": [
+    {
+      "fact_ids": [
+        "format:input.xlsx",
+        "format:output.xlsx",
+        "public_symbol:workbook.load_xlsx",
+        "public_symbol:workbook.load_xlsx_from_bytes",
+        "public_symbol:workbook.save_xlsx"
+      ],
+      "shared_fact_ids": [],
+      "title": "Read and write XLSX files"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cell.get_string_value",
+        "public_symbol:cell.get_double_value",
+        "public_symbol:cell.get_bool_value",
+        "public_symbol:cell.get_date_time_value",
+        "public_symbol:cellmut.put_formula_with_cached_value"
+      ],
+      "shared_fact_ids": [],
+      "title": "Cell value management"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cellstyle.font",
+        "public_symbol:cellstyle.fill",
+        "public_symbol:cellstyle.borders",
+        "public_symbol:cellstyle.number_format",
+        "public_symbol:cellstyle.horizontal_alignment"
+      ],
+      "shared_fact_ids": [],
+      "title": "Styling and formatting"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheetsmut.add",
+        "public_symbol:worksheet.set_name",
+        "public_symbol:worksheet.set_visibility_type",
+        "public_symbol:worksheet.set_tab_color",
+        "public_symbol:worksheet.set_zoom"
+      ],
+      "shared_fact_ids": [],
+      "title": "Worksheet management"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:validationcollection.add",
+        "public_symbol:validation.set_type",
+        "public_symbol:formatconditioncollection.add",
+        "public_symbol:formatcondition.set_type"
+      ],
+      "shared_fact_ids": [],
+      "title": "Data validation and conditional formatting"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:chartcollection.add",
+        "public_symbol:chart.chart_type",
+        "public_symbol:picturecollection.add_from_file",
+        "public_symbol:shapecollection.add"
+      ],
+      "shared_fact_ids": [],
+      "title": "Charts and shapes"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook.document_properties",
+        "public_symbol:workbook.protect",
+        "public_symbol:worksheet.freeze_panes",
+        "public_symbol:pagesetup.paper_size"
+      ],
+      "shared_fact_ids": [],
+      "title": "Document properties and protection"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:autofilter.set_range",
+        "public_symbol:autofiltercolorfilter.set_cell_color",
+        "public_symbol:autofiltercustomfilter.set_operator",
+        "public_symbol:listobjectcollection.add"
+      ],
+      "shared_fact_ids": [],
+      "title": "Auto-filters and tables"
+    }
+  ],
+  "deviations": [
+    {
+      "fact_ids": [
+        "inherited_unit:026.code_block"
+      ],
+      "section_id": "quick_start",
+      "text": "No verified examples are available; the example in the inherited README is UNRESOLVED and cannot be cited."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:031.code_block",
+        "inherited_unit:034.code_block",
+        "inherited_unit:036.code_block",
+        "inherited_unit:038.code_block",
+        "inherited_unit:040.code_block",
+        "inherited_unit:042.code_block"
+      ],
+      "section_id": "additional_examples",
+      "text": "No further verified examples are available; all examples in the inherited README are UNRESOLVED and cannot be cited."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:048.paragraph"
+      ],
+      "section_id": "api_reference",
+      "text": "The claim of 213 public types is unsupported; the section describes core entry points without the unsupported count."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:078.code_block"
+      ],
+      "section_id": "development_testing",
+      "text": "The full code block of commands is not fully supported; only 'cargo check --all-targets' and 'cargo test --all-targets' are verified."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:079.paragraph"
+      ],
+      "section_id": "development_testing",
+      "text": "The paragraph about CI and samples is unsupported; only CI matrix and example directory facts are verified."
+    }
+  ],
+  "flagship_example_id": null,
+  "links": [
+    {
+      "link_fact_id": "link_target:022",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:023",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:024",
+      "section_id": "api_reference"
+    },
+    {
+      "link_fact_id": "link_target:021",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:025",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:026",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:027",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "link_fact_id": "link_target:001",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:003",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:007",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:008",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:009",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:010",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:011",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:012",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:014",
+      "section_id": "api_reference"
+    },
+    {
+      "link_fact_id": "link_target:015",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:016",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:017",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:018",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:020",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:028",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:029",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:002",
+      "section_id": "license"
+    },
+    {
+      "link_fact_id": "link_target:004",
+      "section_id": "identity"
+    }
+  ],
+  "material_limitations": [
+    {
+      "fact_ids": [
+        "install_command:cargo"
+      ],
+      "unit_ids": []
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:test-command"
+      ],
+      "unit_ids": []
+    },
+    {
+      "fact_ids": [
+        "install_command:cargo"
+      ],
+      "unit_ids": []
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheetsmut.remove_at"
+      ],
+      "unit_ids": []
+    }
+  ],
+  "quick_start_example_id": null,
+  "second_quick_start_example_id": null,
+  "sections": [
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "identity"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "badges"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "banner"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "opening"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "navigation"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "at_a_glance"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "key_capabilities"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "installation"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "dependencies"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "quick_start"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "additional_examples"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "api_reference"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "documentation_resources"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "scope_limitations"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "development_testing"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "third_party_notices"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "license"
+    }
+  ]
+}

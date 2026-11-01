@@ -1,0 +1,1314 @@
+{
+  "dispositions": [
+    {
+      "destination_section": "identity",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:rust_edition",
+        "package:version"
+      ],
+      "rationale": "The H1 product name is rendered deterministically from identity and package facts.",
+      "unit_id": "inherited_unit:001.heading"
+    },
+    {
+      "destination_section": "badges",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "license:file",
+        "license:spdx",
+        "link_target:001",
+        "link_target:002",
+        "link_target:003",
+        "link_target:004",
+        "link_target:005",
+        "link_target:006",
+        "link_target:007",
+        "link_target:008",
+        "link_target:009",
+        "link_target:010",
+        "link_target:011",
+        "link_target:012",
+        "link_target:013",
+        "link_target:014",
+        "link_target:015",
+        "link_target:016",
+        "link_target:017",
+        "link_target:018",
+        "link_target:020",
+        "link_target:021",
+        "link_target:022",
+        "link_target:023",
+        "link_target:024",
+        "link_target:025",
+        "link_target:026",
+        "link_target:027",
+        "link_target:028",
+        "link_target:029",
+        "link_target:badge.ci",
+        "link_target:product.banner",
+        "link_target:product.enterprise",
+        "link_target:product.homepage",
+        "package:rust_edition"
+      ],
+      "rationale": "The badge row is rendered deterministically from license and edition facts.",
+      "unit_id": "inherited_unit:002.badge_row"
+    },
+    {
+      "destination_section": "banner",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:005",
+        "link_target:006",
+        "link_target:product.banner",
+        "link_target:product.homepage"
+      ],
+      "rationale": "The banner image is rendered deterministically from product illustration and homepage facts.",
+      "unit_id": "inherited_unit:003.badge_row"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:platform",
+        "package:name",
+        "package:version",
+        "dependency:zip",
+        "dependency:roxmltree",
+        "dependency:chrono",
+        "dependency:sha2",
+        "dependency:base64",
+        "dependency:getrandom",
+        "dependency:serde_json",
+        "format:input.xlsx",
+        "format:output.xlsx"
+      ],
+      "rationale": "The paragraph describes the product, its problems solved, and audience; facts support all claims.",
+      "unit_id": "inherited_unit:004.paragraph"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision"
+      ],
+      "rationale": "The Navigation heading is rendered by deterministic code; the list below is also rendered deterministically.",
+      "unit_id": "inherited_unit:005.heading"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "link_target:007",
+        "link_target:008",
+        "link_target:009",
+        "link_target:010",
+        "link_target:011",
+        "link_target:012",
+        "link_target:013",
+        "link_target:014",
+        "link_target:015",
+        "link_target:016",
+        "link_target:017",
+        "link_target:018"
+      ],
+      "rationale": "The navigation list is rendered deterministically from in-page link targets.",
+      "unit_id": "inherited_unit:006.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'At a Glance' heading is not placeable; the Mermaid diagram is rendered by deterministic code.",
+      "unit_id": "inherited_unit:007.heading"
+    },
+    {
+      "destination_section": "at_a_glance",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "format:input.xlsx",
+        "format:output.xlsx",
+        "public_symbol:autofilter.set_range",
+        "public_symbol:autofiltercolorfilter.set_cell_color",
+        "public_symbol:autofiltercustomfilter.set_operator",
+        "public_symbol:cell.get_bool_value",
+        "public_symbol:cell.get_date_time_value",
+        "public_symbol:cell.get_double_value",
+        "public_symbol:cell.get_string_value",
+        "public_symbol:cellmut.put_formula_with_cached_value",
+        "public_symbol:cellstyle.borders",
+        "public_symbol:cellstyle.fill",
+        "public_symbol:cellstyle.font",
+        "public_symbol:cellstyle.horizontal_alignment",
+        "public_symbol:cellstyle.number_format",
+        "public_symbol:chart.chart_type",
+        "public_symbol:chartcollection.add",
+        "public_symbol:formatcondition.set_type",
+        "public_symbol:formatconditioncollection.add",
+        "public_symbol:listobjectcollection.add",
+        "public_symbol:pagesetup.paper_size",
+        "public_symbol:picturecollection.add_from_file",
+        "public_symbol:shapecollection.add",
+        "public_symbol:validation.set_type",
+        "public_symbol:validationcollection.add",
+        "public_symbol:workbook.document_properties",
+        "public_symbol:workbook.load_xlsx",
+        "public_symbol:workbook.load_xlsx_from_bytes",
+        "public_symbol:workbook.protect",
+        "public_symbol:workbook.save_xlsx",
+        "public_symbol:worksheet.freeze_panes",
+        "public_symbol:worksheet.set_name",
+        "public_symbol:worksheet.set_tab_color",
+        "public_symbol:worksheet.set_visibility_type",
+        "public_symbol:worksheet.set_zoom",
+        "public_symbol:worksheetsmut.add"
+      ],
+      "rationale": "Superseded by the At a Glance diagram the renderer draws from the verified formats and capabilities.",
+      "unit_id": "inherited_unit:008.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:workbook",
+        "public_symbol:worksheet",
+        "public_symbol:cell",
+        "public_symbol:cellmut",
+        "public_symbol:cellstyle",
+        "public_symbol:chart",
+        "public_symbol:chartcollection",
+        "public_symbol:charttype",
+        "public_symbol:picture",
+        "public_symbol:shape",
+        "public_symbol:autofilter",
+        "public_symbol:listobject",
+        "public_symbol:validation",
+        "public_symbol:conditionalformattingcollection",
+        "public_symbol:hyperlink",
+        "public_symbol:definedname"
+      ],
+      "rationale": "The heading is placeable and the list items are grounded in verified public symbols.",
+      "unit_id": "inherited_unit:009.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:autofilter",
+        "public_symbol:autoshapetype",
+        "public_symbol:cell",
+        "public_symbol:cellmut",
+        "public_symbol:cellstyle",
+        "public_symbol:chart",
+        "public_symbol:chartcollection",
+        "public_symbol:charttype",
+        "public_symbol:conditionalformattingcollection",
+        "public_symbol:definedname",
+        "public_symbol:documentproperties",
+        "public_symbol:extendeddocumentproperties",
+        "public_symbol:formatcondition",
+        "public_symbol:freezepane",
+        "public_symbol:hyperlink",
+        "public_symbol:listobject",
+        "public_symbol:loaddiagnostics",
+        "public_symbol:loadoptions",
+        "public_symbol:numberformat",
+        "public_symbol:operatortype",
+        "public_symbol:pagesetup",
+        "public_symbol:picture",
+        "public_symbol:saveoptions",
+        "public_symbol:shape",
+        "public_symbol:sparklinegroup",
+        "public_symbol:styleflag",
+        "public_symbol:validation",
+        "public_symbol:validationtype",
+        "public_symbol:workbook",
+        "public_symbol:worksheet",
+        "public_symbol:worksheetsmut"
+      ],
+      "rationale": "The list items are grounded in verified public symbols and match the capabilities investigation.",
+      "unit_id": "inherited_unit:010.list"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:cargo"
+      ],
+      "rationale": "The Installation heading is rendered deterministically; the following content is also rendered deterministically.",
+      "unit_id": "inherited_unit:011.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "CORRECT_WITH_EVIDENCE",
+      "fact_ids": [
+        "install_command:cargo",
+        "link_target:019"
+      ],
+      "rationale": "Lead-in of the block that follows: kept in its section, with it.",
+      "unit_id": "inherited_unit:012.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "install_command:cargo"
+      ],
+      "rationale": "The Git dependency snippet is a valid development workflow and supported by the install_command fact.",
+      "unit_id": "inherited_unit:013.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "install_command:cargo"
+      ],
+      "rationale": "The path dependency instruction is a valid development workflow and supported by the install_command fact.",
+      "unit_id": "inherited_unit:014.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "install_command:cargo"
+      ],
+      "rationale": "The path dependency snippet is a valid development workflow and supported by the install_command fact.",
+      "unit_id": "inherited_unit:015.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "import_path:aspose_cells_foss_rust",
+        "install_command:cargo",
+        "package:rust_edition"
+      ],
+      "rationale": "The paragraph describes the package name, import path, and toolchain requirement, all supported by facts.",
+      "unit_id": "inherited_unit:016.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:build-command"
+      ],
+      "rationale": "The paragraph introduces the build command, which is supported by the build_test_asset:build-command fact.",
+      "unit_id": "inherited_unit:017.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:build-command"
+      ],
+      "rationale": "The build command snippet is supported by the build_test_asset:build-command fact.",
+      "unit_id": "inherited_unit:018.code_block"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:base64",
+        "dependency:chrono",
+        "dependency:getrandom",
+        "dependency:roxmltree",
+        "dependency:serde_json",
+        "dependency:sha2",
+        "dependency:zip"
+      ],
+      "rationale": "The Dependencies heading is rendered deterministically; the following subsection is also rendered deterministically.",
+      "unit_id": "inherited_unit:019.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:base64",
+        "dependency:chrono",
+        "dependency:getrandom",
+        "dependency:roxmltree",
+        "dependency:serde_json",
+        "dependency:sha2",
+        "dependency:zip"
+      ],
+      "rationale": "The 'Required Package Dependencies' subsection heading is rendered deterministically by the dependencies section.",
+      "unit_id": "inherited_unit:020.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:base64",
+        "dependency:chrono",
+        "dependency:getrandom",
+        "dependency:roxmltree",
+        "dependency:serde_json",
+        "dependency:sha2",
+        "dependency:zip"
+      ],
+      "rationale": "The dependency list is fully covered by the deterministic dependencies section, which lists the same packages with verified versions.",
+      "unit_id": "inherited_unit:021.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The heading 'Native and System Requirements' has no corresponding section in the destination schema and no supporting facts about system requirements beyond the",
+      "unit_id": "inherited_unit:022.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "package:rust_edition"
+      ],
+      "rationale": "The requirement for Rust 2021 edition is covered by the package edition fact and the scope limitations section will state toolchain requirements.",
+      "unit_id": "inherited_unit:023.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The heading '## Quick Start' is not placeable; the quick_start section is not rendered because its condition (at least one example executed or compiled in",
+      "unit_id": "inherited_unit:024.heading"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:001",
+        "install_command:cargo"
+      ],
+      "rationale": "Reprinted verbatim in Quick Start beside the unverified example it introduces.",
+      "unit_id": "inherited_unit:025.paragraph"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "Reprinted verbatim in Quick Start with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
+      "unit_id": "inherited_unit:026.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The heading '## Additional Examples' is not placeable; the additional_examples section is not rendered because its condition (at least one further verified",
+      "unit_id": "inherited_unit:027.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "link_target:020",
+        "link_target:021"
+      ],
+      "rationale": "Redundant with the verified facts it names: link_target:020, link_target:021. The paragraph introducing Additional Examples is unsupported because the additiona",
+      "unit_id": "inherited_unit:028.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The heading '### Load XLSX Files With Repair Options' is not placeable; no additional_examples section is rendered.",
+      "unit_id": "inherited_unit:029.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:loadoptions.try_repair_package",
+        "public_symbol:loadoptions.try_repair_xml",
+        "public_symbol:workbook.get_load_diagnostics"
+      ],
+      "rationale": "The paragraph describes repair options and diagnostics, which are already covered in the scope_limitations section via the loadoptions public symbols.",
+      "unit_id": "inherited_unit:030.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
+      "unit_id": "inherited_unit:031.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "NON_CONTENT",
+      "fact_ids": [],
+      "rationale": "The HTML details/summary block is non-content markup and is omitted.",
+      "unit_id": "inherited_unit:032.html_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The heading '### Add Charts From Data Ranges' is not placeable; no additional_examples section is rendered.",
+      "unit_id": "inherited_unit:033.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
+      "unit_id": "inherited_unit:034.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The heading '### Apply Conditional Formatting Rules' is not placeable; no additional_examples section is rendered.",
+      "unit_id": "inherited_unit:035.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:004"
+      ],
+      "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
+      "unit_id": "inherited_unit:036.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The heading '### Enforce Data Validation Rules' is not placeable; no additional_examples section is rendered.",
+      "unit_id": "inherited_unit:037.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:005"
+      ],
+      "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
+      "unit_id": "inherited_unit:038.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The heading '### Build a Structured Excel Table (ListObject)' is not placeable; no additional_examples section is rendered.",
+      "unit_id": "inherited_unit:039.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:006"
+      ],
+      "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
+      "unit_id": "inherited_unit:040.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Hyperlinks and Defined Names' heading is superseded by the API Reference section which covers all public symbols including Hyperlink and DefinedName.",
+      "unit_id": "inherited_unit:041.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "build_test_asset:examples",
+        "example:007",
+        "public_symbol:definedname",
+        "public_symbol:hyperlink"
+      ],
+      "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
+      "unit_id": "inherited_unit:042.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The closing </details> HTML tag is redundant with the API Reference section's collapsible structure.",
+      "unit_id": "inherited_unit:043.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:014",
+        "link_target:024",
+        "public_symbol:autofilter",
+        "public_symbol:autofilter.clear",
+        "public_symbol:autofilter.filter_columns",
+        "public_symbol:autofilter.get_filter_columns",
+        "public_symbol:autofilter.get_range",
+        "public_symbol:autofilter.get_sort_state",
+        "public_symbol:autofilter.set_range",
+        "public_symbol:autofilter.sort_state",
+        "public_symbol:cell",
+        "public_symbol:cell.formula_cached_value",
+        "public_symbol:cell.get_bool_value",
+        "public_symbol:cell.get_date_time_value",
+        "public_symbol:cell.get_double_value",
+        "public_symbol:cell.get_string_value",
+        "public_symbol:cell.style",
+        "public_symbol:cell.value",
+        "public_symbol:cellmut",
+        "public_symbol:cellmut.put_formula_with_cached_value",
+        "public_symbol:cellmut.put_value_bool",
+        "public_symbol:cellmut.put_value_date_time",
+        "public_symbol:cellmut.put_value_i32",
+        "public_symbol:cellmut.put_value_string",
+        "public_symbol:cellmut.set_style",
+        "public_symbol:cellmut.set_value",
+        "public_symbol:cellstyle",
+        "public_symbol:cellstyle.borders",
+        "public_symbol:cellstyle.fill",
+        "public_symbol:cellstyle.font",
+        "public_symbol:cellstyle.horizontal_alignment",
+        "public_symbol:cellstyle.number_format",
+        "public_symbol:cellstyle.vertical_alignment",
+        "public_symbol:cellstyle.wrap_text",
+        "public_symbol:chart",
+        "public_symbol:chart.chart_type",
+        "public_symbol:chart.data_range",
+        "public_symbol:chart.delete",
+        "public_symbol:chart.get_chart_type",
+        "public_symbol:chart.get_data_range",
+        "public_symbol:chartcollection",
+        "public_symbol:chartcollection.add",
+        "public_symbol:chartcollection.count",
+        "public_symbol:chartcollection.get",
+        "public_symbol:chartcollection.item",
+        "public_symbol:charttype",
+        "public_symbol:conditionalformattingcollection",
+        "public_symbol:conditionalformattingcollection.add",
+        "public_symbol:conditionalformattingcollection.count",
+        "public_symbol:conditionalformattingcollection.get",
+        "public_symbol:definedname",
+        "public_symbol:definedname.get_formula",
+        "public_symbol:definedname.get_name",
+        "public_symbol:definedname.set_formula",
+        "public_symbol:definedname.set_name",
+        "public_symbol:formatcondition",
+        "public_symbol:formatcondition.get_style",
+        "public_symbol:formatcondition.set_priority",
+        "public_symbol:formatcondition.set_style",
+        "public_symbol:formatcondition.set_type",
+        "public_symbol:hyperlink",
+        "public_symbol:hyperlink.address",
+        "public_symbol:hyperlink.area",
+        "public_symbol:hyperlink.get_address",
+        "public_symbol:hyperlink.get_area",
+        "public_symbol:loadoptions",
+        "public_symbol:loadoptions.default",
+        "public_symbol:loadoptions.try_repair_package",
+        "public_symbol:loadoptions.try_repair_xml"
+      ],
+      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "unit_id": "inherited_unit:044.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "import_path:aspose_cells_foss_rust"
+      ],
+      "rationale": "The paragraph describes the source layout and module organization, which is consistent with the import path and repository structure.",
+      "unit_id": "inherited_unit:045.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "import_path:aspose_cells_foss_rust"
+      ],
+      "rationale": "The directory tree shows the source layout matching the import path and module organization.",
+      "unit_id": "inherited_unit:046.code_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'API Reference' heading is superseded by the deterministic API Reference section.",
+      "unit_id": "inherited_unit:047.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_REWRITE",
+      "fact_ids": [
+        "public_symbol:cellmut",
+        "public_symbol:cells",
+        "public_symbol:cellsmut",
+        "public_symbol:workbook",
+        "public_symbol:worksheet",
+        "public_symbol:worksheetsmut"
+      ],
+      "rationale": "The paragraph's claim of 213 public types is unsupported; rewritten to describe the core entry points without the unsupported count or dangling pointer.",
+      "unit_id": "inherited_unit:048.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The opening <details> tag is redundant with the API Reference section's collapsible structure.",
+      "unit_id": "inherited_unit:049.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Core API' heading is preserved as it introduces the main API surface tables.",
+      "unit_id": "inherited_unit:050.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:014",
+        "link_target:024",
+        "public_symbol:autofilter",
+        "public_symbol:autofilter.clear",
+        "public_symbol:autofilter.filter_columns",
+        "public_symbol:autofilter.get_filter_columns",
+        "public_symbol:autofilter.get_range",
+        "public_symbol:autofilter.get_sort_state",
+        "public_symbol:autofilter.set_range",
+        "public_symbol:autofilter.sort_state",
+        "public_symbol:cell",
+        "public_symbol:cell.formula_cached_value",
+        "public_symbol:cell.get_bool_value",
+        "public_symbol:cell.get_date_time_value",
+        "public_symbol:cell.get_double_value",
+        "public_symbol:cell.get_string_value",
+        "public_symbol:cell.style",
+        "public_symbol:cell.value",
+        "public_symbol:cellmut",
+        "public_symbol:cellmut.put_formula_with_cached_value",
+        "public_symbol:cellmut.put_value_bool",
+        "public_symbol:cellmut.put_value_date_time",
+        "public_symbol:cellmut.put_value_i32",
+        "public_symbol:cellmut.put_value_string",
+        "public_symbol:cellmut.set_style",
+        "public_symbol:cellmut.set_value",
+        "public_symbol:cellstyle",
+        "public_symbol:cellstyle.borders",
+        "public_symbol:cellstyle.fill",
+        "public_symbol:cellstyle.font",
+        "public_symbol:cellstyle.horizontal_alignment",
+        "public_symbol:cellstyle.number_format",
+        "public_symbol:cellstyle.vertical_alignment",
+        "public_symbol:cellstyle.wrap_text",
+        "public_symbol:chart",
+        "public_symbol:chart.chart_type",
+        "public_symbol:chart.data_range",
+        "public_symbol:chart.delete",
+        "public_symbol:chart.get_chart_type",
+        "public_symbol:chart.get_data_range",
+        "public_symbol:chartcollection",
+        "public_symbol:chartcollection.add",
+        "public_symbol:chartcollection.count",
+        "public_symbol:chartcollection.get",
+        "public_symbol:chartcollection.item",
+        "public_symbol:charttype",
+        "public_symbol:conditionalformattingcollection",
+        "public_symbol:conditionalformattingcollection.add",
+        "public_symbol:conditionalformattingcollection.count",
+        "public_symbol:conditionalformattingcollection.get",
+        "public_symbol:definedname",
+        "public_symbol:definedname.get_formula",
+        "public_symbol:definedname.get_name",
+        "public_symbol:definedname.set_formula",
+        "public_symbol:definedname.set_name",
+        "public_symbol:formatcondition",
+        "public_symbol:formatcondition.get_style",
+        "public_symbol:formatcondition.set_priority",
+        "public_symbol:formatcondition.set_style",
+        "public_symbol:formatcondition.set_type",
+        "public_symbol:hyperlink",
+        "public_symbol:hyperlink.address",
+        "public_symbol:hyperlink.area",
+        "public_symbol:hyperlink.get_address",
+        "public_symbol:hyperlink.get_area",
+        "public_symbol:loadoptions",
+        "public_symbol:loadoptions.default",
+        "public_symbol:loadoptions.try_repair_package",
+        "public_symbol:loadoptions.try_repair_xml"
+      ],
+      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "unit_id": "inherited_unit:051.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:autofilter",
+        "public_symbol:cell",
+        "public_symbol:cells",
+        "public_symbol:chart",
+        "public_symbol:comment",
+        "public_symbol:definedname",
+        "public_symbol:hyperlink",
+        "public_symbol:listobject",
+        "public_symbol:picture",
+        "public_symbol:shape",
+        "public_symbol:validation",
+        "public_symbol:workbook",
+        "public_symbol:worksheet",
+        "public_symbol:worksheets"
+      ],
+      "rationale": "The structs table lists verified public symbols; the table is preserved as part of the API reference.",
+      "unit_id": "inherited_unit:052.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Enumerations' heading is preserved as it introduces the enums table.",
+      "unit_id": "inherited_unit:053.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:autoshapetype",
+        "public_symbol:borderlinestyle",
+        "public_symbol:borderstyletype",
+        "public_symbol:cellvaluetype",
+        "public_symbol:charttype",
+        "public_symbol:datesystem",
+        "public_symbol:diagnosticseverity",
+        "public_symbol:fillpattern",
+        "public_symbol:filteroperatortype",
+        "public_symbol:fontunderlinetype",
+        "public_symbol:formatconditiontype",
+        "public_symbol:horizontalalignment",
+        "public_symbol:imagetype",
+        "public_symbol:loadformat",
+        "public_symbol:operatortype",
+        "public_symbol:pageorientationtype"
+      ],
+      "rationale": "The enumerations table lists verified public symbols; the table is preserved as part of the API reference.",
+      "unit_id": "inherited_unit:054.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:014",
+        "link_target:024",
+        "public_symbol:autofilter",
+        "public_symbol:autofilter.clear",
+        "public_symbol:autofilter.filter_columns",
+        "public_symbol:autofilter.get_filter_columns",
+        "public_symbol:autofilter.get_range",
+        "public_symbol:autofilter.get_sort_state",
+        "public_symbol:autofilter.set_range",
+        "public_symbol:autofilter.sort_state",
+        "public_symbol:cell",
+        "public_symbol:cell.formula_cached_value",
+        "public_symbol:cell.get_bool_value",
+        "public_symbol:cell.get_date_time_value",
+        "public_symbol:cell.get_double_value",
+        "public_symbol:cell.get_string_value",
+        "public_symbol:cell.style",
+        "public_symbol:cell.value",
+        "public_symbol:cellmut",
+        "public_symbol:cellmut.put_formula_with_cached_value",
+        "public_symbol:cellmut.put_value_bool",
+        "public_symbol:cellmut.put_value_date_time",
+        "public_symbol:cellmut.put_value_i32",
+        "public_symbol:cellmut.put_value_string",
+        "public_symbol:cellmut.set_style",
+        "public_symbol:cellmut.set_value",
+        "public_symbol:cellstyle",
+        "public_symbol:cellstyle.borders",
+        "public_symbol:cellstyle.fill",
+        "public_symbol:cellstyle.font",
+        "public_symbol:cellstyle.horizontal_alignment",
+        "public_symbol:cellstyle.number_format",
+        "public_symbol:cellstyle.vertical_alignment",
+        "public_symbol:cellstyle.wrap_text",
+        "public_symbol:chart",
+        "public_symbol:chart.chart_type",
+        "public_symbol:chart.data_range",
+        "public_symbol:chart.delete",
+        "public_symbol:chart.get_chart_type",
+        "public_symbol:chart.get_data_range",
+        "public_symbol:chartcollection",
+        "public_symbol:chartcollection.add",
+        "public_symbol:chartcollection.count",
+        "public_symbol:chartcollection.get",
+        "public_symbol:chartcollection.item",
+        "public_symbol:charttype",
+        "public_symbol:conditionalformattingcollection",
+        "public_symbol:conditionalformattingcollection.add",
+        "public_symbol:conditionalformattingcollection.count",
+        "public_symbol:conditionalformattingcollection.get",
+        "public_symbol:definedname",
+        "public_symbol:definedname.get_formula",
+        "public_symbol:definedname.get_name",
+        "public_symbol:definedname.set_formula",
+        "public_symbol:definedname.set_name",
+        "public_symbol:formatcondition",
+        "public_symbol:formatcondition.get_style",
+        "public_symbol:formatcondition.set_priority",
+        "public_symbol:formatcondition.set_style",
+        "public_symbol:formatcondition.set_type",
+        "public_symbol:hyperlink",
+        "public_symbol:hyperlink.address",
+        "public_symbol:hyperlink.area",
+        "public_symbol:hyperlink.get_address",
+        "public_symbol:hyperlink.get_area",
+        "public_symbol:loadoptions",
+        "public_symbol:loadoptions.default",
+        "public_symbol:loadoptions.try_repair_package",
+        "public_symbol:loadoptions.try_repair_xml"
+      ],
+      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "unit_id": "inherited_unit:055.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:iwarningcallback"
+      ],
+      "rationale": "The traits table lists the verified public trait IWarningCallback.",
+      "unit_id": "inherited_unit:056.table"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Detailed Member Reference' heading has no supporting fact and introduces no verifiable content.",
+      "unit_id": "inherited_unit:057.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Workbook and Worksheets' heading is superseded by the API Reference section which already covers Workbook and Worksheets.",
+      "unit_id": "inherited_unit:058.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:workbook.load_xlsx",
+        "public_symbol:workbook.save_xlsx"
+      ],
+      "rationale": "The list documents verified public methods of Workbook and Worksheets/WorksheetsMut.",
+      "unit_id": "inherited_unit:059.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:worksheetsmut.remove_at"
+      ],
+      "rationale": "The list documents verified public methods of WorksheetsMut including the special case for remove_at.",
+      "unit_id": "inherited_unit:059.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:worksheet.set_name",
+        "public_symbol:worksheet.set_tab_color",
+        "public_symbol:worksheet.set_visibility_type",
+        "public_symbol:worksheet.set_zoom"
+      ],
+      "rationale": "Kept in api_reference: key_capabilities holds no api material. The list of Worksheet methods is covered by the verified capability 'Worksheet management' in...",
+      "unit_id": "inherited_unit:059.003.list"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:cell",
+        "public_symbol:cellmut",
+        "public_symbol:cells",
+        "public_symbol:cellsmut",
+        "public_symbol:cell.get_string_value",
+        "public_symbol:cell.get_double_value",
+        "public_symbol:cell.get_bool_value",
+        "public_symbol:cell.get_date_time_value",
+        "public_symbol:cellmut.put_formula_with_cached_value"
+      ],
+      "rationale": "The 'Cells, Values, and Formulas' heading and its list are superseded by the verified capability 'Cell value management' in key_capabilities.",
+      "unit_id": "inherited_unit:060.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:cell.get_bool_value",
+        "public_symbol:cell.get_date_time_value",
+        "public_symbol:cell.get_double_value",
+        "public_symbol:cell.get_string_value",
+        "public_symbol:cellmut.put_formula_with_cached_value"
+      ],
+      "rationale": "Not printed again: api reference already states this material from the facts it cites, so the kept unit is redundant.",
+      "unit_id": "inherited_unit:061.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:cell.get_bool_value",
+        "public_symbol:cell.get_date_time_value",
+        "public_symbol:cell.get_double_value",
+        "public_symbol:cell.get_string_value",
+        "public_symbol:cellmut.put_formula_with_cached_value"
+      ],
+      "rationale": "Not printed again: api reference already states this material from the facts it cites, so the kept unit is redundant.",
+      "unit_id": "inherited_unit:061.002.list"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:cellstyle",
+        "public_symbol:font",
+        "public_symbol:color",
+        "public_symbol:cellstyle.font",
+        "public_symbol:cellstyle.fill",
+        "public_symbol:cellstyle.borders",
+        "public_symbol:cellstyle.number_format",
+        "public_symbol:cellstyle.horizontal_alignment"
+      ],
+      "rationale": "The 'Styling' heading and its list are superseded by the verified 'Styling and formatting' capability in key_capabilities.",
+      "unit_id": "inherited_unit:062.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:cellstyle.borders",
+        "public_symbol:cellstyle.fill",
+        "public_symbol:cellstyle.font",
+        "public_symbol:cellstyle.horizontal_alignment",
+        "public_symbol:cellstyle.number_format"
+      ],
+      "rationale": "Not printed again: api reference already states this material from the facts it cites, so the kept unit is redundant.",
+      "unit_id": "inherited_unit:063.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:cellstyle.font"
+      ],
+      "rationale": "Not printed again: api reference already states this material from the facts it cites, so the kept unit is redundant.",
+      "unit_id": "inherited_unit:063.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:cellstyle.fill",
+        "public_symbol:cellstyle.font"
+      ],
+      "rationale": "Not printed again: api reference already states this material from the facts it cites, so the kept unit is redundant.",
+      "unit_id": "inherited_unit:063.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in api_reference: key_capabilities holds no api material. The PageSetup method list is covered by the verified 'Styling and formatting' capability in ke...",
+      "unit_id": "inherited_unit:063.004.list"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:loadoptions",
+        "public_symbol:saveoptions",
+        "public_symbol:loadoptions.try_repair_package",
+        "public_symbol:loadoptions.try_repair_xml"
+      ],
+      "rationale": "The 'Load and Save Options' heading and its list are superseded by the verified capabilities 'Read and write XLSX files' and 'Load and repair XLSX' in key_caps.",
+      "unit_id": "inherited_unit:064.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:loadoptions.try_repair_package",
+        "public_symbol:loadoptions.try_repair_xml"
+      ],
+      "rationale": "Not printed again: api reference already states this material from the facts it cites, so the kept unit is redundant.",
+      "unit_id": "inherited_unit:065.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:workbook.save_xlsx",
+        "public_symbol:workbook.save_xlsx_to_bytes",
+        "public_symbol:workbook.save_xlsx_to_stream"
+      ],
+      "rationale": "Kept in api_reference: key_capabilities holds no api material. The SaveOptions mention is covered by the verified 'Read and write XLSX files' capability in k...",
+      "unit_id": "inherited_unit:065.002.list"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:validation",
+        "public_symbol:validationcollection",
+        "public_symbol:formatcondition",
+        "public_symbol:formatconditioncollection",
+        "public_symbol:conditionalformattingcollection"
+      ],
+      "rationale": "The 'Validation and Conditional Formatting' heading and its list are superseded by the verified 'Data validation and conditional formatting' capability in key_c",
+      "unit_id": "inherited_unit:066.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:validation.set_type"
+      ],
+      "rationale": "Kept in api_reference: key_capabilities holds no api material. The Validation method list is covered by the verified 'Data validation and conditional formatt...",
+      "unit_id": "inherited_unit:067.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:formatcondition.set_type"
+      ],
+      "rationale": "Not printed again: api reference already states this material from the facts it cites, so the kept unit is redundant.",
+      "unit_id": "inherited_unit:067.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in api_reference: key_capabilities holds no api material. The ConditionalFormattingCollection method list is covered by the verified 'Data validation an...",
+      "unit_id": "inherited_unit:067.003.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:cellserror",
+        "public_symbol:cellsexception",
+        "public_symbol:formulaexception",
+        "public_symbol:styleexception",
+        "public_symbol:invalidfileformatexception",
+        "public_symbol:unsupportedfeatureexception",
+        "public_symbol:workbookloadexception",
+        "public_symbol:workbooksaveexception"
+      ],
+      "rationale": "The 'Exceptions' heading and its list are superseded by the verified limitations in scope_limitations.",
+      "unit_id": "inherited_unit:068.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:cellserror",
+        "public_symbol:cellsexception"
+      ],
+      "rationale": "The CellsError and CellsException list is covered by the verified limitations in scope_limitations.",
+      "unit_id": "inherited_unit:069.001.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:workbookloadexception",
+        "public_symbol:workbooksaveexception",
+        "public_symbol:formulaexception",
+        "public_symbol:styleexception",
+        "public_symbol:invalidfileformatexception",
+        "public_symbol:unsupportedfeatureexception"
+      ],
+      "rationale": "The exception types list is covered by the verified limitations in scope_limitations.",
+      "unit_id": "inherited_unit:069.002.list"
+    },
+    {
+      "destination_section": "identity",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:rust_edition",
+        "package:version"
+      ],
+      "rationale": "The closing </details> HTML block is non-essential and superseded by the identity section's canonical product name.",
+      "unit_id": "inherited_unit:070.html_block"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:015"
+      ],
+      "rationale": "The 'Documentation & Resources' heading is superseded by the deterministic 'Documentation & Resources' section which will be authored from verified links.",
+      "unit_id": "inherited_unit:071.heading"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "link_target:022",
+        "link_target:023",
+        "link_target:024",
+        "link_target:021",
+        "link_target:025",
+        "link_target:026"
+      ],
+      "rationale": "The list of documentation links is superseded by the deterministic 'Documentation & Resources' section which will include all verified links.",
+      "unit_id": "inherited_unit:072.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:016"
+      ],
+      "rationale": "The 'Scope and Limitations' heading is superseded by the deterministic 'Scope and Limitations' section which will be authored from facts.",
+      "unit_id": "inherited_unit:073.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "format:input.xlsx",
+        "build_test_asset:test-command",
+        "install_command:cargo",
+        "public_symbol:worksheetsmut.remove_at"
+      ],
+      "rationale": "The list of limitations is superseded by the deterministic 'Scope and Limitations' section which will be authored from verified facts.",
+      "unit_id": "inherited_unit:074.list"
+    },
+    {
+      "destination_section": "enterprise_relationship",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:027",
+        "link_target:product.enterprise"
+      ],
+      "rationale": "The paragraph about the Enterprise Edition is moved to the deterministic 'enterprise_relationship' section as it relates FOSS scope to the enterprise product.",
+      "unit_id": "inherited_unit:075.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:017"
+      ],
+      "rationale": "The 'Development and Testing' heading is superseded by the deterministic 'Development and Testing' section which will be authored from build/test assets.",
+      "unit_id": "inherited_unit:076.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "build_test_asset:test-command",
+        "build_test_asset:ci",
+        "build_test_asset:ci-matrix",
+        "build_test_asset:examples"
+      ],
+      "rationale": "The paragraph about testing is superseded by the deterministic 'Development and Testing' section which will be authored from CI and build assets.",
+      "unit_id": "inherited_unit:077.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:build-command",
+        "build_test_asset:ci",
+        "build_test_asset:ci-matrix",
+        "build_test_asset:examples",
+        "build_test_asset:test-command"
+      ],
+      "rationale": "The code block lists commands not fully supported by facts; only 'cargo check --all-targets' and 'cargo test --all-targets' are verified, and the full block is冗",
+      "unit_id": "inherited_unit:078.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "link_target:020",
+        "link_target:021",
+        "link_target:028",
+        "link_target:029"
+      ],
+      "rationale": "Redundant with the verified facts it names: link_target:020, link_target:021, link_target:028, link_target:029. The paragraph contains claims not supported by f",
+      "unit_id": "inherited_unit:079.paragraph"
+    },
+    {
+      "destination_section": "license",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "license:file",
+        "license:spdx",
+        "link_target:018"
+      ],
+      "rationale": "The 'License' heading is superseded by the deterministic 'License' section which will be authored from license facts.",
+      "unit_id": "inherited_unit:080.heading"
+    },
+    {
+      "destination_section": "license",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "license:file",
+        "license:spdx"
+      ],
+      "rationale": "The license prose is superseded by the deterministic 'License' section which will be authored from the MIT license fact.",
+      "unit_id": "inherited_unit:081.paragraph"
+    }
+  ]
+}
