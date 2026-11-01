@@ -117,117 +117,12 @@
   "deviations": [
     {
       "fact_ids": [
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "identity:repository",
+        "license:file",
         "license:spdx",
-        "package:name",
-        "package:version"
+        "link_target:product.enterprise"
       ],
-      "section_id": "identity",
-      "text": "The H1 product name is supported by the product_summary fact_ids and belongs in the opening section."
-    },
-    {
-      "fact_ids": [
-        "link_target:001",
-        "link_target:002",
-        "link_target:003",
-        "link_target:004",
-        "link_target:005",
-        "link_target:007",
-        "link_target:008",
-        "link_target:badge.ci"
-      ],
-      "section_id": "badges",
-      "text": "Redundant with the verified facts it names: link_target:001, link_target:002, link_target:003, link_target:004, link_target:005, link_target:007, link_target:008, link_target:badge.ci"
-    },
-    {
-      "fact_ids": [
-        "link_target:product.banner",
-        "link_target:product.enterprise",
-        "link_target:product.homepage"
-      ],
-      "section_id": "banner",
-      "text": "The banner image links to a verified aspose.com product page and belongs in enterprise_relationship."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem",
-        "identity:platform",
-        "dependency:none",
-        "license:spdx"
-      ],
-      "section_id": "opening",
-      "text": "The paragraph's substance is supported by identity, dependency, and license facts and belongs in the opening."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "identity:repository",
-        "identity:revision"
-      ],
-      "section_id": "navigation",
-      "text": "The Navigation heading is rendered by the deterministic navigation section and is redundant."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "identity:repository",
-        "identity:revision"
-      ],
-      "section_id": "navigation",
-      "text": "The navigation list is rendered by the deterministic navigation section and is redundant."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem"
-      ],
-      "section_id": "at_a_glance",
-      "text": "The At a Glance heading is rendered by the deterministic at_a_glance section and is redundant."
-    },
-    {
-      "fact_ids": [
-        "example:001",
-        "example:002",
-        "example:003",
-        "example:004",
-        "example:005",
-        "example:006",
-        "example:007",
-        "example:008",
-        "example:009"
-      ],
-      "section_id": "additional_examples",
-      "text": "The Mermaid diagram is not a verified example; it is a structural diagram and is kept as written in additional_examples."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem"
-      ],
-      "section_id": "key_capabilities",
-      "text": "The Key Capabilities heading is rendered by the deterministic key_capabilities section and is redundant."
-    },
-    {
-      "fact_ids": [
-        "example:003",
-        "example:004",
-        "example:005",
-        "example:006",
-        "example:001",
-        "example:002",
-        "example:007",
-        "example:008",
-        "example:009",
-        "public_symbol:org.aspose.pdf",
-        "public_symbol:org.aspose"
-      ],
-      "section_id": "key_capabilities",
-      "text": "The list items are supported by example and public_symbol facts and are re-authored in key_capabilities."
+      "section_id": "enterprise_relationship",
+      "text": "The license section heading and paragraph were moved to the enterprise_relationship section to align with the license fact and enterprise relationship context."
     }
   ],
   "flagship_example_id": "example:006",
@@ -314,6 +209,22 @@
     }
   ],
   "material_limitations": [
+    {
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "unit_ids": [
+        "inherited_unit:129.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "unit_ids": [
+        "inherited_unit:129.list"
+      ]
+    },
     {
       "fact_ids": [
         "install_command:maven"

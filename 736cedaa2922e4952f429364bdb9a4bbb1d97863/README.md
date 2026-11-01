@@ -4,7 +4,7 @@
 
 [![Aspose.PDF FOSS for Java](https://products.aspose.org/media/pdf/java/banner-readme.png)](https://products.aspose.org/pdf/java/)
 
-It reads and writes PDF documents, extracts text from pages, and creates or modifies form fields and annotations. It supports reading PDF files to access embedded images and writing new PDF files with text fragments, form fields, and widget annotations. It operates on Java 11.
+Aspose.PDF FOSS for Java reads and writes PDF documents, extracts text from pages, and creates or modifies form fields and annotations. It supports reading existing PDFs to extract content such as text and images, and writing new PDFs with text fragments, form fields, and widget annotations. The library operates on the PDF format and exposes the `org.aspose.pdf` package for Java 11 runtime.
 
 ## Navigation
 
@@ -40,12 +40,12 @@ Product["Aspose.PDF FOSS for Java"] --> Cap6["Manage document structure"]
 
 ## Key Capabilities
 
-- **Create and edit PDF documents.** It creates new PDF documents and edits existing ones by adding pages, text fragments, and annotations using the `Document`, `Page`, and `TextFragment` classes.
-- **Extract text and images.** It extracts text using `TextAbsorber` and images as `XImage` objects from specific pages, saving them to external files.
-- **Work with forms and annotations.** It works with forms and annotations by creating and manipulating widget annotations, radio button option fields, and form fields such as text boxes through the `Document` and `Form` APIs.
-- **Render and convert pages.** It renders PDF pages to raster images using device classes and extracts plain text per page with `TextDevice`.
-- **Secure and optimize documents.** It secures and optimizes documents by encrypting with AES or RC4 and optimizing resources through `Document.optimizeResources`.
-- **Manage document structure.** It manages document structure by building and inspecting the logical structure tree rooted at `StructTreeRoot` and working with tagged PDF content.
+- **Create and edit PDF documents.** It creates new PDF documents and edits existing ones by adding pages with `Page`, inserting text fragments with `TextFragment`, and saving the result to a file.
+- **Extract text and images.** It extracts text from PDF pages using `TextAbsorber` and saves images from a specific page to PNG files using `XImage`.
+- **Work with forms and annotations.** It works with forms and annotations by creating widget annotations with customizable borders and backgrounds, adding radio button options to cells, and filling existing form fields through `Form`.
+- **Render and convert pages.** It renders PDF pages to raster images using device classes such as `PngDevice` and extracts plain text per page with `TextDevice`, supporting multi-page TIFF output.
+- **Secure and optimize documents.** It secures and optimizes documents by encrypting them with AES or RC4 using `AESCipher`, `RC4Cipher`, and `StandardSecurityHandler`, and reducing file size through `Document.optimizeResources()`.
+- **Manage document structure.** It manages document structure by reading and modifying the outline tree with `OutlineCollection` and `OutlineItemCollection`, and inspecting the logical structure tree rooted at `StructTreeRoot`.
 
 ## Installation
 
@@ -112,7 +112,7 @@ try (Document doc = new Document()) {
 
 ## Additional Examples
 
-The following workflows demonstrate common tasks with Aspose.PDF FOSS for Java, including mixing text and an interactive form field inside the same table cell, extracting text from an existing PDF, extracting images from a specific page, creating a new PDF with a text fragment, and reading or updating form fields.
+The following workflows demonstrate common tasks: adding radio button options to a table cell, extracting text from a PDF, extracting images, creating a new PDF, filling form fields, preserving field insertion order, setting widget annotation background color, and configuring radio button border styles.
 
 ### Read and Update Form Fields in an Existing AcroForm
 
@@ -141,7 +141,7 @@ try (Document doc = new Document("form.pdf")) {
 <details>
 <summary>View Additional Examples</summary>
 
-### Mix Plain Text and a Radio Button Option Field in a Table Cell
+### Add Radio Button Options and Text to a Table Cell
 
 ```java
 import java.io.*;
@@ -224,7 +224,7 @@ try (Document doc = new Document()) {
 }
 ```
 
-### `Insert` Multiple Radio Button Option Fields in a Cell
+### `Insert` Radio Button Options and Preserve Their Order
 
 ```java
 import java.io.*;
@@ -267,7 +267,7 @@ try (Document doc = new Document()) {
 }
 ```
 
-### Configure and Inspect the Border Style of a Radio Button Option Field
+### Configure and Inspect the Border Style of a Radio Button Option
 
 ```java
 import java.io.*;
@@ -289,7 +289,7 @@ System.out.println(roundTrip.getWidth());
 
 ## API Reference
 
-Aspose.PDF FOSS for Java exposes the `Document` class as its central entry point for working with PDF documents, with page access provided through `PageCollection` and `Page` types. Convenience operations for editing, extracting, converting, and signing PDFs are available via dedicated facade classes.
+Aspose.PDF FOSS for Java exposes the `Document` class as its primary entry point for working with PDF documents, with page-level access through `PageCollection` and `Page`. Convenience operations for editing, extracting, converting, and signing PDFs are provided by dedicated facade classes such as `PdfContentEditor`, `PdfExtractor`, `PdfConverter`, and `PdfFileSignature`.
 
 The verified public surface has 1181 types.
 
@@ -636,7 +636,7 @@ The verified public surface has 1181 types.
 | `ConditionalExpr` | test ? |
 | `ContinueStmt` | continue label?; |
 | `DebuggerStmt` | Debugger statement (parsed, no-op). |
-| `DoWhileStmt` | DoWhileStmt represents a do-while statement in the JavaScript AST. |
+| `DoWhileStmt` | DoWhileStmt represents a do-while statement in the JavaScript AST, containing a test condition, a body, and an optional at location. |
 | `EmptyStmt` | Lone; |
 | `ExprStmt` | Expression used as a statement. |
 | `ForInStmt` | for (left in right) body |
@@ -938,7 +938,7 @@ The verified public surface has 1181 types.
 | `Variables` | Typed XFA template element variables. |
 | `XfaTemplateElements` | Registry of generated typed element constructors for this XFA grammar (element local name -> typed node). |
 | `XfaNamespaces` | Canonicalises XFA namespace URIs to their version-independent family. |
-| `XfaPacket` | XfaPacket represents an XFA packet with properties such as name, source bytes, and dirty state. |
+| `XfaPacket` | XfaPacket represents an XFA packet with a name, document reference, dirty flag, and optional source bytes. |
 | `XfaPacketReader` | Reads the AcroForm /XFA entry into a typed XfaPacketSet. |
 | `XfaPacketSet` | The full set of XFA packets parsed from a PDF's /XFA entry, with typed accessors per packet plus the assembled xdp document. |
 | `XfaPacketWriter` | Writes a modified XfaPacketSet back to the PDF /XFA entry, replacing the former XfaPacketParser write path. |
@@ -1491,15 +1491,21 @@ The verified public surface has 1181 types.
 
 ### org
 
-The org namespace serves as the root package for the Aspose.PDF FOSS for Java library, under which all public API types are organized.
+The org namespace serves as the root package for the Aspose.PDF FOSS for Java library, under which all public classes and interfaces are organized.
 
 ### aspose
 
-The `org.aspose` namespace contains core API types shared across Aspose products, including base classes and common interfaces used by the PDF module.
+The `org.aspose` namespace contains core types and facades for PDF manipulation, including `Document`, `PageCollection`, `Page`, and editor classes like `PdfContentEditor` and `PdfFileSignature`.
 
 ### pdf
 
-The `org.aspose.pdf` namespace hosts the main PDF-specific classes such as `Document`, `Page`, `PageCollection`, and the facades `PdfFileEditor`, `PdfContentEditor`, `PdfBookmarkEditor`, `PdfExtractor`, `PdfConverter`, and `PdfFileSignature`.
+The `org.aspose.pdf` namespace provides the main API surface for working with PDF content, including core classes such as `Document`, `Page`, `Resources`, and form-related types like `Form` and `Field`.
+
+The central class is `Document` (ISO 32000-1:2008), whose pages are reached through
+`PageCollection` and `Page`, each backed by a `Resources` dictionary. Document-level convenience
+operations are exposed through the facades — `PdfFileEditor`, `PdfContentEditor`,
+`PdfBookmarkEditor`, `PdfExtractor`, `PdfConverter`, and `PdfFileSignature`, among others. The
+public API surface spans 1026 public types across the module-grouped tables below.
 
 - `Document`
   - `getPages() -> PageCollection`
@@ -1564,33 +1570,33 @@ The `org.aspose.pdf` namespace hosts the main PDF-specific classes such as `Docu
 
 ## Documentation & Resources
 
-- **[Getting started guide](https://docs.aspose.org/pdf/java/)** — The Getting started guide covers installation, walkthroughs, and feature guides for this library.
-- **[How-to guides & FAQ](https://kb.aspose.org/pdf/java/)** — The How-to guides & FAQ provide task-focused answers for common PDF-processing questions.
-- **[Full API reference](https://reference.aspose.org/pdf/java/)** — The Full API reference offers the complete, browsable reference for the public API surface. It covers all 1181 verified public types; the [API Reference](#api-reference) section above covers the essentials.
-- **[Contributor guide](AGENTS.md)** — The Contributor guide provides architecture notes and conventions for contributors, including guidance for AI coding assistants.
-- **[Publishing guide](PUBLISHING.md)** — The Publishing guide describes the maintainers' release process for publishing this package to Maven Central.
-- **[Changelog](CHANGELOG.md)** — The Changelog documents release history and notable changes.
-- **[Getting Started](docs/getting-started.md)** — The Getting Started topic guide introduces the fundamentals of using this library.
-- **[Text Extraction](docs/text-extraction.md)** — The `Text` Extraction topic guide explains how to extract text from PDF documents.
-- **[Annotations](docs/annotations.md)** — The Annotations topic guide covers working with annotations in PDF documents.
-- **[Attachments](docs/attachments.md)** — The Attachments topic guide explains how to work with file attachments in PDF documents.
-- **[Forms](docs/forms.md)** — The Forms topic guide covers working with standard PDF forms.
-- **[XFA Forms](docs/xfa.md)** — The XFA Forms topic guide explains how to work with XFA-based forms in PDF documents.
-- **[Metadata](docs/metadata.md)** — The Metadata topic guide covers reading and writing document metadata in PDF files.
-- **[PDF/A](docs/pdfa.md)** — The PDF/A topic guide explains how to create and validate PDF/A compliant documents.
-- **[Document Conversion](docs/conversion.md)** — The `Document` Conversion topic guide covers converting documents to and from PDF format.
-- **[Generating PDFs from Scratch](docs/document-generation.md)** — The Generating PDFs from Scratch topic guide explains how to create new PDF documents programmatically.
+- **[Getting started guide](https://docs.aspose.org/pdf/java/)** — The getting started guide covers installation, walkthroughs, and feature guides for this library.
+- **[How-to guides & FAQ](https://kb.aspose.org/pdf/java/)** — The how-to guides & FAQ provide task-focused answers for common PDF-processing questions.
+- **[Full API reference](https://reference.aspose.org/pdf/java/)** — The full API reference offers the complete, browsable reference for the public API surface. It covers all 1181 verified public types; the [API Reference](#api-reference) section above covers the essentials.
+- **[Contributor guide](AGENTS.md)** — The contributor guide provides architecture notes and conventions for contributors, including guidance for AI coding assistants.
+- **[Publishing guide](PUBLISHING.md)** — The publishing guide describes the maintainers' release process for publishing this package to Maven Central.
+- **[Changelog](CHANGELOG.md)** — The changelog documents release history and notable changes.
+- **[Getting Started](docs/getting-started.md)** — The in-repo getting started guide provides foundational information for beginning with the library.
+- **[Text Extraction](docs/text-extraction.md)** — The text extraction guide explains how to extract text content from PDF documents.
+- **[Annotations](docs/annotations.md)** — The annotations guide covers working with annotations in PDF documents.
+- **[Attachments](docs/attachments.md)** — The attachments guide explains how to work with file attachments in PDF documents.
+- **[Forms](docs/forms.md)** — The forms guide covers working with standard PDF forms.
+- **[XFA Forms](docs/xfa.md)** — The XFA forms guide explains how to work with XFA-based forms in PDF documents.
+- **[Metadata](docs/metadata.md)** — The metadata guide covers reading and writing document metadata in PDF files.
+- **[PDF/A](docs/pdfa.md)** — The PDF/A guide explains how to create and validate PDF/A compliant documents.
+- **[Document Conversion](docs/conversion.md)** — The document conversion guide covers converting documents between various formats and PDF.
+- **[Generating PDFs from Scratch](docs/document-generation.md)** — The document generation guide explains how to create PDF documents from scratch.
 - Found a bug or have a feature request? [Open an issue](https://github.com/aspose-pdf-foss/Aspose.PDF-FOSS-for-Java/issues).
 
 - **In-repo topic guides**: [Getting Started](docs/getting-started.md), [Text Extraction](docs/text-extraction.md), [Annotations](docs/annotations.md), [Attachments](docs/attachments.md), [Forms](docs/forms.md), [XFA Forms](docs/xfa.md), [Metadata](docs/metadata.md), [PDF/A](docs/pdfa.md), [Document Conversion](docs/conversion.md), [Generating PDFs from Scratch](docs/document-generation.md), [Drawing API](docs/drawing.md), [Facades API](docs/facades.md), [Navigation (Bookmarks, Destinations, Links)](docs/navigation.md), [Page Operations](docs/page-operations.md), [Rasterization](docs/rasterization.md), [Resource Optimization](docs/optimization.md), [Digital Signatures](docs/signatures.md), [Security](docs/security.md), and [Limitations and Out-of-Scope Features](docs/limitations.md).
 
 ## Scope and Limitations
 
-Aspose.PDF FOSS for Java is a Java library for working with PDF documents.
+Aspose.PDF FOSS for Java reads and writes PDF documents, converts PDF to HTML, XML, and raster images, and supports basic text extraction and form handling. It targets Java 11 and is distributed as the `org.aspose:aspose-pdf-foss` package at version 26.9.0.
 
-- OCR, conversion to non-PDF formats other than HTML/XML, conversion from non-PDF formats other than HTML, full XFA form rendering, and 3D annotations and PRC/U3D streams are not supported.
-- Partially implemented today: `PdfFileSecurity.setAllowExceptions` throws `UnsupportedOperationException`, text replacement with non-Latin scripts may differ from a reference renderer, resource optimization is limited, tagged PDF support is partial, PDF/X validation and conversion lacks dedicated test coverage, and public-key-encrypted PDFs require a custom security handler.
-- A single `Document` instance is not thread-safe — use one `Document` per thread, opening separate instances for parallel processing.
+- OCR, conversion to non-PDF formats other than HTML/XML, conversion from non-PDF formats other than HTML, full XFA form rendering, and 3D annotations and PRC/U3D streams are not supported; use a dedicated OCR library instead, and rely on HTML/XML/raster output for conversions.
+- `Text` replacement with non-Latin scripts, resource optimization, and tagged PDF structure support are partially implemented: basic text replacement works but complex bidirectional reordering and shaping may differ from a reference renderer, advanced resource optimization strategies are limited, and structure tree coverage for full compliance is partial.
+- PDF/X validation and conversion and public-key-encrypted PDFs are supported through the same APIs used for PDF/A, but PDF/X has no dedicated test coverage and no out-of-the-box helper for public-key encryption is provided yet; additionally, `PdfFileSecurity.setAllowExceptions` throws UnsupportedOperationException, and a single `Document` instance is not thread-safe.
 
 - **`PdfFileSecurity.setAllowExceptions`** throws `UnsupportedOperationException` — the legacy
   `AllowExceptions=false` toolkit-key-size path is not implemented.
@@ -1607,11 +1613,14 @@ Aspose.PDF FOSS for Java is a Java library for working with PDF documents.
 - **Public-key-encrypted PDFs** are supported through the `ICustomSecurityHandler` interface, but
   no out-of-the-box helper for the common cases is provided yet.
 
+**Concurrency**: a single `Document` instance is not thread-safe — use one `Document` per thread,
+opening separate instances for parallel processing.
+
 These limitations don't apply to [full-featured Aspose.PDF for Java — Enterprise Edition](https://products.aspose.com/pdf/java/). It adds broader format conversion (including OCR and non-PDF output formats), full feature completeness, and commercial support.
 
 ## Development and Testing
 
-Aspose.PDF FOSS for Java targets Java 11+ and builds with Maven 3. Tests use JUnit 5 (Jupiter) and build any PDF fixtures in-memory or via @TempDir, so the repository ships no sample PDF corpus. CI runs on every push via `.github/workflows/build.yml` and releases publish to Maven Central via .github/workflows/maven-central-release.yml.
+Aspose.PDF FOSS for Java targets Java 11 and builds with Maven 3. Tests use JUnit 5 and create PDF fixtures in-memory or via @TempDir, so the repository ships no sample PDF corpus. CI runs on every push via `.github/workflows/build.yml` and releases publish to Maven Central via .github/workflows/maven-central-release.yml. No required third-party package dependencies are needed.
 
 The suite covers 290 test files under `src/test/`. The [build workflow](.github/workflows/build.yml) runs with Java 11 and 17. Releases run through the [maven-central-release workflow](.github/workflows/maven-central-release.yml).
 
