@@ -1233,10 +1233,34 @@ def normalize(
             and unit.rsplit(".", 1)[-1] == "heading"
             and identity_fact_id is not None
             and (
-                (disposition == "SUPERSEDE_REDUNDANT" and destination in placeable)
+                (
+                    disposition in {"SUPERSEDE_REDUNDANT", "VERIFIED_MOVE", "VERIFIED_PRESERVE"}
+                    and destination in placeable
+                )
                 or disposition == "OMIT_UNSUPPORTED"
             )
         ):
+            # Widened 2026-11-01 (aspose-slides-foss/Aspose.Slides-FOSS-for-.NET, run
+            # 41284665612): VERIFIED_MOVE/VERIFIED_PRESERVE is a THIRD shape of this same defect,
+            # worse than the other two -- a citation backfill alone cannot fix it, because
+            # independent_reviewer.py's own disposition_coverage_rule (unprinted_kept_units) does
+            # not consult fact_ids at all for a KEPT_DISPOSITIONS unit; it asks only whether the
+            # heading's own text is actually printed as a heading (heading_printed()), confirmed
+            # empirically False for this exact live case (inherited_unit:029.heading, "### Why
+            # the `!`", moved to additional_examples) -- the SAME rendering limitation the
+            # eighteenth fix already found for SUPERSEDE_REDUNDANT/OMIT_UNSUPPORTED headings
+            # (placement.py's own renders_verbatim() never re-prints a heading's literal text
+            # regardless of disposition), just reached from a different starting disposition this
+            # time. So this branch also flips the disposition itself to SUPERSEDE_REDUNDANT below,
+            # not only the citation -- VERIFIED_MOVE/VERIFIED_PRESERVE's own claim ("printed
+            # verbatim, as moved or as placed") is false for a heading regardless of what it
+            # cites. This run's own repair loop already reached the identical correction by hand
+            # for a sibling heading (inherited_unit:019, VERIFIED_MOVE -> OMIT_UNSUPPORTED with
+            # identity:ecosystem) earlier in the same pipeline run, proving the target shape is
+            # right; this fold exists so a proactive, deterministic fix lands before a repair
+            # round is needed at all, the same reasoning as every other fold in this function.
+            if disposition in {"VERIFIED_MOVE", "VERIFIED_PRESERVE"}:
+                entry["disposition"] = "SUPERSEDE_REDUNDANT"
             # Measured live, three times (aspose-cells-foss/Aspose.Cells-FOSS-for-.NET run
             # 41112824093, aspose-words-foss/Aspose.Words-FOSS-for-.NET run 41125275923,
             # aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp runs 41149996795 and 41154207665): a
