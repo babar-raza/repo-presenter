@@ -354,6 +354,83 @@ def _uncited_heading(
     return _Decision(destination, rationale, facts)
 
 
+def _uncited_kept_heading_identity(
+    entry: Mapping[str, Any], candidate: Candidate, known: frozenset[str]
+) -> _Decision | None:
+    """Last resort for a kept (``VERIFIED_PRESERVE``/``VERIFIED_MOVE``) heading the render does
+    not print, reached only when ``_decide``'s own heading branch (``_heading_facts``/
+    ``_example_heading``, above, in the caller's own decision chain) could find no section-
+    specific fact to cite -- never instead of it.
+
+    Measured live (aspose-slides-foss/Aspose.Slides-FOSS-for-.NET, run 41284665612):
+    ``inherited_unit:029.heading`` ("### Why the `!`") was kept ``VERIFIED_MOVE`` into
+    ``additional_examples`` -- a heading that merely introduces explanatory prose, not a
+    ``SUPPORTED`` example, so ``_example_heading`` found no payload and ``_heading_facts`` found
+    no planned/rendered fact either (``additional_examples`` is authored prose, not built from a
+    fixed fact set the way ``scope_limitations``/``key_capabilities`` are). The unit fell through
+    every branch in the caller's own chain untouched, reaching S9's deterministic
+    ``disposition_coverage``/``live_readme_loss`` checks uncited, with the model's own reply
+    already accepted and no retry mechanism left.
+
+    Deliberately narrow, found the hard way (three existing negative controls in
+    ``test_accounting.py``/``test_accounting_examples.py`` broke on first contact with this
+    function before these two guards were added): a generic, unrelated citation must never mask
+    a REAL, specific defect this module's own other branches exist to surface rather than paper
+    over. ``_payload_row`` finding a real code block this heading introduces (``test_a_kept_
+    heading_over_an_example_the_readme_does_not_print_is_left_alone``: the example is SUPPORTED
+    but its own code is not printed; ``test_a_heading_before_an_omission_no_fact_contradicts_is_
+    left_alone``: the next block is omitted for a reason that is not a contradiction) means this
+    heading's own fate is tied to that specific, nameable problem -- the fallback must leave it
+    alone so the real cause (an unprinted example, a wrongly-omitted block) stays visible, not
+    disappear behind an identity citation that explains nothing. Likewise a destination not
+    actually in the finished plan's own included sections
+    (``test_a_heading_with_no_facts_to_cite_is_left_alone``) has nothing to attribute the heading
+    to at all, real citation or not.
+
+    The repository's own identity fact is always real and always true of it -- the exact fallback
+    ``reconciliation/dispositions.py``'s sibling fold already uses for an uncited ``SUPERSEDE_
+    REDUNDANT``/``OMIT_UNSUPPORTED`` heading (the diagram steer's own reasoning, ported here for
+    the third disposition shape that fold cannot reach: a citation backfill alone does not fix
+    ``VERIFIED_MOVE``/``VERIFIED_PRESERVE``, since ``disposition_coverage_rule``'s own
+    ``unprinted_kept_units`` never consults ``fact_ids`` for a kept disposition -- the disposition
+    itself must become ``SUPERSEDE_REDUNDANT``, which is exactly what this function's own
+    ``_Decision`` (default ``disposition="SUPERSEDE_REDUNDANT"``) and the caller already do for
+    every other accounted entry -- but ONLY once both guards above confirm there is genuinely
+    nothing more specific left to say."""
+    unit_id = str(entry.get("unit_id", ""))
+    value = _unit_values(candidate).get(unit_id)
+    destination = entry.get("destination_section")
+    if (
+        value is None
+        or not unit_id.endswith(".heading")
+        or entry.get("disposition") not in {"VERIFIED_PRESERVE", "VERIFIED_MOVE"}
+        or not isinstance(destination, str)
+        or heading_printed(value, candidate.readme)
+        or _payload_row(unit_id, candidate) is not None
+    ):
+        return None
+    included = {
+        str(item.get("section_id"))
+        for item in candidate.plan.get("sections", [])
+        if item.get("include")
+    }
+    if destination not in included:
+        return None
+    identity = next(
+        (
+            fact.id
+            for fact in candidate.facts.by_kind("identity")
+            if fact.polarity == "SUPPORTED" and fact.id in known
+        ),
+        None,
+    )
+    if identity is None:
+        return None
+    return _Decision(
+        destination, RATIONALE_HEADING.format(section=destination.replace("_", " ")), [identity]
+    )
+
+
 def _included_sections(plan: Mapping[str, Any]) -> list[str]:
     return [
         str(item.get("section_id"))
@@ -652,6 +729,9 @@ def account_unprinted_units(
             if decided is None:
                 decided = _lead_heading_omitted(entry, candidate, known)
                 reason = "lead_heading_omitted"
+            if decided is None:
+                decided = _uncited_kept_heading_identity(entry, candidate, known)
+                reason = "uncited_kept_heading_identity"
         if decided is None:
             decided = _uncited_diagram(entry, candidate, known)
             reason = "uncited_diagram"
