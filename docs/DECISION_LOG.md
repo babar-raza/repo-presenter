@@ -1794,3 +1794,57 @@ not acted on.
 **Where the detail lives**: durable-state records for each of the six repositories (`git show
 refs/repository-presenter-state/records/<slug>[@lane-l]:record.json`); `fix/verified-move-
 heading-identity-citation`'s own commit for Finding 1; this entry for Findings 0 and 5.
+
+---
+
+### 2026-11-01: `fix/verified-move-heading-identity-citation` merged -- a kept heading the renderer never prints is accounted for as a last resort, two real cold-review gaps closed first
+
+**Decision**: merged to `main`. A heading kept `VERIFIED_PRESERVE`/`VERIFIED_MOVE` into a
+placeable section, which `placement.py`'s own `renders_verbatim()` structurally never prints as
+written, is now accounted (disposition flipped to `SUPERSEDE_REDUNDANT`, citing the repository's
+own identity fact) at S9 (`readme/repair/accounting.py`'s `account_unprinted_units`), but ONLY as
+a true last resort: after the existing, more precise `_decide`/`_heading_facts`/`_example_heading`
+machinery has already had its chance, and only when the heading carries no code-block payload
+relationship (`_payload_row`) and its destination is genuinely included in the finished plan.
+
+**Why, and the two real gaps a cold review found before this was safe to merge**: this is
+Finding 1 from the six-repository portfolio sweep (above) -- a third shape of the already-known
+heading-accounting gap, found on aspose-slides-foss/Aspose.Slides-FOSS-for-.NET run 41284665612.
+The first attempt (reconciliation/dispositions.py, a new `normalize()` fold, same shape as the
+existing SUPERSEDE_REDUNDANT/OMIT_UNSUPPORTED heading-identity fold) went through one full cycle
+of real-data reproduction, falsifier, and full-suite-clean before its own first cold, independent
+verification -- which found a real, concrete bug: gating the disposition-flip on `not cited` left
+an ALREADY-cited `VERIFIED_MOVE`/`VERIFIED_PRESERVE` heading untouched, since
+`disposition_coverage_rule` never consults `fact_ids` for a kept disposition at all. Fixing that
+gap, a full-suite run surfaced a SECOND, more serious problem self-caught, not by the verifier:
+2 pre-existing `tests/test_cascade_s9.py` tests regressed, revealing the fix was in the wrong
+place entirely -- `normalize()` runs at S4, too early, pre-empting an already-existing, more
+precise S9 mechanism (`_decide`'s own heading branch) that cites a section-specific fact (e.g. a
+`public_symbol`) whenever one exists. Relocating the fix into `accounting.py`'s own decision chain
+(as a last-resort fallback, not a competing early fold) then broke 3 MORE pre-existing negative-
+control tests (`test_a_heading_with_no_facts_to_cite_is_left_alone`,
+`test_a_kept_heading_over_an_example_the_readme_does_not_print_is_left_alone`,
+`test_a_heading_before_an_omission_no_fact_contradicts_is_left_alone`) -- each one proof that this
+module's own design philosophy ("no fact is invented"; a unit is left alone, not papered over,
+when nothing precise can be found) would be violated by a fallback too eager to fire. Two guards
+(`_payload_row(...) is None`; destination actually in the plan's own included sections) close
+exactly that gap, each earned by one of the three broken tests, not guessed in advance.
+
+**Evidence**: real downloaded artifacts (`gh run download 41284665612`) reproduced the exact
+defect (`inherited_unit:029.heading`, "### Why the `!`", VERIFIED_MOVE into `additional_examples`,
+no example/payload relationship at all -- a heading over explanatory prose) against the real
+`facts.json`/`dispositions.composed.json`. Falsifier confirmed twice (once per location). Full
+suite clean at every stage (3471 -> 3475 passed, 13 skipped, exit 0 throughout). TWO full,
+independent cold reviews in isolated worktrees, the first finding a real gap and the second
+(after relocation) finding none, including its own adversarial hunt for a parallel masking risk
+(a sibling uncited paragraph/list) that it confirmed, empirically, already existed identically on
+`main` before this change -- not newly introduced.
+
+**What this does NOT decide**: whether `live_readme_loss_rule`'s own deterministic tracking
+should be widened to cover plain prose (paragraph/list) loss the way it already tracks headings,
+fences, links and install commands -- the second verifier's own adversarial case exposed this as
+a real, pre-existing blind spot, unrelated to this fix, not touched here.
+
+**Where the detail lives**: `src/repo_presenter/readme/repair/accounting.py`
+(`_uncited_kept_heading_identity`, whose own docstring carries the two-location history),
+`tests/readme/repair/test_accounting_uncited.py`.
