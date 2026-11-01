@@ -84,6 +84,7 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from typing import Any, Literal
 
+from repo_presenter.readme.composition.components.shell import SEMANTIC_SHELL
 from repo_presenter.readme.composition.planning import section_conditions
 from repo_presenter.readme.evidence.facts.product_pages import (
     ENTERPRISE_FACT_ID,
@@ -463,11 +464,29 @@ def _excluded_by_plan(unit_id: str, entry: Mapping[str, Any], ctx: DeferralConte
     return in_examples_section and not ctx.names_verified_symbol(unit_id)
 
 
+#: Each section's own authored heading text (``shell.py``'s own ``SEMANTIC_SHELL``), lower
+#: cased: the model's rationale states a section it cannot name (``_section_absent`` matches on
+#: free text, never a section_id it was never given), so it spells the heading a reader sees --
+#: "Documentation & Resources", not "documentation_resources" or "documentation resources" --
+#: which an underscore-to-space conversion of the id alone can never produce.
+_SECTION_TITLES: Mapping[str, str] = {
+    section.id: section.heading.lower()
+    for section in SEMANTIC_SHELL
+    if section.heading is not None
+}
+
+
 def _section_absent(unit_id: str, entry: Mapping[str, Any], ctx: DeferralContext) -> bool:
     rationale = _rationale(entry)
-    return any(
-        section.replace("_", " ") in rationale or section in rationale for section in ctx.absent
-    )
+    for section in ctx.absent:
+        title = _SECTION_TITLES.get(section, "")
+        if (
+            section.replace("_", " ") in rationale
+            or section in rationale
+            or (title and title in rationale)
+        ):
+            return True
+    return False
 
 
 def _lead_in(unit_id: str, entry: Mapping[str, Any], ctx: DeferralContext) -> bool:
