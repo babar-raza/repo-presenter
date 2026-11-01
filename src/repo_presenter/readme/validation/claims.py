@@ -298,6 +298,33 @@ def _components(version: str) -> tuple[int, ...] | None:
     return tuple(int(part) for part in matched.group(0).split(".")) if matched else None
 
 
+def _versions_equal(a: str, b: str) -> bool:
+    """Whether ``a`` and ``b`` name the same release: a plain match after ``_normal_version``, or
+    -- when both are PURELY dotted-numeric, nothing else attached -- equal after padding the
+    shorter to the other's width with zeros.
+
+    Measured live (aspose-cells-foss/Aspose.Cells-FOSS-for-.NET, run 41298080767): the upstream
+    README's own `<PackageReference ... Version="26.10.0.0" />` snippet spells this release with
+    .NET's traditional 4-part assembly-version convention (a trailing revision, conventionally
+    0), which the registry's own 3-part release ("26.10.0") does not carry -- the same release,
+    not a real mismatch, but a bare string comparison called it one. Deliberately narrower than
+    ``_components``'s own numeric-PREFIX reading (which truncates a trailing ``-rc1``/``-beta``
+    suffix): requiring the whole normalized string to be numeric-dotted, with nothing trailing,
+    means a genuine prerelease/build-tagged version is never silently treated as equal to a
+    release it is not -- only the padding a release number's own trailing-zero convention needs."""
+    left, right = _normal_version(a), _normal_version(b)
+    if left == right:
+        return True
+    if not _NUMERIC_VERSION.fullmatch(left) or not _NUMERIC_VERSION.fullmatch(right):
+        return False
+    left_parts = tuple(int(part) for part in left.split("."))
+    right_parts = tuple(int(part) for part in right.split("."))
+    width = max(len(left_parts), len(right_parts))
+    return left_parts + (0,) * (width - len(left_parts)) == right_parts + (
+        0,
+    ) * (width - len(right_parts))
+
+
 def _request_satisfied(requested: str, exact: bool, release: str) -> bool:
     """Whether CMake would accept ``release`` for ``find_package(Name <requested> [EXACT])``.
 
@@ -348,7 +375,7 @@ def _version_findings(
         for version, exact in _cmake_requests(line.text, names)
     ]
     for index, version in shown:
-        if expected is None or _normal_version(version) == _normal_version(expected):
+        if expected is None or _versions_equal(version, expected):
             continue
         # The offending text sits in an install fact's own value: the defect is upstream of
         # the prose, and recomposing the section cannot fix it.

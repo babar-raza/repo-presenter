@@ -83,6 +83,45 @@ def test_the_right_version_and_unrelated_numbers_pass(sentence: str) -> None:
     assert claim_findings(readme("## Installation", "", sentence), facts()) == []
 
 
+# Measured live (aspose-cells-foss/Aspose.Cells-FOSS-for-.NET, run 41298080767): the upstream
+# README's own `<PackageReference Include="Aspose.Cells.FOSS" Version="26.10.0.0" />` snippet
+# spells the release with .NET's traditional 4-part assembly-version convention (a trailing
+# revision, conventionally 0); the registry's own 3-part release ("26.10.0") does not carry it.
+# The same release, not a real mismatch -- a bare string comparison called it one.
+def test_a_dotnet_four_part_assembly_version_matches_its_three_part_release() -> None:
+    sentence = 'Install the published package from NuGet (`Aspose.3D.FOSS`, version 26.1.0.0):'
+    assert claim_findings(readme("## Installation", "", sentence), facts()) == []
+
+
+def test_a_three_part_version_matches_its_four_part_release() -> None:
+    """The padding direction is symmetric: the manifest/registry side may be the longer one too."""
+    sentence = "Install the published package from NuGet (`Aspose.3D.FOSS`, version 26.1.0):"
+    rev_facts = FactsDocument(
+        "org/repo",
+        REVISION,
+        (
+            fact("package:name", "package", "Aspose.3D.FOSS"),
+            fact("package:version", "package", "26.1.0.0"),
+            fact("public_symbol:scene", "public_symbol", "Aspose.ThreeD.Scene"),
+            fact("dependency:none", "dependency", "none"),
+        ),
+    )
+    assert claim_findings(readme("## Installation", "", sentence), rev_facts) == []
+
+
+@pytest.mark.parametrize(
+    "shown",
+    [
+        "26.1.0.1",  # a genuinely different trailing revision, not a trailing zero
+        "26.1.0-rc1",  # a prerelease tag must never be silently padded away
+    ],
+)
+def test_a_four_part_version_that_is_not_a_trailing_zero_still_fails(shown: str) -> None:
+    sentence = f"Install the published package from NuGet (`Aspose.3D.FOSS`, version {shown}):"
+    [finding] = claim_findings(readme("## Installation", "", sentence), facts())
+    assert shown in finding.detail and "26.1.0" in finding.detail
+
+
 # --- a package name stated in prose ------------------------------------------------------------
 
 
