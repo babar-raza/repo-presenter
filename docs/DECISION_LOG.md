@@ -1479,3 +1479,36 @@ never-observed-live limitation rather than chased further, per this project's ow
 **Where the detail lives**: `src/repo_presenter/readme/reconciliation/dispositions.py`
 (`_collapsible_wrapper_bounds`, whose own docstring carries the full three-round history),
 `tests/readme/reconciliation/test_dispositions.py`.
+
+---
+
+## 2026-11-01: `live_readme_loss` on Page-Python's install snippet investigated — not a bug, no fix made
+
+**Finding**: the fix-queue item opened by the `fix/unresolved-install-command-defer` merge
+(aspose-page-foss/Aspose.Page-FOSS-for-Python, run 41236483023, `live_readme_loss [omission]: code
+block 'pip install aspose-page-foss'`) is the independent reviewer's own accounting rule correctly,
+by design, blocking a genuinely unverifiable install claim — not a defect.
+
+**Evidence**: `install_command:pip`'s own real evidence (`facts.json`, downloaded from the earlier
+hosted run): PyPI confirms a distribution named `aspose-page-foss` exists, but "the registry lists
+no source repository to compare with this one" -- there is no way to confirm THIS repository
+actually owns that published package name, as opposed to some unrelated third party. `DEFER_UNRESOLVED`
+is deliberately excluded from `independent_reviewer.py`'s `ACCOUNTING_DISPOSITIONS`
+(`{SUPERSEDE_REDUNDANT, CORRECT_WITH_EVIDENCE, VERIFIED_REWRITE, OMIT_UNSUPPORTED}`) -- a disposition
+that itself means "the facts neither confirm nor deny this claim" cannot also "account for" the
+content it defers, by the reviewer's own design; `dispositions.py`'s own `uncited_redundant_defer`
+error message already states this consequence directly ("a deferral with no destination leaves it
+unaccounted for later, as if the content had simply vanished"). The `fix/unresolved-install-command-
+defer` merge fixed a real, different defect (the model's correct DEFER_UNRESOLVED answer being wrongly
+*refused at S4* before it was ever recorded); it was never going to make this specific candidate seal,
+because the underlying real-world fact -- an unconfirmable PyPI ownership claim -- correctly still
+blocks sealing at S9/review, via a different, equally legitimate mechanism. Progress (the pipeline now
+reaches review instead of failing at S4), not a regression, and not something a reconciliation/review
+code change should paper over.
+
+**What this does NOT decide**: whether `aspose-page-foss`'s PyPI listing could or should be reconciled
+by other means (e.g. a maintainer updating the PyPI project's source-repository metadata) is a
+registry/data question for the actual package maintainer, entirely outside this pipeline's scope.
+
+**Where the detail lives**: `src/repo_presenter/readme/review/independent_reviewer.py`
+(`ACCOUNTING_DISPOSITIONS`, `live_readme_loss_rule`, `_accounting_units`).
