@@ -2044,3 +2044,59 @@ specifically `cascade/repairs.json`'s `F04` and `BC-14`-labeled attempts; `src/r
 readme/validation/blocking.py` (`BC-14` -> `claim_failures`); `src/repo_presenter/readme/review/
 independent_reviewer.py`'s own `claim_contradiction` rule (same underlying `claims.claim_
 findings`).
+
+---
+
+### 2026-11-01: a third five-repository fresh sweep -- one clean full ACCEPT, two fresh Lane L ACCEPTs, one genuine upstream data gap, two confirmed model-reliability non-bugs
+
+**What this does**: dispatched five more fresh `present.yml` (`both` lanes) runs on `main`, each
+against a repository not yet tried this session (aspose-gis-foss/.Net, aspose-html-foss/Python,
+aspose-barcode-foss/Python, aspose-imaging-foss/.NET, aspose-words-foss/Python), continuing the
+portfolio sweep.
+
+**Confirmed real wins, no fix needed**: aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET's Lane R
+is a clean, full, green ACCEPT today (both jobs green, no sub-step failure at all) -- the third
+distinct full/fresh portfolio win confirmed this session (after Cells-Python's Lane R and this
+candidate's own earlier Lane L). aspose-html-foss/Aspose.HTML-FOSS-for-Python's Lane L and
+aspose-words-foss/Aspose.Words-FOSS-for-Python's Lane L are BOTH freshly `ACCEPTED` today
+(confirmed via the trigger-dedup-key match, not stale), even though each repository's own Lane R
+failed in the same run for unrelated reasons (below) -- two more real wins the red overall job
+status alone would have hidden.
+
+**Genuine upstream data gap, not a pipeline defect**: aspose-gis-foss/Aspose.GIS.FOSS-for-.Net
+failed with "no README.md at the pinned revision ... this cascade has nothing to reconcile
+without one." Confirmed directly against the real repository (`gh api repos/aspose-gis-foss/
+Aspose.GIS.FOSS-for-.Net/contents/`): the repository genuinely has no `README.md` (or any
+variant) at its root at all -- only a solution file, a test project and a source project.
+Explains this repository's own long-standing `OBSERVED`/never-transitioned durable state seen
+earlier this session. Nothing for this pipeline to do; the upstream repository needs a README
+before it can ever be presented.
+
+**Confirmed model-reliability non-bugs (not pipeline defects), each checked against the real
+evidence rather than assumed**:
+- aspose-html-foss/Aspose.HTML-FOSS-for-Python's Lane R `F01` omission finding claims the
+  candidate omits a specific sentence about `CSSRule.type`/`CSSRule.css_text` -- but the sentence
+  IS verbatim in the real candidate README (confirmed directly, `grep` against the real
+  `README.coherent.md`). The reason the built-in `omission_present` clearance (`readme/review/
+  clearances.py`) did not clear this false claim: the reviewer's own `missing_quotes` text is
+  itself fabricated -- it inserts a parenthetical, "(the CSSOM base-rule stubs)", that appears
+  nowhere in the real document, and drops the backticks the real text has -- so no literal-ish
+  match can succeed, correctly, since the "proof" quote the clearance would need to find isn't
+  real text at all. A genuine reviewer hallucination inside its own finding, not a clearance bug:
+  the clearance refusing to trust a fabricated quote is the correct behavior.
+- aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python's Lane R `section_authoring` rejection (a
+  `scope_limitations` unit's text containing a forbidden `pip install` command, rejected 3 times
+  running) shows the model's OWN recorded reasoning on one attempt explicitly stating the command
+  "must not include" the literal install command and should state the requirement generically --
+  then its own `text` field includes "...running pip install ." verbatim anyway, in the SAME
+  reply. A within-reply self-contradiction, the same model-compliance-gap category as the
+  Slides-Cpp/Font-Python findings already logged this session, not a pipeline defect.
+
+**Confirmed match to an already-established non-bug pattern, not re-investigated in full**:
+aspose-words-foss/Aspose.Words-FOSS-for-Python's Lane R findings are all `causal_stage: S6`,
+empty `fact_ids`, with 4 repair rounds already active -- the same "`3D-Java`/`3D-.NET`
+already-working repair loop" shape.
+
+**Where the detail lives**: real downloaded artifacts for each run; `gh api repos/aspose-gis-
+foss/Aspose.GIS.FOSS-for-.Net/contents/` (the GIS finding); `src/repo_presenter/readme/review/
+clearances.py::omission_present` (the HTML-Python finding); this entry for all five.
