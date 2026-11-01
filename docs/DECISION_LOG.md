@@ -2010,3 +2010,37 @@ not created by this merge, not attempted here.
 
 **Where the detail lives**: `src/repo_presenter/readme/validation/deferrals.py`
 (`_section_absent`, `_SECTION_TITLES`).
+
+---
+
+### 2026-11-01: live-verified the SECTION_ABSENT merge; a real repair-loop oscillation found behind it on the same repository
+
+**What this does**: dispatched a fresh `present.yml` (Lane R only) run for aspose-psd-foss/
+Aspose.PSD-FOSS-for-.NET on merged `main` (run 41294881468).
+
+**Confirmed**: the original defect is gone -- the durable record's `failure.detail` no longer
+names `BC-05`/`UNCLASSIFIED` at all; the candidate progressed all the way to independent review
+before blocking on a single, different, unrelated finding (`claim_contradiction`).
+
+**New finding -- real, confirmed, NOT fixed (needs a focused repair-loop investigation this pass
+did not have room for)**: this is the already-named, previously-unevidenced "PSD-.NET stale-
+publication detector" fix-queue item from earlier this session, now with real evidence. The
+facts genuinely show `package:published_version` SUPPORTED at `26.10.0` -- the package IS
+published -- yet the final candidate's review finding reads "the README says the package is not
+published to NuGet yet... but a package-registry reading lists it." Read `repairs.json` directly:
+across 7 repair rounds, the SAME sentence was flipped in BOTH directions by two different repair
+sources -- one round (label `F04`, routed from an LLM review finding, stage S6) rewrote a
+CORRECT "published... version 26.10.0" sentence INTO the false "not yet published" claim; a
+LATER round (label `BC-14`, routed from the deterministic `claim_failures` check that also backs
+`claim_contradiction`) correctly rewrote it back. The final candidate still carries the wrong
+text regardless, so either a repair round beyond the 7 recorded reverted it again, or the `F04`-
+sourced wrong rewrite was reapplied after `BC-14`'s correct one for a reason not traced in this
+pass. Not root-caused to a single mechanism this session; recorded with the real, specific
+repair-ledger evidence (the two opposing diffs) rather than guessed at, for a dedicated follow-up
+rather than a rushed fix layered onto an already-substantial day's worth of changes.
+
+**Where the detail lives**: real downloaded artifacts (`gh run download 41294881468`),
+specifically `cascade/repairs.json`'s `F04` and `BC-14`-labeled attempts; `src/repo_presenter/
+readme/validation/blocking.py` (`BC-14` -> `claim_failures`); `src/repo_presenter/readme/review/
+independent_reviewer.py`'s own `claim_contradiction` rule (same underlying `claims.claim_
+findings`).
