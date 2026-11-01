@@ -1512,3 +1512,44 @@ registry/data question for the actual package maintainer, entirely outside this 
 
 **Where the detail lives**: `src/repo_presenter/readme/review/independent_reviewer.py`
 (`ACCOUNTING_DISPOSITIONS`, `live_readme_loss_rule`, `_accounting_units`).
+
+---
+
+## 2026-11-01: 3D-Java's F01-F05 content-quality findings investigated — already-working repair loop, not a pipeline bug, no fix made
+
+**Finding**: the 5-finding REJECT surfaced on aspose-3d-foss/Aspose.3D-FOSS-for-Java (run
+41233168620, while live-checking `fix/installation-contradicted-command-omit`) is the repair
+loop correctly, repeatedly firing against genuinely free-form, unsupported prose in S6-authored
+text -- not a routing bug, not unused machinery, and not a single fixable root cause.
+
+**Evidence**: downloaded the run's own `review_verdict.json`/`repairs.json`. All 5 findings
+(F01, F03, F04, F05: `unsupported_claim`; F02: `contradiction`) carry `causal_stage: "S6"` and
+`fact_ids: []` -- the reviewer's own "audit" trail shows some of the claim's distinctive terms do
+match real SUPPORTED facts, but the *compound* sentence as a whole still asserts more than any
+single fact confirms (e.g. F01: "the full API reference offers a complete, browsable reference
+for all 266 public types" -- `266` and `reference.aspose.org` are each individually real, but
+nothing confirms the reference is "complete" or "browsable"). `repairs.json` shows the repair
+loop already fired across at least 5-6 distinct rounds, spanning `development_testing`,
+`scope_limitations`, `key_capabilities`, `opening`, `documentation_resources`, and
+`api_reference` -- correctly routed per `review/defect_bridge.py`'s own `causal_stage`-based
+dispatch (confirmed: `S4_RULES = {"disposition_coverage"}`, everything else routes to S6, exactly
+as documented) -- successfully resolving several named findings per round (e.g. `F10` repaired by
+removing an unsupported "targeting runtime version 21" clause) while the model's own revised
+prose kept introducing new overclaims elsewhere, re-raising a differently-labeled finding the next
+round. Finding labels (F01, F02, ...) are per-round, not globally stable IDs, confirmed by the
+same label appearing against different `section_id`s across different repair attempts.
+
+**Why not fixed**: this is not a deterministic code defect with a single, boundable root cause --
+it is the designed repair loop genuinely converging slowly against a repository whose live README
+makes more free-form, unverifiable editorial claims than the round budget fully resolves in one
+run. Per this project's own stop rule (two-plus rounds on the same finding class without full
+convergence), this is recorded plainly rather than chased with a speculative fix; the available
+remedies (raising `max_rounds`, or changing the repair prompt's own instructions) are policy/prompt
+decisions with real cost tradeoffs, not a pipeline logic bug.
+
+**What this does NOT decide**: whether `max_rounds` should be raised, or the repair prompt
+improved, for repositories with this shape of content; not investigated further here.
+
+**Where the detail lives**: `src/repo_presenter/readme/review/defect_bridge.py` (confirmed
+correctly routing every `causal_stage` to the right repair dispatch), `src/repo_presenter/readme/
+repair/loop.py`, this run's own `repairs.json`/`review_verdict.json`.
