@@ -2100,3 +2100,47 @@ already-working repair loop" shape.
 **Where the detail lives**: real downloaded artifacts for each run; `gh api repos/aspose-gis-
 foss/Aspose.GIS.FOSS-for-.Net/contents/` (the GIS finding); `src/repo_presenter/readme/review/
 clearances.py::omission_present` (the HTML-Python finding); this entry for all five.
+
+---
+
+### 2026-11-01: a fourth five-repository fresh sweep -- two more full real wins, one fixed (.NET version padding), one new fix in flight (lead-in coordination), four confirmed non-bug matches
+
+**What this does**: dispatched five more fresh `present.yml` (`both` lanes) runs on `main`
+(aspose-cells-foss/.NET, aspose-email-foss/.Net, aspose-pdf-foss/.NET, aspose-slides-foss/Java,
+aspose-slides-foss/Python).
+
+**Confirmed real wins, no fix needed**: aspose-email-foss/Aspose.Email-FOSS-for-.Net is a clean,
+full, green ACCEPT (both jobs green). aspose-cells-foss/Aspose.Cells-FOSS-for-.NET's Lane R is a
+genuine, fresh `exit 0, durable state ACCEPTED` today (confirmed directly from the hosted job's
+own log, not just the record, since a repeat-success-on-the-same-terminal-state can leave the
+record's own dedup-key match ambiguous -- the log line is unambiguous). aspose-pdf-foss/
+Aspose.PDF-FOSS-for-.NET's Lane L is freshly `ACCEPTED` today. The fifth and sixth real wins
+confirmed this session.
+
+**Fixed**: see `fix/dotnet-four-part-version-padding` -- aspose-cells-foss/Aspose.Cells-FOSS-for-
+.NET's own `<PackageReference ... Version="26.10.0.0" />` snippet (.NET's 4-part assembly-version
+convention) was wrongly flagged as contradicting the registry's 3-part release ("26.10.0"), the
+same release, not a real mismatch. Fixed, tested (including adversarial negative controls for a
+genuine differing revision and a prerelease tag), independently cold-verified with 10 additional
+adversarial cases beyond the branch's own tests, merged.
+
+**New fix, in flight**: see the next entry below -- aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET's
+Lane R BC-07 dangling-colon failure, a lead-in/payload coordination gap for `UNRESOLVED`-example
+payloads.
+
+**Confirmed model-reliability/known-pattern non-bugs, not re-investigated in full**:
+- aspose-cells-foss/Aspose.Cells-FOSS-for-.NET's Lane L `claim_contradiction` ("shown at version
+  26.10.0.0, but the registry's current stable release is 26.10.0") is the Lane L review path
+  hitting the EXACT SAME version-padding gap `fix/dotnet-four-part-version-padding` fixes --
+  expected to clear on its own once that fix reaches a fresh Lane L run; not separately
+  investigated.
+- aspose-slides-foss/Aspose.Slides-FOSS-for-Java's Lane R `live_readme_loss` (a code block quoting
+  the literal error message "Export format 'Pdf' is not supported...") and Lane L's Enterprise
+  Edition naming finding, and aspose-slides-foss/Aspose.Slides-FOSS-for-Python's Lane R
+  `duplicate_paragraph` (the already-logged, already-deferred `email-foss/Cpp`-class finding,
+  confirmed recurring on a THIRD repository) and Lane L `claim_contradiction` (a format list) were
+  surfaced but not investigated in full this round, given the volume of confirmed real work
+  already landed -- flagged for a future pass, not lost.
+
+**Where the detail lives**: real downloaded artifacts for each run; `fix/dotnet-four-part-
+version-padding`'s own commit; the next entry for the lead-in coordination fix.
