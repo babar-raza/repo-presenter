@@ -5,7 +5,7 @@
   "provider_repository_id": 1381084812,
   "registry_revision": null,
   "active_transaction_id": "3d536d7e23ba4f1bbf7c77f9da1f495c",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "CorrectionRunError: the clone has no README: Lane L corrects a live README and has none to start from; Lane R writes one",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-01T10:05:26.592868+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:41295841751",
     "acquired_at": "2026-11-01T10:05:24.166943+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-11-01T10:20:24.166943+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "eac696e216694fc6bc12a97c64eb11e4",
+    "transaction_id": "3d536d7e23ba4f1bbf7c77f9da1f495c",
+    "repository": "aspose-gis-foss/Aspose.GIS.FOSS-for-.Net",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-11-01T10:05:26.302304+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-gis-foss/Aspose.GIS.FOSS-for-.Net",
+    "output_manifest": "candidates/aspose-gis-foss__Aspose.GIS.FOSS-for-.Net/lane-l/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:41295841751:aspose-gis-foss/Aspose.GIS.FOSS-for-.Net": "3d536d7e23ba4f1bbf7c77f9da1f495c"
   },
