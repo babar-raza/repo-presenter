@@ -1,3 +1,7 @@
+# Advisory only: no entry below carries a hash, and no CI/hosted workflow installs from this
+# file -- .github/workflows/present.yml runs `pip install -e .` directly, resolving dependency
+# versions however pip resolves them at run time. Regenerate with `pip-compile --generate-hashes`
+# and wire it into present.yml's install step before treating this file as an enforced lock.
 httpx==0.28.1 \
     # direct dependency, hashes omitted (generate with pip-compile --generate-hashes for a real release lock)
 jsonschema==4.26.0 \

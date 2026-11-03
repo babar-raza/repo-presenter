@@ -65,8 +65,12 @@ def main() -> None:
     try:
         sealed = seal_candidate(seal_inputs)
     except NotImplementedError as exc:
+        # An unsealed run is a real, expected outcome (a re-seal of an already-sealed
+        # repository, most commonly) -- but it is not success, and a caller relying on the
+        # process exit code (CI, a supervisor script) must be able to tell the two apart
+        # without parsing stdout text.
         print(f"\nnot sealed: {exc}")
-        return
+        sys.exit(1)
     print(f"\nsealed: {sealed.bundle} (state={sealed.state})")
 
 
