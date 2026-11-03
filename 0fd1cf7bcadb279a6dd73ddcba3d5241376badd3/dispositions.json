@@ -1,0 +1,1136 @@
+{
+  "dispositions": [
+    {
+      "destination_section": "identity",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:published_version",
+        "package:python_requires",
+        "package:version"
+      ],
+      "rationale": "The H1 product name is rendered deterministically from identity and package facts.",
+      "unit_id": "inherited_unit:001.heading"
+    },
+    {
+      "destination_section": "badges",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "license:spdx",
+        "link_target:001",
+        "link_target:002",
+        "link_target:003",
+        "link_target:004",
+        "link_target:005",
+        "link_target:006",
+        "link_target:007",
+        "link_target:008",
+        "link_target:009",
+        "link_target:010",
+        "link_target:011",
+        "link_target:012",
+        "link_target:013",
+        "link_target:014",
+        "link_target:015",
+        "link_target:016",
+        "link_target:017",
+        "link_target:018",
+        "link_target:019",
+        "link_target:020",
+        "link_target:021",
+        "link_target:022",
+        "link_target:023",
+        "link_target:024",
+        "link_target:025",
+        "link_target:026",
+        "link_target:027",
+        "link_target:028",
+        "link_target:029",
+        "link_target:030",
+        "link_target:031",
+        "link_target:badge.ci",
+        "link_target:product.banner",
+        "link_target:product.enterprise",
+        "link_target:product.homepage"
+      ],
+      "rationale": "The badge row is rendered deterministically from link_target and license facts.",
+      "unit_id": "inherited_unit:002.badge_row"
+    },
+    {
+      "destination_section": "banner",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:008",
+        "link_target:009",
+        "link_target:product.banner",
+        "link_target:product.homepage"
+      ],
+      "rationale": "The banner image is rendered deterministically from product.banner and product.homepage link targets.",
+      "unit_id": "inherited_unit:003.badge_row"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "package:name",
+        "package:version",
+        "install_command:pip",
+        "format:input.one",
+        "format:output.pdf",
+        "public_symbol:aspose.note.document"
+      ],
+      "rationale": "The paragraph matches the product_summary and is supported by multiple facts; it belongs in the opening section.",
+      "unit_id": "inherited_unit:004.paragraph"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision"
+      ],
+      "rationale": "The 'Navigation' heading is rendered by deterministic code for the navigation section.",
+      "unit_id": "inherited_unit:005.heading"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "identity:revision"
+      ],
+      "rationale": "The navigation list is rendered by deterministic code for the navigation section.",
+      "unit_id": "inherited_unit:006.list"
+    },
+    {
+      "destination_section": "at_a_glance",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'At a Glance' heading is rendered by deterministic code for the at_a_glance section.",
+      "unit_id": "inherited_unit:007.heading"
+    },
+    {
+      "destination_section": "at_a_glance",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "package:name",
+        "package:version",
+        "install_command:pip",
+        "format:input.one",
+        "format:output.pdf",
+        "public_symbol:aspose.note.document",
+        "public_symbol:aspose.note.page",
+        "public_symbol:aspose.note.richtext",
+        "public_symbol:aspose.note.image",
+        "public_symbol:aspose.note.table",
+        "public_symbol:aspose.note.attachedfile",
+        "public_symbol:aspose.note.notetag",
+        "public_symbol:aspose.note.numberlist"
+      ],
+      "rationale": "The Mermaid diagram is rendered deterministically for the at_a_glance section using the same facts that drive its content.",
+      "unit_id": "inherited_unit:008.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Key Capabilities' heading is retained as written; its content is re-authored from facts.",
+      "unit_id": "inherited_unit:009.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_REWRITE",
+      "fact_ids": [
+        "public_symbol:aspose.note.document",
+        "public_symbol:aspose.note.node",
+        "public_symbol:aspose.note.documentvisitor",
+        "public_symbol:aspose.note.page",
+        "public_symbol:aspose.note.richtext",
+        "public_symbol:aspose.note.image",
+        "public_symbol:aspose.note.table",
+        "public_symbol:aspose.note.attachedfile",
+        "public_symbol:aspose.note.notetag",
+        "public_symbol:aspose.note.numberlist",
+        "format:input.one",
+        "format:output.pdf",
+        "example:002",
+        "example:003",
+        "example:004",
+        "example:007"
+      ],
+      "rationale": "The list items are supported by facts and belong in key_capabilities; wording is re-authored from facts.",
+      "unit_id": "inherited_unit:010.list"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "rationale": "The 'Installation' heading is rendered by deterministic code for the installation section.",
+      "unit_id": "inherited_unit:011.heading"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "rationale": "The pip install command matches the install_command fact and is rendered by the installation section.",
+      "unit_id": "inherited_unit:012.code_block"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:optional.pdf.reportlab-3.6"
+      ],
+      "rationale": "The paragraph about the pdf extra is supported and belongs in quick_start as context for the first example.",
+      "unit_id": "inherited_unit:013.paragraph"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "install_command:pip",
+        "dependency:optional.pdf.reportlab-3.6"
+      ],
+      "rationale": "The pip install with pdf extra is a real, supported installation path and is preserved as written.",
+      "unit_id": "inherited_unit:014.code_block"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "import_path:aspose.note",
+        "package:python_requires",
+        "public_symbol:aspose.note"
+      ],
+      "rationale": "The Python version and import statement are supported and belong in quick_start as minimal setup.",
+      "unit_id": "inherited_unit:015.paragraph"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:development.dev.build-1.2",
+        "dependency:development.dev.twine-5.0",
+        "dependency:none",
+        "dependency:optional.pdf.reportlab-3.6",
+        "dependency:optional.test-pdf.pillow-10.0",
+        "dependency:optional.test-pdf.pymupdf-1.25",
+        "dependency:optional.test-pdf.pypdf-5.3"
+      ],
+      "rationale": "The 'Dependencies' heading is rendered by deterministic code for the dependencies section.",
+      "unit_id": "inherited_unit:016.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:development.dev.build-1.2",
+        "dependency:development.dev.twine-5.0",
+        "dependency:none",
+        "dependency:optional.pdf.reportlab-3.6",
+        "dependency:optional.test-pdf.pillow-10.0",
+        "dependency:optional.test-pdf.pymupdf-1.25",
+        "dependency:optional.test-pdf.pypdf-5.3"
+      ],
+      "rationale": "The 'Required Package Dependencies' heading is rendered by deterministic code for the dependencies section.",
+      "unit_id": "inherited_unit:017.heading"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:none"
+      ],
+      "rationale": "The statement about no required third-party dependencies is supported and belongs in quick_start.",
+      "unit_id": "inherited_unit:018.paragraph"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:development.dev.build-1.2",
+        "dependency:development.dev.twine-5.0",
+        "dependency:none",
+        "dependency:optional.pdf.reportlab-3.6",
+        "dependency:optional.test-pdf.pillow-10.0",
+        "dependency:optional.test-pdf.pymupdf-1.25",
+        "dependency:optional.test-pdf.pypdf-5.3"
+      ],
+      "rationale": "The 'Optional Dependencies' heading is rendered by deterministic code for the dependencies section.",
+      "unit_id": "inherited_unit:019.heading"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:optional.pdf.reportlab-3.6",
+        "dependency:optional.test-pdf.pillow-10.0",
+        "dependency:optional.test-pdf.pymupdf-1.25",
+        "dependency:optional.test-pdf.pypdf-5.3"
+      ],
+      "rationale": "The optional dependencies list is supported and belongs in quick_start as context for extras.",
+      "unit_id": "inherited_unit:020.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Native and System Requirements' heading is superseded by the 'Scope and Limitations' section, which is deterministically rendered from facts including 'py'",
+      "unit_id": "inherited_unit:021.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "CORRECT_WITH_EVIDENCE",
+      "fact_ids": [
+        "package:python_requires"
+      ],
+      "rationale": "The requirement 'Requires Python 3.10 or later' is corrected to match the fact 'package:python_requires' which states '>=3.10'.",
+      "unit_id": "inherited_unit:022.list"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:development.dev.build-1.2",
+        "dependency:development.dev.twine-5.0",
+        "dependency:none",
+        "dependency:optional.pdf.reportlab-3.6",
+        "dependency:optional.test-pdf.pillow-10.0",
+        "dependency:optional.test-pdf.pymupdf-1.25",
+        "dependency:optional.test-pdf.pypdf-5.3"
+      ],
+      "rationale": "The 'Development Dependencies' heading is superseded by the 'Dependencies' section, which is deterministically rendered from facts.",
+      "unit_id": "inherited_unit:023.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:development.dev.build-1.2",
+        "dependency:development.dev.twine-5.0",
+        "dependency:none",
+        "dependency:optional.pdf.reportlab-3.6",
+        "dependency:optional.test-pdf.pillow-10.0",
+        "dependency:optional.test-pdf.pymupdf-1.25",
+        "dependency:optional.test-pdf.pypdf-5.3"
+      ],
+      "rationale": "The list of development dependencies is superseded by the 'Dependencies' section, which includes verified facts for 'build>=1.2' and 'twine>=5.0'.",
+      "unit_id": "inherited_unit:024.list"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:001",
+        "example:002"
+      ],
+      "rationale": "The 'Quick Start' heading is preserved as it maps to the 'Quick Start' section, and at least one example (example:002) is verified as SUPPORTED.",
+      "unit_id": "inherited_unit:025.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "Lead-in of the omitted block that follows (inherited_unit:027.code_block): withheld with it, never alone.",
+      "unit_id": "inherited_unit:026.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "The first code block is omitted because its example fact (example:001) has polarity CONTRADICTED.",
+      "unit_id": "inherited_unit:027.code_block"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
+      "unit_id": "inherited_unit:028.paragraph"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "The second code block is preserved as its example fact (example:002) is SUPPORTED and matches the verified export-to-PDF workflow.",
+      "unit_id": "inherited_unit:029.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:examples",
+        "link_target:021"
+      ],
+      "rationale": "The 'Additional Examples' heading is preserved as it maps to the 'Additional Examples' section, and examples exist in the repository.",
+      "unit_id": "inherited_unit:030.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:examples",
+        "link_target:021"
+      ],
+      "rationale": "The paragraph pointing to the examples directory is preserved as it is supported by the examples directory fact and link.",
+      "unit_id": "inherited_unit:031.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:032.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "The code block for saving embedded images is preserved as its example fact (example:003) is SUPPORTED.",
+      "unit_id": "inherited_unit:033.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The HTML details block is omitted as it adds no verifiable content and is not supported by any fact.",
+      "unit_id": "inherited_unit:034.html_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:004"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:035.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:004"
+      ],
+      "rationale": "The code block for loading from a binary stream is preserved as its example fact (example:004) is SUPPORTED.",
+      "unit_id": "inherited_unit:036.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:005"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:037.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:005"
+      ],
+      "rationale": "The code block for traversing tables is preserved as its example fact (example:005) is SUPPORTED.",
+      "unit_id": "inherited_unit:038.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:006"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:039.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:006"
+      ],
+      "rationale": "The code block for extracting attached files is preserved as its example fact (example:006) is SUPPORTED.",
+      "unit_id": "inherited_unit:040.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:007"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:041.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:007"
+      ],
+      "rationale": "The code block for inspecting tags is supported by example:007 and belongs under Additional Examples.",
+      "unit_id": "inherited_unit:042.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:008"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:043.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:008"
+      ],
+      "rationale": "The code block for counting nodes with DocumentVisitor is supported by example:008 and belongs under Additional Examples.",
+      "unit_id": "inherited_unit:044.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:009"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:045.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:009"
+      ],
+      "rationale": "The code block for extracting all text is supported by example:009 and belongs under Additional Examples.",
+      "unit_id": "inherited_unit:046.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:010"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:047.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:010"
+      ],
+      "rationale": "The code block for exporting to PDF with custom options is supported by example:010 and belongs under Additional Examples.",
+      "unit_id": "inherited_unit:048.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:011"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:049.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:011"
+      ],
+      "rationale": "The code block for extracting hyperlinks is supported by example:011 and belongs under Additional Examples.",
+      "unit_id": "inherited_unit:050.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:012"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:051.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "example:012"
+      ],
+      "rationale": "The code block for inspecting numbered lists is supported by example:012 and belongs under Additional Examples.",
+      "unit_id": "inherited_unit:052.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The closing </details> HTML tag is redundant because Additional Examples is rendered as a collapsible section by the shell.",
+      "unit_id": "inherited_unit:053.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'API Reference' heading is required by the section definition and matches the destination section.",
+      "unit_id": "inherited_unit:054.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "import_path:aspose.note",
+        "public_symbol:aspose.note",
+        "public_symbol:aspose.note.saving"
+      ],
+      "rationale": "Not printed again: api reference already states this material from the facts it cites, so the kept unit is redundant.",
+      "unit_id": "inherited_unit:055.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The opening <details> HTML tag is redundant because API Reference is rendered as a collapsible section by the shell.",
+      "unit_id": "inherited_unit:056.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Core API' heading is appropriate for the table of core classes in the API Reference section.",
+      "unit_id": "inherited_unit:057.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose.note.exceptions.asposenoteerror",
+        "public_symbol:aspose.note.attachedfile",
+        "public_symbol:aspose.note.model.compositenode",
+        "public_symbol:aspose.note.document",
+        "public_symbol:aspose.note.documentvisitor",
+        "public_symbol:aspose.note.filecorruptedexception",
+        "public_symbol:aspose.note.image",
+        "public_symbol:aspose.note.incorrectdocumentstructureexception",
+        "public_symbol:aspose.note.incorrectpasswordexception",
+        "public_symbol:aspose.note.license",
+        "public_symbol:aspose.note.loadoptions",
+        "public_symbol:aspose.note.metered",
+        "public_symbol:aspose.note.node",
+        "public_symbol:aspose.note.notetag",
+        "public_symbol:aspose.note.numberlist",
+        "public_symbol:aspose.note.outlineelement"
+      ],
+      "rationale": "The table of core API classes is supported by the listed public symbols and belongs in API Reference.",
+      "unit_id": "inherited_unit:058.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Enumerations' heading is appropriate for the table of enumerations in the API Reference section.",
+      "unit_id": "inherited_unit:059.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose.note.fileformat",
+        "public_symbol:aspose.note.horizontalalignment",
+        "public_symbol:aspose.note.nodetype",
+        "public_symbol:aspose.note.saveformat",
+        "public_symbol:aspose.note.tagstatus"
+      ],
+      "rationale": "The table of enumerations is supported by the listed public symbols and belongs in API Reference.",
+      "unit_id": "inherited_unit:060.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Saving' heading is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:061.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The table of classes is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:062.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Detailed Member Reference' heading is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:063.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Document and Traversal' heading is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:064.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The list of Document, PageHistory, DocumentVisitor, Node, and container nodes is superseded by the API Reference section, which re-authors the public surface.",
+      "unit_id": "inherited_unit:065.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Document Structure' heading is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:066.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The Page class members list is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:067.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The Title class members list is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:067.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The Outline class members list is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:067.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The OutlineElement class members list is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:067.004.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Content' heading is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:068.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The list of RichText, TextRun, ParagraphStyle, TextStyle, Image, AttachedFile, Table, TableColumn, NoteTag, and NumberList is superseded by the API Reference.",
+      "unit_id": "inherited_unit:069.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Load and Save Options' heading is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:070.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The list of LoadOptions, SaveOptions, and PdfSaveOptions is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:071.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose.note.license",
+        "public_symbol:aspose.note.metered"
+      ],
+      "rationale": "The 'Licensing' heading and its content are superseded by the Scope and Limitations section, which explicitly states License.SetLicense() and Metered.SetMetered",
+      "unit_id": "inherited_unit:072.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose.note.license",
+        "public_symbol:aspose.note.metered"
+      ],
+      "rationale": "The list of License and Metered methods is superseded by the Scope and Limitations section, which explicitly states they are no-ops in this edition.",
+      "unit_id": "inherited_unit:073.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Enumerations' heading is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:074.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The FileFormat enum list is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:075.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The SaveFormat enum list is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:075.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The HorizontalAlignment enum list is superseded by the API Reference section, which re-authors the public surface from facts.",
+      "unit_id": "inherited_unit:075.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose.note.nodetype"
+      ],
+      "rationale": "Not printed again: api reference already states this material from the facts it cites, so the kept unit is redundant.",
+      "unit_id": "inherited_unit:075.004.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose.note.tagstatus"
+      ],
+      "rationale": "Not printed again: api reference already states this material from the facts it cites, so the kept unit is redundant.",
+      "unit_id": "inherited_unit:075.005.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Exceptions' heading is superseded by the scope and limitations section which covers exception-related facts.",
+      "unit_id": "inherited_unit:076.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose.note.exceptions.asposenoteerror"
+      ],
+      "rationale": "Exception inheritance is covered by the scope and limitations section's exception handling capability.",
+      "unit_id": "inherited_unit:077.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose.note.exceptions.asposenoteerror"
+      ],
+      "rationale": "AsposeNoteError base exception is covered by the scope and limitations section's exception handling capability.",
+      "unit_id": "inherited_unit:078.001.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose.note.filecorruptedexception"
+      ],
+      "rationale": "FileCorruptedException is covered by the scope and limitations section's exception handling capability.",
+      "unit_id": "inherited_unit:078.002.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose.note.incorrectdocumentstructureexception"
+      ],
+      "rationale": "IncorrectDocumentStructureException is covered by the scope and limitations section's exception handling capability.",
+      "unit_id": "inherited_unit:078.003.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose.note.incorrectpasswordexception"
+      ],
+      "rationale": "IncorrectPasswordException is covered by the scope and limitations section's password support limitation.",
+      "unit_id": "inherited_unit:078.004.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose.note.unsupportedfileformatexception"
+      ],
+      "rationale": "UnsupportedFileFormatException is covered by the scope and limitations section's format support limitation.",
+      "unit_id": "inherited_unit:078.005.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose.note.unsupportedsaveformatexception"
+      ],
+      "rationale": "UnsupportedSaveFormatException is covered by the scope and limitations section's save format limitation.",
+      "unit_id": "inherited_unit:078.006.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "NON_CONTENT",
+      "fact_ids": [],
+      "rationale": "HTML closing tag is non-content markup.",
+      "unit_id": "inherited_unit:079.html_block"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "link_target:022",
+        "link_target:023",
+        "link_target:024"
+      ],
+      "rationale": "The 'Documentation & Resources' heading is preserved and moved to the documentation_resources section where its links are verified.",
+      "unit_id": "inherited_unit:080.heading"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:022",
+        "link_target:023",
+        "link_target:024",
+        "link_target:025"
+      ],
+      "rationale": "Not printed again: documentation resources already states this material from the facts it cites, so the kept unit is redundant.",
+      "unit_id": "inherited_unit:081.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Scope and Limitations' heading is preserved as it matches the section ID and contains supported content.",
+      "unit_id": "inherited_unit:082.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose.note.saveformat",
+        "public_symbol:aspose.note.incorrectpasswordexception",
+        "public_symbol:aspose.note.license",
+        "public_symbol:aspose.note.document"
+      ],
+      "rationale": "All listed limitations are supported by public_symbol and dependency facts.",
+      "unit_id": "inherited_unit:083.list"
+    },
+    {
+      "destination_section": "enterprise_relationship",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:026",
+        "link_target:product.enterprise"
+      ],
+      "rationale": "The Enterprise Edition reference is supported by link_target:product.enterprise and belongs in enterprise_relationship.",
+      "unit_id": "inherited_unit:084.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Development and Testing' heading is preserved as it matches the section ID and contains supported content.",
+      "unit_id": "inherited_unit:085.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:ci",
+        "build_test_asset:test-command"
+      ],
+      "rationale": "The paragraph introduces the test setup and is supported by CI and test-command facts.",
+      "unit_id": "inherited_unit:086.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:ci",
+        "build_test_asset:test-command"
+      ],
+      "rationale": "The code block matches the CI workflow and test-command fact, supporting its preservation.",
+      "unit_id": "inherited_unit:087.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "link_target:027"
+      ],
+      "rationale": "Redundant with the verified facts it names: link_target:027. No fact supports the specific reference to ci.yml; the section covers testing generally.",
+      "unit_id": "inherited_unit:088.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:test-command"
+      ],
+      "rationale": "The test command list is redundant with the development_testing section, which will render the verified test command.",
+      "unit_id": "inherited_unit:089.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The HTML summary tag is non-content framing for the following paragraph and test command, which are superseded by development_testing.",
+      "unit_id": "inherited_unit:090.html_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The PDF golden tests description is superseded by the development_testing section, which will render verified test asset details.",
+      "unit_id": "inherited_unit:091.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The PDF golden test command is redundant with the development_testing section's test command rendering.",
+      "unit_id": "inherited_unit:092.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The PDF golden failure handling description is superseded by the development_testing section.",
+      "unit_id": "inherited_unit:093.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:028"
+      ],
+      "rationale": "Superseded, and redundant with the verified facts it names: link_target:028. The regenerate PDF golden baselines instruction is superseded by the development_te",
+      "unit_id": "inherited_unit:094.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The regenerate PDF golden script command is redundant with the development_testing section.",
+      "unit_id": "inherited_unit:095.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The selective case regeneration instruction is superseded by the development_testing section.",
+      "unit_id": "inherited_unit:096.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The selective case regenerate command is redundant with the development_testing section.",
+      "unit_id": "inherited_unit:097.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "build_test_asset:examples",
+        "build_test_asset:release-workflow",
+        "link_target:029",
+        "link_target:030"
+      ],
+      "rationale": "The examples README and release workflow references are relevant to development and testing and are supported by facts.",
+      "unit_id": "inherited_unit:098.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The closing HTML tag is non-content framing for the preceding paragraph and test command, which are superseded.",
+      "unit_id": "inherited_unit:099.html_block"
+    },
+    {
+      "destination_section": "license",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "license:file",
+        "license:spdx"
+      ],
+      "rationale": "The License heading is superseded by the license section, which is rendered from the license fact.",
+      "unit_id": "inherited_unit:100.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "license:file",
+        "license:spdx",
+        "third_party_notices:file",
+        "link_target:020",
+        "link_target:031"
+      ],
+      "rationale": "The license and third-party notices details are supported and add repository-specific information not rendered elsewhere.",
+      "unit_id": "inherited_unit:101.paragraph"
+    }
+  ]
+}
