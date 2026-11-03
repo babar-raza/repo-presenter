@@ -5145,8 +5145,12 @@ next_ready_items:
       session's own established discipline for every other fold change.
 
   - id: AUDIT_2026_11_01_ITEM_9_WRITE_REAL_TOP_LEVEL_README
-    status: READY
+    status: DONE
     priority: low
+    done: >
+      2026-11-03: README.md now states what this repository is, how to run it, and points to
+      AGENTS.md/MISSION_AUTHORITY.md/the audit/DECISION_LOG.md. Doc-only change, no test/
+      falsifier applicable (not executable behavior); committed directly to main.
     purpose: >
       Dimension 16. This repository's own top-level README.md is completely empty (0 lines) --
       a README-generation project ships no README of its own. Trivial technically, but a real,
@@ -5157,8 +5161,19 @@ next_ready_items:
     invalidation_impact: None.
 
   - id: AUDIT_2026_11_01_ITEM_10_EXIT_CODE_AND_LOCK_FILE_HONESTY
-    status: READY
+    status: IN_PROGRESS
     priority: low
+    done: >
+      Sub-items (1)-(3) merged to main 2026-11-03 (commit c95d37e, branch
+      fix/exit-code-and-license): run_cascade.py now sys.exit(1)s on an unsealed run (covered by
+      tests/test_run_cascade_script.py, including a falsifier regression-tested both by the
+      supervisor and an independent cold verifier agent); a real MIT LICENSE now exists at the
+      repository root; requirements-lock.txt's header now states plainly it is advisory/unused
+      in CI. Full suite re-run clean (3484 passed, 13 skipped, 0 failed) before merge.
+    next_step: >
+      Sub-item (4) -- candidates_publish/effect.py's own never-called status -- is still open.
+      Give it one real caller with an independently-confirmed live exercise, or log it in
+      docs/DECISION_LOG.md as deliberately deferred with a stated reason.
     purpose: >
       Added 2026-11-03 from an independently-verified external counter-review (audit §K, items
       6/7/8/9). Four small, concrete, already-diagnosed defects: (1) scripts/run_cascade.py
