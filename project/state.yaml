@@ -1,6 +1,6 @@
 schema_version: 1
 project: repo-presenter
-updated_at: "2026-11-03T00:00:00Z"
+updated_at: "2026-11-03T01:00:00Z"
 # 2026-11-03: AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md is owner-ADOPTED binding authority
 # as of this date (see AGENTS.md's authority table, top row). Its corrective plan (§I, 9 items) is
 # tracked below as cards AUDIT_2026_11_01_ITEM_1 through _9. No future session may treat the audit
@@ -5034,17 +5034,41 @@ next_ready_items:
       Aspose.3D-FOSS-for-Python) -- confirmed live via gh api search/issues?type:pr. A real
       bot-authored PR exists only from the OLD, legacy repository's own workflows, on a
       different repository (Cpp), proving the capability once, elsewhere, not here.
-    blocked_on: AUDIT_2026_11_01_ITEM_4_GITHUB_APP_TOKEN_MINTING (publishing needs a real token)
+      CORRECTED 2026-11-03 (external counter-review, independently re-verified -- see audit §K):
+      a wired caller and a minted token are NOT sufficient by themselves. Two more real,
+      independently confirmed blockers exist: (1) data/reviewer_calibration.json reports
+      status NOT_PASSED (failed gates: false_reject_rate, stability,
+      reviewer_alone[real:contradiction], reviewer_alone[real:unsupported_claim]) and
+      propose/effect.py's own code (lines 320-335) refuses with Refusal.REVIEW_UNCALIBRATED
+      BEFORE and INDEPENDENTLY of the token check; (2) data/registry.json shows
+      aspose-3d-foss/Aspose.3D-FOSS-for-Python's own registry entry is mode: dry_run (one of
+      only 6 of 36 registry entries is mode: full; aspose-cells-foss/Aspose.Cells-FOSS-for-.NET
+      IS mode: full already), and core/registry/write_gate.py's require_write_permitted refuses
+      any dry_run entry by design -- this blocks live publication against that specific
+      mandatory target regardless of token or calibration state.
+    blocked_on: >
+      ALL THREE, independently, in any order (corrected 2026-11-03, was previously listed as
+      only the first of these): (1) AUDIT_2026_11_01_ITEM_4_GITHUB_APP_TOKEN_MINTING (a minted,
+      verified installation token); (2) the independent reviewer re-passing calibration
+      (data/reviewer_calibration.json status must become PASSED, or the owner logs an explicit,
+      scoped exception in docs/DECISION_LOG.md) -- this is an owner/reviewer-logic decision, not
+      a code-wiring task, and is NOT currently assigned to any of these nine cards; (3) for the
+      aspose-3d-foss/Aspose.3D-FOSS-for-Python target specifically, an owner decision to flip
+      that registry entry's mode from dry_run to full in data/registry.json.
     done_when: >
       One real, bot-authored PR exists against aspose-cells-foss/Aspose.Cells-FOSS-for-.NET and
       one against aspose-3d-foss/Aspose.3D-FOSS-for-Python, each independently confirmed via
       `gh api`, each fired only after the owner personally names it as the first live target per
       the mission document's own existing "first live exercise is owner-selected, not
-      agent-selected" rule (already written, never yet exercised for this capability).
+      agent-selected" rule (already written, never yet exercised for this capability), and only
+      after blockers (1), (2), and (3) above are each independently confirmed cleared --
+      confirming a caller exists and fires is not sufficient to close this card; the live PR
+      itself, inspected via `gh api`, is the only acceptable evidence.
     write_paths: [src/repo_presenter/propose/, src/repo_presenter/authorization/]
     source_refs: >
       AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md §B (G4 row), §D (propose/effect.py row),
-      §I item 5; src/repo_presenter/github/token_provenance.py's own "never fired live" comment.
+      §I item 5, §K (items 1-4); src/repo_presenter/github/token_provenance.py's own
+      "never fired live" comment; data/reviewer_calibration.json; data/registry.json.
     invalidation_impact: >
       A real external effect (a real PR on a real upstream repository) -- requires explicit
       owner authorization before the write action itself, per standing mission policy.
@@ -5131,3 +5155,38 @@ next_ready_items:
     write_paths: [README.md]
     source_refs: AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md §C dimension 16, §D, §I item 9.
     invalidation_impact: None.
+
+  - id: AUDIT_2026_11_01_ITEM_10_EXIT_CODE_AND_LOCK_FILE_HONESTY
+    status: READY
+    priority: low
+    purpose: >
+      Added 2026-11-03 from an independently-verified external counter-review (audit §K, items
+      6/7/8/9). Four small, concrete, already-diagnosed defects: (1) scripts/run_cascade.py
+      lines 65-69 catches seal_candidate's NotImplementedError, prints it, and returns --
+      main() then exits 0 whether or not anything actually sealed, so a CI/supervisor caller
+      relying on exit code cannot tell "sealed" from "ran, sealed nothing"; (2) no top-level
+      LICENSE file exists (pyproject.toml's license = "MIT" is metadata only, not a licensing
+      text); (3) requirements-lock.txt carries zero sha256 hashes and its own comment admits
+      this, and .github/workflows/present.yml never installs from it anyway (both install steps
+      run `pip install -e .` directly) -- the lock file is currently decorative; (4)
+      src/repo_presenter/candidates_publish/effect.py (398 lines) is a third, previously
+      uninventoried never-called publish mechanism (control-repo-side candidates/ tree PR,
+      distinct from propose/effect.py's external-repo README PR) -- give it the same
+      "needs one real caller" treatment as item 5, tracked here rather than silently absorbed
+      into item 5's scope since its target and gating are both different.
+    done_when: >
+      (1) run_cascade.py exits non-zero (or otherwise surfaces a machine-readable failure
+      signal, not just printed text) when seal_candidate raises NotImplementedError; (2) a real
+      LICENSE file exists at the repository root; (3) requirements-lock.txt's own header states
+      plainly that it is advisory/unused-in-CI (or present.yml is changed to actually install
+      from a hashed lock -- either answer closes this sub-item, silence does not); (4)
+      candidates_publish/effect.py either gets one real caller with an independently-confirmed
+      live exercise, or is explicitly logged in docs/DECISION_LOG.md as deliberately deferred
+      with a stated reason -- matching this project's own standing "decide on the record, don't
+      let it go silently unused" rule (AGENTS.md non-negotiable #5 in spirit; see item 1's
+      identical treatment of the taskcard mechanism).
+    write_paths: [scripts/run_cascade.py, LICENSE, requirements-lock.txt, docs/DECISION_LOG.md]
+    source_refs: AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md §K (items 6-9), §I item 10.
+    invalidation_impact: >
+      None for (1)-(3) (local tooling/doc fixes only). (4) is None unless/until a real caller is
+      wired and fired, at which point it carries the same real-external-effect impact as item 5.

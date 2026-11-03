@@ -2300,3 +2300,71 @@ open question tracked by that item's own card (several are `READY`, one is `IN_P
 **Where the detail lives**: `AGENTS.md`'s own top section; `docs/MISSION_AUTHORITY.md`'s own new
 section; `project/state.yaml`'s `authority.corrective_plan` field and its nine new cards;
 `docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md` itself.
+
+### 2026-11-03: external counter-review independently verified; audit amended with §K, ten corrective-plan cards (was nine)
+
+**What happened**: the same day the Nov 1 audit was adopted as binding authority, an external,
+independently-authored "Repo Presenter — Deep Technical and Delivery Audit" arrived, explicitly
+framed as treating the Nov 1 audit "as evidence to challenge and independently inspect — not
+automatically accepting its conclusions." Per `AGENTS.md` non-negotiable #6 (evidence from
+tooling, never model narration, and never accepted on another document's own authority either),
+every one of its checkable claims was independently re-verified against this repository's real
+code, data, and `gh` state before anything was changed — none were accepted on the external
+review's own say-so, and none were dismissed without a check. All ten checked claims came back
+confirmed true (one, the stored candidate's structural-defect claim, confirmed only partially —
+graded and logged as such, not inflated). Full list and citations: `docs/AUDIT_2026-11-01_FIRST_
+PRINCIPLES_EVALUATION.md` §K.
+
+**What was wrong or incomplete in the original Nov 1 audit, now corrected**:
+- The G4 finding ("zero callers") was true but incomplete. There are **two** never-called publish
+  mechanisms, not one (`propose/effect.py` was the only one inventoried; `candidates_publish/
+  effect.py`, 398 lines, a distinct control-repo-side publish path, was missed entirely). And even
+  a wired caller would still face **three** independent gates, not zero: the App token (already
+  named), the independent reviewer's own calibration gate (`data/reviewer_calibration.json`:
+  `status: NOT_PASSED`), and the registry write-gate, which blocks `aspose-3d-foss/Aspose.3D-FOSS-
+  for-Python` specifically because its own registry entry is `mode: dry_run` (30 of 36 registry
+  entries are `dry_run`; only 6, including the other mandatory target, are `full`).
+- G6's verdict never cited real hosted-run statistics. `gh run list --workflow present.yml
+  --limit 300` shows 187 completed runs: 160 failures, 27 successes (~14%) — a real, load-bearing
+  reliability figure the original pass simply never pulled.
+- Three smaller, concretely diagnosed defects were newly found and independently confirmed:
+  `scripts/run_cascade.py` swallows `seal_candidate`'s `NotImplementedError` and exits 0 on an
+  unsealed run; no top-level `LICENSE` file exists; `requirements-lock.txt` has zero hashes and
+  is not actually installed from in CI (`present.yml` runs `pip install -e .` directly).
+- The one committed Lane R candidate bundle (`candidates/aspose-3d-foss__Aspose.3D-FOSS-for-.NET`,
+  sealed 2026-10-26) carries `reviewer_logic_version: "1"` in its own `review_verdict.json` — five
+  versions behind the current, `NOT_PASSED` calibration record. "9 Lane R accepted" is accurate as
+  a durable-state-pipeline claim; it is not evidence that any candidate was produced under a
+  reviewer proven adequate, because none has been.
+
+**What changed as a result**:
+- `docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md` gained a new §K (full external-review
+  verification trail) and inline corrections to the G4/G6 scorecard rows, dimensions 7/9/11/16,
+  the component inventory, the Independent Capability Verification section, §I item 5, and §J —
+  each pointing back to §K rather than silently overwriting the original citations.
+- `project/state.yaml`'s `AUDIT_2026_11_01_ITEM_5_FIRST_LIVE_PUBLICATION` card's `blocked_on`
+  field, which previously named only the App-token card, now names all three real, independently
+  confirmed blockers (token, reviewer calibration, registry mode for the 3d-foss/Python target) —
+  this was a factually wrong `blocked_on` field, now corrected, not merely expanded.
+- A new tenth card, `AUDIT_2026_11_01_ITEM_10_EXIT_CODE_AND_LOCK_FILE_HONESTY`, tracks the four
+  newly-confirmed smaller defects (exit code, LICENSE, lock file, the third publish mechanism) as
+  real, open, low-priority work rather than letting them live only inside this log entry.
+- `AGENTS.md`'s own top "READ THIS FIRST" section now says "ten cards," names §K's headline
+  findings, and tells every future session to read §K specifically, not just skim the original
+  Nov 1 text.
+
+**Why this matters, stated plainly**: an audit that is immune to being checked by anyone else is
+not actually binding authority, it is just an unexamined document with an adoption date on it —
+exactly the failure mode this project's own corrective-plan item 1 (the abandoned taskcard
+mechanism) already warns about in a different shape. Treating the external review as data to be
+independently verified, neither accepted nor dismissed on its own authority, is the same
+discipline this project's own fix-queue sweep already practices for every code fix; this entry is
+that same discipline applied to the audit document itself.
+
+**What this does NOT decide**: whether/how to action the newly real reviewer-calibration and
+registry-mode questions is still an owner decision, not resolved by this entry — item 5's
+`blocked_on` field names them as open blockers, it does not close them.
+
+**Where the detail lives**: `docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md` §K (full
+citations); `project/state.yaml`'s `AUDIT_2026_11_01_ITEM_5` (corrected) and `_ITEM_10` (new)
+cards; `AGENTS.md`'s top section.

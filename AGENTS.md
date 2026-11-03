@@ -14,14 +14,19 @@ issues module, candidate publishing with mandatory tests against `cells/net` and
 GitHub App integration, autonomous Docker/GitHub-Actions production execution, parity with
 aspose.org's refresh-candidate skill, and not repeating the two trashed predecessor projects'
 failure modes) and found that four of those eight capabilities exist only as unexercised library
-code nothing calls. Its corrective plan (§I) is tracked as nine live cards in
-`project/state.yaml`'s `next_ready_items`, ids `AUDIT_2026_11_01_ITEM_1` through `_9`. **Every
-session working in this repository must read the audit before treating any other planning
-document as current, and must treat its nine cards as real, open work — not a document that was
-once read and can now be ignored.** The mission document and `MISSION_AUTHORITY.md` still answer
-"what must the product do"; the audit answers "what must get fixed, concretely, before any of
-that counts as delivered" — the two are complementary, not in conflict, and this row does not
-reorder the authority table below.
+code nothing calls. **It was amended the same day (2026-11-03) after an external, independently-
+authored counter-review — see the document's own §K — which independently confirmed additional,
+real gaps the original pass missed: a reviewer-calibration gate that is itself `NOT_PASSED`, a
+registry `dry_run` mode blocking one of the two G4-mandatory targets, a third never-called publish
+mechanism, a real ~14% GitHub Actions success rate, and a `run_cascade.py` exit-code defect that
+masks a failed seal as success.** Its corrective plan (§I) is tracked as ten live cards in
+`project/state.yaml`'s `next_ready_items`, ids `AUDIT_2026_11_01_ITEM_1` through `_10`. **Every
+session working in this repository must read the audit (including §K) before treating any other
+planning document as current, and must treat its ten cards as real, open work — not a document
+that was once read and can now be ignored.** The mission document and `MISSION_AUTHORITY.md`
+still answer "what must the product do"; the audit answers "what must get fixed, concretely,
+before any of that counts as delivered" — the two are complementary, not in conflict, and this
+row does not reorder the authority table below.
 
 ## Authority table
 

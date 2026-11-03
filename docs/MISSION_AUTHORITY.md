@@ -16,13 +16,17 @@ GitHub App integration; G6: autonomous Docker + GitHub Actions production execut
 with, and non-duplication of, aspose.org's own refresh-candidate skill; G8: deliver without
 repeating the two trashed predecessor projects' failure modes) and found, with direct code-level
 and `gh api` evidence, that G3, G4, G5, and the autonomy half of G6 exist only as real but
-never-exercised library code — nothing calls them. This file's own "Authority order" below still
-governs *what the product must do*; the audit governs *what must concretely get fixed before any
-of that counts as delivered*, and its corrective plan (§I) is tracked as nine live cards in
-`project/state.yaml`'s `next_ready_items` (`AUDIT_2026_11_01_ITEM_1` through `_9`). Do not treat
-the audit as read once and closed — it stays open until every one of those nine cards is marked
-`DONE` by the same independent-verification discipline (not self-reported) this project already
-applies to every other acceptance.
+never-exercised library code — nothing calls them. **Amended 2026-11-03 (same day) after an
+external, independently-verified counter-review (audit §K): a wired caller alone would still face
+an uncalibrated-reviewer gate and a `dry_run` registry-mode gate on one of the two G4-mandatory
+targets; a third never-called publish mechanism exists; real Actions history shows a ~14% success
+rate; and a `run_cascade.py` exit-code defect masks a failed seal as success.** This file's own
+"Authority order" below still governs *what the product must do*; the audit governs *what must
+concretely get fixed before any of that counts as delivered*, and its corrective plan (§I) is
+tracked as ten live cards in `project/state.yaml`'s `next_ready_items` (`AUDIT_2026_11_01_ITEM_1`
+through `_10`). Do not treat the audit as read once and closed — it stays open until every one of
+those ten cards is marked `DONE` by the same independent-verification discipline (not
+self-reported) this project already applies to every other acceptance.
 
 Numeric note for anyone tempted to quote an old figure: this file's history and `project/
 state.yaml`'s own history contain at least three *other* "how many accepted candidates is enough"
