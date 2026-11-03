@@ -2368,3 +2368,52 @@ registry-mode questions is still an owner decision, not resolved by this entry โ
 **Where the detail lives**: `docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md` ยงK (full
 citations); `project/state.yaml`'s `AUDIT_2026_11_01_ITEM_5` (corrected) and `_ITEM_10` (new)
 cards; `AGENTS.md`'s top section.
+
+## 2026-11-03: a live link target spelled by an uncited SUPERSEDE_REDUNDANT paragraph gets a real citation backfilled (merged `fix/supersede-redundant-link-citation`)
+
+**Finding**: aspose-note-foss/Aspose.Note-FOSS-for-Python's Lane R run (41290974964) REJECTed at
+independent review with `live_readme_loss [omission] ... link tools/regenerate_pdf_goldens.py`,
+blocking the seal. Downloaded the real hosted artifact and traced it to S4: `normalize()` assigned
+`SUPERSEDE_REDUNDANT` to `inherited_unit:094.paragraph` (the live README's own "Regenerate PDF
+baselines... using tools/regenerate_pdf_goldens.py" paragraph, which carries a real markdown link)
+with `fact_ids: []`, even though that run's own `facts.json` already carries a matching `SUPPORTED`
+fact, `link_target:028`, value `"tools/regenerate_pdf_goldens.py"`. `placement_errors`'s own
+citation requirement for `SUPERSEDE_REDUNDANT` is deliberately scoped to `code_block` units only
+(its own comment: "a heading or a short lead-in rarely has an independent fact of its own") -- but
+this unit had a real, available fact, and `independent_reviewer.py`'s `_accounting_units` requires
+`fact_ids` truthy for every `ACCOUNTING_DISPOSITIONS` kind, by design, with no exemption for
+`SUPERSEDE_REDUNDANT`. The uncited disposition was never counted as accounting for anything, so the
+link was reported lost three stages later.
+
+**Fix**: `normalize()` already carries this exact backfill shape for `OMIT_UNSUPPORTED` (the
+2026-10-27 `_spelled_supported_facts` defect, same file). Added the identical backfill for
+`SUPERSEDE_REDUNDANT`: when `fact_ids` is empty, check whether the unit's own text spells a
+`SUPPORTED` `package`/`link_target` fact's value verbatim (`_spelled_supported_facts`, reused
+verbatim, no reimplementation) and attach it if so -- never loosening the disposition, never
+trusting the model's own say-so, exactly the established pattern. A negative-control test (a
+genuinely redundant paragraph naming nothing real) proves the backfill invents nothing when no
+real fact matches.
+
+**Verified**: two new tests (one positive, reusing the existing `_GO_LINK_FACTS` fixture; one
+negative control) plus a falsifier (reverting the block makes the positive test fail, confirmed
+independently by a cold-verifier agent that also commented out the block itself rather than
+trusting the author's claim). Full suite: 3486 passed, 13 skipped, 0 failed, confirmed both by the
+supervisor and independently by the cold verifier. **Live-checked against the exact real failing
+case**: dispatched `present.yml` on the fix branch for `aspose-note-foss/Aspose.Note-FOSS-for-
+Python` (run 41657452717) -- Lane R moved from `FAILED_INTERNAL` to `ACCEPTED`, confirmed by
+reading the fresh durable state record directly (`state: "ACCEPTED"`, `last_transition` matching
+this run's own dedup key). `lane_r_pipeline_good` moved from 9 to 10 (`scripts/portfolio_status.py`,
+re-run after merge).
+
+**What this does NOT decide**: `placement_errors`'s own citation requirement for `SUPERSEDE_
+REDUNDANT` stays scoped to `code_block` only, unchanged -- this fix is purely an additive backfill,
+not a loosening of what the validator tolerates. Whether other, similarly-shaped uncited-
+`SUPERSEDE_REDUNDANT`-on-prose defects exist elsewhere in the portfolio (the fix is generic, not
+Note-Python-specific, so it should already help any repository hitting the same shape) is not
+separately confirmed per-repository here; the fix-queue sweep (`AUDIT_2026_11_01_ITEM_7`) continues
+to surface and verify those individually as they're found.
+
+**Where the detail lives**: `src/repo_presenter/readme/reconciliation/dispositions.py`
+(`_spelled_supported_facts`, the new `SUPERSEDE_REDUNDANT` backfill block in `normalize()`);
+`tests/readme/reconciliation/test_dispositions.py`; this run's downloaded artifact (expires
+2026-11-15, `present-python-41290974964`).

@@ -5103,10 +5103,13 @@ next_ready_items:
       found/fixed/cold-verified/live-verified, 4 more found and honestly deferred rather than
       rushed).
     done: >
-      As of 2026-11-03 (scripts/portfolio_status.py, re-run for this card): Lane R 9/25 (36%),
+      As of 2026-11-03 (scripts/portfolio_status.py, re-run for this card): Lane R 10/25 (40%),
       Lane L 12/25 (48%), against a 36-repository ceiling -- both reachable, neither close to
-      exhausted. 24-27 repositories per lane remain FAILED_INTERNAL for real, already-triaged
-      reasons recorded in docs/DECISION_LOG.md's 2026-11-01 entries.
+      exhausted. One more real defect found/fixed/cold-verified/live-verified this session
+      (aspose-note-foss/Aspose.Note-FOSS-for-Python Lane R, FAILED_INTERNAL -> ACCEPTED: an
+      uncited SUPERSEDE_REDUNDANT on a live-link-carrying paragraph; see docs/DECISION_LOG.md's
+      2026-11-03 "supersede-redundant-link-citation" entry). 22-26 repositories per lane remain
+      FAILED_INTERNAL for real, already-triaged or still-untriaged reasons.
     next_step: >
       Keep dispatching fresh hosted runs against untried or previously-failing repositories,
       triaging each failure with the same real-evidence discipline (download the real artifact,
