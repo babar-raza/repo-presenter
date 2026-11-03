@@ -6,6 +6,31 @@ distilled 2026-10-21 per `plans/repository_presenter_fresh_start_supervisor_prom
 source governs when two documents disagree, and extracts the still-valid outcome
 requirements from the old repository's `plans/idea.md`.
 
+## Corrective plan (owner-adopted 2026-11-03) — read before anything else in this file
+
+`docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md` is owner-adopted binding authority. It
+evaluated this project against eight explicit goals the owner stated directly (G1/G2: Lane L and
+Lane R production, 25+ independently accepted candidates each; G3: an operational issues module;
+G4: candidate publishing, with `cells/net` and `3d/python` as mandatory integration tests; G5:
+GitHub App integration; G6: autonomous Docker + GitHub Actions production execution; G7: parity
+with, and non-duplication of, aspose.org's own refresh-candidate skill; G8: deliver without
+repeating the two trashed predecessor projects' failure modes) and found, with direct code-level
+and `gh api` evidence, that G3, G4, G5, and the autonomy half of G6 exist only as real but
+never-exercised library code — nothing calls them. This file's own "Authority order" below still
+governs *what the product must do*; the audit governs *what must concretely get fixed before any
+of that counts as delivered*, and its corrective plan (§I) is tracked as nine live cards in
+`project/state.yaml`'s `next_ready_items` (`AUDIT_2026_11_01_ITEM_1` through `_9`). Do not treat
+the audit as read once and closed — it stays open until every one of those nine cards is marked
+`DONE` by the same independent-verification discipline (not self-reported) this project already
+applies to every other acceptance.
+
+Numeric note for anyone tempted to quote an old figure: this file's history and `project/
+state.yaml`'s own history contain at least three *other* "how many accepted candidates is enough"
+numbers (20/36, 28+, "all 36 both lanes") from earlier, now-superseded framings. The audit's own
+25+ target is the current one. `project/state.yaml`'s `progress.counters_status` block is the
+place to find the real, reproducible current count (`python scripts/portfolio_status.py`) — not
+any number quoted in prose anywhere, including this file.
+
 ## Exit plan: this repository is a temporary salvage/rebuild workspace (owner instruction, 2026-11-01)
 
 The end state the owner wants is **one** maintained repository, named

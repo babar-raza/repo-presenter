@@ -2244,3 +2244,59 @@ module.") across its 3 attempts, never landing on any of the dispositions named 
 rejection text -- the same category as the already-logged Slides-Cpp/Font-Python findings.
 
 **Where the detail lives**: real downloaded artifacts for each run.
+
+---
+
+### 2026-11-03: `docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md` owner-adopted as binding authority; wired into the authority chain, not left as a standalone file
+
+**What happened**: the owner personally commissioned a full first-principles audit against eight
+explicit goals (G1-G8: Lane L/Lane R production at 25+ independently accepted candidates each; an
+operational issues module; candidate publishing with `cells/net`/`3d/python` as mandatory
+integration tests; GitHub App integration; autonomous Docker + GitHub Actions production
+execution; parity with aspose.org's own refresh-candidate skill; avoiding the two trashed
+predecessor projects' failure modes). The audit was produced via five parallel research threads
+(mission-authority history, G3-G6 code-level implementation depth, a real portfolio acceptance
+tally via durable state records, a predecessor-project retrospective with direct access to both
+legacy repos' own primary sources, and an aspose.org-skill investigation) plus direct inspection,
+every claim cited to a file, commit, `gh api` call, or durable state record. After reviewing it,
+the owner explicitly directed that it be "wired properly so it does not get lost, ignored,
+skipped, overlooked or forgetting" and stay "in focus for all future sessions."
+
+**Decision**: adopted as owner-directed binding authority, 2026-11-03, and wired into the actual
+authority chain this project's own agents read, not left as an orphaned document:
+- `AGENTS.md` gained a new top-of-file "READ THIS FIRST" section and a new top row in its own
+  authority table, pointing directly at the audit.
+- `docs/MISSION_AUTHORITY.md` gained a new "Corrective plan (owner-adopted 2026-11-03)" section,
+  placed before its existing "Exit plan" section, making clear the audit answers "what must get
+  fixed" while the mission document still answers "what must the product do" -- complementary,
+  not competing, authorities.
+- The audit's own nine-item corrective plan (§I) is now tracked as nine real cards in
+  `project/state.yaml`'s `next_ready_items` (`AUDIT_2026_11_01_ITEM_1` through `_9`), each with
+  its own `done_when`/`blocked_on`/`source_refs` pointing back at the exact audit section.
+- `project/state.yaml`'s own stale `progress.counters_status` block (last computed 2026-10-21,
+  corrected once 2026-10-28, stale again by 2026-10-31) was refreshed by actually running
+  `python scripts/portfolio_status.py` (read-only, already existed, nobody had run it since
+  2026-10-31): Lane R 9/36 pipeline-good, Lane L 12/36 -- matching the audit's own independently-
+  computed tally exactly, confirming both are correct. The old, now-known-false `lane_l_accepted:
+  36`/`lane_r_accepted: 34` fields (the 2026-10-21 sweep's own "false green," which the owner
+  personally caught once already on 2026-10-28 per that card) were corrected in place to 12/9,
+  with an explicit note that reverting to 36/34 would be reintroducing a known-false figure, not
+  merely an old one.
+
+**Why this matters, stated plainly**: this project's own audit found, as one of its most
+significant results, that its own mandated supervisor/worker governance mechanism
+(`ops/gatecli.py`/`ops/SUPERVISOR.md`) was used exactly once and then silently abandoned --
+exactly the "an elaborate plan was authored, then abandoned after step one" predecessor failure
+mode this project's own `MISSION_AUTHORITY.md` names. Writing the audit and then leaving it as a
+single file in `docs/` with no other pointer would have been the same mistake a third time, for
+the audit itself. The wiring above is the concrete difference between "a document that was read
+once" and "a standing instruction every future session's own first reads (`AGENTS.md`,
+`MISSION_AUTHORITY.md`, `project/state.yaml`) cannot avoid seeing."
+
+**What this does NOT decide**: whether to action any individual corrective-plan item is still an
+open question tracked by that item's own card (several are `READY`, one is `IN_PROGRESS`, one is
+`BLOCKED` pending another). This entry records the wiring, not the completion, of the plan.
+
+**Where the detail lives**: `AGENTS.md`'s own top section; `docs/MISSION_AUTHORITY.md`'s own new
+section; `project/state.yaml`'s `authority.corrective_plan` field and its nine new cards;
+`docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md` itself.

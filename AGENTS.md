@@ -5,10 +5,29 @@ repository. Keep this short; detailed requirements live in
 `docs/MISSION_AUTHORITY.md`, the live cursor lives in `project/state.yaml`, and
 neither this file nor a derived document ever overrides those.
 
+## READ THIS FIRST — owner-adopted corrective plan (2026-11-03)
+
+`docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md` is **owner-adopted, binding authority**,
+not a one-time report to skim and forget. It evaluates this project against eight explicit goals
+(G1–G8: Lane L/Lane R production with 25+ independently accepted candidates each, an operational
+issues module, candidate publishing with mandatory tests against `cells/net` and `3d/python`,
+GitHub App integration, autonomous Docker/GitHub-Actions production execution, parity with
+aspose.org's refresh-candidate skill, and not repeating the two trashed predecessor projects'
+failure modes) and found that four of those eight capabilities exist only as unexercised library
+code nothing calls. Its corrective plan (§I) is tracked as nine live cards in
+`project/state.yaml`'s `next_ready_items`, ids `AUDIT_2026_11_01_ITEM_1` through `_9`. **Every
+session working in this repository must read the audit before treating any other planning
+document as current, and must treat its nine cards as real, open work — not a document that was
+once read and can now be ignored.** The mission document and `MISSION_AUTHORITY.md` still answer
+"what must the product do"; the audit answers "what must get fixed, concretely, before any of
+that counts as delivered" — the two are complementary, not in conflict, and this row does not
+reorder the authority table below.
+
 ## Authority table
 
 | Question | Authority |
 |---|---|
+| What must get fixed before the mission's own goals count as delivered? | `docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md` (owner-adopted 2026-11-03; corrective-plan cards live in `project/state.yaml`) |
 | What must the product do, for whom, with what quality bar? | `docs/MISSION_AUTHORITY.md` |
 | What is currently true / in progress / blocked right now? | `project/state.yaml` (the only execution cursor — never hand-edited; see below) |
 | What old code/tests/fixtures may this repo reuse, and how? | `migration/reuse-manifest.yaml` |

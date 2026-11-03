@@ -1,10 +1,13 @@
 schema_version: 1
 project: repo-presenter
-updated_at: "2026-10-31T00:00:00Z"
-# 2026-10-31 owner-approved correction: current_gate, active_work_item and the progress counters below
-# were last set on 2026-10-21 and do not describe the hosted-era state; see progress.counters_status.
+updated_at: "2026-11-03T00:00:00Z"
+# 2026-11-03: AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md is owner-ADOPTED binding authority
+# as of this date (see AGENTS.md's authority table, top row). Its corrective plan (§I, 9 items) is
+# tracked below as cards AUDIT_2026_11_01_ITEM_1 through _9. No future session may treat the audit
+# as read and forgotten: AGENTS.md's own top row now points here on every session's first read.
 
 authority:
+  corrective_plan: docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md
   mission: plans/repository_presenter_fresh_start_supervisor_prompt.md
   product: docs/MISSION_AUTHORITY.md
   governance: AGENTS.md
@@ -13,29 +16,39 @@ authority:
 
 progress:
   counters_status: >
-    STALE, do not quote. repositories_independently_reviewed, lane_l_accepted, lane_r_accepted and
-    the related counters below come from the 2026-10-21 manual agent sweep
-    (evidence/build/P1_PORTFOLIO_SCALE/), before qwen3-next, the LLM reviewer and every hosted run;
-    nothing in src/, ops/ or scripts/ computes them. Observed on 2026-10-31 from the origin state
-    refs (49 records, latest run per repository and lane, so a later run overwrites an earlier one):
-    Lane R in ACCEPTED/READY_FOR_PROPOSAL 4 of 36 (Cells-.NET, Cells-Cpp, Cells-Java, HTML-Python);
-    Lane L 4 of 36 (3D-Java, Cells-Java, Cells-Rust, PDF-.NET); both lanes 1 (Cells-Java). Lane R
-    has a record for 28 repositories, Lane L for 21. None has been reviewed by the owner, reviewer
-    calibration is NOT_PASSED, and only one bundle (3D-.NET, deterministic-only ACCEPT) is committed
-    under candidates/. Since 2026-10-31 sealed bundles are also stored durably on origin as
-    refs/repository-presenter-state/bundles/* (nine backfilled from expiring artifacts, see
-    docs/DECISION_LOG.md); restore one with core/state/bundle_store.export_bundle.
-    These are pipeline-level observations, not acceptances.
-    Reproduce with: python scripts/portfolio_status.py (read-only; reads the registry, the state
-    remote's per-lane records and candidates/; about 2 minutes).
+    REFRESHED 2026-11-03 via `python scripts/portfolio_status.py` (read-only; reads the registry,
+    the state remote's per-lane records and candidates/) -- the exact script progress's own prior
+    note already pointed to and that nothing had actually run since 2026-10-31. Real, current,
+    reproducible numbers as of this run, superseding every earlier counters block in this file's
+    history: Lane R pipeline-good (ACCEPTED/READY_FOR_PROPOSAL) on 9 of 36 registry repositories;
+    Lane L pipeline-good on 12 of 36. Both lanes pipeline-good on 5 repositories (Cells-Java,
+    Cells-Rust, Cells-TypeScript, Email-.Net, Imaging-.NET). Lane R record states: ACCEPTED 8,
+    READY_FOR_PROPOSAL 1, FAILED_INTERNAL 23, INVALIDATED 2, NO_RECORD 2. Lane L record states:
+    ACCEPTED 11, READY_FOR_PROPOSAL 1, FAILED_INTERNAL 22, NO_RECORD 2. Durable bundles stored:
+    11 (Lane R), 12 (Lane L). Committed under candidates/: 1 (Lane R), 0 (Lane L).
+    owner_reviewed: not tracked -- no owner-review record exists anywhere in this repository; every
+    ACCEPTED state above is pipeline-level (independently reviewed by this repo's own non-authoring
+    LLM reviewer, never self-graded) and NOT owner-accepted. These are against
+    AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md's own G1/G2 targets (25+ independently accepted
+    per lane): Lane R 9/25 (36%), Lane L 12/25 (48%) -- short of target, reachable against the
+    36-repository ceiling, not close to exhausted.
+    This block goes stale again the moment a new hosted run changes a record and nobody reruns the
+    script -- re-run `python scripts/portfolio_status.py` before quoting these numbers in anything
+    more than a day old.
   unit: authorizable README candidates (independently verified by this repo's own reviewer, not inherited from the old repo's judge)
   registry_total: 36
   repositories_with_composed_candidates: 36
   repositories_independently_reviewed: 36
-  lane_l_accepted: 36
+  # lane_l_accepted/lane_r_accepted below were 36/34 from the 2026-10-21 manual sweep -- this is
+  # the exact "false green" AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md's §F accountability
+  # table (row 6) documents the owner personally catching and correcting on 2026-10-28, and that
+  # correction itself went stale again by 2026-10-31. Replaced 2026-11-03 with the real,
+  # script-reproduced numbers in counters_status above (9 Lane R, 12 Lane L) -- do not revert to
+  # 36/34, that figure is known-false, not merely old.
+  lane_l_accepted: 12
   lane_l_corrected_non_empty_patch: 15
   lane_l_blocked: 0
-  lane_r_accepted: 34
+  lane_r_accepted: 9
   lane_r_blocked_or_not_authored: 2
   lane_r_blocked_detail: >
     aspose-psd-foss/Aspose.PSD-FOSS-for-.NET and aspose-slides-foss/Aspose.Slides-FOSS-for-.NET:
@@ -4913,3 +4926,208 @@ next_ready_items:
       None: cascade.py is new, additive, and no existing candidate's own already-written
       artifacts are touched by this card (the six original scripts remain unchanged and fully
       functional; nothing here deletes or supersedes them yet).
+
+  # ---- 2026-11-03: owner-adopted corrective plan, AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md
+  # §I. Nine items, dependency-ordered as the audit itself orders them. Each card's source_refs
+  # point back at the exact audit section/evidence so a future session never has to re-derive why
+  # this exists. A supervisor picking "next action" from this file MUST treat these as live,
+  # equal-priority to any other open card -- the whole point of writing them here, not only in the
+  # audit document, is that this is the file AGENTS.md's own authority table names as "what is
+  # currently true / in progress / blocked right now."
+
+  - id: AUDIT_2026_11_01_ITEM_1_GOVERNANCE_DECISION
+    status: READY
+    priority: highest
+    purpose: >
+      Decide, on the record, what to do with the taskcard/gatecli supervisor-worker mechanism
+      (ops/SUPERVISOR.md, ops/gatecli.py): it has been used exactly once (TC-000, a smoke test)
+      in this project's entire life and never again, including for every merge made during the
+      2026-11-01 session that produced the audit itself -- a live, current, previously-unflagged
+      instance of the exact "an elaborate plan was authored, then abandoned after step one"
+      predecessor failure mode MISSION_AUTHORITY.md already names.
+    done_when: >
+      One docs/DECISION_LOG.md entry exists choosing EITHER (a) "reinstating supervisor/worker
+      taskcards starting now, every future card goes through ops/gatecli.py" OR (b) "formally
+      retiring ops/gatecli.py and ops/SUPERVISOR.md's taskcard mechanism; AGENTS.md's own
+      'Taskcard discipline' section is corrected to match whatever replaces it." Either answer
+      closes this card; silence does not.
+    write_paths: [docs/DECISION_LOG.md, AGENTS.md, ops/SUPERVISOR.md]
+    source_refs: >
+      AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md §C dimension 19, §D (ops/SUPERVISOR.md row),
+      §F's decision-table row 7, §I item 1.
+    invalidation_impact: None -- a governance decision, touches no sealed candidate.
+
+  - id: AUDIT_2026_11_01_ITEM_2_AUTOMATE_PORTFOLIO_DASHBOARD
+    status: IN_PROGRESS
+    priority: high
+    purpose: >
+      project/state.yaml's own progress.counters_status block had gone stale (last computed
+      2026-10-21, corrected once 2026-10-28, stale again by 2026-10-31) and required a dedicated
+      research pass during the audit to recompute by hand from raw git refs. Nothing runs
+      scripts/portfolio_status.py on any schedule.
+    done: >
+      2026-11-03: ran `python scripts/portfolio_status.py` directly (read-only; confirmed exit
+      clean) and used its real output to replace the stale counters_status block and the stale
+      lane_l_accepted/lane_r_accepted fields above (36/34 -> 12/9, matching the audit's own
+      independently-computed tally exactly). This closes the immediate "the numbers in this file
+      are currently false" problem.
+    next_step: >
+      The recurring half is still open: decide whether portfolio_status.py runs as part of every
+      hosted present.yml dispatch (writing its own small, timestamped summary file the way the
+      durable state records already do), on a cron, or stays a manually-invoked command a
+      supervisor is expected to run before trusting this file -- any of the three closes this
+      card, but it must be a recorded decision, not an assumption.
+    write_paths: [project/state.yaml, scripts/portfolio_status.py, .github/workflows/present.yml]
+    source_refs: >
+      AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md §C dimension 13, §D (state.yaml dashboard
+      row), §I item 2.
+    invalidation_impact: None -- read-only reporting.
+
+  - id: AUDIT_2026_11_01_ITEM_3_ISSUES_MODULE_ONE_REAL_CALLER
+    status: READY
+    priority: high
+    purpose: >
+      G3. src/repo_presenter/issues/{model,dedup,approval,file}.py is real, gated, filing-capable
+      code with zero autonomous or scripted callers anywhere outside tests/, no discovery
+      mechanism (nothing constructs a Handoff except tests), and no close mechanism (deliberately
+      not ported). The project's one real filed issue (aspose-3d-foss/Python#4) went through
+      file.py's own code in local GITHUB_TOKEN mode, owner-authorized in-session -- proving the
+      filing path itself works, once, by hand; discovery and close remain entirely unbuilt.
+    done_when: >
+      A real discovery step runs (even a manual CLI entrypoint, not yet scheduled) against one
+      owner-named repository, finds or confirms a genuine defect, files or dedupes it through
+      file.py, and the result is independently confirmed via `gh api` the same way this session
+      verified fixes today -- not self-reported.
+    write_paths: [src/repo_presenter/issues/, scripts/]
+    source_refs: >
+      AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md §B (G3 row), §D (issues module row), §E,
+      §I item 3; project/state.yaml's own upstream_issues_filed_detail entry for issue #4.
+    invalidation_impact: None -- additive; no existing candidate touched.
+
+  - id: AUDIT_2026_11_01_ITEM_4_GITHUB_APP_TOKEN_MINTING
+    status: READY
+    priority: high
+    purpose: >
+      G5. src/repo_presenter/github/token_provenance.py can only VERIFY an already-minted App
+      installation token (verify_installation_token); nothing in src/ can mint one (no JWT
+      signing, no private-key handling, no call to /app/installations/{id}/access_tokens
+      anywhere). The App identity itself is real and externally confirmed (ID 5092474, slug
+      repository-presenter, installed on target upstream repos) but unusable from this codebase
+      without this.
+    done_when: >
+      A real installation token is minted by this codebase's own code and passes the existing
+      verify_installation_token check end to end, once, against a real App installation.
+    write_paths: [src/repo_presenter/github/client.py, src/repo_presenter/github/token_provenance.py]
+    source_refs: >
+      AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md §B (G5 row), §D (github/client.py row),
+      §I item 4; src/repo_presenter/github/token_provenance.py lines 38-59.
+    invalidation_impact: None -- additive capability, no existing candidate touched.
+
+  - id: AUDIT_2026_11_01_ITEM_5_FIRST_LIVE_PUBLICATION
+    status: BLOCKED
+    priority: high
+    purpose: >
+      G4. src/repo_presenter/propose/{effect,pull_request}.py and authorization/* have zero
+      callers anywhere and the code's own comment admits "has never fired live." Zero bot-
+      authored PRs exist, ever, against either of the two mandatory integration-test
+      repositories (aspose-cells-foss/Aspose.Cells-FOSS-for-.NET, aspose-3d-foss/
+      Aspose.3D-FOSS-for-Python) -- confirmed live via gh api search/issues?type:pr. A real
+      bot-authored PR exists only from the OLD, legacy repository's own workflows, on a
+      different repository (Cpp), proving the capability once, elsewhere, not here.
+    blocked_on: AUDIT_2026_11_01_ITEM_4_GITHUB_APP_TOKEN_MINTING (publishing needs a real token)
+    done_when: >
+      One real, bot-authored PR exists against aspose-cells-foss/Aspose.Cells-FOSS-for-.NET and
+      one against aspose-3d-foss/Aspose.3D-FOSS-for-Python, each independently confirmed via
+      `gh api`, each fired only after the owner personally names it as the first live target per
+      the mission document's own existing "first live exercise is owner-selected, not
+      agent-selected" rule (already written, never yet exercised for this capability).
+    write_paths: [src/repo_presenter/propose/, src/repo_presenter/authorization/]
+    source_refs: >
+      AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md §B (G4 row), §D (propose/effect.py row),
+      §I item 5; src/repo_presenter/github/token_provenance.py's own "never fired live" comment.
+    invalidation_impact: >
+      A real external effect (a real PR on a real upstream repository) -- requires explicit
+      owner authorization before the write action itself, per standing mission policy.
+
+  - id: AUDIT_2026_11_01_ITEM_6_AUTONOMOUS_SCHEDULING_DECISION
+    status: READY
+    priority: medium
+    purpose: >
+      G6. .github/workflows/present.yml is the only workflow in this repository and its only
+      trigger is workflow_dispatch (manual). Its own comment already frames scheduling as "an
+      owner decision (cadence and provider spend) not yet made." Zero Dockerfile/docker-compose
+      files exist anywhere. Every run in this project's history, including ~45 dispatches during
+      the 2026-11-01 session, was started by a human or an agent acting as one.
+    done_when: >
+      Either a `schedule:` trigger exists in present.yml and has fired once unattended with a
+      real, inspected result, or a dated docs/DECISION_LOG.md entry records why not yet
+      (cadence/cost concern, insufficient Lane R/L maturity, etc.) -- either answer closes this
+      card. Docker is explicitly NOT required to close this card (see §H of the audit: no
+      evidence justifies adding it speculatively; only add it if a concrete reason surfaces).
+    write_paths: [.github/workflows/present.yml, docs/DECISION_LOG.md]
+    source_refs: >
+      AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md §B (G6 row), §C dimension 12, §H, §I item 6.
+    invalidation_impact: None until a schedule actually fires; then ordinary hosted-run impact.
+
+  - id: AUDIT_2026_11_01_ITEM_7_CONTINUE_FIX_QUEUE_SWEEP
+    status: IN_PROGRESS
+    priority: high
+    purpose: >
+      G1/G2. Continue the already-proven, evidence-gated fix-queue sweep toward 25+ independently
+      accepted candidates per lane. This item needs no process change -- 2026-11-01's own session
+      is the evidence it already works (11 fresh independent accepts in one day, 4 real defects
+      found/fixed/cold-verified/live-verified, 4 more found and honestly deferred rather than
+      rushed).
+    done: >
+      As of 2026-11-03 (scripts/portfolio_status.py, re-run for this card): Lane R 9/25 (36%),
+      Lane L 12/25 (48%), against a 36-repository ceiling -- both reachable, neither close to
+      exhausted. 24-27 repositories per lane remain FAILED_INTERNAL for real, already-triaged
+      reasons recorded in docs/DECISION_LOG.md's 2026-11-01 entries.
+    next_step: >
+      Keep dispatching fresh hosted runs against untried or previously-failing repositories,
+      triaging each failure with the same real-evidence discipline (download the real artifact,
+      reproduce cold, falsify, cold-verify, live-check) before merging any fix, same as today.
+      Do not rush past a cold-verifier's own negative finding (AGENTS.md non-negotiable #5).
+    write_paths: [src/repo_presenter/, tests/]
+    source_refs: >
+      AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md §A, §B (G1/G2 rows), §I item 7;
+      docs/DECISION_LOG.md's 2026-11-01 entries (the six sweep rounds and four merged fixes).
+    invalidation_impact: Per-fix, already assessed individually in each fix's own merge entry.
+
+  - id: AUDIT_2026_11_01_ITEM_8_ASPOSE_ORG_CHECKS_REUSE
+    status: READY
+    priority: low
+    purpose: >
+      G7. The aspose.org readme-refresh skill (sibling checkout, real, last exercised 2026-10-31
+      against 3d/python and cells/java) cannot be Lane L/R's orchestration engine -- it contains
+      zero programmatic LLM calls and requires an interactive human/agent session to author
+      content, which would contradict G6's own unattended-execution goal. It DOES have mature,
+      incident-tested deterministic checks (disposition-coverage, retention/fidelity scoring,
+      diagram validation) that this repository independently reimplemented without ever pulling
+      them, despite migration/reuse-manifest.yaml flagging them as "optional... not yet
+      inspected" since this project's own founding.
+    done_when: >
+      At least one of disposition-coverage/retention/diagram checking in this repository is
+      demonstrably informed by (not copied wholesale from) the sibling skill's own
+      incident-tested logic, pulled under the same pinned-revision/file-record/ported-test
+      discipline migration/reuse-manifest.yaml already uses for other aspose.org reuse.
+    write_paths: [src/repo_presenter/readme/review/, src/repo_presenter/readme/validation/]
+    source_refs: >
+      AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md §B (G7 row), §D (aspose.org skill row),
+      §H, §I item 8; migration/reuse-manifest.yaml's own "not yet inspected" entry for this skill.
+    invalidation_impact: >
+      None unless an existing check is replaced rather than supplemented -- any such replacement
+      needs its own regression test proving zero behavior change before/after, matching this
+      session's own established discipline for every other fold change.
+
+  - id: AUDIT_2026_11_01_ITEM_9_WRITE_REAL_TOP_LEVEL_README
+    status: READY
+    priority: low
+    purpose: >
+      Dimension 16. This repository's own top-level README.md is completely empty (0 lines) --
+      a README-generation project ships no README of its own. Trivial technically, but a real,
+      currently-true, citable embarrassment the audit found by simply running `cat README.md`.
+    done_when: README.md states what this repository is, how to run it, and points to AGENTS.md/MISSION_AUTHORITY.md/the audit for anyone who needs the real detail.
+    write_paths: [README.md]
+    source_refs: AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md §C dimension 16, §D, §I item 9.
+    invalidation_impact: None.
