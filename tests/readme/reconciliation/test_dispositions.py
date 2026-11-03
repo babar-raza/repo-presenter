@@ -273,6 +273,56 @@ def test_normalize_backfills_an_omit_unsupported_that_spells_a_supported_link_ta
     assert entry["fact_ids"] == ["link_target:044"]
 
 
+def test_normalize_backfills_a_supersede_redundant_that_spells_a_supported_link_target() -> None:
+    """Real hosted defect (aspose-note-foss/Aspose.Note-FOSS-for-Python, run 41290974964): a
+    paragraph superseded ("the regenerate PDF golden baselines instruction is superseded by the
+    development_testing section") with no fact_ids cited, while its own text names a verified
+    link_target fact's value verbatim. normalize() must attach that real citation -- never
+    loosen the disposition -- so independent_reviewer.py's _accounting_units (which requires
+    fact_ids truthy for every ACCOUNTING_DISPOSITIONS kind, including SUPERSEDE_REDUNDANT) stops
+    reporting the superseded unit's own live link target as lost three stages later."""
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:020.paragraph",
+                "disposition": "SUPERSEDE_REDUNDANT",
+                "destination_section": None,
+                "fact_ids": [],
+                "rationale": "Superseded by the detailed documentation section.",
+            }
+        ]
+    }
+    normalize(output, _GO_LINK_FACTS)
+    entry = output["dispositions"][0]
+    assert entry["disposition"] == "SUPERSEDE_REDUNDANT"
+    assert entry["fact_ids"] == ["link_target:044"]
+    assert entry["rationale"]
+
+
+def test_normalize_leaves_a_genuinely_redundant_supersede_without_a_matching_fact_uncited() -> (
+    None
+):
+    """Negative control: a SUPERSEDE_REDUNDANT paragraph that spells no SUPPORTED package/
+    link_target fact (a short lead-in, exactly the shape the project's own design deliberately
+    leaves uncited) must stay exactly as uncited -- this backfill never invents a citation."""
+    output = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:011.code_block",
+                "disposition": "SUPERSEDE_REDUNDANT",
+                "destination_section": "installation",
+                "fact_ids": [],
+                "rationale": "Superseded by the installation section.",
+            }
+        ]
+    }
+    normalize(output, _CPP_PACKAGE_FACTS)
+    entry = output["dispositions"][0]
+    assert entry["disposition"] == "SUPERSEDE_REDUNDANT"
+    assert entry["fact_ids"] == []
+    assert entry["rationale"] == "Superseded by the installation section."
+
+
 def test_normalize_leaves_a_genuinely_unsupported_omission_uncited() -> None:
     """Negative control: content that spells no SUPPORTED package/link_target fact must stay
     exactly as uncited -- the reviewer rule is never loosened for a real omission."""

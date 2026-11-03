@@ -1556,6 +1556,33 @@ def normalize(
             + str(entry.get("rationale") or "")
         )[:_RATIONALE_LIMIT]
     for entry in output.get("dispositions", []):
+        if entry.get("disposition") != "SUPERSEDE_REDUNDANT" or entry.get("fact_ids"):
+            continue
+        unit_fact = units_by_id.get(str(entry.get("unit_id", "?")))
+        if unit_fact is None:
+            continue
+        # Measured live (aspose-note-foss/Aspose.Note-FOSS-for-Python, hosted run 41290974964,
+        # live_readme_loss on "link tools/regenerate_pdf_goldens.py"): SUPERSEDE_REDUNDANT on a
+        # paragraph whose own text spells a live link_target fact's value verbatim, with no
+        # fact_ids cited. placement_errors's own SUPERSEDE_REDUNDANT check is deliberately scoped
+        # to code_block only (a heading or short lead-in rarely has an independent fact of its
+        # own) -- but this unit DOES have one, available right now, the same shape the
+        # OMIT_UNSUPPORTED backfill just above already handles. Same principle, same helper: never
+        # loosen the disposition, only attach a citation already true of the unit's own text, so
+        # independent_reviewer.py's _accounting_units (which requires fact_ids truthy for every
+        # ACCOUNTING_DISPOSITIONS kind, deliberately, including SUPERSEDE_REDUNDANT) stops
+        # reporting the superseded unit's own live link target as lost.
+        cited = _spelled_supported_facts(unit_fact.value, facts)
+        if not cited:
+            continue
+        entry["fact_ids"] = sorted(cited)
+        entry["rationale"] = (
+            "Superseded, and redundant with the verified facts it names: "
+            + ", ".join(sorted(cited))
+            + ". "
+            + str(entry.get("rationale") or "")
+        )[:_RATIONALE_LIMIT]
+    for entry in output.get("dispositions", []):
         if entry.get("disposition") != "OMIT_UNSUPPORTED" or entry.get("fact_ids"):
             continue
         unit = str(entry.get("unit_id", "?"))
