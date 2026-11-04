@@ -12,18 +12,18 @@ from __future__ import annotations
 
 import json
 import re
+import shlex
 import time
 from pathlib import Path
 
 from gatectl import (
+    CANONICAL_ENV,
     EVIDENCE,
     REPO,
     STATUS_JSONL,
     TASKCARDS,
-    CANONICAL_ENV,
     all_cards,
     check_scope,
-    die,
     drop_worktree,
     fingerprint,
     git,
@@ -356,7 +356,8 @@ def do_verify(card_id: str, base: str, head: str, issue_rev: str | None = None,
         "base_rev": base,
         "head_rev": head,
         "card_sha256": card_sha,
-        "checker_fileset_sha256": checker_fileset_sha256(card, head),
+        "checker_fileset_sha256": checker_fileset_sha256(card, head, FILESET_SCHEME_CURRENT),
+        "checker_fileset_scheme": FILESET_SCHEME_CURRENT,
         "fingerprint": fingerprint(),
         "scope": {"ok": ok_scope, "changed_paths": changed, "violations": violations, "evaluated": evaluate_scope},
         "runs": runs,
@@ -471,15 +472,62 @@ def referenced_files(card: dict) -> list[str]:
     return sorted(paths)
 
 
-def checker_fileset_sha256(card: dict, rev: str) -> str:
+FILESET_SCHEME_CURRENT = "v2"
+
+
+def _marker_checks(card: dict) -> dict[str, list[str]]:
+    """``{file: [markers]}`` for every ``marker_check.py <file> <marker>...`` command in the card.
+    Such a check consumes ONLY whether each marker substring occurs in the file, nothing else."""
+    found: dict[str, list[str]] = {}
+    for c in card.get("checks", []) or []:
+        try:
+            tokens = shlex.split(str(c.get("command", "")))
+        except ValueError:
+            continue
+        for i, tok in enumerate(tokens):
+            if tok.endswith("marker_check.py") and len(tokens) > i + 2:
+                found.setdefault(tokens[i + 1], []).extend(tokens[i + 2 :])
+    return found
+
+
+def _consumed_digest(path: str, markers: list[str], rev: str) -> str:
+    """Digest of exactly what a marker check consumes: each marker's occurrence lines (sorted,
+    with counts). Unrelated edits to the file do not change it; removing, altering or duplicating
+    the marker line does."""
+    rc, out, _ = git("show", f"{rev}:{path}")
+    if rc != 0:
+        return "MISSING"
+    lines = out.splitlines()
+    parts = [f"{m}\t" + "\n".join(sorted(ln for ln in lines if m in ln)) for m in sorted(set(markers))]
+    return sha256_bytes("\x00".join(parts).encode("utf-8"))
+
+
+def checker_fileset_sha256(card: dict, rev: str, scheme: str = FILESET_SCHEME_CURRENT) -> str:
     """2026-11-04 (supervisor directive correction): currentness was tied only to the taskcard
     YAML's own hash, so the EXECUTABLE acceptance checker it calls (e.g. a script under
     ops/checks/) or a required evidence document could change underneath an accepted receipt
     without the receipt ever going stale. This hashes every file `referenced_files()` finds, AT
     `rev`, combined into one digest; a file absent at `rev` hashes as literal 'MISSING' so its
-    removal is also detected as a change, not silently ignored."""
+    removal is also detected as a change, not silently ignored.
+
+    Scheme v2 (2026-11-04): a file that the card consumes ONLY through ``marker_check.py`` (an
+    append-only decision log, AGENTS.md, a prose contract) is hashed as the marker lines it
+    consumes, not whole: appending an unrelated decision must not invalidate an acceptance that
+    never read it, while changing the consumed marker still does. v1 (whole file) is kept so
+    receipts written before v2 are compared the way they were made."""
+    markers = _marker_checks(card) if scheme == "v2" else {}
+    other_use = set()
+    if markers:
+        for c in card.get("checks", []) or []:
+            cmd = str(c.get("command", ""))
+            if "marker_check.py" in cmd:
+                continue
+            other_use.update(t.strip("\"'") for t in cmd.split())
     parts = []
     for path in referenced_files(card):
+        if path in markers and path not in other_use:
+            parts.append(f"{path}:marker:{_consumed_digest(path, markers[path], rev)}")
+            continue
         rc, out, _ = git("show", f"{rev}:{path}")
         parts.append(f"{path}:{sha256_bytes(out.encode('utf-8')) if rc == 0 else 'MISSING'}")
     return sha256_bytes("\n".join(parts).encode("utf-8"))
@@ -505,7 +553,8 @@ def card_is_stale(cid: str, receipt: dict) -> bool:
         return True
     if "checker_fileset_sha256" not in receipt:
         return True
-    return checker_fileset_sha256(card, "HEAD") != receipt.get("checker_fileset_sha256")
+    scheme = receipt.get("checker_fileset_scheme", "v1")
+    return checker_fileset_sha256(card, "HEAD", scheme) != receipt.get("checker_fileset_sha256")
 
 
 def compute_rows(cards: dict, raw: dict, dispatched: set, attempts: dict, latest_kind: dict):
