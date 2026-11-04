@@ -55,20 +55,23 @@ NOT ported this pass, deliberately: ``close_handoff``/``comment_on_filed``/``pla
 
 from __future__ import annotations
 
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Protocol
+from typing import Literal, Protocol
 
+from repo_presenter.core.registry.write_gate import WritePermit
 from repo_presenter.github.client import (
     IssueOutcomeUnknownError,
     WriteFn,
+    comment_issue,
     create_issue,
+    default_patch,
     default_post,
+    reopen_issue,
 )
 from repo_presenter.github.errors import RepositoryMetadataError
 from repo_presenter.github.token_provenance import TokenDecision
-from repo_presenter.core.registry.write_gate import WritePermit
 from repo_presenter.issues.approval import (
     ApprovalStore,
     evidence_digest,
@@ -77,6 +80,7 @@ from repo_presenter.issues.approval import (
     verify_approval,
 )
 from repo_presenter.issues.dedup import body_with_marker
+from repo_presenter.issues.labels import labels_for
 from repo_presenter.issues.model import Handoff, IssueRef
 
 AUTHORIZATION_VARIABLE = "REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED"
@@ -139,6 +143,9 @@ class FileResult:
     # ``True`` when the create call's answer was lost and a search of the target found the issue
     # it had made: ``issue_ref`` is set, ``filed`` stays ``False`` (no POST was confirmed).
     reconciled: bool = False
+    # ``True`` when a CLOSED upstream issue for this defect was reopened on recurrence
+    # (``issue_ref`` is that issue; ``filed`` stays ``False``: no new issue was created).
+    reopened: bool = False
 
 
 @dataclass(frozen=True)
@@ -153,10 +160,24 @@ class FilingPlan:
     handoff_id: str = ""
     evidence_digest: str = ""
     approval_refused: bool = False
+    # Set (and ``already_filed`` left ``None``) when the matching upstream issue is CLOSED and
+    # the defect is re-detected: the planned action is a reopen, not a new issue nor a dedup.
+    reopen: IssueRef | None = None
 
     @property
     def ready(self) -> bool:
-        return self.refusal is None and self.already_filed is None
+        """``True`` only when a NEW issue would be created."""
+        return self.refusal is None and self.already_filed is None and self.reopen is None
+
+    @property
+    def action(self) -> Literal["FILE", "DEDUP", "REOPEN", "REFUSED"]:
+        if self.refusal is not None:
+            return "REFUSED"
+        if self.reopen is not None:
+            return "REOPEN"
+        if self.already_filed is not None:
+            return "DEDUP"
+        return "FILE"
 
 
 def _not_pending_reason(status: str) -> str:
@@ -178,6 +199,13 @@ def _target_refusal(handoff: Handoff, expected_repository: str | None) -> str | 
             f"{expected_repository} - refusing to file outside the recorded target"
         )
     return None
+
+
+def _is_closed(found: IssueRef) -> bool:
+    """An upstream issue the dedup search reports as closed. Only an explicit ``"closed"``
+    counts: an ``IssueRef`` (no state) or any other value is treated as still open, i.e. dedup
+    only -- the safe direction, since a reopen is a write."""
+    return getattr(found, "state", "open") == "closed"
 
 
 def plan_filing(
@@ -203,7 +231,11 @@ def plan_filing(
     """
 
     def _plan(
-        refusal: str | None, already: IssueRef | None = None, *, refused: bool = False
+        refusal: str | None,
+        already: IssueRef | None = None,
+        *,
+        refused: bool = False,
+        reopen: IssueRef | None = None,
     ) -> FilingPlan:
         return FilingPlan(
             repository=handoff.repository,
@@ -214,6 +246,7 @@ def plan_filing(
             handoff_id=handoff_id(handoff) if is_valid_repository(handoff.repository) else "",
             evidence_digest=evidence_digest(handoff),
             approval_refused=refused,
+            reopen=reopen,
         )
 
     if handoff.status != "HANDOFF_PENDING":
@@ -242,8 +275,11 @@ def plan_filing(
                 f"upstream lookup inconclusive ({exc}) - refusing to file without proof that "
                 "no issue for this defect exists"
             )
-        if found is not None:
+        if found is not None and not _is_closed(found):
             return _plan(None, already=found)
+        closed = found
+    else:
+        closed = None
 
     if recheck is not None:
         result = recheck()
@@ -257,7 +293,19 @@ def plan_filing(
                 f"recheck: inconclusive ({result.note}) - refusing to file without a fresh "
                 "confirmation that the defect still fires"
             )
-    return _plan(None)
+    return _plan(None, reopen=closed)
+
+
+def _recurrence_comment(handoff: Handoff) -> str:
+    lines = [
+        f"Recurrence: this defect was re-detected at revision {handoff.source_revision}.",
+        "",
+        handoff.claim,
+        "",
+        "Evidence:",
+    ]
+    lines += [f"- {e.path}" + (f": {e.detail}" if e.detail else "") for e in handoff.evidence]
+    return "\n".join(lines) + "\n"
 
 
 def file_handoff(
@@ -274,6 +322,9 @@ def file_handoff(
     permit: WritePermit,
     verify_token: Callable[[str], TokenDecision],
     max_attempts: int = MAX_CREATE_ATTEMPTS,
+    comment: WriteFn = default_post,
+    patch: WriteFn = default_patch,
+    labels: Sequence[str] | None = None,
 ) -> FileResult:
     """File ``handoff`` as a real GitHub issue -- but only past every gate in this module's own
     docstring. Every early return below makes no network call at all.
@@ -282,7 +333,11 @@ def file_handoff(
     listed, active and permits ``issue_filing``. ``verify_token`` proves the write token's
     provenance (``github/token_provenance.py``); a hand-set or wrongly-scoped token is refused
     before any lookup or POST, at the caller's own discretion (this function only calls what is
-    given it)."""
+    given it).
+
+    A recurrence -- the matching upstream issue is CLOSED and the defect is re-detected -- is
+    reopened (a recurrence comment, then ``state=open``) behind these same gates, never re-filed.
+    ``labels`` defaults to ``labels_for(handoff)``; no assignees are ever sent."""
     if permit.effect != "issue_filing" or permit.entry.repository != handoff.repository:
         raise ValueError("the write permit does not clear this effect for this repository")
 
@@ -332,6 +387,30 @@ def file_handoff(
         return _refuse(True, plan.refusal)
 
     owner, name = _split(handoff.repository)
+    if plan.reopen is not None:
+        target = plan.reopen
+        try:
+            comment_issue(
+                owner,
+                name,
+                target.number,
+                body=_recurrence_comment(handoff),
+                token=token,
+                write=comment,
+            )
+            reopen_issue(owner, name, target.number, token=token, write=patch)
+        except RepositoryMetadataError as exc:
+            return _refuse(True, f"reopen of #{target.number} failed: {exc}", error=True)
+        return FileResult(
+            repository=handoff.repository,
+            defect_fingerprint=handoff.defect_fingerprint,
+            authorized=True,
+            filed=False,
+            reason=f"recurrence: closed issue #{target.number} reopened - no new issue filed",
+            issue_ref=IssueRef(number=target.number, url=target.url),
+            reopened=True,
+        )
+    issue_labels = labels_for(handoff) if labels is None else tuple(labels)
     for attempt in range(1, max(1, max_attempts) + 1):
         try:
             created = create_issue(
@@ -341,6 +420,7 @@ def file_handoff(
                 body=body_with_marker(handoff.suggested_issue_body, handoff.defect_fingerprint),
                 token=token,
                 write=create,
+                labels=issue_labels,
             )
         except IssueOutcomeUnknownError as exc:
             # The issue may exist. Look before anything else is written (reconcile an uncertain

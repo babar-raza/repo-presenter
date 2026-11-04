@@ -23,10 +23,16 @@
 
 FROM python:3.13-slim
 
+# The facts stage clones the pinned upstream revision with git (verified missing 2026-11-04: the
+# slim base has none, so the stage failed with FileNotFoundError: 'git').
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 # Layered so dependency installation caches independently of source changes.
-COPY pyproject.toml ./
+COPY pyproject.toml README.md ./
 COPY src/ ./src/
 RUN pip install --no-cache-dir -e . \
     && useradd --create-home --uid 10001 runner
