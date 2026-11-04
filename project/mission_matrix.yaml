@@ -34,7 +34,7 @@ rows:
   - {id: G6, title: "Autonomous Docker + Actions production", status: PARTIAL,
      implementation: PARTIAL, test: PARTIAL, real_execution: PARTIAL, independent_verification: NONE,
      evidence: [.github/workflows/present.yml, Dockerfile],
-     gaps: "hosted present runs exist from earlier sweeps (~14% success noted by audit); schedule fails closed by design; Dockerfile fixed and built locally 2026-11-04 (README.md copy; runs --help as uid 10001, --network=none) but the git install is unverified locally (deb.debian.org blocked) and no facts stage ran in the container; hosted `docker` CI job added in PR #4 is the verification path; this sandbox cannot dispatch Actions (403)",
+     gaps: "hosted present runs exist from earlier sweeps (~14% success noted by audit); schedule fails closed by design; Dockerfile fixed and built locally 2026-11-04 (README.md copy; runs --help as uid 10001, --network=none) hosted `docker` CI job (PR #4, run 41882862381, job 126760103728) built the image including the apt git install and verified: git present, uid 10001, entrypoint starts with --network=none, no secret-shaped env; no facts stage has yet executed inside the container; this sandbox cannot dispatch Actions (403)",
      next_action: "build and run image; hosted pilot via an authorized path", external_effect_prohibited: "none beyond upstream writes"}
   - {id: G7, title: "Equal or better than aspose.org", status: PARTIAL,
      implementation: PARTIAL, test: YES, real_execution: PARTIAL, independent_verification: PARTIAL,
