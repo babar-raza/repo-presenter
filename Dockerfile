@@ -13,13 +13,18 @@
 #
 # Usage (local validation only, never a hosted deployment target):
 #   docker build -t repo-presenter-facts .
-#   docker run --rm --network=none -v "$PWD/.present-work:/app/.present-work" \
-#     -v "$PWD/.present-facts:/app/.present-facts" \
+#   docker run --rm -v "$PWD/.present-work:/tmp/work" -v "$PWD/.present-facts:/tmp/facts" \
 #     repo-presenter-facts --repository <owner/name> --ecosystem <ecosystem> \
-#     --workdir .present-work --facts-dir .present-facts
-# `--network=none` is deliberate: the facts stage clones a PRE-PINNED revision supplied by the
-# caller via its own checkout step outside this container (present.yml's `actions/checkout@v4`);
-# this container only compiles/runs already-materialized example code, never fetches it itself.
+#     --workdir /tmp/work --facts-dir /tmp/facts
+# CORRECTION (2026-11-04, found by comparing this file with the code): an earlier version of this
+# comment said the container "never fetches" code and showed `--network=none` for a real run. That
+# was wrong. The facts stage itself resolves the default-branch revision (git ls-remote) and clones
+# the pinned revision over HTTPS (present.py -> core/git_safety/clone.py), which is why git is
+# installed below, so a real run needs network access to the repository host. What this image
+# does guarantee, and what CI exercises: it runs as an unprivileged user (UID 10001), bakes in no
+# secret, and with NO network the stage FAILS CLOSED (exit code 3, "cannot resolve the
+# default-branch revision") rather than producing anything. The `present` stage (which holds
+# secrets) is intentionally NOT containerized here -- hosted runners already isolate it.
 
 FROM python:3.13-slim
 

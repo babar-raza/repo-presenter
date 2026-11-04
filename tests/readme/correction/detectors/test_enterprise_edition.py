@@ -87,3 +87,70 @@ def test_commercial_describing_something_other_than_the_product_name_is_left_alo
     ctx = make_context(readme, make_facts(_enterprise(make_fact)))
     result = enterprise_edition_naming(ctx)
     assert result.edits == () and result.findings == ()
+
+
+# --- a bare "the commercial product", resolved only when the README names exactly one ---------------
+
+_ONE_NAME_README = (
+    "The namespaces are `Aspose.Words.*`, the same as the commercial product, so existing code "
+    "compiles.\n"
+    "The API is the same as in the commercial Aspose.Words for .NET, so its docs largely apply.\n"
+)
+
+
+def test_a_bare_commercial_product_is_resolved_when_the_readme_names_exactly_one(
+    make_context: Any, make_facts: Any, make_fact: Any
+) -> None:
+    ctx = make_context(_ONE_NAME_README, make_facts(_enterprise(make_fact)))
+    result = enterprise_edition_naming(ctx)
+    bare = [e for e in result.edits if e.original == "the commercial product"]
+    assert len(bare) == 1
+    (edit,) = bare
+    assert edit.kind == FALSE_CLAIM_FIX and edit.fact_ids == (ENTERPRISE_FACT_ID,)
+    assert edit.replacement == "Aspose.Words for .NET — Enterprise Edition"
+    assert _ONE_NAME_README[edit.start : edit.end] == "the commercial product"
+    assert result.findings == ()  # the named one was fixed too; nothing left unreported
+
+
+def test_a_bare_commercial_product_is_not_resolved_when_two_different_names_appear(
+    make_context: Any, make_facts: Any, make_fact: Any
+) -> None:
+    readme = (
+        "It is the same as the commercial product.\n"
+        "Compare the commercial Aspose.Words for .NET with the commercial Aspose.Words for Java.\n"
+    )
+    ctx = make_context(readme, make_facts(_enterprise(make_fact)))
+    result = enterprise_edition_naming(ctx)
+    assert all(e.original != "the commercial product" for e in result.edits)
+    assert any("not guessed" in f.reason and "commercial product" in f.reason for f in result.findings)
+
+
+def test_the_same_name_in_different_spelling_counts_as_one_name(
+    make_context: Any, make_facts: Any, make_fact: Any
+) -> None:
+    readme = (
+        "It is the same as the commercial product.\n"
+        "See the commercial Aspose.Words for .NET and the commercial aspose.words  for .net.\n"
+    )
+    ctx = make_context(readme, make_facts(_enterprise(make_fact)))
+    assert any(e.original == "the commercial product" for e in enterprise_edition_naming(ctx).edits)
+
+
+def test_a_name_inside_a_code_fence_is_not_evidence_for_resolving_a_bare_phrase(
+    make_context: Any, make_facts: Any, make_fact: Any
+) -> None:
+    readme = (
+        "It is the same as the commercial product.\n"
+        "```\nthe commercial Aspose.Words for .NET\n```\n"
+    )
+    ctx = make_context(readme, make_facts(_enterprise(make_fact)))
+    result = enterprise_edition_naming(ctx)
+    assert result.edits == ()
+    assert result.findings
+
+
+def test_a_bare_commercial_product_is_not_resolved_without_the_enterprise_fact(
+    make_context: Any, make_facts: Any
+) -> None:
+    ctx = make_context(_ONE_NAME_README, make_facts())
+    assert enterprise_edition_naming(ctx).edits == ()

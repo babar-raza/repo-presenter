@@ -32,11 +32,14 @@ from typing import Literal, Protocol
 from repo_presenter.core.facts import Fact
 from repo_presenter.core.registry.write_gate import WritePermit
 from repo_presenter.github.client import (
+    FetchFn,
     WriteFn,
     close_issue,
     comment_issue,
+    default_fetch,
     default_patch,
     default_post,
+    issue_has_comment_with_marker,
 )
 from repo_presenter.github.token_provenance import TokenDecision
 from repo_presenter.issues.approval import (
@@ -120,6 +123,8 @@ class RemoteClose:
     expected_repository: str | None = None
     comment: WriteFn = default_post
     patch: WriteFn = default_patch
+    #: The read transport for the comment-idempotency check (a GET; never a write).
+    fetch: FetchFn = default_fetch
 
 
 @dataclass(frozen=True)
@@ -127,6 +132,9 @@ class CloseOutcome:
     handoff: Handoff
     commented: bool
     closed_remote: bool
+    #: True when the closing comment was already on the issue (a retry after a partial failure), so
+    #: none was posted again; ``commented`` is then False for this run.
+    comment_already_present: bool = False
 
 
 def _read_close_approval(handoff: Handoff, remote: RemoteClose) -> tuple[str, str]:
@@ -218,6 +226,12 @@ def _bullets(entries: tuple) -> list[str]:  # type: ignore[type-arg]
     return [f"- {e.path}" + (f": {e.detail}" if e.detail else "") for e in entries]
 
 
+def closing_marker(handoff: Handoff, reason: CloseReason) -> str:
+    """The hidden marker that makes the closing comment idempotent across retries: one per
+    (defect fingerprint, close reason), invisible in the rendered issue."""
+    return f"<!-- repo-presenter:closing-comment:{handoff.defect_fingerprint}:{reason} -->"
+
+
 def _closing_comment(
     handoff: Handoff,
     reason: CloseReason,
@@ -243,7 +257,7 @@ def _closing_comment(
             "",
             f"Original claim: {handoff.claim}",
         ]
-    return "\n".join(lines) + "\n"
+    return "\n".join(lines) + "\n\n" + closing_marker(handoff, reason) + "\n"
 
 
 def close_handoff_with_outcome(
@@ -272,7 +286,7 @@ def close_handoff_with_outcome(
                 "(extraction failure, a renamed check, or incomplete toolchain evidence); "
                 "absence of the fact is not proof the defect was fixed"
             )
-    commented = closed_remote = False
+    commented = closed_remote = already_present = False
     if remote is not None:
         # Every gate first (nothing is written, locally or upstream, on a refusal); then the
         # evidence comment; then the close. The local file is written last, so a failed upstream
@@ -282,20 +296,28 @@ def close_handoff_with_outcome(
         owner, name = handoff.repository.split("/", 1)
         number = handoff.issue_ref.number
         current = current_facts_by_id.get(handoff.triggering_check.id)
-        comment_issue(
-            owner,
-            name,
-            number,
-            body=_closing_comment(handoff, reason, current, reason_text, approver),
-            token=remote.token or "",
-            write=remote.comment,
+        # Idempotent across a partial failure (comment posted, close failed): read the issue's
+        # comments first and post only if this closing comment is not already there. An
+        # incomplete read raises, leaving the handoff FILED to retry -- never a guessed "absent".
+        already_present = issue_has_comment_with_marker(
+            owner, name, number, closing_marker(handoff, reason),
+            token=remote.token, fetch=remote.fetch,
         )
-        commented = True
+        if not already_present:
+            comment_issue(
+                owner,
+                name,
+                number,
+                body=_closing_comment(handoff, reason, current, reason_text, approver),
+                token=remote.token or "",
+                write=remote.comment,
+            )
+            commented = True
         close_issue(owner, name, number, reason=reason, token=remote.token or "", write=remote.patch)
         closed_remote = True
     resolved = replace(handoff, status="RESOLVED_UPSTREAM", close_reason=reason)
     write_handoff(resolved, path)
-    return CloseOutcome(resolved, commented, closed_remote)
+    return CloseOutcome(resolved, commented, closed_remote, already_present)
 
 
 def close_handoff(

@@ -69,3 +69,14 @@ jobs:
         run: |
           docker run --rm --network=none --entrypoint env repo-presenter-facts \
             | grep -i -E '(token|secret|password|api_key|GPT_OSS)' && exit 1 || true
+
+      - name: With no network the facts stage fails closed (it resolves and clones its own revision)
+        run: |
+          set +e
+          out="$(docker run --rm --network=none repo-presenter-facts \
+            --repository aspose-words-foss/Aspose.Words-FOSS-for-Python --ecosystem python \
+            --workdir /tmp/work --facts-dir /tmp/facts 2>&1)"
+          rc=$?
+          echo "$out"
+          test "$rc" = "3"
+          echo "$out" | grep -q "cannot resolve the default-branch revision"

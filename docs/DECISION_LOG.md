@@ -2836,3 +2836,54 @@ prepare iteration 4 within the 200-call cap; (3) read-only verification that eve
 publishing path is disabled-by-construction against non-`babar-raza/repo-presenter` targets
 (a guard test, so the new no-upstream-write rule is mechanical rather than narrative); (4)
 README-quality pilots (Imaging-.NET, 3D-.NET, Words-.NET) bounded to three repositories.
+
+## 2026-11-04: checkpoint after PRs #3 and #5 -- write guard, real-pipeline P5 proof, a fail-open scheduled gate closed, and the pilot failure picture
+
+**Delivered (all merged to `main`, hosted `ci` green on each head)**: PR #3 (`0db8462`): fail-closed
+repository allowlist on the three real GitHub write primitives (`github/client.py`; only
+`babar-raza/repo-presenter`; a `%2F` bypass was caught by its own test and fixed), the
+real-`run_cascade` Lane R caching test (`tests/test_lane_r_real_cascade_p5.py`, 17 tests), and a guard
+that any future `mint-app-token` caller may only target this repository. PR #5 (`27592d9`): TC-008a's
+headline P5 numbers now come from Lane L (real CLI) and Lane R-real (real `run_cascade`); measured
+provider requests are 0 for warm, cold-runner and evicted-cache on both lanes, 10 for a cold Lane R run
+(nine stages + one review), and corrupt evidence never silently skips (0 with the call store intact =
+replay, 10 when evicted). A guard test fails if the committed proof's headline numbers are not derivable
+from its own per-scenario rows. All provider traffic in these proofs is a fake at the transport boundary;
+no live model was called, so this is operational proof of the skip logic, not of model behaviour.
+
+**Real defect found and fixed (TC-012)**: `scripts/scheduled_execution_gate.calibration_passed()` returned
+true for any file whose `status` was the string `PASSED`, including `PASSED` beside `failed_gates`, a wrong
+`reviewer_logic_version`, or no `measured` object -- all of which `calibration_status.parse_calibration`
+reads as `NOT_PASSED`. A hand-edited status could have opened the scheduled provider-spend path. It now
+delegates to `load_calibration` and requires exactly `PASSED`. Found by a consistency test whose negative
+control disagreed with the gate.
+
+**Verifier-design cost, not fixed**: a check that reads the append-only `docs/DECISION_LOG.md` (TC-009's
+marker check) makes every log entry stale that card's receipt, so each entry needs a TC-009-tagged commit
+and a real re-verification. Left as is; batching log entries is the mitigation. A cleaner fix is for the
+check to read a dedicated file.
+
+**Unexplained**: one local full-suite run failed
+`tests/candidates_publish/test_git_ops.py::test_a_pending_branch_is_continued_from_its_own_remote_tip_not_the_base_branch`
+(output not captured); it passed in isolation, in the next clean full run (3639 passed) and in hosted CI.
+Not root-caused; reopen with the captured output if it recurs.
+
+**Pilot failure picture (durable-state records dated 2026-11-01, i.e. older than several fixes; all three
+registry entries are `dry_run`)**: Imaging-.NET ACCEPTED on both lanes. Words-.NET Lane R: reviewer broke
+its output contract twice (a contradiction finding cited only inherited text, no product fact). Words-.NET
+Lane L: the live README says "the same as the commercial product" (line 95) -- a correct
+`enterprise_edition_naming` blocker the detector deliberately will not guess a replacement for.
+3D-.NET Lane R: three `unsupported_claim` findings in `scope_limitations`; Lane L: seven blocking findings
+(for example `U3D` marked supported with no fact confirming it). `present.yml` was inspected: its only
+write is `contents: write` for this repository's own durable-state refs (job `GITHUB_TOKEN`); it has no
+App-token, PR or issue step, so a dispatched run cannot write upstream.
+
+**Not done / still true**: reviewer calibration is `NOT_PASSED` (iteration 3); no iteration 4 was run and
+the held-out corpus inputs (hosted cascade work directories) do not exist in this checkout. TC-002 and
+TC-004 remain `AWAITING_OWNER_DECISION`; the sweep pause stands. Nothing is live-delivered; publishing and
+issue paths are `IMPLEMENTED_AND_VERIFIED -- UPSTREAM_EFFECT_NOT_EXECUTED` at most.
+
+**Next**: (1) bare "the commercial product" resolution from registry identity (a design decision touching
+the detector's deliberate no-guess rule); (2) reviewer-recovery for the contradiction-without-product-fact
+failure without silently dropping a negative finding; (3) calibration corpus inputs via a bounded hosted
+run; (4) publishing/issue lifecycle simulations against fixtures.

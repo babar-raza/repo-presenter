@@ -68,6 +68,22 @@ def close_approval(h, *, reason_text="false positive: check version changed", cl
     return Store({handoff_id(h) + ".close": json.dumps(rec)})
 
 
+class Comments:
+    """A fake GET /issues/{n}/comments: serves the given comment bodies in pages of ``page_size``;
+    ``status`` simulates an unreachable/denied read. Counts reads."""
+
+    def __init__(self, bodies: list[str] | None = None, *, status: int = 200, page_size: int = 100):
+        self.bodies, self.status, self.page_size, self.reads = bodies or [], status, page_size, 0
+
+    def __call__(self, url: str, token: str | None) -> tuple[int, Any]:
+        self.reads += 1
+        if self.status != 200:
+            return self.status, None
+        page = int(url.rsplit("page=", 1)[1])
+        start = (page - 1) * self.page_size
+        return 200, [{"body": b} for b in self.bodies[start:start + self.page_size]]
+
+
 class W:
     def __init__(self, status: int = 200) -> None:
         self.calls: list[tuple[str, str, dict[str, Any]]] = []
@@ -79,13 +95,13 @@ class W:
 
 
 def remote(h, *, env=ENV, token="w", approvals=None, close_approvals=None, effect="issue_close",
-           verify=None, comment=None, patch=None, **kw) -> RemoteClose:
+           verify=None, comment=None, patch=None, fetch=None, **kw) -> RemoteClose:
     return RemoteClose(
         token=token, environment=env, permit=make_permit(h.repository, effect=effect),
         approvals=approvals if approvals is not None else approval(h),
         verify_token=verify or (lambda t: TokenDecision(True, t)),
         close_approvals=close_approvals, now=lambda: NOW,
-        comment=comment or W(201), patch=patch or W(200), **kw,
+        comment=comment or W(201), patch=patch or W(200), fetch=fetch or Comments(), **kw,
     )
 
 
@@ -232,3 +248,83 @@ def test_approved_not_planned_remote_close_posts_the_recorded_reason_then_closes
     assert "false positive: check version changed" in c.calls[0][2]["body"]
     assert "owner-login" in c.calls[0][2]["body"]
     assert p.calls[0][2] == {"state": "closed", "state_reason": "not_planned"}
+
+
+# --- idempotence across a partial failure (comment posted, close failed) -------------------------
+
+
+def test_a_retry_after_a_failed_close_does_not_post_the_closing_comment_twice(tmp_path: Path) -> None:
+    h = filed()
+    posted = W(201)
+    # Run 1: the comment lands, the close PATCH fails with HTTP 500 -> raises, handoff stays FILED.
+    with pytest.raises(Exception, match="HTTP 500"):
+        close_handoff(h, current_facts_by_id=FIXED, reason="completed", path=tmp_path / "h.json",
+                      remote=remote(h, comment=posted, patch=W(500)))
+    assert len(posted.calls) == 1
+    first_body = posted.calls[0][2]["body"]
+    assert "repo-presenter:closing-comment:" in first_body
+    # Run 2 (the retry): the issue now already holds that comment; only the close is attempted.
+    patch = W(200)
+    outcome = close_handoff_with_outcome(
+        h, current_facts_by_id=FIXED, reason="completed", path=tmp_path / "h.json",
+        remote=remote(h, comment=posted, patch=patch, fetch=Comments([first_body])))
+    assert len(posted.calls) == 1, "the closing comment was posted a second time"
+    assert outcome.commented is False and outcome.comment_already_present is True
+    assert outcome.closed_remote is True and len(patch.calls) == 1
+    assert outcome.handoff.status == "RESOLVED_UPSTREAM"
+
+
+def test_the_first_attempt_posts_the_comment_when_the_issue_has_none(tmp_path: Path) -> None:
+    h = filed()
+    posted = W(201)
+    outcome = close_handoff_with_outcome(
+        h, current_facts_by_id=FIXED, reason="completed", path=tmp_path / "h.json",
+        remote=remote(h, comment=posted, fetch=Comments(["an unrelated human comment"])))
+    assert len(posted.calls) == 1 and outcome.commented and not outcome.comment_already_present
+
+
+def test_a_marker_from_a_different_close_reason_is_not_treated_as_this_closing_comment(
+    tmp_path: Path,
+) -> None:
+    from repo_presenter.issues.close import closing_marker
+
+    h = filed()
+    other = closing_marker(h, "not planned")  # a different reason's marker
+    posted = W(201)
+    outcome = close_handoff_with_outcome(
+        h, current_facts_by_id=FIXED, reason="completed", path=tmp_path / "h.json",
+        remote=remote(h, comment=posted, fetch=Comments([other])))
+    assert len(posted.calls) == 1 and outcome.commented
+
+
+def test_the_marker_is_found_on_a_later_page_of_comments(tmp_path: Path) -> None:
+    from repo_presenter.issues.close import closing_marker
+
+    h = filed()
+    filler = [f"comment {i}" for i in range(100)]  # exactly one full page, marker on page 2
+    posted = W(201)
+    outcome = close_handoff_with_outcome(
+        h, current_facts_by_id=FIXED, reason="completed", path=tmp_path / "h.json",
+        remote=remote(h, comment=posted, fetch=Comments([*filler, closing_marker(h, "completed")])))
+    assert posted.calls == [] and outcome.comment_already_present
+
+
+@pytest.mark.parametrize("status", [-1, 403, 404, 500])
+def test_an_unreadable_comment_list_posts_nothing_and_closes_nothing(tmp_path: Path, status: int) -> None:
+    """Absence is never guessed from a failed read: no comment, no close, handoff stays FILED."""
+    h = filed()
+    posted, patch = W(201), W(200)
+    path = tmp_path / "h.json"
+    with pytest.raises(Exception):
+        close_handoff(h, current_facts_by_id=FIXED, reason="completed", path=path,
+                      remote=remote(h, comment=posted, patch=patch, fetch=Comments(status=status)))
+    assert posted.calls == [] and patch.calls == [] and not path.exists()
+
+
+def test_the_comment_read_is_not_made_when_a_gate_refuses(tmp_path: Path) -> None:
+    h = filed()
+    reads = Comments()
+    with pytest.raises(CloseRefusal):
+        close_handoff(h, current_facts_by_id=FIXED, reason="completed", path=tmp_path / "h.json",
+                      remote=remote(h, env={}, fetch=reads))
+    assert reads.reads == 0

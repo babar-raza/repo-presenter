@@ -3,11 +3,11 @@
   "card": "TC-009",
   "gate": "GATE2_INTEGRATIONS",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-04T16:21:23Z",
-  "base_rev": "6986787ff888a87e26f62cdb3ecc4e02f90f3355",
-  "head_rev": "b77e6b011fe398466e41280025d50f0445b4c23f",
+  "generated_at": "2026-11-04T18:14:00Z",
+  "base_rev": "27592d9b09464de42130a1e976d3c8cbce129796",
+  "head_rev": "49fedf54784e7167d892043353e65b8e95557f14",
   "card_sha256": "62005ce824b43ba4512ba4e89750fa59d777430368725974527bcea82d7094de",
-  "checker_fileset_sha256": "58d46e93ae853cf23d9f65d5be4667c425581e639ed3884f5bd5d2a67fad681d",
+  "checker_fileset_sha256": "053e61b12e56a80f5f2fc0208f6f376534121b4300efdf55de2c807f718a23fa",
   "fingerprint": {
     "python": "3.13.18",
     "platform": "Linux-6.18.44-fc-v233-x86_64-with-glibc2.39"
@@ -27,20 +27,20 @@
         {
           "command": "python ops/checks/marker_check.py docs/DECISION_LOG.md \"APP_TOKEN_REUSE_DECISION:\"",
           "exit_code": 0,
-          "duration_s": 0.03,
+          "duration_s": 0.027,
           "stdout_sha256": "cef78e8b8fee5e9e1dcbafa7f1096483a4aeaca246007b0b29f91ca70c281d10"
         },
         {
           "command": "python -m pytest tests/test_mint_app_token_workflow.py -q",
           "exit_code": 0,
-          "duration_s": 0.757,
-          "stdout_sha256": "c2c6b596f6326dec34c3110029f10ae752a6b80ef7dd9f3d368c2793a9363a31"
+          "duration_s": 0.949,
+          "stdout_sha256": "33ceaa0d737d4006ec8ba3fe8bdb5c94696ba33d8c2c6ca14092b20570b1c688"
         },
         {
           "command": "python -m pytest tests/ops/test_gate_guard_tc009.py -q",
           "exit_code": 0,
-          "duration_s": 0.653,
-          "stdout_sha256": "3605abb09038ce24e90d81df8f7c0d87bb6f647a5e016bf461d8a8fcb408f6e9"
+          "duration_s": 0.911,
+          "stdout_sha256": "e8c2ebdecc6c68bd31c948de0b0c1dd4c57dd47d093194a6c1d241c65727824d"
         }
       ],
       "all_passed": true
@@ -51,19 +51,19 @@
         {
           "command": "python ops/checks/marker_check.py docs/DECISION_LOG.md \"APP_TOKEN_REUSE_DECISION:\"",
           "exit_code": 0,
-          "duration_s": 0.035,
+          "duration_s": 0.032,
           "stdout_sha256": "cef78e8b8fee5e9e1dcbafa7f1096483a4aeaca246007b0b29f91ca70c281d10"
         },
         {
           "command": "python -m pytest tests/test_mint_app_token_workflow.py -q",
           "exit_code": 0,
-          "duration_s": 0.686,
-          "stdout_sha256": "c2c6b596f6326dec34c3110029f10ae752a6b80ef7dd9f3d368c2793a9363a31"
+          "duration_s": 0.605,
+          "stdout_sha256": "ca12bf5ea55b044bc10bb2aa85a86e00af21c4d9016b261b92fd477b542d30a9"
         },
         {
           "command": "python -m pytest tests/ops/test_gate_guard_tc009.py -q",
           "exit_code": 0,
-          "duration_s": 0.543,
+          "duration_s": 0.629,
           "stdout_sha256": "f4c77b58e2280613a49ba18da1c4a02d440e862c49a6c8fe5daaf277333ff99d"
         }
       ],
