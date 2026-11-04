@@ -370,6 +370,10 @@ class _Composition:
     readme: str
     tasks: list[Any]
     accounted: list[Accounted]
+    #: The dispositions the S5-S8 calls were made from (before the S9 accounting added entries).
+    #: A repair rebuilds those calls' request hashes, so it must read these, not ``dispositions``;
+    #: ``None`` means the accounting changed nothing and the two sets are the same.
+    planned_dispositions: dict[str, Any] | None = None
 
 
 def _candidate(
@@ -442,6 +446,7 @@ def _compose(
     candidate = _candidate(
         entry, document, plan, coherent_units, dispositions, final_readme, tree_paths, tasks
     )
+    planned_dispositions = dispositions
     settled, accounted = account_unprinted_units(candidate)
     if accounted:
         if render_readme(entry, document, plan, coherent_units, settled) == final_readme:
@@ -461,7 +466,8 @@ def _compose(
     )
     (out_dir / "README.coherent.md").write_text(final_readme, encoding="utf-8", newline="\n")
     return _Composition(
-        dispositions, plan, units_document, coherent_units, final_readme, tasks, accounted
+        dispositions, plan, units_document, coherent_units, final_readme, tasks, accounted,
+        planned_dispositions,
     )
 
 
@@ -521,7 +527,12 @@ def _repair_defects(
 
     rc = RepairContext(
         entry=entry, facts=document, prompts=prompts, config=config, ledger=ledger, store=store,
-        context=context, investigation=investigation, dispositions=composed.dispositions,
+        context=context, investigation=investigation,
+        dispositions=(
+            composed.planned_dispositions
+            if composed.planned_dispositions is not None
+            else composed.dispositions
+        ),
         plan=composed.plan, tasks=composed.tasks, name=product_name(entry),
     )
     fresh = merge_equivalent([d for d in defects if not repairs.attempted(d.fingerprint)])
