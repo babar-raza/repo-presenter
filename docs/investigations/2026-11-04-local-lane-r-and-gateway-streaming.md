@@ -81,3 +81,24 @@ project-URL change by the package maintainers, an upstream data question outside
 the owner explicitly rules otherwise. Recorded as a genuinely blocked source fact; the
 upstream-issue candidate cannot be filed (external writes prohibited). Mandatory-target status for
 G4/3D-Python: BLOCKED_ON_SOURCE_FACT.
+
+## Cells-FOSS-for-.NET (mandatory G4 target) local Lane R: environment-blocked
+
+The whole cascade completed (no .NET SDK locally, so examples are NOT_VERIFIED and Quick Start is
+excluded - that needs a hosted runner). The only blocking check is BC-06:
+`https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-.NET/issues` is UNCHECKED because
+github.com returns 403 from this sandbox. The alternate-source rule intentionally covers only
+github.com blob/raw file links, and the session's GitHub tools are scoped to babar-raza/repo-presenter,
+so no authenticated read of that repository is available. Left UNCHECKED, not weakened. Needs a
+hosted run (Actions dispatch is 403 from this integration).
+
+## Font Lane R: three pipeline defects found by running it for real
+
+1. Install-command matching through the `python -m` launcher (3D-Python; merged in PR #4).
+2. A deferred CONTRADICTED example was reported as `live_readme_loss` (fixed: a deferral on a
+   code-computed CONTRADICTED example becomes a cited OMIT_UNSUPPORTED).
+3. `cascade._repair_defects` built the repair context from the S9-accounted dispositions, so the
+   BC-07 visible-line-budget repair (S5) could never find its plan in the call store (fixed:
+   `_Composition.planned_dispositions`). Note for anyone resuming a workdir: `repairs.json`
+   persists and remembers attempted fingerprints, so a rerun in the same workdir will not retry a
+   defect already recorded unrepairable - move it aside to retest.
