@@ -21,9 +21,9 @@ from __future__ import annotations
 
 import base64
 import re
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
-from typing import Any, NoReturn
+from typing import Any, Literal, NoReturn
 from urllib.parse import urlsplit
 
 import httpx
@@ -164,6 +164,10 @@ class CreatedIssue:
 
     number: int
     url: str
+    #: ``"open"`` or ``"closed"`` as GitHub reports it for an issue found by the dedup search
+    #: (a freshly created issue is open). Lets a caller tell a recurrence of a closed defect
+    #: apart from a duplicate of a still-open one.
+    state: str = "open"
 
 
 class IssueOutcomeUnknownError(RepositoryMetadataError):
@@ -198,8 +202,11 @@ def create_issue(
     body: str,
     token: str,
     write: WriteFn = default_post,
+    labels: Sequence[str] | None = None,
+    assignees: Sequence[str] | None = None,
 ) -> CreatedIssue:
-    """``POST /repos/{owner}/{repo}/issues``.
+    """``POST /repos/{owner}/{repo}/issues``. ``labels``/``assignees`` join the payload only when
+    non-empty, so a call without them posts exactly ``{"title", "body"}`` as before.
 
     Raises :class:`RepositoryMetadataError` on anything but a well-formed HTTP 201 (GitHub's own
     success status for issue creation), or a response missing the ``number``/``html_url`` fields a
@@ -210,7 +217,12 @@ def create_issue(
     if not token:
         raise RepositoryMetadataError(f"{owner}/{name}: POST refused - no write-scoped token")
     url = f"{API_ROOT}/repos/{owner}/{name}/issues"
-    status_code, response_body = write(url, token, {"title": title, "body": body})
+    payload: dict[str, Any] = {"title": title, "body": body}
+    if labels:
+        payload["labels"] = list(labels)
+    if assignees:
+        payload["assignees"] = list(assignees)
+    status_code, response_body = write(url, token, payload)
     if status_code != 201:
         _write_failure(owner, name, url, status_code, response_body)
     if (
@@ -222,6 +234,79 @@ def create_issue(
             f"{owner}/{name}: POST {url} returned HTTP 201 with no usable issue body"
         )
     return CreatedIssue(number=int(response_body["number"]), url=str(response_body["html_url"]))
+
+
+def _guarded_issue_write(
+    owner: str, name: str, url: str, token: str, payload: dict[str, Any], write: WriteFn, verb: str
+) -> Any:
+    """Shared body of the comment/close/reopen primitives. ``assert_write_allowed`` runs HERE, on
+    the URL, before ``write`` is ever called -- so even an injected writer is never invoked for a
+    repository outside ``WRITE_ALLOWED_REPOSITORIES`` (the real ``default_post``/``default_patch``
+    check again). A missing token, a transport failure or a non-2xx answer raises; nothing is
+    guessed."""
+    assert_write_allowed(url)
+    if not token:
+        raise RepositoryMetadataError(f"{owner}/{name}: {verb} refused - no write-scoped token")
+    status_code, response_body = write(url, token, payload)
+    if status_code == -1:
+        raise RepositoryMetadataError(f"{owner}/{name}: unreachable ({response_body})")
+    if status_code not in (200, 201):
+        raise RepositoryMetadataError(f"{owner}/{name}: {verb} {url} returned HTTP {status_code}")
+    return response_body
+
+
+def comment_issue(
+    owner: str,
+    name: str,
+    number: int,
+    *,
+    body: str,
+    token: str,
+    write: WriteFn = default_post,
+) -> None:
+    """``POST /repos/{owner}/{repo}/issues/{number}/comments``. Adds a comment; never edits or
+    deletes one, so the issue's history only grows."""
+    url = f"{API_ROOT}/repos/{owner}/{name}/issues/{number}/comments"
+    _guarded_issue_write(owner, name, url, token, {"body": body}, write, "POST")
+
+
+IssueCloseReason = Literal["completed", "not planned"]
+_STATE_REASONS = {"completed": "completed", "not planned": "not_planned"}
+
+
+def close_issue(
+    owner: str,
+    name: str,
+    number: int,
+    *,
+    reason: IssueCloseReason,
+    token: str,
+    write: WriteFn = default_patch,
+) -> None:
+    """``PATCH /repos/{owner}/{repo}/issues/{number}`` with ``state=closed`` and GitHub's
+    ``state_reason`` (``completed`` / ``not_planned``). Only the state changes: labels, body and
+    comments are untouched. The CALLER (``issues/close.py``) decides whether closing is
+    authorized."""
+    if reason not in _STATE_REASONS:
+        raise ValueError(f"unknown close reason {reason!r}")
+    url = f"{API_ROOT}/repos/{owner}/{name}/issues/{number}"
+    payload = {"state": "closed", "state_reason": _STATE_REASONS[reason]}
+    _guarded_issue_write(owner, name, url, token, payload, write, "PATCH")
+
+
+def reopen_issue(
+    owner: str,
+    name: str,
+    number: int,
+    *,
+    token: str,
+    write: WriteFn = default_patch,
+) -> None:
+    """``PATCH /repos/{owner}/{repo}/issues/{number}`` with ``state=open``,
+    ``state_reason=reopened``. The CALLER (``issues/file.py``) decides whether it is authorized."""
+    url = f"{API_ROOT}/repos/{owner}/{name}/issues/{number}"
+    payload = {"state": "open", "state_reason": "reopened"}
+    _guarded_issue_write(owner, name, url, token, payload, write, "PATCH")
 
 
 ISSUE_LIST_PAGE_SIZE = 100
@@ -270,7 +355,10 @@ def find_issue_with_marker(
                     raise RepositoryMetadataError(
                         f"{owner}/{name}: matching issue has no usable number/html_url"
                     )
-                return CreatedIssue(number=number, url=html_url)
+                state = item.get("state")
+                return CreatedIssue(
+                    number=number, url=html_url, state=state if isinstance(state, str) else "open"
+                )
         if len(body) < ISSUE_LIST_PAGE_SIZE:
             return None
     raise RepositoryMetadataError(
