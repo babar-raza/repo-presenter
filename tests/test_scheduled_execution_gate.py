@@ -16,8 +16,18 @@ from support import init_git_repository, monitor_registry_entry, write_registry_
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from scripts import scheduled_execution_gate as gate  # noqa: E402
+from repo_presenter.readme.review.calibration_status import REVIEWER_LOGIC_VERSION  # noqa: E402
 
 REPOSITORY = "aspose-cells-foss/Aspose.Cells-FOSS-for-.NET"
+
+# A calibration record the project's own fail-closed parser reads as exactly PASSED. A bare
+# {"status": "PASSED"} is (correctly) NOT enough since 2026-11-04.
+VALID_PASSED = {
+    "status": "PASSED",
+    "reviewer_logic_version": REVIEWER_LOGIC_VERSION,
+    "measured": {},
+    "failed_gates": [],
+}
 
 
 # --- pure predicate functions -----------------------------------------------------------------
@@ -64,9 +74,25 @@ def test_calibration_passed_requires_an_existing_valid_passed_record(tmp_path: P
     not_passed.write_text(json.dumps({"status": "NOT_PASSED"}), encoding="utf-8")
     assert gate.calibration_passed(not_passed) is False
 
-    passed = tmp_path / "passed.json"
-    passed.write_text(json.dumps({"status": "PASSED"}), encoding="utf-8")
-    assert gate.calibration_passed(passed) is True
+    def write(name: str, **fields: object) -> Path:
+        record = {"status": "PASSED", "reviewer_logic_version": REVIEWER_LOGIC_VERSION,
+                  "measured": {}, "failed_gates": [], **fields}
+        target = tmp_path / name
+        target.write_text(json.dumps(record), encoding="utf-8")
+        return target
+
+    assert gate.calibration_passed(write("valid.json")) is True
+    # Each of these is read as NOT_PASSED by the project's own parser, so the gate must refuse:
+    assert gate.calibration_passed(write("failed_gates.json", failed_gates=["stability"])) is False
+    assert gate.calibration_passed(write("old_logic.json", reviewer_logic_version="0")) is False
+    assert gate.calibration_passed(write("no_measured.json", measured=None)) is False
+    assert gate.calibration_passed(write("unknown.json", status="PASS")) is False
+    assert gate.calibration_passed(
+        write("limits.json", status="PASSED_WITH_DECLARED_LIMITS", owner_acceptance="x")
+    ) is False
+    bare = tmp_path / "bare.json"
+    bare.write_text(json.dumps({"status": "PASSED"}), encoding="utf-8")
+    assert gate.calibration_passed(bare) is False
 
 
 def test_load_policy_fails_closed_on_missing_or_corrupt_file(tmp_path: Path) -> None:
@@ -99,7 +125,7 @@ def test_evaluate_predicates_names_every_unmet_one() -> None:
 
 def test_evaluate_predicates_is_empty_only_when_all_three_hold(tmp_path: Path) -> None:
     calibration = tmp_path / "cal.json"
-    calibration.write_text(json.dumps({"status": "PASSED"}), encoding="utf-8")
+    calibration.write_text(json.dumps(VALID_PASSED), encoding="utf-8")
     reasons = gate.evaluate_predicates(
         decision_log_text="OWNER_RULING_SWEEP_PAUSE: LIFTED ref=x",
         calibration=calibration,
@@ -144,7 +170,7 @@ def authorized_env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     monkeypatch.setattr(gate, "DECISION_LOG", decision_log)
 
     calibration = tmp_path / "reviewer_calibration.json"
-    calibration.write_text(json.dumps({"status": "PASSED"}), encoding="utf-8")
+    calibration.write_text(json.dumps(VALID_PASSED), encoding="utf-8")
     monkeypatch.setattr(gate, "CALIBRATION", calibration)
 
     policy = tmp_path / "scheduled_execution_policy.json"
@@ -206,7 +232,7 @@ def test_a_repository_not_named_in_authorized_repositories_is_never_selected(
     monkeypatch.setattr(gate, "DECISION_LOG", decision_log)
 
     calibration = tmp_path / "reviewer_calibration.json"
-    calibration.write_text(json.dumps({"status": "PASSED"}), encoding="utf-8")
+    calibration.write_text(json.dumps(VALID_PASSED), encoding="utf-8")
     monkeypatch.setattr(gate, "CALIBRATION", calibration)
 
     other_repo = "aspose-words-foss/Aspose.Words-FOSS-for-.NET"
@@ -231,3 +257,23 @@ def test_a_repository_not_named_in_authorized_repositories_is_never_selected(
     assert exit_code == 0
     assert "authorized=false" in out
     assert REPOSITORY not in out.split("reason=")[0]  # never emitted as the selected repository
+
+
+def test_gate_predicates_agree_with_an_independent_read_of_the_real_committed_state() -> None:
+    """Not a pin on today's values (they will legitimately change): the gate must never report
+    calibration passed or the sweep pause lifted unless the REAL committed files independently
+    say so. Reads data/reviewer_calibration.json and docs/DECISION_LOG.md directly, not through
+    the gate's own helpers' logic."""
+    root = Path(__file__).resolve().parent.parent
+    calibration = json.loads((root / "data" / "reviewer_calibration.json").read_text("utf-8"))
+    independently_passed = calibration.get("status") == "PASSED" and not calibration.get(
+        "failed_gates"
+    )
+    assert gate.calibration_passed(root / "data" / "reviewer_calibration.json") == (
+        independently_passed
+    )
+    log = (root / "docs" / "DECISION_LOG.md").read_text("utf-8")
+    rulings = [ln for ln in log.splitlines() if "OWNER_RULING_SWEEP_PAUSE:" in ln]
+    token_lifted = "OWNER_RULING_SWEEP_PAUSE: LIFTED" in log
+    if not token_lifted:
+        assert gate.sweep_pause_lifted(log) is False, rulings

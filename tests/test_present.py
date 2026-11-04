@@ -994,3 +994,25 @@ def test_the_example_verifier_receives_absolute_paths_even_from_a_relative_comma
     )
     assert len(seen) == 2
     assert all(path.is_absolute() for path in seen), seen
+
+
+def test_committed_p5_proof_is_derivable_from_its_own_measurements() -> None:
+    """The committed TC-008a call-count proof must be a function of its recorded per-scenario
+    measurements (scripts/p5_call_count_proof.py), never typed zeros: every headline number is
+    recomputed here from the per-lane rows, and the real Lane R pipeline must have been measured
+    (a cold run that made provider requests) so that zero-request rows are not vacuous."""
+    path = (
+        Path(__file__).resolve().parents[1]
+        / "evidence/build/GATE1_QUALITY/TC-008a/call_count_proof.json"
+    )
+    proof = json.loads(path.read_text(encoding="utf-8"))
+    rows = proof["per_scenario_requests_by_lane"]
+    real = {k: [n for lane, n in v.items() if lane in ("L", "R-real")] for k, v in rows.items()}
+    for scenario in ("warm_unchanged_rerun", "cold_runner", "evicted_cache", "corrupt_evidence"):
+        assert {"L", "R-real"} <= set(rows[scenario]), scenario
+    assert proof["warm_unchanged_rerun_calls"] == max(real["warm_unchanged_rerun"])
+    assert proof["cold_runner_calls"] == max(real["cold_runner"])
+    assert proof["evicted_cache_calls"] == max(real["evicted_cache"])
+    assert proof["corrupt_evidence_fail_closed"] == all(n >= 1 for n in real["corrupt_evidence"])
+    assert rows["cold_run"]["R-real"] >= 1
+    assert proof["lane_r_real_cold_run_requests"] == rows["cold_run"]["R-real"]

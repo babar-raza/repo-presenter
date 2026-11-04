@@ -2,8 +2,8 @@
 ===== CLEAN RUN 1 =====
 $ python -m pytest tests/test_present_schedule.py tests/test_present_lanes.py tests/test_present.py tests/test_scheduled_execution_gate.py -q
 --- stdout ---
-..........................................................               [100%]
-58 passed in 81.30s (0:01:21)
+............................................................             [100%]
+60 passed in 11.57s
 
 --- stderr ---
 
@@ -17,8 +17,8 @@ OK: Dockerfile contains all 1 required marker(s)
 ===== CLEAN RUN 2 =====
 $ python -m pytest tests/test_present_schedule.py tests/test_present_lanes.py tests/test_present.py tests/test_scheduled_execution_gate.py -q
 --- stdout ---
-..........................................................               [100%]
-58 passed in 79.36s (0:01:19)
+............................................................             [100%]
+60 passed in 12.16s
 
 --- stderr ---
 
@@ -33,9 +33,9 @@ OK: Dockerfile contains all 1 required marker(s)
 mutated: M .github/workflows/present.yml
 $ python -m pytest tests/test_present_schedule.py tests/test_present_lanes.py tests/test_present.py tests/test_scheduled_execution_gate.py -q
 --- stdout ---
-F.........................................................               [100%]
-================================== FAILURES ===================================
-_______________ test_a_schedule_trigger_exists_with_a_real_cron _______________
+F...........................................................             [100%]
+=================================== FAILURES ===================================
+_______________ test_a_schedule_trigger_exists_with_a_real_cron ________________
 
     def test_a_schedule_trigger_exists_with_a_real_cron():
         workflow = _load_workflow()
@@ -44,10 +44,10 @@ _______________ test_a_schedule_trigger_exists_with_a_real_cron _______________
 E       AssertionError: no schedule: trigger -- TC-012 is not actually done
 E       assert 'schedule' in {'workflow_dispatch': {'inputs': {'repository': {'description': 'owner/name of a repository listed in data/registry.js... L.', 'required': True, 'type': 'choice', 'options': ['both', 'R', 'L'], ...}}}, 'removed': [{'cron': '17 */6 * * *'}]}
 
-tests\test_present_schedule.py:24: AssertionError
-=========================== short test summary info ===========================
+tests/test_present_schedule.py:24: AssertionError
+=========================== short test summary info ============================
 FAILED tests/test_present_schedule.py::test_a_schedule_trigger_exists_with_a_real_cron
-1 failed, 57 passed in 78.10s (0:01:18)
+1 failed, 59 passed in 12.08s
 
 --- stderr ---
 

@@ -3,11 +3,11 @@
   "card": "TC-008a",
   "gate": "GATE1_QUALITY",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-04T15:17:00Z",
-  "base_rev": "94746ea15ed1855054fff7210c9f8f345475ac74",
-  "head_rev": "1b752b69e331ced14aa03d974305d2bf85c590c2",
+  "generated_at": "2026-11-04T17:58:29Z",
+  "base_rev": "0db8462bb822bc589d6cd6a4c1c46c21e9f6cbb2",
+  "head_rev": "eaa1b811211a406f9807148795af6d51150f4890",
   "card_sha256": "69bc7bbe6f36b274dd891696367963f5a566b81b61c1837c971a7ab747f543ed",
-  "checker_fileset_sha256": "97cb8b8ddf7da6af28bf6cb9f69cd7de0a53166eb8ae9dd4475214f80ec5f82d",
+  "checker_fileset_sha256": "00f34f4cdd9c91007a62b7650688e1252eea68afc985b67e83bb9340d47825b8",
   "fingerprint": {
     "python": "3.13.18",
     "platform": "Linux-6.18.44-fc-v233-x86_64-with-glibc2.39"
@@ -15,13 +15,7 @@
   "scope": {
     "ok": true,
     "changed_paths": [
-      "scripts/p5_call_count_proof.py",
-      "src/repo_presenter/cascade.py",
-      "src/repo_presenter/core/preflight.py",
-      "src/repo_presenter/lane_l_run.py",
-      "src/repo_presenter/present.py",
-      "src/repo_presenter/readme/bundle/seal.py",
-      "tests/test_preflight_wiring.py"
+      "tests/test_present.py"
     ],
     "violations": [],
     "evaluated": true
@@ -33,14 +27,14 @@
         {
           "command": "python ops/checks/execution_proof.py evidence/build/GATE1_QUALITY/TC-008a/call_count_proof.json warm_unchanged_rerun_calls=0 cold_runner_calls=0 evicted_cache_calls=0 corrupt_evidence_fail_closed=True",
           "exit_code": 0,
-          "duration_s": 0.033,
+          "duration_s": 0.025,
           "stdout_sha256": "b94330a95b17c26ad4fb59c7feddeccb10a01ddfd5765b17adef80b53768cf1c"
         },
         {
           "command": "python -m pytest tests/core/test_preflight.py tests/test_present.py tests/test_lane_l_hosted.py -q",
           "exit_code": 0,
-          "duration_s": 40.815,
-          "stdout_sha256": "b2346c25ba5f201621a531d08f6dcb5a0e65e532223c811b19c6c134de6e5053"
+          "duration_s": 35.581,
+          "stdout_sha256": "f3532f1fa0f8d098f1aa49feba68620160a3e7bd495b65470c06a632a6a4c39e"
         }
       ],
       "all_passed": true
@@ -51,14 +45,14 @@
         {
           "command": "python ops/checks/execution_proof.py evidence/build/GATE1_QUALITY/TC-008a/call_count_proof.json warm_unchanged_rerun_calls=0 cold_runner_calls=0 evicted_cache_calls=0 corrupt_evidence_fail_closed=True",
           "exit_code": 0,
-          "duration_s": 0.029,
+          "duration_s": 0.041,
           "stdout_sha256": "b94330a95b17c26ad4fb59c7feddeccb10a01ddfd5765b17adef80b53768cf1c"
         },
         {
           "command": "python -m pytest tests/core/test_preflight.py tests/test_present.py tests/test_lane_l_hosted.py -q",
           "exit_code": 0,
-          "duration_s": 41.511,
-          "stdout_sha256": "22bba8944e25c5f58b7ec875b4b91ea0f0f7abea30fcce0f52fc5dcc28ee9dee"
+          "duration_s": 35.478,
+          "stdout_sha256": "d46090c2ad3740af584e5f221fa514d462ad31395168ff864f78b0d2e44aef22"
         }
       ],
       "all_passed": true
@@ -72,7 +66,7 @@
     "patch_applied_failed": true,
     "exit_codes": [
       1,
-      0
+      1
     ],
     "tree_changed": [
       "M evidence/build/GATE1_QUALITY/TC-008a/call_count_proof.json"
