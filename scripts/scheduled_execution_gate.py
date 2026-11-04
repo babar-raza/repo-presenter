@@ -50,6 +50,10 @@ from repo_presenter.core.portfolio_matrix import (  # noqa: E402
     stored_bundle_refs,
 )
 from repo_presenter.core.registry.loader import load_registry  # noqa: E402
+from repo_presenter.readme.review.calibration_status import (  # noqa: E402
+    PASSED,
+    load_calibration,
+)
 
 DECISION_LOG = REPO_ROOT / "docs" / "DECISION_LOG.md"
 CALIBRATION = REPO_ROOT / "data" / "reviewer_calibration.json"
@@ -69,13 +73,14 @@ def sweep_pause_lifted(decision_log_text: str) -> bool:
 
 
 def calibration_passed(path: Path) -> bool:
-    if not path.exists():
-        return False
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError:
-        return False
-    return data.get("status") == "PASSED"
+    """True only when the project's own fail-closed parser reads the file as exactly PASSED.
+
+    Delegates to ``calibration_status.load_calibration`` so this gate can never be more permissive
+    than the code that guards the reviewer itself: a bare ``"status": "PASSED"`` beside failed
+    gates, a missing ``measured`` object, an unknown status or a reviewer-logic version other than
+    the current one all read as not passed. PASSED_WITH_DECLARED_LIMITS (a limited, owner-accepted
+    pass) deliberately does NOT open scheduled spend."""
+    return load_calibration(path).status == PASSED
 
 
 def load_policy(path: Path) -> dict:
