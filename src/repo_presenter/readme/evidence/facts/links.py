@@ -82,6 +82,9 @@ class LinkResult:
     # What the read cost and what it returned, for the probe record; a local check has neither.
     status: int | None = None
     elapsed_ms: int | None = None
+    # Which authoritative source produced a RESOLVED verdict; "direct" unless the alternate-source
+    # rule below answered for a github.com blob/raw link.
+    source: str = "direct"
 
 
 def _classify(href: str) -> LinkKind:
@@ -278,31 +281,106 @@ def fetch_status(url: str) -> tuple[int, str]:
         return response.status_code, str(response.url)
 
 
+RAW_HOST = "raw.githubusercontent.com"
+_GH_NAME = re.compile(r"^[A-Za-z0-9_.-]+$")
+_GH_REF = re.compile(r"^[A-Za-z0-9_.-]+$")
+_ENCODED_DANGER = re.compile(r"(?i)%(2e|2f|5c|00)")
+
+
+def raw_alternate(href: str) -> str | None:
+    """The raw.githubusercontent.com URL for a plain ``github.com/{o}/{r}/blob|raw/{ref}/{path}``
+    link, or None when the link is anything else or its ref/path is not safe to rewrite: a ref
+    with a slash or encoded character, a path with ``..``/``.``/empty segments or encoded dots,
+    slashes or backslashes, a non-default port or userinfo."""
+    parts = urlsplit(href)
+    if parts.scheme != "https" or parts.hostname != "github.com":
+        return None
+    if parts.port is not None or parts.username or parts.password:
+        return None
+    segments = parts.path.split("/")
+    # ['', owner, repo, 'blob'|'raw', ref, path...]
+    if len(segments) < 6 or segments[0] != "" or segments[3] not in {"blob", "raw"}:
+        return None
+    owner, repo, ref, path = segments[1], segments[2], segments[4], segments[5:]
+    if not (_GH_NAME.match(owner) and _GH_NAME.match(repo) and _GH_REF.match(ref)):
+        return None
+    if ref in {".", ".."}:
+        return None
+    if any(seg in {"", ".", ".."} or "\\" in seg for seg in path):
+        return None
+    if _ENCODED_DANGER.search(parts.path):
+        return None
+    return f"https://{RAW_HOST}/{owner}/{repo}/{ref}/{'/'.join(path)}"
+
+
 def check_external(
     href: str,
     *,
     fetch: Callable[[str], tuple[int, str]] | None = None,
     sleep: Callable[[float], None] | None = None,
 ) -> LinkResult:
-    """Resolve one external link, retrying transient failures under the link_check policy."""
-    fetcher = fetch or fetch_status
+    """Resolve one external link, retrying transient failures under the link_check policy.
 
+    Four outcomes stay distinct: MISSING (an authoritative 404/410), RESOLVED directly,
+    RESOLVED via an authoritative alternate source (``source`` names it), and UNCHECKED (no
+    authoritative source could be reached). The only alternate rule: a github.com blob/raw link
+    whose direct check could not be established (403, 429, 5xx, connection error - never a 404)
+    is asked of raw.githubusercontent.com; a 2xx there is RESOLVED, anything else stays
+    UNCHECKED (a raw 404 is not proof of brokenness when the direct check never answered).
+    """
+    fetcher = fetch or fetch_status
+    direct = _check_once(href, fetcher, sleep)
+    if direct.outcome != "UNCHECKED" or direct.detail.startswith("rejected:"):
+        return direct
+    if direct.status is not None and direct.status not in {403, 429}:
+        return direct
+    alternate = raw_alternate(href)
+    if alternate is None:
+        return direct
+    try:
+        status, final = _fetch_with_retry(alternate, fetcher, sleep)
+    except (PrivateAddressError, RetryableOperationError):
+        return direct
+    if 200 <= status < 300 and (urlsplit(final).hostname or "") == RAW_HOST:
+        return LinkResult(
+            "RESOLVED",
+            f"HTTP {status} via {RAW_HOST} (direct: {direct.detail})",
+            status,
+            direct.elapsed_ms,
+            source=RAW_HOST,
+        )
+    return direct
+
+
+def _fetch_with_retry(
+    url: str,
+    fetcher: Callable[[str], tuple[int, str]],
+    sleep: Callable[[float], None] | None,
+) -> tuple[int, str]:
     def attempt() -> tuple[int, str]:
         try:
-            status, final = fetcher(href)
+            status, final = fetcher(url)
         except httpx.TransportError as exc:
             raise RetryableOperationError(f"{type(exc).__name__}: {exc}") from exc
         if status in _TRANSIENT_STATUSES:
             raise RetryableOperationError(f"HTTP {status}")
         return status, final
 
+    return run_with_retry("link_check", attempt, sleep=sleep or time.sleep)
+
+
+def _check_once(
+    href: str,
+    fetcher: Callable[[str], tuple[int, str]],
+    sleep: Callable[[float], None] | None,
+) -> LinkResult:
     started = time.monotonic()
 
     def since_start() -> int:
         return int((time.monotonic() - started) * 1000)
 
     try:
-        status, final = run_with_retry("link_check", attempt, sleep=sleep or time.sleep)
+        status, final = _fetch_with_retry(href, fetcher, sleep)
     except PrivateAddressError as exc:
         # Never retried: a private/reserved address does not become a public one by asking
         # again (TB-08, external review D8, 2026-09-08).
@@ -397,6 +475,8 @@ def link_facts(
             # status, the redirect target and the transport error text change without the link's
             # verdict changing, and live in the probe record above instead (TC-INV-02).
             resolution: str = result.outcome
+            if result.outcome == "RESOLVED" and result.source != "direct":
+                resolution = f"RESOLVED via {result.source}"
         elif target.kind == "anchor":
             result = check_anchor(target.href, slugs)
             where = readme_path
