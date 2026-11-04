@@ -250,45 +250,73 @@ def dependencies_document(
     Lane R's document is what it has always been, byte for byte: adding a key would make every
     rerun of a sealed layout-v1 bundle differ from it. Lane L's is its own
     (:func:`lane_l_dependencies_document`), built from the staged artifacts."""
-    if inputs.lane == LANE_L:
-        if staged is None:
+    original = None if staged is None else staged.get("README.original.md")
+    return current_dependencies_document(
+        lane=inputs.lane,
+        source_revision=inputs.source_revision,
+        facts=inputs.facts,
+        prompts=inputs.prompts,
+        original_readme=original,
+    )
+
+
+def current_dependencies_document(
+    *,
+    lane: str,
+    source_revision: str,
+    facts: FactsDocument,
+    prompts: PromptRegistry,
+    original_readme: bytes | None = None,
+) -> dict[str, Any]:
+    """The dependencies record a seal made NOW would write, built from the same code path the
+    seal uses (so the preflight comparison can never drift from what is sealed). Lane L needs the
+    live README's bytes (``original_readme``); Lane R's record has no such input."""
+    if lane == LANE_L:
+        if original_readme is None:
             raise SealError("seal: a Lane L dependencies record is built from its staged artifacts")
-        return lane_l_dependencies_document(inputs, staged)
-    code = code_dependencies(inputs.prompts)
+        return lane_l_dependencies_document(
+            source_revision, facts, prompts, {"README.original.md": original_readme}
+        )
+    code = code_dependencies(prompts)
     return {
         "schema_version": 1,
-        "source": {"revision": inputs.source_revision},
+        "source": {"revision": source_revision},
         "environment": environment_dependencies(),
         "facts": {
             fact.id: _sha256(_canonical_json(asdict(fact)))
-            for fact in sorted(inputs.facts.facts, key=lambda fact: fact.id)
+            for fact in sorted(facts.facts, key=lambda fact: fact.id)
         },
         "prompts": code["prompts"],
         "components": code["components"],
     }
 
 
-def lane_l_dependencies_document(inputs: SealInputs, staged: Mapping[str, bytes]) -> dict[str, Any]:
+def lane_l_dependencies_document(
+    source_revision: str,
+    facts: FactsDocument,
+    prompts: PromptRegistry,
+    staged: Mapping[str, bytes],
+) -> dict[str, Any]:
     """What a Lane L candidate consumed: the pinned revision and the live README's bytes (the
     ``source``), the fact records, the correction engine and each detector, the review's prompt and
     logic. Nothing about the machine that sealed it: the correction is a pure function of those
     inputs, so a rerun on another host, another Python or another working directory writes the same
     bytes (plan L4). A prompt or renderer Lane L never ran is not here, and cannot reopen it."""
     try:
-        review = inputs.prompts["independent_review"]
+        review = prompts["independent_review"]
     except KeyError as exc:
         raise SealError("seal: the prompt registry has no independent_review manifest") from exc
     return {
         "schema_version": 1,
         "lane": LANE_L,
         "source": {
-            "revision": inputs.source_revision,
+            "revision": source_revision,
             "readme_sha256": _sha256(staged["README.original.md"]),
         },
         "environment": {"inherited_units_version": INHERITED_UNITS_VERSION},
         "facts": {
             fact.id: _sha256(_canonical_json(asdict(fact)))
-            for fact in sorted(inputs.facts.facts, key=lambda fact: fact.id)
+            for fact in sorted(facts.facts, key=lambda fact: fact.id)
         },
         "prompts": {
             "independent_review": {
