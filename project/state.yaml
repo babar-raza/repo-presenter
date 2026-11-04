@@ -133,7 +133,7 @@ owner_review_status:
 
 release_gate_dashboard:
   generated_by: gatecli
-  generated_at: '2026-11-04T16:21:29Z'
+  generated_at: '2026-11-04T17:58:35Z'
   note: Tool-generated from gateverify.rebuild_state() -- never hand-edit this block.
     Historical current_gate/active_work_item below are preserved bootstrap-era narrative,
     not this cursor; this block is the real, evidence-derived release-gate status
@@ -210,7 +210,7 @@ release_gate_dashboard:
     status: ACCEPTED
     attempt: 0
     blocker: null
-    commit: 1b752b69e331ced14aa03d974305d2bf85c590c2
+    commit: eaa1b811211a406f9807148795af6d51150f4890
     receipt: GATE1_QUALITY/TC-008a/receipt.json
   - id: TC-009
     gate: GATE2_INTEGRATIONS
@@ -256,20 +256,21 @@ release_gate_dashboard:
       summary: depends on TC-007, TC-009b, not yet accepted
   - id: TC-012
     gate: GATE4_PRODUCTION
-    status: ACCEPTED
+    status: STALE_RECEIPT
     attempt: 0
-    blocker: null
-    commit: 07d936ecb13e9e12b77b531faeb8bbf0e638be92
-    receipt: GATE4_PRODUCTION/TC-012/receipt.json
+    blocker:
+      class: STALE_RECEIPT
+      summary: card definition changed since this receipt was generated -- re-verify
   - id: TC-012a
     gate: GATE4_PRODUCTION
     status: AWAITING_PREREQUISITE
     attempt: 0
     blocker:
       class: AWAITING_PREREQUISITE
-      summary: depends on TC-002, TC-009b, TC-010a, TC-011, not yet accepted
+      summary: depends on TC-002, TC-009b, TC-010a, TC-011, TC-012, not yet accepted
   ready:
   - TC-007
+  - TC-012
 current_gate:
   id: P1_PORTFOLIO_SCALE
   status: ACCEPTED
