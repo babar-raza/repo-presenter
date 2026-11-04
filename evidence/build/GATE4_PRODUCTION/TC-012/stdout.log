@@ -3,7 +3,7 @@
 $ python -m pytest tests/test_present_schedule.py tests/test_present_lanes.py tests/test_present.py tests/test_scheduled_execution_gate.py -q
 --- stdout ---
 ............................................................             [100%]
-60 passed in 11.57s
+60 passed in 12.31s
 
 --- stderr ---
 
@@ -18,7 +18,7 @@ OK: Dockerfile contains all 1 required marker(s)
 $ python -m pytest tests/test_present_schedule.py tests/test_present_lanes.py tests/test_present.py tests/test_scheduled_execution_gate.py -q
 --- stdout ---
 ............................................................             [100%]
-60 passed in 12.16s
+60 passed in 17.15s
 
 --- stderr ---
 
@@ -47,7 +47,7 @@ E       assert 'schedule' in {'workflow_dispatch': {'inputs': {'repository': {'d
 tests/test_present_schedule.py:24: AssertionError
 =========================== short test summary info ============================
 FAILED tests/test_present_schedule.py::test_a_schedule_trigger_exists_with_a_real_cron
-1 failed, 59 passed in 12.08s
+1 failed, 59 passed in 12.52s
 
 --- stderr ---
 
