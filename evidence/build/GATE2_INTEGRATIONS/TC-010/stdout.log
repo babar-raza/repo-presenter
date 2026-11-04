@@ -2,9 +2,9 @@
 ===== CLEAN RUN 1 =====
 $ python -m pytest tests/issues/ -q
 --- stdout ---
-........................................................................ [ 78%]
-....................                                                     [100%]
-92 passed in 4.15s
+........................................................................ [ 77%]
+.....................                                                    [100%]
+93 passed in 16.96s
 
 --- stderr ---
 
@@ -12,9 +12,9 @@ $ python -m pytest tests/issues/ -q
 ===== CLEAN RUN 2 =====
 $ python -m pytest tests/issues/ -q
 --- stdout ---
-........................................................................ [ 78%]
-....................                                                     [100%]
-92 passed in 3.87s
+........................................................................ [ 77%]
+.....................                                                    [100%]
+93 passed in 4.12s
 
 --- stderr ---
 
@@ -23,12 +23,12 @@ $ python -m pytest tests/issues/ -q
 mutated: M src/repo_presenter/issues/close.py
 $ python -m pytest tests/issues/ -q
 --- stdout ---
-....................................F................................... [ 78%]
-.......F............                                                     [100%]
+....................................FF.................................. [ 77%]
+........F............                                                    [100%]
 ================================== FAILURES ===================================
 __________ test_close_completed_refused_when_defect_still_reproduces __________
 
-tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-19627/test_close_completed_refused_w0')
+tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-19718/test_close_completed_refused_w0')
 
     def test_close_completed_refused_when_defect_still_reproduces(tmp_path: Path):
         handoff = _filed_handoff()
@@ -39,10 +39,25 @@ tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest
              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       Failed: DID NOT RAISE CloseRefusal
 
-tests\issues\test_close.py:71: Failed
+tests\issues\test_close.py:75: Failed
+_______ test_close_completed_refused_when_the_triggering_fact_is_absent _______
+
+tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-19718/test_close_completed_refused_w1')
+
+    def test_close_completed_refused_when_the_triggering_fact_is_absent(tmp_path: Path):
+        """Negative control for the unsafe case the directive flagged: a FILED handoff whose
+        triggering check no longer appears at all in a fresh facts document must NOT close as
+        'completed' -- absence is not evidence of a fix."""
+        handoff = _filed_handoff()
+        out = tmp_path / "handoff.json"
+>       with pytest.raises(CloseRefusal, match="absent from the current facts document"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE CloseRefusal
+
+tests\issues\test_close.py:88: Failed
 _ test_full_lifecycle_refuses_close_when_redetection_finds_the_defect_still_live _
 
-tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-19627/test_full_lifecycle_refuses_cl0')
+tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-19718/test_full_lifecycle_refuses_cl0')
 
     def test_full_lifecycle_refuses_close_when_redetection_finds_the_defect_still_live(tmp_path: Path):
         doc = _contradicted_example_doc()
@@ -59,8 +74,9 @@ E       Failed: DID NOT RAISE CloseRefusal
 tests\issues\test_lifecycle_end_to_end.py:128: Failed
 =========================== short test summary info ===========================
 FAILED tests/issues/test_close.py::test_close_completed_refused_when_defect_still_reproduces
+FAILED tests/issues/test_close.py::test_close_completed_refused_when_the_triggering_fact_is_absent
 FAILED tests/issues/test_lifecycle_end_to_end.py::test_full_lifecycle_refuses_close_when_redetection_finds_the_defect_still_live
-2 failed, 90 passed in 4.18s
+3 failed, 90 passed in 4.06s
 
 --- stderr ---
 

@@ -2564,3 +2564,97 @@ classification rather than resolved by it.
 READINESS_PACKAGE_2026-11-04.md` (second pass); `ops/gateverify.py`; `tests/ops/
 test_gateverify_dependency_enforcement.py`; `tests/ops/test_receipt_coherence.py`;
 `project/taskcards/TC-002.yaml`.
+
+## 2026-11-04: P0 containment pass -- scheduled execution fails closed, hosted CI's 3 real failures fixed, an unsafe issue-close path fixed, and every "accepted" receipt's --no-scope gap closed
+
+A further owner directive (citing hosted run `https://github.com/babar-raza/repo-presenter/
+actions/runs/41812982506`, FAILED, 3 failed/3537 passed/23 skipped, and the fact that
+`present.yml`'s `schedule:` trigger was already live on `main` with no authorization gate at
+all) named six concrete, independently verifiable defects. All six were reproduced first, then
+fixed at the root cause, not worked around:
+
+**1. Scheduled execution had no fail-closed boundary.** Confirmed: the `schedule:` trigger
+added in the prior pass resolved a real target and ran both lanes unconditionally the moment a
+repository came back from the selector -- nothing checked the 2026-10-31 sweep pause, reviewer
+calibration, or any per-repository authorization. Fixed with `scripts/
+scheduled_execution_gate.py`, which runs only for `schedule` events (manual `workflow_dispatch`
+is unchanged, and is its own explicit authorization) and independently re-derives three
+predicates from their own primary sources -- `docs/DECISION_LOG.md`'s own `OWNER_RULING_
+SWEEP_PAUSE:` marker must read `LIFTED`; `data/reviewer_calibration.json`'s `status` must be
+`PASSED`; `data/scheduled_execution_policy.json` must explicitly name the repository -- failing
+closed (`authorized=false`, a named reason, exit 0, never a red job) when any is unmet, which is
+every predicate today. Every provider-consuming or repository-code step in `present.yml`'s two
+jobs (`Build the facts`, `Fetch the facts`, both lane steps, the cache save/restore and
+evidence-upload steps) is now conditioned on that output at the workflow-file level. 12 new
+tests in `tests/test_scheduled_execution_gate.py`, including a negative control proving
+re-pausing the sweep after it was lifted blocks the run again.
+
+**2. Two of the three hosted-CI failures were the test suite leaking the real runner's own
+ambient state, not product defects.** `GITHUB_ACTIONS=true` is set by every GitHub-hosted job,
+including the one running `pytest` itself; `present.py` reads that variable to refuse the
+dangerous combined stage on a hosted runner (a real, deliberate, separately-tested safety
+property) -- but two unrelated tests that called `present.main()` without picking a non-default
+`--stage` inherited that ambient value and hit the wrong refusal path. Fixed with an autouse
+`tests/conftest.py` fixture that deletes `GITHUB_ACTIONS` by default; a test that wants the real
+hosted refusal still sets it back explicitly (one already did, unaffected). The third failure
+(`test_this_environment_actually_carries_the_two_required_variables`) asserted that real
+provider secrets exist in whatever machine happens to run the suite -- never true in
+credential-free CI, and not a product property at all; deleted, not weakened or skipped.
+
+**3. `issues/close.py::redetect()` was unsafe.** It returned a bare `bool` and treated a
+triggering fact that had disappeared entirely from a fresh facts document (extraction failure,
+a renamed check id, incomplete toolchain evidence) as equivalent to a verified fix. Absence of
+evidence is not evidence of a fix. `redetect()` now returns one of three distinct outcomes
+(`VERIFIED_RESOLVED`/`STILL_REPRODUCES`/`NOT_VERIFIABLE`), and `close_handoff(reason=
+"completed")` refuses identically on the latter two, proven by a new negative-control test.
+
+**4. Every "accepted" release-gate receipt in this project was generated with `--no-scope`.**
+Checked directly: `TC-000/001/003/005/006/008/009/010/012`'s receipts all show `scope.evaluated:
+false`. `receipt_is_coherent()` checked `scope.ok` but never `scope.evaluated`, so a diagnostic
+`--no-scope` run (which sets `scope.ok=True` trivially, because nothing was checked) was
+indistinguishable from a genuinely scope-evaluated pass. Fixed: `accepted: true` now also
+requires `scope.evaluated is True`; `--no-scope` remains available for diagnostic reruns but can
+never again produce an ACCEPTED-eligible receipt. Regenerating the dashboard after this fix
+correctly reclassifies every one of those previously "accepted" cards as `INCOHERENT_RECEIPT` --
+an honest downgrade, not a regression, because none of them was ever really scope-verified.
+
+**5. Fixing (4) surfaced a second, deeper, previously-undiscovered conflict**: several
+taskcards (`TC-006`, `TC-010`, `TC-012`, at minimum) had declared `write_paths` under
+`docs/**`, `.github/**`, or `data/**` -- all of which `GLOBAL_DENY` (`ops/gatectl.py`, written
+2026-10-21) reserves to the supervisor unconditionally, "regardless of what the card says." This
+was never caught because every real `verify` run before this pass used `--no-scope`, which never
+exercises `check_scope` at all. Once (4) forced real scope evaluation, `TC-010`'s attempted
+re-verification failed immediately on exactly this: its own taskcard YAML edit (under
+`project/**`, also globally denied) was bundled into its tagged commit. Corrected by: (a)
+removing the globally-denied paths from each card's declared `write_paths` (`TC-006` keeps
+`docs/PARITY_BENCHMARK_PILOT.md` listed for honesty even though it can never pass real scope
+evaluation -- its entire deliverable is supervisor-territory, so it is structurally restricted
+to `--no-scope`, explicitly and permanently, not as an oversight; `TC-010` and `TC-012` dropped
+the denied paths they never actually needed), and (b) splitting this pass's own commits so that
+supervisor-owned paths (`.github/workflows/present.yml`, `data/scheduled_execution_policy.json`,
+`docs/PARITY_BENCHMARK_PILOT.md`, `ops/gateverify.py`, `ops/checks/
+parity_benchmark_pilot_complete.py`, and the three taskcard YAML edits themselves) land in one
+untagged commit, while each card's genuine src/tests-only deliverable lands in its own commit
+tagged `(GATE/TC-ID)`. Both `TC-010` and `TC-012` then passed a REAL, scope-evaluated `gatecli.py
+verify` (no `--no-scope`) for the first time in this project's history.
+
+**6. The pilot parity benchmark (`TC-006`) measured 1 of 3 named repositories and called that
+"complete."** Fixed: all 3 named repositories (Imaging-.NET, 3D-.NET, Words-.NET) are now
+addressed -- Imaging-.NET's durable-state bundle was exported via `bundle_store.export_bundle`
+and measured on both lanes (near byte-exact structural match against the `aspose.org`
+reference); Words-.NET was confirmed to have no sealed candidate on either lane
+(`FAILED_INTERNAL`), which is itself the real finding, not a gap in the benchmark. The
+document's own explicit `PARITY_VERDICT` is `NOT_PASSED`. The bare marker check was replaced
+with `ops/checks/parity_benchmark_pilot_complete.py`, which requires all three repositories
+named and an explicit verdict line, so "complete" can never again mean "measured one of three."
+
+**What this does NOT decide**: `TC-002` and `TC-004` remain open owner decisions, unaffected by
+this pass. `TC-008`'s own operational P5 gate (both lanes genuinely skipping unnecessary
+provider calls) still does not exist as a separate, mandatory card -- flagged, not yet created
+as of this entry.
+
+**Where the detail lives**: `scripts/scheduled_execution_gate.py`; `tests/
+test_scheduled_execution_gate.py`; `tests/conftest.py`; `src/repo_presenter/issues/close.py`;
+`tests/issues/test_close.py`; `ops/gateverify.py`; `tests/ops/test_receipt_coherence.py`;
+`docs/PARITY_BENCHMARK_PILOT.md`; `ops/checks/parity_benchmark_pilot_complete.py`;
+`project/taskcards/TC-006.yaml`, `TC-010.yaml`, `TC-012.yaml`.

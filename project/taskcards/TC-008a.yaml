@@ -1,0 +1,88 @@
+id: TC-008a
+gate: GATE1_QUALITY
+track: caching-preflight
+purpose: >
+  MANDATORY OPERATIONAL P5 GATE, split out from TC-008's decision-module-only scope (2026-11-04
+  P0 follow-up directive section 4: "Either keep this as an explicitly named component-development
+  milestone and create a mandatory operational P5 gate, or correct its release-level acceptance
+  contract... The operational gate must not pass until both lanes actually skip unnecessary
+  calls safely"). TC-008 built and tested preflight_decision() as a pure decision module that
+  NEVER returns can_skip_provider_call=True yet -- correctly, because readme/bundle/seal.py's own
+  dependencies.json producer was never ported, so there is no full-fidelity sealed-bundle
+  comparison beyond source revision. This card is that producer port plus live wiring plus the
+  real end-to-end proof; it stays blocked on that real, named prerequisite, not on an owner
+  decision -- any engineer may pick it up once the port exists.
+depends_on:
+  - TC-008
+write_paths:
+  - src/repo_presenter/readme/bundle/seal.py
+  - src/repo_presenter/core/toolchains.py
+  - src/repo_presenter/core/preflight.py
+  - src/repo_presenter/cascade.py
+  - src/repo_presenter/lane_l_run.py
+  - src/repo_presenter/present.py
+  - tests/core/test_preflight.py
+  - tests/test_present.py
+  - tests/test_lane_l_hosted.py
+satisfies:
+  - REQ-P5-001
+source_refs:
+  - file: src/repo_presenter/readme/bundle/evaluation.py
+    anchor: "Known gap from the port"
+  - file: project/taskcards/TC-008.yaml
+    anchor: "A SEPARATE, explicitly-named follow-up card is required"
+inputs: []
+actions:
+  - "Port readme/bundle/seal.py's dependencies.json producer and core/toolchains.py (its own
+     stated dependency) so evaluate()'s full comparison means something beyond source revision,
+     for BOTH lanes (Lane R's cascade.py call store and Lane L's lane_l_run.py/present.py call
+     store -- the directive is explicit this must not be Lane R only)."
+  - "Independently verify present_transaction.py's classify_present_outcome tolerates a run
+     that sealed nothing new, before wiring any live skip into present.py."
+  - "Flip preflight_decision() to return can_skip_provider_call=True for the fully-checked case
+     and wire it into both cascade.py's and lane_l_run.py's entry points."
+  - "Instrument the real provider-call boundary (not print statements) and record actual request
+     counts to evidence/build/GATE1_QUALITY/TC-008a/call_count_proof.json for each of: a warm
+     unchanged rerun, a cold hosted runner, an expired/evicted Actions cache, a changed-input
+     targeted re-execution, an unrelated-input-change no-op, and a corrupt-evidence fail-closed
+     case -- six named scenarios, each with its own measured call count, never a single
+     aggregate number."
+checks:
+  # 2026-11-04: this card's checks deliberately fail today -- the evidence file this requires
+  # does not exist, because the real wiring and instrumentation this card is FOR have not been
+  # done yet. A passing check here, before that work exists, would itself be the false-green
+  # pattern the directive named; this is the honest, correctly-blocked state.
+  - command: |-
+      python ops/checks/execution_proof.py evidence/build/GATE1_QUALITY/TC-008a/call_count_proof.json warm_unchanged_rerun_calls=0 cold_runner_calls=0 evicted_cache_calls=0 corrupt_evidence_fail_closed=True
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-P5-001
+  - command: |-
+      python -m pytest tests/core/test_preflight.py tests/test_present.py tests/test_lane_l_hosted.py -q
+    expect: exit 0
+    timeout_seconds: 120
+    proves:
+      - REQ-P5-001
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -c "import json, pathlib; p = pathlib.Path('evidence/build/GATE1_QUALITY/TC-008a/call_count_proof.json'); p.write_text(json.dumps({'warm_unchanged_rerun_calls': 3, 'cold_runner_calls': 0, 'evicted_cache_calls': 0, 'corrupt_evidence_fail_closed': True}), encoding='utf-8') if p.exists() else None"
+  rationale: >
+    Once the real evidence file exists with a genuine warm_unchanged_rerun_calls=0, corrupting
+    it to a nonzero call count must make the check fail again -- proving it reads the actual
+    measured value, not merely the file's presence. Before the real file exists, the clean run
+    already correctly fails (file absent) and the negative control is skipped.
+evidence:
+  - evidence/build/GATE1_QUALITY/TC-008a/call_count_proof.json
+closeout:
+  - "This gate -- not TC-008 -- is what 'P5 delivered' actually refers to. Do not let TC-008's
+     ACCEPTED status (a decision-module-only milestone) be read anywhere as P5 operational
+     delivery. TC-011 (25-repository portfolio delivery) should depend on this card once a real
+     campaign would otherwise burn unnecessary provider calls at scale; not added as a hard
+     dependency yet because TC-011 itself remains far from its own 25-repository target and
+     doing so now would not change which card is next, only add narrative weight."
+recovery: "No files exist yet for this card to revert; it is correctly not started -- blocked on
+  the seal.py dependencies.json port, a real prerequisite, not an owner decision."
