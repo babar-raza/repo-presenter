@@ -50,6 +50,7 @@ import copy
 import functools
 import itertools
 import json
+import os
 import re
 import string
 import time
@@ -306,6 +307,8 @@ def request_payload(
 def _complete(config: GatewayConfig, payload: dict[str, Any]) -> _Reply:
     # Looked up on the module so the test seam that swaps the client applies here too.
     client = transport.build_client(config)
+    if os.environ.get(STREAMING_VARIABLE) == "1":
+        return _complete_streaming(client, payload)
     completion = client.chat.completions.create(**payload)
     usage = completion.usage
     choice = completion.choices[0] if completion.choices else None
@@ -317,6 +320,40 @@ def _complete(config: GatewayConfig, payload: dict[str, Any]) -> _Reply:
         completion_tokens=usage.completion_tokens if usage else None,
         total_tokens=usage.total_tokens if usage else None,
         finish_reason=choice.finish_reason if choice else None,
+    )
+
+
+#: Opt-in (``GPT_OSS_STREAMING=1``): some gateway paths (measured 2026-11-04 from the cloud
+#: sandbox's proxy) cut a non-streaming request at 30 s with HTTP 502 while a streamed one of the
+#: same length succeeds, and every real cascade call exceeds 30 s. The reply is accumulated into
+#: the same ``_Reply`` shape, so nothing downstream (cache keys, ledger, validation) changes.
+STREAMING_VARIABLE = "GPT_OSS_STREAMING"
+
+
+def _complete_streaming(client: Any, payload: dict[str, Any]) -> _Reply:
+    stream = client.chat.completions.create(
+        **payload, stream=True, stream_options={"include_usage": True}
+    )
+    parts: list[str] = []
+    model = request_id = finish_reason = None
+    usage = None
+    for chunk in stream:
+        model = getattr(chunk, "model", None) or model
+        request_id = getattr(chunk, "id", None) or request_id
+        usage = getattr(chunk, "usage", None) or usage
+        for choice in getattr(chunk, "choices", None) or []:
+            delta = getattr(choice, "delta", None)
+            if delta is not None and getattr(delta, "content", None):
+                parts.append(delta.content)
+            finish_reason = getattr(choice, "finish_reason", None) or finish_reason
+    return _Reply(
+        content="".join(parts),
+        model=model,
+        request_id=request_id,
+        prompt_tokens=usage.prompt_tokens if usage else None,
+        completion_tokens=usage.completion_tokens if usage else None,
+        total_tokens=usage.total_tokens if usage else None,
+        finish_reason=finish_reason,
     )
 
 
