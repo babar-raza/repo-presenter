@@ -2658,3 +2658,43 @@ test_scheduled_execution_gate.py`; `tests/conftest.py`; `src/repo_presenter/issu
 `tests/issues/test_close.py`; `ops/gateverify.py`; `tests/ops/test_receipt_coherence.py`;
 `docs/PARITY_BENCHMARK_PILOT.md`; `ops/checks/parity_benchmark_pilot_complete.py`;
 `project/taskcards/TC-006.yaml`, `TC-010.yaml`, `TC-012.yaml`.
+
+## 2026-11-04: the GITHUB_ACTIONS fix above did not actually fix hosted CI -- a second, different ambient-env leak was still failing it for real
+
+Pushing the previous entry's commits (`22a2552`..`ae10a9f`) and watching the real hosted run
+(`https://github.com/babar-raza/repo-presenter/actions/runs/41832146529`) showed it still FAILED:
+1 failed, 3554 passed, 23 skipped -- `tests/test_lane_l_hosted.py::
+test_a_reviewer_outage_is_a_retryable_failure_and_seals_nothing`, the same test named in the
+original directive, was reported fixed by the `GITHUB_ACTIONS` diagnosis above. It was not; that
+diagnosis was wrong for this specific test, and this entry corrects it rather than leaving the
+error silently superseded.
+
+Real root cause, confirmed by reproducing it locally (`GITHUB_RUN_ID=999999 GITHUB_ACTIONS=true
+pytest ...`, which failed identically with the same `FileNotFoundError` on `lane-l/CURRENT`, and
+the same `trigger deduplicated: ... already has transaction ... in flight` log line) and by a
+negative control (stashing the fix reproduces the failure; restoring it passes): the hosted
+runner sets `GITHUB_RUN_ID` to one fixed value for the entire job. `present.py`'s
+`--workflow-run-id` defaults to `os.environ.get("GITHUB_RUN_ID")`, and `tests/
+test_lane_l_hosted.py`'s `Hosted` helper calls `present.main()` twice in this one test (an
+outage, then a retry) without ever passing `--workflow-run-id` explicitly -- unlike every other
+test in this project that cares about `workflow_run_id` semantics, which already passes a
+distinct value per call (`"run-1"`, `"run-2"`, etc.). On a hosted runner both calls therefore
+got the SAME run id, and `admit_trigger`'s workflow_dispatch dedup key treated the retry as the
+same trigger as the failed first attempt, deduplicating it into a no-op -- so the retry's
+expected success never actually sealed anything, and `lane-l/CURRENT` was never written.
+Locally this env var is simply absent, so each call already fell back to a fresh `uuid4().hex`
+and never collided, which is exactly why this reproduced only in real hosted CI and not in any
+number of local runs. Fixed with a second autouse `tests/conftest.py` fixture
+(`no_ambient_github_run_id`), deleting `GITHUB_RUN_ID` by default, matching the existing
+`GITHUB_ACTIONS` fixture's reasoning. 248 tests in `tests/test_lane_l_hosted.py` and
+`tests/core/state/` pass; the full suite (3565 passed, 13 skipped before this fix; unchanged
+count after, since this only removes an environment leak, not a test) was re-run clean.
+
+**Lesson, stated plainly rather than left implicit**: two tests failing with superficially
+similar "something read an ambient hosted-only env var" symptoms does not mean they share one
+root cause. The first fix was verified too early -- against only the two failures it actually
+explained -- and reported as closing all three. This entry is the correction; the push
+immediately following it is the actual fix, independently reproduced and confirmed via a real
+hosted re-run before being reported as closed.
+
+**Where the detail lives**: `tests/conftest.py`.
