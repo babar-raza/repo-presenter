@@ -58,3 +58,26 @@ formats (.otf, .woff, .woff2, .cff, .cff2, .pfa, .pfb, .eot) that no SUPPORTED f
 may not repair content it cannot verify, so it left 4 defects and recommended Lane R. These are real
 upstream README defects (issue-discovery candidates for G3); upstream issue filing remains disabled,
 so nothing was filed. Counts toward neither G1 nor P1 (no sealed candidate).
+
+## 3D-FOSS-for-Python (mandatory G4 target) local Lane R: blocked source fact, not a pipeline fault
+
+Four local attempts. Two pipeline defects were found and fixed on the way (merged / pushed): the
+`python3 -m pip` launcher not matching the UNRESOLVED install fact (reconciliation rejected 3x), and
+- on Font - a deferred CONTRADICTED example reported as lost. The final 3D-Python attempt completed
+the whole cascade and the independent review returned REJECT with exactly one finding:
+`live_readme_loss`: code block `python3 -m pip install aspose-3d-foss`.
+
+Cause: `install_command:pip` is UNRESOLVED because PyPI's `aspose-3d-foss` 26.1.0 lists its project
+URL as `https://github.com/aspose-3d/Aspose.3D-for-Python`, a different repository from
+`aspose-3d-foss/Aspose.3D-FOSS-for-Python`; ownership cannot be confirmed. The candidate therefore
+renders an Installation section saying the package "could not be confirmed on PyPI" and does not
+reproduce the live install command. `DEFER_UNRESOLVED` is deliberately not an accounting disposition
+(independent_reviewer.ACCOUNTING_DISPOSITIONS), per the 2026-11-01 Page-Python ruling in
+docs/DECISION_LOG.md ("not something a reconciliation/review code change should paper over"). That
+ruling is kept; the reviewer was not changed.
+
+Consequence: the 3D-Python candidate cannot seal until the registry metadata is reconciled (a PyPI
+project-URL change by the package maintainers, an upstream data question outside this pipeline) or
+the owner explicitly rules otherwise. Recorded as a genuinely blocked source fact; the
+upstream-issue candidate cannot be filed (external writes prohibited). Mandatory-target status for
+G4/3D-Python: BLOCKED_ON_SOURCE_FACT.
