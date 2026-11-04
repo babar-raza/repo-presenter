@@ -204,7 +204,7 @@ def preflight_decision(
         can_skip_provider_call=False,
         reason=(
             "source revision unchanged, but prompts/policy/model/detector/contract scopes "
-            "cannot yet be checked (seal.py's dependencies.json producer was never ported) -- "
+            "cannot yet be checked because the caller supplied no current_dependencies -- "
             "proceeding with the full pipeline rather than fabricating a currency claim"
         ),
         checked_scopes=CHECKED_SCOPES, unchecked_scopes=UNCHECKED_SCOPES,
