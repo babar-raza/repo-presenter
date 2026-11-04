@@ -31,23 +31,27 @@ def _filed_handoff(fingerprint: str = "example:x") -> Handoff:
     )
 
 
-def test_redetect_true_when_fact_no_longer_contradicted():
+def test_redetect_verified_resolved_when_fact_no_longer_contradicted():
     handoff = _filed_handoff()
     fixed_fact = Fact(id="example:x", kind="example", value="now fine",
                        evidence=(Evidence(path="README.md"),), polarity="SUPPORTED")
-    assert redetect(handoff, {"example:x": fixed_fact}) is True
+    assert redetect(handoff, {"example:x": fixed_fact}) == "VERIFIED_RESOLVED"
 
 
-def test_redetect_false_when_fact_still_contradicted():
+def test_redetect_still_reproduces_when_fact_still_contradicted():
     handoff = _filed_handoff()
     still_broken = Fact(id="example:x", kind="example", value="still bad",
                          evidence=(Evidence(path="README.md"),), polarity="CONTRADICTED")
-    assert redetect(handoff, {"example:x": still_broken}) is False
+    assert redetect(handoff, {"example:x": still_broken}) == "STILL_REPRODUCES"
 
 
-def test_redetect_true_when_fact_no_longer_exists_at_all():
+def test_redetect_not_verifiable_when_fact_no_longer_exists_at_all():
+    """2026-11-04 correction (P0 follow-up directive section 7): this used to return True --
+    treating a missing fact (extraction failure, a renamed check, incomplete toolchain evidence)
+    as equivalent to a verified fix. Missing evidence is not proof of a fix; it is its own
+    distinct, unresolved outcome."""
     handoff = _filed_handoff()
-    assert redetect(handoff, {}) is True
+    assert redetect(handoff, {}) == "NOT_VERIFIABLE"
 
 
 def test_close_completed_succeeds_when_redetection_confirms_fix(tmp_path: Path):
@@ -72,6 +76,17 @@ def test_close_completed_refused_when_defect_still_reproduces(tmp_path: Path):
         close_handoff(
             handoff, current_facts_by_id={"example:x": still_broken}, reason="completed", path=out,
         )
+    assert not out.exists()  # a refused close must write nothing
+
+
+def test_close_completed_refused_when_the_triggering_fact_is_absent(tmp_path: Path):
+    """Negative control for the unsafe case the directive flagged: a FILED handoff whose
+    triggering check no longer appears at all in a fresh facts document must NOT close as
+    'completed' -- absence is not evidence of a fix."""
+    handoff = _filed_handoff()
+    out = tmp_path / "handoff.json"
+    with pytest.raises(CloseRefusal, match="absent from the current facts document"):
+        close_handoff(handoff, current_facts_by_id={}, reason="completed", path=out)
     assert not out.exists()  # a refused close must write nothing
 
 
