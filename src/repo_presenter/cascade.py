@@ -534,6 +534,7 @@ def _repair_defects(
             else composed.dispositions
         ),
         plan=composed.plan, tasks=composed.tasks, name=product_name(entry),
+        readme=composed.readme,
     )
     fresh = merge_equivalent([d for d in defects if not repairs.attempted(d.fingerprint)])
     for defect in defects:

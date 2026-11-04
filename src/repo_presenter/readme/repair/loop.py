@@ -81,6 +81,8 @@ from repo_presenter.readme.composition.planning import (
     planning_packet,
     planning_schema,
 )
+from repo_presenter.readme.composition.policy import DEFAULT_POLICY
+from repo_presenter.readme.composition.renderer import line_counts
 from repo_presenter.readme.reconciliation.dispositions import (
     reconcile_checks,
     reconciliation_batch_facts,
@@ -107,6 +109,7 @@ from repo_presenter.readme.repair.targeted import (
     repair_checks,
     repair_packet,
     repair_schema,
+    visible_line_budget_hint,
 )
 from repo_presenter.readme.review.defect_bridge import build_defects
 
@@ -212,6 +215,12 @@ class RepairContext:
     plan: dict[str, Any]
     tasks: list[SectionTask]
     name: str
+    #: The README the defect was found in (for a BC-07 budget repair: its visible-line count).
+    readme: str = ""
+
+
+def _read_text(path: Path) -> str:
+    return path.read_text(encoding="utf-8") if path.is_file() else ""
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -237,6 +246,7 @@ def _targeted_call(
     recover: Callable[[dict[str, Any]], dict[str, Any] | None] | None = None,
     patch: PatchScope | None = None,
     stage_facts: FactsDocument | None = None,
+    visible_line_budget: Mapping[str, Any] | None = None,
 ) -> JobResult | JobError:
     """One ``targeted_repair`` call, judged by ``repair_checks`` around the causing stage's own
     ``checks``; a rejection after the job's own re-asks comes back as the ``JobError``.
@@ -259,7 +269,7 @@ def _targeted_call(
                 condensed(reply_contract) if patch is not None else contract,
                 allowed,
                 slot_facts,
-                None,
+                visible_line_budget,
                 carried=carried,
             ),
             config=rc.config,
@@ -331,10 +341,29 @@ def _repair_plan(rc: RepairContext, defect: Defect, repairs: RepairLedger) -> bo
             ecosystem=rc.entry.ecosystem,
         ),
     )
-    outcome = _targeted_call(rc, defect, loaded, original, checks)
+    outcome = _targeted_call(
+        rc, defect, loaded, original, checks,
+        visible_line_budget=_budget_hint(rc, defect, original),
+    )
     if isinstance(outcome, JobError):
         return _unrepairable(defect, repairs, str(outcome))
     return _accept(rc, defect, loaded, key, outcome, repairs)
+
+
+def _budget_hint(
+    rc: RepairContext, defect: Defect, plan: Mapping[str, Any]
+) -> dict[str, Any] | None:
+    """The measured cost of each optional plan lever for a BC-07 visible-line-budget defect, so the
+    one repair attempt can clear the right field instead of guessing among small prose trims
+    (``targeted.visible_line_budget_hint``; its original caller, rounds.py, was never ported, so the
+    packet always carried ``null``). Routed on the defect's label and stage - never its prose - and
+    only when the README it was found in is known."""
+    if defect.label != "BC-07" or defect.stage != "S5" or not rc.readme:
+        return None
+    visible, _total = line_counts(rc.readme)
+    return visible_line_budget_hint(
+        plan, rc.facts, visible, DEFAULT_POLICY.visible_lines_budget
+    )
 
 
 def reject_printed_quote(
@@ -648,6 +677,7 @@ def _load_context(
         plan=plan,
         tasks=tasks,
         name=product_name(entry),
+        readme=_read_text(out_dir / "README.coherent.md"),
     )
 
 
