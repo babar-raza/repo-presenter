@@ -50,6 +50,19 @@ from tests.test_lane_l_hosted import (
     restore_state,
 )
 
+
+def _record(lane: str, scenario: str, requests: int) -> None:
+    """When P5_PROOF_OUT is set, append the measured provider-request count for this scenario
+    (the supervisor's call_count_proof generator reads these; unset, this is a no-op)."""
+    import json
+    import os
+
+    out = os.environ.get("P5_PROOF_OUT")
+    if out:
+        with open(out, "a", encoding="utf-8") as handle:
+            handle.write(json.dumps({"lane": lane, "scenario": scenario, "requests": requests}) + chr(10))
+
+
 # --- Lane L: six named scenarios through the real CLI ---------------------------------------------
 
 
@@ -85,6 +98,7 @@ def test_lane_l_warm_unchanged_rerun_makes_exactly_zero_provider_requests(
     assert hosted.lane_l("run3", hosted.facts("run3")) == 0
 
     assert provider.calls == 0
+    _record('L','warm_unchanged_rerun',provider.calls)
     assert _skipped(capsys)
     assert digest_tree(hosted.bundle()) == proven  # the proven bundle is left exactly as sealed
     record = hosted.record("L")
@@ -110,6 +124,7 @@ def test_lane_l_cold_runner_with_only_the_restored_bundle_makes_zero_provider_re
     assert hosted.lane_l("cold", hosted.facts("cold")) == 0
 
     assert provider.calls == 0
+    _record('L','cold_runner',provider.calls)
     assert _skipped(capsys)
     assert digest_tree(hosted.bundle()) == proven
 
@@ -130,6 +145,7 @@ def test_lane_l_evicted_actions_cache_makes_zero_provider_requests_while_a_bundl
     assert hosted.lane_l("evicted", hosted.facts("evicted")) == 0
 
     assert provider.calls == 0
+    _record('L','evicted_cache',provider.calls)
     assert _skipped(capsys)
     assert digest_tree(hosted.bundle()) == proven
 
@@ -208,6 +224,7 @@ def test_lane_l_corrupt_evidence_fails_closed_and_the_provider_is_asked(
     hosted.lane_l("corrupt", hosted.facts("corrupt"))
 
     assert not _skipped(capsys)
+    _record('L','corrupt_evidence',provider.calls)
     assert provider.calls == EXPECTED_REVIEW_REQUESTS, provider.calls  # never a skip
 
 
@@ -314,6 +331,7 @@ def test_lane_r_warm_unchanged_rerun_makes_zero_requests(world: LaneRWorld) -> N
     before = digest_tree(bundle)
     world.run_stage()
     assert world.provider.requests == 0 and world.ran == []
+    _record('R','warm_unchanged_rerun',world.provider.requests)
     assert digest_tree(bundle) == before
 
 
@@ -328,6 +346,8 @@ def test_lane_r_cold_runner_and_evicted_cache_make_zero_requests(
     shutil.rmtree(world.candidates)
     world.run_stage(candidates=restored)  # a cold runner: only the restored bundle exists
     assert world.provider.requests == 0 and world.ran == []
+    _record('R','cold_runner',world.provider.requests)
+    _record('R','evicted_cache',world.provider.requests)
     assert digest_tree(restored / bundle.relative_to(world.candidates)) == before
 
 
@@ -371,6 +391,7 @@ def test_lane_r_corrupt_evidence_fails_closed(world: LaneRWorld) -> None:
         verify_bundle(bundle, LANE_R)
     world.run_stage()
     assert world.ran == [1] and world.provider.requests == 1
+    _record('R','corrupt_evidence',world.provider.requests)
 
 
 def test_lane_r_unproven_accepted_bundle_still_runs_the_pipeline(world: LaneRWorld) -> None:
