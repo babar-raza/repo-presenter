@@ -24,20 +24,23 @@ lane_l_candidate.diff`` for the before/after text this detector's test fixtures 
 Both rules fire only when the product's own name (with its platform) is already spelled out, in
 full, on the exact physical line the edit replaces -- no name is ever invented or looked up from
 elsewhere, the same "repair only what is unique and already there" discipline every other detector
-in this package follows (see ``links.broken_link``). Two shapes measured in the same three real
-diffs are deliberately NOT auto-fixed, for that reason:
+in this package follows (see ``links.broken_link``). One further shape is fixed under a narrower,
+explicit condition (detector version 2), and one shape remains deliberately NOT auto-fixed:
 
-* a bare "the commercial product" with no product name anywhere on its own line (one of the three
-  real fixes resolved this from a product name stated in an *earlier* sentence of the README --
-  cross-sentence name resolution this detector does not attempt, because guessing which earlier
-  name applies risks asserting the wrong platform, a worse error than leaving the sentence alone);
+* a bare "the commercial product" with no product name on its own line is rewritten to
+  ``<name> — Enterprise Edition`` ONLY when every OTHER commercial-product mention in the README's
+  prose (outside code fences) names one and the same product (compared case- and whitespace-
+  insensitively): then the bare phrase can only mean that product, and the name is one the README
+  itself already spells out. With no such mention, or with two or more different names (the bare
+  phrase could mean either, and asserting the wrong platform is a worse error than leaving the
+  sentence alone), it stays a finding -- "not guessed" -- exactly as before;
 * a "commercial ... product" phrase split across a hard line-wrap (a real, if rarer, shape in a
   hard-wrapped README) -- this architecture's ``FALSE_CLAIM_FIX`` edit kind is one physical line by
   construction (``model.Edit.__post_init__``), so a multi-line rewrap is out of scope for this
   edit kind regardless.
 
-Both are reported as findings instead (never silently dropped), with the exact matched text and
-why it was not guessed.
+Anything not fixed is reported as a finding instead (never silently dropped), with the exact
+matched text and why it was not guessed.
 
 The auto-fix additionally requires a ``link_target:product.enterprise`` fact to be on record
 (any polarity) before it edits anything, so it always has a fact to cite as its evidence
@@ -76,6 +79,7 @@ _BARE_RULE = re.compile(
 )
 #: A leftover "commercial" mention this detector recognizes as the same naming violation, but
 #: cannot repair without guessing a product name: reported, never silently ignored.
+_BARE_PRODUCT = re.compile(r"(?i)(?:the\s+)?commercial\s+product\b")
 _SUSPECT = re.compile(
     r"(?i)\bcommercial\s+(?:product\b|edition\b|version\b|Aspose\.[A-Za-z0-9+#]+\b)"
 )
@@ -85,9 +89,27 @@ def _overlaps(start: int, end: int, spans: list[tuple[int, int]]) -> bool:
     return any(start < s_end and end > s_start for s_start, s_end in spans)
 
 
+def _normalized(name: str) -> str:
+    return " ".join(name.lower().split())
+
+
+def _single_named_product(ctx: Context) -> str | None:
+    """The one product name every named ``commercial <Aspose.X for Y>`` mention in the README's
+    prose agrees on, spelled as first written; ``None`` when there is none or more than one."""
+    names: dict[str, str] = {}
+    for line in ctx.lines:
+        if line.in_fence:
+            continue
+        for rule in (_LINK_RULE, _BARE_RULE):
+            for match in rule.finditer(line.text):
+                names.setdefault(_normalized(match.group(1)), " ".join(match.group(1).split()))
+    return next(iter(names.values())) if len(names) == 1 else None
+
+
 @detector(DETECTOR)
 def enterprise_edition_naming(ctx: Context) -> DetectorResult:
     enterprise = ctx.fact(ENTERPRISE_FACT_ID)
+    sole_product = _single_named_product(ctx)
     edits: list[Edit] = []
     findings: list[Finding] = []
     for line in ctx.lines:
@@ -102,6 +124,14 @@ def enterprise_edition_naming(ctx: Context) -> DetectorResult:
             if _overlaps(match.start(), match.end(), occupied):
                 continue
             claimed.append((match.start(), match.end(), f"{match.group(1)} — Enterprise Edition"))
+        occupied = [(s, e) for s, e, _ in claimed]
+        if sole_product is not None and enterprise is not None:
+            for match in _BARE_PRODUCT.finditer(line.text):
+                if _overlaps(match.start(), match.end(), occupied):
+                    continue
+                claimed.append(
+                    (match.start(), match.end(), f"{sole_product} — Enterprise Edition")
+                )
         occupied = [(s, e) for s, e, _ in claimed]
         for start, end, replacement in claimed:
             original = line.text[start:end]
