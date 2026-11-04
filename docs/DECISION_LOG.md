@@ -2417,3 +2417,45 @@ to surface and verify those individually as they're found.
 (`_spelled_supported_facts`, the new `SUPERSEDE_REDUNDANT` backfill block in `normalize()`);
 `tests/readme/reconciliation/test_dispositions.py`; this run's downloaded artifact (expires
 2026-11-15, `present-python-41290974964`).
+
+## 2026-11-04: independent status reconciliation finds the predecessor repo is a live second writer, not closed history; one new Stage 0 inserted ahead of the adopted corrective plan
+
+**Decision**: record, as a new consolidated document
+(`docs/STATUS_ASSESSMENT_AND_RECOVERY_PLAN_2026-11-04.md`), a full re-read of both
+`docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md` (with its own §K amendment) and
+`docs/repo_presenter_independent_audit_2026-11-03.md`, compared claim-by-claim, plus an
+independent re-verification pass. Per `AGENTS.md` non-negotiable #6, the Nov-03 independent
+audit's most consequential new claim was not accepted on its own authority -- it was checked
+directly: `gh api repos/babar-raza/repository-presenter/actions/workflows` returns 12 workflows,
+every one `state: "active"`, and `gh run list --repo babar-raza/repository-presenter --limit 8`
+shows every recent run schedule-triggered and successful, most recently a "Liveness" run at
+2026-11-04T00:11:03Z -- under 24 hours before this entry, despite that repository's own source
+tree being frozen since 2026-10-20. **Confirmed true, not narration.** The existing authority
+chain (`docs/history-reconstruction.md`, `docs/MISSION_AUTHORITY.md`) correctly treats the old
+repo's code and review logic as untrusted holdout material, but nothing in it registers that the
+old repo's *infrastructure* -- including a scheduled issues-lifecycle funnel and a scheduled
+sealing job -- is still live and writing-capable against the same upstream App installation and
+target repositories this project also targets, with no reconciliation between the two. This is
+inserted as a new Stage 0 ahead of the ten adopted `AUDIT_2026_11_01_ITEM_*` cards, because Stage
+3/4 (issues, App auth, publishing) work is unsafe to build out while a second, unsupervised writer
+exists against the same targets. Three smaller findings also folded in: (a) the adopted plan's
+item 4 (write fresh JWT/installation-token-minting code) should be weighed against reusing the old
+repo's already-proven `actions/create-github-app-token@v2` pattern before any new credential code
+is written; (b) the ten adopted corrective-plan cards can close on documented deferral without
+their underlying G-goal being met -- the same "plan depth tracked as progress" failure mode the
+Nov-01 audit's own §F names from the *old* repository; (c) the top-of-file dashboard drifted out
+of sync with a newer card for a third time (`state.yaml` lines 23/48/51 say `lane_r_accepted: 9`
+while line 5106's `AUDIT_2026_11_01_ITEM_7` card, re-run the same day, reports `Lane R 10/25`) --
+confirmed directly in the file, not from either audit's narration.
+
+**What this does NOT decide**: which of the old repo's twelve live workflows to keep, pause, or
+retire is an owner decision, not resolved by this entry -- the new Stage 0 names it as an open
+gate, it does not close it. This entry also does not reopen or reorder the ten adopted
+`AUDIT_2026_11_01_ITEM_*` cards; Stage 0 is inserted ahead of them, items 1-10 continue to apply
+as before with the two corrections (item 4's reuse-before-rebuild question, item 2's closure-teeth
+fix) noted above and detailed in the new document.
+
+**Where the detail lives**: `docs/STATUS_ASSESSMENT_AND_RECOVERY_PLAN_2026-11-04.md` (full
+citations, the consolidated status assessment, and the stage-by-stage plan);
+`docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md` §K; `docs/repo_presenter_independent_audit_
+2026-11-03.md`; `project/state.yaml` lines 23, 48, 51, 5106.
