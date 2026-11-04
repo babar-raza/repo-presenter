@@ -3,7 +3,7 @@
 $ python -m pytest tests/core/test_preflight.py -q
 --- stdout ---
 .......                                                                  [100%]
-7 passed in 0.36s
+7 passed in 0.61s
 
 --- stderr ---
 
@@ -12,7 +12,7 @@ $ python -m pytest tests/core/test_preflight.py -q
 $ python -m pytest tests/core/test_preflight.py -q
 --- stdout ---
 .......                                                                  [100%]
-7 passed in 0.23s
+7 passed in 0.50s
 
 --- stderr ---
 
@@ -22,10 +22,10 @@ mutated: M src/repo_presenter/core/preflight.py
 $ python -m pytest tests/core/test_preflight.py -q
 --- stdout ---
 ..F....                                                                  [100%]
-================================== FAILURES ===================================
-___________ test_changed_source_revision_is_a_real_negative_control ___________
+=================================== FAILURES ===================================
+___________ test_changed_source_revision_is_a_real_negative_control ____________
 
-tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-19624/test_changed_source_revision_i0')
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-14/test_changed_source_revision_i0')
 
     def test_changed_source_revision_is_a_real_negative_control(tmp_path: Path) -> None:
         _seal_lane_r(tmp_path, "o/r", "abc123")
@@ -34,13 +34,13 @@ tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest
         )
         assert decision.can_skip_provider_call is False
 >       assert "source revision changed" in decision.reason
-E       assert 'source revision changed' in "source revision unchanged, but prompts/policy/model/detector/contract scopes cannot yet be checked (seal.py's dependencies.json producer was never ported) -- proceeding with the full pipeline rather than fabricating a currency claim"
-E        +  where "source revision unchanged, but prompts/policy/model/detector/contract scopes cannot yet be checked (seal.py's dependencies.json producer was never ported) -- proceeding with the full pipeline rather than fabricating a currency claim" = PreflightDecision(can_skip_provider_call=False, reason="source revision unchanged, but prompts/policy/model/detector/c...acts', 'prompts', 'detectors', 'contract_version', 'components', 'validators', 'acceptance_profile_version', 'policy')).reason
+E       AssertionError: assert 'source revision changed' in 'source revision unchanged, but prompts/policy/model/detector/contract scopes cannot yet be checked because the caller supplied no current_dependencies -- proceeding with the full pipeline rather than fabricating a currency claim'
+E        +  where 'source revision unchanged, but prompts/policy/model/detector/contract scopes cannot yet be checked because the caller supplied no current_dependencies -- proceeding with the full pipeline rather than fabricating a currency claim' = PreflightDecision(can_skip_provider_call=False, reason='source revision unchanged, but prompts/policy/model/detector/c...pts', 'detectors', 'contract_version', 'components', 'validators', 'acceptance_profile_version', 'policy'), changed=()).reason
 
-tests\core\test_preflight.py:62: AssertionError
-=========================== short test summary info ===========================
+tests/core/test_preflight.py:62: AssertionError
+=========================== short test summary info ============================
 FAILED tests/core/test_preflight.py::test_changed_source_revision_is_a_real_negative_control
-1 failed, 6 passed in 0.20s
+1 failed, 6 passed in 0.07s
 
 --- stderr ---
 

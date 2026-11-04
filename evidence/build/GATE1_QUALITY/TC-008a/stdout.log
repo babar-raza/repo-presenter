@@ -1,0 +1,46 @@
+
+===== CLEAN RUN 1 =====
+$ python ops/checks/execution_proof.py evidence/build/GATE1_QUALITY/TC-008a/call_count_proof.json warm_unchanged_rerun_calls=0 cold_runner_calls=0 evicted_cache_calls=0 corrupt_evidence_fail_closed=True
+--- stdout ---
+OK: evidence/build/GATE1_QUALITY/TC-008a/call_count_proof.json records a real execution proof matching all 4 requirement(s)
+
+--- stderr ---
+
+$ python -m pytest tests/core/test_preflight.py tests/test_present.py tests/test_lane_l_hosted.py -q
+--- stdout ---
+.....................................................                    [100%]
+53 passed in 40.01s
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python ops/checks/execution_proof.py evidence/build/GATE1_QUALITY/TC-008a/call_count_proof.json warm_unchanged_rerun_calls=0 cold_runner_calls=0 evicted_cache_calls=0 corrupt_evidence_fail_closed=True
+--- stdout ---
+OK: evidence/build/GATE1_QUALITY/TC-008a/call_count_proof.json records a real execution proof matching all 4 requirement(s)
+
+--- stderr ---
+
+$ python -m pytest tests/core/test_preflight.py tests/test_present.py tests/test_lane_l_hosted.py -q
+--- stdout ---
+.....................................................                    [100%]
+53 passed in 40.77s
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M evidence/build/GATE1_QUALITY/TC-008a/call_count_proof.json
+$ python ops/checks/execution_proof.py evidence/build/GATE1_QUALITY/TC-008a/call_count_proof.json warm_unchanged_rerun_calls=0 cold_runner_calls=0 evicted_cache_calls=0 corrupt_evidence_fail_closed=True
+--- stdout ---
+FAIL: warm_unchanged_rerun_calls: expected '0', got 3
+
+--- stderr ---
+
+$ python -m pytest tests/core/test_preflight.py tests/test_present.py tests/test_lane_l_hosted.py -q
+--- stdout ---
+.....................................................                    [100%]
+53 passed in 42.88s
+
+--- stderr ---
+

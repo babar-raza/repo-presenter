@@ -1,0 +1,26 @@
+{
+  "measured_by": "scripts/p5_call_count_proof.py running tests/test_preflight_wiring.py",
+  "per_scenario_requests_by_lane": {
+    "warm_unchanged_rerun": {
+      "L": 0,
+      "R": 0
+    },
+    "cold_runner": {
+      "L": 0,
+      "R": 0
+    },
+    "evicted_cache": {
+      "L": 0,
+      "R": 0
+    },
+    "corrupt_evidence": {
+      "L": 1,
+      "R": 1
+    }
+  },
+  "warm_unchanged_rerun_calls": 0,
+  "cold_runner_calls": 0,
+  "evicted_cache_calls": 0,
+  "corrupt_evidence_fail_closed": true,
+  "caveat": "Lane R run_cascade body is stubbed to one request; Lane L is the real CLI path."
+}

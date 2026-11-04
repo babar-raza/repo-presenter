@@ -3,7 +3,14 @@
 $ python -m pytest tests/test_version.py -q
 --- stdout ---
 .                                                                        [100%]
-1 passed in 0.03s
+1 passed in 0.01s
+
+--- stderr ---
+
+$ python -m pytest tests/ops/test_gate_guard_tc000.py -q
+--- stdout ---
+.                                                                        [100%]
+1 passed in 0.01s
 
 --- stderr ---
 
@@ -16,23 +23,49 @@ $ python -m pytest tests/test_version.py -q
 
 --- stderr ---
 
+$ python -m pytest tests/ops/test_gate_guard_tc000.py -q
+--- stdout ---
+.                                                                        [100%]
+1 passed in 0.02s
+
+--- stderr ---
+
 
 ===== NEGATIVE CONTROL (checks MUST now fail) =====
 mutated: M src/repo_presenter/__init__.py
 $ python -m pytest tests/test_version.py -q
 --- stdout ---
 F                                                                        [100%]
-================================== FAILURES ===================================
-__________________________ test_version_is_nonempty ___________________________
+=================================== FAILURES ===================================
+___________________________ test_version_is_nonempty ___________________________
 
     def test_version_is_nonempty():
 >       assert __version__
 E       AssertionError: assert ''
 
-tests\test_version.py:5: AssertionError
-=========================== short test summary info ===========================
+tests/test_version.py:5: AssertionError
+=========================== short test summary info ============================
 FAILED tests/test_version.py::test_version_is_nonempty - AssertionError: asse...
-1 failed in 0.12s
+1 failed in 0.03s
+
+--- stderr ---
+
+$ python -m pytest tests/ops/test_gate_guard_tc000.py -q
+--- stdout ---
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______________________ test_package_version_is_declared _______________________
+
+    def test_package_version_is_declared():
+        from repo_presenter import __version__
+>       assert isinstance(__version__, str) and __version__
+E       AssertionError: assert (True and '')
+E        +  where True = isinstance('', str)
+
+tests/ops/test_gate_guard_tc000.py:17: AssertionError
+=========================== short test summary info ============================
+FAILED tests/ops/test_gate_guard_tc000.py::test_package_version_is_declared
+1 failed in 0.02s
 
 --- stderr ---
 

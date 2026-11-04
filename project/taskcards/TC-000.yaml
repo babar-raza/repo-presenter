@@ -25,6 +25,12 @@ checks:
     timeout_seconds: 60
     proves:
       - REQ-SMOKE-001
+  - command: |-
+      python -m pytest tests/ops/test_gate_guard_tc000.py -q
+    expect: exit 0
+    timeout_seconds: 60
+    proves:
+      - REQ-SMOKE-001
 requires:
   - python
 network: false

@@ -41,6 +41,7 @@ from typing import Any
 from repo_presenter.cascade import (
     DEFAULT_PROMPTS_PATH,
     DEFAULT_REGISTRY_PATH,
+    preflight_cascade,
     run_cascade,
 )
 from repo_presenter.core.candidates import CANDIDATES_DIRNAME, LANE_L, LANE_R, LANES
@@ -62,7 +63,7 @@ from repo_presenter.core.state.present_transaction import (
 )
 from repo_presenter.facts_handoff import FactsManifest, load_handoff, write_handoff
 from repo_presenter.lane_l import build_lane_l_facts
-from repo_presenter.lane_l_run import run_lane_l
+from repo_presenter.lane_l_run import preflight_lane_l, run_lane_l
 from repo_presenter.readme.bundle.seal import SealInputs, seal_candidate
 from repo_presenter.readme.correction.report import (
     OUTCOME_REFUSED,
@@ -127,6 +128,13 @@ def _cascade_and_seal(
     prompts_path: Path,
     registry_path: Path,
 ) -> None:
+    decision = preflight_cascade(
+        repository, clone_path, facts_path=facts_path, candidates_root=candidates_root,
+        prompts_path=prompts_path,
+    )
+    print(f"preflight (Lane R): skip={decision.can_skip_provider_call}: {decision.reason}")
+    if decision.can_skip_provider_call:
+        return  # the proven sealed bundle stays exactly as sealed; no provider call is made
     result = run_cascade(
         repository,
         ecosystem,
@@ -182,6 +190,13 @@ def _lane_l_and_seal(
     """Lane L's counterpart of :func:`_cascade_and_seal`: correct the live README, judge the final
     README, and seal only a candidate a model reviewed and accepted. A defect the engine may not
     repair is a refusal that names Lane R, never a seal."""
+    decision = preflight_lane_l(
+        repository, clone_path, facts_path=facts_path, candidates_root=candidates_root,
+        prompts_path=prompts_path,
+    )
+    print(f"preflight (Lane L): skip={decision.can_skip_provider_call}: {decision.reason}")
+    if decision.can_skip_provider_call:
+        return  # the proven sealed bundle stays exactly as sealed; no provider call is made
     result = run_lane_l(
         repository,
         ecosystem,

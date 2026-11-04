@@ -8,13 +8,20 @@ OK: AGENTS.md contains all 1 required marker(s)
 
 $ python ops/checks/marker_check.py ops/SUPERVISOR.md "RELEASE_GATE_CARDS_REINSTATED_2026-11-04"
 --- stdout ---
-OK: ops\SUPERVISOR.md contains all 1 required marker(s)
+OK: ops/SUPERVISOR.md contains all 1 required marker(s)
 
 --- stderr ---
 
 $ python ops/checks/count_taskcards.py 13
 --- stdout ---
-OK: found 17 taskcard(s) (>= 13): TC-000, TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-009a, TC-009b, TC-010, TC-010a, TC-011, TC-012, TC-012a
+OK: found 18 taskcard(s) (>= 13): TC-000, TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-008a, TC-009, TC-009a, TC-009b, TC-010, TC-010a, TC-011, TC-012, TC-012a
+
+--- stderr ---
+
+$ python -m pytest tests/ops/test_gate_guard_tc003.py -q
+--- stdout ---
+.                                                                        [100%]
+1 passed in 0.10s
 
 --- stderr ---
 
@@ -28,13 +35,20 @@ OK: AGENTS.md contains all 1 required marker(s)
 
 $ python ops/checks/marker_check.py ops/SUPERVISOR.md "RELEASE_GATE_CARDS_REINSTATED_2026-11-04"
 --- stdout ---
-OK: ops\SUPERVISOR.md contains all 1 required marker(s)
+OK: ops/SUPERVISOR.md contains all 1 required marker(s)
 
 --- stderr ---
 
 $ python ops/checks/count_taskcards.py 13
 --- stdout ---
-OK: found 17 taskcard(s) (>= 13): TC-000, TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-009a, TC-009b, TC-010, TC-010a, TC-011, TC-012, TC-012a
+OK: found 18 taskcard(s) (>= 13): TC-000, TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-008a, TC-009, TC-009a, TC-009b, TC-010, TC-010a, TC-011, TC-012, TC-012a
+
+--- stderr ---
+
+$ python -m pytest tests/ops/test_gate_guard_tc003.py -q
+--- stdout ---
+.                                                                        [100%]
+1 passed in 0.09s
 
 --- stderr ---
 
@@ -49,13 +63,42 @@ FAIL: AGENTS.md missing marker(s): ['TWO_TIER_TASKCARD_MODEL_ADOPTED_2026-11-04'
 
 $ python ops/checks/marker_check.py ops/SUPERVISOR.md "RELEASE_GATE_CARDS_REINSTATED_2026-11-04"
 --- stdout ---
-OK: ops\SUPERVISOR.md contains all 1 required marker(s)
+OK: ops/SUPERVISOR.md contains all 1 required marker(s)
 
 --- stderr ---
 
 $ python ops/checks/count_taskcards.py 13
 --- stdout ---
-OK: found 17 taskcard(s) (>= 13): TC-000, TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-009a, TC-009b, TC-010, TC-010a, TC-011, TC-012, TC-012a
+OK: found 18 taskcard(s) (>= 13): TC-000, TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-008a, TC-009, TC-009a, TC-009b, TC-010, TC-010a, TC-011, TC-012, TC-012a
+
+--- stderr ---
+
+$ python -m pytest tests/ops/test_gate_guard_tc003.py -q
+--- stdout ---
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____________ test_two_tier_model_and_reinstated_cards_are_recorded _____________
+
+    def test_two_tier_model_and_reinstated_cards_are_recorded():
+>       _check("ops/checks/marker_check.py", "AGENTS.md", "TWO_TIER_TASKCARD_MODEL_ADOPTED_2026-11-04")
+
+tests/ops/test_gate_guard_tc003.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ('ops/checks/marker_check.py', 'AGENTS.md', 'TWO_TIER_TASKCARD_MODEL_ADOPTED_2026-11-04')
+
+    def _check(*args):
+        r = subprocess.run([sys.executable, *args], cwd=ROOT, capture_output=True, text=True)
+>       assert r.returncode == 0, r.stdout + r.stderr
+E       AssertionError: FAIL: AGENTS.md missing marker(s): ['TWO_TIER_TASKCARD_MODEL_ADOPTED_2026-11-04']
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/usr/local/bin/python', 'ops/checks/marker_check.py', 'AGENTS.md', 'TWO_TIER_TASKCARD_MODEL_AD... returncode=1, stdout="FAIL: AGENTS.md missing marker(s): ['TWO_TIER_TASKCARD_MODEL_ADOPTED_2026-11-04']\n", stderr='').returncode
+
+tests/ops/test_gate_guard_tc003.py:12: AssertionError
+=========================== short test summary info ============================
+FAILED tests/ops/test_gate_guard_tc003.py::test_two_tier_model_and_reinstated_cards_are_recorded
+1 failed in 0.07s
 
 --- stderr ---
 

@@ -32,6 +32,7 @@ from repo_presenter.core.llm.jobs import CallStore, JobContext
 from repo_presenter.core.llm.ledger import Ledger
 from repo_presenter.core.llm.prompts import load_manifests
 from repo_presenter.core.noop_proof import Invocation, measure_invocation
+from repo_presenter.core.preflight import PreflightDecision, preflight_decision
 from repo_presenter.core.registry.loader import load_registry, require_listed
 from repo_presenter.core.registry.models import RegistryEntry
 from repo_presenter.core.registry_entry_stub import RegistryEntryStub
@@ -106,6 +107,46 @@ def _read_live_readme(clone_path: Path) -> tuple[str, bytes, str]:
             "edits; Lane R can rewrite it"
         ) from exc
     return inventory.readme_path.relative_to(clone_path).as_posix(), data, text
+
+
+def preflight_lane_l(
+    repository: str,
+    clone_path: Path,
+    *,
+    facts_path: Path,
+    candidates_root: Path,
+    prompts_path: Path = DEFAULT_PROMPTS_PATH,
+) -> PreflightDecision:
+    """P5 (TC-008a): before the one provider call of a Lane L run, may it be skipped? Compares
+    the inputs Lane L consumes now (pinned revision plus the live README's bytes, the facts, the
+    correction engine and detector versions, the review prompt) against the lane's verified,
+    proven sealed bundle. Anything that cannot be computed is a fail-closed "do not skip"."""
+    from repo_presenter.core.candidates import LANE_L
+    from repo_presenter.readme.bundle.seal import current_dependencies_document
+
+    try:
+        document = read_facts(facts_path)
+        clone = clone_path.resolve()
+        source_revision = run_git(["rev-parse", "HEAD"], cwd=clone).stdout.strip()
+        if document.source_revision != source_revision:
+            raise CorrectionRunError("the facts describe a different revision than the clone")
+        _, original_bytes, _ = _read_live_readme(clone)
+        dependencies = current_dependencies_document(
+            lane=LANE_L,
+            source_revision=source_revision,
+            facts=document,
+            prompts=load_manifests(prompts_path),
+            original_readme=original_bytes,
+        )
+    except Exception as exc:  # noqa: BLE001 -- unknowable current inputs never justify a skip
+        return PreflightDecision(
+            False, f"current inputs could not be computed ({type(exc).__name__}: {exc})",
+            (), (), (),
+        )
+    return preflight_decision(
+        candidates_root=candidates_root, repository=repository, lane=LANE_L,
+        current_source_revision=source_revision, current_dependencies=dependencies,
+    )
 
 
 def run_lane_l(

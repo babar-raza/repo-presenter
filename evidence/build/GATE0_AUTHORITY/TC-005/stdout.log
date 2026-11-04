@@ -2,13 +2,20 @@
 ===== CLEAN RUN 1 =====
 $ python ops/checks/marker_check.py docs/RELEASE_CONTRACT_P1-P5.md "RELEASE_CONTRACT_ADOPTED_2026-11-04"
 --- stdout ---
-OK: docs\RELEASE_CONTRACT_P1-P5.md contains all 1 required marker(s)
+OK: docs/RELEASE_CONTRACT_P1-P5.md contains all 1 required marker(s)
 
 --- stderr ---
 
 $ python ops/checks/dashboard_matches_live.py
 --- stdout ---
 OK: project/state.yaml matches live portfolio_status.py (R=10, L=12)
+
+--- stderr ---
+
+$ python -m pytest tests/ops/test_gate_guard_tc005.py -q
+--- stdout ---
+.                                                                        [100%]
+1 passed in 42.54s
 
 --- stderr ---
 
@@ -16,13 +23,20 @@ OK: project/state.yaml matches live portfolio_status.py (R=10, L=12)
 ===== CLEAN RUN 2 =====
 $ python ops/checks/marker_check.py docs/RELEASE_CONTRACT_P1-P5.md "RELEASE_CONTRACT_ADOPTED_2026-11-04"
 --- stdout ---
-OK: docs\RELEASE_CONTRACT_P1-P5.md contains all 1 required marker(s)
+OK: docs/RELEASE_CONTRACT_P1-P5.md contains all 1 required marker(s)
 
 --- stderr ---
 
 $ python ops/checks/dashboard_matches_live.py
 --- stdout ---
 OK: project/state.yaml matches live portfolio_status.py (R=10, L=12)
+
+--- stderr ---
+
+$ python -m pytest tests/ops/test_gate_guard_tc005.py -q
+--- stdout ---
+.                                                                        [100%]
+1 passed in 46.90s
 
 --- stderr ---
 
@@ -31,13 +45,43 @@ OK: project/state.yaml matches live portfolio_status.py (R=10, L=12)
 mutated: M project/state.yaml
 $ python ops/checks/marker_check.py docs/RELEASE_CONTRACT_P1-P5.md "RELEASE_CONTRACT_ADOPTED_2026-11-04"
 --- stdout ---
-OK: docs\RELEASE_CONTRACT_P1-P5.md contains all 1 required marker(s)
+OK: docs/RELEASE_CONTRACT_P1-P5.md contains all 1 required marker(s)
 
 --- stderr ---
 
 $ python ops/checks/dashboard_matches_live.py
 --- stdout ---
 FAIL: lane_r_accepted recorded=999 but live=10
+
+--- stderr ---
+
+$ python -m pytest tests/ops/test_gate_guard_tc005.py -q
+--- stdout ---
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________ test_release_contract_adopted_and_dashboard_matches_live ___________
+
+    def test_release_contract_adopted_and_dashboard_matches_live():
+        _check("ops/checks/marker_check.py", "docs/RELEASE_CONTRACT_P1-P5.md", "RELEASE_CONTRACT_ADOPTED_2026-11-04")
+>       _check("ops/checks/dashboard_matches_live.py")
+
+tests/ops/test_gate_guard_tc005.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ('ops/checks/dashboard_matches_live.py',)
+
+    def _check(*args):
+        r = subprocess.run([sys.executable, *args], cwd=ROOT, capture_output=True, text=True)
+>       assert r.returncode == 0, r.stdout + r.stderr
+E       AssertionError: FAIL: lane_r_accepted recorded=999 but live=10
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/usr/local/bin/python', 'ops/checks/dashboard_matches_live.py'], returncode=1, stdout='FAIL: lane_r_accepted recorded=999 but live=10\n', stderr='').returncode
+
+tests/ops/test_gate_guard_tc005.py:12: AssertionError
+=========================== short test summary info ============================
+FAILED tests/ops/test_gate_guard_tc005.py::test_release_contract_adopted_and_dashboard_matches_live
+1 failed in 45.31s
 
 --- stderr ---
 
