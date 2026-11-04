@@ -3,9 +3,9 @@
   "card": "TC-005",
   "gate": "GATE0_AUTHORITY",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-04T08:34:12Z",
-  "base_rev": "8756b0387c35d53f67944b98636ae131611930b1",
-  "head_rev": "8756b0387c35d53f67944b98636ae131611930b1",
+  "generated_at": "2026-11-04T10:11:02Z",
+  "base_rev": "2d783e47a7df59b49fbb8b480176f2a43379d3aa",
+  "head_rev": "2d783e47a7df59b49fbb8b480176f2a43379d3aa",
   "card_sha256": "855f20c104af06bd6e5ad713da5836510c5889e6bb490c8f919e715a692fad84",
   "fingerprint": {
     "python": "3.13.15",
@@ -14,7 +14,8 @@
   "scope": {
     "ok": true,
     "changed_paths": [],
-    "violations": []
+    "violations": [],
+    "evaluated": false
   },
   "runs": [
     {
@@ -23,13 +24,13 @@
         {
           "command": "python ops/checks/marker_check.py docs/RELEASE_CONTRACT_P1-P5.md \"RELEASE_CONTRACT_ADOPTED_2026-11-04\"",
           "exit_code": 0,
-          "duration_s": 0.072,
+          "duration_s": 0.078,
           "stdout_sha256": "98f1983e4ab0cd19a7d2384ce827d2dc0d1fed75f38fee9286fde156cfa324a5"
         },
         {
           "command": "python ops/checks/dashboard_matches_live.py",
           "exit_code": 0,
-          "duration_s": 122.874,
+          "duration_s": 121.249,
           "stdout_sha256": "1aa806eff6f49058ed2a34d92ea98d8d3de2e245260c7445db3f68e164792058"
         }
       ],
@@ -41,13 +42,13 @@
         {
           "command": "python ops/checks/marker_check.py docs/RELEASE_CONTRACT_P1-P5.md \"RELEASE_CONTRACT_ADOPTED_2026-11-04\"",
           "exit_code": 0,
-          "duration_s": 0.071,
+          "duration_s": 0.098,
           "stdout_sha256": "98f1983e4ab0cd19a7d2384ce827d2dc0d1fed75f38fee9286fde156cfa324a5"
         },
         {
           "command": "python ops/checks/dashboard_matches_live.py",
           "exit_code": 0,
-          "duration_s": 124.17,
+          "duration_s": 121.503,
           "stdout_sha256": "1aa806eff6f49058ed2a34d92ea98d8d3de2e245260c7445db3f68e164792058"
         }
       ],

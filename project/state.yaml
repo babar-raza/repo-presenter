@@ -131,6 +131,138 @@ owner_review_status:
     clarifies what level of acceptance each one represents, per mission non-negotiable #7
     ("report observations, not claims of progress") and #5 (no silent self-grading overrule).
 
+release_gate_dashboard:
+  generated_by: gatecli
+  generated_at: '2026-11-04T10:13:22Z'
+  note: Tool-generated from gateverify.rebuild_state() -- never hand-edit this block.
+    Historical current_gate/active_work_item below are preserved bootstrap-era narrative,
+    not this cursor; this block is the real, evidence-derived release-gate status
+    as of generated_at.
+  cards:
+  - id: TC-000
+    gate: P0_BOOTSTRAP
+    status: ACCEPTED
+    attempt: 1
+    blocker: null
+    commit: 2d783e47a7df59b49fbb8b480176f2a43379d3aa
+    receipt: P0_BOOTSTRAP/TC-000/receipt.json
+  - id: TC-001
+    gate: GATE0_AUTHORITY
+    status: ACCEPTED
+    attempt: 0
+    blocker: null
+    commit: 2d783e47a7df59b49fbb8b480176f2a43379d3aa
+    receipt: GATE0_AUTHORITY/TC-001/receipt.json
+  - id: TC-002
+    gate: GATE0_AUTHORITY
+    status: AWAITING_OWNER_DECISION
+    attempt: 0
+    blocker:
+      class: AWAITING_OWNER_DECISION
+      summary: 'checks failed: python ops/checks/owner_decision_record.py docs/LEGACY_WRITER_INVENTORY_2026-11-04.md
+        OWNER_APPROVED_WRITER_DISPOSITION:; negative-control patch did not apply'
+  - id: TC-003
+    gate: GATE0_AUTHORITY
+    status: ACCEPTED
+    attempt: 0
+    blocker: null
+    commit: 2d783e47a7df59b49fbb8b480176f2a43379d3aa
+    receipt: GATE0_AUTHORITY/TC-003/receipt.json
+  - id: TC-004
+    gate: GATE0_AUTHORITY
+    status: AWAITING_OWNER_DECISION
+    attempt: 0
+    blocker:
+      class: AWAITING_OWNER_DECISION
+      summary: 'checks failed: python ops/checks/owner_decision_record.py docs/DECISION_LOG.md
+        OWNER_RULING_SWEEP_PAUSE:; negative-control patch did not apply'
+  - id: TC-005
+    gate: GATE0_AUTHORITY
+    status: ACCEPTED
+    attempt: 0
+    blocker: null
+    commit: 2d783e47a7df59b49fbb8b480176f2a43379d3aa
+    receipt: GATE0_AUTHORITY/TC-005/receipt.json
+  - id: TC-006
+    gate: GATE1_QUALITY
+    status: ACCEPTED
+    attempt: 0
+    blocker: null
+    commit: 2d783e47a7df59b49fbb8b480176f2a43379d3aa
+    receipt: GATE1_QUALITY/TC-006/receipt.json
+  - id: TC-007
+    gate: GATE1_QUALITY
+    status: VERIFICATION_FAILED
+    attempt: 0
+    blocker:
+      class: VERIFICATION_FAILED
+      summary: 'checks failed: python ops/checks/calibration_status.py PASSED; negative-control
+        patch did not apply'
+  - id: TC-008
+    gate: GATE1_QUALITY
+    status: ACCEPTED
+    attempt: 0
+    blocker: null
+    commit: 2d783e47a7df59b49fbb8b480176f2a43379d3aa
+    receipt: GATE1_QUALITY/TC-008/receipt.json
+  - id: TC-009
+    gate: GATE2_INTEGRATIONS
+    status: ACCEPTED
+    attempt: 0
+    blocker: null
+    commit: 2d783e47a7df59b49fbb8b480176f2a43379d3aa
+    receipt: GATE2_INTEGRATIONS/TC-009/receipt.json
+  - id: TC-009a
+    gate: GATE2_INTEGRATIONS
+    status: AWAITING_PREREQUISITE
+    attempt: 0
+    blocker:
+      class: AWAITING_PREREQUISITE
+      summary: depends on TC-002, not yet accepted
+  - id: TC-009b
+    gate: GATE2_INTEGRATIONS
+    status: AWAITING_PREREQUISITE
+    attempt: 0
+    blocker:
+      class: AWAITING_PREREQUISITE
+      summary: depends on TC-009a, TC-007, not yet accepted
+  - id: TC-010
+    gate: GATE2_INTEGRATIONS
+    status: ACCEPTED
+    attempt: 0
+    blocker: null
+    commit: 2d783e47a7df59b49fbb8b480176f2a43379d3aa
+    receipt: GATE2_INTEGRATIONS/TC-010/receipt.json
+  - id: TC-010a
+    gate: GATE2_INTEGRATIONS
+    status: AWAITING_PREREQUISITE
+    attempt: 0
+    blocker:
+      class: AWAITING_PREREQUISITE
+      summary: depends on TC-002, not yet accepted
+  - id: TC-011
+    gate: GATE3_PORTFOLIO
+    status: AWAITING_PREREQUISITE
+    attempt: 0
+    blocker:
+      class: AWAITING_PREREQUISITE
+      summary: depends on TC-007, TC-009b, not yet accepted
+  - id: TC-012
+    gate: GATE4_PRODUCTION
+    status: AWAITING_PREREQUISITE
+    attempt: 0
+    blocker:
+      class: AWAITING_PREREQUISITE
+      summary: depends on TC-002, not yet accepted
+  - id: TC-012a
+    gate: GATE4_PRODUCTION
+    status: AWAITING_PREREQUISITE
+    attempt: 0
+    blocker:
+      class: AWAITING_PREREQUISITE
+      summary: depends on TC-002, TC-009b, TC-010a, TC-011, TC-012, not yet accepted
+  ready:
+  - TC-007
 current_gate:
   id: P1_PORTFOLIO_SCALE
   status: ACCEPTED

@@ -2,7 +2,7 @@
 ===== CLEAN RUN 1 =====
 $ python ops/checks/marker_check.py docs/PARITY_BENCHMARK_PILOT.md "PARITY_BENCHMARK_COMPLETE:"
 --- stdout ---
-FAIL: docs\PARITY_BENCHMARK_PILOT.md missing marker(s): ['PARITY_BENCHMARK_COMPLETE:']
+OK: docs\PARITY_BENCHMARK_PILOT.md contains all 1 required marker(s)
 
 --- stderr ---
 
@@ -10,9 +10,16 @@ FAIL: docs\PARITY_BENCHMARK_PILOT.md missing marker(s): ['PARITY_BENCHMARK_COMPL
 ===== CLEAN RUN 2 =====
 $ python ops/checks/marker_check.py docs/PARITY_BENCHMARK_PILOT.md "PARITY_BENCHMARK_COMPLETE:"
 --- stdout ---
-FAIL: docs\PARITY_BENCHMARK_PILOT.md missing marker(s): ['PARITY_BENCHMARK_COMPLETE:']
+OK: docs\PARITY_BENCHMARK_PILOT.md contains all 1 required marker(s)
 
 --- stderr ---
 
 
-!! clean runs failed; falsifier skipped (it would prove nothing)
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M docs/PARITY_BENCHMARK_PILOT.md
+$ python ops/checks/marker_check.py docs/PARITY_BENCHMARK_PILOT.md "PARITY_BENCHMARK_COMPLETE:"
+--- stdout ---
+FAIL: docs\PARITY_BENCHMARK_PILOT.md missing marker(s): ['PARITY_BENCHMARK_COMPLETE:']
+
+--- stderr ---
+

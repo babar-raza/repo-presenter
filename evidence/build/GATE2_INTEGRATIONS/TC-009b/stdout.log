@@ -1,0 +1,30 @@
+
+===== CLEAN RUN 1 =====
+$ python ops/checks/owner_decision_record.py docs/DECISION_LOG.md PUBLISHING_PILOT_AUTHORIZED:
+--- stdout ---
+FAIL: docs\DECISION_LOG.md has no record matching 'PUBLISHING_PILOT_AUTHORIZED: <YYYY-MM-DD> ref=<anchor>'
+
+--- stderr ---
+
+$ python ops/checks/execution_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009b/pilot_proof.json cells_net_pr_opened=True cells_net_content_hash_matches=True threed_python_mode_change_authorized=True threed_python_pr_opened=True threed_python_content_hash_matches=True
+--- stdout ---
+FAIL: evidence\build\GATE2_INTEGRATIONS\TC-009b\pilot_proof.json does not exist -- no execution proof has been recorded
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python ops/checks/owner_decision_record.py docs/DECISION_LOG.md PUBLISHING_PILOT_AUTHORIZED:
+--- stdout ---
+FAIL: docs\DECISION_LOG.md has no record matching 'PUBLISHING_PILOT_AUTHORIZED: <YYYY-MM-DD> ref=<anchor>'
+
+--- stderr ---
+
+$ python ops/checks/execution_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009b/pilot_proof.json cells_net_pr_opened=True cells_net_content_hash_matches=True threed_python_mode_change_authorized=True threed_python_pr_opened=True threed_python_content_hash_matches=True
+--- stdout ---
+FAIL: evidence\build\GATE2_INTEGRATIONS\TC-009b\pilot_proof.json does not exist -- no execution proof has been recorded
+
+--- stderr ---
+
+
+!! clean runs failed; falsifier skipped (it would prove nothing)

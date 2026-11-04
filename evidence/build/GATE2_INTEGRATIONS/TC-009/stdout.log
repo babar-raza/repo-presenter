@@ -6,9 +6,10 @@ OK: docs\DECISION_LOG.md contains all 1 required marker(s)
 
 --- stderr ---
 
-$ python ops/checks/marker_check.py .github/workflows/present.yml "create-github-app-token"
+$ python -m pytest tests/test_mint_app_token_workflow.py -q
 --- stdout ---
-FAIL: .github\workflows\present.yml missing marker(s): ['create-github-app-token']
+.....                                                                    [100%]
+5 passed in 0.08s
 
 --- stderr ---
 
@@ -20,11 +21,26 @@ OK: docs\DECISION_LOG.md contains all 1 required marker(s)
 
 --- stderr ---
 
-$ python ops/checks/marker_check.py .github/workflows/present.yml "create-github-app-token"
+$ python -m pytest tests/test_mint_app_token_workflow.py -q
 --- stdout ---
-FAIL: .github\workflows\present.yml missing marker(s): ['create-github-app-token']
+.....                                                                    [100%]
+5 passed in 0.04s
 
 --- stderr ---
 
 
-!! clean runs failed; falsifier skipped (it would prove nothing)
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M docs/DECISION_LOG.md
+$ python ops/checks/marker_check.py docs/DECISION_LOG.md "APP_TOKEN_REUSE_DECISION:"
+--- stdout ---
+FAIL: docs\DECISION_LOG.md missing marker(s): ['APP_TOKEN_REUSE_DECISION:']
+
+--- stderr ---
+
+$ python -m pytest tests/test_mint_app_token_workflow.py -q
+--- stdout ---
+.....                                                                    [100%]
+5 passed in 0.05s
+
+--- stderr ---
+

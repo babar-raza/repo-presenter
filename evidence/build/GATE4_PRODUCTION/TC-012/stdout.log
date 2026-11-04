@@ -1,30 +1,59 @@
 
 ===== CLEAN RUN 1 =====
-$ python ops/checks/marker_check.py .github/workflows/present.yml "schedule:"
+$ python -m pytest tests/test_present_schedule.py tests/test_present_lanes.py tests/test_present.py -q
 --- stdout ---
-FAIL: .github\workflows\present.yml missing marker(s): ['schedule:']
+...........................................                              [100%]
+43 passed in 89.14s (0:01:29)
 
 --- stderr ---
 
 $ python ops/checks/marker_check.py Dockerfile "FROM"
 --- stdout ---
-FAIL: Dockerfile missing marker(s): ['FROM']
+OK: Dockerfile contains all 1 required marker(s)
 
 --- stderr ---
 
 
 ===== CLEAN RUN 2 =====
-$ python ops/checks/marker_check.py .github/workflows/present.yml "schedule:"
+$ python -m pytest tests/test_present_schedule.py tests/test_present_lanes.py tests/test_present.py -q
 --- stdout ---
-FAIL: .github\workflows\present.yml missing marker(s): ['schedule:']
+...........................................                              [100%]
+43 passed in 75.06s (0:01:15)
 
 --- stderr ---
 
 $ python ops/checks/marker_check.py Dockerfile "FROM"
 --- stdout ---
-FAIL: Dockerfile missing marker(s): ['FROM']
+OK: Dockerfile contains all 1 required marker(s)
 
 --- stderr ---
 
 
-!! clean runs failed; falsifier skipped (it would prove nothing)
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M .github/workflows/present.yml
+$ python -m pytest tests/test_present_schedule.py tests/test_present_lanes.py tests/test_present.py -q
+--- stdout ---
+F..........................................                              [100%]
+================================== FAILURES ===================================
+_______________ test_a_schedule_trigger_exists_with_a_real_cron _______________
+
+    def test_a_schedule_trigger_exists_with_a_real_cron():
+        workflow = _load_workflow()
+        triggers = workflow["on"] if "on" in workflow else workflow[True]
+>       assert "schedule" in triggers, "no schedule: trigger -- TC-012 is not actually done"
+E       AssertionError: no schedule: trigger -- TC-012 is not actually done
+E       assert 'schedule' in {'workflow_dispatch': {'inputs': {'repository': {'description': 'owner/name of a repository listed in data/registry.js... L.', 'required': True, 'type': 'choice', 'options': ['both', 'R', 'L'], ...}}}, 'removed': [{'cron': '17 */6 * * *'}]}
+
+tests\test_present_schedule.py:22: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_present_schedule.py::test_a_schedule_trigger_exists_with_a_real_cron
+1 failed, 42 passed in 72.31s (0:01:12)
+
+--- stderr ---
+
+$ python ops/checks/marker_check.py Dockerfile "FROM"
+--- stdout ---
+OK: Dockerfile contains all 1 required marker(s)
+
+--- stderr ---
+

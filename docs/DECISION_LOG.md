@@ -2511,3 +2511,56 @@ safe-default proposal is not an owner ruling; `TC-004.yaml` stays open until one
 `docs/RELEASE_CONTRACT_P1-P5.md`; `docs/LEGACY_WRITER_INVENTORY_2026-11-04.md`;
 `docs/SOURCE_OF_TRUTH_2026-11-04.md`; `project/taskcards/TC-001.yaml` through `TC-012.yaml`;
 `AGENTS.md`; `ops/SUPERVISOR.md`.
+
+## 2026-11-04: legacy-writer classification corrected a second time -- globally armed since 2026-10-15, not dormant; and real state-machine defects (dependency enforcement, receipt coherence, the READY deadlock) fixed and independently re-verified
+
+**What happened**: a second owner directive, responding to this same day's first correction
+pass, disputed the "dormant-but-armed, authorization environment variable unset" classification
+above as false, citing a specific real job
+(`https://github.com/babar-raza/repository-presenter/actions/runs/41626576391/job/125885584935`).
+Per `AGENTS.md` non-negotiable #6, this was independently reproduced against the real job and
+its log, not accepted on the directive's own say-so -- and the directive was right, in the
+riskier direction: `gh api repos/babar-raza/repository-presenter/actions/variables` confirms
+`REPOSITORY_PRESENTER_ISSUES_WRITE_AUTHORIZED` has been `"1"` (a committed Actions **variable**,
+not an unset secret) since 2026-10-15. Per-job eligibility is actually gated by whether that
+specific repository has a committed approval-record file and is under a 5-open-issue cap: 2 of
+22 "File and close" jobs in the 2026-11-03 run had real, non-skipped write steps (the other 20,
+including the one this session sampled first, correctly skipped for lack of an eligible
+approval record that day -- not because the switch was off). Net real external effect of that
+entire run, grepped directly across all 22 jobs: zero -- no issue filed, none closed, no
+comment posted; the two armed jobs found only already-filed issues or hit "no approval record"/
+"cap reached" on every other candidate. **Corrected classification: globally armed,
+per-repository gated, zero net effects in the most recently inspected run -- a human committing
+one new approval-record file for any of the 36 registered repositories is sufficient, with no
+other step, to cause a real external write on the next scheduled run.** `docs/
+LEGACY_WRITER_INVENTORY_2026-11-04.md` and `project/taskcards/TC-002.yaml` are corrected in
+place to this classification; this entry records the correction itself, per the standing
+practice of never rewriting an earlier entry's own text.
+
+The same directive also reported, and this session independently reproduced before fixing,
+three real defects in `ops/gateverify.py`: `rebuild_state()` trusted any receipt with
+`accepted: true` without enforcing `depends_on` (a card with an accepted-looking receipt could
+count even if its prerequisite was not itself accepted); no self-dependency, cycle, or
+duplicate-card-ID detection existed; and a card that was merely `verify`-checked for diagnostic
+purposes (never actually dispatched) was permanently reclassified `IN_PROGRESS`, which is why
+`tick` reported `ready cards: none` even though real, startable work existed. All three are
+fixed (a fixed-point "effectively accepted" computation over the whole dependency graph;
+`find_dependency_graph_problems`/`find_duplicate_card_ids`, wired into `validate`; a new status
+model distinguishing `AWAITING_PREREQUISITE`/`AWAITING_OWNER_DECISION`/`VERIFICATION_FAILED`/
+`STALE_RECEIPT`/`IN_PROGRESS`) and covered by 19 new tests in `tests/ops/`, including a real
+falsifier run (the fix was temporarily reverted, the 4 targeted tests failed, the fix was
+restored, all 19 passed again). A further receipt-integrity gap (a receipt's own `accepted:
+true` was trusted without checking internal coherence -- clean runs, scope, and a genuinely
+broken negative control) was independently confirmed and fixed the same way
+(`receipt_is_coherent`, 10 more tests). `python ops/gatecli.py tick` now reports real ready
+work (`TC-008`, `TC-009`, `TC-010` -- all dev/mock-scope cards needing no owner decision)
+instead of `none`.
+
+**What this does NOT decide**: which of the old repo's writers to keep, pause, or retire is
+still the owner's decision (`TC-002`), now informed by the corrected, higher-risk
+classification rather than resolved by it.
+
+**Where the detail lives**: `docs/LEGACY_WRITER_INVENTORY_2026-11-04.md`; `docs/
+READINESS_PACKAGE_2026-11-04.md` (second pass); `ops/gateverify.py`; `tests/ops/
+test_gateverify_dependency_enforcement.py`; `tests/ops/test_receipt_coherence.py`;
+`project/taskcards/TC-002.yaml`.

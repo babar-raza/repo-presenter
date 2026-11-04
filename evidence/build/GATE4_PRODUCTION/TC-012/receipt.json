@@ -3,10 +3,10 @@
   "card": "TC-012",
   "gate": "GATE4_PRODUCTION",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-04T08:33:04Z",
-  "base_rev": "8756b0387c35d53f67944b98636ae131611930b1",
-  "head_rev": "8756b0387c35d53f67944b98636ae131611930b1",
-  "card_sha256": "20bbe5321a4bdbbf2ea9b5b288d4a76a8e80db785198df9cc549a24698397c09",
+  "generated_at": "2026-11-04T10:05:48Z",
+  "base_rev": "2d783e47a7df59b49fbb8b480176f2a43379d3aa",
+  "head_rev": "2d783e47a7df59b49fbb8b480176f2a43379d3aa",
+  "card_sha256": "60fc7b349220eab5dd428008e384811c63b3e9aced6b7d5e9c68b09e7733fd95",
   "fingerprint": {
     "python": "3.13.15",
     "platform": "Windows-11-10.0.26300-SP0"
@@ -14,54 +14,61 @@
   "scope": {
     "ok": true,
     "changed_paths": [],
-    "violations": []
+    "violations": [],
+    "evaluated": false
   },
   "runs": [
     {
       "run": 1,
       "checks": [
         {
-          "command": "python ops/checks/marker_check.py .github/workflows/present.yml \"schedule:\"",
-          "exit_code": 1,
-          "duration_s": 0.069,
-          "stdout_sha256": "4a4eced99898ff2517c16bf3532178e84529144c1f144725e9bf36d3e9858ecf"
+          "command": "python -m pytest tests/test_present_schedule.py tests/test_present_lanes.py tests/test_present.py -q",
+          "exit_code": 0,
+          "duration_s": 90.211,
+          "stdout_sha256": "283f203df699419f9473a02016b52e9fc4fcb2cbd16596bdc7dd30ecd468a218"
         },
         {
           "command": "python ops/checks/marker_check.py Dockerfile \"FROM\"",
-          "exit_code": 1,
-          "duration_s": 0.077,
-          "stdout_sha256": "2e7f96b22a89a9346b66ca21e1b601f43a4431442b5e2eebe09391bd24c28068"
+          "exit_code": 0,
+          "duration_s": 0.083,
+          "stdout_sha256": "3ba2b9104d4cc40ed0cb8406ec68e85cbeb33ce95b1346246302fd54826d347b"
         }
       ],
-      "all_passed": false
+      "all_passed": true
     },
     {
       "run": 2,
       "checks": [
         {
-          "command": "python ops/checks/marker_check.py .github/workflows/present.yml \"schedule:\"",
-          "exit_code": 1,
-          "duration_s": 0.079,
-          "stdout_sha256": "4a4eced99898ff2517c16bf3532178e84529144c1f144725e9bf36d3e9858ecf"
+          "command": "python -m pytest tests/test_present_schedule.py tests/test_present_lanes.py tests/test_present.py -q",
+          "exit_code": 0,
+          "duration_s": 76.026,
+          "stdout_sha256": "5a031dfa9dddc249c1612c5878f924b5b3aa8d6381fc062a446f0e5ba1774e2d"
         },
         {
           "command": "python ops/checks/marker_check.py Dockerfile \"FROM\"",
-          "exit_code": 1,
-          "duration_s": 0.069,
-          "stdout_sha256": "2e7f96b22a89a9346b66ca21e1b601f43a4431442b5e2eebe09391bd24c28068"
+          "exit_code": 0,
+          "duration_s": 0.072,
+          "stdout_sha256": "3ba2b9104d4cc40ed0cb8406ec68e85cbeb33ce95b1346246302fd54826d347b"
         }
       ],
-      "all_passed": false
+      "all_passed": true
     }
   ],
   "negative_control": {
     "kind": "mutate",
     "patch": "python -c \"import pathlib; p = pathlib.Path('.github/workflows/present.yml'); s = p.read_text(encoding='utf-8'); s2 = s.replace('schedule:', 'removed:'); p.write_text(s2, encoding='utf-8')\"",
-    "patch_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
-    "applied": false,
-    "patch_applied_failed": false,
-    "exit_codes": []
+    "patch_sha256": "adb94ddff5b32ab8364e02a0c89c26a9403c0e8b1f153bec3d04329c05822dd0",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      1,
+      0
+    ],
+    "tree_changed": [
+      "M .github/workflows/present.yml"
+    ]
   },
-  "accepted": false,
-  "reason": "checks failed: python ops/checks/marker_check.py .github/workflows/present.yml \"schedule:\"; python ops/checks/marker_check.py Dockerfile \"FROM\"; negative-control patch did not apply"
+  "accepted": true,
+  "reason": "all gates passed"
 }
