@@ -24,8 +24,8 @@ from repo_presenter.readme.correction.engine import CORRECTION_ENGINE_VERSION
 #: LF-normalised source).
 PINS: dict[str, tuple[tuple[str, ...], str]] = {
     "enterprise_edition.py": (
-        ("1",),
-        "958c1d8b6b821be971d6fcf9d53330f84bfd5c596904a4bfdcbf9f4f7d343c88",
+        ("2",),
+        "18fd437e38b8e40b742e9e71c0f7aac69e0550bb7a7ce353e097409be512bebd",
     ),
     "examples.py": (
         ("1",),
