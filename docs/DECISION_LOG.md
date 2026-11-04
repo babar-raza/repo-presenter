@@ -2786,22 +2786,3 @@ separately, not yet done as of this entry.
 `TC-012.yaml`, `TC-008a.yaml`; `ops/gatecli.py`; `ops/gateverify.py`; `tests/ops/
 test_cardlint_grandfather.py`; `tests/ops/test_checker_fileset_currentness.py`; `tests/ops/
 test_receipt_coherence.py`; `.github/workflows/present.yml`; `tests/test_present_schedule.py`.
-
-## 2026-11-04 (supervisor session, branch claude/blissful-gauss-8xels9): local Lane R feasibility and gateway finding
-
-- **Observation (measured, not assumed):** from the cloud sandbox, `llm.professionalize.com/v1` returns HTTP 502
-  at ~30.5 s for any non-streaming chat completion that takes longer than 30 s; the same request streamed
-  succeeds. Every real cascade call exceeds 30 s, so the first two local runs failed with `HTTP 502` after 3
-  retries. Added opt-in `GPT_OSS_STREAMING=1` (`core/llm/jobs.py`, `tests/core/llm/test_streaming.py`); default
-  unchanged.
-- **Local end-to-end run** (`present --stage combined --lane R`, `aspose-font-foss/Aspose.Font-FOSS-for-Python`,
-  local bare state remote, no GitHub writes): 44 provider calls, all HTTP 200, 14 cache reuses, full cascade
-  produced. Independent review returned REJECT (1 deterministic finding: live banner link
-  `docs/images/banner.png` lost without disposition), run ended `FAILED_INTERNAL` (the durable-state label for
-  a rejected, unsealed run). So: the pipeline works locally against the real gateway and the reviewer blocks a
-  real content loss. It is NOT a delivered candidate and does not count toward P1.
-- **TC-007 unchanged:** calibration remains `NOT_PASSED`; no status was edited. Iteration 4 needs fresh
-  ACCEPTed clean twins per ecosystem, which requires further local cascade runs (about 10 minutes and ~45
-  calls each) and a fix for the banner-link disposition gap seen above.
-- **Not done this session:** mission matrix, migration-readiness package, TC-009a/009b/010a/011/012a. PR #3
-  (write guard) was left to its own agent.
