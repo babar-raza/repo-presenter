@@ -38,3 +38,12 @@ that conflict is resolved, supervisor notes go in docs/investigations/ instead.
   README that links to github.com pages. That needs a hosted run (Actions, not dispatchable from this
   session: HTTP 403 on workflow_dispatch) or a runner with ordinary github.com access. The link check was
   deliberately not weakened.
+
+## Restricted operations recorded (environment capability, not project blockers)
+
+| Operation | Observed | Exact capability needed |
+|---|---|---|
+| `workflow_dispatch` of `present.yml` from this session | `POST .../actions/workflows/present.yml/dispatches` -> 403 "Resource not accessible by integration" (reads of Actions succeed) | The GitHub App/integration token must carry `actions: write` on `babar-raza/repo-presenter`; a grant made mid-session did not reach this session's token (still 403 afterwards) |
+| Debian package install in `docker build` | `deb.debian.org` unreachable | allowlist `deb.debian.org`, `security.debian.org`; or verify via the hosted `docker` CI job (PR #4) |
+| .NET SDK for example compilation | `builds.dotnet.microsoft.com` unreachable (api.nuget.org reachable) | allowlist `builds.dotnet.microsoft.com`; or run on a hosted runner (present.yml installs 10.0.204) |
+| github.com / api.github.com direct reads | 403 (raw.githubusercontent.com 200) | governed access; handled by the alternate-source rule for blob/raw links only |
