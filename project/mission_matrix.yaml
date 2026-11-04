@@ -34,7 +34,7 @@ rows:
   - {id: G6, title: "Autonomous Docker + Actions production", status: PARTIAL,
      implementation: PARTIAL, test: PARTIAL, real_execution: PARTIAL, independent_verification: NONE,
      evidence: [.github/workflows/present.yml, Dockerfile],
-     gaps: "hosted present runs exist from earlier sweeps (~14% success noted by audit); schedule fails closed by design; Dockerfile fixed and built 2026-11-04 (facts-stage image runs --help as uid 10001, --network=none) but no facts stage executed in the container yet; this sandbox cannot dispatch Actions (403)",
+     gaps: "hosted present runs exist from earlier sweeps (~14% success noted by audit); schedule fails closed by design; Dockerfile fixed and built locally 2026-11-04 (README.md copy; runs --help as uid 10001, --network=none) but the git install is unverified locally (deb.debian.org blocked) and no facts stage ran in the container; hosted `docker` CI job added in PR #4 is the verification path; this sandbox cannot dispatch Actions (403)",
      next_action: "build and run image; hosted pilot via an authorized path", external_effect_prohibited: "none beyond upstream writes"}
   - {id: G7, title: "Equal or better than aspose.org", status: PARTIAL,
      implementation: PARTIAL, test: YES, real_execution: PARTIAL, independent_verification: PARTIAL,
@@ -59,19 +59,19 @@ rows:
   - {id: P5, title: "Unchanged inputs -> zero provider calls, incl. cold runner", status: PARTIAL,
      implementation: YES, test: YES, real_execution: PARTIAL, independent_verification: PARTIAL,
      evidence: [scripts/p5_call_count_proof.py, tests/test_preflight_wiring.py],
-     gaps: "Lane L real-CLI proven; Lane R proven with a stubbed pipeline body in PR #2 (PR #3 adds a real run_cascade test, unmerged as of this entry); no hosted cold-runner proof",
-     next_action: "merge PR #3 after hosted CI; hosted cold-runner run", external_effect_prohibited: "none"}
+     gaps: "Lane L real-CLI proven; Lane R now also proven through the real run_cascade with a counting fake provider (tests/test_lane_r_real_cascade_p5.py, merged in PR #3, independently re-run: 391 passed); provider is a fake, so no live-provider or hosted cold-runner proof",
+     next_action: "hosted cold-runner run when an Actions dispatch path exists", external_effect_prohibited: "none"}
   - {id: N1, title: "Non-negotiable: two equal lanes", status: PARTIAL, implementation: YES, test: YES, real_execution: PARTIAL,
      independent_verification: NONE, evidence: [AGENTS.md, src/repo_presenter/present.py], gaps: "parity of delivered outputs not shown", next_action: "pilot", external_effect_prohibited: "none"}
   - {id: N2, title: "Non-negotiable: reviewer calibration and no false acceptance", status: BLOCKED,
      implementation: YES, test: YES, real_execution: PARTIAL, independent_verification: NONE,
      evidence: [data/reviewer_calibration.json, project/taskcards/TC-007.yaml],
-     gaps: "NOT_PASSED (failed gates: false_reject_rate, stability, two tier-2 real-defect classes); iteration 4 needs fresh sealed clean twins; local sandbox runs cannot seal (github.com 403 -> BC-06 UNCHECKED, see docs/investigations/2026-11-04-local-lane-r-and-gateway-streaming.md) and Actions dispatch is 403",
+     gaps: "NOT_PASSED (failed gates: false_reject_rate, stability, two tier-2 real-defect classes); iteration 4 needs fresh sealed clean twins; local sandbox sealing was blocked by github.com 403 -> BC-06 UNCHECKED (docs/investigations/2026-11-04-local-lane-r-and-gateway-streaming.md); a raw.githubusercontent.com alternate-source rule (RESOLVED-via-alternate, distinct from RESOLVED/UNCHECKED/BROKEN) now exists; .NET example verification needs a .NET SDK (builds.dotnet.microsoft.com blocked locally); Actions dispatch is 403 from this integration",
      next_action: "obtain network access or hosted runs; rerun harness", external_effect_prohibited: "none"}
   - {id: N3, title: "Non-negotiable: no writes outside babar-raza/repo-presenter", status: PARTIAL,
      implementation: PARTIAL, test: YES, real_execution: PARTIAL, independent_verification: NONE,
-     evidence: [docs/DECISION_LOG.md], gaps: "mechanical write guard is in unmerged PR #3 (another agent); legacy writers inventoried only",
-     next_action: "confirm PR #3 merged with green CI", external_effect_prohibited: "ALL upstream/aspose.org/legacy repo writes"}
+     evidence: [docs/DECISION_LOG.md], gaps: "write guard (assert_write_allowed on every real HTTP write primitive) merged in PR #3 with green CI and an independent local re-run; legacy writers inventoried only, not retired; no audit of workflows that could write with the App token beyond the caller-pin test",
+     next_action: "audit remaining write-capable paths (legacy writer inventory) under TC-002 when the owner decides", external_effect_prohibited: "ALL upstream/aspose.org/legacy repo writes"}
   - {id: M1, title: "Final successor cutover to single repository-presenter on GitHub/GitLab", status: NOT_STARTED,
      implementation: NONE, test: NONE, real_execution: NONE, independent_verification: NONE,
      evidence: [migration/reuse-manifest.yaml, docs/MISSION_AUTHORITY.md], gaps: "no cutover/rollback procedure document yet; predecessor snapshot not recorded",
