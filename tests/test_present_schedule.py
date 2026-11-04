@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from tests.test_present import _load_workflow
+from tests.test_present import WORKFLOW, _load_workflow
 from tests.test_present_lanes import present_steps
 
 
@@ -68,20 +68,32 @@ def test_every_provider_consuming_or_repository_code_step_is_gated_on_authorizat
     workflow = _load_workflow()
 
     build_facts = next(s for s in facts_steps(workflow) if s.get("name") == "Build the facts")
-    assert "steps.target.outputs.authorized != 'false'" in str(build_facts.get("if", "")), (
+    assert "steps.target.outputs.authorized == 'true'" in str(build_facts.get("if", "")), (
         "an unauthorized scheduled run must never execute the upstream repository's own code"
     )
 
     steps = present_steps(workflow)
     fetch_facts = next(s for s in steps if s.get("id") == "fetch_facts")
-    assert "needs.facts.outputs.authorized != 'false'" in str(fetch_facts.get("if", ""))
+    assert "needs.facts.outputs.authorized == 'true'" in str(fetch_facts.get("if", ""))
 
     for name in ("Present (Lane R)", "Present (Lane L)"):
         step = next(s for s in steps if s.get("name") == name)
-        assert "needs.facts.outputs.authorized != 'false'" in str(step.get("if", "")), (
+        assert "needs.facts.outputs.authorized == 'true'" in str(step.get("if", "")), (
             f"{name} must refuse to spend a provider call or write durable state when "
             "the scheduled run was not authorized"
         )
+
+
+def test_no_permissive_negative_comparison_remains_anywhere_in_the_workflow():
+    """2026-11-04 supervisor-directive correction: `authorized != 'false'` is a PERMISSIVE
+    comparison -- an absent, empty, or malformed output (anything other than the literal string
+    'false') would satisfy it and run anyway. Every privileged/provider-consuming/repository-
+    code step must instead require the explicit POSITIVE match `authorized == 'true'`, so an
+    absent, empty, or malformed authorization output fails closed by construction, not by
+    coincidence."""
+    text = WORKFLOW.read_text(encoding="utf-8")
+    assert "!= 'false'" not in text
+    assert text.count("authorized == 'true'") >= 7  # one per gated step, see the test above
 
 
 def test_a_blocked_schedule_still_produces_a_successful_no_op_not_a_red_job():

@@ -118,13 +118,13 @@ jobs:
       # The version is pinned because the receipt records it and a build is only as reproducible
       # as the toolchain that ran (10.0.204 is the SDK the verifier was measured against).
       - name: Install the .NET SDK for example compilation
-        if: steps.target.outputs.authorized != 'false' && steps.target.outputs.ecosystem == 'net'
+        if: steps.target.outputs.authorized == 'true' && steps.target.outputs.ecosystem == 'net'
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "10.0.204"
 
       - name: Install the JDK for example compilation
-        if: steps.target.outputs.authorized != 'false' && steps.target.outputs.ecosystem == 'java'
+        if: steps.target.outputs.authorized == 'true' && steps.target.outputs.ecosystem == 'java'
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -136,7 +136,7 @@ jobs:
           java-version: "21.0.12"
 
       - name: Build the facts
-        if: steps.target.outputs.authorized != 'false'
+        if: steps.target.outputs.authorized == 'true'
         env:
           INPUT_REPOSITORY: ${{ steps.target.outputs.repository }}
           INPUT_ECOSYSTEM: ${{ steps.target.outputs.ecosystem }}
@@ -150,11 +150,11 @@ jobs:
 
       - name: Record the facts digest
         id: digest
-        if: steps.target.outputs.authorized != 'false'
+        if: steps.target.outputs.authorized == 'true'
         run: echo "sha256=$(sha256sum .present-facts/facts.json | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
 
       - name: Hand the facts to the present job
-        if: steps.target.outputs.authorized != 'false'
+        if: steps.target.outputs.authorized == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: present-facts-${{ github.run_id }}
@@ -195,7 +195,7 @@ jobs:
       # its manifest, a call by its request hash), so a stale or partial restore can only cost a
       # re-run, never a wrong proof; a cache miss degrades to a fresh seal.
       - name: Restore the previous sealed bundle and call store
-        if: needs.facts.outputs.authorized != 'false'
+        if: needs.facts.outputs.authorized == 'true'
         uses: actions/cache/restore@v4
         with:
           path: |
@@ -212,7 +212,7 @@ jobs:
       # so this step must skip too, or a missing-artifact error would turn a deliberate no-op red.
       - name: Fetch the facts
         id: fetch_facts
-        if: needs.facts.outputs.authorized != 'false'
+        if: needs.facts.outputs.authorized == 'true'
         uses: actions/download-artifact@v4
         with:
           name: present-facts-${{ github.run_id }}
@@ -221,12 +221,14 @@ jobs:
       # Each lane is its own process, so its own durable-state record, candidate pointer and seal.
       # Lane L carries a status function (!cancelled()) so it runs whether or not Lane R failed:
       # neither lane is measured by the other's delivery. It still needs the facts, so it is gated
-      # on the fetch step's outcome. The job is red if either lane is. `authorized != 'false'` is
-      # the actual P0 enforcement point: the one place a scheduled run's provider call and
-      # durable-state write are physically prevented when unauthorized, not merely recorded as
-      # blocked in a taskcard.
+      # on the fetch step's outcome. The job is red if either lane is. `authorized == 'true'`
+      # (an explicit positive match, not merely "not the literal string 'false'" -- a second
+      # supervisor-directive correction: an absent, empty, or malformed output must also fail
+      # closed, not just a well-formed "false") is the actual P0 enforcement point: the one
+      # place a scheduled run's provider call and durable-state write are physically prevented
+      # when unauthorized, not merely recorded as blocked in a taskcard.
       - name: Present (Lane R)
-        if: ${{ needs.facts.outputs.authorized != 'false' && inputs.lane != 'L' }}
+        if: ${{ needs.facts.outputs.authorized == 'true' && inputs.lane != 'L' }}
         env:
           INPUT_REPOSITORY: ${{ needs.facts.outputs.repository }}
           INPUT_ECOSYSTEM: ${{ needs.facts.outputs.ecosystem }}
@@ -247,7 +249,7 @@ jobs:
             --expected-facts-sha256 "$FACTS_SHA256"
 
       - name: Present (Lane L)
-        if: ${{ !cancelled() && steps.fetch_facts.outcome == 'success' && inputs.lane != 'R' && needs.facts.outputs.authorized != 'false' }}
+        if: ${{ !cancelled() && steps.fetch_facts.outcome == 'success' && inputs.lane != 'R' && needs.facts.outputs.authorized == 'true' }}
         env:
           INPUT_REPOSITORY: ${{ needs.facts.outputs.repository }}
           INPUT_ECOSYSTEM: ${{ needs.facts.outputs.ecosystem }}
@@ -268,7 +270,7 @@ jobs:
             --expected-facts-sha256 "$FACTS_SHA256"
 
       - name: Save the sealed bundle and call store for the next run
-        if: always() && needs.facts.outputs.authorized != 'false'
+        if: always() && needs.facts.outputs.authorized == 'true'
         uses: actions/cache/save@v4
         with:
           path: |
@@ -278,7 +280,7 @@ jobs:
           key: presenter-state-${{ steps.slug.outputs.slug }}-${{ github.run_id }}
 
       - name: Keep the run's evidence
-        if: always() && needs.facts.outputs.authorized != 'false'
+        if: always() && needs.facts.outputs.authorized == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: present-${{ needs.facts.outputs.ecosystem }}-${{ github.run_id }}
