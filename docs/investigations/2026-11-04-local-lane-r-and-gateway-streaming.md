@@ -102,3 +102,24 @@ hosted run (Actions dispatch is 403 from this integration).
    `_Composition.planned_dispositions`). Note for anyone resuming a workdir: `repairs.json`
    persists and remembers attempted fingerprints, so a rerun in the same workdir will not retry a
    defect already recorded unrepairable - move it aside to retest.
+
+## Font Lane R reaches independent LLM review (first time in this repository's local runs)
+
+After the four pipeline fixes (launcher match, deferred contradicted example, repair-context
+dispositions, budget hint + acceptance check) the BC-07 visible-line repair cleared both optional
+plan levers (321 -> within 300 visible lines), every deterministic check passed, and the candidate
+reached the independent LLM review (qwen3-next, calibration status NOT_PASSED, label `uncalibrated`).
+Verdict: REJECT_FACTUAL, 2 blocking `unsupported_claim` findings:
+
+- F01 (opening) - TRUE POSITIVE: the candidate says QA reports are written "in JSON, HTML, and PDF
+  formats"; the live README says "JSON, HTML, and visual PNG" and contains no `pdf` at all. The model
+  fabricated PDF; the reviewer caught it.
+- F02 (key_capabilities) - ARGUABLE: "stripping legacy sfnt metadata tables and outdated Mac name
+  records via FontCleaner.clean_for_web" is the maintainers' own wording (README line 21, and
+  src/aspose_font/ttf/font.py), but the extracted facts hold only the docstring "Produce a cleaned
+  font appropriate for web or distribution output." An evidence-extraction gap, not clearly a
+  reviewer false reject, and not something to override.
+
+The REJECT is blocking and was not overridden. These two findings are a useful calibration case
+(one fabrication caught, one source-backed claim the extractor did not capture). Saved locally as
+verdict_attempt_A.json / README_attempt_A.md in the run directory.
