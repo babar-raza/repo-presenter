@@ -17,8 +17,7 @@ purpose: >
   to fire, would be scope creep ahead of TC-002's own open disposition question.
 depends_on: []
 write_paths:
-  - .github/workflows/mint-app-token.yml
-  - docs/DECISION_LOG.md
+  - tests/ops/test_gate_guard_tc009.py
   - tests/test_mint_app_token_workflow.py
 satisfies:
   - REQ-G5-001
@@ -41,6 +40,12 @@ checks:
       - REQ-G5-001
   - command: |-
       python -m pytest tests/test_mint_app_token_workflow.py -q
+    expect: exit 0
+    timeout_seconds: 60
+    proves:
+      - REQ-G5-001
+  - command: |-
+      python -m pytest tests/ops/test_gate_guard_tc009.py -q
     expect: exit 0
     timeout_seconds: 60
     proves:

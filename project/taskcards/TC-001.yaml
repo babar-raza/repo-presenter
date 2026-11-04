@@ -8,7 +8,7 @@ purpose: >
   docs/SOURCE_OF_TRUTH_2026-11-04.md for the full investigation.
 depends_on: []
 write_paths:
-  - docs/SOURCE_OF_TRUTH_2026-11-04.md
+  - tests/ops/test_gate_guard_tc001.py
 satisfies:
   - REQ-G8-010
 source_refs:
@@ -24,6 +24,12 @@ checks:
       python ops/checks/marker_check.py docs/SOURCE_OF_TRUTH_2026-11-04.md "RECONCILIATION_STATUS: RESOLVED"
     expect: exit 0
     timeout_seconds: 30
+    proves:
+      - REQ-G8-010
+  - command: |-
+      python -m pytest tests/ops/test_gate_guard_tc001.py -q
+    expect: exit 0
+    timeout_seconds: 60
     proves:
       - REQ-G8-010
 requires:

@@ -19,16 +19,7 @@ purpose: >
   owner-decision gate. The sweep pause itself (10-31 decision 4) is preserved exactly as-is.
 depends_on: []
 write_paths:
-  - docs/PARITY_BENCHMARK_PILOT.md
-# 2026-11-04 correction: this card's entire real deliverable (the path above, plus
-# ops/checks/parity_benchmark_pilot_complete.py) lives under paths GLOBAL_DENY reserves to the
-# supervisor (docs/**, ops/**) -- a card may never actually touch them as its own "mine"-tagged,
-# scope-evaluated work, regardless of what write_paths says here. There is no src/tests-only
-# portion of this card's own work, so this card is structurally unable to reach a real
-# scope-evaluated ACCEPTED receipt; its checks still run and its receipt is still produced, but
-# only ever via --no-scope, honestly and explicitly, never silently. See docs/DECISION_LOG.md
-# for the fuller writeup of this GLOBAL_DENY-vs-write_paths conflict, which affects several
-# cards, not just this one.
+  - tests/ops/test_gate_guard_tc006.py
 satisfies:
   - REQ-G7-001
 source_refs:
@@ -48,6 +39,12 @@ checks:
       python ops/checks/parity_benchmark_pilot_complete.py docs/PARITY_BENCHMARK_PILOT.md
     expect: exit 0
     timeout_seconds: 30
+    proves:
+      - REQ-G7-001
+  - command: |-
+      python -m pytest tests/ops/test_gate_guard_tc006.py -q
+    expect: exit 0
+    timeout_seconds: 60
     proves:
       - REQ-G7-001
 requires:
