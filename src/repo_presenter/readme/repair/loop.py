@@ -344,9 +344,12 @@ def _repair_plan(rc: RepairContext, defect: Defect, repairs: RepairLedger) -> bo
             ecosystem=rc.entry.ecosystem,
         ),
     )
+    hint = _budget_hint(rc, defect, original)
+    if hint is not None:
+        checks = _fits_the_budget(rc, checks, hint)
     outcome = _targeted_call(
         rc, defect, loaded, original, checks,
-        visible_line_budget=_budget_hint(rc, defect, original),
+        visible_line_budget=hint,
     )
     if isinstance(outcome, JobError):
         return _unrepairable(defect, repairs, str(outcome))
@@ -371,6 +374,38 @@ def _budget_hint(
         DEFAULT_POLICY.visible_lines_budget,
         measure=_measure_by_render(rc, plan, visible),
     )
+
+
+def _fits_the_budget(rc: RepairContext, checks: Checks, hint: Mapping[str, Any]) -> Checks:
+    """Judge a BC-07 plan revision by what it renders. The plan checks only refuse a no-op, so a
+    reply that edited unrelated lists was recorded "repaired" while the README stayed over budget
+    (Font, 321 visible lines vs 300): the one attempt a fingerprint gets, spent on nothing. A
+    revision whose render still exceeds the budget is rejected with the measured levers named, so
+    the job's own bounded re-asks can correct it. A revision that cannot be rendered is left to the
+    plan checks: this adds a requirement, it never decides on a render it could not make."""
+    budget = DEFAULT_POLICY.visible_lines_budget
+    levers = hint.get("optional_plan_fields_and_their_visible_line_cost_if_cleared") or {}
+
+    def judged(revised: dict[str, Any]) -> list[str]:
+        errors = checks(revised)
+        if errors:
+            return errors
+        try:
+            rendered = render_readme(rc.entry, rc.facts, revised, rc.units, rc.dispositions)
+        except Exception:  # noqa: BLE001 - "cannot render" is not a verdict on the budget
+            return errors
+        visible = line_counts(rendered)[0]
+        if visible <= budget:
+            return errors
+        named = ", ".join(f"{name} (saves {cost})" for name, cost in sorted(levers.items()))
+        message = (
+            f"the revised plan still renders {visible} visible lines against the budget of "
+            f"{budget}; clear (set to null) enough of the optional fields in visible_line_budget "
+            f"to remove at least {visible - budget} lines: {named or 'none is selected'}"
+        )
+        return [message]
+
+    return judged
 
 
 def _measure_by_render(

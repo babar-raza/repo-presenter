@@ -125,3 +125,80 @@ def test_the_measure_is_unavailable_without_the_authored_units():
     rc = _rc(BIG_README)
     rc.units = {}
     assert loop._measure_by_render(rc, PLAN, 321) is None
+
+
+# --- a BC-07 repair is only accepted if it actually fits the budget ----------------------------
+# The model was asked to fix a 321-line README, returned a plan that changed unrelated lists, and
+# the repair was recorded "repaired" while the defect stood: one attempt spent on nothing. The
+# plan checks only refused a no-op. A budget repair is now judged by what it renders.
+
+
+def _checks_for(monkeypatch, rendered_visible):
+    captured = {}
+    monkeypatch.setattr(loop, "planning_packet", lambda *a, **k: {})
+    monkeypatch.setattr(loop, "planning_schema", lambda *a, **k: {})
+    monkeypatch.setattr(loop, "request_hash", lambda *a, **k: "k")
+    monkeypatch.setattr(loop, "effective_model", lambda *a, **k: "m")
+    monkeypatch.setattr(loop, "refuse_noop", lambda original, checks: checks)
+    monkeypatch.setattr(loop, "plan_checks", lambda revised, **k: [])
+    monkeypatch.setattr(
+        loop,
+        "render_readme",
+        lambda entry, facts, plan, units, dispositions: "\n".join(["x"] * rendered_visible(plan)),
+    )
+
+    def fake_call(rc, d, loaded, original, checks, **kwargs):
+        captured["checks"] = checks
+        captured["hint"] = kwargs.get("visible_line_budget")
+        return "outcome"
+
+    monkeypatch.setattr(loop, "_targeted_call", fake_call)
+    monkeypatch.setattr(loop, "_accept", lambda *a, **k: True)
+    rc = _rc(BIG_README)
+    rc.units = {"units": []}
+    loop._repair_plan(rc, _defect("BC-07"), SimpleNamespace(record=lambda *a, **k: None))
+    return captured["checks"]
+
+
+def _lines(plan):
+    return 321 if plan.get("flagship_example_id") else 278
+
+
+def test_a_revision_that_still_exceeds_the_budget_is_rejected_with_the_levers_named(monkeypatch):
+    checks = _checks_for(monkeypatch, _lines)
+    errors = checks(dict(PLAN, unrelated="edit"))
+    assert errors and "321" in errors[0] and "300" in errors[0]
+    assert "flagship_example_id" in errors[0]
+
+
+def test_a_revision_that_fits_the_budget_is_accepted(monkeypatch):
+    checks = _checks_for(monkeypatch, _lines)
+    assert checks(dict(PLAN, flagship_example_id=None)) == []
+
+
+def test_a_revision_that_cannot_be_rendered_is_not_judged_by_the_budget(monkeypatch):
+    def broken(plan):
+        raise KeyError("slot")
+
+    checks = _checks_for(monkeypatch, _lines)
+    monkeypatch.setattr(loop, "render_readme", lambda *a, **k: broken(a[2]))
+    assert checks(dict(PLAN)) == []
+
+
+def test_a_non_budget_defect_is_judged_only_by_the_plan_checks(monkeypatch):
+    monkeypatch.setattr(loop, "planning_packet", lambda *a, **k: {})
+    monkeypatch.setattr(loop, "planning_schema", lambda *a, **k: {})
+    monkeypatch.setattr(loop, "request_hash", lambda *a, **k: "k")
+    monkeypatch.setattr(loop, "effective_model", lambda *a, **k: "m")
+    monkeypatch.setattr(loop, "refuse_noop", lambda original, checks: checks)
+    marker = ["plan-check-error"]
+    monkeypatch.setattr(loop, "plan_checks", lambda revised, **k: marker)
+    seen = {}
+    monkeypatch.setattr(
+        loop, "_targeted_call", lambda rc, d, l, o, checks, **kw: seen.update(checks=checks) or "o"
+    )
+    monkeypatch.setattr(loop, "_accept", lambda *a, **k: True)
+    rc = _rc(BIG_README)
+    rc.units = {"units": []}
+    loop._repair_plan(rc, _defect("BC-02"), SimpleNamespace(record=lambda *a, **k: None))
+    assert seen["checks"]({}) == marker
