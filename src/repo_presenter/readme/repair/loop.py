@@ -28,7 +28,7 @@ from __future__ import annotations
 
 import json
 from collections.abc import Callable, Collection, Mapping, Sequence
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from functools import partial
 from pathlib import Path
 from typing import Any
@@ -81,6 +81,8 @@ from repo_presenter.readme.composition.planning import (
     planning_packet,
     planning_schema,
 )
+from repo_presenter.readme.composition.policy import DEFAULT_POLICY
+from repo_presenter.readme.composition.renderer import line_counts, render_readme
 from repo_presenter.readme.reconciliation.dispositions import (
     reconcile_checks,
     reconciliation_batch_facts,
@@ -107,6 +109,7 @@ from repo_presenter.readme.repair.targeted import (
     repair_checks,
     repair_packet,
     repair_schema,
+    visible_line_budget_hint,
 )
 from repo_presenter.readme.review.defect_bridge import build_defects
 
@@ -212,6 +215,15 @@ class RepairContext:
     plan: dict[str, Any]
     tasks: list[SectionTask]
     name: str
+    #: The README the defect was found in (for a BC-07 budget repair: its visible-line count).
+    readme: str = ""
+    #: The coherent units document the README was rendered from; with it a budget repair can
+    #: MEASURE what clearing a plan field removes instead of estimating.
+    units: dict[str, Any] = field(default_factory=dict)
+
+
+def _read_text(path: Path) -> str:
+    return path.read_text(encoding="utf-8") if path.is_file() else ""
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -237,6 +249,7 @@ def _targeted_call(
     recover: Callable[[dict[str, Any]], dict[str, Any] | None] | None = None,
     patch: PatchScope | None = None,
     stage_facts: FactsDocument | None = None,
+    visible_line_budget: Mapping[str, Any] | None = None,
 ) -> JobResult | JobError:
     """One ``targeted_repair`` call, judged by ``repair_checks`` around the causing stage's own
     ``checks``; a rejection after the job's own re-asks comes back as the ``JobError``.
@@ -259,7 +272,7 @@ def _targeted_call(
                 condensed(reply_contract) if patch is not None else contract,
                 allowed,
                 slot_facts,
-                None,
+                visible_line_budget,
                 carried=carried,
             ),
             config=rc.config,
@@ -331,10 +344,89 @@ def _repair_plan(rc: RepairContext, defect: Defect, repairs: RepairLedger) -> bo
             ecosystem=rc.entry.ecosystem,
         ),
     )
-    outcome = _targeted_call(rc, defect, loaded, original, checks)
+    hint = _budget_hint(rc, defect, original)
+    if hint is not None:
+        checks = _fits_the_budget(rc, checks, hint)
+    outcome = _targeted_call(
+        rc, defect, loaded, original, checks,
+        visible_line_budget=hint,
+    )
     if isinstance(outcome, JobError):
         return _unrepairable(defect, repairs, str(outcome))
     return _accept(rc, defect, loaded, key, outcome, repairs)
+
+
+def _budget_hint(
+    rc: RepairContext, defect: Defect, plan: Mapping[str, Any]
+) -> dict[str, Any] | None:
+    """The measured cost of each optional plan lever for a BC-07 visible-line-budget defect, so the
+    one repair attempt can clear the right field instead of guessing among small prose trims
+    (``targeted.visible_line_budget_hint``; its original caller, rounds.py, was never ported, so the
+    packet always carried ``null``). Routed on the defect's label and stage - never its prose - and
+    only when the README it was found in is known."""
+    if defect.label != "BC-07" or defect.stage != "S5" or not rc.readme:
+        return None
+    visible, _total = line_counts(rc.readme)
+    return visible_line_budget_hint(
+        plan,
+        rc.facts,
+        visible,
+        DEFAULT_POLICY.visible_lines_budget,
+        measure=_measure_by_render(rc, plan, visible),
+    )
+
+
+def _fits_the_budget(rc: RepairContext, checks: Checks, hint: Mapping[str, Any]) -> Checks:
+    """Judge a BC-07 plan revision by what it renders. The plan checks only refuse a no-op, so a
+    reply that edited unrelated lists was recorded "repaired" while the README stayed over budget
+    (Font, 321 visible lines vs 300): the one attempt a fingerprint gets, spent on nothing. A
+    revision whose render still exceeds the budget is rejected with the measured levers named, so
+    the job's own bounded re-asks can correct it. A revision that cannot be rendered is left to the
+    plan checks: this adds a requirement, it never decides on a render it could not make."""
+    budget = DEFAULT_POLICY.visible_lines_budget
+    levers = hint.get("optional_plan_fields_and_their_visible_line_cost_if_cleared") or {}
+
+    def judged(revised: dict[str, Any]) -> list[str]:
+        errors = checks(revised)
+        if errors:
+            return errors
+        try:
+            rendered = render_readme(rc.entry, rc.facts, revised, rc.units, rc.dispositions)
+        except Exception:  # noqa: BLE001 - "cannot render" is not a verdict on the budget
+            return errors
+        visible = line_counts(rendered)[0]
+        if visible <= budget:
+            return errors
+        named = ", ".join(f"{name} (saves {cost})" for name, cost in sorted(levers.items()))
+        message = (
+            f"the revised plan still renders {visible} visible lines against the budget of "
+            f"{budget}; clear (set to null) enough of the optional fields in visible_line_budget "
+            f"to remove at least {visible - budget} lines: {named or 'none is selected'}"
+        )
+        return [message]
+
+    return judged
+
+
+def _measure_by_render(
+    rc: RepairContext, plan: Mapping[str, Any], visible: int
+) -> Callable[[str], int | None] | None:
+    """A function giving the visible lines that disappear when one plan field is cleared, measured
+    by rendering the README again from the same units and dispositions. ``None`` (so the caller
+    keeps the formula) without the authored units, and per field when the render cannot be made.
+    The plan passed in is never mutated."""
+    if not rc.units:
+        return None
+
+    def measure(field_name: str) -> int | None:
+        try:
+            cleared = {**plan, field_name: None}
+            rendered = render_readme(rc.entry, rc.facts, cleared, rc.units, rc.dispositions)
+            return max(visible - line_counts(rendered)[0], 0)
+        except Exception:  # noqa: BLE001 - any render failure means "cannot measure", not a defect
+            return None
+
+    return measure
 
 
 def reject_printed_quote(
@@ -648,6 +740,8 @@ def _load_context(
         plan=plan,
         tasks=tasks,
         name=product_name(entry),
+        readme=_read_text(out_dir / "README.coherent.md"),
+        units=_read_json(out_dir / "content_units.coherent.json"),
     )
 
 

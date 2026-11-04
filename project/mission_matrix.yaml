@@ -25,7 +25,7 @@ rows:
   - {id: G4, title: "Candidate publication end-to-end (Cells .NET, 3D Python mandatory)", status: PARTIAL,
      implementation: PARTIAL, test: YES, real_execution: NONE, independent_verification: NONE,
      evidence: [src/repo_presenter/propose/effect.py, src/repo_presenter/candidates_publish],
-     gaps: "registry dry_run blocks 3d/python and 3d/net; REVIEW_UNCALIBRATED gate refuses; no non-mutating end-to-end proof",
+     gaps: "registry dry_run blocks 3d/python and 3d/net; REVIEW_UNCALIBRATED gate refuses; no non-mutating end-to-end proof; 3D-Python Lane R completes the cascade locally but cannot seal: PyPI aspose-3d-foss project URL points at aspose-3d/Aspose.3D-for-Python, so the install fact is UNRESOLVED and the live install block is unaccounted (BLOCKED_ON_SOURCE_FACT, docs/investigations/2026-11-04-local-lane-r-and-gateway-streaming.md); Cells .NET not yet run (needs a .NET SDK for example verification)",
      next_action: "TC-009b non-mutating publication proof after TC-007", external_effect_prohibited: "any upstream branch/PR"}
   - {id: G5, title: "Proven GitHub App integration", status: PARTIAL,
      implementation: PARTIAL, test: YES, real_execution: NONE, independent_verification: NONE,

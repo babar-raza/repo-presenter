@@ -1342,7 +1342,11 @@ def normalize(
             entry["destination_section"] = "installation"
             entry["fact_ids"] = sorted(cited | set(install_ids))
             continue
-        if disposition in PLACING and unit in contradicted:
+        # A DEFER_UNRESOLVED on an executed-and-failed example is wrong, not merely uncited: a
+        # deferral accounts for nothing (independent_reviewer._accounting_units), so the dropped
+        # failing example would be reported as live_readme_loss (measured: aspose-font-foss
+        # Aspose.Font-FOSS-for-Python Lane R, example:007). The fact is code-computed CONTRADICTED.
+        if (disposition in PLACING or disposition == "DEFER_UNRESOLVED") and unit in contradicted:
             entry["disposition"] = "OMIT_UNSUPPORTED"
             entry["destination_section"] = None
             entry["fact_ids"] = sorted(cited | {contradicted[unit]})

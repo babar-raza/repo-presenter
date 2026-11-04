@@ -41,10 +41,6 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
-from repo_presenter.readme.composition.authoring import uncarried_units
-from repo_presenter.readme.composition.renderer import (
-    example_block_visible_lines,
-)
 from repo_presenter.core.examples import printed_example
 from repo_presenter.core.facts import FACT_KINDS, FactsDocument, bounded_records
 from repo_presenter.core.llm.binding import binding_errors, merge_partial_units
@@ -52,6 +48,10 @@ from repo_presenter.core.llm.jobs import schema_error_lines
 from repo_presenter.core.llm.ledger import canonical_hash
 from repo_presenter.core.llm.prompts import LoadedManifest
 from repo_presenter.core.registry.models import RegistryEntry
+from repo_presenter.readme.composition.authoring import uncarried_units
+from repo_presenter.readme.composition.renderer import (
+    example_block_visible_lines,
+)
 
 REPAIRS_FILENAME = "repairs.json"
 MAX_ROUNDS = 3
@@ -508,7 +508,11 @@ VISIBLE_LINE_LEVER_FIELDS = ("flagship_example_id", "second_quick_start_example_
 
 
 def visible_line_budget_hint(
-    plan: Mapping[str, Any], facts: FactsDocument, visible: int, budget: int
+    plan: Mapping[str, Any],
+    facts: FactsDocument,
+    visible: int,
+    budget: int,
+    measure: Callable[[str], int | None] | None = None,
 ) -> dict[str, Any] | None:
     """The exact visible-line cost of each optional plan field that can close a BC-07
     visible-line-budget overage without deleting or fabricating anything, or ``None`` when the
@@ -532,7 +536,12 @@ def visible_line_budget_hint(
             # and this field whenever more than one additional example exists, matches the
             # formula exactly.
             cost -= 1
-        levers[field_name] = cost
+        # ``measure`` re-renders the README with the field cleared and returns the visible lines
+        # that actually disappear (None when it cannot render). The formula above misses lines the
+        # field also pulls in around it: on Font it said 17 where the render saves 43, which told
+        # the model that no single field could close a 21-line overage when one could.
+        measured = measure(field_name) if measure is not None else None
+        levers[field_name] = measured if measured is not None else cost
     if not levers:
         return None
     return {
@@ -860,8 +869,7 @@ def _resolve_change_path(document: Any, path: str) -> Any:
     """
     value: Any = document
     trimmed = path.strip()
-    if trimmed.startswith("$."):
-        trimmed = trimmed[2:]
+    trimmed = trimmed.removeprefix("$.")
     # Both prefixes are stripped in sequence, never as an if/elif: a JSONPath-style spelling of
     # the reply's own key (`$.revised_output.units[3].text`) carries both, and stripping only the
     # first left `revised_output` as a literal key that never resolves on either side.
