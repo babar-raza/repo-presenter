@@ -67,6 +67,8 @@ def cmd_validate(args) -> int:
     if state.get("project") != "repo-presenter":
         problems.append(f"project/state.yaml 'project' is {state.get('project')!r}, expected 'repo-presenter'")
 
+    problems.extend(gateverify.find_duplicate_card_ids())
+
     cards = all_cards()
     if not cards:
         print("validate: bootstrap mode -- no taskcards under project/taskcards/ yet. "
@@ -77,6 +79,7 @@ def cmd_validate(args) -> int:
             errs = schema_errors(schema, card)
             if errs:
                 problems.append(f"{cid}: schema violations: " + "; ".join(errs))
+        problems.extend(gateverify.find_dependency_graph_problems(cards))
         rows, accepted_ids = gateverify.rebuild_state()
         print("validate: derived card rows from evidence (receipts + instructions.jsonl):")
         for r in rows:

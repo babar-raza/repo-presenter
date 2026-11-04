@@ -78,14 +78,19 @@ and a named, narrow escalation list instead of "ask the owner about the plan").
 
 ## E. Reconciled decision log
 
-New `docs/DECISION_LOG.md` entry, 2026-11-04: corrects R2's framing (the legacy-writer risk was
-already named 2026-10-24, not newly discovered — and is now more precisely dormant-but-armed,
-not actively writing); actually implements R3 (two-tier model, not just another paragraph);
-flags R4 as a real, confirmed, **unresolved** governance violation (the 2026-10-31 sweep-pause
-was never lifted before the sweep that produced today's 9–12/36 figures) rather than resolving it
-unilaterally; and records the P3 decision (reuse `actions/create-github-app-token@v2`, no new
-JWT code, per the directive's own stated preference — this one *is* a routine implementation
-decision resolvable from evidence, not an owner-level call).
+Two 2026-11-04 `docs/DECISION_LOG.md` entries, not rewritten after the fact (per non-negotiable
+#6, old entries stay, corrections get a new entry): the first corrects R2's framing (the
+legacy-writer risk was already named 2026-10-24, not newly discovered) and, at the time, called
+it "dormant-but-armed" from sampling a single job; a second, same-day entry corrects THAT
+characterization after an owner-supplied counter-example was independently reproduced against
+the real job log — the correct classification is **globally armed since 2026-10-15, per-
+repository gated on committed approval records and a 5-open-issue cap**, with zero net external
+effects in the most recently inspected run, not "dormant." The first entry also actually
+implements R3 (two-tier taskcard model, not just another paragraph); flags R4 as a real,
+confirmed, **unresolved** governance violation (the 2026-10-31 sweep-pause was never lifted
+before the sweep that produced today's 9–12/36 figures) rather than resolving it unilaterally;
+and records the P3 decision (reuse `actions/create-github-app-token@v2`, no new JWT code — a
+routine implementation decision resolvable from evidence, not an owner-level call).
 
 ## F. Verified salvage choices
 

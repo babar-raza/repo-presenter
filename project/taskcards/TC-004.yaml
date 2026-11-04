@@ -14,6 +14,7 @@ write_paths:
   - docs/READINESS_PACKAGE_2026-11-04.md
 satisfies:
   - REQ-G8-012
+requires_owner_decision: true
 source_refs:
   - file: docs/DECISION_LOG.md
     anchor: "2026-10-31: Owner delegates the open decisions and sets the target"
@@ -27,8 +28,11 @@ actions:
   - "Await and record the owner's explicit decision as a dated docs/DECISION_LOG.md entry
      containing the OWNER_RULING_SWEEP_PAUSE marker."
 checks:
+  # 2026-11-04 correction, same reasoning as TC-002: require a dated record that cross-
+  # references a real anchor (here, the 2026-10-31 entry this ruling is actually about), not a
+  # bare marker a negative control could only duplicate, never falsify.
   - command: |-
-      python ops/checks/marker_check.py docs/DECISION_LOG.md "OWNER_RULING_SWEEP_PAUSE:"
+      python ops/checks/owner_decision_record.py docs/DECISION_LOG.md OWNER_RULING_SWEEP_PAUSE:
     expect: exit 0
     timeout_seconds: 30
     proves:
@@ -38,11 +42,13 @@ requires:
 network: false
 negative_control:
   mutate: |-
-    python -c "import pathlib; p = pathlib.Path('docs/DECISION_LOG.md'); p.write_text(p.read_text(encoding='utf-8') + chr(10) + 'OWNER_RULING_SWEEP_PAUSE: fabricated, must be rejected', encoding='utf-8')"
+    python -c "import pathlib; p = pathlib.Path('docs/DECISION_LOG.md'); s = p.read_text(encoding='utf-8'); s2 = s.replace('ref=', 'ref=BROKEN-'); p.write_text(s2, encoding='utf-8')"
   rationale: >
-    Same discipline as TC-002's negative control: a textually present marker is cheap to inject
-    and must never substitute for a real, dated owner decision reviewed by a human, not inferred
-    from this receipt alone.
+    Once a real ruling exists ("OWNER_RULING_SWEEP_PAUSE: <date> ref=<anchor-of-the-2026-10-31-
+    entry-being-ruled-on>"), this corrupts the cross-reference so it resolves to nothing real --
+    a meaningful falsification, not a marker duplication. Before a real ruling exists, the clean
+    run already correctly fails and the negative control is skipped, per do_verify's own
+    documented behavior.
 evidence:
   - docs/READINESS_PACKAGE_2026-11-04.md
 closeout:

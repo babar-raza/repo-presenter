@@ -1,0 +1,52 @@
+id: TC-012a
+gate: GATE4_PRODUCTION
+track: production-cutover
+purpose: >
+  FINAL CUTOVER, split out from TC-012's infrastructure scope (2026-11-04 dependency-ordering
+  correction, directive Stage E: "Final production cutover... after the owner has approved
+  cutover"). A safe, owner-approved transition of legacy write ownership to this repository --
+  never a silent pause/disable of the predecessor system. Genuinely depends on everything else:
+  writer disposition, live App-token capability, live issues capability, real portfolio
+  delivery, and working scheduled infrastructure must all be real before retiring the system
+  that currently owns these effects.
+depends_on:
+  - TC-002
+  - TC-009a
+  - TC-010a
+  - TC-011
+  - TC-012
+requires_owner_decision: true
+write_paths:
+  - docs/LEGACY_CUTOVER_RECORD.md
+satisfies:
+  - REQ-G6-001
+source_refs:
+  - file: project/taskcards/TC-012.yaml
+    anchor: "TC-012a, not this card, covers the final legacy-writer cutover"
+inputs: []
+actions:
+  - "Reconcile every pending legacy issue/PR before cutover."
+  - "Record the owner-approved cutover/retirement decision in docs/LEGACY_CUTOVER_RECORD.md,
+     naming the exact writers transferred or retired and the rollback plan."
+checks:
+  - command: |-
+      python ops/checks/owner_decision_record.py docs/LEGACY_CUTOVER_RECORD.md OWNER_APPROVED_CUTOVER:
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-G6-001
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -c "import pathlib; p = pathlib.Path('docs/LEGACY_CUTOVER_RECORD.md'); s = p.read_text(encoding='utf-8'); s2 = s.replace('ref=', 'ref=BROKEN-'); p.write_text(s2, encoding='utf-8')"
+  rationale: >
+    Same cross-reference-corruption pattern as TC-002/TC-004/TC-009a/TC-010a.
+evidence:
+  - docs/LEGACY_CUTOVER_RECORD.md
+closeout:
+  - "Only after this card's own cross-referenced record exists may the legacy repository's
+     write-capable workflows be paused or retired -- never before, never silently."
+recovery: "The named record does not exist yet; this card is correctly not started, and remains
+  the last gate in the whole dependency graph."

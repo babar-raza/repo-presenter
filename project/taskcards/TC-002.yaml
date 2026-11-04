@@ -13,6 +13,7 @@ write_paths:
   - docs/LEGACY_WRITER_INVENTORY_2026-11-04.md
 satisfies:
   - REQ-P3-001
+requires_owner_decision: true
 source_refs:
   - file: docs/DECISION_LOG.md
     anchor: "2026-10-24: The old repo's P3/P4"
@@ -24,8 +25,16 @@ actions:
   - "Propose a disposition per writer; do NOT write an owner-approval marker -- that is the
      owner's decision, not this card's to fabricate."
 checks:
+  # 2026-11-04 correction: the first version's check accepted a bare marker string, and its
+  # negative control appended that same marker -- which cannot falsify a legitimate positive
+  # state (appending more of a string that already satisfies a substring check changes nothing).
+  # This version requires a structured, cross-referenced record: "<PREFIX> <YYYY-MM-DD>
+  # ref=<anchor>", where <anchor> must independently resolve to real text in
+  # docs/DECISION_LOG.md. No mechanical check can prove a human actually decided something; this
+  # raises the bar from "one string anywhere" to "a dated record pointing at a real decision-log
+  # entry," which a meaningful negative control can actually break (see below).
   - command: |-
-      python ops/checks/marker_check.py docs/LEGACY_WRITER_INVENTORY_2026-11-04.md "OWNER_APPROVED_WRITER_DISPOSITION:"
+      python ops/checks/owner_decision_record.py docs/LEGACY_WRITER_INVENTORY_2026-11-04.md OWNER_APPROVED_WRITER_DISPOSITION:
     expect: exit 0
     timeout_seconds: 30
     proves:
@@ -35,15 +44,14 @@ requires:
 network: false
 negative_control:
   mutate: |-
-    python -c "import pathlib; p = pathlib.Path('docs/LEGACY_WRITER_INVENTORY_2026-11-04.md'); p.write_text(p.read_text(encoding='utf-8') + chr(10) + 'OWNER_APPROVED_WRITER_DISPOSITION: 2099-01-01 (fabricated by negative control, must be rejected)', encoding='utf-8')"
+    python -c "import pathlib; p = pathlib.Path('docs/LEGACY_WRITER_INVENTORY_2026-11-04.md'); s = p.read_text(encoding='utf-8'); s2 = s.replace('ref=', 'ref=BROKEN-'); p.write_text(s2, encoding='utf-8')"
   rationale: >
-    Injects the exact marker the check looks for. This negative control is written to reveal a
-    different failure mode than the usual delete-the-marker pattern: if an agent were ever tempted
-    to make this check pass by writing the marker itself rather than obtaining a real owner
-    decision, this proves that a *textually present* marker is cheap to fake and that acceptance
-    of this specific card must never rest on the automated check alone -- a human reviewing the
-    actual commit history for a real, dated owner decision is required, and that human review is
-    documented separately in docs/DECISION_LOG.md, never inferred from this receipt.
+    Once a real record exists ("OWNER_APPROVED_WRITER_DISPOSITION: <date> ref=<anchor>"), this
+    corrupts the cross-reference itself (ref=BROKEN-<anchor> will not match any real
+    docs/DECISION_LOG.md text) rather than duplicating a marker -- a meaningful falsification of
+    the actual positive state, not a no-op. Before a real record exists, this mutate has nothing
+    to corrupt and the clean run already correctly fails, so the negative control is skipped
+    (do_verify's own documented behavior) -- expected and correct at this stage.
 evidence:
   - docs/LEGACY_WRITER_INVENTORY_2026-11-04.md
 closeout:

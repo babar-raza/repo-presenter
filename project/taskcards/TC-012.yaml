@@ -2,21 +2,22 @@ id: TC-012
 gate: GATE4_PRODUCTION
 track: production-cutover
 purpose: >
-  Reach P4/G6: unattended scheduled execution on GitHub-hosted runners, local Docker validation
-  at the smallest credible scope, and a safe, owner-approved transition of legacy write
-  ownership -- not a silent pause/disable of the predecessor system. Blocked on every other gate:
-  writer disposition (TC-002), preflight (TC-008), issues lifecycle (TC-010), and portfolio
-  delivery (TC-011) all need to be real before autonomy is turned on, or autonomy just means
-  scheduling a system that still fails most of its own real runs.
+  Reach P4/G6: unattended scheduled execution on GitHub-hosted runners and local Docker
+  validation at the smallest credible scope. 2026-11-04 dependency-ordering correction: this no
+  longer depends on TC-011 (25-product portfolio delivery) -- the directive explicitly flags
+  "makes hosted scheduling depend on 25-product delivery, creating avoidable manual work."
+  Scheduling and Docker validation are an infrastructure milestone independent of portfolio
+  scale; the FINAL legacy-writer cutover (which genuinely should wait for real delivery proof)
+  is now its own card, TC-012a. Still depends on writer disposition (TC-002, since a schedule
+  could eventually also drive writes), preflight (TC-008, so scheduled runs don't burn needless
+  provider calls), and the dev-scope issues lifecycle (TC-010).
 depends_on:
   - TC-002
   - TC-008
   - TC-010
-  - TC-011
 write_paths:
   - .github/workflows/present.yml
   - Dockerfile
-  - docs/LEGACY_CUTOVER_RECORD.md
 satisfies:
   - REQ-G6-001
 source_refs:
@@ -43,12 +44,6 @@ checks:
     timeout_seconds: 30
     proves:
       - REQ-G6-001
-  - command: |-
-      python ops/checks/marker_check.py docs/LEGACY_CUTOVER_RECORD.md "OWNER_APPROVED_CUTOVER:"
-    expect: exit 0
-    timeout_seconds: 30
-    proves:
-      - REQ-G6-001
 requires:
   - python
 network: false
@@ -61,9 +56,7 @@ negative_control:
 evidence:
   - .github/workflows/present.yml
   - Dockerfile
-  - docs/LEGACY_CUTOVER_RECORD.md
 closeout:
   - "Run at least one real unattended cycle and independently confirm its outcome before this
-     card is ACCEPTED -- the final gate in the 2026-11-04 directive."
-recovery: "None of the named artifacts exist yet; this card is correctly not started, and is the
-  last gate in the whole dependency graph."
+     card is ACCEPTED. TC-012a, not this card, covers the final legacy-writer cutover."
+recovery: "None of the named artifacts exist yet; this card is correctly not started."

@@ -2,15 +2,17 @@ id: TC-010
 gate: GATE2_INTEGRATIONS
 track: issues-lifecycle
 purpose: >
-  Complete the issues lifecycle (P2): discovery, classification, dedup, approval, filing,
-  assignment where authorized, tracking, re-detection, verified resolution, authorized closing --
-  not just the single filing path that exists today. Reuse the legacy repo's tested discovery/
-  redetect/close_approval/lifecycle/funnel modules rather than rebuilding from scratch. Blocked
-  on TC-002 because this touches the same upstream issue surface the legacy funnel already owns.
-depends_on:
-  - TC-002
+  DEV/MOCK SCOPE ONLY (2026-11-04 dependency-ordering correction, directive §6/§7). Build and
+  test the complete issues lifecycle (P2) against a local/mock token: discovery,
+  classification, dedup, approval, filing, assignment, tracking, re-detection, verified
+  resolution, authorized closing -- not just the single filing path that exists today. Reuse
+  the legacy repo's tested discovery/redetect/close_approval/lifecycle/funnel modules rather
+  than rebuilding from scratch. TC-010a (separate card) covers firing this for real against a
+  live upstream repository, which genuinely needs TC-002 first.
+depends_on: []
 write_paths:
   - src/repo_presenter/issues/**
+  - tests/issues/**
 satisfies:
   - REQ-G3-001
 source_refs:
@@ -41,5 +43,6 @@ evidence:
   - src/repo_presenter/issues/discovery.py
 closeout:
   - "Demonstrate discover -> dedupe -> approval -> file -> track -> re-detect -> resolve -> close
-     once, end to end, independently confirmed (not self-reported) before ACCEPTED."
+     once end to end against a mock/local token, independently confirmed. TC-010a, not this
+     card, covers the real upstream exercise."
 recovery: "The named module does not exist yet; this card is correctly not started."

@@ -2,16 +2,20 @@ id: TC-009
 gate: GATE2_INTEGRATIONS
 track: github-app
 purpose: >
-  Reuse the legacy repository's proven actions/create-github-app-token@v2 pattern for App
-  installation tokens, per P3 of the 2026-11-04 directive -- do not implement custom JWT signing
-  or a new credential service unless a specific, verified requirement proves the proven hosted
-  mechanism insufficient. Blocked on TC-002 (writer disposition) because this wires a second
-  write path toward the same upstream App installation the legacy system already holds.
-depends_on:
-  - TC-002
+  DEV/MOCK SCOPE ONLY (2026-11-04 dependency-ordering correction: isolated implementation,
+  read-only inspection, and mock-token testing do not need owner authorization -- only an actual
+  external write does, per the directive's own §6). Reuse the legacy repository's proven
+  actions/create-github-app-token@v2 pattern for App installation tokens, per P3 -- do not
+  implement custom JWT signing or a new credential service unless a specific, verified
+  requirement proves the proven hosted mechanism insufficient. Wire the workflow step and verify
+  it locally against a mock/test token; TC-009a (separate card) covers minting one real
+  installation token against the real App, which is genuinely gated on TC-002.
+depends_on: []
 write_paths:
   - .github/workflows/present.yml
   - docs/DECISION_LOG.md
+  - src/repo_presenter/github/**
+  - tests/github/**
 satisfies:
   - REQ-G5-001
 source_refs:
@@ -48,7 +52,7 @@ evidence:
   - docs/DECISION_LOG.md
   - .github/workflows/present.yml
 closeout:
-  - "Mint one real installation token end to end and verify it via token_provenance.py before
-     this card is ACCEPTED."
+  - "This card closes on the workflow wiring + a passing mock-token test. The live mint is
+     TC-009a, not this card -- do not fire a real token mint under this card's scope."
 recovery: "Revert the present.yml wiring; the decision record in docs/DECISION_LOG.md stays as a
   historical entry even if the implementation is rolled back."

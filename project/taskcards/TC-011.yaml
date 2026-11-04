@@ -7,12 +7,16 @@ purpose: >
   selected output per repository confirmed live upstream (state 10 of the eleven-state model in
   docs/RELEASE_CONTRACT_P1-P5.md) -- never a manufactured no-op PR. Blocked on calibration
   passing (TC-007) and a real publication path (TC-009); the current real count is 5 both-lanes
-  pipeline-good and 0 live-delivered, against a target of 25.
+  pipeline-good and 0 live-delivered, against a target of 25. Depends on TC-009a (the real,
+  live-write App-token milestone), not merely TC-009 (dev/mock scope) -- P1 needs genuine
+  upstream delivery capability, not just a wired-and-tested mechanism (2026-11-04
+  dependency-ordering correction).
 depends_on:
   - TC-007
-  - TC-009
+  - TC-009a
 write_paths:
   - docs/RELEASE_CONTRACT_P1-P5.md
+  - evidence/build/GATE3_PORTFOLIO/TC-011/**
 satisfies:
   - REQ-P1-001
 source_refs:
@@ -25,21 +29,29 @@ actions:
   - "For each of the 25, obtain the owner's selected-output decision and confirm the live result
      against the real upstream repository, not the local durable record."
 checks:
+  # 2026-11-04 correction: a manually typed "LIVE_DELIVERY_CONFIRMED_COUNT: 25" marker is never
+  # acceptable evidence for this goal -- an agent could simply type any number. This derives the
+  # count from real, independently cross-validated sources: both-lane pipeline-good status from
+  # the durable state backend, a globally-PASSED calibration record, and a real delivery-ledger
+  # entry per repository (evidence/delivery_ledger.json -- does not exist yet, so today's
+  # correct count is honestly 0, not a shortcut).
   - command: |-
-      python ops/checks/marker_check.py project/state.yaml "LIVE_DELIVERY_CONFIRMED_COUNT: 25"
+      python ops/checks/portfolio_delivery_count.py 25
     expect: exit 0
-    timeout_seconds: 30
+    timeout_seconds: 300
     proves:
       - REQ-P1-001
 requires:
   - python
-network: false
+network: true
 negative_control:
   mutate: |-
-    python -c "import pathlib; p = pathlib.Path('project/state.yaml'); s = p.read_text(encoding='utf-8'); s2 = s.replace('LIVE_DELIVERY_CONFIRMED_COUNT: 25', 'LIVE_DELIVERY_CONFIRMED_COUNT: 24'); p.write_text(s2, encoding='utf-8')"
+    python -c "import pathlib; p = pathlib.Path('evidence/delivery_ledger.json'); p.write_text('[]', encoding='utf-8')"
   rationale: >
-    Drops the confirmed count by one. Proves the check requires the real threshold, not just the
-    marker's presence at any value.
+    Once a real ledger with >=25 live-verified entries exists, this empties it -- a meaningful
+    falsification of the actual cross-validated evidence, not a marker duplication. Before a
+    real ledger exists, the clean run already correctly fails on calibration status alone and
+    the negative control is skipped.
 evidence:
   - project/state.yaml
 closeout:

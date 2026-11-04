@@ -28,22 +28,31 @@ checks:
     timeout_seconds: 30
     proves:
       - REQ-G8-013
+  # 2026-11-04 correction: hard-coded "10"/"12" would wrongly FAIL the moment a legitimate new
+  # hosted run raises either number (to 11/13, say), and would wrongly PASS forever if the
+  # numbers simply stopped being updated -- exactly the staleness this card exists to prevent.
+  # This check instead runs scripts/portfolio_status.py's own underlying machinery fresh, every
+  # time, and compares it against whatever project/state.yaml currently records -- needs network
+  # (the durable state backend's refs live on origin).
   - command: |-
-      python ops/checks/marker_check.py project/state.yaml "lane_r_accepted: 10" "lane_l_accepted: 12"
+      python ops/checks/dashboard_matches_live.py
     expect: exit 0
-    timeout_seconds: 30
+    timeout_seconds: 300
     proves:
       - REQ-G8-013
 requires:
   - python
-network: false
+network: true
 negative_control:
   mutate: |-
-    python -c "import pathlib; p = pathlib.Path('project/state.yaml'); s = p.read_text(encoding='utf-8'); s2 = s.replace('lane_r_accepted: 10', 'lane_r_accepted: 9'); p.write_text(s2, encoding='utf-8')"
+    python -c "import pathlib; p = pathlib.Path('project/state.yaml'); s = p.read_text(encoding='utf-8'); s2 = s.replace('lane_r_accepted: 10', 'lane_r_accepted: 999'); p.write_text(s2, encoding='utf-8')"
   rationale: >
-    Reintroduces the exact drift this card exists to prevent (the real third recurrence found
-    live this pass: top counters said 9 while a later card already said 10). Proves the check
-    actually catches a stale number rather than only confirming the file parses.
+    Replaces today's known-current recorded value with an implausible sentinel (999) that can
+    never coincidentally match whatever the live script actually reports -- a real falsification
+    of today's content, without regex or backslashes crossing the YAML/shell boundary (the exact
+    shape ops/SUPERVISOR.md's own falsifier-authoring rule warns against). As the real recorded
+    number changes over time, this mutate line will stop matching and should be refreshed to the
+    then-current value the same way any negative control is maintained alongside its card.
 evidence:
   - docs/RELEASE_CONTRACT_P1-P5.md
   - project/state.yaml

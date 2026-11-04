@@ -18,6 +18,7 @@ from gatectl import (
     EVIDENCE,
     REPO,
     STATUS_JSONL,
+    TASKCARDS,
     CANONICAL_ENV,
     all_cards,
     check_scope,
@@ -25,6 +26,7 @@ from gatectl import (
     drop_worktree,
     fingerprint,
     load_card_at_rev,
+    load_yaml,
     make_worktree,
     now_utc,
     parse_junit,
@@ -35,7 +37,20 @@ from gatectl import (
     sha256_file,
 )
 
-GATE_STATUS_ORDER = ["BLOCKED_ENV", "FAILED_INTERNAL", "IN_PROGRESS", "VERIFYING", "READY", "ACCEPTED"]
+# 2026-11-04: real state model, replacing the collapsed PENDING/IN_PROGRESS pair that caused
+# `tick` to report "ready cards: none" forever once any undispatched diagnostic `verify` run
+# produced a non-accepting receipt (confirmed, not theoretical -- this happened to TC-002/004/
+# 006/007/008/009/010/011/012 in this very session). AWAITING_OWNER_DECISION and
+# AWAITING_PREREQUISITE are both "blocked," but for different reasons the supervisor must not
+# treat interchangeably: a prerequisite is something an agent can go work on; an owner decision
+# is not. VERIFICATION_FAILED and STALE_RECEIPT are both immediately re-attemptable -- a check
+# failing because a feature does not exist yet must not permanently block the very task that
+# would implement it.
+GATE_STATUS_ORDER = [
+    "BLOCKED_ENV", "AWAITING_PREREQUISITE", "AWAITING_OWNER_DECISION", "FAILED_INTERNAL",
+    "IN_PROGRESS", "VERIFICATION_FAILED", "STALE_RECEIPT", "READY", "ACCEPTED", "SUPERSEDED",
+]
+READY_LIKE = {"READY", "VERIFICATION_FAILED", "STALE_RECEIPT"}
 
 
 def receipt_dir(gate: str, card_id: str) -> Path:
@@ -272,6 +287,68 @@ def do_verify(card_id: str, base: str, head: str, issue_rev: str | None = None,
 
 
 # --------------------------------------------------------------------------
+# dependency-graph integrity (2026-11-04: real checks, not per-card linting --
+# cardlint.py only ever validated one card's own shape in isolation)
+# --------------------------------------------------------------------------
+def find_duplicate_card_ids() -> list[str]:
+    """all_cards() keys its dict by each card's own declared `id`, so two
+    files declaring the same id silently overwrite one another in that dict
+    and the collision is invisible to every caller of all_cards(). This
+    walks the files directly instead."""
+    from collections import defaultdict
+
+    by_id: dict[str, list[str]] = defaultdict(list)
+    if TASKCARDS.exists():
+        for p in sorted(TASKCARDS.glob("TC-*.yaml")):
+            c = load_yaml(p)
+            if isinstance(c, dict) and "id" in c:
+                by_id[c["id"]].append(str(p))
+    return [
+        f"duplicate card id {cid!r} declared in: {', '.join(paths)}"
+        for cid, paths in sorted(by_id.items())
+        if len(paths) > 1
+    ]
+
+
+def find_dependency_graph_problems(cards: dict) -> list[str]:
+    """Self-dependency, missing dependency IDs, and real cycle detection
+    (DFS over depends_on edges), checked once over the whole graph."""
+    problems: list[str] = []
+    for cid, card in sorted(cards.items()):
+        deps = card.get("depends_on", [])
+        if cid in deps:
+            problems.append(f"{cid}: depends_on includes itself")
+        for d in deps:
+            if d not in cards:
+                problems.append(f"{cid}: depends_on references unknown card {d!r}")
+
+    WHITE, GRAY, BLACK = 0, 1, 2
+    color = {cid: WHITE for cid in cards}
+    seen_cycles: set[tuple] = set()
+
+    def visit(cid: str, stack: list[str]) -> None:
+        color[cid] = GRAY
+        stack.append(cid)
+        for d in cards[cid].get("depends_on", []):
+            if d not in cards:
+                continue  # already reported above; do not also report a confusing cycle
+            if color.get(d) == GRAY:
+                cyc = tuple(stack[stack.index(d):] + [d])
+                if cyc not in seen_cycles:
+                    seen_cycles.add(cyc)
+                    problems.append("dependency cycle: " + " -> ".join(cyc))
+            elif color.get(d) == WHITE:
+                visit(d, stack)
+        stack.pop()
+        color[cid] = BLACK
+
+    for cid in sorted(cards):
+        if color[cid] == WHITE:
+            visit(cid, [])
+    return problems
+
+
+# --------------------------------------------------------------------------
 # derived state
 # --------------------------------------------------------------------------
 def gate_status(statuses: list[str], accepted: bool, exit_verdict) -> str:
@@ -290,39 +367,87 @@ def gate_status(statuses: list[str], accepted: bool, exit_verdict) -> str:
     return "READY"
 
 
-def rebuild_state(cards_order: list[str] | None = None):
-    """project/state.yaml's CARD-DRIVEN portion is a FUNCTION of primary
-    evidence (cards on disk + receipts + instructions log), never a narration.
-    This only covers the `cards`/`current_gate`/`accepted_gates`/
-    `execution_limits` fields -- the bootstrap-era fields (`authority`,
-    `progress`, `active_work_item`, pre-card `current_gate.id` like
-    P0_BOOTSTRAP) are supervisor-authored directly until the first taskcard
-    exists, exactly as ops/SUPERVISOR.md documents."""
-    cards = all_cards()
-    instructions = read_jsonl(Path(STATUS_JSONL).parent / "instructions.jsonl")
+def card_is_stale(cid: str, receipt: dict) -> bool:
+    """A receipt's accepted=True is NECESSARY, never SUFFICIENT: it must also
+    still describe the card as currently committed at HEAD. If the card file
+    was edited (e.g. a check weakened) after the receipt was generated, the
+    receipt's card_sha256 no longer matches and the receipt must not be
+    trusted as current. Mirrors load_card_at_rev's own hashing exactly
+    (git show -> .strip() -> utf-8 -> sha256) so the comparison is apples to
+    apples with what do_verify itself computed."""
+    try:
+        _, current_sha = load_card_at_rev(cid, "HEAD")
+    except SystemExit:
+        return True  # HEAD does not contain this card yet -- cannot be current
+    return current_sha != receipt.get("card_sha256")
 
-    attempts: dict[str, int] = {}
-    dispatched: set[str] = set()
-    for ins in instructions:
-        t = ins.get("target_card")
-        if t and t != "ALL":
-            attempts[t] = max(attempts.get(t, 0), int(ins.get("attempt", 0)))
-            if ins.get("kind") in ("dispatch", "rework"):
-                dispatched.add(t)
 
-    rows, accepted_ids = [], set()
+def compute_rows(cards: dict, raw: dict, dispatched: set, attempts: dict, latest_kind: dict):
+    """Pure function, no IO: the actual dependency-enforcement/status logic,
+    extracted 2026-11-04 so it can be unit-tested directly against synthetic
+    cards/receipts without a live git worktree. `raw[cid]` is
+    {"receipt": dict|None, "attempt": int, "stale": bool}.
+
+    A positive receipt is necessary, never sufficient, for ACCEPTED: it must
+    also be non-stale and every depends_on edge must itself resolve to an
+    effectively-accepted card -- a fixed point over the whole graph, not one
+    card's own receipt read in isolation. A card that was merely
+    verify-checked for diagnostic purposes (never actually `instruct --kind
+    dispatch`ed) does not get stuck in IN_PROGRESS forever: only a real
+    dispatch does that -- VERIFICATION_FAILED/STALE_RECEIPT stay
+    immediately re-attemptable (see READY_LIKE)."""
+    effectively_accepted: set[str] = set()
+    changed = True
+    while changed:
+        changed = False
+        for cid in sorted(cards):
+            if cid in effectively_accepted:
+                continue
+            if latest_kind.get(cid) == "supersede":
+                continue  # a superseded card never counts as accepted for a downstream
+                          # dependency, even if its own historical receipt still says so --
+                          # "previously accepted downstream cards lose release eligibility if a
+                          # required upstream gate is genuinely invalidated" (2026-11-04 directive)
+            info = raw[cid]
+            r = info["receipt"]
+            if not (r and r.get("accepted")) or info["stale"]:
+                continue
+            deps = cards[cid].get("depends_on", [])
+            if all(d in effectively_accepted for d in deps):
+                effectively_accepted.add(cid)
+                changed = True
+
+    rows = []
     for cid in sorted(cards):
         c = cards[cid]
-        r = load_receipt(c["gate"], cid)
-        row = {"id": cid, "gate": c["gate"], "status": "PENDING",
-               "attempt": attempts.get(cid, 0), "blocker": None}
-        if r and r.get("accepted"):
+        info = raw[cid]
+        r, stale, attempt = info["receipt"], info["stale"], info.get("attempt", attempts.get(cid, 0))
+        deps = c.get("depends_on", [])
+        deps_met = all(d in effectively_accepted for d in deps)
+        row = {"id": cid, "gate": c["gate"], "status": "AWAITING_PREREQUISITE",
+               "attempt": attempt, "blocker": None}
+
+        if latest_kind.get(cid) == "supersede":
+            row["status"] = "SUPERSEDED"
+        elif cid in effectively_accepted:
             row["status"] = "ACCEPTED"
             row["commit"] = r["head_rev"]
             row["receipt"] = f"{r['gate']}/{cid}/receipt.json"
-            accepted_ids.add(cid)
-        elif r and not r.get("accepted"):
-            if row["attempt"] >= 3:
+        elif not deps_met:
+            unmet = [d for d in deps if d not in effectively_accepted]
+            row["status"] = "AWAITING_PREREQUISITE"
+            summary = f"depends on {', '.join(unmet)}, not yet accepted"
+            if r and r.get("accepted") and stale:
+                summary += " (receipt also stale: card changed since verification)"
+            row["blocker"] = {"class": "AWAITING_PREREQUISITE", "summary": summary}
+        elif r and r.get("accepted") and stale:
+            row["status"] = "STALE_RECEIPT"
+            row["blocker"] = {
+                "class": "STALE_RECEIPT",
+                "summary": "card definition changed since this receipt was generated -- re-verify",
+            }
+        elif cid in dispatched:
+            if r and not r.get("accepted") and attempt >= 3:
                 row["status"] = "FAILED_INTERNAL"
                 row["blocker"] = {
                     "class": "FAILED_INTERNAL",
@@ -332,21 +457,54 @@ def rebuild_state(cards_order: list[str] | None = None):
                 }
             else:
                 row["status"] = "IN_PROGRESS"
-        elif cid in dispatched:
-            row["status"] = "IN_PROGRESS"
+        elif r and not r.get("accepted"):
+            if c.get("requires_owner_decision"):
+                row["status"] = "AWAITING_OWNER_DECISION"
+            else:
+                row["status"] = "VERIFICATION_FAILED"
+            row["blocker"] = {"class": row["status"], "summary": r.get("reason", "verification failed")}
+        else:
+            row["status"] = "READY"
         rows.append(row)
 
-    for row in rows:
-        if row["status"] == "PENDING":
-            deps = cards[row["id"]].get("depends_on", [])
-            if all(d in accepted_ids for d in deps):
-                row["status"] = "READY"
+    return rows, effectively_accepted
 
-    return rows, accepted_ids
+
+def rebuild_state(cards_order: list[str] | None = None):
+    """project/state.yaml's CARD-DRIVEN portion is a FUNCTION of primary
+    evidence (cards on disk + receipts + instructions log), never a narration.
+    This only covers the `cards`/`current_gate`/`accepted_gates`/
+    `execution_limits` fields -- the bootstrap-era fields (`authority`,
+    `progress`, `active_work_item`, pre-card `current_gate.id` like
+    P0_BOOTSTRAP) are supervisor-authored directly until the first taskcard
+    exists, exactly as ops/SUPERVISOR.md documents. This is the IO-performing
+    wrapper; compute_rows() above is the pure logic, unit-tested directly."""
+    cards = all_cards()
+    instructions = read_jsonl(Path(STATUS_JSONL).parent / "instructions.jsonl")
+
+    attempts: dict[str, int] = {}
+    dispatched: set[str] = set()
+    latest_kind: dict[str, str] = {}
+    for ins in instructions:
+        t = ins.get("target_card")
+        if t and t != "ALL":
+            attempts[t] = max(attempts.get(t, 0), int(ins.get("attempt", 0)))
+            if ins.get("kind") in ("dispatch", "rework"):
+                dispatched.add(t)
+            latest_kind[t] = ins.get("kind")
+
+    raw: dict[str, dict] = {}
+    for cid in sorted(cards):
+        c = cards[cid]
+        r = load_receipt(c["gate"], cid)
+        stale = bool(r and r.get("accepted") and card_is_stale(cid, r))
+        raw[cid] = {"receipt": r, "attempt": attempts.get(cid, 0), "stale": stale}
+
+    return compute_rows(cards, raw, dispatched, attempts, latest_kind)
 
 
 def ready_cards_from_rows(rows):
-    return [r["id"] for r in rows if r["status"] == "READY"]
+    return [r["id"] for r in rows if r["status"] in READY_LIKE]
 
 
 def next_card_from_rows(rows):
