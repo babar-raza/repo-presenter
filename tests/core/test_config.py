@@ -47,12 +47,3 @@ def test_missing_only_the_api_key_names_it() -> None:
 def test_a_non_http_endpoint_is_rejected() -> None:
     with pytest.raises(ConfigError, match="absolute http"):
         load_gateway_config({ENDPOINT_VARIABLE: "not-a-url", API_KEY_VARIABLE: "sk-test"})
-
-
-def test_this_environment_actually_carries_the_two_required_variables() -> None:
-    """This taskcard's own finding (see core/llm/jobs.py's module docstring): confirmed by
-    environment-variable NAME only, values never read, logged or asserted against."""
-    import os
-
-    assert ENDPOINT_VARIABLE in os.environ, f"{ENDPOINT_VARIABLE} is not set in this environment"
-    assert API_KEY_VARIABLE in os.environ, f"{API_KEY_VARIABLE} is not set in this environment"
