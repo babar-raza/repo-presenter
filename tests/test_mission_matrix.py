@@ -6,7 +6,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "ops" / "checks"))
-import mission_matrix  # noqa: E402
+import mission_matrix
 
 
 def test_matrix_is_valid():
