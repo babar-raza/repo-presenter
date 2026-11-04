@@ -1,0 +1,18 @@
+
+===== CLEAN RUN 1 =====
+$ python ops/checks/marker_check.py src/repo_presenter/cascade.py "preflight_currency_gate"
+--- stdout ---
+FAIL: src\repo_presenter\cascade.py missing marker(s): ['preflight_currency_gate']
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python ops/checks/marker_check.py src/repo_presenter/cascade.py "preflight_currency_gate"
+--- stdout ---
+FAIL: src\repo_presenter\cascade.py missing marker(s): ['preflight_currency_gate']
+
+--- stderr ---
+
+
+!! clean runs failed; falsifier skipped (it would prove nothing)

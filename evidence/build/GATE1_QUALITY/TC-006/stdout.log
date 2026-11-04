@@ -1,0 +1,18 @@
+
+===== CLEAN RUN 1 =====
+$ python ops/checks/marker_check.py docs/PARITY_BENCHMARK_PILOT.md "PARITY_BENCHMARK_COMPLETE:"
+--- stdout ---
+FAIL: docs\PARITY_BENCHMARK_PILOT.md missing marker(s): ['PARITY_BENCHMARK_COMPLETE:']
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python ops/checks/marker_check.py docs/PARITY_BENCHMARK_PILOT.md "PARITY_BENCHMARK_COMPLETE:"
+--- stdout ---
+FAIL: docs\PARITY_BENCHMARK_PILOT.md missing marker(s): ['PARITY_BENCHMARK_COMPLETE:']
+
+--- stderr ---
+
+
+!! clean runs failed; falsifier skipped (it would prove nothing)

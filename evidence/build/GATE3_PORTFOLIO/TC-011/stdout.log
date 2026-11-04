@@ -1,0 +1,18 @@
+
+===== CLEAN RUN 1 =====
+$ python ops/checks/marker_check.py project/state.yaml "LIVE_DELIVERY_CONFIRMED_COUNT: 25"
+--- stdout ---
+FAIL: project\state.yaml missing marker(s): ['LIVE_DELIVERY_CONFIRMED_COUNT: 25']
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python ops/checks/marker_check.py project/state.yaml "LIVE_DELIVERY_CONFIRMED_COUNT: 25"
+--- stdout ---
+FAIL: project\state.yaml missing marker(s): ['LIVE_DELIVERY_CONFIRMED_COUNT: 25']
+
+--- stderr ---
+
+
+!! clean runs failed; falsifier skipped (it would prove nothing)

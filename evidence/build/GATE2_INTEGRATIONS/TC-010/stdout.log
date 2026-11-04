@@ -1,0 +1,18 @@
+
+===== CLEAN RUN 1 =====
+$ python ops/checks/marker_check.py src/repo_presenter/issues/discovery.py "class HandoffDiscovery"
+--- stdout ---
+FAIL: src\repo_presenter\issues\discovery.py missing marker(s): ['class HandoffDiscovery']
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python ops/checks/marker_check.py src/repo_presenter/issues/discovery.py "class HandoffDiscovery"
+--- stdout ---
+FAIL: src\repo_presenter\issues\discovery.py missing marker(s): ['class HandoffDiscovery']
+
+--- stderr ---
+
+
+!! clean runs failed; falsifier skipped (it would prove nothing)

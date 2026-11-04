@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "card": "TC-007",
+  "gate": "GATE1_QUALITY",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-04T07:35:59Z",
+  "base_rev": "52c48d5e69142a42e74f0bb7ca463113658c5a0c",
+  "head_rev": "52c48d5e69142a42e74f0bb7ca463113658c5a0c",
+  "card_sha256": "6ae3c93a00b5cdf247ae7ada21a1211f13cd363b121af846444129ec307963c2",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [],
+    "violations": []
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python ops/checks/calibration_status.py PASSED",
+          "exit_code": 1,
+          "duration_s": 0.065,
+          "stdout_sha256": "d74cdd0c1bb7adc7990a1b1e46d629452520c6140446beb7f2a7c3e7959ccb30"
+        }
+      ],
+      "all_passed": false
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python ops/checks/calibration_status.py PASSED",
+          "exit_code": 1,
+          "duration_s": 0.064,
+          "stdout_sha256": "d74cdd0c1bb7adc7990a1b1e46d629452520c6140446beb7f2a7c3e7959ccb30"
+        }
+      ],
+      "all_passed": false
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -c \"import json, pathlib; p = pathlib.Path('data/reviewer_calibration.json'); d = json.loads(p.read_text(encoding='utf-8')); d['status'] = 'NOT_PASSED'; p.write_text(json.dumps(d, indent=2), encoding='utf-8')\"",
+    "patch_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "applied": false,
+    "patch_applied_failed": false,
+    "exit_codes": []
+  },
+  "accepted": false,
+  "reason": "checks failed: python ops/checks/calibration_status.py PASSED; negative-control patch did not apply"
+}

@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "card": "TC-003",
+  "gate": "GATE0_AUTHORITY",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-04T07:35:38Z",
+  "base_rev": "52c48d5e69142a42e74f0bb7ca463113658c5a0c",
+  "head_rev": "52c48d5e69142a42e74f0bb7ca463113658c5a0c",
+  "card_sha256": "9a3df4304e0b8fae72e57d36c2f5c888c5ab0f196eccf7c4845056cf121e7012",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [],
+    "violations": []
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python ops/checks/marker_check.py AGENTS.md \"TWO_TIER_TASKCARD_MODEL_ADOPTED_2026-11-04\"",
+          "exit_code": 0,
+          "duration_s": 0.063,
+          "stdout_sha256": "e8d1ab495fa3e7689d31bf96ac4c3e36aa831835b2e72276fe6188ba84230c8e"
+        },
+        {
+          "command": "python ops/checks/marker_check.py ops/SUPERVISOR.md \"RELEASE_GATE_CARDS_REINSTATED_2026-11-04\"",
+          "exit_code": 0,
+          "duration_s": 0.065,
+          "stdout_sha256": "67aa02f90212c6c05c5faea6e08c4452d278373ea9773490458c26907fb89458"
+        },
+        {
+          "command": "python ops/checks/count_taskcards.py 13",
+          "exit_code": 0,
+          "duration_s": 0.062,
+          "stdout_sha256": "e1d0f44466aaef4b5e582953358aa951e0dfda4bd110a90b7147ad3887c4ae2d"
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python ops/checks/marker_check.py AGENTS.md \"TWO_TIER_TASKCARD_MODEL_ADOPTED_2026-11-04\"",
+          "exit_code": 0,
+          "duration_s": 0.067,
+          "stdout_sha256": "e8d1ab495fa3e7689d31bf96ac4c3e36aa831835b2e72276fe6188ba84230c8e"
+        },
+        {
+          "command": "python ops/checks/marker_check.py ops/SUPERVISOR.md \"RELEASE_GATE_CARDS_REINSTATED_2026-11-04\"",
+          "exit_code": 0,
+          "duration_s": 0.065,
+          "stdout_sha256": "67aa02f90212c6c05c5faea6e08c4452d278373ea9773490458c26907fb89458"
+        },
+        {
+          "command": "python ops/checks/count_taskcards.py 13",
+          "exit_code": 0,
+          "duration_s": 0.063,
+          "stdout_sha256": "e1d0f44466aaef4b5e582953358aa951e0dfda4bd110a90b7147ad3887c4ae2d"
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -c \"import pathlib; p = pathlib.Path('AGENTS.md'); s = p.read_text(encoding='utf-8'); s2 = s.replace('TWO_TIER_TASKCARD_MODEL_ADOPTED_2026-11-04', ''); p.write_text(s2, encoding='utf-8')\"",
+    "patch_sha256": "b5a220923b24ba6664e192ae13eba6b71e5fa66c9a351a3665e71b21214146ae",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      1,
+      0,
+      0
+    ],
+    "tree_changed": [
+      "M AGENTS.md"
+    ]
+  },
+  "accepted": true,
+  "reason": "all gates passed"
+}

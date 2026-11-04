@@ -1,0 +1,42 @@
+
+===== CLEAN RUN 1 =====
+$ python ops/checks/marker_check.py .github/workflows/present.yml "schedule:"
+--- stdout ---
+FAIL: .github\workflows\present.yml missing marker(s): ['schedule:']
+
+--- stderr ---
+
+$ python ops/checks/marker_check.py Dockerfile "FROM"
+--- stdout ---
+FAIL: Dockerfile missing marker(s): ['FROM']
+
+--- stderr ---
+
+$ python ops/checks/marker_check.py docs/LEGACY_CUTOVER_RECORD.md "OWNER_APPROVED_CUTOVER:"
+--- stdout ---
+FAIL: docs\LEGACY_CUTOVER_RECORD.md missing marker(s): ['OWNER_APPROVED_CUTOVER:']
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python ops/checks/marker_check.py .github/workflows/present.yml "schedule:"
+--- stdout ---
+FAIL: .github\workflows\present.yml missing marker(s): ['schedule:']
+
+--- stderr ---
+
+$ python ops/checks/marker_check.py Dockerfile "FROM"
+--- stdout ---
+FAIL: Dockerfile missing marker(s): ['FROM']
+
+--- stderr ---
+
+$ python ops/checks/marker_check.py docs/LEGACY_CUTOVER_RECORD.md "OWNER_APPROVED_CUTOVER:"
+--- stdout ---
+FAIL: docs\LEGACY_CUTOVER_RECORD.md missing marker(s): ['OWNER_APPROVED_CUTOVER:']
+
+--- stderr ---
+
+
+!! clean runs failed; falsifier skipped (it would prove nothing)

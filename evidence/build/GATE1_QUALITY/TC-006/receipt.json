@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "card": "TC-006",
+  "gate": "GATE1_QUALITY",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-04T07:35:57Z",
+  "base_rev": "52c48d5e69142a42e74f0bb7ca463113658c5a0c",
+  "head_rev": "52c48d5e69142a42e74f0bb7ca463113658c5a0c",
+  "card_sha256": "00a4b2635304d1c75bf1065ccf71d65f6c2b69961adc179dd07d3bfa6bf88bbc",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [],
+    "violations": []
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python ops/checks/marker_check.py docs/PARITY_BENCHMARK_PILOT.md \"PARITY_BENCHMARK_COMPLETE:\"",
+          "exit_code": 1,
+          "duration_s": 0.072,
+          "stdout_sha256": "8dd28f2ef08ebc4eceea5095db3fbc5dbe8a286397ff9b37b95760b697cedc22"
+        }
+      ],
+      "all_passed": false
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python ops/checks/marker_check.py docs/PARITY_BENCHMARK_PILOT.md \"PARITY_BENCHMARK_COMPLETE:\"",
+          "exit_code": 1,
+          "duration_s": 0.065,
+          "stdout_sha256": "8dd28f2ef08ebc4eceea5095db3fbc5dbe8a286397ff9b37b95760b697cedc22"
+        }
+      ],
+      "all_passed": false
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -c \"import pathlib; p = pathlib.Path('docs/PARITY_BENCHMARK_PILOT.md'); p.write_text('placeholder, no real benchmark', encoding='utf-8') if p.exists() else None\"",
+    "patch_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "applied": false,
+    "patch_applied_failed": false,
+    "exit_codes": []
+  },
+  "accepted": false,
+  "reason": "checks failed: python ops/checks/marker_check.py docs/PARITY_BENCHMARK_PILOT.md \"PARITY_BENCHMARK_COMPLETE:\"; negative-control patch did not apply"
+}

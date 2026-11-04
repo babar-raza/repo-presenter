@@ -1,0 +1,18 @@
+
+===== CLEAN RUN 1 =====
+$ python ops/checks/marker_check.py docs/DECISION_LOG.md "OWNER_RULING_SWEEP_PAUSE:"
+--- stdout ---
+FAIL: docs\DECISION_LOG.md missing marker(s): ['OWNER_RULING_SWEEP_PAUSE:']
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python ops/checks/marker_check.py docs/DECISION_LOG.md "OWNER_RULING_SWEEP_PAUSE:"
+--- stdout ---
+FAIL: docs\DECISION_LOG.md missing marker(s): ['OWNER_RULING_SWEEP_PAUSE:']
+
+--- stderr ---
+
+
+!! clean runs failed; falsifier skipped (it would prove nothing)

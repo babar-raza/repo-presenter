@@ -1,0 +1,61 @@
+
+===== CLEAN RUN 1 =====
+$ python ops/checks/marker_check.py AGENTS.md "TWO_TIER_TASKCARD_MODEL_ADOPTED_2026-11-04"
+--- stdout ---
+OK: AGENTS.md contains all 1 required marker(s)
+
+--- stderr ---
+
+$ python ops/checks/marker_check.py ops/SUPERVISOR.md "RELEASE_GATE_CARDS_REINSTATED_2026-11-04"
+--- stdout ---
+OK: ops\SUPERVISOR.md contains all 1 required marker(s)
+
+--- stderr ---
+
+$ python ops/checks/count_taskcards.py 13
+--- stdout ---
+OK: found 13 taskcard(s) (>= 13): TC-000, TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python ops/checks/marker_check.py AGENTS.md "TWO_TIER_TASKCARD_MODEL_ADOPTED_2026-11-04"
+--- stdout ---
+OK: AGENTS.md contains all 1 required marker(s)
+
+--- stderr ---
+
+$ python ops/checks/marker_check.py ops/SUPERVISOR.md "RELEASE_GATE_CARDS_REINSTATED_2026-11-04"
+--- stdout ---
+OK: ops\SUPERVISOR.md contains all 1 required marker(s)
+
+--- stderr ---
+
+$ python ops/checks/count_taskcards.py 13
+--- stdout ---
+OK: found 13 taskcard(s) (>= 13): TC-000, TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M AGENTS.md
+$ python ops/checks/marker_check.py AGENTS.md "TWO_TIER_TASKCARD_MODEL_ADOPTED_2026-11-04"
+--- stdout ---
+FAIL: AGENTS.md missing marker(s): ['TWO_TIER_TASKCARD_MODEL_ADOPTED_2026-11-04']
+
+--- stderr ---
+
+$ python ops/checks/marker_check.py ops/SUPERVISOR.md "RELEASE_GATE_CARDS_REINSTATED_2026-11-04"
+--- stdout ---
+OK: ops\SUPERVISOR.md contains all 1 required marker(s)
+
+--- stderr ---
+
+$ python ops/checks/count_taskcards.py 13
+--- stdout ---
+OK: found 13 taskcard(s) (>= 13): TC-000, TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012
+
+--- stderr ---
+

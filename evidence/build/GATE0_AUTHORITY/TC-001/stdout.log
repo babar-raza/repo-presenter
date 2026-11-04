@@ -1,0 +1,25 @@
+
+===== CLEAN RUN 1 =====
+$ python ops/checks/marker_check.py docs/SOURCE_OF_TRUTH_2026-11-04.md "RECONCILIATION_STATUS: RESOLVED"
+--- stdout ---
+OK: docs\SOURCE_OF_TRUTH_2026-11-04.md contains all 1 required marker(s)
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python ops/checks/marker_check.py docs/SOURCE_OF_TRUTH_2026-11-04.md "RECONCILIATION_STATUS: RESOLVED"
+--- stdout ---
+OK: docs\SOURCE_OF_TRUTH_2026-11-04.md contains all 1 required marker(s)
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M docs/SOURCE_OF_TRUTH_2026-11-04.md
+$ python ops/checks/marker_check.py docs/SOURCE_OF_TRUTH_2026-11-04.md "RECONCILIATION_STATUS: RESOLVED"
+--- stdout ---
+FAIL: docs\SOURCE_OF_TRUTH_2026-11-04.md missing marker(s): ['RECONCILIATION_STATUS: RESOLVED']
+
+--- stderr ---
+

@@ -1,0 +1,43 @@
+
+===== CLEAN RUN 1 =====
+$ python ops/checks/marker_check.py docs/RELEASE_CONTRACT_P1-P5.md "RELEASE_CONTRACT_ADOPTED_2026-11-04"
+--- stdout ---
+OK: docs\RELEASE_CONTRACT_P1-P5.md contains all 1 required marker(s)
+
+--- stderr ---
+
+$ python ops/checks/marker_check.py project/state.yaml "lane_r_accepted: 10" "lane_l_accepted: 12"
+--- stdout ---
+OK: project\state.yaml contains all 2 required marker(s)
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python ops/checks/marker_check.py docs/RELEASE_CONTRACT_P1-P5.md "RELEASE_CONTRACT_ADOPTED_2026-11-04"
+--- stdout ---
+OK: docs\RELEASE_CONTRACT_P1-P5.md contains all 1 required marker(s)
+
+--- stderr ---
+
+$ python ops/checks/marker_check.py project/state.yaml "lane_r_accepted: 10" "lane_l_accepted: 12"
+--- stdout ---
+OK: project\state.yaml contains all 2 required marker(s)
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M project/state.yaml
+$ python ops/checks/marker_check.py docs/RELEASE_CONTRACT_P1-P5.md "RELEASE_CONTRACT_ADOPTED_2026-11-04"
+--- stdout ---
+OK: docs\RELEASE_CONTRACT_P1-P5.md contains all 1 required marker(s)
+
+--- stderr ---
+
+$ python ops/checks/marker_check.py project/state.yaml "lane_r_accepted: 10" "lane_l_accepted: 12"
+--- stdout ---
+FAIL: project\state.yaml missing marker(s): ['lane_r_accepted: 10']
+
+--- stderr ---
+

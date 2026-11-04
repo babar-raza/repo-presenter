@@ -1,0 +1,30 @@
+
+===== CLEAN RUN 1 =====
+$ python ops/checks/marker_check.py docs/DECISION_LOG.md "APP_TOKEN_REUSE_DECISION:"
+--- stdout ---
+OK: docs\DECISION_LOG.md contains all 1 required marker(s)
+
+--- stderr ---
+
+$ python ops/checks/marker_check.py .github/workflows/present.yml "create-github-app-token"
+--- stdout ---
+FAIL: .github\workflows\present.yml missing marker(s): ['create-github-app-token']
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python ops/checks/marker_check.py docs/DECISION_LOG.md "APP_TOKEN_REUSE_DECISION:"
+--- stdout ---
+OK: docs\DECISION_LOG.md contains all 1 required marker(s)
+
+--- stderr ---
+
+$ python ops/checks/marker_check.py .github/workflows/present.yml "create-github-app-token"
+--- stdout ---
+FAIL: .github\workflows\present.yml missing marker(s): ['create-github-app-token']
+
+--- stderr ---
+
+
+!! clean runs failed; falsifier skipped (it would prove nothing)
