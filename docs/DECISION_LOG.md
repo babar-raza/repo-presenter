@@ -2786,3 +2786,53 @@ separately, not yet done as of this entry.
 `TC-012.yaml`, `TC-008a.yaml`; `ops/gatecli.py`; `ops/gateverify.py`; `tests/ops/
 test_cardlint_grandfather.py`; `tests/ops/test_checker_fileset_currentness.py`; `tests/ops/
 test_receipt_coherence.py`; `.github/workflows/present.yml`; `tests/test_present_schedule.py`.
+
+## 2026-11-04: autonomous-supervision directive adopted -- PR #2 reviewed post-merge, NO-UPSTREAM-WRITES rule recorded, a provider path found, next work selected
+
+**Source**: the owner's "Autonomous, Continuous Supervised Execution" directive of this date. It
+authorizes autonomous internal work in `babar-raza/repo-presenter` (PRs, merges to `main`, code,
+workflows, taskcards) and makes every repository outside it **read-only**: no pushes, PRs, issues,
+settings, releases or README publication upstream, and no change to the predecessor
+`repository-presenter` or `aspose.org`. It states that it overrides older instructions that would
+require an upstream write. Publishing and issue-management paths are to be built and verified with
+mocks/fixtures/read-only checks only; any output that would need the write is labelled
+`IMPLEMENTED_AND_VERIFIED -- UPSTREAM_EFFECT_NOT_EXECUTED`, never "live".
+
+**What this does NOT do**: it is not an `OWNER_APPROVED_WRITER_DISPOSITION` (TC-002) or an
+`OWNER_RULING_SWEEP_PAUSE: LIFTED` (TC-004). Both cards stay `AWAITING_OWNER_DECISION`; the sweep
+pause stays in force (bounded pilot verification only, at most three repositories per change). No
+receipt, status or marker was edited by hand.
+
+**PR #2 (merged by the owner 2026-11-04T15:39Z, merge commit 6986787)**: independently refreshed
+from GitHub. Post-merge `ci` on `main` (run 41860036256) is green; `python ops/gatecli.py validate`
+reproduces 10 ACCEPTED cards and reports TC-002/TC-004 AWAITING_OWNER_DECISION, TC-007
+VERIFICATION_FAILED, and TC-009a/009b/010a/011/012a AWAITING_PREREQUISITE. Review finding: the
+TC-008a measurement (`scripts/p5_call_count_proof.py`) is a function of a real pytest run and
+Lane L is exercised through the real CLI, but **Lane R's `run_cascade` is stubbed to a single
+request**, so "Lane R makes zero unnecessary requests" is proven for the preflight decision and
+request boundary only, not for the real nine-stage pipeline. The receipt is honest about this
+(its `caveat` field) but P5 is not fully demonstrated for Lane R until a real-pipeline measurement
+exists. Dispatched as a bounded worker task (new file `tests/test_lane_r_real_cascade_p5.py`
+only); acceptance is independent re-run, not the worker's report.
+
+**Provider path (was: "GPT_OSS_* absent, calibration cannot run")**: this cloud session has a
+proxy-injected route to `https://llm.professionalize.com/v1/` (observed: `/v1/models` lists
+`qwen3-next`, `gpt-oss`, `recommended`, `experimental`; a one-token `qwen3-next` completion
+succeeded with no key in the request). `config.py` still requires `GPT_OSS_ENDPOINT` and
+`GPT_OSS_API_KEY` to be set, so calibration/model-dependent runs from this session use
+`GPT_OSS_ENDPOINT=https://llm.professionalize.com/v1` with a placeholder key (the proxy
+substitutes the credential; no secret value is read, stored or logged). Whether the hosted
+Actions secrets point at the same gateway has not been verified. Not yet done: any calibration
+run. `data/reviewer_calibration.json` remains `NOT_PASSED` (iteration 3, 2026-10-27).
+
+**TC-007 / iteration 4 prerequisite found**: no downloaded hosted-cascade `.present-work`
+directories (run5/run7/run9 bases) exist in this checkout, and `scripts/run_reviewer_calibration.py`
+requires them. A real iteration 4 needs fresh hosted cascade artifacts for a held-out corpus
+first; that is the next calibration step, not a calibration claim.
+
+**Next selected work** (ordered): (1) Lane R real-pipeline P5 measurement [in progress, worker];
+(2) enumerate obtainable calibration corpus inputs (hosted run artifacts, `candidates/`) and
+prepare iteration 4 within the 200-call cap; (3) read-only verification that every issue/PR
+publishing path is disabled-by-construction against non-`babar-raza/repo-presenter` targets
+(a guard test, so the new no-upstream-write rule is mechanical rather than narrative); (4)
+README-quality pilots (Imaging-.NET, 3D-.NET, Words-.NET) bounded to three repositories.
