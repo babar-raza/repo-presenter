@@ -3,10 +3,10 @@
   "card": "TC-012",
   "gate": "GATE4_PRODUCTION",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-04T07:36:07Z",
-  "base_rev": "52c48d5e69142a42e74f0bb7ca463113658c5a0c",
-  "head_rev": "52c48d5e69142a42e74f0bb7ca463113658c5a0c",
-  "card_sha256": "7dcce03a004805bda2a8d2efc5ade87f021dfc169a4c011796381a1aa35c0a73",
+  "generated_at": "2026-11-04T08:33:04Z",
+  "base_rev": "8756b0387c35d53f67944b98636ae131611930b1",
+  "head_rev": "8756b0387c35d53f67944b98636ae131611930b1",
+  "card_sha256": "20bbe5321a4bdbbf2ea9b5b288d4a76a8e80db785198df9cc549a24698397c09",
   "fingerprint": {
     "python": "3.13.15",
     "platform": "Windows-11-10.0.26300-SP0"
@@ -23,20 +23,14 @@
         {
           "command": "python ops/checks/marker_check.py .github/workflows/present.yml \"schedule:\"",
           "exit_code": 1,
-          "duration_s": 0.064,
+          "duration_s": 0.069,
           "stdout_sha256": "4a4eced99898ff2517c16bf3532178e84529144c1f144725e9bf36d3e9858ecf"
         },
         {
           "command": "python ops/checks/marker_check.py Dockerfile \"FROM\"",
           "exit_code": 1,
-          "duration_s": 0.062,
+          "duration_s": 0.077,
           "stdout_sha256": "2e7f96b22a89a9346b66ca21e1b601f43a4431442b5e2eebe09391bd24c28068"
-        },
-        {
-          "command": "python ops/checks/marker_check.py docs/LEGACY_CUTOVER_RECORD.md \"OWNER_APPROVED_CUTOVER:\"",
-          "exit_code": 1,
-          "duration_s": 0.068,
-          "stdout_sha256": "51cca173d48a831b9104cc8ac6452b103019999ba7e0d51807d4071fc76cf852"
         }
       ],
       "all_passed": false
@@ -47,20 +41,14 @@
         {
           "command": "python ops/checks/marker_check.py .github/workflows/present.yml \"schedule:\"",
           "exit_code": 1,
-          "duration_s": 0.065,
+          "duration_s": 0.079,
           "stdout_sha256": "4a4eced99898ff2517c16bf3532178e84529144c1f144725e9bf36d3e9858ecf"
         },
         {
           "command": "python ops/checks/marker_check.py Dockerfile \"FROM\"",
           "exit_code": 1,
-          "duration_s": 0.066,
+          "duration_s": 0.069,
           "stdout_sha256": "2e7f96b22a89a9346b66ca21e1b601f43a4431442b5e2eebe09391bd24c28068"
-        },
-        {
-          "command": "python ops/checks/marker_check.py docs/LEGACY_CUTOVER_RECORD.md \"OWNER_APPROVED_CUTOVER:\"",
-          "exit_code": 1,
-          "duration_s": 0.078,
-          "stdout_sha256": "51cca173d48a831b9104cc8ac6452b103019999ba7e0d51807d4071fc76cf852"
         }
       ],
       "all_passed": false
@@ -75,5 +63,5 @@
     "exit_codes": []
   },
   "accepted": false,
-  "reason": "checks failed: python ops/checks/marker_check.py .github/workflows/present.yml \"schedule:\"; python ops/checks/marker_check.py Dockerfile \"FROM\"; python ops/checks/marker_check.py docs/LEGACY_CUTOVER_RECORD.md \"OWNER_APPROVED_CUTOVER:\"; negative-control patch did not apply"
+  "reason": "checks failed: python ops/checks/marker_check.py .github/workflows/present.yml \"schedule:\"; python ops/checks/marker_check.py Dockerfile \"FROM\"; negative-control patch did not apply"
 }

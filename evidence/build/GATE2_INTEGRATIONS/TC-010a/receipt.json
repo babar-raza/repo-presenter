@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "card": "TC-010a",
+  "gate": "GATE2_INTEGRATIONS",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-04T08:33:02Z",
+  "base_rev": "8756b0387c35d53f67944b98636ae131611930b1",
+  "head_rev": "8756b0387c35d53f67944b98636ae131611930b1",
+  "card_sha256": "3d47192bbd5774424c5ee20c49f8bb446d9e1b65364233f6eba78091fef726f6",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [],
+    "violations": []
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python ops/checks/owner_decision_record.py docs/DECISION_LOG.md ISSUES_LIVE_LIFECYCLE_AUTHORIZED:",
+          "exit_code": 1,
+          "duration_s": 0.079,
+          "stdout_sha256": "a4e0981d334ff38aa07643e3184dabc58ae56de6a0189ddfc41ba8cfd997c5d0"
+        }
+      ],
+      "all_passed": false
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python ops/checks/owner_decision_record.py docs/DECISION_LOG.md ISSUES_LIVE_LIFECYCLE_AUTHORIZED:",
+          "exit_code": 1,
+          "duration_s": 0.106,
+          "stdout_sha256": "a4e0981d334ff38aa07643e3184dabc58ae56de6a0189ddfc41ba8cfd997c5d0"
+        }
+      ],
+      "all_passed": false
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -c \"import pathlib; p = pathlib.Path('docs/DECISION_LOG.md'); s = p.read_text(encoding='utf-8'); s2 = s.replace('ref=', 'ref=BROKEN-'); p.write_text(s2, encoding='utf-8')\"",
+    "patch_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "applied": false,
+    "patch_applied_failed": false,
+    "exit_codes": []
+  },
+  "accepted": false,
+  "reason": "checks failed: python ops/checks/owner_decision_record.py docs/DECISION_LOG.md ISSUES_LIVE_LIFECYCLE_AUTHORIZED:; negative-control patch did not apply"
+}

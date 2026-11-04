@@ -3,10 +3,10 @@
   "card": "TC-005",
   "gate": "GATE0_AUTHORITY",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-04T07:35:41Z",
-  "base_rev": "52c48d5e69142a42e74f0bb7ca463113658c5a0c",
-  "head_rev": "52c48d5e69142a42e74f0bb7ca463113658c5a0c",
-  "card_sha256": "e4797de79204b4068c1668767716ea7c1e16e9e4c7d56b19c169a50225b882eb",
+  "generated_at": "2026-11-04T08:34:12Z",
+  "base_rev": "8756b0387c35d53f67944b98636ae131611930b1",
+  "head_rev": "8756b0387c35d53f67944b98636ae131611930b1",
+  "card_sha256": "855f20c104af06bd6e5ad713da5836510c5889e6bb490c8f919e715a692fad84",
   "fingerprint": {
     "python": "3.13.15",
     "platform": "Windows-11-10.0.26300-SP0"
@@ -23,14 +23,14 @@
         {
           "command": "python ops/checks/marker_check.py docs/RELEASE_CONTRACT_P1-P5.md \"RELEASE_CONTRACT_ADOPTED_2026-11-04\"",
           "exit_code": 0,
-          "duration_s": 0.067,
+          "duration_s": 0.072,
           "stdout_sha256": "98f1983e4ab0cd19a7d2384ce827d2dc0d1fed75f38fee9286fde156cfa324a5"
         },
         {
-          "command": "python ops/checks/marker_check.py project/state.yaml \"lane_r_accepted: 10\" \"lane_l_accepted: 12\"",
+          "command": "python ops/checks/dashboard_matches_live.py",
           "exit_code": 0,
-          "duration_s": 0.074,
-          "stdout_sha256": "dea12850625f1ab1c3cad4bb6a11e7c2827abd918b3055f7d93cc835d7723f58"
+          "duration_s": 122.874,
+          "stdout_sha256": "1aa806eff6f49058ed2a34d92ea98d8d3de2e245260c7445db3f68e164792058"
         }
       ],
       "all_passed": true
@@ -41,14 +41,14 @@
         {
           "command": "python ops/checks/marker_check.py docs/RELEASE_CONTRACT_P1-P5.md \"RELEASE_CONTRACT_ADOPTED_2026-11-04\"",
           "exit_code": 0,
-          "duration_s": 0.064,
+          "duration_s": 0.071,
           "stdout_sha256": "98f1983e4ab0cd19a7d2384ce827d2dc0d1fed75f38fee9286fde156cfa324a5"
         },
         {
-          "command": "python ops/checks/marker_check.py project/state.yaml \"lane_r_accepted: 10\" \"lane_l_accepted: 12\"",
+          "command": "python ops/checks/dashboard_matches_live.py",
           "exit_code": 0,
-          "duration_s": 0.066,
-          "stdout_sha256": "dea12850625f1ab1c3cad4bb6a11e7c2827abd918b3055f7d93cc835d7723f58"
+          "duration_s": 124.17,
+          "stdout_sha256": "1aa806eff6f49058ed2a34d92ea98d8d3de2e245260c7445db3f68e164792058"
         }
       ],
       "all_passed": true
@@ -56,8 +56,8 @@
   ],
   "negative_control": {
     "kind": "mutate",
-    "patch": "python -c \"import pathlib; p = pathlib.Path('project/state.yaml'); s = p.read_text(encoding='utf-8'); s2 = s.replace('lane_r_accepted: 10', 'lane_r_accepted: 9'); p.write_text(s2, encoding='utf-8')\"",
-    "patch_sha256": "20c38b4e472505748146a8be83add9f024f6f2df2cde54cb41a2e83d0d006f23",
+    "patch": "python -c \"import pathlib; p = pathlib.Path('project/state.yaml'); s = p.read_text(encoding='utf-8'); s2 = s.replace('lane_r_accepted: 10', 'lane_r_accepted: 999'); p.write_text(s2, encoding='utf-8')\"",
+    "patch_sha256": "110c1e4d72df6a0c9c303bf6fe503dea3b4fcf1d1debb062988caefd800e9997",
     "applied": true,
     "patch_applied_failed": true,
     "exit_codes": [

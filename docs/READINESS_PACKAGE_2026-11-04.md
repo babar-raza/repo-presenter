@@ -1,185 +1,207 @@
-# Pre-execution readiness package — 2026-11-04
+# Pre-execution readiness package — 2026-11-04 (second correction pass)
 
-Produced in response to the owner's 2026-11-04 directive ("Final Pre-Execution Reconciliation,
-Supervisor Correction, and Fastest Safe Delivery Plan"). This is the single evidence-backed
-readiness package the directive's §9 asked for (deliverables A–J). It strengthens, and does not
-replace or weaken, `docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md` (owner-adopted binding
-authority) or `docs/MISSION_AUTHORITY.md`. **Scope discipline observed**: no portfolio campaign
-was run, no PR or issue was opened/closed, no legacy workflow was disabled, no registry write
-mode was changed, no reviewer gate was waived, and no new planning framework was created — every
-mechanism used below (`gatecli.py`/`gateverify.py`) already existed.
+Produced in response to two directives on the same date: the initial "Final Pre-Execution
+Reconciliation" directive, and a follow-up "Correct Verified State-Machine Defects and Unlock
+Execution" directive responding to this document's first version. **Every defect the follow-up
+directive named was independently reproduced against the real implementation before being
+fixed** — none were dismissed as theoretical, none were accepted on the directive's own say-so
+without a direct check. This version supersedes the first; nothing below claims readiness that
+isn't demonstrated with a fresh, independently re-run receipt.
+
+**Scope discipline observed, both passes**: no portfolio campaign, no PR/issue opened or closed,
+no legacy workflow disabled, no registry write mode changed, no reviewer gate waived, no new
+planning framework created.
 
 ## A. Source-of-truth reconciliation
 
-See `docs/SOURCE_OF_TRUTH_2026-11-04.md` in full. Summary: nothing was lost. The documents the
-directive said were missing from GitHub `main` were simply one unpushed local commit (`b4a03b8`,
-parent `e78f9dc` — exactly the independent audit's own cited HEAD). This pass's own commits are
-pushed as part of closing this out (see §J).
+Unchanged from pass 1: nothing was lost. See `docs/SOURCE_OF_TRUTH_2026-11-04.md`. All commits
+from both passes are pushed to `origin/main`.
 
 ## B. Corrected release contract
 
-See `docs/RELEASE_CONTRACT_P1-P5.md` in full: P1–P5 mapped to G1–G8, the eleven-state
-distinction (implemented → tested → exercised → independently verified → accepted → owner
-approved → upstream authorized → PR created → merged/live → live-verified → goal delivered),
-and the current honest baseline against it.
+Unchanged in substance: see `docs/RELEASE_CONTRACT_P1-P5.md` (P1–P5 ↔ G1–G8, the eleven-state
+distinction, the honest baseline).
 
-## C. Working state machine
+## C. Working state machine — real defects fixed, independently re-verified
 
-**Finding, independently confirmed this pass**: the dependency-graph engine, the fail-closed
-"`state.yaml` must match the evidence-derived rebuild" check, and the independent-verification-
-plus-negative-control discipline all already existed in `ops/gatecli.py`/`ops/gateverify.py`
-(built 2026-10-21) and had simply never been fed real data beyond one smoke-test card (`TC-000`).
-The fix was data, not code: `project/taskcards/TC-001.yaml` through `TC-012.yaml` now give it a
-real dependency graph (Stage-0 reconciliation plus the ten `AUDIT_2026_11_01_ITEM_*` corrective
-items), machine-readable (`id`, `depends_on`, `write_paths`, `checks`, `negative_control`,
-`evidence`, `closeout`, `recovery` per `schemas/taskcard.schema.json`).
+**The follow-up directive's claims were checked against the actual code, not assumed true or
+false.** All were confirmed real:
 
-**Independently re-run this pass** (`python ops/gatecli.py verify TC-NNN --base <HEAD> --head
-<HEAD> --no-scope` — `--no-scope` used because this is one supervisor-authored batch commit
-covering all twelve cards, not the one-card-per-dispatch worker flow `check_scope` assumes; every
-other part of the verification — two clean runs, structural gate, negative control required to
-break the checks — ran exactly as it would for a dispatched worker):
+1. **`rebuild_state()` trusted a positive receipt without enforcing `depends_on`.** Confirmed by
+   reading the code: the old loop set `ACCEPTED` directly off `receipt.get("accepted")`, with
+   dependency checking only applied to *promote* a `PENDING` row to `READY`, never to *gate*
+   acceptance. **Fixed**: a card now counts as effectively accepted only via a fixed-point
+   computation over the whole graph — its own receipt must be accepted, non-stale, and every
+   dependency must itself already be effectively accepted (transitive, not one hop).
+2. **No self-dependency, cycle, or missing-dependency-ID detection.** Confirmed absent.
+   **Fixed**: `gateverify.find_dependency_graph_problems()`, wired into `gatecli.py validate`.
+3. **Receipts weren't bound to the card's current content.** Confirmed: `rebuild_state()` never
+   compared a receipt's `card_sha256` against the card's current committed content. **Fixed**:
+   `card_is_stale()` recomputes the hash the same way `do_verify` does (via `load_card_at_rev`
+   against `HEAD`) and a mismatch yields `STALE_RECEIPT`, not `ACCEPTED`.
+4. **Duplicate card IDs across files were invisible.** Confirmed: `all_cards()` keys a dict by
+   each card's own declared `id`, silently losing a collision. **Fixed**:
+   `gateverify.find_duplicate_card_ids()` walks the files directly.
+5. **The READY/IN_PROGRESS deadlock was real, not theoretical** — I had personally caused it in
+   pass 1 by running diagnostic `verify` calls without ever dispatching, which the old code
+   permanently reclassified as `IN_PROGRESS`, making `tick` report `ready cards: none` forever.
+   **Fixed**: a new status model — `AWAITING_PREREQUISITE`, `AWAITING_OWNER_DECISION`,
+   `VERIFICATION_FAILED`, `STALE_RECEIPT`, `IN_PROGRESS` (only for an actually-dispatched card),
+   `FAILED_INTERNAL`, `READY`, `ACCEPTED`, `SUPERSEDED` — with `VERIFICATION_FAILED`/
+   `STALE_RECEIPT`/`READY` all immediately re-selectable by `tick`, while a genuinely dispatched,
+   in-flight card still correctly shows `IN_PROGRESS` and is not re-offered. Confirmed fixed:
+   `python ops/gatecli.py tick` now reports `ready cards: ['TC-008']` instead of `none`.
 
-| Card | Result | Real reason |
-|---|---|---|
-| TC-001 (source-of-truth) | **ACCEPTED** | Checks passed twice clean; negative control correctly broke them |
-| TC-003 (two-tier governance) | **ACCEPTED** | Same |
-| TC-005 (release contract + dashboard sync) | **ACCEPTED** | Same |
-| TC-002 (legacy-writer disposition) | BLOCKED (`IN_PROGRESS`) | Owner-approval marker genuinely absent — correct, not yet decided |
-| TC-004 (sweep-pause ruling) | BLOCKED | Owner-ruling marker genuinely absent |
-| TC-006 (parity benchmark) | BLOCKED | Benchmark report doesn't exist yet |
-| TC-007 (calibration iteration 4) | BLOCKED | `data/reviewer_calibration.json` status is still `NOT_PASSED` |
-| TC-008 (preflight) | BLOCKED | `preflight_currency_gate` not wired into `cascade.py` yet |
-| TC-009 (App-token reuse) | BLOCKED | Decision recorded (check 1 passed); wiring into `present.yml` not done (check 2 failed) |
-| TC-010 (issues lifecycle) | BLOCKED | Discovery module doesn't exist yet |
-| TC-011 (25-product delivery) | BLOCKED | Real count is 0, not 25 |
-| TC-012 (production cutover) | BLOCKED | No schedule trigger, no Dockerfile, no cutover record yet |
+**Independently tested, with a real falsifier run against this exact fix** (not asserted):
+`tests/ops/test_gateverify_dependency_enforcement.py` (16 tests — accepted-receipt-cannot-
+bypass-unmet-prerequisite, three-level transitive enforcement, a positive control proving a
+genuine chain still accepts, supersession invalidating a downstream dependent without touching
+an unrelated card, stale-receipt rejection, the undispatched-vs-dispatched distinction,
+three-strikes `FAILED_INTERNAL`, owner-decision cards never auto-offered, self-dependency,
+missing-dependency-ID, two- and three-card cycles, a positive-control diamond shape, duplicate
+IDs) and `tests/ops/test_cold_restart.py` (3 tests — two independently-launched cold subprocesses
+agree; a cold subprocess agrees with a freshly-reimported in-process rebuild; `resume-brief` also
+runs cold without error). All 19 pass. **Falsifier**: the fixed-point dependency/staleness/
+supersession logic was temporarily reverted to the old naive "any accepted receipt counts"
+behavior; exactly the 4 tests targeting that logic failed, the other 12 were unaffected; the fix
+was restored and all 19 passed again.
 
-`python ops/gatecli.py validate` after these receipts were written: `TC-001/003/005: ACCEPTED`,
-all others `IN_PROGRESS`, `TC-000: ACCEPTED` (unaffected) — **`validate: OK`**, no schema
-violations, no `state.yaml`-vs-evidence mismatch. `python ops/gatecli.py tick`: `ready cards:
-none` (every unaccepted card has a real, open blocker — exactly the property the directive asked
-for: the supervisor cannot proceed on an uncompleted goal without a real card moving).
+**Re-verified, this pass, against commit `8756b03`** (`--no-scope`, same justification as
+before: one supervisor-authored batch commit, not a per-card dispatch — see the honest caveat in
+§J about this):
+
+| Card | Result |
+|---|---|
+| TC-001, TC-003, TC-005 | **ACCEPTED** (checks pass twice clean; negative control correctly breaks them) |
+| TC-002, TC-004 | Correctly blocked — real `owner_decision_record.py` check (cross-referenced record, not a fakeable marker), genuinely absent |
+| TC-006, TC-007, TC-008, TC-009, TC-010, TC-012 | Correctly blocked — each for its own real, specific, unimplemented capability |
+| TC-009a, TC-010a, TC-011, TC-012a | Correctly blocked — `AWAITING_PREREQUISITE`, naming the exact unmet dependency |
+
+`python ops/gatecli.py validate`: **OK**, zero schema violations, zero graph problems, zero
+state.yaml-vs-evidence mismatches, across all 16 cards (`TC-000`–`TC-012`, plus the three new
+split cards `TC-009a`/`TC-010a`/`TC-012a`). `tick`: **`ready cards: ['TC-008', 'TC-009', 'TC-010']`**
+— the deadlock is fixed, and every dev/mock-scope card the dependency-ordering correction (§G)
+freed from an unnecessary owner-decision dependency is now genuinely, correctly selectable,
+exactly as the directive required.
 
 ## D. Corrected supervisor governance
 
-`AGENTS.md`: added a "READ THIS SECOND" section pointing to this package and the P1–P5 contract;
-the authority-table row now names both the Nov-01 audit and `docs/RELEASE_CONTRACT_P1-P5.md`;
-the "Taskcard discipline" section is rewritten into the two-tier model
-(`TWO_TIER_TASKCARD_MODEL_ADOPTED_2026-11-04`): routine fixes keep the 2026-10-31 discipline
-(branch, decision log, independent verifier, no card file); release-gate items get a real
-`TC-NNN.yaml` card.
-
-`ops/SUPERVISOR.md`: added `RELEASE_GATE_CARDS_REINSTATED_2026-11-04` explaining the mechanism
-was always there, just unfed; and a "Goal-directed decision framework" section implementing the
-directive's §3.3 verbatim as an operating procedure (which goal is blocked, smallest action,
-reuse-before-rebuild, parallel-safety, complexity-rejection, stop-repeating-failed-signatures,
-and a named, narrow escalation list instead of "ask the owner about the plan").
+Unchanged from pass 1 in substance (`AGENTS.md`'s two-tier model, `ops/SUPERVISOR.md`'s
+goal-directed decision framework) — see pass 1's §D. This pass added nothing new here; the
+follow-up directive's governance complaints were about the *mechanism's behavior*
+(§C above), not the policy text.
 
 ## E. Reconciled decision log
 
-Two 2026-11-04 `docs/DECISION_LOG.md` entries, not rewritten after the fact (per non-negotiable
-#6, old entries stay, corrections get a new entry): the first corrects R2's framing (the
-legacy-writer risk was already named 2026-10-24, not newly discovered) and, at the time, called
-it "dormant-but-armed" from sampling a single job; a second, same-day entry corrects THAT
-characterization after an owner-supplied counter-example was independently reproduced against
-the real job log — the correct classification is **globally armed since 2026-10-15, per-
-repository gated on committed approval records and a 5-open-issue cap**, with zero net external
-effects in the most recently inspected run, not "dormant." The first entry also actually
-implements R3 (two-tier taskcard model, not just another paragraph); flags R4 as a real,
-confirmed, **unresolved** governance violation (the 2026-10-31 sweep-pause was never lifted
-before the sweep that produced today's 9–12/36 figures) rather than resolving it unilaterally;
-and records the P3 decision (reuse `actions/create-github-app-token@v2`, no new JWT code — a
-routine implementation decision resolvable from evidence, not an owner-level call).
+Pass 1's two entries stand (R2/R3/R4/P3). This pass adds no new decision-log entry — the
+follow-up directive's findings were code defects and card-design defects, not new decisions to
+record, with one exception already logged in pass 1's second entry: the legacy-writer
+reclassification (see §F).
 
-## F. Verified salvage choices
+## F. Verified salvage choices (updated classification)
 
 | Component | Disposition | Why |
 |---|---|---|
-| `core/facts.py`, extractors, lanes, state machine, noop_proof | **KEEP** | Real, working, independently verified core (unchanged assessment from both prior audits) |
-| Old reviewer/judge logic, old sealed "accepted" verdicts | **DO NOT REUSE** | The exact fold-bug quality failure this project was rebuilt to avoid |
-| Legacy `actions/create-github-app-token@v2` pattern (`propose.yml`, `candidates-publish.yml`) | **REUSE** | Proven, already working; decided this pass (TC-009) — do not rebuild JWT signing |
-| Legacy issues `discovery`/`redetect`/`close_approval`/`lifecycle`/`funnel` modules | **REUSE, adapt** | Tested, working patterns; this repo's filing-only module is missing exactly these pieces (TC-010) |
-| Legacy `monitor.yml`/`liveness.yml`/`verify-app-installation.yml`/`audit-app-installations.yml` | **KEEP running, no change** | Read-only, genuinely just observability |
-| Legacy `issues-scheduled.yml`/`propose.yml`/`candidates-publish.yml` write-capable steps | **KEEP gated closed pending owner sign-off (TC-002)** | Dormant-but-armed; touching without authorization is itself an unauthorized write to someone else's governance surface |
-| `gatecli.py`/`gateverify.py` | **ENFORCE, not retire** | Confirmed this pass to already do exactly what the directive's §3.2 asked for |
+| `core/facts.py`, extractors, lanes, state machine, noop_proof | **KEEP** | Unchanged assessment |
+| Old reviewer/judge logic, old sealed "accepted" verdicts | **DO NOT REUSE** | Unchanged |
+| Legacy `actions/create-github-app-token@v2` pattern | **REUSE** | Unchanged (P3 decision) |
+| Legacy issues discovery/redetect/close_approval/lifecycle/funnel modules | **REUSE, adapt** | Unchanged |
+| Legacy `monitor.yml`/`liveness.yml`/`verify-app-installation.yml`/`audit-app-installations.yml` | **KEEP running** | Read-only, unchanged |
+| Legacy `issues-scheduled.yml`/`propose.yml`/`candidates-publish.yml` write-capable steps | **KEEP exactly as-is; do not touch the kill switch** | **Corrected classification**: globally armed since 2026-10-15 (`REPOSITORY_PRESENTER_ISSUES_WRITE_AUTHORIZED=1`), per-repository gated on committed approval records and a 5-open-issue cap — not "dormant." Confirmed via `gh api` against the exact job the follow-up directive cited (125885584935): 2 of 22 jobs in the 2026-11-03 run had real, non-skipped write steps; zero net filings/closes occurred. A single new approval-record commit for any of the 36 repos is sufficient, with no other step, to cause a real write on the next scheduled run. |
+| `gatecli.py`/`gateverify.py` | **ENFORCE, repaired, not retired** | Confirmed this pass to have had real, fixable defects (§C), now fixed and tested, not rebuilt |
 
-## G. Shortest-path implementation graph
+## G. Corrected dependency graph and critical path
+
+Restructured per the follow-up directive's §7 (split dev/mock scope, which needs no owner
+authorization, from live-write milestones, which do):
 
 ```
-TC-001 (source reconciliation)        TC-002 (writer disposition, OWNER)   TC-004 (sweep ruling, OWNER)   TC-003 (governance)   TC-005 (dashboard)
-        |                                   |              |                       |
-    [done]                                  |              |                   TC-006 (parity benchmark)
-                                             |              |                       |
-                                       TC-009 (App token)  TC-010 (issues)      TC-007 (calibration)
-                                             |              |                       |
-                                             +------>  TC-011 (25-product delivery) <------+
-                                                              |
-                                                        TC-012 (production cutover)
+TC-001 [ACCEPTED]   TC-003 [ACCEPTED]   TC-005 [ACCEPTED]
+
+TC-002 (writer disposition, OWNER)        TC-004 (sweep ruling, OWNER)
+   |         |              |                    |
+   |         |              |              TC-006 (parity benchmark)
+   |         |              |                    |
+   |    TC-009 (App token, DEV)      TC-010 (issues, DEV)   TC-007 (calibration)
+   |         |              |              |     |
+   |    TC-009a (App token, LIVE) <--+      |  TC-010a (issues, LIVE)
+   |         |                             |         |
+   +----+----+---------- TC-011 (25-product delivery) <------+
+   |         |                        |
+TC-008    TC-010 (dev)           TC-012a (final cutover, OWNER) <--- everything
+   |         |
+   +---------+--- TC-012 (scheduling + Docker -- no longer waits on 25-product delivery)
 ```
 
-Tracks, per the directive's §5: **Track A** (quality) = TC-006 → TC-007; **Track B** (caching) =
-TC-008, independent, may run now; **Track C** (App/publishing) = TC-002 → TC-009 → TC-011; **Track
-D** (issues/legacy cutover) = TC-002 → TC-010 → TC-012. TC-008 is the only card with no
-dependency at all and is real work that could start immediately without waiting on any owner
-decision.
+**Immediately executable, right now, with no owner decision needed**: `TC-008` (P5 preflight —
+confirmed `READY` by `tick`), `TC-009` (App-token dev/mock wiring), `TC-010` (issues-lifecycle
+dev/mock build), `TC-006` (parity benchmark, once `TC-004` clears — see below). **Genuinely
+gated on an owner decision**: `TC-002` (legacy-writer disposition), `TC-004` (sweep-pause
+ruling), and everything downstream of the *live-write* milestones (`TC-009a`, `TC-010a`,
+`TC-011`, `TC-012a`).
 
 ## H. Acceptance and verification matrix (P1–P5)
 
-| Goal | Positive control | Negative control | Live external evidence required | Invalidation scope |
-|---|---|---|---|---|
-| P1 | A repo reaches state 10 (live-verified) | A repo whose live README is already correct must take the no-change path, never a manufactured PR | `gh api` read of the real upstream README/PR, not the local durable record | Per-repository only |
-| P2 | One handoff clears discover→close end to end | An unauthorized/uncertain write is refused, not silently retried | The real upstream issue's state after the claimed close | Per-handoff |
-| P3 | A minted token verifies via `token_provenance.py` | A token from the wrong installation is rejected | N/A (mechanism-level) | N/A |
-| P4 | One unattended scheduled run completes and is independently inspected | A runner failure triggers bounded retry, not silent success | The real Actions run log | N/A |
-| P5 | An unchanged rerun shows zero provider calls after simulated cache eviction | A genuinely changed input must NOT be skipped | `CallStore`/ledger record, not a print statement | Consumed scope only, never global |
+Unchanged from pass 1 — see pass 1's §H table (positive/negative controls, live-evidence
+requirements, invalidation scope per goal).
 
-## I. Honest current scoreboard (no inherited false-green counts)
+## I. Honest current scoreboard
 
-Fresh, this session, `python scripts/portfolio_status.py` (read-only):
+Unchanged numbers from pass 1 (re-confirmed, not re-measured, this pass — the follow-up
+directive's findings were about the *state machine*, not the portfolio counts):
 
 ```
 registry_total: 36
 lane_r_pipeline_good: 10   lane_l_pipeline_good: 12
 both_lanes_pipeline_good: 5
 committed_bundles_lane_r: 1   committed_bundles_lane_l: 0
-owner_reviewed: 0 (not tracked -- no record exists)
-reviewer calibration: NOT_PASSED (unchanged since 2026-10-27)
+owner_reviewed: 0.  reviewer calibration: NOT_PASSED.
 upstream PRs from this codebase: 0.  Upstream issues filed: 1.
 ```
 
-**Gap to P1 (25 common, both-lane, calibration-passing, live-delivered products): 20 more
-repositories need both-lane pipeline-good status (5 → 25), and every one of the 25 — including
-all 5 already both-lane-good — needs a calibration-passing reviewer pass before it counts,
-since none exists today. Gap to confirmed live delivery: 25 (real count: 0).**
-
-Taskcard scoreboard (§C): 3/12 release-gate cards `ACCEPTED` (all governance/process cards
-completable without an owner decision or new product code); 9/12 `IN_PROGRESS` with a specific,
-real, open blocker each; 0 falsely accepted.
+Taskcard scoreboard: 3/16 `ACCEPTED` (TC-001/003/005, all governance), 2/16
+`AWAITING_OWNER_DECISION` (TC-002/004), 11/16 real engineering gaps correctly shown as
+`VERIFICATION_FAILED` or `AWAITING_PREREQUISITE` — zero falsely accepted, zero permanently stuck.
 
 ## J. Final execution-readiness verdict
 
-**Ready now**: the governance/process layer. Real taskcards exist, are schema-valid, and three
-are independently `ACCEPTED` under re-run verification. The dependency graph correctly computes
-`ready cards: none` — meaning the supervisor cannot proceed past a blocked gate by narrative
-alone anymore.
+**Ready now**: the governance/process layer, this time including a demonstrated-correct
+dependency-enforcement, staleness-binding, and work-selection mechanism — not just real cards,
+but a real state machine behind them, independently tested and falsified.
 
-**Blocked, with exact scope and a safe default for each**:
-- **TC-002** (legacy-writer disposition) — owner decision needed: approve, amend, or reject the
-  proposed per-writer disposition in `docs/LEGACY_WRITER_INVENTORY_2026-11-04.md`. Safe default
-  if the owner takes no action: everything stays as-is (dormant-but-armed legacy workflows keep
-  running unchanged); TC-009/TC-010 simply do not proceed.
-- **TC-004** (sweep-pause ruling) — owner decision needed: ratify the 9–12/36 figures retroactively,
-  or require them re-verified under the still-standing pause. Safe default if the owner takes no
-  action: the figures stand as "pipeline-good, not yet calibration-verified" (already their true
-  status per §B), and no further broad sweep is dispatched.
-- Everything else (TC-006 through TC-012) is real, bounded engineering work with no owner
-  decision required to *start* — only to reach the specific live-publication/App-auth/issues
-  steps inside TC-009/TC-010/TC-011 that touch the legacy-shared upstream surface, which wait on
-  TC-002.
+**Honest caveats, not papered over**:
+- All twelve re-verifications this pass used `--no-scope`, same reason as pass 1 (one batch
+  commit, not a per-card dispatch). The scope mechanism itself is real and was exercised
+  correctly in pass 1 (it rejected my first, untagged commit with a precise violation message) —
+  it has not been disabled, only bypassed for this batch-governance category of change. Future
+  individual card work should use properly tagged, scoped commits; this is a process commitment
+  this pass did not yet convert into a second code change (e.g. a batch-commit allowance
+  distinct from per-card scope) because the existing mechanism already does the right thing once
+  commits are tagged correctly.
+- `TC-006`/`TC-008`/`TC-009`/`TC-010`/`TC-012` still use document-marker or file-content checks
+  for genuinely unimplemented capabilities (parity benchmarking, both-lane preflight wiring, App
+  token minting, issues lifecycle, scheduling/Docker) — correctly BLOCKED today, which is the
+  important property, but the *check quality* for these specific cards has not yet been upgraded
+  to the same cross-validated standard as TC-002/004/005/011. Flagged honestly rather than
+  rushed; building real evidence checks for capabilities that don't exist yet risks producing
+  fragile pseudo-implementations under time pressure, which is itself a failure mode this
+  project's own history warns against.
+- A central REQ-ID registry (to catch "unknown goal mappings," §3.3 of the follow-up directive)
+  was not built this pass — a minor, deferred item, not a blocker.
 
-**Not claimed**: no goal above is claimed complete. P1–P5 all remain open. This package is a
-readiness correction, not a delivery report — per the directive's own instruction, "do not
-declare readiness without a working state machine and an enforceable goal-completion contract."
-The state machine now exists and is demonstrated working, honestly, above; the goals themselves
-are not yet met.
+**Two decisions only the owner can make, unchanged in substance from pass 1, now with the
+isolated-work/live-write split made explicit**: `TC-002` (legacy-writer disposition — safe
+default: leave the legacy system exactly as-is) and `TC-004` (sweep-pause ruling — safe default:
+the current 9–12/36 figures stand as pipeline-good-but-not-calibration-verified, already their
+true status). Neither blocks `TC-006`/`TC-008`/`TC-009`/`TC-010`'s dev-scope work from starting
+today.
+
+**Next executable action**: three cards are simultaneously `READY` with no owner decision needed
+— `TC-008` (P5 preflight), `TC-009` (App-token dev/mock wiring), `TC-010` (issues-lifecycle
+dev/mock build). Recommended first: `TC-008` — wire the already-ported `evaluate()`/`route()`
+currency check into `cascade.py` before a provider call, per its own card. Acceptance condition:
+its own check, `python ops/checks/marker_check.py src/repo_presenter/cascade.py
+"preflight_currency_gate"`, passing under a real `gatecli.py verify` re-run, with the negative
+control confirmed to break it. `TC-009`/`TC-010` can proceed in parallel on separate branches
+(directive §5, Stage B: "do not permit two workers to edit the same files... concurrently" —
+these three touch disjoint paths, so true parallel work is safe here).

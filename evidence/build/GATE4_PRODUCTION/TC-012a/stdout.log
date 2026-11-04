@@ -1,0 +1,18 @@
+
+===== CLEAN RUN 1 =====
+$ python ops/checks/owner_decision_record.py docs/LEGACY_CUTOVER_RECORD.md OWNER_APPROVED_CUTOVER:
+--- stdout ---
+FAIL: docs\LEGACY_CUTOVER_RECORD.md has no record matching 'OWNER_APPROVED_CUTOVER: <YYYY-MM-DD> ref=<anchor>'
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python ops/checks/owner_decision_record.py docs/LEGACY_CUTOVER_RECORD.md OWNER_APPROVED_CUTOVER:
+--- stdout ---
+FAIL: docs\LEGACY_CUTOVER_RECORD.md has no record matching 'OWNER_APPROVED_CUTOVER: <YYYY-MM-DD> ref=<anchor>'
+
+--- stderr ---
+
+
+!! clean runs failed; falsifier skipped (it would prove nothing)

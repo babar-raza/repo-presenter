@@ -1,16 +1,16 @@
 
 ===== CLEAN RUN 1 =====
-$ python ops/checks/marker_check.py docs/DECISION_LOG.md "OWNER_RULING_SWEEP_PAUSE:"
+$ python ops/checks/owner_decision_record.py docs/DECISION_LOG.md OWNER_RULING_SWEEP_PAUSE:
 --- stdout ---
-FAIL: docs\DECISION_LOG.md missing marker(s): ['OWNER_RULING_SWEEP_PAUSE:']
+FAIL: docs\DECISION_LOG.md has no record matching 'OWNER_RULING_SWEEP_PAUSE: <YYYY-MM-DD> ref=<anchor>'
 
 --- stderr ---
 
 
 ===== CLEAN RUN 2 =====
-$ python ops/checks/marker_check.py docs/DECISION_LOG.md "OWNER_RULING_SWEEP_PAUSE:"
+$ python ops/checks/owner_decision_record.py docs/DECISION_LOG.md OWNER_RULING_SWEEP_PAUSE:
 --- stdout ---
-FAIL: docs\DECISION_LOG.md missing marker(s): ['OWNER_RULING_SWEEP_PAUSE:']
+FAIL: docs\DECISION_LOG.md has no record matching 'OWNER_RULING_SWEEP_PAUSE: <YYYY-MM-DD> ref=<anchor>'
 
 --- stderr ---
 

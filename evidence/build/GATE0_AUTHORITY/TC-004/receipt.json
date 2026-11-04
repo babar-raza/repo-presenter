@@ -3,10 +3,10 @@
   "card": "TC-004",
   "gate": "GATE0_AUTHORITY",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-04T07:35:55Z",
-  "base_rev": "52c48d5e69142a42e74f0bb7ca463113658c5a0c",
-  "head_rev": "52c48d5e69142a42e74f0bb7ca463113658c5a0c",
-  "card_sha256": "933de917f6915ad9598cee3bdbeda184d4ecb19d96563c9a165c0efc08ddbcfe",
+  "generated_at": "2026-11-04T08:27:14Z",
+  "base_rev": "8756b0387c35d53f67944b98636ae131611930b1",
+  "head_rev": "8756b0387c35d53f67944b98636ae131611930b1",
+  "card_sha256": "374197c4da5d760f6708c2cf87056e55e3f8a7cb70e6197ea70147fbd1227cb0",
   "fingerprint": {
     "python": "3.13.15",
     "platform": "Windows-11-10.0.26300-SP0"
@@ -21,10 +21,10 @@
       "run": 1,
       "checks": [
         {
-          "command": "python ops/checks/marker_check.py docs/DECISION_LOG.md \"OWNER_RULING_SWEEP_PAUSE:\"",
+          "command": "python ops/checks/owner_decision_record.py docs/DECISION_LOG.md OWNER_RULING_SWEEP_PAUSE:",
           "exit_code": 1,
-          "duration_s": 0.065,
-          "stdout_sha256": "6dff4e9aacc7579879a23e0f3dea3a7944ca78d31c6c8087c693b1ad665dec53"
+          "duration_s": 0.069,
+          "stdout_sha256": "f2b201576ec2cff923994f26ef9549d5fa4a74c810709d9ea48ee67d594c8f92"
         }
       ],
       "all_passed": false
@@ -33,10 +33,10 @@
       "run": 2,
       "checks": [
         {
-          "command": "python ops/checks/marker_check.py docs/DECISION_LOG.md \"OWNER_RULING_SWEEP_PAUSE:\"",
+          "command": "python ops/checks/owner_decision_record.py docs/DECISION_LOG.md OWNER_RULING_SWEEP_PAUSE:",
           "exit_code": 1,
-          "duration_s": 0.075,
-          "stdout_sha256": "6dff4e9aacc7579879a23e0f3dea3a7944ca78d31c6c8087c693b1ad665dec53"
+          "duration_s": 0.063,
+          "stdout_sha256": "f2b201576ec2cff923994f26ef9549d5fa4a74c810709d9ea48ee67d594c8f92"
         }
       ],
       "all_passed": false
@@ -44,12 +44,12 @@
   ],
   "negative_control": {
     "kind": "mutate",
-    "patch": "python -c \"import pathlib; p = pathlib.Path('docs/DECISION_LOG.md'); p.write_text(p.read_text(encoding='utf-8') + chr(10) + 'OWNER_RULING_SWEEP_PAUSE: fabricated, must be rejected', encoding='utf-8')\"",
+    "patch": "python -c \"import pathlib; p = pathlib.Path('docs/DECISION_LOG.md'); s = p.read_text(encoding='utf-8'); s2 = s.replace('ref=', 'ref=BROKEN-'); p.write_text(s2, encoding='utf-8')\"",
     "patch_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
     "applied": false,
     "patch_applied_failed": false,
     "exit_codes": []
   },
   "accepted": false,
-  "reason": "checks failed: python ops/checks/marker_check.py docs/DECISION_LOG.md \"OWNER_RULING_SWEEP_PAUSE:\"; negative-control patch did not apply"
+  "reason": "checks failed: python ops/checks/owner_decision_record.py docs/DECISION_LOG.md OWNER_RULING_SWEEP_PAUSE:; negative-control patch did not apply"
 }

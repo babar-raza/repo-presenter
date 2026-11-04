@@ -1,0 +1,18 @@
+
+===== CLEAN RUN 1 =====
+$ python ops/checks/owner_decision_record.py docs/DECISION_LOG.md ISSUES_LIVE_LIFECYCLE_AUTHORIZED:
+--- stdout ---
+FAIL: docs\DECISION_LOG.md has no record matching 'ISSUES_LIVE_LIFECYCLE_AUTHORIZED: <YYYY-MM-DD> ref=<anchor>'
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python ops/checks/owner_decision_record.py docs/DECISION_LOG.md ISSUES_LIVE_LIFECYCLE_AUTHORIZED:
+--- stdout ---
+FAIL: docs\DECISION_LOG.md has no record matching 'ISSUES_LIVE_LIFECYCLE_AUTHORIZED: <YYYY-MM-DD> ref=<anchor>'
+
+--- stderr ---
+
+
+!! clean runs failed; falsifier skipped (it would prove nothing)

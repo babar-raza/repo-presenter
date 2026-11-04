@@ -6,9 +6,9 @@ OK: docs\RELEASE_CONTRACT_P1-P5.md contains all 1 required marker(s)
 
 --- stderr ---
 
-$ python ops/checks/marker_check.py project/state.yaml "lane_r_accepted: 10" "lane_l_accepted: 12"
+$ python ops/checks/dashboard_matches_live.py
 --- stdout ---
-OK: project\state.yaml contains all 2 required marker(s)
+OK: project/state.yaml matches live portfolio_status.py (R=10, L=12)
 
 --- stderr ---
 
@@ -20,9 +20,9 @@ OK: docs\RELEASE_CONTRACT_P1-P5.md contains all 1 required marker(s)
 
 --- stderr ---
 
-$ python ops/checks/marker_check.py project/state.yaml "lane_r_accepted: 10" "lane_l_accepted: 12"
+$ python ops/checks/dashboard_matches_live.py
 --- stdout ---
-OK: project\state.yaml contains all 2 required marker(s)
+OK: project/state.yaml matches live portfolio_status.py (R=10, L=12)
 
 --- stderr ---
 
@@ -35,9 +35,9 @@ OK: docs\RELEASE_CONTRACT_P1-P5.md contains all 1 required marker(s)
 
 --- stderr ---
 
-$ python ops/checks/marker_check.py project/state.yaml "lane_r_accepted: 10" "lane_l_accepted: 12"
+$ python ops/checks/dashboard_matches_live.py
 --- stdout ---
-FAIL: project\state.yaml missing marker(s): ['lane_r_accepted: 10']
+FAIL: lane_r_accepted recorded=999 but live=10
 
 --- stderr ---
 

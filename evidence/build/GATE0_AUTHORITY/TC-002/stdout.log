@@ -1,16 +1,16 @@
 
 ===== CLEAN RUN 1 =====
-$ python ops/checks/marker_check.py docs/LEGACY_WRITER_INVENTORY_2026-11-04.md "OWNER_APPROVED_WRITER_DISPOSITION:"
+$ python ops/checks/owner_decision_record.py docs/LEGACY_WRITER_INVENTORY_2026-11-04.md OWNER_APPROVED_WRITER_DISPOSITION:
 --- stdout ---
-FAIL: docs\LEGACY_WRITER_INVENTORY_2026-11-04.md missing marker(s): ['OWNER_APPROVED_WRITER_DISPOSITION:']
+FAIL: docs\LEGACY_WRITER_INVENTORY_2026-11-04.md has no record matching 'OWNER_APPROVED_WRITER_DISPOSITION: <YYYY-MM-DD> ref=<anchor>'
 
 --- stderr ---
 
 
 ===== CLEAN RUN 2 =====
-$ python ops/checks/marker_check.py docs/LEGACY_WRITER_INVENTORY_2026-11-04.md "OWNER_APPROVED_WRITER_DISPOSITION:"
+$ python ops/checks/owner_decision_record.py docs/LEGACY_WRITER_INVENTORY_2026-11-04.md OWNER_APPROVED_WRITER_DISPOSITION:
 --- stdout ---
-FAIL: docs\LEGACY_WRITER_INVENTORY_2026-11-04.md missing marker(s): ['OWNER_APPROVED_WRITER_DISPOSITION:']
+FAIL: docs\LEGACY_WRITER_INVENTORY_2026-11-04.md has no record matching 'OWNER_APPROVED_WRITER_DISPOSITION: <YYYY-MM-DD> ref=<anchor>'
 
 --- stderr ---
 
