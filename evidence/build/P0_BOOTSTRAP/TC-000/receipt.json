@@ -3,19 +3,22 @@
   "card": "TC-000",
   "gate": "P0_BOOTSTRAP",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-04T09:23:55Z",
-  "base_rev": "2d783e47a7df59b49fbb8b480176f2a43379d3aa",
-  "head_rev": "2d783e47a7df59b49fbb8b480176f2a43379d3aa",
-  "card_sha256": "df84c1ad7fa22913397589119b434ed48ffd9fee1fd91164fed90d2a81304d3c",
+  "generated_at": "2026-11-04T14:58:31Z",
+  "base_rev": "aadbd18881ffd65b4a048e6252c6d2a1bd477cc8",
+  "head_rev": "1f426ec19ae6dc7e5c26dc75536d459300daa942",
+  "card_sha256": "fad7486ad488cbafef43e35287b4b0e700cfc1856060cbf7a719d7e92e625644",
+  "checker_fileset_sha256": "b5c98fad57293b4c126598e3111572eb8aa81690bf3d87da7e1e3e95619bcadc",
   "fingerprint": {
-    "python": "3.13.15",
-    "platform": "Windows-11-10.0.26300-SP0"
+    "python": "3.13.18",
+    "platform": "Linux-6.18.44-fc-v233-x86_64-with-glibc2.39"
   },
   "scope": {
     "ok": true,
-    "changed_paths": [],
+    "changed_paths": [
+      "tests/ops/test_gate_guard_tc000.py"
+    ],
     "violations": [],
-    "evaluated": false
+    "evaluated": true
   },
   "runs": [
     {
@@ -24,8 +27,14 @@
         {
           "command": "python -m pytest tests/test_version.py -q",
           "exit_code": 0,
-          "duration_s": 0.668,
-          "stdout_sha256": "35d86279d96ed65491ba8ff0748e1c8e7891711531404dc5d4b9cd6ae33de3ec"
+          "duration_s": 0.559,
+          "stdout_sha256": "4bcefcc9f6c645923b9993ccf73ad92e6b400ca25458ea14e095857fc2131342"
+        },
+        {
+          "command": "python -m pytest tests/ops/test_gate_guard_tc000.py -q",
+          "exit_code": 0,
+          "duration_s": 0.623,
+          "stdout_sha256": "4bcefcc9f6c645923b9993ccf73ad92e6b400ca25458ea14e095857fc2131342"
         }
       ],
       "all_passed": true
@@ -36,7 +45,13 @@
         {
           "command": "python -m pytest tests/test_version.py -q",
           "exit_code": 0,
-          "duration_s": 0.614,
+          "duration_s": 0.816,
+          "stdout_sha256": "a71df3ef716cabe43ead70bd8311cda3aeadcb986bea501da0ea9262f31c3925"
+        },
+        {
+          "command": "python -m pytest tests/ops/test_gate_guard_tc000.py -q",
+          "exit_code": 0,
+          "duration_s": 0.896,
           "stdout_sha256": "a71df3ef716cabe43ead70bd8311cda3aeadcb986bea501da0ea9262f31c3925"
         }
       ],
@@ -50,6 +65,7 @@
     "applied": true,
     "patch_applied_failed": true,
     "exit_codes": [
+      1,
       1
     ],
     "tree_changed": [

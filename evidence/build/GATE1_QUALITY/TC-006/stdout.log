@@ -1,25 +1,68 @@
 
 ===== CLEAN RUN 1 =====
-$ python ops/checks/marker_check.py docs/PARITY_BENCHMARK_PILOT.md "PARITY_BENCHMARK_COMPLETE:"
+$ python ops/checks/parity_benchmark_pilot_complete.py docs/PARITY_BENCHMARK_PILOT.md
 --- stdout ---
-OK: docs\PARITY_BENCHMARK_PILOT.md contains all 1 required marker(s)
+OK: docs/PARITY_BENCHMARK_PILOT.md addresses all 3 named pilot repositories with an explicit verdict (NOT_PASSED)
+
+--- stderr ---
+
+$ python -m pytest tests/ops/test_gate_guard_tc006.py -q
+--- stdout ---
+.                                                                        [100%]
+1 passed in 0.04s
 
 --- stderr ---
 
 
 ===== CLEAN RUN 2 =====
-$ python ops/checks/marker_check.py docs/PARITY_BENCHMARK_PILOT.md "PARITY_BENCHMARK_COMPLETE:"
+$ python ops/checks/parity_benchmark_pilot_complete.py docs/PARITY_BENCHMARK_PILOT.md
 --- stdout ---
-OK: docs\PARITY_BENCHMARK_PILOT.md contains all 1 required marker(s)
+OK: docs/PARITY_BENCHMARK_PILOT.md addresses all 3 named pilot repositories with an explicit verdict (NOT_PASSED)
+
+--- stderr ---
+
+$ python -m pytest tests/ops/test_gate_guard_tc006.py -q
+--- stdout ---
+.                                                                        [100%]
+1 passed in 0.04s
 
 --- stderr ---
 
 
 ===== NEGATIVE CONTROL (checks MUST now fail) =====
 mutated: M docs/PARITY_BENCHMARK_PILOT.md
-$ python ops/checks/marker_check.py docs/PARITY_BENCHMARK_PILOT.md "PARITY_BENCHMARK_COMPLETE:"
+$ python ops/checks/parity_benchmark_pilot_complete.py docs/PARITY_BENCHMARK_PILOT.md
 --- stdout ---
-FAIL: docs\PARITY_BENCHMARK_PILOT.md missing marker(s): ['PARITY_BENCHMARK_COMPLETE:']
+FAIL: missing named pilot repositories: ['3D-.NET', 'Imaging-.NET', 'Words-.NET']; no explicit 'PARITY_VERDICT: PASSED|NOT_PASSED' line; no 'PARITY_BENCHMARK_COMPLETE:' line
+
+--- stderr ---
+
+$ python -m pytest tests/ops/test_gate_guard_tc006.py -q
+--- stdout ---
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___ test_pilot_parity_benchmark_covers_all_three_repositories_with_a_verdict ___
+
+    def test_pilot_parity_benchmark_covers_all_three_repositories_with_a_verdict():
+>       _check("ops/checks/parity_benchmark_pilot_complete.py", "docs/PARITY_BENCHMARK_PILOT.md")
+
+tests/ops/test_gate_guard_tc006.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ('ops/checks/parity_benchmark_pilot_complete.py', 'docs/PARITY_BENCHMARK_PILOT.md')
+
+    def _check(*args):
+        r = subprocess.run([sys.executable, *args], cwd=ROOT, capture_output=True, text=True)
+>       assert r.returncode == 0, r.stdout + r.stderr
+E       AssertionError: FAIL: missing named pilot repositories: ['3D-.NET', 'Imaging-.NET', 'Words-.NET']; no explicit 'PARITY_VERDICT: PASSED|NOT_PASSED' line; no 'PARITY_BENCHMARK_COMPLETE:' line
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/usr/local/bin/python', 'ops/checks/parity_benchmark_pilot_complete.py', 'docs/PARITY_BENCHMAR...Words-.NET']; no explicit 'PARITY_VERDICT: PASSED|NOT_PASSED' line; no 'PARITY_BENCHMARK_COMPLETE:' line\n", stderr='').returncode
+
+tests/ops/test_gate_guard_tc006.py:12: AssertionError
+=========================== short test summary info ============================
+FAILED tests/ops/test_gate_guard_tc006.py::test_pilot_parity_benchmark_covers_all_three_repositories_with_a_verdict
+1 failed in 0.09s
 
 --- stderr ---
 

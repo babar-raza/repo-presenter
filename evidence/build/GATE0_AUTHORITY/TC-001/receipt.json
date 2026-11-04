@@ -3,19 +3,22 @@
   "card": "TC-001",
   "gate": "GATE0_AUTHORITY",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-04T09:23:58Z",
-  "base_rev": "2d783e47a7df59b49fbb8b480176f2a43379d3aa",
-  "head_rev": "2d783e47a7df59b49fbb8b480176f2a43379d3aa",
-  "card_sha256": "0906313b10535c00734269ec8c7d604a9c80733210e5d0d4aa9bc45ab6bd6051",
+  "generated_at": "2026-11-04T14:58:37Z",
+  "base_rev": "aadbd18881ffd65b4a048e6252c6d2a1bd477cc8",
+  "head_rev": "1f426ec19ae6dc7e5c26dc75536d459300daa942",
+  "card_sha256": "47e86ceaf6d09a17a8fe8c823431ac9ad7391a66fb1a3c9195d2898a3b814d40",
+  "checker_fileset_sha256": "3fa67a6816f2d5261ac8e63692ca47f5501433dbb7e49077e9c0e050ccd687e8",
   "fingerprint": {
-    "python": "3.13.15",
-    "platform": "Windows-11-10.0.26300-SP0"
+    "python": "3.13.18",
+    "platform": "Linux-6.18.44-fc-v233-x86_64-with-glibc2.39"
   },
   "scope": {
     "ok": true,
-    "changed_paths": [],
+    "changed_paths": [
+      "tests/ops/test_gate_guard_tc001.py"
+    ],
     "violations": [],
-    "evaluated": false
+    "evaluated": true
   },
   "runs": [
     {
@@ -24,8 +27,14 @@
         {
           "command": "python ops/checks/marker_check.py docs/SOURCE_OF_TRUTH_2026-11-04.md \"RECONCILIATION_STATUS: RESOLVED\"",
           "exit_code": 0,
-          "duration_s": 0.067,
-          "stdout_sha256": "7d238ccc64e78f75da4a3dcb6c27bd8ba97aaf2851d6fcd1c2ddce0105fb3bbb"
+          "duration_s": 0.033,
+          "stdout_sha256": "efd2ca1b76c063b79ec7bbd806c14bb1356cd5c0e27f40b3e1e2d2ca02c576ed"
+        },
+        {
+          "command": "python -m pytest tests/ops/test_gate_guard_tc001.py -q",
+          "exit_code": 0,
+          "duration_s": 0.639,
+          "stdout_sha256": "5b19689a97d618d5cdfce632de67285a8efa3c57100a80350a5bb7ca9e05ae34"
         }
       ],
       "all_passed": true
@@ -36,8 +45,14 @@
         {
           "command": "python ops/checks/marker_check.py docs/SOURCE_OF_TRUTH_2026-11-04.md \"RECONCILIATION_STATUS: RESOLVED\"",
           "exit_code": 0,
-          "duration_s": 0.065,
-          "stdout_sha256": "7d238ccc64e78f75da4a3dcb6c27bd8ba97aaf2851d6fcd1c2ddce0105fb3bbb"
+          "duration_s": 0.026,
+          "stdout_sha256": "efd2ca1b76c063b79ec7bbd806c14bb1356cd5c0e27f40b3e1e2d2ca02c576ed"
+        },
+        {
+          "command": "python -m pytest tests/ops/test_gate_guard_tc001.py -q",
+          "exit_code": 0,
+          "duration_s": 0.594,
+          "stdout_sha256": "f4c77b58e2280613a49ba18da1c4a02d440e862c49a6c8fe5daaf277333ff99d"
         }
       ],
       "all_passed": true
@@ -50,6 +65,7 @@
     "applied": true,
     "patch_applied_failed": true,
     "exit_codes": [
+      1,
       1
     ],
     "tree_changed": [
