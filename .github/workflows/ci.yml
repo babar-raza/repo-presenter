@@ -42,3 +42,30 @@ jobs:
 
       - name: Validate taskcard governance (schema, dependency graph, dashboard sync)
         run: python ops/gatecli.py validate
+
+  # 2026-11-04 (G6): the facts-stage image had never been built. Building it here is the hosted,
+  # authorized verification of the Dockerfile (README.md copy, git install) -- the cloud sandbox
+  # cannot reach the Debian mirrors, so this job, not a local build, is the evidence.
+  docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Build the facts-stage image
+        run: docker build -t repo-presenter-facts .
+
+      - name: The image has git (the facts stage clones with it) and runs unprivileged
+        run: |
+          docker run --rm --network=none --entrypoint git repo-presenter-facts --version
+          test "$(docker run --rm --network=none --entrypoint id repo-presenter-facts -u)" = "10001"
+
+      - name: The entrypoint starts with no network
+        run: docker run --rm --network=none repo-presenter-facts --help
+
+      - name: No secret-shaped variable is baked into the image
+        run: |
+          docker run --rm --network=none --entrypoint env repo-presenter-facts \
+            | grep -i -E '(token|secret|password|api_key|GPT_OSS)' && exit 1 || true
