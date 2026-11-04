@@ -1161,3 +1161,57 @@ def test_the_launcher_match_is_not_gameable_extra_commands_or_another_package_do
         normalize(output, facts)
         errors = placement_errors(output, facts)
         assert any("uncited_redundant_defer" in str(e) for e in errors), block
+
+
+# Real defect (aspose-font-foss/Aspose.Font-FOSS-for-Python Lane R, local run 2026-11-04): unit
+# 045.code_block's example (example:007) FAILED when executed (TypeError, CONTRADICTED). The model
+# chose DEFER_UNRESOLVED with fact_ids [] (its rationale named example:007 but did not cite it).
+# normalize() converted PLACING dispositions on a contradicted unit to a cited OMIT_UNSUPPORTED but
+# left a DEFER alone, and a deferral accounts for nothing, so independent review reported the
+# dropped failing example as live_readme_loss and the candidate could not seal. DEFER_UNRESOLVED
+# means "facts neither confirm nor deny"; an executed-and-failed example is contradicted.
+def _defer_entry(cited: list[str]) -> dict:
+    return {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:163.code_block",
+                "disposition": "DEFER_UNRESOLVED",
+                "destination_section": None,
+                "fact_ids": cited,
+                "rationale": "example:050 is contradicted and nothing else supports this block.",
+            }
+        ]
+    }
+
+
+def test_a_deferred_contradicted_example_becomes_a_cited_omission() -> None:
+    output = _defer_entry([])
+    assert normalize(output, _CONTRADICTED_EXAMPLE_FACTS) == []
+    assert placement_errors(output, _CONTRADICTED_EXAMPLE_FACTS) == []
+    entry = output["dispositions"][0]
+    assert entry["disposition"] == "OMIT_UNSUPPORTED"
+    assert entry["fact_ids"] == ["example:050"]
+    assert entry["destination_section"] is None
+
+
+def test_a_deferred_contradicted_example_keeps_its_other_citations() -> None:
+    output = _defer_entry(["package:name"])
+    normalize(output, _CONTRADICTED_EXAMPLE_FACTS)
+    entry = output["dispositions"][0]
+    assert entry["disposition"] == "OMIT_UNSUPPORTED"
+    assert entry["fact_ids"] == ["example:050", "package:name"]
+
+
+def test_a_deferred_merely_unresolved_example_stays_a_deferral() -> None:
+    """Scoped to CONTRADICTED only: an UNRESOLVED example is genuinely neither confirmed nor
+    refuted, so DEFER_UNRESOLVED remains the correct disposition and is not rewritten."""
+    facts = replace(
+        _CONTRADICTED_EXAMPLE_FACTS,
+        facts=tuple(
+            f if f.id != "example:050" else replace(f, polarity="UNRESOLVED")
+            for f in _CONTRADICTED_EXAMPLE_FACTS.facts
+        ),
+    )
+    output = _defer_entry(["example:050"])
+    normalize(output, facts)
+    assert output["dispositions"][0]["disposition"] == "DEFER_UNRESOLVED"
