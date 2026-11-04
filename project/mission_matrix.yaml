@@ -10,13 +10,13 @@ rows:
   - {id: G1, title: "Lane L live-README maintenance, 25 independently accepted candidates", status: PARTIAL,
      implementation: PARTIAL, test: YES, real_execution: PARTIAL, independent_verification: NONE,
      evidence: [docs/READINESS_PACKAGE_2026-11-04.md, src/repo_presenter/lane_l.py],
-     gaps: "12 Lane L pipeline-good (hosted), 0 committed bundles, 0 owner-reviewed, 0/25 independently accepted; reviewer uncalibrated",
+     gaps: "12 Lane L pipeline-good (hosted, earlier sweeps), 0 committed bundles, 0 owner-reviewed, 0/25 independently accepted; reviewer uncalibrated. Local Lane L on Font (2026-11-04) correctly refused to seal: the live README lists unsupported formats and 4 of its own examples FAIL when executed (upstream README defects; Lane L may not repair them and recommends Lane R)",
      next_action: "TC-007 calibration, then hosted pilot on the 3 mandatory products", external_effect_prohibited: "upstream PRs"}
   - {id: G2, title: "Lane R regeneration, 25 independently accepted candidates", status: PARTIAL,
      implementation: PARTIAL, test: YES, real_execution: PARTIAL, independent_verification: NONE,
      evidence: [docs/READINESS_PACKAGE_2026-11-04.md, src/repo_presenter/cascade.py, docs/DECISION_LOG.md],
-     gaps: "10 Lane R pipeline-good, 1 committed bundle, 0/25 accepted; local run 2026-11-04 completed 44 gateway calls but was rejected (sandbox cannot reach link-check hosts)",
-     next_action: "hosted pilot; calibration", external_effect_prohibited: "upstream PRs"}
+     gaps: "10 Lane R pipeline-good (earlier hosted sweeps), 1 committed bundle, 0/25 accepted. Local pilots 2026-11-04 (Font, 3D-Python, Cells .NET) found and fixed 4 pipeline defects (merged PR #4, #10); Font now clears every deterministic check and reaches independent LLM review but is REJECTed (fabricated PDF export: authoring-accuracy limit of qwen3-next); 3D-Python BLOCKED_ON_SOURCE_FACT; Cells .NET needs a hosted run. 0 sealed. See docs/investigations/2026-11-04-local-lane-r-and-gateway-streaming.md",
+     next_action: "hosted pilots when an Actions dispatch path exists (integration needs actions:write; token must be re-issued)", external_effect_prohibited: "upstream PRs"}
   - {id: G3, title: "Issue lifecycle discovery->closure, external writes disabled", status: PARTIAL,
      implementation: PARTIAL, test: YES, real_execution: NONE, independent_verification: NONE,
      evidence: [src/repo_presenter/issues/discovery.py, src/repo_presenter/issues/close.py],
