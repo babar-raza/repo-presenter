@@ -34,7 +34,7 @@ rows:
   - {id: G6, title: "Autonomous Docker + Actions production", status: PARTIAL,
      implementation: PARTIAL, test: PARTIAL, real_execution: PARTIAL, independent_verification: NONE,
      evidence: [.github/workflows/present.yml, Dockerfile],
-     gaps: "hosted present runs exist from earlier sweeps (~14% success noted by audit); schedule fails closed by design; Dockerfile unverified; this sandbox cannot dispatch Actions (403)",
+     gaps: "hosted present runs exist from earlier sweeps (~14% success noted by audit); schedule fails closed by design; Dockerfile fixed and built 2026-11-04 (facts-stage image runs --help as uid 10001, --network=none) but no facts stage executed in the container yet; this sandbox cannot dispatch Actions (403)",
      next_action: "build and run image; hosted pilot via an authorized path", external_effect_prohibited: "none beyond upstream writes"}
   - {id: G7, title: "Equal or better than aspose.org", status: PARTIAL,
      implementation: PARTIAL, test: YES, real_execution: PARTIAL, independent_verification: PARTIAL,
