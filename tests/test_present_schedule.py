@@ -1,8 +1,10 @@
-"""2026-11-04 (TC-012, follow-up directive §10): a naive `schedule:` trigger does not work --
-`inputs.*` is only populated for `workflow_dispatch`, so a scheduled run would otherwise launch
-with an empty repository/ecosystem. These tests assert the real fix structurally, the same way
-tests/test_present_lanes.py already asserts the lane-independence structure, rather than trusting
-a live hosted run (which this environment cannot trigger)."""
+"""2026-11-04 (TC-012, follow-up directive §10, and the P0 follow-up directive §2): a naive
+`schedule:` trigger does not work -- `inputs.*` is only populated for `workflow_dispatch`, so a
+scheduled run would otherwise launch with an empty repository/ecosystem. Worse, nothing watches
+a schedule fire, so it must fail closed by itself rather than rely on a human noticing a bad
+pick. These tests assert the real fix structurally, the same way tests/test_present_lanes.py
+already asserts the lane-independence structure, rather than trusting a live hosted run (which
+this environment cannot trigger)."""
 from __future__ import annotations
 
 import json
@@ -34,11 +36,16 @@ def test_the_facts_job_resolves_a_real_target_for_either_trigger():
     assert "github.event_name" in run and "schedule" in run, (
         "the step must actually branch on trigger type, not just exist"
     )
-    assert "select_scheduled_cohort.py" in run, (
-        "the scheduled branch must call the real cohort selector, not a placeholder"
+    assert "scheduled_execution_gate.py" in run, (
+        "the scheduled branch must call the real authorization-gated selector, not the bare "
+        "cohort picker (which enforces no predicate at all) or a placeholder"
     )
     assert "inputs.repository" in run and "inputs.ecosystem" in run, (
         "the manual-dispatch branch must still pass inputs through unchanged"
+    )
+    assert 'echo "authorized=true"' in run, (
+        "a manual dispatch is its own explicit authorization and must set authorized=true "
+        "itself, never defer to the gate script"
     )
 
     outputs = workflow["jobs"]["facts"].get("outputs", {})
@@ -48,6 +55,46 @@ def test_the_facts_job_resolves_a_real_target_for_either_trigger():
     assert "steps.target.outputs.ecosystem" in str(outputs.get("ecosystem", "")), (
         "facts job must expose the resolved ecosystem as its own output for the present job"
     )
+    assert "steps.target.outputs.authorized" in str(outputs.get("authorized", "")), (
+        "facts job must expose the gate's authorized flag so the present job can enforce it too"
+    )
+
+
+def test_every_provider_consuming_or_repository_code_step_is_gated_on_authorization():
+    """The actual P0 enforcement boundary: every step that spends a provider call, runs
+    repository code, or could leak a durable-state write must refuse to run when the scheduled
+    gate said authorized=false. Checking taskcard status is not enough -- this must be true of
+    the workflow file itself."""
+    workflow = _load_workflow()
+
+    build_facts = next(s for s in facts_steps(workflow) if s.get("name") == "Build the facts")
+    assert "steps.target.outputs.authorized != 'false'" in str(build_facts.get("if", "")), (
+        "an unauthorized scheduled run must never execute the upstream repository's own code"
+    )
+
+    steps = present_steps(workflow)
+    fetch_facts = next(s for s in steps if s.get("id") == "fetch_facts")
+    assert "needs.facts.outputs.authorized != 'false'" in str(fetch_facts.get("if", ""))
+
+    for name in ("Present (Lane R)", "Present (Lane L)"):
+        step = next(s for s in steps if s.get("name") == name)
+        assert "needs.facts.outputs.authorized != 'false'" in str(step.get("if", "")), (
+            f"{name} must refuse to spend a provider call or write durable state when "
+            "the scheduled run was not authorized"
+        )
+
+
+def test_a_blocked_schedule_still_produces_a_successful_no_op_not_a_red_job():
+    """directive: 'An empty cohort must produce a successful, explicitly evidenced no-op, not an
+    unexplained failed run.' The gate script itself must never be the thing that fails the job --
+    only the provider-consuming steps are conditionally skipped."""
+    workflow = _load_workflow()
+    target_step = next(s for s in facts_steps(workflow) if s.get("id") == "target")
+    run = str(target_step["run"])
+    # the schedule branch's only command is the gate script -- no `exit 1` / `|| exit` escape
+    # that would turn "nothing authorized" into a failed step.
+    schedule_branch = run.split('"schedule" ]; then', 1)[1].split("else", 1)[0]
+    assert "exit 1" not in schedule_branch and "|| exit" not in schedule_branch
 
 
 def test_target_resolution_runs_before_any_ecosystem_conditional_toolchain_step():

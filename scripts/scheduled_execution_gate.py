@@ -1,0 +1,168 @@
+"""Fail-closed authorization gate for present.yml's `schedule:` trigger ONLY (2026-11-04 P0,
+follow-up directive section 2: "Make scheduled provider-consuming execution fail closed until
+its explicit authorization and safety predicates are satisfied... Enforce the gate at the actual
+workflow execution boundary [not] only by changing taskcard status").
+
+A manual `workflow_dispatch` never calls this script -- an explicit, named, human-triggered run
+IS its own authorization (directive: "preserve safe manual read-only tests, isolated engineering
+runs and explicitly authorized pilots"). Only a `schedule:`-triggered run, which nobody watched
+when it started, needs this gate.
+
+A scheduled run spends real provider calls and commits real durable-state git refs even when
+every registry entry stays `mode: dry_run` (that mode only gates the final upstream PR/issue
+effect -- see core/registry/write_gate.py -- not the internal pipeline's cost or its own state
+writes). This gate is therefore the correct place to stop an unauthorized scheduled run before
+either happens, and it independently re-derives every predicate from its own primary source --
+it never trusts a single hand-set flag as a complete authorization:
+
+  1. data/scheduled_execution_policy.json: scheduled_execution_authorized == true AND the
+     candidate repository is explicitly named in authorized_repositories.
+  2. docs/DECISION_LOG.md: the most recent OWNER_RULING_SWEEP_PAUSE: entry reads LIFTED (TC-004 --
+     the 2026-10-31 portfolio-sweep pause has never otherwise been lifted on the record).
+  3. data/reviewer_calibration.json: status == PASSED (TC-007).
+
+All three together are necessary; any one of them failing makes the whole gate fail closed.
+Absent that, the run selects nothing, spends nothing, and writes nothing -- a clean, evidenced
+no-op (exit 0, authorized=false, reason= naming exactly what is missing), never a crashed job and
+never a silent partial authorization.
+
+Usage: python scripts/scheduled_execution_gate.py [--max 1] [--remote origin]
+Always prints `authorized=`, `reason=`, `repository=` and `ecosystem=` as GITHUB_OUTPUT-style
+lines (the latter two empty when authorized=false). Always exits 0.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import sys
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO_ROOT / "src"))
+sys.path.insert(0, str(REPO_ROOT))
+
+from scripts.select_scheduled_cohort import select_eligible  # noqa: E402
+
+from repo_presenter.core.portfolio_matrix import (  # noqa: E402
+    backend_reader,
+    build_matrix,
+    stored_bundle_refs,
+)
+from repo_presenter.core.registry.loader import load_registry  # noqa: E402
+
+DECISION_LOG = REPO_ROOT / "docs" / "DECISION_LOG.md"
+CALIBRATION = REPO_ROOT / "data" / "reviewer_calibration.json"
+POLICY = REPO_ROOT / "data" / "scheduled_execution_policy.json"
+
+SWEEP_PAUSE_RE = re.compile(r"OWNER_RULING_SWEEP_PAUSE:\s*(\S+)")
+
+
+def sweep_pause_lifted(decision_log_text: str) -> bool:
+    """Only the MOST RECENT ruling counts -- an owner can re-pause after lifting. Anything other
+    than the literal token LIFTED (no ruling at all, UPHELD, a typo) is "still paused," never
+    inferred as permissive."""
+    matches = SWEEP_PAUSE_RE.findall(decision_log_text)
+    if not matches:
+        return False
+    return matches[-1].rstrip(".,:;") == "LIFTED"
+
+
+def calibration_passed(path: Path) -> bool:
+    if not path.exists():
+        return False
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return False
+    return data.get("status") == "PASSED"
+
+
+def load_policy(path: Path) -> dict:
+    if not path.exists():
+        return {"scheduled_execution_authorized": False, "authorized_repositories": []}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {"scheduled_execution_authorized": False, "authorized_repositories": []}
+    if not isinstance(data, dict):
+        return {"scheduled_execution_authorized": False, "authorized_repositories": []}
+    return data
+
+
+def evaluate_predicates(
+    *, decision_log_text: str, calibration: Path, policy: dict
+) -> list[str]:
+    """Every unmet predicate, named plainly; an empty list means every predicate is satisfied."""
+    reasons = []
+    if not policy.get("scheduled_execution_authorized"):
+        reasons.append(
+            "data/scheduled_execution_policy.json: scheduled_execution_authorized is not true"
+        )
+    if not sweep_pause_lifted(decision_log_text):
+        reasons.append(
+            "TC-004: the 2026-10-31 portfolio-sweep pause has not been explicitly lifted "
+            "(docs/DECISION_LOG.md has no OWNER_RULING_SWEEP_PAUSE: LIFTED entry)"
+        )
+    if not calibration_passed(calibration):
+        reasons.append(
+            "TC-007: reviewer calibration has not reached data/reviewer_calibration.json "
+            "status PASSED"
+        )
+    return reasons
+
+
+def _print_blocked(reasons: list[str]) -> None:
+    print("authorized=false")
+    print("repository=")
+    print("ecosystem=")
+    print("reason=" + " | ".join(reasons))
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--max", type=int, default=1)
+    parser.add_argument("--remote", default="origin")
+    parser.add_argument("--registry", type=Path, default=REPO_ROOT / "data" / "registry.json")
+    args = parser.parse_args(argv)
+
+    decision_log_text = (
+        DECISION_LOG.read_text(encoding="utf-8") if DECISION_LOG.exists() else ""
+    )
+    policy = load_policy(POLICY)
+    reasons = evaluate_predicates(
+        decision_log_text=decision_log_text, calibration=CALIBRATION, policy=policy
+    )
+    if reasons:
+        _print_blocked(reasons)
+        return 0
+
+    authorized_repos = {
+        str(r) for r in (policy.get("authorized_repositories") or []) if isinstance(r, str)
+    }
+    entries = {e.repository: e for e in load_registry(args.registry).entries}
+    with backend_reader(args.remote) as read_state:
+        rows = build_matrix(
+            list(entries.values()), read_state, REPO_ROOT, stored_bundle_refs(args.remote)
+        )
+
+    chosen = select_eligible(entries, rows, authorized_repos=authorized_repos, max_n=args.max)
+    if not chosen:
+        _print_blocked(
+            [
+                "every predicate cleared, but no authorized, eligible, not-yet-both-lane-"
+                "pipeline-good repository remains in authorized_repositories"
+            ]
+        )
+        return 0
+
+    row = chosen[0]
+    print("authorized=true")
+    print(f"repository={row.repository}")
+    print(f"ecosystem={entries[row.repository].ecosystem}")
+    print("reason=all predicates satisfied")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv[1:]))
