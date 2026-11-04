@@ -66,6 +66,28 @@ def test_forged_positive_receipt_with_no_clean_runs_rejected():
     assert any("two identical clean passes" in p for p in problems)
 
 
+def test_forged_receipt_with_mismatched_commands_between_runs_rejected():
+    """2026-11-04 supervisor-directive correction: a receipt whose two 'clean runs' both
+    declared all_passed=True but checked DIFFERENT commands never actually proved the same
+    check ran twice -- this must be caught even though the old, weaker version of this function
+    would have accepted it."""
+    forged = full_receipt(runs=[
+        {"run": 1, "checks": [{"command": "x", "exit_code": 0, "duration_s": 0.1,
+                                "stdout_sha256": "c" * 64}], "all_passed": True},
+        {"run": 2, "checks": [{"command": "totally different command", "exit_code": 0,
+                                "duration_s": 0.1, "stdout_sha256": "c" * 64}], "all_passed": True},
+    ])
+    problems = gateverify.receipt_is_coherent(forged)
+    assert any("different commands" in p for p in problems)
+
+
+def test_forged_receipt_whose_runs_do_not_match_the_cards_own_declared_checks_rejected():
+    forged = full_receipt()  # both runs declare command "x"
+    card = {"checks": [{"command": "y"}]}  # the card itself declares a different check
+    problems = gateverify.receipt_is_coherent(forged, card=card)
+    assert any("does not prove what the card claims" in p for p in problems)
+
+
 def test_forged_positive_receipt_with_scope_violation_rejected():
     forged = full_receipt(scope={"ok": False, "changed_paths": ["x"], "violations": ["bad"], "evaluated": True})
     problems = gateverify.receipt_is_coherent(forged)

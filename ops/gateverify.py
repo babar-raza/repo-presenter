@@ -11,6 +11,7 @@ it looked.
 from __future__ import annotations
 
 import json
+import re
 import time
 from pathlib import Path
 
@@ -25,6 +26,7 @@ from gatectl import (
     die,
     drop_worktree,
     fingerprint,
+    git,
     load_card_at_rev,
     load_yaml,
     make_worktree,
@@ -54,14 +56,21 @@ GATE_STATUS_ORDER = [
 READY_LIKE = {"READY", "VERIFICATION_FAILED", "STALE_RECEIPT", "INCOHERENT_RECEIPT"}
 
 
-def receipt_is_coherent(receipt: dict) -> list[str]:
+def receipt_is_coherent(receipt: dict, card: dict | None = None) -> list[str]:
     """2026-11-04: 'accepted: true because the JSON says so' is not authoritative on its own --
     confirmed real by the follow-up directive. Checks that a receipt claiming accepted=True is
     actually INTERNALLY CONSISTENT with do_verify's own acceptance invariant (two identical
     clean passes, scope ok, negative control applied and genuinely broke the checks), catching a
     hand-forged or corrupted receipt that a tool did not actually produce honestly. Schema
     validity is checked first (schemas/receipt.schema.json) -- a malformed receipt is incoherent
-    by construction."""
+    by construction.
+
+    2026-11-04 (supervisor directive correction): "two identical clean passes" previously meant
+    only "both runs declared all_passed=True" -- a forged receipt could satisfy that with run 1
+    and run 2 listing entirely DIFFERENT commands, neither matching what the card actually
+    declares. Now also requires both runs to have checked the exact same ordered list of
+    commands as each other, and -- when `card` is supplied -- the exact same list the card's own
+    `checks[]` declares, so a receipt cannot claim to prove a check it never actually ran."""
     import gatectl
 
     problems: list[str] = []
@@ -77,6 +86,21 @@ def receipt_is_coherent(receipt: dict) -> list[str]:
         runs = receipt.get("runs") or []
         if len(runs) != 2 or not all(r.get("all_passed") is True for r in runs):
             problems.append("accepted=True but runs do not show two identical clean passes")
+        elif [c.get("command") for c in runs[0].get("checks", [])] != [
+            c.get("command") for c in runs[1].get("checks", [])
+        ]:
+            problems.append(
+                "accepted=True but run 1 and run 2 checked different commands -- not a real "
+                "repeat of the same check set"
+            )
+        elif card is not None:
+            declared = [c.get("command") for c in card.get("checks", []) or []]
+            ran = [c.get("command") for c in runs[0].get("checks", [])]
+            if ran != declared:
+                problems.append(
+                    "accepted=True but the runs' commands do not match the card's own "
+                    "declared checks[] -- this receipt does not prove what the card claims"
+                )
         scope = receipt.get("scope", {})
         if not scope.get("ok", False):
             problems.append("accepted=True but scope.ok is not True")
@@ -332,6 +356,7 @@ def do_verify(card_id: str, base: str, head: str, issue_rev: str | None = None,
         "base_rev": base,
         "head_rev": head,
         "card_sha256": card_sha,
+        "checker_fileset_sha256": checker_fileset_sha256(card, head),
         "fingerprint": fingerprint(),
         "scope": {"ok": ok_scope, "changed_paths": changed, "violations": violations, "evaluated": evaluate_scope},
         "runs": runs,
@@ -428,6 +453,38 @@ def gate_status(statuses: list[str], accepted: bool, exit_verdict) -> str:
     return "READY"
 
 
+_REFERENCED_FILE_RE = re.compile(r"^[\w./-]+\.(?:py|json|ya?ml|md)$")
+
+
+def referenced_files(card: dict) -> list[str]:
+    """Every checker script or required-evidence document this card's own `checks[].command`
+    strings name -- e.g. `ops/checks/parity_benchmark_pilot_complete.py`,
+    `docs/PARITY_BENCHMARK_PILOT.md`. A card's own taskcard YAML is excluded: that is already
+    covered by `card_sha256`, and a card must never be able to extend its own currency check to
+    cover itself twice."""
+    paths: set[str] = set()
+    for c in card.get("checks", []) or []:
+        for raw in str(c.get("command", "")).split():
+            tok = raw.strip("'\"")
+            if _REFERENCED_FILE_RE.match(tok) and not tok.startswith("project/taskcards/"):
+                paths.add(tok)
+    return sorted(paths)
+
+
+def checker_fileset_sha256(card: dict, rev: str) -> str:
+    """2026-11-04 (supervisor directive correction): currentness was tied only to the taskcard
+    YAML's own hash, so the EXECUTABLE acceptance checker it calls (e.g. a script under
+    ops/checks/) or a required evidence document could change underneath an accepted receipt
+    without the receipt ever going stale. This hashes every file `referenced_files()` finds, AT
+    `rev`, combined into one digest; a file absent at `rev` hashes as literal 'MISSING' so its
+    removal is also detected as a change, not silently ignored."""
+    parts = []
+    for path in referenced_files(card):
+        rc, out, _ = git("show", f"{rev}:{path}")
+        parts.append(f"{path}:{sha256_bytes(out.encode('utf-8')) if rc == 0 else 'MISSING'}")
+    return sha256_bytes("\n".join(parts).encode("utf-8"))
+
+
 def card_is_stale(cid: str, receipt: dict) -> bool:
     """A receipt's accepted=True is NECESSARY, never SUFFICIENT: it must also
     still describe the card as currently committed at HEAD. If the card file
@@ -435,12 +492,20 @@ def card_is_stale(cid: str, receipt: dict) -> bool:
     receipt's card_sha256 no longer matches and the receipt must not be
     trusted as current. Mirrors load_card_at_rev's own hashing exactly
     (git show -> .strip() -> utf-8 -> sha256) so the comparison is apples to
-    apples with what do_verify itself computed."""
+    apples with what do_verify itself computed. Also stale if any file
+    referenced_files() names has changed since the receipt was generated, or if the receipt
+    predates this check existing at all (checker_fileset_sha256 absent) -- new, stronger
+    acceptance must be earned, a historical receipt does not grandfather past a real
+    strengthening of what currentness means."""
     try:
-        _, current_sha = load_card_at_rev(cid, "HEAD")
+        card, current_sha = load_card_at_rev(cid, "HEAD")
     except SystemExit:
         return True  # HEAD does not contain this card yet -- cannot be current
-    return current_sha != receipt.get("card_sha256")
+    if current_sha != receipt.get("card_sha256"):
+        return True
+    if "checker_fileset_sha256" not in receipt:
+        return True
+    return checker_fileset_sha256(card, "HEAD") != receipt.get("checker_fileset_sha256")
 
 
 def compute_rows(cards: dict, raw: dict, dispatched: set, attempts: dict, latest_kind: dict):
@@ -572,7 +637,7 @@ def rebuild_state(cards_order: list[str] | None = None):
         stale = bool(r and r.get("accepted") and card_is_stale(cid, r))
         incoherent_reasons: list[str] = []
         if r and r.get("accepted"):
-            incoherent_reasons = receipt_is_coherent(r)
+            incoherent_reasons = receipt_is_coherent(r, card=c)
             if not receipt_artifact_present(c["gate"], cid):
                 incoherent_reasons.append("missing stdout.log artifact alongside receipt.json")
         raw[cid] = {

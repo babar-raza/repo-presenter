@@ -19,6 +19,10 @@
     "base_rev": { "$ref": "#/$defs/sha40" },
     "head_rev": { "$ref": "#/$defs/sha40" },
     "card_sha256": { "$ref": "#/$defs/sha256" },
+    "checker_fileset_sha256": {
+      "$ref": "#/$defs/sha256",
+      "description": "2026-11-04: hash of every checker script / required-evidence file this card's own checks[].command references, at head_rev. Without this, currentness was tied only to the taskcard YAML's own hash, so a referenced ops/checks/*.py script or a required doc could change underneath an accepted receipt without it ever going stale. Absent on a receipt generated before this field existed -- gateverify.card_is_stale treats that absence itself as stale."
+    },
     "fingerprint": {
       "type": "object",
       "additionalProperties": false,

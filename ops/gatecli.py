@@ -124,8 +124,14 @@ def cmd_validate(args) -> int:
                 problems.append(f"release_gate_dashboard.cards names card(s) with no matching file: {sorted(extra)}")
 
         for cid, card in sorted(cards.items()):
-            r = gateverify.load_receipt(card["gate"], cid)
-            accepted = bool(r and r.get("accepted"))
+            # 2026-11-04 (supervisor directive correction): this used to pass the receipt's own
+            # raw `accepted` field straight through, bypassing cardlint's checks for any card
+            # whose receipt forged or stale-claimed `accepted: true` even when
+            # rebuild_state()'s own coherence/dependency computation says otherwise (e.g.
+            # INCOHERENT_RECEIPT). cardlint must grandfather a card only when it is EFFECTIVELY
+            # accepted -- the same set this validate run already derived and printed above --
+            # never from the receipt's own say-so.
+            accepted = cid in accepted_ids
             problems.extend(cardlint.lint_card(card, REPO, accepted=accepted))
 
     if problems:
