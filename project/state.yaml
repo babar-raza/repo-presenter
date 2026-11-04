@@ -133,7 +133,7 @@ owner_review_status:
 
 release_gate_dashboard:
   generated_by: gatecli
-  generated_at: '2026-11-04T18:44:14Z'
+  generated_at: '2026-11-04T18:46:02Z'
   note: Tool-generated from gateverify.rebuild_state() -- never hand-edit this block.
     Historical current_gate/active_work_item below are preserved bootstrap-era narrative,
     not this cursor; this block is the real, evidence-derived release-gate status
@@ -256,23 +256,20 @@ release_gate_dashboard:
       summary: depends on TC-007, TC-009b, not yet accepted
   - id: TC-012
     gate: GATE4_PRODUCTION
-    status: INCOHERENT_RECEIPT
+    status: ACCEPTED
     attempt: 0
-    blocker:
-      class: INCOHERENT_RECEIPT
-      summary: 'receipt claims accepted=True but fails internal consistency checks
-        (forged, corrupted, or missing its own artifact): schema violation: : Additional
-        properties are not allowed (''checker_fileset_scheme'' was unexpected)'
+    blocker: null
+    commit: 6335d8e1de5ee0f7d032ce8b552062ffb369a607
+    receipt: GATE4_PRODUCTION/TC-012/receipt.json
   - id: TC-012a
     gate: GATE4_PRODUCTION
     status: AWAITING_PREREQUISITE
     attempt: 0
     blocker:
       class: AWAITING_PREREQUISITE
-      summary: depends on TC-002, TC-009b, TC-010a, TC-011, TC-012, not yet accepted
+      summary: depends on TC-002, TC-009b, TC-010a, TC-011, not yet accepted
   ready:
   - TC-007
-  - TC-012
 current_gate:
   id: P1_PORTFOLIO_SCALE
   status: ACCEPTED
