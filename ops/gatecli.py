@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -84,15 +85,43 @@ def cmd_validate(args) -> int:
         print("validate: derived card rows from evidence (receipts + instructions.jsonl):")
         for r in rows:
             print(f"  {r['id']}: {r['status']}" + (f" (blocker: {r['blocker']['summary']})" if r.get("blocker") else ""))
-        state_cards = {c["id"]: c for c in state.get("cards", [])} if isinstance(state.get("cards"), list) else {}
-        for r in rows:
-            sc = state_cards.get(r["id"])
-            if sc is not None and sc.get("status") != r["status"]:
-                problems.append(
-                    f"{r['id']}: project/state.yaml says status={sc.get('status')!r} but the "
-                    f"rebuild from receipts/instructions says {r['status']!r} -- state.yaml is "
-                    f"derived, never hand-written; regenerate it from this rebuild."
-                )
+
+        # 2026-11-04: the real execution cursor is `release_gate_dashboard.cards` (tool-generated
+        # by `regenerate-dashboard`), not the unused top-level `cards` key the schema names --
+        # confirmed real defect: the old comparison here only checked rows ALREADY present in
+        # state.yaml, so a card entirely missing from the persisted dashboard was silently never
+        # flagged. Now explicitly required once any real taskcard exists.
+        dash = state.get("release_gate_dashboard")
+        if not isinstance(dash, dict) or not isinstance(dash.get("cards"), list):
+            problems.append(
+                "project/state.yaml has no release_gate_dashboard.cards -- run "
+                "`python ops/gatecli.py regenerate-dashboard` before validating."
+            )
+        else:
+            dash_cards = dash["cards"]
+            seen_ids: dict[str, int] = {}
+            for i, dc in enumerate(dash_cards):
+                seen_ids[dc.get("id")] = seen_ids.get(dc.get("id"), 0) + 1
+            for cid, n in seen_ids.items():
+                if n > 1:
+                    problems.append(f"release_gate_dashboard.cards has {n} entries for {cid!r} -- duplicate")
+            dash_by_id = {dc["id"]: dc for dc in dash_cards if "id" in dc}
+            for r in rows:
+                sc = dash_by_id.get(r["id"])
+                if sc is None:
+                    problems.append(
+                        f"{r['id']}: present under project/taskcards/ but MISSING from "
+                        f"release_gate_dashboard.cards -- run `regenerate-dashboard`."
+                    )
+                elif sc.get("status") != r["status"]:
+                    problems.append(
+                        f"{r['id']}: release_gate_dashboard says status={sc.get('status')!r} but "
+                        f"the rebuild from receipts/instructions says {r['status']!r} -- "
+                        f"regenerate-dashboard, never hand-edit this block."
+                    )
+            extra = set(dash_by_id) - set(cards)
+            if extra:
+                problems.append(f"release_gate_dashboard.cards names card(s) with no matching file: {sorted(extra)}")
 
         for cid, card in sorted(cards.items()):
             r = gateverify.load_receipt(card["gate"], cid)
@@ -105,6 +134,54 @@ def cmd_validate(args) -> int:
             print(f"  - {p}", file=sys.stderr)
         return EXIT_FAIL
     print("\nvalidate: OK")
+    return EXIT_OK
+
+
+# --------------------------------------------------------------------------
+# regenerate-dashboard: the real execution cursor, 2026-11-04
+# --------------------------------------------------------------------------
+# project/state.yaml's narrative sections (authority/progress/current_gate/active_work_item/
+# next_ready_items) carry rich hand-authored comments and are never auto-reformatted -- a full
+# YAML load-modify-dump round trip would silently delete every one of them (PyYAML has no
+# comment model). This surgically replaces or inserts ONLY the release_gate_dashboard block as
+# raw text, exactly like every other edit this file's own history has made to state.yaml by
+# hand -- the difference is this one is tool-generated from gateverify.rebuild_state(), never
+# narrated, per ops/SUPERVISOR.md's "never hand-write project/state.yaml's card-driven fields."
+TOP_LEVEL_KEY_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*:", re.MULTILINE)
+
+
+def _splice_top_level_block(text: str, key: str, new_block: str, insert_before_key: str) -> str:
+    start_re = re.compile(rf"^{re.escape(key)}:.*?(?=\n[A-Za-z_][A-Za-z0-9_]*:|\Z)", re.MULTILINE | re.DOTALL)
+    m = start_re.search(text)
+    if m:
+        return text[:m.start()] + new_block.rstrip("\n") + "\n" + text[m.end():].lstrip("\n")
+    anchor = re.compile(rf"^{re.escape(insert_before_key)}:", re.MULTILINE)
+    am = anchor.search(text)
+    if not am:
+        return text.rstrip("\n") + "\n\n" + new_block
+    return text[:am.start()] + new_block.rstrip("\n") + "\n\n" + text[am.start():]
+
+
+def cmd_regenerate_dashboard(args) -> int:
+    rows, _ = gateverify.rebuild_state()
+    ready = gateverify.ready_cards_from_rows(rows)
+    dashboard = {
+        "release_gate_dashboard": {
+            "generated_by": "gatecli",
+            "generated_at": now_utc(),
+            "note": "Tool-generated from gateverify.rebuild_state() -- never hand-edit this "
+                    "block. Historical current_gate/active_work_item below are preserved "
+                    "bootstrap-era narrative, not this cursor; this block is the real, "
+                    "evidence-derived release-gate status as of generated_at.",
+            "cards": rows,
+            "ready": ready,
+        }
+    }
+    block_text = dump_yaml(dashboard)
+    text = STATE_FILE.read_text(encoding="utf-8")
+    new_text = _splice_top_level_block(text, "release_gate_dashboard", block_text, "current_gate")
+    STATE_FILE.write_text(new_text, encoding="utf-8")
+    print(f"regenerate-dashboard: wrote {len(rows)} card rows, ready={ready or 'none'}")
     return EXIT_OK
 
 
@@ -317,6 +394,7 @@ def build_parser():
     sub = p.add_subparsers(dest="cmd", required=True)
 
     sub.add_parser("validate").set_defaults(func=cmd_validate)
+    sub.add_parser("regenerate-dashboard").set_defaults(func=cmd_regenerate_dashboard)
     sub.add_parser("state").set_defaults(func=cmd_state)
 
     cg = sub.add_parser("commit-guard")

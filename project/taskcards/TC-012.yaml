@@ -3,14 +3,19 @@ gate: GATE4_PRODUCTION
 track: production-cutover
 purpose: >
   Reach P4/G6: unattended scheduled execution on GitHub-hosted runners and local Docker
-  validation at the smallest credible scope. 2026-11-04 dependency-ordering correction: this no
-  longer depends on TC-011 (25-product portfolio delivery) -- the directive explicitly flags
-  "makes hosted scheduling depend on 25-product delivery, creating avoidable manual work."
-  Scheduling and Docker validation are an infrastructure milestone independent of portfolio
-  scale; the FINAL legacy-writer cutover (which genuinely should wait for real delivery proof)
-  is now its own card, TC-012a. Still depends on writer disposition (TC-002, since a schedule
-  could eventually also drive writes), preflight (TC-008, so scheduled runs don't burn needless
-  provider calls), and the dev-scope issues lifecycle (TC-010).
+  validation at the smallest credible scope. 2026-11-04 (follow-up directive §10): a naive
+  `schedule:` trigger does NOT work on its own -- present.yml's inputs (repository/ecosystem/
+  lane) are only populated for workflow_dispatch; a scheduled run needs its own target-selection
+  step. REAL, this pass: `.github/workflows/present.yml` now resolves its target for either
+  trigger (a new "Select this run's target" step in the unprivileged facts job, backed by
+  `scripts/select_scheduled_cohort.py`), structurally tested in `tests/test_present_schedule.py`
+  (5 tests) alongside the pre-existing `tests/test_present.py`/`test_present_lanes.py` (all 38
+  of which still pass unmodified -- confirmed, not assumed). A minimal, scope-matched
+  `Dockerfile` (facts-stage only, no secrets, matching the existing two-job trust boundary) is
+  written but **NOT locally build-verified this pass** -- Docker Desktop's engine was not
+  running in this environment; flagged honestly, not claimed. This no longer depends on TC-011
+  (25-product portfolio delivery) -- the directive explicitly flagged that ordering as creating
+  avoidable manual work. The FINAL legacy-writer cutover is its own card, TC-012a.
 depends_on:
   - TC-002
   - TC-008
@@ -18,6 +23,8 @@ depends_on:
 write_paths:
   - .github/workflows/present.yml
   - Dockerfile
+  - scripts/select_scheduled_cohort.py
+  - tests/test_present_schedule.py
 satisfies:
   - REQ-G6-001
 source_refs:
@@ -25,17 +32,20 @@ source_refs:
     anchor: "G6 -- Autonomous Docker + GitHub Actions production"
 inputs: []
 actions:
-  - "Add a schedule: trigger to present.yml, with bounded retry/recovery, budget and kill
-     switches."
+  - "Add a schedule: trigger to present.yml, with a real target-resolution step -- not a bare
+     trigger with nothing to dispatch."
   - "Add the smallest credible Dockerfile that isolates untrusted upstream example code from
      long-lived infrastructure credentials, per the existing two-job trust boundary."
-  - "Record the owner-approved legacy-writer cutover/retirement in
-     docs/LEGACY_CUTOVER_RECORD.md -- never a silent pause."
+  - "Build-verify the Dockerfile locally once Docker is actually available, and run at least one
+     real unattended scheduled cycle, independently confirmed, before this card is ACCEPTED."
 checks:
+  # 2026-11-04: real behavioral tests, not file-content markers (follow-up directive §4) -- the
+  # existing project test infrastructure (tests/test_present.py's _load_workflow parser
+  # pattern), extended, not a new architecture.
   - command: |-
-      python ops/checks/marker_check.py .github/workflows/present.yml "schedule:"
+      python -m pytest tests/test_present_schedule.py tests/test_present_lanes.py tests/test_present.py -q
     expect: exit 0
-    timeout_seconds: 30
+    timeout_seconds: 300
     proves:
       - REQ-G6-001
   - command: |-
@@ -51,12 +61,17 @@ negative_control:
   mutate: |-
     python -c "import pathlib; p = pathlib.Path('.github/workflows/present.yml'); s = p.read_text(encoding='utf-8'); s2 = s.replace('schedule:', 'removed:'); p.write_text(s2, encoding='utf-8')"
   rationale: >
-    Removes the schedule trigger once it exists. Proves the check tracks real autonomy, not a
-    comment merely mentioning the word "schedule."
+    Removes the schedule trigger. tests/test_present_schedule.py's own
+    test_a_schedule_trigger_exists_with_a_real_cron must then fail -- a real behavioral check,
+    not a comment merely mentioning the word "schedule."
 evidence:
   - .github/workflows/present.yml
   - Dockerfile
+  - scripts/select_scheduled_cohort.py
+  - tests/test_present_schedule.py
 closeout:
-  - "Run at least one real unattended cycle and independently confirm its outcome before this
-     card is ACCEPTED. TC-012a, not this card, covers the final legacy-writer cutover."
-recovery: "None of the named artifacts exist yet; this card is correctly not started."
+  - "Build-verify the Dockerfile locally (not done this pass -- Docker engine unavailable) and
+     run at least one real unattended cycle, independently confirmed, before ACCEPTED. TC-012a,
+     not this card, covers the final legacy-writer cutover."
+recovery: "Revert .github/workflows/present.yml, Dockerfile, scripts/select_scheduled_cohort.py,
+  and tests/test_present_schedule.py together -- they are one coherent change."

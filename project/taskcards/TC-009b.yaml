@@ -1,0 +1,74 @@
+id: TC-009b
+gate: GATE2_INTEGRATIONS
+track: github-app
+purpose: >
+  MANDATORY PUBLISHING PILOT (new, 2026-11-04 follow-up directive §9): TC-009a only proves App
+  installation token minting; it does NOT prove a real upstream README PR was ever published.
+  This card is the explicit, smallest-necessary integration milestone BEFORE any 25-repository
+  portfolio scaling: one real, bot-authored, independently-inspected PR against each of the two
+  mandatory targets -- `aspose-cells-foss/Aspose.Cells-FOSS-for-.NET` (already `mode: full` in
+  the registry) and `aspose-3d-foss/Aspose.3D-FOSS-for-Python` (currently `mode: dry_run` --
+  this card does NOT bypass that; it requires a SEPARATE, explicit owner authorization naming
+  exactly that write-mode change before any live effect against that specific target). Uses the
+  existing `propose/effect.py` and `propose/pull_request.py` (already covers refusal ordering,
+  duplicate-PR prevention, and reconciliation -- confirmed by this session's own research pass
+  against `tests/propose/test_effect.py`'s 40+ existing tests) via an isolated publication job
+  with minimal credentials, not co-located with the LLM generation job.
+depends_on:
+  - TC-009a
+  - TC-007
+requires_owner_decision: true
+write_paths:
+  - docs/DECISION_LOG.md
+  - evidence/build/GATE2_INTEGRATIONS/TC-009b/**
+  - .github/workflows/present.yml
+satisfies:
+  - REQ-P1-001
+  - REQ-G5-001
+source_refs:
+  - file: src/repo_presenter/propose/effect.py
+    anchor: "propose_candidate"
+  - file: data/registry.json
+    anchor: "aspose-3d-foss/Aspose.3D-FOSS-for-Python"
+inputs: []
+actions:
+  - "Obtain the owner's named authorization for this specific pilot against both targets,
+     including the separate, explicit dry_run-to-full mode change for 3d/python."
+  - "Run propose_candidate against cells/net first (already full mode); independently inspect
+     the resulting real PR via gh api (author, branch, content-hash agreement with the selected
+     candidate)."
+  - "Only after the owner separately authorizes the registry mode change, flip
+     aspose-3d-foss/Aspose.3D-FOSS-for-Python to mode: full via write_gate.py's own sanctioned
+     path (never a direct hand-edit of data/registry.json bypassing the gate) and run
+     propose_candidate against it; independently inspect the resulting real PR."
+  - "Write evidence/build/GATE2_INTEGRATIONS/TC-009b/pilot_proof.json recording both outcomes,
+     written only by the actual publication code path."
+checks:
+  - command: |-
+      python ops/checks/owner_decision_record.py docs/DECISION_LOG.md PUBLISHING_PILOT_AUTHORIZED:
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-P1-001
+  - command: |-
+      python ops/checks/execution_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009b/pilot_proof.json cells_net_pr_opened=True cells_net_content_hash_matches=True threed_python_mode_change_authorized=True threed_python_pr_opened=True threed_python_content_hash_matches=True
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-P1-001
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -c "import pathlib; p = pathlib.Path('docs/DECISION_LOG.md'); s = p.read_text(encoding='utf-8'); s2 = s.replace('ref=', 'ref=BROKEN-'); p.write_text(s2, encoding='utf-8')"
+  rationale: >
+    Same cross-reference-corruption pattern as the other owner-decision cards.
+evidence:
+  - docs/DECISION_LOG.md
+  - evidence/build/GATE2_INTEGRATIONS/TC-009b/pilot_proof.json
+closeout:
+  - "Do not start an unrestricted 25-repository publication campaign (TC-011) until this card's
+     own execution proof -- not just its authorization record -- is ACCEPTED for BOTH mandatory
+     targets."
+recovery: "No live PR has been opened; nothing external to revert."

@@ -27,8 +27,16 @@ actions:
   - "Run discover -> dedupe -> approval -> file -> track -> re-detect -> resolve -> close for
      real against that target; record the outcome independently confirmed via gh api."
 checks:
+  # 2026-11-04 (follow-up directive §6): AUTHORIZED != EXECUTED. Second, independent check that
+  # the lifecycle actually ran and reached a real outcome, not merely that it was authorized.
   - command: |-
       python ops/checks/owner_decision_record.py docs/DECISION_LOG.md ISSUES_LIVE_LIFECYCLE_AUTHORIZED:
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-G3-001
+  - command: |-
+      python ops/checks/execution_proof.py evidence/build/GATE2_INTEGRATIONS/TC-010a/lifecycle_proof.json filed=True resolved_or_closed=True independently_confirmed_via_gh_api=True
     expect: exit 0
     timeout_seconds: 30
     proves:
@@ -43,8 +51,9 @@ negative_control:
     Same cross-reference-corruption pattern as TC-002/TC-004/TC-009a.
 evidence:
   - docs/DECISION_LOG.md
-  - evidence/build/GATE2_INTEGRATIONS/TC-010a/
+  - evidence/build/GATE2_INTEGRATIONS/TC-010a/lifecycle_proof.json
 closeout:
   - "Independently confirm the real close/resolution via gh api against the actual upstream
-     issue, not the local durable record alone."
+     issue, not the local durable record alone -- write that confirmation into
+     lifecycle_proof.json, never fabricate independently_confirmed_via_gh_api."
 recovery: "No live issue action has been taken; nothing external to revert."

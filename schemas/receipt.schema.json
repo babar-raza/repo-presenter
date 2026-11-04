@@ -31,11 +31,15 @@
     "scope": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["ok", "changed_paths", "violations"],
+      "required": ["ok", "changed_paths", "violations", "evaluated"],
       "properties": {
         "ok": { "type": "boolean" },
         "changed_paths": { "type": "array", "items": { "type": "string" } },
-        "violations": { "type": "array", "items": { "type": "string" } }
+        "violations": { "type": "array", "items": { "type": "string" } },
+        "evaluated": {
+          "type": "boolean",
+          "description": "2026-11-04: without this, a --no-scope run and a properly-scoped run with zero violations produce an identical scope block (ok: true, violations: []) -- indistinguishable from the stored receipt alone. False means scope was never actually checked for this receipt."
+        }
       }
     },
     "runs": {

@@ -6,16 +6,20 @@ purpose: >
   read-only inspection, and mock-token testing do not need owner authorization -- only an actual
   external write does, per the directive's own §6). Reuse the legacy repository's proven
   actions/create-github-app-token@v2 pattern for App installation tokens, per P3 -- do not
-  implement custom JWT signing or a new credential service unless a specific, verified
-  requirement proves the proven hosted mechanism insufficient. Wire the workflow step and verify
-  it locally against a mock/test token; TC-009a (separate card) covers minting one real
-  installation token against the real App, which is genuinely gated on TC-002.
+  implement custom JWT signing or a new credential service. REAL this pass: fetched the legacy
+  repo's own `propose.yml` verbatim via `gh api` (not guessed) and adapted its exact minting
+  step -- scoped via `owner`/`repositories` to one target, minimum `permission-*` inputs -- into
+  a NEW, isolated `.github/workflows/mint-app-token.yml` that is `workflow_call`-ONLY (no
+  trigger of its own; cannot fire on its own) and has no caller anywhere in this repository yet
+  -- both properties structurally tested (`tests/test_mint_app_token_workflow.py`, 5 tests).
+  Deliberately did NOT wire a caller into present.yml itself this pass: TC-009a (separate,
+  owner-gated card) adds the one real caller once authorized -- wiring it now, even unauthorized
+  to fire, would be scope creep ahead of TC-002's own open disposition question.
 depends_on: []
 write_paths:
-  - .github/workflows/present.yml
+  - .github/workflows/mint-app-token.yml
   - docs/DECISION_LOG.md
-  - src/repo_presenter/github/**
-  - tests/github/**
+  - tests/test_mint_app_token_workflow.py
 satisfies:
   - REQ-G5-001
 source_refs:
@@ -24,9 +28,11 @@ source_refs:
 inputs: []
 actions:
   - "Record the reuse-over-rebuild decision in docs/DECISION_LOG.md."
-  - "Adapt actions/create-github-app-token@v2 into present.yml's write-capable job, scoped and
-     short-lived, with the existing token_provenance.py verifying it end to end."
+  - "Fetch the legacy repo's real propose.yml via gh api; adapt its exact
+     actions/create-github-app-token@v2 step into an isolated, workflow_call-only reusable
+     workflow with no caller yet."
 checks:
+  # 2026-11-04: real behavioral/structural tests, not a bare text marker.
   - command: |-
       python ops/checks/marker_check.py docs/DECISION_LOG.md "APP_TOKEN_REUSE_DECISION:"
     expect: exit 0
@@ -34,9 +40,9 @@ checks:
     proves:
       - REQ-G5-001
   - command: |-
-      python ops/checks/marker_check.py .github/workflows/present.yml "create-github-app-token"
+      python -m pytest tests/test_mint_app_token_workflow.py -q
     expect: exit 0
-    timeout_seconds: 30
+    timeout_seconds: 60
     proves:
       - REQ-G5-001
 requires:
@@ -46,13 +52,15 @@ negative_control:
   mutate: |-
     python -c "import pathlib; p = pathlib.Path('docs/DECISION_LOG.md'); s = p.read_text(encoding='utf-8'); s2 = s.replace('APP_TOKEN_REUSE_DECISION:', 'removed'); p.write_text(s2, encoding='utf-8')"
   rationale: >
-    Deletes the decision marker. Proves the check reads real content; the second check (the
-    workflow file) independently proves the decision was actually wired, not just recorded.
+    Deletes the decision marker. Proves the first check reads real content; the second check
+    (the real pytest suite against mint-app-token.yml) independently proves the workflow is
+    correctly adapted and isolated, not just that some text exists.
 evidence:
   - docs/DECISION_LOG.md
-  - .github/workflows/present.yml
+  - .github/workflows/mint-app-token.yml
+  - tests/test_mint_app_token_workflow.py
 closeout:
-  - "This card closes on the workflow wiring + a passing mock-token test. The live mint is
-     TC-009a, not this card -- do not fire a real token mint under this card's scope."
-recovery: "Revert the present.yml wiring; the decision record in docs/DECISION_LOG.md stays as a
-  historical entry even if the implementation is rolled back."
+  - "This card closes on the isolated workflow + its structural tests. The live mint and its
+     caller are TC-009a, not this card -- do not add a caller under this card's scope."
+recovery: "Revert .github/workflows/mint-app-token.yml and tests/test_mint_app_token_workflow.py;
+  the decision record in docs/DECISION_LOG.md stays as a historical entry regardless."

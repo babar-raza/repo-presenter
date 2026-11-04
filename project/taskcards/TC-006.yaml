@@ -6,10 +6,12 @@ purpose: >
   (Imaging-.NET, 3D-.NET, Words-.NET, per the 2026-10-31 decision log) against the real
   aspose.org refresh-candidate output on the same products, BEFORE reviewer calibration
   iteration 4 runs -- the ordering the 2026-11-04 directive requires: benchmark, then
-  calibration, then publication eligibility, then portfolio scaling. Correctly BLOCKED until a
-  real benchmark report exists; no shortcut to "looks similar" is acceptable.
-depends_on:
-  - TC-004
+  calibration, then publication eligibility, then portfolio scaling. 2026-11-04 correction
+  (follow-up directive §7): this is read-only analysis of already-committed candidates against
+  a local sibling checkout -- it does not touch, resume, or ratify the paused broad sweep, and
+  must not be blocked by TC-004's unrelated owner-decision gate. The sweep pause itself (10-31
+  decision 4) is preserved exactly as-is; only this card's own dependency edge was wrong.
+depends_on: []
 write_paths:
   - docs/PARITY_BENCHMARK_PILOT.md
 satisfies:

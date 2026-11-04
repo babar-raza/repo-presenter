@@ -1,0 +1,62 @@
+name: mint-app-token
+
+# 2026-11-04 (TC-009, dev/mock scope -- NOT TC-009a's live-write milestone). Reusable workflow
+# only (`workflow_call`): nothing in this repository calls it yet, and it has no trigger of its
+# own, so it cannot fire on its own -- isolated implementation and dry-run planning, per the
+# follow-up directive's own §6 ("isolated implementation... does not need owner authorization").
+# TC-009a is the separate, owner-gated card that will add exactly one caller, once authorized.
+#
+# Adapts the legacy `repository-presenter` repo's own proven `propose.yml` pattern verbatim
+# (fetched via `gh api repos/babar-raza/repository-presenter/contents/.github/workflows/
+# propose.yml` this session, not guessed): `actions/create-github-app-token@v2`, GitHub's own
+# official action, scoped to exactly one target repository via `owner`/`repositories`, with the
+# minimum permission-* inputs the effect actually needs -- never the whole App installation,
+# never a hand-rolled JWT. Per P3 (docs/DECISION_LOG.md, APP_TOKEN_REUSE_DECISION), this
+# repository does not implement its own JWT signing.
+
+on:
+  workflow_call:
+    inputs:
+      owner:
+        description: "org/user that owns the single target repository"
+        required: true
+        type: string
+      repository_name:
+        description: "bare repository name (no owner prefix) -- scoped to exactly this one repo"
+        required: true
+        type: string
+      permission_contents:
+        description: "read or write -- caller decides, per the minimum the calling effect needs"
+        required: true
+        type: string
+      permission_pull_requests:
+        description: "read, write, or none -- caller decides"
+        required: false
+        type: string
+        default: "none"
+    outputs:
+      token:
+        description: "the minted, scoped installation token (never logged, never committed)"
+        value: ${{ jobs.mint.outputs.token }}
+
+permissions:
+  contents: read
+
+jobs:
+  mint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      token: ${{ steps.app-token.outputs.token }}
+    steps:
+      - name: Mint a fresh installation token, scoped to this target repository alone
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: ${{ inputs.owner }}
+          repositories: ${{ inputs.repository_name }}
+          permission-contents: ${{ inputs.permission_contents }}
+          permission-metadata: read
+          permission-pull-requests: ${{ inputs.permission_pull_requests }}

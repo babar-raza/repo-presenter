@@ -3,32 +3,51 @@ gate: GATE1_QUALITY
 track: caching-preflight
 purpose: >
   Wire a durable, source-aware preflight that proves currentness and safely skips a model call
-  BEFORE the call is made (P5) -- not the current after-the-fact, two-process, ledger-measured
-  no-op proof (core/noop_proof.py), which only judges a completed run. The already-ported
-  evaluate()/route()/classify()/RECHECKS table in readme/bundle/recheck.py is the right scope to
-  wire, not a full port of recheck_bundle()/recheck_portfolio() (both still raise
-  NotImplementedError, deliberately, per that file's own docstring). Independent of calibration
-  -- may proceed in parallel with TC-006/TC-007.
+  BEFORE the call is made (P5), covering BOTH lanes (2026-11-04 follow-up directive §8: Lane L
+  uses lane_l_run.py/present.py's own call store, not just cascade.py). REAL this pass:
+  src/repo_presenter/core/preflight.py (evaluate()/route()-backed, lane-agnostic, tested in
+  tests/core/test_preflight.py -- 7 tests: cold start, warm matching revision, changed-source
+  negative control, corrupt manifest, missing manifest, empty CURRENT pointer, Lane
+  R-vs-L bundle isolation). **A real, confirmed prerequisite gap, not glossed over**:
+  evaluation.py's own docstring states readme/bundle/seal.py's dependencies.json PRODUCER was
+  never ported into this repository -- there is no committed bundle whose "sealed" side of a
+  full evaluate() comparison is genuine, full-fidelity data for anything beyond source revision.
+  preflight_decision() therefore NEVER returns can_skip_provider_call=True yet -- correctly,
+  not as a bug -- because claiming it could for prompts/policy/model/detector scopes nothing
+  here can check would be exactly the "fabricating currency" failure mode the directive warns
+  against. **NOT wired into present.py's live pipeline this pass**: doing so safely requires
+  either porting seal.py's producer, or independently verifying present_transaction.py's
+  classify_present_outcome tolerates a run that sealed nothing new (neither done yet, flagged
+  honestly). This card's real, demonstrated scope is the decision module and its tests; live
+  wiring + the seal.py port are the next, explicitly separate, step.
 depends_on: []
 write_paths:
+  - src/repo_presenter/core/preflight.py
   - src/repo_presenter/cascade.py
-  - src/repo_presenter/readme/bundle/recheck.py
+  - src/repo_presenter/lane_l_run.py
+  - src/repo_presenter/present.py
+  - src/repo_presenter/readme/bundle/seal.py
+  - tests/core/test_preflight.py
 satisfies:
   - REQ-P5-001
 source_refs:
-  - file: src/repo_presenter/readme/bundle/recheck.py
-    anchor: "recheck_bundle"
+  - file: src/repo_presenter/readme/bundle/evaluation.py
+    anchor: "Known gap from the port"
 inputs: []
 actions:
-  - "Call the existing evaluate()/route() currency check before cascade.py decides to invoke the
-     provider, not only after sealing decides whether to accept the result as a no-op."
-  - "Prove zero recorded provider requests on an unchanged rerun, including after simulated
-     Actions-cache eviction."
+  - "Port readme/bundle/seal.py's dependencies.json producer (and core/toolchains.py, its own
+     stated dependency) so evaluate()'s full comparison means something beyond source revision."
+  - "Independently verify present_transaction.py's classify_present_outcome tolerates a run
+     that sealed nothing new before wiring a live skip into present.py."
+  - "Only then flip preflight_decision() to return can_skip_provider_call=True for the fully-
+     checked case, and wire it into both cascade.py's and lane_l_run.py's entry points."
 checks:
+  # 2026-11-04: a real, passing test suite, not a marker claiming a wire-in that would be unsafe
+  # to make without the prerequisite above.
   - command: |-
-      python ops/checks/marker_check.py src/repo_presenter/cascade.py "preflight_currency_gate"
+      python -m pytest tests/core/test_preflight.py -q
     expect: exit 0
-    timeout_seconds: 30
+    timeout_seconds: 60
     proves:
       - REQ-P5-001
 requires:
@@ -36,13 +55,19 @@ requires:
 network: false
 negative_control:
   mutate: |-
-    python -c "import pathlib; p = pathlib.Path('src/repo_presenter/cascade.py'); s = p.read_text(encoding='utf-8'); s2 = s.replace('preflight_currency_gate', 'REMOVED'); p.write_text(s2, encoding='utf-8')"
+    python -c "import pathlib; p = pathlib.Path('src/repo_presenter/core/preflight.py'); s = p.read_text(encoding='utf-8'); s2 = s.replace('sealed_revision != current_source_revision', 'False'); p.write_text(s2, encoding='utf-8')"
   rationale: >
-    Removes the preflight call this card requires, once it exists. Proves the check actually
-    detects the wiring, not just that cascade.py contains any text at all.
+    Breaks the one real comparison this module makes (source-revision equality) so it would
+    never detect a changed source. test_changed_source_revision_is_a_real_negative_control must
+    then fail -- a real behavioral falsifier, not a text-presence check.
 evidence:
-  - src/repo_presenter/cascade.py
+  - src/repo_presenter/core/preflight.py
+  - tests/core/test_preflight.py
 closeout:
-  - "Add warm-cache, cold-runner, Actions-cache-eviction, changed-README, changed-fact,
-     changed-policy, and corrupt-evidence tests per R10 of the 2026-11-04 directive."
-recovery: "The named marker does not exist yet; this card is correctly not started."
+  - "This card closes on the decision module + its tests, honestly scoped. A SEPARATE,
+     explicitly-named follow-up card is required before claiming P5 itself delivered: port
+     seal.py's producer, verify classify_present_outcome's tolerance, wire the live skip into
+     both lanes, and add warm/cold/cache-evicted/changed-input tests at the present.py
+     integration level (not just the pure decision-module level this card covers)."
+recovery: "Revert src/repo_presenter/core/preflight.py and tests/core/test_preflight.py; nothing
+  else was changed by this card, since no live wiring was done."

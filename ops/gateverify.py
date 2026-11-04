@@ -48,9 +48,57 @@ from gatectl import (
 # would implement it.
 GATE_STATUS_ORDER = [
     "BLOCKED_ENV", "AWAITING_PREREQUISITE", "AWAITING_OWNER_DECISION", "FAILED_INTERNAL",
-    "IN_PROGRESS", "VERIFICATION_FAILED", "STALE_RECEIPT", "READY", "ACCEPTED", "SUPERSEDED",
+    "IN_PROGRESS", "VERIFICATION_FAILED", "STALE_RECEIPT", "INCOHERENT_RECEIPT", "READY",
+    "ACCEPTED", "SUPERSEDED",
 ]
-READY_LIKE = {"READY", "VERIFICATION_FAILED", "STALE_RECEIPT"}
+READY_LIKE = {"READY", "VERIFICATION_FAILED", "STALE_RECEIPT", "INCOHERENT_RECEIPT"}
+
+
+def receipt_is_coherent(receipt: dict) -> list[str]:
+    """2026-11-04: 'accepted: true because the JSON says so' is not authoritative on its own --
+    confirmed real by the follow-up directive. Checks that a receipt claiming accepted=True is
+    actually INTERNALLY CONSISTENT with do_verify's own acceptance invariant (two identical
+    clean passes, scope ok, negative control applied and genuinely broke the checks), catching a
+    hand-forged or corrupted receipt that a tool did not actually produce honestly. Schema
+    validity is checked first (schemas/receipt.schema.json) -- a malformed receipt is incoherent
+    by construction."""
+    import gatectl
+
+    problems: list[str] = []
+    schema = gatectl.load_schema("receipt.schema.json")
+    schema_problems = gatectl.schema_errors(schema, receipt)
+    if schema_problems:
+        return [f"schema violation: {p}" for p in schema_problems]  # nothing else is trustworthy
+
+    if receipt.get("generated_by") != "gatecli":
+        problems.append("generated_by is not 'gatecli'")
+
+    if receipt.get("accepted") is True:
+        runs = receipt.get("runs") or []
+        if len(runs) != 2 or not all(r.get("all_passed") is True for r in runs):
+            problems.append("accepted=True but runs do not show two identical clean passes")
+        if not receipt.get("scope", {}).get("ok", False):
+            problems.append("accepted=True but scope.ok is not True")
+        nc = receipt.get("negative_control", {})
+        if nc.get("applied") is not True:
+            problems.append("accepted=True but negative_control.applied is not True")
+        if nc.get("patch_applied_failed") is not True:
+            problems.append("accepted=True but negative_control.patch_applied_failed is not True "
+                             "(the falsifier did not actually break the checks)")
+        if not nc.get("tree_changed"):
+            problems.append("accepted=True but negative_control.tree_changed is empty -- "
+                             "no evidence anything was actually mutated")
+        if not nc.get("exit_codes"):
+            problems.append("accepted=True but negative_control.exit_codes is empty -- "
+                             "no evidence the falsifier run was ever measured")
+    return problems
+
+
+def receipt_artifact_present(gate: str, card_id: str) -> bool:
+    """A receipt without its own stdout.log sibling is missing the artifact that would let a
+    human or a future audit actually inspect what ran -- treated as a real integrity gap, not
+    cosmetic (2026-11-04)."""
+    return (receipt_dir(gate, card_id) / "stdout.log").exists()
 
 
 def receipt_dir(gate: str, card_id: str) -> Path:
@@ -88,7 +136,7 @@ def _blocked_env(card_id, gate, head, missing, outdir):
         "base_rev": head,
         "head_rev": head,
         "fingerprint": fingerprint(),
-        "scope": {"ok": True, "changed_paths": [], "violations": []},
+        "scope": {"ok": True, "changed_paths": [], "violations": [], "evaluated": False},
         "runs": [
             {"run": 1, "checks": [], "all_passed": False},
             {"run": 2, "checks": [], "all_passed": False},
@@ -272,7 +320,7 @@ def do_verify(card_id: str, base: str, head: str, issue_rev: str | None = None,
         "head_rev": head,
         "card_sha256": card_sha,
         "fingerprint": fingerprint(),
-        "scope": {"ok": ok_scope, "changed_paths": changed, "violations": violations},
+        "scope": {"ok": ok_scope, "changed_paths": changed, "violations": violations, "evaluated": evaluate_scope},
         "runs": runs,
         "negative_control": negctl,
         "accepted": len(reasons) == 0,
@@ -410,7 +458,7 @@ def compute_rows(cards: dict, raw: dict, dispatched: set, attempts: dict, latest
                           # required upstream gate is genuinely invalidated" (2026-11-04 directive)
             info = raw[cid]
             r = info["receipt"]
-            if not (r and r.get("accepted")) or info["stale"]:
+            if not (r and r.get("accepted")) or info["stale"] or info.get("incoherent"):
                 continue
             deps = cards[cid].get("depends_on", [])
             if all(d in effectively_accepted for d in deps):
@@ -422,6 +470,8 @@ def compute_rows(cards: dict, raw: dict, dispatched: set, attempts: dict, latest
         c = cards[cid]
         info = raw[cid]
         r, stale, attempt = info["receipt"], info["stale"], info.get("attempt", attempts.get(cid, 0))
+        incoherent = info.get("incoherent", False)
+        incoherent_reasons = info.get("incoherent_reasons", [])
         deps = c.get("depends_on", [])
         deps_met = all(d in effectively_accepted for d in deps)
         row = {"id": cid, "gate": c["gate"], "status": "AWAITING_PREREQUISITE",
@@ -439,7 +489,16 @@ def compute_rows(cards: dict, raw: dict, dispatched: set, attempts: dict, latest
             summary = f"depends on {', '.join(unmet)}, not yet accepted"
             if r and r.get("accepted") and stale:
                 summary += " (receipt also stale: card changed since verification)"
+            if r and r.get("accepted") and incoherent:
+                summary += f" (receipt also incoherent: {'; '.join(incoherent_reasons)})"
             row["blocker"] = {"class": "AWAITING_PREREQUISITE", "summary": summary}
+        elif r and r.get("accepted") and incoherent:
+            row["status"] = "INCOHERENT_RECEIPT"
+            row["blocker"] = {
+                "class": "INCOHERENT_RECEIPT",
+                "summary": "receipt claims accepted=True but fails internal consistency checks "
+                           "(forged, corrupted, or missing its own artifact): " + "; ".join(incoherent_reasons),
+            }
         elif r and r.get("accepted") and stale:
             row["status"] = "STALE_RECEIPT"
             row["blocker"] = {
@@ -498,7 +557,15 @@ def rebuild_state(cards_order: list[str] | None = None):
         c = cards[cid]
         r = load_receipt(c["gate"], cid)
         stale = bool(r and r.get("accepted") and card_is_stale(cid, r))
-        raw[cid] = {"receipt": r, "attempt": attempts.get(cid, 0), "stale": stale}
+        incoherent_reasons: list[str] = []
+        if r and r.get("accepted"):
+            incoherent_reasons = receipt_is_coherent(r)
+            if not receipt_artifact_present(c["gate"], cid):
+                incoherent_reasons.append("missing stdout.log artifact alongside receipt.json")
+        raw[cid] = {
+            "receipt": r, "attempt": attempts.get(cid, 0), "stale": stale,
+            "incoherent": bool(incoherent_reasons), "incoherent_reasons": incoherent_reasons,
+        }
 
     return compute_rows(cards, raw, dispatched, attempts, latest_kind)
 

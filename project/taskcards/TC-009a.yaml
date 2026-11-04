@@ -26,9 +26,22 @@ actions:
   - "Obtain the owner's named, scoped authorization for this specific first live mint."
   - "Mint one real installation token via the wired Actions step; verify it with
      token_provenance.py; record the result (not the token itself) in docs/DECISION_LOG.md."
+  - "Write evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json with minted=true,
+     verified_via_token_provenance=true, and the real timestamp -- only the actual mint/verify
+     code path may write this file, never the authorization step."
 checks:
+  # 2026-11-04 (follow-up directive §6): AUTHORIZED != EXECUTED. This check alone only proves a
+  # human wrote an authorization record -- it cannot and must not be mistaken for proof the
+  # mint actually happened. The second check below is independent, required evidence that the
+  # authorized action was actually carried out.
   - command: |-
       python ops/checks/owner_decision_record.py docs/DECISION_LOG.md APP_TOKEN_LIVE_MINT_AUTHORIZED:
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-G5-001
+  - command: |-
+      python ops/checks/execution_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json minted=True verified_via_token_provenance=True
     expect: exit 0
     timeout_seconds: 30
     proves:
@@ -45,8 +58,8 @@ negative_control:
     marker. Before a real record exists, the clean run already correctly fails.
 evidence:
   - docs/DECISION_LOG.md
-  - evidence/build/GATE2_INTEGRATIONS/TC-009a/
+  - evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json
 closeout:
   - "The minted token itself must never be committed or logged in plaintext -- only the fact and
-     outcome of the mint/verify cycle."
+     outcome of the mint/verify cycle, in mint_proof.json."
 recovery: "No live token has been minted; nothing external to revert."

@@ -11,7 +11,7 @@ purpose: >
   that currently owns these effects.
 depends_on:
   - TC-002
-  - TC-009a
+  - TC-009b
   - TC-010a
   - TC-011
   - TC-012
@@ -29,8 +29,16 @@ actions:
   - "Record the owner-approved cutover/retirement decision in docs/LEGACY_CUTOVER_RECORD.md,
      naming the exact writers transferred or retired and the rollback plan."
 checks:
+  # 2026-11-04 (follow-up directive §6): AUTHORIZED != EXECUTED. Second check that the cutover
+  # was actually carried out safely, not merely approved.
   - command: |-
       python ops/checks/owner_decision_record.py docs/LEGACY_CUTOVER_RECORD.md OWNER_APPROVED_CUTOVER:
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-G6-001
+  - command: |-
+      python ops/checks/execution_proof.py evidence/build/GATE4_PRODUCTION/TC-012a/cutover_proof.json writers_transferred_or_retired=True rollback_plan_recorded=True legacy_pending_effects_reconciled=True
     expect: exit 0
     timeout_seconds: 30
     proves:
@@ -45,8 +53,10 @@ negative_control:
     Same cross-reference-corruption pattern as TC-002/TC-004/TC-009a/TC-010a.
 evidence:
   - docs/LEGACY_CUTOVER_RECORD.md
+  - evidence/build/GATE4_PRODUCTION/TC-012a/cutover_proof.json
 closeout:
-  - "Only after this card's own cross-referenced record exists may the legacy repository's
-     write-capable workflows be paused or retired -- never before, never silently."
+  - "Only after this card's own cross-referenced record AND execution proof both exist may the
+     legacy repository's write-capable workflows be paused or retired -- never before, never
+     silently, never on the authorization record alone."
 recovery: "The named record does not exist yet; this card is correctly not started, and remains
   the last gate in the whole dependency graph."

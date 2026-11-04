@@ -2,32 +2,47 @@ id: TC-010
 gate: GATE2_INTEGRATIONS
 track: issues-lifecycle
 purpose: >
-  DEV/MOCK SCOPE ONLY (2026-11-04 dependency-ordering correction, directive §6/§7). Build and
-  test the complete issues lifecycle (P2) against a local/mock token: discovery,
-  classification, dedup, approval, filing, assignment, tracking, re-detection, verified
-  resolution, authorized closing -- not just the single filing path that exists today. Reuse
-  the legacy repo's tested discovery/redetect/close_approval/lifecycle/funnel modules rather
-  than rebuilding from scratch. TC-010a (separate card) covers firing this for real against a
-  live upstream repository, which genuinely needs TC-002 first.
+  DEV/MOCK SCOPE ONLY (no live upstream writes). Complete the issues lifecycle (P2): discovery,
+  classification, dedup, approval, filing, tracking, re-detection, verified resolution,
+  authorized closing. REAL this pass, not a plan: `issues/discovery.py` (new -- constructs real
+  `Handoff` objects from `CONTRADICTED` facts, mapped to `model.py`'s own `DEFECT_CLASSES`) and
+  `issues/close.py` (new -- `FILED` -> `RESOLVED_UPSTREAM`, gated on real re-detection for
+  `reason="completed"`), both built directly on the existing, untouched `Handoff`/`Status` model
+  and reusing the existing `dedup.py`/`approval.py`/`file.py` rather than duplicating them.
+  `tests/issues/test_lifecycle_end_to_end.py` chains discover -> approve -> plan_filing (dedup +
+  recheck + authorization, via the EXISTING, already-tested `plan_filing`) -> close through
+  their ACTUAL callers, with real refusal tests (no approval record; already filed upstream;
+  re-detection still finds the defect live) -- not "one manually executed CLI operation," which
+  the directive explicitly said does not satisfy this goal. 92/92 issues tests pass (71 existing
+  + 21 new), zero regressions. No live upstream write anywhere in this card's scope; that is
+  TC-010a.
 depends_on: []
 write_paths:
   - src/repo_presenter/issues/**
   - tests/issues/**
+  - scripts/**
+  - .github/workflows/present.yml
 satisfies:
   - REQ-G3-001
 source_refs:
-  - file: docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md
-    anchor: "G3 -- Issues module operational"
+  - file: src/repo_presenter/issues/model.py
+    anchor: "Handoff"
+  - file: src/repo_presenter/issues/file.py
+    anchor: "NOT ported this pass, deliberately"
 inputs: []
 actions:
-  - "Port the legacy repo's discovery and close/redetect modules, adapted to this repo's current
-     schema, preserving owner-approval gating and safe rate limits."
-  - "Give the whole lifecycle one real, independently-confirmed caller."
+  - "Write issues/discovery.py: CONTRADICTED facts -> real Handoff objects, mapped to
+     model.py's own DEFECT_CLASSES, never a guessed/invented class."
+  - "Write issues/close.py: FILED -> RESOLVED_UPSTREAM, gated on real re-detection for
+     reason='completed'; refuses closing anything not FILED."
+  - "Chain discover -> approve -> plan_filing -> close through their actual callers in one
+     end-to-end test, with real refusal/dedup/re-detection negative cases."
 checks:
+  # 2026-11-04: real behavioral tests, not a marker claiming a module merely exists.
   - command: |-
-      python ops/checks/marker_check.py src/repo_presenter/issues/discovery.py "class HandoffDiscovery"
+      python -m pytest tests/issues/ -q
     expect: exit 0
-    timeout_seconds: 30
+    timeout_seconds: 120
     proves:
       - REQ-G3-001
 requires:
@@ -35,14 +50,21 @@ requires:
 network: false
 negative_control:
   mutate: |-
-    python -c "import pathlib; p = pathlib.Path('src/repo_presenter/issues/discovery.py'); p.write_text('placeholder', encoding='utf-8') if p.exists() else None"
+    python -c "import pathlib; p = pathlib.Path('src/repo_presenter/issues/close.py'); s = p.read_text(encoding='utf-8'); s2 = s.replace('if reason ==', 'if False and reason =='); p.write_text(s2, encoding='utf-8')"
   rationale: >
-    If the discovery module ever exists, replacing it with a placeholder must make this check
-    fail -- the check must track real content, not merely file presence.
+    Disables the re-detection gate on a 'completed' close -- test_close_completed_refused_when_
+    defect_still_reproduces and test_full_lifecycle_refuses_close_when_redetection_finds_the_
+    defect_still_live must then fail, proving these tests actually exercise the real refusal
+    logic, not just import success.
 evidence:
   - src/repo_presenter/issues/discovery.py
+  - src/repo_presenter/issues/close.py
+  - tests/issues/test_discovery.py
+  - tests/issues/test_close.py
+  - tests/issues/test_lifecycle_end_to_end.py
 closeout:
-  - "Demonstrate discover -> dedupe -> approval -> file -> track -> re-detect -> resolve -> close
-     once end to end against a mock/local token, independently confirmed. TC-010a, not this
-     card, covers the real upstream exercise."
-recovery: "The named module does not exist yet; this card is correctly not started."
+  - "This card closes on the dev/mock-scope lifecycle (discover/approve/plan/close), fully
+     tested without any live network call. TC-010a, not this card, covers firing file_handoff
+     for real against one real, owner-authorized upstream repository."
+recovery: "Revert src/repo_presenter/issues/discovery.py, close.py, and the three new test
+  files; dedup.py/approval.py/file.py/model.py are untouched and unaffected."
