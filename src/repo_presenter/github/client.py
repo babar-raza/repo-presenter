@@ -20,9 +20,11 @@ visual-asset/metadata work) are still not needed and left for later.
 from __future__ import annotations
 
 import base64
+import re
 from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any, NoReturn
+from urllib.parse import urlsplit
 
 import httpx
 
@@ -34,6 +36,37 @@ REQUEST_TIMEOUT_SECONDS = 30.0
 
 FetchFn = Callable[[str, "str | None"], "tuple[int, Any]"]
 WriteFn = Callable[[str, str, "dict[str, Any]"], "tuple[int, Any]"]
+
+
+# Owner directive 2026-11-04 (docs/DECISION_LOG.md): every repository except this one is READ-ONLY.
+# This is the single choke point for the three real HTTP write primitives below, so the rule is
+# mechanical rather than narrative. There is deliberately no environment-variable override: lifting
+# it is a reviewed code change, not a runtime switch.
+WRITE_ALLOWED_REPOSITORIES = frozenset({"babar-raza/repo-presenter"})
+_REPO_PATH = re.compile(r"^/repos/(?P<owner>[^/]+)/(?P<name>[^/]+)(?:/|$)")
+
+
+class UpstreamWriteForbiddenError(RepositoryMetadataError):
+    """A write was refused before any request was made: its target is not an allowed repository."""
+
+
+def assert_write_allowed(url: str) -> None:
+    """Raise unless ``url`` is a ``/repos/{owner}/{repo}/...`` URL on the GitHub API root whose
+    repository is in ``WRITE_ALLOWED_REPOSITORIES``. Fails closed on every other shape."""
+    parts = urlsplit(url)
+    if f"{parts.scheme}://{parts.netloc}" != API_ROOT:
+        raise UpstreamWriteForbiddenError(f"write refused: {url} is not on {API_ROOT}")
+    if "%" in parts.path or ".." in parts.path or parts.query.startswith("/"):
+        raise UpstreamWriteForbiddenError(f"write refused: {url} has an encoded or dotted path")
+    match = _REPO_PATH.match(parts.path)
+    if match is None:
+        raise UpstreamWriteForbiddenError(f"write refused: {url} does not target a repository")
+    slug = f"{match['owner']}/{match['name']}".lower()
+    if slug not in {a.lower() for a in WRITE_ALLOWED_REPOSITORIES}:
+        raise UpstreamWriteForbiddenError(
+            f"write refused: {slug} is read-only for this execution (only "
+            f"{sorted(WRITE_ALLOWED_REPOSITORIES)} may be written)"
+        )
 
 
 def _write_headers(token: str) -> dict[str, str]:
@@ -74,6 +107,7 @@ def default_post(url: str, token: str, payload: dict[str, Any]) -> tuple[int, An
     """``POST url`` with ``payload`` as JSON. Never called except by ``create_issue``, which is
     itself never called except by ``repo_presenter.issues.file`` after that module's own
     authorization check passes."""
+    assert_write_allowed(url)
     try:
         response = httpx.post(
             url, headers=_write_headers(token), json=payload, timeout=REQUEST_TIMEOUT_SECONDS
@@ -91,6 +125,7 @@ def default_patch(url: str, token: str, payload: dict[str, Any]) -> tuple[int, A
     """``PATCH url`` with ``payload`` as JSON. Never called except by ``update_pull_request``,
     which is itself never called except by ``repo_presenter.propose.effect`` after that module's
     own gates pass."""
+    assert_write_allowed(url)
     try:
         response = httpx.patch(
             url, headers=_write_headers(token), json=payload, timeout=REQUEST_TIMEOUT_SECONDS
@@ -108,6 +143,7 @@ def default_put(url: str, token: str, payload: dict[str, Any]) -> tuple[int, Any
     """``PUT url`` with ``payload`` as JSON. Never called except by ``put_contents``, which is
     itself never called except by ``repo_presenter.propose.effect`` after that module's own gates
     pass."""
+    assert_write_allowed(url)
     try:
         response = httpx.put(
             url, headers=_write_headers(token), json=payload, timeout=REQUEST_TIMEOUT_SECONDS
