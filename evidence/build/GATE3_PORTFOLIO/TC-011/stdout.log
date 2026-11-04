@@ -1,16 +1,16 @@
 
 ===== CLEAN RUN 1 =====
-$ python ops/checks/marker_check.py project/state.yaml "LIVE_DELIVERY_CONFIRMED_COUNT: 25"
+$ python ops/checks/portfolio_delivery_count.py 25
 --- stdout ---
-FAIL: project\state.yaml missing marker(s): ['LIVE_DELIVERY_CONFIRMED_COUNT: 25']
+FAIL: reviewer calibration status is 'NOT_PASSED', not PASSED -- nothing can count toward P1 while this holds
 
 --- stderr ---
 
 
 ===== CLEAN RUN 2 =====
-$ python ops/checks/marker_check.py project/state.yaml "LIVE_DELIVERY_CONFIRMED_COUNT: 25"
+$ python ops/checks/portfolio_delivery_count.py 25
 --- stdout ---
-FAIL: project\state.yaml missing marker(s): ['LIVE_DELIVERY_CONFIRMED_COUNT: 25']
+FAIL: reviewer calibration status is 'NOT_PASSED', not PASSED -- nothing can count toward P1 while this holds
 
 --- stderr ---
 

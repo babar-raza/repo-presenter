@@ -3,10 +3,10 @@
   "card": "TC-011",
   "gate": "GATE3_PORTFOLIO",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-04T07:36:05Z",
-  "base_rev": "52c48d5e69142a42e74f0bb7ca463113658c5a0c",
-  "head_rev": "52c48d5e69142a42e74f0bb7ca463113658c5a0c",
-  "card_sha256": "8b7bc10834290909731435d66c85b251288052cb9ff1fcbf82b6fe5cde404da3",
+  "generated_at": "2026-11-04T08:35:26Z",
+  "base_rev": "8756b0387c35d53f67944b98636ae131611930b1",
+  "head_rev": "8756b0387c35d53f67944b98636ae131611930b1",
+  "card_sha256": "97a7b8107a5c339f585f90b0805a1fa7098cdc43f3c2423f874eab54de334348",
   "fingerprint": {
     "python": "3.13.15",
     "platform": "Windows-11-10.0.26300-SP0"
@@ -21,10 +21,10 @@
       "run": 1,
       "checks": [
         {
-          "command": "python ops/checks/marker_check.py project/state.yaml \"LIVE_DELIVERY_CONFIRMED_COUNT: 25\"",
+          "command": "python ops/checks/portfolio_delivery_count.py 25",
           "exit_code": 1,
-          "duration_s": 0.067,
-          "stdout_sha256": "2ca38bc2cf83dd810dca6e99f3eceb6fb73e5411ba00d1da8b2a63482bf4957e"
+          "duration_s": 0.069,
+          "stdout_sha256": "e5f391322b23c9bfec7fd7d336ad0db96248013db1b9e25d45e6b302cdcd0f4c"
         }
       ],
       "all_passed": false
@@ -33,10 +33,10 @@
       "run": 2,
       "checks": [
         {
-          "command": "python ops/checks/marker_check.py project/state.yaml \"LIVE_DELIVERY_CONFIRMED_COUNT: 25\"",
+          "command": "python ops/checks/portfolio_delivery_count.py 25",
           "exit_code": 1,
-          "duration_s": 0.064,
-          "stdout_sha256": "2ca38bc2cf83dd810dca6e99f3eceb6fb73e5411ba00d1da8b2a63482bf4957e"
+          "duration_s": 0.069,
+          "stdout_sha256": "e5f391322b23c9bfec7fd7d336ad0db96248013db1b9e25d45e6b302cdcd0f4c"
         }
       ],
       "all_passed": false
@@ -44,12 +44,12 @@
   ],
   "negative_control": {
     "kind": "mutate",
-    "patch": "python -c \"import pathlib; p = pathlib.Path('project/state.yaml'); s = p.read_text(encoding='utf-8'); s2 = s.replace('LIVE_DELIVERY_CONFIRMED_COUNT: 25', 'LIVE_DELIVERY_CONFIRMED_COUNT: 24'); p.write_text(s2, encoding='utf-8')\"",
+    "patch": "python -c \"import pathlib; p = pathlib.Path('evidence/delivery_ledger.json'); p.write_text('[]', encoding='utf-8')\"",
     "patch_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
     "applied": false,
     "patch_applied_failed": false,
     "exit_codes": []
   },
   "accepted": false,
-  "reason": "checks failed: python ops/checks/marker_check.py project/state.yaml \"LIVE_DELIVERY_CONFIRMED_COUNT: 25\"; negative-control patch did not apply"
+  "reason": "checks failed: python ops/checks/portfolio_delivery_count.py 25; negative-control patch did not apply"
 }
