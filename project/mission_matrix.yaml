@@ -20,7 +20,7 @@ rows:
   - {id: G3, title: "Issue lifecycle discovery->closure, external writes disabled", status: PARTIAL,
      implementation: PARTIAL, test: YES, real_execution: NONE, independent_verification: NONE,
      evidence: [src/repo_presenter/issues/discovery.py, src/repo_presenter/issues/close.py],
-     gaps: "library exists with tests; no end-to-end exercise in an isolated repo; TC-010a open",
+     gaps: "all 11 lifecycle stages now have code + fake-transport tests (stage audit in tests/issues/test_lifecycle_end_to_end.py; tracking, labels, reopen-on-recurrence and remote comment/close/reopen added 2026-11-04, every write behind assert_write_allowed + kill switch + permit + approvals; 12 negative controls). NOT done: no real exercise even against babar-raza/repo-presenter, no production CloseApprovalStore (close-approval record format is untested against GitApprovalStore), assignees unsupported (no registry field), a partial failure (comment ok, close failed) can duplicate the closing comment on retry, local-only not-planned close still skips re-verification (pinned by an existing test); TC-010a open",
      next_action: "TC-010a isolated exercise inside babar-raza/repo-presenter", external_effect_prohibited: "filing/closing issues on upstream repos"}
   - {id: G4, title: "Candidate publication end-to-end (Cells .NET, 3D Python mandatory)", status: PARTIAL,
      implementation: PARTIAL, test: YES, real_execution: NONE, independent_verification: NONE,
