@@ -4,10 +4,23 @@ track: legacy-reconciliation
 purpose: >
   Inventory every write-capable legacy (repository-presenter) workflow and effect, with real
   job-level evidence of whether a write has actually occurred (not just "workflow enabled"),
-  and obtain an explicit owner-approved disposition per writer before any new publishing/issues
-  work (TC-009, TC-010) proceeds against the same upstream App installation. This card stays
-  correctly BLOCKED until the owner actually signs off -- it must not be gamed into ACCEPTED by
-  weakening its own check.
+  and obtain an explicit owner-approved disposition per writer before any new LIVE-WRITE
+  publishing/issues action (TC-009a, TC-010a, TC-012a -- the final cutover) proceeds against the
+  same upstream App installation. This card stays correctly BLOCKED until the owner actually
+  signs off on a BLANKET disposition -- it must not be gamed into ACCEPTED by weakening its own
+  check. 2026-11-04 (second supervisor directive, section 2): the owner has separately given an
+  explicit INTERIM disposition -- preserve the legacy writer and its existing authorization
+  exactly as-is; keep read-only monitoring/liveness operational; preserve existing issues/PRs/
+  approvals/records/history; never run two autonomous writers for the same (repository, effect);
+  build and test replacement implementations (TC-009/TC-010's dev/mock scope, already done)
+  without waiting on this card; for any live pilot, obtain the applicable authorization for that
+  EXACT target/effect and isolate ownership so old and new systems never compete; never retire,
+  disable, overwrite, or force-push the legacy system; final writer-ownership migration remains
+  its own distinct, later, owner-approved cutover (TC-012a). This is recorded in
+  docs/DECISION_LOG.md. It is explicitly NOT a blanket OWNER_APPROVED_WRITER_DISPOSITION -- this
+  card's own check must not be satisfied by it, and was not; TC-009/TC-010's dev/mock scope was
+  never actually blocked on this card in the real dependency graph (depends_on: [] on both),
+  only TC-009a/TC-010a/TC-012a (the live-write/cutover cards) correctly still are.
 depends_on: []
 write_paths:
   - docs/LEGACY_WRITER_INVENTORY_2026-11-04.md

@@ -33,9 +33,17 @@ purpose: >
   avoidable manual work. The FINAL legacy-writer cutover is its own card, TC-012a. Still NOT
   claimed ACCEPTED here: no real unattended scheduled cycle has ever actually run, and the
   Dockerfile remains build-unverified -- see closeout.
+  2026-11-04 (second supervisor directive, section 2 + section 5): `depends_on` corrected twice.
+  TC-002 (legacy issue-filing writer disposition) is removed -- this card's scheduled execution
+  is README generation, an entirely different effect/domain from the legacy issue-filing
+  writer's ownership (`docs/LEGACY_WRITER_INVENTORY_2026-11-04.md`); the two were never in
+  conflict, and the directive is explicit that engineering/infra work must not sit behind a
+  blanket TC-002 approval it never actually needed. `TC-008` is replaced with `TC-008a`
+  (strictly stronger, since TC-008a itself depends on TC-008): production scheduled execution
+  must depend on the real operational P5 proof, not merely the decision-module milestone, per
+  the directive's own words ("not merely the preliminary TC-008 module").
 depends_on:
-  - TC-002
-  - TC-008
+  - TC-008a
   - TC-010
 write_paths:
   - Dockerfile

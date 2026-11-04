@@ -2698,3 +2698,91 @@ immediately following it is the actual fix, independently reproduced and confirm
 hosted re-run before being reported as closed.
 
 **Where the detail lives**: `tests/conftest.py`.
+
+## 2026-11-04: owner answers the two alleged blanket blockers with interim dispositions, not blanket approvals; the taskcard-ownership mismatch is repaired, not worked around
+
+A further directive answered two questions this session had posed as blanket human blockers, and
+corrected a structural mismatch in how taskcards declare ownership of paths. Recorded here
+verbatim in substance, with the explicit caveat the directive itself states: **neither answer
+below satisfies either card's own mechanical check, and neither should.**
+
+**TC-002 (legacy writer disposition) -- INTERIM, not blanket**: preserve the legacy scheduled
+issue-filing machinery and its existing authorization exactly as-is; keep read-only monitoring
+and liveness workflows operational; preserve existing issues, PRs, approvals, durable records
+and workflow history; never run two autonomous writers for the same `(repository, effect)`
+ownership; build and test replacement implementations independently without waiting on this
+card (already true in the real dependency graph -- `TC-009`/`TC-010` both declare
+`depends_on: []`, and were never actually blocked on `TC-002` despite this card's own prior
+purpose text implying otherwise, now corrected); for any live pilot, obtain the applicable
+authorization for that exact target/effect and isolate ownership so old and new systems never
+compete; never retire, disable, overwrite, or force-push the legacy system; final writer-
+ownership migration remains its own distinct, owner-approved cutover (`TC-012a`). This is
+recorded in `project/taskcards/TC-002.yaml`'s own purpose field, not fabricated as an
+`OWNER_APPROVED_WRITER_DISPOSITION:` record -- the card's own check still correctly fails, and
+`TC-009a`/`TC-010a`/`TC-012a` (the actual live-write/cutover cards) correctly still depend on it.
+
+**TC-004 (2026-10-31 sweep pause) -- UPHELD exactly as written, not lifted**: the pause's own
+original, objective lift condition (the three-product pilot set reaching the established
+quality bar) is unchanged. Explicitly still allowed: read-only investigation/comparison,
+implementing and testing shared corrections, named bounded pilot verification (at most three
+repositories per change), building calibration harnesses. Explicitly still prohibited: broad
+portfolio generation sweeps, treating historically produced candidates as newly verified,
+upstream writes without specific authorization. Recorded in `project/taskcards/TC-004.yaml`'s
+own purpose field, not fabricated as `OWNER_RULING_SWEEP_PAUSE: LIFTED` -- `scheduled_execution_
+gate.py`'s own sweep-pause predicate correctly still fails.
+
+**TC-006's permanent `--no-scope` exception -- rejected; the real mismatch repaired instead.**
+The actual problem generalizes well beyond `TC-006`: many cards' real deliverables sit under
+paths `GLOBAL_DENY` reserves to the supervisor (`docs/**`, `data/**`, `project/**`,
+`evidence/**`, `.github/**`, `ops/**`), while the verifier's own `check_scope` assumed every
+acceptable card has a worker-owned, card-tagged commit covering its entire deliverable. The real
+fix is recognizing (not yet further separated into new tooling this pass, given the directive's
+own "do not reimplement the supervisor" instruction) that a card's `write_paths` should name only
+its genuinely worker-owned, scope-checkable portion; a card whose real output is itself
+supervisor-owned content (a docs report, a workflow file) has that content committed by the
+supervisor directly, untagged, and verified by the card's own executable checks reading the live
+file -- exactly the pattern `TC-010`/`TC-012` already demonstrated by splitting their commits
+this way. `TC-006` keeps its `--no-scope`-only status honestly documented in its own YAML, not
+granted a standing exception in the verifier; no blanket permission to edit protected paths was
+added anywhere.
+
+**Taskcard dependency graph corrected**: `TC-012`'s `depends_on` dropped `TC-002` (its scheduled
+execution is README generation, never in ownership conflict with the issue-filing writer) and
+replaced `TC-008` with `TC-008a` (the real operational P5 gate, not the decision-module
+milestone). `TC-011` gained `TC-008a` as an explicit dependency -- its own closeout had already
+said a 25-repository campaign must not scale while burning unnecessary provider calls; it is
+now a real edge, not prose.
+
+**Verifier integrity repairs, reproduced and fixed**: (1) `ops/gatecli.py::cmd_validate` passed
+a receipt's raw `accepted` field straight to `cardlint.lint_card`, bypassing its lint checks for
+any card whose receipt forged or stale-claimed acceptance even when `gateverify`'s own coherence
+computation disagreed -- fixed to use the effectively-accepted set instead, with 4 new tests.
+(2) `receipt_is_coherent()`'s "two identical clean passes" check only required both runs to
+declare `all_passed=True`, never that they checked the SAME commands as each other or as the
+card's own declared `checks[]` -- fixed, with 2 new negative-control tests proving a receipt
+with mismatched run commands, or commands not matching the card, is now rejected. (3)
+Currentness was tied only to the taskcard YAML's own hash, so a referenced checker script (e.g.
+`ops/checks/*.py`) or required evidence document could change underneath an accepted receipt
+without it ever going stale -- fixed with `gateverify.checker_fileset_sha256()`, hashing every
+file a card's checks reference at the relevant revision; a receipt generated before this field
+existed is itself treated as stale (new, stronger acceptance must be earned -- historical
+invalid receipts remain historical, per the directive's own instruction). `TC-010` and `TC-012`
+were re-verified for real under the strengthened checks and remain genuinely accepted; `TC-006`
+is now additionally, correctly flagged incoherent on grounds (2) above, since its receipt
+predates the check-script replacement its own card now declares.
+
+**Authorization predicate hardened**: `present.yml`'s every privileged/provider-consuming/
+repository-code step changed from `authorized != 'false'` (a PERMISSIVE comparison an absent,
+empty, or malformed output would also satisfy) to `authorized == 'true'` (an explicit positive
+match) -- 46 structural tests re-run clean, plus a new test asserting no `!= 'false'` pattern
+remains anywhere in the workflow file.
+
+**What this does NOT decide**: neither TC-002 nor TC-004 is closed; both remain
+`AWAITING_OWNER_DECISION` by design, correctly. Branch protection and the remaining external-
+effect-oracle hardening (`execution_proof.py`, `portfolio_delivery_count.py`) are tracked
+separately, not yet done as of this entry.
+
+**Where the detail lives**: `project/taskcards/TC-002.yaml`, `TC-004.yaml`, `TC-011.yaml`,
+`TC-012.yaml`, `TC-008a.yaml`; `ops/gatecli.py`; `ops/gateverify.py`; `tests/ops/
+test_cardlint_grandfather.py`; `tests/ops/test_checker_fileset_currentness.py`; `tests/ops/
+test_receipt_coherence.py`; `.github/workflows/present.yml`; `tests/test_present_schedule.py`.

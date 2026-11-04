@@ -7,7 +7,18 @@ purpose: >
   with aspose.org (decision 4), and that pause was never lifted on the record -- yet the sweep
   that raised Lane R from 4 to 9-10 and Lane L from 4 to 12 (2026-11-01 onward) proceeded anyway,
   with no decision-log entry authorizing the resumption. This card stays BLOCKED until the owner
-  rules on it; it must not be closed by an agent's own interpretation.
+  rules on it; it must not be closed by an agent's own interpretation. 2026-11-04 (second
+  supervisor directive, section 2): the owner has separately UPHELD the original conditional
+  pause exactly as written, with its existing, objective lift condition (the three-product
+  pilot set reaching the established quality bar) -- not lifted. Explicitly still allowed under
+  this ruling: read-only investigation/comparison, implementing and testing shared corrections,
+  named bounded pilot verification (at most three repositories per change), building calibration
+  harnesses. Explicitly still prohibited: broad portfolio generation sweeps, treating
+  historically produced candidates as newly verified, upstream writes without specific
+  authorization. This is recorded in docs/DECISION_LOG.md. It is explicitly NOT an
+  OWNER_RULING_SWEEP_PAUSE: LIFTED record -- this card's own check, and
+  scheduled_execution_gate.py's own sweep-pause predicate, must not be satisfied by it, and were
+  not: the pause itself continues exactly as the 2026-10-31 decision already set it.
 depends_on: []
 write_paths:
   - docs/DECISION_LOG.md
