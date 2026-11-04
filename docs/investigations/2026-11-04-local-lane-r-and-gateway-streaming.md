@@ -123,3 +123,13 @@ Verdict: REJECT_FACTUAL, 2 blocking `unsupported_claim` findings:
 The REJECT is blocking and was not overridden. These two findings are a useful calibration case
 (one fabrication caught, one source-backed claim the extractor did not capture). Saved locally as
 verdict_attempt_A.json / README_attempt_A.md in the run directory.
+
+### Font, second pass (fresh repair ledger): authoring accuracy limit, not a code defect
+
+The model authored different text and again fabricated "PDF" (now F03 as well as F01), plus two more
+unsupported key-capability claims (4 blocking findings). The F01 repair was rejected twice by the
+repair's own checks (unrepairable) and the others did not clear their findings. Per the escalation
+ladder this is recorded as a limit of qwen3-next's authoring accuracy on a large API surface
+(hallucinated PDF export) combined with the single-attempt repair budget, not a further code fault.
+Font stays unsealed. Rerunning more would only sample the model again; the next lever is not a code
+change here but the model/route, or an evidence-extraction improvement for F02-type claims.
