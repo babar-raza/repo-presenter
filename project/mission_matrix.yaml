@@ -66,7 +66,7 @@ rows:
   - {id: N2, title: "Non-negotiable: reviewer calibration and no false acceptance", status: BLOCKED,
      implementation: YES, test: YES, real_execution: PARTIAL, independent_verification: NONE,
      evidence: [data/reviewer_calibration.json, project/taskcards/TC-007.yaml],
-     gaps: "NOT_PASSED (failed gates: false_reject_rate, stability, two tier-2 real-defect classes); iteration 4 needs fresh ACCEPTed clean twins which need hosted/link-reachable runs",
+     gaps: "NOT_PASSED (failed gates: false_reject_rate, stability, two tier-2 real-defect classes); iteration 4 needs fresh sealed clean twins; local sandbox runs cannot seal (github.com 403 -> BC-06 UNCHECKED, see docs/investigations/2026-11-04-local-lane-r-and-gateway-streaming.md) and Actions dispatch is 403",
      next_action: "obtain network access or hosted runs; rerun harness", external_effect_prohibited: "none"}
   - {id: N3, title: "Non-negotiable: no writes outside babar-raza/repo-presenter", status: PARTIAL,
      implementation: PARTIAL, test: YES, real_execution: PARTIAL, independent_verification: NONE,

@@ -22,3 +22,19 @@ that conflict is resolved, supervisor notes go in docs/investigations/ instead.
   calls each) and a fix for the banner-link disposition gap seen above.
 - **Not done this session:** mission matrix, migration-readiness package, TC-009a/009b/010a/011/012a. PR #3
   (write guard) was left to its own agent.
+
+## Correction and second local run (after the owner allowed products.aspose.org / img.shields.io)
+
+- The first run's banner REJECT was a sandbox artifact (products.aspose.org and img.shields.io were
+  unreachable, so link facts were UNRESOLVED and the renderer correctly dropped the banner). It was not
+  a pipeline or disposition defect.
+- Second run (same repository, streaming on): 47 gateway calls, all HTTP 200. The deterministic review
+  stage returned ACCEPT (`model_verdict: null`), but validation check BC-06 failed because
+  `https://github.com/aspose-font-foss/Aspose.Font-FOSS-for-Python/blob/main/LICENSE.txt` is `UNCHECKED`:
+  direct requests to github.com and api.github.com return HTTP 403 from this session (governed GitHub
+  access; raw.githubusercontent.com returns 200). The run was therefore correctly not sealed and no LLM
+  review was made (a deterministic-only verdict is never sealed).
+- Consequence: no sealed candidate and no calibration-corpus base can be produced in this sandbox for any
+  README that links to github.com pages. That needs a hosted run (Actions, not dispatchable from this
+  session: HTTP 403 on workflow_dispatch) or a runner with ordinary github.com access. The link check was
+  deliberately not weakened.
