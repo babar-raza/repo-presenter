@@ -28,7 +28,7 @@ from __future__ import annotations
 
 import json
 from collections.abc import Callable, Collection, Mapping, Sequence
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from functools import partial
 from pathlib import Path
 from typing import Any
@@ -82,7 +82,7 @@ from repo_presenter.readme.composition.planning import (
     planning_schema,
 )
 from repo_presenter.readme.composition.policy import DEFAULT_POLICY
-from repo_presenter.readme.composition.renderer import line_counts
+from repo_presenter.readme.composition.renderer import line_counts, render_readme
 from repo_presenter.readme.reconciliation.dispositions import (
     reconcile_checks,
     reconciliation_batch_facts,
@@ -217,6 +217,9 @@ class RepairContext:
     name: str
     #: The README the defect was found in (for a BC-07 budget repair: its visible-line count).
     readme: str = ""
+    #: The coherent units document the README was rendered from; with it a budget repair can
+    #: MEASURE what clearing a plan field removes instead of estimating.
+    units: dict[str, Any] = field(default_factory=dict)
 
 
 def _read_text(path: Path) -> str:
@@ -362,8 +365,33 @@ def _budget_hint(
         return None
     visible, _total = line_counts(rc.readme)
     return visible_line_budget_hint(
-        plan, rc.facts, visible, DEFAULT_POLICY.visible_lines_budget
+        plan,
+        rc.facts,
+        visible,
+        DEFAULT_POLICY.visible_lines_budget,
+        measure=_measure_by_render(rc, plan, visible),
     )
+
+
+def _measure_by_render(
+    rc: RepairContext, plan: Mapping[str, Any], visible: int
+) -> Callable[[str], int | None] | None:
+    """A function giving the visible lines that disappear when one plan field is cleared, measured
+    by rendering the README again from the same units and dispositions. ``None`` (so the caller
+    keeps the formula) without the authored units, and per field when the render cannot be made.
+    The plan passed in is never mutated."""
+    if not rc.units:
+        return None
+
+    def measure(field_name: str) -> int | None:
+        try:
+            cleared = {**plan, field_name: None}
+            rendered = render_readme(rc.entry, rc.facts, cleared, rc.units, rc.dispositions)
+            return max(visible - line_counts(rendered)[0], 0)
+        except Exception:  # noqa: BLE001 - any render failure means "cannot measure", not a defect
+            return None
+
+    return measure
 
 
 def reject_printed_quote(
@@ -678,6 +706,7 @@ def _load_context(
         tasks=tasks,
         name=product_name(entry),
         readme=_read_text(out_dir / "README.coherent.md"),
+        units=_read_json(out_dir / "content_units.coherent.json"),
     )
 
 
