@@ -47,3 +47,14 @@ that conflict is resolved, supervisor notes go in docs/investigations/ instead.
 | Debian package install in `docker build` | `deb.debian.org` unreachable | allowlist `deb.debian.org`, `security.debian.org`; or verify via the hosted `docker` CI job (PR #4) |
 | .NET SDK for example compilation | `builds.dotnet.microsoft.com` unreachable (api.nuget.org reachable) | allowlist `builds.dotnet.microsoft.com`; or run on a hosted runner (present.yml installs 10.0.204) |
 | github.com / api.github.com direct reads | 403 (raw.githubusercontent.com 200) | governed access; handled by the alternate-source rule for blob/raw links only |
+
+## Local Lane L run on aspose-font-foss/Aspose.Font-FOSS-for-Python (streaming on, local state remote)
+
+Result: `FAILED_INTERNAL` (validation_failed), nothing sealed - the intended outcome, not a fault. The
+independent review returned REJECT with 5 deterministic blocking findings: the live README lists
+formats (.otf, .woff, .woff2, .cff, .cff2, .pfa, .pfb, .eot) that no SUPPORTED format fact states
+(`claim_contradiction`), and four of its own examples FAIL when executed
+(`UnsupportedFontFormatException` x2, `ImportError`, `TypeError`; `lane_l_unrepaired_defect`). Lane L
+may not repair content it cannot verify, so it left 4 defects and recommended Lane R. These are real
+upstream README defects (issue-discovery candidates for G3); upstream issue filing remains disabled,
+so nothing was filed. Counts toward neither G1 nor P1 (no sealed candidate).
