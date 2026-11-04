@@ -2459,3 +2459,55 @@ fix) noted above and detailed in the new document.
 citations, the consolidated status assessment, and the stage-by-stage plan);
 `docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md` §K; `docs/repo_presenter_independent_audit_
 2026-11-03.md`; `project/state.yaml` lines 23, 48, 51, 5106.
+
+## 2026-11-04: pre-execution correction pass -- R2 framing corrected, R3 taskcard contradiction actually resolved, R4 sweep-pause violation flagged for the owner, P3 App-token-reuse decided
+
+**R2 correction**: `docs/STATUS_ASSESSMENT_AND_RECOVERY_PLAN_2026-11-04.md` framed the legacy
+repo's live scheduled workflows as a newly discovered risk. It was not new: this log's own
+2026-10-24 entry ("The old repo's P3/P4... is real, live production") already named it and
+explicitly left it open ("not decided or acted on in this entry"). Corrected in
+`docs/LEGACY_WRITER_INVENTORY_2026-11-04.md`, which also corrects a second, real overstatement
+from the same document: job-level inspection shows the legacy write-capable steps are currently
+fail-closed (authorization env var unset) on every recent scheduled run -- dormant-but-armed, not
+actively writing today. A second bot PR not previously surfaced
+(`aspose-cells-foss/Aspose.Cells-FOSS-for-Java#7`) was also found this pass.
+
+**R3 resolution**: the 2026-10-31 decision (decision 5: amend `AGENTS.md` to drop per-fix
+taskcards for narrative state.yaml work items) was logged but never implemented -- `AGENTS.md`'s
+"Taskcard discipline" section still required a card per fix. Resolved, not just re-logged: a
+two-tier model is now actually in `AGENTS.md` (`TWO_TIER_TASKCARD_MODEL_ADOPTED_2026-11-04`) and
+`ops/SUPERVISOR.md` (`RELEASE_GATE_CARDS_REINSTATED_2026-11-04`) -- routine fixes keep the
+2026-10-31 discipline (no card file); release-gate items (the ten `AUDIT_2026_11_01_ITEM_*`
+corrective-plan entries plus a new Stage-0 reconciliation item) become real
+`project/taskcards/TC-001.yaml`..`TC-012.yaml` cards, independently verified via
+`python ops/gatecli.py validate`/`verify` this same session (see
+`docs/READINESS_PACKAGE_2026-11-04.md` §C for the actual receipts).
+
+**R4 flag -- NOT resolved here, an open owner decision**: the 2026-10-31 decision log (decision
+4) paused broad coverage sweeps until the three-repository pilot set reached parity with
+aspose.org. That pause was never lifted on the record. The sweep that raised Lane R from 4 to
+9-10 and Lane L from 4 to 12 (2026-11-01 onward, the very numbers
+`docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md` praises as "real evidence... discipline...
+works") proceeded without an authorizing entry. This is a real, confirmed governance violation,
+not resolved by this entry -- see `project/taskcards/TC-004.yaml`. Proposed safe default,
+pending the owner's actual ruling: do not discard the already-produced pipeline-good candidates;
+do not resume further broad sweeps; require any candidate from the paused window to clear a
+calibration-passing reviewer before it counts toward P1 eligibility.
+
+**P3 decided**: per the 2026-11-04 directive's own explicit preference, this project will adapt
+the legacy repo's proven `actions/create-github-app-token@v2` pattern for App installation
+tokens rather than implement custom JWT signing or a new credential service in
+`src/repo_presenter/github/`, unless a specific, verified requirement later proves that
+insufficient. `APP_TOKEN_REUSE_DECISION: 2026-11-04, reuse actions/create-github-app-token@v2,
+no new JWT/private-key code`. Tracked as `project/taskcards/TC-009.yaml`; the decision is made,
+the wiring is not yet done.
+
+**What this does NOT decide**: R2's dormant-but-armed finding does not mean the legacy-writer
+disposition question (`project/taskcards/TC-002.yaml`) is resolved -- it changes the urgency,
+not the need for an explicit owner-approved disposition before TC-009/TC-010 proceed. R4's
+safe-default proposal is not an owner ruling; `TC-004.yaml` stays open until one is logged here.
+
+**Where the detail lives**: `docs/READINESS_PACKAGE_2026-11-04.md` (the full A-J package);
+`docs/RELEASE_CONTRACT_P1-P5.md`; `docs/LEGACY_WRITER_INVENTORY_2026-11-04.md`;
+`docs/SOURCE_OF_TRUTH_2026-11-04.md`; `project/taskcards/TC-001.yaml` through `TC-012.yaml`;
+`AGENTS.md`; `ops/SUPERVISOR.md`.

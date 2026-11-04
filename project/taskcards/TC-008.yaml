@@ -1,0 +1,48 @@
+id: TC-008
+gate: GATE1_QUALITY
+track: caching-preflight
+purpose: >
+  Wire a durable, source-aware preflight that proves currentness and safely skips a model call
+  BEFORE the call is made (P5) -- not the current after-the-fact, two-process, ledger-measured
+  no-op proof (core/noop_proof.py), which only judges a completed run. The already-ported
+  evaluate()/route()/classify()/RECHECKS table in readme/bundle/recheck.py is the right scope to
+  wire, not a full port of recheck_bundle()/recheck_portfolio() (both still raise
+  NotImplementedError, deliberately, per that file's own docstring). Independent of calibration
+  -- may proceed in parallel with TC-006/TC-007.
+depends_on: []
+write_paths:
+  - src/repo_presenter/cascade.py
+  - src/repo_presenter/readme/bundle/recheck.py
+satisfies:
+  - REQ-P5-001
+source_refs:
+  - file: src/repo_presenter/readme/bundle/recheck.py
+    anchor: "recheck_bundle"
+inputs: []
+actions:
+  - "Call the existing evaluate()/route() currency check before cascade.py decides to invoke the
+     provider, not only after sealing decides whether to accept the result as a no-op."
+  - "Prove zero recorded provider requests on an unchanged rerun, including after simulated
+     Actions-cache eviction."
+checks:
+  - command: |-
+      python ops/checks/marker_check.py src/repo_presenter/cascade.py "preflight_currency_gate"
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-P5-001
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -c "import pathlib; p = pathlib.Path('src/repo_presenter/cascade.py'); s = p.read_text(encoding='utf-8'); s2 = s.replace('preflight_currency_gate', 'REMOVED'); p.write_text(s2, encoding='utf-8')"
+  rationale: >
+    Removes the preflight call this card requires, once it exists. Proves the check actually
+    detects the wiring, not just that cascade.py contains any text at all.
+evidence:
+  - src/repo_presenter/cascade.py
+closeout:
+  - "Add warm-cache, cold-runner, Actions-cache-eviction, changed-README, changed-fact,
+     changed-policy, and corrupt-evidence tests per R10 of the 2026-11-04 directive."
+recovery: "The named marker does not exist yet; this card is correctly not started."

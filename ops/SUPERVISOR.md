@@ -29,6 +29,48 @@ The split exists for one reason: a loop that graded its own homework would
 forfeit the property the whole design rests on. The worker produces a commit;
 `gatecli.py` computes whether that commit is acceptable.
 
+## RELEASE_GATE_CARDS_REINSTATED_2026-11-04
+
+This mechanism (`gatecli.py`/`gateverify.py`) was built 2026-10-21, exercised exactly once
+(`TC-000`, a smoke test), then went dormant for release-blocking work — not because it didn't
+work, but because nothing ever fed it real cards for anything beyond the smoke test. The gap was
+data, not code: `gateverify.rebuild_state()` already computes real `READY`/`BLOCKED`/
+`IN_PROGRESS`/`ACCEPTED` status from a `depends_on` dependency graph across taskcard files, and
+`cmd_validate` already refuses when `project/state.yaml`'s hand-written fields disagree with
+that rebuild — both existed, unused, until `project/taskcards/TC-001.yaml` through `TC-012.yaml`
+(2026-11-04) gave them a real graph to compute over: the Stage-0 reconciliation items plus the
+ten `AUDIT_2026_11_01_ITEM_*` corrective-plan items, now real cards instead of narrative blocks
+in `project/state.yaml`'s `next_ready_items`. See AGENTS.md's "Taskcard discipline — two-tier
+model" for which kind of work gets a real card (release-gate items) versus which stays on the
+lighter, already-proven routine-fix discipline (branch, decision-log entry, independent
+verifier, no card file).
+
+## Goal-directed decision framework (per the 2026-11-04 directive, §3.3)
+
+At every decision point, the supervisor answers, in order:
+
+1. Which primary goal (P1–P5, `docs/RELEASE_CONTRACT_P1-P5.md`) is currently blocked, and by
+   which specific, named card (`python ops/gatecli.py tick` prints the real READY set)?
+2. What is the smallest action that removes its most important blocker?
+3. What pre-existing, already-working capability can perform that action (prefer reuse over
+   rebuild — see `docs/READINESS_PACKAGE_2026-11-04.md` §F's salvage table)?
+4. What evidence will prove success, independently, not from a worker's own report?
+5. What can proceed in parallel, and what must be serialized for safety (never two writers
+   against the same upstream repository/effect; see `docs/LEGACY_WRITER_INVENTORY_2026-11-04.md`)?
+6. Would the proposed change increase delivery capability, or only system complexity? Reject the
+   latter.
+7. Has an approach already failed on this exact failure signature? Stop repeating it; do
+   root-cause analysis instead (the escalation ladder below, applied to the signature, not the
+   card).
+
+**Escalate to the owner only for genuine owner-level decisions**: production write permission,
+a deliberate release-policy change, a destructive cutover, or — concretely, right now — the
+three open items named in `project/taskcards/TC-002.yaml` and `TC-004.yaml` (legacy-writer
+disposition; the 2026-10-31 sweep-pause ruling). Do not ask for routine implementation decisions
+that evidence can already resolve. Never claim a goal complete on test counts, taskcards,
+commits, documentation, or architecture alone — only on the eleven-state distinction in
+`docs/RELEASE_CONTRACT_P1-P5.md` reaching the state actually claimed.
+
 ## Channel
 
 Two append-only JSONL files, one writer each, both git-tracked:

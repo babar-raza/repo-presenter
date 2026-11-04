@@ -1,0 +1,42 @@
+id: TC-001
+gate: GATE0_AUTHORITY
+track: governance
+purpose: >
+  Reconcile the 2026-11-04 directive's claim that recent documents were missing from GitHub
+  main -- confirm nothing was lost (no stray branch, stash, or uncommitted work), record the
+  exact resolution, and push so origin/main matches local main. See
+  docs/SOURCE_OF_TRUTH_2026-11-04.md for the full investigation.
+depends_on: []
+write_paths:
+  - docs/SOURCE_OF_TRUTH_2026-11-04.md
+satisfies:
+  - REQ-G8-010
+source_refs:
+  - file: docs/STATUS_ASSESSMENT_AND_RECOVERY_PLAN_2026-11-04.md
+    anchor: "local/remote discrepancy"
+inputs: []
+actions:
+  - "Diff local main against origin/main; check git branch -a and git stash list for stray work."
+  - "Write docs/SOURCE_OF_TRUTH_2026-11-04.md recording the exact finding and resolution."
+  - "git push origin main once this card's own receipt is ACCEPTED."
+checks:
+  - command: |-
+      python ops/checks/marker_check.py docs/SOURCE_OF_TRUTH_2026-11-04.md "RECONCILIATION_STATUS: RESOLVED"
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-G8-010
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -c "import pathlib; p = pathlib.Path('docs/SOURCE_OF_TRUTH_2026-11-04.md'); s = p.read_text(encoding='utf-8'); s2 = s.replace('RECONCILIATION_STATUS: RESOLVED', ''); p.write_text(s2, encoding='utf-8')"
+  rationale: >
+    Deletes the resolution marker the check requires. Proves the check reads the file's real
+    content rather than only confirming the file exists.
+evidence:
+  - docs/SOURCE_OF_TRUTH_2026-11-04.md
+closeout:
+  - "git push origin main"
+recovery: "Revert the commit touching docs/SOURCE_OF_TRUTH_2026-11-04.md only; no product code involved."

@@ -1,0 +1,48 @@
+id: TC-011
+gate: GATE3_PORTFOLIO
+track: portfolio-delivery
+purpose: >
+  Reach P1: at least 25 common, authorized repository identities with BOTH lanes pipeline-good
+  under a calibration-passing reviewer, each with a reproducible acceptance receipt, and one
+  selected output per repository confirmed live upstream (state 10 of the eleven-state model in
+  docs/RELEASE_CONTRACT_P1-P5.md) -- never a manufactured no-op PR. Blocked on calibration
+  passing (TC-007) and a real publication path (TC-009); the current real count is 5 both-lanes
+  pipeline-good and 0 live-delivered, against a target of 25.
+depends_on:
+  - TC-007
+  - TC-009
+write_paths:
+  - docs/RELEASE_CONTRACT_P1-P5.md
+satisfies:
+  - REQ-P1-001
+source_refs:
+  - file: docs/RELEASE_CONTRACT_P1-P5.md
+    anchor: "Gap to P1's 25-common-products target"
+inputs: []
+actions:
+  - "Continue the fix-queue sweep toward common both-lane coverage, but only count a repository
+     toward P1 once its candidate has cleared a calibration-passing reviewer."
+  - "For each of the 25, obtain the owner's selected-output decision and confirm the live result
+     against the real upstream repository, not the local durable record."
+checks:
+  - command: |-
+      python ops/checks/marker_check.py project/state.yaml "LIVE_DELIVERY_CONFIRMED_COUNT: 25"
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-P1-001
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -c "import pathlib; p = pathlib.Path('project/state.yaml'); s = p.read_text(encoding='utf-8'); s2 = s.replace('LIVE_DELIVERY_CONFIRMED_COUNT: 25', 'LIVE_DELIVERY_CONFIRMED_COUNT: 24'); p.write_text(s2, encoding='utf-8')"
+  rationale: >
+    Drops the confirmed count by one. Proves the check requires the real threshold, not just the
+    marker's presence at any value.
+evidence:
+  - project/state.yaml
+closeout:
+  - "This card's ACCEPTED state must be independently cross-checked against gh api for each of
+     the 25 repositories' live README content, not accepted from a durable-state record alone."
+recovery: "The named marker does not exist yet; this card is correctly not started."

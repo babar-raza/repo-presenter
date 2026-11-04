@@ -1,0 +1,51 @@
+id: TC-007
+gate: GATE1_QUALITY
+track: quality-calibration
+purpose: >
+  Run reviewer calibration iteration 4 against a held-out corpus (per R5 of the 2026-11-04
+  directive: do not tune prompts without measuring improvement on held-out data; do not treat a
+  discretionary override or a manual JSON edit as equivalent to genuine verification) and reach
+  a real PASSED status. Nothing in this project may be published or counted toward P1 while this
+  card is open. Currently correctly BLOCKED: calibration has failed three times
+  (2026-10-27/27b/27-iter3) and has not been re-attempted since.
+depends_on:
+  - TC-006
+write_paths:
+  - data/reviewer_calibration.json
+satisfies:
+  - REQ-G4-001
+source_refs:
+  - file: data/reviewer_calibration.json
+    anchor: "status"
+inputs: []
+actions:
+  - "Run calibration iteration 4 against the aspose.org candidates as a local-only reference
+     corpus (far larger n than the 3 clean twins before), per the 2026-10-31 decision."
+  - "Do not hand-edit status to PASSED; the status must be the honest output of the calibration
+     harness."
+checks:
+  - command: |-
+      python ops/checks/calibration_status.py PASSED
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-G4-001
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -c "import json, pathlib; p = pathlib.Path('data/reviewer_calibration.json'); d = json.loads(p.read_text(encoding='utf-8')); d['status'] = 'NOT_PASSED'; p.write_text(json.dumps(d, indent=2), encoding='utf-8')"
+  rationale: >
+    Reverts a real PASSED status back to NOT_PASSED via real JSON editing (no raw-text quote
+    juggling, no backslashes crossing YAML and the shell -- ops/SUPERVISOR.md's own falsifier
+    rule). Proves the check distinguishes a genuine pass from the substring trap where
+    "NOT_PASSED" itself contains "PASSED": ops/checks/calibration_status.py parses the JSON and
+    compares the status field by equality, not by substring, so this negative control is the
+    only way to prove the check is not accidentally vacuous against the very string it must
+    currently correctly reject.
+evidence:
+  - data/reviewer_calibration.json
+closeout:
+  - "Do not dispatch TC-011 (25-product live delivery) until this card is ACCEPTED."
+recovery: "Calibration status reverts to NOT_PASSED; no product output is affected."

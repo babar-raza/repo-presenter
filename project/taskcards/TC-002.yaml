@@ -1,0 +1,52 @@
+id: TC-002
+gate: GATE0_AUTHORITY
+track: legacy-reconciliation
+purpose: >
+  Inventory every write-capable legacy (repository-presenter) workflow and effect, with real
+  job-level evidence of whether a write has actually occurred (not just "workflow enabled"),
+  and obtain an explicit owner-approved disposition per writer before any new publishing/issues
+  work (TC-009, TC-010) proceeds against the same upstream App installation. This card stays
+  correctly BLOCKED until the owner actually signs off -- it must not be gamed into ACCEPTED by
+  weakening its own check.
+depends_on: []
+write_paths:
+  - docs/LEGACY_WRITER_INVENTORY_2026-11-04.md
+satisfies:
+  - REQ-P3-001
+source_refs:
+  - file: docs/DECISION_LOG.md
+    anchor: "2026-10-24: The old repo's P3/P4"
+inputs: []
+actions:
+  - "Classify every legacy workflow READ-ONLY vs WRITE-CAPABLE from its own permissions: block."
+  - "Check the most recent write-capable job's actual step-level log, not just run conclusion."
+  - "Search for real bot-authored PRs/issues across every target org."
+  - "Propose a disposition per writer; do NOT write an owner-approval marker -- that is the
+     owner's decision, not this card's to fabricate."
+checks:
+  - command: |-
+      python ops/checks/marker_check.py docs/LEGACY_WRITER_INVENTORY_2026-11-04.md "OWNER_APPROVED_WRITER_DISPOSITION:"
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-P3-001
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -c "import pathlib; p = pathlib.Path('docs/LEGACY_WRITER_INVENTORY_2026-11-04.md'); p.write_text(p.read_text(encoding='utf-8') + chr(10) + 'OWNER_APPROVED_WRITER_DISPOSITION: 2099-01-01 (fabricated by negative control, must be rejected)', encoding='utf-8')"
+  rationale: >
+    Injects the exact marker the check looks for. This negative control is written to reveal a
+    different failure mode than the usual delete-the-marker pattern: if an agent were ever tempted
+    to make this check pass by writing the marker itself rather than obtaining a real owner
+    decision, this proves that a *textually present* marker is cheap to fake and that acceptance
+    of this specific card must never rest on the automated check alone -- a human reviewing the
+    actual commit history for a real, dated owner decision is required, and that human review is
+    documented separately in docs/DECISION_LOG.md, never inferred from this receipt.
+evidence:
+  - docs/LEGACY_WRITER_INVENTORY_2026-11-04.md
+closeout:
+  - "Do not mark this card ACCEPTED from the automated check alone -- require a dated
+     docs/DECISION_LOG.md entry naming the owner's actual disposition decision."
+recovery: "Revert the commit touching docs/LEGACY_WRITER_INVENTORY_2026-11-04.md only."

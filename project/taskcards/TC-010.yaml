@@ -1,0 +1,45 @@
+id: TC-010
+gate: GATE2_INTEGRATIONS
+track: issues-lifecycle
+purpose: >
+  Complete the issues lifecycle (P2): discovery, classification, dedup, approval, filing,
+  assignment where authorized, tracking, re-detection, verified resolution, authorized closing --
+  not just the single filing path that exists today. Reuse the legacy repo's tested discovery/
+  redetect/close_approval/lifecycle/funnel modules rather than rebuilding from scratch. Blocked
+  on TC-002 because this touches the same upstream issue surface the legacy funnel already owns.
+depends_on:
+  - TC-002
+write_paths:
+  - src/repo_presenter/issues/**
+satisfies:
+  - REQ-G3-001
+source_refs:
+  - file: docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md
+    anchor: "G3 -- Issues module operational"
+inputs: []
+actions:
+  - "Port the legacy repo's discovery and close/redetect modules, adapted to this repo's current
+     schema, preserving owner-approval gating and safe rate limits."
+  - "Give the whole lifecycle one real, independently-confirmed caller."
+checks:
+  - command: |-
+      python ops/checks/marker_check.py src/repo_presenter/issues/discovery.py "class HandoffDiscovery"
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-G3-001
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -c "import pathlib; p = pathlib.Path('src/repo_presenter/issues/discovery.py'); p.write_text('placeholder', encoding='utf-8') if p.exists() else None"
+  rationale: >
+    If the discovery module ever exists, replacing it with a placeholder must make this check
+    fail -- the check must track real content, not merely file presence.
+evidence:
+  - src/repo_presenter/issues/discovery.py
+closeout:
+  - "Demonstrate discover -> dedupe -> approval -> file -> track -> re-detect -> resolve -> close
+     once, end to end, independently confirmed (not self-reported) before ACCEPTED."
+recovery: "The named module does not exist yet; this card is correctly not started."

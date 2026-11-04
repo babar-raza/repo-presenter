@@ -16,25 +16,33 @@ authority:
 
 progress:
   counters_status: >
-    REFRESHED 2026-11-03 via `python scripts/portfolio_status.py` (read-only; reads the registry,
-    the state remote's per-lane records and candidates/) -- the exact script progress's own prior
-    note already pointed to and that nothing had actually run since 2026-10-31. Real, current,
-    reproducible numbers as of this run, superseding every earlier counters block in this file's
-    history: Lane R pipeline-good (ACCEPTED/READY_FOR_PROPOSAL) on 9 of 36 registry repositories;
+    REFRESHED 2026-11-04 via `python scripts/portfolio_status.py` (read-only; reads the registry,
+    the state remote's per-lane records and candidates/) -- this is the SECOND resync, closing a
+    real drift found live: the 2026-11-03T01:00:00Z block below said lane_r_accepted: 9, but a
+    later same-day card (AUDIT_2026_11_01_ITEM_7, project/state.yaml) had already logged 10, and
+    the top-of-file counters were never resynced after that run -- a third live recurrence of the
+    stale-dashboard pattern, independently confirmed in `docs/STATUS_ASSESSMENT_AND_RECOVERY_PLAN_
+    2026-11-04.md` and `docs/repo_presenter_independent_audit_2026-11-03.md`. Real, current,
+    reproducible numbers as of THIS run, superseding every earlier counters block in this file's
+    history: Lane R pipeline-good (ACCEPTED/READY_FOR_PROPOSAL) on 10 of 36 registry repositories;
     Lane L pipeline-good on 12 of 36. Both lanes pipeline-good on 5 repositories (Cells-Java,
-    Cells-Rust, Cells-TypeScript, Email-.Net, Imaging-.NET). Lane R record states: ACCEPTED 8,
-    READY_FOR_PROPOSAL 1, FAILED_INTERNAL 23, INVALIDATED 2, NO_RECORD 2. Lane L record states:
+    Cells-Rust, Cells-TypeScript, Email-.Net, Imaging-.NET). Lane R record states: ACCEPTED 9,
+    READY_FOR_PROPOSAL 1, FAILED_INTERNAL 22, INVALIDATED 2, NO_RECORD 2. Lane L record states:
     ACCEPTED 11, READY_FOR_PROPOSAL 1, FAILED_INTERNAL 22, NO_RECORD 2. Durable bundles stored:
-    11 (Lane R), 12 (Lane L). Committed under candidates/: 1 (Lane R), 0 (Lane L).
+    12 (Lane R), 12 (Lane L). Committed under candidates/: 1 (Lane R), 0 (Lane L).
     owner_reviewed: not tracked -- no owner-review record exists anywhere in this repository; every
     ACCEPTED state above is pipeline-level (independently reviewed by this repo's own non-authoring
-    LLM reviewer, never self-graded) and NOT owner-accepted. These are against
-    AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md's own G1/G2 targets (25+ independently accepted
-    per lane): Lane R 9/25 (36%), Lane L 12/25 (48%) -- short of target, reachable against the
-    36-repository ceiling, not close to exhausted.
-    This block goes stale again the moment a new hosted run changes a record and nobody reruns the
-    script -- re-run `python scripts/portfolio_status.py` before quoting these numbers in anything
-    more than a day old.
+    LLM reviewer, never self-graded) and NOT owner-accepted, and NONE has been produced or
+    re-checked under a calibration-PASSING reviewer (data/reviewer_calibration.json: NOT_PASSED,
+    unchanged since 2026-10-27) -- see docs/RELEASE_CONTRACT_P1-P5.md for why "pipeline-good" and
+    "release-accepted" are not the same claim. Against the owner's 2026-11-04 P1 target (25
+    common, both-lane, calibration-passing, live-delivered products, superseding the earlier
+    25-per-lane-independently framing): both-lanes-pipeline-good is 5/25 (20%), and live-delivered
+    is 0/25 -- see docs/RELEASE_CONTRACT_P1-P5.md.
+    CLOSURE TEETH (TC-005, project/taskcards/TC-005.yaml): this block must be re-synced via the
+    same script every time either lane's record states change, not left to drift again -- TC-005's
+    own check asserts `lane_r_accepted`/`lane_l_accepted` below match this run's numbers and fails
+    loudly if a later run changes the real counts without anyone re-running this sync.
   unit: authorizable README candidates (independently verified by this repo's own reviewer, not inherited from the old repo's judge)
   registry_total: 36
   repositories_with_composed_candidates: 36
@@ -42,13 +50,15 @@ progress:
   # lane_l_accepted/lane_r_accepted below were 36/34 from the 2026-10-21 manual sweep -- this is
   # the exact "false green" AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md's §F accountability
   # table (row 6) documents the owner personally catching and correcting on 2026-10-28, and that
-  # correction itself went stale again by 2026-10-31. Replaced 2026-11-03 with the real,
-  # script-reproduced numbers in counters_status above (9 Lane R, 12 Lane L) -- do not revert to
-  # 36/34, that figure is known-false, not merely old.
+  # correction itself went stale again by 2026-10-31, then AGAIN by 2026-11-03 (9 vs the real 10 --
+  # see counters_status above). Resynced 2026-11-04 via `python scripts/portfolio_status.py`;
+  # TC-005 (project/taskcards/TC-005.yaml) now asserts this block matches that script's output, so
+  # the next drift is a failing check, not a silent stale number. Do not revert to 36/34 (known
+  # false) or hand-edit these two fields without re-running the script first.
   lane_l_accepted: 12
   lane_l_corrected_non_empty_patch: 15
   lane_l_blocked: 0
-  lane_r_accepted: 9
+  lane_r_accepted: 10
   lane_r_blocked_or_not_authored: 2
   lane_r_blocked_detail: >
     aspose-psd-foss/Aspose.PSD-FOSS-for-.NET and aspose-slides-foss/Aspose.Slides-FOSS-for-.NET:

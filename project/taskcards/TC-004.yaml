@@ -1,0 +1,51 @@
+id: TC-004
+gate: GATE0_AUTHORITY
+track: governance
+purpose: >
+  Obtain an explicit owner ruling on a real, confirmed governance violation: the 2026-10-31
+  decision log paused broad coverage sweeps until the three-repository pilot set reached parity
+  with aspose.org (decision 4), and that pause was never lifted on the record -- yet the sweep
+  that raised Lane R from 4 to 9-10 and Lane L from 4 to 12 (2026-11-01 onward) proceeded anyway,
+  with no decision-log entry authorizing the resumption. This card stays BLOCKED until the owner
+  rules on it; it must not be closed by an agent's own interpretation.
+depends_on: []
+write_paths:
+  - docs/DECISION_LOG.md
+  - docs/READINESS_PACKAGE_2026-11-04.md
+satisfies:
+  - REQ-G8-012
+source_refs:
+  - file: docs/DECISION_LOG.md
+    anchor: "2026-10-31: Owner delegates the open decisions and sets the target"
+inputs: []
+actions:
+  - "State the violation plainly, with exact citations, in docs/READINESS_PACKAGE_2026-11-04.md."
+  - "Propose a safe default (do not discard the already-produced pipeline-good candidates; do not
+     resume further broad sweeps; require any candidate from the paused window to clear a
+     calibration-passing reviewer before counting toward P1 eligibility) without presuming the
+     owner's actual ruling."
+  - "Await and record the owner's explicit decision as a dated docs/DECISION_LOG.md entry
+     containing the OWNER_RULING_SWEEP_PAUSE marker."
+checks:
+  - command: |-
+      python ops/checks/marker_check.py docs/DECISION_LOG.md "OWNER_RULING_SWEEP_PAUSE:"
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-G8-012
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -c "import pathlib; p = pathlib.Path('docs/DECISION_LOG.md'); p.write_text(p.read_text(encoding='utf-8') + chr(10) + 'OWNER_RULING_SWEEP_PAUSE: fabricated, must be rejected', encoding='utf-8')"
+  rationale: >
+    Same discipline as TC-002's negative control: a textually present marker is cheap to inject
+    and must never substitute for a real, dated owner decision reviewed by a human, not inferred
+    from this receipt alone.
+evidence:
+  - docs/READINESS_PACKAGE_2026-11-04.md
+closeout:
+  - "Do not mark ACCEPTED without a human-reviewed, dated docs/DECISION_LOG.md entry recording
+     the owner's actual ruling."
+recovery: "No files are mutated by this card until the owner rules; nothing to revert."

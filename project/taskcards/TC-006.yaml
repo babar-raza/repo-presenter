@@ -1,0 +1,46 @@
+id: TC-006
+gate: GATE1_QUALITY
+track: quality-calibration
+purpose: >
+  Produce a representative quality benchmark comparing this repository's pilot-set candidates
+  (Imaging-.NET, 3D-.NET, Words-.NET, per the 2026-10-31 decision log) against the real
+  aspose.org refresh-candidate output on the same products, BEFORE reviewer calibration
+  iteration 4 runs -- the ordering the 2026-11-04 directive requires: benchmark, then
+  calibration, then publication eligibility, then portfolio scaling. Correctly BLOCKED until a
+  real benchmark report exists; no shortcut to "looks similar" is acceptable.
+depends_on:
+  - TC-004
+write_paths:
+  - docs/PARITY_BENCHMARK_PILOT.md
+satisfies:
+  - REQ-G7-001
+source_refs:
+  - file: docs/DECISION_LOG.md
+    anchor: "Iteration 4 runs after parity is shown on the pilot set"
+inputs: []
+actions:
+  - "Compare each pilot repository's committed candidate against its aspose.org reference on
+     factual accuracy, supported-API coverage, install commands, tested examples, retained
+     content, diagram quality, navigation and usability."
+  - "Record independently reproducible results in docs/PARITY_BENCHMARK_PILOT.md."
+checks:
+  - command: |-
+      python ops/checks/marker_check.py docs/PARITY_BENCHMARK_PILOT.md "PARITY_BENCHMARK_COMPLETE:"
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-G7-001
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -c "import pathlib; p = pathlib.Path('docs/PARITY_BENCHMARK_PILOT.md'); p.write_text('placeholder, no real benchmark', encoding='utf-8') if p.exists() else None"
+  rationale: >
+    If the real benchmark file ever exists, overwriting it with a placeholder must make this
+    check fail again -- a benchmark report is only evidence while its content is real.
+evidence:
+  - docs/PARITY_BENCHMARK_PILOT.md
+closeout:
+  - "Do not dispatch TC-007 (calibration iteration 4) until this card is ACCEPTED."
+recovery: "No files exist yet for this card to revert; it is correctly not started."

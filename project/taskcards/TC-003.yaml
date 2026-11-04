@@ -1,0 +1,63 @@
+id: TC-003
+gate: GATE0_AUTHORITY
+track: governance
+purpose: >
+  Resolve the standing contradiction between the 2026-10-31 decision log (decision 5: AGENTS.md
+  amended to drop per-fix taskcards for narrative state.yaml work items) and AGENTS.md's own
+  still-unedited "Taskcard discipline" section, by adopting a two-tier model: routine code fixes
+  keep using branch + decision-log + independent verifier (as 2026-10-31 decided and as this
+  project's real fix-queue sweep already practices); release-gate items (the ones that block a
+  P1-P5/G1-G8 goal) use real project/taskcards/TC-NNN.yaml cards enforced by the
+  gatecli.py/gateverify.py machinery that already exists and has simply never been fed real data.
+depends_on: []
+write_paths:
+  - AGENTS.md
+  - ops/SUPERVISOR.md
+  - project/taskcards/**
+satisfies:
+  - REQ-G8-011
+source_refs:
+  - file: docs/DECISION_LOG.md
+    anchor: "2026-10-31: Owner delegates the open decisions and sets the target"
+inputs: []
+actions:
+  - "Add a TWO_TIER_TASKCARD_MODEL_ADOPTED_2026-11-04 marker and explanation to AGENTS.md."
+  - "Add a RELEASE_GATE_CARDS_REINSTATED_2026-11-04 marker and explanation to ops/SUPERVISOR.md."
+  - "Author real TC-001..TC-012 cards for the Stage-0-plus-ten-item release-gate work."
+checks:
+  - command: |-
+      python ops/checks/marker_check.py AGENTS.md "TWO_TIER_TASKCARD_MODEL_ADOPTED_2026-11-04"
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-G8-011
+  - command: |-
+      python ops/checks/marker_check.py ops/SUPERVISOR.md "RELEASE_GATE_CARDS_REINSTATED_2026-11-04"
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-G8-011
+  - command: |-
+      python ops/checks/count_taskcards.py 13
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-G8-011
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -c "import pathlib; p = pathlib.Path('AGENTS.md'); s = p.read_text(encoding='utf-8'); s2 = s.replace('TWO_TIER_TASKCARD_MODEL_ADOPTED_2026-11-04', ''); p.write_text(s2, encoding='utf-8')"
+  rationale: >
+    Deletes the two-tier-adoption marker from AGENTS.md. Proves the check is reading real,
+    current content, not a cached assumption that governance was already fixed.
+evidence:
+  - AGENTS.md
+  - ops/SUPERVISOR.md
+  - project/taskcards/TC-001.yaml through TC-012.yaml
+closeout:
+  - "python ops/gatecli.py validate"
+  - "python ops/gatecli.py doctor"
+recovery: "Revert the AGENTS.md/SUPERVISOR.md edits and the new taskcard files; TC-000 and the
+  prior governance text remain intact in history regardless."

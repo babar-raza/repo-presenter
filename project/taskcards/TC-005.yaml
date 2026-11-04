@@ -1,0 +1,53 @@
+id: TC-005
+gate: GATE0_AUTHORITY
+track: governance
+purpose: >
+  Freeze the P1-P5 release contract (mapped to G1-G8, with the eleven-state distinction) and
+  close the stale-portfolio-dashboard pattern with real closure teeth: project/state.yaml's
+  top-of-file lane_r_accepted/lane_l_accepted counters must match a fresh
+  scripts/portfolio_status.py run, and this card's own check keeps proving that match rather than
+  trusting that a past sync is still current.
+depends_on: []
+write_paths:
+  - docs/RELEASE_CONTRACT_P1-P5.md
+  - project/state.yaml
+satisfies:
+  - REQ-G8-013
+source_refs:
+  - file: docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md
+    anchor: "Eight-Goal Scorecard"
+inputs: []
+actions:
+  - "Write docs/RELEASE_CONTRACT_P1-P5.md with the P1-P5/G1-G8 mapping and the eleven-state list."
+  - "Run python scripts/portfolio_status.py and resync project/state.yaml's dashboard counters to
+     its exact output."
+checks:
+  - command: |-
+      python ops/checks/marker_check.py docs/RELEASE_CONTRACT_P1-P5.md "RELEASE_CONTRACT_ADOPTED_2026-11-04"
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-G8-013
+  - command: |-
+      python ops/checks/marker_check.py project/state.yaml "lane_r_accepted: 10" "lane_l_accepted: 12"
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-G8-013
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -c "import pathlib; p = pathlib.Path('project/state.yaml'); s = p.read_text(encoding='utf-8'); s2 = s.replace('lane_r_accepted: 10', 'lane_r_accepted: 9'); p.write_text(s2, encoding='utf-8')"
+  rationale: >
+    Reintroduces the exact drift this card exists to prevent (the real third recurrence found
+    live this pass: top counters said 9 while a later card already said 10). Proves the check
+    actually catches a stale number rather than only confirming the file parses.
+evidence:
+  - docs/RELEASE_CONTRACT_P1-P5.md
+  - project/state.yaml
+closeout:
+  - "Re-run python scripts/portfolio_status.py and this card's checks any time a lane record
+     changes -- do not let the top-of-file dashboard drift a fourth time."
+recovery: "Revert the docs/RELEASE_CONTRACT_P1-P5.md and project/state.yaml counter edits only."

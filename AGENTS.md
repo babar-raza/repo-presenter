@@ -28,11 +28,28 @@ still answer "what must the product do"; the audit answers "what must get fixed,
 before any of that counts as delivered" — the two are complementary, not in conflict, and this
 row does not reorder the authority table below.
 
+## READ THIS SECOND — P1–P5 release contract (2026-11-04)
+
+The owner's 2026-11-04 pre-execution-correction directive **strengthens, and does not cancel**,
+the Nov-01 audit's goals and gates — it freezes five primary delivery objectives (P1–P5, see
+`docs/RELEASE_CONTRACT_P1-P5.md`) and requires the ten `AUDIT_2026_11_01_ITEM_*` narrative blocks
+in `project/state.yaml` to become real, mechanically-enforced taskcards instead of prose nobody
+re-reads. **That has now been done**: `project/taskcards/TC-001.yaml` through `TC-012.yaml` are
+the real, schema-conformant, dependency-ordered release-gate cards (Stage-0 reconciliation plus
+the ten corrective items), enforced by `ops/gatecli.py`/`ops/gateverify.py` exactly as
+`ops/SUPERVISOR.md` already describes — the narrative `AUDIT_2026_11_01_ITEM_*` blocks in
+`project/state.yaml` are now historical record, superseded by these cards, not a second
+parallel source of truth. `docs/READINESS_PACKAGE_2026-11-04.md` is the full reconciliation
+package (source-of-truth record, release contract, state machine, corrected governance,
+reconciled decision log, salvage table, dependency graph, acceptance matrix, honest scoreboard,
+and readiness verdict). Read it, and run `python ops/gatecli.py validate` / `tick`, before
+treating any status number in this repository as current.
+
 ## Authority table
 
 | Question | Authority |
 |---|---|
-| What must get fixed before the mission's own goals count as delivered? | `docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md` (owner-adopted 2026-11-03; corrective-plan cards live in `project/state.yaml`) |
+| What must get fixed before the mission's own goals count as delivered? | `docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md`, strengthened by `docs/RELEASE_CONTRACT_P1-P5.md` (owner-adopted 2026-11-03/04; corrective-plan cards live in `project/taskcards/TC-001..TC-012.yaml`, enforced via `ops/gatecli.py`) |
 | What must the product do, for whom, with what quality bar? | `docs/MISSION_AUTHORITY.md` |
 | What is currently true / in progress / blocked right now? | `project/state.yaml` (the only execution cursor — never hand-edited; see below) |
 | What old code/tests/fixtures may this repo reuse, and how? | `migration/reuse-manifest.yaml` |
@@ -92,14 +109,36 @@ accepted" property from `ops/SUPERVISOR.md` even in a single-session context.
    structural/tone reference, is incomplete relative to this goal even if its
    own tests are green.
 
-## Taskcard discipline (minimum, adapted from `foss-mcp`)
+## Taskcard discipline — two-tier model (TWO_TIER_TASKCARD_MODEL_ADOPTED_2026-11-04)
 
-Every taskcard is self-contained: a worker never reads this file or the
-mission document — only its card. A card states: objective, `write_paths`,
-test commands, a falsifier (a change that must make the stated tests fail —
-see `ops/SUPERVISOR.md` for the no-backslashes / semantic-break / UTF-8
-authoring rules carried over from `foss-mcp`), `source_refs` (what evidence or
-requirement this card satisfies), and rollback instructions. A card is
-ACCEPTED only when the supervisor has independently re-run its tests and
-falsifier from the commit it names, not from the worker's report of having
-run them.
+The 2026-10-31 decision log (`docs/DECISION_LOG.md`, "Owner delegates the open decisions and
+sets the target," decision 5) ruled that this file would be amended to describe what was
+actually being done — narrative work items in `project/state.yaml` plus a decision-log entry,
+branch, live hosted check, and independent verifier for routine fixes — instead of a per-fix
+taskcard for every change. **That amendment was logged but never made** until this entry; the
+contradiction between the decision log and this section (both AGENTS.md and `ops/SUPERVISOR.md`)
+is resolved here, not by another decision-log paragraph alone.
+
+Two tiers, by kind of work, not by size:
+
+1. **Routine code fixes** (the day-to-day fix-queue sweep: a defect found against a real
+   repository, a branch, a fix, an independent cold-verifier subagent, a live hosted re-check,
+   a `docs/DECISION_LOG.md` entry) — **no per-fix taskcard file**, per the 2026-10-31 decision,
+   now actually in force. This is the project's own proven, practiced discipline; it does not
+   need the heavier mechanism below to work.
+2. **Release-gate items** — anything that blocks a P1–P5/G1–G8 goal from counting as delivered
+   (see `docs/RELEASE_CONTRACT_P1-P5.md`'s eleven-state distinction) — **use a real
+   `project/taskcards/TC-NNN.yaml` card**, self-contained: a worker never reads this file or the
+   mission document, only its card. A card states: objective, `write_paths`, `depends_on` (a
+   real dependency edge to another card, mechanically enforced), checks (a falsifiable,
+   re-runnable command — see `ops/SUPERVISOR.md` for the no-backslashes / semantic-break / UTF-8
+   authoring rules carried over from `foss-mcp`), `source_refs`, `negative_control`, and
+   `recovery`. A card is `ACCEPTED` only when `ops/gatecli.py verify`/`review` has independently
+   re-run its checks twice clean and confirmed its negative control actually breaks them — never
+   from a worker's or an agent's own report of having run them, and never by hand-editing a
+   receipt or `project/state.yaml`'s card-derived fields (those are a function of evidence, per
+   `ops/gateverify.rebuild_state`, not a narration).
+
+This mechanism already existed (`ops/gatecli.py`, `ops/gateverify.py`, built 2026-10-21) and was
+exercised exactly once (`TC-000`, a smoke test) before going dormant — the gap was data, not
+code. `project/taskcards/TC-001.yaml` through `TC-012.yaml` are the first real use of it since.

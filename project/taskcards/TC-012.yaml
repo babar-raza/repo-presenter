@@ -1,0 +1,69 @@
+id: TC-012
+gate: GATE4_PRODUCTION
+track: production-cutover
+purpose: >
+  Reach P4/G6: unattended scheduled execution on GitHub-hosted runners, local Docker validation
+  at the smallest credible scope, and a safe, owner-approved transition of legacy write
+  ownership -- not a silent pause/disable of the predecessor system. Blocked on every other gate:
+  writer disposition (TC-002), preflight (TC-008), issues lifecycle (TC-010), and portfolio
+  delivery (TC-011) all need to be real before autonomy is turned on, or autonomy just means
+  scheduling a system that still fails most of its own real runs.
+depends_on:
+  - TC-002
+  - TC-008
+  - TC-010
+  - TC-011
+write_paths:
+  - .github/workflows/present.yml
+  - Dockerfile
+  - docs/LEGACY_CUTOVER_RECORD.md
+satisfies:
+  - REQ-G6-001
+source_refs:
+  - file: docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md
+    anchor: "G6 -- Autonomous Docker + GitHub Actions production"
+inputs: []
+actions:
+  - "Add a schedule: trigger to present.yml, with bounded retry/recovery, budget and kill
+     switches."
+  - "Add the smallest credible Dockerfile that isolates untrusted upstream example code from
+     long-lived infrastructure credentials, per the existing two-job trust boundary."
+  - "Record the owner-approved legacy-writer cutover/retirement in
+     docs/LEGACY_CUTOVER_RECORD.md -- never a silent pause."
+checks:
+  - command: |-
+      python ops/checks/marker_check.py .github/workflows/present.yml "schedule:"
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-G6-001
+  - command: |-
+      python ops/checks/marker_check.py Dockerfile "FROM"
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-G6-001
+  - command: |-
+      python ops/checks/marker_check.py docs/LEGACY_CUTOVER_RECORD.md "OWNER_APPROVED_CUTOVER:"
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-G6-001
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -c "import pathlib; p = pathlib.Path('.github/workflows/present.yml'); s = p.read_text(encoding='utf-8'); s2 = s.replace('schedule:', 'removed:'); p.write_text(s2, encoding='utf-8')"
+  rationale: >
+    Removes the schedule trigger once it exists. Proves the check tracks real autonomy, not a
+    comment merely mentioning the word "schedule."
+evidence:
+  - .github/workflows/present.yml
+  - Dockerfile
+  - docs/LEGACY_CUTOVER_RECORD.md
+closeout:
+  - "Run at least one real unattended cycle and independently confirm its outcome before this
+     card is ACCEPTED -- the final gate in the 2026-11-04 directive."
+recovery: "None of the named artifacts exist yet; this card is correctly not started, and is the
+  last gate in the whole dependency graph."
