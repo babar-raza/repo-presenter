@@ -77,8 +77,21 @@ def receipt_is_coherent(receipt: dict) -> list[str]:
         runs = receipt.get("runs") or []
         if len(runs) != 2 or not all(r.get("all_passed") is True for r in runs):
             problems.append("accepted=True but runs do not show two identical clean passes")
-        if not receipt.get("scope", {}).get("ok", False):
+        scope = receipt.get("scope", {})
+        if not scope.get("ok", False):
             problems.append("accepted=True but scope.ok is not True")
+        if scope.get("evaluated") is not True:
+            # 2026-11-04 (P0 follow-up directive section 5): `--no-scope` sets scope.ok=True
+            # trivially (nothing was checked) and, until this line existed, that was
+            # indistinguishable from a genuinely scope-evaluated pass. Every one of this
+            # project's "accepted" cards was verified this way -- a real, confirmed integrity
+            # gap, not theoretical. Normal release-gate acceptance now requires a real scope
+            # evaluation; `--no-scope` stays available for diagnostic reruns but can never
+            # again produce an ACCEPTED-eligible receipt.
+            problems.append(
+                "accepted=True but scope.evaluated is not True -- a --no-scope run never "
+                "satisfies normal release-gate acceptance, however clean its checks were"
+            )
         nc = receipt.get("negative_control", {})
         if nc.get("applied") is not True:
             problems.append("accepted=True but negative_control.applied is not True")

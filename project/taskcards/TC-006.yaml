@@ -2,18 +2,33 @@ id: TC-006
 gate: GATE1_QUALITY
 track: quality-calibration
 purpose: >
-  Produce a representative quality benchmark comparing this repository's pilot-set candidates
-  (Imaging-.NET, 3D-.NET, Words-.NET, per the 2026-10-31 decision log) against the real
-  aspose.org refresh-candidate output on the same products, BEFORE reviewer calibration
-  iteration 4 runs -- the ordering the 2026-11-04 directive requires: benchmark, then
-  calibration, then publication eligibility, then portfolio scaling. 2026-11-04 correction
-  (follow-up directive §7): this is read-only analysis of already-committed candidates against
-  a local sibling checkout -- it does not touch, resume, or ratify the paused broad sweep, and
-  must not be blocked by TC-004's unrelated owner-decision gate. The sweep pause itself (10-31
-  decision 4) is preserved exactly as-is; only this card's own dependency edge was wrong.
+  DEV/MEASUREMENT MILESTONE, NOT a quality-pass gate. Produce a representative structural
+  parity benchmark comparing this repository's pilot-set candidates (Imaging-.NET, 3D-.NET,
+  Words-.NET, per the 2026-10-31 decision log) against the real aspose.org refresh-candidate
+  output on the same products, BEFORE reviewer calibration iteration 4 runs. 2026-11-04
+  correction (P0 follow-up directive section 4): the first pass measured only 1 of the 3 named
+  pilots and called that "complete" -- exactly the false-green pattern the directive named.
+  This card's ACCEPTED status means only "the measurement was honestly done for all three named
+  repositories" -- it does NOT mean parity was achieved. docs/PARITY_BENCHMARK_PILOT.md's own
+  explicit PARITY_VERDICT is NOT_PASSED (3D-.NET Lane R fails on Quick Start/code-fence/link
+  density; Words-.NET has no sealed candidate on either lane; factual-correctness/prose-quality
+  comparison, directive R11, was not attempted for any repository). Read-only analysis of
+  already-committed candidates and durable-state-backend bundles (Imaging-.NET's was exported
+  via bundle_store.export_bundle this pass) against a local sibling checkout -- it does not
+  touch, resume, or ratify the paused broad sweep, and must not be blocked by TC-004's unrelated
+  owner-decision gate. The sweep pause itself (10-31 decision 4) is preserved exactly as-is.
 depends_on: []
 write_paths:
   - docs/PARITY_BENCHMARK_PILOT.md
+# 2026-11-04 correction: this card's entire real deliverable (the path above, plus
+# ops/checks/parity_benchmark_pilot_complete.py) lives under paths GLOBAL_DENY reserves to the
+# supervisor (docs/**, ops/**) -- a card may never actually touch them as its own "mine"-tagged,
+# scope-evaluated work, regardless of what write_paths says here. There is no src/tests-only
+# portion of this card's own work, so this card is structurally unable to reach a real
+# scope-evaluated ACCEPTED receipt; its checks still run and its receipt is still produced, but
+# only ever via --no-scope, honestly and explicitly, never silently. See docs/DECISION_LOG.md
+# for the fuller writeup of this GLOBAL_DENY-vs-write_paths conflict, which affects several
+# cards, not just this one.
 satisfies:
   - REQ-G7-001
 source_refs:
@@ -26,8 +41,11 @@ actions:
      content, diagram quality, navigation and usability."
   - "Record independently reproducible results in docs/PARITY_BENCHMARK_PILOT.md."
 checks:
+  # 2026-11-04 correction: a bare marker check could be satisfied by a placeholder file; this
+  # requires all 3 named pilot repositories to be addressed by name AND an explicit
+  # PARITY_VERDICT line, so "complete" can never again mean "measured 1 of 3."
   - command: |-
-      python ops/checks/marker_check.py docs/PARITY_BENCHMARK_PILOT.md "PARITY_BENCHMARK_COMPLETE:"
+      python ops/checks/parity_benchmark_pilot_complete.py docs/PARITY_BENCHMARK_PILOT.md
     expect: exit 0
     timeout_seconds: 30
     proves:
@@ -37,12 +55,18 @@ requires:
 network: false
 negative_control:
   mutate: |-
-    python -c "import pathlib; p = pathlib.Path('docs/PARITY_BENCHMARK_PILOT.md'); p.write_text('placeholder, no real benchmark', encoding='utf-8') if p.exists() else None"
+    python -c "import pathlib; p = pathlib.Path('docs/PARITY_BENCHMARK_PILOT.md'); p.write_text('placeholder, no real benchmark', encoding='utf-8')"
   rationale: >
-    If the real benchmark file ever exists, overwriting it with a placeholder must make this
-    check fail again -- a benchmark report is only evidence while its content is real.
+    Overwriting the real benchmark with a placeholder removes the named-repository coverage and
+    the PARITY_VERDICT line alike -- the check must fail again, proving it actually reads
+    content, not merely a marker string's presence.
 evidence:
   - docs/PARITY_BENCHMARK_PILOT.md
+  - ops/checks/parity_benchmark_pilot_complete.py
 closeout:
-  - "Do not dispatch TC-007 (calibration iteration 4) until this card is ACCEPTED."
-recovery: "No files exist yet for this card to revert; it is correctly not started."
+  - "This card's ACCEPTED status means the measurement is honestly complete for all 3 named
+     pilots -- it does NOT mean parity was achieved (see the document's own PARITY_VERDICT,
+     currently NOT_PASSED). Do not dispatch TC-007 (calibration iteration 4) until this card is
+     ACCEPTED; do not let any downstream card or report read this card's acceptance as a quality
+     pass."
+recovery: "Revert docs/PARITY_BENCHMARK_PILOT.md and ops/checks/parity_benchmark_pilot_complete.py."

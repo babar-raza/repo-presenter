@@ -49,6 +49,12 @@ on:
   # `inputs.lane != 'R'` -- are both true on an empty string, which is the same as `both`, not a
   # new code path). Cadence is intentionally wide (owner can tighten after observing real cost
   # and failure rate): one target per run, at most once every 6 hours.
+  # 2026-11-04 (P0 follow-up directive section 2): a scheduled run must fail closed until
+  # scripts/scheduled_execution_gate.py's three independent predicates (explicit per-repository
+  # authorization, the 2026-10-31 sweep pause actually lifted, reviewer calibration PASSED) all
+  # hold. All three fail today, so this cron currently selects and spends nothing on every fire
+  # -- a deliberate, evidenced no-op (see "Select this run's target" below), not a live schedule
+  # waiting to be noticed.
   schedule:
     - cron: "17 */6 * * *"
 
@@ -74,6 +80,7 @@ jobs:
       facts_sha256: ${{ steps.digest.outputs.sha256 }}
       repository: ${{ steps.target.outputs.repository }}
       ecosystem: ${{ steps.target.outputs.ecosystem }}
+      authorized: ${{ steps.target.outputs.authorized }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -87,16 +94,19 @@ jobs:
         run: python -m pip install -e .
 
       # Resolves the real repository/ecosystem for EITHER trigger: a manual dispatch passes
-      # them as inputs; a schedule trigger has no inputs at all, so this picks the next eligible
-      # repository from data/registry.json (read-only; contents: read is enough -- no secret).
-      # A workflow_dispatch's own inputs are the single source of truth when present; the
-      # selector only ever runs for `schedule`.
-      - name: Select this run's target (scheduled cohort, or passthrough for manual dispatch)
+      # them as inputs and IS its own explicit authorization (preserved exactly, unchanged). A
+      # schedule trigger has no inputs at all and nobody is watching it start, so it goes
+      # through scripts/scheduled_execution_gate.py instead -- the actual fail-closed boundary
+      # (P0 follow-up directive section 2), not merely a cohort pick. The gate always exits 0 and
+      # always emits authorized=true|false; every downstream step that would spend a provider
+      # call or touch repository code is gated on that output, below and in the present job.
+      - name: Select this run's target (authorization-gated for schedule, passthrough for manual dispatch)
         id: target
         run: |
           if [ "${{ github.event_name }}" = "schedule" ]; then
-            python scripts/select_scheduled_cohort.py --max 1 >> "$GITHUB_OUTPUT"
+            python scripts/scheduled_execution_gate.py --max 1 >> "$GITHUB_OUTPUT"
           else
+            echo "authorized=true" >> "$GITHUB_OUTPUT"
             echo "repository=${{ inputs.repository }}" >> "$GITHUB_OUTPUT"
             echo "ecosystem=${{ inputs.ecosystem }}" >> "$GITHUB_OUTPUT"
           fi
@@ -108,13 +118,13 @@ jobs:
       # The version is pinned because the receipt records it and a build is only as reproducible
       # as the toolchain that ran (10.0.204 is the SDK the verifier was measured against).
       - name: Install the .NET SDK for example compilation
-        if: steps.target.outputs.ecosystem == 'net'
+        if: steps.target.outputs.authorized != 'false' && steps.target.outputs.ecosystem == 'net'
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "10.0.204"
 
       - name: Install the JDK for example compilation
-        if: steps.target.outputs.ecosystem == 'java'
+        if: steps.target.outputs.authorized != 'false' && steps.target.outputs.ecosystem == 'java'
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -126,6 +136,7 @@ jobs:
           java-version: "21.0.12"
 
       - name: Build the facts
+        if: steps.target.outputs.authorized != 'false'
         env:
           INPUT_REPOSITORY: ${{ steps.target.outputs.repository }}
           INPUT_ECOSYSTEM: ${{ steps.target.outputs.ecosystem }}
@@ -139,9 +150,11 @@ jobs:
 
       - name: Record the facts digest
         id: digest
+        if: steps.target.outputs.authorized != 'false'
         run: echo "sha256=$(sha256sum .present-facts/facts.json | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
 
       - name: Hand the facts to the present job
+        if: steps.target.outputs.authorized != 'false'
         uses: actions/upload-artifact@v4
         with:
           name: present-facts-${{ github.run_id }}
@@ -182,6 +195,7 @@ jobs:
       # its manifest, a call by its request hash), so a stale or partial restore can only cost a
       # re-run, never a wrong proof; a cache miss degrades to a fresh seal.
       - name: Restore the previous sealed bundle and call store
+        if: needs.facts.outputs.authorized != 'false'
         uses: actions/cache/restore@v4
         with:
           path: |
@@ -194,8 +208,11 @@ jobs:
       # The artifact is untrusted input from the job that ran repository code: the Present step
       # checks its manifest and digest (also against the digest the facts job published as a job
       # output), validates it as data, and re-clones the recorded revision for README reads only.
+      # The facts job never uploads an artifact for an unauthorized scheduled run (gated above),
+      # so this step must skip too, or a missing-artifact error would turn a deliberate no-op red.
       - name: Fetch the facts
         id: fetch_facts
+        if: needs.facts.outputs.authorized != 'false'
         uses: actions/download-artifact@v4
         with:
           name: present-facts-${{ github.run_id }}
@@ -204,9 +221,12 @@ jobs:
       # Each lane is its own process, so its own durable-state record, candidate pointer and seal.
       # Lane L carries a status function (!cancelled()) so it runs whether or not Lane R failed:
       # neither lane is measured by the other's delivery. It still needs the facts, so it is gated
-      # on the fetch step's outcome. The job is red if either lane is.
+      # on the fetch step's outcome. The job is red if either lane is. `authorized != 'false'` is
+      # the actual P0 enforcement point: the one place a scheduled run's provider call and
+      # durable-state write are physically prevented when unauthorized, not merely recorded as
+      # blocked in a taskcard.
       - name: Present (Lane R)
-        if: ${{ inputs.lane != 'L' }}
+        if: ${{ needs.facts.outputs.authorized != 'false' && inputs.lane != 'L' }}
         env:
           INPUT_REPOSITORY: ${{ needs.facts.outputs.repository }}
           INPUT_ECOSYSTEM: ${{ needs.facts.outputs.ecosystem }}
@@ -227,7 +247,7 @@ jobs:
             --expected-facts-sha256 "$FACTS_SHA256"
 
       - name: Present (Lane L)
-        if: ${{ !cancelled() && steps.fetch_facts.outcome == 'success' && inputs.lane != 'R' }}
+        if: ${{ !cancelled() && steps.fetch_facts.outcome == 'success' && inputs.lane != 'R' && needs.facts.outputs.authorized != 'false' }}
         env:
           INPUT_REPOSITORY: ${{ needs.facts.outputs.repository }}
           INPUT_ECOSYSTEM: ${{ needs.facts.outputs.ecosystem }}
@@ -248,7 +268,7 @@ jobs:
             --expected-facts-sha256 "$FACTS_SHA256"
 
       - name: Save the sealed bundle and call store for the next run
-        if: always()
+        if: always() && needs.facts.outputs.authorized != 'false'
         uses: actions/cache/save@v4
         with:
           path: |
@@ -258,7 +278,7 @@ jobs:
           key: presenter-state-${{ steps.slug.outputs.slug }}-${{ github.run_id }}
 
       - name: Keep the run's evidence
-        if: always()
+        if: always() && needs.facts.outputs.authorized != 'false'
         uses: actions/upload-artifact@v4
         with:
           name: present-${{ needs.facts.outputs.ecosystem }}-${{ github.run_id }}

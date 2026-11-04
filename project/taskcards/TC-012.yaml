@@ -7,24 +7,48 @@ purpose: >
   `schedule:` trigger does NOT work on its own -- present.yml's inputs (repository/ecosystem/
   lane) are only populated for workflow_dispatch; a scheduled run needs its own target-selection
   step. REAL, this pass: `.github/workflows/present.yml` now resolves its target for either
-  trigger (a new "Select this run's target" step in the unprivileged facts job, backed by
-  `scripts/select_scheduled_cohort.py`), structurally tested in `tests/test_present_schedule.py`
-  (5 tests) alongside the pre-existing `tests/test_present.py`/`test_present_lanes.py` (all 38
-  of which still pass unmodified -- confirmed, not assumed). A minimal, scope-matched
-  `Dockerfile` (facts-stage only, no secrets, matching the existing two-job trust boundary) is
-  written but **NOT locally build-verified this pass** -- Docker Desktop's engine was not
-  running in this environment; flagged honestly, not claimed. This no longer depends on TC-011
+  trigger (a "Select this run's target" step in the unprivileged facts job), structurally
+  tested in `tests/test_present_schedule.py` alongside the pre-existing
+  `tests/test_present.py`/`test_present_lanes.py` (all still pass unmodified -- confirmed, not
+  assumed). A minimal, scope-matched `Dockerfile` (facts-stage only, no secrets, matching the
+  existing two-job trust boundary) is written but **NOT locally build-verified this pass** --
+  Docker Desktop's engine was not running in this environment; flagged honestly, not claimed.
+  2026-11-04 P0 correction (follow-up directive section 2): the schedule trigger had already
+  been merged with NO authorization gate at all -- any cron fire would have spent real provider
+  calls and committed real durable state the moment the cohort selector returned a repository.
+  Fixed: the facts job's target step now calls `scripts/scheduled_execution_gate.py` for
+  `schedule` events only (manual dispatch is unchanged and is its own explicit authorization),
+  which independently re-derives three predicates (TC-004's sweep-pause ruling, TC-007
+  calibration PASSED, an explicit per-repository `data/scheduled_execution_policy.json` entry)
+  and fails closed, as `authorized=false`, when any is unmet -- which is every predicate, today.
+  Every provider-consuming or repository-code step in both jobs (`Build the facts`, `Fetch the
+  facts`, `Present (Lane R)`, `Present (Lane L)`, the cache restore/save and evidence-upload
+  steps) is now conditioned on that flag at the workflow-file level, not merely a taskcard
+  status -- proven by `tests/test_scheduled_execution_gate.py` (12 tests, including a negative
+  control that re-pausing the sweep after it was lifted blocks the run again) and
+  `tests/test_present_schedule.py::test_every_provider_consuming_or_repository_code_step_is_
+  gated_on_authorization`. An unauthorized scheduled fire is a clean, evidenced no-op (exit 0,
+  `authorized=false`, a named reason), never a red job. This no longer depends on TC-011
   (25-product portfolio delivery) -- the directive explicitly flagged that ordering as creating
-  avoidable manual work. The FINAL legacy-writer cutover is its own card, TC-012a.
+  avoidable manual work. The FINAL legacy-writer cutover is its own card, TC-012a. Still NOT
+  claimed ACCEPTED here: no real unattended scheduled cycle has ever actually run, and the
+  Dockerfile remains build-unverified -- see closeout.
 depends_on:
   - TC-002
   - TC-008
   - TC-010
 write_paths:
-  - .github/workflows/present.yml
   - Dockerfile
   - scripts/select_scheduled_cohort.py
+  - scripts/scheduled_execution_gate.py
   - tests/test_present_schedule.py
+  - tests/test_scheduled_execution_gate.py
+# 2026-11-04 correction: .github/workflows/present.yml and data/scheduled_execution_policy.json
+# were declared here but GLOBAL_DENY reserves .github/** and data/** to the supervisor
+# unconditionally. The actual present.yml wiring and the policy file are committed directly by
+# the supervisor (untagged for any card, per AGENTS.md's role table); this card's own
+# scope-evaluated, tagged portion is the scripts/ and tests/ companion pieces whose checks
+# (below) verify the supervisor's workflow edit indirectly by parsing the live file.
 satisfies:
   - REQ-G6-001
 source_refs:
@@ -43,7 +67,7 @@ checks:
   # existing project test infrastructure (tests/test_present.py's _load_workflow parser
   # pattern), extended, not a new architecture.
   - command: |-
-      python -m pytest tests/test_present_schedule.py tests/test_present_lanes.py tests/test_present.py -q
+      python -m pytest tests/test_present_schedule.py tests/test_present_lanes.py tests/test_present.py tests/test_scheduled_execution_gate.py -q
     expect: exit 0
     timeout_seconds: 300
     proves:
@@ -68,10 +92,18 @@ evidence:
   - .github/workflows/present.yml
   - Dockerfile
   - scripts/select_scheduled_cohort.py
+  - scripts/scheduled_execution_gate.py
+  - data/scheduled_execution_policy.json
   - tests/test_present_schedule.py
+  - tests/test_scheduled_execution_gate.py
 closeout:
   - "Build-verify the Dockerfile locally (not done this pass -- Docker engine unavailable) and
      run at least one real unattended cycle, independently confirmed, before ACCEPTED. TC-012a,
-     not this card, covers the final legacy-writer cutover."
+     not this card, covers the final legacy-writer cutover. A scheduled run remains correctly
+     unauthorized (data/scheduled_execution_policy.json: scheduled_execution_authorized=false)
+     until the owner clears TC-004 and TC-007 and explicitly names a repository -- do not flip
+     that file without those two being independently true first."
 recovery: "Revert .github/workflows/present.yml, Dockerfile, scripts/select_scheduled_cohort.py,
-  and tests/test_present_schedule.py together -- they are one coherent change."
+  scripts/scheduled_execution_gate.py, data/scheduled_execution_policy.json,
+  tests/test_present_schedule.py, and tests/test_scheduled_execution_gate.py together -- they
+  are one coherent change."

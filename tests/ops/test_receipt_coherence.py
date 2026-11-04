@@ -72,6 +72,17 @@ def test_forged_positive_receipt_with_scope_violation_rejected():
     assert any("scope.ok" in p for p in problems)
 
 
+def test_a_no_scope_receipt_can_never_satisfy_normal_acceptance():
+    """2026-11-04 P0 follow-up directive section 5: --no-scope sets scope.ok=True trivially
+    (nothing was checked), and that used to be indistinguishable from a real scope evaluation.
+    Every one of this project's previously-accepted receipts was generated this way -- a real,
+    confirmed gap, not a hypothetical. accepted=True with scope.evaluated anything but True must
+    always be rejected now."""
+    forged = full_receipt(scope={"ok": True, "changed_paths": [], "violations": [], "evaluated": False})
+    problems = gateverify.receipt_is_coherent(forged)
+    assert any("scope.evaluated" in p for p in problems)
+
+
 def test_missing_negative_control_evidence_rejected_applied_false():
     """accepted=True but the negative control was never actually applied -- the falsifier never
     ran, so nothing was proven."""

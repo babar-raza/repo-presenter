@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "scheduled_execution_authorized": false,
+  "authorized_repositories": [],
+  "reason": "Blocked by default. scripts/scheduled_execution_gate.py requires all three of: (1) this file's own scheduled_execution_authorized=true and a non-empty authorized_repositories entry for the selected repository, (2) TC-004's ruling lifting the 2026-10-31 portfolio-sweep pause (docs/DECISION_LOG.md, OWNER_RULING_SWEEP_PAUSE: marker must read LIFTED), and (3) TC-007 reviewer calibration reaching data/reviewer_calibration.json status PASSED. This flag alone can never authorize a scheduled run -- the gate independently re-derives (2) and (3) from their own sources every time, not from this file.",
+  "updated": "2026-11-04"
+}

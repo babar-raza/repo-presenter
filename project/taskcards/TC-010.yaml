@@ -13,15 +13,23 @@ purpose: >
   recheck + authorization, via the EXISTING, already-tested `plan_filing`) -> close through
   their ACTUAL callers, with real refusal tests (no approval record; already filed upstream;
   re-detection still finds the defect live) -- not "one manually executed CLI operation," which
-  the directive explicitly said does not satisfy this goal. 92/92 issues tests pass (71 existing
-  + 21 new), zero regressions. No live upstream write anywhere in this card's scope; that is
-  TC-010a.
+  the directive explicitly said does not satisfy this goal. 93/93 issues tests pass, zero
+  regressions. No live upstream write anywhere in this card's scope; that is TC-010a.
+  2026-11-04 P0 correction (follow-up directive section 7): `close.py::redetect()` originally
+  returned a bare bool and treated a triggering fact that had disappeared entirely (extraction
+  failure, a renamed check id, incomplete toolchain evidence) as equivalent to a VERIFIED fix --
+  unsafe, since absence of evidence is not evidence of a fix. `redetect()` now returns one of
+  three distinct outcomes (`VERIFIED_RESOLVED`/`STILL_REPRODUCES`/`NOT_VERIFIABLE`), and
+  `close_handoff(reason="completed")` refuses identically on the latter two -- proven by a new
+  negative-control test, `test_close_completed_refused_when_the_triggering_fact_is_absent`.
 depends_on: []
 write_paths:
   - src/repo_presenter/issues/**
   - tests/issues/**
   - scripts/**
-  - .github/workflows/present.yml
+# 2026-11-04 correction: .github/workflows/present.yml was declared here but GLOBAL_DENY
+# reserves .github/** to the supervisor unconditionally -- this card never actually needed it
+# (discovery.py/close.py touch neither), so it is simply removed, not worked around.
 satisfies:
   - REQ-G3-001
 source_refs:
