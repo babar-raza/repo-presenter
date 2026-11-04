@@ -133,7 +133,7 @@ owner_review_status:
 
 release_gate_dashboard:
   generated_by: gatecli
-  generated_at: '2026-11-04T12:35:07Z'
+  generated_at: '2026-11-04T14:28:54Z'
   note: Tool-generated from gateverify.rebuild_state() -- never hand-edit this block.
     Historical current_gate/active_work_item below are preserved bootstrap-era narrative,
     not this cursor; this block is the real, evidence-derived release-gate status
@@ -202,9 +202,11 @@ release_gate_dashboard:
     blocker:
       class: INCOHERENT_RECEIPT
       summary: 'receipt claims accepted=True but fails internal consistency checks
-        (forged, corrupted, or missing its own artifact): accepted=True but scope.evaluated
-        is not True -- a --no-scope run never satisfies normal release-gate acceptance,
-        however clean its checks were'
+        (forged, corrupted, or missing its own artifact): accepted=True but the runs''
+        commands do not match the card''s own declared checks[] -- this receipt does
+        not prove what the card claims; accepted=True but scope.evaluated is not True
+        -- a --no-scope run never satisfies normal release-gate acceptance, however
+        clean its checks were'
   - id: TC-007
     gate: GATE1_QUALITY
     status: AWAITING_PREREQUISITE
@@ -273,14 +275,14 @@ release_gate_dashboard:
     attempt: 0
     blocker:
       class: AWAITING_PREREQUISITE
-      summary: depends on TC-007, TC-009b, not yet accepted
+      summary: depends on TC-007, TC-008a, TC-009b, not yet accepted
   - id: TC-012
     gate: GATE4_PRODUCTION
     status: AWAITING_PREREQUISITE
     attempt: 0
     blocker:
       class: AWAITING_PREREQUISITE
-      summary: depends on TC-002, TC-008, not yet accepted
+      summary: depends on TC-008a, not yet accepted
   - id: TC-012a
     gate: GATE4_PRODUCTION
     status: AWAITING_PREREQUISITE
