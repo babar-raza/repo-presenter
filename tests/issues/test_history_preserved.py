@@ -58,6 +58,10 @@ class FakeGitHub:
         return 200, {}
 
     def fetch(self, url: str, token: str | None) -> tuple[int, Any]:
+        comments = re.search(r"/issues/(\d+)/comments\?", url)
+        if comments:
+            posted = self.issues[int(comments[1])]["comments"] if "page=1" in url else []
+            return 200, [{"body": body} for body in posted]
         return 200, [dict(i) for i in self.issues.values()] if "page=1" in url else []
 
 
@@ -111,7 +115,8 @@ def test_history_is_preserved_across_the_whole_lifecycle(tmp_path: Path):
         fh, current_facts_by_id=fixed, reason="completed", path=path,
         remote=RemoteClose(token="w", environment=ENV, permit=make_permit(REPO, effect="issue_close"),
                            approvals=Store(fh), verify_token=lambda t: TokenDecision(True, t),
-                           now=lambda: NOW, comment=gh.post, patch=gh.patch))
+                           now=lambda: NOW, comment=gh.post, patch=gh.patch,
+                           fetch=gh.fetch))
     assert closed.status == "RESOLVED_UPSTREAM" and load_handoff(path) == closed
     assert issue["state"] == "closed" and issue["state_reason"] == "completed"
     assert len(issue["comments"]) == 1 and "VERIFIED_RESOLVED" in issue["comments"][0]
@@ -158,5 +163,6 @@ def test_kill_switch_off_writes_nothing_at_any_stage(tmp_path: Path):
                       remote=RemoteClose(token="w", environment={},
                                          permit=make_permit(REPO, effect="issue_close"),
                                          approvals=Store(fh), verify_token=lambda t: TokenDecision(True, t),
-                                         now=lambda: NOW, comment=gh.post, patch=gh.patch))
+                                         now=lambda: NOW, comment=gh.post, patch=gh.patch,
+                                         fetch=gh.fetch))
     assert gh.writes == writes and gh.issues[1]["state"] == "open"

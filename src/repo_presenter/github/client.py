@@ -270,6 +270,43 @@ def comment_issue(
     _guarded_issue_write(owner, name, url, token, {"body": body}, write, "POST")
 
 
+def issue_has_comment_with_marker(
+    owner: str,
+    name: str,
+    number: int,
+    marker: str,
+    *,
+    token: str | None,
+    fetch: FetchFn = default_fetch,
+) -> bool:
+    """Whether any comment on issue ``number`` contains ``marker`` (a read only).
+
+    Makes a retried write idempotent: a partial failure that already posted a comment must not post
+    it again. Like ``find_issue_with_marker``, absence is never inferred from a partial read: an
+    unreachable host, a non-200 answer, or more than ``ISSUE_LIST_MAX_PAGES`` full pages raises
+    :class:`RepositoryMetadataError` instead of returning ``False``."""
+    for page in range(1, ISSUE_LIST_MAX_PAGES + 1):
+        url = (
+            f"{API_ROOT}/repos/{owner}/{name}/issues/{number}/comments"
+            f"?per_page={ISSUE_LIST_PAGE_SIZE}&page={page}"
+        )
+        status_code, body = fetch(url, token)
+        if status_code == -1:
+            raise RepositoryMetadataError(f"{owner}/{name}: unreachable ({body})")
+        if status_code != 200 or not isinstance(body, list):
+            raise RepositoryMetadataError(f"{owner}/{name}: GET {url} returned HTTP {status_code}")
+        for item in body:
+            text = item.get("body") if isinstance(item, dict) else None
+            if isinstance(text, str) and marker in text:
+                return True
+        if len(body) < ISSUE_LIST_PAGE_SIZE:
+            return False
+    raise RepositoryMetadataError(
+        f"{owner}/{name}#{number}: more than {ISSUE_LIST_MAX_PAGES} pages of comments - "
+        "cannot prove absence"
+    )
+
+
 IssueCloseReason = Literal["completed", "not planned"]
 _STATE_REASONS = {"completed": "completed", "not planned": "not_planned"}
 
