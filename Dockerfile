@@ -26,7 +26,7 @@ FROM python:3.13-slim
 WORKDIR /app
 
 # Layered so dependency installation caches independently of source changes.
-COPY pyproject.toml ./
+COPY pyproject.toml README.md ./
 COPY src/ ./src/
 RUN pip install --no-cache-dir -e . \
     && useradd --create-home --uid 10001 runner
