@@ -40,6 +40,12 @@ def main(argv: list[str]) -> int:
         return 1
     date, anchor = m.group(1), m.group(2)
     log_text = DECISION_LOG.read_text(encoding="utf-8") if DECISION_LOG.exists() else ""
+    # 2026-11-05: when the record itself lives in the decision log (TC-004), its own line
+    # contains its anchor, so the record satisfied itself, and the negative control's
+    # "ref=BROKEN-..." still matched its own mutated line. The anchor must resolve to OTHER
+    # content: the record's own line is not evidence for itself.
+    if target.resolve() == DECISION_LOG.resolve():
+        log_text = log_text.replace(m.group(0), "", 1)
     if anchor not in log_text:
         print(f"FAIL: ref={anchor} (dated {date}) does not match any text in {DECISION_LOG}")
         return 1
