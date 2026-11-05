@@ -24,7 +24,7 @@
       "description": "2026-11-04: hash of every checker script / required-evidence file this card's own checks[].command references, at head_rev. Without this, currentness was tied only to the taskcard YAML's own hash, so a referenced ops/checks/*.py script or a required doc could change underneath an accepted receipt without it ever going stale. Absent on a receipt generated before this field existed -- gateverify.card_is_stale treats that absence itself as stale."
     },
     "checker_fileset_scheme": {
-      "enum": ["v1", "v2"],
+      "enum": ["v1", "v2", "v3"],
       "description": "Which fileset-hash scheme produced checker_fileset_sha256 (see ops/gateverify.py FILESET_SCHEME_CURRENT). Absent on a receipt written before schemes existed, which gateverify reads as v1. Must be allowed here: this schema forbids additional properties, so a field the writer emits but the schema omits makes every newly written receipt INCOHERENT."
     },
     "fingerprint": {

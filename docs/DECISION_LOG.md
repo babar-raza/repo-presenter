@@ -3007,3 +3007,36 @@ each lifecycle step is independent, via `gh api`. `lifecycle_proof.json` is writ
 lifecycle code path.
 
 ISSUES_LIVE_LIFECYCLE_AUTHORIZED: 2026-11-05 ref=OWNER-AUTH-2026-11-05-TC010A-CELLS-JAVA
+
+---
+
+## 2026-11-05: checker-fileset scheme v3 — owner-decision records are hashed as the lines they consume
+
+**Defect.** Scheme v2 of `ops/gateverify.py`'s `checker_fileset_sha256` hashed a file read only by
+`ops/checks/marker_check.py` as its marker lines, but a target of `ops/checks/owner_decision_record.py
+<file> <PREFIX>` was hashed whole. TC-004 keeps its record in this log, so every new entry here turned
+its ACCEPTED receipt into STALE_RECEIPT; conversely TC-002's referenced entry in this log was not hashed
+at all, so rewording the decision its record points at never staled it.
+
+**Fix (routine tier, no taskcard).** Scheme v3 (now `FILESET_SCHEME_CURRENT`): such a check consumes
+(a) its target's lines containing PREFIX, plus the exact record text the checker's regex matches, and
+(b) the lines of `docs/DECISION_LOG.md` containing the record's `ref=` anchor, resolved at the hashed
+revision. Removing, altering or duplicating the record or its anchor line changes the digest; an
+unrelated appended entry does not. A file any other check reads is still hashed whole, and so is the
+checker script. v1/v2 receipts are still compared under their own scheme; `schemas/receipt.schema.json`
+admits `v3`. Tests: `tests/ops/test_fileset_record_scheme.py` (falsifier: disabling anchor consumption
+fails 4 of 16).
+
+**Second defect found while re-verifying.** `ops/gatectl.py`'s scope check counted GitHub's merge commit
+for PR #14 (`66c8fd0`, tree identical to its second parent) as "claims neither this card nor the
+supervisor", so no card could be re-verified across any PR merge. A merge is now skipped only when its
+tree equals a parent that already contains every other parent; `-s ours` and two-sided merges are still
+flagged (`tests/ops/test_scope_noop_merge.py`).
+
+**Re-verified** under v3 with `python ops/gatecli.py review <card> --base b90eaf8 --head HEAD`: TC-002 and
+TC-004 ACCEPTED (scope evaluated, two clean runs, negative control fails the check). Dashboard regenerated
+with `python ops/gatecli.py regenerate-dashboard`. This entry is itself the unrelated append that v3
+must ignore: TC-004 stays ACCEPTED after it is committed.
+
+**What this does NOT decide**: any change to what the two cards require, or to the owner rulings they
+record.
