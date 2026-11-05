@@ -16,9 +16,12 @@ is prose, under a section the renderer does not own wholesale, outside every fen
 from __future__ import annotations
 
 import re
+from collections.abc import Mapping
+from typing import Any
 
+from repo_presenter.core.facts import FactsDocument
 from repo_presenter.readme.composition.components.shell import SEMANTIC_SHELL
-from repo_presenter.readme.composition.placement import ATTRIBUTION_LINE
+from repo_presenter.readme.composition.placement import ATTRIBUTED, ATTRIBUTION_LINE
 from repo_presenter.readme.validation.text import section_lines
 
 #: Sections the renderer prints wholesale from facts (owner ``D``) and the diagram.
@@ -140,3 +143,35 @@ def section_of_line(readme: str, number: int, rendered: bool = True) -> str | No
     """The section a reviewable line belongs to, or ``None`` for a line that is not reviewable."""
     classified = line_sections(readme, rendered)
     return classified[number - 1] if 1 <= number <= len(classified) else None
+
+
+def maintainer_lines(
+    readme: str, facts: FactsDocument, dispositions: Mapping[str, Any]
+) -> frozenset[int]:
+    """The 1-based numbers of the candidate lines that are attributed maintainer text: a line whose
+    stripped text is a stripped line of an inherited unit reconciliation kept as
+    ``PRESERVE_ATTRIBUTED`` (docs/MAINTAINER_CONTENT_PRESERVATION.md). Like ``reviewable_lines`` it
+    reads only structure, never meaning: it matches the unit's own lines, so a kept line the
+    renderer changed (an anchor it resolved) is not marked and stays judged like authored text.
+
+    A corrected live README (Lane L, ``rendered=False``) is reviewed without S4 dispositions, so it
+    has no ``PRESERVE_ATTRIBUTED`` unit and this set is empty there: nothing changes for Lane L."""
+    kept = {
+        str(row.get("unit_id", ""))
+        for row in dispositions.get("dispositions", [])
+        if isinstance(row, Mapping) and row.get("disposition") == ATTRIBUTED
+    }
+    if not kept:
+        return frozenset()
+    texts = {
+        line.strip()
+        for fact in facts.by_kind("inherited_unit")
+        if fact.id in kept
+        for line in fact.value.splitlines()
+        if line.strip()
+    }
+    return frozenset(
+        number
+        for number, row in enumerate(readme.splitlines(), 1)
+        if row.strip() and row.strip() in texts
+    )

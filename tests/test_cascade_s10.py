@@ -185,7 +185,7 @@ def test_the_model_reviews_a_clean_candidate_once_on_the_one_ledger(
     assert result.provider_calls == 10 and provider.reviewer_calls == 1
     verdict = result.review_verdict
     assert verdict.verdict == "ACCEPT" and verdict.model_reviewed
-    assert verdict.prompt_version == "18" and verdict.model_served == "qwen3-next"
+    assert verdict.prompt_version == "19" and verdict.model_served == "qwen3-next"
     assert run.verdict_file() == verdict
     records = load_records(run.out / "llm_cache" / "ledger.jsonl")
     assert {record.invocation_id for record in records} == {

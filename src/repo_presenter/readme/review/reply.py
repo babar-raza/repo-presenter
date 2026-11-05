@@ -80,6 +80,12 @@ WHOLE_SECTION_KINDS = frozenset({"omission", "absence", "quality"})
 #: The manifest's bound on a finding's ``text``; the merged-findings note stays inside it.
 TEXT_LIMIT = 600
 _ID = re.compile(r"F[0-9]{2}")
+#: docs/MAINTAINER_CONTENT_PRESERVATION.md: maintainer content kept with attribution is unverified,
+#: not false; lack of repository evidence is not a defect in it.
+MAINTAINER_TEXT_ERROR = (
+    "attributed maintainer text is not an unsupported claim; judge it only for contradiction, "
+    "misrepresentation, promotion or value"
+)
 
 
 @dataclass(frozen=True)
@@ -90,6 +96,10 @@ class ReviewScope:
 
     sections: frozenset[str]
     lines: frozenset[int]
+    #: The shown lines that are attributed maintainer text (``scope.maintainer_lines``): kept as
+    #: ``PRESERVE_ATTRIBUTED``, so an ``unsupported_claim`` citing only these is a contract error.
+    #: Empty for a Lane L review, which has no such disposition.
+    maintainer_lines: frozenset[int] = frozenset()
 
 
 def valid_section_ids(plan: Mapping[str, Any] | None = None) -> frozenset[str]:
@@ -210,6 +220,19 @@ def resolve_cited_lines(
                     problems.append(
                         f"finding {label}: lines {_numbers(hidden)} were not shown to you "
                         "(renderer-printed text or another review unit); cite only the numbered lines"
+                    )
+                    continue
+                written = [n for n in range(first, last + 1) if rows[n - 1].strip()]
+                if (
+                    kind == "unsupported_claim"
+                    and written
+                    and all(n in scope.maintainer_lines for n in written)
+                ):
+                    # Only when EVERY cited line is the maintainers': a span that also cites an
+                    # authored line may carry its claim there, and stays the model's to file.
+                    problems.append(
+                        f"finding {label}: lines {_numbers(written)} are maintainer_lines - "
+                        f"{MAINTAINER_TEXT_ERROR}"
                     )
                     continue
         where = _cited_section(candidate_readme, first, last)
