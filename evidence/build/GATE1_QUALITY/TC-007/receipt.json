@@ -3,10 +3,10 @@
   "card": "TC-007",
   "gate": "GATE1_QUALITY",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-05T08:45:48Z",
+  "generated_at": "2026-11-05T09:58:37Z",
   "base_rev": "eb74bd042991067c89ec40205baafb7baa3b2eb0",
-  "head_rev": "1b9f0ab639e5766f27f66e23c89928b71b744327",
-  "card_sha256": "6ae3c93a00b5cdf247ae7ada21a1211f13cd363b121af846444129ec307963c2",
+  "head_rev": "f51fb7e1132e63937ee6fe367d4d607da175cb81",
+  "card_sha256": "9cb9b71211c3b43df78b91be3b9313b8f3c84ad14bf750bf76ccec3947147871",
   "checker_fileset_sha256": "fa7a68e9d90e413ba95294c2517a3faf0d80337c2e7d2c7c4f73db385c156ea8",
   "checker_fileset_scheme": "v2",
   "fingerprint": {
@@ -14,13 +14,11 @@
     "platform": "Linux-6.18.44-fc-v236-x86_64-with-glibc2.39"
   },
   "scope": {
-    "ok": false,
+    "ok": true,
     "changed_paths": [
       "data/reviewer_calibration.json"
     ],
-    "violations": [
-      "data/reviewer_calibration.json: touches a globally denied path"
-    ],
+    "violations": [],
     "evaluated": true
   },
   "runs": [
@@ -30,7 +28,7 @@
         {
           "command": "python ops/checks/calibration_status.py PASSED",
           "exit_code": 1,
-          "duration_s": 0.065,
+          "duration_s": 0.033,
           "stdout_sha256": "27bdbd566d5998aad5a9e3d51a598642ba694775c8ae9591987d3a7c18d6e112"
         }
       ],
@@ -42,7 +40,7 @@
         {
           "command": "python ops/checks/calibration_status.py PASSED",
           "exit_code": 1,
-          "duration_s": 0.064,
+          "duration_s": 0.046,
           "stdout_sha256": "27bdbd566d5998aad5a9e3d51a598642ba694775c8ae9591987d3a7c18d6e112"
         }
       ],
@@ -58,5 +56,5 @@
     "exit_codes": []
   },
   "accepted": false,
-  "reason": "scope violation: data/reviewer_calibration.json: touches a globally denied path; checks failed: python ops/checks/calibration_status.py PASSED; negative-control patch did not apply"
+  "reason": "checks failed: python ops/checks/calibration_status.py PASSED; negative-control patch did not apply"
 }
