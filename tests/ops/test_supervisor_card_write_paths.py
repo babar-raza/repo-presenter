@@ -14,7 +14,7 @@ import yaml
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "ops"))
 
-import gatectl  # noqa: E402
+import gatectl
 
 
 def card(write_paths, executor=None):

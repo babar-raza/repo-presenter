@@ -23,7 +23,6 @@ import cardlint
 import gateverify
 import secretscan
 from gatectl import (
-    write_path_problems,
     EVIDENCE,
     GLOBAL_DENY,
     INSTRUCTIONS_JSONL,
@@ -45,6 +44,7 @@ from gatectl import (
     now_utc,
     read_jsonl,
     schema_errors,
+    write_path_problems,
 )
 
 EXIT_OK, EXIT_FAIL, EXIT_USAGE = 0, 1, 2
