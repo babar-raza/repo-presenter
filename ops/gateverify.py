@@ -472,7 +472,11 @@ def referenced_files(card: dict) -> list[str]:
     return sorted(paths)
 
 
-FILESET_SCHEME_CURRENT = "v2"
+FILESET_SCHEME_CURRENT = "v3"
+
+# The decision log owner_decision_record.py resolves every `ref=<anchor>` against (it hard-codes
+# this relative path, so the fileset hash must too).
+DECISION_LOG_PATH = "docs/DECISION_LOG.md"
 
 
 def _marker_checks(card: dict) -> dict[str, list[str]]:
@@ -502,6 +506,73 @@ def _consumed_digest(path: str, markers: list[str], rev: str) -> str:
     return sha256_bytes("\x00".join(parts).encode("utf-8"))
 
 
+def _record_pattern(prefix: str) -> re.Pattern:
+    """Exactly the record regex ops/checks/owner_decision_record.py matches."""
+    return re.compile(re.escape(prefix) + r"\s+(\d{4}-\d{2}-\d{2})\s+ref=(\S+)")
+
+
+def _consumption_v3(card: dict) -> tuple[dict[str, list[tuple[str, str]]], set[str]]:
+    """Scheme v3's view of what each check reads.
+
+    Returns ``(needles, other_use)``: ``needles[path]`` lists ``(kind, value)`` pairs for every
+    file read only line-wise -- ``("marker", m)`` from ``marker_check.py <file> <m>...``,
+    ``("prefix", p)`` for the target of ``owner_decision_record.py <file> <p>``, and
+    ``("anchor_of", "<file>\\x00<p>")`` on DECISION_LOG_PATH for that record's ``ref=`` anchor
+    (resolved at the hashed revision, see _needle_digest). ``other_use`` holds every token any
+    command uses outside those invocations; a path in it is hashed whole, never line-wise."""
+    needles: dict[str, list[tuple[str, str]]] = {}
+    other_use: set[str] = set()
+    for c in card.get("checks", []) or []:
+        cmd = str(c.get("command", ""))
+        try:
+            tokens = shlex.split(cmd)
+        except ValueError:
+            other_use.update(t.strip("\"'") for t in cmd.split())
+            continue
+        consumed = [False] * len(tokens)
+        for i, tok in enumerate(tokens):
+            if tok.endswith("marker_check.py") and len(tokens) > i + 2:
+                needles.setdefault(tokens[i + 1], []).extend(("marker", m) for m in tokens[i + 2 :])
+                consumed[i:] = [True] * (len(tokens) - i)
+                break
+            if tok.endswith("owner_decision_record.py") and len(tokens) > i + 2:
+                target, prefix = tokens[i + 1], tokens[i + 2]
+                needles.setdefault(target, []).append(("prefix", prefix))
+                needles.setdefault(DECISION_LOG_PATH, []).append(("anchor_of", f"{target}\x00{prefix}"))
+                consumed[i + 1] = consumed[i + 2] = True
+        other_use.update(t for t, used in zip(tokens, consumed) if not used)
+    return needles, other_use
+
+
+def _needle_digest(path: str, needles: list[tuple[str, str]], rev: str) -> str:
+    """Digest of exactly the lines of ``path`` at ``rev`` that the v3 needles consume (sorted,
+    with counts, so a duplicated line changes it). A ``prefix`` needle also hashes the exact
+    record text the checker's regex matches first (which can span a line break). An
+    ``anchor_of`` needle resolves the record's ``ref=`` anchor from its target AT ``rev`` and
+    hashes every line containing it; a missing record hashes as ``NO_RECORD``."""
+    rc, out, _ = git("show", f"{rev}:{path}")
+    if rc != 0:
+        return "MISSING"
+    lines = out.splitlines()
+    parts = []
+    for kind, value in sorted(set(needles)):
+        if kind == "anchor_of":
+            target, prefix = value.split("\x00", 1)
+            trc, tout, _ = git("show", f"{rev}:{target}")
+            m = _record_pattern(prefix).search(tout) if trc == 0 else None
+            if not m:
+                parts.append(f"{kind}:{value}\tNO_RECORD")
+                continue
+            needle, head = m.group(2), f"{kind}:{value}:{m.group(2)}"
+        elif kind == "prefix":
+            m = _record_pattern(value).search(out)
+            needle, head = value, f"{kind}:{value}:{m.group(0) if m else 'NO_RECORD'}"
+        else:
+            needle, head = value, f"{kind}:{value}"
+        parts.append(head + "\t" + "\n".join(sorted(ln for ln in lines if needle in ln)))
+    return sha256_bytes("\x00".join(parts).encode("utf-8"))
+
+
 def checker_fileset_sha256(card: dict, rev: str, scheme: str = FILESET_SCHEME_CURRENT) -> str:
     """2026-11-04 (supervisor directive correction): currentness was tied only to the taskcard
     YAML's own hash, so the EXECUTABLE acceptance checker it calls (e.g. a script under
@@ -514,7 +585,25 @@ def checker_fileset_sha256(card: dict, rev: str, scheme: str = FILESET_SCHEME_CU
     append-only decision log, AGENTS.md, a prose contract) is hashed as the marker lines it
     consumes, not whole: appending an unrelated decision must not invalidate an acceptance that
     never read it, while changing the consumed marker still does. v1 (whole file) is kept so
-    receipts written before v2 are compared the way they were made."""
+    receipts written before v2 are compared the way they were made.
+
+    Scheme v3 (2026-11-05): the same treatment for ``owner_decision_record.py <file> <PREFIX>``.
+    Such a check consumes the PREFIX lines of its target plus the DECISION_LOG_PATH lines that
+    contain the record's ``ref=`` anchor (resolved at ``rev``), so DECISION_LOG_PATH is part of
+    the fileset even when no command names it. Before v3 a record kept in the decision log itself
+    (TC-004) went stale on every unrelated new entry. v1/v2 receipts are still compared under
+    their own scheme."""
+    if scheme == "v3":
+        needles, other_use = _consumption_v3(card)
+        paths = sorted(set(referenced_files(card)) | set(needles))
+        parts = []
+        for path in paths:
+            if path in needles and path not in other_use:
+                parts.append(f"{path}:lines:{_needle_digest(path, needles[path], rev)}")
+                continue
+            rc, out, _ = git("show", f"{rev}:{path}")
+            parts.append(f"{path}:{sha256_bytes(out.encode('utf-8')) if rc == 0 else 'MISSING'}")
+        return sha256_bytes("\n".join(parts).encode("utf-8"))
     markers = _marker_checks(card) if scheme == "v2" else {}
     other_use = set()
     if markers:
