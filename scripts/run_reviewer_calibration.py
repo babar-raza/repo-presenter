@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import argparse
 import datetime
-import hashlib
 import json
 import os
 import pickle
@@ -50,6 +49,10 @@ from repo_presenter.readme.review.calibration.record import (
 from repo_presenter.readme.review.calibration.reviewers import (
     LiveReviewer,
     physical_calls,
+)
+from repo_presenter.readme.review.calibration.selection import (
+    cap_real_defects,
+    stability_subset,
 )
 from repo_presenter.readme.review.calibration.sources import (
     load_bundle_candidate,
@@ -273,17 +276,6 @@ def stratified(cases: list[Case], per_class: int) -> list[Case]:
     return chosen
 
 
-def stability_subset(cases: list[Case], size: int) -> list[Case]:
-    """A pre-registered stability subset: half scored clean twins, half defect cases, each half
-    ranked by the SHA-256 of the case id (no reviewer output decides which cases are repeated)."""
-    rank = lambda case: hashlib.sha256(case.case_id.encode("utf-8")).hexdigest()
-    clean = sorted((c for c in cases if c.role == "clean"), key=rank)
-    defects = sorted(
-        (c for c in cases if c.role in {"mutant", "real_defect"}), key=rank
-    )
-    return clean[: size - size // 2] + defects[: size // 2]
-
-
 def result_record(result: CaseResult) -> dict:
     return {
         "case": result.case.case_id,
@@ -392,6 +384,12 @@ def main(argv: list[str] | None = None) -> int:
         "cache, and score stability over all four reviews",
     )
     parser.add_argument(
+        "--real-per-base",
+        type=int,
+        default=-1,
+        help="ask at most this many real-defect cases of each base, hash-ranked (default: all)",
+    )
+    parser.add_argument(
         "--write-status",
         type=Path,
         help="write the calibration status document computed from this run (PASSED only when "
@@ -473,7 +471,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.only:
         selected = [c for c in cases if c.case_id in set(args.only.split(","))]
     elif args.all:
-        selected = list(cases)
+        selected = cap_real_defects(cases, args.real_per_base)
     else:
         selected = stratified(cases, args.per_class)
     models = None
