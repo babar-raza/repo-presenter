@@ -216,7 +216,55 @@ def _normalise_jsdoc(source: str) -> str:
     return "".join(out)
 
 
+#: The wrapper tags of an XML doc block that the C# reader strips itself and the javadoc reader
+#: would keep as text.
+_XML_WRAPPER = re.compile(r"</?(?:summary|para)\s*>", re.IGNORECASE)
+_CPP_DOC_LINE = re.compile(r"^(\s*)///(?!/)(.*)$")
+
+
+def _cpp_block(block: list[str]) -> list[str]:
+    """One run of Doxygen ``///`` lines as one ``/** ... */`` block, line for line."""
+    out: list[str] = []
+    last = len(block) - 1
+    for i, line in enumerate(block):
+        body, ending = _split_eol(line)
+        match = _CPP_DOC_LINE.match(body)
+        indent, text = match.group(1), match.group(2).replace("*/", "* /")
+        opener = "/**" if i == 0 else " *"
+        closer = " */" if i == last else ""
+        out.append(f"{indent}{opener}{text}{closer}{ending}")
+    return out
+
+
+def _normalise_cpp(source: str) -> str:
+    """Doxygen ``///`` line comments, which the vendored C++ reader does not read (it reads
+    ``/** */`` blocks only), rewritten as the block comment they mean. Measured 2026-11-05: the
+    Cells and Slides C++ repositories document 184 and 266 headers this way, and every one of
+    their symbols reached the facts without a docstring. ``////`` rulers and ``//!`` are left
+    alone; same lines, same line count, same line endings."""
+    lines = source.splitlines(keepends=True)
+    out: list[str] = []
+    index = 0
+    while index < len(lines):
+        if not _CPP_DOC_LINE.match(_split_eol(lines[index])[0]):
+            out.append(lines[index])
+            index += 1
+            continue
+        end = index
+        while end < len(lines) and _CPP_DOC_LINE.match(_split_eol(lines[end])[0]):
+            end += 1
+        block = lines[index:end]
+        # Some C++ ports keep their C# origin's XML doc (``/// <summary>``, ``<see cref=.../>``):
+        # resolved by the same rules as C#, so the tags do not reach the docstring.
+        if any("<summary" in line.lower() for line in block):
+            block = [_XML_WRAPPER.sub("", line) for line in _csharp_block(block)]
+        out.extend(_cpp_block(block))
+        index = end
+    return "".join(out)
+
+
 _NORMALISERS = {
+    "cpp": _normalise_cpp,
     "csharp": _normalise_csharp,
     "typescript": _normalise_jsdoc,
     "javascript": _normalise_jsdoc,

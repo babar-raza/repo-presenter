@@ -217,7 +217,8 @@ def unit_facts(
     unit_words = words(text)
     core = [fact for fact in facts if fact.kind in CORE_KINDS]
     symbols = _symbol_matches(
-        identifiers(text), [fact for fact in facts if fact.kind == "public_symbol"]
+        identifiers(text),
+        [fact for fact in facts if fact.kind in {"public_symbol", "enum_member"}],
     )
     ranked = _ranked(
         unit_words,
@@ -225,7 +226,7 @@ def unit_facts(
             fact
             for fact in facts
             if fact.kind not in CORE_KINDS
-            and fact.kind not in {"public_symbol", "example", "link_target"}
+            and fact.kind not in {"public_symbol", "enum_member", "example", "link_target"}
         ],
     )
     examples = (

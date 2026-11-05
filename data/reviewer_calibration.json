@@ -6,61 +6,169 @@
   "model": "qwen3-next",
   "owner_acceptance": "",
   "failed_gates": [
-    "false_reject_rate",
-    "stability",
+    "pipeline[break_install_command]",
+    "pipeline[contradict_format]",
+    "pipeline[contradict_version]",
+    "pipeline[drop_section]",
+    "pipeline[invent_api_name]",
+    "reviewer_alone[add_promotional_filler]",
+    "reviewer_alone[inject_unsupported_claim]",
     "reviewer_alone[real:contradiction]",
-    "reviewer_alone[real:unsupported_claim]"
+    "reviewer_alone[real:unsupported_claim]",
+    "false_reject_rate",
+    "stability"
   ],
   "measured": {
-    "source": "docs/investigations/2026-10-27-reviewer-calibration-iteration-3.md",
-    "measured_on": "2026-10-27",
+    "source": "/tmp/claude-0/-home-user-repo-presenter/542f6e2c-a780-567b-84f4-4e5f84153686/scratchpad/it4/run/results-it4.jsonl",
+    "measured_on": "2026-11-05",
     "corpus": {
-      "cases": 109,
-      "scored_clean_twins": 3,
-      "unscored_twins": 9,
-      "note": "run9 is a known-flawed baseline; n is 1 to 11 per defect label; one gateway, one day"
+      "cases": 1299,
+      "asked": 375,
+      "by_role": {
+        "clean": 37,
+        "mutant": 253,
+        "real_defect": 1005,
+        "unscored_twin": 4
+      }
     },
-    "tier1_pipeline_on_target_recall": {
-      "contradict_version": "10/10",
-      "contradict_package_name": "11/11",
-      "contradict_format": "7/7",
-      "break_install_command": "8/8",
-      "drop_section": "11/11",
-      "invent_api_name": "11/11",
-      "duplicate_paragraph": "11/11",
-      "real:broken_install": "1/1",
-      "real:duplicate_paragraph": "1/1"
+    "two_tier_status": "NOT_PASSED",
+    "complete": true,
+    "incomplete_reason": "",
+    "gates": [
+      {
+        "name": "pipeline[break_install_command]",
+        "value": 0.8,
+        "threshold": 0.9,
+        "direction": ">=",
+        "passed": false,
+        "n": 20
+      },
+      {
+        "name": "pipeline[contradict_format]",
+        "value": 0.8667,
+        "threshold": 0.9,
+        "direction": ">=",
+        "passed": false,
+        "n": 15
+      },
+      {
+        "name": "pipeline[contradict_package_name]",
+        "value": 1.0,
+        "threshold": 0.9,
+        "direction": ">=",
+        "passed": true,
+        "n": 21
+      },
+      {
+        "name": "pipeline[contradict_version]",
+        "value": 0.6667,
+        "threshold": 0.9,
+        "direction": ">=",
+        "passed": false,
+        "n": 6
+      },
+      {
+        "name": "pipeline[drop_section]",
+        "value": 0.1707,
+        "threshold": 0.9,
+        "direction": ">=",
+        "passed": false,
+        "n": 41
+      },
+      {
+        "name": "pipeline[duplicate_paragraph]",
+        "value": 1.0,
+        "threshold": 0.9,
+        "direction": ">=",
+        "passed": true,
+        "n": 41
+      },
+      {
+        "name": "pipeline[invent_api_name]",
+        "value": 0.6667,
+        "threshold": 0.9,
+        "direction": ">=",
+        "passed": false,
+        "n": 27
+      },
+      {
+        "name": "reviewer_alone[add_promotional_filler]",
+        "value": 0.3171,
+        "threshold": 0.9,
+        "direction": ">=",
+        "passed": false,
+        "n": 41
+      },
+      {
+        "name": "reviewer_alone[inject_unsupported_claim]",
+        "value": 0.2927,
+        "threshold": 0.9,
+        "direction": ">=",
+        "passed": false,
+        "n": 41
+      },
+      {
+        "name": "reviewer_alone[real:contradiction]",
+        "value": 0.0,
+        "threshold": 0.9,
+        "direction": ">=",
+        "passed": false,
+        "n": 7
+      },
+      {
+        "name": "reviewer_alone[real:unsupported_claim]",
+        "value": 0.0,
+        "threshold": 0.9,
+        "direction": ">=",
+        "passed": false,
+        "n": 74
+      },
+      {
+        "name": "false_reject_rate",
+        "value": 0.1622,
+        "threshold": 0.1,
+        "direction": "<=",
+        "passed": false,
+        "n": 37
+      },
+      {
+        "name": "json_valid_first_reply",
+        "value": 1.0,
+        "threshold": 0.9,
+        "direction": ">=",
+        "passed": true,
+        "n": 196
+      },
+      {
+        "name": "stability",
+        "value": 0.7,
+        "threshold": 0.9,
+        "direction": ">=",
+        "passed": false,
+        "n": 10
+      }
+    ],
+    "reviewer_alone_tier1_not_gated": {
+      "break_install_command": 0.0,
+      "contradict_format": 0.8,
+      "contradict_package_name": 0.2857,
+      "contradict_version": 0.1667,
+      "drop_section": 0.0,
+      "duplicate_paragraph": 0.0244,
+      "invent_api_name": 0.5556
     },
-    "tier1_reviewer_alone_on_target_recall_not_gated": {
-      "contradict_version": "2/10",
-      "contradict_package_name": "0/11",
-      "contradict_format": "5/7",
-      "break_install_command": "0/8",
-      "drop_section": "0/11",
-      "invent_api_name": "10/11",
-      "duplicate_paragraph": "4/11"
-    },
-    "tier2_reviewer_alone_on_target_recall": {
-      "inject_unsupported_claim": "11/11",
-      "add_promotional_filler": "11/11",
-      "real:unsupported_claim": "0/2",
-      "real:contradiction": "1/2"
-    },
-    "false_reject_rate_scored_clean_twins": {
-      "first_pass": "1/3",
-      "all_12_fresh_and_first_draws": "7/12",
-      "note": "run5's twin carries format claims no format fact states (U3D, AMF, HTML5 export); run9 is a flawed baseline"
-    },
-    "json_valid_first_reply_units": "125/125",
-    "contract_valid_first_reply_units": "123/125",
-    "reviews_ended_unavailable": "0/109",
-    "stability_3_fresh_reviews_identical_verdict": "6/8",
-    "cost": {
-      "provider_calls_pass1": 127,
-      "provider_calls_stability": 68,
-      "provider_calls_prompt_development": 34,
-      "mean_prompt_tokens_per_call": 17025,
-      "calls_per_fresh_review": 2.83
-    }
+    "clean_n": 37,
+    "clean_llm_rejected": 6,
+    "clean_unavailable": 0,
+    "unscored_twins_asked": 4,
+    "unscored_twins_llm_rejected": 0,
+    "first_replies": 196,
+    "first_reply_json_valid": 196,
+    "first_reply_contract_valid": 179,
+    "repeated_cases": 10,
+    "stable_cases": 7,
+    "provider_calls": 225,
+    "cases_asked": 375,
+    "tokens": 3793740
   }
 }

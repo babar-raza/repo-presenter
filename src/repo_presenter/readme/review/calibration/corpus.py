@@ -28,7 +28,11 @@ from repo_presenter.readme.review.calibration.sources import (
     SourceCandidate,
     blocking_check,
 )
-from repo_presenter.readme.review.independent_reviewer import review_candidate
+from repo_presenter.readme.review.independent_reviewer import (
+    claim_contradiction_rule,
+    duplicate_paragraph_rule,
+    review_candidate,
+)
 from repo_presenter.readme.validation.blocking import blocking_failures
 
 Role = Literal["clean", "mutant", "real_defect", "unscored_twin"]
@@ -138,8 +142,18 @@ def new_blocking_checks(case: Case) -> tuple[str, ...]:
 
 
 def deterministic_rules(case: Case) -> tuple[str, ...]:
-    """The rules of ``review_candidate`` that fire on ``case``'s README."""
+    """The rules of ``review_candidate`` that fire on ``case``'s README. A README this renderer did
+    not print (``SourceCandidate.rendered`` is ``False``) has no disposition record, so only the
+    rules that read the text alone apply to it: ``disposition_coverage``, ``live_readme_loss`` and
+    ``duplicate_opening_paragraph`` audit this project's own units and dispositions, and would fire
+    on the absence of a record that such a README never had."""
     source = case.source
+    if not source.rendered:
+        findings = [
+            *claim_contradiction_rule(case.readme, source.facts),
+            *duplicate_paragraph_rule(case.readme),
+        ]
+        return tuple(sorted({finding.rule for finding in findings}))
     verdict = review_candidate(
         readme_text=case.readme,
         units=source.units.get("units", []),

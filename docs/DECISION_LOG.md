@@ -2887,3 +2887,34 @@ issue paths are `IMPLEMENTED_AND_VERIFIED -- UPSTREAM_EFFECT_NOT_EXECUTED` at mo
 the detector's deliberate no-guess rule); (2) reviewer-recovery for the contradiction-without-product-fact
 failure without silently dropping a negative finding; (3) calibration corpus inputs via a bounded hosted
 run; (4) publishing/issue lifecycle simulations against fixtures.
+
+---
+
+## 2026-11-05: reviewer calibration iteration 4 NOT_PASSED; owner rules on the gate defect, CI, next work and the call budget
+
+**Observed** (full detail: `docs/investigations/2026-11-05-reviewer-calibration-iteration-4.md`): TC-007's
+iteration 4 ran on a pre-registered 41-base corpus (7 own sealed bundles, 34 aspose.org candidates as a
+local-only reference, per the 2026-10-31 decision 4) — 375 cases, 845 provider calls, complete. Status
+`NOT_PASSED` (harness-written): real unsupported claims 0/81 on target, injected claims 0.29, false reject
+6/37, stability 7/10. Recording it exposed a gate defect: 8 of 18 cards (TC-002, TC-004, TC-007, TC-009a,
+TC-009b, TC-010a, TC-011, TC-012a) declared write paths under `data/`, `docs/`, `evidence/` or `.github/`,
+which `ops/gatectl.py`'s `GLOBAL_DENY` always refuses — none could ever be accepted, and `doctor` did not
+report it.
+
+**Decisions (owner, 2026-11-05, chosen from options with stated trade-offs)**:
+1. *Gate fix: supervisor-card exemption.* A card whose deliverable is a supervisor-owned artifact declares
+   `executor: supervisor` (schema field). Only such a card may write a `GLOBAL_DENY` path, only those its own
+   `write_paths` name, and never `SUPERVISOR_CARD_DENY` (`ops/`, `schemas/`, `project/`, `.claude/`,
+   `AGENTS.md`, `.gitattributes`, `.gitignore`): no card can rewrite the gate, schemas or cursor that judge
+   it. Worker cards keep the full deny list. `doctor` now reports any card whose write paths the scope check
+   would always refuse. Checks, negative control and two clean re-runs are unchanged for every card. The 8
+   cards above are marked `executor: supervisor`.
+2. *Hosted CI*: open a pull request to `main` for this work so the hosted CI run can be inspected.
+3. *Next work*: fix the facts-coverage gaps the iteration found first (17/34 products without a format
+   fact, no C++/TypeScript docstrings, enum members and dataclass fields not extracted), before any
+   reviewer change. A changed reviewer is measured on a new held-out set.
+4. *Calibration budget*: about 1,000 provider calls per iteration (iteration 3 was authorised 300).
+
+**What this does NOT decide**: TC-002 and TC-004's open owner items (unchanged); how the conflict between the
+S9 preservation checks and the reviewer's standard is resolved; whether the reviewer's prompt, unit size or
+model route changes.

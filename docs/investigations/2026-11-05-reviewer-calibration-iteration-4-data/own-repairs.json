@@ -1,0 +1,625 @@
+{
+ "own:cells-cpp": [
+  {
+   "old": " handle Excel formula text with or without a leading `=`.",
+   "new": " handle Excel formula text.",
+   "klass": "unsupported_claim",
+   "reason": "The claim that formulas are accepted with or without a leading '=' is stated only by an inherited unit; no symbol signature or docstring implies it.",
+   "targets": [
+    "formula",
+    "leading ="
+   ]
+  },
+  {
+   "old": "CellFormatValue represents the formatted value of a cell.",
+   "new": "CellFormatValue represents a cell format value.",
+   "klass": "unsupported_claim",
+   "reason": "Its members (Get/SetFontId, FillId, BorderId, NumFmtId, Alignment, Protection) describe a style/format record, not a formatted cell value; no fact states the latter.",
+   "targets": [
+    "cellformatvalue",
+    "formatted value"
+   ]
+  },
+  {
+   "old": "ExtendedDocumentPropertiesModel stores custom document properties defined by the user.",
+   "new": "ExtendedDocumentPropertiesModel stores extended document properties.",
+   "klass": "unsupported_claim",
+   "reason": "No fact supports user-defined custom properties; the class members are Application, AppVersion, Company, Manager, DocSecurity, HyperlinkBase, LinksUpToDate, ScaleCrop, SharedDoc.",
+   "targets": [
+    "extended properties",
+    "custom"
+   ]
+  },
+  {
+   "old": "specifies the protection settings for a worksheet or workbook.",
+   "new": "specifies protection settings.",
+   "klass": "unsupported_claim",
+   "reason": "ProtectionValue's only members are IsLocked/IsHidden (cell-style protection); no fact ties it to worksheet or workbook protection (those are WorksheetProtectionModel/WorkbookProtectionModel).",
+   "targets": [
+    "protectionvalue",
+    "worksheet or workbook"
+   ]
+  },
+  {
+   "old": "holds workbook-wide settings such as default font and precision options.",
+   "new": "holds workbook-wide settings such as the date system and display culture.",
+   "klass": "unsupported_claim",
+   "reason": "WorkbookSettingsModel members are only DateSystem and DisplayCulture; no default-font or precision member exists in the facts.",
+   "targets": [
+    "default font",
+    "precision"
+   ]
+  },
+  {
+   "old": "specifies the view settings for a workbook such as window state and zoom.",
+   "new": "specifies the view settings for a workbook such as window state.",
+   "klass": "unsupported_claim",
+   "reason": "WorkbookViewModel has no zoom member (members: Minimized, Visibility, Window*, TabRatio, ShowSheetTabs, etc.); search for zoom on it found nothing.",
+   "targets": [
+    "zoom",
+    "workbook view"
+   ]
+  },
+  {
+   "old": "such as gridlines, headers, and pane configuration.",
+   "new": "such as gridlines and headers.",
+   "klass": "unsupported_claim",
+   "reason": "WorksheetViewModel members are RightToLeft, ShowGridLines, ShowRowColumnHeaders, ShowZeros, ZoomScale; no pane-related symbol exists.",
+   "targets": [
+    "pane",
+    "worksheet view"
+   ]
+  },
+  {
+   "old": "such as company, manager, and custom fields.",
+   "new": "such as company and manager.",
+   "klass": "unsupported_claim",
+   "reason": "ExtendedDocumentProperties has no custom-field members (Application, AppVersion, Company, Manager, DocSecurity, ...); no fact states custom fields.",
+   "targets": [
+    "custom fields",
+    "extended properties"
+   ]
+  },
+  {
+   "old": "Row represents a single row in a worksheet and provides access to its cells and formatting.",
+   "new": "Row represents a single row in a worksheet and provides access to its height and hidden state.",
+   "klass": "unsupported_claim",
+   "reason": "Row's members are only Get/SetHeight and Get/SetIsHidden; no cell-access or formatting member exists.",
+   "targets": [
+    "row",
+    "cells and formatting"
+   ]
+  },
+  {
+   "old": "such as calculation options and default style.",
+   "new": "such as calculation options.",
+   "klass": "unsupported_claim",
+   "reason": "WorkbookProperties has GetCalculation but no default-style member in the facts.",
+   "targets": [
+    "default style",
+    "workbook properties"
+   ]
+  },
+  {
+   "old": "WorkbookPropertySupport indicates whether a specific workbook property is supported by the current environment.",
+   "new": "WorkbookPropertySupport provides normalization helpers for workbook property values.",
+   "klass": "unsupported_claim",
+   "reason": "Its members are NormalizeCalculationMode, NormalizeReferenceMode, NormalizeShowObjects, NormalizeUpdateLinks, NormalizeVisibility; nothing checks support by environment.",
+   "targets": [
+    "workbookpropertysupport",
+    "environment"
+   ]
+  },
+  {
+   "old": "| Maps shared string table XML content for XLSX workbooks. |",
+   "new": "| Maps shared string table XML content. |",
+   "klass": "contradiction",
+   "reason": "The limitation (inherited_unit:056.list and the README's own Scope section) says these mapper classes are for legacy SpreadsheetML and their read/write methods unconditionally throw UnsupportedFeatureException, not XLSX mapping.",
+   "targets": [
+    "xml mapper",
+    "xlsx"
+   ]
+  },
+  {
+   "old": "| Maps stylesheet XML content for XLSX workbooks. |",
+   "new": "| Maps stylesheet XML content. |",
+   "klass": "contradiction",
+   "reason": "inherited_unit:056.list says StylesheetXmlMapper belongs to unimplemented SpreadsheetML support and always throws UnsupportedFeatureException.",
+   "targets": [
+    "xml mapper",
+    "xlsx"
+   ]
+  },
+  {
+   "old": "| Maps workbook XML content for XLSX files. |",
+   "new": "| Maps workbook XML content. |",
+   "klass": "contradiction",
+   "reason": "inherited_unit:056.list says WorkbookXmlMapper belongs to unimplemented SpreadsheetML support and always throws UnsupportedFeatureException.",
+   "targets": [
+    "xml mapper",
+    "xlsx"
+   ]
+  },
+  {
+   "old": "| Maps worksheet XML content for XLSX files. |",
+   "new": "| Maps worksheet XML content. |",
+   "klass": "contradiction",
+   "reason": "inherited_unit:056.list says WorksheetXmlMapper belongs to unimplemented SpreadsheetML support and always throws UnsupportedFeatureException.",
+   "targets": [
+    "xml mapper",
+    "xlsx"
+   ]
+  },
+  {
+   "old": "full public surface — 197 public types — is listed below, grouped exactly as\n`reference.aspose.org` organizes them.",
+   "new": "full public surface is listed below.",
+   "klass": "unsupported_claim",
+   "reason": "The count 197 is not stated by any fact (the facts hold 168 class + 27 enum = 195 types, matching the README's own 195), and the reference.aspose.org grouping claim has no fact.",
+   "targets": [
+    "197",
+    "type count"
+   ]
+  },
+  {
+   "old": "targets C++17 on MSVC, GCC, and Clang. The test suite in `Aspose.Cells.Foss.Cpp.Tests/` uses GoogleTest v1.14.0, downloading it automatically via FetchContent unless -DASPOSE_CELLS_FOSS_TESTS_USE_SYSTEM_GTEST=ON is passed.",
+   "new": "targets C++17. The test suite lives in `Aspose.Cells.Foss.Cpp.Tests/`.",
+   "klass": "unsupported_claim",
+   "reason": "Compiler compatibility (MSVC/GCC/Clang), GoogleTest v1.14.0, FetchContent and the GTEST option are stated only by inherited units; no fact states them.",
+   "targets": [
+    "compilers",
+    "googletest"
+   ]
+  },
+  {
+   "old": "targets C++17 on MSVC, GCC, and Clang alike:",
+   "new": "targets C++17:",
+   "klass": "unsupported_claim",
+   "reason": "Compiler compatibility claim (MSVC, GCC, Clang) appears only in inherited_unit:018.paragraph; no fact states it.",
+   "targets": [
+    "compilers",
+    "compatibility"
+   ]
+  }
+ ],
+ "own:cells-go": [
+  {
+   "old": " via `Cell.SetStyle`, with automatic deduplication of identical styles during save.",
+   "new": " via `Cell.SetStyle`.",
+   "klass": "unsupported_claim",
+   "reason": "Automatic style deduplication on save is stated only by inherited_unit:010.list; no symbol docstring (Style, Cell.SetStyle, Workbook.Save) mentions it.",
+   "targets": [
+    "deduplication",
+    "styles"
+   ]
+  },
+  {
+   "old": ", keeping memory proportional to one row's width.",
+   "new": ", without loading the entire sheet XML into memory.",
+   "klass": "unsupported_claim",
+   "reason": "The memory-proportional-to-one-row claim appears only in inherited_unit:010.list; the StreamingReader docstring states only that it reads without loading the entire sheet XML into memory.",
+   "targets": [
+    "memory",
+    "streaming"
+   ]
+  },
+  {
+   "old": "to apply ECMA-376 Agile Encryption (SHA-512 key derivation, AES-256-CBC) during save,",
+   "new": "to configure an open password for the workbook,",
+   "klass": "unsupported_claim",
+   "reason": "The encryption scheme (ECMA-376 Agile, SHA-512, AES-256-CBC) is stated only by inherited units; the SetPassword docstring says only that it configures an open password.",
+   "targets": [
+    "encryption",
+    "aes-256"
+   ]
+  },
+  {
+   "old": "reference for all 14 public types (",
+   "new": "reference for all public types (",
+   "klass": "unsupported_claim",
+   "reason": "No fact states 14 public types; the facts hold 28 class-kind symbols, matching the README's own 'The verified public surface has 28 types'.",
+   "targets": [
+    "14",
+    "type count"
+   ]
+  }
+ ],
+ "own:cells-java": [
+  {
+   "old": "Embed pictures from bytes, streams, or file paths with two-cell anchor positioning, supporting JPEG, PNG, GIF, and BMP formats,",
+   "new": "Embed pictures from bytes with two-cell anchor positioning,",
+   "klass": "unsupported_claim",
+   "reason": "The only PictureCollection.add fact takes byte[] ('Adds a picture from raw bytes'); stream/file-path overloads and the JPEG/PNG/GIF/BMP format list appear only in inherited_unit:010.list (ImageType has no listed values).",
+   "targets": [
+    "pictures",
+    "image formats"
+   ]
+  },
+  {
+   "old": "Create 18 of the 25 `ChartType` values programmatically via `ChartCollection.add()`, while the remaining 7 ChartEx types",
+   "new": "Create charts programmatically via `ChartCollection.add()`, while the ChartEx types",
+   "klass": "unsupported_claim",
+   "reason": "The counts 18 of 25 ChartType values and 7 ChartEx types are stated only by inherited_unit:010.list; no fact enumerates ChartType values.",
+   "targets": [
+    "18 of 25",
+    "chart types"
+   ]
+  },
+  {
+   "old": "freeze rows and/or columns by coordinate or cell name,",
+   "new": "freeze rows and/or columns by coordinate,",
+   "klass": "unsupported_claim",
+   "reason": "The only freezePanes fact takes int row/column coordinates; freezing by cell name is stated only by inherited_unit:010.list.",
+   "targets": [
+    "freeze panes",
+    "cell name"
+   ]
+  },
+  {
+   "old": "surface — 183 public types organized into one module.",
+   "new": "surface — 183 public types.",
+   "klass": "unsupported_claim",
+   "reason": "The facts list seven module symbols (org.aspose.cells_foss plus core, packaging, validation, xml subpackages), so 'organized into one module' is not supported.",
+   "targets": [
+    "one module"
+   ]
+  },
+  {
+   "old": "public API surface, containing 183 public types organized into one module.",
+   "new": "public API surface.",
+   "klass": "unsupported_claim",
+   "reason": "The 183 types span several module facts (org.aspose.cells_foss, .core, .packaging, .validation, .xml); no fact places all 183 in this one package or module.",
+   "targets": [
+    "one module",
+    "183"
+   ]
+  }
+ ],
+ "own:cells-net": [
+  {
+   "old": "which exposes collections for worksheets, defined names, and charts, and supports",
+   "new": "which exposes collections for worksheets and defined names, and supports",
+   "klass": "unsupported_claim",
+   "reason": "Claims Workbook exposes a charts collection; the Workbook members in the facts are DefinedNames, Dispose, DocumentProperties, LoadDiagnostics, Properties, Save, Settings, Worksheets (Charts exists only on Worksheet).",
+   "targets": [
+    "workbook",
+    "charts"
+   ]
+  }
+ ],
+ "own:cells-rust": [
+  {
+   "old": "with `Workbook::new` (starts with one sheet, `\"Sheet1\"`), or",
+   "new": "with `Workbook::new`, or",
+   "klass": "unsupported_claim",
+   "reason": "That a new workbook starts with one sheet named Sheet1 is stated only by inherited_unit:010.list and an unverified example comment; the Workbook.new docstring says only 'Initializes a new instance.'",
+   "targets": [
+    "sheet1",
+    "new workbook"
+   ]
+  },
+  {
+   "old": "chart collection — column, line, bar,\n  area, pie, doughnut, scatter, radar, bubble, and stock families, plus their stacked and\n  3D variants, each rendered as real OOXML chart markup.",
+   "new": "chart collection.",
+   "klass": "unsupported_claim",
+   "reason": "The chart-family list, stacked/3D variants and 'rendered as real OOXML chart markup' appear only in inherited_unit:010.list; no fact enumerates ChartType values.",
+   "targets": [
+    "chart types",
+    "3d"
+   ]
+  },
+  {
+   "old": " / `AutoShapeType`\n  (rectangles, stars, arrows, and other preset geometries).",
+   "new": " / `AutoShapeType`.",
+   "klass": "unsupported_claim",
+   "reason": "The AutoShapeType docstring says only 'Specifies the type of an auto shape (preset geometry).'; no fact lists rectangles, stars or arrows.",
+   "targets": [
+    "shapes",
+    "preset geometries"
+   ]
+  }
+ ],
+ "own:html-python": [
+  {
+   "old": "resolves the cascade including specificity, inline-vs-author rules, !important, and inheritance using `Element.get_computed_style`",
+   "new": "resolves computed styles using `Element.get_computed_style`",
+   "klass": "unsupported_claim",
+   "reason": "The specific cascade features (specificity, inline-vs-author, !important, inheritance) are stated only by inherited_unit:010.list; no symbol docstring states them (ComputedStyleDeclaration has no docstring).",
+   "targets": [
+    "cascade",
+    "specificity"
+   ]
+  },
+  {
+   "old": "including BOM and content sniffing with",
+   "new": "including BOM with",
+   "klass": "unsupported_claim",
+   "reason": "Content sniffing is not stated by any fact; the detect_encoding docstring says only that it detects the encoding and returns a decoded result, and example:005 exercises only a BOM input.",
+   "targets": [
+    "content sniffing",
+    "encoding"
+   ]
+  },
+  {
+   "old": "| SubtleCrypto provides cryptographic operations such as encryption, decryption, signing, and verification. |",
+   "new": "| SubtleCrypto represents the SubtleCrypto interface. |",
+   "klass": "unsupported_claim",
+   "reason": "The SubtleCrypto fact has no docstring and no members; no fact states encryption, decryption, signing or verification capability.",
+   "targets": [
+    "subtlecrypto",
+    "encryption"
+   ]
+  },
+  {
+   "old": "| ValidityState provides information about the validity of a form control's value. |",
+   "new": "| ValidityState represents the ValidityState interface. |",
+   "klass": "contradiction",
+   "reason": "Claims ValidityState provides validity information, while the limitation in inherited_unit:089.list (and the README's own Scope section) says form constraint validation (validity-state computation) is present on the API but not implemented.",
+   "targets": [
+    "validitystate",
+    "constraint validation"
+   ]
+  },
+  {
+   "old": "performs WHATWG-compliant encoding detection on byte sequences using BOM, meta-charset, and UTF-8 default rules,",
+   "new": "performs encoding detection on byte sequences,",
+   "klass": "unsupported_claim",
+   "reason": "WHATWG compliance and the meta-charset / UTF-8-default rule set are not stated by any fact; the detect_encoding docstring says only 'Detect the character encoding of data and return a decoded result.'",
+   "targets": [
+    "whatwg-compliant",
+    "meta-charset"
+   ]
+  },
+  {
+   "old": "browsable reference for all 243 public types. It covers",
+   "new": "browsable reference. It covers",
+   "klass": "unsupported_claim",
+   "reason": "No fact states 243 public types; the facts hold 302 class + 1 enum = 303 types, which the same sentence also states.",
+   "targets": [
+    "243",
+    "type count"
+   ]
+  }
+ ],
+ "own:imaging-net": [
+  {
+   "old": "Detects 14 image formats by reading only the file's signature bytes and returning an `ImageFormat` value without pulling in a full imaging stack.",
+   "new": "Detects an image's format and returns an `ImageFormat` value.",
+   "klass": "unsupported_claim",
+   "reason": "The count of 14 formats and the signature-bytes-only mechanism are stated only by inherited unit 010; no public_symbol docstring/signature or format fact states them.",
+   "targets": [
+    "14 formats",
+    "signature bytes"
+   ]
+  },
+  {
+   "old": "Reads a format's real header fields directly into an `ImageInfo` for PNG, JPEG, GIF, BMP, WEBP, ICO, TIFF, PSD, EMF, WMF, DICOM, DJVU, AVIF, and HEIC/HEIF, providing width, height, bit depth, and frame count without decoding.",
+   "new": "Reads a format's header fields into an `ImageInfo`, providing width, height, bit depth, and frame count.",
+   "klass": "unsupported_claim",
+   "reason": "No format fact exists in the facts file; the per-format list and 'without decoding' are stated only by inherited units 010/012.",
+   "targets": [
+    "format list",
+    "header probing"
+   ]
+  },
+  {
+   "old": "Counts real multi-frame and multi-page content by walking GIF image-descriptor blocks, ICO directory entries, TIFF IFD chains, and bundled multi-page DJVU FORM:DJVU page components rather than relying on file counts that include shared dictionaries and thumbnails.",
+   "new": "Reports a frame count through `ImageInfo.FrameCount`.",
+   "klass": "unsupported_claim",
+   "reason": "The parsing mechanics for GIF/ICO/TIFF/DJVU frame counting are not stated by any public_symbol or format fact; only inherited units describe them.",
+   "targets": [
+    "frame counting",
+    "djvu"
+   ]
+  },
+  {
+   "old": ", so a probe can run on an ASP.NET request thread without blocking it",
+   "new": "",
+   "klass": "unsupported_claim",
+   "reason": "The ASP.NET non-blocking usage claim is not stated by any fact (ProbeAsync/ProbeFileAsync signatures only).",
+   "targets": [
+    "asp.net"
+   ]
+  },
+  {
+   "old": "**Robust error handling.** Never throws on a signature match it cannot fully parse—malformed or truncated input returns an `ImageInfo` with only Format set, and every number in an `ImageInfo` is either positive or null, with zero, negative, or out-of-range header fields reported as unknown instead of passed through.",
+   "new": "**Nullable results.** `Width`, `Height`, `BitDepth`, and `FrameCount` in an `ImageInfo` are nullable.",
+   "klass": "unsupported_claim",
+   "reason": "The never-throws and positive-or-null guarantees appear only in inherited units 010/030; facts only show int? signatures.",
+   "targets": [
+    "never throws",
+    "error handling"
+   ]
+  },
+  {
+   "old": "- DICOM parsing covers Implicit VR Little Endian and Explicit VR Little/Big Endian transfer\n  syntaxes — including the common compressed ones, whose non-pixel elements are encoded\n  Explicit VR Little Endian — and reads `Rows`/`Columns`/`BitsAllocated` directly from the data\n  set, stopping rather than guessing if it reaches a sequence or encapsulated pixel data\n  element with an undefined length first.",
+   "new": "",
+   "klass": "unsupported_claim",
+   "reason": "No fact mentions DICOM transfer syntaxes or element parsing; only inherited units do.",
+   "targets": [
+    "dicom",
+    "transfer syntax"
+   ]
+  },
+  {
+   "old": ", demonstrating the simplest way to read image metadata without loading the full image",
+   "new": "",
+   "klass": "unsupported_claim",
+   "reason": "That probing avoids loading the full image is not stated by any fact.",
+   "targets": [
+    "without loading"
+   ]
+  },
+  {
+   "old": "`Probe` never throws on malformed or truncated input — if a file matches a format's signature\nbut its header can't be fully parsed, you get back an `ImageInfo` with just the `Format` set\nrather than an exception.",
+   "new": "",
+   "klass": "unsupported_claim",
+   "reason": "The no-throw behavior is stated only by inherited unit 030; no public_symbol docstring or example fact states it.",
+   "targets": [
+    "never throws"
+   ]
+  },
+  {
+   "old": " for use on a thread\nthat shouldn't block on I/O, such as an ASP.NET request handler",
+   "new": "",
+   "klass": "unsupported_claim",
+   "reason": "The ASP.NET/non-blocking usage claim is not stated by any fact.",
+   "targets": [
+    "asp.net"
+   ]
+  },
+  {
+   "old": "`DetectFormat` and `Probe` both buffer a non-seekable stream internally, so detection works the\nsame way over a network or compressed stream as it does over a file:",
+   "new": "`DetectFormat` accepts a `Stream`:",
+   "klass": "unsupported_claim",
+   "reason": "Internal buffering of non-seekable streams is not stated by any fact; only the DetectFormat(Stream stream) signature exists.",
+   "targets": [
+    "non-seekable",
+    "buffer"
+   ]
+  },
+  {
+   "old": "enum of the 14 detectable formats, plus `Unknown` for anything unmatched",
+   "new": "enum of detectable image formats",
+   "klass": "unsupported_claim",
+   "reason": "No fact states 14 formats or an `Unknown` member of ImageFormat.",
+   "targets": [
+    "14 formats",
+    "unknown"
+   ]
+  },
+  {
+   "old": "immutable result of a probe",
+   "new": "result of a probe",
+   "klass": "unsupported_claim",
+   "reason": "Immutability of ImageInfo is not stated by any public_symbol fact.",
+   "targets": [
+    "immutable"
+   ]
+  },
+  {
+   "old": "It identifies formats including PSD, EMF, WMF, DICOM, GIF, ICO, TIFF, and DJVU, and reports frame counts where the container format records them.",
+   "new": "It identifies image formats and reports frame counts through `ImageInfo`.",
+   "klass": "unsupported_claim",
+   "reason": "No format fact exists; the listed formats are stated only by inherited units.",
+   "targets": [
+    "format list"
+   ]
+  },
+  {
+   "old": "- Frame count reflects only what the container itself records: it is a real, computed count for GIF, ICO, TIFF, and bundled multi-page DJVU, while every other supported format reports a fixed 1 for a successfully parsed header, and an indirect or truncated DJVM document reports `FrameCount` as null.",
+   "new": "",
+   "klass": "unsupported_claim",
+   "reason": "Per-format frame-count behavior (fixed 1, DJVM null) is stated by no public_symbol or format fact.",
+   "targets": [
+    "frame count",
+    "djvm"
+   ]
+  },
+  {
+   "old": "- Non-placeable WMF is detected but not dimensioned because its header carries no bounding rectangle, so Probe returns a format-only `ImageInfo` for it; only placeable WMF headers yield Width and Height, assuming a conventional 96 DPI target.",
+   "new": "",
+   "klass": "unsupported_claim",
+   "reason": "WMF placeable handling and the 96 DPI assumption are stated by no fact other than inherited unit 052.",
+   "targets": [
+    "wmf",
+    "96 dpi"
+   ]
+  },
+  {
+   "old": "- DICOM parsing stops at the first undefined-length element, since Rows, Columns, and `BitsAllocated` always precede such elements in a conformant file.",
+   "new": "",
+   "klass": "unsupported_claim",
+   "reason": "DICOM parsing behavior is not stated by any fact.",
+   "targets": [
+    "dicom"
+   ]
+  },
+  {
+   "old": "- CDR support is planned but not yet implemented, as no `CdrFormatHandler` exists in the current source tree.",
+   "new": "",
+   "klass": "unsupported_claim",
+   "reason": "CDR plans and the `CdrFormatHandler` identifier match no fact value.",
+   "targets": [
+    "cdr"
+   ]
+  },
+  {
+   "old": "Most .NET image libraries make you fully decode an image just to answer \"is this a JPEG, and\nhow big is it?\". `ImageSharp.Image.Identify` covers common raster formats well, but nothing\nelse in the .NET FOSS ecosystem does the same for PSD, EMF/WMF, or DICOM — this library covers\nthat full range in one place.",
+   "new": "",
+   "klass": "unsupported_claim",
+   "reason": "Comparative ecosystem claims (ImageSharp, nothing else does the same) are stated by no fact, only inherited unit 011.",
+   "targets": [
+    "imagesharp",
+    "comparison"
+   ]
+  },
+  {
+   "old": "Frame count is marked ✅ only where the container format genuinely records more than one\nframe or page (GIF, ICO, TIFF, and multi-page DJVU); every other format's `FrameCount` comes\nback as a fixed `1` on a successful parse, which this table does not count as a real frame\ncount.",
+   "new": "",
+   "klass": "unsupported_claim",
+   "reason": "Per-format frame-count behavior is stated only by inherited unit 013, not by any fact.",
+   "targets": [
+    "frame count"
+   ]
+  },
+  {
+   "old": " It adds full decoding, editing, rendering, and conversion across a much broader format range.",
+   "new": "",
+   "klass": "unsupported_claim",
+   "reason": "Capabilities of the Enterprise Edition are stated by no fact.",
+   "targets": [
+    "enterprise",
+    "conversion"
+   ]
+  },
+  {
+   "old": " The test suite resides in `tests/Aspose.Imaging.Foss.Tests/Aspose.Imaging.Foss.Tests.csproj`, targets net9.0, and uses xUnit via Microsoft.NET.Test.Sdk, xunit, and xunit.runner.visualstudio; code coverage is collected with coverlet.collector. These test dependencies apply only to the test project and are not referenced by the main library.",
+   "new": " The test suite resides in `tests/`.",
+   "klass": "unsupported_claim",
+   "reason": "Test project path, net9.0, xUnit/coverlet test dependencies are stated only by inherited units 026/057; build_test_asset:tests gives only tests/ and there is no dependency fact for them.",
+   "targets": [
+    "net9.0",
+    "xunit",
+    "coverlet"
+   ]
+  },
+  {
+   "old": " that runs on tagged version pushes",
+   "new": "",
+   "klass": "unsupported_claim",
+   "reason": "The release trigger is not stated by build_test_asset:release-workflow.",
+   "targets": [
+    "tagged push"
+   ]
+  },
+  {
+   "old": "The suite covers 3 test files under `tests/`. ",
+   "new": "",
+   "klass": "unsupported_claim",
+   "reason": "No fact states a count of test files.",
+   "targets": [
+    "3 test files"
+   ]
+  },
+  {
+   "old": "The test project targets `net9.0` and references the library via a plain `ProjectReference` —\nno packaged dependency is required to build or test the library itself. A tagged\n`v<major>.<minor>.<patch>` push runs [`.github/workflows/release.yml`](.github/workflows/release.yml),\nwhich builds and publishes the package.",
+   "new": "Releases run through [`.github/workflows/release.yml`](.github/workflows/release.yml).",
+   "klass": "unsupported_claim",
+   "reason": "net9.0 test target, the tag pattern, and package publishing are stated only by inherited unit 057; build_test_asset:release-workflow gives the path only.",
+   "targets": [
+    "net9.0",
+    "tag pattern",
+    "publish"
+   ]
+  },
+  {
+   "old": "Adding a new format means implementing `IFormatHandler` (signature match + header parse) under\n`src/Aspose.Imaging.Foss/Formats` and registering it in `ImageProbe`. ",
+   "new": "",
+   "klass": "unsupported_claim",
+   "reason": "`IFormatHandler` matches no public_symbol value and the Formats directory is stated by no fact.",
+   "targets": [
+    "iformathandler"
+   ]
+  }
+ ]
+}

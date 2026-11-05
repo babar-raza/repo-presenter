@@ -181,7 +181,8 @@ def unit_failures(candidate: Candidate) -> list[Failure]:
     values = {fact.value for fact in facts.facts if fact.polarity == "SUPPORTED"}
     symbols = {
         fact.value.rsplit(".", 1)[-1]
-        for fact in facts.by_kind("public_symbol")
+        for kind in ("public_symbol", "enum_member")
+        for fact in facts.by_kind(kind)
         if fact.polarity == "SUPPORTED"
     }
     placed_lines = {

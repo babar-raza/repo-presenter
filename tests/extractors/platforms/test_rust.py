@@ -269,13 +269,21 @@ def test_surface_facts_come_from_the_shared_extractor_and_skip_separate_targets(
     tree = _repository(tmp_path)
     facts = rust.PLUGIN.surface_facts(tmp_path, tree)
     values = {fact.value for fact in facts}
-    kinds = {fact.value: (fact.attributes or {})["symbol_kind"] for fact in facts}
+    kinds = {
+        fact.value: (fact.attributes or {})["symbol_kind"]
+        for fact in facts
+        if fact.kind == "public_symbol"
+    }
     # The module path is derived from the crate's source root, never from the manifest's own
     # directory: `src` is not a Rust module and no consumer writes `src::widget::Widget`.
     assert "widget.Widget" in values
     assert not any(value.startswith("src") for value in values)
     assert kinds["widget.Widget"] == "class"
     assert "widget.WidgetKind" in values and kinds["widget.WidgetKind"] == "enum"
+    # Its variants are facts of their own kind, so a README naming `WidgetKind.Round` cites one.
+    members = {fact.value: fact for fact in facts if fact.kind == "enum_member"}
+    assert set(members) == {"widget.WidgetKind.Round", "widget.WidgetKind.Square"}
+    assert members["widget.WidgetKind.Round"].attributes == {"enum": "widget.WidgetKind"}
     # The `tests/` target beside it declares TestOnlyWidget and no consumer can reach it.
     assert not any(value.startswith("TestOnlyWidget") for value in values)
     for fact in facts:

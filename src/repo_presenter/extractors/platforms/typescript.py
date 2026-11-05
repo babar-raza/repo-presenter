@@ -36,7 +36,7 @@ from repo_presenter.extractors.platforms.typescript_format_declarations import (
     format_declarations as typescript_format_declarations,
 )
 from repo_presenter.extractors.surface import npm_package
-from repo_presenter.extractors.surface.extractor import surface_symbols
+from repo_presenter.extractors.surface.extractor import surface_symbols, with_enum_members
 from repo_presenter.extractors.surface.npm_package import (
     TYPESCRIPT_MODULES,
 )
@@ -134,7 +134,9 @@ class TypeScriptPlugin:
         symbols = surface_symbols(
             get_parser(_PARSER_LANGUAGE), _PARSER_LANGUAGE, barrel.parent, root, self.ecosystem
         )
-        return npm_package.public_symbol_facts(root, barrel, symbols, TYPESCRIPT_MODULES)
+        return with_enum_members(
+            npm_package.public_symbol_facts(root, barrel, symbols, TYPESCRIPT_MODULES), symbols
+        )
 
     def registry_facts(self, facts: Sequence[Fact]) -> tuple[list[Fact], list[ProbeRecord]]:
         """Resolve the install claim against npm; the fact keeps its ID and gains evidence."""

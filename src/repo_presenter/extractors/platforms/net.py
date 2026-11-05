@@ -43,7 +43,7 @@ from repo_presenter.extractors.platforms.net_examples import verify_net_examples
 from repo_presenter.extractors.platforms.net_format_declarations import (
     format_declarations as net_format_declarations,
 )
-from repo_presenter.extractors.surface.extractor import surface_symbols
+from repo_presenter.extractors.surface.extractor import surface_symbols, with_enum_members
 from repo_presenter.extractors.surface.manifest import (
     PackageIdentity,
     read_identity,
@@ -351,7 +351,7 @@ class NetPlugin:
                     attributes=attributes,
                 )
             )
-        return facts
+        return with_enum_members(facts, symbols)
 
     def registry_facts(self, facts: Sequence[Fact]) -> tuple[list[Fact], list[ProbeRecord]]:
         """Resolve the install claim against NuGet; the fact keeps its ID and gains evidence."""

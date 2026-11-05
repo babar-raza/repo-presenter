@@ -340,3 +340,53 @@ def test_a_symbol_whose_documentation_has_a_hole_keeps_its_facts_and_loses_the_q
         "symbol_kind": "method",
         "docstring": "Clears the <b>scene</b>",
     }
+
+
+# Doxygen ``///`` comments, as the Cells and Slides C++ repositories write them (2026-11-05: 184
+# and 266 headers; every symbol reached the facts with no docstring, because the vendored C++
+# reader reads ``/** */`` blocks only). Cells keeps its C# origin's XML inside them.
+CPP = (
+    "namespace Aspose { namespace Widget {\n"
+    "/// Stores the defined names state for a worksheet.\n"
+    "class A final {\n"
+    "public:\n"
+    "    /// Gets or sets\n"
+    "    /// the print area.\n"
+    "    int GetPrintArea() const;\n"
+    "    //// a ruler, not a doc comment\n"
+    "    int Other() const;\n"
+    "};\n"
+    "/// <summary>\n"
+    "/// Initializes a new instance of the <see cref=\"A\"/> class.\n"
+    "/// </summary>\n"
+    "/// <param name=\"x\">Leaked param text.</param>\n"
+    "class B {};\n"
+    "}}\n"
+)
+
+
+def test_cpp_doxygen_lines_become_one_block_comment_line_for_line() -> None:
+    source = CPP.encode("utf-8")
+    rewritten = normalise_source_docs(source, "cpp")
+    assert rewritten.count(b"\n") == source.count(b"\n")
+    text = rewritten.decode("utf-8")
+    assert "/** Stores the defined names state for a worksheet. */" in text
+    assert "    /** Gets or sets\n     * the print area. */\n" in text
+    assert "//// a ruler, not a doc comment" in text
+    crlf = CPP.replace("\n", "\r\n").encode("utf-8")
+    assert normalise_source_docs(crlf, "cpp").count(b"\r\n") == crlf.count(b"\r\n")
+    # A closer inside the text cannot end the block early.
+    assert b"* /" in normalise_source_docs(b"/// a */ b\nclass Z {};\n", "cpp")
+
+
+def test_the_cpp_engine_reads_doxygen_line_comments(tmp_path: Path) -> None:
+    include = tmp_path / "include" / "aspose" / "widget"
+    include.mkdir(parents=True)
+    (include / "A.h").write_text(CPP, encoding="utf-8")
+    symbols = surface_symbols(get_parser("cpp"), "cpp", tmp_path / "include", tmp_path, "widget")
+    by_suffix = {s.value.split(".")[-1]: s.doc for s in symbols}
+    assert by_suffix["A"] == "Stores the defined names state for a worksheet."
+    assert by_suffix["GetPrintArea"] == "Gets or sets the print area."
+    assert by_suffix["B"] == "Initializes a new instance of the A class."
+    assert "Leaked" not in by_suffix["B"]
+    assert by_suffix.get("Other", "") == ""

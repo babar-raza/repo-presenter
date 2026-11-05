@@ -44,6 +44,7 @@ from gatectl import (
     now_utc,
     read_jsonl,
     schema_errors,
+    write_path_problems,
 )
 
 EXIT_OK, EXIT_FAIL, EXIT_USAGE = 0, 1, 2
@@ -352,6 +353,8 @@ def cmd_doctor(args) -> int:
         errs = schema_errors(schema, card)
         if errs:
             problems.append(f"{cid} fails its own schema: " + "; ".join(errs))
+        for problem in write_path_problems(card):
+            problems.append(f"{cid}: {problem}")
     if problems:
         print("doctor: ISSUES FOUND", file=sys.stderr)
         for p in problems:
