@@ -108,3 +108,113 @@ python scripts/run_reviewer_calibration.py live --all --real-per-base 2 --stabil
   --bundle own:<...>=<revision dir>,<clone> ...  --reference ref:<...>=<aspose.org readme>,<facts>,<clone> ... \
   --write-status data/reviewer_calibration.json
 ```
+
+## 2. Results (appended after the run; section 1 is unchanged)
+
+**Status: `NOT_PASSED`** — computed by `--write-status` from the complete run (375 of 375 selected cases asked,
+no budget stop) and committed as `data/reviewer_calibration.json` unchanged. 11 gates fail; the gate is not close.
+The reviewer (prompt v17, logic 6, `qwen3-next`) is unchanged by this iteration; nothing was loosened.
+
+### 2.1 One deviation from the pre-registration
+
+The 620-call cap was too low: a mutant that shifts unit boundaries re-asks more than one unit, and contract re-asks
+cost more than estimated. The first invocation stopped at the cap after 330 of 375 cases and wrote `NOT_PASSED`
+(incomplete) — kept in `-data/run-output-stopped-at-620.txt`. The decision to resume was taken **before any result
+was read**, and the run was resumed once with cap 900 under the same tag: the 330 answered cases replayed from the
+call store at zero cost, the remaining 45 cases and the stability repeats were asked. Total physical calls: **845**
+(620 + 225), 3.79 M tokens in the resumed invocation's accounting. Consequence: first-reply JSON validity is
+measured over the 196 unit replies of the resumed invocation only (replays carry no first-reply record): 196/196
+valid; contract-valid 179/196 = 0.91.
+
+### 2.2 Whole corpus (the gated numbers)
+
+| Gate | Value | n | Need |
+|---|---|---|---|
+| pipeline[break_install_command] | 0.80 | 20 | ≥ 0.90 FAIL |
+| pipeline[contradict_format] | 0.87 | 15 | FAIL |
+| pipeline[contradict_package_name] | 1.00 | 21 | PASS |
+| pipeline[contradict_version] | 0.67 | 6 | FAIL |
+| pipeline[drop_section] | 0.17 | 41 | FAIL |
+| pipeline[duplicate_paragraph] | 1.00 | 41 | PASS |
+| pipeline[invent_api_name] | 0.67 | 27 | FAIL |
+| reviewer_alone[add_promotional_filler] | 0.32 | 41 | FAIL |
+| reviewer_alone[inject_unsupported_claim] | 0.29 | 41 | FAIL |
+| reviewer_alone[real:contradiction] | 0.00 | 7 | FAIL |
+| reviewer_alone[real:unsupported_claim] | 0.00 | 74 | FAIL |
+| false_reject_rate (scored clean twins) | 0.16 (6/37) | 37 | ≤ 0.10 FAIL |
+| json_valid_first_reply | 1.00 | 196 | PASS |
+| stability (4 reviews identical) | 0.70 (7/10) | 10 | ≥ 0.90 FAIL |
+
+The real-defect zero is not a scoring artifact: of the 74 real unsupported-claim cases the reviewer **accepted 61**;
+its 13 rejections cite other lines, never the defect (checked by reading the quotes against `Case.defect_text`).
+The 7 real contradictions were all accepted.
+
+### 2.3 By base kind (reported, not gated)
+
+| | own bases (rendered, 7) | reference bases (`rendered=False`, 34) |
+|---|---|---|
+| tier-1 pipeline | all 1.00 except invent_api_name 0.86 (n=7) | install 0.71, format 0.83, version 0.60, drop_section 0.00 (n=34), invent_api 0.60 |
+| reviewer-alone filler / injected claim | 0.86 / 0.71 (n=7 each) | 0.21 / 0.21 (n=34 each) |
+| reviewer-alone real unsupported claim | 0/13 | 0/61 (+ real contradiction 0/7) |
+| false reject | 0/4 | 6/33 = 0.18 |
+
+Reading:
+
+1. **The reviewer does not find a real unsupported claim, on either kind of base (0/81).** It catches a blatant
+   injected one in a small rendered unit most of the time (0.71), which is iteration 3's 11/11 seen on a fair
+   sample. A real one is the maintainers' own phrasing, plausible and specific; v17 accepts it. This is the
+   failure iteration 3 already named (0/2), now with n = 81 instead of 2.
+2. **Shown a whole README (`rendered=False`), the reviewer degrades sharply**: injected claims and filler fall to
+   0.21. Units there hold far more authored text per call than a rendered candidate's (a reference README is
+   2-10x denser), and the model misses an inserted sentence among many specific ones. This bears on Lane L, whose
+   corrected live README is reviewed the same way.
+3. **Content loss on reference bases is undetectable by construction** (0/34): with no disposition record, only
+   the reviewer can notice a missing section, and its contract says a difference from the original is not a
+   finding. The tier-1 `drop_section` gate is therefore only meaningful on own bases (7/7).
+4. **False rejects: 6 of 33 reference twins, 0 of 4 own.** Adjudication of the 6 (reported, never gated): one is a
+   clear reviewer error (Font Python: "no required third-party dependencies" and two dev-tool lines, each backed by
+   a dependency fact; rejected in all 4 draws), one is a defect the curator missed (Words Python: "126 public types"
+   against 199 class and enum facts), four are mixed or undecided. Even re-labelling generously, the recall gates
+   fail by wide margins; the conclusion does not depend on this adjudication.
+
+### 2.4 What this measurement also found (outside the reviewer)
+
+* **Facts coverage gaps** (production facts stage, run locally): 17 of 34 products have **no format fact**; every
+  C++ and TypeScript product has **0 symbols with a docstring**; enum members and dataclass/pydantic fields are not
+  extracted; Imaging .NET has 17 public symbols. Under the reviewer's own contract an honest README for these
+  products is full of "unsupported" claims (the curators removed up to 91 per README). Caveat: this container has
+  no .NET SDK, so .NET example facts are UNRESOLVED here, and any format fact derived from an executed .NET
+  example is missing; hosted facts would be richer for .NET.
+* **Contract conflict on own bases**: four sealed, ACCEPTed own candidates (Cells C++, Go, Rust; Imaging .NET)
+  carry maintainer claims no fact supports, which the S9 preservation checks (BC-04/05/07) require to stay. A
+  reviewer that applied its own contract correctly would reject them, and the deterministic stage would refuse
+  the repaired text. One of the two rules must move; that is a design decision, not a fix.
+* **Upstream breakage**: `aspose-tex-foss/Aspose.TeX-FOSS-for-Python` at `181015d` (2026-09-02, "Refresh README:
+  verified examples and documentation links") has its indentation collapsed to one space: 102 of 119 Python files
+  do not parse (checked with `ast`, nothing executed). The facts stage correctly reports 9 of 10 README examples
+  CONTRADICTED (IndentationError). No issue was filed (decision log 2026-10-31, decision 7).
+
+### 2.5 What follows
+
+TC-007 is not accepted: its check (`calibration_status.py PASSED`) correctly fails. Per the escalation ladder this is
+a repeated failure on the same signature (iterations 1-4), so the next step is root-cause work, not a fifth
+re-run of the same reviewer: (a) the reviewer's acceptance of plausible real unsupported claims (0/81), (b) its
+degradation on dense whole-README units, (c) the facts-coverage gaps above, which make the contract unsatisfiable
+for honest READMEs of 17+ products. Any changed reviewer is measured on a **new** held-out set (this corpus has now
+been seen).
+
+Data (`-data/`): `results-own-bases.jsonl` (the 71 own-base cases in full), `verdicts-by-base.json` (verdict counts
+per base, all 41), `run-output.txt` and `run-output-stopped-at-620.txt` (the runner's printed metrics). The full
+results file (`77b3febf4fa494b8050aa09679ac234fe4f1f079bef9ddb3d34b0e961585d4b2`) quotes aspose.org text and stays
+local.
+
+### 2.6 A gate defect found while recording this result
+
+`python ops/gatecli.py review TC-007` (receipt in `evidence/build/GATE1_QUALITY/TC-007/`) correctly fails the card's
+check, **and** reports a scope violation: `data/reviewer_calibration.json: touches a globally denied path`.
+`ops/gatectl.py`'s `GLOBAL_DENY` (paths "no taskcard may EVER declare in write_paths") includes `data/**`, `docs/**`,
+`evidence/**` and `.github/**`, yet 9 of the 18 cards declare such paths as their only or main write paths
+(TC-002, TC-004, TC-007, TC-009a, TC-009b, TC-010a, TC-011, TC-012a). As configured, **none of them can ever be
+ACCEPTED, whatever their checks say** — that is every card not yet accepted, including TC-011 (P1 delivery).
+`doctor` and `validate` do not detect a card that declares a denied path. Not fixed here: changing what the release
+gate accepts is reported to the owner with a proposed fix rather than made unilaterally.

@@ -1,0 +1,57 @@
+375 cases selected; ledger holds 1 of 620 calls
+stability: 10 cases x 3 fresh reviews
+cases asked 330, provider calls 615, stopped: provider-call budget of 4 reached in this invocation; no further calls are made and the run stops; 620 provider calls made; the cap is 620
+  broken_install       n=17 llm_recall=0.11764705882352941 llm_on_target=0.0 pipeline_recall=0.8235294117647058 pipeline_on_target=0.8235294117647058 unavailable=1
+  content_loss         n=36 llm_recall=0.08333333333333333 llm_on_target=0.0 pipeline_recall=0.25 pipeline_on_target=0.19444444444444445 unavailable=1
+  contradiction        n=44 llm_recall=0.4772727272727273 llm_on_target=0.38636363636363635 pipeline_recall=0.8181818181818182 pipeline_on_target=0.7954545454545454 unavailable=0
+  duplicate_paragraph  n=35 llm_recall=0.22857142857142856 llm_on_target=0.02857142857142857 pipeline_recall=1.0 pipeline_on_target=1.0 unavailable=2
+  invented_api         n=27 llm_recall=0.7037037037037037 llm_on_target=0.5555555555555556 pipeline_recall=0.8148148148148148 pipeline_on_target=0.6666666666666666 unavailable=0
+  promotional_filler   n=35 llm_recall=0.5142857142857142 llm_on_target=0.3142857142857143 pipeline_recall=0.5142857142857142 pipeline_on_target=0.3142857142857143 unavailable=4
+  unsupported_claim    n=100 llm_recall=0.25 llm_on_target=0.1 pipeline_recall=0.25 pipeline_on_target=0.1 unavailable=3
+  clean n=33 llm_false_reject=0.09090909090909091 pipeline_false_reject=0.09090909090909091 unavailable=1 approved_yield=0.8787878787878788
+  first replies 582 json_valid=1.0 contract_valid=0.9673539518900344 stability=None (n=0) content_loss_rate=0.7222222222222222
+  unscored recorded twins asked 3, llm-rejected 0
+  [llm] FAIL recall[contradiction]: 0.39 (need >= 0.90, n=44)
+  [llm] FAIL recall[content_loss]: 0.00 (need >= 0.90, n=36)
+  [llm] FAIL recall[unsupported_claim]: 0.10 (need >= 0.90, n=100)
+  [llm] FAIL recall[broken_install]: 0.00 (need >= 0.90, n=17)
+  [llm] PASS false_reject_rate: 0.09 (need <= 0.10, n=33)
+  [llm] PASS json_valid_first_reply: 1.00 (need >= 0.90, n=582)
+  [llm] FAIL stability: not measured (need >= 0.90, n=0)
+  [pipeline] FAIL recall[contradiction]: 0.80 (need >= 0.90, n=44)
+  [pipeline] FAIL recall[content_loss]: 0.19 (need >= 0.90, n=36)
+  [pipeline] FAIL recall[unsupported_claim]: 0.10 (need >= 0.90, n=100)
+  [pipeline] FAIL recall[broken_install]: 0.82 (need >= 0.90, n=17)
+  [pipeline] PASS false_reject_rate: 0.09 (need <= 0.10, n=33)
+  [pipeline] PASS json_valid_first_reply: 1.00 (need >= 0.90, n=582)
+  [pipeline] FAIL stability: not measured (need >= 0.90, n=0)
+  units asked 983, tokens 10665180 (32318.727272727272 per case)
+  defect add_promotional_filler       n=35 pipeline_on_target=0.3142857142857143 reviewer_alone_on_target=0.3142857142857143 unavailable=4
+  defect break_install_command        n=17 pipeline_on_target=0.8235294117647058 reviewer_alone_on_target=0.0 unavailable=1
+  defect contradict_format            n=13 pipeline_on_target=0.9230769230769231 reviewer_alone_on_target=0.8461538461538461 unavailable=0
+  defect contradict_package_name      n=20 pipeline_on_target=1.0 reviewer_alone_on_target=0.3 unavailable=0
+  defect contradict_version           n=4 pipeline_on_target=0.75 reviewer_alone_on_target=0.0 unavailable=0
+  defect drop_section                 n=36 pipeline_on_target=0.19444444444444445 reviewer_alone_on_target=0.0 unavailable=1
+  defect duplicate_paragraph          n=35 pipeline_on_target=1.0 reviewer_alone_on_target=0.02857142857142857 unavailable=2
+  defect inject_unsupported_claim     n=36 pipeline_on_target=0.2777777777777778 reviewer_alone_on_target=0.2777777777777778 unavailable=2
+  defect invent_api_name              n=27 pipeline_on_target=0.6666666666666666 reviewer_alone_on_target=0.5555555555555556 unavailable=0
+  defect real:contradiction           n=7 pipeline_on_target=0.0 reviewer_alone_on_target=0.0 unavailable=0
+  defect real:unsupported_claim       n=64 pipeline_on_target=0.0 reviewer_alone_on_target=0.0 unavailable=1
+  [tier] FAIL pipeline[break_install_command]: 0.82 (need >= 0.90, n=17)
+  [tier] PASS pipeline[contradict_format]: 0.92 (need >= 0.90, n=13)
+  [tier] PASS pipeline[contradict_package_name]: 1.00 (need >= 0.90, n=20)
+  [tier] FAIL pipeline[contradict_version]: 0.75 (need >= 0.90, n=4)
+  [tier] FAIL pipeline[drop_section]: 0.19 (need >= 0.90, n=36)
+  [tier] PASS pipeline[duplicate_paragraph]: 1.00 (need >= 0.90, n=35)
+  [tier] FAIL pipeline[invent_api_name]: 0.67 (need >= 0.90, n=27)
+  [tier] FAIL reviewer_alone[add_promotional_filler]: 0.31 (need >= 0.90, n=35)
+  [tier] FAIL reviewer_alone[inject_unsupported_claim]: 0.28 (need >= 0.90, n=36)
+  [tier] FAIL reviewer_alone[real:contradiction]: 0.00 (need >= 0.90, n=7)
+  [tier] FAIL reviewer_alone[real:unsupported_claim]: 0.00 (need >= 0.90, n=64)
+  [tier] PASS false_reject_rate: 0.09 (need <= 0.10, n=33)
+  [tier] PASS json_valid_first_reply: 1.00 (need >= 0.90, n=582)
+  [tier] FAIL stability: not measured (need >= 0.90, n=0)
+  two-tier status: NOT_PASSED
+wrote /tmp/claude-0/-home-user-repo-presenter/542f6e2c-a780-567b-84f4-4e5f84153686/scratchpad/it4/run/reviewer_calibration.json: NOT_PASSED
+ledger now holds 620 of 620 calls; results: /tmp/claude-0/-home-user-repo-presenter/542f6e2c-a780-567b-84f4-4e5f84153686/scratchpad/it4/run/results-it4.jsonl
+EXIT 0
