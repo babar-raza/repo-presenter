@@ -3106,3 +3106,22 @@ None is a genuine README defect, so **no issue is drafted and nothing is filed**
 real, single-owner defect, which needs its own named authorization. The verification exposed a verifier
 defect that would have produced false issues (a failure on a substitute input recorded as CONTRADICTED); it
 is fixed separately (example verifier, "substitute input" change).
+
+---
+
+## 2026-11-05: format facts from directional format enums — declared, UNRESOLVED (owner decision)
+
+Asked interactively (options with trade-offs); the owner chose "Declared = UNRESOLVED". 17 of 34 products
+had no format fact at all. A member of a directional format enum (`SaveFormat`/`ExportFormat`/`WriteFormat`
+→ output, `LoadFormat`/`ImportFormat`/`ReadFormat` → input) now yields an UNRESOLVED format fact
+("declared by the API, not verified"), added only where no format fact of that direction and extension
+exists. A declaration never makes a format SUPPORTED: that still takes an executed example or a corroborated
+dispatch path (Aspose.3D for Java declares about 30 formats and handles 4). Neutral `FileFormat`-style
+enums and behaviour members (`Auto`, `Unknown`, `Default`, …) declare nothing. Effects: authoring lists
+these formats under "do not claim"; BC-04 still refuses a unit citing them as a capability; the claims rule
+still reads SUPPORTED formats only. Measured on clones (surface only): Slides C++ 21 declared formats,
+PDF .NET 35, Words .NET 48, Cells Java and Rust 2 each; Aspose.3D for Java 0 (neutral enum).
+
+**Consequence stated**: each facts improvement of 2026-11-05 (C++ docstrings, enum members, declared
+formats) changes the facts digest of the products it touches, so their cached candidates are no longer
+current and are regenerated on their next run (consumed-scope invalidation, not a global reseal).

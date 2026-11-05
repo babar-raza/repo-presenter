@@ -39,7 +39,10 @@ from repo_presenter.readme.evidence.facts.commands import (
     release_workflow_fact,
 )
 from repo_presenter.readme.evidence.facts.examples import example_facts
-from repo_presenter.readme.evidence.facts.formats import format_facts
+from repo_presenter.readme.evidence.facts.formats import (
+    declared_format_facts,
+    format_facts,
+)
 from repo_presenter.readme.evidence.facts.inherited import inherited_unit_facts
 from repo_presenter.readme.evidence.facts.license_text import (
     license_facts,
@@ -401,6 +404,8 @@ def extract_facts(
     # A symbol whose own documentation has a hole ("Base class for  and") is an undocumented
     # symbol: the table row and the member bullet quote only a summary that reads whole.
     facts.extend(usable_symbol_docs(list(plugin.surface_facts(clone_path, tree_paths))))
+    # A directional format enum's members as UNRESOLVED format facts (declared, never verified).
+    facts.extend(declared_format_facts(facts))
     # G4-W17 arrival item 51: the manifest's own license declaration, through the ManifestReader
     # facade the plugins read identity from, stands in for a license file the repository does
     # not ship (license_facts consults it only then).

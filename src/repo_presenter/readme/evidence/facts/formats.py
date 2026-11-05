@@ -14,6 +14,7 @@ Ported (REUSE, near-verbatim) from the old repository-presenter project's
 
 from __future__ import annotations
 
+import re
 from collections.abc import Callable, Sequence
 from pathlib import Path
 
@@ -165,3 +166,63 @@ def format_facts(
         )
     facts.extend(_htm_alias_facts(facts, evidence))
     return facts
+
+
+#: An enum whose name says which way its members go (``SaveFormat`` members are formats the API
+#: writes, ``LoadFormat`` members formats it reads). A neutral ``FileFormat``-style enum says neither
+#: and is not read: a declaration of a format is not a statement of its direction.
+_OUTPUT_ENUM = re.compile(r"(?:Save|Export|Write|Output)(?:Format|FileFormat|Type)s?$")
+_INPUT_ENUM = re.compile(r"(?:Load|Import|Read|Input|Open)(?:Format|FileFormat|Type)s?$")
+_EXTENSION_MEMBER = re.compile(r"^[A-Za-z][A-Za-z0-9]{1,5}$")
+#: Members that name a behaviour, not a format.
+_NOT_A_FORMAT = frozenset(
+    {"auto", "unknown", "default", "none", "detect", "any", "all", "custom", "other", "native",
+     "max", "min", "count", "invalid", "undefined", "notset"}
+)
+
+
+def declared_format_facts(facts: Sequence[Fact]) -> list[Fact]:
+    """UNRESOLVED format facts for the formats a directional format enum declares (owner decision
+    2026-11-05: declared is not working -- Aspose.3D for Java declares about 30 formats and
+    handles 4 -- so a declaration never makes a format SUPPORTED; that still takes an executed
+    example or a corroborated dispatch path). Added only where no format fact of that direction and
+    extension exists, so an executed or contradicted one is never touched. Read from the
+    ``enum_member`` facts (``SaveFormat.Pdf`` -> output ``.pdf``)."""
+    existing = {f.id for f in facts if f.kind == "format"}
+    found: dict[str, list[Evidence]] = {}
+    for fact in facts:
+        if fact.kind != "enum_member":
+            continue
+        enum = str((fact.attributes or {}).get("enum", ""))
+        enum_name = enum.rsplit(".", 1)[-1]
+        if _OUTPUT_ENUM.search(enum_name):
+            direction = "output"
+        elif _INPUT_ENUM.search(enum_name):
+            direction = "input"
+        else:
+            continue
+        member = fact.value.rsplit(".", 1)[-1]
+        if not _EXTENSION_MEMBER.match(member) or member.lower() in _NOT_A_FORMAT:
+            continue
+        extension = "." + member.lower()
+        identifier = fact_id("format", direction, extension.lstrip("."))
+        if identifier in existing:
+            continue
+        found.setdefault(identifier, []).append(
+            Evidence(
+                fact.evidence[0].path if fact.evidence else "",
+                f"declared by {enum} member {member}; declared is not verified",
+            )
+        )
+    return [
+        Fact(
+            identifier,
+            "format",
+            "." + identifier.rsplit(".", 1)[-1],
+            tuple(evidence),
+            polarity="UNRESOLVED",
+            confidence=0.5,
+            attributes={"source": "enum_declaration"},
+        )
+        for identifier, evidence in sorted(found.items())
+    ]
