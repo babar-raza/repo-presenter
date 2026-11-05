@@ -2975,3 +2975,18 @@ upstream source parses again.
 **What this does NOT decide**: any specific upstream write; when the sweep pause lifts; the concrete design
 of the attributed-preservation mechanism (disposition kinds, rendering, reviewer contract change) — that
 is implementation work against the requirement, measured on a new held-out calibration corpus.
+
+---
+
+## 2026-11-05: owner authorizes the first live App-token mint (TC-009a)
+
+Asked interactively with the trade-offs stated; the owner chose "Authorize one mint" (anchor
+`OWNER-AUTH-2026-11-05-TC009A-ONE-MINT`). Scope, exactly: **one** real installation token for the
+existing `repository-presenter` GitHub App, minted by the already-wired Actions step
+(`actions/create-github-app-token@v2` pattern, TC-009), verified with `token_provenance.py`; only the
+result is recorded (never the token). It authorizes **no** pull request, issue, commit or any other
+upstream write, and no second mint. Under the approved TC-002 disposition (single owner per effect), a
+mint performs no effect the legacy writer owns. `mint_proof.json` is written only by the real
+mint/verify code path.
+
+APP_TOKEN_LIVE_MINT_AUTHORIZED: 2026-11-05 ref=OWNER-AUTH-2026-11-05-TC009A-ONE-MINT
