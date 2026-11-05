@@ -231,7 +231,11 @@ def duplicate_paragraph_rule(readme_text: str) -> list[Finding]:
 
 
 #: Kept units must print verbatim (judge.py J4); these dispositions account for a live loss (J6).
-KEPT_DISPOSITIONS: frozenset[str] = frozenset({"VERIFIED_PRESERVE", "VERIFIED_MOVE"})
+#: PRESERVE_ATTRIBUTED is kept as written too (under an attribution line), so it is held to the
+#: same "printed verbatim" standard.
+KEPT_DISPOSITIONS: frozenset[str] = frozenset(
+    {"VERIFIED_PRESERVE", "VERIFIED_MOVE", "PRESERVE_ATTRIBUTED"}
+)
 ACCOUNTING_DISPOSITIONS: frozenset[str] = frozenset(
     {
         "SUPERSEDE_REDUNDANT",

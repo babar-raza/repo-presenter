@@ -56,7 +56,13 @@ from repo_presenter.readme.validation.text import (
 
 # The placement dispositions the renderer acts on (kept as written, moved, or corrected).
 PLACING = frozenset(
-    {"VERIFIED_PRESERVE", "VERIFIED_REWRITE", "VERIFIED_MOVE", "CORRECT_WITH_EVIDENCE"}
+    {
+        "VERIFIED_PRESERVE",
+        "VERIFIED_REWRITE",
+        "VERIFIED_MOVE",
+        "CORRECT_WITH_EVIDENCE",
+        "PRESERVE_ATTRIBUTED",
+    }
 )
 # The sections whose rendered text must state every item of a list kept as written that placement
 # dropped as covered: the authored limitation and summary slots, and the one authored line per
@@ -212,10 +218,27 @@ def unit_failures(candidate: Candidate) -> list[Failure]:
         for block in active_retained(candidate.facts, candidate.dispositions)
         for line in block_lines(block)
     )
+    # Maintainer content kept as PRESERVE_ATTRIBUTED is printed as written under an attribution
+    # line and claims no fact: an identifier it spells is the maintainers', never one this
+    # project asserts. Like a cited inherited unit (``cited_inherited_identifiers``), its own
+    # identifiers are allowed -- but only on its own lines (matched whitespace-trimmed), never in
+    # authored prose elsewhere, which would then present maintainer text as verified.
+    attributed = [
+        p for p in placements_of(candidate) if p.outcome == "placed" and p.attributed
+    ]
+    attributed_lines = {
+        line.strip() for p in attributed for line in p.text.splitlines() if line.strip()
+    }
+    attributed_allowed = cited_inherited_identifiers(facts, {p.unit_id for p in attributed})
     for line in outside_fences(candidate.readme):
         if line in placed_lines or line in renderer_lines:
             continue
+        maintainers = line.strip() in attributed_lines
         for span in SPAN.findall(line):
+            if maintainers and identifier_allowed(
+                span, attributed_allowed, members, methods
+            ):
+                continue
             if span in seen:
                 continue
             seen.add(span)

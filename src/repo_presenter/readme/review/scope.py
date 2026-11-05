@@ -18,6 +18,7 @@ from __future__ import annotations
 import re
 
 from repo_presenter.readme.composition.components.shell import SEMANTIC_SHELL
+from repo_presenter.readme.composition.placement import ATTRIBUTION_LINE
 from repo_presenter.readme.validation.text import section_lines
 
 #: Sections the renderer prints wholesale from facts (owner ``D``) and the diagram.
@@ -30,8 +31,12 @@ _FENCE = re.compile(r"^\s*(```|~~~)")
 _NOT_VERIFIED = "> **Not verified:**"
 _SURFACE_SUMMARY = re.compile(r"^The verified public surface has \d+ types?\.\s*$")
 #: Markup lines the renderer (or a reader's Markdown) owns rather than an author: headings, tables,
-#: HTML tags, badge and banner images, horizontal rules, "Not verified" notes.
-_MARKUP_START = ("#", "|", "<", "[![", "![", "---", "***", "___", _NOT_VERIFIED)
+#: HTML tags, badge and banner images, horizontal rules, "Not verified" notes, and the attribution
+#: line the renderer prints before maintainer content kept as PRESERVE_ATTRIBUTED (a label, not a
+#: claim; the maintainer content under it stays shown).
+_MARKUP_START = (
+    "#", "|", "<", "[![", "![", "---", "***", "___", _NOT_VERIFIED, ATTRIBUTION_LINE
+)
 #: Sentences the renderer writes into a section an author otherwise owns (``composition.renderer``:
 #: ``_development_sentences``, the resources and API summaries, the Enterprise lead, the issues
 #: bullet). They are facts the renderer computed, not claims an author made, so they are removed from

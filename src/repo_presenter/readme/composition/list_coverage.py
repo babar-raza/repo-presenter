@@ -20,7 +20,7 @@ from typing import Any
 
 from repo_presenter.core.facts import FactsDocument
 
-_AS_WRITTEN = frozenset({"VERIFIED_PRESERVE", "VERIFIED_MOVE"})
+_AS_WRITTEN = frozenset({"VERIFIED_PRESERVE", "VERIFIED_MOVE", "PRESERVE_ATTRIBUTED"})
 _BULLET = re.compile(r"^(?:[-*+]|\d{1,3}[.)])\s+(.*)$")
 _BOLD_LEAD = re.compile(r"^\s*(?:\*\*|__)(.+?)(?:\*\*|__)")
 _LEAD_BREAK = re.compile(r"\s(?:-{1,2}|–|—)\s|:\s|\.\s|\(")

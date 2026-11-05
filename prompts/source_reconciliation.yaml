@@ -1,5 +1,5 @@
 prompt_id: source_reconciliation
-version: "12"
+version: "13"
 stage: S4
 purpose: Decide exactly one disposition for every material inherited unit of the existing README, with evidence and a destination section, so that nothing valuable is dropped silently and nothing unsupported is carried forward.
 model_route: qwen3-next
@@ -71,6 +71,7 @@ output:
                 - VERIFIED_REWRITE
                 - VERIFIED_MOVE
                 - CORRECT_WITH_EVIDENCE
+                - PRESERVE_ATTRIBUTED
                 - SUPERSEDE_REDUNDANT
                 - OMIT_UNSUPPORTED
                 - DEFER_UNRESOLVED
@@ -97,9 +98,21 @@ system: |
   plan's freshly authored content for a placeable section covers (a section heading the shell
   owns, a capability list re-authored under key_capabilities, a limitations list re-authored under
   scope_limitations, a resource list re-authored under documentation_resources); name that section
-  in destination_section and cite the facts that render it when you can. OMIT_UNSUPPORTED drops a claim no fact
-  supports. For a paragraph or list, OMIT requires a cited reason (one or more fact IDs that show the
-  claim unsupported) or a placement instead; an uncited prose omission is rejected. Other units may
+  in destination_section and cite the facts that render it when you can. PRESERVE_ATTRIBUTED keeps
+  a paragraph, list, table or blockquote of maintainer-authored content as written, under a line
+  that attributes it to the maintainers' README and says it is not independently verified: use it
+  for an inherited unit whose content is valuable to a reader (project history, maintainer
+  insight, plans, background, context, a capability or limitation statement no fact can confirm)
+  and that does not contradict a SUPPORTED fact and is not promotional, link-stuffed,
+  keyword-stuffed or valueless. Lack of a supporting fact alone is never a reason to drop such a
+  unit; it is a reason to keep it attributed. It needs a placeable destination_section like the
+  other placing dispositions, its fact_ids may be empty, and its rationale says what the content
+  gives a reader. A unit that contradicts a SUPPORTED fact is CORRECT_WITH_EVIDENCE, never
+  PRESERVE_ATTRIBUTED. OMIT_UNSUPPORTED drops a unit only when it is harmful, misleading,
+  irrelevant, promotional, link- or keyword-stuffed, or beyond reasonable repair, and its rationale
+  says which of these it is; that no fact supports it is not enough. For a paragraph or list, OMIT
+  requires a cited reason (one or more fact IDs that show the claim unsupported) or a placement
+  instead; an uncited prose omission is rejected. Other units may
   cite the facts you searched or leave fact_ids empty and say so. DEFER_UNRESOLVED marks a
   material claim the facts neither support nor contradict; it is listed for the owner and never
   rendered. For a code block specifically, that means an example fact whose polarity is
@@ -120,14 +133,17 @@ system: |
   (the distribution fact supports it as a real alternative), so nothing here is actually
   unresolved. NON_CONTENT covers separators, empty lines, and HTML comments.
 
-  Rules that are checked mechanically. Every unit ID appears exactly once. The four placing
-  dispositions (PRESERVE, REWRITE, MOVE, CORRECT) require a destination_section whose entry in
+  Rules that are checked mechanically. Every unit ID appears exactly once. The five placing
+  dispositions (PRESERVE, REWRITE, MOVE, CORRECT, PRESERVE_ATTRIBUTED) require a destination_section whose entry in
   the supplied section list says placeable: true. A section marked placeable: false renders from
   facts (identity, badges, navigation, installation, dependencies, third_party_notices, license);
   a unit whose substance such a section renders is SUPERSEDE_REDUNDANT with that section named in
   destination_section, and deterministic code records the facts that section renders. OMIT,
   DEFER, and NON_CONTENT take a null destination. CORRECT_WITH_EVIDENCE requires at least one
-  fact ID; SUPERSEDE_REDUNDANT requires the section or at least one fact ID.
+  fact ID; SUPERSEDE_REDUNDANT requires the section or at least one fact ID. PRESERVE_ATTRIBUTED
+  keeps only a paragraph, list, table or blockquote. PRESERVE_ATTRIBUTED and OMIT_UNSUPPORTED each
+  require a non-empty rationale: it is the record of why maintainer content was kept unverified or
+  removed.
 
   What a fact ID is. Every entry of fact_ids is one string copied character for character from
   the "id" of a record in the Facts list you are given below, or from a fact_ids array inside the

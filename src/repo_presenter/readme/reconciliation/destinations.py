@@ -35,6 +35,9 @@ PLACING_DISPOSITIONS = (
     "VERIFIED_REWRITE",
     "VERIFIED_MOVE",
     "CORRECT_WITH_EVIDENCE",
+    # Maintainer content kept as written under an attribution line (composition/placement.py's
+    # ATTRIBUTED); it needs a section that can hold it exactly like the four above.
+    "PRESERVE_ATTRIBUTED",
 )
 
 _DIAGRAM_ONLY = frozenset({"at_a_glance"})

@@ -27,9 +27,17 @@ from repo_presenter.readme.composition.source_topics import root_heading, unit_t
 from repo_presenter.readme.evidence.facts.commands import CI_MATRIX_FACT_ID, RELEASE_WORKFLOW_FACT_ID
 from repo_presenter.readme.evidence.facts.links import heading_slug
 
-PLACED = frozenset({"VERIFIED_PRESERVE", "VERIFIED_MOVE"})
+#: The disposition that keeps maintainer-authored content no fact can confirm, printed as written
+#: under an attribution line (docs/MAINTAINER_CONTENT_PRESERVATION.md, owner requirement
+#: 2026-11-05): lack of repository evidence is not grounds for deletion, but such content is never
+#: presented as verified. It places exactly like VERIFIED_PRESERVE/VERIFIED_MOVE.
+ATTRIBUTED = "PRESERVE_ATTRIBUTED"
+#: The one line the renderer prints directly before each contiguous run of ``ATTRIBUTED`` content
+#: in a section, followed by a blank line and the verbatim content.
+ATTRIBUTION_LINE = "*From the maintainers' README (not independently verified):*"
+PLACED = frozenset({"VERIFIED_PRESERVE", "VERIFIED_MOVE", ATTRIBUTED})
 PLACING = frozenset(
-    {"VERIFIED_PRESERVE", "VERIFIED_REWRITE", "VERIFIED_MOVE", "CORRECT_WITH_EVIDENCE"}
+    {"VERIFIED_PRESERVE", "VERIFIED_REWRITE", "VERIFIED_MOVE", "CORRECT_WITH_EVIDENCE", ATTRIBUTED}
 )
 _RENDERED_ELSEWHERE = frozenset({"heading", "badge_row", "html_block"})
 Outcome = Literal["placed", "overlap", "owned_elsewhere", "excluded"]
@@ -47,6 +55,8 @@ class Placement:
     outcome: Outcome
     overlap: tuple[str, ...] = ()
     read_with: tuple[str, ...] = ()
+    #: Kept as ``PRESERVE_ATTRIBUTED``: printed as written under ``ATTRIBUTION_LINE``.
+    attributed: bool = False
 
 
 def renders_verbatim(unit_id: str, value: str, ecosystem: str) -> bool:
@@ -359,6 +369,7 @@ def _drop_orphaned_lead_ins(result: list[Placement]) -> list[Placement]:
                 "overlap",
                 marks,
                 decision.read_with,
+                decision.attributed,
             )
         kept.append(decision)
     return kept
@@ -393,11 +404,18 @@ def placements(
         unit = by_id.get(unit_id)
         if unit is None:
             continue
+        attributed = entry.get("disposition") == ATTRIBUTED
         if not renders_verbatim(unit_id, unit.value, ecosystem):
-            result.append(Placement(unit_id, destination, unit.value, "owned_elsewhere"))
+            result.append(
+                Placement(
+                    unit_id, destination, unit.value, "owned_elsewhere", attributed=attributed
+                )
+            )
             continue
         if destination not in included:
-            result.append(Placement(unit_id, destination, unit.value, "excluded"))
+            result.append(
+                Placement(unit_id, destination, unit.value, "excluded", attributed=attributed)
+            )
             continue
         lead_in_of = _adjacent_rendered_examples(
             unit_id, rendered_examples, example_ordinals
@@ -467,7 +485,9 @@ def placements(
         outcome: Outcome = "overlap" if overlap else "placed"
         if outcome == "placed" and not unit_id.endswith(".code_block"):
             text = resolve_intra_document_anchors(text, planned_slugs)
-        result.append(Placement(unit_id, destination, text, outcome, overlap, also))
+        result.append(
+            Placement(unit_id, destination, text, outcome, overlap, also, attributed)
+        )
     return _drop_orphaned_lead_ins(result)
 
 
@@ -478,3 +498,25 @@ def placed_texts(decisions: list[Placement]) -> dict[str, list[str]]:
         if placement.outcome == "placed":
             texts.setdefault(placement.destination, []).append(placement.text)
     return texts
+
+
+def placed_attribution(decisions: list[Placement]) -> dict[str, list[bool]]:
+    """For each section, whether each text ``placed_texts`` lists for it is attributed maintainer
+    content (``PRESERVE_ATTRIBUTED``), index for index."""
+    flags: dict[str, list[bool]] = {}
+    for placement in decisions:
+        if placement.outcome == "placed":
+            flags.setdefault(placement.destination, []).append(placement.attributed)
+    return flags
+
+
+def with_attribution(texts: list[str], attributed: list[bool]) -> list[str]:
+    """``texts`` as a section prints them: ``ATTRIBUTION_LINE`` and a blank line directly before
+    the first text of each contiguous run of attributed texts, every text otherwise unchanged."""
+    shown: list[str] = []
+    previous = False
+    for index, text in enumerate(texts):
+        flagged = index < len(attributed) and attributed[index]
+        shown.append(f"{ATTRIBUTION_LINE}\n\n{text}" if flagged and not previous else text)
+        previous = flagged
+    return shown
