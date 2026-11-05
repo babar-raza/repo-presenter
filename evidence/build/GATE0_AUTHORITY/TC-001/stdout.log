@@ -2,7 +2,14 @@
 ===== CLEAN RUN 1 =====
 $ python ops/checks/marker_check.py docs/SOURCE_OF_TRUTH_2026-11-04.md "RECONCILIATION_STATUS: RESOLVED"
 --- stdout ---
-OK: docs\SOURCE_OF_TRUTH_2026-11-04.md contains all 1 required marker(s)
+OK: docs/SOURCE_OF_TRUTH_2026-11-04.md contains all 1 required marker(s)
+
+--- stderr ---
+
+$ python -m pytest tests/ops/test_gate_guard_tc001.py -q
+--- stdout ---
+.                                                                        [100%]
+1 passed in 0.05s
 
 --- stderr ---
 
@@ -10,7 +17,14 @@ OK: docs\SOURCE_OF_TRUTH_2026-11-04.md contains all 1 required marker(s)
 ===== CLEAN RUN 2 =====
 $ python ops/checks/marker_check.py docs/SOURCE_OF_TRUTH_2026-11-04.md "RECONCILIATION_STATUS: RESOLVED"
 --- stdout ---
-OK: docs\SOURCE_OF_TRUTH_2026-11-04.md contains all 1 required marker(s)
+OK: docs/SOURCE_OF_TRUTH_2026-11-04.md contains all 1 required marker(s)
+
+--- stderr ---
+
+$ python -m pytest tests/ops/test_gate_guard_tc001.py -q
+--- stdout ---
+.                                                                        [100%]
+1 passed in 0.04s
 
 --- stderr ---
 
@@ -19,7 +33,36 @@ OK: docs\SOURCE_OF_TRUTH_2026-11-04.md contains all 1 required marker(s)
 mutated: M docs/SOURCE_OF_TRUTH_2026-11-04.md
 $ python ops/checks/marker_check.py docs/SOURCE_OF_TRUTH_2026-11-04.md "RECONCILIATION_STATUS: RESOLVED"
 --- stdout ---
-FAIL: docs\SOURCE_OF_TRUTH_2026-11-04.md missing marker(s): ['RECONCILIATION_STATUS: RESOLVED']
+FAIL: docs/SOURCE_OF_TRUTH_2026-11-04.md missing marker(s): ['RECONCILIATION_STATUS: RESOLVED']
+
+--- stderr ---
+
+$ python -m pytest tests/ops/test_gate_guard_tc001.py -q
+--- stdout ---
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______________ test_source_of_truth_reconciliation_is_resolved ________________
+
+    def test_source_of_truth_reconciliation_is_resolved():
+>       _check("ops/checks/marker_check.py", "docs/SOURCE_OF_TRUTH_2026-11-04.md", "RECONCILIATION_STATUS: RESOLVED")
+
+tests/ops/test_gate_guard_tc001.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ('ops/checks/marker_check.py', 'docs/SOURCE_OF_TRUTH_2026-11-04.md', 'RECONCILIATION_STATUS: RESOLVED')
+
+    def _check(*args):
+        r = subprocess.run([sys.executable, *args], cwd=ROOT, capture_output=True, text=True)
+>       assert r.returncode == 0, r.stdout + r.stderr
+E       AssertionError: FAIL: docs/SOURCE_OF_TRUTH_2026-11-04.md missing marker(s): ['RECONCILIATION_STATUS: RESOLVED']
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/usr/local/bin/python', 'ops/checks/marker_check.py', 'docs/SOURCE_OF_TRUTH_2026-11-04.md', 'R... stdout="FAIL: docs/SOURCE_OF_TRUTH_2026-11-04.md missing marker(s): ['RECONCILIATION_STATUS: RESOLVED']\n", stderr='').returncode
+
+tests/ops/test_gate_guard_tc001.py:12: AssertionError
+=========================== short test summary info ============================
+FAILED tests/ops/test_gate_guard_tc001.py::test_source_of_truth_reconciliation_is_resolved
+1 failed in 0.05s
 
 --- stderr ---
 

@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "card": "TC-008a",
+  "gate": "GATE1_QUALITY",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-04T17:58:29Z",
+  "base_rev": "0db8462bb822bc589d6cd6a4c1c46c21e9f6cbb2",
+  "head_rev": "eaa1b811211a406f9807148795af6d51150f4890",
+  "card_sha256": "69bc7bbe6f36b274dd891696367963f5a566b81b61c1837c971a7ab747f543ed",
+  "checker_fileset_sha256": "00f34f4cdd9c91007a62b7650688e1252eea68afc985b67e83bb9340d47825b8",
+  "fingerprint": {
+    "python": "3.13.18",
+    "platform": "Linux-6.18.44-fc-v233-x86_64-with-glibc2.39"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [
+      "tests/test_present.py"
+    ],
+    "violations": [],
+    "evaluated": true
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python ops/checks/execution_proof.py evidence/build/GATE1_QUALITY/TC-008a/call_count_proof.json warm_unchanged_rerun_calls=0 cold_runner_calls=0 evicted_cache_calls=0 corrupt_evidence_fail_closed=True",
+          "exit_code": 0,
+          "duration_s": 0.025,
+          "stdout_sha256": "b94330a95b17c26ad4fb59c7feddeccb10a01ddfd5765b17adef80b53768cf1c"
+        },
+        {
+          "command": "python -m pytest tests/core/test_preflight.py tests/test_present.py tests/test_lane_l_hosted.py -q",
+          "exit_code": 0,
+          "duration_s": 35.581,
+          "stdout_sha256": "f3532f1fa0f8d098f1aa49feba68620160a3e7bd495b65470c06a632a6a4c39e"
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python ops/checks/execution_proof.py evidence/build/GATE1_QUALITY/TC-008a/call_count_proof.json warm_unchanged_rerun_calls=0 cold_runner_calls=0 evicted_cache_calls=0 corrupt_evidence_fail_closed=True",
+          "exit_code": 0,
+          "duration_s": 0.041,
+          "stdout_sha256": "b94330a95b17c26ad4fb59c7feddeccb10a01ddfd5765b17adef80b53768cf1c"
+        },
+        {
+          "command": "python -m pytest tests/core/test_preflight.py tests/test_present.py tests/test_lane_l_hosted.py -q",
+          "exit_code": 0,
+          "duration_s": 35.478,
+          "stdout_sha256": "d46090c2ad3740af584e5f221fa514d462ad31395168ff864f78b0d2e44aef22"
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -c \"import json, pathlib; p = pathlib.Path('evidence/build/GATE1_QUALITY/TC-008a/call_count_proof.json'); p.write_text(json.dumps({'warm_unchanged_rerun_calls': 3, 'cold_runner_calls': 0, 'evicted_cache_calls': 0, 'corrupt_evidence_fail_closed': True}), encoding='utf-8') if p.exists() else None\"",
+    "patch_sha256": "ba199db8a7e61ef0fd1f06af1a69b8d671d41508c88bcd450eb1e1c8a20acd00",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      1,
+      1
+    ],
+    "tree_changed": [
+      "M evidence/build/GATE1_QUALITY/TC-008a/call_count_proof.json"
+    ]
+  },
+  "accepted": true,
+  "reason": "all gates passed"
+}

@@ -1,0 +1,43 @@
+{
+  "measured_by": "scripts/p5_call_count_proof.py running tests/test_preflight_wiring.py and tests/test_lane_r_real_cascade_p5.py",
+  "per_scenario_requests_by_lane": {
+    "warm_unchanged_rerun": {
+      "L": 0,
+      "R": 0,
+      "R-real": 0
+    },
+    "cold_runner": {
+      "L": 0,
+      "R": 0,
+      "R-real": 0
+    },
+    "evicted_cache": {
+      "L": 0,
+      "R": 0,
+      "R-real": 0
+    },
+    "corrupt_evidence": {
+      "L": 1,
+      "R": 1,
+      "R-real": 10
+    },
+    "cold_run": {
+      "R-real": 10
+    },
+    "cold_runner_nothing_restored": {
+      "R-real": 10
+    },
+    "evicted_cache_unproven": {
+      "R-real": 10
+    },
+    "corrupt_evidence_cache_intact": {
+      "R-real": 0
+    }
+  },
+  "lane_r_real_cold_run_requests": 10,
+  "warm_unchanged_rerun_calls": 0,
+  "cold_runner_calls": 0,
+  "evicted_cache_calls": 0,
+  "corrupt_evidence_fail_closed": true,
+  "caveat": "Headline numbers use lane L (real CLI) and lane R-real (real run_cascade, nine stages + one review). Lane R rows from tests/test_preflight_wiring.py use a stubbed run_cascade and are a cross-check only. All provider traffic is a fake at the transport boundary; no live model was called."
+}

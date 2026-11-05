@@ -1,0 +1,78 @@
+# Mission matrix (one durable, mechanically checked record). Checked by ops/checks/mission_matrix.py.
+# States: implementation/test/real_execution/independent_verification use
+#   NONE | PARTIAL | YES   (real_execution = exercised for real inside the allowed boundary)
+# A row may be status COMPLETE only if all four are YES, evidence is non-empty and exists, and
+# external_effect_prohibited rows say so. IMPLEMENTED_AND_VERIFIED_EXTERNAL_EFFECT_PROHIBITED is the
+# status for a capability fully built and verified except for an effect barred by owner authority.
+# Written 2026-11-04 by the supervisor session; a requirement is never promoted from a summary.
+schema_version: 1
+rows:
+  - {id: G1, title: "Lane L live-README maintenance, 25 independently accepted candidates", status: PARTIAL,
+     implementation: PARTIAL, test: YES, real_execution: PARTIAL, independent_verification: NONE,
+     evidence: [docs/READINESS_PACKAGE_2026-11-04.md, src/repo_presenter/lane_l.py],
+     gaps: "12 Lane L pipeline-good (hosted, earlier sweeps), 0 committed bundles, 0 owner-reviewed, 0/25 independently accepted; reviewer uncalibrated. Local Lane L on Font (2026-11-04) correctly refused to seal: the live README lists unsupported formats and 4 of its own examples FAIL when executed (upstream README defects; Lane L may not repair them and recommends Lane R)",
+     next_action: "TC-007 calibration, then hosted pilot on the 3 mandatory products", external_effect_prohibited: "upstream PRs"}
+  - {id: G2, title: "Lane R regeneration, 25 independently accepted candidates", status: PARTIAL,
+     implementation: PARTIAL, test: YES, real_execution: PARTIAL, independent_verification: NONE,
+     evidence: [docs/READINESS_PACKAGE_2026-11-04.md, src/repo_presenter/cascade.py, docs/DECISION_LOG.md],
+     gaps: "10 Lane R pipeline-good (earlier hosted sweeps), 1 committed bundle, 0/25 accepted. Local pilots 2026-11-04 (Font, 3D-Python, Cells .NET) found and fixed 4 pipeline defects (merged PR #4, #10); Font now clears every deterministic check and reaches independent LLM review but is REJECTed (fabricated PDF export: authoring-accuracy limit of qwen3-next); 3D-Python BLOCKED_ON_SOURCE_FACT; Cells .NET needs a hosted run. 0 sealed. See docs/investigations/2026-11-04-local-lane-r-and-gateway-streaming.md",
+     next_action: "hosted pilots when an Actions dispatch path exists (integration needs actions:write; token must be re-issued)", external_effect_prohibited: "upstream PRs"}
+  - {id: G3, title: "Issue lifecycle discovery->closure, external writes disabled", status: PARTIAL,
+     implementation: PARTIAL, test: YES, real_execution: NONE, independent_verification: NONE,
+     evidence: [src/repo_presenter/issues/discovery.py, src/repo_presenter/issues/close.py],
+     gaps: "all 11 lifecycle stages now have code + fake-transport tests (stage audit in tests/issues/test_lifecycle_end_to_end.py; tracking, labels, reopen-on-recurrence and remote comment/close/reopen added 2026-11-04, every write behind assert_write_allowed + kill switch + permit + approvals; 12 negative controls; closing comment is idempotent across a partial failure via a hidden fingerprint+reason marker and a fail-closed paginated comment read, 2026-11-04). NOT done: no real exercise even against babar-raza/repo-presenter, no production CloseApprovalStore (close-approval record format is untested against GitApprovalStore), assignees unsupported (no registry field), local-only not-planned close still skips re-verification (pinned by an existing test); TC-010a open",
+     next_action: "TC-010a isolated exercise inside babar-raza/repo-presenter", external_effect_prohibited: "filing/closing issues on upstream repos"}
+  - {id: G4, title: "Candidate publication end-to-end (Cells .NET, 3D Python mandatory)", status: PARTIAL,
+     implementation: PARTIAL, test: YES, real_execution: NONE, independent_verification: NONE,
+     evidence: [src/repo_presenter/propose/effect.py, src/repo_presenter/candidates_publish],
+     gaps: "registry dry_run blocks 3d/python and 3d/net; REVIEW_UNCALIBRATED gate refuses; no non-mutating end-to-end proof; 3D-Python Lane R completes the cascade locally but cannot seal: PyPI aspose-3d-foss project URL points at aspose-3d/Aspose.3D-for-Python, so the install fact is UNRESOLVED and the live install block is unaccounted (BLOCKED_ON_SOURCE_FACT, docs/investigations/2026-11-04-local-lane-r-and-gateway-streaming.md); Cells .NET not yet run (needs a .NET SDK for example verification)",
+     next_action: "TC-009b non-mutating publication proof after TC-007", external_effect_prohibited: "any upstream branch/PR"}
+  - {id: G5, title: "Proven GitHub App integration", status: PARTIAL,
+     implementation: PARTIAL, test: YES, real_execution: NONE, independent_verification: NONE,
+     evidence: [.github/workflows/mint-app-token.yml, src/repo_presenter/github/token_provenance.py],
+     gaps: "0 real token mints; TC-009a open", next_action: "TC-009a", external_effect_prohibited: "writes with the App token to non-allowed repos"}
+  - {id: G6, title: "Autonomous Docker + Actions production", status: PARTIAL,
+     implementation: PARTIAL, test: PARTIAL, real_execution: PARTIAL, independent_verification: NONE,
+     evidence: [.github/workflows/present.yml, Dockerfile],
+     gaps: "hosted present runs exist from earlier sweeps (~14% success noted by audit); schedule fails closed by design; Dockerfile fixed and built locally 2026-11-04 (README.md copy; runs --help as uid 10001, --network=none) hosted `docker` CI job (PR #4, run 41882862381, job 126760103728) built the image including the apt git install and verified: git present, uid 10001, entrypoint starts with --network=none, no secret-shaped env; no facts stage has yet executed inside the container; this sandbox cannot dispatch Actions (403)",
+     next_action: "build and run image; hosted pilot via an authorized path", external_effect_prohibited: "none beyond upstream writes"}
+  - {id: G7, title: "Equal or better than aspose.org", status: PARTIAL,
+     implementation: PARTIAL, test: YES, real_execution: PARTIAL, independent_verification: PARTIAL,
+     evidence: [docs/PARITY_BENCHMARK_PILOT.md, src/repo_presenter/core/aspose_parity.py],
+     gaps: "one pilot parity measurement (TC-006 accepted); three-product parity not shown", next_action: "TC-011-prep benchmark of 3 products", external_effect_prohibited: "none"}
+  - {id: G8, title: "Actual delivery, no endless development", status: PARTIAL,
+     implementation: PARTIAL, test: PARTIAL, real_execution: PARTIAL, independent_verification: NONE,
+     evidence: [docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md, project/state.yaml],
+     gaps: "delivery count still 0 accepted candidates", next_action: "convert pilots into accepted candidates", external_effect_prohibited: "none"}
+  - {id: P1, title: "25 common repos, both lanes independently accepted", status: NOT_STARTED_FOR_ACCEPTANCE,
+     implementation: PARTIAL, test: PARTIAL, real_execution: PARTIAL, independent_verification: NONE,
+     evidence: [docs/RELEASE_CONTRACT_P1-P5.md], gaps: "0/25; blocked by TC-007", next_action: "TC-007 then TC-011", external_effect_prohibited: "upstream PRs"}
+  - {id: P2, title: "Issue lifecycle operates and is verifiable", status: PARTIAL,
+     implementation: PARTIAL, test: YES, real_execution: NONE, independent_verification: NONE,
+     evidence: [src/repo_presenter/issues/model.py], gaps: "see G3", next_action: "TC-010a", external_effect_prohibited: "upstream issue writes"}
+  - {id: P3, title: "Proven App path integrated and tested", status: PARTIAL,
+     implementation: PARTIAL, test: YES, real_execution: NONE, independent_verification: NONE,
+     evidence: [tests/test_mint_app_token_workflow.py], gaps: "see G5", next_action: "TC-009a", external_effect_prohibited: "non-allowed repo writes"}
+  - {id: P4, title: "Runs reliably and autonomously on hosted infra and Docker", status: PARTIAL,
+     implementation: PARTIAL, test: PARTIAL, real_execution: PARTIAL, independent_verification: NONE,
+     evidence: [.github/workflows/ci.yml], gaps: "see G6", next_action: "Docker run + hosted pilot", external_effect_prohibited: "none"}
+  - {id: P5, title: "Unchanged inputs -> zero provider calls, incl. cold runner", status: PARTIAL,
+     implementation: YES, test: YES, real_execution: PARTIAL, independent_verification: PARTIAL,
+     evidence: [scripts/p5_call_count_proof.py, tests/test_preflight_wiring.py],
+     gaps: "Lane L real-CLI proven; Lane R now also proven through the real run_cascade with a counting fake provider (tests/test_lane_r_real_cascade_p5.py, merged in PR #3, independently re-run: 391 passed); provider is a fake, so no live-provider or hosted cold-runner proof",
+     next_action: "hosted cold-runner run when an Actions dispatch path exists", external_effect_prohibited: "none"}
+  - {id: N1, title: "Non-negotiable: two equal lanes", status: PARTIAL, implementation: YES, test: YES, real_execution: PARTIAL,
+     independent_verification: NONE, evidence: [AGENTS.md, src/repo_presenter/present.py], gaps: "parity of delivered outputs not shown", next_action: "pilot", external_effect_prohibited: "none"}
+  - {id: N2, title: "Non-negotiable: reviewer calibration and no false acceptance", status: BLOCKED,
+     implementation: YES, test: YES, real_execution: PARTIAL, independent_verification: NONE,
+     evidence: [data/reviewer_calibration.json, project/taskcards/TC-007.yaml],
+     gaps: "NOT_PASSED (failed gates: false_reject_rate, stability, two tier-2 real-defect classes); iteration 4 needs fresh sealed clean twins; local sandbox sealing was blocked by github.com 403 -> BC-06 UNCHECKED (docs/investigations/2026-11-04-local-lane-r-and-gateway-streaming.md); a raw.githubusercontent.com alternate-source rule (RESOLVED-via-alternate, distinct from RESOLVED/UNCHECKED/BROKEN) now exists; .NET example verification needs a .NET SDK (builds.dotnet.microsoft.com blocked locally); Actions dispatch is 403 from this integration",
+     next_action: "obtain network access or hosted runs; rerun harness", external_effect_prohibited: "none"}
+  - {id: N3, title: "Non-negotiable: no writes outside babar-raza/repo-presenter", status: PARTIAL,
+     implementation: PARTIAL, test: YES, real_execution: PARTIAL, independent_verification: NONE,
+     evidence: [docs/DECISION_LOG.md], gaps: "write guard (assert_write_allowed on every real HTTP write primitive) merged in PR #3 with green CI and an independent local re-run; legacy writers inventoried only, not retired; no audit of workflows that could write with the App token beyond the caller-pin test",
+     next_action: "audit remaining write-capable paths (legacy writer inventory) under TC-002 when the owner decides", external_effect_prohibited: "ALL upstream/aspose.org/legacy repo writes"}
+  - {id: M1, title: "Final successor cutover to single repository-presenter on GitHub/GitLab", status: NOT_STARTED,
+     implementation: NONE, test: NONE, real_execution: NONE, independent_verification: NONE,
+     evidence: [migration/reuse-manifest.yaml, docs/MISSION_AUTHORITY.md], gaps: "no cutover/rollback procedure document yet; predecessor snapshot not recorded",
+     next_action: "write migration/CUTOVER_PROCEDURE.md (prepared, awaiting owner authorization)", external_effect_prohibited: "any change to legacy GitHub/GitLab repositories"}

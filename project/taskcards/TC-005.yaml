@@ -9,8 +9,7 @@ purpose: >
   trusting that a past sync is still current.
 depends_on: []
 write_paths:
-  - docs/RELEASE_CONTRACT_P1-P5.md
-  - project/state.yaml
+  - tests/ops/test_gate_guard_tc005.py
 satisfies:
   - REQ-G8-013
 source_refs:
@@ -38,6 +37,12 @@ checks:
       python ops/checks/dashboard_matches_live.py
     expect: exit 0
     timeout_seconds: 300
+    proves:
+      - REQ-G8-013
+  - command: |-
+      python -m pytest tests/ops/test_gate_guard_tc005.py -q
+    expect: exit 0
+    timeout_seconds: 60
     proves:
       - REQ-G8-013
 requires:

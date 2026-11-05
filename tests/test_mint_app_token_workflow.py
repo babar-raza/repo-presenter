@@ -77,3 +77,37 @@ def test_the_token_output_is_wired_through_without_a_second_echo():
         assert "steps.app-token.outputs.token" not in run, (
             "the token must never be referenced from a run: step -- only as a job/workflow output"
         )
+
+
+def test_any_future_caller_may_only_target_this_repository():
+    """2026-11-04 owner directive: every repository except babar-raza/repo-presenter is read-only,
+    and this workflow takes `owner`/`repository_name` from its caller -- so a caller could mint an
+    installation token for an upstream repository. Until that rule is lifted by a reviewed change,
+    every `uses:` of this workflow must pass literal owner/repository_name values naming this
+    repository (an expression is refused: it could resolve to anything)."""
+    for path in sorted(WORKFLOWS_DIR.glob("*.yml")):
+        if path == MINT_TOKEN_PATH:
+            continue
+        for job in (_load(path).get("jobs") or {}).values():
+            if "mint-app-token" not in str(job.get("uses", "")):
+                continue
+            with_ = job.get("with") or {}
+            assert with_.get("owner") == "babar-raza", (path.name, with_)
+            assert with_.get("repository_name") == "repo-presenter", (path.name, with_)
+
+
+def test_minted_token_requests_only_the_least_privilege_permission_set():
+    """Least privilege (TC-009, 2026-11-04 directive): the minted installation token may carry
+    only contents, metadata and pull-requests. Any other `permission-*` input (issues,
+    administration, workflows, actions, ...) widens what a leaked or misused token can do and
+    must be a reviewed change to this test, not a drive-by edit to the workflow."""
+    workflow = _load(MINT_TOKEN_PATH)
+    steps = workflow["jobs"]["mint"]["steps"]
+    granted = {
+        key
+        for step in steps
+        if "create-github-app-token" in str(step.get("uses", ""))
+        for key in (step.get("with") or {})
+        if key.startswith("permission-")
+    }
+    assert granted == {"permission-contents", "permission-metadata", "permission-pull-requests"}

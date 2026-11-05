@@ -57,6 +57,7 @@ from repo_presenter.core.llm.jobs import CallStore, JobContext, run_job
 from repo_presenter.core.llm.ledger import Ledger
 from repo_presenter.core.llm.prompts import PromptRegistry, load_manifests
 from repo_presenter.core.noop_proof import Invocation, measure_invocation
+from repo_presenter.core.preflight import PreflightDecision, preflight_decision
 from repo_presenter.core.registry.loader import load_registry, require_listed
 from repo_presenter.core.registry.models import RegistryEntry
 from repo_presenter.extractors.platforms.registry import plugin_for
@@ -369,6 +370,10 @@ class _Composition:
     readme: str
     tasks: list[Any]
     accounted: list[Accounted]
+    #: The dispositions the S5-S8 calls were made from (before the S9 accounting added entries).
+    #: A repair rebuilds those calls' request hashes, so it must read these, not ``dispositions``;
+    #: ``None`` means the accounting changed nothing and the two sets are the same.
+    planned_dispositions: dict[str, Any] | None = None
 
 
 def _candidate(
@@ -441,6 +446,7 @@ def _compose(
     candidate = _candidate(
         entry, document, plan, coherent_units, dispositions, final_readme, tree_paths, tasks
     )
+    planned_dispositions = dispositions
     settled, accounted = account_unprinted_units(candidate)
     if accounted:
         if render_readme(entry, document, plan, coherent_units, settled) == final_readme:
@@ -460,7 +466,8 @@ def _compose(
     )
     (out_dir / "README.coherent.md").write_text(final_readme, encoding="utf-8", newline="\n")
     return _Composition(
-        dispositions, plan, units_document, coherent_units, final_readme, tasks, accounted
+        dispositions, plan, units_document, coherent_units, final_readme, tasks, accounted,
+        planned_dispositions,
     )
 
 
@@ -520,8 +527,14 @@ def _repair_defects(
 
     rc = RepairContext(
         entry=entry, facts=document, prompts=prompts, config=config, ledger=ledger, store=store,
-        context=context, investigation=investigation, dispositions=composed.dispositions,
+        context=context, investigation=investigation,
+        dispositions=(
+            composed.planned_dispositions
+            if composed.planned_dispositions is not None
+            else composed.dispositions
+        ),
         plan=composed.plan, tasks=composed.tasks, name=product_name(entry),
+        readme=composed.readme, units=composed.coherent_units,
     )
     fresh = merge_equivalent([d for d in defects if not repairs.attempted(d.fingerprint)])
     for defect in defects:
@@ -603,6 +616,45 @@ def _review_defects(
         if not defect.repairable and not repairs.attempted(defect.fingerprint):
             repairs.record(defect, "unrepairable")
     return [defect for defect in defects if defect.repairable]
+
+
+def preflight_cascade(
+    repository: str,
+    clone_path: Path,
+    *,
+    facts_path: Path,
+    candidates_root: Path,
+    prompts_path: Path = DEFAULT_PROMPTS_PATH,
+) -> PreflightDecision:
+    """P5 (TC-008a): before any provider call, may Lane R skip? Builds the dependencies record a
+    seal made now would write -- from the same inputs ``run_cascade`` consumes, with no provider
+    call -- and compares every consumed scope against the lane's verified, proven sealed bundle.
+    Any failure computing the current inputs is a fail-closed "do not skip": the cascade then
+    runs (and raises its own typed error, if it has one)."""
+    from repo_presenter.core.candidates import LANE_R
+    from repo_presenter.readme.bundle.seal import current_dependencies_document
+
+    try:
+        base_document = read_facts(facts_path)
+        source_revision = run_git(["rev-parse", "HEAD"], cwd=clone_path).stdout.strip()
+        document = _document_with_inherited_units(
+            repository, base_document, source_revision, clone_path
+        )
+        dependencies = current_dependencies_document(
+            lane=LANE_R,
+            source_revision=source_revision,
+            facts=document,
+            prompts=load_manifests(prompts_path),
+        )
+    except Exception as exc:  # noqa: BLE001 -- unknowable current inputs never justify a skip
+        return PreflightDecision(
+            False, f"current inputs could not be computed ({type(exc).__name__}: {exc})",
+            (), (), (),
+        )
+    return preflight_decision(
+        candidates_root=candidates_root, repository=repository, lane=LANE_R,
+        current_source_revision=source_revision, current_dependencies=dependencies,
+    )
 
 
 def run_cascade(

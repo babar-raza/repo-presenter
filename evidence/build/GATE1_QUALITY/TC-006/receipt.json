@@ -3,29 +3,38 @@
   "card": "TC-006",
   "gate": "GATE1_QUALITY",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-04T09:24:16Z",
-  "base_rev": "2d783e47a7df59b49fbb8b480176f2a43379d3aa",
-  "head_rev": "2d783e47a7df59b49fbb8b480176f2a43379d3aa",
-  "card_sha256": "9587f26aebfaee947b59ef5106f66939a4f20fdaa59145d3e7c3c13887bef1f0",
+  "generated_at": "2026-11-04T15:03:19Z",
+  "base_rev": "aadbd18881ffd65b4a048e6252c6d2a1bd477cc8",
+  "head_rev": "1f426ec19ae6dc7e5c26dc75536d459300daa942",
+  "card_sha256": "2fd69b3490e4916ae329298d15b09e46e6f47d7f31dbf628a2634a7e79f8bcfc",
+  "checker_fileset_sha256": "2d6613a5c27f34be2520e283415c789921f54fb5ce0fce2d5ded481ee6e539e9",
   "fingerprint": {
-    "python": "3.13.15",
-    "platform": "Windows-11-10.0.26300-SP0"
+    "python": "3.13.18",
+    "platform": "Linux-6.18.44-fc-v233-x86_64-with-glibc2.39"
   },
   "scope": {
     "ok": true,
-    "changed_paths": [],
+    "changed_paths": [
+      "tests/ops/test_gate_guard_tc006.py"
+    ],
     "violations": [],
-    "evaluated": false
+    "evaluated": true
   },
   "runs": [
     {
       "run": 1,
       "checks": [
         {
-          "command": "python ops/checks/marker_check.py docs/PARITY_BENCHMARK_PILOT.md \"PARITY_BENCHMARK_COMPLETE:\"",
+          "command": "python ops/checks/parity_benchmark_pilot_complete.py docs/PARITY_BENCHMARK_PILOT.md",
           "exit_code": 0,
-          "duration_s": 0.061,
-          "stdout_sha256": "9eae9b32637aaf2d645faa79618d454d9e133cefecc823d021a51406974d2121"
+          "duration_s": 0.029,
+          "stdout_sha256": "8d137880b3610680aaedd402345b60a9261cf796f8a2cf7d471e9b55b9b7fe1a"
+        },
+        {
+          "command": "python -m pytest tests/ops/test_gate_guard_tc006.py -q",
+          "exit_code": 0,
+          "duration_s": 0.642,
+          "stdout_sha256": "f4c77b58e2280613a49ba18da1c4a02d440e862c49a6c8fe5daaf277333ff99d"
         }
       ],
       "all_passed": true
@@ -34,10 +43,16 @@
       "run": 2,
       "checks": [
         {
-          "command": "python ops/checks/marker_check.py docs/PARITY_BENCHMARK_PILOT.md \"PARITY_BENCHMARK_COMPLETE:\"",
+          "command": "python ops/checks/parity_benchmark_pilot_complete.py docs/PARITY_BENCHMARK_PILOT.md",
           "exit_code": 0,
-          "duration_s": 0.067,
-          "stdout_sha256": "9eae9b32637aaf2d645faa79618d454d9e133cefecc823d021a51406974d2121"
+          "duration_s": 0.037,
+          "stdout_sha256": "8d137880b3610680aaedd402345b60a9261cf796f8a2cf7d471e9b55b9b7fe1a"
+        },
+        {
+          "command": "python -m pytest tests/ops/test_gate_guard_tc006.py -q",
+          "exit_code": 0,
+          "duration_s": 0.689,
+          "stdout_sha256": "f4c77b58e2280613a49ba18da1c4a02d440e862c49a6c8fe5daaf277333ff99d"
         }
       ],
       "all_passed": true
@@ -45,11 +60,12 @@
   ],
   "negative_control": {
     "kind": "mutate",
-    "patch": "python -c \"import pathlib; p = pathlib.Path('docs/PARITY_BENCHMARK_PILOT.md'); p.write_text('placeholder, no real benchmark', encoding='utf-8') if p.exists() else None\"",
-    "patch_sha256": "5316e19b6b253ed768366243497d757f3f29bda28c31801d8581910bc908243e",
+    "patch": "python -c \"import pathlib; p = pathlib.Path('docs/PARITY_BENCHMARK_PILOT.md'); p.write_text('placeholder, no real benchmark', encoding='utf-8')\"",
+    "patch_sha256": "51a465f74e2b7f77adba641c33d631b8e17a5f1eb5110f82095a0a70cd19fe04",
     "applied": true,
     "patch_applied_failed": true,
     "exit_codes": [
+      1,
       1
     ],
     "tree_changed": [

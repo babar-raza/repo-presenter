@@ -1050,13 +1050,26 @@ def _matching_unresolved_install(
     unit_fact = units_by_id.get(unit_id)
     if unit_fact is None:
         return None
-    lines = set(_command_lines(unit_fact.value))
+    lines = {_without_launcher(line) for line in _command_lines(unit_fact.value)}
     if not lines:
         return None
     for fact in facts.by_kind("install_command"):
-        if fact.polarity == "UNRESOLVED" and lines <= set(_command_lines(fact.value)):
+        if fact.polarity == "UNRESOLVED" and lines <= {
+            _without_launcher(line) for line in _command_lines(fact.value)
+        }:
             return fact
     return None
+
+
+_LAUNCHER = re.compile(r"^(?:python3?|py)\s+-m\s+")
+
+
+def _without_launcher(line: str) -> str:
+    """``python3 -m pip install X`` and ``pip install X`` are the same install: _INSTALL_COMMAND
+    already treats the launcher as part of an install command, so comparing install lines must
+    too. Only a leading interpreter launcher is dropped; every other character must still match
+    (a trailing ``&& ...`` or a different package never matches)."""
+    return _LAUNCHER.sub("", line)
 
 
 def _preceding_contradicted_example(
@@ -1329,7 +1342,11 @@ def normalize(
             entry["destination_section"] = "installation"
             entry["fact_ids"] = sorted(cited | set(install_ids))
             continue
-        if disposition in PLACING and unit in contradicted:
+        # A DEFER_UNRESOLVED on an executed-and-failed example is wrong, not merely uncited: a
+        # deferral accounts for nothing (independent_reviewer._accounting_units), so the dropped
+        # failing example would be reported as live_readme_loss (measured: aspose-font-foss
+        # Aspose.Font-FOSS-for-Python Lane R, example:007). The fact is code-computed CONTRADICTED.
+        if (disposition in PLACING or disposition == "DEFER_UNRESOLVED") and unit in contradicted:
             entry["disposition"] = "OMIT_UNSUPPORTED"
             entry["destination_section"] = None
             entry["fact_ids"] = sorted(cited | {contradicted[unit]})

@@ -25,13 +25,23 @@ checked here, because nothing in this repository can yet report the current stat
 classes against a sealed record that was never written. ``preflight_decision`` returns that
 scope explicitly rather than claiming a false green for scopes it cannot check.
 
-**Not wired into ``present.py`` this pass.** Wiring a provably-correct skip into the hosted
-pipeline requires either porting ``seal.py``'s dependencies.json producer (so the full
-``evaluate()`` comparison means something), or independently verifying ``present_transaction.py``'s
-``classify_present_outcome`` contract tolerates a pipeline that sealed nothing new this run (not
-yet done). This module is real, tested, and ready to be called from either lane's entry point
-once one of those two things is true -- see ``tests/core/test_preflight.py`` for warm/cold/
-cache-evicted/changed-source coverage.
+**TC-008a update (2026-11-04).** ``seal.py`` DOES produce a full ``dependencies.json`` (it was
+ported before this card; the paragraph above describes the state when TC-008 was written), and
+``current_dependencies_document`` there builds the record a seal made now would write from the
+same code path. When a caller passes that as ``current_dependencies``, ``preflight_decision``
+runs the whole ``evaluate()`` comparison and returns ``can_skip_provider_call=True`` ONLY when
+
+* the lane's CURRENT bundle exists and passes ``verify_bundle`` (every file's digest, the ledger
+  totals, the lane) -- any corrupt or unreadable evidence fails closed (no skip);
+* its ``dependencies.json`` is a readable object, and its manifest state is
+  ``READY_FOR_PROPOSAL`` (an ``ACCEPTED`` bundle still needs the second, fresh zero-call run that
+  proves the no-op; skipping would withhold that proof forever);
+* ``evaluate(sealed, current)`` reports no change in ANY consumed scope.
+
+Only a scope a candidate actually consumed can reopen it (``evaluate`` compares the sealed
+record's own keys), so an unrelated input never forces a call (consumed-scope invalidation, never
+a global reseal). Without ``current_dependencies`` the legacy source-revision-only behavior
+stays: never skip.
 """
 
 from __future__ import annotations
@@ -39,8 +49,19 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
-from repo_presenter.core.candidates import CANDIDATES_DIRNAME, CURRENT_FILENAME, lane_directory
+from repo_presenter.core.candidates import (
+    CANDIDATES_DIRNAME,
+    CURRENT_FILENAME,
+    DEPENDENCIES_FILENAME,
+    lane_directory,
+    verify_bundle,
+)
+from repo_presenter.readme.bundle.evaluation import evaluate
+
+#: The only manifest state whose no-op has been PROVEN by a fresh zero-call rerun.
+PROVEN_STATE = "READY_FOR_PROPOSAL"
 
 
 @dataclass(frozen=True)
@@ -49,6 +70,7 @@ class PreflightDecision:
     reason: str
     checked_scopes: tuple[str, ...]
     unchecked_scopes: tuple[str, ...]
+    changed: tuple[str, ...] = ()
 
 
 # The only evaluate()-table classes this module can genuinely assess without seal.py's
@@ -83,14 +105,84 @@ def load_current_bundle_manifest(candidates_root: Path, repository: str, lane: s
         return None  # corrupt manifest is never treated as current -- fail safe, not fabricated
 
 
+def _full_decision(
+    *,
+    candidates_root: Path,
+    repository: str,
+    lane: str,
+    current_source_revision: str,
+    current_dependencies: dict[str, Any],
+) -> PreflightDecision:
+    """The fully-checked comparison. Every non-skip branch is a fail-closed answer."""
+    all_scopes = CHECKED_SCOPES + UNCHECKED_SCOPES
+
+    def no(reason: str, changed: tuple[str, ...] = ()) -> PreflightDecision:
+        return PreflightDecision(False, reason, (), all_scopes, changed)
+
+    slug = repository.replace("/", "__")
+    lane_root = lane_directory(candidates_root / CANDIDATES_DIRNAME / slug, lane)
+    current_file = lane_root / CURRENT_FILENAME
+    if not current_file.is_file():
+        return no("no prior sealed bundle for this repository/lane -- nothing to compare against")
+    try:
+        revision = current_file.read_text(encoding="utf-8").strip()
+        if not revision:
+            return no("the CURRENT pointer is empty -- treated as no usable evidence")
+        bundle = lane_root / revision
+        manifest = verify_bundle(bundle, lane)
+        if manifest is None:
+            return no("the CURRENT pointer names a bundle with no manifest -- evidence missing")
+        sealed = json.loads((bundle / DEPENDENCIES_FILENAME).read_text(encoding="utf-8"))
+        if not isinstance(sealed, dict) or not isinstance(sealed.get("source"), dict):
+            return no("the sealed dependencies.json is not a dependency record -- failing closed")
+        state = manifest.get("state")
+        evaluation = evaluate(sealed, current_dependencies)
+    except Exception as exc:  # noqa: BLE001 -- corrupt/unreadable evidence must never skip
+        return no(f"sealed evidence is corrupt or unreadable ({type(exc).__name__}: {exc}) -- failing closed")
+    changed = tuple(change.dependency for change in evaluation.changes)
+    if changed:
+        return PreflightDecision(
+            False,
+            f"consumed input changed: {', '.join(changed)} (earliest reopened stage "
+            f"{evaluation.earliest})",
+            CHECKED_SCOPES + UNCHECKED_SCOPES, (), changed,
+        )
+    if sealed.get("source", {}).get("revision") != current_source_revision:
+        return no(
+            f"sealed source revision {sealed.get('source', {}).get('revision')!r} is not the "
+            f"current {current_source_revision!r}"
+        )
+    if state != PROVEN_STATE:
+        return PreflightDecision(
+            False,
+            f"nothing consumed changed, but the sealed bundle is {state!r}, not {PROVEN_STATE}: "
+            "the rerun that proves the no-op has not happened yet, so the pipeline runs (it "
+            "replays from the call store)",
+            all_scopes, (), (),
+        )
+    return PreflightDecision(
+        True,
+        f"every consumed scope equals the sealed record of a proven bundle ({revision}); "
+        "no provider call is needed",
+        all_scopes, (), (),
+    )
+
+
 def preflight_decision(
     *, candidates_root: Path, repository: str, lane: str, current_source_revision: str,
+    current_dependencies: dict[str, Any] | None = None,
 ) -> PreflightDecision:
-    """The one entry point either lane would call before a provider call. Conservative by
-    construction: can_skip_provider_call is True only for the narrow, fully-checked case; every
-    other case (no prior bundle, corrupt manifest, source changed, or -- always, honestly --
-    the unchecked scopes) returns False, matching today's existing behavior exactly (full
-    pipeline runs) rather than a guessed skip."""
+    """The one entry point either lane calls before a provider call. Conservative by
+    construction: can_skip_provider_call is True only when ``current_dependencies`` is given and
+    every consumed scope compares equal against a verified, proven sealed bundle; every other case
+    (no prior bundle, corrupt evidence, any changed scope, an unproven bundle, or no current
+    dependencies supplied) returns False, so the full pipeline runs exactly as it always did."""
+    if current_dependencies is not None:
+        return _full_decision(
+            candidates_root=candidates_root, repository=repository, lane=lane,
+            current_source_revision=current_source_revision,
+            current_dependencies=current_dependencies,
+        )
     manifest = load_current_bundle_manifest(candidates_root, repository, lane)
     if manifest is None:
         return PreflightDecision(
@@ -112,7 +204,7 @@ def preflight_decision(
         can_skip_provider_call=False,
         reason=(
             "source revision unchanged, but prompts/policy/model/detector/contract scopes "
-            "cannot yet be checked (seal.py's dependencies.json producer was never ported) -- "
+            "cannot yet be checked because the caller supplied no current_dependencies -- "
             "proceeding with the full pipeline rather than fabricating a currency claim"
         ),
         checked_scopes=CHECKED_SCOPES, unchecked_scopes=UNCHECKED_SCOPES,

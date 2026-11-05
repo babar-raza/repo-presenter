@@ -20,9 +20,11 @@ visual-asset/metadata work) are still not needed and left for later.
 from __future__ import annotations
 
 import base64
-from collections.abc import Callable
+import re
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
-from typing import Any, NoReturn
+from typing import Any, Literal, NoReturn
+from urllib.parse import urlsplit
 
 import httpx
 
@@ -34,6 +36,37 @@ REQUEST_TIMEOUT_SECONDS = 30.0
 
 FetchFn = Callable[[str, "str | None"], "tuple[int, Any]"]
 WriteFn = Callable[[str, str, "dict[str, Any]"], "tuple[int, Any]"]
+
+
+# Owner directive 2026-11-04 (docs/DECISION_LOG.md): every repository except this one is READ-ONLY.
+# This is the single choke point for the three real HTTP write primitives below, so the rule is
+# mechanical rather than narrative. There is deliberately no environment-variable override: lifting
+# it is a reviewed code change, not a runtime switch.
+WRITE_ALLOWED_REPOSITORIES = frozenset({"babar-raza/repo-presenter"})
+_REPO_PATH = re.compile(r"^/repos/(?P<owner>[^/]+)/(?P<name>[^/]+)(?:/|$)")
+
+
+class UpstreamWriteForbiddenError(RepositoryMetadataError):
+    """A write was refused before any request was made: its target is not an allowed repository."""
+
+
+def assert_write_allowed(url: str) -> None:
+    """Raise unless ``url`` is a ``/repos/{owner}/{repo}/...`` URL on the GitHub API root whose
+    repository is in ``WRITE_ALLOWED_REPOSITORIES``. Fails closed on every other shape."""
+    parts = urlsplit(url)
+    if f"{parts.scheme}://{parts.netloc}" != API_ROOT:
+        raise UpstreamWriteForbiddenError(f"write refused: {url} is not on {API_ROOT}")
+    if "%" in parts.path or ".." in parts.path or parts.query.startswith("/"):
+        raise UpstreamWriteForbiddenError(f"write refused: {url} has an encoded or dotted path")
+    match = _REPO_PATH.match(parts.path)
+    if match is None:
+        raise UpstreamWriteForbiddenError(f"write refused: {url} does not target a repository")
+    slug = f"{match['owner']}/{match['name']}".lower()
+    if slug not in {a.lower() for a in WRITE_ALLOWED_REPOSITORIES}:
+        raise UpstreamWriteForbiddenError(
+            f"write refused: {slug} is read-only for this execution (only "
+            f"{sorted(WRITE_ALLOWED_REPOSITORIES)} may be written)"
+        )
 
 
 def _write_headers(token: str) -> dict[str, str]:
@@ -74,6 +107,7 @@ def default_post(url: str, token: str, payload: dict[str, Any]) -> tuple[int, An
     """``POST url`` with ``payload`` as JSON. Never called except by ``create_issue``, which is
     itself never called except by ``repo_presenter.issues.file`` after that module's own
     authorization check passes."""
+    assert_write_allowed(url)
     try:
         response = httpx.post(
             url, headers=_write_headers(token), json=payload, timeout=REQUEST_TIMEOUT_SECONDS
@@ -91,6 +125,7 @@ def default_patch(url: str, token: str, payload: dict[str, Any]) -> tuple[int, A
     """``PATCH url`` with ``payload`` as JSON. Never called except by ``update_pull_request``,
     which is itself never called except by ``repo_presenter.propose.effect`` after that module's
     own gates pass."""
+    assert_write_allowed(url)
     try:
         response = httpx.patch(
             url, headers=_write_headers(token), json=payload, timeout=REQUEST_TIMEOUT_SECONDS
@@ -108,6 +143,7 @@ def default_put(url: str, token: str, payload: dict[str, Any]) -> tuple[int, Any
     """``PUT url`` with ``payload`` as JSON. Never called except by ``put_contents``, which is
     itself never called except by ``repo_presenter.propose.effect`` after that module's own gates
     pass."""
+    assert_write_allowed(url)
     try:
         response = httpx.put(
             url, headers=_write_headers(token), json=payload, timeout=REQUEST_TIMEOUT_SECONDS
@@ -128,6 +164,10 @@ class CreatedIssue:
 
     number: int
     url: str
+    #: ``"open"`` or ``"closed"`` as GitHub reports it for an issue found by the dedup search
+    #: (a freshly created issue is open). Lets a caller tell a recurrence of a closed defect
+    #: apart from a duplicate of a still-open one.
+    state: str = "open"
 
 
 class IssueOutcomeUnknownError(RepositoryMetadataError):
@@ -162,8 +202,11 @@ def create_issue(
     body: str,
     token: str,
     write: WriteFn = default_post,
+    labels: Sequence[str] | None = None,
+    assignees: Sequence[str] | None = None,
 ) -> CreatedIssue:
-    """``POST /repos/{owner}/{repo}/issues``.
+    """``POST /repos/{owner}/{repo}/issues``. ``labels``/``assignees`` join the payload only when
+    non-empty, so a call without them posts exactly ``{"title", "body"}`` as before.
 
     Raises :class:`RepositoryMetadataError` on anything but a well-formed HTTP 201 (GitHub's own
     success status for issue creation), or a response missing the ``number``/``html_url`` fields a
@@ -174,7 +217,12 @@ def create_issue(
     if not token:
         raise RepositoryMetadataError(f"{owner}/{name}: POST refused - no write-scoped token")
     url = f"{API_ROOT}/repos/{owner}/{name}/issues"
-    status_code, response_body = write(url, token, {"title": title, "body": body})
+    payload: dict[str, Any] = {"title": title, "body": body}
+    if labels:
+        payload["labels"] = list(labels)
+    if assignees:
+        payload["assignees"] = list(assignees)
+    status_code, response_body = write(url, token, payload)
     if status_code != 201:
         _write_failure(owner, name, url, status_code, response_body)
     if (
@@ -186,6 +234,116 @@ def create_issue(
             f"{owner}/{name}: POST {url} returned HTTP 201 with no usable issue body"
         )
     return CreatedIssue(number=int(response_body["number"]), url=str(response_body["html_url"]))
+
+
+def _guarded_issue_write(
+    owner: str, name: str, url: str, token: str, payload: dict[str, Any], write: WriteFn, verb: str
+) -> Any:
+    """Shared body of the comment/close/reopen primitives. ``assert_write_allowed`` runs HERE, on
+    the URL, before ``write`` is ever called -- so even an injected writer is never invoked for a
+    repository outside ``WRITE_ALLOWED_REPOSITORIES`` (the real ``default_post``/``default_patch``
+    check again). A missing token, a transport failure or a non-2xx answer raises; nothing is
+    guessed."""
+    assert_write_allowed(url)
+    if not token:
+        raise RepositoryMetadataError(f"{owner}/{name}: {verb} refused - no write-scoped token")
+    status_code, response_body = write(url, token, payload)
+    if status_code == -1:
+        raise RepositoryMetadataError(f"{owner}/{name}: unreachable ({response_body})")
+    if status_code not in (200, 201):
+        raise RepositoryMetadataError(f"{owner}/{name}: {verb} {url} returned HTTP {status_code}")
+    return response_body
+
+
+def comment_issue(
+    owner: str,
+    name: str,
+    number: int,
+    *,
+    body: str,
+    token: str,
+    write: WriteFn = default_post,
+) -> None:
+    """``POST /repos/{owner}/{repo}/issues/{number}/comments``. Adds a comment; never edits or
+    deletes one, so the issue's history only grows."""
+    url = f"{API_ROOT}/repos/{owner}/{name}/issues/{number}/comments"
+    _guarded_issue_write(owner, name, url, token, {"body": body}, write, "POST")
+
+
+def issue_has_comment_with_marker(
+    owner: str,
+    name: str,
+    number: int,
+    marker: str,
+    *,
+    token: str | None,
+    fetch: FetchFn = default_fetch,
+) -> bool:
+    """Whether any comment on issue ``number`` contains ``marker`` (a read only).
+
+    Makes a retried write idempotent: a partial failure that already posted a comment must not post
+    it again. Like ``find_issue_with_marker``, absence is never inferred from a partial read: an
+    unreachable host, a non-200 answer, or more than ``ISSUE_LIST_MAX_PAGES`` full pages raises
+    :class:`RepositoryMetadataError` instead of returning ``False``."""
+    for page in range(1, ISSUE_LIST_MAX_PAGES + 1):
+        url = (
+            f"{API_ROOT}/repos/{owner}/{name}/issues/{number}/comments"
+            f"?per_page={ISSUE_LIST_PAGE_SIZE}&page={page}"
+        )
+        status_code, body = fetch(url, token)
+        if status_code == -1:
+            raise RepositoryMetadataError(f"{owner}/{name}: unreachable ({body})")
+        if status_code != 200 or not isinstance(body, list):
+            raise RepositoryMetadataError(f"{owner}/{name}: GET {url} returned HTTP {status_code}")
+        for item in body:
+            text = item.get("body") if isinstance(item, dict) else None
+            if isinstance(text, str) and marker in text:
+                return True
+        if len(body) < ISSUE_LIST_PAGE_SIZE:
+            return False
+    raise RepositoryMetadataError(
+        f"{owner}/{name}#{number}: more than {ISSUE_LIST_MAX_PAGES} pages of comments - "
+        "cannot prove absence"
+    )
+
+
+IssueCloseReason = Literal["completed", "not planned"]
+_STATE_REASONS = {"completed": "completed", "not planned": "not_planned"}
+
+
+def close_issue(
+    owner: str,
+    name: str,
+    number: int,
+    *,
+    reason: IssueCloseReason,
+    token: str,
+    write: WriteFn = default_patch,
+) -> None:
+    """``PATCH /repos/{owner}/{repo}/issues/{number}`` with ``state=closed`` and GitHub's
+    ``state_reason`` (``completed`` / ``not_planned``). Only the state changes: labels, body and
+    comments are untouched. The CALLER (``issues/close.py``) decides whether closing is
+    authorized."""
+    if reason not in _STATE_REASONS:
+        raise ValueError(f"unknown close reason {reason!r}")
+    url = f"{API_ROOT}/repos/{owner}/{name}/issues/{number}"
+    payload = {"state": "closed", "state_reason": _STATE_REASONS[reason]}
+    _guarded_issue_write(owner, name, url, token, payload, write, "PATCH")
+
+
+def reopen_issue(
+    owner: str,
+    name: str,
+    number: int,
+    *,
+    token: str,
+    write: WriteFn = default_patch,
+) -> None:
+    """``PATCH /repos/{owner}/{repo}/issues/{number}`` with ``state=open``,
+    ``state_reason=reopened``. The CALLER (``issues/file.py``) decides whether it is authorized."""
+    url = f"{API_ROOT}/repos/{owner}/{name}/issues/{number}"
+    payload = {"state": "open", "state_reason": "reopened"}
+    _guarded_issue_write(owner, name, url, token, payload, write, "PATCH")
 
 
 ISSUE_LIST_PAGE_SIZE = 100
@@ -234,7 +392,10 @@ def find_issue_with_marker(
                     raise RepositoryMetadataError(
                         f"{owner}/{name}: matching issue has no usable number/html_url"
                     )
-                return CreatedIssue(number=number, url=html_url)
+                state = item.get("state")
+                return CreatedIssue(
+                    number=number, url=html_url, state=state if isinstance(state, str) else "open"
+                )
         if len(body) < ISSUE_LIST_PAGE_SIZE:
             return None
     raise RepositoryMetadataError(

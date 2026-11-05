@@ -11,9 +11,7 @@ purpose: >
   gatecli.py/gateverify.py machinery that already exists and has simply never been fed real data.
 depends_on: []
 write_paths:
-  - AGENTS.md
-  - ops/SUPERVISOR.md
-  - project/taskcards/**
+  - tests/ops/test_gate_guard_tc003.py
 satisfies:
   - REQ-G8-011
 source_refs:
@@ -41,6 +39,12 @@ checks:
       python ops/checks/count_taskcards.py 13
     expect: exit 0
     timeout_seconds: 30
+    proves:
+      - REQ-G8-011
+  - command: |-
+      python -m pytest tests/ops/test_gate_guard_tc003.py -q
+    expect: exit 0
+    timeout_seconds: 60
     proves:
       - REQ-G8-011
 requires:

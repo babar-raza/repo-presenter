@@ -3,19 +3,22 @@
   "card": "TC-008",
   "gate": "GATE1_QUALITY",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-04T09:24:23Z",
-  "base_rev": "2d783e47a7df59b49fbb8b480176f2a43379d3aa",
-  "head_rev": "2d783e47a7df59b49fbb8b480176f2a43379d3aa",
+  "generated_at": "2026-11-04T15:13:24Z",
+  "base_rev": "94746ea15ed1855054fff7210c9f8f345475ac74",
+  "head_rev": "8d45f2d1a77ecf8f83bd3ab8a12cac214e14eea6",
   "card_sha256": "6e17e99ce5d170b76f3ab37891043433500bf1b40c9e6daedb135f534848c258",
+  "checker_fileset_sha256": "39f53012b580b77a8e5c6f28d605c91e0053f49f0018f64a513a00a501b77c2c",
   "fingerprint": {
-    "python": "3.13.15",
-    "platform": "Windows-11-10.0.26300-SP0"
+    "python": "3.13.18",
+    "platform": "Linux-6.18.44-fc-v233-x86_64-with-glibc2.39"
   },
   "scope": {
     "ok": true,
-    "changed_paths": [],
+    "changed_paths": [
+      "src/repo_presenter/core/preflight.py"
+    ],
     "violations": [],
-    "evaluated": false
+    "evaluated": true
   },
   "runs": [
     {
@@ -24,8 +27,8 @@
         {
           "command": "python -m pytest tests/core/test_preflight.py -q",
           "exit_code": 0,
-          "duration_s": 0.98,
-          "stdout_sha256": "ef496804c4d862064f1a1b180b6fc817374df35801921f0062bdeb6035f701fa"
+          "duration_s": 1.297,
+          "stdout_sha256": "1874b47a6432969fc829a7aa42f0385f4307a8d7af57a127368403918405344e"
         }
       ],
       "all_passed": true
@@ -36,8 +39,8 @@
         {
           "command": "python -m pytest tests/core/test_preflight.py -q",
           "exit_code": 0,
-          "duration_s": 0.822,
-          "stdout_sha256": "bf57a87e7fe91a0d8a8815a680d416938ba682dee7e8a176a4973cb35e527edc"
+          "duration_s": 1.284,
+          "stdout_sha256": "c0bb7edc122a2f852497ff28990e7e83659dd02337712c5e74fd90608cb7ad4a"
         }
       ],
       "all_passed": true

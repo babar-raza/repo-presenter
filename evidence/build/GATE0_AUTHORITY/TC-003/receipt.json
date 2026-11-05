@@ -3,19 +3,22 @@
   "card": "TC-003",
   "gate": "GATE0_AUTHORITY",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-04T09:24:03Z",
-  "base_rev": "2d783e47a7df59b49fbb8b480176f2a43379d3aa",
-  "head_rev": "2d783e47a7df59b49fbb8b480176f2a43379d3aa",
-  "card_sha256": "9a3df4304e0b8fae72e57d36c2f5c888c5ab0f196eccf7c4845056cf121e7012",
+  "generated_at": "2026-11-04T14:58:40Z",
+  "base_rev": "aadbd18881ffd65b4a048e6252c6d2a1bd477cc8",
+  "head_rev": "1f426ec19ae6dc7e5c26dc75536d459300daa942",
+  "card_sha256": "89c02832dcc1b1c3c26e344b4214e58a97c79dcdf650d408bf17fa23a0809c41",
+  "checker_fileset_sha256": "e3be29ff0644faf387614b4fd11f9a26800aa8aaf07d0863d29a8f7349bd314c",
   "fingerprint": {
-    "python": "3.13.15",
-    "platform": "Windows-11-10.0.26300-SP0"
+    "python": "3.13.18",
+    "platform": "Linux-6.18.44-fc-v233-x86_64-with-glibc2.39"
   },
   "scope": {
     "ok": true,
-    "changed_paths": [],
+    "changed_paths": [
+      "tests/ops/test_gate_guard_tc003.py"
+    ],
     "violations": [],
-    "evaluated": false
+    "evaluated": true
   },
   "runs": [
     {
@@ -24,20 +27,26 @@
         {
           "command": "python ops/checks/marker_check.py AGENTS.md \"TWO_TIER_TASKCARD_MODEL_ADOPTED_2026-11-04\"",
           "exit_code": 0,
-          "duration_s": 0.076,
+          "duration_s": 0.027,
           "stdout_sha256": "e8d1ab495fa3e7689d31bf96ac4c3e36aa831835b2e72276fe6188ba84230c8e"
         },
         {
           "command": "python ops/checks/marker_check.py ops/SUPERVISOR.md \"RELEASE_GATE_CARDS_REINSTATED_2026-11-04\"",
           "exit_code": 0,
-          "duration_s": 0.082,
-          "stdout_sha256": "67aa02f90212c6c05c5faea6e08c4452d278373ea9773490458c26907fb89458"
+          "duration_s": 0.026,
+          "stdout_sha256": "1ceaf886543bd6de176fb2113ee51db4ebcce41651623af8fdc1106ec7d929cf"
         },
         {
           "command": "python ops/checks/count_taskcards.py 13",
           "exit_code": 0,
-          "duration_s": 0.088,
-          "stdout_sha256": "04a77b837f10c6fbe274cd242b9de6538dcc826eb30f3fb010d04b10895dcbb1"
+          "duration_s": 0.025,
+          "stdout_sha256": "3130a8b3ceefbadc5414a8f8886fb9eca592501600292f3f3a53c2aa0f36e2e7"
+        },
+        {
+          "command": "python -m pytest tests/ops/test_gate_guard_tc003.py -q",
+          "exit_code": 0,
+          "duration_s": 0.815,
+          "stdout_sha256": "4e8b6c5a89da44bf05d17100903172be04033067c113a6831bdfafbd42b7da52"
         }
       ],
       "all_passed": true
@@ -48,20 +57,26 @@
         {
           "command": "python ops/checks/marker_check.py AGENTS.md \"TWO_TIER_TASKCARD_MODEL_ADOPTED_2026-11-04\"",
           "exit_code": 0,
-          "duration_s": 0.086,
+          "duration_s": 0.026,
           "stdout_sha256": "e8d1ab495fa3e7689d31bf96ac4c3e36aa831835b2e72276fe6188ba84230c8e"
         },
         {
           "command": "python ops/checks/marker_check.py ops/SUPERVISOR.md \"RELEASE_GATE_CARDS_REINSTATED_2026-11-04\"",
           "exit_code": 0,
-          "duration_s": 0.068,
-          "stdout_sha256": "67aa02f90212c6c05c5faea6e08c4452d278373ea9773490458c26907fb89458"
+          "duration_s": 0.034,
+          "stdout_sha256": "1ceaf886543bd6de176fb2113ee51db4ebcce41651623af8fdc1106ec7d929cf"
         },
         {
           "command": "python ops/checks/count_taskcards.py 13",
           "exit_code": 0,
-          "duration_s": 0.089,
-          "stdout_sha256": "04a77b837f10c6fbe274cd242b9de6538dcc826eb30f3fb010d04b10895dcbb1"
+          "duration_s": 0.027,
+          "stdout_sha256": "3130a8b3ceefbadc5414a8f8886fb9eca592501600292f3f3a53c2aa0f36e2e7"
+        },
+        {
+          "command": "python -m pytest tests/ops/test_gate_guard_tc003.py -q",
+          "exit_code": 0,
+          "duration_s": 0.619,
+          "stdout_sha256": "59907462a8d5fd93406cdf4c7d1eb2f7b7a96664ae85c4ec202693d419cd019e"
         }
       ],
       "all_passed": true
@@ -76,7 +91,8 @@
     "exit_codes": [
       1,
       0,
-      0
+      0,
+      1
     ],
     "tree_changed": [
       "M AGENTS.md"
