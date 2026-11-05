@@ -3,19 +3,23 @@
   "card": "TC-002",
   "gate": "GATE0_AUTHORITY",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-04T09:24:00Z",
-  "base_rev": "2d783e47a7df59b49fbb8b480176f2a43379d3aa",
-  "head_rev": "2d783e47a7df59b49fbb8b480176f2a43379d3aa",
-  "card_sha256": "01421e6d02d06022820a3715e64a804374fcedb68d12cbbad7993ef77cc32ea2",
+  "generated_at": "2026-11-05T11:41:35Z",
+  "base_rev": "b90eaf8e66547c9086ce5f1e8984ee81a8f626f4",
+  "head_rev": "93b59b25d27c0dff72cb70a9a672b706af0ec8ea",
+  "card_sha256": "ebe0b095e90e3397d078edfccbdb2345339097eff11a2fa65c654199b84519bd",
+  "checker_fileset_sha256": "0638ee7e570ecfbf423ea93878d43ebd26ca04fa0092e2b9cca0206fb7480543",
+  "checker_fileset_scheme": "v2",
   "fingerprint": {
-    "python": "3.13.15",
-    "platform": "Windows-11-10.0.26300-SP0"
+    "python": "3.13.18",
+    "platform": "Linux-6.18.44-fc-v236-x86_64-with-glibc2.39"
   },
   "scope": {
     "ok": true,
-    "changed_paths": [],
+    "changed_paths": [
+      "docs/LEGACY_WRITER_INVENTORY_2026-11-04.md"
+    ],
     "violations": [],
-    "evaluated": false
+    "evaluated": true
   },
   "runs": [
     {
@@ -23,34 +27,39 @@
       "checks": [
         {
           "command": "python ops/checks/owner_decision_record.py docs/LEGACY_WRITER_INVENTORY_2026-11-04.md OWNER_APPROVED_WRITER_DISPOSITION:",
-          "exit_code": 1,
-          "duration_s": 0.074,
-          "stdout_sha256": "339bb46ba21ada3928136156891ea40c0a5cc7e71c383ef579c126f2d0c7b596"
+          "exit_code": 0,
+          "duration_s": 0.034,
+          "stdout_sha256": "493c4287bf874ec728bf7456dbb7bd6d695e1c378b8f456cf9be1fdd30e4189f"
         }
       ],
-      "all_passed": false
+      "all_passed": true
     },
     {
       "run": 2,
       "checks": [
         {
           "command": "python ops/checks/owner_decision_record.py docs/LEGACY_WRITER_INVENTORY_2026-11-04.md OWNER_APPROVED_WRITER_DISPOSITION:",
-          "exit_code": 1,
-          "duration_s": 0.079,
-          "stdout_sha256": "339bb46ba21ada3928136156891ea40c0a5cc7e71c383ef579c126f2d0c7b596"
+          "exit_code": 0,
+          "duration_s": 0.042,
+          "stdout_sha256": "493c4287bf874ec728bf7456dbb7bd6d695e1c378b8f456cf9be1fdd30e4189f"
         }
       ],
-      "all_passed": false
+      "all_passed": true
     }
   ],
   "negative_control": {
     "kind": "mutate",
     "patch": "python -c \"import pathlib; p = pathlib.Path('docs/LEGACY_WRITER_INVENTORY_2026-11-04.md'); s = p.read_text(encoding='utf-8'); s2 = s.replace('ref=', 'ref=BROKEN-'); p.write_text(s2, encoding='utf-8')\"",
-    "patch_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
-    "applied": false,
-    "patch_applied_failed": false,
-    "exit_codes": []
+    "patch_sha256": "c76335f9165da3684f3b165aaba1019ef0fe14aefe07caba6149637c13d93530",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      1
+    ],
+    "tree_changed": [
+      "M docs/LEGACY_WRITER_INVENTORY_2026-11-04.md"
+    ]
   },
-  "accepted": false,
-  "reason": "checks failed: python ops/checks/owner_decision_record.py docs/LEGACY_WRITER_INVENTORY_2026-11-04.md OWNER_APPROVED_WRITER_DISPOSITION:; negative-control patch did not apply"
+  "accepted": true,
+  "reason": "all gates passed"
 }

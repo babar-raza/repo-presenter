@@ -2,7 +2,7 @@
 ===== CLEAN RUN 1 =====
 $ python ops/checks/owner_decision_record.py docs/LEGACY_WRITER_INVENTORY_2026-11-04.md OWNER_APPROVED_WRITER_DISPOSITION:
 --- stdout ---
-FAIL: docs\LEGACY_WRITER_INVENTORY_2026-11-04.md has no record matching 'OWNER_APPROVED_WRITER_DISPOSITION: <YYYY-MM-DD> ref=<anchor>'
+OK: docs/LEGACY_WRITER_INVENTORY_2026-11-04.md has a cross-referenced record dated 2026-11-05; ref=OWNER-DECISIONS-2026-11-05-TC002 found in docs/DECISION_LOG.md
 
 --- stderr ---
 
@@ -10,9 +10,16 @@ FAIL: docs\LEGACY_WRITER_INVENTORY_2026-11-04.md has no record matching 'OWNER_A
 ===== CLEAN RUN 2 =====
 $ python ops/checks/owner_decision_record.py docs/LEGACY_WRITER_INVENTORY_2026-11-04.md OWNER_APPROVED_WRITER_DISPOSITION:
 --- stdout ---
-FAIL: docs\LEGACY_WRITER_INVENTORY_2026-11-04.md has no record matching 'OWNER_APPROVED_WRITER_DISPOSITION: <YYYY-MM-DD> ref=<anchor>'
+OK: docs/LEGACY_WRITER_INVENTORY_2026-11-04.md has a cross-referenced record dated 2026-11-05; ref=OWNER-DECISIONS-2026-11-05-TC002 found in docs/DECISION_LOG.md
 
 --- stderr ---
 
 
-!! clean runs failed; falsifier skipped (it would prove nothing)
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M docs/LEGACY_WRITER_INVENTORY_2026-11-04.md
+$ python ops/checks/owner_decision_record.py docs/LEGACY_WRITER_INVENTORY_2026-11-04.md OWNER_APPROVED_WRITER_DISPOSITION:
+--- stdout ---
+FAIL: ref=BROKEN-OWNER-DECISIONS-2026-11-05-TC002 (dated 2026-11-05) does not match any text in docs/DECISION_LOG.md
+
+--- stderr ---
+
