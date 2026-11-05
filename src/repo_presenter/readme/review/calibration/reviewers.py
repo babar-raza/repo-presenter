@@ -149,6 +149,7 @@ class LiveReviewer:
                 plan=source.plan,
                 dispositions=source.dispositions,
                 validation=source.validation,
+                rendered=source.rendered,
             )
         except ProviderCallBudgetError as error:
             raise BudgetExhausted(str(error)) from error

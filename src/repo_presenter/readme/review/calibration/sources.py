@@ -50,6 +50,11 @@ class SourceCandidate:
     tree_paths: tuple[str, ...]
     tasks: tuple[SectionTask, ...]
     scratch: Path
+    #: Whether this project's renderer printed ``readme`` (a Lane R candidate). A README written
+    #: elsewhere (a reference candidate, a maintainers' README) is ``False``: the reviewer is shown
+    #: every prose line (``review_with_model(rendered=False)``) and the deterministic rules that
+    #: audit this project's own disposition record do not apply to it, since it has none.
+    rendered: bool = True
 
 
 def _json(path: Path) -> dict[str, Any]:
@@ -225,3 +230,67 @@ def load_lane_r_candidate(
             else None
         ),
     )
+
+
+def load_bundle_candidate(
+    revision_dir: Path,
+    *,
+    clone: Path,
+    name: str,
+    registry_path: Path = DEFAULT_REGISTRY_PATH,
+) -> SourceCandidate:
+    """A sealed Lane R bundle (``bundle_store.export_bundle``'s ``<root>/<revision>`` directory),
+    re-rendered from its own artifacts, with a clone at the same revision supplying the live
+    README and the file tree. The bundle's own ``facts.json`` already holds its inherited units."""
+    repository = clone_repository(clone)
+    entry = require_listed(load_registry(registry_path), repository)
+    facts = read_facts(revision_dir / "facts.json")
+    if facts.source_revision != revision_dir.name:
+        raise ValueError(
+            f"{name}: the bundle's facts are for {facts.source_revision}, not {revision_dir.name}"
+        )
+    return build_source(
+        name=name,
+        entry=entry,
+        facts=facts,
+        plan=_json(revision_dir / "plan.json"),
+        units=_json(revision_dir / "content_units.coherent.json"),
+        dispositions=_json(revision_dir / "dispositions.json"),
+        investigation=_json(revision_dir / "investigation.json"),
+        original=(clone / "README.md").read_bytes().decode("utf-8", errors="replace"),
+        tree_paths=_tree_paths(clone),
+        scratch=revision_dir,
+    )
+
+
+def load_reference_candidate(
+    readme_path: Path,
+    *,
+    facts_path: Path,
+    clone: Path,
+    name: str,
+    registry_path: Path = DEFAULT_REGISTRY_PATH,
+) -> SourceCandidate:
+    """A README another process wrote for the same product (the aspose.org refresh candidate,
+    read at run time from a local sibling checkout and never copied into this repository), judged
+    against this project's facts for the clone's revision. It is not this renderer's output, so it
+    has no plan, units or dispositions, no S9 validation, and ``rendered`` is ``False``."""
+    repository = clone_repository(clone)
+    entry = require_listed(load_registry(registry_path), repository)
+    facts = read_facts(facts_path)
+    if facts.repository != repository:
+        raise ValueError(f"{name}: facts are for {facts.repository}, not {repository}")
+    source = build_source(
+        name=name,
+        entry=entry,
+        facts=facts,
+        plan={},
+        units={},
+        dispositions={},
+        investigation={},
+        original=(clone / "README.md").read_bytes().decode("utf-8", errors="replace"),
+        tree_paths=_tree_paths(clone),
+        scratch=readme_path.parent,
+        recorded_readme=readme_path.read_text(encoding="utf-8"),
+    )
+    return replace(source, rendered=False)

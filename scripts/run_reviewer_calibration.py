@@ -15,6 +15,8 @@ moment the ledger holds that many. Nothing here pushes, dispatches a workflow or
 from __future__ import annotations
 
 import argparse
+import datetime
+import hashlib
 import json
 import os
 import pickle
@@ -41,13 +43,19 @@ from repo_presenter.readme.review.calibration.harness import (
     pre_llm,
     run_corpus,
 )
+from repo_presenter.readme.review.calibration.record import (
+    merge_repeats,
+    status_document,
+)
 from repo_presenter.readme.review.calibration.reviewers import (
     LiveReviewer,
     physical_calls,
 )
 from repo_presenter.readme.review.calibration.sources import (
+    load_bundle_candidate,
     load_cascade_candidate,
     load_lane_r_candidate,
+    load_reference_candidate,
 )
 
 #: The defects this project's own reading of each candidate found, as the edit that removes each.
@@ -149,11 +157,55 @@ def parse_lane_r(items: list[str]) -> list[tuple[str, Path, Path, tuple[str, ...
     return found
 
 
+def parse_specs(items: list[str], fields: int) -> list[tuple[str, tuple[Path, ...]]]:
+    """``NAME=PATH,PATH[,...]`` with exactly ``fields`` comma-separated paths."""
+    found = []
+    for item in items:
+        name, spec = item.split("=", 1)
+        paths = tuple(Path(part) for part in spec.split(","))
+        if len(paths) != fields:
+            raise SystemExit(f"{item!r}: expected {fields} comma-separated paths")
+        found.append((name, paths))
+    return found
+
+
+def load_repairs(path: Path | None) -> dict[str, tuple[Repair, ...]]:
+    """Pre-registered repairs of iteration-4 bases, from a JSON file ``{base: [repair, ...]}``.
+    The reference bases' repairs quote aspose.org text, so that file stays outside this repository
+    (decision log 2026-10-31, decision 1); only its digest and counts are committed."""
+    if path is None:
+        return {}
+    document = json.loads(path.read_text(encoding="utf-8"))
+    return {
+        name: tuple(
+            Repair(
+                item["old"],
+                item["new"],
+                item["reason"],
+                klass=item.get("klass"),
+                count=item.get("count", 1),
+                targets=tuple(item.get("targets", ())),
+            )
+            for item in items
+        )
+        for name, items in document.items()
+    }
+
+
 def build(
     work: dict[str, Path],
     clones: Path | None,
     lane_r: list[tuple[str, Path, Path, tuple[str, ...]]] = (),
+    bundles: list[tuple[str, tuple[Path, ...]]] = (),
+    references: list[tuple[str, tuple[Path, ...]]] = (),
+    repairs: dict[str, tuple[Repair, ...]] | None = None,
 ) -> list[Case]:
+    repairs = repairs or {}
+    unknown = sorted(
+        set(repairs) - {name for name, _ in (*bundles, *references)}
+    )
+    if unknown:
+        raise SystemExit(f"repairs name bases that are not in the corpus: {unknown}")
     bases = [
         Base(
             load_cascade_candidate(path, name=name),
@@ -170,6 +222,14 @@ def build(
             name=name,
         )
         bases.append(Base(source, (), tolerated_checks=tolerated))
+    for name, (revision_dir, clone) in bundles:
+        source = load_bundle_candidate(revision_dir, clone=clone, name=name)
+        bases.append(Base(source, repairs.get(name, ())))
+    for name, (readme, facts, clone) in references:
+        source = load_reference_candidate(
+            readme, facts_path=facts, clone=clone, name=name
+        )
+        bases.append(Base(source, repairs.get(name, ())))
     recorded = []
     if clones is not None:
         for key, (repo, output, klass, repairs, note, targets) in RECORDED.items():
@@ -211,6 +271,17 @@ def stratified(cases: list[Case], per_class: int) -> list[Case]:
                 seen.append(member)
         chosen.extend(seen[:per_class])
     return chosen
+
+
+def stability_subset(cases: list[Case], size: int) -> list[Case]:
+    """A pre-registered stability subset: half scored clean twins, half defect cases, each half
+    ranked by the SHA-256 of the case id (no reviewer output decides which cases are repeated)."""
+    rank = lambda case: hashlib.sha256(case.case_id.encode("utf-8")).hexdigest()
+    clean = sorted((c for c in cases if c.role == "clean"), key=rank)
+    defects = sorted(
+        (c for c in cases if c.role in {"mutant", "real_defect"}), key=rank
+    )
+    return clean[: size - size // 2] + defects[: size // 2]
 
 
 def result_record(result: CaseResult) -> dict:
@@ -295,6 +366,37 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--lane-r", action="append", default=[], metavar="NAME=OUT,CLONE[,CHECK]"
     )
+    parser.add_argument(
+        "--bundle",
+        action="append",
+        default=[],
+        metavar="NAME=REVISION_DIR,CLONE",
+        help="a sealed Lane R bundle (export_bundle's <root>/<revision>) and a clone at its revision",
+    )
+    parser.add_argument(
+        "--reference",
+        action="append",
+        default=[],
+        metavar="NAME=README,FACTS,CLONE",
+        help="a README written elsewhere (the aspose.org candidate), this project's facts for the "
+        "clone's revision, and the clone",
+    )
+    parser.add_argument(
+        "--repairs", type=Path, help="pre-registered repairs of --bundle/--reference bases"
+    )
+    parser.add_argument(
+        "--stability",
+        type=int,
+        default=0,
+        help="after the first pass, review this many pre-registered cases 3 more times with no "
+        "cache, and score stability over all four reviews",
+    )
+    parser.add_argument(
+        "--write-status",
+        type=Path,
+        help="write the calibration status document computed from this run (PASSED only when "
+        "every gate passes and every selected case was asked)",
+    )
     parser.add_argument("--out", type=Path, default=Path(".calibration"))
     parser.add_argument("--cap", type=int, default=200)
     parser.add_argument("--per-class", type=int, default=2)
@@ -346,7 +448,12 @@ def main(argv: list[str] | None = None) -> int:
             plugin_for(ecosystem)  # registers the spec the blocking checks look up
     else:
         cases = build(
-            parse_work(args.work), args.recorded_clones, parse_lane_r(args.lane_r)
+            parse_work(args.work),
+            args.recorded_clones,
+            parse_lane_r(args.lane_r),
+            parse_specs(args.bundle, 2),
+            parse_specs(args.reference, 3),
+            load_repairs(args.repairs),
         )
         if args.cache_corpus is not None:
             args.cache_corpus.write_bytes(pickle.dumps(cases))
@@ -390,11 +497,55 @@ def main(argv: list[str] | None = None) -> int:
         f"{len(selected)} cases selected; ledger holds {physical_calls(ledger_path)} of {args.cap} calls"
     )
     run = run_corpus(selected, reviewer, repeats=args.repeats)
+    if args.stability:
+        repeated = stability_subset(
+            [r.case for r in run.results], args.stability
+        )
+        fresh = LiveReviewer(
+            prompts=load_manifests(args.prompts),
+            config=load_gateway_config(os.environ),
+            ledger_path=ledger_path,
+            store_dir=args.out / "calls" / f"{args.tag}-stability",
+            cap=args.cap,
+            models=models,
+            fresh_store_per_call=True,
+        )
+        print(f"stability: {len(repeated)} cases x 3 fresh reviews")
+        run = merge_repeats(run, run_corpus(repeated, fresh, repeats=3))
     out_file = args.out / (args.results_name or f"results-{args.tag}.jsonl")
     with out_file.open("w", encoding="utf-8", newline="\n") as stream:
         for result in run.results:
             stream.write(json.dumps(result_record(result), sort_keys=True) + "\n")
     print_metrics(run)
+    if args.write_status is not None:
+        metrics = compute_metrics(run)
+        complete = not run.stopped and len(run.results) == len(selected)
+        manifest = load_manifests(args.prompts)["independent_review"].manifest
+        document = status_document(
+            evaluate_tiers(metrics),
+            metrics,
+            complete=complete and bool(args.all),
+            incomplete_reason=(
+                run.stopped
+                or ("" if args.all else "a sample (--all not given), not the whole corpus")
+            ),
+            prompt_version=str(manifest.version),
+            model=args.model or manifest.model_route,
+            measured_on=datetime.datetime.now(datetime.UTC).date().isoformat(),
+            source=str(out_file),
+            corpus={
+                "cases": len(cases),
+                "asked": len(run.results),
+                "by_role": {
+                    role: sum(1 for c in cases if c.role == role)
+                    for role in sorted({c.role for c in cases})
+                },
+            },
+        )
+        args.write_status.write_text(
+            json.dumps(document, indent=2) + "\n", encoding="utf-8"
+        )
+        print(f"wrote {args.write_status}: {document['status']}")
     print(
         f"ledger now holds {physical_calls(ledger_path)} of {args.cap} calls; results: {out_file}"
     )
