@@ -51,7 +51,7 @@ from repo_presenter.readme.review.matching import (
 )
 
 #: Fact kinds whose value is a name a reader can write, for ``names_supported``.
-NAME_KINDS = frozenset({"public_symbol", "import_path", "identity", "format"})
+NAME_KINDS = frozenset({"public_symbol", "enum_member", "import_path", "identity", "format"})
 
 
 @dataclass(frozen=True)

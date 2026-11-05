@@ -37,6 +37,7 @@ from repo_presenter.extractors.platforms.cpp_examples import (
 from repo_presenter.extractors.surface.extractor import (
     SurfaceSymbol,
     surface_symbols,
+    with_enum_members,
 )
 from repo_presenter.extractors.surface.manifest import read_identity
 from repo_presenter.extractors.surface.registry import (
@@ -626,7 +627,7 @@ class CppPlugin:
                     attributes=attributes,
                 )
             )
-        return facts
+        return with_enum_members(facts, symbols)
 
     def registry_facts(self, facts: Sequence[Fact]) -> tuple[list[Fact], list[ProbeRecord]]:
         """Record that there is no registry to ask for the build, and resolve each NuGet package

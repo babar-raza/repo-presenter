@@ -38,7 +38,7 @@ from repo_presenter.extractors.platforms.rust_format_declarations import (
 from repo_presenter.extractors.platforms.rust_examples import (
     verify_rust_examples,
 )
-from repo_presenter.extractors.surface.extractor import surface_symbols
+from repo_presenter.extractors.surface.extractor import surface_symbols, with_enum_members
 from repo_presenter.extractors.surface.manifest import (
     PackageIdentity,
     read_identity,
@@ -429,7 +429,7 @@ class RustPlugin:
                     attributes=attributes,
                 )
             )
-        return facts
+        return with_enum_members(facts, symbols)
 
     def registry_facts(self, facts: Sequence[Fact]) -> tuple[list[Fact], list[ProbeRecord]]:
         """Resolve the install claim against crates.io; the fact keeps its ID."""

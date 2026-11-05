@@ -19,6 +19,7 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Literal, Protocol
 
+from repo_presenter.core.facts import Evidence, Fact, fact_id, slug
 from repo_presenter.extractors.surface._vendor.aspose_extraction import (
     api_surface,
     lang,
@@ -26,7 +27,6 @@ from repo_presenter.extractors.surface._vendor.aspose_extraction import (
 from repo_presenter.extractors.surface.doc_text import (
     normalise_source_docs,
 )
-from repo_presenter.core.facts import slug
 
 # The vendored engine keys its per-language adapters by grammar name and registers one for
 # TypeScript only, although every `language in ("typescript", "javascript")` branch in it reads
@@ -134,6 +134,10 @@ class SurfaceSymbol:
     # What a fact ID is derived from. It is the value, unless another symbol's value slugs to the
     # same thing: a fact ID is lowercased and C# is not, so `MimeType` and `MIMEType` collide.
     fact_slug: str = ""
+    #: An enum type's member names, as the vendored engine read them (``enum_members``); empty
+    #: for every other kind. They become ``enum_member`` facts (``enum_member_facts``), never
+    #: ``public_symbol`` facts, so nothing that counts, lists or caps public symbols sees them.
+    enum_members: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         if not self.fact_slug:
@@ -269,6 +273,7 @@ def surface_symbols(
                 source_path=path,
                 line=_line(entry),
                 doc=str(entry.get("doc", "")),
+                enum_members=_enum_member_names(entry),
             )
         )
         for method in entry.get("methods", []):
@@ -303,6 +308,60 @@ def surface_symbols(
         seen.add(symbol.value)
         unique.append(symbol)
     return _disambiguate(_namespaces(unique) + unique)
+
+
+def _enum_member_names(entry: dict[str, Any]) -> tuple[str, ...]:
+    names: list[str] = []
+    for member in entry.get("enum_members", []) or []:
+        name = slug_safe(str((member or {}).get("name", "")).strip())
+        if name and name not in names:
+            names.append(name)
+    return tuple(names)
+
+
+def enum_member_facts(symbols: list[SurfaceSymbol]) -> list[Fact]:
+    """One ``enum_member`` fact per member of each public enum (2026-11-05, owner decision).
+
+    The vendored engine read them all along and this surface dropped them, so a README naming
+    `Axis.X_AXIS` or `SaveFormat.Pdf` cited nothing and read as unsupported (calibration
+    iteration 4: the curators removed enum names from 3D Java and Python, Slides Python, PSD).
+    A separate fact kind on purpose: public-symbol counts, API tables, member bullets and packet
+    caps never see these; only the name checks that ask "is this identifier a fact value?" do.
+    """
+    facts: list[Fact] = []
+    seen: set[str] = set()
+    for symbol in symbols:
+        for name in symbol.enum_members:
+            value = f"{symbol.value}.{name}"
+            try:
+                identifier = fact_id("enum_member", value)
+            except ValueError:
+                continue
+            if identifier in seen:
+                continue
+            seen.add(identifier)
+            facts.append(
+                Fact(
+                    identifier,
+                    "enum_member",
+                    value,
+                    (
+                        Evidence(
+                            symbol.source_path,
+                            f"line {symbol.line}; member of enum {symbol.value}",
+                        ),
+                    ),
+                    attributes={"enum": symbol.value},
+                )
+            )
+    return facts
+
+
+def with_enum_members(facts: list[Fact], symbols: list[SurfaceSymbol]) -> list[Fact]:
+    """``facts`` plus the members of every enum among them: an enum a plugin filtered out of its
+    public surface (not exported, internal) contributes no member either."""
+    public = {fact.value for fact in facts if fact.kind == "public_symbol"}
+    return [*facts, *(f for f in enum_member_facts(symbols) if f.attributes["enum"] in public)]
 
 
 def _namespaces(symbols: list[SurfaceSymbol]) -> list[SurfaceSymbol]:

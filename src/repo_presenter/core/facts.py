@@ -28,6 +28,7 @@ FactKind = Literal[
     "install_command",
     "import_path",
     "public_symbol",
+    "enum_member",
     "example",
     "format",
     "capability",

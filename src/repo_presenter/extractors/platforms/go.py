@@ -33,7 +33,7 @@ from repo_presenter.extractors.platforms.go_format_declarations import (
 from repo_presenter.extractors.platforms.go_examples import (
     verify_go_examples,
 )
-from repo_presenter.extractors.surface.extractor import surface_symbols
+from repo_presenter.extractors.surface.extractor import surface_symbols, with_enum_members
 from repo_presenter.extractors.surface.manifest import (
     PackageIdentity,
     read_identity,
@@ -359,7 +359,7 @@ class GoPlugin:
                     attributes=attributes,
                 )
             )
-        return [
+        modules = [
             Fact(
                 fact_id("public_symbol", package),
                 "public_symbol",
@@ -368,7 +368,8 @@ class GoPlugin:
                 attributes={"symbol_kind": "module"},
             )
             for package, (where, line) in sorted(packages.items())
-        ] + facts
+        ]
+        return with_enum_members(modules + facts, symbols)
 
     def registry_facts(self, facts: Sequence[Fact]) -> tuple[list[Fact], list[ProbeRecord]]:
         """Resolve the install claim against the Go module proxy; the fact keeps its ID."""

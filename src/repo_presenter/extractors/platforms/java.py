@@ -37,7 +37,7 @@ from repo_presenter.extractors.platforms.java_examples import verify_java_exampl
 from repo_presenter.extractors.platforms.java_format_declarations import (
     format_declarations as java_format_declarations,
 )
-from repo_presenter.extractors.surface.extractor import surface_symbols
+from repo_presenter.extractors.surface.extractor import surface_symbols, with_enum_members
 from repo_presenter.extractors.surface.manifest import (
     read_identity,
 )
@@ -512,7 +512,7 @@ class JavaPlugin:
                     attributes=attributes,
                 )
             )
-        return facts
+        return with_enum_members(facts, symbols)
 
     def registry_facts(self, facts: Sequence[Fact]) -> tuple[list[Fact], list[ProbeRecord]]:
         """Resolve the install claim against Maven Central; the fact keeps its ID, gains evidence.
