@@ -26,6 +26,11 @@
       "items": { "type": "string", "pattern": "^TC-[0-9]{3}[a-z]?$" },
       "uniqueItems": true
     },
+    "executor": {
+      "type": "string",
+      "enum": ["worker", "supervisor"],
+      "description": "Who carries the card out. Default worker: write_paths may never match ops/gatectl.py GLOBAL_DENY. supervisor (owner decision 2026-11-05): the deliverable is a supervisor-owned artifact (data/, docs/, evidence/, .github/); write_paths may name such paths, never SUPERVISOR_CARD_DENY (ops/, schemas/, project/, .claude/, AGENTS.md). Checks, negative control and two clean independent re-runs are required exactly as for a worker card."
+    },
     "write_paths": {
       "type": "array",
       "minItems": 1,

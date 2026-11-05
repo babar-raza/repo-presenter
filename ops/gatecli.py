@@ -23,6 +23,7 @@ import cardlint
 import gateverify
 import secretscan
 from gatectl import (
+    write_path_problems,
     EVIDENCE,
     GLOBAL_DENY,
     INSTRUCTIONS_JSONL,
@@ -352,6 +353,8 @@ def cmd_doctor(args) -> int:
         errs = schema_errors(schema, card)
         if errs:
             problems.append(f"{cid} fails its own schema: " + "; ".join(errs))
+        for problem in write_path_problems(card):
+            problems.append(f"{cid}: {problem}")
     if problems:
         print("doctor: ISSUES FOUND", file=sys.stderr)
         for p in problems:

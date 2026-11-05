@@ -77,6 +77,54 @@ GLOBAL_DENY = [
     "README.md",
 ]
 
+# 2026-11-05 (owner decision, docs/DECISION_LOG.md "Supervisor-executed release-gate cards"):
+# a release-gate card whose deliverable IS a supervisor-owned artifact (a status file under
+# data/, a decision record under docs/, receipts under evidence/, a workflow under .github/)
+# declares ``executor: supervisor``. Only such a card may write a GLOBAL_DENY path, only the
+# paths its own write_paths name, and never the gate's own machinery below: a card can never
+# rewrite the gate, the schemas or the execution cursor that judge it. A worker card (the
+# default) keeps the full GLOBAL_DENY, unchanged.
+SUPERVISOR_CARD_DENY = [
+    "ops/**",
+    "schemas/**",
+    "project/**",
+    ".claude/**",
+    ".gitattributes",
+    ".gitignore",
+    "AGENTS.md",
+]
+
+
+def is_supervisor_card(card) -> bool:
+    return card.get("executor", "worker") == "supervisor"
+
+
+def denied_for(card, path: str) -> bool:
+    """Whether ``card`` may never touch ``path``, whatever its write_paths say."""
+    if is_supervisor_card(card):
+        return matches_any(path, SUPERVISOR_CARD_DENY)
+    return matches_any(path, GLOBAL_DENY)
+
+
+def write_path_problems(card) -> list:
+    """Authoring defects in a card's write_paths: a path the scope check would always refuse
+    makes the card unacceptable by construction, so it is reported before any work is done."""
+    problems = []
+    for w in card.get("write_paths", []) or []:
+        if not denied_for(card, w):
+            continue
+        if is_supervisor_card(card):
+            problems.append(
+                f"write_path {w!r} is gate machinery (SUPERVISOR_CARD_DENY): no card may write it"
+            )
+        else:
+            problems.append(
+                f"write_path {w!r} is a globally denied path: a worker card can never be "
+                "accepted for it (declare executor: supervisor if the deliverable is a "
+                "supervisor-owned artifact)"
+            )
+    return problems
+
 CANONICAL_ENV = {
     "PYTHONHASHSEED": "0",
     "PYTHONUTF8": "1",
@@ -423,7 +471,7 @@ def check_scope(card, base: str, head: str):
             f"commit {r[:12]} claims neither this card nor the supervisor: {commit_subject(r)[:70]!r}"
         )
     for p in changed:
-        if matches_any(p, GLOBAL_DENY):
+        if denied_for(card, p):
             violations.append(f"{p}: touches a globally denied path")
         elif not matches_any(p, write_paths):
             violations.append(f"{p}: outside the card's declared write_paths")

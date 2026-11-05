@@ -213,8 +213,12 @@ local.
 `python ops/gatecli.py review TC-007` (receipt in `evidence/build/GATE1_QUALITY/TC-007/`) correctly fails the card's
 check, **and** reports a scope violation: `data/reviewer_calibration.json: touches a globally denied path`.
 `ops/gatectl.py`'s `GLOBAL_DENY` (paths "no taskcard may EVER declare in write_paths") includes `data/**`, `docs/**`,
-`evidence/**` and `.github/**`, yet 9 of the 18 cards declare such paths as their only or main write paths
+`evidence/**` and `.github/**`, yet 8 of the 18 cards declare such paths as their only or main write paths
 (TC-002, TC-004, TC-007, TC-009a, TC-009b, TC-010a, TC-011, TC-012a). As configured, **none of them can ever be
 ACCEPTED, whatever their checks say** — that is every card not yet accepted, including TC-011 (P1 delivery).
 `doctor` and `validate` do not detect a card that declares a denied path. Not fixed here: changing what the release
 gate accepts is reported to the owner with a proposed fix rather than made unilaterally.
+
+*Update, same day:* the owner chose the supervisor-card exemption (`docs/DECISION_LOG.md`, 2026-11-05). The 8
+cards declare `executor: supervisor`; `doctor` now reports any card whose write paths the scope check would
+always refuse.
