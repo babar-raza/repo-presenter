@@ -44,7 +44,13 @@ Verdict = Literal["ACCEPT", "REJECT"]
 #: "6": the model reviews one bounded unit of reviewable sections per call (renderer-printed lines are
 #: never sent as reviewable text), findings that repeat are merged, an omission, absence or quality
 #: finding may cite a whole section, and a verdict records the reviewer's calibration status.
-REVIEWER_LOGIC_VERSION = "6"
+#: "7": prompt v18 -- maintainer text kept verbatim or with attribution is not an unsupported claim
+#: (docs/MAINTAINER_CONTENT_PRESERVATION.md), and the attribution line the renderer prints before
+#: PRESERVE_ATTRIBUTED content is not reviewable text.
+#: "8": prompt v19 -- each unit's packet names its attributed maintainer lines
+#: (``scope.maintainer_lines``), and an unsupported_claim citing only those lines is a contract
+#: error (``reply.resolve_cited_lines``), re-asked like any other.
+REVIEWER_LOGIC_VERSION = "8"
 REVIEW_VERDICT_FILENAME = "review_verdict.json"
 
 REJECT_VERDICTS = (

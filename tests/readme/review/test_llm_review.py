@@ -18,6 +18,7 @@ from typing import Any
 import pytest
 
 from repo_presenter.core.config import GatewayConfig
+from repo_presenter.core.facts import Evidence, Fact, FactsDocument
 from repo_presenter.core.llm import jobs as jobs_module
 from repo_presenter.core.llm.jobs import CallStore, JobContext, request_hash
 from repo_presenter.core.llm.ledger import Ledger, canonical_hash, load_records
@@ -188,7 +189,7 @@ def test_an_accept_reply_is_one_provider_call_and_a_model_reviewed_accept(
     assert verdict.model_verdict == "ACCEPT" and verdict.findings == ()
     assert harness.provider_calls() == 1 and len(client.payloads) == 1
     loaded = PROMPTS["independent_review"]
-    assert verdict.prompt_version == "17" and verdict.model_served == "qwen3-next"
+    assert verdict.prompt_version == "19" and verdict.model_served == "qwen3-next"
     (unit,) = plan_units(CANDIDATE)
     packet = unit_packet(
         unit,
@@ -226,9 +227,9 @@ def test_the_verdict_file_records_what_a_reader_needs_to_audit_it(
     path = tmp_path / "review_verdict.json"
     write_review_verdict(verdict, path)
     document = json.loads(path.read_text(encoding="utf-8"))
-    assert document["schema_version"] == 2 and document["reviewer_logic_version"] == "6"
+    assert document["schema_version"] == 2 and document["reviewer_logic_version"] == "8"
     assert (
-        document["prompt_version"] == "17" and document["model_served"] == "qwen3-next"
+        document["prompt_version"] == "19" and document["model_served"] == "qwen3-next"
     )
     assert document["request_sha256"] == verdict.request_sha256
     assert document["reply_sha256"] == verdict.reply_sha256
@@ -653,9 +654,9 @@ def test_the_reviewer_shares_the_authoring_model_and_does_not_claim_otherwise() 
         assert PROMPTS[authoring].sha256 != loaded.sha256
 
 
-def test_the_manifest_is_v17_and_carries_no_advisory_tier() -> None:
+def test_the_manifest_is_v19_and_carries_no_advisory_tier() -> None:
     loaded = PROMPTS["independent_review"]
-    assert loaded.manifest.version == "17"
+    assert loaded.manifest.version == "19"
     assert "advisory" not in loaded.manifest.system.replace(
         "there is no advisory finding", ""
     )
@@ -664,6 +665,23 @@ def test_the_manifest_is_v17_and_carries_no_advisory_tier() -> None:
     schema = loaded.manifest.output.schema_["properties"]["findings"]["items"]
     assert "claim_kind" in schema["required"]
     assert {"absent", "omission", "unsupported_names"}.isdisjoint(schema["required"])
+
+
+def test_the_manifest_does_not_treat_kept_maintainer_text_as_unsupported() -> None:
+    """docs/MAINTAINER_CONTENT_PRESERVATION.md: maintainer text kept verbatim or with attribution
+    is judged for contradiction, misrepresentation, stuffing and value, never as unsupported for
+    lack of a fact; an authored restatement presented as verified still is."""
+    system = " ".join(PROMPTS["independent_review"].manifest.system.split())
+    assert "a specific claim that only such a unit states is still unsupported" not in system
+    assert (
+        "Maintainer text the candidate keeps - verbatim, or under a line attributing it to the "
+        "maintainers' README as not independently verified - is not an unsupported_claim"
+    ) in system
+    assert (
+        "Authored (non-verbatim) text that restates an inherited unit's claim as a verified "
+        "fact is still an `unsupported_claim`"
+    ) in system
+    assert "(a `contradiction`)" in system
 
 
 def test_a_reviewer_prompt_or_model_change_reaches_only_the_reviewer_scope() -> None:
@@ -690,3 +708,101 @@ def test_a_reviewer_prompt_or_model_change_reaches_only_the_reviewer_scope() -> 
     current = copy.deepcopy(sealed)
     current["prompts"]["section_authoring"]["sha256"] = "e" * 64
     assert {c.scope for c in evaluate(sealed, current).changes} == {"authoring"}
+
+
+# ---------------------------------------------------------------------------
+# Attributed maintainer text (docs/MAINTAINER_CONTENT_PRESERVATION.md, reviewer logic 8)
+# ---------------------------------------------------------------------------
+
+_MAINTAINER_UNIT = "inherited_unit:009.list"
+_MAINTAINER_FACTS = FactsDocument(
+    FACTS.repository,
+    FACTS.source_revision,
+    (
+        *FACTS.facts,
+        Fact(_MAINTAINER_UNIT, "inherited_unit", "- " + QUOTE, (Evidence("README.md"),)),
+    ),
+)
+
+
+def _attributed(disposition: str = "PRESERVE_ATTRIBUTED") -> dict[str, Any]:
+    return {
+        "dispositions": [
+            *DISPOSITIONS["dispositions"],
+            {
+                "unit_id": _MAINTAINER_UNIT,
+                "disposition": disposition,
+                "destination_section": "key_capabilities",
+                "fact_ids": [],
+                "rationale": "maintainer insight",
+            },
+        ]
+    }
+
+
+def _review_attributed(tmp_path: Path, dispositions: dict[str, Any], rendered: bool = True):
+    return review_with_model(
+        prompts=PROMPTS,
+        config=CONFIG,
+        ledger=Ledger(tmp_path / "ledger.jsonl", invocation_id="inv-1"),
+        store=CallStore(tmp_path / "calls"),
+        context=CONTEXT,
+        candidate_readme=CANDIDATE,
+        original_readme=ORIGINAL,
+        facts=_MAINTAINER_FACTS,
+        plan=PLAN,
+        dispositions=dispositions,
+        validation=VALIDATION,
+        rendered=rendered,
+    )
+
+
+def _unsupported_on_the_maintainer_line() -> dict[str, Any]:
+    return finding("unsupported_claim", criterion="factuality", fact_ids=[])
+
+
+def test_an_unsupported_claim_on_attributed_maintainer_text_is_re_asked(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    from repo_presenter.readme.review.reply import MAINTAINER_TEXT_ERROR
+
+    client = install(
+        monkeypatch,
+        [
+            completion(reply("REJECT_FACTUAL", _unsupported_on_the_maintainer_line())),
+            completion(reply()),
+        ],
+    )
+    verdict = _review_attributed(tmp_path, _attributed())
+    first, second = client.payloads
+    shown = line_of(QUOTE)
+    # The packet marks the shown line as attributed maintainer text ...
+    assert f"verified):\n[\n {shown}\n]" in first["messages"][-1]["content"]
+    # ... and the contract refuses the unsupported_claim on it, re-asking with the reason.
+    assert MAINTAINER_TEXT_ERROR in second["messages"][-1]["content"]
+    assert verdict.verdict == "ACCEPT"
+
+
+def test_a_verified_kept_line_is_not_maintainer_text_and_its_claim_stands(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    client = install(
+        monkeypatch,
+        [completion(reply("REJECT_FACTUAL", _unsupported_on_the_maintainer_line()))],
+    )
+    verdict = _review_attributed(tmp_path, _attributed("VERIFIED_PRESERVE"))
+    (only,) = client.payloads
+    assert "verified):\n[]" in only["messages"][-1]["content"]
+    assert verdict.verdict == "REJECT" and verdict.model_verdict == "REJECT_FACTUAL"
+
+
+def test_a_lane_l_review_marks_no_maintainer_lines(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    client = install(
+        monkeypatch,
+        [completion(reply("REJECT_FACTUAL", _unsupported_on_the_maintainer_line()))],
+    )
+    verdict = _review_attributed(tmp_path, _attributed(), rendered=False)
+    assert "verified):\n[]" in client.payloads[0]["messages"][-1]["content"]
+    assert verdict.verdict == "REJECT" and verdict.model_verdict == "REJECT_FACTUAL"

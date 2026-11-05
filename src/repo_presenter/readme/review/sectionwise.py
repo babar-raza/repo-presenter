@@ -16,7 +16,7 @@ printed by the renderer or belongs to another unit, and the reviewer cannot cite
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
+from collections.abc import Collection, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any
 
@@ -141,10 +141,13 @@ def unit_packet(
     original_readme: str,
     facts: FactsDocument,
     plan: Mapping[str, Any],
+    maintainer_lines: Collection[int] = (),
 ) -> dict[str, Any]:
     """The packet ``prompts/independent_review.yaml`` declares, for one unit. Evidence only: the
     author's rationale for a plan entry is dropped, and the dispositions and the deterministic
-    validation result are not sent (they are the deterministic stage's, not the reviewer's)."""
+    validation result are not sent (they are the deterministic stage's, not the reviewer's).
+    ``maintainer_lines`` (``scope.maintainer_lines``) are sent only as the shown line numbers that
+    are attributed maintainer text -- a structural label, not a disposition or a rationale."""
     text = unit_text(unit, candidate_readme)
     records = unit_facts(facts, text, sections=unit.sections)
     rows = candidate_readme.splitlines()
@@ -172,6 +175,7 @@ def unit_packet(
             "original_excerpt", original_excerpt(original_readme, text)
         ),
         "facts": records,
+        "maintainer_lines": sorted(n for n in unit.lines if n in set(maintainer_lines)),
         "support_hints": support_hints(
             {n: _shown(unit, rows[n - 1]) for n in unit.lines}, records
         ),

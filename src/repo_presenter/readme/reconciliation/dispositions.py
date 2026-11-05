@@ -89,6 +89,8 @@ from repo_presenter.readme.composition.components.shell import (
 )
 from repo_presenter.readme.composition.coverage import unversioned
 from repo_presenter.readme.composition.placement import (
+    ATTRIBUTED,
+    PLACED,
     renderer_fact_ids,
     resolve_intra_document_anchors,
 )
@@ -149,7 +151,7 @@ DISPOSITIONS_FILENAME = "dispositions.json"
 # that would reopen the regression the sibling test guards against.
 RECOVERED_COVERAGE_RATIONALE = "Not provably carried by the section named; held for the owner. "
 PLACING = frozenset(
-    {"VERIFIED_PRESERVE", "VERIFIED_REWRITE", "VERIFIED_MOVE", "CORRECT_WITH_EVIDENCE"}
+    {"VERIFIED_PRESERVE", "VERIFIED_REWRITE", "VERIFIED_MOVE", "CORRECT_WITH_EVIDENCE", ATTRIBUTED}
 )
 _SHELL_OWNED = frozenset({"heading", "badge_row"})
 _RENDERER_OWNED_LINK_IDS = frozenset({BANNER_FACT_ID, HOMEPAGE_FACT_ID, ENTERPRISE_FACT_ID})
@@ -200,6 +202,7 @@ _DISPOSITIONS = (
     "VERIFIED_REWRITE",
     "VERIFIED_MOVE",
     "CORRECT_WITH_EVIDENCE",
+    ATTRIBUTED,
     "SUPERSEDE_REDUNDANT",
     "OMIT_UNSUPPORTED",
     "DEFER_UNRESOLVED",
@@ -880,7 +883,7 @@ def coverage_findings(output: Mapping[str, Any], facts: FactsDocument) -> list[C
 def _prune_incidental_coverage(output: dict[str, Any], ctx: _Coverage) -> None:
     """Drop the class and enum citations that would make placement discard a unit as covered."""
     for entry in output.get("dispositions", []):
-        if entry.get("disposition") not in {"VERIFIED_PRESERVE", "VERIFIED_MOVE"}:
+        if entry.get("disposition") not in PLACED:
             continue
         unit = str(entry.get("unit_id", "?"))
         if entry.get("destination_section") != "api_reference" or _unit_kind(unit) not in {
@@ -967,7 +970,7 @@ def _rehome_misfiled_units(
     holdable = holdable_sections(facts)
     root = root_heading(list(units.values()))
     for entry in output.get("dispositions", []):
-        if entry.get("disposition") not in {"VERIFIED_PRESERVE", "VERIFIED_MOVE"}:
+        if entry.get("disposition") not in PLACED:
             continue
         unit_id = str(entry.get("unit_id", "?"))
         old = entry.get("destination_section")
@@ -1334,7 +1337,7 @@ def normalize(
                 entry["fact_ids"] = sorted(cited | set(build_ids or install_ids))
             continue
         if (
-            disposition in {"VERIFIED_PRESERVE", "VERIFIED_MOVE"}
+            disposition in PLACED
             and install_ids
             and _printed_by_installation(unit, cited, coverage)
         ):
@@ -1352,7 +1355,7 @@ def normalize(
             entry["fact_ids"] = sorted(cited | {contradicted[unit]})
             continue
         if (
-            disposition in {"VERIFIED_PRESERVE", "VERIFIED_MOVE"}
+            disposition in PLACED
             and unit.rsplit(".", 1)[-1] not in _SHELL_OWNED
         ):
             unit_fact = units_by_id.get(unit)
@@ -1446,7 +1449,7 @@ def normalize(
             entry["disposition"] = "SUPERSEDE_REDUNDANT"
             entry["destination_section"] = "api_reference"
             continue
-        if disposition in {"VERIFIED_PRESERVE", "VERIFIED_MOVE"} and _is_row_table(
+        if disposition in PLACED and _is_row_table(
             unit, entry, coverage
         ):
             entry["disposition"] = "VERIFIED_REWRITE"
@@ -2432,7 +2435,14 @@ def _coverage_errors(
     return errors
 
 
-_PRINTED_AS_WRITTEN = frozenset({"VERIFIED_PRESERVE", "VERIFIED_MOVE"})
+_PRINTED_AS_WRITTEN = PLACED
+#: The unit kinds ``PRESERVE_ATTRIBUTED`` may keep: maintainer prose the renderer prints as
+#: written. A code block is never kept unverified this way (its own example and command rules
+#: decide it), and a heading, badge row or HTML block is never printed as written at all.
+_ATTRIBUTABLE_KINDS = frozenset({"paragraph", "list", "table", "blockquote"})
+#: Dispositions whose rationale is the only record of why maintainer content was kept unverified
+#: or removed, so an empty one is refused.
+_JUSTIFIED_DISPOSITIONS = frozenset({ATTRIBUTED, "OMIT_UNSUPPORTED"})
 _COMMAND_LINE = re.compile(
     r"^\s*(?:[$>]\s*)?(?:pip3?|python3?(?:\s+-m)?|npm|npx|yarn|pnpm|dotnet|mvn|gradle|go|"
     r"cargo|cmake|make|git)\b(?!-)",
@@ -2502,7 +2512,7 @@ def dangling_pointers(
         fact = inherited.get(unit)
         if (
             fact is None
-            or entry.get("disposition") not in {"VERIFIED_PRESERVE", "VERIFIED_MOVE"}
+            or entry.get("disposition") not in PLACED
             or destination not in placeable
         ):
             continue
@@ -2692,6 +2702,19 @@ def placement_errors(output: dict[str, Any], facts: FactsDocument) -> list[str]:
             errors.append(f"{unit}: {disposition} takes no destination; got {destination!r}")
         if disposition == "CORRECT_WITH_EVIDENCE" and not cited:
             errors.append(f"{unit}: CORRECT_WITH_EVIDENCE needs at least one fact ID as evidence")
+        if disposition == ATTRIBUTED and _unit_kind(str(unit)) not in _ATTRIBUTABLE_KINDS:
+            errors.append(
+                f"{unit}: {ATTRIBUTED} keeps maintainer prose (a paragraph, list, table or "
+                f"blockquote) as written under an attribution line; a {_unit_kind(str(unit))} is "
+                "never kept that way - choose the disposition its own rules allow"
+            )
+        if disposition in _JUSTIFIED_DISPOSITIONS and not str(entry.get("rationale") or "").strip():
+            # Traceability (docs/MAINTAINER_CONTENT_PRESERVATION.md, requirement 7): what is kept
+            # unverified, or removed, is recorded with its justification, never silently.
+            errors.append(
+                f"{unit}: {disposition} needs a rationale that says why the maintainers' content "
+                "is kept unverified or removed"
+            )
     pointers: dict[str, list[str]] = {}
     for unit, sentence, reason in dangling_pointers(output, facts):
         pointers.setdefault(unit, []).append(f"{json.dumps(sentence, ensure_ascii=False)} {reason}")

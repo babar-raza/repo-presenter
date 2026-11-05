@@ -57,9 +57,11 @@ from repo_presenter.readme.composition.coverage import Destinations
 from repo_presenter.readme.composition.placement import (
     Placement,
     api_reference_hub_methods,
+    placed_attribution,
     placed_texts,
     placements,
     renders_verbatim,
+    with_attribution,
 )
 from repo_presenter.readme.composition.retained_examples import (
     RetainedBlock,
@@ -194,6 +196,15 @@ class RenderContext:
         if self._placed is None:
             self._placed = placed_texts(self.placements)
         return self._placed
+
+    def printed(self, section_id: str) -> list[str]:
+        """The verbatim texts ``section_id`` places, as the section prints them: each contiguous
+        run of attributed maintainer content (``PRESERVE_ATTRIBUTED``) led by the attribution
+        line. Empty while the unplaced document is built."""
+        texts = self.placed.get(section_id, [])
+        if not texts:
+            return []
+        return with_attribution(texts, placed_attribution(self.placements).get(section_id, []))
 
     def unplaced_destinations(self) -> Destinations:
         """The document as it renders with no kept unit placed."""
@@ -1160,7 +1171,7 @@ def _section_body(context: RenderContext, section: Section) -> list[str]:
         elif spdx is not None and spdx.polarity == "SUPPORTED":
             template = _MIT_DECLARED_PROSE if spdx.value == "MIT" else _GENERIC_DECLARED_PROSE
             lines.append(template.format(spdx=spdx.value, manifest=spdx.evidence[0].path))
-    placed = context.placed.get(sid, [])
+    placed = context.printed(sid)
     if placed and section.visibility == "collapsible" and lines and lines[-1] == "</details>":
         closing = lines.pop()
         for verbatim in placed:

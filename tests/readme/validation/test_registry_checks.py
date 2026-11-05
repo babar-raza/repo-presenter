@@ -3490,3 +3490,254 @@ def test_every_failure_names_its_causal_stage(tmp_path: Path) -> None:
     bundle = _failed(leaked, "BC-09")
     assert bundle["causal_stage"] is None
     assert bundle["details"] == ["value of GPT_OSS_API_KEY found in calls.jsonl"]
+
+
+# --- PRESERVE_ATTRIBUTED: maintainer content kept unverified, with attribution ------------------
+# docs/MAINTAINER_CONTENT_PRESERVATION.md (owner requirement 2026-11-05): lack of repository
+# evidence is not grounds for deletion; such content is kept as written under an attribution line,
+# never presented as verified, and survives the S9 preservation checks like any kept unit.
+
+_MAINTAINER_NOTE = (
+    "The maintainers plan a `SceneGraphOptimizer` pass next year; the project began as a port of "
+    "an internal tool."
+)
+_MAINTAINER_FACTS = FactsDocument(
+    FACTS.repository,
+    FACTS.source_revision,
+    (
+        *FACTS.facts,
+        _fact("inherited_unit:005.paragraph", "inherited_unit", _MAINTAINER_NOTE),
+    ),
+)
+
+
+def _attributed_dispositions(*, note: str = "PRESERVE_ATTRIBUTED") -> dict[str, Any]:
+    rows = [dict(row) for row in DISPOSITIONS["dispositions"]]
+    rows.append(
+        {
+            "unit_id": "inherited_unit:005.paragraph",
+            "disposition": note,
+            "destination_section": "scope_limitations",
+            "fact_ids": [],
+            "rationale": "Project history and plans a reader values; no fact confirms them.",
+        }
+    )
+    return {"dispositions": rows}
+
+
+def test_a_preserve_attributed_unit_renders_verbatim_under_the_attribution_line() -> None:
+    from repo_presenter.readme.composition.placement import ATTRIBUTION_LINE
+    from repo_presenter.readme.validation.structure import structure_failures as bc07
+    from repo_presenter.readme.validation.units import disposition_failures
+
+    candidate = _candidate(facts=_MAINTAINER_FACTS, dispositions=_attributed_dispositions())
+    assert f"{ATTRIBUTION_LINE}\n\n{_MAINTAINER_NOTE}" in candidate.readme
+    # The verified unit printed in the same section carries no attribution line.
+    assert candidate.readme.count(ATTRIBUTION_LINE) == 1
+    assert "Kept verbatim from the old README." in candidate.readme
+    assert f"{ATTRIBUTION_LINE}\n\nKept verbatim from the old README." not in candidate.readme
+    # BC-05: the kept unit is rendered where its disposition put it.
+    assert disposition_failures(candidate) == []
+    # BC-07: the attribution adds no structural defect over the same README with the note kept
+    # as a verified move.
+    verified = _candidate(
+        facts=_MAINTAINER_FACTS, dispositions=_attributed_dispositions(note="VERIFIED_MOVE")
+    )
+    assert ATTRIBUTION_LINE not in verified.readme
+    assert bc07(candidate) == bc07(verified)
+    # BC-08: it is protected content like any unit kept as written.
+    assert ("unit", _MAINTAINER_NOTE, "inherited_unit:005.paragraph") in protected_fragments(
+        candidate
+    )
+
+
+def test_bc05_reports_a_preserve_attributed_unit_the_candidate_does_not_render() -> None:
+    from repo_presenter.readme.validation.units import disposition_failures
+
+    candidate = _candidate(facts=_MAINTAINER_FACTS, dispositions=_attributed_dispositions())
+    dropped = dataclasses.replace(
+        candidate, readme=candidate.readme.replace(_MAINTAINER_NOTE, "")
+    )
+    assert [f.detail for f in disposition_failures(dropped)] == [
+        (
+            "inherited_unit:005.paragraph was placed in scope_limitations but the candidate "
+            "does not render it there"
+        )
+    ]
+
+
+def test_bc04_does_not_fire_on_an_identifier_inside_preserve_attributed_content() -> None:
+    candidate = _candidate(facts=_MAINTAINER_FACTS, dispositions=_attributed_dispositions())
+    assert "`SceneGraphOptimizer`" in candidate.readme
+    assert not [
+        f for f in unit_checks_module.unit_failures(candidate) if "SceneGraphOptimizer" in f.detail
+    ]
+    # Scoped to the maintainers' own lines: the same identifier in authored prose still fails.
+    authored = dataclasses.replace(
+        candidate,
+        readme=candidate.readme.replace(
+            "The package writes GLB only.",
+            "The package writes GLB only through `SceneGraphOptimizer`.",
+        ),
+    )
+    assert "through `SceneGraphOptimizer`" in authored.readme
+    assert [
+        f.detail
+        for f in unit_checks_module.unit_failures(authored)
+        if "SceneGraphOptimizer" in f.detail
+    ] == ["code span 'SceneGraphOptimizer' is not a fact value"]
+
+
+def test_bc04_allows_attributed_identifiers_on_a_reindented_maintainer_line() -> None:
+    """The exact-line exemption every placed unit gets misses a maintainer line the README prints
+    with different surrounding whitespace; the attributed allowance matches trimmed lines."""
+    candidate = _candidate(facts=_MAINTAINER_FACTS, dispositions=_attributed_dispositions())
+    reindented = dataclasses.replace(
+        candidate, readme=candidate.readme.replace(_MAINTAINER_NOTE, _MAINTAINER_NOTE + "  ")
+    )
+    assert _MAINTAINER_NOTE + "  " in reindented.readme
+    assert not [
+        f
+        for f in unit_checks_module.unit_failures(reindented)
+        if "SceneGraphOptimizer" in f.detail
+    ]
+
+
+def test_contiguous_attributed_texts_share_one_attribution_line() -> None:
+    from repo_presenter.readme.composition.placement import (
+        ATTRIBUTION_LINE,
+        with_attribution,
+    )
+
+    shown = with_attribution(["a", "b", "c", "d"], [True, True, False, True])
+    assert shown == [
+        f"{ATTRIBUTION_LINE}\n\na",
+        "b",
+        "c",
+        f"{ATTRIBUTION_LINE}\n\nd",
+    ]
+    assert with_attribution(["a"], [False]) == ["a"]
+
+
+def _reply(row: dict[str, Any]) -> dict[str, Any]:
+    return {"dispositions": [*copy.deepcopy(DISPOSITIONS["dispositions"]), row]}
+
+
+def _maintainer_row(**changes: Any) -> dict[str, Any]:
+    row = {
+        "unit_id": "inherited_unit:005.paragraph",
+        "disposition": "PRESERVE_ATTRIBUTED",
+        "destination_section": "scope_limitations",
+        "fact_ids": [],
+        "rationale": "Project history a reader values.",
+    }
+    row.update(changes)
+    return row
+
+
+def test_placement_errors_accept_a_well_formed_preserve_attributed_disposition() -> None:
+    from repo_presenter.readme.reconciliation.dispositions import placement_errors
+
+    errors = placement_errors(_reply(_maintainer_row()), _MAINTAINER_FACTS)
+    assert not [e for e in errors if e.startswith("inherited_unit:005.paragraph")]
+
+
+def test_placement_errors_refuse_a_preserve_attributed_disposition_without_a_destination() -> None:
+    from repo_presenter.readme.reconciliation.dispositions import placement_errors
+
+    errors = placement_errors(
+        _reply(_maintainer_row(destination_section=None)), _MAINTAINER_FACTS
+    )
+    assert any(
+        e.startswith("inherited_unit:005.paragraph: PRESERVE_ATTRIBUTED needs a destination")
+        for e in errors
+    )
+
+
+def test_placement_errors_refuse_preserve_attributed_on_a_code_block() -> None:
+    from repo_presenter.readme.reconciliation.dispositions import placement_errors
+
+    row = _maintainer_row(
+        unit_id="inherited_unit:004.code_block", destination_section="development_testing"
+    )
+    reply = {
+        "dispositions": [
+            r for r in DISPOSITIONS["dispositions"] if r["unit_id"] != row["unit_id"]
+        ]
+        + [row]
+    }
+    errors = placement_errors(reply, _MAINTAINER_FACTS)
+    assert any(
+        "PRESERVE_ATTRIBUTED keeps maintainer prose" in e and "code_block is never" in e
+        for e in errors
+    )
+
+
+@pytest.mark.parametrize("disposition", ["PRESERVE_ATTRIBUTED", "OMIT_UNSUPPORTED"])
+@pytest.mark.parametrize("rationale", ["", "   "])
+def test_placement_errors_refuse_an_unjustified_keep_or_removal(
+    disposition: str, rationale: str
+) -> None:
+    from repo_presenter.readme.reconciliation.dispositions import placement_errors
+
+    row = _maintainer_row(
+        disposition=disposition,
+        rationale=rationale,
+        destination_section="scope_limitations" if disposition == "PRESERVE_ATTRIBUTED" else None,
+        fact_ids=[] if disposition == "PRESERVE_ATTRIBUTED" else ["identity:repository"],
+    )
+    errors = placement_errors(_reply(row), _MAINTAINER_FACTS)
+    assert (
+        f"inherited_unit:005.paragraph: {disposition} needs a rationale that says why the "
+        "maintainers' content is kept unverified or removed"
+    ) in errors
+
+
+def test_the_reconciliation_schema_requires_a_holdable_section_for_preserve_attributed() -> None:
+    from repo_presenter.readme.reconciliation.destinations import disposition_variants
+
+    item = {
+        "type": "object",
+        "properties": {
+            "disposition": {"enum": ["VERIFIED_PRESERVE", "PRESERVE_ATTRIBUTED", "NON_CONTENT"]},
+            "destination_section": {},
+        },
+    }
+    placing, other = disposition_variants(item, ["scope_limitations"])
+    assert "PRESERVE_ATTRIBUTED" in placing["properties"]["disposition"]["enum"]
+    assert "PRESERVE_ATTRIBUTED" not in other["properties"]["disposition"]["enum"]
+
+
+def test_a_preserve_attributed_unit_the_readme_does_not_print_is_a_coverage_defect() -> None:
+    from repo_presenter.readme.review.independent_reviewer import (
+        disposition_coverage_rule,
+    )
+
+    candidate = _candidate(facts=_MAINTAINER_FACTS, dispositions=_attributed_dispositions())
+    kept = disposition_coverage_rule(
+        candidate.readme, facts=_MAINTAINER_FACTS, dispositions=candidate.dispositions
+    )
+    assert kept == []
+    lost = disposition_coverage_rule(
+        candidate.readme.replace(_MAINTAINER_NOTE, ""),
+        facts=_MAINTAINER_FACTS,
+        dispositions=candidate.dispositions,
+    )
+    assert [f.message for f in lost] == [
+        (
+            "inherited_unit:005.paragraph is kept (PRESERVE_ATTRIBUTED) but its text is not "
+            "printed in the README"
+        )
+    ]
+
+
+def test_the_attribution_line_is_renderer_text_the_reviewer_is_not_shown() -> None:
+    from repo_presenter.readme.composition.placement import ATTRIBUTION_LINE
+    from repo_presenter.readme.review.scope import line_sections
+
+    candidate = _candidate(facts=_MAINTAINER_FACTS, dispositions=_attributed_dispositions())
+    rows = candidate.readme.splitlines()
+    sections = line_sections(candidate.readme)
+    assert sections[rows.index(ATTRIBUTION_LINE)] is None
+    # The maintainer content under it is still shown and judged.
+    assert sections[rows.index(_MAINTAINER_NOTE)] == "scope_limitations"

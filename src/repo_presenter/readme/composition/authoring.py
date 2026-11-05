@@ -278,7 +278,8 @@ def _placed_units(dispositions: dict[str, Any], section: str) -> list[str]:
         entry["unit_id"]
         for entry in dispositions.get("dispositions", [])
         if entry.get("destination_section") == section
-        and entry.get("disposition") in {"VERIFIED_PRESERVE", "VERIFIED_REWRITE", "VERIFIED_MOVE"}
+        and entry.get("disposition")
+        in {"VERIFIED_PRESERVE", "VERIFIED_REWRITE", "VERIFIED_MOVE", "PRESERVE_ATTRIBUTED"}
     ]
 
 
@@ -295,7 +296,7 @@ def carried_units(dispositions: dict[str, Any], section: str, facts: FactsDocume
     kept = "\n\n".join(
         texts[entry["unit_id"]]
         for entry in dispositions.get("dispositions", [])
-        if entry.get("disposition") in {"VERIFIED_PRESERVE", "VERIFIED_MOVE"}
+        if entry.get("disposition") in _VERBATIM_PRESERVED_DISPOSITIONS
         and entry.get("destination_section") == section
         and entry.get("unit_id") in texts
         and str(entry.get("unit_id")).endswith(_CARRIABLE_SUFFIXES)
@@ -311,7 +312,11 @@ def carried_units(dispositions: dict[str, Any], section: str, facts: FactsDocume
     ]
 
 
-_VERBATIM_PRESERVED_DISPOSITIONS = frozenset({"VERIFIED_PRESERVE", "VERIFIED_MOVE"})
+#: PRESERVE_ATTRIBUTED prints its raw inherited text too (under an attribution line), so it is
+#: verbatim-preserved in exactly the sense below.
+_VERBATIM_PRESERVED_DISPOSITIONS = frozenset(
+    {"VERIFIED_PRESERVE", "VERIFIED_MOVE", "PRESERVE_ATTRIBUTED"}
+)
 
 
 def preserved_section_text(
@@ -731,7 +736,7 @@ def owed_list_units(
         str(item.get("unit_id"))
         for item in dispositions.get("dispositions", [])
         if item.get("destination_section") == section
-        and item.get("disposition") in {"VERIFIED_PRESERVE", "VERIFIED_MOVE"}
+        and item.get("disposition") in _VERBATIM_PRESERVED_DISPOSITIONS
         and str(item.get("unit_id", "")).endswith(".list")
     }
     if not kept:

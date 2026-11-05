@@ -3125,3 +3125,29 @@ PDF .NET 35, Words .NET 48, Cells Java and Rust 2 each; Aspose.3D for Java 0 (ne
 **Consequence stated**: each facts improvement of 2026-11-05 (C++ docstrings, enum members, declared
 formats) changes the facts digest of the products it touches, so their cached candidates are no longer
 current and are regenerated on their next run (consumed-scope invalidation, not a global reseal).
+
+---
+
+## 2026-11-05: maintainer-content preservation implemented in the pipeline; reviewer enforcement by contract scope (owner decision)
+
+Implementing `docs/MAINTAINER_CONTENT_PRESERVATION.md` (worker commits, independently verified by the
+supervisor: full suite re-run, falsifiers re-run):
+
+* **S4/S7/S9**: new reconciliation disposition `PRESERVE_ATTRIBUTED` (source_reconciliation prompt v13) for
+  valuable maintainer content no fact can confirm and that contradicts no SUPPORTED fact. It places like
+  `VERIFIED_PRESERVE`, is printed verbatim under `*From the maintainers' README (not independently
+  verified):*`, survives BC-05/BC-07, and BC-04 allows its own identifiers on its own lines only. It is limited
+  to paragraphs, lists, tables and blockquotes (an unverified code block must not bypass the example and
+  command checks). `OMIT_UNSUPPORTED` is narrowed to harmful, misleading, irrelevant, promotional or
+  beyond-repair content; both dispositions require a non-empty rationale.
+* **S10**: independent_review prompt v18 replaces "a claim that only an inherited unit states is still
+  unsupported" with the requirement's rule; `REVIEWER_LOGIC_VERSION` 7. `data/reviewer_calibration.json`
+  stays the logic-6 measurement (NOT_PASSED); a changed reviewer is measured again.
+
+**Owner decision (interactive form)**: the reviewer rule is enforced by **contract scope for attributed
+text**, not by a clearance. Lines printed as `PRESERVE_ATTRIBUTED` content are marked in the review packet;
+an `unsupported_claim` citing only such lines is a reply-contract error (the model is re-asked), while
+contradiction, quality/promotion and other findings on them still apply. The existing invariants stay:
+`unsupported_claim` is unclearable, and "the original README says it too" is not a clearance (maintainer
+text can be false). Verbatim maintainer text in Lane L and reference READMEs (no `PRESERVE_ATTRIBUTED`
+dispositions) relies on the prompt rule and is measured in calibration iteration 5.

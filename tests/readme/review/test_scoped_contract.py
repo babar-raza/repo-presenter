@@ -273,3 +273,60 @@ def test_a_merged_reply_is_still_a_blocking_finding_not_an_accept() -> None:
     )
     (finding,) = findings_from_reply(reply)
     assert finding.blocking and finding.claim_kind == "unsupported_claim"
+
+
+# --- attributed maintainer text (reviewer logic 8) -----------------------------------------------
+# docs/MAINTAINER_CONTENT_PRESERVATION.md: maintainer content kept as PRESERVE_ATTRIBUTED is
+# unverified, not false, so an unsupported_claim citing only it is a contract error; every other
+# claim kind on it, and a span that also cites an authored line, is judged as usual.
+
+
+def maintained(*maintainer: int) -> ReviewScope:
+    unit = scope("key_capabilities")
+    return ReviewScope(unit.sections, unit.lines, frozenset(maintainer))
+
+
+def test_an_unsupported_claim_citing_only_maintainer_lines_is_a_contract_error() -> None:
+    from repo_presenter.readme.review.reply import MAINTAINER_TEXT_ERROR
+
+    unit = maintained(FIRST, FIRST + 1)
+    for span in ((FIRST,), (FIRST, FIRST + 1)):
+        problems = check(cited("unsupported_claim", *span, fact_ids=[]), unit=unit)
+        assert len(problems) == 1 and MAINTAINER_TEXT_ERROR in problems[0], (span, problems)
+
+
+def test_a_contradiction_or_quality_finding_on_maintainer_lines_is_still_judged() -> None:
+    unit = maintained(FIRST)
+    assert check(cited("contradiction", FIRST, criterion="factuality"), unit=unit) == []
+    assert check(cited("quality", FIRST), unit=unit) == []
+
+
+def test_an_unsupported_claim_citing_maintainer_and_authored_lines_stands() -> None:
+    unit = maintained(FIRST)
+    assert check(cited("unsupported_claim", FIRST, FIRST + 1, fact_ids=[]), unit=unit) == []
+
+
+def test_without_maintainer_lines_an_unsupported_claim_stands() -> None:
+    assert check(cited("unsupported_claim", FIRST, fact_ids=[]), unit=maintained()) == []
+
+
+def test_maintainer_lines_are_the_lines_of_units_kept_as_preserve_attributed() -> None:
+    from repo_presenter.core.facts import Evidence, Fact, FactsDocument
+    from repo_presenter.readme.review.scope import maintainer_lines
+
+    kept = "\n".join(ROWS[FIRST - 1 : FIRST + 1])
+    facts = FactsDocument(
+        FACTS.repository,
+        FACTS.source_revision,
+        (
+            *FACTS.facts,
+            Fact("inherited_unit:009.list", "inherited_unit", kept, (Evidence("README.md"),)),
+        ),
+    )
+
+    def rows(disposition: str) -> dict[str, Any]:
+        return {"dispositions": [{"unit_id": "inherited_unit:009.list", "disposition": disposition}]}
+
+    assert maintainer_lines(CANDIDATE, facts, rows("PRESERVE_ATTRIBUTED")) == {FIRST, FIRST + 1}
+    assert maintainer_lines(CANDIDATE, facts, rows("VERIFIED_PRESERVE")) == frozenset()
+    assert maintainer_lines(CANDIDATE, facts, {"dispositions": []}) == frozenset()

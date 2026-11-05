@@ -57,6 +57,7 @@ from repo_presenter.readme.review.reply import (
     review_from_reply,
     validate_review_reply,
 )
+from repo_presenter.readme.review.scope import maintainer_lines
 from repo_presenter.readme.review.sectionwise import (
     ReviewUnit,
     plan_units,
@@ -240,9 +241,17 @@ def review_with_model(
     review could be obtained. ``dispositions`` and ``validation`` are the deterministic stage's
     evidence: a review unit is not sent them (they decide nothing the reviewer may relitigate).
     ``rendered`` says the candidate was printed by the renderer (Lane R, the default); a corrected
-    live README (Lane L) passes ``False``, and none of its text is withheld as renderer-owned."""
+    live README (Lane L) passes ``False``, and none of its text is withheld as renderer-owned.
+
+    The one thing taken from ``dispositions`` is structural: which shown lines are attributed
+    maintainer text (``scope.maintainer_lines``, units kept as ``PRESERVE_ATTRIBUTED``). Each unit's
+    packet names them and its contract refuses an ``unsupported_claim`` citing only them. A Lane L
+    review has no such disposition, so the set is empty and nothing changes there."""
     loaded = prompts[JOB]
     units = plan_units(candidate_readme, rendered=rendered)
+    attributed = (
+        maintainer_lines(candidate_readme, facts, dispositions) if rendered else frozenset()
+    )
     if not units:
         raise ReviewUnavailable(
             "the candidate has no author-written text to review (every line is renderer-printed)",
@@ -264,13 +273,18 @@ def review_with_model(
             original_readme=original_readme,
             facts=facts,
             plan=plan,
+            maintainer_lines=attributed,
         )
         schema = unit_schema(loaded, unit)
         request_sha256 = request_hash(loaded, packet, schema, model=model)
         request_hashes.append(request_sha256)
         request_of[unit.label] = request_sha256
         _refuse_reroll(store, request_sha256)
-        scope = ReviewScope(frozenset(unit.sections), frozenset(unit.lines))
+        scope = ReviewScope(
+            frozenset(unit.sections),
+            frozenset(unit.lines),
+            attributed & frozenset(unit.lines),
+        )
         try:
             result = run_job(
                 loaded,
