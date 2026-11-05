@@ -121,7 +121,7 @@ def test_one_governed_call_per_unit_and_one_merged_accept(
         r["status"] == "reviewed" and r["findings"] == 0 for r in verdict.unit_reviews
     )
     assert len({r["request_sha256"] for r in verdict.unit_reviews}) == len(units)
-    assert verdict.prompt_version == "17"
+    assert verdict.prompt_version == "18"
 
 
 def test_every_call_carries_only_its_own_units_text(

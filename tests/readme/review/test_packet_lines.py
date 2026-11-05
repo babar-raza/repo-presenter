@@ -121,9 +121,9 @@ def test_the_wider_manifest_schema_accepts_the_resolved_reply_a_store_holds() ->
     )
 
 
-def test_the_v17_manifest_budget_schema_and_scope_rules() -> None:
+def test_the_v18_manifest_budget_schema_and_scope_rules() -> None:
     manifest = LOADED.manifest
-    assert manifest.version == "17" and manifest.model_route == "qwen3-next"
+    assert manifest.version == "18" and manifest.model_route == "qwen3-next"
     assert manifest.sampling.max_output_tokens >= 9000  # headroom over the 6000 of v15
     item = manifest.output.schema_["properties"]["findings"]["items"]
     assert "quote" not in item["required"] and "lines" in item["properties"]

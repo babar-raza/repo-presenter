@@ -188,7 +188,7 @@ def test_an_accept_reply_is_one_provider_call_and_a_model_reviewed_accept(
     assert verdict.model_verdict == "ACCEPT" and verdict.findings == ()
     assert harness.provider_calls() == 1 and len(client.payloads) == 1
     loaded = PROMPTS["independent_review"]
-    assert verdict.prompt_version == "17" and verdict.model_served == "qwen3-next"
+    assert verdict.prompt_version == "18" and verdict.model_served == "qwen3-next"
     (unit,) = plan_units(CANDIDATE)
     packet = unit_packet(
         unit,
@@ -226,9 +226,9 @@ def test_the_verdict_file_records_what_a_reader_needs_to_audit_it(
     path = tmp_path / "review_verdict.json"
     write_review_verdict(verdict, path)
     document = json.loads(path.read_text(encoding="utf-8"))
-    assert document["schema_version"] == 2 and document["reviewer_logic_version"] == "6"
+    assert document["schema_version"] == 2 and document["reviewer_logic_version"] == "7"
     assert (
-        document["prompt_version"] == "17" and document["model_served"] == "qwen3-next"
+        document["prompt_version"] == "18" and document["model_served"] == "qwen3-next"
     )
     assert document["request_sha256"] == verdict.request_sha256
     assert document["reply_sha256"] == verdict.reply_sha256
@@ -653,9 +653,9 @@ def test_the_reviewer_shares_the_authoring_model_and_does_not_claim_otherwise() 
         assert PROMPTS[authoring].sha256 != loaded.sha256
 
 
-def test_the_manifest_is_v17_and_carries_no_advisory_tier() -> None:
+def test_the_manifest_is_v18_and_carries_no_advisory_tier() -> None:
     loaded = PROMPTS["independent_review"]
-    assert loaded.manifest.version == "17"
+    assert loaded.manifest.version == "18"
     assert "advisory" not in loaded.manifest.system.replace(
         "there is no advisory finding", ""
     )
@@ -664,6 +664,23 @@ def test_the_manifest_is_v17_and_carries_no_advisory_tier() -> None:
     schema = loaded.manifest.output.schema_["properties"]["findings"]["items"]
     assert "claim_kind" in schema["required"]
     assert {"absent", "omission", "unsupported_names"}.isdisjoint(schema["required"])
+
+
+def test_the_v18_manifest_does_not_treat_kept_maintainer_text_as_unsupported() -> None:
+    """docs/MAINTAINER_CONTENT_PRESERVATION.md: maintainer text kept verbatim or with attribution
+    is judged for contradiction, misrepresentation, stuffing and value, never as unsupported for
+    lack of a fact; an authored restatement presented as verified still is."""
+    system = " ".join(PROMPTS["independent_review"].manifest.system.split())
+    assert "a specific claim that only such a unit states is still unsupported" not in system
+    assert (
+        "Maintainer text the candidate keeps - verbatim, or under a line attributing it to the "
+        "maintainers' README as not independently verified - is not an unsupported_claim"
+    ) in system
+    assert (
+        "Authored (non-verbatim) text that restates an inherited unit's claim as a verified "
+        "fact is still an `unsupported_claim`"
+    ) in system
+    assert "(a `contradiction`)" in system
 
 
 def test_a_reviewer_prompt_or_model_change_reaches_only_the_reviewer_scope() -> None:
