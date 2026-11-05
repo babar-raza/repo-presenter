@@ -3542,3 +3542,26 @@ entries:
       readme/repair/loop.py::settle_candidate's own unwired build_defects/review.defect_bridge path
       (noted in the prior entry, d2ca65b) remains out of scope -- unaffected either way, since this
       fix lives inside the check itself and benefits every current and future caller of it.
+
+  - component: "aspose.org scripts/pipeline/lib/example_verification/fixtures.py (input-vs-output file-literal classifier)"
+    source: aspose-org
+    disposition: REUSE_WITH_FIXES
+    pulled_2026_11_05: >
+      Owner-directed (verbatim): "aspose.org has recently implemented example verified in full,
+      check it out, and see if you can reuse anything." Ported _statement_prefix, _classify,
+      input_fixture_names and their word lists (sibling checkout 32cb4ebd2c, logic unchanged) to
+      src/repo_presenter/core/example_io.py, and wired into extractors/platforms/python_examples.py
+      (stage_fixtures, _serviceable): a fixture is never staged under a literal the example writes
+      (written_names); aspose.org's stricter input_fixture_names (stage only classified inputs) was
+      tried first and regressed four working examples, so it is kept but not used for staging.
+      Measured on all 13 Python products: CONTRADICTED 61 -> 42, SUPPORTED 102 -> 121, 0 regressions. Cause: the verifier staged a repository file under every
+      file-like literal, so Aspose.PDF for Python's document.save("hello.pdf") met an existing
+      destination and raised FileExistsError (19 of that README's 37 CONTRADICTED examples).
+      Local fixes on top of the port, each reported upstream in
+      docs/ASPOSE_ORG_EXAMPLE_VERIFIER_FINDINGS.md: "create" and "writer" are output words;
+      open(<file>, <write/append/exclusive mode>) is an output; a capitalised callee taking the
+      literal (a Python constructor) is an input, excluding Create(/New( factories. Not pulled:
+      the fixture generators (default_prelude, make_pdf, ...) -- this verifier stages the
+      repository's own sample files, which is stronger evidence than a generated minimal file.
+      Tests: tests/core/test_example_io.py (incl. one reproducing each upstream finding with the
+      local fixes switched off).
