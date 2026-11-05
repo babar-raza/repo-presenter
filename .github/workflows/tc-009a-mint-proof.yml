@@ -1,0 +1,84 @@
+name: tc-009a-mint-proof
+
+# TC-009a, owner-authorized 2026-11-05 (docs/DECISION_LOG.md, OWNER-AUTH-2026-11-05-TC009A-ONE-MINT):
+# exactly ONE real GitHub App installation token for the existing repository-presenter App, minted
+# with the same actions/create-github-app-token@v2 step as the reusable mint workflow, verified by
+# token_provenance.verify_installation_token, recorded as an execution proof. No upstream write of
+# any kind: the token is read-only (contents/metadata read), scoped to one repository, never
+# printed, never stored, and revoked by the action at job end.
+#
+# Mint and verification run in ONE job on purpose: the reusable mint workflow (TC-009)
+# hands the token out as a job output, and GitHub drops job outputs that contain a secret, so a
+# caller of it would receive nothing to verify.
+#
+# Manual dispatch only, no inputs: the target is the authorized one and cannot be changed at
+# dispatch. It refuses to run when a proof already exists (branch or file): one mint, one proof.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write  # only to push the proof branch of THIS repository
+
+concurrency:
+  group: tc-009a-mint-proof
+  cancel-in-progress: false
+
+env:
+  TARGET_OWNER: aspose-cells-foss
+  TARGET_REPOSITORY: Aspose.Cells-FOSS-for-Java
+  PROOF_PATH: evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json
+  PROOF_BRANCH: tc-009a/mint-proof
+
+jobs:
+  mint-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Refuse a second mint
+        run: |
+          if [ -e "$PROOF_PATH" ]; then
+            echo "::error::$PROOF_PATH already exists: the one authorized mint has a proof"; exit 1
+          fi
+          if git ls-remote --exit-code origin "refs/heads/$PROOF_BRANCH" >/dev/null; then
+            echo "::error::branch $PROOF_BRANCH already exists: the one authorized mint has run"; exit 1
+          fi
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install
+        run: python -m pip install -e .
+
+      - name: Mint one installation token, scoped to the one authorized repository, read-only
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: ${{ env.TARGET_OWNER }}
+          repositories: ${{ env.TARGET_REPOSITORY }}
+          permission-contents: read
+          permission-metadata: read
+
+      - name: Verify it and write the execution proof (the token is never printed)
+        env:
+          GH_APP_INSTALLATION_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: >
+          python scripts/mint_proof.py
+          --repository "$TARGET_OWNER/$TARGET_REPOSITORY"
+          --out "$PROOF_PATH"
+          --run-id "$GITHUB_RUN_ID"
+
+      - name: Push the proof to its own branch of this repository
+        if: always() && hashFiles('evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json') != ''
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$PROOF_BRANCH"
+          git add -f "$PROOF_PATH"
+          git commit -m "TC-009a mint proof, run $GITHUB_RUN_ID (GATE2_INTEGRATIONS/TC-009a)"
+          git push origin "$PROOF_BRANCH"
