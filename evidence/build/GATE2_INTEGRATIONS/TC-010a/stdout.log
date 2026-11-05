@@ -2,13 +2,13 @@
 ===== CLEAN RUN 1 =====
 $ python ops/checks/owner_decision_record.py docs/DECISION_LOG.md ISSUES_LIVE_LIFECYCLE_AUTHORIZED:
 --- stdout ---
-FAIL: docs\DECISION_LOG.md has no record matching 'ISSUES_LIVE_LIFECYCLE_AUTHORIZED: <YYYY-MM-DD> ref=<anchor>'
+OK: docs/DECISION_LOG.md has a cross-referenced record dated 2026-11-05; ref=OWNER-AUTH-2026-11-05-TC010A-CELLS-JAVA found in docs/DECISION_LOG.md
 
 --- stderr ---
 
 $ python ops/checks/execution_proof.py evidence/build/GATE2_INTEGRATIONS/TC-010a/lifecycle_proof.json filed=True resolved_or_closed=True independently_confirmed_via_gh_api=True
 --- stdout ---
-FAIL: evidence\build\GATE2_INTEGRATIONS\TC-010a\lifecycle_proof.json does not exist -- no execution proof has been recorded
+FAIL: evidence/build/GATE2_INTEGRATIONS/TC-010a/lifecycle_proof.json does not exist -- no execution proof has been recorded
 
 --- stderr ---
 
@@ -16,13 +16,13 @@ FAIL: evidence\build\GATE2_INTEGRATIONS\TC-010a\lifecycle_proof.json does not ex
 ===== CLEAN RUN 2 =====
 $ python ops/checks/owner_decision_record.py docs/DECISION_LOG.md ISSUES_LIVE_LIFECYCLE_AUTHORIZED:
 --- stdout ---
-FAIL: docs\DECISION_LOG.md has no record matching 'ISSUES_LIVE_LIFECYCLE_AUTHORIZED: <YYYY-MM-DD> ref=<anchor>'
+OK: docs/DECISION_LOG.md has a cross-referenced record dated 2026-11-05; ref=OWNER-AUTH-2026-11-05-TC010A-CELLS-JAVA found in docs/DECISION_LOG.md
 
 --- stderr ---
 
 $ python ops/checks/execution_proof.py evidence/build/GATE2_INTEGRATIONS/TC-010a/lifecycle_proof.json filed=True resolved_or_closed=True independently_confirmed_via_gh_api=True
 --- stdout ---
-FAIL: evidence\build\GATE2_INTEGRATIONS\TC-010a\lifecycle_proof.json does not exist -- no execution proof has been recorded
+FAIL: evidence/build/GATE2_INTEGRATIONS/TC-010a/lifecycle_proof.json does not exist -- no execution proof has been recorded
 
 --- stderr ---
 

@@ -2918,3 +2918,92 @@ report it.
 **What this does NOT decide**: TC-002 and TC-004's open owner items (unchanged); how the conflict between the
 S9 preservation checks and the reviewer's standard is resolved; whether the reviewer's prompt, unit size or
 model route changes.
+
+---
+
+## 2026-11-05: owner rules on TC-002, TC-004, maintainer-content preservation and the TeX Python breakage
+
+Asked interactively (options with stated trade-offs, one recommended); the owner's answers, recorded as
+given.
+
+**1. TC-002 — legacy writer disposition: the proposed table is APPROVED** (anchor
+`OWNER-DECISIONS-2026-11-05-TC002`). Exactly the per-writer table in
+`docs/LEGACY_WRITER_INVENTORY_2026-11-04.md`: every legacy writer stays as it is (no kill-switch flip,
+no retirement, no new approval-record commits on the legacy system's behalf); the read-only monitors
+keep running; `mirror-gitlab.yml` is noted for the later cutover. This repository may perform a live
+write only for a specific, named target and effect authorized on its own, and never on a (repository,
+effect) the legacy writer also owns — single owner per effect. The final writer-ownership migration
+remains TC-012a, its own owner-approved cutover. This approval unblocks the live-write pilot cards'
+prerequisite only (TC-009a, TC-010a); it authorizes no upstream write by itself (decision 7 of
+2026-10-31 still holds: no issue or PR without an explicit instruction naming that action).
+
+**2. TC-004 — the 2026-10-31 sweep pause: KEPT PAUSED, paused-window candidates KEPT** (anchor
+`OWNER-DECISIONS-2026-11-05-TC004`). The pause stands with its objective lift condition (the
+three-product pilot set reaching the established quality bar). The violation (the 2026-11-01 sweep ran
+without a lift on the record) is acknowledged. Candidates produced in the paused window are kept, not
+discarded, and count toward P1 only after clearing a calibration-passing reviewer. Still allowed:
+read-only investigation, shared corrections, named bounded pilot verification (at most three
+repositories per change), calibration work. Still prohibited: broad generation sweeps, treating
+historical candidates as newly verified, upstream writes without specific authorization. The record
+below is a ruling, not a lift: `scripts/scheduled_execution_gate.py` lifts the pause only on the literal
+token `LIFTED`, and this record does not carry it.
+
+OWNER_RULING_SWEEP_PAUSE: 2026-11-05 ref=OWNER-DECISIONS-2026-11-05-TC004
+
+**3. Maintainer-authored content preservation — a new owner requirement** (anchor
+`OWNER-REQUIREMENT-2026-11-05-MAINTAINER-CONTENT`). Asked which rule should move in the conflict
+iteration 4 found (S9 preservation checks require keeping maintainer text no fact supports; the
+reviewer's contract rejects it as unsupported), the owner answered with a requirement, recorded in full
+in `docs/MAINTAINER_CONTENT_PRESERVATION.md` and referenced from `docs/MISSION_AUTHORITY.md`. Its
+guiding principle: repository truth governs verifiable technical claims; maintainer knowledge remains
+valuable even when independently unverifiable, and the two are treated differently rather than the
+latter being discarded automatically. Consequences now on record: lack of repository evidence alone is
+no longer grounds to delete maintainer content; unverified content is preserved with attribution or
+qualification and never presented as verified; content that contradicts repository truth, misrepresents
+the product, or is promotional, link-stuffed or valueless is remediated proportionately; every
+preservation, modification, relocation or removal is recorded with its justification; the rules are
+calibrated against live READMEs across the portfolio, not assumptions. This directly changes how the
+reviewer's `unsupported_claim` standard applies to inherited maintainer text, and how calibration labels
+are built: iteration 4's curators removed unverified maintainer text as defects, which this requirement
+now distinguishes from false text. Implementation is not done by this entry.
+
+**4. TeX Python upstream breakage — RECORD ONLY.** `aspose-tex-foss/Aspose.TeX-FOSS-for-Python` at
+`181015d` has its indentation collapsed (102 of 119 Python files do not parse; checked with `ast`,
+nothing executed). Nothing is filed upstream. TeX Python is excluded from delivery counts until the
+upstream source parses again.
+
+**What this does NOT decide**: any specific upstream write; when the sweep pause lifts; the concrete design
+of the attributed-preservation mechanism (disposition kinds, rendering, reviewer contract change) — that
+is implementation work against the requirement, measured on a new held-out calibration corpus.
+
+---
+
+## 2026-11-05: owner authorizes the first live App-token mint (TC-009a)
+
+Asked interactively with the trade-offs stated; the owner chose "Authorize one mint" (anchor
+`OWNER-AUTH-2026-11-05-TC009A-ONE-MINT`). Scope, exactly: **one** real installation token for the
+existing `repository-presenter` GitHub App, minted by the already-wired Actions step
+(`actions/create-github-app-token@v2` pattern, TC-009), verified with `token_provenance.py`; only the
+result is recorded (never the token). It authorizes **no** pull request, issue, commit or any other
+upstream write, and no second mint. Under the approved TC-002 disposition (single owner per effect), a
+mint performs no effect the legacy writer owns. `mint_proof.json` is written only by the real
+mint/verify code path.
+
+APP_TOKEN_LIVE_MINT_AUTHORIZED: 2026-11-05 ref=OWNER-AUTH-2026-11-05-TC009A-ONE-MINT
+
+---
+
+## 2026-11-05: owner authorizes one live issues lifecycle on Cells Java (TC-010a)
+
+Asked interactively; the owner chose "Authorize: Cells-Java" (anchor
+`OWNER-AUTH-2026-11-05-TC010A-CELLS-JAVA`). Scope, exactly: **one** full issues lifecycle (discover →
+dedupe → approve → file → track → re-detect → resolve → close) on
+`aspose-cells-foss/Aspose.Cells-FOSS-for-Java`, for **one** real defect chosen by evidence. Conditions,
+all binding before anything is filed: (1) the legacy issues funnel must be confirmed **not** authorized
+for this repository (single owner per effect, TC-002); if it is, nothing is filed and the owner is told;
+(2) the chosen defect, its evidence and the exact issue text are shown to the owner **before** filing;
+(3) one issue only; closing follows verified resolution, never a manufactured close. Confirmation of
+each lifecycle step is independent, via `gh api`. `lifecycle_proof.json` is written only by the real
+lifecycle code path.
+
+ISSUES_LIVE_LIFECYCLE_AUTHORIZED: 2026-11-05 ref=OWNER-AUTH-2026-11-05-TC010A-CELLS-JAVA

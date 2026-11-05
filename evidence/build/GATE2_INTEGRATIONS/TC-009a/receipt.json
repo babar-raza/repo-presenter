@@ -3,19 +3,23 @@
   "card": "TC-009a",
   "gate": "GATE2_INTEGRATIONS",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-04T09:24:29Z",
-  "base_rev": "2d783e47a7df59b49fbb8b480176f2a43379d3aa",
-  "head_rev": "2d783e47a7df59b49fbb8b480176f2a43379d3aa",
-  "card_sha256": "e41a3bdcffc7fef90a693c648a9120fed3cfa8b23f51666a7ddc85b736d7e22e",
+  "generated_at": "2026-11-05T12:25:51Z",
+  "base_rev": "b90eaf8e66547c9086ce5f1e8984ee81a8f626f4",
+  "head_rev": "7949bb1b4ce690197c9039f791aabbaf7dff0d4a",
+  "card_sha256": "5ad234d09a81448abb44aae49fdebef239866c7b9ff6d37d2e8229904946dd7d",
+  "checker_fileset_sha256": "fc57e8c90291fa044923fc9eb5162accd56b657f7f8222c7c259ee5c3ae17b54",
+  "checker_fileset_scheme": "v2",
   "fingerprint": {
-    "python": "3.13.15",
-    "platform": "Windows-11-10.0.26300-SP0"
+    "python": "3.13.18",
+    "platform": "Linux-6.18.44-fc-v236-x86_64-with-glibc2.39"
   },
   "scope": {
     "ok": true,
-    "changed_paths": [],
+    "changed_paths": [
+      "docs/DECISION_LOG.md"
+    ],
     "violations": [],
-    "evaluated": false
+    "evaluated": true
   },
   "runs": [
     {
@@ -23,15 +27,15 @@
       "checks": [
         {
           "command": "python ops/checks/owner_decision_record.py docs/DECISION_LOG.md APP_TOKEN_LIVE_MINT_AUTHORIZED:",
-          "exit_code": 1,
-          "duration_s": 0.066,
-          "stdout_sha256": "ca74a8fd2815922a26a773c1221488603b0ec11b95534b83617e49bd7fe71f0e"
+          "exit_code": 0,
+          "duration_s": 0.047,
+          "stdout_sha256": "4055cd8459ddc5d0d8fd5c979ccc94c218a90c1cf4c2831c648eb5440c298376"
         },
         {
           "command": "python ops/checks/execution_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json minted=True verified_via_token_provenance=True",
           "exit_code": 1,
-          "duration_s": 0.067,
-          "stdout_sha256": "02300bed637347171c73119d99966ec7dd2cec6b323151bfd164d794329baaaf"
+          "duration_s": 0.045,
+          "stdout_sha256": "1a1c2258c10414be82c92335ad781c91238e4166f7b615c66eea05311f6f6c2b"
         }
       ],
       "all_passed": false
@@ -41,15 +45,15 @@
       "checks": [
         {
           "command": "python ops/checks/owner_decision_record.py docs/DECISION_LOG.md APP_TOKEN_LIVE_MINT_AUTHORIZED:",
-          "exit_code": 1,
-          "duration_s": 0.064,
-          "stdout_sha256": "ca74a8fd2815922a26a773c1221488603b0ec11b95534b83617e49bd7fe71f0e"
+          "exit_code": 0,
+          "duration_s": 0.047,
+          "stdout_sha256": "4055cd8459ddc5d0d8fd5c979ccc94c218a90c1cf4c2831c648eb5440c298376"
         },
         {
           "command": "python ops/checks/execution_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json minted=True verified_via_token_provenance=True",
           "exit_code": 1,
-          "duration_s": 0.068,
-          "stdout_sha256": "02300bed637347171c73119d99966ec7dd2cec6b323151bfd164d794329baaaf"
+          "duration_s": 0.04,
+          "stdout_sha256": "1a1c2258c10414be82c92335ad781c91238e4166f7b615c66eea05311f6f6c2b"
         }
       ],
       "all_passed": false
@@ -64,5 +68,5 @@
     "exit_codes": []
   },
   "accepted": false,
-  "reason": "checks failed: python ops/checks/owner_decision_record.py docs/DECISION_LOG.md APP_TOKEN_LIVE_MINT_AUTHORIZED:; python ops/checks/execution_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json minted=True verified_via_token_provenance=True; negative-control patch did not apply"
+  "reason": "checks failed: python ops/checks/execution_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json minted=True verified_via_token_provenance=True; negative-control patch did not apply"
 }

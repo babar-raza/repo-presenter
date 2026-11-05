@@ -85,4 +85,8 @@ validation are explicitly NOT gated by this, per the directive's §6) until this
 explicitly signed off, because that is the one row where silence would be unsafe rather than
 merely cautious.
 
-<!-- OWNER_APPROVED_WRITER_DISPOSITION marker intentionally absent: this has not happened yet. -->
+**Owner decision (2026-11-05): the proposed table above is approved as written** — see
+`docs/DECISION_LOG.md`, entry "2026-11-05: owner rules on TC-002, TC-004, ...", item 1. It approves the
+dispositions only; it authorizes no specific upstream write.
+
+OWNER_APPROVED_WRITER_DISPOSITION: 2026-11-05 ref=OWNER-DECISIONS-2026-11-05-TC002

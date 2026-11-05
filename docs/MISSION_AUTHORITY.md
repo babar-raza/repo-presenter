@@ -64,6 +64,17 @@ tests pass" — it is "this repo is good enough to become the one
 forest-level framing non-negotiable #8 already states, now with its own
 concrete exit criterion.
 
+## Maintainer-authored content preservation (owner requirement, 2026-11-05)
+
+`docs/MAINTAINER_CONTENT_PRESERVATION.md` is binding for both lanes. Repository truth governs verifiable
+technical claims; maintainer knowledge in the live README remains valuable even when it cannot be
+verified, and is preserved with attribution or qualification rather than deleted for lack of evidence.
+Content that contradicts repository truth, misrepresents the product, or is promotional, link-stuffed,
+manipulative or valueless is remediated proportionately; every preservation, modification, relocation
+or removal is recorded with its justification. This qualifies, and does not replace, the "repository
+evidence wins for factual truth" rule (AGENTS.md non-negotiable 2): it wins for *verifiable technical
+claims*; it is not a reason to discard unverifiable maintainer knowledge.
+
 ## Authority order (binding, highest first)
 
 1. **`plans/repository_presenter_fresh_start_supervisor_prompt.md`** (the mission
