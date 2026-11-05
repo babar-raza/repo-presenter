@@ -2,13 +2,13 @@
 ===== CLEAN RUN 1 =====
 $ python ops/checks/owner_decision_record.py docs/DECISION_LOG.md APP_TOKEN_LIVE_MINT_AUTHORIZED:
 --- stdout ---
-FAIL: docs\DECISION_LOG.md has no record matching 'APP_TOKEN_LIVE_MINT_AUTHORIZED: <YYYY-MM-DD> ref=<anchor>'
+OK: docs/DECISION_LOG.md has a cross-referenced record dated 2026-11-05; ref=OWNER-AUTH-2026-11-05-TC009A-ONE-MINT found in docs/DECISION_LOG.md
 
 --- stderr ---
 
 $ python ops/checks/execution_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json minted=True verified_via_token_provenance=True
 --- stdout ---
-FAIL: evidence\build\GATE2_INTEGRATIONS\TC-009a\mint_proof.json does not exist -- no execution proof has been recorded
+FAIL: evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json does not exist -- no execution proof has been recorded
 
 --- stderr ---
 
@@ -16,13 +16,13 @@ FAIL: evidence\build\GATE2_INTEGRATIONS\TC-009a\mint_proof.json does not exist -
 ===== CLEAN RUN 2 =====
 $ python ops/checks/owner_decision_record.py docs/DECISION_LOG.md APP_TOKEN_LIVE_MINT_AUTHORIZED:
 --- stdout ---
-FAIL: docs\DECISION_LOG.md has no record matching 'APP_TOKEN_LIVE_MINT_AUTHORIZED: <YYYY-MM-DD> ref=<anchor>'
+OK: docs/DECISION_LOG.md has a cross-referenced record dated 2026-11-05; ref=OWNER-AUTH-2026-11-05-TC009A-ONE-MINT found in docs/DECISION_LOG.md
 
 --- stderr ---
 
 $ python ops/checks/execution_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json minted=True verified_via_token_provenance=True
 --- stdout ---
-FAIL: evidence\build\GATE2_INTEGRATIONS\TC-009a\mint_proof.json does not exist -- no execution proof has been recorded
+FAIL: evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json does not exist -- no execution proof has been recorded
 
 --- stderr ---
 
