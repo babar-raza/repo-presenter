@@ -403,6 +403,26 @@ def commit_body(rev: str) -> str:
     return git("log", "-1", "--format=%b", rev)[1]
 
 
+def is_content_noop_merge(rev: str) -> bool:
+    """True for a merge commit that introduces no content of its own: its tree is identical to
+    one parent P's tree and every other parent is an ancestor of P (e.g. GitHub's merge commit for
+    a PR whose base branch had not moved). Such a merge carries no change to attribute -- every
+    path it brings in arrives through P's own commits, which are still scope-checked one by one.
+    A merge that discards or combines content (``-s ours``, a real two-sided merge) is NOT a
+    no-op and stays subject to attribution like any other commit."""
+    rc, out, _ = git("rev-list", "--parents", "-n", "1", rev)
+    parents = out.split()[1:] if rc == 0 else []
+    if len(parents) < 2:
+        return False
+    tree = git("rev-parse", f"{rev}^{{tree}}")[1]
+    for p in parents:
+        if git("rev-parse", f"{p}^{{tree}}")[1] != tree:
+            continue
+        if all(git("merge-base", "--is-ancestor", q, p)[0] == 0 for q in parents if q != p):
+            return True
+    return False
+
+
 def changed_paths(base: str, head: str, card_id: str | None = None, gate: str | None = None):
     rc, out, err = git("rev-list", "--reverse", f"{base}..{head}")
     if rc != 0:
@@ -418,6 +438,8 @@ def changed_paths(base: str, head: str, card_id: str | None = None, gate: str | 
             if tag in commit_subject(r) or r in recorded:
                 mine.append(r)
             elif re.search(r"Co-Authored-By:\s*Claude\s+\S+", commit_body(r)):
+                others.append(r)
+            elif is_content_noop_merge(r):
                 others.append(r)
             else:
                 unattributed.append(r)
