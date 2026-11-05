@@ -3040,3 +3040,36 @@ must ignore: TC-004 stays ACCEPTED after it is committed.
 
 **What this does NOT decide**: any change to what the two cards require, or to the owner rulings they
 record.
+
+---
+
+## 2026-11-05: merge commit `9b9c9d1` (PR #16) will be flagged by the scope check, and it carries no content of its own
+
+**What reviewers will see.** Any `python ops/gatecli.py review <card> --base <rev> --head <rev>` whose range
+includes `9b9c9d1` reports `commit 9b9c9d1d9f2c claims neither this card nor the supervisor`. `9b9c9d1` is
+GitHub's merge commit for PR #16 (fileset scheme v3). PR #15 (`5dafb57`, merged as `c155d69`) landed on
+`main` after that branch was cut, so `9b9c9d1` has two content-bearing parents: `c155d69` (main) and
+`88d9ef4` (PR #16 head). The no-op-merge rule added in PR #16 (`gatectl.is_content_noop_merge`) skips
+only a merge whose tree equals a parent that already contains every other parent. That is correctly not
+the case here, so the merge is counted as unattributed. This is the gate working as designed, not a defect.
+
+**Why it is nonetheless empty.** Its tree (`c4de46b54c4c786b2e7caa2084e9a48a928f3a28`) is exactly the tree
+of git's clean automatic merge of its two parents, so it introduces no change beyond what those parents'
+own commits already carry. Each of those commits is attributed and scope-checked one by one. Re-check it
+with:
+
+    git rev-parse 9b9c9d1^{tree}
+    git merge-tree --write-tree 9b9c9d1^1 9b9c9d1^2
+
+Both print the same tree id; a difference means the merge carries content of its own, and the flag must
+then be treated as a real scope violation.
+
+**How to re-verify a card across it.** Pick `--base`/`--head` so the range does not include `9b9c9d1`, for
+example a `--base` at or after `9b9c9d1` with the card's own tagged commit after it. Never use `--no-scope`
+to get past this: a no-scope run never yields an ACCEPTED receipt. Already-accepted receipts (TC-002,
+TC-004 under v3) are unaffected, because currentness does not depend on the scope range.
+
+**What this does NOT decide**: whether `gatectl` should also accept a merge whose tree equals the clean
+automatic merge of its parents, or how future PR merges should be made (merging `main` into the PR branch
+first with an attributed commit, so GitHub's merge is a no-op, versus explicit supervisor attribution).
+Either one is a gate change for the owner to decide.
