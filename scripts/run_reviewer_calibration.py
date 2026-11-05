@@ -172,6 +172,18 @@ def parse_specs(items: list[str], fields: int) -> list[tuple[str, tuple[Path, ..
     return found
 
 
+def load_tolerated(path: Path | None) -> dict[str, tuple[str, ...]]:
+    """Blocking checks a repaired own twin is known to fail, from ``--tolerate`` (JSON
+    ``{base: {"checks": [...], "reason": "..."}}``); every entry must state its reason."""
+    if path is None:
+        return {}
+    document = json.loads(path.read_text(encoding="utf-8"))
+    for name, entry in document.items():
+        if not str(entry.get("reason", "")).strip():
+            raise SystemExit(f"--tolerate {name}: a tolerated check needs a stated reason")
+    return {name: tuple(entry["checks"]) for name, entry in document.items()}
+
+
 def load_repairs(path: Path | None) -> dict[str, tuple[Repair, ...]]:
     """Pre-registered repairs of iteration-4 bases, from a JSON file ``{base: [repair, ...]}``.
     The reference bases' repairs quote aspose.org text, so that file stays outside this repository
@@ -202,8 +214,10 @@ def build(
     bundles: list[tuple[str, tuple[Path, ...]]] = (),
     references: list[tuple[str, tuple[Path, ...]]] = (),
     repairs: dict[str, tuple[Repair, ...]] | None = None,
+    tolerated: dict[str, tuple[str, ...]] | None = None,
 ) -> list[Case]:
     repairs = repairs or {}
+    tolerated = tolerated or {}
     unknown = sorted(
         set(repairs) - {name for name, _ in (*bundles, *references)}
     )
@@ -227,7 +241,9 @@ def build(
         bases.append(Base(source, (), tolerated_checks=tolerated))
     for name, (revision_dir, clone) in bundles:
         source = load_bundle_candidate(revision_dir, clone=clone, name=name)
-        bases.append(Base(source, repairs.get(name, ())))
+        bases.append(
+            Base(source, repairs.get(name, ()), tolerated_checks=tolerated.get(name, ()))
+        )
     for name, (readme, facts, clone) in references:
         source = load_reference_candidate(
             readme, facts_path=facts, clone=clone, name=name
@@ -384,6 +400,11 @@ def main(argv: list[str] | None = None) -> int:
         "cache, and score stability over all four reviews",
     )
     parser.add_argument(
+        "--tolerate",
+        type=Path,
+        help="blocking checks a repaired own twin is known to fail, each with a stated reason",
+    )
+    parser.add_argument(
         "--real-per-base",
         type=int,
         default=-1,
@@ -452,6 +473,7 @@ def main(argv: list[str] | None = None) -> int:
             parse_specs(args.bundle, 2),
             parse_specs(args.reference, 3),
             load_repairs(args.repairs),
+            load_tolerated(args.tolerate),
         )
         if args.cache_corpus is not None:
             args.cache_corpus.write_bytes(pickle.dumps(cases))
