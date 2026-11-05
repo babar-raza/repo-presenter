@@ -20,6 +20,7 @@ its local fixes switched off, so it is aspose.org's logic, and is pinned by a te
 | 4 | Gap (Python) | A Python constructor taking the file (`Document("in.pdf")`) is **unknown**, so it is never treated as an input | `fixtures.py:344` |
 | 5 | Minor | A call split over lines loses its callee: `doc.save(\n "out.pdf")` is **unknown** | `fixtures.py:330-334` |
 | 6 | Coverage | Only the Java, .NET and Go runners use the classifier; Python, Rust, C++ and TypeScript have no input/output distinction at all | `runners/*.py` |
+| 7 | **Active** (Java) | A runtime failure on a **generated stand-in** input is reported as a real failure (`RUNTIME-ERROR`) | `runners/java.py:784-835` |
 
 ## 1. A writer constructor's literal is classified as an input — ACTIVE
 
@@ -98,6 +99,28 @@ than the last newline (tracking open brackets).
 `runners/go.py` only. The Python, Rust, C++ and TypeScript runners neither pre-stage inputs nor tell an
 input from an output, so a missing input there cannot be told apart from a real defect by this
 mechanism. Not a bug in the classifier; a gap in where it is applied.
+
+## 7. A failure on a generated stand-in input is reported as a real failure — ACTIVE
+
+`runners/java.py` stages the default prelude (`fixtures.default_prelude`: minimal, generated files by
+extension) before running an example (`_stage_prelude`, line 784). If the example then fails for any
+reason other than a missing file, the result is an ordinary `RUNTIME-ERROR` (line 835), i.e. a failed
+example. But a generated minimal PDF/XLSX/DOCX is not the document the example describes: an example
+that reads the form fields of `application.pdf`, the third sheet of `report.xlsx`, or a table in
+`input.docx` fails on the stand-in, not on its own code. The run never exercised the example against
+its real input, so the honest result is BLOCKED/inconclusive, not a failure. (The cache key already
+records the prelude, `_prelude_fingerprint`; the outcome does not.)
+
+**Seen here first**: this repository's Python verifier had the same defect with *repository* files
+substituted by extension (the smallest file of that extension). Measured 2026-11-05: 14 of the 42
+remaining CONTRADICTED Python examples were failures on a substitute (`KeyError` on missing form
+fields, `PdfValidationException`, `ValueError` reading slide 3 of a one-slide deck), and this
+repository's issue discovery would have proposed them as upstream issues. **Fix used here**
+(`python_examples._substitute_inconclusive`): a failure is recorded as needing its input (UNRESOLVED),
+naming the substitution, whenever any staged input was not the file the example names; errors no
+input can cause (`SyntaxError`, `IndentationError`, `TabError`, `NameError`, `ImportError`,
+`ModuleNotFoundError`) stay failures. The Java equivalent would be: if `staged` is non-empty and the
+failure is a runtime error (not a compile error), report BLOCKED-WITH-REASON `FIXTURE-SUBSTITUTE`.
 
 ## A note on strictness (not a defect in aspose.org)
 

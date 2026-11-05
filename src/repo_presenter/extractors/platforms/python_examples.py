@@ -246,6 +246,45 @@ def _classify(result: ExecutionResult, code: str) -> tuple[str, str]:
     return "FAILED", last
 
 
+#: Failures no input file can cause: the code itself is wrong, whatever it was given.
+_CODE_INTRINSIC = frozenset(
+    {"SyntaxError", "IndentationError", "TabError", "NameError", "ImportError",
+     "ModuleNotFoundError"}
+)
+
+
+def _substitute(binding: FixtureBinding) -> bool:
+    """Whether ``binding`` served a DIFFERENT file than the one the example names: a repository
+    file of another name (matched by extension), or another example's output."""
+    return binding.produced_by is not None or (
+        Path(binding.source_path).name.lower() != Path(binding.literal).name.lower()
+    )
+
+
+def _substitute_inconclusive(
+    outcome: str, detail: str, fixtures: Sequence[FixtureBinding]
+) -> tuple[str, str]:
+    """A failure on a substitute input proves nothing about the README (2026-11-05).
+
+    Measured on Aspose.PDF for Python and Aspose.Slides for Python: an example that fills the
+    form fields of ``template.pdf``, or reads slide 3 of ``input.pptx``, was handed the smallest
+    repository file of that extension, failed on it (KeyError, PdfValidationException, ValueError),
+    and was recorded CONTRADICTED -- which issue discovery turns into a proposed upstream issue. It
+    never ran against the input it describes, so it needs that input (UNRESOLVED), unless the
+    error is one no input can cause (``_CODE_INTRINSIC``)."""
+    if outcome != "FAILED" or detail in _CODE_INTRINSIC:
+        return outcome, detail
+    substitutes = [b for b in fixtures if _substitute(b)]
+    if not substitutes:
+        return outcome, detail
+    named = ", ".join(f"{b.source_path} for {b.literal}" for b in substitutes)
+    reason = (
+        f"{detail} on a substitute input ({named}): inconclusive, the example never ran "
+        "against the file it names"
+    )
+    return "NEEDS_INPUT", reason
+
+
 def missing_input_path(stderr: str, run_dir: Path) -> str | None:
     """The path an example's own FileNotFoundError names, relative to its run directory.
 
@@ -592,6 +631,7 @@ def verify_python_examples(
             },
         )
         outcome, detail = _classify(result, candidate.code)
+        outcome, detail = _substitute_inconclusive(outcome, detail, fixtures)
         if source_note:
             detail = f"{detail}; {source_note}"
         if interpreter.label:
