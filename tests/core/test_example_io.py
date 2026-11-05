@@ -131,3 +131,27 @@ def test_the_verifier_still_stages_what_it_cannot_classify(tmp_path):
         work.mkdir()
         staged = {b.literal for b in stage_fixtures(code, root, tree, work)}
         assert staged == set(wanted), code
+
+
+def test_a_failure_on_a_substitute_input_is_inconclusive_not_a_contradiction():
+    """2026-11-05: an example given the smallest repository PDF in place of its ``template.pdf``
+    failed with KeyError and was recorded CONTRADICTED; issue discovery would have proposed it."""
+    from repo_presenter.core.examples import FixtureBinding
+    from repo_presenter.extractors.platforms.python_examples import (
+        _substitute_inconclusive,
+    )
+
+    substitute = FixtureBinding("template.pdf", "tests/sample.pdf")
+    same_name = FixtureBinding("template.pdf", "tests/template.pdf")
+    produced = FixtureBinding("overview.png", "page-1.png", produced_by=8)
+
+    outcome, detail = _substitute_inconclusive("FAILED", "KeyError", [substitute])
+    assert outcome == "NEEDS_INPUT" and "tests/sample.pdf for template.pdf" in detail
+    assert _substitute_inconclusive("FAILED", "KeyError", [produced])[0] == "NEEDS_INPUT"
+    # The example's own named file, or no fixture at all: a real failure stays a failure.
+    assert _substitute_inconclusive("FAILED", "KeyError", [same_name]) == ("FAILED", "KeyError")
+    assert _substitute_inconclusive("FAILED", "KeyError", []) == ("FAILED", "KeyError")
+    # An error no input can cause stays a failure even on a substitute.
+    assert _substitute_inconclusive("FAILED", "NameError", [substitute]) == ("FAILED", "NameError")
+    # Only failures are reconsidered.
+    assert _substitute_inconclusive("EXECUTED", "exit 0", [substitute]) == ("EXECUTED", "exit 0")

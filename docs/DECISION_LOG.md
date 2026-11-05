@@ -3073,3 +3073,36 @@ TC-004 under v3) are unaffected, because currentness does not depend on the scop
 automatic merge of its parents, or how future PR merges should be made (merging `main` into the PR branch
 first with an attributed commit, so GitHub's merge is a no-op, versus explicit supervisor attribution).
 Either one is a gate change for the owner to decide.
+
+---
+
+## 2026-11-05: TC-010a target verification — no genuine single-owner defect found; Cells-Java is no-change; nothing filed
+
+The owner chose (interactive form) "verify non-legacy candidates": record Cells-Java as no change
+warranted, verify the candidates outside the legacy funnel, and bring back a drafted issue only for a real
+defect.
+
+**Cells-Java: no change warranted, and legacy-owned.** At upstream HEAD `c65329e` the lifecycle's own
+discovery (`issues/discovery.py`) finds no CONTRADICTED example, install, build or licence fact; this
+project's sealed Lane L bundle at the same revision is `NO_CHANGE_WARRANTED` (0 edits). The legacy
+`repository-presenter` holds an issue-approval record for it
+(`ops/issue_approvals/aspose-cells-foss__Aspose.Cells-FOSS-for-Java__83a9…json`, approved 2026-10-15,
+expired 2026-10-22) and lists it in its defect ledger, so under the approved TC-002 disposition (single
+owner per effect) its issues belong to the legacy funnel. Condition (1) of the TC-010a authorization
+therefore fails on its own.
+
+**Candidates outside the legacy ledger, verified with the fixed verifier (facts regenerated at HEAD):**
+
+| Repository | Remaining failure | Verdict |
+|---|---|---|
+| Cells Go | example 6 calls `generateSmallPNG` | The README comments that the helper is in `examples/picture/main.go`, where it exists: a documented abbreviation, not a defect |
+| Email Python | example 5: `msg_path` undefined | The block is introduced as "excerpted from `examples/msg_reader.py`": a documented excerpt |
+| PDF Python | 11 `NameError`s (`Document`) | Imported in example 1; the README does not repeat imports. Example 15's `certificate`/`key` are defined in an earlier block |
+| PDF Python | `KeyError`, `IndexError`, `PdfValidationException` (7) | Each ran on a substitute PDF (the smallest of that extension), not the document it names |
+| Slides Python | example 15: `ValueError` | Reads a slide number from a substituted one-slide `input.pptx` |
+| PSD Python | 4 failures | Fixture without layers and a fragment of a larger routine, run where the package does not build |
+
+None is a genuine README defect, so **no issue is drafted and nothing is filed**; TC-010a stays waiting for a
+real, single-owner defect, which needs its own named authorization. The verification exposed a verifier
+defect that would have produced false issues (a failure on a substitute input recorded as CONTRADICTED); it
+is fixed separately (example verifier, "substitute input" change).
