@@ -99,10 +99,26 @@ than the last newline (tracking open brackets).
 input from an output, so a missing input there cannot be told apart from a real defect by this
 mechanism. Not a bug in the classifier; a gap in where it is applied.
 
+## A note on strictness (not a defect in aspose.org)
+
+aspose.org stages a fixture only under a literal every occurrence of which is classified as an
+**input**; an unclassifiable literal is never staged and is reported as FIXTURE-UNAVAILABLE. That is
+honest in aspose.org's design. Adopted as-is here it regressed four working examples (measured
+2026-11-05), because real inputs are often unclassifiable by statement prefix:
+`extractor.bind_pdf("input.pdf")` (`bind` is not an input word), a list passed to
+`editor.concatenate(["part-1.pdf", "part-2.pdf"], ...)`, and a loop over a tuple of names
+(`for path in ("report.docx", ...)`). If aspose.org's Python runner adopts the classifier (finding 6),
+it will meet the same cases; adding `bind` to the input words and classifying a literal inside a
+`for ... in (...)` / list argument by the call that later consumes it would help. This repository uses
+the narrower rule instead: never stage under a name the example **writes** (`written_names`), stage
+everything else as before.
+
 ## Why this repository needed it
 
 This repository's own Python example verifier staged a repository file under **every** file-like
 literal an example named. Aspose.PDF for Python's `document.save("hello.pdf")` therefore found a PDF
 already at `hello.pdf`, and that library's `save` refuses to overwrite: 19 of the 37 examples recorded
 CONTRADICTED for that README were this (`FileExistsError`). aspose.org's classifier, with fixes 1-4,
-is now what decides which literals get a fixture here.
+now decides which literals never get a fixture here (the written ones). Measured on all 13 Python
+products: CONTRADICTED examples 61 -> 42 and SUPPORTED 102 -> 121 (Aspose.PDF for Python 37 -> 18 and
+26 -> 45, every FileExistsError gone), no example that passed before fails now.

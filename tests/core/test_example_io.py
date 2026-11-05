@@ -109,3 +109,25 @@ def test_the_aspose_org_original_misclassifies_exactly_as_reported(monkeypatch):
     assert roles('with open("out.txt", "w") as f:\n    pass\n') == {"out.txt": {"input"}}  # 3
     assert roles('doc = Document("in.pdf")\n') == {"in.pdf": {"unknown"}}  # 4
     assert roles('doc.save(\n    "out.pdf",\n)\n') == {"out.pdf": {"unknown"}}  # 5
+
+
+def test_the_verifier_still_stages_what_it_cannot_classify(tmp_path):
+    """The four examples the stricter aspose.org rule regressed (measured 2026-11-05): an
+    unclassifiable literal is still staged; only a written one never is."""
+    root, tree = _tree(tmp_path)
+    for code, wanted in (
+        ('with PdfExtractor() as e:\n    e.bind_pdf("input.pdf")\n', ["input.pdf"]),
+        ('editor.concatenate(["part-1.pdf", "part-2.pdf"], "merged.pdf")\n',
+         ["part-1.pdf", "part-2.pdf", "merged.pdf"]),
+        (
+            (
+                'for path in ("report.pdf", "legacy.pdf"):\n    doc = aw.Document(path)\n'
+                '    doc.save(f"{path}.out", aw.SaveFormat.PDF)\n'
+            ),
+            ["report.pdf", "legacy.pdf"],
+        ),
+    ):
+        work = tmp_path / f"run{len(wanted)}{len(code)}"
+        work.mkdir()
+        staged = {b.literal for b in stage_fixtures(code, root, tree, work)}
+        assert staged == set(wanted), code

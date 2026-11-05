@@ -3551,8 +3551,10 @@ entries:
       check it out, and see if you can reuse anything." Ported _statement_prefix, _classify,
       input_fixture_names and their word lists (sibling checkout 32cb4ebd2c, logic unchanged) to
       src/repo_presenter/core/example_io.py, and wired into extractors/platforms/python_examples.py
-      (stage_fixtures, _serviceable): a fixture is now staged only under a literal every occurrence
-      of which reads as an input. Cause: the verifier staged a repository file under every
+      (stage_fixtures, _serviceable): a fixture is never staged under a literal the example writes
+      (written_names); aspose.org's stricter input_fixture_names (stage only classified inputs) was
+      tried first and regressed four working examples, so it is kept but not used for staging.
+      Measured on all 13 Python products: CONTRADICTED 61 -> 42, SUPPORTED 102 -> 121, 0 regressions. Cause: the verifier staged a repository file under every
       file-like literal, so Aspose.PDF for Python's document.save("hello.pdf") met an existing
       destination and raised FileExistsError (19 of that README's 37 CONTRADICTED examples).
       Local fixes on top of the port, each reported upstream in

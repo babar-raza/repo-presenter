@@ -13,10 +13,8 @@ example named. An example that writes ``document.save("hello.pdf")`` therefore f
 PDF already at ``hello.pdf``, and a library that refuses to overwrite (Aspose.PDF for Python's
 ``save`` raises ``FileExistsError`` on an existing destination) failed: a README example that
 works was recorded CONTRADICTED. Measured 2026-11-05 on Aspose.PDF for Python: 19 of its 37
-CONTRADICTED examples were exactly this. A literal is now staged only when every occurrence of it
-reads as an input; an output, or a literal that cannot be classified, is not staged (an
-unclassified real input is still served by the verifier's own retry on the path its
-``FileNotFoundError`` names).
+CONTRADICTED examples were exactly this. A literal the example writes is now never staged
+(``written_names``); a literal it reads, or that cannot be classified, is staged as before.
 """
 
 from __future__ import annotations
@@ -96,6 +94,16 @@ def literal_roles(code: str) -> dict[str, set[str]]:
             role = OUTPUT
         roles.setdefault(name, set()).add(role)
     return roles
+
+
+def written_names(code: str) -> set[str]:
+    """The file names any occurrence of which the example WRITES: nothing may be staged under
+    them. This is what this repository's verifier uses (see ``python_examples.stage_fixtures``):
+    aspose.org's stricter ``input_fixture_names`` would also refuse every literal it cannot
+    classify, and measured 2026-11-05 that turned four working examples into NEEDS_INPUT or
+    FAILED (``bind_pdf("input.pdf")``, a list passed to ``concatenate``, a loop over a tuple of
+    names), because this verifier's retry serves only one measured missing path per re-run."""
+    return {name for name, roles in literal_roles(code).items() if OUTPUT in roles}
 
 
 def input_fixture_names(code: str) -> list[str]:
