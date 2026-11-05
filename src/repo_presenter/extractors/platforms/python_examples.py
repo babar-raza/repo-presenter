@@ -31,6 +31,7 @@ from packaging.specifiers import InvalidSpecifier, SpecifierSet
 from packaging.version import InvalidVersion, Version
 
 from repo_presenter.core.ecosystems import PYTHON
+from repo_presenter.core.example_io import input_fixture_names
 from repo_presenter.core.examples import (
     ExampleCandidate,
     ExampleReceipt,
@@ -181,10 +182,13 @@ def stage_fixtures(
     bindings: list[FixtureBinding] = []
     representative = [path for path in tree_paths if _representative(path)]
     by_name = {Path(path).name.lower(): path for path in sorted(representative)}
+    # Only what the example READS: a fixture staged under a name it writes made a working example
+    # fail (``save`` refusing an existing destination). See core/example_io.py.
+    inputs = set(input_fixture_names(code))
     literals = [
         literal
         for literal in _string_literals(code)
-        if _FILE_LITERAL.match(literal) and "/" not in literal
+        if _FILE_LITERAL.match(literal) and "/" not in literal and literal in inputs
     ]
     for wanted in [*literals, *opened]:
         binding = _stage_one(wanted, root, representative, by_name, workspace, produced or {})
@@ -694,10 +698,11 @@ def verify_python_examples(
 def _serviceable(code: str, root: Path, tree_paths: Sequence[str], produced: ProducedFiles) -> bool:
     """Whether the pool now holds an extension this example opens and the tree never had."""
     suffixes = {Path(path).suffix.lower() for path in tree_paths}
+    inputs = set(input_fixture_names(code))
     wanted = {
         Path(literal).suffix.lower()
         for literal in _string_literals(code)
-        if _FILE_LITERAL.match(literal) and "/" not in literal
+        if _FILE_LITERAL.match(literal) and "/" not in literal and literal in inputs
     }
     return any(suffix in produced for suffix in wanted - suffixes)
 
