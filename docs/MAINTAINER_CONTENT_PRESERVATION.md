@@ -57,4 +57,11 @@ discarding the latter.
 * **S9 preservation checks (BC-04/05/07)** stay: they already refuse silent loss, which requirement 7
   demands. What is new is a recorded, attributed way to keep the content rather than a choice between
   verbatim retention and deletion.
-* **Not implemented yet.** No code, prompt or label changed with this record.
+* **Implemented 2026-11-05** (`docs/DECISION_LOG.md`, "maintainer-content preservation implemented in the
+  pipeline"): disposition `PRESERVE_ATTRIBUTED` (verbatim, under an attribution line; paragraphs, lists, tables,
+  blockquotes only), `OMIT_UNSUPPORTED` narrowed with a required rationale, reviewer prompt v19 / logic 8, and
+  contract scope (owner decision): an `unsupported_claim` citing only attributed maintainer lines is refused by
+  the reply contract, every other finding kind still applies. **Not yet done**: calibration iteration 5 on a
+  new held-out corpus labelled under this requirement (requirement 6), and the examination of the 567
+  `SUPERSEDE_REDUNDANT` units against requirement 5
+  (`docs/investigations/2026-11-05-maintainer-content-calibration.md`).
