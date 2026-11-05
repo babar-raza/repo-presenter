@@ -2990,3 +2990,20 @@ mint performs no effect the legacy writer owns. `mint_proof.json` is written onl
 mint/verify code path.
 
 APP_TOKEN_LIVE_MINT_AUTHORIZED: 2026-11-05 ref=OWNER-AUTH-2026-11-05-TC009A-ONE-MINT
+
+---
+
+## 2026-11-05: owner authorizes one live issues lifecycle on Cells Java (TC-010a)
+
+Asked interactively; the owner chose "Authorize: Cells-Java" (anchor
+`OWNER-AUTH-2026-11-05-TC010A-CELLS-JAVA`). Scope, exactly: **one** full issues lifecycle (discover →
+dedupe → approve → file → track → re-detect → resolve → close) on
+`aspose-cells-foss/Aspose.Cells-FOSS-for-Java`, for **one** real defect chosen by evidence. Conditions,
+all binding before anything is filed: (1) the legacy issues funnel must be confirmed **not** authorized
+for this repository (single owner per effect, TC-002); if it is, nothing is filed and the owner is told;
+(2) the chosen defect, its evidence and the exact issue text are shown to the owner **before** filing;
+(3) one issue only; closing follows verified resolution, never a manufactured close. Confirmation of
+each lifecycle step is independent, via `gh api`. `lifecycle_proof.json` is written only by the real
+lifecycle code path.
+
+ISSUES_LIVE_LIFECYCLE_AUTHORIZED: 2026-11-05 ref=OWNER-AUTH-2026-11-05-TC010A-CELLS-JAVA
