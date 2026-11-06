@@ -330,8 +330,89 @@ def ci_badge(fact: Fact) -> str:
     return f"[![Build Status]({fact.value}/badge.svg{query})]({fact.value})"
 
 
+_IMAGE_URL = re.compile(r"!\[[^\]]*\]\(([^)\s]*)")
+_LINKED_BADGE = re.compile(r"\[!\[[^\]]*\]\(([^)\s]*)[^)]*\)\]\(([^)\s]*)\)")
+#: Slots an upstream badge may fill on its link alone. A build-status, runtime or license badge
+#: asserts something only its own fact verifies (a real workflow, the runtime floor, the SPDX
+#: licence), so the maintainers' badge may only take the renderer's own badge's place there.
+_LINK_VERIFIED_SLOTS = frozenset({"package", "contributors"})
+
+
+def badge_slot(token: str) -> str | None:
+    """The slot a rendered badge occupies, read off its image URL; ``None`` when unrecognized."""
+    match = _IMAGE_URL.search(token)
+    if match is None:
+        return None
+    url = match.group(1)
+    if "/actions/workflows/" in url and url.split("?", 1)[0].endswith("/badge.svg"):
+        return "build"
+    if "img.shields.io/github/contributors" in url:
+        return "contributors"
+    if "img.shields.io/badge/License-" in url:
+        return "license"
+    if "img.shields.io/badge/" in url:
+        return "runtime"
+    if url.startswith("https://"):
+        return "package"
+    return None
+
+
+def _badge_target(href: str) -> str:
+    return href.strip().removeprefix("./").rstrip("/").casefold()
+
+
+def upstream_badges(context: RenderContext) -> list[tuple[str, str, str]]:
+    """The maintainers' header badges as ``(slot, markdown as written, link target)``, first per
+    slot: the linked badges of the live README's first top-level badge row (banner excluded)."""
+    rows = [
+        fact
+        for fact in context.facts.by_kind("inherited_unit")
+        if fact.id.endswith(".badge_row")
+        and " > " not in str((fact.attributes or {}).get("section", ""))
+    ]
+    banner = banner_target(context.facts.facts)
+    banner_image = banner[0].value if banner is not None else None
+    for fact in sorted(rows, key=lambda f: f.id):
+        found: list[tuple[str, str, str]] = []
+        for match in _LINKED_BADGE.finditer(fact.value):
+            image, href = match.group(1), match.group(2)
+            if image == banner_image or not image.startswith("https://"):
+                continue
+            slot = badge_slot(match.group(0))
+            if slot is not None and all(slot != seen for seen, _, _ in found):
+                found.append((slot, match.group(0), href))
+        if found:
+            return found
+    return []
+
+
 def badge_slots(context: RenderContext) -> list[tuple[str, str]]:
-    """Every badge the verified facts support, as ``(slot, markdown)`` in ``BADGE_ORDER``."""
+    """Every badge the verified facts support, as ``(slot, markdown)`` in ``BADGE_ORDER``.
+
+    The maintainers' own header badge is kept as written wherever the facts verify it: in place of
+    the renderer's badge for the same slot when both link to the same target, and for a slot the
+    renderer has no badge for when its link is a SUPPORTED ``link_target`` fact (package and
+    contributors slots only). An upstream badge's image form (a ``.svg`` suffix, a missing
+    ``?branch=`` query, its alt text) is the maintainers' choice, never a reason to drop it."""
+    own = dict(_own_badge_slots(context))
+    verified = {
+        _badge_target(fact.value)
+        for fact in context.facts.by_kind("link_target")
+        if fact.polarity == "SUPPORTED" and fact.value
+    }
+    for slot, markdown, href in upstream_badges(context):
+        mine = own.get(slot)
+        if mine is not None:
+            match = _LINKED_BADGE.search(mine)
+            if match is not None and _badge_target(match.group(2)) == _badge_target(href):
+                own[slot] = markdown
+        elif slot in _LINK_VERIFIED_SLOTS and _badge_target(href) in verified:
+            own[slot] = markdown
+    return [(slot, own[slot]) for slot in BADGE_ORDER if slot in own]
+
+
+def _own_badge_slots(context: RenderContext) -> list[tuple[str, str]]:
+    """The badges the renderer derives from verified facts alone, in ``BADGE_ORDER``."""
     repo = context.entry.repository
     badges: list[tuple[str, str]] = []
     spec = context.spec
