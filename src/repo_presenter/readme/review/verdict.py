@@ -50,7 +50,11 @@ Verdict = Literal["ACCEPT", "REJECT"]
 #: "8": prompt v19 -- each unit's packet names its attributed maintainer lines
 #: (``scope.maintainer_lines``), and an unsupported_claim citing only those lines is a contract
 #: error (``reply.resolve_cited_lines``), re-asked like any other.
-REVIEWER_LOGIC_VERSION = "8"
+#: "9": review scope (2026-11-06 root cause of calibration iteration 4, which found 19 of 81 real
+#: defects on lines no unit showed): a table's body rows are reviewable in a candidate the renderer
+#: did not print, and an API reference row whose description an author wrote
+#: (``scope.authored_table_lines``) is reviewable in one it did.
+REVIEWER_LOGIC_VERSION = "9"
 REVIEW_VERDICT_FILENAME = "review_verdict.json"
 
 REJECT_VERDICTS = (

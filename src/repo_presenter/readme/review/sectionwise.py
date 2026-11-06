@@ -53,10 +53,12 @@ class ReviewUnit:
         return f"u{self.index}"
 
 
-def _runs(readme: str, rendered: bool) -> list[tuple[str, list[int]]]:
+def _runs(
+    readme: str, rendered: bool, authored: Collection[int] = ()
+) -> list[tuple[str, list[int]]]:
     """``(section, line numbers)`` for each run of reviewable lines under one section."""
     runs: list[tuple[str, list[int]]] = []
-    for number, section in enumerate(line_sections(readme, rendered), 1):
+    for number, section in enumerate(line_sections(readme, rendered, authored), 1):
         if section is None:
             continue
         if runs and runs[-1][0] == section:
@@ -67,18 +69,24 @@ def _runs(readme: str, rendered: bool) -> list[tuple[str, list[int]]]:
 
 
 def plan_units(
-    readme: str, max_chars: int = UNIT_CHARS, *, rendered: bool = True
+    readme: str,
+    max_chars: int = UNIT_CHARS,
+    *,
+    rendered: bool = True,
+    authored: Collection[int] = (),
 ) -> tuple[ReviewUnit, ...]:
     """The review units of ``readme``, in document order: whole sections packed together while
     their text fits ``max_chars``, a longer section split between lines. Every reviewable line is
-    in exactly one unit. A candidate with no author-written text has no units."""
+    in exactly one unit. A candidate with no author-written text has no units. ``authored``
+    (``scope.authored_table_lines``) adds the renderer-printed table rows whose cell an author
+    wrote."""
     rows = readme.splitlines()
 
     def size(numbers: Sequence[int]) -> int:
         return sum(len(rows[n - 1]) + 1 for n in numbers)
 
     pieces: list[tuple[str, list[int]]] = []
-    for section, numbers in _runs(readme, rendered):
+    for section, numbers in _runs(readme, rendered, authored):
         if size(numbers) <= max_chars:
             pieces.append((section, numbers))
             continue
