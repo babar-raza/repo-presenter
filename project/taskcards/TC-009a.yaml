@@ -47,9 +47,18 @@ checks:
     timeout_seconds: 30
     proves:
       - REQ-G5-001
+  # 2026-11-06 (independent audit: "live-effect proof can rely on editable JSON assertions"): the proof
+  # is verified against GitHub itself -- the run it names concluded success, and the file is the
+  # github-actions[bot] commit on the proof branch, byte-identical.
+  - command: |-
+      python ops/checks/actions_run_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json tc-009a/mint-proof tc-009a-mint-proof.yml,run-request.yml
+    expect: exit 0
+    timeout_seconds: 120
+    proves:
+      - REQ-G5-001
 requires:
   - python
-network: false
+network: true
 negative_control:
   mutate: |-
     python -c "import pathlib; p = pathlib.Path('docs/DECISION_LOG.md'); s = p.read_text(encoding='utf-8'); s2 = s.replace('ref=', 'ref=BROKEN-'); p.write_text(s2, encoding='utf-8')"
