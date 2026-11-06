@@ -766,6 +766,13 @@ def rebuild_state(cards_order: list[str] | None = None):
             attempts[t] = max(attempts.get(t, 0), int(ins.get("attempt", 0)))
             if ins.get("kind") in ("dispatch", "rework"):
                 dispatched.add(t)
+            elif ins.get("kind") == "lease_expired":
+                # 2026-11-06 (owner ruling R8, `gatecli.py worker-tick`): a lease that expired
+                # without an accepted verification means the worker died or stalled -- the card
+                # was never judged, so it returns to its pre-dispatch status (READY-like) instead
+                # of staying IN_PROGRESS forever. A `lease_release` (accepted / failed_internal)
+                # deliberately does NOT undo the dispatch: the verdict decides the status there.
+                dispatched.discard(t)
             latest_kind[t] = ins.get("kind")
 
     raw: dict[str, dict] = {}

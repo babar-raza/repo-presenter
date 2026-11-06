@@ -4,17 +4,20 @@
 Adapted 2026-10-21 from foss-mcp's ops/gatecli.py (reference mechanics only --
 see docs/MISSION_AUTHORITY.md). v1 minimal slice: validate, state, commit-guard,
 instruct, status-append, verify, review, tick, doctor, resume-brief,
-secret-scan. Deferred to a later card (see ops/SUPERVISOR.md "What v1
-defers"): dispatch-next/worker-tick/preflight/gate-exit/integrate/
-release-record -- not needed until a second taskcard exists.
+secret-scan, plus dispatch-next/worker-tick (owner ruling R8, 2026-11-06:
+lease-based autonomous continuation over the same state machine). Still
+deferred (see ops/SUPERVISOR.md "What v1 defers"): preflight/gate-exit/
+integrate/release-record.
 """
 
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 import re
 import sys
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -46,6 +49,7 @@ from gatectl import (
     schema_errors,
     write_path_problems,
 )
+from gatectl import sha256_bytes as gatectl_sha256
 
 EXIT_OK, EXIT_FAIL, EXIT_USAGE = 0, 1, 2
 
@@ -396,6 +400,275 @@ def cmd_secret_scan(args) -> int:
 
 
 # --------------------------------------------------------------------------
+# dispatch-next / worker-tick: autonomous continuation (owner ruling R8, 2026-11-06)
+# --------------------------------------------------------------------------
+# These extend the EXISTING state machine; they are not a second one. The lease lives in the
+# same append-only channel the machine already persists dispatches in (ops/instructions.jsonl):
+# a `dispatch` line carrying a `lease` object acquires it, a `rework` line renews it after a
+# failed independent verify, `lease_release` ends it on a verdict and `lease_expired` ends it
+# when the holder went silent past expires_at. gateverify.rebuild_state() derives every card
+# status from those same lines (a lease_expired line un-dispatches the card, so it is READY
+# again). There is exactly one lease slot: one worker at a time, never two writers racing.
+# Acceptance is never decided here -- only by gateverify.do_verify (the same independent,
+# worktree-isolated, twice-clean + negative-control path `gatecli.py verify/review` run).
+DEFAULT_LEASE_TTL_MINUTES = 240
+DEFAULT_HOLDER = "supervisor"
+TS_FMT = "%Y-%m-%dT%H:%M:%SZ"
+LEASE_FIELDS = ("holder", "base_sha", "acquired_at", "expires_at")
+
+
+def _parse_ts(ts: str) -> datetime:
+    return datetime.strptime(ts, TS_FMT).replace(tzinfo=UTC)
+
+
+def _plus_minutes(ts: str, minutes: int) -> str:
+    return (_parse_ts(ts) + timedelta(minutes=minutes)).strftime(TS_FMT)
+
+
+def active_lease(instructions: list[dict] | None = None, now: str | None = None) -> dict | None:
+    """The single live (or expired-but-not-yet-marked) lease, derived from the instructions
+    log alone, or None. ``expired`` is computed against ``now`` (default: now_utc())."""
+    if instructions is None:
+        instructions = read_jsonl(INSTRUCTIONS_JSONL)
+    lease = None
+    for ins in instructions:
+        kind, card, info = ins.get("kind"), ins.get("target_card"), ins.get("lease")
+        if kind == "dispatch" and isinstance(info, dict):
+            lease = {"card": card, "attempt": int(ins.get("attempt", 1)),
+                     "card_sha256": ins.get("card_sha256", "NONE"), **info}
+        elif lease and card == lease["card"]:
+            if kind == "rework" and isinstance(info, dict):
+                lease.update(info)
+                lease["attempt"] = int(ins.get("attempt", lease["attempt"]))
+            elif kind in ("lease_release", "lease_expired", "supersede", "stop"):
+                lease = None
+    if lease is not None:
+        lease["expired"] = _parse_ts(now or now_utc()) >= _parse_ts(lease["expires_at"])
+    return lease
+
+
+def _card_sha_at(card_id: str, rev: str) -> str:
+    rc, out, _ = git("show", f"{rev}:project/taskcards/{card_id}.yaml")
+    if rc != 0:
+        return "NONE"
+    return gatectl_sha256(out.encode("utf-8"))
+
+
+def _head_sha(rev: str = "HEAD") -> str:
+    rc, out, err = git("rev-parse", "--verify", f"{rev}^{{commit}}")
+    if rc != 0 or len(out) != 40:
+        die(f"cannot resolve {rev!r}: {err or out}")
+    return out
+
+
+def commit_tag(card: dict) -> str:
+    return f"({card['gate']}/{card['id']})"
+
+
+def tagged_commits(base: str, head: str, card: dict) -> list[str]:
+    """Card-tagged commits in base..head, oldest first -- the worker's progress signal (the
+    same `(GATE/TC-NNN)` subject tag check_scope attributes a commit to a card by)."""
+    rc, out, _ = git("log", "--reverse", "--format=%H%x00%s", f"{base}..{head}")
+    if rc != 0:
+        return []
+    tag = commit_tag(card)
+    revs = []
+    for line in out.splitlines():
+        sha, _, subject = line.partition("\x00")
+        if tag in subject:
+            revs.append(sha)
+    return revs
+
+
+def assignment(lease: dict, card: dict) -> dict:
+    """The machine-readable instruction a worker (or the supervisor dispatching one) acts on."""
+    cid, base = card["id"], lease["base_sha"]
+    return {
+        "card": cid,
+        "gate": card["gate"],
+        "executor": card.get("executor", "worker"),
+        "attempt": lease["attempt"],
+        "card_file": f"project/taskcards/{cid}.yaml",
+        "card_sha256": lease.get("card_sha256", "NONE"),
+        "purpose": " ".join(str(card.get("purpose", "")).split()),
+        "write_paths": card.get("write_paths", []),
+        "depends_on": card.get("depends_on", []),
+        "checks": [c["command"].strip() for c in card.get("checks", [])],
+        "commit_subject_tag": commit_tag(card),
+        "lease": {k: lease[k] for k in LEASE_FIELDS},
+        "report_progress": (f"python ops/gatecli.py status-append --card {cid} --phase committed "
+                            f"--verdict n/a --summary \"...\" --attempt {lease['attempt']}"),
+        "judged_by": [
+            f"python ops/gatecli.py review {cid} --base {base} --head <worker-commit> --issue-rev {base}",
+            f"python ops/gatecli.py verify {cid} --base {base} --head <worker-commit> --issue-rev {base}",
+        ],
+        "never": "the worker never runs verify/review on its own work and never edits "
+                 "project/state.yaml, ops/, schemas/ or its own card",
+    }
+
+
+def _append_instruction(line: dict):
+    errs = schema_errors(load_schema("instruction-line.schema.json"), line)
+    if errs:
+        die("generated instruction line fails its own schema: " + "; ".join(errs))
+    append_jsonl(INSTRUCTIONS_JSONL, line)
+
+
+def _lease_line(kind: str, lease: dict, instruction: str, attempt: int, **extra) -> dict:
+    info = {k: lease[k] for k in LEASE_FIELDS}
+    info.update({k: v for k, v in extra.items() if v is not None})
+    return {
+        "ts": now_utc(), "target_card": lease["card"], "kind": kind,
+        "instruction": instruction, "card_sha256": lease.get("card_sha256", "NONE"),
+        "issue_rev": lease["base_sha"], "attempt": attempt, "lease": info,
+    }
+
+
+def _expire(lease: dict):
+    _append_instruction(_lease_line(
+        "lease_expired", lease,
+        f"lease held by {lease['holder']} expired at {lease['expires_at']} with no accepted "
+        f"verification -- {lease['card']} returns to READY",
+        lease["attempt"], outcome="expired"))
+
+
+def _acquire(holder: str, ttl: int, base: str | None, dry_run: bool) -> dict:
+    """Pick the first READY card in tick's own order and lease it. Returns a result dict."""
+    rows, _ = gateverify.rebuild_state()
+    ready = gateverify.ready_cards_from_rows(rows)
+    cid = gateverify.next_card_from_rows(rows)
+    if cid is None:
+        return {"status": "IDLE", "ready": [], "reason": "no READY card (blocked cards are "
+                "awaiting a prerequisite or an owner decision, never dispatched)"}
+    card = all_cards()[cid]
+    row = next(r for r in rows if r["id"] == cid)
+    prior = [i for i in read_jsonl(INSTRUCTIONS_JSONL) if i.get("target_card") == cid]
+    crashed = bool(prior) and prior[-1].get("kind") == "lease_expired"
+    # A crashed worker's expired lease did not consume an attempt; a judged failure did.
+    attempt = max(1, row.get("attempt", 0)) if crashed else row.get("attempt", 0) + 1
+    attempt = min(attempt, 3)
+    base_sha = _head_sha(base or "HEAD")
+    acquired = now_utc()
+    lease = {"card": cid, "attempt": attempt, "holder": holder, "base_sha": base_sha,
+             "acquired_at": acquired, "expires_at": _plus_minutes(acquired, ttl),
+             "card_sha256": _card_sha_at(cid, base_sha)}
+    if not dry_run:
+        _append_instruction(_lease_line(
+            "dispatch", lease,
+            f"lease-dispatched by gatecli dispatch-next to {holder}: implement {cid} exactly as "
+            f"project/taskcards/{cid}.yaml states; every commit subject ends with {commit_tag(card)}",
+            attempt))
+    return {"status": "DRY_RUN_WOULD_DISPATCH" if dry_run else "DISPATCHED",
+            "ready": ready, "assignment": assignment(lease, card)}
+
+
+def _refresh_dashboard(args):
+    # Keep release_gate_dashboard in step with the lease line just written (validate compares
+    # them); its one-line note goes to stderr so stdout stays a single JSON document.
+    if not getattr(args, "no_dashboard", False):
+        with contextlib.redirect_stdout(sys.stderr):
+            cmd_regenerate_dashboard(args)
+
+
+def cmd_dispatch_next(args) -> int:
+    lease = active_lease()
+    if lease and not lease["expired"]:
+        if lease["holder"] != args.holder:
+            print(json.dumps({"status": "REFUSED", "reason": f"lease held by {lease['holder']!r} "
+                              f"on {lease['card']} until {lease['expires_at']}",
+                              "lease": lease}, indent=2))
+            return EXIT_FAIL
+        card = all_cards()[lease["card"]]
+        print(json.dumps({"status": "LEASE_HELD", "assignment": assignment(lease, card)}, indent=2))
+        return EXIT_OK
+    expired_card = None
+    if lease and lease["expired"]:
+        expired_card = lease["card"]
+        if not args.dry_run:
+            _expire(lease)
+    result = _acquire(args.holder, args.ttl_minutes, args.base, args.dry_run)
+    if expired_card:
+        result["expired_lease"] = expired_card
+    if not args.dry_run and (result["status"] == "DISPATCHED" or expired_card):
+        _refresh_dashboard(args)
+    print(json.dumps(result, indent=2))
+    return EXIT_OK
+
+
+def _independent_verify(card_id: str, base: str, head: str) -> dict:
+    """The ONLY acceptance path: the existing gateverify.do_verify (what `gatecli.py verify`
+    runs). Isolated in one function so tests can mock it; worker-tick never grades itself."""
+    return gateverify.do_verify(card_id, base, head, issue_rev=base, evaluate_scope=True)
+
+
+def cmd_worker_tick(args) -> int:
+    dry = args.dry_run
+    report: dict = {"dry_run": dry, "now": now_utc(), "actions": []}
+    act = report["actions"].append
+    mutated = False
+    lease = active_lease()
+    if lease is None:
+        act({"action": "no_lease"})
+    else:
+        card = all_cards().get(lease["card"])
+        report["lease"] = {k: v for k, v in lease.items() if k != "card_sha256"}
+        head = _head_sha(args.head)
+        commits = tagged_commits(lease["base_sha"], head, card) if card else []
+        candidate = commits[-1] if commits else None
+        if candidate and candidate != lease.get("verified_head"):
+            if dry:
+                act({"action": "would_verify", "card": lease["card"], "head": candidate,
+                     "tagged_commits": len(commits),
+                     "command": f"python ops/gatecli.py verify {lease['card']} --base "
+                                f"{lease['base_sha']} --head {candidate} --issue-rev {lease['base_sha']}"})
+            else:
+                receipt = _independent_verify(lease["card"], lease["base_sha"], candidate)
+                reason = str(receipt.get("reason", ""))
+                if receipt.get("accepted"):
+                    _append_instruction(_lease_line(
+                        "lease_release", lease, f"independent verify ACCEPTED {candidate}",
+                        lease["attempt"], verified_head=candidate, outcome="accepted"))
+                    act({"action": "verified_accepted", "card": lease["card"], "head": candidate})
+                    lease = None
+                elif lease["attempt"] >= 3:
+                    _append_instruction(_lease_line(
+                        "lease_release", lease, f"attempt 3 failed independent verify: {reason}"[:2000],
+                        lease["attempt"], verified_head=candidate, outcome="failed_internal"))
+                    act({"action": "failed_internal", "card": lease["card"], "head": candidate,
+                         "reason": reason})
+                    lease = None
+                else:
+                    renewed = dict(lease, expires_at=_plus_minutes(now_utc(), args.ttl_minutes))
+                    _append_instruction(_lease_line(
+                        "rework", renewed,
+                        f"REWORK REQUIRED (independent verify of {candidate[:12]}): {reason}"[:2000],
+                        lease["attempt"] + 1, verified_head=candidate, outcome="rework"))
+                    act({"action": "rework_lease_renewed", "card": lease["card"], "head": candidate,
+                         "attempt": lease["attempt"] + 1, "expires_at": renewed["expires_at"],
+                         "reason": reason})
+                mutated = True
+        elif lease["expired"]:
+            act({"action": "would_expire" if dry else "expired", "card": lease["card"],
+                 "expires_at": lease["expires_at"], "tagged_commits": len(commits)})
+            if not dry:
+                _expire(lease)
+                mutated = True
+            lease = None
+        else:
+            act({"action": "no_progress", "card": lease["card"], "tagged_commits": len(commits),
+                 "already_verified_head": lease.get("verified_head"),
+                 "lease_live_until": lease["expires_at"]})
+    if lease is None and not args.no_advance:
+        result = _acquire(args.holder, args.ttl_minutes, None, dry)
+        act({"action": "advance", **result})
+        mutated = mutated or result["status"] == "DISPATCHED"
+    if mutated and not dry:
+        _refresh_dashboard(args)
+    print(json.dumps(report, indent=2))
+    return EXIT_OK
+
+
+# --------------------------------------------------------------------------
 # argument parser
 # --------------------------------------------------------------------------
 def build_parser():
@@ -439,6 +712,24 @@ def build_parser():
         v.add_argument("--issue-rev", default=None)
         v.add_argument("--no-scope", action="store_true")
         v.set_defaults(func=fn)
+
+    for name, fn in (("dispatch-next", cmd_dispatch_next), ("worker-tick", cmd_worker_tick)):
+        d = sub.add_parser(name)
+        d.add_argument("--holder", default=DEFAULT_HOLDER,
+                       help="who holds the lease (a session id, a subagent name)")
+        d.add_argument("--ttl-minutes", type=int, default=DEFAULT_LEASE_TTL_MINUTES)
+        d.add_argument("--dry-run", action="store_true",
+                       help="report what would happen; write nothing")
+        d.add_argument("--no-dashboard", action="store_true",
+                       help="do not regenerate release_gate_dashboard after a state change")
+        if name == "dispatch-next":
+            d.add_argument("--base", default=None, help="base revision for the lease (default HEAD)")
+        else:
+            d.add_argument("--head", default="HEAD",
+                           help="revision to look for the worker's card-tagged commits in")
+            d.add_argument("--no-advance", action="store_true",
+                           help="do not dispatch the next READY card after a release/expiry")
+        d.set_defaults(func=fn)
 
     sub.add_parser("tick").set_defaults(func=cmd_tick)
     sub.add_parser("doctor").set_defaults(func=cmd_doctor)
