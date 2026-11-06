@@ -20,10 +20,14 @@ renderer draws At a Glance from verified facts), and a lead-in carried with its 
 
 from __future__ import annotations
 
+from repo_presenter.readme.composition.references import positional_only
 from repo_presenter.readme.validation.content_presence import unstated
 from repo_presenter.readme.validation.failures import Candidate, Failure
 
 SUPERSEDED = "SUPERSEDE_REDUNDANT"
+# The phrase every failure of this check carries; reconciliation/patch.py reads it to require that a
+# repair of such a unit stops superseding it.
+LOSS_MARKER = "is SUPERSEDE_REDUNDANT, but the README does not state"
 EXEMPT_KINDS = frozenset({"heading", "badge_row", "html_block"})
 _LEAD_IN = "lead-in of the block that follows"
 _SHOWN = 4
@@ -43,6 +47,10 @@ def exempt(unit_id: str, text: str, rationale: str) -> bool:
     if kind in EXEMPT_KINDS:
         return True
     if kind == "code_block" and _diagram(text):
+        return True
+    if kind == "paragraph" and positional_only(text):
+        # "A few more patterns beyond the Quick Start example above." (Email .NET, 2026-11-06 local
+        # pilot): kept by a repair, it became a BC-07 dangling reference.
         return True
     return _LEAD_IN in rationale.lower()
 
@@ -68,7 +76,7 @@ def superseded_failures(candidate: Candidate) -> list[Failure]:
         failures.append(
             Failure(
                 "RECONCILING",
-                f"{unit_id} is SUPERSEDE_REDUNDANT, but the README does not state "
+                f"{unit_id} {LOSS_MARKER} "
                 f"{len(missing)} piece(s) of it ({shown}): a superseded unit's replacement must "
                 "carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or "
                 "PRESERVE_ATTRIBUTED when no fact confirms it",

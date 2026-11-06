@@ -103,6 +103,9 @@ class PatchScope:
     # Units whose stored disposition is a deferral: the defect is that the deferral loses content.
     deferred: frozenset[str]
     holdable: tuple[str, ...]
+    # Units failed because superseding them loses content (validation/supersession.py): a reply
+    # that leaves them SUPERSEDE_REDUNDANT or defers them cannot repair that.
+    superseded: frozenset[str] = frozenset()
 
 
 def patch_scope(
@@ -175,7 +178,29 @@ def patch_scope(
             if stored[unit].get("disposition") == "DEFER_UNRESOLVED"
         ),
         holdable=holdable,
+        superseded=frozenset(
+            unit
+            for unit in chosen
+            if stored[unit].get("disposition") == "SUPERSEDE_REDUNDANT"
+            and unit in _loss_units(record)
+        ),
     )
+
+
+def _loss_units(record: Mapping[str, Any]) -> set[str]:
+    """The units a record's failures name as superseded with content the README does not state."""
+    from repo_presenter.readme.validation.supersession import LOSS_MARKER
+
+    failures: list[Any] = list(record.get("failures") or [])
+    for equivalent in record.get("equivalent_findings") or []:
+        failures.extend(equivalent.get("failures") or [])
+    return {
+        str(failure.get("unit_id"))
+        for failure in failures
+        if isinstance(failure, Mapping)
+        and failure.get("unit_id")
+        and LOSS_MARKER in str(failure.get("detail", ""))
+    }
 
 
 def patch_checks(
@@ -195,6 +220,15 @@ def patch_checks(
             for entry in revised.get("dispositions", [])
             if isinstance(entry, Mapping)
         }
+        for unit in sorted(scope.superseded):
+            disposition = by_unit.get(unit, {}).get("disposition")
+            if disposition in {"SUPERSEDE_REDUNDANT", "DEFER_UNRESOLVED"}:
+                errors.append(
+                    f"{unit}: still {disposition}, which is the defect: the README does not state "
+                    "its substance, so not printing it loses content. Keep it (VERIFIED_PRESERVE or "
+                    f"VERIFIED_MOVE into {', '.join(scope.holdable)}), or PRESERVE_ATTRIBUTED when "
+                    "no fact confirms it"
+                )
         for unit in sorted(scope.deferred):
             if by_unit.get(unit, {}).get("disposition") == "DEFER_UNRESOLVED":
                 errors.append(

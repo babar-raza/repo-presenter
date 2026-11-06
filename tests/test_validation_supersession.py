@@ -56,3 +56,11 @@ def test_other_dispositions_are_not_judged_here() -> None:
     candidate = _candidate(PLATFORM, README_WITHOUT)
     candidate.dispositions["dispositions"][0]["disposition"] = "OMIT_UNSUPPORTED"
     assert superseded_failures(candidate) == []
+
+
+def test_a_positional_paragraph_is_exempt() -> None:
+    assert exempt(
+        "inherited_unit:029.paragraph",
+        "A few more real, runnable patterns beyond the Quick Start example above.",
+        "",
+    )
