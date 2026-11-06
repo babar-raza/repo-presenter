@@ -3,14 +3,15 @@
   "card": "TC-005",
   "gate": "GATE0_AUTHORITY",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-04T15:03:15Z",
+  "generated_at": "2026-11-06T02:11:36Z",
   "base_rev": "aadbd18881ffd65b4a048e6252c6d2a1bd477cc8",
   "head_rev": "1f426ec19ae6dc7e5c26dc75536d459300daa942",
-  "card_sha256": "60cbc6cbe5ec5b2f048596c0aa799a72dabbc7b7e99f77f881a7f89250079584",
-  "checker_fileset_sha256": "78a3e5929fb100a46cf6c200cd5121186d6e62e898013eb8ecb552344401e306",
+  "card_sha256": "459db6103b01bcfdb28bfb488f0eccdfec4f1c21b6ebbfbae18ee4ed17e1bb76",
+  "checker_fileset_sha256": "3eed7c8eb4954f91a2f48a3ea7eeb16dee5ce90883f7d7aed1ffd6352b5abcd3",
+  "checker_fileset_scheme": "v3",
   "fingerprint": {
     "python": "3.13.18",
-    "platform": "Linux-6.18.44-fc-v233-x86_64-with-glibc2.39"
+    "platform": "Linux-6.18.44-fc-v242-x86_64-with-glibc2.39"
   },
   "scope": {
     "ok": true,
@@ -27,20 +28,20 @@
         {
           "command": "python ops/checks/marker_check.py docs/RELEASE_CONTRACT_P1-P5.md \"RELEASE_CONTRACT_ADOPTED_2026-11-04\"",
           "exit_code": 0,
-          "duration_s": 0.03,
+          "duration_s": 0.025,
           "stdout_sha256": "4c24c97b20afbb1ecae0b9c485f0e838886e9df82c183d72cbd7352bb9a7be91"
         },
         {
           "command": "python ops/checks/dashboard_matches_live.py",
           "exit_code": 0,
-          "duration_s": 47.049,
+          "duration_s": 43.262,
           "stdout_sha256": "1aa806eff6f49058ed2a34d92ea98d8d3de2e245260c7445db3f68e164792058"
         },
         {
           "command": "python -m pytest tests/ops/test_gate_guard_tc005.py -q",
           "exit_code": 0,
-          "duration_s": 43.139,
-          "stdout_sha256": "1cc55c107eae8eb9c3b60b78028ad9bf9e88ffa0ba177b6584255adf2f71f040"
+          "duration_s": 43.705,
+          "stdout_sha256": "0d716aa4c4d5c6d0314975f2ac067c3140715fa6aa874f561fc02fab5ba83ce4"
         }
       ],
       "all_passed": true
@@ -51,20 +52,20 @@
         {
           "command": "python ops/checks/marker_check.py docs/RELEASE_CONTRACT_P1-P5.md \"RELEASE_CONTRACT_ADOPTED_2026-11-04\"",
           "exit_code": 0,
-          "duration_s": 0.027,
+          "duration_s": 0.024,
           "stdout_sha256": "4c24c97b20afbb1ecae0b9c485f0e838886e9df82c183d72cbd7352bb9a7be91"
         },
         {
           "command": "python ops/checks/dashboard_matches_live.py",
           "exit_code": 0,
-          "duration_s": 43.76,
+          "duration_s": 44.053,
           "stdout_sha256": "1aa806eff6f49058ed2a34d92ea98d8d3de2e245260c7445db3f68e164792058"
         },
         {
           "command": "python -m pytest tests/ops/test_gate_guard_tc005.py -q",
           "exit_code": 0,
-          "duration_s": 47.459,
-          "stdout_sha256": "c797d09647913f41b53b2f94442c49063988b69b29bcff5d6d8d9b57faba886c"
+          "duration_s": 41.849,
+          "stdout_sha256": "7db5a069a8827000f27009c49b5d3bf6dd99a7bded1394db7450aa235393d1c1"
         }
       ],
       "all_passed": true

@@ -15,7 +15,7 @@ OK: project/state.yaml matches live portfolio_status.py (R=10, L=12)
 $ python -m pytest tests/ops/test_gate_guard_tc005.py -q
 --- stdout ---
 .                                                                        [100%]
-1 passed in 42.54s
+1 passed in 43.13s
 
 --- stderr ---
 
@@ -36,7 +36,7 @@ OK: project/state.yaml matches live portfolio_status.py (R=10, L=12)
 $ python -m pytest tests/ops/test_gate_guard_tc005.py -q
 --- stdout ---
 .                                                                        [100%]
-1 passed in 46.90s
+1 passed in 41.30s
 
 --- stderr ---
 
@@ -81,7 +81,7 @@ E        +  where 1 = CompletedProcess(args=['/usr/local/bin/python', 'ops/check
 tests/ops/test_gate_guard_tc005.py:12: AssertionError
 =========================== short test summary info ============================
 FAILED tests/ops/test_gate_guard_tc005.py::test_release_contract_adopted_and_dashboard_matches_live
-1 failed in 45.31s
+1 failed in 41.66s
 
 --- stderr ---
 
