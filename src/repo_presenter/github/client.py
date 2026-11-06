@@ -20,9 +20,11 @@ visual-asset/metadata work) are still not needed and left for later.
 from __future__ import annotations
 
 import base64
+import json
 import re
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, Literal, NoReturn
 from urllib.parse import urlsplit
 
@@ -38,21 +40,145 @@ FetchFn = Callable[[str, "str | None"], "tuple[int, Any]"]
 WriteFn = Callable[[str, str, "dict[str, Any]"], "tuple[int, Any]"]
 
 
-# Owner directive 2026-11-04 (docs/DECISION_LOG.md): every repository except this one is READ-ONLY.
-# This is the single choke point for the three real HTTP write primitives below, so the rule is
-# mechanical rather than narrative. There is deliberately no environment-variable override: lifting
-# it is a reviewed code change, not a runtime switch.
-WRITE_ALLOWED_REPOSITORIES = frozenset({"babar-raza/repo-presenter"})
+# Owner directive 2026-11-04 (docs/DECISION_LOG.md), amended by owner ruling R3
+# (docs/CONSOLIDATED_GOALS_2026-11-06.md, 2026-11-06): the control repository below may be written
+# for its own internal effects; every other repository is READ-ONLY unless the owner-controlled
+# ``data/upstream_write_allowlist.json`` lists it for the specific effect being attempted.
+# ``authorize_write`` is the single, effect-specific, default-deny decision; every real HTTP write
+# primitive below (``default_post``/``default_patch``/``default_put`` and ``_guarded_issue_write``)
+# reaches it through ``authorize_request`` before any request is made. There is deliberately no
+# environment-variable override: changing it is a reviewed code or owner-data change.
+#
+# The allowlist is a NECESSARY condition only. It authorizes nothing by itself: the callers
+# (``repo_presenter.propose.effect``'s registry permit, kill switch, reviewer veto, reviewer
+# calibration, authorization record, token provenance and source recheck) still gate every effect.
+CONTROL_REPOSITORY = "babar-raza/repo-presenter"
+WRITE_ALLOWED_REPOSITORIES = frozenset({CONTROL_REPOSITORY})
 _REPO_PATH = re.compile(r"^/repos/(?P<owner>[^/]+)/(?P<name>[^/]+)(?:/|$)")
+
+#: The owner-controlled upstream allowlist (ruling R3). Read on every authorization, never cached,
+#: so a removed entry takes effect immediately; missing or malformed means nothing is allowed.
+UPSTREAM_WRITE_ALLOWLIST = (
+    Path(__file__).resolve().parents[3] / "data" / "upstream_write_allowlist.json"
+)
+
+WriteEffect = Literal["pull_request", "issue", "issue_comment", "internal"]
+#: Effects an allowlist entry may grant on an upstream repository. Independent of each other: a
+#: repository allowed ``pull_request`` is refused ``issue`` and ``issue_comment``.
+UPSTREAM_EFFECTS = frozenset({"pull_request", "issue", "issue_comment"})
+#: ``internal`` is any other write shape on the control repository (unchanged from before R3);
+#: it is never grantable upstream.
+KNOWN_EFFECTS = UPSTREAM_EFFECTS | {"internal"}
+
+#: The branch namespace every upstream branch/contents write must stay inside: the pull-request
+#: effect needs a presenter branch on the target, never a write to its default branch.
+UPSTREAM_BRANCH_PREFIX = "repository-presenter/"
 
 
 class UpstreamWriteForbiddenError(RepositoryMetadataError):
-    """A write was refused before any request was made: its target is not an allowed repository."""
+    """A write was refused before any request was made: its target is not an allowed repository,
+    or not allowed for this effect."""
 
 
-def assert_write_allowed(url: str) -> None:
-    """Raise unless ``url`` is a ``/repos/{owner}/{repo}/...`` URL on the GitHub API root whose
-    repository is in ``WRITE_ALLOWED_REPOSITORIES``. Fails closed on every other shape."""
+@dataclass(frozen=True)
+class WriteGrant:
+    """What :func:`authorize_write` cleared: one repository, one effect."""
+
+    repository: str
+    effect: str
+    upstream: bool
+    #: The allowlist entry's ``first_pr_as_draft``. Every pull request this system opens on such a
+    #: repository is a draft (see :func:`create_pull_request`).
+    draft_required: bool = False
+
+
+@dataclass(frozen=True)
+class _AllowlistEntry:
+    effects: frozenset[str]
+    first_pr_as_draft: bool
+
+
+def _load_upstream_allowlist(path: Path) -> dict[str, _AllowlistEntry]:
+    """The allowlist as ``{lowercased slug: entry}``. Raises :class:`UpstreamWriteForbiddenError`
+    for a missing, unreadable or malformed file: one bad entry invalidates the whole file."""
+
+    def bad(why: str) -> NoReturn:
+        raise UpstreamWriteForbiddenError(f"write refused: upstream allowlist {path} {why}")
+
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        bad("is missing")
+    except (OSError, UnicodeDecodeError, ValueError) as exc:
+        bad(f"is unreadable ({type(exc).__name__})")
+    if not isinstance(data, dict) or data.get("schema_version") != 1:
+        bad("has no schema_version 1 object")
+    entries = data.get("repositories")
+    if not isinstance(entries, list):
+        bad("has no repositories list")
+    result: dict[str, _AllowlistEntry] = {}
+    for item in entries:
+        if not isinstance(item, dict):
+            bad("has a non-object entry")
+        slug = item.get("repository")
+        effects = item.get("effects")
+        draft = item.get("first_pr_as_draft")
+        if not isinstance(slug, str) or slug.count("/") != 1 or not all(slug.split("/")):
+            bad(f"has an invalid repository {slug!r}")
+        if (
+            not isinstance(effects, list)
+            or not effects
+            or not all(isinstance(e, str) and e in UPSTREAM_EFFECTS for e in effects)
+        ):
+            bad(f"has invalid effects for {slug}: {effects!r}")
+        if not isinstance(draft, bool):
+            bad(f"has a non-boolean first_pr_as_draft for {slug}")
+        key = slug.lower()
+        if key in result:
+            bad(f"lists {slug} twice")
+        result[key] = _AllowlistEntry(frozenset(effects), draft)
+    return result
+
+
+def authorize_write(repository: str, effect: str) -> WriteGrant:
+    """The one write-authorization decision: default deny, fail closed, effect-specific.
+
+    * Unknown ``effect`` -> refused (for every repository).
+    * The control repository -> allowed for every known effect, exactly as before R3.
+    * Any other repository -> allowed only when ``data/upstream_write_allowlist.json`` loads
+      cleanly AND lists it AND lists ``effect`` for it. ``internal`` is never grantable upstream.
+
+    Raises :class:`UpstreamWriteForbiddenError`; never makes a request."""
+    if effect not in KNOWN_EFFECTS:
+        raise UpstreamWriteForbiddenError(f"write refused: unknown effect {effect!r}")
+    if not isinstance(repository, str) or repository.count("/") != 1:
+        raise UpstreamWriteForbiddenError(f"write refused: {repository!r} is not owner/name")
+    slug = repository.lower()
+    if slug == CONTROL_REPOSITORY:
+        return WriteGrant(repository=slug, effect=effect, upstream=False)
+    if effect not in UPSTREAM_EFFECTS:
+        raise UpstreamWriteForbiddenError(
+            f"write refused: {slug} is read-only for effect {effect!r} (only "
+            f"{CONTROL_REPOSITORY} may be written for it)"
+        )
+    entry = _load_upstream_allowlist(UPSTREAM_WRITE_ALLOWLIST).get(slug)
+    if entry is None:
+        raise UpstreamWriteForbiddenError(
+            f"write refused: {slug} is read-only for this execution (not in the upstream write "
+            f"allowlist; only {sorted(WRITE_ALLOWED_REPOSITORIES)} may be written)"
+        )
+    if effect not in entry.effects:
+        raise UpstreamWriteForbiddenError(
+            f"write refused: {slug} is allowlisted for {sorted(entry.effects)}, not {effect!r}"
+        )
+    return WriteGrant(
+        repository=slug, effect=effect, upstream=True, draft_required=entry.first_pr_as_draft
+    )
+
+
+def _parse_write_url(url: str) -> tuple[str, str]:
+    """``(lowercased owner/name, path after it)`` for a ``/repos/{owner}/{repo}/...`` URL on the
+    GitHub API root; raises for every other shape."""
     parts = urlsplit(url)
     if f"{parts.scheme}://{parts.netloc}" != API_ROOT:
         raise UpstreamWriteForbiddenError(f"write refused: {url} is not on {API_ROOT}")
@@ -61,12 +187,98 @@ def assert_write_allowed(url: str) -> None:
     match = _REPO_PATH.match(parts.path)
     if match is None:
         raise UpstreamWriteForbiddenError(f"write refused: {url} does not target a repository")
-    slug = f"{match['owner']}/{match['name']}".lower()
+    return f"{match['owner']}/{match['name']}".lower(), parts.path[match.end() :].rstrip("/")
+
+
+# (method, path after /repos/{owner}/{repo}/) -> effect. Anything else is ``internal``.
+_EFFECT_ROUTES: tuple[tuple[str, re.Pattern[str], str], ...] = (
+    ("POST", re.compile(r"^pulls$"), "pull_request"),
+    ("PATCH", re.compile(r"^pulls/\d+$"), "pull_request"),
+    ("POST", re.compile(r"^git/refs$"), "pull_request"),
+    ("PUT", re.compile(r"^contents/.+$"), "pull_request"),
+    ("POST", re.compile(r"^issues$"), "issue"),
+    ("PATCH", re.compile(r"^issues/\d+$"), "issue"),
+    ("POST", re.compile(r"^issues/\d+/comments$"), "issue_comment"),
+)
+
+
+def classify_write(method: str, url: str) -> tuple[str, str]:
+    """``(repository, effect)`` for a write request; ``effect`` is ``internal`` for any shape
+    outside the routes above (which :func:`authorize_write` allows only on the control repo)."""
+    slug, rest = _parse_write_url(url)
+    for verb, pattern, effect in _EFFECT_ROUTES:
+        if method.upper() == verb and pattern.match(rest):
+            return slug, effect
+    return slug, "internal"
+
+
+def authorize_request(
+    method: str, url: str, payload: dict[str, Any] | None = None
+) -> WriteGrant:
+    """Authorize one concrete write request, before it is made. Beyond :func:`authorize_write`,
+    an upstream request must also keep to the narrow shape its effect needs:
+
+    * a branch/contents write stays inside ``UPSTREAM_BRANCH_PREFIX`` (never the default branch);
+    * a pull-request update changes only ``title``/``body`` (never state, base or draft);
+    * a pull request comes from a presenter branch, and on a ``first_pr_as_draft`` repository
+      carries ``draft: true``."""
+    slug, effect = classify_write(method, url)
+    grant = authorize_write(slug, effect)
+    if not grant.upstream:
+        return grant
+    body = payload if isinstance(payload, dict) else {}
+    _, rest = _parse_write_url(url)
+
+    def refuse(why: str) -> NoReturn:
+        raise UpstreamWriteForbiddenError(f"write refused: {method.upper()} {url}: {why}")
+
+    if rest == "git/refs":
+        ref = body.get("ref")
+        if not isinstance(ref, str) or not ref.startswith("refs/heads/" + UPSTREAM_BRANCH_PREFIX):
+            refuse(f"an upstream ref must be under refs/heads/{UPSTREAM_BRANCH_PREFIX}")
+    elif rest.startswith("contents/"):
+        branch = body.get("branch")
+        if not isinstance(branch, str) or not branch.startswith(UPSTREAM_BRANCH_PREFIX):
+            refuse(f"an upstream contents write must name a {UPSTREAM_BRANCH_PREFIX} branch")
+    elif rest.startswith("pulls/"):
+        if not set(body) <= {"title", "body"}:
+            refuse("an upstream pull-request update may change only title and body")
+    elif rest == "pulls":
+        head = body.get("head")
+        if not isinstance(head, str) or not head.split(":")[-1].startswith(
+            UPSTREAM_BRANCH_PREFIX
+        ):
+            refuse(f"an upstream pull request must come from a {UPSTREAM_BRANCH_PREFIX} branch")
+        if grant.draft_required and body.get("draft") is not True:
+            refuse("this repository's pull requests must be opened as drafts")
+    return grant
+
+
+def assert_write_allowed(url: str) -> None:
+    """Raise unless ``url`` is a ``/repos/{owner}/{repo}/...`` URL on the GitHub API root whose
+    repository is the control repository (``WRITE_ALLOWED_REPOSITORIES``). Fails closed on every
+    other shape. A control-repository-only check, unchanged since 2026-11-04; the real write
+    primitives use the effect-aware :func:`authorize_request` instead."""
+    slug, _ = _parse_write_url(url)
     if slug not in {a.lower() for a in WRITE_ALLOWED_REPOSITORIES}:
         raise UpstreamWriteForbiddenError(
             f"write refused: {slug} is read-only for this execution (only "
             f"{sorted(WRITE_ALLOWED_REPOSITORIES)} may be written)"
         )
+
+
+def pull_request_draft_required(owner: str, name: str) -> bool:
+    """Whether a pull request opened on ``owner/name`` must be a draft. The control repository:
+    never. An upstream repository: its allowlist entry's ``first_pr_as_draft``; when the allowlist
+    cannot be read, ``True`` (fail safe -- the write itself is then refused by the guard)."""
+    slug = f"{owner}/{name}".lower()
+    if slug == CONTROL_REPOSITORY:
+        return False
+    try:
+        entry = _load_upstream_allowlist(UPSTREAM_WRITE_ALLOWLIST).get(slug)
+    except UpstreamWriteForbiddenError:
+        return True
+    return entry.first_pr_as_draft if entry is not None else False
 
 
 def _write_headers(token: str) -> dict[str, str]:
@@ -107,7 +319,7 @@ def default_post(url: str, token: str, payload: dict[str, Any]) -> tuple[int, An
     """``POST url`` with ``payload`` as JSON. Never called except by ``create_issue``, which is
     itself never called except by ``repo_presenter.issues.file`` after that module's own
     authorization check passes."""
-    assert_write_allowed(url)
+    authorize_request("POST", url, payload)
     try:
         response = httpx.post(
             url, headers=_write_headers(token), json=payload, timeout=REQUEST_TIMEOUT_SECONDS
@@ -125,7 +337,7 @@ def default_patch(url: str, token: str, payload: dict[str, Any]) -> tuple[int, A
     """``PATCH url`` with ``payload`` as JSON. Never called except by ``update_pull_request``,
     which is itself never called except by ``repo_presenter.propose.effect`` after that module's
     own gates pass."""
-    assert_write_allowed(url)
+    authorize_request("PATCH", url, payload)
     try:
         response = httpx.patch(
             url, headers=_write_headers(token), json=payload, timeout=REQUEST_TIMEOUT_SECONDS
@@ -143,7 +355,7 @@ def default_put(url: str, token: str, payload: dict[str, Any]) -> tuple[int, Any
     """``PUT url`` with ``payload`` as JSON. Never called except by ``put_contents``, which is
     itself never called except by ``repo_presenter.propose.effect`` after that module's own gates
     pass."""
-    assert_write_allowed(url)
+    authorize_request("PUT", url, payload)
     try:
         response = httpx.put(
             url, headers=_write_headers(token), json=payload, timeout=REQUEST_TIMEOUT_SECONDS
@@ -239,12 +451,12 @@ def create_issue(
 def _guarded_issue_write(
     owner: str, name: str, url: str, token: str, payload: dict[str, Any], write: WriteFn, verb: str
 ) -> Any:
-    """Shared body of the comment/close/reopen primitives. ``assert_write_allowed`` runs HERE, on
-    the URL, before ``write`` is ever called -- so even an injected writer is never invoked for a
-    repository outside ``WRITE_ALLOWED_REPOSITORIES`` (the real ``default_post``/``default_patch``
-    check again). A missing token, a transport failure or a non-2xx answer raises; nothing is
-    guessed."""
-    assert_write_allowed(url)
+    """Shared body of the comment/close/reopen primitives. ``authorize_request`` runs HERE, on
+    the URL (comment -> ``issue_comment``, close/reopen -> ``issue``), before ``write`` is ever
+    called -- so even an injected writer is never invoked for a repository not authorized for
+    that effect (the real ``default_post``/``default_patch`` check again). A missing token, a
+    transport failure or a non-2xx answer raises; nothing is guessed."""
+    authorize_request(verb, url, payload)
     if not token:
         raise RepositoryMetadataError(f"{owner}/{name}: {verb} refused - no write-scoped token")
     status_code, response_body = write(url, token, payload)
@@ -661,13 +873,22 @@ def create_pull_request(
 ) -> PullRequestRef:
     """``POST /repos/{owner}/{repo}/pulls`` -- opens the one presenter PR from ``head`` into
     ``base``. Only ever called after :func:`find_pull_requests` has confirmed none is open and
-    none for the same candidate was already settled."""
+    none for the same candidate was already settled.
+
+    ``draft: true`` is sent whenever the target's allowlist entry has ``first_pr_as_draft: true``
+    (:func:`pull_request_draft_required`). Deliberately ALWAYS, not only for the first pull
+    request: proving "no pull request by this system exists yet" would need an extra, paginated
+    read whose partial failure could wrongly open a ready-for-review PR, so every PR on such a
+    repository is opened as a draft and the owner marks it ready. The transport guard
+    (:func:`authorize_request`) refuses a non-draft creation there. The control repository's
+    payload is unchanged (no ``draft`` key)."""
     if not token:
         raise RepositoryMetadataError(f"{owner}/{name}: POST refused - no write-scoped token")
     url = f"{API_ROOT}/repos/{owner}/{name}/pulls"
-    status_code, response_body = write(
-        url, token, {"title": title, "body": body, "head": head, "base": base}
-    )
+    payload: dict[str, Any] = {"title": title, "body": body, "head": head, "base": base}
+    if pull_request_draft_required(owner, name):
+        payload["draft"] = True
+    status_code, response_body = write(url, token, payload)
     if status_code == -1:
         raise RepositoryMetadataError(f"{owner}/{name}: unreachable ({response_body})")
     if status_code != 201 or not isinstance(response_body, dict):
