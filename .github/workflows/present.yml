@@ -236,6 +236,9 @@ jobs:
           FACTS_SHA256: ${{ needs.facts.outputs.facts_sha256 }}
           GPT_OSS_ENDPOINT: ${{ secrets.GPT_OSS_ENDPOINT }}
           GPT_OSS_API_KEY: ${{ secrets.GPT_OSS_API_KEY }}
+          # Stream replies: the gateway drops a non-streamed request at ~30 s (HTTP 502) while a
+          # streamed one of the same length succeeds (measured 2026-11-04 and 2026-11-06).
+          GPT_OSS_STREAMING: "1"
           REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
         run: |
           python -m repo_presenter.present \
@@ -257,6 +260,9 @@ jobs:
           FACTS_SHA256: ${{ needs.facts.outputs.facts_sha256 }}
           GPT_OSS_ENDPOINT: ${{ secrets.GPT_OSS_ENDPOINT }}
           GPT_OSS_API_KEY: ${{ secrets.GPT_OSS_API_KEY }}
+          # Stream replies: the gateway drops a non-streamed request at ~30 s (HTTP 502) while a
+          # streamed one of the same length succeeds (measured 2026-11-04 and 2026-11-06).
+          GPT_OSS_STREAMING: "1"
           REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
         run: |
           python -m repo_presenter.present \
