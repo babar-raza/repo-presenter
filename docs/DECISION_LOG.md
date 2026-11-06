@@ -3445,3 +3445,16 @@ re-add. Calibrated rule: a code block may be omitted only with evidence (CONTRAD
 package provably absent, or an identical block printed elsewhere); "promotional"/"redundant"/"no supporting fact" is
 never enough for code; the lead-in stays with its block. Implemented as a deterministic reconciliation rule, then the
 Imaging seal is repaired by a targeted run.
+
+---
+
+## 2026-11-06: acceptance redesign adopted (R12; stage S0)
+
+`docs/design/2026-11-06-acceptance-redesign.md` is adopted as the plan that ends the stuck acceptance problem:
+twelve provable acceptance properties; one primary mechanism per defect class (deterministic proof from facts and
+source, execution, benchmark parity BC-17, drop decisions R14, and an LLM only for prose judgement); inherited text
+blocked only when the source contradicts it; independence from a separate code path, seeded canaries and a sampled
+audit; calibration per mechanism with thresholds unchanged or stricter; the fallback ladder whose rung (c) makes
+acceptance reachable at zero calls even if no LLM passes. `data/reviewer_calibration.json` stays the frozen record of
+the old reviewer. Stages S1-S5 (zero calls) start now in parallel; S6-S12 follow in order. The one owner action item
+(design §7.4.1, R3 wording) is raised once, when S9 wires the acceptance record to upstream writes.
