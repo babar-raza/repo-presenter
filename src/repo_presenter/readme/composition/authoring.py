@@ -33,7 +33,14 @@ from pathlib import Path
 from types import MappingProxyType
 from typing import Any
 
-from repo_presenter.core.facts import REPOSITORY_FILES_ATTRIBUTE, Fact, FactsDocument, bounded_records
+from repo_presenter.core.facts import (
+    EVIDENCE_ONLY_KINDS,
+    NON_IDENTIFIER_KINDS,
+    REPOSITORY_FILES_ATTRIBUTE,
+    Fact,
+    FactsDocument,
+    bounded_records,
+)
 from repo_presenter.core.llm.prompts import LoadedManifest
 from repo_presenter.core.registry.models import RegistryEntry
 from repo_presenter.readme.composition.audience import audience_errors, support_texts
@@ -498,7 +505,9 @@ def supporting_fact_ids(
     return sorted(
         fact.id
         for fact in facts.facts
-        if fact.polarity == "SUPPORTED" and needle in fact.value.lower()
+        if fact.polarity == "SUPPORTED"
+        and fact.kind not in EVIDENCE_ONLY_KINDS
+        and needle in fact.value.lower()
     )[:limit]
 
 
@@ -1211,9 +1220,15 @@ def allowed_identifiers(facts: FactsDocument, name: str) -> frozenset[str]:
     fence spells inside itself, and the product name's tokens."""
     allowed: set[str] = set(product_name_tokens(name))
     allowed.update(REGISTRY_NAMES.values())
-    allowed.update(host_names(fact.value for fact in facts.facts if fact.polarity == "SUPPORTED"))
+    allowed.update(
+        host_names(
+            fact.value
+            for fact in facts.facts
+            if fact.polarity == "SUPPORTED" and fact.kind not in NON_IDENTIFIER_KINDS
+        )
+    )
     for fact in facts.facts:
-        if fact.polarity != "SUPPORTED":
+        if fact.polarity != "SUPPORTED" or fact.kind in NON_IDENTIFIER_KINDS:
             continue
         allowed.add(fact.value)
         if fact.kind == "example":
@@ -1227,7 +1242,7 @@ def allowed_identifiers(facts: FactsDocument, name: str) -> frozenset[str]:
             for file_name in (fact.attributes or {}).get(REPOSITORY_FILES_ATTRIBUTE, "").split(",")
             if file_name and not spells_the_product(file_name, name)
         )
-        if fact.kind in {"public_symbol", "import_path"}:
+        if fact.kind in {"public_symbol", "import_path", "member_field"}:
             spellings = [fact.value]
             attributes = fact.attributes or {}
             spellings.extend(

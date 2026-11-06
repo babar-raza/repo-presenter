@@ -16,7 +16,7 @@ from collections.abc import Mapping
 from typing import Any
 
 from repo_presenter.core.examples import collapse_blank_runs
-from repo_presenter.core.facts import Fact, FactsDocument
+from repo_presenter.core.facts import NON_IDENTIFIER_KINDS, Fact, FactsDocument
 from repo_presenter.readme.composition.authoring import (
     allowed_identifiers,
     cited_inherited_identifiers,
@@ -185,7 +185,11 @@ def unit_failures(candidate: Candidate) -> list[Failure]:
     allowed = allowed | cited_inherited_identifiers(facts, cited_ids)
     members = verified_members(facts)
     methods = surface_members(facts)
-    values = {fact.value for fact in facts.facts if fact.polarity == "SUPPORTED"}
+    values = {
+        fact.value
+        for fact in facts.facts
+        if fact.polarity == "SUPPORTED" and fact.kind not in NON_IDENTIFIER_KINDS
+    }
     symbols = {
         fact.value.rsplit(".", 1)[-1]
         for kind in ("public_symbol", "enum_member")

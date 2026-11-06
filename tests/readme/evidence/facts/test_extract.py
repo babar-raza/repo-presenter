@@ -13,6 +13,7 @@ from support import REPO_ROOT, commit_all, fake_npm, init_git_repository
 
 from repo_presenter.core.examples import ExampleCandidate, ExampleReceipt, MeasuredBuild
 from repo_presenter.core.facts import (
+    EVIDENCE_ONLY_KINDS,
     SOURCE_CHECKOUT_COMMAND_ATTRIBUTE,
     SOURCE_CHECKOUT_UNVERIFIED_ATTRIBUTE,
     Evidence,
@@ -131,6 +132,11 @@ def test_facts_document_for_a_local_clone(
         "package:name",
         "package:python_requires",
         "package:version",
+        # Source detail (class-B audit): the package's own sources hold no compiled extension and
+        # import nothing but the standard library; the test file names one test.
+        "package_trait:pure_source.python",
+        "package_trait:stdlib_only.python",
+        "project_file:test.tests-test_example.py.test_ok",
         "public_symbol:aspose",
         "public_symbol:aspose.example",
     ]
@@ -266,11 +272,17 @@ def test_without_a_manifest_only_identity_license_and_assets_remain(
         ENTRY, snapshot, clone.path, list_tree_paths(clone.path), plugin, None
     )
 
-    assert {fact.kind for fact in document.facts} == {
+    assert {fact.kind for fact in document.facts} - EVIDENCE_ONLY_KINDS == {
         "identity",
         "inherited_unit",
         "link_target",  # the product-page lookup, unresolved offline
         "public_symbol",
+    }
+    # What the tree itself states: no package manifest, and the package's own traits.
+    assert {fact.id for fact in document.facts if fact.kind in EVIDENCE_ONLY_KINDS} == {
+        "package_trait:pure_source.python",
+        "package_trait:stdlib_only.python",
+        "project_file:python_package_manifest",
     }
     assert [f.value for f in document.by_kind("inherited_unit")] == ["# Example"]
     assert [f.value for f in document.by_kind("public_symbol")] == ["pkg"]

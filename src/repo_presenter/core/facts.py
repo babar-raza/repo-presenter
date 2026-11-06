@@ -38,10 +38,38 @@ FactKind = Literal[
     "build_test_asset",
     "link_target",
     "inherited_unit",
+    # Source detail (2026-11-06 unsupported-claim class audit, class B): what the source states
+    # beyond the public symbol table. Evidence for checks and reviewers, never a rendering input.
+    "member_field",
+    "module_export",
+    "internal_symbol",
+    "implementation",
+    "standard_reference",
+    "project_file",
+    "package_trait",
 ]
 Polarity = Literal["SUPPORTED", "CONTRADICTED", "UNRESOLVED"]
 FACT_KINDS: tuple[str, ...] = get_args(FactKind)
 POLARITIES: tuple[str, ...] = get_args(Polarity)
+#: The source-detail kinds: deterministic evidence a claim may bind to, not composition input, so
+#: a packet built from "every kind" leaves them out (they can number in the thousands).
+EVIDENCE_ONLY_KINDS: frozenset[str] = frozenset(
+    {
+        "member_field",
+        "module_export",
+        "internal_symbol",
+        "implementation",
+        "standard_reference",
+        "project_file",
+        "package_trait",
+    }
+)
+#: Source-detail kinds whose value is not a name a README may use as an identifier: a non-public
+#: type (``internal_symbol``), an export the entry point does not re-export (``module_export``),
+#: and statements about code or project files. Naming one of these as API must stay unsupported
+#: (the audit's class-A "non-existent or non-exported type" cases). ``member_field`` is a real
+#: member of a public type and is not in this set.
+NON_IDENTIFIER_KINDS: frozenset[str] = EVIDENCE_ONLY_KINDS - {"member_field"}
 FACTS_FILENAME = "facts.json"
 REPOSITORY_FILES_ATTRIBUTE = "repository_files"
 SOURCE_CHECKOUT_COMMAND_ATTRIBUTE = "source_checkout_command"

@@ -54,12 +54,14 @@ from repo_presenter.readme.evidence.facts.product_pages import (
     enterprise_from_readme_link,
     product_page_facts,
 )
+from repo_presenter.readme.evidence.facts.project_detail import with_project_detail
 from repo_presenter.readme.evidence.facts.published_version import (
     PACKAGE_NAME_FACT_ID,
     pin_install_version,
     published_version_fact,
 )
 from repo_presenter.readme.evidence.facts.registry_lag import registry_lag_fact
+from repo_presenter.readme.evidence.facts.source_detail import with_source_detail
 from repo_presenter.readme.evidence.facts.unpublished import (
     documented_source_install,
 )
@@ -406,6 +408,11 @@ def extract_facts(
     facts.extend(usable_symbol_docs(list(plugin.surface_facts(clone_path, tree_paths))))
     # A directional format enum's members as UNRESOLVED format facts (declared, never verified).
     facts.extend(declared_format_facts(facts))
+    # The 2026-11-06 class-B audit: what the source and project files state beyond the symbol
+    # table (full doc comments, enum members, fields, throws, constants, internal types, test and
+    # build files, package traits). Evidence-only kinds; no renderer reads them.
+    facts[:] = with_source_detail(clone_path, tree_paths, facts)
+    facts[:] = with_project_detail(clone_path, tree_paths, entry.ecosystem, facts)
     # G4-W17 arrival item 51: the manifest's own license declaration, through the ManifestReader
     # facade the plugins read identity from, stands in for a license file the repository does
     # not ship (license_facts consults it only then).
