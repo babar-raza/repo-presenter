@@ -5,7 +5,7 @@
   "provider_repository_id": 1359836523,
   "registry_revision": null,
   "active_transaction_id": "9a0323cb194b479193f48d554af46968",
-  "state": "ACCEPTED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "ACCEPTED",
+    "occurred_at": "2026-11-06T05:52:16.438739+00:00",
+    "resume_predicate": null,
+    "recovery_count": 2
+  },
   "lease": null,
   "last_transition": {
     "transition_id": "7f8687b7a1884009b8bd46bc44d95380",
@@ -33,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 39,
+  "state_version": 40,
   "recent_trigger_dedup_keys": {
     "run:41121245347:aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET": "2e7a505898484cddb6abd5333eb93e50",
     "run:41169943876:aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET": "1b0f7665bd0947518e5cc2c91b2fdace",
@@ -41,5 +48,5 @@
     "run:41177736649:aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET": "91af1eca2c124fc791d75c294f44599a",
     "run:41295857744:aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET": "9a0323cb194b479193f48d554af46968"
   },
-  "recovery_count": 1
+  "recovery_count": 2
 }
