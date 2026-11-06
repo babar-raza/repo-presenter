@@ -16,7 +16,7 @@ from repo_presenter.readme.composition.retained_examples import (
     normalized_code,
 )
 from repo_presenter.readme.validation.claims import claim_findings
-from repo_presenter.readme.validation.failures import Candidate, CausalStage, Failure
+from repo_presenter.readme.validation.failures import Candidate, Failure
 from repo_presenter.readme.validation.text import fences, section_lines, sha256
 
 # The markers an example fact's evidence carries once it has actually run (BC-03's own list).
@@ -133,13 +133,20 @@ def example_failures(candidate: Candidate) -> list[Failure]:
 
 
 def claim_failures(candidate: Candidate) -> list[Failure]:
-    """BC-14: version, install-package and publication statements agree with the facts."""
+    """BC-14: version, install-package, publication and surface statements agree with the facts.
+
+    A finding about text the README keeps verbatim from a SUPPORTED ``inherited_unit``
+    (``ClaimFinding.unit``) is the reconciliation disposition's defect -- keeping contradicted
+    maintainer text -- so it routes to RECONCILING with that unit's id; every other prose finding
+    routes to COMPOSING with its section."""
     lines = section_lines(candidate.readme)
     failures: list[Failure] = []
     for finding in claim_findings(candidate.readme, candidate.facts):
-        stage: CausalStage = (
-            "EXTRACTING" if finding.stage == "EXTRACTING" else "COMPOSING"
-        )
         section = lines[finding.line] if finding.line < len(lines) else None
-        failures.append(Failure(stage, finding.detail, section))
+        if finding.stage == "EXTRACTING":
+            failures.append(Failure("EXTRACTING", finding.detail, section))
+        elif finding.unit is not None:
+            failures.append(Failure("RECONCILING", finding.detail, section, unit=finding.unit))
+        else:
+            failures.append(Failure("COMPOSING", finding.detail, section))
     return failures

@@ -136,7 +136,8 @@ def claim_contradiction_rule(readme_text: str, facts: FactsDocument) -> list[Fin
     lines = readme_text.splitlines()
     findings = []
     for finding in claim_findings(readme_text, facts):
-        quote = lines[finding.line] if 0 <= finding.line < len(lines) else ""
+        last = finding.last if finding.last is not None else finding.line
+        quote = "\n".join(lines[finding.line : last + 1]) if 0 <= finding.line < len(lines) else ""
         findings.append(
             Finding(
                 rule="claim_contradiction",
