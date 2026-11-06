@@ -110,6 +110,16 @@ treated as lost, the count fell to 0, and everything had to be resealed. Never a
    under current code. Mechanism changes are still batched and kept rare, so re-certification stays cheap and
    rare, and a change that would make good seals fail is treated as a defect in the change.
 
+### R12–R14 (owner rulings 2026-11-06 — binding)
+
+8. **When stuck, change the approach (R12).** The same failure twice means the next attempt is a first-principles
+   redesign, planned in writing (perspectives considered, hidden factors named, verification designed) and built to
+   be permanent -- not another variant of the failed attempt.
+9. **Portfolio scope (R13).** Plans, runs and reports target the complete portfolio / >= 25 accepted per lane.
+10. **Drop review (R14).** Before any candidate counts, every live-README item it drops has a recorded supervisor
+    decision (`data/drop_decisions.json`: item, repository, decision, evidence, the rule or case it calibrates);
+    each decision is turned into a deterministic rule or labelled case so the pipeline decides alike from then on.
+
 ## Channel
 
 Two append-only JSONL files, one writer each, both git-tracked:

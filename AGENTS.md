@@ -29,6 +29,17 @@ Full text: `docs/CONSOLIDATED_GOALS_2026-11-06.md` Part B; operating detail: `op
 - **R11 — decide, don't ask; report results; work in parallel.** Ask the owner only for actions only the owner
   can perform; lead every report with accepted-per-lane and delivered-upstream numbers.
 
+## BINDING OWNER RULINGS R12–R14 (2026-11-06)
+
+- **R12 — when stuck, change the approach.** After repeated failed tries, stop retrying: think from first
+  principles, examine every perspective and the hidden factors, design it to be solved once, robustly, and verify
+  it rigorously so it never has to be revisited.
+- **R13 — the goal is the complete portfolio, or at least 25 accepted per lane (R and L).** Never treat a few
+  pilot repositories as the scope; plan and execute portfolio-wide (upstream writes still per R3).
+- **R14 — no careless drops.** Every item dropped from a live README is examined and decided (keep dropped with
+  evidence, or re-add), the decision recorded, and the system calibrated to decide every similar drop the same way
+  (a rule or a labelled case); BC-17 blocks unreviewed losses.
+
 ## READ THIS FIRST — owner-adopted corrective plan (2026-11-03)
 
 `docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md` is **owner-adopted, binding authority**,
