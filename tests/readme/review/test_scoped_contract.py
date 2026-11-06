@@ -330,3 +330,80 @@ def test_maintainer_lines_are_the_lines_of_units_kept_as_preserve_attributed() -
     assert maintainer_lines(CANDIDATE, facts, rows("PRESERVE_ATTRIBUTED")) == {FIRST, FIRST + 1}
     assert maintainer_lines(CANDIDATE, facts, rows("VERIFIED_PRESERVE")) == frozenset()
     assert maintainer_lines(CANDIDATE, facts, {"dispositions": []}) == frozenset()
+
+
+# --- the reviewer rule for inherited text (DECISION_LOG 2026-11-06, reviewer logic 10) -----------
+# Inherited text is exempt from claim findings only when printed under the maintainer attribution
+# (PRESERVE_ATTRIBUTED) AND no fact contradicts it; inherited text printed as the README's own claim
+# is judged like generated text, and a contradicted inherited claim is always a finding.
+
+_KEPT_UNIT = "inherited_unit:009.list"
+#: A CONTRADICTED product fact whose value only the first kept line holds.
+_REFUTING = "format:number-1"
+
+
+def _inherited_facts(*, unit_polarity: str = "SUPPORTED", refuting: bool = False):
+    from repo_presenter.core.facts import Evidence, Fact, FactsDocument
+
+    kept = "\n".join(ROWS[FIRST - 1 : FIRST + 1])
+    extra = [Fact(_KEPT_UNIT, "inherited_unit", kept, (Evidence("README.md"),), unit_polarity)]
+    if refuting:
+        extra.append(
+            Fact(_REFUTING, "format", "number 1", (Evidence("src/x.py"),), "CONTRADICTED")
+        )
+    return FactsDocument(FACTS.repository, FACTS.source_revision, (*FACTS.facts, *extra))
+
+
+def _kept_as(disposition: str, *fact_ids: str) -> dict[str, Any]:
+    return {
+        "dispositions": [
+            {"unit_id": _KEPT_UNIT, "disposition": disposition, "fact_ids": list(fact_ids)}
+        ]
+    }
+
+
+def _marked(facts, dispositions) -> frozenset[int]:
+    from repo_presenter.readme.review.scope import maintainer_lines
+
+    return maintainer_lines(CANDIDATE, facts, dispositions)
+
+
+def _unsupported_on_first_line(facts, dispositions) -> list[str]:
+    unit = maintained(*_marked(facts, dispositions))
+    return check(cited("unsupported_claim", FIRST, fact_ids=[]), unit=unit)
+
+
+def test_a_verbatim_unattributed_inherited_claim_a_fact_contradicts_stands() -> None:
+    """(a) kept verbatim as the README's own claim (no attribution): no exemption at all, so the
+    unsupported_claim on it is a valid, blocking finding."""
+    facts = _inherited_facts(refuting=True)
+    for disposition in ("VERIFIED_PRESERVE", "VERIFIED_MOVE"):
+        assert _marked(facts, _kept_as(disposition)) == frozenset()
+        assert _unsupported_on_first_line(facts, _kept_as(disposition)) == []
+
+
+def test_an_attributed_uncontradicted_inherited_claim_is_exempt() -> None:
+    """(b) printed under the attribution and contradicted by no fact: the unsupported_claim is
+    refused (re-asked) as a contract error."""
+    from repo_presenter.readme.review.reply import MAINTAINER_TEXT_ERROR
+
+    problems = _unsupported_on_first_line(_inherited_facts(), _kept_as("PRESERVE_ATTRIBUTED"))
+    assert len(problems) == 1 and MAINTAINER_TEXT_ERROR in problems[0]
+
+
+def test_an_attributed_inherited_claim_a_fact_contradicts_stands() -> None:
+    """(c) attributed but contradicted, by each way a fact can contradict it: the line is not
+    marked, so the finding on it stands."""
+    attributed = _kept_as("PRESERVE_ATTRIBUTED")
+    for facts, dispositions in (
+        # the inherited unit's own fact is CONTRADICTED
+        (_inherited_facts(unit_polarity="CONTRADICTED"), attributed),
+        # the disposition cites a CONTRADICTED fact
+        (_inherited_facts(refuting=True), _kept_as("PRESERVE_ATTRIBUTED", _REFUTING)),
+        # the line holds a CONTRADICTED product fact's value
+        (_inherited_facts(refuting=True), attributed),
+    ):
+        assert FIRST not in _marked(facts, dispositions)
+        assert _unsupported_on_first_line(facts, dispositions) == []
+    # Only the contradicted line loses the exemption; the uncontradicted kept line keeps it.
+    assert _marked(_inherited_facts(refuting=True), attributed) == {FIRST + 1}
