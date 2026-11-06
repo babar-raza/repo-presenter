@@ -141,7 +141,7 @@ owner_review_status:
 
 release_gate_dashboard:
   generated_by: gatecli
-  generated_at: '2026-11-06T02:11:36Z'
+  generated_at: '2026-11-06T10:15:12Z'
   note: Tool-generated from gateverify.rebuild_state() -- never hand-edit this block.
     Historical current_gate/active_work_item below are preserved bootstrap-era narrative,
     not this cursor; this block is the real, evidence-derived release-gate status
@@ -227,20 +227,18 @@ release_gate_dashboard:
     receipt: GATE2_INTEGRATIONS/TC-009/receipt.json
   - id: TC-009a
     gate: GATE2_INTEGRATIONS
-    status: AWAITING_OWNER_DECISION
+    status: ACCEPTED
     attempt: 0
-    blocker:
-      class: AWAITING_OWNER_DECISION
-      summary: 'checks failed: python ops/checks/execution_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json
-        minted=True verified_via_token_provenance=True; negative-control patch did
-        not apply'
+    blocker: null
+    commit: 12e7a3e2bd3952e42c972d9dec70d54cd0ed4c67
+    receipt: GATE2_INTEGRATIONS/TC-009a/receipt.json
   - id: TC-009b
     gate: GATE2_INTEGRATIONS
     status: AWAITING_PREREQUISITE
     attempt: 0
     blocker:
       class: AWAITING_PREREQUISITE
-      summary: depends on TC-009a, TC-007, not yet accepted
+      summary: depends on TC-007, not yet accepted
   - id: TC-010
     gate: GATE2_INTEGRATIONS
     status: ACCEPTED
