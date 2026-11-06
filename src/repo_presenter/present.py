@@ -54,6 +54,7 @@ from repo_presenter.core.llm.prompts import load_manifests
 from repo_presenter.core.registry.loader import load_registry, require_listed
 from repo_presenter.core.registry.models import RegistryEntry
 from repo_presenter.core.state.bundle_store import publish_bundle
+from repo_presenter.core.version_set import current_fingerprint
 from repo_presenter.core.state.cas import StateBackend
 from repo_presenter.core.state.git_backend import GitStateBackend
 from repo_presenter.core.state.present_transaction import (
@@ -394,6 +395,7 @@ def run_present(
     pipeline: Callable[[], None],
     lane: str = LANE_R,
     publish: Callable[[], None] | None = None,
+    version_set: str | None = None,
 ) -> int:
     """Run ``pipeline`` under the durable transaction for ``entry``; returns the exit code.
 
@@ -404,8 +406,15 @@ def run_present(
     bundle durable (``core/state/bundle_store.py``). A candidate whose bundle could not be stored
     is recorded as a failure, not as ready, because a result that only lives in an expiring cache
     is not a result.
+
+    No demotion (owner version-set rules, ``core/version_set.py``): a failed run is recorded as a
+    failed ATTEMPT on the transaction record, naming the ``version_set`` fingerprint it ran under,
+    and never publishes -- so the lane's bundle-ref history (every earlier seal, under whatever
+    version set it was sealed) is left exactly as it was. The record may still route to
+    INVALIDATED for its own state machine; no count reads it.
     """
     failure: dict[str, str] = {}
+    attempt = f"attempt under version set {version_set[:12]}: " if version_set else ""
 
     def run() -> int:
         try:
@@ -445,7 +454,7 @@ def run_present(
         if exit_code != 0:
             return PresentOutcome(
                 kind="failed",
-                detail=failure.get("detail", f"present exited {exit_code}"),
+                detail=attempt + failure.get("detail", f"present exited {exit_code}"),
                 failure_class="transient"
                 if failure.get("class") == "transient"
                 else None,
@@ -455,7 +464,7 @@ def run_present(
         except PresenterError as exc:
             # A bundle that fails its own integrity check is a recorded failure, never an
             # exception that leaves the durable record describing an earlier run.
-            return PresentOutcome(kind="failed", detail=f"{type(exc).__name__}: {exc}")
+            return PresentOutcome(kind="failed", detail=f"{attempt}{type(exc).__name__}: {exc}")
 
     return run_present_transaction(
         backend=backend,
@@ -584,10 +593,19 @@ def main(argv: Sequence[str] | None = None) -> int:
             f"({publication.files} files, {'pushed' if publication.changed else 'unchanged'})"
         )
 
+    try:
+        version_set: str | None = current_fingerprint(args.lane, load_manifests(args.prompts))
+    except Exception as exc:  # noqa: BLE001 -- the label is informational; the run decides
+        print(f"version set: not computable ({type(exc).__name__}: {exc})")
+        version_set = None
+    else:
+        print(f"version set (Lane {args.lane}): {version_set[:12]}")
+
     with GitStateBackend(
         remote=args.state_remote, token=state_token, lane=args.lane
     ) as backend:
         exit_code = run_present(
+            version_set=version_set,
             backend=backend,
             entry=entry,
             candidates_root=args.candidates_root,

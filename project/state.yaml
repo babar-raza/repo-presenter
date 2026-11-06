@@ -55,10 +55,14 @@ progress:
   # TC-005 (project/taskcards/TC-005.yaml) now asserts this block matches that script's output, so
   # the next drift is a failing check, not a silent stale number. Do not revert to 36/34 (known
   # false) or hand-edit these two fields without re-running the script first.
-  lane_l_accepted: 12
+  lane_l_accepted: 0
   lane_l_corrected_non_empty_patch: 15
   lane_l_blocked: 0
-  lane_r_accepted: 9
+  lane_r_accepted: 0
+  # 2026-11-06 version-set resync (owner ruling: one version set per release set; seals never demoted):
+  # counts now come from seal history grouped by version-set fingerprint, current set only. No seal exists yet
+  # under the current set in either lane (older sets are reported separately by scripts/portfolio_status.py and
+  # never summed). Earlier values here (10/9/8/7 Lane R, 12 Lane L) mixed version sets.
   # 2026-11-06 fourth resync (scripts/portfolio_status.py): 8 -> 9. Email .NET Lane R sealed ACCEPTED under the
   # BC-05 supersession check (round 6, hosted run 42198930558).
   # 2026-11-06 third resync (scripts/portfolio_status.py): 7 -> 8. Imaging .NET Lane R sealed ACCEPTED under the
@@ -143,7 +147,7 @@ owner_review_status:
 
 release_gate_dashboard:
   generated_by: gatecli
-  generated_at: '2026-11-06T10:24:48Z'
+  generated_at: '2026-11-06T11:46:40Z'
   note: Tool-generated from gateverify.rebuild_state() -- never hand-edit this block.
     Historical current_gate/active_work_item below are preserved bootstrap-era narrative,
     not this cursor; this block is the real, evidence-derived release-gate status
@@ -186,11 +190,11 @@ release_gate_dashboard:
     receipt: GATE0_AUTHORITY/TC-004/receipt.json
   - id: TC-005
     gate: GATE0_AUTHORITY
-    status: ACCEPTED
+    status: STALE_RECEIPT
     attempt: 0
-    blocker: null
-    commit: 1f426ec19ae6dc7e5c26dc75536d459300daa942
-    receipt: GATE0_AUTHORITY/TC-005/receipt.json
+    blocker:
+      class: STALE_RECEIPT
+      summary: card definition changed since this receipt was generated -- re-verify
   - id: TC-006
     gate: GATE1_QUALITY
     status: ACCEPTED
@@ -286,6 +290,7 @@ release_gate_dashboard:
       class: AWAITING_PREREQUISITE
       summary: depends on TC-007, not yet accepted
   ready:
+  - TC-005
   - TC-007
 current_gate:
   id: P1_PORTFOLIO_SCALE

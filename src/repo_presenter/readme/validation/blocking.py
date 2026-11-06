@@ -40,6 +40,7 @@ from repo_presenter.readme.validation.provenance import (
     example_failures,
     source_failures,
 )
+from repo_presenter.readme.validation.public_text import public_text_failures
 from repo_presenter.readme.validation.structure import (
     canonical_name_failures,
     structure_failures,
@@ -57,7 +58,7 @@ JUDGES: dict[str, Callable[[Candidate], list[Failure]]] = {
     "BC-04": unit_failures,
     "BC-05": disposition_failures,
     "BC-06": link_failures,
-    "BC-07": structure_failures,
+    "BC-07": lambda candidate: [*structure_failures(candidate), *public_text_failures(candidate)],
     "BC-08": protected_failures,
     "BC-12": canonical_name_failures,
     "BC-14": claim_failures,

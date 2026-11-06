@@ -219,3 +219,166 @@ def export_bundle(
     ).is_file():
         raise BundleStoreError(f"{target}: the exported bundle does not verify")
     return target
+
+
+# --- seal history: every sealed bundle a lane ever pushed, never only the latest ----------------
+
+#: Manifest states of a seal that stands as a candidate.
+SEALED_GOOD_STATES = frozenset({"ACCEPTED", "READY_FOR_PROPOSAL"})
+REVIEW_VERDICT_FILENAME = "review_verdict.json"
+DEPENDENCIES_FILENAME = "dependencies.json"
+_HISTORY_REF_PREFIX = "refs/repository-presenter-seal-history"
+
+
+@dataclass(frozen=True)
+class SealRecord:
+    """One seal: one commit on a lane's bundle ref, read and integrity-verified at that commit.
+
+    The bundle ref is append-only (``publish_bundle`` always commits on top of the previous seal,
+    and only a run that sealed publishes at all), so its history is the immutable record of every
+    candidate the lane ever sealed. A later run -- failed or not, under any version set -- can add
+    commits; it never rewrites or removes this one, so it can never demote it.
+    """
+
+    repository: str
+    lane: str
+    commit: str
+    revision: str
+    manifest_state: str
+    dependencies: dict | None
+    review: dict | None
+    readme: bytes | None = None
+    error: str = ""
+
+    @property
+    def pipeline_good(self) -> bool:
+        return not self.error and self.manifest_state in SEALED_GOOD_STATES
+
+    @property
+    def model_accept(self) -> bool:
+        review = self.review or {}
+        return review.get("verdict") == "ACCEPT" and review.get("model_verdict") == "ACCEPT"
+
+    @property
+    def counted(self) -> bool:
+        """A pipeline-good seal carrying a model-reviewed ACCEPT: what a lane count may include."""
+        return self.pipeline_good and self.model_accept
+
+
+def parse_bundle_ref(ref: str) -> tuple[str, str] | None:
+    """``refs/.../bundles/<org>__<name>[@lane-l]`` -> ``(org/name, lane)``; None otherwise."""
+    from repo_presenter.core.state.git_backend import LANE_L_REF_SUFFIX
+
+    prefix = BUNDLE_REF_PREFIX + "/"
+    if not ref.startswith(prefix):
+        return None
+    key = ref[len(prefix) :]
+    lane = LANE_R
+    if key.endswith(LANE_L_REF_SUFFIX):
+        key, lane = key[: -len(LANE_L_REF_SUFFIX)], LANE_L
+    if "__" not in key:
+        return None
+    return key.replace("__", "/", 1), lane
+
+
+def _read_seal(git_dir: Path, commit: str, repository: str, lane: str, scratch: Path) -> SealRecord:
+    """Materialize ``commit``'s tree into a fresh directory and verify it exactly as a committed
+    ``candidates/`` tree is verified. Any failure is a recorded ``error``, never a count."""
+    import io
+    import json
+    import tarfile
+
+    def failed(why: str, revision: str = "") -> SealRecord:
+        return SealRecord(repository, lane, commit, revision, "", None, None, None, why)
+
+    archive = subprocess.run(
+        ["git", "--git-dir", str(git_dir), "archive", "--format=tar", commit],
+        stdin=subprocess.DEVNULL,
+        capture_output=True,
+        check=False,
+    )
+    if archive.returncode != 0:
+        return failed(f"git archive failed: {archive.stderr.decode(errors='replace').strip()}")
+    target = scratch / commit
+    target.mkdir(parents=True)
+    with tarfile.open(fileobj=io.BytesIO(archive.stdout)) as tar:
+        members = [m for m in tar.getmembers() if m.type != tarfile.XGLTYPE]
+        for member in members:
+            if not (member.isfile() or member.isdir()):
+                return failed(f"refusing non-regular tree entry {member.name!r}")
+            try:
+                _require_contained(commit, member.name.rstrip("/"), target)
+            except BundleStoreError as exc:
+                return failed(str(exc))
+        tar.extractall(target, members=members, filter="data")
+    try:
+        revision = _current_revision(target)
+        bundle = target / revision
+        manifest = verify_bundle(bundle, lane)
+        if manifest is None:
+            return failed(f"CURRENT names {revision} but it has no manifest", revision)
+        if manifest.get("repository") not in (None, repository):
+            return failed(f"manifest names repository {manifest.get('repository')!r}", revision)
+        files = manifest.get("files", {})
+        dependencies = review = None
+        if DEPENDENCIES_FILENAME in files:  # only manifest-sealed files are evidence
+            dependencies = json.loads((bundle / DEPENDENCIES_FILENAME).read_text(encoding="utf-8"))
+        if REVIEW_VERDICT_FILENAME in files:
+            review = json.loads((bundle / REVIEW_VERDICT_FILENAME).read_text(encoding="utf-8"))
+        readme = (bundle / "README.md").read_bytes() if "README.md" in files else None
+    except Exception as exc:  # noqa: BLE001 -- corrupt evidence is a reason, never a count
+        return failed(f"{type(exc).__name__}: {exc}")
+    return SealRecord(
+        repository,
+        lane,
+        commit,
+        revision,
+        str(manifest.get("state")),
+        dependencies if isinstance(dependencies, dict) else None,
+        review if isinstance(review, dict) else None,
+        readme,
+    )
+
+
+def seal_history(
+    *, remote: str = "origin", token: str | None = None
+) -> dict[tuple[str, str], list[SealRecord]]:
+    """Every seal on every bundle ref of ``remote``: ``{(repository, lane): [seal, ...]}``, oldest
+    first. One full-history fetch of the bundle namespace into an isolated workspace; read-only
+    (nothing is ever pushed)."""
+    import tempfile
+
+    history: dict[tuple[str, str], list[SealRecord]] = {}
+    try:
+        with GitStateBackend(remote=remote, token=token) as backend, backend._lock:
+            fetched = backend._run_remote_git(
+                [
+                    "fetch",
+                    "--no-write-fetch-head",
+                    "--no-tags",
+                    backend._remote,
+                    f"+{BUNDLE_REF_PREFIX}/*:{_HISTORY_REF_PREFIX}/*",
+                ]
+            )
+            if fetched.returncode != 0:
+                raise BundleStoreError(
+                    f"fetch of the bundle history failed: {fetched.stderr.strip()}"
+                )
+            listed = _git(
+                backend, ["for-each-ref", "--format=%(refname)", _HISTORY_REF_PREFIX], "for-each-ref"
+            )
+            with tempfile.TemporaryDirectory(prefix="seal-history-") as tmp:
+                for local in sorted(filter(None, listed.splitlines())):
+                    parsed = parse_bundle_ref(BUNDLE_REF_PREFIX + local[len(_HISTORY_REF_PREFIX) :])
+                    if parsed is None:
+                        continue
+                    repository, lane = parsed
+                    commits = _git(backend, ["rev-list", "--reverse", local], "rev-list").split()
+                    scratch = Path(tmp) / lane / _slug(repository)
+                    history[parsed] = [
+                        _read_seal(backend._git_cwd, commit, repository, lane, scratch)
+                        for commit in commits
+                    ]
+    except StateBackendError as exc:
+        raise BundleStoreError(str(exc)) from exc
+    return history

@@ -92,6 +92,21 @@ commits, documentation, or architecture alone — only on the eleven-state disti
    the supervisor verifies each result independently (tests, gate review, real runs) and merges.
    Waiting on a single worker while other READY work exists is a defect.
 
+### Version sets and release trains (owner ruling 2026-11-06 — binding)
+
+5. **One version set per release set.** Every candidate that is counted, accepted or delivered together was
+   produced under the same single version set: every prompt (name, version, sha), reviewer logic, renderer,
+   shell, normalisation, correction engine, detectors, model routes. Candidates under different version sets
+   are never summed, compared as one portfolio, or delivered as one set.
+6. **A version bump never invalidates a seal.** A sealed candidate is an immutable record of what its version
+   set produced; a later change or a failed re-run never demotes or deletes it. Counts come from seal history
+   grouped by version-set fingerprint, never from a transaction record's latest state.
+7. **Release trains, not drip regeneration.** Mechanism changes accumulate on `main`. A release train pins one
+   version set and regenerates every target repository under it; while a train runs, no mechanism change
+   merges (a change that must land restarts the train from zero under the new set). Counts reported to the
+   owner are the current train's, with older version sets shown separately. Per-fix pilot runs are diagnostics
+   and are never counted as a release set.
+
 ## Channel
 
 Two append-only JSONL files, one writer each, both git-tracked:

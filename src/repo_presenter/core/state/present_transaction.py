@@ -261,7 +261,11 @@ def _failure_hops(current_state: TransactionState) -> list[TransactionState]:
     ``ACCEPTED`` and ``READY_FOR_PROPOSAL`` have no registered edge to ``FAILED_INTERNAL``; both
     have one to ``INVALIDATED``, and a failure discovered while a sealed (possibly proven) candidate
     is in play means that candidate no longer stands (docs/STATE_MACHINE.md section 10: "Failure
-    routes through ``INVALIDATED``"). ``INVALIDATED`` is already the routing state a failure lands
+    routes through ``INVALIDATED``"). That is the RECORD's routing only (owner version-set rules,
+    2026-11-06, ``core/version_set.py``): the sealed candidate itself is an immutable commit on its
+    bundle ref, which a failed run never publishes to, and every count reads that seal history --
+    never ``record.state`` -- so this hop records a failed attempt without demoting any seal.
+    ``INVALIDATED`` is already the routing state a failure lands
     on, so it commits nothing new - the same reasoning as a repeat ``FAILED_INTERNAL``. A
     ``MONITORING`` record's only registered next state is ``OBSERVED``, so a failure is recorded
     from there. Everything else reaches ``FAILED_INTERNAL`` directly.

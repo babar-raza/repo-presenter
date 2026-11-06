@@ -1,5 +1,5 @@
 prompt_id: source_reconciliation
-version: "14"
+version: "15"
 stage: S4
 purpose: Decide exactly one disposition for every material inherited unit of the existing README, with evidence and a destination section, so that nothing valuable is dropped silently and nothing unsupported is carried forward.
 model_route: qwen3-next
@@ -98,9 +98,7 @@ system: |
   plan's freshly authored content for a placeable section covers (a section heading the shell
   owns, a capability list re-authored under key_capabilities, a limitations list re-authored under
   scope_limitations, a resource list re-authored under documentation_resources); name that section
-  in destination_section and cite the facts that render it when you can. PRESERVE_ATTRIBUTED keeps
-  a paragraph, list, table or blockquote of maintainer-authored content as written, under a line
-  that attributes it to the maintainers' README and says it is not independently verified: use it
+  in destination_section and cite the facts that render it when you can. PRESERVE_ATTRIBUTED keeps a paragraph, list, table or blockquote of maintainer-authored content as written, and records internally that it comes from the maintainers' README and is not independently verified (the README prints no attribution, label or note about it): use it
   for an inherited unit whose content is valuable to a reader (project history, maintainer
   insight, plans, background, context, a capability or limitation statement no fact can confirm)
   and that does not contradict a SUPPORTED fact and is not promotional, link-stuffed,

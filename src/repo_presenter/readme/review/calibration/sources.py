@@ -294,3 +294,37 @@ def load_reference_candidate(
         recorded_readme=readme_path.read_text(encoding="utf-8"),
     )
     return replace(source, rendered=False)
+
+
+def load_lane_l_bundle_candidate(
+    revision_dir: Path,
+    *,
+    name: str,
+    registry_path: Path = DEFAULT_REGISTRY_PATH,
+) -> SourceCandidate:
+    """A sealed Lane L bundle (``bundle_store.export_bundle(..., LANE_L, ...)``'s
+    ``<root>/lane-l/<revision>`` directory): the corrected live README it sealed, judged against the
+    facts it was sealed with and the live README it corrected (``README.original.md``), both taken
+    from the bundle itself so no clone at the bundle's revision is needed. Like a reference
+    candidate it is not this renderer's output (``rendered`` is ``False``): the deterministic stage
+    is Lane L's holdout rules (``corpus.deterministic_findings``), not the S9 checks."""
+    facts = read_facts(revision_dir / "facts.json")
+    if facts.source_revision != revision_dir.name:
+        raise ValueError(
+            f"{name}: the bundle's facts are for {facts.source_revision}, not {revision_dir.name}"
+        )
+    entry = require_listed(load_registry(registry_path), facts.repository)
+    source = build_source(
+        name=name,
+        entry=entry,
+        facts=facts,
+        plan={},
+        units={},
+        dispositions={},
+        investigation={},
+        original=(revision_dir / "README.original.md").read_text(encoding="utf-8"),
+        tree_paths=[],
+        scratch=revision_dir,
+        recorded_readme=(revision_dir / "README.md").read_text(encoding="utf-8"),
+    )
+    return replace(source, rendered=False)

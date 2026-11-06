@@ -61,6 +61,10 @@ class Base:
     #: Blocking checks that fail on the clean twin and are not about its text (for example the
     #: package registry's ownership receipt, a property of the registry and not of the README).
     tolerated_checks: tuple[str, ...] = ()
+    #: Why this base's clean twin is asked but not scored although the deterministic stage passes it
+    #: (for example: the same README and facts were already asked in an earlier iteration, so a
+    #: verdict on it is not a held-out measurement). Empty: scored as usual.
+    unscored_reason: str = ""
 
 
 @dataclass(frozen=True)
@@ -235,6 +239,12 @@ def base_cases(base: Base) -> list[Case]:
             baseline_rules=baseline_rules,
             note="the repaired real candidate; the deterministic stage already blocks it "
             f"({', '.join(baseline_rules)})",
+        )
+    elif base.unscored_reason:
+        clean = replace(
+            clean,
+            role="unscored_twin",
+            note=f"the repaired real candidate; not scored: {base.unscored_reason}",
         )
     cases = [clean]
     for index, repair in enumerate(base.repairs):

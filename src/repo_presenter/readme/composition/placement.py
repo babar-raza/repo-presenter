@@ -28,12 +28,13 @@ from repo_presenter.readme.evidence.facts.commands import CI_MATRIX_FACT_ID, REL
 from repo_presenter.readme.evidence.facts.links import heading_slug
 
 #: The disposition that keeps maintainer-authored content no fact can confirm, printed as written
-#: under an attribution line (docs/MAINTAINER_CONTENT_PRESERVATION.md, owner requirement
+#: with its attribution recorded internally only, never printed (docs/MAINTAINER_CONTENT_PRESERVATION.md, owner requirement
 #: 2026-11-05): lack of repository evidence is not grounds for deletion, but such content is never
 #: presented as verified. It places exactly like VERIFIED_PRESERVE/VERIFIED_MOVE.
 ATTRIBUTED = "PRESERVE_ATTRIBUTED"
-#: The one line the renderer prints directly before each contiguous run of ``ATTRIBUTED`` content
-#: in a section, followed by a blank line and the verbatim content.
+#: The attribution line the renderer USED to print before attributed content (until 2026-11-06). The
+#: owner ruled attribution internal-only: it is never printed; this constant exists so the public
+#: text guard can refuse any README that still carries it.
 ATTRIBUTION_LINE = "*From the maintainers' README (not independently verified):*"
 PLACED = frozenset({"VERIFIED_PRESERVE", "VERIFIED_MOVE", ATTRIBUTED})
 PLACING = frozenset(
@@ -511,12 +512,10 @@ def placed_attribution(decisions: list[Placement]) -> dict[str, list[bool]]:
 
 
 def with_attribution(texts: list[str], attributed: list[bool]) -> list[str]:
-    """``texts`` as a section prints them: ``ATTRIBUTION_LINE`` and a blank line directly before
-    the first text of each contiguous run of attributed texts, every text otherwise unchanged."""
-    shown: list[str] = []
-    previous = False
-    for index, text in enumerate(texts):
-        flagged = index < len(attributed) and attributed[index]
-        shown.append(f"{ATTRIBUTION_LINE}\n\n{text}" if flagged and not previous else text)
-        previous = flagged
-    return shown
+    """``texts`` as a section prints them: unchanged. Owner ruling 2026-11-06: the maintainer
+    attribution is internal only -- recorded in ``dispositions.json`` (``PRESERVE_ATTRIBUTED``) and
+    in the reviewer's ``maintainer_lines`` -- and must never appear in the public README in any shape
+    or form. ``ATTRIBUTION_LINE`` is kept only so ``validation/public_text.py`` can refuse a README
+    that carries it."""
+    del attributed  # the flags stay internal; nothing is printed for them
+    return list(texts)

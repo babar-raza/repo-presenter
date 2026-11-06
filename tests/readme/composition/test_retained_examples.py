@@ -335,19 +335,15 @@ def test_the_stage_is_idempotent() -> None:
     assert retain_unverified_examples(copy.deepcopy(once), _facts()) == once
 
 
-def test_the_renderer_prints_each_unverified_example_verbatim_beside_the_fixed_note() -> (
-    None
-):
+def test_the_renderer_prints_each_unverified_example_verbatim_with_no_public_note() -> None:
+    """Owner ruling 2026-11-06: provenance and verification status stay internal."""
     facts = _facts()
     dispositions = retain_unverified_examples(_raw_dispositions(), facts)
     readme = _render(facts, dispositions)
-    assert (
-        "## Quick Start\n\nCreate a widget and render it:\n\n" + NOT_VERIFIED_NOTE
-        in readme
-    )
+    assert "## Quick Start\n\nCreate a widget and render it:\n\n```python\n" in readme
     for code in (CODE_A, CODE_B, CODE_C):
-        assert f"{NOT_VERIFIED_NOTE}\n\n```python\n{code.strip()}\n```" in readme
-    assert readme.count(NOT_VERIFIED_NOTE) == 3
+        assert f"```python\n{code.strip()}\n```" in readme
+    assert NOT_VERIFIED_NOTE not in readme
     assert "## Additional Examples\n\nMore ways to render." in readme
     assert (
         "<details>\n<summary>View Additional Examples</summary>\n\n### Render Twice"
@@ -412,9 +408,8 @@ def test_a_supported_example_is_printed_verified_and_unmarked() -> None:
     }
     readme = render_readme(make_entry(), facts, plan, units, dispositions)
     assert f"Render one:\n\n```python\n{CODE_A.rstrip()}\n```" in readme
-    assert f"{NOT_VERIFIED_NOTE}\n\n```python\n{CODE_A.strip()}" not in readme
-    assert f"{NOT_VERIFIED_NOTE}\n\n```python\n{CODE_B.strip()}\n```" in readme
-    assert readme.count(NOT_VERIFIED_NOTE) == 1
+    assert f"```python\n{CODE_B.strip()}\n```" in readme
+    assert NOT_VERIFIED_NOTE not in readme
 
 
 def test_the_independent_reviewer_finds_no_loss_in_the_retained_example_sections() -> (
@@ -461,16 +456,15 @@ def _candidate(facts: FactsDocument, dispositions: dict[str, Any], readme: str) 
     )
 
 
-def test_bc03_accepts_marked_retained_examples_and_rejects_unmarked_ones() -> None:
+def test_bc03_accepts_retained_examples_as_written_and_rejects_altered_ones() -> None:
     facts = _facts()
     dispositions = retain_unverified_examples(_raw_dispositions(), facts)
     readme = _render(facts, dispositions)
     assert example_failures(_candidate(facts, dispositions, readme)) == []
-    unmarked = readme.replace(NOT_VERIFIED_NOTE + "\n\n", "", 1)
-    failures = example_failures(_candidate(facts, dispositions, unmarked))
-    assert [f.detail for f in failures] == [
-        "example:001 is not verified but is printed without the not-verified note"
-    ]
+    first = CODE_A.strip().splitlines()[0]
+    altered = readme.replace(first, first + "  # edited", 1)
+    # An unverified example changed from what the maintainers wrote is never printed as theirs.
+    assert example_failures(_candidate(facts, dispositions, altered))
 
 
 def test_bc03_still_rejects_an_example_fence_the_stage_did_not_hand_over() -> None:

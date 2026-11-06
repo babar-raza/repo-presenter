@@ -23,6 +23,12 @@ from typing import Any
 
 from repo_presenter.core.facts import Fact, FactsDocument
 
+# The public note the renderer USED to print beside a retained, unverified example (until 2026-11-06):
+# "> **Not verified:** this example is carried over unchanged from the project's existing README. It
+# could not be compiled or run here." Owner ruling 2026-11-06: provenance and attribution are internal
+# only and never reach the public README in any shape or form; the example prints exactly as the
+# maintainers wrote it, and its verification status stays in facts.json / dispositions.json.
+# Kept as a constant so validation/public_text.py refuses a README that still carries it.
 NOT_VERIFIED_NOTE = (
     "> **Not verified:** this example is carried over unchanged from the project's existing "
     "README. It could not be compiled or run here."
@@ -220,9 +226,10 @@ def normalized_code(code: str) -> str:
 
 
 def block_lines(block: RetainedBlock) -> list[str]:
-    """One retained example as the README prints it: framing text, the note, the code as written."""
+    """One retained example as the README prints it: framing text, then the code as written (no
+    provenance note: owner ruling 2026-11-06)."""
     lines: list[str] = []
-    for text in (*block.lead_texts, NOT_VERIFIED_NOTE, block.code):
+    for text in (*block.lead_texts, block.code):
         if lines:
             lines.append("")
         lines.extend(text.split("\n"))
