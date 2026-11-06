@@ -43,6 +43,12 @@
       "sha256": "1ab153842587ed693dfa2dc3c5c9cfd9add85bb053b703cac6a3a4ce2cccdf2f"
     }
   },
+  "invalidated": {
+    "causal_stage": "EXTRACTING",
+    "detail": "dependencies.json, facts.json, review_verdict.json changed",
+    "recorded_at": "2026-11-06T06:14:10Z",
+    "scope": "facts"
+  },
   "lane": "L",
   "ledger_totals": {
     "audit_only": 0,
@@ -95,39 +101,43 @@
     "invocation_id": "7b7f331f31494f3e9ff9105e9d0e8b51",
     "started_at": "2026-10-28T05:02:07Z"
   },
-  "state": "VALID_UPDATE_AVAILABLE",
+  "state": "INVALIDATED",
   "update": {
     "available": true,
     "changed": [
-      "dependencies.json"
+      "dependencies.json",
+      "facts.json",
+      "review_verdict.json"
     ],
-    "classification": "presentation",
-    "earliest_affected_stage": "RECONCILING",
+    "classification": "factual",
+    "earliest_affected_stage": "EXTRACTING",
     "files": {
       "README.md": "71de1b2fe224df2ec332c6f4b2ee0c181afb659e5c6b01ad4703d9d3ecd8e436",
       "README.original.md": "71de1b2fe224df2ec332c6f4b2ee0c181afb659e5c6b01ad4703d9d3ecd8e436",
       "README.patch.diff": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "corrections.json": "12551511783fb11b8e9f83ed6ff6987ea8a30f17c043e2d0716601294fcc7c56",
-      "dependencies.json": "6fc414b7377289e8d1ae2d633dec8cfcab9325381dc5b27a5103a4726bf7f8e4",
-      "facts.json": "10842b124d82b66c813975888809b6171f0a46d1f72615f821081ab1fbc79fd3",
+      "dependencies.json": "b3aef1304d22a8471ee1673555d3830904562d18e8fb50b5550f3656ed144974",
+      "facts.json": "9688dadceb56ec8e6d50af93f4077a65bbbb5cf5413d8afdb4298b55d01b4c4b",
       "holdouts.json": "574594ee3f796e771e181e7f3778057bec3ee017c9d486b350da2003d0bab4aa",
-      "review_verdict.json": "1ab153842587ed693dfa2dc3c5c9cfd9add85bb053b703cac6a3a4ce2cccdf2f"
+      "review_verdict.json": "639f01b8e85135f67c8571fa7c5259341606a1a62d9fdbf982e1220096bb9a14"
     },
-    "recorded_at": "2026-11-01T12:43:26Z",
+    "recorded_at": "2026-11-06T06:14:10Z",
     "recorded_by": {
       "identity": {
-        "boot_id": "boot:a419e262-68e0-4703-825f-0d9fc5bc2416",
-        "nonce": "eaec8649f0e346ba9f7e989e3bd1ee9d",
-        "pid": 3203,
-        "started": "proc:108173"
+        "boot_id": "boot:4c698270-cbbc-49a9-b7a3-3482afc35146",
+        "nonce": "6fc837c83884477e8ca95df857899de0",
+        "pid": 3142,
+        "started": "proc:133774"
       },
-      "invocation_id": "a1283a4a5cff413099477ac184cde8e7",
-      "started_at": "2026-11-01T12:43:26Z"
+      "invocation_id": "4622b9c47ba94a67a377daf25add2dda",
+      "started_at": "2026-11-06T06:13:45Z"
     },
     "scope_basis": "artifacts",
     "scopes": [
-      "reconciliation"
+      "facts",
+      "reconciliation",
+      "reviewer"
     ],
-    "triggering_scope": "reconciliation"
+    "triggering_scope": "facts"
   }
 }
