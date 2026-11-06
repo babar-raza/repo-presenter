@@ -1628,8 +1628,36 @@ def normalize(
             "CONTRADICTED. "
             + str(entry.get("rationale") or "")
         )[:_RATIONALE_LIMIT]
+    _fold_positional_pointers(output, facts)
     _prune_incidental_coverage(output, coverage)
     return errors
+
+
+def _fold_positional_pointers(output: dict[str, Any], facts: FactsDocument) -> None:
+    """A paragraph kept as written whose every sentence only points at another block ("summarized
+    in the module-grouped table below") and whose pointer would dangle where it is kept is
+    navigation: superseded by the section it points into, in place.
+
+    Measured (2026-11-06, Cells-Rust, hosted runs 42184536751 and 42188399755): the model kept
+    inherited_unit:048.paragraph in the API Reference three asks running, each rejected as a
+    dangling_pointer, and the candidate failed before rendering. Such a unit states nothing a
+    reader loses (``composition.references.positional_only``; BC-05's supersession check exempts it
+    for the same reason), so folding it cannot hide a loss."""
+    from repo_presenter.readme.composition.references import positional_only
+
+    texts = {fact.id: fact.value for fact in facts.by_kind("inherited_unit")}
+    dangling = {unit for unit, _, _ in dangling_pointers(output, facts)}
+    for entry in output.get("dispositions", []):
+        unit = str(entry.get("unit_id", ""))
+        if unit not in dangling or _unit_kind(unit) != "paragraph":
+            continue
+        if not positional_only(texts.get(unit, "")):
+            continue
+        entry["disposition"] = "SUPERSEDE_REDUNDANT"
+        entry["rationale"] = (
+            "A pointer to a block the section prints itself; kept as written it would dangle. "
+            + str(entry.get("rationale") or "")
+        )[:_RATIONALE_LIMIT]
 
 
 # S4 job-wiring half, ported later than the rest of this module (2026-10-22): builds the actual

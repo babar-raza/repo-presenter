@@ -511,10 +511,45 @@ def test_a_kept_unit_with_a_dangling_pointer_is_refused_via_placement_errors() -
 
 
 def test_reconcile_checks_combines_normalize_and_placement_errors() -> None:
-    """reconcile_checks = normalize(...) + placement_errors(...), the old repo's own wiring."""
-    facts = _facts(*_padded(_unit("inherited_unit:046.paragraph", "The table below lists every method.")))
+    """reconcile_checks = normalize(...) + placement_errors(...), the old repo's own wiring. (A
+    sentence that is only a pointer is folded to a supersession by normalize since 2026-11-06, so
+    this one carries a claim of its own.)"""
+    facts = _facts(
+        *_padded(
+            _unit(
+                "inherited_unit:046.paragraph",
+                "Every reader is thread-safe. The table below lists every method.",
+            )
+        )
+    )
     document = {
         "dispositions": [_entry("inherited_unit:046.paragraph", "VERIFIED_PRESERVE", "api_reference")]
     }
     errors = reconcile_checks(document, facts)
     assert any("dangling_pointer" in e for e in errors)
+
+
+def test_a_positional_only_paragraph_that_would_dangle_is_folded_to_a_supersession() -> None:
+    """Cells-Rust, 2026-11-06: the model kept this sentence in the API Reference three asks running."""
+    from repo_presenter.readme.reconciliation.dispositions import (
+        _fold_positional_pointers,
+    )
+
+    text = "The public API surface includes 213 public types, summarized in the module-grouped table below."
+    facts = _facts(*_padded(_unit("inherited_unit:048.paragraph", text)))
+    document = {"dispositions": [_entry("inherited_unit:048.paragraph", "VERIFIED_PRESERVE", "api_reference")]}
+    _fold_positional_pointers(document, facts)
+    assert document["dispositions"][0]["disposition"] == "SUPERSEDE_REDUNDANT"
+    assert dangling_pointers(document, facts) == []
+
+
+def test_a_paragraph_with_content_beyond_the_pointer_is_not_folded() -> None:
+    from repo_presenter.readme.reconciliation.dispositions import (
+        _fold_positional_pointers,
+    )
+
+    text = "Every reader is thread-safe. The table below lists every method."
+    facts = _facts(*_padded(_unit("inherited_unit:046.paragraph", text)))
+    document = {"dispositions": [_entry("inherited_unit:046.paragraph", "VERIFIED_PRESERVE", "api_reference")]}
+    _fold_positional_pointers(document, facts)
+    assert document["dispositions"][0]["disposition"] == "VERIFIED_PRESERVE"
