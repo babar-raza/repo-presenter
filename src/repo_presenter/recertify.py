@@ -267,6 +267,7 @@ def _rerun_lane_r(
         readme_sha256=None,
         tree_paths=list(source.tree_paths),
         tasks=authoring_tasks(entry, document, investigation, dispositions, plan),
+        benchmark_readme=original,  # BC-17: the README the run read, at the sealed revision
     )
     with tempfile.TemporaryDirectory(prefix="recertify-") as empty:
         validation = validate_candidate(candidate, Path(empty), [])

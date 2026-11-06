@@ -59,6 +59,10 @@ class Candidate:
     tree_paths: Sequence[str]
     tasks: Sequence[SectionTask]
     policy: PlanningPolicy = DEFAULT_POLICY
+    #: The published README this candidate replaces (the live upstream README the run read), the
+    #: R2 floor BC-17 (``validation/parity.py``) measures content loss against. ``None`` when not
+    #: handed over (a calibration source); unlike ``original_readme`` it is never digest-checked.
+    benchmark_readme: str | None = None
 
 
 def earliest(failures: Sequence[Failure]) -> CausalStage | None:
