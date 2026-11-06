@@ -3300,3 +3300,28 @@ privileged jobs (`environment:` on the present/mint jobs, which would then need 
 reusable-workflow caller job cannot set it — the called workflows' jobs would declare it). This is an owner
 Settings action and has not been taken; until it is, the run-request redesign closes the specific
 "edit the validator or run-request.yml" path, not the general push-access-to-secrets path.
+
+---
+
+## 2026-11-06: reviewer rule for inherited text (supervisor decision, under the owner operating directive)
+
+Root cause (`docs/investigations/2026-11-06-reviewer-rootcause.md`, replayed from iteration 4's call store, zero
+provider calls): of 81 real unsupported-claim/contradiction cases, 19 sat on lines no review unit showed (fixed in
+code, REVIEWER_LOGIC_VERSION 9) and 61 were shown but not reported; 42 of those 61 repeat the original README
+verbatim, which prompt v17 told the reviewer "is not a finding". That rule lets a false claim pass because a
+maintainer wrote it, against goals §4 ("validate technical claims ... never invent ... verification results") and
+§6 ("reject candidates that are attractive but inaccurate"); it also conflicts with v19's attribution exemption.
+
+**Decided:** an inherited sentence is exempt from claim findings only when it is printed under the maintainer
+attribution (`PRESERVE_ATTRIBUTED`) and no fact contradicts it. Inherited text printed as the README's own claim is
+judged exactly like generated text; a contradicted inherited claim is always a finding, attributed or not. This
+keeps §5 (preserve maintainer content, attributed when unverifiable) and closes the false-accept path.
+
+Also adopted from the root-cause report: tables are shown (prompt wording corrected); a dependency line matching a
+`dependency` fact is supported; "identifier does not exist" is filed as `name_denial` so clearances can test it;
+cite only numbered, non-blank lines. Not adopted: "every checkable sentence must cite a fact id or be a finding" --
+false rejects are already above the 10 % ceiling (16.2 %) and this would raise them; revisit with iteration-5 data.
+
+Calibration iteration 5: frozen held-out corpus, labels aligned to the rule above, thresholds unchanged, provider
+call cap 1,000 (the owner-approved calibration budget, 2026-11-05); the corpus is sized to fit the cap rather than
+the cap raised.
