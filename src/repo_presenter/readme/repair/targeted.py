@@ -55,6 +55,12 @@ from repo_presenter.readme.composition.renderer import (
 
 REPAIRS_FILENAME = "repairs.json"
 MAX_ROUNDS = 3
+# The S9 settle loop (cascade._settle) only: compose, validate deterministically, repair, repeat. It stops
+# as soon as nothing fresh is repairable, so a larger budget costs calls only while repairs still make
+# progress. 3 (two repair passes) ran out twice in the 2026-11-06 pilot with progress still being made:
+# Email .NET unit 040 (round 5) and Cells-Rust unit 061.002 (round 6) surfaced only after earlier repairs
+# changed what the README carried, and neither was attempted.
+MAX_SETTLE_ROUNDS = 5
 STAGE_JOBS: dict[str, str] = {
     "S3": "repository_investigation",
     "S4": "source_reconciliation",
