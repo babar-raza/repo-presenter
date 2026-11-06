@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected three times (the third a narrowed ask for the units a rejection actually named); last rejection: inherited_unit:048.paragraph: dangling_pointer: VERIFIED_PRESERVE keeps it as written in api_reference, but its sentence \"The public API surface includes 213 public types, summarized in the module-grouped table below.\" says 'table below' but no table follows it in this section. Kept units print after the section's own content, so a pointer to what follows is answered only by a unit kept right after it in the same section: keep that unit there too, or choose VERIFIED_REWRITE (the wording is re-authored from facts, without the pointer), or OMIT_UNSUPPORTED citing the fact that shows the claim unsupported",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-06T08:06:07.836531+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:42184536751",
     "acquired_at": "2026-11-06T08:01:15.512503+00:00",
@@ -39,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 51,
+  "state_version": 52,
   "recent_trigger_dedup_keys": {
     "run:40555609801:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust": "384ec130f5d042919913581b3645c9e9",
     "run:40571555199:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust": "7e1dc318b1af4ce2ad24ff6ceefe1c1b",
