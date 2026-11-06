@@ -4,12 +4,12 @@
   "findings": [],
   "model_served": "qwen3-next",
   "model_verdict": "ACCEPT",
-  "prompt_version": "19",
+  "prompt_version": "21",
   "reason": "",
   "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-  "request_sha256": "f8492d6425461796128432bd43e73f935abc260ebfc04e28b99b6ff207df01ec",
+  "request_sha256": "69d320eb57e6e2b2b3e4951f8cfd35fd5e1ba87925981a121db8ab9ad85c7a09",
   "retryable": false,
-  "reviewer_logic_version": "8",
+  "reviewer_logic_version": "10",
   "schema_version": 2,
   "unit_reviews": [
     {
@@ -22,7 +22,7 @@
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "111e62a10eae2b5d01ee337a8bafde55afbf996b87d8c3d27738589a4649a497",
+      "request_sha256": "96316567284d075e63f0c034dca47bba1400df6d2e6256eb521dc9d8cda07702",
       "sections": [
         "opening",
         "navigation",
@@ -39,16 +39,15 @@
       "findings": 0,
       "lines": [
         177,
-        280,
-        44
+        234,
+        38
       ],
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "2d79956ed7970d829932f8b1bf12ecab760c40bcaf0b7f0960af96abf317f06a",
+      "request_sha256": "336a1b5f90d1d639ee81035dcceae93d12890da1686feb60dd64ffda64871071",
       "sections": [
-        "api_reference",
-        "documentation_resources"
+        "api_reference"
       ],
       "status": "reviewed",
       "unit": "u2"
@@ -56,21 +55,39 @@
     {
       "findings": 0,
       "lines": [
-        284,
-        320,
-        18
+        235,
+        310,
+        50
       ],
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "36bc97207e3e7dd05b2694cf32d344064caa8bc5a08dbf908c02f4577e5da218",
+      "request_sha256": "070473a09bc61fb629198bae4c9d0aafc42c21cf59fc179703c1ce959b52d683",
       "sections": [
+        "api_reference",
+        "documentation_resources",
         "scope_limitations",
-        "development_testing",
-        "license"
+        "development_testing"
       ],
       "status": "reviewed",
       "unit": "u3"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        318,
+        320,
+        3
+      ],
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "81406cb2cfa9739f03ae8bb8b3e3a6a678a4702b687e3ff9361fd41048e15533",
+      "sections": [
+        "license"
+      ],
+      "status": "reviewed",
+      "unit": "u4"
     }
   ],
   "verdict": "ACCEPT"
