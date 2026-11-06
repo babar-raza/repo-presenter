@@ -542,16 +542,18 @@ def test_the_regeneration_count_is_derived_from_the_seal_history() -> None:
     assert recertify.regeneration_count([seal("x", "p", "r1"), seal("x", "q", "r1")], LANE_L) == 0
 
 
-def test_a_platform_ecosystem_spec_is_registered_before_recertifying() -> None:
-    """Dry run 2026-11-06: every non-built-in ecosystem failed 'no ecosystem spec registered'."""
-    import importlib
+def test_a_platform_ecosystem_spec_is_registered_before_recertifying(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Dry run 2026-11-06: every non-built-in ecosystem failed 'no ecosystem spec registered',
+    because specs register on plugin import and only the generation path imported the plugin."""
+    from types import SimpleNamespace
 
-    import repo_presenter.core.ecosystems as eco
     import repo_presenter.recertify as rc
+    from repo_presenter.extractors.platforms import registry
 
-    eco.SPECS.pop("rust", None)
-    importlib.reload(rc)
-    from repo_presenter.extractors.platforms.registry import plugin_for
-
-    plugin_for("rust")
-    assert "rust" in eco.SPECS
+    asked: list[str] = []
+    monkeypatch.setattr(registry, "plugin_for", lambda ecosystem: asked.append(ecosystem))
+    entry = SimpleNamespace(repository="o/n", ecosystem="rust")
+    rc.recertify_bundle(tmp_path / "missing", "R", entry=entry, source=None)
+    assert asked == ["rust"]
