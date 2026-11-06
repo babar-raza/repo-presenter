@@ -116,6 +116,22 @@ def facts_pipeline(
     return write_handoff(document, ecosystem, facts_dir)
 
 
+
+def report_findings(verdict: Any, *, out: Any = None) -> None:
+    """Print each blocking finding of a rejected candidate to the job log: hosted run artifacts are
+    not always readable afterwards, and a reject that names no quote cannot be judged true or false."""
+    stream = out if out is not None else sys.stdout
+    for finding in verdict.blocking_findings:
+        label = finding.finding_id or finding.rule
+        print(
+            f"finding {label} [{finding.rule}] section={finding.section_id or '-'}: {finding.message}",
+            file=stream,
+        )
+        if finding.quote:
+            print(f"  quote: {finding.quote[:600]!r}", file=stream)
+        if finding.evidence:
+            print(f"  evidence: {finding.evidence[:600]}", file=stream)
+
 def _cascade_and_seal(
     *,
     repository: str,
@@ -147,6 +163,7 @@ def _cascade_and_seal(
     )
     verdict = result.review_verdict
     if verdict.verdict != "ACCEPT":
+        report_findings(verdict)
         raise PresentFailure(
             f"independent review returned {verdict.verdict} with "
             f"{len(verdict.blocking_findings)} blocking finding(s) of {len(verdict.findings)}; "
@@ -209,6 +226,7 @@ def _lane_l_and_seal(
     )
     verdict = result.review_verdict
     if verdict.verdict != "ACCEPT":
+        report_findings(verdict)
         recommendation = (
             f"; {lane_r_recommendation(result.correction)}"
             if result.outcome == OUTCOME_REFUSED
@@ -554,6 +572,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     print(
         f"present: {args.repository} lane {args.lane} exit {exit_code}, durable state {state}"
     )
+    failure = getattr(record, "failure", None) if exit_code else None
+    if failure is not None:
+        print(f"failure ({failure.classification}): {failure.detail}")
     return exit_code
 
 

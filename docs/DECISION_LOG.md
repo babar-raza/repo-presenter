@@ -3198,3 +3198,22 @@ and an empty allowlist.
    `aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET` (both lanes pipeline-good; no issue-approval record in the
    legacy system, checked). Listing authorizes nothing by itself: every gate must pass, and reviewer calibration
    is NOT_PASSED (TC-007).
+
+---
+
+## 2026-11-06: first run requests — mint blocked on missing App secrets (owner adds them); pilot results
+
+- **Mint (`run-requests/mint-1`, run 42170741214)**: the run request validated and called the mint, which failed at
+  `actions/create-github-app-token` with "appId option is required": `GH_APP_ID` and `GH_APP_PRIVATE_KEY` were
+  provisioned only in the legacy repository (`babar-raza/repository-presenter`), never in this one. **Owner decision
+  (interactive form): the owner adds both secrets to this repository** (the same `repository-presenter[bot]` App that
+  `token_provenance.py` names; no new App). No proof exists yet, so the one-mint guard still allows a retry
+  (`run-requests/mint-2`) after the secrets are added.
+- **Pilot (three allowlisted repositories, `lane: both`, current `main`, streaming on)**: Email .NET and Imaging .NET
+  sealed ACCEPTED on both lanes (the first hosted candidates under source_reconciliation v14 / independent_review v19).
+  Cells-Rust Lane R: the independent reviewer REJECTED the new candidate (2 blocking `unsupported_claim` findings, in
+  `scope_limitations` and `development_testing`); nothing sealed, record INVALIDATED (its earlier acceptance was on
+  changed inputs). Whether the reject is true or false cannot be judged: the job log printed only "exit 1" and the
+  candidate is in a run artifact this session cannot download. Fix: `present.py` now prints every blocking finding
+  (rule, section, quote, evidence) and the recorded failure detail to the job log.
+- No upstream PR was or could be opened: reviewer calibration is NOT_PASSED (TC-007).
