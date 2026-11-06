@@ -465,6 +465,26 @@ def reject_printed_quote(
     return guarded
 
 
+
+def scope_record(defect: Defect, units: Sequence[str]) -> dict[str, Any]:
+    """The record a patch scope is cut from: each named unit with the details its failures carry.
+
+    ``patch_scope`` reads the supersession-loss marker from those details (round 4, Email .NET,
+    run 42188403878: a bare ``{"unit_id"}`` record hid it, so a reply that left the unit
+    superseded was accepted as repaired)."""
+    details: dict[str, list[str]] = {}
+    for record in [defect.record, *defect.record.get("equivalent_findings", [])]:
+        for failure in record.get("failures") or []:
+            if isinstance(failure, Mapping) and failure.get("unit_id"):
+                details.setdefault(str(failure["unit_id"]), []).append(
+                    str(failure.get("detail") or "")
+                )
+    return {
+        "failures": [
+            {"unit_id": unit, "detail": " ".join(details.get(unit, []))} for unit in units
+        ]
+    }
+
 def _named_units(rc: RepairContext, defect: Defect) -> list[str]:
     """The inherited units a defect is about: those its failure records name in their ``unit_id``
     field, else (a review finding, which carries a quote and no unit) those whose placed text holds
@@ -508,7 +528,7 @@ def _repair_reconciliation(
         if output is not None:
             keys[batch_id], stored[batch_id] = key, output
     scope = patch_scope(
-        {"failures": [{"unit_id": unit} for unit in _named_units(rc, defect)]},
+        scope_record(defect, _named_units(rc, defect)),
         stored,
         batches,
         rc.facts,

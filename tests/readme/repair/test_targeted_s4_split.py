@@ -48,3 +48,14 @@ def test_a_check_naming_no_unit_is_unchanged() -> None:
     defects = validation_defects(_validation([{"detail": "x"}, {"detail": "y"}]), set())
     assert len(defects) == 1
     assert len(defects[0].record["failures"]) == 2
+
+
+def test_the_scope_record_keeps_the_supersession_marker() -> None:
+    from repo_presenter.readme.reconciliation.patch import _loss_units
+    from repo_presenter.readme.repair.loop import scope_record
+    from repo_presenter.readme.validation.supersession import LOSS_MARKER
+
+    unit = "inherited_unit:004.paragraph"
+    failures = [{"detail": f"{unit} {LOSS_MARKER} 1 piece(s) of it", "unit_id": unit}]
+    (defect,) = validation_defects(_validation(failures), set())
+    assert _loss_units(scope_record(defect, [unit])) == {unit}
