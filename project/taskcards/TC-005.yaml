@@ -42,7 +42,9 @@ checks:
   - command: |-
       python -m pytest tests/ops/test_gate_guard_tc005.py -q
     expect: exit 0
-    timeout_seconds: 60
+    # 2026-11-06: 60 s was too tight. The test runs the live portfolio status, which queries origin
+    # over the network (measured 37 s and >60 s on two consecutive runs): a timeout, not a code flake.
+    timeout_seconds: 240
     proves:
       - REQ-G8-013
 requires:

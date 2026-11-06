@@ -9,6 +9,12 @@ weaken, any safety gate that document already established. Where P1–P5 is stro
 historical task-closure criterion, this contract governs *release* acceptance; the historical
 record stays intact and unedited (non-negotiable #6, no rewriting accepted history).
 
+> **Amended 2026-11-06 (owner rulings, `docs/CONSOLIDATED_GOALS_2026-11-06.md`):** P1's target is **about 25
+> accepted Lane R candidates and about 25 accepted Lane L candidates, counted independently** (ruling R4), not
+> the same >=25 products on both lanes; the quality floor is the aspose.org readme-refresh output **published
+> upstream** (R2); upstream PRs/issues are authorized by a gated per-repository allowlist (R3). TC-011's check
+> must be re-authored to R4 before it can be accepted; until then this note governs.
+
 ## The eleven states (never collapsed into one another)
 
 1. Work item implemented (code exists).

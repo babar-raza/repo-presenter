@@ -1,5 +1,7 @@
 # Mission Authority — Repository Presenter (new repository)
 
+> **2026-11-06:** `docs/CONSOLIDATED_GOALS_2026-11-06.md` (owner's consolidated goals and conflict rulings) now sits above this file in the authority order (AGENTS.md). Where they differ, it wins.
+
 This file is the single normative product+operating authority for this repository,
 distilled 2026-10-21 per `plans/repository_presenter_fresh_start_supervisor_prompt.md`
 ("the mission document"). It does not duplicate that document; it resolves which

@@ -195,6 +195,9 @@ The first live upstream effect for each *new effect capability* requires a targe
 
 ## 10. Aspose.org skill: optional acceleration, not another authority
 
+> **Amended 2026-11-06 (owner ruling R2, `docs/CONSOLIDATED_GOALS_2026-11-06.md`):** the aspose.org readme-refresh outputs already published upstream are the **minimum quality floor** for both lanes; repository evidence still wins for factual truth. Lane L is also amended (ruling R5: change-driven as well as defect-driven), and upstream PR/issue authorization is a gated per-repository allowlist (ruling R3).
+
+
 If the salvaged generator cannot reach a production-quality README without major rework, inspect the working README-refresh skill and the actual implementation/tests inside `C:\Users\babar\Documents\GitHub\aspose.org`. Locate it by search and verify its real entry points, dependencies, schemas, runtime LLM use, prompts and concrete successful results. Prior reports mention `scripts/pipeline/commands/foss/readme_refresh_run.py`; verify that path rather than assuming it is current.
 
 Compare its output with live READMEs and Lane R requirements. Reuse skill procedures, heuristics, extraction or fixtures where permitted and independently proven. It is currently **skill-driven by an LLM**; if that path is best, package it behind the new agentic orchestrator with deterministic guards and hosted-runner execution. The production system must not require a private sibling checkout or a manual skill invocation. Avoid recreating a fragile command-by-command hard-coded clone of the skill without proof it works portfolio-wide.
