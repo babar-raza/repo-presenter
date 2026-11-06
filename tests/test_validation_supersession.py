@@ -64,3 +64,41 @@ def test_a_positional_paragraph_is_exempt() -> None:
         "A few more real, runnable patterns beyond the Quick Start example above.",
         "",
     )
+
+
+def _with_symbols(candidate, *symbols: str):
+    unit_facts = candidate.facts.by_kind("inherited_unit")
+    public = [SimpleNamespace(id=f"public_symbol:{s.lower()}", value=s) for s in symbols]
+    candidate.facts = SimpleNamespace(
+        by_kind=lambda kind: unit_facts if kind == "inherited_unit" else public if kind == "public_symbol" else []
+    )
+    return candidate
+
+
+API_TABLE = (
+    "| Struct | Description |\n|---|---|\n"
+    "| `AutoFilter` | Represents auto filter. |\n"
+    "| `AlignmentValue` | Struct with 1 method. |\n"
+    "| `SheetVisibility` | SheetVisibility enum defines three visibility states: Visible, Hidden, and VeryHidden. |\n"
+)
+API_README = "## API Reference\n\n| Class | Description |\n| --- | --- |\n| `AutoFilter` | Represents auto filter. |\n"
+
+
+def test_rows_naming_types_outside_the_public_surface_are_not_owed() -> None:
+    """Cells-Rust: AlignmentValue and SheetVisibility live in private core_* modules."""
+    candidate = _with_symbols(
+        _candidate(API_TABLE, API_README, "inherited_unit:052.table"), "AutoFilter", "AutoFilter.clear"
+    )
+    assert superseded_failures(candidate) == []
+
+
+def test_a_public_type_missing_from_the_readme_is_still_owed() -> None:
+    candidate = _with_symbols(
+        _candidate(API_TABLE, API_README, "inherited_unit:052.table"), "AutoFilter", "SheetVisibility"
+    )
+    failures = superseded_failures(candidate)
+    assert len(failures) == 1 and "SheetVisibility" in failures[0].detail
+
+
+def test_without_an_extracted_surface_every_row_is_owed() -> None:
+    assert superseded_failures(_candidate(API_TABLE, API_README, "inherited_unit:052.table"))
