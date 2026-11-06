@@ -259,6 +259,7 @@ jobs:
             --repository "$INPUT_REPOSITORY" \
             --ecosystem "$INPUT_ECOSYSTEM" \
             --state-remote "https://github.com/${GITHUB_REPOSITORY_SLUG}.git" \
+            --restore-sealed-bundle \
             --workdir .present-work \
             --facts-dir .present-facts \
             --expected-facts-sha256 "$FACTS_SHA256"
@@ -283,6 +284,7 @@ jobs:
             --repository "$INPUT_REPOSITORY" \
             --ecosystem "$INPUT_ECOSYSTEM" \
             --state-remote "https://github.com/${GITHUB_REPOSITORY_SLUG}.git" \
+            --restore-sealed-bundle \
             --workdir .present-work \
             --facts-dir .present-facts \
             --expected-facts-sha256 "$FACTS_SHA256"

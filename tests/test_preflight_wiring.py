@@ -153,24 +153,28 @@ def test_lane_l_evicted_actions_cache_makes_zero_provider_requests_while_a_bundl
 def test_lane_l_changed_input_re_executes_the_targeted_stage(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    """Two changed consumed inputs, each reopening the one provider stage Lane L has, each
-    measured separately: the review prompt, then the live README (new revision)."""
+    """Two changed consumed inputs, measured separately. (a) The review prompt is a MECHANISM
+    version: owner rule 2026-11-06, a version bump never regenerates a seal -- the sealed
+    candidate is re-certified under current code with zero provider requests. (b) The live
+    README (a new revision) is an INPUT: the correction and the review rerun."""
     hosted = Hosted(tmp_path, monkeypatch)
     _proven_lane_l(hosted, monkeypatch)
     capsys.readouterr()
 
-    # (a) the review prompt is a consumed input: change it and the review is asked again.
+    # (a) the review prompt changes: re-certified, not regenerated; zero requests.
     prompts = tmp_path / "prompts-edited"
     shutil.copytree(PROMPTS, prompts)
     review = prompts / "independent_review.yaml"
     review.write_bytes(review.read_bytes() + b"\n# edited\n")
-    provider = Provider(monkeypatch, default=accept_reply())
+    provider = Provider(monkeypatch)  # any request raises
     argv = hosted.args("cascade", "prompt", "--state-remote", str(hosted.remote), lane="L")
     argv[argv.index("--prompts") + 1] = str(prompts)
     hosted.facts("prompt")
     assert present.main(argv) == 0
-    assert not _skipped(capsys)
-    assert provider.calls == EXPECTED_REVIEW_REQUESTS, provider.calls
+    out = capsys.readouterr().out
+    assert "preflight (Lane L): skip=False" in out and "recertify (Lane L): RECERTIFIED" in out
+    assert provider.calls == 0, provider.calls
+    assert hosted.manifest()["recertified_from"]["state"] == "READY_FOR_PROPOSAL"
 
     # (b) the README changes upstream (a new revision): the correction and review rerun.
     (hosted.upstream / "README.md").write_bytes(CLEAN_README.encode() + b"\nMore text.\n")
@@ -360,9 +364,12 @@ def test_lane_r_changed_input_re_executes_exactly_once(world: LaneRWorld) -> Non
     assert world.ran == [1] and world.provider.requests == 1
 
 
-def test_lane_r_changed_prompt_re_executes_exactly_once(
-    world: LaneRWorld, tmp_path: Path
+def test_lane_r_changed_prompt_with_a_seal_that_cannot_recertify_re_executes_exactly_once(
+    world: LaneRWorld, tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
+    """A prompt change alone routes to re-certification (tests/test_recertify.py proves the
+    zero-call path on a real candidate); this synthetic seal cannot be re-certified (its
+    repository is in no registry), so -- and only so -- the generation pipeline runs once."""
     world.seal_proven()
     prompts = tmp_path / "prompts-edited"
     shutil.copytree(PROMPTS, prompts)
@@ -370,6 +377,7 @@ def test_lane_r_changed_prompt_re_executes_exactly_once(
     target.write_bytes(target.read_bytes() + b"\n# edited\n")
     world.run_stage(prompts=prompts)
     assert world.ran == [1] and world.provider.requests == 1
+    assert "recertify (Lane R): not possible" in capsys.readouterr().out
 
 
 def test_lane_r_unrelated_input_change_is_a_no_op(

@@ -43,6 +43,51 @@ jobs:
       - name: Validate taskcard governance (schema, dependency graph, dashboard sync)
         run: python ops/gatecli.py validate
 
+  # 2026-11-06 (owner rule: a version bump never invalidates a seal; repo_presenter.recertify):
+  # the no-regression merge gate. Every bundle ref's latest seal is re-certified under the PR's
+  # code (zero provider calls, read-only: no ref is written) and compared with the committed
+  # data/recertification_baseline.json. A seal that re-certified on the base branch and does not
+  # now fails the job, unless the PR's baseline records it NEEDS_REPAIR with a justification that
+  # names each newly failing check.
+  recertification-gate:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install
+        run: python -m pip install -e .
+
+      - name: The base branch's baseline (the gate's "before")
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          git show "origin/${BASE_REF}:data/recertification_baseline.json" > "$RUNNER_TEMP/base_baseline.json" \
+            || rm -f "$RUNNER_TEMP/base_baseline.json"
+
+      - name: Re-certify every latest seal and compare with the baseline
+        env:
+          # read-only: git fetches refs/repository-presenter-state/bundles/* with this token
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY_SLUG: ${{ github.repository }}
+        run: |
+          base=()
+          if [ -f "$RUNNER_TEMP/base_baseline.json" ]; then
+            base=(--base-baseline "$RUNNER_TEMP/base_baseline.json")
+          fi
+          python -m repo_presenter.recertify --gate \
+            --remote "https://github.com/${REPOSITORY_SLUG}.git" "${base[@]}"
+
   # 2026-11-04 (G6): the facts-stage image had never been built. Building it here is the hosted,
   # authorized verification of the Dockerfile (README.md copy, git install) -- the cloud sandbox
   # cannot reach the Debian mirrors, so this job, not a local build, is the evidence.

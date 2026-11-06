@@ -406,7 +406,7 @@ def test_changed_facts_defeat_the_skip(world: RealWorld) -> None:
     assert runs == 1
 
 
-def test_changed_consumed_prompt_defeats_the_skip(world: RealWorld, tmp_path: Path) -> None:
+def test_changed_consumed_prompt_recertifies_without_regenerating(world: RealWorld, tmp_path: Path) -> None:
     world.seal_proven()
     prompts = tmp_path / "prompts-edited"
     shutil.copytree(PROMPTS, prompts)
@@ -417,8 +417,11 @@ def test_changed_consumed_prompt_defeats_the_skip(world: RealWorld, tmp_path: Pa
     assert decision.can_skip_provider_call is False
     assert decision.changed, decision
 
+    # Owner ruling R10: a mechanism change alone (here a prompt) never regenerates a sealed candidate;
+    # the seal is re-certified from its stored outputs with zero provider calls, so the cascade does
+    # not run. The change is still reported (decision.changed above) as provenance.
     _, runs, _ = world.measured(prompts=prompts)
-    assert runs == 1
+    assert runs == 0
 
 
 def test_the_proven_real_bundle_is_the_one_case_that_skips(world: RealWorld) -> None:

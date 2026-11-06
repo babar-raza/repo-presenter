@@ -158,6 +158,72 @@ def report_repairs(out_dir: Path, *, out: Any = None) -> None:
             file=stream,
         )
 
+def recertify_instead(
+    *,
+    lane: str,
+    repository: str,
+    clone_path: Path,
+    candidates_root: Path,
+    prompts_path: Path,
+    registry_path: Path,
+) -> bool:
+    """Owner rule (2026-11-06): a mechanism-version change alone never regenerates a sealed
+    candidate. Re-certify the lane's sealed bundle under current code from its stored outputs --
+    re-render, the full blocking validation, the deterministic reviewer rules (Lane R); the
+    correction engine and its holdouts (Lane L) -- with ZERO provider calls. True when it
+    RECERTIFIED (the re-certified seal replaces the local bundle; ``publish`` pushes it as a NEW
+    commit on the bundle ref, so the original seal stays in the ref's history). False on
+    NEEDS_REPAIR: the original seal is untouched and the generation pipeline runs."""
+    from repo_presenter.lane_l import tree_paths_of
+    from repo_presenter.recertify import SourceSnapshot, recertify_local
+
+    readme = clone_path / "README.md"
+    source = SourceSnapshot(
+        tree_paths=tuple(tree_paths_of(clone_path)),
+        readme=readme.read_bytes() if readme.is_file() else None,
+    )
+    try:
+        rec = recertify_local(
+            candidates_root=candidates_root,
+            entry=require_listed(load_registry(registry_path), repository),
+            lane=lane,
+            source=source,
+            prompts=load_manifests(prompts_path),
+            write=True,
+        )
+    except Exception as exc:  # noqa: BLE001 -- a re-certification that cannot run regenerates
+        print(f"recertify (Lane {lane}): not possible ({type(exc).__name__}: {exc}); "
+              "running the generation pipeline")
+        return False
+    print(
+        f"recertify (Lane {lane}): {rec.outcome}"
+        + (f"; failing: {', '.join(rec.failing_checks)}" if rec.failing_checks else "")
+        + ("; README re-rendered" if rec.readme_changed else "")
+    )
+    for detail in rec.details[:12]:
+        print(f"  {detail[:500]}")
+    return rec.recertified
+
+
+def restore_sealed_bundle(
+    repository: str, lane: str, candidates_root: Path, *, remote: str, token: str | None
+) -> None:
+    """A runner whose cache missed has no local bundle; the durable bundle ref still holds the
+    latest seal. Export it, so preflight can re-certify it instead of regenerating. Any failure
+    leaves things as they were (preflight then sees no bundle and the pipeline runs)."""
+    from repo_presenter.core.candidates import CURRENT_FILENAME, lane_directory
+    from repo_presenter.core.state.bundle_store import BundleStoreError, export_bundle
+
+    slug_dir = candidates_root / CANDIDATES_DIRNAME / repository.replace("/", "__")
+    if (lane_directory(slug_dir, lane) / CURRENT_FILENAME).is_file():
+        return
+    try:
+        export_bundle(repository, lane, candidates_root / CANDIDATES_DIRNAME, remote=remote, token=token)
+        print(f"restored the latest seal of lane {lane} from its bundle ref")
+    except (BundleStoreError, OSError) as exc:
+        print(f"no stored seal restored for lane {lane}: {exc}")
+
+
 def _cascade_and_seal(
     *,
     repository: str,
@@ -177,6 +243,11 @@ def _cascade_and_seal(
     print(f"preflight (Lane R): skip={decision.can_skip_provider_call}: {decision.reason}")
     if decision.can_skip_provider_call:
         return  # the proven sealed bundle stays exactly as sealed; no provider call is made
+    if decision.recertify and recertify_instead(
+        lane=LANE_R, repository=repository, clone_path=clone_path,
+        candidates_root=candidates_root, prompts_path=prompts_path, registry_path=registry_path,
+    ):
+        return  # re-certified under current code with zero provider calls
     result = run_cascade(
         repository,
         ecosystem,
@@ -246,6 +317,11 @@ def _lane_l_and_seal(
     print(f"preflight (Lane L): skip={decision.can_skip_provider_call}: {decision.reason}")
     if decision.can_skip_provider_call:
         return  # the proven sealed bundle stays exactly as sealed; no provider call is made
+    if decision.recertify and recertify_instead(
+        lane=LANE_L, repository=repository, clone_path=clone_path,
+        candidates_root=candidates_root, prompts_path=prompts_path, registry_path=registry_path,
+    ):
+        return  # re-certified under current code with zero provider calls
     result = run_lane_l(
         repository,
         ecosystem,
@@ -505,6 +581,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--prompts", type=Path, default=DEFAULT_PROMPTS_PATH)
     parser.add_argument("--state-remote", default="origin")
     parser.add_argument("--workflow-run-id", default=os.environ.get("GITHUB_RUN_ID"))
+    parser.add_argument(
+        "--restore-sealed-bundle",
+        action="store_true",
+        help="when no local bundle exists, export the lane's latest seal from its bundle ref first "
+        "(so a mechanism-only change re-certifies it instead of regenerating)",
+    )
     args = parser.parse_args(argv)
 
     if (
@@ -553,6 +635,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     state_token = os.environ.get(STATE_TOKEN_VARIABLE) or None
 
     def pipeline() -> None:
+        if args.restore_sealed_bundle:
+            restore_sealed_bundle(
+                args.repository, args.lane, args.candidates_root,
+                remote=args.state_remote, token=state_token,
+            )
         if args.stage == "combined":
             combined_pipeline(
                 repository=args.repository,
