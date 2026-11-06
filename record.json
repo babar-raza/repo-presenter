@@ -5,7 +5,7 @@
   "provider_repository_id": 1301317734,
   "registry_revision": null,
   "active_transaction_id": "988837a00d2f41d9a50ecbb3f41367bf",
-  "state": "INVALIDATED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -19,11 +19,11 @@
   "proposal": null,
   "failure": {
     "classification": "transient",
-    "detail": "model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected three times (the third a narrowed ask for the units a rejection actually named); last rejection: inherited_unit:048.paragraph: dangling_pointer: VERIFIED_PRESERVE keeps it as written in api_reference, but its sentence \"The public API surface includes 213 public types, summarized in the module-grouped table below.\" says 'table below' but no table follows it in this section. Kept units print after the section's own content, so a pointer to what follows is answered only by a unit kept right after it in the same section: keep that unit there too, or choose VERIFIED_REWRITE (the wording is re-authored from facts, without the pointer), or OMIT_UNSUPPORTED citing the fact that shows the claim unsupported",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-06T08:06:07.836531+00:00",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "INVALIDATED",
+    "occurred_at": "2026-11-06T08:33:19.118029+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 4
   },
   "lease": null,
   "last_transition": {
@@ -40,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 53,
+  "state_version": 54,
   "recent_trigger_dedup_keys": {
     "run:40555609801:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust": "384ec130f5d042919913581b3645c9e9",
     "run:40571555199:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust": "7e1dc318b1af4ce2ad24ff6ceefe1c1b",
@@ -53,5 +53,5 @@
     "run:41118892620:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust": "b8af14a61e7c4c19aa21b8f6a27c4f5f",
     "run:41306477548:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust": "988837a00d2f41d9a50ecbb3f41367bf"
   },
-  "recovery_count": 3
+  "recovery_count": 4
 }
