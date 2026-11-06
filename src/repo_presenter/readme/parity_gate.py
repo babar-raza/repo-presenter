@@ -326,11 +326,29 @@ class Accounting:
             )
         return None
 
+    def loss_units(self, item: str, *, code: bool = False) -> tuple[str, ...]:
+        """Lane R: the inherited units holding ``item`` whose disposition does not account for its
+        absence (no row, or a loss disposition): the units a repair must re-reconcile. Empty for
+        Lane L, and for an item no inherited unit holds."""
+        if self.candidate.lane == LANE_L:
+            return ()
+        return tuple(
+            unit_id
+            for unit_id in self._units_containing(item, code=code)
+            if (row := self.rows.get(unit_id)) is None
+            or not disposition_is_non_loss(row, self.facts)
+        )
+
     def section_reason(self, heading: str) -> str | None:
         """Lane R: every content unit of the benchmark section has a non-loss disposition (or the
         section has none). Lane L: the heading line itself is inside an evidenced edit."""
+        return self.section_account(heading)[0]
+
+    def section_account(self, heading: str) -> tuple[str | None, tuple[str, ...]]:
+        """``(non-loss reason or None, the section's units that make it a loss)``; the units are
+        empty for Lane L and for a section with no content unit."""
         if self.candidate.lane == LANE_L:
-            return self.reason(heading)
+            return self.reason(heading), ()
         members = [
             unit_id
             for unit_id, unit in self.units.items()
@@ -342,13 +360,15 @@ class Accounting:
             and str((unit.get("attributes") or {}).get("section", ""))
         ]
         if not members:
-            return None
+            return None, ()
         audit = _load_audit()
         moved = 0
+        losing: list[str] = []
         for unit_id in members:
             row = self.rows.get(unit_id)
             if row is None:
-                return None
+                losing.append(unit_id)
+                continue
             if disposition_is_non_loss(row, self.facts):
                 continue
             carried = audit.coverage(
@@ -360,13 +380,33 @@ class Accounting:
             ):
                 moved += 1
                 continue
-            return None
+            losing.append(unit_id)
+        if losing:
+            return None, tuple(losing)
         if moved:
-            return f"{moved} of {len(members)} section units carried under other headings, rest non-loss"
-        return f"all {len(members)} section units have non-loss dispositions"
+            return (
+                f"{moved} of {len(members)} section units carried under other headings, rest non-loss",
+                (),
+            )
+        return f"all {len(members)} section units have non-loss dispositions", ()
 
 
 # --- the six dimensions ---------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class Loss:
+    """One benchmark item a content dimension finds lost, with what a repair needs to route it.
+
+    ``units`` are the inherited units (Lane R) holding the item with a disposition that does not
+    account for its absence; empty when no inherited unit holds it (or for Lane L). ``stage`` is
+    the causal stage that should have carried an item that maps to no unit."""
+
+    dimension: str
+    category: str
+    item: str
+    units: tuple[str, ...] = ()
+    stage: str = "RECONCILING"
 
 
 @dataclass
@@ -375,6 +415,7 @@ class Dimension:
     passed: bool
     numbers: dict[str, Any]
     details: list[str] = field(default_factory=list)
+    losses: list[Loss] = field(default_factory=list)
 
 
 def _label(text: str, limit: int = 70) -> str:
@@ -384,15 +425,26 @@ def _label(text: str, limit: int = 70) -> str:
 def section_coverage(bench: Document, cand: Document, acct: Accounting) -> Dimension:
     cand_topics = [name for level, name in cand.headings if level in (2, 3)]
     present, justified, missing = 0, 0, []
+    losses: list[Loss] = []
     for heading in bench.h2:
         if any(topics_match(heading, other) for other in cand_topics):
             present += 1
             continue
-        why = acct.section_reason(heading)
+        why, units = acct.section_account(heading)
         if why:
             justified += 1
         else:
             missing.append(heading)
+            # A section with no content unit to re-reconcile was the plan's to carry.
+            losses.append(
+                Loss(
+                    "section_coverage",
+                    "h2",
+                    _label(heading),
+                    units,
+                    "RECONCILING" if units else "PLANNING",
+                )
+            )
     return Dimension(
         "section_coverage",
         not missing,
@@ -403,6 +455,7 @@ def section_coverage(bench: Document, cand: Document, acct: Accounting) -> Dimen
             "missing": len(missing),
         },
         [f"missing H2: {_label(h)}" for h in missing],
+        losses,
     )
 
 
@@ -492,6 +545,7 @@ def technical_content(
     )
     numbers: dict[str, Any] = {}
     details: list[str] = []
+    losses: list[Loss] = []
     lost_total = 0
     for category, entries in items.items():
         carried = accounted = 0
@@ -546,8 +600,18 @@ def technical_content(
                 accounted += 1
             else:
                 lost_total += 1
-                details.append(
-                    f"{category} lost: {_label(item.splitlines()[0] if is_code else item)}"
+                label = _label(item.splitlines()[0] if is_code else item)
+                details.append(f"{category} lost: {label}")
+                units = acct.loss_units(item, code=is_code)
+                # An item no inherited unit holds was never extracted from the README it is in.
+                losses.append(
+                    Loss(
+                        "technical_content",
+                        category,
+                        label,
+                        units,
+                        "RECONCILING" if units else "EXTRACTING",
+                    )
                 )
         numbers[category] = {
             "benchmark": len(entries),
@@ -556,7 +620,7 @@ def technical_content(
             "lost": len(entries) - carried - accounted,
         }
     numbers["lost_total"] = lost_total
-    return Dimension("technical_content", lost_total == 0, numbers, details)
+    return Dimension("technical_content", lost_total == 0, numbers, details, losses)
 
 
 def verified_examples(
@@ -736,6 +800,25 @@ class ParityResult:
             "context": self.context,
             "dimensions": {d.name: asdict(d) for d in self.dimensions},
         }
+
+
+#: The dimensions about content a candidate carries from the benchmark: what the blocking check
+#: (``validation/parity.py``) enforces. ``maintainer_preservation`` is BC-05 itself
+#: (``validation/supersession.py``); ``links`` and ``internal_markers`` are BC-06/BC-07's;
+#: ``verified_examples`` compares counts and has no item to route.
+CONTENT_DIMENSIONS = ("section_coverage", "technical_content")
+
+
+def content_losses(candidate: SealedCandidate, benchmark_text: str) -> list[Loss]:
+    """Every benchmark item the content dimensions find lost: the ONE judgement both the parity
+    gate (``ops/checks/parity_gate.py``, through :func:`evaluate`) and the blocking check make."""
+    bench = read_markdown(benchmark_text)
+    cand_doc = read_markdown(candidate.readme)
+    acct = Accounting(candidate)
+    return [
+        *section_coverage(bench, cand_doc, acct).losses,
+        *technical_content(bench, cand_doc, candidate, acct).losses,
+    ]
 
 
 def evaluate(

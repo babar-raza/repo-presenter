@@ -378,7 +378,7 @@ class _Composition:
 
 def _candidate(
     entry: RegistryEntry, document: FactsDocument, plan: dict, units: dict, dispositions: dict,
-    readme: str, tree_paths: list[str], tasks: list[Any],
+    readme: str, tree_paths: list[str], tasks: list[Any], benchmark: str | None = None,
 ) -> Candidate:
     """What the blocking checks read. ``original_readme`` is left unset: BC-01 compares it with the
     snapshot's README digest, which Lane L holds and the cascade is not handed, and a digest taken
@@ -395,6 +395,7 @@ def _candidate(
         readme_sha256=None,
         tree_paths=tree_paths,
         tasks=tasks,
+        benchmark_readme=benchmark,
     )
 
 
@@ -573,7 +574,7 @@ def _settle_s9(
         )
         candidate = _candidate(
             entry, document, composed.plan, composed.coherent_units, composed.dispositions,
-            composed.readme, tree_paths, composed.tasks,
+            composed.readme, tree_paths, composed.tasks, benchmark=original,
         )
         validation = validate_candidate(candidate, out_dir, [])
         verdict = review_candidate(

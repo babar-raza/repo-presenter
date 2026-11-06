@@ -184,10 +184,13 @@
       "revision": "d947d11cc6b282443231c2025ee43bf974a335dd"
     },
     {
-      "commit": "6c25dafd779a82779e4000532c6cf316da3d0da4",
-      "failing_checks": [],
+      "commit": "da1653c07dd4e0ee21d78bc42a14fd9cff58cba8",
+      "failing_checks": [
+        "BC-17"
+      ],
+      "justification": "BC-17 (R2 parity, genuine loss): the sealed README drops the maintainers' <ProjectReference Include=\"..\\Aspose.Imaging-FOSS-for-.NET\\src\\Aspose.…csproj\" /> code block (inherited_unit:018.code_block, OMIT_UNSUPPORTED 'promotional', no contradicting fact) that the README at the sealed revision prints; ops/checks/parity_gate.py reports the same code_blocks loss. Needs a targeted S4 repair of unit 018, not regeneration.",
       "lane": "R",
-      "outcome": "RECERTIFIED",
+      "outcome": "NEEDS_REPAIR",
       "regenerations": 3,
       "repository": "aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET",
       "revision": "d947d11cc6b282443231c2025ee43bf974a335dd"

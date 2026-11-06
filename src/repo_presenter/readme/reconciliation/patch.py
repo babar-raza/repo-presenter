@@ -41,6 +41,7 @@ from repo_presenter.core.errors import ConfigError
 from repo_presenter.core.facts import Fact, FactsDocument
 from repo_presenter.core.llm.prompts import LoadedManifest
 from repo_presenter.readme.composition.source_topics import source_heading
+from repo_presenter.readme.parity_gate import disposition_is_non_loss
 from repo_presenter.readme.reconciliation.destinations import (
     holdable_sections,
     nearest_for_units,
@@ -106,6 +107,12 @@ class PatchScope:
     # Units failed because superseding them loses content (validation/supersession.py): a reply
     # that leaves them SUPERSEDE_REDUNDANT or defers them cannot repair that.
     superseded: frozenset[str] = frozenset()
+    # Units failed by BC-17 (validation/parity.py) because their disposition loses an item of the
+    # published README: a reply that still gives them a loss disposition cannot repair that.
+    parity_lost: frozenset[str] = frozenset()
+    # The CONTRADICTED facts of the batch: an omission citing one is a non-loss (the parity gate's
+    # own exemption, ``parity_gate.disposition_is_non_loss``).
+    contradicted: frozenset[str] = frozenset()
 
 
 def patch_scope(
@@ -184,13 +191,27 @@ def patch_scope(
             if stored[unit].get("disposition") == "SUPERSEDE_REDUNDANT"
             and unit in _loss_units(record)
         ),
+        parity_lost=frozenset(
+            unit for unit in chosen if unit in _loss_units(record, _parity_marker())
+        ),
+        contradicted=frozenset(
+            fact.id for fact in batch_facts.facts if fact.polarity == "CONTRADICTED"
+        ),
     )
 
 
-def _loss_units(record: Mapping[str, Any]) -> set[str]:
-    """The units a record's failures name as superseded with content the README does not state."""
+def _parity_marker() -> str:
+    from repo_presenter.readme.validation.parity import PARITY_LOSS_MARKER
+
+    return PARITY_LOSS_MARKER
+
+
+def _loss_units(record: Mapping[str, Any], marker: str | None = None) -> set[str]:
+    """The units a record's failures name as superseded with content the README does not state
+    (or, with ``marker``, whose failure detail carries that marker)."""
     from repo_presenter.readme.validation.supersession import LOSS_MARKER
 
+    marker = LOSS_MARKER if marker is None else marker
     failures: list[Any] = list(record.get("failures") or [])
     for equivalent in record.get("equivalent_findings") or []:
         failures.extend(equivalent.get("failures") or [])
@@ -199,7 +220,7 @@ def _loss_units(record: Mapping[str, Any]) -> set[str]:
         for failure in failures
         if isinstance(failure, Mapping)
         and failure.get("unit_id")
-        and LOSS_MARKER in str(failure.get("detail", ""))
+        and marker in str(failure.get("detail", ""))
     }
 
 
@@ -262,9 +283,31 @@ def patch_checks(
                 f"(VERIFIED_PRESERVE or VERIFIED_MOVE into one of {', '.join(others)}), or "
                 "PRESERVE_ATTRIBUTED when no fact confirms it"
             )
+        # BC-17, judged the same way (after normalisation) and by the parity gate's own rule of
+        # what accounts for an absent benchmark item, so a reply passes here only if the item it
+        # holds stops counting as lost. The rendered README is not available to a patch, so a
+        # placing disposition is accepted here and judged again by BC-17 on the next render.
+        facts = {fid: {"polarity": "CONTRADICTED"} for fid in scope.contradicted}
+        for unit in sorted(scope.parity_lost - scope.superseded):
+            entry = normalised.get(unit, {})
+            disposition = entry.get("disposition")
+            if disposition not in _PARITY_LOSING or disposition_is_non_loss(entry, facts):
+                continue
+            errors.append(
+                f"{unit}: still {disposition}, which is the defect: the published README prints "
+                "this content and the candidate must not lose it. Keep it (VERIFIED_PRESERVE or "
+                f"VERIFIED_MOVE into one of {', '.join(scope.holdable)}), PRESERVE_ATTRIBUTED "
+                "when no fact confirms it, or OMIT_UNSUPPORTED only citing the CONTRADICTED fact "
+                "that shows it is incorrect or obsolete"
+            )
         return errors
 
     return guarded
+
+
+# Dispositions that leave a unit's content out of the README; an OMIT_UNSUPPORTED is a loss unless
+# ``disposition_is_non_loss`` (the parity gate's rule) accounts for it.
+_PARITY_LOSING = frozenset({"OMIT_UNSUPPORTED", "SUPERSEDE_REDUNDANT", "DEFER_UNRESOLVED"})
 
 
 _CHANGE_TEXT = 2000  # the repair manifest's own ``before``/``after`` ceiling
