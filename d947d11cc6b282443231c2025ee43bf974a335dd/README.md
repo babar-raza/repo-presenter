@@ -6,8 +6,6 @@
 
 Aspose.Imaging FOSS for .NET reads image headers to detect formats and extract metadata for 14 image formats without requiring full decoding. It supports netstandard2.0 and net8.0 and has no external dependencies.
 
-*From the maintainers' README (not independently verified):*
-
 Most .NET image libraries make you fully decode an image just to answer "is this a JPEG, and
 how big is it?". `ImageSharp.Image.Identify` covers common raster formats well, but nothing
 else in the .NET FOSS ecosystem does the same for PSD, EMF/WMF, or DICOM — this library covers
@@ -108,8 +106,6 @@ Console.WriteLine($"{info.Format}: {info.FrameCount} frame(s)");
 
 ## Additional Examples
 
-> **Not verified:** this example is carried over unchanged from the project's existing README. It could not be compiled or run here.
-
 ```csharp
 using Aspose.Imaging.Foss;
 
@@ -125,16 +121,12 @@ var info2 = ImageProbe.Probe(stream);
 <details>
 <summary>View Additional Examples</summary>
 
-> **Not verified:** this example is carried over unchanged from the project's existing README. It could not be compiled or run here.
-
 ```csharp
 using Aspose.Imaging.Foss;
 
 var info = await ImageProbe.ProbeFileAsync("upload.png", cancellationToken);
 Console.WriteLine($"{info.Format}: {info.Width}x{info.Height}");
 ```
-
-> **Not verified:** this example is carried over unchanged from the project's existing README. It could not be compiled or run here.
 
 ```csharp
 using Aspose.Imaging.Foss;
@@ -222,8 +214,6 @@ frame or page (GIF, ICO, TIFF, and multi-page DJVU); every other format's `Frame
 back as a fixed `1` on a successful parse, which this table does not count as a real frame
 count.
 
-*From the maintainers' README (not independently verified):*
-
 `Probe` never throws on malformed or truncated input — if a file matches a format's signature
 but its header can't be fully parsed, you get back an `ImageInfo` with just the `Format` set
 rather than an exception.
@@ -261,8 +251,6 @@ The test project targets `net9.0` and references the library via a plain `Projec
 no packaged dependency is required to build or test the library itself. A tagged
 `v<major>.<minor>.<patch>` push runs [`.github/workflows/release.yml`](.github/workflows/release.yml),
 which builds and publishes the package.
-
-*From the maintainers' README (not independently verified):*
 
 Adding a new format means implementing `IFormatHandler` (signature match + header parse) under
 `src/Aspose.Imaging.Foss/Formats` and registering it in `ImageProbe`. Pull requests for new

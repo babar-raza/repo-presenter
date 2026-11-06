@@ -1,6 +1,6 @@
 --- a/README.md
 +++ b/README.md
-@@ -1,15 +1,21 @@
+@@ -1,15 +1,19 @@
  # Aspose.Imaging FOSS for .NET
  
 -[![CI](https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET/actions/workflows/ci.yml/badge.svg)](https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Contributors](https://img.shields.io/github/contributors/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET.svg)](https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET/graphs/contributors)
@@ -14,9 +14,7 @@
 -count — directly from the file header, so you know what a file is and how big it is, fast,
 -without pulling in a full imaging stack to decode a single pixel. It has no NuGet dependencies
 -and targets `netstandard2.0` and `net8.0`.
-+Aspose.Imaging FOSS for .NET reads and writes image files in multiple formats including GIF, JPEG, PNG, TIFF, BMP, PSD, EMF, WMF, and DICOM. It converts images between these formats and inspects their properties such as format type, dimensions, and frame count without requiring full decoding. The library multi-targets netstandard2.0 and net8.0 and has no external dependencies.
-+
-+*From the maintainers' README (not independently verified):*
++Aspose.Imaging FOSS for .NET reads image headers to detect formats and extract metadata for 14 image formats without requiring full decoding. It supports netstandard2.0 and net8.0 and has no external dependencies.
 +
 +Most .NET image libraries make you fully decode an image just to answer "is this a JPEG, and
 +how big is it?". `ImageSharp.Image.Identify` covers common raster formats well, but nothing
@@ -29,7 +27,7 @@
  
  ## Navigation
  
-@@ -28,66 +34,29 @@
+@@ -28,66 +32,29 @@
  ## At a Glance
  
  ```mermaid
@@ -115,7 +113,7 @@
  
  | Format | Detect | Width / Height | Bit depth | Frame count |
  |--------|:------:|:---------------:|:---------:|:-----------:|
-@@ -106,54 +75,40 @@
+@@ -106,54 +73,38 @@
  | AVIF (still / animated) | ✅ | ✅ | — | — |
  | HEIC / HEIF | ✅ | ✅ | — | — |
  
@@ -173,7 +171,7 @@
  
  ## Quick Start
 +
-+This example uses Aspose.Imaging FOSS for .NET to inspect an image file and report its format and frame count, helping visitors quickly verify file properties.
++This example uses Aspose.Imaging FOSS for .NET to inspect an image file and report its format and frame count.
 +
 +```csharp
 +using Aspose.Imaging.Foss;
@@ -183,12 +181,10 @@
 +```
 +
 +## Additional Examples
-+
-+> **Not verified:** this example is carried over unchanged from the project's existing README. It could not be compiled or run here.
  
  ```csharp
  using Aspose.Imaging.Foss;
-@@ -167,19 +122,10 @@
+@@ -167,20 +118,9 @@
  var info2 = ImageProbe.Probe(stream);
  ```
  
@@ -205,17 +201,15 @@
 -
 -`ProbeFileAsync()` and `ProbeAsync()` mirror their synchronous counterparts for use on a thread
 -that shouldn't block on I/O, such as an ASP.NET request handler:
-+> **Not verified:** this example is carried over unchanged from the project's existing README. It could not be compiled or run here.
- 
+-
  ```csharp
  using Aspose.Imaging.Foss;
-@@ -188,42 +134,51 @@
+ 
+@@ -188,42 +128,49 @@
  Console.WriteLine($"{info.Format}: {info.Width}x{info.Height}");
  ```
  
 -### Count Frames in a Multi-Frame GIF or a Multi-Page DJVU
-+> **Not verified:** this example is carried over unchanged from the project's existing README. It could not be compiled or run here.
-+
 +```csharp
 +using Aspose.Imaging.Foss;
 +
@@ -290,7 +284,7 @@
  
  - `ImageFormat` — enum of the 14 detectable formats, plus `Unknown` for anything unmatched.
  - `ImageInfo` — immutable result of a probe: `Format`, and the nullable `Width`, `Height`,
-@@ -247,44 +202,56 @@
+@@ -247,44 +194,54 @@
  
  ## Documentation & Resources
  
@@ -345,8 +339,6 @@
 +back as a fixed `1` on a successful parse, which this table does not count as a real frame
 +count.
 +
-+*From the maintainers' README (not independently verified):*
-+
 +`Probe` never throws on malformed or truncated input — if a file matches a format's signature
 +but its header can't be fully parsed, you get back an `ImageInfo` with just the `Format` set
 +rather than an exception.
@@ -379,15 +371,7 @@
  
  ```bash
  dotnet test tests/Aspose.Imaging.Foss.Tests/Aspose.Imaging.Foss.Tests.csproj
-@@ -295,12 +262,12 @@
- `v<major>.<minor>.<patch>` push runs [`.github/workflows/release.yml`](.github/workflows/release.yml),
- which builds and publishes the package.
- 
-+*From the maintainers' README (not independently verified):*
-+
- Adding a new format means implementing `IFormatHandler` (signature match + header parse) under
- `src/Aspose.Imaging.Foss/Formats` and registering it in `ImageProbe`. Pull requests for new
- formats or wider tag/chunk coverage on existing ones are welcome.
+@@ -301,6 +258,4 @@
  
  ## License
  
