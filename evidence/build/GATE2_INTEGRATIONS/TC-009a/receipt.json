@@ -3,20 +3,21 @@
   "card": "TC-009a",
   "gate": "GATE2_INTEGRATIONS",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-05T12:25:51Z",
-  "base_rev": "b90eaf8e66547c9086ce5f1e8984ee81a8f626f4",
-  "head_rev": "7949bb1b4ce690197c9039f791aabbaf7dff0d4a",
-  "card_sha256": "5ad234d09a81448abb44aae49fdebef239866c7b9ff6d37d2e8229904946dd7d",
-  "checker_fileset_sha256": "fc57e8c90291fa044923fc9eb5162accd56b657f7f8222c7c259ee5c3ae17b54",
-  "checker_fileset_scheme": "v2",
+  "generated_at": "2026-11-06T10:14:54Z",
+  "base_rev": "26e8cca1e9a04b3b73abc1a284b72da557a3eb88",
+  "head_rev": "12e7a3e2bd3952e42c972d9dec70d54cd0ed4c67",
+  "card_sha256": "8cc5fd0409d1ae63632ceeeba5b9faf6d186c2428b5ccbaf3cb7bb5ff887dc8e",
+  "checker_fileset_sha256": "7901fefb8457302884ddb642819ebd27f1c84aeaf4d3bc0fa9244d3673e69a90",
+  "checker_fileset_scheme": "v3",
   "fingerprint": {
     "python": "3.13.18",
-    "platform": "Linux-6.18.44-fc-v236-x86_64-with-glibc2.39"
+    "platform": "Linux-6.18.44-fc-v242-x86_64-with-glibc2.39"
   },
   "scope": {
     "ok": true,
     "changed_paths": [
-      "docs/DECISION_LOG.md"
+      "docs/DECISION_LOG.md",
+      "evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json"
     ],
     "violations": [],
     "evaluated": true
@@ -28,17 +29,23 @@
         {
           "command": "python ops/checks/owner_decision_record.py docs/DECISION_LOG.md APP_TOKEN_LIVE_MINT_AUTHORIZED:",
           "exit_code": 0,
-          "duration_s": 0.047,
+          "duration_s": 0.032,
           "stdout_sha256": "4055cd8459ddc5d0d8fd5c979ccc94c218a90c1cf4c2831c648eb5440c298376"
         },
         {
           "command": "python ops/checks/execution_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json minted=True verified_via_token_provenance=True",
-          "exit_code": 1,
-          "duration_s": 0.045,
-          "stdout_sha256": "1a1c2258c10414be82c92335ad781c91238e4166f7b615c66eea05311f6f6c2b"
+          "exit_code": 0,
+          "duration_s": 0.028,
+          "stdout_sha256": "3300a2471473533769bd61dff271ef6be7609775635d5a597de02a495e730b41"
+        },
+        {
+          "command": "python ops/checks/actions_run_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json tc-009a/mint-proof tc-009a-mint-proof.yml,run-request.yml",
+          "exit_code": 0,
+          "duration_s": 0.826,
+          "stdout_sha256": "fdcebc9e0960b579fdd2767ef37ff28fdda9f86788e03c15678c9521e7ad7d17"
         }
       ],
-      "all_passed": false
+      "all_passed": true
     },
     {
       "run": 2,
@@ -46,27 +53,40 @@
         {
           "command": "python ops/checks/owner_decision_record.py docs/DECISION_LOG.md APP_TOKEN_LIVE_MINT_AUTHORIZED:",
           "exit_code": 0,
-          "duration_s": 0.047,
+          "duration_s": 0.03,
           "stdout_sha256": "4055cd8459ddc5d0d8fd5c979ccc94c218a90c1cf4c2831c648eb5440c298376"
         },
         {
           "command": "python ops/checks/execution_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json minted=True verified_via_token_provenance=True",
-          "exit_code": 1,
-          "duration_s": 0.04,
-          "stdout_sha256": "1a1c2258c10414be82c92335ad781c91238e4166f7b615c66eea05311f6f6c2b"
+          "exit_code": 0,
+          "duration_s": 0.029,
+          "stdout_sha256": "3300a2471473533769bd61dff271ef6be7609775635d5a597de02a495e730b41"
+        },
+        {
+          "command": "python ops/checks/actions_run_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json tc-009a/mint-proof tc-009a-mint-proof.yml,run-request.yml",
+          "exit_code": 0,
+          "duration_s": 0.792,
+          "stdout_sha256": "fdcebc9e0960b579fdd2767ef37ff28fdda9f86788e03c15678c9521e7ad7d17"
         }
       ],
-      "all_passed": false
+      "all_passed": true
     }
   ],
   "negative_control": {
     "kind": "mutate",
     "patch": "python -c \"import pathlib; p = pathlib.Path('docs/DECISION_LOG.md'); s = p.read_text(encoding='utf-8'); s2 = s.replace('ref=', 'ref=BROKEN-'); p.write_text(s2, encoding='utf-8')\"",
-    "patch_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
-    "applied": false,
-    "patch_applied_failed": false,
-    "exit_codes": []
+    "patch_sha256": "60f88b4df65567a400a4e0f7ec29e0f5de4ac4ca05bf54075f5432e4485862b1",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      1,
+      0,
+      0
+    ],
+    "tree_changed": [
+      "M docs/DECISION_LOG.md"
+    ]
   },
-  "accepted": false,
-  "reason": "checks failed: python ops/checks/execution_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json minted=True verified_via_token_provenance=True; negative-control patch did not apply"
+  "accepted": true,
+  "reason": "all gates passed"
 }
