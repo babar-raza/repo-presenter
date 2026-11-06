@@ -5,7 +5,7 @@
   "provider_repository_id": 1301317734,
   "registry_revision": null,
   "active_transaction_id": "988837a00d2f41d9a50ecbb3f41367bf",
-  "state": "ACCEPTED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -18,12 +18,12 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "PresentFailure: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; F01 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-10-30T19:59:04.802266+00:00",
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "ACCEPTED",
+    "occurred_at": "2026-11-06T05:51:55.797205+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 1
   },
   "lease": null,
   "last_transition": {
@@ -40,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 38,
+  "state_version": 39,
   "recent_trigger_dedup_keys": {
     "run:40555609801:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust": "384ec130f5d042919913581b3645c9e9",
     "run:40571555199:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust": "7e1dc318b1af4ce2ad24ff6ceefe1c1b",
@@ -53,5 +53,5 @@
     "run:41118892620:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust": "b8af14a61e7c4c19aa21b8f6a27c4f5f",
     "run:41306477548:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust": "988837a00d2f41d9a50ecbb3f41367bf"
   },
-  "recovery_count": 0
+  "recovery_count": 1
 }
