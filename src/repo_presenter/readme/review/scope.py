@@ -16,7 +16,7 @@ is prose, under a section the renderer does not own wholesale, outside every fen
 from __future__ import annotations
 
 import re
-from collections.abc import Mapping
+from collections.abc import Collection, Mapping
 from typing import Any
 
 from repo_presenter.core.facts import FactsDocument
@@ -33,6 +33,9 @@ STRUCTURE = "structure"
 _FENCE = re.compile(r"^\s*(```|~~~)")
 _NOT_VERIFIED = "> **Not verified:**"
 _SURFACE_SUMMARY = re.compile(r"^The verified public surface has \d+ types?\.\s*$")
+_TABLE_DELIMITER = re.compile(r"^\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)*\|?$")
+#: A Core API table row as the renderer prints it: ``| `Name` | description |``.
+_TYPE_ROW = re.compile(r"^\|\s*`([^`]+)`\s*\|(.*)\|$")
 #: Markup lines the renderer (or a reader's Markdown) owns rather than an author: headings, tables,
 #: HTML tags, badge and banner images, horizontal rules, "Not verified" notes, and the attribution
 #: line the renderer prints before maintainer content kept as PRESERVE_ATTRIBUTED (a label, not a
@@ -91,27 +94,96 @@ def _member_bullet(stripped: str, section: str) -> bool:
     )
 
 
-def line_sections(readme: str, rendered: bool = True) -> list[str | None]:
+def _table_delimiter(row: str) -> bool:
+    return _TABLE_DELIMITER.match(row.strip()) is not None
+
+
+def _table_data_row(rows: list[str], index: int) -> bool:
+    """``rows[index]`` is a body row of a Markdown table: a ``|`` row that is neither the delimiter
+    row (``| --- | --- |``) nor the header row right above one. A header row holds column labels; a
+    body row holds whatever its author wrote in the cells, prose included."""
+    row = rows[index].strip()
+    if not row.startswith("|") or _table_delimiter(row):
+        return False
+    following = rows[index + 1] if index + 1 < len(rows) else ""
+    return not _table_delimiter(following)
+
+
+def authored_table_lines(readme: str, facts: FactsDocument) -> frozenset[int]:
+    """The 1-based numbers of the API reference table rows whose description an author wrote.
+
+    The renderer prints the Core API table from facts, but a type with no docstring and no
+    signature gets the sentence authored for it in a bounded batch (``renderer._symbol_description``:
+    the ``type:<fact id>`` unit). That sentence is an author's claim like any other, and iteration 4
+    of the calibration found real unsupported claims in exactly such cells (own Cells C++, own HTML
+    Python), which the reviewer was never shown. Structural, like ``reviewable_lines``: a row is
+    authored when its type is a SUPPORTED class or enum with neither a docstring nor a signature and
+    its description is not the renderer's ``Public <kind>.`` fallback."""
+    from repo_presenter.readme.composition.renderer import api_reference_names
+
+    names = api_reference_names(facts)
+    authored_types: set[str] = set()
+    fallbacks: dict[str, str] = {}
+    for fact in facts.by_kind("public_symbol"):
+        attributes = fact.attributes or {}
+        kind = attributes.get("symbol_kind")
+        if fact.polarity != "SUPPORTED" or kind not in {"class", "enum"}:
+            continue
+        if attributes.get("docstring") or attributes.get("signature"):
+            continue
+        name = names.get(fact.value, fact.value.rsplit(".", 1)[-1])
+        authored_types.add(name)
+        fallbacks[name] = f"Public {kind}."
+    if not authored_types:
+        return frozenset()
+    owners = section_lines(readme)
+    found: set[int] = set()
+    for number, row in enumerate(readme.splitlines(), 1):
+        if owners[number - 1] != "api_reference":
+            continue
+        match = _TYPE_ROW.match(row.strip())
+        if match is None or match.group(1) not in authored_types:
+            continue
+        description = match.group(2).strip()
+        if description and description != fallbacks[match.group(1)]:
+            found.add(number)
+    return frozenset(found)
+
+
+def line_sections(
+    readme: str, rendered: bool = True, authored: Collection[int] = ()
+) -> list[str | None]:
     """For each line (0-based), the section whose author-written prose it is, or ``None`` when the
     line is not reviewable text.
 
     ``rendered`` says the candidate was printed by this project's renderer (Lane R), which owns the
     deterministic sections, the diagram, the member reference and the sentences ``shown_text``
     removes. A corrected live README (Lane L) was written by the maintainers: nothing in it is the
-    renderer's, so with ``rendered=False`` only Markdown that is never prose (fences, tables,
-    headings, HTML, images, horizontal rules) is withheld, and sections are still named."""
+    renderer's, so with ``rendered=False`` only Markdown that is never prose (fences, headings, HTML,
+    images, horizontal rules, a table's header and delimiter rows) is withheld; a table's body rows
+    are the maintainers' text and are shown, and sections are still named.
+
+    ``authored`` (1-based, ``authored_table_lines``) are rows of a renderer-printed table whose cell
+    an author wrote; they are reviewable in a rendered candidate too."""
     rows = readme.splitlines()
     owners = section_lines(readme)
     first = _first_heading(rows)
     classified: list[str | None] = []
     inside = False
+    extra = set(authored)
     for index, row in enumerate(rows):
         stripped = row.strip()
         if _FENCE.match(row):
             inside = not inside
             classified.append(None)
             continue
-        if inside or not stripped or _is_markup(stripped):
+        if inside or not stripped:
+            classified.append(None)
+            continue
+        if rendered and index + 1 in extra:
+            classified.append(owners[index] or STRUCTURE)
+            continue
+        if _is_markup(stripped) and (rendered or not _table_data_row(rows, index)):
             classified.append(None)
             continue
         if rendered and not shown_text(stripped):

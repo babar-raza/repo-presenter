@@ -57,7 +57,7 @@ from repo_presenter.readme.review.reply import (
     review_from_reply,
     validate_review_reply,
 )
-from repo_presenter.readme.review.scope import maintainer_lines
+from repo_presenter.readme.review.scope import authored_table_lines, maintainer_lines
 from repo_presenter.readme.review.sectionwise import (
     ReviewUnit,
     plan_units,
@@ -248,7 +248,8 @@ def review_with_model(
     packet names them and its contract refuses an ``unsupported_claim`` citing only them. A Lane L
     review has no such disposition, so the set is empty and nothing changes there."""
     loaded = prompts[JOB]
-    units = plan_units(candidate_readme, rendered=rendered)
+    authored = authored_table_lines(candidate_readme, facts) if rendered else frozenset()
+    units = plan_units(candidate_readme, rendered=rendered, authored=authored)
     attributed = (
         maintainer_lines(candidate_readme, facts, dispositions) if rendered else frozenset()
     )

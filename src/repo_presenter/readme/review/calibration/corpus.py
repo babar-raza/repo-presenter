@@ -28,9 +28,11 @@ from repo_presenter.readme.review.calibration.sources import (
     SourceCandidate,
     blocking_check,
 )
+from repo_presenter.readme.review.findings import Finding
 from repo_presenter.readme.review.independent_reviewer import (
     claim_contradiction_rule,
     duplicate_paragraph_rule,
+    live_readme_loss_rule,
     review_candidate,
 )
 from repo_presenter.readme.validation.blocking import blocking_failures
@@ -98,6 +100,11 @@ class Case:
     #: on target when it cites lines holding it. Empty when the defect is an absence (a dropped
     #: section) and only keywords can locate it.
     defect_text: str = ""
+    #: The deterministic findings (``finding_key``) already present on this case's twin. A rule that
+    #: fires on the twin still catches a case whose README gives it a finding the twin did not have
+    #: (a dropped section is a new ``live_readme_loss`` finding on a twin that already loses a link);
+    #: ``baseline_rules`` alone cannot tell the two apart.
+    baseline_findings: tuple[tuple[str, str, str], ...] = ()
 
     @property
     def readme(self) -> str:
@@ -141,19 +148,34 @@ def new_blocking_checks(case: Case) -> tuple[str, ...]:
     )
 
 
-def deterministic_rules(case: Case) -> tuple[str, ...]:
-    """The rules of ``review_candidate`` that fire on ``case``'s README. A README this renderer did
-    not print (``SourceCandidate.rendered`` is ``False``) has no disposition record, so only the
-    rules that read the text alone apply to it: ``disposition_coverage``, ``live_readme_loss`` and
-    ``duplicate_opening_paragraph`` audit this project's own units and dispositions, and would fire
-    on the absence of a record that such a README never had."""
+def finding_key(finding: Finding) -> tuple[str, str, str]:
+    """A deterministic finding's identity across a case and its twin: the rule, what it found and
+    the text it cites. Not the message, which for ``claim_contradiction`` carries a line number that
+    an insertion elsewhere shifts."""
+    return (finding.rule, finding.evidence or finding.message, finding.quote)
+
+
+def deterministic_findings(case: Case) -> list[Finding]:
+    """The findings of the deterministic stage on ``case``'s README.
+
+    A README this renderer did not print (``SourceCandidate.rendered`` is ``False``) is judged as
+    Lane L judges a corrected live README (``lane_l_review.holdout_findings``): the text-reading
+    rules plus ``live_readme_loss`` against the live README, with no disposition accounting for a
+    loss (such a README has no disposition record). ``disposition_coverage`` and
+    ``duplicate_opening_paragraph`` audit this project's own units and dispositions and would fire on
+    the absence of a record that such a README never had, so they do not apply to it. Iteration 4
+    left ``live_readme_loss`` out too, so on its 34 reference bases no deterministic rule could see a
+    dropped section (0/34) although the production Lane L stage runs exactly that rule
+    (docs/investigations/2026-11-06-reviewer-rootcause.md)."""
     source = case.source
     if not source.rendered:
-        findings = [
+        return [
             *claim_contradiction_rule(case.readme, source.facts),
             *duplicate_paragraph_rule(case.readme),
+            *live_readme_loss_rule(
+                source.original, case.readme, facts=source.facts, dispositions={}
+            ),
         ]
-        return tuple(sorted({finding.rule for finding in findings}))
     verdict = review_candidate(
         readme_text=case.readme,
         units=source.units.get("units", []),
@@ -161,7 +183,12 @@ def deterministic_rules(case: Case) -> tuple[str, ...]:
         dispositions=source.dispositions,
         original_readme=source.original,
     )
-    return tuple(sorted({finding.rule for finding in verdict.findings}))
+    return list(verdict.findings)
+
+
+def deterministic_rules(case: Case) -> tuple[str, ...]:
+    """The rules of the deterministic stage (``deterministic_findings``) that fire on ``case``."""
+    return tuple(sorted({finding.rule for finding in deterministic_findings(case)}))
 
 
 def _clean_case(base: Base) -> Case:
@@ -193,7 +220,12 @@ def _clean_case(base: Base) -> Case:
 def base_cases(base: Base) -> list[Case]:
     """The clean twin, the real-defect cases and the mutants of one base."""
     clean = _clean_case(base)
-    baseline_rules = deterministic_rules(clean)
+    twin_findings = deterministic_findings(clean)
+    baseline_rules = tuple(sorted({finding.rule for finding in twin_findings}))
+    clean = replace(
+        clean,
+        baseline_findings=tuple(sorted({finding_key(f) for f in twin_findings})),
+    )
     if baseline_rules:
         # The pipeline would never send this twin to the model, so a verdict on it measures the
         # base and not the reviewer: it is kept on record, asked, and not scored as clean.

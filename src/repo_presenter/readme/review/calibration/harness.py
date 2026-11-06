@@ -31,7 +31,8 @@ from dataclasses import dataclass, field
 
 from repo_presenter.readme.review.calibration.corpus import (
     Case,
-    deterministic_rules,
+    deterministic_findings,
+    finding_key,
     new_blocking_checks,
 )
 from repo_presenter.readme.review.calibration.mutations import (
@@ -175,10 +176,16 @@ class Run:
 
 
 def pre_llm(case: Case) -> PreLLM:
-    rules = tuple(
-        rule for rule in deterministic_rules(case) if rule not in case.baseline_rules
-    )
-    return PreLLM(rules, new_blocking_checks(case))
+    """What the deterministic stage alone does with ``case``: the rules that give it a finding its
+    twin does not have (``Case.baseline_findings``), and its new blocking checks. A case with no
+    recorded twin findings (a recorded defect) falls back to the rules that do not fire on the twin."""
+    findings = deterministic_findings(case)
+    if case.baseline_findings:
+        known = set(case.baseline_findings)
+        fired = {f.rule for f in findings if finding_key(f) not in known}
+    else:
+        fired = {f.rule for f in findings if f.rule not in case.baseline_rules}
+    return PreLLM(tuple(sorted(fired)), new_blocking_checks(case))
 
 
 def run_corpus(cases: Sequence[Case], reviewer: Reviewer, *, repeats: int = 1) -> Run:

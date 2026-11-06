@@ -196,18 +196,25 @@ def test_a_recorded_defect_with_no_repair_has_no_twin(tmp_path):
 
 
 def blocked_twin_cases(tmp_path, monkeypatch):
-    from repo_presenter.readme.review.calibration import corpus
+    from repo_presenter.readme.review.calibration import corpus, harness
+    from repo_presenter.readme.review.findings import Finding
 
-    real = corpus.deterministic_rules
+    real = corpus.deterministic_findings
+    # a finding that fires on the twin and on everything built from it
+    always = Finding(
+        rule="live_readme_loss",
+        source="deterministic",
+        claim_kind="omission",
+        message="live README content lost without an accounting disposition: heading 'X'",
+        evidence="heading 'X'",
+        quote="X",
+    )
 
     def with_baseline(case):
-        found = set(real(case))
-        found.add(
-            "live_readme_loss"
-        )  # a rule that fires on the twin and on everything built from it
-        return tuple(sorted(found))
+        return [*real(case), always]
 
-    monkeypatch.setattr(corpus, "deterministic_rules", with_baseline)
+    monkeypatch.setattr(corpus, "deterministic_findings", with_baseline)
+    monkeypatch.setattr(harness, "deterministic_findings", with_baseline)
     return build_corpus([defective_base(tmp_path)])
 
 
@@ -224,12 +231,23 @@ def test_a_twin_the_deterministic_stage_blocks_is_not_a_clean_twin(
 
 
 def test_the_baseline_rule_is_not_a_catch_of_a_mutant(tmp_path, monkeypatch):
+    from repo_presenter.readme.review.calibration import corpus
     from repo_presenter.readme.review.calibration.harness import pre_llm
 
     cases = blocked_twin_cases(tmp_path, monkeypatch)
     for case in by_role(cases, "mutant"):
         assert "live_readme_loss" in case.baseline_rules
-        assert "live_readme_loss" not in pre_llm(case).rules
+        # the finding the twin already has never counts; only a finding the mutant adds does
+        added = {
+            corpus.finding_key(f) for f in corpus.deterministic_findings(case)
+        } - set(case.baseline_findings)
+        assert ("live_readme_loss" in pre_llm(case).rules) == any(
+            key[0] == "live_readme_loss" for key in added
+        )
+    # a broken install command is a NEW live_readme_loss finding (the live README's verified
+    # command is gone): a rule-level baseline hid exactly this catch
+    (broken,) = [c for c in cases if c.operator == "break_install_command"]
+    assert "live_readme_loss" in pre_llm(broken).rules
 
 
 def test_a_clean_twin_the_stage_passes_has_no_baseline_rule(cases):
