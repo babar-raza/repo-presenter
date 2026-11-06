@@ -60,6 +60,20 @@ class Placement:
     attributed: bool = False
 
 
+_API_KINDS = ("public_symbol", "enum_member")
+
+
+def supported_api_names(facts: FactsDocument) -> frozenset[str]:
+    """The simple names of every SUPPORTED public symbol and enum member: the identifiers a kept
+    unit may not lose to a destination that merely shares its words (``coverage.api_identifiers``)."""
+    return frozenset(
+        re.split(r"\.|::", fact.value)[-1]
+        for kind in _API_KINDS
+        for fact in facts.by_kind(kind)
+        if fact.polarity == "SUPPORTED" and fact.value
+    )
+
+
 def renders_verbatim(unit_id: str, value: str, ecosystem: str) -> bool:
     """Whether a placed inherited unit is rendered verbatim in its destination."""
     unit_type = unit_id.rsplit(".", 1)[-1]
@@ -395,6 +409,7 @@ def placements(
     section_heading_ordinals = _section_heading_ordinals(dispositions)
     by_ordinal = _entries_by_ordinal(dispositions)
     root = root_heading(tuple(by_id.values()))
+    api_names = supported_api_names(facts)
     shown: Destinations | None = None
     result: list[Placement] = []
     for entry in dispositions.get("dispositions", []):
@@ -471,6 +486,7 @@ def placements(
                     lead_in=bool(set(overlap) & lead_in_of),
                     also=also,
                     only_also=topical,
+                    api_names=api_names,
                 )
             if remainder and not _introduces_nothing_rendered(
                 unit_id,

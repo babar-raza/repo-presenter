@@ -2020,6 +2020,88 @@ def test_an_omitted_badge_is_allowed() -> None:
     assert _badge_failures(_row_candidate(f"{PYPI} {LICENSE_BADGE}")) == []
 
 
+CONTRIBUTORS_GRAPH = f"https://github.com/{ENTRY.repository}/graphs/contributors"
+UP_PYPI = "[![PyPI version](https://img.shields.io/pypi/v/aspose-3d-foss)](https://pypi.org/project/aspose-3d-foss/)"
+UP_CI = f"[![CI]({CI_FACT.value}/badge.svg)]({CI_FACT.value})"
+UP_LICENSE = "[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)"
+UP_CONTRIBUTORS = (
+    f"[![Contributors](https://img.shields.io/github/contributors/{ENTRY.repository}.svg)]"
+    f"({CONTRIBUTORS_GRAPH})"
+)
+
+
+def _upstream_row(*badges: str) -> Fact:
+    return Fact(
+        "inherited_unit:002.badge_row",
+        "inherited_unit",
+        " ".join(badges),
+        (Evidence("README.md", "lines 3-3"),),
+        attributes={"section": "Old"},
+    )
+
+
+def _header_row(facts: FactsDocument) -> str:
+    readme = render_readme(ENTRY, facts, PLAN, UNITS, DISPOSITIONS)
+    return next(line for line in readme.splitlines() if line.startswith("[!["))
+
+
+def test_the_maintainers_badges_are_kept_as_written_when_they_link_to_the_verified_target() -> None:
+    # Parity-gate losses (R2): the renderer printed its own contributors badge without the
+    # maintainers' ``.svg`` suffix and its own build badge with ``?branch=main``, so the published
+    # badge image URLs were lost although both badges link exactly where the facts verify.
+    contributors = _link_fact("contributors", CONTRIBUTORS_GRAPH)
+    facts = _with_links(
+        CI_FACT,
+        contributors,
+        _upstream_row(UP_LICENSE, UP_PYPI, UP_CONTRIBUTORS, UP_CI),
+    )
+    row = _header_row(facts)
+    # Each maintainer badge in its own slot, in the stable BC-07 order, never twice.
+    assert row.startswith(UP_PYPI)
+    assert UP_CI in row and "?branch=main" not in row
+    assert UP_LICENSE in row and UP_CONTRIBUTORS in row
+    assert row.index(UP_PYPI) < row.index(UP_CI) < row.index(UP_LICENSE) < row.index(UP_CONTRIBUTORS)
+    candidate = _candidate(readme=render_readme(ENTRY, facts, PLAN, UNITS, DISPOSITIONS), facts=facts)
+    assert _badge_failures(candidate) == []
+
+
+def test_a_maintainer_badge_linking_elsewhere_never_replaces_the_verified_one() -> None:
+    other = "[![PyPI](https://img.shields.io/pypi/v/other.svg)](https://pypi.org/project/other/)"
+    row = _header_row(_with_links(_upstream_row(other)))
+    assert other not in row and PYPI in row
+
+
+def test_a_claim_badge_is_never_added_on_its_link_alone() -> None:
+    # A build badge needs the verified-workflow fact, not merely a resolving link to it.
+    ci_link = _link_fact("ci", CI_FACT.value)
+    row = _header_row(_with_links(ci_link, _upstream_row(UP_CI)))
+    assert "actions/workflows" not in row
+
+
+def test_a_link_verified_package_or_contributors_badge_is_added_alongside_the_renderers_own() -> None:
+    without_install = FactsDocument(
+        FACTS.repository,
+        FACTS.source_revision,
+        tuple(f for f in FACTS.facts if f.kind != "install_command"),
+    )
+    pypi_link = _link_fact("pypi", "https://pypi.org/project/aspose-3d-foss/")
+    facts = FactsDocument(
+        without_install.repository,
+        without_install.source_revision,
+        (*without_install.facts, pypi_link, _upstream_row(UP_PYPI, UP_CONTRIBUTORS)),
+    )
+    row = _header_row(facts)
+    assert row.startswith(UP_PYPI)
+    # The contributors graph is no verified link here, so that badge stays out.
+    assert "contributors" not in row
+    unverified = FactsDocument(
+        without_install.repository,
+        without_install.source_revision,
+        (*without_install.facts, _upstream_row(UP_PYPI)),
+    )
+    assert "pypi" not in _header_row(unverified)
+
+
 def _without_badge_worthy_facts(*extra: Fact) -> FactsDocument:
     return FactsDocument(
         FACTS.repository,

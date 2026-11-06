@@ -35,12 +35,11 @@ from repo_presenter.readme.composition.link_budget import (
     resolve_link_budget,
 )
 from repo_presenter.readme.composition.policy import PlanningPolicy
-from repo_presenter.readme.composition.renderer import BADGE_ORDER
+from repo_presenter.readme.composition.renderer import BADGE_ORDER, badge_slot
 
 # The markers an example fact's evidence carries once it has actually run.
 EXECUTION_MARKERS = (": EXECUTED", ": COMPILED")
 _BADGE = re.compile(r"\[!\[[^\]]*\]\([^)]*\)\]\([^)]*\)|!\[[^\]]*\]\([^)]*\)")
-_IMAGE_URL = re.compile(r"!\[[^\]]*\]\(([^)\s]*)")
 
 
 def verified_example_hashes(facts: FactsDocument) -> set[str]:
@@ -67,25 +66,6 @@ def readme_link_budget(
         policy.link_allocation,
         policy.aspose_links_max,
     )
-
-
-def badge_slot(token: str) -> str | None:
-    """The slot a rendered badge occupies, read off its image URL; ``None`` when unrecognized."""
-    match = _IMAGE_URL.search(token)
-    if match is None:
-        return None
-    url = match.group(1)
-    if "/actions/workflows/" in url and url.split("?", 1)[0].endswith("/badge.svg"):
-        return "build"
-    if "img.shields.io/github/contributors" in url:
-        return "contributors"
-    if "img.shields.io/badge/License-" in url:
-        return "license"
-    if "img.shields.io/badge/" in url:
-        return "runtime"
-    if url.startswith("https://"):
-        return "package"
-    return None
 
 
 def badge_problems(row: str, expected: Sequence[tuple[str, str]]) -> list[str]:
