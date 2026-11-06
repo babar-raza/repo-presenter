@@ -416,8 +416,13 @@ def _items(bench: Document, cand: SealedCandidate) -> dict[str, list[tuple[str, 
         ):
             value = str(fact.get("value") or "")
             api_names.add(re.split(r"\.|::", value)[-1])
+    # A maintainers' mermaid diagram is replaced by design when the candidate draws its own At a
+    # Glance diagram from verified facts (BC-05 exempts it the same way); without one it is owed.
+    candidate_draws = any(f.lang == "mermaid" for f in read_markdown(cand.readme).fences)
     code_blocks = [
-        (f.code, True) for f in bench.fences if not f.is_command and f.code.strip()
+        (f.code, True)
+        for f in bench.fences
+        if not f.is_command and f.code.strip() and not (f.lang == "mermaid" and candidate_draws)
     ]
     installs: list[tuple[str, bool]] = []
     for fence in bench.fences:
@@ -667,20 +672,27 @@ def maintainer_preservation(
                 for line in unaccounted[:25]
             ],
         )
-    audit = _load_audit()
-    units = {
-        str(f.get("id")): str(f.get("value") or "")
-        for f in cand.by_kind("inherited_unit")
-    }
+    # The same judgement BC-05 makes (validation/supersession.py): one standard, never two gates a
+    # candidate could pass one of and fail the other (owner ruling 2026-11-06: one version, one truth).
+    from types import SimpleNamespace
+
+    from repo_presenter.readme.validation.supersession import superseded_failures
+
+    def by_kind(kind: str) -> list[Any]:
+        return [
+            SimpleNamespace(id=str(f.get("id")), value=str(f.get("value") or ""))
+            for f in cand.by_kind(kind)
+        ]
+
+    view = SimpleNamespace(
+        facts=SimpleNamespace(by_kind=by_kind),
+        dispositions={"dispositions": list(cand.dispositions)},
+        readme=cand.readme,
+    )
     superseded = [
         r for r in cand.dispositions if r.get("disposition") == "SUPERSEDE_REDUNDANT"
     ]
-    low = []
-    for row in superseded:
-        unit_id = str(row.get("unit_id"))
-        score = audit.coverage(units.get(unit_id, ""), cand.readme)
-        if score < audit.PARTIAL:
-            low.append((round(score, 2), unit_id, units.get(unit_id, "")))
+    low = [(0.0, str(f.unit), f.detail) for f in superseded_failures(view)]
     counts: dict[str, int] = {}
     for row in cand.dispositions:
         key = str(row.get("disposition"))
@@ -693,7 +705,7 @@ def maintainer_preservation(
             "superseded": len(superseded),
             "superseded_carried": len(superseded) - len(low),
             "superseded_not_carried": len(low),
-            "carried_bound": audit.PARTIAL,
+            "judged_by": "validation.supersession (BC-05)",
             "has_dispositions": bool(cand.dispositions),
         },
         [

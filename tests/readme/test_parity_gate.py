@@ -39,7 +39,7 @@ def benchmark() -> str:
             "",
             "## Support",
             "",
-            "Ask on the community forum for help.",
+            "Ask questions on the community forum, where maintainers answer support requests within two business days.",
             "",
         ]
     )
@@ -105,7 +105,7 @@ def base_facts(example_polarity="SUPPORTED", link_polarity="SUPPORTED"):
         fact(
             "inherited_unit:007.paragraph",
             "inherited_unit",
-            "Ask on the community forum for help.",
+            "Ask questions on the community forum, where maintainers answer support requests within two business days.",
             section="Foo for .NET > Support",
         ),
     ]
@@ -172,7 +172,7 @@ def test_lane_l_identical_candidate_reaches_parity():
 
 
 def _without_support(text: str) -> str:
-    return text.replace("## Support\n\nAsk on the community forum for help.\n", "")
+    return text.replace("## Support\n\nAsk questions on the community forum, where maintainers answer support requests within two business days.\n", "")
 
 
 def test_section_missing_without_justification_fails():
@@ -392,7 +392,7 @@ def test_lane_l_line_lost_without_an_edit_fails_and_with_an_evidenced_edit_passe
     assert not dim(run(cand(readme, lane="L")), "maintainer_preservation").passed
     edit = {
         "detector": "structure",
-        "original": "## Support\n\nAsk on the community forum for help.\n",
+        "original": "## Support\n\nAsk questions on the community forum, where maintainers answer support requests within two business days.\n",
         "replacement": "",
         "evidence": [{"fact_id": "x", "status": "CONTRADICTED"}],
     }
@@ -404,7 +404,7 @@ def test_lane_l_unevidenced_edit_does_not_account():
     readme = _without_support(benchmark())
     edit = {
         "detector": "structure",
-        "original": "## Support\n\nAsk on the community forum for help.\n",
+        "original": "## Support\n\nAsk questions on the community forum, where maintainers answer support requests within two business days.\n",
     }
     assert not dim(
         run(cand(readme, lane="L", edits=[edit])), "maintainer_preservation"
@@ -580,3 +580,15 @@ def test_pilot_set_names_the_three_pause_lift_repositories():
 @pytest.mark.parametrize("name", pg.DIMENSIONS)
 def test_every_dimension_is_reported(name):
     assert dim(run(cand()), name).passed
+
+
+MAINTAINER_DIAGRAM = "```mermaid\nflowchart TD\n  input --> output\n```\n"
+OWN_DIAGRAM = "```mermaid\nflowchart TD\n  a[Workbook] --> b[XLSX]\n```\n"
+
+
+def test_a_maintainer_diagram_is_owed_unless_the_candidate_draws_its_own():
+    bench = benchmark() + "\n" + MAINTAINER_DIAGRAM
+    without = dim(run(cand(benchmark()), bench=bench), "technical_content")
+    assert not without.passed
+    with_own = dim(run(cand(benchmark() + "\n" + OWN_DIAGRAM), bench=bench), "technical_content")
+    assert with_own.passed
