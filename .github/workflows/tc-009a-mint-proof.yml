@@ -16,6 +16,8 @@ name: tc-009a-mint-proof
 
 on:
   workflow_dispatch:
+  # Called by run-request.yml (owner ruling 2026-11-06): still no inputs, the target stays fixed.
+  workflow_call:
 
 permissions:
   contents: write  # only to push the proof branch of THIS repository

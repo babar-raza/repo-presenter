@@ -1,0 +1,62 @@
+name: run-request
+
+# Owner ruling 2026-11-06 (docs/CONSOLIDATED_GOALS_2026-11-06.md, blocker 2): the supervisor session cannot
+# dispatch workflows (HTTP 403) but can push. It starts a hosted run by pushing a branch
+# `run-requests/<id>` whose only change from `main` is `run-request.json`. Same trust as a manual dispatch:
+# only accounts with push access can push. scripts/run_request.py refuses a branch that is not exactly the
+# current `main` plus the request, so the workflows that run are always `main`'s (a push-triggered workflow
+# runs the files of the pushed commit).
+
+on:
+  push:
+    branches: ["run-requests/**"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: run-request-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      job: ${{ steps.check.outputs.job }}
+      repository: ${{ steps.check.outputs.repository }}
+      ecosystem: ${{ steps.check.outputs.ecosystem }}
+      lane: ${{ steps.check.outputs.lane }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Validate the request (main plus run-request.json, allowed job, registered target)
+        id: check
+        run: |
+          git fetch --no-tags origin main
+          python scripts/run_request.py --request run-request.json --base origin/main >> "$GITHUB_OUTPUT"
+
+  present:
+    needs: validate
+    if: needs.validate.outputs.job == 'present'
+    permissions:
+      contents: write  # present.yml's durable-state refs in this repository only
+    uses: ./.github/workflows/present.yml
+    with:
+      repository: ${{ needs.validate.outputs.repository }}
+      ecosystem: ${{ needs.validate.outputs.ecosystem }}
+      lane: ${{ needs.validate.outputs.lane }}
+    secrets: inherit
+
+  mint:
+    needs: validate
+    if: needs.validate.outputs.job == 'mint'
+    permissions:
+      contents: write  # the mint workflow pushes its proof branch in this repository only
+    uses: ./.github/workflows/tc-009a-mint-proof.yml
+    secrets: inherit

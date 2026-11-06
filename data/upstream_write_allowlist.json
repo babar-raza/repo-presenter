@@ -2,5 +2,34 @@
   "schema_version": 1,
   "ruling": "R3, docs/CONSOLIDATED_GOALS_2026-11-06.md (owner, 2026-11-06)",
   "meaning": "Repositories on which this system may create upstream PRs and issues without a per-action instruction, only when every gate passes (reviewer calibration PASSED; single owner per (repository, effect) under the TC-002 disposition; no duplicate; the first PR on a repository opened as a draft for owner review). Empty means nothing upstream is authorized. Only the owner adds entries.",
-  "repositories": []
+  "repositories": [
+    {
+      "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Rust",
+      "effects": [
+        "pull_request"
+      ],
+      "first_pr_as_draft": true,
+      "added": "2026-11-06",
+      "added_by": "owner (interactive form)"
+    },
+    {
+      "repository": "aspose-email-foss/Aspose.Email-FOSS-for-.Net",
+      "effects": [
+        "pull_request"
+      ],
+      "first_pr_as_draft": true,
+      "added": "2026-11-06",
+      "added_by": "owner (interactive form)"
+    },
+    {
+      "repository": "aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET",
+      "effects": [
+        "pull_request"
+      ],
+      "first_pr_as_draft": true,
+      "added": "2026-11-06",
+      "added_by": "owner (interactive form)"
+    }
+  ],
+  "note": "Listing a repository authorizes nothing by itself: every gate must also pass, and reviewer calibration is NOT_PASSED (TC-007). Issues on these repositories are not listed (legacy funnel / TC-010a)."
 }
