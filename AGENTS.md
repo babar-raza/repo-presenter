@@ -40,6 +40,8 @@ Full text: `docs/CONSOLIDATED_GOALS_2026-11-06.md` Part B; operating detail: `op
   evidence, or re-add), the decision recorded, and the system calibrated to decide every similar drop the same way
   (a rule or a labelled case); BC-17 blocks unreviewed losses.
 
+- **R15 — no upstream push until every candidate of both lanes is sealed, validated and passed.**
+
 ## READ THIS FIRST — owner-adopted corrective plan (2026-11-03)
 
 `docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md` is **owner-adopted, binding authority**,

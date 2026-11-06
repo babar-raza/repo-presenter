@@ -1,0 +1,118 @@
+diff --git a/src/repo_presenter/authorization/refusals.py b/src/repo_presenter/authorization/refusals.py
+index b6f4f54..7b7fb3d 100644
+--- a/src/repo_presenter/authorization/refusals.py
++++ b/src/repo_presenter/authorization/refusals.py
+@@ -18,6 +18,8 @@ class Refusal(StrEnum):
+     TOKEN_APP_MISMATCH = "token_app_mismatch"
+     # The owner kill switch and credential presence (repo_presenter.issues.file).
+     WRITE_NOT_ENABLED = "write_not_enabled"
++    # owner ruling R15: no upstream push before every candidate of both lanes is sealed and passes
++    PORTFOLIO_INCOMPLETE = "portfolio_incomplete"
+     NO_WRITE_TOKEN = "no_write_token"
+     # Duplicate filing (repo_presenter.issues.dedup / repo_presenter.issues.file).
+     ALREADY_FILED = "already_filed"
+diff --git a/src/repo_presenter/propose/effect.py b/src/repo_presenter/propose/effect.py
+index 175c264..4e8c3ee 100644
+--- a/src/repo_presenter/propose/effect.py
++++ b/src/repo_presenter/propose/effect.py
+@@ -111,6 +111,7 @@ from repo_presenter.github.token_provenance import (
+ from repo_presenter.github.token_provenance import (
+     verify_pull_request_app as default_verify_pull_request_app,
+ )
++from repo_presenter.propose.portfolio_gate import ReadinessFn, portfolio_readiness
+ from repo_presenter.propose.pull_request import PullRequestContent
+ from repo_presenter.readme.review.calibration_status import load_calibration
+ from repo_presenter.readme.review.independent_reviewer import ReviewVerdict
+@@ -264,6 +265,7 @@ def propose_candidate(
+     pr_title: str | None = None,
+     pr_body: str | None = None,
+     compose_pull_request: ComposePullRequestFn | None = None,
++    portfolio_ready: ReadinessFn | None = None,
+ ) -> ProposalEffectResult:
+     """Create or update the one stable presenter branch and PR on `repository` - but only past
+     every gate in this module's own docstring. Every early return before the first write makes no
+@@ -344,6 +346,13 @@ def propose_candidate(
+     if not token:
+         return _refuse(True, Refusal.NO_WRITE_TOKEN, _NO_TOKEN_REASON)
+ 
++    # Owner ruling R15: no upstream push before every candidate of both lanes is sealed, validated and
++    # passed. Computed from the state remote's seal history (network: after the token check, by this
++    # function's own ordering rule); no caller can skip it -- a test may only substitute the reader.
++    readiness = (portfolio_ready or portfolio_readiness)()
++    if not readiness.ready:
++        return _refuse(True, Refusal.PORTFOLIO_INCOMPLETE, readiness.reason())
++
+     try:
+         authorization = load_authorization()
+     except WriteRefusedError as exc:
+diff --git a/src/repo_presenter/propose/portfolio_gate.py b/src/repo_presenter/propose/portfolio_gate.py
+new file mode 100644
+index 0000000..4455121
+--- /dev/null
++++ b/src/repo_presenter/propose/portfolio_gate.py
+@@ -0,0 +1,65 @@
++"""Owner ruling R15 (2026-11-06): no upstream push before every candidate of both lanes is sealed, validated
++and passed.
++
++"Every candidate" is every ACTIVE repository of ``data/registry.json``, in BOTH Lane R and Lane L: each must
++have a latest seal that re-certifies under the current code (``recertify.portfolio_recertification``, zero
++provider calls). Upstream PR creation (``propose/effect.py``) refuses with ``Refusal.PORTFOLIO_INCOMPLETE``
++until this holds; independent acceptance (reviewer/acceptance calibration) is a separate gate that must hold too.
++Computed from the state remote's seal history every time -- never read from an editable record.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Iterable
++from dataclasses import dataclass
++from pathlib import Path
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++LANES = ("R", "L")
++
++
++@dataclass(frozen=True)
++class PortfolioReadiness:
++    ready: bool
++    active: int
++    missing: tuple[tuple[str, str], ...]  # (repository, lane) not yet sealed + passing
++
++    def reason(self) -> str:
++        if self.ready:
++            return f"all {self.active} active repositories are sealed and pass in both lanes"
++        shown = ", ".join(f"{repo} lane {lane}" for repo, lane in self.missing[:8])
++        more = f" (and {len(self.missing) - 8} more)" if len(self.missing) > 8 else ""
++        return (
++            f"owner ruling R15: no upstream push before every candidate of both lanes is sealed, "
++            f"validated and passed; {len(self.missing)} of {2 * self.active} (repository, lane) "
++            f"candidates are not yet: {shown}{more}"
++        )
++
++
++def readiness_from(
++    active: Iterable[str], certified: Iterable[tuple[str, str]]
++) -> PortfolioReadiness:
++    """Pure: ``active`` repositories, ``certified`` (repository, lane) pairs that pass."""
++    repos = sorted(set(active))
++    passing = set(certified)
++    missing = tuple((repo, lane) for repo in repos for lane in LANES if (repo, lane) not in passing)
++    return PortfolioReadiness(ready=not missing and bool(repos), active=len(repos), missing=missing)
++
++
++def portfolio_readiness(
++    *,
++    remote: str = "origin",
++    registry: Path = REPO_ROOT / "data" / "registry.json",
++    prompts_dir: Path = REPO_ROOT / "prompts",
++) -> PortfolioReadiness:
++    """Read-only, zero provider calls: re-certify every latest seal and compare with the registry."""
++    from repo_presenter.core.registry.loader import load_registry
++    from repo_presenter.recertify import OUTCOME_RECERTIFIED, portfolio_recertification
++
++    active = [entry.repository for entry in load_registry(registry).entries if entry.active]
++    results, _ = portfolio_recertification(remote=remote, registry=registry, prompts_dir=prompts_dir)
++    certified = [(r.repository, r.lane) for r in results if r.outcome == OUTCOME_RECERTIFIED]
++    return readiness_from(active, certified)
++
++
++ReadinessFn = Callable[[], PortfolioReadiness]
