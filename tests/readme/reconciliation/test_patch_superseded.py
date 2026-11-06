@@ -51,3 +51,16 @@ def test_only_supersession_failures_mark_a_unit() -> None:
 def test_a_positional_sentence_is_navigation_not_content() -> None:
     assert positional_only("A few more real, runnable patterns beyond the Quick Start example above.")
     assert not positional_only("The library runs on Windows, Linux and macOS.")
+
+
+def test_a_keep_the_normaliser_turns_back_into_a_supersession_is_refused() -> None:
+    def normaliser(revised: dict) -> list[str]:
+        for entry in revised["dispositions"]:
+            if entry.get("destination_section") == "opening":
+                entry["disposition"] = "SUPERSEDE_REDUNDANT"
+        return []
+
+    reply = {"dispositions": [{"unit_id": UNIT, "disposition": "VERIFIED_PRESERVE", "destination_section": "opening"}]}
+    errors = patch_checks(_scope(), normaliser)(reply)
+    assert errors and "you answered VERIFIED_PRESERVE into opening" in errors[0]
+    assert "scope_limitations" in errors[0]
