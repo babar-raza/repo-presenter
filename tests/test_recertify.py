@@ -541,3 +541,18 @@ def test_the_regeneration_count_is_derived_from_the_seal_history() -> None:
     assert recertify.regeneration_count(history[:3], LANE_R) == 0
     assert recertify.regeneration_count([], LANE_R) == 0
     assert recertify.regeneration_count([seal("x", "p", "r1"), seal("x", "q", "r1")], LANE_L) == 0
+
+
+def test_a_platform_ecosystem_spec_is_registered_before_recertifying() -> None:
+    """Dry run 2026-11-06: every non-built-in ecosystem failed 'no ecosystem spec registered'."""
+    import importlib
+
+    import repo_presenter.core.ecosystems as eco
+    import repo_presenter.recertify as rc
+
+    eco.SPECS.pop("rust", None)
+    importlib.reload(rc)
+    from repo_presenter.extractors.platforms.registry import plugin_for
+
+    plugin_for("rust")
+    assert "rust" in eco.SPECS

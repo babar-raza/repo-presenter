@@ -365,6 +365,16 @@ def recertify_bundle(
     """Re-run the deterministic stages of ``bundle`` (one ``<revision>`` directory) with current
     code. Pure apart from reading ``bundle``; zero provider calls; writes nothing."""
     repository = entry.repository
+    # A platform lane registers its ecosystem spec when its plugin is imported
+    # (core/ecosystems.py SPECS); the generation path does that via plugin_for, so re-certification
+    # must too, or every non-built-in ecosystem fails "no ecosystem spec registered" (dry run
+    # 2026-11-06: Cells Cpp/Go/Java/Rust/TypeScript and PDF Java Lane R).
+    from repo_presenter.extractors.platforms.registry import plugin_for
+
+    try:
+        plugin_for(entry.ecosystem)
+    except Exception:  # noqa: BLE001 -- an unknown ecosystem is reported by the check that needs it
+        pass
 
     def needs(revision: str, checks: Sequence[str], why: Sequence[str], sealed: str = "") -> Recertification:
         return Recertification(
