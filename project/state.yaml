@@ -58,7 +58,8 @@ progress:
   lane_l_accepted: 11
   lane_l_corrected_non_empty_patch: 15
   lane_l_blocked: 0
-  lane_r_accepted: 2
+  lane_r_accepted: 1
+  # 2026-11-06 BC-17 (benchmark parity) blocks Imaging .NET Lane R on a genuine loss (justified in the gate baseline); targeted repair restores it.
   # 2026-11-06 after hosted re-certification (run 42225829840, zero provider calls): R 2, L 11.
   # 2026-11-06 release train 1 (pinned set b8a37816 / e2195bcb): Email .NET R+L, Imaging .NET L, Cells-Rust L sealed.
   # 2026-11-06 version-set resync (owner ruling: one version set per release set; seals never demoted):
@@ -149,7 +150,7 @@ owner_review_status:
 
 release_gate_dashboard:
   generated_by: gatecli
-  generated_at: '2026-11-06T14:32:57Z'
+  generated_at: '2026-11-06T15:20:15Z'
   note: Tool-generated from gateverify.rebuild_state() -- never hand-edit this block.
     Historical current_gate/active_work_item below are preserved bootstrap-era narrative,
     not this cursor; this block is the real, evidence-derived release-gate status

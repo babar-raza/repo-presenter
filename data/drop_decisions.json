@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "ruling": "R14, docs/CONSOLIDATED_GOALS_2026-11-06.md Part B: every item a candidate drops from a live README is examined and decided by the supervisor; each decision calibrates a deterministic rule or a labelled case so every similar drop is decided the same way.",
+  "decisions": [
+    {
+      "repository": "aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET",
+      "lane": "R",
+      "item": "inherited_unit:018.code_block",
+      "text": "<ProjectReference Include=\"..\\Aspose.Imaging-FOSS-for-.NET\\src\\Aspose.Imaging.Foss\\Aspose.Imaging.Foss.csproj\" />",
+      "dropped_as": "OMIT_UNSUPPORTED: 'promotional, not a standard install path'",
+      "decision": "READD",
+      "evidence": "src/Aspose.Imaging.Foss/Aspose.Imaging.Foss.csproj exists upstream (clone at HEAD, 2026-11-06); the block is the maintainers' build-from-source install path, introduced by inherited_unit:017.paragraph ('Reference the built assembly from another project, or add the project directly:')",
+      "rule": "code-block-omission-needs-evidence: a code block may be omitted only when (a) its example fact is CONTRADICTED, (b) a path/file/package it names provably does not exist at the revision, or (c) an identical block is printed elsewhere in the candidate; 'promotional', 'redundant' or 'no fact supports it' alone is never a valid reason to drop code. A lead-in is kept with its block.",
+      "decided_by": "supervisor",
+      "decided_at": "2026-11-06"
+    }
+  ]
+}

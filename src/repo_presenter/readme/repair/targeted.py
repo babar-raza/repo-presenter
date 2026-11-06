@@ -42,7 +42,12 @@ from typing import Any
 from jsonschema import Draft202012Validator
 
 from repo_presenter.core.examples import printed_example
-from repo_presenter.core.facts import FACT_KINDS, FactsDocument, bounded_records
+from repo_presenter.core.facts import (
+    EVIDENCE_ONLY_KINDS,
+    FACT_KINDS,
+    FactsDocument,
+    bounded_records,
+)
 from repo_presenter.core.llm.binding import binding_errors, merge_partial_units
 from repo_presenter.core.llm.jobs import schema_error_lines
 from repo_presenter.core.llm.ledger import canonical_hash
@@ -607,7 +612,11 @@ def repair_packet(
     never derived here, or from any check's own ``detail`` prose (this module is a routing-held
     file, tests/test_routing_fields.py).
     """
-    kinds = [kind for kind in FACT_KINDS if kind != "inherited_unit"]
+    kinds = [
+        kind
+        for kind in FACT_KINDS
+        if kind != "inherited_unit" and kind not in EVIDENCE_ONLY_KINDS
+    ]
     records = bounded_records(facts, kinds, ("SUPPORTED",))
     if allowed is not None:
         permitted = set(allowed)
