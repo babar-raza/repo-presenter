@@ -55,10 +55,11 @@ progress:
   # TC-005 (project/taskcards/TC-005.yaml) now asserts this block matches that script's output, so
   # the next drift is a failing check, not a silent stale number. Do not revert to 36/34 (known
   # false) or hand-edit these two fields without re-running the script first.
-  lane_l_accepted: 0
+  lane_l_accepted: 2
   lane_l_corrected_non_empty_patch: 15
   lane_l_blocked: 0
-  lane_r_accepted: 0
+  lane_r_accepted: 1
+  # 2026-11-06 release train 1 (pinned set b8a37816 / e2195bcb): Email .NET R+L, Imaging .NET L, Cells-Rust L sealed.
   # 2026-11-06 version-set resync (owner ruling: one version set per release set; seals never demoted):
   # counts now come from seal history grouped by version-set fingerprint, current set only. No seal exists yet
   # under the current set in either lane (older sets are reported separately by scripts/portfolio_status.py and
@@ -147,7 +148,7 @@ owner_review_status:
 
 release_gate_dashboard:
   generated_by: gatecli
-  generated_at: '2026-11-06T11:46:40Z'
+  generated_at: '2026-11-06T12:32:28Z'
   note: Tool-generated from gateverify.rebuild_state() -- never hand-edit this block.
     Historical current_gate/active_work_item below are preserved bootstrap-era narrative,
     not this cursor; this block is the real, evidence-derived release-gate status
