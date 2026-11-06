@@ -32,6 +32,7 @@ local and offline use only and is refused when ``GITHUB_ACTIONS`` is set.
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import sys
 from collections.abc import Callable, Sequence
@@ -132,6 +133,30 @@ def report_findings(verdict: Any, *, out: Any = None) -> None:
         if finding.evidence:
             print(f"  evidence: {finding.evidence[:600]}", file=stream)
 
+
+def report_repairs(out_dir: Path, *, out: Any = None) -> None:
+    """Print each repair attempt of a blocked candidate (outcome, check, the units it changed and
+    to what, the reason it was not repaired): a hosted run's workdir is not readable afterwards,
+    and a block that names no attempt cannot be diagnosed (2026-11-06 round 3, Email .NET)."""
+    stream = out if out is not None else sys.stdout
+    path = out_dir / "repairs.json"
+    try:
+        attempts = json.loads(path.read_text(encoding="utf-8")).get("attempts", {})
+    except (OSError, ValueError, AttributeError):
+        return
+    for attempt in attempts.values() if isinstance(attempts, dict) else attempts:
+        if not isinstance(attempt, dict):
+            continue
+        changes = [
+            str(change.get("after", ""))[:240] for change in attempt.get("changes") or []
+        ]
+        print(
+            f"repair {attempt.get('outcome')} {attempt.get('label')}: "
+            f"{'; '.join(changes) or '-'}"
+            + (f" | reason: {str(attempt.get('reason'))[:400]}" if attempt.get("reason") else ""),
+            file=stream,
+        )
+
 def _cascade_and_seal(
     *,
     repository: str,
@@ -164,6 +189,7 @@ def _cascade_and_seal(
     verdict = result.review_verdict
     if verdict.verdict != "ACCEPT":
         report_findings(verdict)
+        report_repairs(result.out_dir)
         raise PresentFailure(
             f"independent review returned {verdict.verdict} with "
             f"{len(verdict.blocking_findings)} blocking finding(s) of {len(verdict.findings)}; "
@@ -171,6 +197,7 @@ def _cascade_and_seal(
         )
     if not verdict.model_reviewed:
         failed = blocking_failures(result.validation)
+        report_repairs(result.out_dir)
         failing = ", ".join(check["id"] for check in failed)
         for check in failed:
             for failure in list(check.get("failures") or [])[:12]:

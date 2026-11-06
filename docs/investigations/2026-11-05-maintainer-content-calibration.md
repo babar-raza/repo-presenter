@@ -82,3 +82,16 @@ Change (owner decision 2026-11-06: blocking, auto-repaired): BC-05 runs `validat
 unit is a RECONCILING failure naming the unit, so the repair loop issues a per-unit reconciliation patch with the
 missing pieces quoted, and a candidate that still loses the content is rejected. `RENDERER_VERSION` 35 reopens
 every sealed candidate at RECONCILING. Re-measure with this script after the next regeneration.
+
+## Pilot rounds 2 and 3 under the check (2026-11-06)
+
+- **Round 2** (main fcfdc1d): all three Lane R candidates failed BC-05 unrepaired. Cause, found by a clean local
+  Email .NET run: the repair loop made one defect per check, patched one batch once and never retried it. Then,
+  with one defect per unit: a reply that re-superseded the unit was accepted as repaired, and a keep into the
+  opening or the API Reference was re-superseded by the normaliser. Each fixed (PR #26); a paragraph made only
+  of positional references is exempt (kept, it dangled).
+- **Round 3** (main 7a73f90): **Imaging .NET sealed ACCEPTED** (BC-05 clean, independent review ACCEPT).
+  Email .NET still blocked on units 004 (opening: "needs no Microsoft Outlook installation"), 043 (CFB type
+  descriptions) and 057 (`SetProperty()`/`GetPropertyValue()` list): the hosted log did not show the repair
+  attempts, so `present.py` now prints the repair ledger on a block. Cells-Rust failed earlier, in source
+  reconciliation (a retryable `dangling_pointer` rejection after three asks), unrelated to this check.

@@ -58,7 +58,9 @@ progress:
   lane_l_accepted: 12
   lane_l_corrected_non_empty_patch: 15
   lane_l_blocked: 0
-  lane_r_accepted: 7
+  lane_r_accepted: 8
+  # 2026-11-06 third resync (scripts/portfolio_status.py): 7 -> 8. Imaging .NET Lane R sealed ACCEPTED under the
+  # BC-05 supersession check after the S4 repair fixes (round 3, hosted run 42184543530).
   # 2026-11-06 second resync (scripts/portfolio_status.py): 9 -> 7. Email .NET and Imaging .NET Lane R were
   # re-run under the new BC-05 supersession check (run requests pilot-2-*); both failed BC-05 unrepaired (the
   # S4 repair loop handled a multi-unit check as one never-retried defect), so nothing was sealed.
