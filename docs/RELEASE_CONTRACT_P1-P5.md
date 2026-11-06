@@ -14,6 +14,17 @@ record stays intact and unedited (non-negotiable #6, no rewriting accepted histo
 > the same >=25 products on both lanes; the quality floor is the aspose.org readme-refresh output **published
 > upstream** (R2); upstream PRs/issues are authorized by a gated per-repository allowlist (R3). TC-011's check
 > must be re-authored to R4 before it can be accepted; until then this note governs.
+>
+> **Amendment 2026-11-06 (audit P1, TC-011 re-authored):** done. `project/taskcards/TC-011.yaml` and
+> `ops/checks/portfolio_delivery_count.py` now count **per lane, independently** (25 per lane is the release
+> threshold) and measure five outcomes separately: (a) Lane R independently accepted, (b) Lane L independently
+> accepted, (c) publication-ready, (d) external effect executed, (e) live-verified upstream. "Independently
+> accepted" = pipeline-good durable record + verified sealed bundle + a **model** review ACCEPT recorded under
+> calibration `PASSED` at the reviewer logic/prompt version `data/reviewer_calibration.json` certifies;
+> pipeline-good records under a `NOT_PASSED` reviewer are reported as `pipeline_good_uncalibrated` and never
+> count. Upstream delivery ((d)/(e), from the GitHub API, not from an editable ledger) is its own separately
+> gated outcome (`--live-verified N`), no longer part of P1 acceptance. The "same >=25 products on both lanes"
+> wording in the P1 row and the gap paragraph below is retained as history only; it no longer governs.
 
 ## The eleven states (never collapsed into one another)
 
@@ -37,7 +48,7 @@ portfolio_status.py` currently compute) says nothing about states 6–11.
 
 | Owner goal | Maps to | Measurable release acceptance criteria |
 |---|---|---|
-| **P1** — both lanes, 25 common products, live delivery | G1, G2, G7 | **Both** lanes pipeline-good (state 5) on the **same** >=25 authorized repository identities; each has a reproducible acceptance receipt under a calibration-*passing* reviewer (not merely state 5 under the current `NOT_PASSED` reviewer); quality >= the matching `aspose.org` refresh-candidate output, judged per lane's own role (Lane L = preservation + minimal correction, Lane R = complete regeneration); one selected output per repository reaches state 10 (live-verified), with an explicit no-change policy covering the "already correct, nothing to push" case — never a manufactured PR. |
+| **P1** — both lanes, 25 common products, live delivery *(amended 2026-11-06, R4: ~25 accepted per lane, counted independently; delivery gated separately — see the amendment above)* | G1, G2, G7 | **Both** lanes pipeline-good (state 5) on the **same** >=25 authorized repository identities; each has a reproducible acceptance receipt under a calibration-*passing* reviewer (not merely state 5 under the current `NOT_PASSED` reviewer); quality >= the matching `aspose.org` refresh-candidate output, judged per lane's own role (Lane L = preservation + minimal correction, Lane R = complete regeneration); one selected output per repository reaches state 10 (live-verified), with an explicit no-change policy covering the "already correct, nothing to push" case — never a manufactured PR. |
 | **P2** — operational issues lifecycle | G3 | Discovery → classification → dedup → approval → filing → assignment (where authorized) → tracking → re-detection → verified resolution → authorized closing, demonstrated end to end at least once with independent confirmation at state 10, not just one hand-run filing (today's actual evidence: filing only, states 1–3, not 4 for the lifecycle as a whole). |
 | **P3** — reuse the existing GitHub App | G5 | Prefer the legacy repo's proven `actions/create-github-app-token@v2` pattern over new JWT/private-key code in this repo, unless a documented, specific requirement proves that insufficient (decided this pass — see `docs/DECISION_LOG.md`, 2026-11-04). Never reuse the old reviewer/judge or its historical `ACCEPT` verdicts as quality authority (already the case; re-affirmed). |
 | **P4** — GitHub Actions execution & autonomy | G6 | Both lanes, full issues lifecycle, App publishing, scheduling, bounded retry/recovery, durable state/evidence, the existing two-job trust boundary (upstream code never sees write credentials or the LLM key), and the previously-accepted local-Docker validation requirement at the smallest credible scope — all through GitHub-hosted runners, demonstrated unattended at least once (state 3) and independently confirmed (state 4). |
@@ -61,6 +72,13 @@ reviewer calibration: NOT_PASSED (data/reviewer_calibration.json, unchanged sinc
 (currently 5), and every one of the resulting candidates — old and new — needs to clear a
 calibration-passing reviewer before any of them count toward the 25, since none has today.**
 **Gap to confirmed live delivery: 25, since the real count is 0.**
+
+> **Amended 2026-11-06 (ruling R4):** the "25-common-products" gap above is superseded. Measured 2026-11-06 by
+> `python ops/checks/portfolio_delivery_count.py --per-lane 25`: Lane R 9 pipeline-good (7
+> `pipeline_good_uncalibrated`, 2 not traceable to a sealed model ACCEPT), Lane L 12 (11 uncalibrated, 1 not
+> traceable); **0 independently accepted in either lane** (gap: 25 per lane); 0 publication-ready, 0 effects
+> executed, 0 live-verified. P4's "demonstrated unattended at least once (state 3)" is tracked by the new card
+> `TC-012b` (TC-012 certifies infrastructure only; every scheduled run so far is an authorized=false no-op).
 
 ## What this contract does NOT decide
 

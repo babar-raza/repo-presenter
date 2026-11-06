@@ -8,7 +8,13 @@ OK: docs/DECISION_LOG.md has a cross-referenced record dated 2026-11-05; ref=OWN
 
 $ python ops/checks/execution_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json minted=True verified_via_token_provenance=True
 --- stdout ---
-FAIL: evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json does not exist -- no execution proof has been recorded
+OK: evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json records a real execution proof matching all 2 requirement(s)
+
+--- stderr ---
+
+$ python ops/checks/actions_run_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json tc-009a/mint-proof tc-009a-mint-proof.yml,run-request.yml
+--- stdout ---
+OK: evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json is the github-actions[bot] commit on origin/tc-009a/mint-proof written by run 42200695015 (run-request.yml, completed/success)
 
 --- stderr ---
 
@@ -22,9 +28,34 @@ OK: docs/DECISION_LOG.md has a cross-referenced record dated 2026-11-05; ref=OWN
 
 $ python ops/checks/execution_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json minted=True verified_via_token_provenance=True
 --- stdout ---
-FAIL: evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json does not exist -- no execution proof has been recorded
+OK: evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json records a real execution proof matching all 2 requirement(s)
+
+--- stderr ---
+
+$ python ops/checks/actions_run_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json tc-009a/mint-proof tc-009a-mint-proof.yml,run-request.yml
+--- stdout ---
+OK: evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json is the github-actions[bot] commit on origin/tc-009a/mint-proof written by run 42200695015 (run-request.yml, completed/success)
 
 --- stderr ---
 
 
-!! clean runs failed; falsifier skipped (it would prove nothing)
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M docs/DECISION_LOG.md
+$ python ops/checks/owner_decision_record.py docs/DECISION_LOG.md APP_TOKEN_LIVE_MINT_AUTHORIZED:
+--- stdout ---
+FAIL: ref=BROKEN-OWNER-AUTH-2026-11-05-TC009A-ONE-MINT (dated 2026-11-05) does not match any text in docs/DECISION_LOG.md
+
+--- stderr ---
+
+$ python ops/checks/execution_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json minted=True verified_via_token_provenance=True
+--- stdout ---
+OK: evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json records a real execution proof matching all 2 requirement(s)
+
+--- stderr ---
+
+$ python ops/checks/actions_run_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json tc-009a/mint-proof tc-009a-mint-proof.yml,run-request.yml
+--- stdout ---
+OK: evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json is the github-actions[bot] commit on origin/tc-009a/mint-proof written by run 42200695015 (run-request.yml, completed/success)
+
+--- stderr ---
+

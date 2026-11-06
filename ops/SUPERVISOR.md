@@ -71,6 +71,27 @@ that evidence can already resolve. Never claim a goal complete on test counts, t
 commits, documentation, or architecture alone — only on the eleven-state distinction in
 `docs/RELEASE_CONTRACT_P1-P5.md` reaching the state actually claimed.
 
+## Owner operating directive (2026-11-06) — supersedes any looser wording above
+
+1. **The supervisor decides; it does not ask.** Every implementation, design, sequencing, tuning or
+   trade-off choice is made by the supervisor against `docs/CONSOLIDATED_GOALS_2026-11-06.md` and the
+   failure history of `repository-presenter` and `foss-readme-optimizer`, recorded in
+   `docs/DECISION_LOG.md` with its evidence, and acted on in the same turn. A question to the owner is
+   a defect: it stalls autonomous execution and invites a choice made without the context.
+   The ONLY things that reach the owner are **actions only the owner can physically perform**
+   (repository Settings, secrets, environments, App installation, org permissions) and a widening of
+   external write authority beyond `data/upstream_write_allowlist.json`. Those are stated once as a
+   precise action item, never as a multiple-choice question, and work continues on everything else.
+2. **Report results, not narratives.** Lead every report with the delivery numbers: Lane R and Lane L
+   independently accepted (calibrated reviewer), pipeline-good (uncalibrated, reported separately),
+   upstream PRs/issues delivered and live-verified. Then only what changed and what blocks the next
+   increment. No restated summaries.
+3. **The goals are the spec.** Before any task, check it against the 14 sections of the consolidated
+   goals; a gap found later in a goal already stated is a supervisor defect, recorded as such.
+4. **Parallel by default.** Independent work runs as several isolated workers at once (worktrees);
+   the supervisor verifies each result independently (tests, gate review, real runs) and merges.
+   Waiting on a single worker while other READY work exists is a defect.
+
 ## Channel
 
 Two append-only JSONL files, one writer each, both git-tracked:
@@ -102,6 +123,28 @@ be replaced without loss.
    rebuild (`python ops/gatecli.py validate` prints the derived rows), then
    dispatch the next card.
 5. On REWORK REQUIRED -> follow the escalation ladder below.
+
+### Autonomous continuation (owner ruling R8, 2026-11-06)
+
+`dispatch-next` and `worker-tick` drive the same state machine without a human in the loop;
+they are not a second one. The lease lives in `ops/instructions.jsonl` (the channel this file
+already names): a `dispatch` line with a `lease` object (holder, base SHA, acquired/expires)
+acquires it, a `rework` line renews it, `lease_release` ends it on a verdict, `lease_expired`
+ends it when the holder went silent -- `gateverify.rebuild_state()` then derives the card as
+READY again. One lease slot: one worker at a time.
+
+- `python ops/gatecli.py dispatch-next --holder <session>` -- leases the first READY card in
+  `tick`'s order and prints a JSON assignment (card, write_paths, checks, commit tag, the
+  `review`/`verify` commands that judge it). Idempotent for the same holder while the lease is
+  live; refuses a different holder; never dispatches a card awaiting a prerequisite or owner.
+- `python ops/gatecli.py worker-tick` -- for the leased card, finds `(GATE/TC-NNN)` commits
+  since the lease base and judges the newest one ONLY through `gateverify.do_verify` (never
+  self-certified): accepted -> release; failed -> `rework` + renewed lease (attempt 3 ->
+  FAILED_INTERNAL, release); no progress past `expires_at` -> `lease_expired`; then leases the
+  next READY card. `--dry-run` writes nothing.
+- `.github/workflows/supervisor-tick.yml` runs `doctor`, `tick` and `worker-tick --dry-run`
+  hourly (read-only, no secrets, no push) as the liveness signal; the supervisor session does
+  the real dispatch.
 
 ## Escalation ladder (carried from foss-mcp, same lessons)
 
@@ -163,7 +206,8 @@ it with the same card id; its next turn picks up from the files.
 Not yet ported from foss-mcp, because this repository has at most one taskcard
 (`TC-000-smoke`) so far and these only pay for themselves once a queue exists:
 
-- `dispatch-next` / `worker-tick` / `preflight` (multi-card queue management)
+- `preflight` (multi-card queue management; `dispatch-next`/`worker-tick` were ported
+  2026-11-06 under owner ruling R8 -- see "Autonomous continuation" above)
 - `gate-exit` (multi-card gate-level re-verification)
 - `integrate` (atomic cherry-pick of an accepted worker branch onto main)
 - `release-record` (Docker image bookkeeping -- not relevant to this project)

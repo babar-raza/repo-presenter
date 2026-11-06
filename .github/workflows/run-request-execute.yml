@@ -1,0 +1,81 @@
+name: run-request-execute
+
+# The PRIVILEGED half of a run request (trust redesign 2026-11-06, docs/DECISION_LOG.md; owner ruling
+# 2026-11-06, docs/CONSOLIDATED_GOALS_2026-11-06.md, blocker 2).
+#
+# `run-request.yml` (push to `run-requests/**`) holds no secret and only completes. This workflow runs on its
+# `workflow_run` event, which GitHub always executes from the DEFAULT BRANCH's copy of this file: editing this
+# file, run-request.yml or scripts/run_request.py on a request branch changes nothing that runs here.
+#
+#   validate  no secret, read-only token. Checks out `main` (never the request commit) and runs main's
+#             scripts/run_request.py, which reads run-request.json from the triggering commit as DATA
+#             (`git show <head_sha>:run-request.json`) and refuses: an unknown triggering workflow, a
+#             non-push or non-success triggering run, a fork, a branch outside run-requests/, a head_sha that
+#             is no longer the branch tip (replay), checked-out code that is not current main, a request
+#             commit that is not exactly current main plus run-request.json, an unknown job, an unregistered
+#             repository or wrong ecosystem, a bad lane, and a mint request with any other field.
+#   present / mint  call the default-branch copies of the reusable workflows (local `./` paths resolve to this
+#             run's commit, i.e. main) with `secrets: inherit`, only after validate passed.
+#
+# Residual risk (not closed here, see docs/DECISION_LOG.md): any account with push access can add a NEW
+# workflow file on any branch and reach repository-level secrets; only moving the secrets to an Environment
+# restricted to `main` closes that.
+#
+# tests/test_run_request.py parses this file and fails if the trigger stops being workflow_run of
+# run-request, or the validate checkout uses the triggering head sha as its ref.
+
+on:
+  workflow_run:
+    workflows: ["run-request"]
+    types: [completed]
+    branches: ["run-requests/**"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: run-request-execute-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      job: ${{ steps.check.outputs.job }}
+      repository: ${{ steps.check.outputs.repository }}
+      ecosystem: ${{ steps.check.outputs.ecosystem }}
+      lane: ${{ steps.check.outputs.lane }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Validate the request with main's validator (request read as data, never executed)
+        id: check
+        run: python scripts/run_request.py --event "$GITHUB_EVENT_PATH" >> "$GITHUB_OUTPUT"
+
+  present:
+    needs: validate
+    if: needs.validate.outputs.job == 'present'
+    permissions:
+      contents: write  # present.yml's durable-state refs in this repository only
+    uses: ./.github/workflows/present.yml
+    with:
+      repository: ${{ needs.validate.outputs.repository }}
+      ecosystem: ${{ needs.validate.outputs.ecosystem }}
+      lane: ${{ needs.validate.outputs.lane }}
+    secrets: inherit
+
+  mint:
+    needs: validate
+    if: needs.validate.outputs.job == 'mint'
+    permissions:
+      contents: write  # the mint workflow pushes its proof branch in this repository only
+    uses: ./.github/workflows/tc-009a-mint-proof.yml
+    secrets: inherit

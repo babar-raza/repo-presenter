@@ -9,11 +9,25 @@
   "properties": {
     "ts":          { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$" },
     "target_card": { "type": "string", "pattern": "^(TC-[0-9]{3}[a-z]?|ALL)$" },
-    "kind":        { "enum": ["dispatch", "rework", "root_cause", "stop", "channel_init", "supersede"] },
+    "kind":        { "enum": ["dispatch", "rework", "root_cause", "stop", "channel_init", "supersede", "lease_release", "lease_expired"] },
     "instruction": { "type": "string", "minLength": 1 },
     "card_sha256": { "type": "string", "pattern": "^([0-9a-f]{64}|NONE)$" },
     "issue_rev":   { "type": "string", "pattern": "^([0-9a-f]{40}|NONE)$" },
     "attempt":     { "type": "integer", "minimum": 0, "maximum": 3 },
-    "successor":   { "type": "string", "pattern": "^TC-[0-9]{3}[a-z]?$", "description": "Only for kind supersede: the accepted card that carries this card's work." }
+    "successor":   { "type": "string", "pattern": "^TC-[0-9]{3}[a-z]?$", "description": "Only for kind supersede: the accepted card that carries this card's work." },
+    "lease": {
+      "description": "Only on lines written by gatecli dispatch-next / worker-tick (owner ruling R8, 2026-11-06): the single worker lease. A dispatch line acquires it, a rework line renews it after a failed independent verify, lease_release ends it on a verdict (accepted / failed_internal), lease_expired ends it when the holder went silent past expires_at -- the card then returns to READY.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["holder", "base_sha", "acquired_at", "expires_at"],
+      "properties": {
+        "holder":        { "type": "string", "minLength": 1, "maxLength": 200 },
+        "base_sha":      { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "acquired_at":   { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$" },
+        "expires_at":    { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$" },
+        "verified_head": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "outcome":       { "enum": ["accepted", "failed_internal", "rework", "expired"] }
+      }
+    }
   }
 }

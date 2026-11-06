@@ -44,9 +44,14 @@ rows:
      implementation: PARTIAL, test: PARTIAL, real_execution: PARTIAL, independent_verification: NONE,
      evidence: [docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md, project/state.yaml],
      gaps: "delivery count still 0 accepted candidates", next_action: "convert pilots into accepted candidates", external_effect_prohibited: "none"}
-  - {id: P1, title: "25 common repos, both lanes independently accepted", status: NOT_STARTED_FOR_ACCEPTANCE,
+  # Amended 2026-11-06 (owner ruling R4, docs/CONSOLIDATED_GOALS_2026-11-06.md; audit P1): the title
+  # previously read "25 common repos, both lanes independently accepted" -- that 25-common rule is
+  # retired. P1 is ~25 independently accepted candidates PER LANE, counted independently (product
+  # sets may differ); upstream delivery is a separately gated outcome. Counter:
+  # ops/checks/portfolio_delivery_count.py (TC-011).
+  - {id: P1, title: "~25 independently accepted candidates per lane (Lane R and Lane L counted independently)", status: NOT_STARTED_FOR_ACCEPTANCE,
      implementation: PARTIAL, test: PARTIAL, real_execution: PARTIAL, independent_verification: NONE,
-     evidence: [docs/RELEASE_CONTRACT_P1-P5.md], gaps: "0/25; blocked by TC-007", next_action: "TC-007 then TC-011", external_effect_prohibited: "upstream PRs"}
+     evidence: [docs/RELEASE_CONTRACT_P1-P5.md, ops/checks/portfolio_delivery_count.py], gaps: "Lane R 0/25, Lane L 0/25 independently accepted (2026-11-06: 7 R + 11 L pipeline_good_uncalibrated under the NOT_PASSED reviewer); 0 publication-ready, 0 effects, 0 live-verified; blocked by TC-007", next_action: "TC-007 then TC-011", external_effect_prohibited: "upstream PRs"}
   - {id: P2, title: "Issue lifecycle operates and is verifiable", status: PARTIAL,
      implementation: PARTIAL, test: YES, real_execution: NONE, independent_verification: NONE,
      evidence: [src/repo_presenter/issues/model.py], gaps: "see G3", next_action: "TC-010a", external_effect_prohibited: "upstream issue writes"}

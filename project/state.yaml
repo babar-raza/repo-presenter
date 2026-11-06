@@ -58,7 +58,9 @@ progress:
   lane_l_accepted: 12
   lane_l_corrected_non_empty_patch: 15
   lane_l_blocked: 0
-  lane_r_accepted: 8
+  lane_r_accepted: 9
+  # 2026-11-06 fourth resync (scripts/portfolio_status.py): 8 -> 9. Email .NET Lane R sealed ACCEPTED under the
+  # BC-05 supersession check (round 6, hosted run 42198930558).
   # 2026-11-06 third resync (scripts/portfolio_status.py): 7 -> 8. Imaging .NET Lane R sealed ACCEPTED under the
   # BC-05 supersession check after the S4 repair fixes (round 3, hosted run 42184543530).
   # 2026-11-06 second resync (scripts/portfolio_status.py): 9 -> 7. Email .NET and Imaging .NET Lane R were
@@ -141,7 +143,7 @@ owner_review_status:
 
 release_gate_dashboard:
   generated_by: gatecli
-  generated_at: '2026-11-06T02:11:36Z'
+  generated_at: '2026-11-06T10:24:48Z'
   note: Tool-generated from gateverify.rebuild_state() -- never hand-edit this block.
     Historical current_gate/active_work_item below are preserved bootstrap-era narrative,
     not this cursor; this block is the real, evidence-derived release-gate status
@@ -227,20 +229,18 @@ release_gate_dashboard:
     receipt: GATE2_INTEGRATIONS/TC-009/receipt.json
   - id: TC-009a
     gate: GATE2_INTEGRATIONS
-    status: AWAITING_OWNER_DECISION
+    status: ACCEPTED
     attempt: 0
-    blocker:
-      class: AWAITING_OWNER_DECISION
-      summary: 'checks failed: python ops/checks/execution_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json
-        minted=True verified_via_token_provenance=True; negative-control patch did
-        not apply'
+    blocker: null
+    commit: 12e7a3e2bd3952e42c972d9dec70d54cd0ed4c67
+    receipt: GATE2_INTEGRATIONS/TC-009a/receipt.json
   - id: TC-009b
     gate: GATE2_INTEGRATIONS
     status: AWAITING_PREREQUISITE
     attempt: 0
     blocker:
       class: AWAITING_PREREQUISITE
-      summary: depends on TC-009a, TC-007, not yet accepted
+      summary: depends on TC-007, not yet accepted
   - id: TC-010
     gate: GATE2_INTEGRATIONS
     status: ACCEPTED
@@ -263,7 +263,7 @@ release_gate_dashboard:
     attempt: 0
     blocker:
       class: AWAITING_PREREQUISITE
-      summary: depends on TC-007, TC-009b, not yet accepted
+      summary: depends on TC-007, not yet accepted
   - id: TC-012
     gate: GATE4_PRODUCTION
     status: ACCEPTED
@@ -277,7 +277,14 @@ release_gate_dashboard:
     attempt: 0
     blocker:
       class: AWAITING_PREREQUISITE
-      summary: depends on TC-009b, TC-010a, TC-011, not yet accepted
+      summary: depends on TC-009b, TC-010a, TC-011, TC-012b, not yet accepted
+  - id: TC-012b
+    gate: GATE4_PRODUCTION
+    status: AWAITING_PREREQUISITE
+    attempt: 0
+    blocker:
+      class: AWAITING_PREREQUISITE
+      summary: depends on TC-007, not yet accepted
   ready:
   - TC-007
 current_gate:
