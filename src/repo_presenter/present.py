@@ -170,7 +170,11 @@ def _cascade_and_seal(
             f"nothing sealed; {blocked_predicate(verdict)}"
         )
     if not verdict.model_reviewed:
-        failing = ", ".join(check["id"] for check in blocking_failures(result.validation))
+        failed = blocking_failures(result.validation)
+        failing = ", ".join(check["id"] for check in failed)
+        for check in failed:
+            for failure in list(check.get("failures") or [])[:12]:
+                print(f"blocking {check['id']}: {str(failure.get('detail', ''))[:500]}")
         raise PresentFailure(
             "no LLM review of this candidate was made, and a deterministic-only "
             "verdict is never sealed"

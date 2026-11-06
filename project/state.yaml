@@ -58,7 +58,10 @@ progress:
   lane_l_accepted: 12
   lane_l_corrected_non_empty_patch: 15
   lane_l_blocked: 0
-  lane_r_accepted: 9
+  lane_r_accepted: 7
+  # 2026-11-06 second resync (scripts/portfolio_status.py): 9 -> 7. Email .NET and Imaging .NET Lane R were
+  # re-run under the new BC-05 supersession check (run requests pilot-2-*); both failed BC-05 unrepaired (the
+  # S4 repair loop handled a multi-unit check as one never-retried defect), so nothing was sealed.
   # 2026-11-06 resync (scripts/portfolio_status.py): 10 -> 9. Cells-Rust Lane R was re-run on current
   # main (run-request pilot, hosted run 42170833669); the independent reviewer rejected the new candidate
   # (2 unsupported_claim findings), so its earlier acceptance on changed inputs is INVALIDATED.

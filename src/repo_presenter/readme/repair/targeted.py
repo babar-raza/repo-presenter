@@ -313,12 +313,31 @@ def validation_defects(
                 stage, reason = None, "no failing check names an LLM-owned section"
         elif stage is None:
             reason = f"{state or 'the bundle'} is not repairable by revision"
-        for section in sections:
-            own_failures = (
-                failures
-                if section is None
-                else [f for f in failures if f.get("section_id") == section]
+        # An S4 check whose failures name several inherited units is as many repairable targets
+        # (2026-11-06 hosted pilot, runs 42177318173/42177322240/42177325458: BC-05's supersession
+        # failures named units across batches, the one defect got one batch-scoped patch, and its
+        # fingerprint was never retried, so every Lane R candidate stayed blocked). One defect per
+        # named unit, each its own fingerprint; failures naming no unit stay one defect.
+        groups: list[tuple[str | None, str | None]] = [(section, None) for section in sections]
+        if stage == "S4":
+            units = list(
+                dict.fromkeys(str(f["unit_id"]) for f in failures if f.get("unit_id"))
             )
+            if units:
+                groups = [(None, unit) for unit in units]
+                if any(not f.get("unit_id") for f in failures):
+                    groups.append((None, None))
+        for section, unit in groups:
+            if unit is not None:
+                own_failures = [f for f in failures if f.get("unit_id") == unit]
+            elif stage == "S4" and len(groups) > 1:
+                own_failures = [f for f in failures if not f.get("unit_id")]
+            else:
+                own_failures = (
+                    failures
+                    if section is None
+                    else [f for f in failures if f.get("section_id") == section]
+                )
             record = {
                 "id": check.get("id"),
                 "name": check.get("name"),
@@ -329,7 +348,11 @@ def validation_defects(
             defects.append(
                 Defect(
                     defect_fingerprint(
-                        "validation", section, stage or str(state), str(check.get("id")), context
+                        "validation",
+                        section,
+                        stage or str(state),
+                        str(check.get("id")) if unit is None else f"{check.get('id')}:{unit}",
+                        context,
                     ),
                     "validation",
                     str(check.get("id", "?")),
