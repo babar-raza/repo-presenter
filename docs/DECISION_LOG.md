@@ -3262,3 +3262,41 @@ zero upstream writes. Proof: `evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_pro
 proof against GitHub itself (`ops/checks/actions_run_proof.py`: run completed/success from the expected
 workflow, file authored by the bot in a commit naming the run, bytes identical). The first attempt (run
 42170741214) failed because the App secrets existed only in the legacy repository.
+## 2026-11-06: run requests split into an unprivileged trigger and a privileged executor run from main (audit P0)
+
+**Defect.** `run-request.yml` ran on `push` to `run-requests/**` and called `present.yml` / the TC-009a mint with
+`secrets: inherit`. A push-triggered workflow runs the workflow files and the validator of the PUSHED commit, so
+an account able to push a request branch could edit `run-request.yml` or `scripts/run_request.py` on that branch
+and reach the secrets: the validator was not an independent trust boundary.
+
+**Fix.**
+- `.github/workflows/run-request.yml` (push) is now a trigger only: `contents: read`, no secret, no checkout, no
+  reusable-workflow call, one `printf`. Rewriting it on a branch reaches nothing.
+- `.github/workflows/run-request-execute.yml` (new) runs `on: workflow_run` of `run-request` (completed,
+  `run-requests/**`), which GitHub always executes from the default branch. Its `validate` job (no secret,
+  read-only) checks out `ref: main` and runs main's `scripts/run_request.py --event "$GITHUB_EVENT_PATH"`, which
+  reads `run-request.json` from the triggering commit with `git show` (data only) and refuses: a triggering
+  workflow other than `.github/workflows/run-request.yml`, a non-`push` or non-`success` run, a fork, a branch
+  outside `run-requests/`, a `head_sha` that is no longer the branch tip (replay), a checked-out `main` that is
+  no longer current `main`, and — via the unchanged `validate()` rules — anything but current main plus
+  `run-request.json`, an unknown job, an unregistered repository or wrong ecosystem, a bad lane, a mint with any
+  other field. The registry is read from main's commit. `present` / `mint` then call the local (default-branch)
+  `./.github/workflows/...` paths with `secrets: inherit`; their `workflow_call` interfaces are unchanged.
+- Design choices: `workflow_run` over a branch-scanning schedule (event-driven, no polling latency, GitHub pins it
+  to the default branch). Main advancing between the trigger and the executor's checkout is refused rather than
+  tolerated: the requester re-pushes on the new main.
+- `tests/test_run_request.py`: real-git adversarial tests (modified trigger workflow, modified executor,
+  modified validator, widened registry, extra file, replay of a superseded head, deleted branch, stale main,
+  unregistered repo, wrong ecosystem, unknown job, mint with extra fields, unknown triggering workflow, failed
+  run, fork) and static workflow checks (push workflow: no `secrets`, no write scope, no checkout; executor:
+  `workflow_run`-triggered, checkout `ref: main`, never the head sha).
+
+**Residual risk — NOT solved; recommended owner action.** Any account with push access can add an arbitrary NEW
+workflow file (any trigger, e.g. `push`) on any branch, and that workflow can read every repository-level secret.
+That is GitHub's model; no workflow in this repository can prevent it. It is closed only by moving the secrets
+(`GH_APP_ID`, `GH_APP_PRIVATE_KEY`, the provider key, the state token) from repository secrets into a GitHub
+**Environment** whose deployment branches are restricted to `main`, and referencing that environment from the
+privileged jobs (`environment:` on the present/mint jobs, which would then need a follow-up change since a
+reusable-workflow caller job cannot set it — the called workflows' jobs would declare it). This is an owner
+Settings action and has not been taken; until it is, the run-request redesign closes the specific
+"edit the validator or run-request.yml" path, not the general push-access-to-secrets path.
