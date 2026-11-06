@@ -73,11 +73,14 @@ def _workflow() -> dict:
     return yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
 
 
-def test_the_workflow_is_manual_only_with_no_inputs():
+def test_the_workflow_is_manual_or_run_request_only_with_no_inputs():
+    """workflow_dispatch, plus workflow_call from run-request.yml (owner ruling 2026-11-06); never a
+    push/schedule trigger of its own, and no inputs on either, so the target cannot be changed."""
     workflow = _workflow()
     triggers = workflow["on"] if "on" in workflow else workflow[True]
-    assert set(triggers) == {"workflow_dispatch"}
-    assert not (triggers["workflow_dispatch"] or {}).get("inputs")
+    assert set(triggers) == {"workflow_dispatch", "workflow_call"}
+    for trigger in triggers.values():
+        assert not (trigger or {}).get("inputs")
 
 
 def test_the_mint_is_the_one_authorized_repository_read_only():

@@ -3177,3 +3177,24 @@ conflicts the trace found (interactive forms, options with trade-offs):
 Part D of the document assesses the supervisor's work honestly: verified quality and governance fixes, **no upstream
 value yet**; blocked externally by the LLM gateway's ~30 s timeout, the session's lack of workflow-dispatch rights,
 and an empty allowlist.
+
+---
+
+## 2026-11-06: the three delivery blockers — how each is solved (owner decisions)
+
+1. **LLM gateway ~30 s cutoff (HTTP 502)**: the gateway drops a request that sends no bytes for ~30 s. Measured
+   today: the same 55 s generation fails plain (502 at 30.6 s) and succeeds streamed (200 at 55.6 s). The
+   repository already had a streaming path (`core/llm/jobs.py`, `GPT_OSS_STREAMING=1`, added 2026-11-04 for the
+   same symptom) that was opt-in and set nowhere. Now set in `present.yml` (both lanes) and on the cloud
+   environment (owner-approved environment edit). No code change was needed.
+2. **This session cannot dispatch workflows (HTTP 403)** — owner chose **push-triggered run requests**:
+   `.github/workflows/run-request.yml` runs on a pushed `run-requests/<id>` branch whose only change from the
+   current `main` is `run-request.json` (`scripts/run_request.py` refuses anything else, so only `main`'s
+   workflows and code run), and calls `present.yml` or the one TC-009a mint (both gain a `workflow_call`
+   trigger; the mint keeps no inputs). Same trust as a manual dispatch: only pushers can trigger. The R8
+   scheduled supervisor tick is a recurring scheduled cloud session.
+3. **Empty R3 allowlist** — owner listed three pilot repositories for **README pull requests only**, first PR on
+   each as a draft: `aspose-cells-foss/Aspose.Cells-FOSS-for-Rust`, `aspose-email-foss/Aspose.Email-FOSS-for-.Net`,
+   `aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET` (both lanes pipeline-good; no issue-approval record in the
+   legacy system, checked). Listing authorizes nothing by itself: every gate must pass, and reviewer calibration
+   is NOT_PASSED (TC-007).

@@ -55,6 +55,18 @@ on:
   # hold. All three fail today, so this cron currently selects and spends nothing on every fire
   # -- a deliberate, evidenced no-op (see "Select this run's target" below), not a live schedule
   # waiting to be noticed.
+  # Called by run-request.yml (a validated, push-triggered run request; owner ruling 2026-11-06).
+  workflow_call:
+    inputs:
+      repository:
+        required: true
+        type: string
+      ecosystem:
+        required: true
+        type: string
+      lane:
+        required: true
+        type: string
   schedule:
     - cron: "17 */6 * * *"
 
