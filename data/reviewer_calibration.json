@@ -1,34 +1,30 @@
 {
   "schema_version": 1,
   "status": "NOT_PASSED",
-  "reviewer_logic_version": "6",
-  "prompt_version": "17",
+  "reviewer_logic_version": "10",
+  "prompt_version": "21",
   "model": "qwen3-next",
   "owner_acceptance": "",
   "failed_gates": [
-    "pipeline[break_install_command]",
     "pipeline[contradict_format]",
-    "pipeline[contradict_version]",
-    "pipeline[drop_section]",
     "pipeline[invent_api_name]",
     "reviewer_alone[add_promotional_filler]",
     "reviewer_alone[inject_unsupported_claim]",
     "reviewer_alone[real:contradiction]",
     "reviewer_alone[real:unsupported_claim]",
-    "false_reject_rate",
-    "stability"
+    "false_reject_rate"
   ],
   "measured": {
-    "source": "/tmp/claude-0/-home-user-repo-presenter/542f6e2c-a780-567b-84f4-4e5f84153686/scratchpad/it4/run/results-it4.jsonl",
-    "measured_on": "2026-11-05",
+    "source": "/tmp/claude-0/-home-user/542f6e2c-a780-567b-84f4-4e5f84153686/scratchpad/it5-run/results-it5.jsonl",
+    "measured_on": "2026-11-06",
     "corpus": {
-      "cases": 1299,
-      "asked": 375,
+      "cases": 1465,
+      "asked": 288,
       "by_role": {
-        "clean": 37,
-        "mutant": 253,
-        "real_defect": 1005,
-        "unscored_twin": 4
+        "clean": 28,
+        "mutant": 377,
+        "real_defect": 1029,
+        "unscored_twin": 31
       }
     },
     "two_tier_status": "NOT_PASSED",
@@ -37,19 +33,19 @@
     "gates": [
       {
         "name": "pipeline[break_install_command]",
-        "value": 0.8,
+        "value": 1.0,
         "threshold": 0.9,
         "direction": ">=",
-        "passed": false,
-        "n": 20
+        "passed": true,
+        "n": 12
       },
       {
         "name": "pipeline[contradict_format]",
-        "value": 0.8667,
+        "value": 0.8571,
         "threshold": 0.9,
         "direction": ">=",
         "passed": false,
-        "n": 15
+        "n": 7
       },
       {
         "name": "pipeline[contradict_package_name]",
@@ -57,23 +53,23 @@
         "threshold": 0.9,
         "direction": ">=",
         "passed": true,
-        "n": 21
+        "n": 12
       },
       {
         "name": "pipeline[contradict_version]",
-        "value": 0.6667,
+        "value": 1.0,
         "threshold": 0.9,
         "direction": ">=",
-        "passed": false,
+        "passed": true,
         "n": 6
       },
       {
         "name": "pipeline[drop_section]",
-        "value": 0.1707,
+        "value": 1.0,
         "threshold": 0.9,
         "direction": ">=",
-        "passed": false,
-        "n": 41
+        "passed": true,
+        "n": 18
       },
       {
         "name": "pipeline[duplicate_paragraph]",
@@ -81,31 +77,31 @@
         "threshold": 0.9,
         "direction": ">=",
         "passed": true,
-        "n": 41
+        "n": 18
       },
       {
         "name": "pipeline[invent_api_name]",
-        "value": 0.6667,
+        "value": 0.8667,
         "threshold": 0.9,
         "direction": ">=",
         "passed": false,
-        "n": 27
+        "n": 15
       },
       {
         "name": "reviewer_alone[add_promotional_filler]",
-        "value": 0.3171,
+        "value": 0.5556,
         "threshold": 0.9,
         "direction": ">=",
         "passed": false,
-        "n": 41
+        "n": 18
       },
       {
         "name": "reviewer_alone[inject_unsupported_claim]",
-        "value": 0.2927,
+        "value": 0.6111,
         "threshold": 0.9,
         "direction": ">=",
         "passed": false,
-        "n": 41
+        "n": 18
       },
       {
         "name": "reviewer_alone[real:contradiction]",
@@ -113,23 +109,23 @@
         "threshold": 0.9,
         "direction": ">=",
         "passed": false,
-        "n": 7
+        "n": 13
       },
       {
         "name": "reviewer_alone[real:unsupported_claim]",
-        "value": 0.0,
+        "value": 0.02,
         "threshold": 0.9,
         "direction": ">=",
         "passed": false,
-        "n": 74
+        "n": 100
       },
       {
         "name": "false_reject_rate",
-        "value": 0.1622,
+        "value": 0.1429,
         "threshold": 0.1,
         "direction": "<=",
         "passed": false,
-        "n": 37
+        "n": 28
       },
       {
         "name": "json_valid_first_reply",
@@ -137,38 +133,38 @@
         "threshold": 0.9,
         "direction": ">=",
         "passed": true,
-        "n": 196
+        "n": 764
       },
       {
         "name": "stability",
-        "value": 0.7,
+        "value": 0.9,
         "threshold": 0.9,
         "direction": ">=",
-        "passed": false,
-        "n": 10
+        "passed": true,
+        "n": 20
       }
     ],
     "reviewer_alone_tier1_not_gated": {
       "break_install_command": 0.0,
-      "contradict_format": 0.8,
-      "contradict_package_name": 0.2857,
-      "contradict_version": 0.1667,
+      "contradict_format": 0.7143,
+      "contradict_package_name": 0.5,
+      "contradict_version": 0.3333,
       "drop_section": 0.0,
-      "duplicate_paragraph": 0.0244,
-      "invent_api_name": 0.5556
+      "duplicate_paragraph": 0.0,
+      "invent_api_name": 0.8
     },
-    "clean_n": 37,
-    "clean_llm_rejected": 6,
+    "clean_n": 28,
+    "clean_llm_rejected": 4,
     "clean_unavailable": 0,
-    "unscored_twins_asked": 4,
-    "unscored_twins_llm_rejected": 0,
-    "first_replies": 196,
-    "first_reply_json_valid": 196,
-    "first_reply_contract_valid": 179,
-    "repeated_cases": 10,
-    "stable_cases": 7,
-    "provider_calls": 225,
-    "cases_asked": 375,
-    "tokens": 3793740
+    "unscored_twins_asked": 23,
+    "unscored_twins_llm_rejected": 5,
+    "first_replies": 764,
+    "first_reply_json_valid": 764,
+    "first_reply_contract_valid": 744,
+    "repeated_cases": 20,
+    "stable_cases": 18,
+    "provider_calls": 786,
+    "cases_asked": 288,
+    "tokens": 13821256
   }
 }
