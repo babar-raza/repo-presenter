@@ -1,5 +1,5 @@
 prompt_id: source_reconciliation
-version: "13"
+version: "14"
 stage: S4
 purpose: Decide exactly one disposition for every material inherited unit of the existing README, with evidence and a destination section, so that nothing valuable is dropped silently and nothing unsupported is carried forward.
 model_route: qwen3-next
@@ -133,6 +133,14 @@ system: |
   (the distribution fact supports it as a real alternative), so nothing here is actually
   unresolved. NON_CONTENT covers separators, empty lines, and HTML comments.
 
+  Supersede only when the replacement carries ALL of the unit's substance: every value it lists (enum
+  values such as `Left`, `Center`, `Right`; version numbers; platform or environment names), every
+  condition it states, and any maintainer insight on when or why to use something. A table of types
+  does not carry an enum's values; a target-framework fact does not carry a list of operating systems
+  or hosting environments; an example does not carry the advice on when it is useful. If any such
+  substance would be lost, keep the unit instead: VERIFIED_PRESERVE or VERIFIED_MOVE when facts
+  support it, PRESERVE_ATTRIBUTED when no fact confirms it. Replacing maintainer knowledge with
+  generated text that says less is a loss, not a supersession.
   Rules that are checked mechanically. Every unit ID appears exactly once. The five placing
   dispositions (PRESERVE, REWRITE, MOVE, CORRECT, PRESERVE_ATTRIBUTED) require a destination_section whose entry in
   the supplied section list says placeable: true. A section marked placeable: false renders from
