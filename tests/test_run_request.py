@@ -320,3 +320,16 @@ def test_the_called_workflow_interfaces_are_unchanged():
     assert not (mint_on["workflow_call"] or {}).get("inputs")
 
 
+
+
+def test_a_recertify_request_validates_and_takes_no_other_field():
+    assert rr.validate({"job": "recertify"}, REGISTRY, OK, True)["job"] == "recertify"
+    with pytest.raises(rr.RequestError, match="takes no other field"):
+        rr.validate({"job": "recertify", "repository": "x/y"}, REGISTRY, OK, True)
+
+
+def test_the_recertify_workflow_carries_no_llm_secret():
+    """R10 re-certification makes zero provider calls; the workflow must not even hold the key."""
+    text = (Path(__file__).resolve().parent.parent / ".github/workflows/recertify.yml").read_text()
+    assert "GPT_OSS" not in text and "secrets." not in text
+    assert "--all --write" in text
