@@ -303,11 +303,15 @@ def test_seal_candidate_re_seals_plainly_when_an_unproven_bundle_s_artifacts_dif
     ).read_text(encoding="utf-8")
 
 
-def test_seal_candidate_records_an_invalidating_update_when_a_proven_bundle_s_facts_differ(
+def test_seal_candidate_seals_an_accepted_rerun_when_a_proven_bundle_s_facts_differ(
     tmp_path: Path,
 ) -> None:
-    """facts.json's own scope ("facts") is the one scope that invalidates -- the proven content
-    is still left untouched, but the manifest also carries an "invalidated" record."""
+    """facts.json's own scope ("facts") is the one scope that invalidates the proven content. The
+    rerun reaching seal_candidate is model-accepted -- it IS the re-check the invalidation asks
+    for -- so it becomes the seal (ACCEPTED, unproven), with the superseded proof kept on the
+    manifest. It is never recorded as a waiting update beside INVALIDATED stale content (R10:
+    a facts-changing version bump must not turn a seal into no seal; Cells-Rust Lane L,
+    2026-11-06)."""
     inputs = _inputs(tmp_path)
     seal_candidate(inputs)
     fresh = _fresh_invocation()
@@ -320,14 +324,41 @@ def test_seal_candidate_records_an_invalidating_update_when_a_proven_bundle_s_fa
     _append_cache_reuse_record(inputs.out_dir, later.invocation_id)
     result = seal_candidate(_rerun_inputs(inputs, invocation=later, provider_calls=0))
 
-    assert result.state == "INVALIDATED"
-    assert result.no_op_proof is not None  # still preserved for the record
+    assert result.state == "ACCEPTED"
+    assert result.no_op_proof is None
+    assert (result.bundle / "facts.json").read_bytes() == inputs.facts_path.read_bytes()
 
     manifest = json.loads((result.bundle / BUNDLE_MANIFEST_NAME).read_text(encoding="utf-8"))
-    assert manifest["state"] == "INVALIDATED"
-    assert manifest["update"]["classification"] == "factual"
-    assert manifest["update"]["triggering_scope"] == "facts"
-    assert manifest["invalidated"]["scope"] == "facts"
+    assert manifest["state"] == "ACCEPTED"
+    assert "invalidated" not in manifest and "update" not in manifest
+    assert manifest["superseded"]["triggering_scope"] == "facts"
+    assert manifest["superseded"]["previous_state"] == "READY_FOR_PROPOSAL"
+    assert manifest["superseded"]["previous_proof"] == proven.no_op_proof
+
+
+def test_an_invalidated_bundle_with_a_waiting_update_is_healed_by_the_next_accepted_rerun(
+    tmp_path: Path,
+) -> None:
+    """A bundle already left INVALIDATED (with a waiting update) by the old behavior is healed by
+    the next accepted rerun whose facts still differ from the sealed ones."""
+    inputs = _inputs(tmp_path)
+    first = seal_candidate(inputs)
+    manifest_path = first.bundle / BUNDLE_MANIFEST_NAME
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["state"] = "INVALIDATED"
+    manifest["update"] = {"available": True, "files": {}, "recorded_by": {}}
+    manifest["invalidated"] = {"scope": "facts"}
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    inputs.facts_path.write_text('{"newer": "facts"}\n', encoding="utf-8")
+    healer = _fresh_invocation()
+    _append_cache_reuse_record(inputs.out_dir, healer.invocation_id)
+    result = seal_candidate(_rerun_inputs(inputs, invocation=healer, provider_calls=0))
+
+    healed = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert result.state == healed["state"] == "ACCEPTED"
+    assert healed["superseded"]["previous_state"] == "INVALIDATED"
+    assert "invalidated" not in healed
 
 
 def test_seal_candidate_raises_not_implemented_when_a_proven_bundle_s_artifacts_differ(

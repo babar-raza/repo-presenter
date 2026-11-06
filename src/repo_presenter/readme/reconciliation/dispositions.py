@@ -91,6 +91,7 @@ from repo_presenter.readme.composition.coverage import unversioned
 from repo_presenter.readme.composition.placement import (
     ATTRIBUTED,
     PLACED,
+    api_listing_units,
     renderer_fact_ids,
     resolve_intra_document_anchors,
 )
@@ -945,6 +946,48 @@ def _fold_uncovered(output: dict[str, Any], facts: FactsDocument, ctx: _Coverage
             )
 
 
+API_LISTING_RATIONALE = "Kept in the collapsed API Reference: it lists public API members. "
+
+
+def _fold_api_listings(
+    output: dict[str, Any], facts: FactsDocument, listings: frozenset[str]
+) -> None:
+    """Keep every API-member listing in the API Reference, in place: never superseded, never
+    kept in a visible section.
+
+    Measured (2026-11-06, Cells-Rust Lane R, hosted run 42213705268): the reconciliation and its
+    repairs answered the maintainer's member lists (``put_value_*``, ``get_font_mut()``,
+    ``try_repair_*``) either SUPERSEDE_REDUNDANT -- BC-05 then failed, the README not stating
+    every signature -- or kept them in visible sections, where they pushed the README to 314
+    visible lines and BC-07 failed the visible budget. Both gates are right; the destination was
+    wrong. The API Reference is collapsed (``<details>``), so a listing kept there costs no
+    visible line, and a kept list prints there as written, never dropped on a shared fact
+    (``placement.placements``), so every member it lists is carried. A table is only moved out of
+    a visible section: what the API Reference does with a maintainer's type table (supersede it by
+    the generated Core API table, or restate its rows, :func:`_is_row_table`) stays the rules
+    below, since printing its ``| `Type` |`` rows verbatim would break BC-07's one-row-per-type
+    count."""
+    if not listings or "api_reference" not in holdable_sections(facts):
+        return
+    for entry in output.get("dispositions", []):
+        unit = str(entry.get("unit_id", "?"))
+        disposition = entry.get("disposition")
+        if unit not in listings:
+            continue
+        if disposition in PLACED and entry.get("destination_section") == "api_reference":
+            continue
+        if disposition not in PLACED and not (
+            disposition == "SUPERSEDE_REDUNDANT" and _unit_kind(unit) == "list"
+        ):
+            continue
+        if disposition == "SUPERSEDE_REDUNDANT":
+            entry["disposition"] = "VERIFIED_PRESERVE"
+        entry["destination_section"] = "api_reference"
+        reason = str(entry.get("rationale") or "")
+        if not reason.startswith(API_LISTING_RATIONALE):
+            entry["rationale"] = (API_LISTING_RATIONALE + reason)[:_RATIONALE_LIMIT]
+
+
 def _printed_by_installation(unit_id: str, cited: set[str], ctx: _Coverage) -> bool:
     """Whether ``unit_id`` is a code block every line of which the Installation row prints."""
     if _unit_kind(unit_id) != "code_block" or unit_id in ctx.examples:
@@ -1238,6 +1281,8 @@ def normalize(
         section for section, holds in section_conditions(facts, policy).items() if holds is False
     }
     errors: list[str] = []
+    api_listings = api_listing_units(facts)
+    _fold_api_listings(output, facts, api_listings)
     _fold_uncovered(output, facts, coverage)
     for entry in output.get("dispositions", []):
         unit = str(entry.get("unit_id", "?"))
@@ -1545,7 +1590,9 @@ def normalize(
         destination = entry.get("destination_section")
         if entry.get("disposition") not in PLACING or destination not in placeable_section_ids():
             continue
-        if _restates(entry, destination, claims, coverage):
+        if not (
+            destination == "api_reference" and str(entry.get("unit_id")) in api_listings
+        ) and _restates(entry, destination, claims, coverage):
             entry["disposition"] = "SUPERSEDE_REDUNDANT"
             continue
         _claim(entry, destination, claims, coverage)

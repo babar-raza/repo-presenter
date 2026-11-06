@@ -21,8 +21,10 @@ its own steps 1 and 3:
 - v3: a rerun whose artifacts DIFFER from a bundle that is already proven, or already carries a
   waiting update, routes the difference through ``invalidation.py``'s ``route()`` and RECORDS it
   (:func:`_record_update`) -- the proven content and its proof are left exactly as proven; only
-  the manifest's own ``state``/``update`` (and, when the scope invalidates, ``invalidated``)
-  fields change. A rerun against a bundle that was never proven and carries no waiting update
+  the manifest's own ``state``/``update`` fields change. When the scope INVALIDATES the proven
+  content (a consumed fact changed), the model-accepted rerun is the re-check that invalidation
+  asks for and is sealed instead (:func:`_supersede_invalidated`, 2026-11-06), so a facts-changing
+  version bump never leaves a bundle INVALIDATED around stale content. A rerun against a bundle that was never proven and carries no waiting update
   simply re-seals plainly (the old repo's own ``seal_candidate`` takes this same path for a
   changed, not-yet-``waiting_state`` bundle).
 - v4: ADOPTING a waiting update -- a LATER rerun that reproduces exactly what the update
@@ -540,13 +542,10 @@ def _record_update(
     waiting update of its own -- route it through invalidation.py's own scope table and write
     ONLY the manifest, never the already-sealed files: the proven content (and its proof) stays
     exactly as proven, with the new difference waiting beside it until a later rerun reproduces
-    it byte for byte with zero calls (:func:`_adopt_update`)."""
-    try:
-        routing = route_scopes((), differing, inputs.lane)
-    except ScopeError as exc:
-        raise SealError(f"seal: {exc}") from exc
-    if routing.state is None or routing.triggering_scope is None:
-        raise SealError("seal: a recorded update with no differing artifact to route")
+    it byte for byte with zero calls (:func:`_adopt_update`). Only a difference that does NOT
+    invalidate the proven content is recorded this way; an invalidating one is sealed by
+    :func:`_supersede_invalidated` instead."""
+    routing = _route(differing, inputs.lane)
     update = {
         "available": True,
         "classification": "factual" if routing.invalidates else "presentation",
@@ -575,6 +574,52 @@ def _record_update(
         state=routing.state,
         files=dict(existing.get("files", {})),
         no_op_proof=existing.get("no_op_proof"),
+    )
+
+
+def _route(differing: list[str], lane: str) -> Any:
+    try:
+        routing = route_scopes((), differing, lane)
+    except ScopeError as exc:
+        raise SealError(f"seal: {exc}") from exc
+    if routing.state is None or routing.triggering_scope is None:
+        raise SealError("seal: a recorded update with no differing artifact to route")
+    return routing
+
+
+def _supersede_invalidated(
+    bundle: Path,
+    existing: Mapping[str, Any],
+    differing: list[str],
+    staged: Mapping[str, bytes],
+    inputs: SealInputs,
+    routing: Any,
+) -> SealResult:
+    """A model-accepted rerun (``seal_candidate`` is only ever called after a model-reviewed
+    ACCEPT and passing blocking checks) differs from a proven or waiting bundle in a scope that
+    INVALIDATES it (a consumed fact changed). The previously sealed content is, by that very
+    routing, no longer current -- and this rerun is exactly the re-check the invalidation asks
+    for, and it passed. So the rerun is sealed (ACCEPTED, unproven: a later fresh zero-call
+    reproduction proves it as usual), with the superseded seal's proof and the routing kept on
+    the manifest under ``superseded`` for the record; the superseded commit itself stays in the
+    bundle ref's history. Recording it as a waiting update instead (the old behavior) left the
+    bundle INVALIDATED around stale content on every run: a facts-changing version bump turned a
+    proven seal into no seal at all, and each further run republished that same invalidated seal
+    (Cells-Rust Lane L, train 1, 2026-11-06)."""
+    superseded = {
+        "scopes": list(routing.scopes),
+        "triggering_scope": routing.triggering_scope,
+        "scope_basis": routing.basis,
+        "earliest_affected_stage": routing.stage,
+        "changed": differing,
+        "previous_state": existing.get("state"),
+        "previous_sealed_at": existing.get("sealed_at"),
+        "previous_sealed_by": existing.get("sealed_by"),
+        "previous_proof": existing.get("no_op_proof"),
+        "superseded_at": _now(),
+    }
+    return _write_bundle(
+        bundle, staged, inputs=inputs, extra={"superseded": superseded}, existing=existing
     )
 
 
@@ -667,6 +712,9 @@ def seal_candidate(inputs: SealInputs) -> SealResult:
                 inputs.out_dir / "llm_cache" / LEDGER_BUNDLE_FILENAME, inputs.invocation.invocation_id
             )
             return _adopt_update(bundle, existing, waiting, staged, inputs, measured)
+        routing = _route(differing, inputs.lane)
+        if routing.invalidates:
+            return _supersede_invalidated(bundle, existing, differing, staged, inputs, routing)
         return _record_update(bundle, existing, differing, staged, inputs)
     if inputs.provider_calls != 0:
         raise NotImplementedError(
