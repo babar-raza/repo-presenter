@@ -55,10 +55,12 @@ progress:
   # TC-005 (project/taskcards/TC-005.yaml) now asserts this block matches that script's output, so
   # the next drift is a failing check, not a silent stale number. Do not revert to 36/34 (known
   # false) or hand-edit these two fields without re-running the script first.
-  lane_l_accepted: 11
+  lane_l_accepted: 9
   lane_l_corrected_non_empty_patch: 15
   lane_l_blocked: 0
   lane_r_accepted: 1
+  # Lane L 11 -> 9: BC-14 mechanical rules find genuine false claims in two live READMEs (HTML Python, Words Python:
+  # non-exported or nonexistent types, wrong type counts) -- justified in data/recertification_baseline.json; Lane L corrects them.
   # 2026-11-06 BC-17 (benchmark parity) blocks Imaging .NET Lane R on a genuine loss (justified in the gate baseline); targeted repair restores it.
   # 2026-11-06 after hosted re-certification (run 42225829840, zero provider calls): R 2, L 11.
   # 2026-11-06 release train 1 (pinned set b8a37816 / e2195bcb): Email .NET R+L, Imaging .NET L, Cells-Rust L sealed.
@@ -150,7 +152,7 @@ owner_review_status:
 
 release_gate_dashboard:
   generated_by: gatecli
-  generated_at: '2026-11-06T15:20:15Z'
+  generated_at: '2026-11-06T15:34:36Z'
   note: Tool-generated from gateverify.rebuild_state() -- never hand-edit this block.
     Historical current_gate/active_work_item below are preserved bootstrap-era narrative,
     not this cursor; this block is the real, evidence-derived release-gate status

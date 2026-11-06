@@ -3,7 +3,7 @@
   "schema_version": 1,
   "seals": [
     {
-      "commit": "77f3fc2c99d3a8e8651d07c2d1dde740f7a73b9e",
+      "commit": "e0d4134ef1ea7d75b8d8d528887f20fec8c3479a",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -12,7 +12,7 @@
       "revision": "3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3"
     },
     {
-      "commit": "3d6409a7b2fc8d9f541a7c338efceedf95b88fcb",
+      "commit": "e0223feb7ee696bdeabeae0947f84622342f121b",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -21,7 +21,7 @@
       "revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4"
     },
     {
-      "commit": "182c2a20b7dbce5b1eaf9cbea5065566aa03de28",
+      "commit": "7e431a56a850ca690c4966d5ed6e35b87f9c513a",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -32,7 +32,8 @@
     {
       "commit": "b4fda1b6a67766261a8b7a18328e20886ea9fead",
       "failing_checks": [
-        "BC-05"
+        "BC-05",
+        "BC-17"
       ],
       "lane": "R",
       "outcome": "NEEDS_REPAIR",
@@ -43,7 +44,10 @@
     {
       "commit": "d0baa3b814077b68659984bcdce8e1d48e72ca44",
       "failing_checks": [
-        "RERUN"
+        "BC-05",
+        "BC-14",
+        "BC-17",
+        "REVIEW:claim_contradiction"
       ],
       "lane": "R",
       "outcome": "NEEDS_REPAIR",
@@ -54,7 +58,10 @@
     {
       "commit": "fbe7fa72970583b219e2b4448c002a5191262ff5",
       "failing_checks": [
-        "RERUN"
+        "BC-05",
+        "BC-14",
+        "BC-17",
+        "REVIEW:claim_contradiction"
       ],
       "lane": "R",
       "outcome": "NEEDS_REPAIR",
@@ -63,7 +70,7 @@
       "revision": "99c789e9175f2b12ad82bafeeba148ddcc1367fb"
     },
     {
-      "commit": "30f1fad5a5eaf8ffed67a73b38bdb16b01cb6b60",
+      "commit": "5a9281809f15602235eef8a399c67c677df45e60",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -74,7 +81,10 @@
     {
       "commit": "251d7dc3d70a1a0afc41d6da1f23ed9d3b25c066",
       "failing_checks": [
-        "RERUN"
+        "BC-05",
+        "BC-14",
+        "BC-17",
+        "REVIEW:claim_contradiction"
       ],
       "lane": "R",
       "outcome": "NEEDS_REPAIR",
@@ -86,7 +96,8 @@
       "commit": "f36a02fd5d2647dc5bc08915c486b77544ac9fef",
       "failing_checks": [
         "BC-04",
-        "BC-05"
+        "BC-05",
+        "BC-17"
       ],
       "lane": "R",
       "outcome": "NEEDS_REPAIR",
@@ -108,7 +119,8 @@
     {
       "commit": "08d30a4afda69d7ed42daad149ef42d3273c531b",
       "failing_checks": [
-        "RERUN"
+        "BC-05",
+        "BC-17"
       ],
       "lane": "R",
       "outcome": "NEEDS_REPAIR",
@@ -117,7 +129,7 @@
       "revision": "1a6004af47b1ef15385f9d36d381a8172428cc7e"
     },
     {
-      "commit": "9e932b6ef2bff22f3670b8742f9c134f4ff55539",
+      "commit": "2f3c8d87eef0ed6288ec19dedc47748acd611a17",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -128,7 +140,9 @@
     {
       "commit": "f10b84af4eeb3c6fe01d719d1ea8f4984eeb0119",
       "failing_checks": [
-        "RERUN"
+        "BC-04",
+        "BC-05",
+        "BC-17"
       ],
       "lane": "R",
       "outcome": "NEEDS_REPAIR",
@@ -155,18 +169,24 @@
       "revision": "59125b4732df0eedbc4d4c2ab978698ed4348eb7"
     },
     {
-      "commit": "84c8fae94dc186f91c1c12d322db5eb348571699",
-      "failing_checks": [],
+      "commit": "ca6e52e8be65f6b85580d313681382d47d7bb2d3",
+      "failing_checks": [
+        "L-03"
+      ],
       "lane": "L",
-      "outcome": "RECERTIFIED",
+      "outcome": "NEEDS_REPAIR",
       "regenerations": 0,
       "repository": "aspose-html-foss/Aspose.HTML-FOSS-for-Python",
-      "revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11"
+      "revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11",
+      "justification": "BC-14 (R14/R12 mechanical claims, 2026-11-06): the live README's API table lists CSSDeclarationBlock, BrowsingContext, WindowEventLoop, ModuleLoadPolicy, BreakHints, each defined only in a private _module and not exported, and states 243 public types against 303 in the facts -- genuine false claims in the upstream README; Lane L must correct them, not seal them."
     },
     {
       "commit": "9c31949d852f5109d9754275faac6e1e8278d66c",
       "failing_checks": [
-        "BC-05"
+        "BC-05",
+        "BC-14",
+        "BC-17",
+        "REVIEW:claim_contradiction"
       ],
       "lane": "R",
       "outcome": "NEEDS_REPAIR",
@@ -188,7 +208,7 @@
       "failing_checks": [
         "BC-17"
       ],
-      "justification": "BC-17 (R2 parity, genuine loss): the sealed README drops the maintainers' <ProjectReference Include=\"..\\Aspose.Imaging-FOSS-for-.NET\\src\\Aspose.…csproj\" /> code block (inherited_unit:018.code_block, OMIT_UNSUPPORTED 'promotional', no contradicting fact) that the README at the sealed revision prints; ops/checks/parity_gate.py reports the same code_blocks loss. Needs a targeted S4 repair of unit 018, not regeneration.",
+      "justification": "BC-17 (R2 parity, genuine loss): the sealed README drops the maintainers' <ProjectReference Include=\"..\\Aspose.Imaging-FOSS-for-.NET\\src\\Aspose.\u2026csproj\" /> code block (inherited_unit:018.code_block, OMIT_UNSUPPORTED 'promotional', no contradicting fact) that the README at the sealed revision prints; ops/checks/parity_gate.py reports the same code_blocks loss. Needs a targeted S4 repair of unit 018, not regeneration.",
       "lane": "R",
       "outcome": "NEEDS_REPAIR",
       "regenerations": 3,
@@ -199,7 +219,10 @@
       "commit": "42dbb54971d879cef53d29d3ef0d2385a5093113",
       "failing_checks": [
         "BC-04",
-        "BC-05"
+        "BC-05",
+        "BC-14",
+        "BC-17",
+        "REVIEW:claim_contradiction"
       ],
       "lane": "R",
       "outcome": "NEEDS_REPAIR",
@@ -208,7 +231,7 @@
       "revision": "0fd1cf7bcadb279a6dd73ddcba3d5241376badd3"
     },
     {
-      "commit": "b85f919e7f1b472f1d0b97d3b73a1e0b66bd7d30",
+      "commit": "75eb1cb1062867fc543848d8f0e2df9d614b770e",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -217,7 +240,7 @@
       "revision": "5bc58466e703024671f0f6d843f2d37c397c8a0e"
     },
     {
-      "commit": "deb5c177988001289cb859250fdcf16c190d82c2",
+      "commit": "e7be3e2bfa42f7bf4e9cd9af1e8ae2e5697c32f0",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -228,7 +251,11 @@
     {
       "commit": "391e1d5bdc04606cc80913fe5bf0e138586e61fd",
       "failing_checks": [
-        "RERUN"
+        "BC-04",
+        "BC-05",
+        "BC-14",
+        "BC-17",
+        "REVIEW:claim_contradiction"
       ],
       "lane": "R",
       "outcome": "NEEDS_REPAIR",
@@ -237,13 +264,16 @@
       "revision": "736cedaa2922e4952f429364bdb9a4bbb1d97863"
     },
     {
-      "commit": "68c5a9b3971661c7a21057d8b594f4169f32d2ed",
-      "failing_checks": [],
+      "commit": "b890630f5be59dff1e29a8706163bd15f7b9aafc",
+      "failing_checks": [
+        "L-03"
+      ],
       "lane": "L",
-      "outcome": "RECERTIFIED",
+      "outcome": "NEEDS_REPAIR",
       "regenerations": 0,
       "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Python",
-      "revision": "2d2efee2787cb9e56d071d17f8d7b740dce8b784"
+      "revision": "2d2efee2787cb9e56d071d17f8d7b740dce8b784",
+      "justification": "BC-14 (mechanical claims, 2026-11-06): the live README lists ShapeNode (exists nowhere in the source) and ReaderContext (a private Protocol), and states 146 public types against 198 in the facts -- genuine false claims; Lane L must correct them."
     }
   ]
 }
