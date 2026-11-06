@@ -71,7 +71,10 @@ def test_no_prompt_instructs_printing_an_attribution() -> None:
 
 
 def test_the_renderer_attribution_path_prints_nothing() -> None:
-    from repo_presenter.readme.composition.placement import ATTRIBUTION_LINE, with_attribution
+    from repo_presenter.readme.composition.placement import (
+        ATTRIBUTION_LINE,
+        with_attribution,
+    )
 
     shown = with_attribution(["maintainer text", "more"], [True, True])
     assert shown == ["maintainer text", "more"]
