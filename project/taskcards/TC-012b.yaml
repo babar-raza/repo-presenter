@@ -1,0 +1,74 @@
+id: TC-012b
+gate: GATE4_PRODUCTION
+track: production-cutover
+executor: supervisor
+purpose: >
+  Operational unattended presentation cycle. Split out 2026-11-06 (audit P1) from TC-012, whose
+  ACCEPTED receipt certifies INFRASTRUCTURE ONLY: a schedule trigger with a real target-selection
+  step, a fail-closed authorization gate (scripts/scheduled_execution_gate.py), the two-job trust
+  boundary and a facts-stage Dockerfile build. TC-012's own text required "at least one real
+  unattended scheduled cycle, independently confirmed" before acceptance; that never happened --
+  every scheduled run of present.yml to date is a green, deliberate no-op ("Build the facts" and
+  both "Present (Lane ...)" steps SKIPPED, authorized=false), verified against the Actions API on
+  2026-11-06 (e.g. run 42177039187). TC-012 is not edited (its card hash binds its receipt); this
+  card carries the operational requirement instead. Accepted only when GitHub's own records show
+  an actual successful AUTHORIZED, UNATTENDED (event=schedule) hosted presentation run on the
+  default branch that built real facts, ran Lane R and/or Lane L, and left that lane's outcome
+  sealed (ACCEPTED / READY_FOR_PROPOSAL) and persisted to the durable state refs, bound to that
+  run by the record's own `run:<run id>:<repository>` trigger-dedup entry, with a durable bundle
+  ref for the same repository and lane. Proven from the Actions API and the state refs by
+  ops/checks/hosted_cycle_proof.py, never from an editable JSON assertion. Docker: the cycle
+  runs on GitHub-hosted runners (present.yml); local Docker operation is not re-claimed here.
+depends_on:
+  - TC-012
+  - TC-007
+write_paths:
+  - data/scheduled_execution_policy.json
+  - evidence/build/GATE4_PRODUCTION/TC-012b/**
+satisfies:
+  - REQ-G6-001
+source_refs:
+  - file: project/taskcards/TC-012.yaml
+    anchor: "run at least one real unattended cycle, independently confirmed, before ACCEPTED"
+  - file: docs/CONSOLIDATED_GOALS_2026-11-06.md
+    anchor: "The system must not require continuous human prompting to perform authorized routine work."
+inputs: []
+actions:
+  - "Once TC-007 calibration PASSED and the TC-004 sweep-pause ruling hold, have the owner name a
+     repository in data/scheduled_execution_policy.json so scripts/scheduled_execution_gate.py
+     authorizes a scheduled run (never flip that file before both are independently true)."
+  - "Let the cron fire unattended (no workflow_dispatch); then run the check below against the
+     live Actions API and state refs."
+checks:
+  # Derived from GitHub's Actions API (run event/branch/conclusion, per-step conclusions) and the
+  # durable state refs (record history bound to the run id, bundle ref present). A manual
+  # workflow_dispatch run does not count: `--event schedule` is the default and the card's gate.
+  # Sanity: `--event workflow_dispatch` passes today on real manual runs (e.g. 41306484277),
+  # so the checker is not vacuous; `--event schedule` correctly fails.
+  - command: |-
+      python ops/checks/hosted_cycle_proof.py --event schedule
+    expect: exit 0
+    timeout_seconds: 900
+    proves:
+      - REQ-G6-001
+requires:
+  - python
+  - git
+network: true
+negative_control:
+  mutate: |-
+    python -X utf8 -c "import pathlib; p = pathlib.Path('.github/workflows/present.yml'); s = p.read_text(encoding='utf-8'); s2 = s.replace('schedule:', 'removed:'); p.write_text(s2, encoding='utf-8')"
+  rationale: >
+    Removes the schedule trigger. A cycle proven once but no longer scheduled is not an
+    operational unattended cycle, and hosted_cycle_proof.py refuses before reading any run.
+    (Before a real authorized scheduled run exists, the clean run already fails honestly.)
+evidence:
+  - ops/checks/hosted_cycle_proof.py
+  - .github/workflows/present.yml
+  - data/scheduled_execution_policy.json
+closeout:
+  - "ACCEPTED here means one real unattended authorized cycle sealed and persisted an outcome;
+     it says nothing about upstream delivery (TC-009b/TC-011's live_verified) or reviewer
+     calibration beyond what the scheduled gate itself required."
+recovery: "No product change is made by this card; revert ops/checks/hosted_cycle_proof.py and
+  this card together if the proof criteria are wrong."

@@ -3,50 +3,67 @@ gate: GATE3_PORTFOLIO
 track: portfolio-delivery
 executor: supervisor
 purpose: >
-  Reach P1: at least 25 common, authorized repository identities with BOTH lanes pipeline-good
-  under a calibration-passing reviewer, each with a reproducible acceptance receipt, and one
-  selected output per repository confirmed live upstream (state 10 of the eleven-state model in
-  docs/RELEASE_CONTRACT_P1-P5.md) -- never a manufactured no-op PR. Blocked on calibration
-  passing (TC-007) and a real, PROVEN publication path (TC-009b, not just TC-009a's token
-  mint); the current real count is 5 both-lanes pipeline-good and 0 live-delivered, against a
-  target of 25. 2026-11-04 correction (follow-up directive §9): depends on TC-009b (a real
-  published PR independently inspected against BOTH mandatory targets), not TC-009a alone --
-  a minted token is not publishing capability; retained as a goal-level acceptance gate, not a
-  single heavyweight implementation task (§5) -- actual delivery proceeds in bounded,
-  independently-verified cohorts tracked outside this one card. 2026-11-04 (second supervisor
-  directive, section 5): also depends on TC-008a. The card's own closeout already said a 25-
-  repository campaign must not scale while burning unnecessary provider calls; it is now a real
-  dependency edge, not prose a reader could skip.
+  Reach P1 as amended by owner ruling R4 (docs/CONSOLIDATED_GOALS_2026-11-06.md, 2026-11-06):
+  about 25 independently accepted Lane R candidates AND about 25 independently accepted Lane L
+  candidates, COUNTED INDEPENDENTLY -- the two product sets may differ; neither lane is measured
+  by the other. Release threshold: 25 per lane. "Independently accepted" means the lane's durable
+  state record (state refs) is pipeline-good AND its sealed bundle verifies and carries a MODEL
+  review ACCEPT made under reviewer calibration PASSED, at exactly the reviewer logic and prompt
+  version data/reviewer_calibration.json currently certifies as PASSED. Pipeline-good records
+  under a NOT_PASSED (or version-mismatched) reviewer do not count and are reported separately
+  as pipeline_good_uncalibrated. Acceptance is NOT upstream delivery: the counter measures five
+  outcomes separately and per lane -- (a) Lane R independently accepted, (b) Lane L independently
+  accepted, (c) publication-ready (accepted + R3 allowlisted; the runtime publish gates are
+  enforced by propose.effect at write time), (d) external effect executed (PR confirmed via the
+  GitHub API), (e) live-verified upstream (merged + live README byte-equal to the sealed
+  candidate, via the GitHub API). This card gates on (a) and (b) only; upstream delivery (d)/(e)
+  is a separately gated outcome (`portfolio_delivery_count.py --live-verified N`), never folded
+  into this threshold. 2026-11-06 re-author: supersedes the 2026-11-04 text that required 25
+  COMMON repositories with BOTH lanes pipeline-good plus one live-delivered output each, counted
+  from a hand-editable evidence/delivery_ledger.json; that history stays in version control and
+  in docs/RELEASE_CONTRACT_P1-P5.md, the rule itself is retired. Blocked on calibration passing
+  (TC-007). Still depends on TC-008a (a portfolio campaign must not burn unnecessary provider
+  calls). TC-009b (a real, proven publication path) is no longer a dependency: under R4 it gates
+  the separate delivery outcome, not acceptance; TC-012a still depends on both. Measured
+  2026-11-06: Lane R 9 pipeline-good (7 uncalibrated, 2 not traceable to a sealed model ACCEPT),
+  Lane L 12 (11 uncalibrated, 1 not traceable); 0 independently accepted in either lane; 0
+  publication-ready, 0 effects executed, 0 live-verified.
 depends_on:
   - TC-007
   - TC-008a
-  - TC-009b
 write_paths:
   - docs/RELEASE_CONTRACT_P1-P5.md
   - evidence/build/GATE3_PORTFOLIO/TC-011/**
-  - evidence/delivery_ledger.json
 satisfies:
   - REQ-P1-001
 source_refs:
   - file: docs/RELEASE_CONTRACT_P1-P5.md
     anchor: "Gap to P1's 25-common-products target"
+  - file: docs/CONSOLIDATED_GOALS_2026-11-06.md
+    anchor: "R4 | Accepted-candidate target"
 inputs: []
 actions:
-  - "Continue the fix-queue sweep toward common both-lane coverage, but only count a repository
-     toward P1 once its candidate has cleared a calibration-passing reviewer."
-  - "For each of the 25, obtain the owner's selected-output decision and confirm the live result
-     against the real upstream repository, not the local durable record."
+  - "Continue the fix-queue sweep per lane; count a repository-lane toward P1 only once its sealed
+     candidate carries a model ACCEPT made under a PASSED, version-matching reviewer calibration
+     (ops/checks/portfolio_delivery_count.py decides this from state refs and sealed bundles,
+     never from a typed marker)."
+  - "Track publication readiness, executed effects and live-verified upstream results with the
+     same counter (--live-verified N), separately from acceptance."
 checks:
-  # 2026-11-04 correction: a manually typed "LIVE_DELIVERY_CONFIRMED_COUNT: 25" marker is never
-  # acceptable evidence for this goal -- an agent could simply type any number. This derives the
-  # count from real, independently cross-validated sources: both-lane pipeline-good status from
-  # the durable state backend, a globally-PASSED calibration record, and a real delivery-ledger
-  # entry per repository (evidence/delivery_ledger.json -- does not exist yet, so today's
-  # correct count is honestly 0, not a shortcut).
+  # 2026-11-06 re-author (owner ruling R4): per-lane independent acceptance, derived from the
+  # durable state refs, the sealed bundles' review verdicts and the fail-closed calibration
+  # reader. No editable marker/ledger file is read as evidence. Today's honest result: 0/25 per
+  # lane (calibration NOT_PASSED), so the first check correctly fails.
   - command: |-
-      python ops/checks/portfolio_delivery_count.py 25
+      python ops/checks/portfolio_delivery_count.py --per-lane 25
     expect: exit 0
-    timeout_seconds: 300
+    timeout_seconds: 600
+    proves:
+      - REQ-P1-001
+  - command: |-
+      python -m pytest tests/ops/test_portfolio_delivery_count.py -q
+    expect: exit 0
+    timeout_seconds: 120
     proves:
       - REQ-P1-001
 requires:
@@ -54,15 +71,20 @@ requires:
 network: true
 negative_control:
   mutate: |-
-    python -c "import pathlib; p = pathlib.Path('evidence/delivery_ledger.json'); p.write_text('[]', encoding='utf-8')"
+    python -X utf8 -c "import json, pathlib; p = pathlib.Path('data/reviewer_calibration.json'); d = json.loads(p.read_text(encoding='utf-8')); d['status'] = 'NOT_PASSED'; p.write_text(json.dumps(d, indent=2), encoding='utf-8')"
   rationale: >
-    Once a real ledger with >=25 live-verified entries exists, this empties it -- a meaningful
-    falsification of the actual cross-validated evidence, not a marker duplication. Before a
-    real ledger exists, the clean run already correctly fails on calibration status alone and
-    the negative control is skipped.
+    A semantic break of the one predicate every acceptance rests on: once calibration has
+    PASSED and >=25 per lane are accepted, re-marking the reviewer NOT_PASSED must turn every
+    sealed model ACCEPT into pipeline_good_uncalibrated and drop both lanes to 0, so the first
+    check fails. (Before calibration passes, the clean run already fails honestly.)
 evidence:
   - project/state.yaml
+  - ops/checks/portfolio_delivery_count.py
+  - tests/ops/test_portfolio_delivery_count.py
 closeout:
-  - "This card's ACCEPTED state must be independently cross-checked against gh api for each of
-     the 25 repositories' live README content, not accepted from a durable-state record alone."
-recovery: "The named marker does not exist yet; this card is correctly not started."
+  - "ACCEPTED here certifies per-lane independent acceptance only (a calibrated model ACCEPT per
+     lane, 25 per lane), never upstream delivery. Delivery is reported by the same counter's
+     publication_ready / effect_executed / live_verified columns (GitHub API derived) and gated
+     separately with --live-verified N; do not describe P1 as delivered from this card alone."
+recovery: "Revert ops/checks/portfolio_delivery_count.py, tests/ops/test_portfolio_delivery_count.py
+  and this card together; they are one change."
