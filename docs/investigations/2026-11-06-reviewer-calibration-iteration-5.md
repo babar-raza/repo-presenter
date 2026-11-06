@@ -34,3 +34,27 @@ escalation ladder the approach changes rather than the prompt again:
 2. **Deterministic claim entailment** where the reviewer is weakest: checkable tokens in a sentence (identifiers,
    versions, formats, platforms, numbers) must be entailed by the facts the sentence's unit cites -- the
    deterministic tier already reaches 1.00 on every class it covers.
+
+## Experiment: the reviewer on `gpt-oss` (same corpus subset, no status written)
+
+28 clean twins + 45 sampled real defects were sent with `--model gpt-oss`; the 1,000-call cap was reached after 214
+more calls, so 6 clean twins and 29 unsupported-claim / 13 contradiction cases were judged. Reviewer alone: real
+unsupported claims 0.25 (qwen3-next 0.02), real contradictions 0.00, injected unsupported claims 0.80,
+promotional filler 0.75 -- but **false-reject rate 1.00 (6 of 6 clean twins rejected)**. A different model trades
+missed defects for rejecting everything; it is not a fix. The owner-approved calibration budget (1,000 calls) is
+now spent. The next measurement waits for the deterministic claim-entailment check, measured offline with zero
+calls first, so any further calls are spent only on a reviewer that the offline numbers say can pass.
+
+## Experiment: deterministic claim entailment (BC-15/BC-16), zero provider calls — not enforced
+
+Built on branch `w/claim-entailment` (e1950e4), tuned on iteration-4 data and measured once on the iteration-5 held-out
+set: real unsupported claims 0.14 (0.34 incl. advisory), real contradictions 0.23, contradict_format/package/version
+1.00/1.00/0.83, invent_api_name 0.93, injected unsupported claims 0.00 -- and **13 of 28 clean twins rejected (0.46)**.
+Not enforced and not merged (code nothing runs is itself a failure pattern). Its contradiction tokens
+(package/format/version) duplicate what the deterministic tier already catches at 1.00.
+
+Three detectors (qwen3-next, gpt-oss, deterministic) fail on the same class, which suggests the class measures more
+than reviewer judgement. A zero-call audit classifies every real:unsupported_claim and real:contradiction case as
+false / true-but-not-in-the-facts / unverifiable maintainer knowledge / pipeline-authored / label error, maps each to
+the responsible component, and recomputes recall by responsibility, before any further calls are spent. Thresholds
+and labels are not changed.

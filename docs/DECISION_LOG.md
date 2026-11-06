@@ -3406,3 +3406,21 @@ to existing seals. The owner further directed that these rules be enforced by th
 R9 by BC-07 (`validation/public_text.py`) and re-certification of every seal; R10 by re-certification, the preflight
 change, the no-regression gate in CI and the regeneration counter; "one standard for all" by a static check that no
 product-specific special case enters the pipeline code.
+
+---
+
+## 2026-11-06: calibration direction after the defect-class audit (supervisor decision)
+
+`docs/investigations/2026-11-06-unsupported-claim-class-audit.md` (zero calls, all 113 real-defect cases read against
+upstream source): of 100 "real unsupported claims", 13 are false, **69 are true but missing from the facts**, 14 are
+unverifiable maintainer knowledge, 4 are pipeline-generated; of 13 contradictions, 10 are false. On the reviewer's
+own job (false + generated, 27 cases) qwen3-next finds 0 and the pipeline 4.
+
+Decided: fix each responsible component, not the gate. (1) facts extractor: add the missing kinds (enum members
+across ecosystems, full docstrings, dataclass/pydantic fields and exports, package metadata such as licence, runtime
+floor and pure-language, build/test project files), measured with zero calls; (2) deterministic rules for the 20
+mechanically checkable false claims (type counts, non-existent or non-exported types, stubs described as working,
+CONTRADICTED examples printed, package name/registry state); (3) the generator never emits counts it did not compute
+or verification claims it did not make. Iteration 5 stays recorded as NOT_PASSED; the next pre-registered corpus is
+built after (1) so a true claim is clean because a fact supports it, never by relabelling; no further provider calls
+until (1)-(2) are measured offline. Every change passes the no-regression re-certification gate (R10).
