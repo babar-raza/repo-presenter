@@ -5,7 +5,7 @@
   "provider_repository_id": 1359836523,
   "registry_revision": null,
   "active_transaction_id": "9a0323cb194b479193f48d554af46968",
-  "state": "ACCEPTED",
+  "state": "INVALIDATED",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "attempt under version set b8a378160410: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; F01 [unsupported_claim] in documentation_resources blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-06T12:12:24.860875+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:42213713499",
     "acquired_at": "2026-11-06T11:56:44.421145+00:00",
@@ -26,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "55b5a28a7a1f4c3f91d428adfce35922",
+    "transition_id": "2daa18ad7991444683cfaaaab6e8d7ec",
     "transaction_id": "9a0323cb194b479193f48d554af46968",
     "repository": "aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET",
-    "from_state": "REVIEWING",
-    "to_state": "ACCEPTED",
-    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
-    "occurred_at": "2026-11-06T08:24:15.747055+00:00",
+    "from_state": "ACCEPTED",
+    "to_state": "INVALIDATED",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-11-06T12:12:24.407910+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET",
     "output_manifest": "candidates/aspose-imaging-foss__Aspose.Imaging-FOSS-for-.NET/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 63,
+  "state_version": 64,
   "recent_trigger_dedup_keys": {
     "run:41121245347:aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET": "2e7a505898484cddb6abd5333eb93e50",
     "run:41169943876:aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET": "1b0f7665bd0947518e5cc2c91b2fdace",
