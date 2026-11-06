@@ -14,7 +14,7 @@ counts are printed for visibility and never added in.
 This needs network access to read the durable state remote's refs -- the card declaring this
 check must set `network: true`.
 
-Usage: python ops/checks/dashboard_matches_live.py
+Usage: python ops/checks/dashboard_matches_live.py [--no-loss]
 """
 from __future__ import annotations
 
@@ -55,14 +55,27 @@ def main(argv: list[str]) -> int:
     recorded_l = progress.get("lane_l_accepted")
 
     problems = []
-    if recorded_r != live_r:
-        problems.append(f"lane_r_accepted recorded={recorded_r!r} but live={live_r!r}")
-    if recorded_l != live_l:
-        problems.append(f"lane_l_accepted recorded={recorded_l!r} but live={live_l!r}")
+    # --no-loss (owner ruling R10; the CI mode): fail only when the live count is BELOW the recorded one
+    # (a seal lost, or the record overclaims); live above recorded is progress the dashboard has not been
+    # resynced to yet -- reported, not a failure, so real seals landing never break CI. The strict
+    # equality (no flag) stays TC-005's own point-in-time check.
+    no_loss = "--no-loss" in argv
+    for lane, recorded, live in (("r", recorded_r, live_r), ("l", recorded_l, live_l)):
+        if recorded == live:
+            continue
+        message = f"lane_{lane}_accepted recorded={recorded!r} but live={live!r}"
+        if no_loss and isinstance(recorded, int) and isinstance(live, int) and live > recorded:
+            print(f"WARN (unrecorded progress, resync the dashboard): {message}")
+            continue
+        problems.append(message)
     if problems:
         print("FAIL: " + "; ".join(problems))
         return 1
-    print(f"OK: project/state.yaml matches live portfolio_status.py (R={live_r}, L={live_l})")
+    print(
+        f"OK: no seal lost (recorded R={recorded_r}, L={recorded_l}; live R={live_r}, L={live_l})"
+        if no_loss
+        else f"OK: project/state.yaml matches live portfolio_status.py (R={live_r}, L={live_l})"
+    )
     return 0
 
 

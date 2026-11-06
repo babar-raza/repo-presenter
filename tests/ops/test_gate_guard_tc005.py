@@ -14,4 +14,4 @@ def _check(*args):
 
 def test_release_contract_adopted_and_dashboard_matches_live():
     _check("ops/checks/marker_check.py", "docs/RELEASE_CONTRACT_P1-P5.md", "RELEASE_CONTRACT_ADOPTED_2026-11-04")
-    _check("ops/checks/dashboard_matches_live.py")
+    _check("ops/checks/dashboard_matches_live.py", "--no-loss")
