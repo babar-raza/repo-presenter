@@ -7,118 +7,83 @@
   },
   "omitted": [
     {
-      "fact_id": "identity:repository",
-      "reason": "Repository name is not stated in the opening unit; it is provenance, not a capability or action.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "identity:revision",
-      "reason": "Revision hash is not stated in the opening unit; it is provenance, not a capability or action.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "license:spdx",
-      "reason": "License is not stated in the opening unit; it is provenance, not a capability or action.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "install_command:dotnet",
-      "reason": "Installation commands are not stated in the opening unit; they belong in an installation or setup section.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.imaging",
-      "reason": "Public symbol Aspose.Imaging is not used in the opening unit; only Aspose.Imaging.Foss is cited in the example.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose",
-      "reason": "Public symbol Aspose is not used in the opening unit; only Aspose.Imaging.Foss is cited in the example.",
-      "section": "opening"
+      "fact_id": "inherited_unit:047.list",
+      "reason": "The list of members and constructors belongs to the same inherited_unit as the paragraph cited in the intro slot; it is not cited in the hub slot and is not needed to describe the hub's purpose beyond what the intro and hub units already state.",
+      "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:016.code_block",
-      "reason": "The renderer prints the build command verbatim after this unit; describing its action duplicates the command.",
+      "reason": "The renderer prints the build command verbatim after this unit; describing its action duplicates the command's substance.",
       "section": "development_testing"
     },
     {
       "fact_id": "inherited_unit:017.paragraph",
-      "reason": "The renderer prints the reference snippet verbatim; describing its purpose duplicates the command.",
+      "reason": "This paragraph describes referencing the built assembly, which is outside the scope of the summary slot's focus on toolchain and requirements.",
       "section": "development_testing"
     },
     {
       "fact_id": "inherited_unit:018.code_block",
-      "reason": "The renderer prints the XML snippet verbatim; describing its purpose duplicates the command.",
+      "reason": "The renderer prints the XML reference snippet verbatim after this unit; describing its action duplicates the snippet's substance.",
       "section": "development_testing"
     },
     {
-      "fact_id": "inherited_unit:019.paragraph",
-      "reason": "The renderer prints the target framework list verbatim; describing its purpose duplicates the command.",
+      "fact_id": "inherited_unit:024.list",
+      "reason": "The target frameworks are already stated in the summary text; listing them again as a separate item would duplicate the fact.",
       "section": "development_testing"
     },
     {
       "fact_id": "inherited_unit:055.paragraph",
-      "reason": "The renderer prints the test command verbatim after this unit; describing its action duplicates the command.",
+      "reason": "The renderer prints the test command verbatim after this unit; describing its action duplicates the command's substance.",
       "section": "development_testing"
     },
     {
       "fact_id": "inherited_unit:056.code_block",
-      "reason": "The renderer prints the test command verbatim after this unit; describing its action duplicates the command.",
+      "reason": "The renderer prints the test command verbatim after this unit; describing its action duplicates the command's substance.",
       "section": "development_testing"
     },
     {
       "fact_id": "inherited_unit:057.paragraph",
-      "reason": "The renderer prints the test command and release workflow path verbatim; describing their action duplicates the command.",
+      "reason": "This paragraph describes runtime and packaging details beyond the toolchain and requirements for building and testing.",
       "section": "development_testing"
     },
     {
       "fact_id": "inherited_unit:058.paragraph",
-      "reason": "This describes contribution guidelines for new formats, which is outside the scope of the development_testing summary slot.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "build_test_asset:build-command",
-      "reason": "The renderer prints the build command verbatim after this unit; describing its action duplicates the command.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "build_test_asset:test-command",
-      "reason": "The renderer prints the test command verbatim after this unit; describing its action duplicates the command.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "build_test_asset:tests",
-      "reason": "The renderer prints the test command verbatim after this unit; describing the test location duplicates the command.",
+      "reason": "This paragraph describes contribution guidelines for new formats, which is outside the scope of the summary slot's focus on toolchain and requirements.",
       "section": "development_testing"
     },
     {
       "fact_id": "build_test_asset:ci",
-      "reason": "The renderer prints the CI path verbatim; describing its purpose duplicates the command.",
+      "reason": "CI workflow paths are not required to describe the local build and test toolchain.",
       "section": "development_testing"
     },
     {
-      "fact_id": "identity:ecosystem",
-      "reason": "The ecosystem fact is redundant with platform and target framework facts already cited.",
+      "fact_id": "build_test_asset:ci-matrix",
+      "reason": "CI matrix details are not required to describe the local build and test toolchain.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "build_test_asset:release-workflow",
+      "reason": "Release workflow details are not required to describe the local build and test toolchain.",
       "section": "development_testing"
     },
     {
       "fact_id": "identity:family",
-      "reason": "The family fact is not relevant to the build and test requirements summary.",
+      "reason": "Family identity is not relevant to the toolchain and requirements for building and testing.",
       "section": "development_testing"
     },
     {
       "fact_id": "identity:repository",
-      "reason": "The repository fact is redundant with the clone URL in the rendered command.",
+      "reason": "Repository identity is not relevant to the toolchain and requirements for building and testing.",
       "section": "development_testing"
     },
     {
       "fact_id": "identity:revision",
-      "reason": "The revision fact is not relevant to the build and test requirements summary.",
+      "reason": "Revision identity is not relevant to the toolchain and requirements for building and testing.",
       "section": "development_testing"
     },
     {
       "fact_id": "package:name",
-      "reason": "The package name is redundant with the project path in the rendered commands.",
+      "reason": "Package name is already stated in the product name in the summary text.",
       "section": "development_testing"
     },
     {
@@ -134,15 +99,22 @@
         "identity:ecosystem",
         "identity:family",
         "identity:platform",
+        "identity:repository",
+        "identity:revision",
         "package:name",
         "package:target_framework",
-        "dependency:none",
+        "license:spdx",
         "example:003",
-        "public_symbol:aspose.imaging.foss"
+        "public_symbol:aspose.imaging.foss",
+        "public_symbol:aspose.imaging",
+        "public_symbol:aspose",
+        "dependency:none",
+        "inherited_unit:008.code_block",
+        "inherited_unit:011.paragraph"
       ],
       "section": "opening",
       "slot": "opening",
-      "text": "Aspose.Imaging FOSS for .NET reads image files and inspects their properties using the ImageProbe.ProbeFile method. It supports formats such as GIF, as demonstrated by extracting format and frame count information. The library targets netstandard2.0 and net8.0, and has no external dependencies. It is part of the Aspose.Imaging imaging family for the .NET ecosystem."
+      "text": "Aspose.Imaging FOSS for .NET reads image files and writes format information for PNG, JPEG, GIF, BMP, ICO, TIFF, WEBP, PSD, EMF, WMF, DICOM, DJVU, AVIF, and HEIC. It detects image format, extracts dimension, bit-depth, and frame count, and supports both synchronous and asynchronous probing. It produces ImageFormat and ImageInfo outputs without requiring full image decoding. It covers the full range of formats in one place, including PSD, EMF/WMF, and DICOM, which nothing else in the .NET FOSS ecosystem handles the same way."
     },
     {
       "fact_ids": [
@@ -152,7 +124,7 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:1",
-      "text": "Detects 14 image formats by reading only the file's signature bytes and returning an ImageFormat value without pulling in a full imaging stack."
+      "text": "Format detection identifies 14 image formats by reading only signature bytes and returns an ImageFormat value without loading a full imaging stack, using ImageProbe.DetectFormat()."
     },
     {
       "fact_ids": [
@@ -161,7 +133,7 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:2",
-      "text": "Reads a format's real header fields directly into an ImageInfo for PNG, JPEG, GIF, BMP, WEBP, ICO, TIFF, PSD, EMF, WMF, DICOM, DJVU, AVIF, and HEIC/HEIF, providing width, height, bit depth, and frame count without decoding."
+      "text": "Header probing reads a format's real header fields directly into an ImageInfo for PNG, JPEG, GIF, BMP, WEBP, ICO, TIFF, PSD, EMF, WMF, DICOM, DJVU, AVIF, and HEIC/HEIF, providing width, height, bit depth, and frame count without decoding."
     },
     {
       "fact_ids": [
@@ -169,7 +141,7 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:3",
-      "text": "Counts real multi-frame and multi-page content by walking GIF image-descriptor blocks, ICO directory entries, TIFF IFD chains, and bundled multi-page DJVU FORM:DJVU page components rather than relying on file counts that include shared dictionaries and thumbnails."
+      "text": "Multi-frame counting accurately counts real multi-frame content by walking GIF image-descriptor blocks, ICO directory entries, TIFF IFD chains, and bundled multi-page DJVU FORM:DJVU page components rather than reporting inflated file counts."
     },
     {
       "fact_ids": [
@@ -177,7 +149,7 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:4",
-      "text": "Provides both synchronous and async entry points for the same operation, including ProbeFile/ProbeFileAsync and Probe/ProbeAsync, so a probe can run on an ASP.NET request thread without blocking it."
+      "text": "Async support provides both synchronous and async entry points for the same operation, with ProbeFile/ProbeFileAsync and Probe/ProbeAsync allowing non-blocking probes on ASP.NET request threads."
     },
     {
       "fact_ids": [
@@ -185,7 +157,7 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:5",
-      "text": "Never throws on a signature match it cannot fully parse—malformed or truncated input returns an ImageInfo with only Format set, and every number in an ImageInfo is either positive or null, with zero, negative, or out-of-range header fields reported as unknown instead of passed through."
+      "text": "Robust error handling ensures Probe() never throws on a signature match it cannot fully parse, returning an ImageInfo with only Format set for malformed or truncated input instead of raising an exception."
     },
     {
       "fact_ids": [
@@ -194,7 +166,7 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:6",
-      "text": "Has no external dependencies, making it a lightweight, self-contained imaging library for .NET applications."
+      "text": "The package has no external runtime dependencies beyond the target frameworks netstandard2.0 and net8.0."
     },
     {
       "fact_ids": [
@@ -206,34 +178,21 @@
     },
     {
       "fact_ids": [
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "identity:repository",
-        "identity:revision",
-        "package:name",
-        "package:target_framework",
-        "public_symbol:aspose.imaging.foss",
-        "inherited_unit:044.paragraph"
+        "example:003",
+        "public_symbol:aspose.imaging.foss"
       ],
       "section": "api_reference",
       "slot": "intro",
-      "text": "Aspose.Imaging FOSS for .NET exposes Aspose.Imaging FOSS for .NET as its public API surface, targeting netstandard2.0 and net8.0. It provides image format detection and header inspection through the ImageProbe class."
+      "text": "Aspose.Imaging FOSS for .NET exposes ImageProbe as its single entry point, which returns an ImageFormat value and an ImageInfo record for every supported format."
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.imaging.foss",
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "identity:repository",
-        "identity:revision",
-        "package:name",
-        "package:target_framework"
+        "example:003",
+        "public_symbol:aspose.imaging.foss"
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:aspose.imaging.foss",
-      "text": "The Aspose.Imaging FOSS for .NET public symbol exposes ImageProbe as the static entry point for format detection and header inspection, supporting DetectFormat, Probe, ProbeFile, ProbeAsync, and ProbeFileAsync methods, and returns ImageFormat enums and ImageInfo records containing Format, Width, Height, BitDepth, and FrameCount."
+      "text": "ImageProbe provides static methods DetectFormat, Probe, ProbeFile, ProbeAsync, and ProbeFileAsync to inspect image headers and return an ImageFormat enum and an ImageInfo record containing Format, Width, Height, BitDepth, and FrameCount where available."
     },
     {
       "fact_ids": [
@@ -274,7 +233,6 @@
         "identity:platform",
         "identity:repository",
         "identity:revision",
-        "inherited_unit:011.paragraph",
         "inherited_unit:013.paragraph",
         "inherited_unit:052.list",
         "package:name",
@@ -283,7 +241,7 @@
       ],
       "section": "scope_limitations",
       "slot": "scope",
-      "text": "Aspose.Imaging FOSS for .NET reads image headers to detect formats and extract metadata, supporting netstandard2.0 and net8.0 targets. It identifies formats including PSD, EMF, WMF, DICOM, GIF, ICO, TIFF, and DJVU, and reports frame counts where the container format records them."
+      "text": "Aspose.Imaging FOSS for .NET reads image headers to detect formats and extract metadata, supporting netstandard2.0 and net8.0 targets. It does not render, edit, or convert image data."
     },
     {
       "fact_ids": [
@@ -292,52 +250,57 @@
       ],
       "section": "scope_limitations",
       "slot": "limitation:1",
-      "text": "The library provides detection and metadata extraction only; ImageProbe identifies formats and reads header fields but never decodes pixel data, so there is no rendering, editing, or format-conversion capability anywhere in the library."
+      "text": "Detection and metadata only: ImageProbe identifies a format and reads its header fields; it never decodes pixel data, so there is no rendering, editing, or format-conversion capability anywhere in the library."
     },
     {
       "fact_ids": [
-        "inherited_unit:052.list"
+        "inherited_unit:052.list",
+        "public_symbol:aspose.imaging.foss"
       ],
       "section": "scope_limitations",
       "slot": "limitation:2",
-      "text": "Frame count reflects only what the container itself records: it is a real, computed count for GIF, ICO, TIFF, and bundled multi-page DJVU, while every other supported format reports a fixed 1 for a successfully parsed header, and an indirect or truncated DJVM document reports FrameCount as null."
+      "text": "Frame count reflects only what the container itself records: it is a real, computed count for GIF, ICO, TIFF, and bundled multi-page DJVU (DJVM); every other supported format reports a fixed 1 for a successfully parsed header, since none of their headers carry a genuine frame or page count."
     },
     {
       "fact_ids": [
-        "inherited_unit:052.list"
+        "inherited_unit:052.list",
+        "public_symbol:aspose.imaging.foss"
       ],
       "section": "scope_limitations",
       "slot": "limitation:3",
-      "text": "Non-placeable WMF is detected but not dimensioned because its header carries no bounding rectangle, so Probe returns a format-only ImageInfo for it; only placeable WMF headers yield Width and Height, assuming a conventional 96 DPI target."
+      "text": "Non-placeable WMF is detected but not dimensioned: the classic (non-placeable) WMF header carries no bounding rectangle, so Probe returns a format-only ImageInfo for it; only the placeable WMF header yields Width/Height."
     },
     {
       "fact_ids": [
-        "inherited_unit:052.list"
+        "inherited_unit:052.list",
+        "public_symbol:aspose.imaging.foss"
       ],
       "section": "scope_limitations",
       "slot": "limitation:4",
-      "text": "DICOM parsing stops at the first undefined-length element, since Rows, Columns, and BitsAllocated always precede such elements in a conformant file."
+      "text": "DICOM parsing stops at the first undefined-length element: a sequence or encapsulated pixel-data element with an undefined length ends the walk rather than being parsed."
     },
     {
       "fact_ids": [
-        "inherited_unit:052.list"
+        "inherited_unit:052.list",
+        "public_symbol:aspose.imaging.foss"
       ],
       "section": "scope_limitations",
       "slot": "limitation:5",
-      "text": "CDR support is planned but not yet implemented, as no CdrFormatHandler exists in the current source tree."
+      "text": "CDR support is planned but not yet implemented: no CdrFormatHandler exists in the current source tree."
     },
     {
       "fact_ids": [
+        "build_test_asset:build-command",
+        "build_test_asset:test-command",
+        "identity:ecosystem",
         "identity:platform",
-        "package:target_framework",
-        "build_test_asset:ci-matrix",
-        "build_test_asset:release-workflow",
         "inherited_unit:026.list",
-        "inherited_unit:027.paragraph"
+        "inherited_unit:027.paragraph",
+        "package:target_framework"
       ],
       "section": "development_testing",
       "slot": "summary",
-      "text": "Aspose.Imaging FOSS for .NET targets netstandard2.0 and net8.0 and is built using the .NET CLI. The test suite resides in tests/Aspose.Imaging.Foss.Tests/Aspose.Imaging.Foss.Tests.csproj, targets net9.0, and uses xUnit via Microsoft.NET.Test.Sdk, xunit, and xunit.runner.visualstudio; code coverage is collected with coverlet.collector. These test dependencies apply only to the test project and are not referenced by the main library. The repository includes a CI matrix for ubuntu-latest and windows-latest, and a release workflow at .github/workflows/release.yml that runs on tagged version pushes."
+      "text": "Aspose.Imaging FOSS for .NET targets netstandard2.0 and net8.0 and is built using the .NET CLI. The test project, located under tests/Aspose.Imaging.Foss.Tests, targets net9.0 and uses xUnit for testing, with Microsoft.NET.Test.Sdk 17.12.0, xunit 2.9.2, and xunit.runner.visualstudio 2.8.2 as test dependencies, and coverlet.collector 6.0.2 for code-coverage collection. These test dependencies apply only to the test project and are not referenced by the main library project. The test suite is executed from the repository root using dotnet test, and the build uses dotnet build on the solution file."
     },
     {
       "fact_ids": [

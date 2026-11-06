@@ -2,13 +2,13 @@
   "components": {
     "normalisation": "36",
     "renderer": "34",
-    "reviewer_logic": "6",
+    "reviewer_logic": "8",
     "shell": "6"
   },
   "environment": {
     "inherited_units_version": "4",
     "os": "Linux",
-    "python_version": "3.13.17",
+    "python_version": "3.13.18",
     "toolchains": {
       "cargo": "rustup 1.29.2 (d8c92c676 2026-10-21)",
       "cmake": "cmake version 3.31.6",
@@ -31,6 +31,21 @@
     "build_test_asset:test-command": "0e27d0bcc01e4d6710596b06b650ade61ce21d60f8bc0e98ae747b97e439f9b9",
     "build_test_asset:tests": "05bdcb0a4aaf362ad055f78800c8efd7658c77ed1e0d7b89905b1a06760dffd3",
     "dependency:none": "c99f1b9b02b15fb5a57c634e6fb38c7a3b1c71fa600970131af188d46a1bab22",
+    "enum_member:aspose.imaging.foss.imageformat.avif": "e0670ec1cdea13f5734d5e88ea8412d6b406b3c70b5154472709b8ff67cc680c",
+    "enum_member:aspose.imaging.foss.imageformat.bmp": "e27da11b956102c135bc12e2ac1bc510afe23c85ed4a482d7557430f0a56bf5a",
+    "enum_member:aspose.imaging.foss.imageformat.dicom": "caa02e22a86eb821a2e85a7123d598029816da10f0d2b0258a05dae32ac8afb4",
+    "enum_member:aspose.imaging.foss.imageformat.djvu": "59cac54b23ad2203990ec92d79802f66d4363a31180ae33cfae862175ca60b48",
+    "enum_member:aspose.imaging.foss.imageformat.emf": "a5d969b327fd20c5a7987b6a998bd3002d8ccb0a528602b97ef40b9f6eb95708",
+    "enum_member:aspose.imaging.foss.imageformat.gif": "1111e0a36600c17f75f0add00f5949f4a00a6806157c6c2bdc4c6b132379ddd0",
+    "enum_member:aspose.imaging.foss.imageformat.heic": "a0cf359d4ce8b2b4ed09f0274db36626d70f46a9abb03def718cc7985f5fa0f4",
+    "enum_member:aspose.imaging.foss.imageformat.ico": "95a3d1361d2a44c40649b3a993ad3374b4f502bb76cea32fc7c5ee325692236f",
+    "enum_member:aspose.imaging.foss.imageformat.jpeg": "1b1880ab0bc6cab386dbe5700267066436366c737fe0207aa8dcfddf2c9487c6",
+    "enum_member:aspose.imaging.foss.imageformat.png": "dc5446316288b67c10e6ba343692b06f5c1fb96ae698ac17c239e4ff3ec797f7",
+    "enum_member:aspose.imaging.foss.imageformat.psd": "044bfba9bcae907a1b6933a44aef1678c8af51f601b2b2f2050bf66bef861787",
+    "enum_member:aspose.imaging.foss.imageformat.tiff": "fcbccd6bb7cf4d0cff3833b310ab613e6b52a6722f818b2b3b781724219fb4c2",
+    "enum_member:aspose.imaging.foss.imageformat.unknown": "ecc25e2a1f744b3a96ce616973949a89da947543a13782f69ac26be999f8f87b",
+    "enum_member:aspose.imaging.foss.imageformat.webp": "99d271395760e0a08efd0e38fc9567dc5b2d58d62861c77b0c032a0a68721b31",
+    "enum_member:aspose.imaging.foss.imageformat.wmf": "8432d1dbfb40210cb2be06113bad3e176bbcee818d102b7176a14fe1f1cc59d2",
     "example:001": "db3a7dc8a10ba2020c5cdb4e424bbf23339175cf176b51b3c91c44aa129f91e1",
     "example:002": "a0bdf6d992ac0f759ac978ffc22f1d8b496a25f2a01b10b067ab486e4ef773ee",
     "example:003": "e0bec2a04bb200eab0c5043f26d78050aac268cef21f3fe8ee65e7e8a1c35885",
@@ -155,8 +170,8 @@
   "prompts": {
     "independent_review": {
       "model_route": "qwen3-next",
-      "sha256": "f7b3d73084e00517f85d6dd7f6a82dbf530320c3012a31925e701e7ca07859db",
-      "version": "17"
+      "sha256": "c2f874f7a40686af68de1e68decd5579a5f27e74a42f4d29754ae6998e98be15",
+      "version": "19"
     },
     "presentation_planning": {
       "model_route": "qwen3-next",
@@ -175,8 +190,8 @@
     },
     "source_reconciliation": {
       "model_route": "qwen3-next",
-      "sha256": "ce43332e377feb58f8f9d6f14665d24efa72ea393402dd3bf55b202fbec3e0ab",
-      "version": "12"
+      "sha256": "1c93b98eb353f0d930d225536db272e60df36c78e6eabf381db79cac93c7a06c",
+      "version": "14"
     },
     "targeted_repair": {
       "model_route": "qwen3-next",
