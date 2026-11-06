@@ -3231,3 +3231,20 @@ RECONCILING and names its unit, so the existing repair loop patches that unit (a
 reject. Measured today it would flag units in all 12 sealed Lane R candidates; expected cost is extra
 reconciliation calls per run and some rejects until repairs succeed. `RENDERER_VERSION` 35 reopens sealed
 candidates so none keeps a loss by preflight skip.
+
+---
+
+## 2026-11-06: owner operating directive — supervisor decides, reports results, works in parallel
+
+The owner observed that the supervisor (1) asked too many interactive questions, which stall autonomous
+execution and invite uninformed choices; (2) spent output on summaries while the accepted-candidate counts
+did not rise; (3) kept rediscovering gaps in goals already stated; (4) ran one worker at a time. Recorded as a
+binding section of `ops/SUPERVISOR.md` ("Owner operating directive (2026-11-06)"). Applied immediately: five
+isolated workers launched in parallel on the independent audit's P0/P1 items (run-request trust boundary,
+effect-specific GitHub authorization with first-PR drafts, release-contract reconciliation to per-lane ~25 with
+TC-012 infrastructure/operational split, R8 dispatch-next/worker-tick/scheduled tick, reviewer real-defect root
+cause) while the supervisor drives the pilots and the TC-009a mint (secrets added by the owner 2026-11-06).
+
+An independent audit (2026-11-06) was verified before acting: its claims about the hardcoded control-repo write
+guard, missing `draft`, the 25-common TC-011 rule, the absent `dispatch-next`/`worker-tick`, and the
+branch-controlled code in `run-request.yml` are each confirmed in the code.
