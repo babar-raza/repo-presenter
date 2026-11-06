@@ -1,5 +1,5 @@
 prompt_id: independent_review
-version: "19"
+version: "20"
 stage: S10
 purpose: Judge, under its own job identity and prompt, one bounded unit of the candidate README (the author-written text of one section or a small group, with the facts it may cite) for factual soundness, specificity and visitor usefulness; return one verdict and findings that each carry one typed claim, name a section of the unit and a causal stage, and block until code proves the claim false.
 model_route: qwen3-next
@@ -41,7 +41,7 @@ packet:
       description: The parts of the existing README (exact bytes decoded as UTF-8) that share the most words with this unit's text; evidence, not the standard.
     - name: maintainer_lines
       type: json
-      description: The shown line numbers that are attributed maintainer text - content the maintainers' README holds that the candidate keeps as written under an attribution line, not independently verified; an unsupported_claim citing only these lines is rejected.
+      description: The shown line numbers that are attributed maintainer text - content the maintainers' README holds that the candidate keeps as written under an attribution line, not independently verified, and contradicted by no fact; an unsupported_claim citing only these lines is rejected. A line not listed has no exemption.
     - name: support_hints
       type: json
       description: For each shown line number, the ids of the facts below whose values occur in that line (a symbol it names, a format, the package name, a link target); a search aid, never a verdict.
@@ -97,7 +97,9 @@ output:
                 - coherence
             text: { type: string, minLength: 1, maxLength: 600 }
             # The one typed claim this finding makes (plan D2; prompt v15). A finding carries ONE
-            # claim, so two claims are two findings. absence, name_denial and omission are the
+            # claim, so two claims are two findings (v20: a claim that an identifier or package
+            # name does not exist is a name_denial, never an unsupported_claim, so
+            # names_supported can test it). absence, name_denial and omission are the
             # kinds code can decide from the supplied sources, each with exactly one typed field
             # below; contradiction, unsupported_claim and quality are judgments no code can
             # disprove and fill no typed field. The call schema (readme.review.packet) narrows
@@ -169,11 +171,12 @@ system: |
   holds the lines an author wrote in the unit's sections, each with its number in the whole
   candidate (`0042| text`; the number and bar are not part of the text). Everything the renderer
   printed from facts is NOT shown to you and can never be cited: the title, badges, banner,
-  navigation, the At a Glance diagram, installation, dependencies, API reference tables and member
-  lists, every heading, `<details>` wrappers, code examples, "Not verified" notes, third-party
-  notices and the license. A gap in the numbers marks such text or another unit's text. Never guess
-  what is in a gap and never report a gap as a missing section. The other units are not yours to
-  review.
+  navigation, the At a Glance diagram, installation, dependencies, member lists, every heading,
+  `<details>` wrappers, code examples, "Not verified" notes, third-party notices and the license. A
+  table row shown to you is author text (a row of a README the renderer did not print, or an API
+  reference row whose description an author wrote): judge and cite it like any other line. A gap in
+  the numbers marks text you are not shown or another unit's text. Never guess what is in a gap and
+  never report a gap as a missing section. The other units are not yours to review.
 
   Scope of a finding. Report only a claim in the shown text that contradicts the supplied facts or
   that no fact supports, or a material fact or limitation the supplied facts carry that the unit
@@ -184,9 +187,13 @@ system: |
   report an identifier as unsupported or "should be lowercase" because of how an ID is written.
   Second, anything about text you are not shown: its wording, layout, labels, or what a diagram
   shows. Third, a difference from the original README is not a defect: the original is evidence,
-  not the standard. A sentence that repeats the original's own claim, restates a fact, or merely
-  words something differently from the original is not a finding, and neither is a preference for
-  more detail or the original's phrasing; a dropped inherited item is still preservation. Before
+  not the standard. Repeating the original README never makes a claim supported: a sentence that
+  repeats the original's own claim is exempt from claim findings only when it is printed under the
+  maintainer attribution (one of `maintainer_lines`) and no fact contradicts it; repeated as the
+  README's own claim, it is judged exactly like generated text, and a claim a fact contradicts is a
+  finding whether it is attributed or not. A sentence that restates a fact or merely words
+  something differently from the original is not a finding, and neither is a preference for more
+  detail or the original's phrasing; a dropped inherited item is still preservation. Before
   filing, check that your finding does not contradict itself or restate the shown text as the
   defect.
 
@@ -223,8 +230,10 @@ system: |
   For a contradiction or an unsupported_claim cite the smallest span that holds the defect, at most
   12 lines of one section. For an omission, an absence or a quality finding about a whole section
   you may cite the section's first and last shown line whatever its length; leave `lines` as `[]`
-  only for a finding about text that is absent and cannot be pointed at. A line you were not shown,
-  a line number outside the candidate, or a span across two sections rejects the whole review.
+  only for a finding about text that is absent and cannot be pointed at. Cite only numbered,
+  non-blank lines: a long line keeps one number however it wraps, and a blank line or a gap in the
+  numbers is never cited. A line you were not shown, a blank line, a line number outside the
+  candidate, or a span across two sections rejects the whole review.
   Choose the criterion honestly: `factuality` is for a finding about a false or unsupported
   statement (a contradiction cites a product fact; an unsupported_claim cites none); an omission, an
   absence or a name_denial that does not rest on a product fact you cite is `completeness` or
@@ -243,17 +252,21 @@ system: |
   public symbol's `docstring`, `symbol_kind` and `signature` are what the extractor read from the
   source: a sentence that paraphrases them is supported by that fact. An inherited README unit
   (`inherited_unit:*`) is the maintainers' own unverified text, not a measurement: it supports
-  nothing a product fact does not. Maintainer text the candidate keeps - verbatim, or under a line
-  attributing it to the maintainers' README as not independently verified - is not an
-  unsupported_claim: lack of repository evidence alone is not a defect in it. Judge such text only
-  for contradiction with a SUPPORTED fact (a `contradiction`), misrepresentation of the product,
-  promotion, link or keyword stuffing, and value to a reader. Authored (non-verbatim) text that
-  restates an inherited unit's claim as a verified fact is still an `unsupported_claim`; the same
-  claim restated with attribution ("the maintainers describe ...") is not. `maintainer_lines` lists
-  the shown lines that are such attributed maintainer text: an unsupported_claim citing only those
-  lines is rejected with the whole review, while a contradiction, quality, omission, absence or
-  name_denial finding on them is judged as usual. A claim about a name or
-  a capability is a claim about these facts, so search them before you file.
+  nothing a product fact does not. Maintainer text the candidate keeps under a line attributing it
+  to the maintainers' README as not independently verified (`PRESERVE_ATTRIBUTED`) is exempt from
+  claim findings only while no fact contradicts it: lack of repository evidence alone is not a
+  defect in it, so it is not an unsupported_claim. Judge such text for contradiction with a
+  SUPPORTED fact (a `contradiction`), misrepresentation of the product, promotion, link or keyword
+  stuffing, and value to a reader. Inherited text the candidate prints as the README's own claim,
+  verbatim or reworded, without that attribution is judged exactly like generated text: a specific
+  checkable claim in it that no product fact states is an `unsupported_claim` even though the
+  original says it. A contradicted inherited claim is always a finding, attributed or not.
+  `maintainer_lines` lists the shown lines that are attributed maintainer text no fact contradicts:
+  an unsupported_claim citing only those lines is rejected with the whole review, while a
+  contradiction, quality, omission, absence or name_denial finding on them is judged as usual; a
+  line not in `maintainer_lines` has no exemption. A claim about a name or a capability is a claim
+  about these facts, so search them before you file. A dependency line whose package, version or
+  "none required" statement matches a `dependency` fact value is supported; do not file it.
 
   `support_hints` lists, for each shown line, the ids of the facts whose values occur in it. It is
   a search aid and decides nothing: a line with hints can still claim what no fact says (its terms
@@ -271,7 +284,7 @@ system: |
   number, a capability - that no fact supports; `lines` are required and there is no fact to cite,
   so `fact_ids` is empty or lists only what you checked), `omission` (a section lacks a fact,
   example or passage the facts carry), `absence` (the unit lacks a string you name), `name_denial`
-  (an identifier or package name has no supporting fact), or `quality` (a judgment about
+  (an identifier or package name has no supporting fact, or does not exist), or `quality` (a judgment about
   presentation, coherence or usefulness that no code can check). A statement you believe is FALSE,
   WRONG, UNSUPPORTED or CONTRADICTED is never `quality`: it is a `contradiction` (a fact says
   otherwise) or an `unsupported_claim` (no fact says it). `quality` is only for a judgment that does
@@ -297,8 +310,10 @@ system: |
   `facts` when it exists. Before you write that an identifier or a package name has no fact, find
   its value in `facts`. If you cite a public_symbol fact id for it, that fact exists and supports
   the name: a finding that denies it contradicts itself and is recorded as your own defect.
-  Whenever a finding says an identifier or a package name has no supporting fact, its claim_kind is
-  `name_denial` and you put in `unsupported_names` each such name itself, one identifier or package
+  Whenever a finding says an identifier or a package name has no supporting fact or does not exist
+  (a type, class, method or package "is not in the facts", "does not exist", "is not a real
+  symbol"), its claim_kind is `name_denial`, never `unsupported_claim`, and you put in
+  `unsupported_names` each such name itself, one identifier or package
   name per string, as the candidate spells it. Code then looks each one up among the SUPPORTED
   facts: when every one is a fact value (or the package name) the finding is cleared, and when any
   one is no fact the finding stands. Only a name_denial finding fills `unsupported_names`. Never

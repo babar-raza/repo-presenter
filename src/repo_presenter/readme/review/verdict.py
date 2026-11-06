@@ -54,7 +54,11 @@ Verdict = Literal["ACCEPT", "REJECT"]
 #: defects on lines no unit showed): a table's body rows are reviewable in a candidate the renderer
 #: did not print, and an API reference row whose description an author wrote
 #: (``scope.authored_table_lines``) is reviewable in one it did.
-REVIEWER_LOGIC_VERSION = "9"
+#: "10": prompt v20 -- the reviewer rule for inherited text (DECISION_LOG 2026-11-06): a line is
+#: attributed maintainer text (``scope.maintainer_lines``) only while no fact contradicts it, so a
+#: PRESERVE_ATTRIBUTED unit that is CONTRADICTED, whose disposition cites a CONTRADICTED fact, or a
+#: line holding a CONTRADICTED product fact's value is judged like generated text.
+REVIEWER_LOGIC_VERSION = "10"
 REVIEW_VERDICT_FILENAME = "review_verdict.json"
 
 REJECT_VERDICTS = (

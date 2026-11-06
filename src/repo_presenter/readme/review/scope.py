@@ -22,6 +22,7 @@ from typing import Any
 from repo_presenter.core.facts import FactsDocument
 from repo_presenter.readme.composition.components.shell import SEMANTIC_SHELL
 from repo_presenter.readme.composition.placement import ATTRIBUTED, ATTRIBUTION_LINE
+from repo_presenter.readme.review.matching import present
 from repo_presenter.readme.validation.text import section_lines
 
 #: Sections the renderer prints wholesale from facts (owner ``D``) and the diagram.
@@ -226,24 +227,37 @@ def maintainer_lines(
     reads only structure, never meaning: it matches the unit's own lines, so a kept line the
     renderer changed (an anchor it resolved) is not marked and stays judged like authored text.
 
+    The exemption holds only while no fact contradicts the text (DECISION_LOG 2026-11-06, "reviewer
+    rule for inherited text"; reviewer logic 10): a unit whose own fact is CONTRADICTED, or whose
+    disposition cites a CONTRADICTED fact, marks no line, and a line holding the value of a
+    CONTRADICTED product fact is not marked. Such text is judged like generated text, so a finding
+    on it stands. Inherited text kept verbatim without the attribution (``VERIFIED_PRESERVE``,
+    ``VERIFIED_MOVE``) is never marked either.
+
     A corrected live README (Lane L, ``rendered=False``) is reviewed without S4 dispositions, so it
     has no ``PRESERVE_ATTRIBUTED`` unit and this set is empty there: nothing changes for Lane L."""
+    contradicted = {fact.id: fact for fact in facts.facts if fact.polarity == "CONTRADICTED"}
     kept = {
         str(row.get("unit_id", ""))
         for row in dispositions.get("dispositions", [])
-        if isinstance(row, Mapping) and row.get("disposition") == ATTRIBUTED
+        if isinstance(row, Mapping)
+        and row.get("disposition") == ATTRIBUTED
+        and not any(str(fact_id) in contradicted for fact_id in row.get("fact_ids") or ())
     }
     if not kept:
         return frozenset()
     texts = {
         line.strip()
         for fact in facts.by_kind("inherited_unit")
-        if fact.id in kept
+        if fact.id in kept and fact.polarity != "CONTRADICTED"
         for line in fact.value.splitlines()
         if line.strip()
     }
+    refuted = [fact.value for fact in contradicted.values() if fact.kind != "inherited_unit"]
     return frozenset(
         number
         for number, row in enumerate(readme.splitlines(), 1)
-        if row.strip() and row.strip() in texts
+        if row.strip()
+        and row.strip() in texts
+        and not any(present(value, row) for value in refuted)
     )
