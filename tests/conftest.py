@@ -49,6 +49,15 @@ def no_ambient_github_actions(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.fixture(autouse=True)
+def no_ambient_llm_streaming(monkeypatch: pytest.MonkeyPatch) -> None:
+    """2026-11-06: the cloud environment now sets ``GPT_OSS_STREAMING=1`` (the gateway's ~30 s idle
+    cutoff fix), and ``core/llm/jobs.py`` reads it to stream replies. The suite's fake transports
+    answer the plain request shape, so the ambient value broke 130 tests in such a session while
+    hosted CI (which does not set it) passed. Deleted by default; a streaming test sets it itself."""
+    monkeypatch.delenv("GPT_OSS_STREAMING", raising=False)
+
+
+@pytest.fixture(autouse=True)
 def no_ambient_github_run_id(monkeypatch: pytest.MonkeyPatch) -> None:
     """2026-11-04 (P0 follow-up directive section 3, second real hosted-CI-only failure, found
     AFTER the GITHUB_ACTIONS fix above did not actually resolve it): the real hosted runner also

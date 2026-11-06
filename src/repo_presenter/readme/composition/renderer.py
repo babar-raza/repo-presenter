@@ -83,7 +83,11 @@ from repo_presenter.readme.evidence.facts.commands import (
 from repo_presenter.readme.evidence.facts.links import link_text
 from repo_presenter.readme.evidence.facts.product_pages import banner_target, enterprise_target
 
-RENDERER_VERSION = "34"
+# 35 (2026-11-06): no rendering change. BC-05 now fails a SUPERSEDE_REDUNDANT unit whose substance the
+# README does not state (validation/supersession.py), and no "validators" version is recorded in a
+# sealed bundle's dependencies, so this presentation-scope bump is what reopens every sealed candidate at
+# RECONCILING -- the stage that check's repairs act on -- instead of letting preflight skip it.
+RENDERER_VERSION = "35"
 ADDITIONAL_EXAMPLES_SUMMARY = "View Additional Examples"
 API_SURFACE_SUMMARY = "View the Complete Public API Surface"
 README_FILENAME = "README.md"
