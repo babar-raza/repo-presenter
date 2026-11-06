@@ -3344,3 +3344,21 @@ attribution as internal; `RENDERER_VERSION` 36 reopens every candidate sealed wi
 Imaging candidates are regenerated before they can count or be published. The supervisor's earlier statement
 "exempt ... only when the README prints it under the maintainer attribution" was wrong on that point; the rule
 is: exempt only when recorded internally as attributed and no fact contradicts it.
+
+---
+
+## 2026-11-06: owner ruling — one version set for all candidates; a version bump never invalidates a seal
+
+Owner: "single version of prompts, reviewer, generator, everything must be true for all candidates, not for some.
+And version bump in any case should not invalidate sealed candidate" (the two predecessor projects were abandoned
+over this). Verified violation: counts are read from each repository's transaction-record state; any component bump
+reopens candidates and a failed re-run moves ACCEPTED -> INVALIDATED, so valid seals stop counting (Lane R 10 -> 7 on
+2026-11-06) and the remaining count silently mixes whatever version each repository last sealed under -- today's
+pilot seals span several renderer/reviewer/prompt versions.
+
+Decided: (a) counts and release sets come from seal history grouped by a version-set fingerprint (every consumed
+mechanism version; not per-repository inputs); (b) no seal is ever demoted by a later run; (c) release trains: one
+pinned version set, every target regenerated under it, no mechanism merge mid-train (binding text in
+`ops/SUPERVISOR.md`, items 5-7). Consequence stated plainly: the pilot seals made today under differing versions are
+diagnostics, not a release set; the first release train runs once the in-flight mechanism fixes (attribution,
+reviewer v21, calibration) have landed.
