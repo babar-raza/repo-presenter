@@ -6,6 +6,7 @@ This session's GitHub access cannot dispatch workflows (HTTP 403) but can push. 
 
     {"job": "present", "repository": "owner/name", "ecosystem": "rust", "lane": "R"}
     {"job": "mint"}
+    {"job": "recertify"}
 
 Trust boundary. A push-triggered workflow runs the workflow files of the PUSHED commit, so nothing that holds a
 secret may run on the push. ``.github/workflows/run-request.yml`` (push) holds no secret, has a read-only
@@ -37,7 +38,7 @@ from pathlib import Path
 from typing import Any
 
 REQUEST_FILE = "run-request.json"
-JOBS = {"present", "mint"}
+JOBS = {"present", "mint", "recertify"}
 LANES = {"R", "L", "both"}
 TRIGGER_WORKFLOW = ".github/workflows/run-request.yml"
 BRANCH_PREFIX = "run-requests/"
@@ -66,6 +67,12 @@ def validate(request: Any, registry: list[dict[str, Any]], changed: list[str], b
         if set(request) != {"job"}:
             raise RequestError("a mint request takes no other field (its target is fixed in the workflow)")
         return {"job": "mint", "repository": "", "ecosystem": "", "lane": ""}
+    if job == "recertify":
+        # Owner ruling R10: re-certify every bundle ref's latest seal under main's code (zero provider
+        # calls) and write the passing ones as new seal commits. No target field: it is all seals.
+        if set(request) != {"job"}:
+            raise RequestError("a recertify request takes no other field (it re-certifies every seal)")
+        return {"job": "recertify", "repository": "", "ecosystem": "", "lane": ""}
     allowed_keys = {"job", "repository", "ecosystem", "lane"}
     if set(request) - allowed_keys:
         raise RequestError(f"unknown fields {sorted(set(request) - allowed_keys)}")

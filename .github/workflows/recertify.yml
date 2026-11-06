@@ -1,0 +1,40 @@
+name: recertify
+
+# Owner ruling R10 (docs/CONSOLIDATED_GOALS_2026-11-06.md Part B): a version bump never loses a seal. This
+# re-certifies every bundle ref's latest seal under main's code from its stored outputs -- zero provider calls
+# (no LLM secret is passed) -- and writes each one that passes every current check as a new seal commit on the
+# same ref, keeping the original. Called by run-request-execute.yml (validated request, main's code only) or
+# dispatched manually. The state refs are written with the job's own token, as present.yml does.
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: write  # this repository's refs/repository-presenter-state/* only
+
+concurrency:
+  group: recertify
+  cancel-in-progress: false
+
+jobs:
+  recertify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install
+        run: python -m pip install -e .
+      - name: Re-certify every seal and write the passing ones (zero provider calls)
+        env:
+          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -m repo_presenter.recertify --all --write \
+            --remote "https://github.com/${{ github.repository }}.git" | tee -a "$GITHUB_STEP_SUMMARY"

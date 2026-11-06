@@ -79,3 +79,10 @@ jobs:
       contents: write  # the mint workflow pushes its proof branch in this repository only
     uses: ./.github/workflows/tc-009a-mint-proof.yml
     secrets: inherit
+
+  recertify:
+    needs: validate
+    if: needs.validate.outputs.job == 'recertify'
+    permissions:
+      contents: write  # recertify writes new seal commits to this repository's state refs only
+    uses: ./.github/workflows/recertify.yml
