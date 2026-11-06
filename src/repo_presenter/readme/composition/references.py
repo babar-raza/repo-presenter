@@ -208,6 +208,18 @@ def _nothing_follows(blocks: list[_Block], position: int) -> bool:
     return following is None or following.kind == "heading"
 
 
+def positional_only(text: str) -> bool:
+    """Every sentence of ``text`` points at something by position ("the example above", "the
+    following table"): it states nothing a reader loses when the block it points at is printed
+    elsewhere, and kept out of its place it is a dangling reference (BC-07). Used by
+    ``validation/supersession.py`` so superseding such a sentence is not judged a content loss."""
+    sentences = [_plain(raw) for raw in _SENTENCE_END.split(_SPACE.sub(" ", text))]
+    sentences = [sentence for sentence in sentences if sentence]
+    return bool(sentences) and all(
+        _DIRECT.search(sentence) or _FOLLOWING.search(sentence) for sentence in sentences
+    )
+
+
 def dangling_references(readme: str) -> list[DanglingReference]:
     """Every prose sentence of ``readme`` that points at something the README does not have."""
     blocks, headings = _parse(readme)

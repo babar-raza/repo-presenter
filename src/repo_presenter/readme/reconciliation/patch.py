@@ -103,6 +103,9 @@ class PatchScope:
     # Units whose stored disposition is a deferral: the defect is that the deferral loses content.
     deferred: frozenset[str]
     holdable: tuple[str, ...]
+    # Units failed because superseding them loses content (validation/supersession.py): a reply
+    # that leaves them SUPERSEDE_REDUNDANT or defers them cannot repair that.
+    superseded: frozenset[str] = frozenset()
 
 
 def patch_scope(
@@ -175,7 +178,29 @@ def patch_scope(
             if stored[unit].get("disposition") == "DEFER_UNRESOLVED"
         ),
         holdable=holdable,
+        superseded=frozenset(
+            unit
+            for unit in chosen
+            if stored[unit].get("disposition") == "SUPERSEDE_REDUNDANT"
+            and unit in _loss_units(record)
+        ),
     )
+
+
+def _loss_units(record: Mapping[str, Any]) -> set[str]:
+    """The units a record's failures name as superseded with content the README does not state."""
+    from repo_presenter.readme.validation.supersession import LOSS_MARKER
+
+    failures: list[Any] = list(record.get("failures") or [])
+    for equivalent in record.get("equivalent_findings") or []:
+        failures.extend(equivalent.get("failures") or [])
+    return {
+        str(failure.get("unit_id"))
+        for failure in failures
+        if isinstance(failure, Mapping)
+        and failure.get("unit_id")
+        and LOSS_MARKER in str(failure.get("detail", ""))
+    }
 
 
 def patch_checks(
@@ -195,6 +220,13 @@ def patch_checks(
             for entry in revised.get("dispositions", [])
             if isinstance(entry, Mapping)
         }
+        asked = {
+            unit: (
+                by_unit.get(unit, {}).get("disposition"),
+                by_unit.get(unit, {}).get("destination_section"),
+            )
+            for unit in scope.superseded
+        }
         for unit in sorted(scope.deferred):
             if by_unit.get(unit, {}).get("disposition") == "DEFER_UNRESOLVED":
                 errors.append(
@@ -203,6 +235,33 @@ def patch_checks(
                     f"({', '.join(scope.holdable)}), or omit it citing the fact that contradicts it"
                 )
         errors.extend(checks(revised) if checks is not None else [])
+        # Judged after ``checks``, which normalise in place: the normaliser supersedes a lead
+        # paragraph kept into the opening and a table kept into the API Reference (Email .NET local
+        # pilot, 2026-11-06: units 004 and 043 were "kept" there by the repair, then superseded
+        # again, and the loss stood). What the batch will hold is what is judged.
+        normalised = {
+            str(entry.get("unit_id")): entry
+            for entry in revised.get("dispositions", [])
+            if isinstance(entry, Mapping)
+        }
+        for unit in sorted(scope.superseded):
+            disposition = normalised.get(unit, {}).get("disposition")
+            if disposition not in {"SUPERSEDE_REDUNDANT", "DEFER_UNRESOLVED"}:
+                continue
+            was, where = asked.get(unit, (None, None))
+            overridden = (
+                f" (you answered {was} into {where}, but that section prints its own content, so "
+                "the unit is superseded there; name another section)"
+                if was not in {"SUPERSEDE_REDUNDANT", "DEFER_UNRESOLVED", None}
+                else ""
+            )
+            others = [section for section in scope.holdable if section != where]
+            errors.append(
+                f"{unit}: still {disposition}{overridden}, which is the defect: the README does "
+                "not state its substance, so not printing it loses content. Keep it "
+                f"(VERIFIED_PRESERVE or VERIFIED_MOVE into one of {', '.join(others)}), or "
+                "PRESERVE_ATTRIBUTED when no fact confirms it"
+            )
         return errors
 
     return guarded
