@@ -1,5 +1,5 @@
 prompt_id: independent_review
-version: "20"
+version: "21"
 stage: S10
 purpose: Judge, under its own job identity and prompt, one bounded unit of the candidate README (the author-written text of one section or a small group, with the facts it may cite) for factual soundness, specificity and visitor usefulness; return one verdict and findings that each carry one typed claim, name a section of the unit and a causal stage, and block until code proves the claim false.
 model_route: qwen3-next
@@ -41,7 +41,7 @@ packet:
       description: The parts of the existing README (exact bytes decoded as UTF-8) that share the most words with this unit's text; evidence, not the standard.
     - name: maintainer_lines
       type: json
-      description: The shown line numbers that are attributed maintainer text - content the maintainers' README holds that the candidate keeps as written under an attribution line, not independently verified, and contradicted by no fact; an unsupported_claim citing only these lines is rejected. A line not listed has no exemption.
+      description: The shown line numbers that are attributed maintainer text - content the maintainers' README holds that the candidate keeps as written and records internally as attributed maintainer text (PRESERVE_ATTRIBUTED; the README prints no attribution), not independently verified, and contradicted by no fact; an unsupported_claim citing only these lines is rejected. A line not listed has no exemption.
     - name: support_hints
       type: json
       description: For each shown line number, the ids of the facts below whose values occur in that line (a symbol it names, a format, the package name, a link target); a search aid, never a verdict.
@@ -188,8 +188,7 @@ system: |
   Second, anything about text you are not shown: its wording, layout, labels, or what a diagram
   shows. Third, a difference from the original README is not a defect: the original is evidence,
   not the standard. Repeating the original README never makes a claim supported: a sentence that
-  repeats the original's own claim is exempt from claim findings only when it is printed under the
-  maintainer attribution (one of `maintainer_lines`) and no fact contradicts it; repeated as the
+  repeats the original's own claim is exempt from claim findings only when it is recorded as attributed maintainer text (one of `maintainer_lines`; the attribution is internal and never printed) and no fact contradicts it; repeated as the
   README's own claim, it is judged exactly like generated text, and a claim a fact contradicts is a
   finding whether it is attributed or not. A sentence that restates a fact or merely words
   something differently from the original is not a finding, and neither is a preference for more
@@ -252,13 +251,12 @@ system: |
   public symbol's `docstring`, `symbol_kind` and `signature` are what the extractor read from the
   source: a sentence that paraphrases them is supported by that fact. An inherited README unit
   (`inherited_unit:*`) is the maintainers' own unverified text, not a measurement: it supports
-  nothing a product fact does not. Maintainer text the candidate keeps under a line attributing it
-  to the maintainers' README as not independently verified (`PRESERVE_ATTRIBUTED`) is exempt from
+  nothing a product fact does not. Maintainer text the candidate keeps as written and records internally as attributed (`PRESERVE_ATTRIBUTED`; listed in `maintainer_lines`; the README itself carries no attribution and must never carry one) is exempt from
   claim findings only while no fact contradicts it: lack of repository evidence alone is not a
   defect in it, so it is not an unsupported_claim. Judge such text for contradiction with a
   SUPPORTED fact (a `contradiction`), misrepresentation of the product, promotion, link or keyword
   stuffing, and value to a reader. Inherited text the candidate prints as the README's own claim,
-  verbatim or reworded, without that attribution is judged exactly like generated text: a specific
+  verbatim or reworded, without that internal attribution is judged exactly like generated text: a specific
   checkable claim in it that no product fact states is an `unsupported_claim` even though the
   original says it. A contradicted inherited claim is always a finding, attributed or not.
   `maintainer_lines` lists the shown lines that are attributed maintainer text no fact contradicts:

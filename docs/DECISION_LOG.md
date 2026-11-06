@@ -3325,3 +3325,22 @@ false rejects are already above the 10 % ceiling (16.2 %) and this would raise t
 Calibration iteration 5: frozen held-out corpus, labels aligned to the rule above, thresholds unchanged, provider
 call cap 1,000 (the owner-approved calibration budget, 2026-11-05); the corpus is sized to fit the cap rather than
 the cap raised.
+
+---
+
+## 2026-11-06: owner ruling — maintainer attribution is internal only, never in the public README
+
+Owner: "maintainer attribution should not be visible publicly on live readme ... should stay out of the public
+readme at all costs and in any shape or form." Verified against the code before acting: the renderer printed
+`*From the maintainers' README (not independently verified):*` before attributed content, and
+`> **Not verified:** this example is carried over unchanged from the project's existing README ...` before
+retained unverified examples; the two candidates sealed today (Email .NET, Imaging .NET) carry the first line.
+
+Changed: neither line is printed any more (`placement.with_attribution`, `retained_examples.block_lines`); the
+attribution and verification status live only in `dispositions.json`/`facts.json` and the reviewer's
+`maintainer_lines`; BC-07 now fails any README carrying the old lines or attribution wording
+(`validation/public_text.py`); prompts independent_review v21 and source_reconciliation v15 describe the
+attribution as internal; `RENDERER_VERSION` 36 reopens every candidate sealed with the line, so the Email and
+Imaging candidates are regenerated before they can count or be published. The supervisor's earlier statement
+"exempt ... only when the README prints it under the maintainer attribution" was wrong on that point; the rule
+is: exempt only when recorded internally as attributed and no fact contradicts it.

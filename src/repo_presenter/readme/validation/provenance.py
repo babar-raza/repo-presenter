@@ -11,7 +11,6 @@ from __future__ import annotations
 from repo_presenter.core.ecosystems import spec_for
 from repo_presenter.core.examples import printed_example
 from repo_presenter.readme.composition.retained_examples import (
-    NOT_VERIFIED_NOTE,
     active_retained,
     block_body,
     normalized_code,
@@ -103,8 +102,9 @@ def example_failures(candidate: Candidate) -> list[Failure]:
     # (EcosystemSpec.example_fences - `py`/`python3` for Python, `csharp`/`cs`/`c#` for .NET),
     # never against the bare ecosystem string: a .NET example is fenced ```csharp, never ```net.
     example_fences = spec_for(candidate.entry.ecosystem).example_fences
-    # An UNRESOLVED example the README already carried is reprinted as written, but only beside the
-    # fixed not-verified note (composition/retained_examples.py): never as a planned, verified one.
+    # An UNRESOLVED example the README already carried is reprinted exactly as written, never as a
+    # planned, verified one (composition/retained_examples.py). Its unverified status is internal; the
+    # README carries no provenance note (owner ruling 2026-11-06).
     retained = {
         normalized_code(block_body(block)): block
         for block in active_retained(candidate.facts, candidate.dispositions)
@@ -112,12 +112,12 @@ def example_failures(candidate: Candidate) -> list[Failure]:
     for language, body in fences(candidate.readme):
         block = retained.get(normalized_code(body))
         if language in example_fences and block is not None:
-            if f"{NOT_VERIFIED_NOTE}\n\n{block.code}" not in candidate.readme:
+            if block.code not in candidate.readme:
                 failures.append(
                     Failure(
                         "COMPOSING",
-                        f"{block.example_id} is not verified but is printed without the "
-                        "not-verified note",
+                        f"{block.example_id} is not verified but is not printed exactly as the "
+                        "maintainers wrote it",
                     )
                 )
             continue

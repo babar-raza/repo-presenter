@@ -65,3 +65,13 @@ discarding the latter.
   new held-out corpus labelled under this requirement (requirement 6), and the examination of the 567
   `SUPERSEDE_REDUNDANT` units against requirement 5
   (`docs/investigations/2026-11-05-maintainer-content-calibration.md`).
+
+## Amendment 2026-11-06 (owner ruling): attribution is internal only
+
+The maintainer attribution must never appear in the public README, in any shape or form. `PRESERVE_ATTRIBUTED`
+content is printed exactly as the maintainers wrote it, with no attribution line, label or note; the
+attribution and the "not independently verified" status are recorded only in the bundle's `dispositions.json`
+and passed to the reviewer as `maintainer_lines`. The same holds for retained unverified examples: no public
+"Not verified" note; their status stays in `facts.json`. BC-07 (`validation/public_text.py`) refuses any README
+that carries the attribution line, the old example note, or attribution wording. Wherever this document says
+"under an attribution line", read "recorded internally as attributed".

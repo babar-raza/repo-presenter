@@ -189,7 +189,7 @@ def test_an_accept_reply_is_one_provider_call_and_a_model_reviewed_accept(
     assert verdict.model_verdict == "ACCEPT" and verdict.findings == ()
     assert harness.provider_calls() == 1 and len(client.payloads) == 1
     loaded = PROMPTS["independent_review"]
-    assert verdict.prompt_version == "20" and verdict.model_served == "qwen3-next"
+    assert verdict.prompt_version == "21" and verdict.model_served == "qwen3-next"
     (unit,) = plan_units(CANDIDATE)
     packet = unit_packet(
         unit,
@@ -229,7 +229,7 @@ def test_the_verdict_file_records_what_a_reader_needs_to_audit_it(
     document = json.loads(path.read_text(encoding="utf-8"))
     assert document["schema_version"] == 2 and document["reviewer_logic_version"] == "10"
     assert (
-        document["prompt_version"] == "20" and document["model_served"] == "qwen3-next"
+        document["prompt_version"] == "21" and document["model_served"] == "qwen3-next"
     )
     assert document["request_sha256"] == verdict.request_sha256
     assert document["reply_sha256"] == verdict.reply_sha256
@@ -656,7 +656,7 @@ def test_the_reviewer_shares_the_authoring_model_and_does_not_claim_otherwise() 
 
 def test_the_manifest_is_v20_and_carries_no_advisory_tier() -> None:
     loaded = PROMPTS["independent_review"]
-    assert loaded.manifest.version == "20"
+    assert loaded.manifest.version == "21"
     assert "advisory" not in loaded.manifest.system.replace(
         "there is no advisory finding", ""
     )
@@ -669,7 +669,7 @@ def test_the_manifest_is_v20_and_carries_no_advisory_tier() -> None:
 
 def test_the_manifest_states_the_inherited_text_rule() -> None:
     """DECISION_LOG 2026-11-06 ("reviewer rule for inherited text"): inherited text is exempt from
-    claim findings only when printed under the maintainer attribution and no fact contradicts it;
+    claim findings only when recorded as attributed maintainer text (internal only, never printed) and no fact contradicts it;
     printed as the README's own claim it is judged like generated text; a contradicted inherited
     claim is always a finding. The v17 "repeats the original's own claim ... is not a finding" and
     the v18/v19 "kept verbatim ... is not an unsupported_claim" wordings are gone."""
@@ -678,8 +678,8 @@ def test_the_manifest_states_the_inherited_text_rule() -> None:
     assert "Maintainer text the candidate keeps - verbatim, or under a line" not in system
     assert "Repeating the original README never makes a claim supported" in system
     assert (
-        "exempt from claim findings only when it is printed under the maintainer attribution "
-        "(one of `maintainer_lines`) and no fact contradicts it"
+        "exempt from claim findings only when it is recorded as attributed maintainer text (one of "
+        "`maintainer_lines`; the attribution is internal and never printed) and no fact contradicts it"
     ) in system
     assert "judged exactly like generated text" in system
     assert "A contradicted inherited claim is always a finding, attributed or not." in system

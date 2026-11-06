@@ -3525,25 +3525,26 @@ def _attributed_dispositions(*, note: str = "PRESERVE_ATTRIBUTED") -> dict[str, 
     return {"dispositions": rows}
 
 
-def test_a_preserve_attributed_unit_renders_verbatim_under_the_attribution_line() -> None:
+def test_a_preserve_attributed_unit_renders_verbatim_with_no_public_attribution() -> None:
+    """Owner ruling 2026-11-06: the attribution is internal only; the README prints the maintainer
+    text exactly as written, with no attribution line, label or note in any form."""
     from repo_presenter.readme.composition.placement import ATTRIBUTION_LINE
+    from repo_presenter.readme.validation.public_text import internal_markers
     from repo_presenter.readme.validation.structure import structure_failures as bc07
     from repo_presenter.readme.validation.units import disposition_failures
 
     candidate = _candidate(facts=_MAINTAINER_FACTS, dispositions=_attributed_dispositions())
-    assert f"{ATTRIBUTION_LINE}\n\n{_MAINTAINER_NOTE}" in candidate.readme
-    # The verified unit printed in the same section carries no attribution line.
-    assert candidate.readme.count(ATTRIBUTION_LINE) == 1
+    assert _MAINTAINER_NOTE in candidate.readme
+    assert ATTRIBUTION_LINE not in candidate.readme
+    assert internal_markers(candidate.readme) == []
     assert "Kept verbatim from the old README." in candidate.readme
-    assert f"{ATTRIBUTION_LINE}\n\nKept verbatim from the old README." not in candidate.readme
     # BC-05: the kept unit is rendered where its disposition put it.
     assert disposition_failures(candidate) == []
-    # BC-07: the attribution adds no structural defect over the same README with the note kept
-    # as a verified move.
+    # The public README is the same as with the note kept as a verified move.
     verified = _candidate(
         facts=_MAINTAINER_FACTS, dispositions=_attributed_dispositions(note="VERIFIED_MOVE")
     )
-    assert ATTRIBUTION_LINE not in verified.readme
+    assert candidate.readme == verified.readme
     assert bc07(candidate) == bc07(verified)
     # BC-08: it is protected content like any unit kept as written.
     assert ("unit", _MAINTAINER_NOTE, "inherited_unit:005.paragraph") in protected_fragments(
@@ -3603,19 +3604,10 @@ def test_bc04_allows_attributed_identifiers_on_a_reindented_maintainer_line() ->
     ]
 
 
-def test_contiguous_attributed_texts_share_one_attribution_line() -> None:
-    from repo_presenter.readme.composition.placement import (
-        ATTRIBUTION_LINE,
-        with_attribution,
-    )
+def test_attributed_texts_print_unchanged_with_no_attribution_line() -> None:
+    from repo_presenter.readme.composition.placement import with_attribution
 
-    shown = with_attribution(["a", "b", "c", "d"], [True, True, False, True])
-    assert shown == [
-        f"{ATTRIBUTION_LINE}\n\na",
-        "b",
-        "c",
-        f"{ATTRIBUTION_LINE}\n\nd",
-    ]
+    assert with_attribution(["a", "b", "c", "d"], [True, True, False, True]) == ["a", "b", "c", "d"]
     assert with_attribution(["a"], [False]) == ["a"]
 
 
@@ -3731,13 +3723,13 @@ def test_a_preserve_attributed_unit_the_readme_does_not_print_is_a_coverage_defe
     ]
 
 
-def test_the_attribution_line_is_renderer_text_the_reviewer_is_not_shown() -> None:
+def test_attributed_maintainer_content_is_shown_to_the_reviewer_with_no_public_label() -> None:
     from repo_presenter.readme.composition.placement import ATTRIBUTION_LINE
     from repo_presenter.readme.review.scope import line_sections
 
     candidate = _candidate(facts=_MAINTAINER_FACTS, dispositions=_attributed_dispositions())
     rows = candidate.readme.splitlines()
-    sections = line_sections(candidate.readme)
-    assert sections[rows.index(ATTRIBUTION_LINE)] is None
-    # The maintainer content under it is still shown and judged.
-    assert sections[rows.index(_MAINTAINER_NOTE)] == "scope_limitations"
+    assert ATTRIBUTION_LINE not in rows
+    # The maintainer content is still shown and judged; its attribution lives only in the
+    # dispositions (the reviewer's maintainer_lines), never in the README.
+    assert line_sections(candidate.readme)[rows.index(_MAINTAINER_NOTE)] == "scope_limitations"

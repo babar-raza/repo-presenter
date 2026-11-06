@@ -87,7 +87,9 @@ from repo_presenter.readme.evidence.facts.product_pages import banner_target, en
 # README does not state (validation/supersession.py), and no "validators" version is recorded in a
 # sealed bundle's dependencies, so this presentation-scope bump is what reopens every sealed candidate at
 # RECONCILING -- the stage that check's repairs act on -- instead of letting preflight skip it.
-RENDERER_VERSION = "35"
+# 36 (2026-11-06): attributed maintainer content prints with no attribution line (owner ruling: the
+# attribution is internal only). Reopens every candidate sealed with the line.
+RENDERER_VERSION = "36"
 ADDITIONAL_EXAMPLES_SUMMARY = "View Additional Examples"
 API_SURFACE_SUMMARY = "View the Complete Public API Surface"
 README_FILENAME = "README.md"
