@@ -74,7 +74,7 @@ def _workflow() -> dict:
 
 
 def test_the_workflow_is_manual_or_run_request_only_with_no_inputs():
-    """workflow_dispatch, plus workflow_call from run-request.yml (owner ruling 2026-11-06); never a
+    """workflow_dispatch, plus workflow_call from run-request-execute.yml (owner ruling 2026-11-06); never a
     push/schedule trigger of its own, and no inputs on either, so the target cannot be changed."""
     workflow = _workflow()
     triggers = workflow["on"] if "on" in workflow else workflow[True]

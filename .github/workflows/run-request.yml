@@ -2,10 +2,15 @@ name: run-request
 
 # Owner ruling 2026-11-06 (docs/CONSOLIDATED_GOALS_2026-11-06.md, blocker 2): the supervisor session cannot
 # dispatch workflows (HTTP 403) but can push. It starts a hosted run by pushing a branch
-# `run-requests/<id>` whose only change from `main` is `run-request.json`. Same trust as a manual dispatch:
-# only accounts with push access can push. scripts/run_request.py refuses a branch that is not exactly the
-# current `main` plus the request, so the workflows that run are always `main`'s (a push-triggered workflow
-# runs the files of the pushed commit).
+# `run-requests/<id>` whose only change from `main` is `run-request.json`.
+#
+# UNPRIVILEGED TRIGGER ONLY (trust redesign 2026-11-06, docs/DECISION_LOG.md). A push-triggered workflow runs
+# this file as it exists on the PUSHED commit, so anyone who can push the branch can rewrite it: it must not
+# be able to reach anything. It holds no secret, has a read-only token, checks nothing out, runs no
+# repository code and does no validation that anything relies on. Its only effect is to complete, which
+# fires `run-request-execute.yml` (workflow_run), which GitHub always runs from the default branch and which
+# does every check with main's own code. tests/test_run_request.py fails if this file gains a secret or a
+# write permission.
 
 on:
   push:
@@ -14,49 +19,13 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: run-request-${{ github.ref }}
-  cancel-in-progress: false
-
 jobs:
-  validate:
+  trigger:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
-    outputs:
-      job: ${{ steps.check.outputs.job }}
-      repository: ${{ steps.check.outputs.repository }}
-      ecosystem: ${{ steps.check.outputs.ecosystem }}
-      lane: ${{ steps.check.outputs.lane }}
+    timeout-minutes: 2
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.13"
-      - name: Validate the request (main plus run-request.json, allowed job, registered target)
-        id: check
-        run: |
-          git fetch --no-tags origin main
-          python scripts/run_request.py --request run-request.json --base origin/main >> "$GITHUB_OUTPUT"
-
-  present:
-    needs: validate
-    if: needs.validate.outputs.job == 'present'
-    permissions:
-      contents: write  # present.yml's durable-state refs in this repository only
-    uses: ./.github/workflows/present.yml
-    with:
-      repository: ${{ needs.validate.outputs.repository }}
-      ecosystem: ${{ needs.validate.outputs.ecosystem }}
-      lane: ${{ needs.validate.outputs.lane }}
-    secrets: inherit
-
-  mint:
-    needs: validate
-    if: needs.validate.outputs.job == 'mint'
-    permissions:
-      contents: write  # the mint workflow pushes its proof branch in this repository only
-    uses: ./.github/workflows/tc-009a-mint-proof.yml
-    secrets: inherit
+      - name: Record the request (data only; validated and executed by main's run-request-execute.yml)
+        env:
+          REF: ${{ github.ref }}
+          SHA: ${{ github.sha }}
+        run: printf 'run request %s at %s\n' "$REF" "$SHA"
