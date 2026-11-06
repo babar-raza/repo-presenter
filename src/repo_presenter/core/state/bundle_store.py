@@ -15,7 +15,7 @@ republish of identical content pushes nothing.
 from __future__ import annotations
 
 import subprocess
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from repo_presenter.core.candidates import (
@@ -249,6 +249,13 @@ class SealRecord:
     review: dict | None
     readme: bytes | None = None
     error: str = ""
+    #: The manifest's file inventory (``{name: {sha256, bytes}}``) -- what a regeneration count
+    #: compares between seals of one revision.
+    files: dict = field(default_factory=dict)
+    #: The manifest's ``recertified_from`` (a re-certified seal, ``repo_presenter.recertify``).
+    recertified_from: dict | None = None
+    #: The materialized ``<revision>`` directory, only while ``seal_history``'s ``scratch`` exists.
+    bundle: Path | None = None
 
     @property
     def pipeline_good(self) -> bool:
@@ -328,6 +335,7 @@ def _read_seal(git_dir: Path, commit: str, repository: str, lane: str, scratch: 
         readme = (bundle / "README.md").read_bytes() if "README.md" in files else None
     except Exception as exc:  # noqa: BLE001 -- corrupt evidence is a reason, never a count
         return failed(f"{type(exc).__name__}: {exc}")
+    recertified = manifest.get("recertified_from")
     return SealRecord(
         repository,
         lane,
@@ -337,15 +345,21 @@ def _read_seal(git_dir: Path, commit: str, repository: str, lane: str, scratch: 
         dependencies if isinstance(dependencies, dict) else None,
         review if isinstance(review, dict) else None,
         readme,
+        files=dict(files) if isinstance(files, dict) else {},
+        recertified_from=recertified if isinstance(recertified, dict) else None,
+        bundle=bundle,
     )
 
 
 def seal_history(
-    *, remote: str = "origin", token: str | None = None
+    *, remote: str = "origin", token: str | None = None, scratch: Path | None = None
 ) -> dict[tuple[str, str], list[SealRecord]]:
     """Every seal on every bundle ref of ``remote``: ``{(repository, lane): [seal, ...]}``, oldest
     first. One full-history fetch of the bundle namespace into an isolated workspace; read-only
-    (nothing is ever pushed)."""
+    (nothing is ever pushed). With ``scratch`` the materialized trees are kept there and each
+    record's ``bundle`` names its ``<revision>`` directory (re-certification reads it); without
+    it they are removed before this returns."""
+    import contextlib
     import tempfile
 
     history: dict[tuple[str, str], list[SealRecord]] = {}
@@ -367,7 +381,8 @@ def seal_history(
             listed = _git(
                 backend, ["for-each-ref", "--format=%(refname)", _HISTORY_REF_PREFIX], "for-each-ref"
             )
-            with tempfile.TemporaryDirectory(prefix="seal-history-") as tmp:
+            keep = contextlib.nullcontext(str(scratch)) if scratch is not None else None
+            with keep or tempfile.TemporaryDirectory(prefix="seal-history-") as tmp:
                 for local in sorted(filter(None, listed.splitlines())):
                     parsed = parse_bundle_ref(BUNDLE_REF_PREFIX + local[len(_HISTORY_REF_PREFIX) :])
                     if parsed is None:

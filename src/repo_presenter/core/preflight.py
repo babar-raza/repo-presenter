@@ -62,6 +62,13 @@ from repo_presenter.readme.bundle.evaluation import evaluate
 
 #: The only manifest state whose no-op has been PROVEN by a fresh zero-call rerun.
 PROVEN_STATE = "READY_FOR_PROPOSAL"
+#: The dependency classes that are per-repository INPUTS (``evaluation.evaluate``'s change names):
+#: a change in one of these is new work for the generation pipeline. Every other changed class is a
+#: mechanism version (a prompt, a component, a detector, the reviewer, the host's toolchains --
+#: the facts themselves are compared directly), which never reopens an LLM stage of a seal.
+INPUT_CHANGES = frozenset({"source", "facts"})
+#: Manifest states a re-certification may start from (``recertify.GOOD_STATES``).
+RECERTIFIABLE_STATES = frozenset({"ACCEPTED", "READY_FOR_PROPOSAL", "VALID_UPDATE_AVAILABLE"})
 
 
 @dataclass(frozen=True)
@@ -71,6 +78,11 @@ class PreflightDecision:
     checked_scopes: tuple[str, ...]
     unchecked_scopes: tuple[str, ...]
     changed: tuple[str, ...] = ()
+    #: Owner rule (2026-11-06): only MECHANISM versions changed (no source revision, fact record or
+    #: live README), so the sealed candidate is re-certified under current code from its stored
+    #: outputs (``repo_presenter.recertify``) with no provider call; only a NEEDS_REPAIR result
+    #: runs the generation pipeline.
+    recertify: bool = False
 
 
 # The only evaluate()-table classes this module can genuinely assess without seal.py's
@@ -140,6 +152,14 @@ def _full_decision(
     except Exception as exc:  # noqa: BLE001 -- corrupt/unreadable evidence must never skip
         return no(f"sealed evidence is corrupt or unreadable ({type(exc).__name__}: {exc}) -- failing closed")
     changed = tuple(change.dependency for change in evaluation.changes)
+    inputs_changed = tuple(name for name in changed if name in INPUT_CHANGES)
+    if changed and not inputs_changed and state in RECERTIFIABLE_STATES:
+        return PreflightDecision(
+            False,
+            f"only mechanism versions changed ({', '.join(changed)}): re-certify the sealed "
+            f"candidate {revision} under current code from its stored outputs, no provider call",
+            CHECKED_SCOPES + UNCHECKED_SCOPES, (), changed, recertify=True,
+        )
     if changed:
         return PreflightDecision(
             False,
@@ -151,6 +171,13 @@ def _full_decision(
         return no(
             f"sealed source revision {sealed.get('source', {}).get('revision')!r} is not the "
             f"current {current_source_revision!r}"
+        )
+    if state == "ACCEPTED" and isinstance(manifest.get("recertified_from"), dict):
+        return PreflightDecision(
+            True,
+            f"every consumed scope equals the record of a seal re-certified under current code "
+            f"({revision}); no provider call is needed",
+            all_scopes, (), (),
         )
     if state != PROVEN_STATE:
         return PreflightDecision(
