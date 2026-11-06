@@ -103,6 +103,28 @@ be replaced without loss.
    dispatch the next card.
 5. On REWORK REQUIRED -> follow the escalation ladder below.
 
+### Autonomous continuation (owner ruling R8, 2026-11-06)
+
+`dispatch-next` and `worker-tick` drive the same state machine without a human in the loop;
+they are not a second one. The lease lives in `ops/instructions.jsonl` (the channel this file
+already names): a `dispatch` line with a `lease` object (holder, base SHA, acquired/expires)
+acquires it, a `rework` line renews it, `lease_release` ends it on a verdict, `lease_expired`
+ends it when the holder went silent -- `gateverify.rebuild_state()` then derives the card as
+READY again. One lease slot: one worker at a time.
+
+- `python ops/gatecli.py dispatch-next --holder <session>` -- leases the first READY card in
+  `tick`'s order and prints a JSON assignment (card, write_paths, checks, commit tag, the
+  `review`/`verify` commands that judge it). Idempotent for the same holder while the lease is
+  live; refuses a different holder; never dispatches a card awaiting a prerequisite or owner.
+- `python ops/gatecli.py worker-tick` -- for the leased card, finds `(GATE/TC-NNN)` commits
+  since the lease base and judges the newest one ONLY through `gateverify.do_verify` (never
+  self-certified): accepted -> release; failed -> `rework` + renewed lease (attempt 3 ->
+  FAILED_INTERNAL, release); no progress past `expires_at` -> `lease_expired`; then leases the
+  next READY card. `--dry-run` writes nothing.
+- `.github/workflows/supervisor-tick.yml` runs `doctor`, `tick` and `worker-tick --dry-run`
+  hourly (read-only, no secrets, no push) as the liveness signal; the supervisor session does
+  the real dispatch.
+
 ## Escalation ladder (carried from foss-mcp, same lessons)
 
 | Attempt | Action |
@@ -163,7 +185,8 @@ it with the same card id; its next turn picks up from the files.
 Not yet ported from foss-mcp, because this repository has at most one taskcard
 (`TC-000-smoke`) so far and these only pay for themselves once a queue exists:
 
-- `dispatch-next` / `worker-tick` / `preflight` (multi-card queue management)
+- `preflight` (multi-card queue management; `dispatch-next`/`worker-tick` were ported
+  2026-11-06 under owner ruling R8 -- see "Autonomous continuation" above)
 - `gate-exit` (multi-card gate-level re-verification)
 - `integrate` (atomic cherry-pick of an accepted worker branch onto main)
 - `release-record` (Docker image bookkeeping -- not relevant to this project)
