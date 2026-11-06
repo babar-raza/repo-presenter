@@ -65,10 +65,10 @@ def test_the_committed_file_is_not_passed_and_carries_measured_numbers() -> None
     assert calibration.status == "NOT_PASSED" and not calibration.permits
     assert calibration.owner_acceptance == ""
     assert calibration.measured and calibration.failed_gates
-    # The committed measurement is of reviewer logic 6 (prompt v17). Reviewer logic 10 (prompt v20,
-    # inherited text is exempt only when attributed and uncontradicted) has not been measured, so the file
-    # is stale for this reviewer and still reads NOT_PASSED; it is re-measured, never relabelled.
-    assert calibration.reviewer_logic_version == "6" != REVIEWER_LOGIC_VERSION
+    # The committed measurement is calibration iteration 5 (2026-11-06) of the current reviewer, logic 10
+    # (prompt v21): measured and NOT_PASSED (docs/investigations/2026-11-06-reviewer-calibration-iteration-5.md).
+    # A NOT_PASSED reviewer stays uncalibrated however current it is; it is re-measured, never relabelled.
+    assert calibration.reviewer_logic_version == REVIEWER_LOGIC_VERSION == "10"
     assert calibration.label == "uncalibrated"
 
 
