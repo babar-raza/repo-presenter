@@ -21,7 +21,9 @@ from repo_presenter.core.portfolio_matrix import (
 )
 from repo_presenter.core.git_safety.git import run_git
 from repo_presenter.core.state.git_backend import GitStateBackend
+from repo_presenter.core.state.bundle_store import SealRecord
 from repo_presenter.core.state.schema import RepositoryRecord
+from repo_presenter.core.version_set import fingerprint
 
 A = SimpleNamespace(repository="aspose-a-foss/Aspose.A-FOSS-for-.NET", ecosystem="net", mode="full")
 B = SimpleNamespace(repository="aspose-b-foss/Aspose.B-FOSS-for-Java", ecosystem="java", mode="dry_run")
@@ -37,7 +39,17 @@ def test_a_repository_with_no_record_is_reported_as_such_not_as_missing(tmp_path
     assert rows[0].record_r == NO_RECORD and rows[0].record_l == NO_RECORD
 
 
+def _seal(repository: str, lane: str, deps: dict) -> SealRecord:
+    review = {"verdict": "ACCEPT", "model_verdict": "ACCEPT"}
+    return SealRecord(repository, lane, "c", "rev", "ACCEPTED", deps, review)
+
+
+DEPS = {"prompts": {"independent_review": {"sha256": "a" * 64, "version": "1"}}}
+
+
 def test_counts_are_derived_per_lane_and_both_lanes_is_the_intersection(tmp_path: Path) -> None:
+    """Counts come from the seal history under the current version set; the records give the
+    latest attempt per lane only (owner version-set rules, core/version_set.py)."""
     table = {
         (A.repository, "R"): "READY_FOR_PROPOSAL",
         (A.repository, "L"): "ACCEPTED",
@@ -45,12 +57,25 @@ def test_counts_are_derived_per_lane_and_both_lanes_is_the_intersection(tmp_path
         (B.repository, "L"): "FAILED_INTERNAL",
         (C.repository, "R"): "FAILED_INTERNAL",
     }
-    summary = summarize(build_matrix([A, B, C], _reader(table), tmp_path))
+    seals = {
+        (A.repository, "R"): [_seal(A.repository, "R", DEPS)],
+        (A.repository, "L"): [_seal(A.repository, "L", DEPS)],
+        (B.repository, "R"): [_seal(B.repository, "R", DEPS)],
+        # B's Lane L latest attempt FAILED, but its earlier seal still counts; C's record says
+        # FAILED_INTERNAL and C has no seal at all.
+        (B.repository, "L"): [_seal(B.repository, "L", DEPS)],
+    }
+    current = {"R": fingerprint(DEPS, "R"), "L": fingerprint(DEPS, "L")}
+    summary = summarize(build_matrix([A, B, C], _reader(table), tmp_path, (), seals), current)
     assert summary["registry_total"] == 3
     assert summary["write_eligible_mode_full"] == 1
     assert summary["lane_r_attempted"] == 3 and summary["lane_l_attempted"] == 2
-    assert summary["lane_r_pipeline_good"] == 2 and summary["lane_l_pipeline_good"] == 1
-    assert summary["both_lanes_pipeline_good"] == [A.repository]
+    assert summary["lane_r_pipeline_good"] == 2 and summary["lane_l_pipeline_good"] == 2
+    assert summary["both_lanes_pipeline_good"] == [A.repository, B.repository]
+    # without a current version set nothing can count
+    assert summarize(build_matrix([A, B, C], _reader(table), tmp_path, (), seals))[
+        "lane_r_pipeline_good"
+    ] == 0
     assert summary["lane_r_record_states"] == {
         "ACCEPTED": 1,
         "FAILED_INTERNAL": 1,
@@ -62,7 +87,10 @@ def test_a_pipeline_good_record_is_not_a_committed_bundle(tmp_path: Path) -> Non
     """The review's central finding: a good durable record says nothing about whether a bundle
     exists in git. Both facts are reported separately."""
     table = {(A.repository, "R"): "READY_FOR_PROPOSAL"}
-    summary = summarize(build_matrix([A], _reader(table), tmp_path))
+    seals = {(A.repository, "R"): [_seal(A.repository, "R", DEPS)]}
+    summary = summarize(
+        build_matrix([A], _reader(table), tmp_path, (), seals), {"R": fingerprint(DEPS, "R")}
+    )
     assert summary["lane_r_pipeline_good"] == 1
     assert summary["committed_bundles_lane_r"] == 0 and summary["committed_bundles_lane_l"] == 0
 

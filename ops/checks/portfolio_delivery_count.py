@@ -9,12 +9,22 @@ the SAME >=25 repositories pipeline-good on BOTH lanes and conflated acceptance 
 delivery by counting only entries of a hand-editable `evidence/delivery_ledger.json`. Both are
 gone: no editable marker or ledger file is read as evidence by this check.
 
+Re-based 2026-11-06 on the owner's version-set rules (`repo_presenter.core.version_set`): ONE
+version set for every candidate that counts, and a version bump never invalidates a sealed
+candidate. Counting therefore reads the SEAL HISTORY (every commit on the lane's durable bundle
+ref, `bundle_store.seal_history`, plus the committed `candidates/` tree), never the transaction
+record's latest state -- a failed re-run under a new version set moves that record ACCEPTED ->
+INVALIDATED, but cannot remove an earlier seal. Seals are GROUPED BY version-set fingerprint: the
+headline numbers are the CURRENT fingerprint's (the only set that can form a release set); every
+older fingerprint is reported separately under `older_version_sets` and never summed in. The
+calibration rule below is applied within each version set. The record is still read for the
+latest attempt's state (`record_state`, informational) and its proposal (outcomes (d)/(e)).
+
 Five outcomes are measured, separately and per lane, never collapsed into one number:
 
-  (a)/(b) independently_accepted -- the lane's durable state record (state refs on the remote) is
-      pipeline-good (ACCEPTED / READY_FOR_PROPOSAL) AND its sealed bundle (the durable bundle ref,
-      falling back to the committed `candidates/` tree) verifies, belongs to that lane and that
-      repository, and carries a review verdict that is an ACCEPT made by a MODEL reviewer, recorded
+  (a)/(b) independently_accepted -- the lane has a seal under the version set being counted whose
+      manifest state is pipeline-good (ACCEPTED / READY_FOR_PROPOSAL), which verifies, belongs to
+      that lane and that repository, and carries a review verdict that is an ACCEPT made by a MODEL reviewer, recorded
       under calibration status PASSED, at exactly the reviewer logic and prompt version that
       `data/reviewer_calibration.json` currently certifies as PASSED (read fail-closed by
       `repo_presenter.readme.review.calibration_status.load_calibration`). A pipeline-good record
@@ -58,10 +68,12 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 CALIBRATION = REPO_ROOT / "data" / "reviewer_calibration.json"
 ALLOWLIST = REPO_ROOT / "data" / "upstream_write_allowlist.json"
 REGISTRY = REPO_ROOT / "data" / "registry.json"
+PROMPTS = REPO_ROOT / "prompts"
 
 PIPELINE_GOOD = frozenset({"ACCEPTED", "READY_FOR_PROPOSAL"})
 REVIEW_VERDICT_NAME = "review_verdict.json"
 README_NAME = "README.md"
+DEPENDENCIES_NAME = "dependencies.json"
 
 # outcome buckets for a pipeline-good lane (exactly one applies)
 ACCEPTED = "independently_accepted"
@@ -77,14 +89,18 @@ class SealedEvidence:
     manifest: dict[str, Any]
     review: dict[str, Any] | None  # the raw review_verdict.json, None when absent
     readme: bytes | None
+    version_set: str = ""  # the seal's full version-set fingerprint
+    commit: str = ""  # the bundle-ref commit (a durable-ref seal only)
 
 
 @dataclass
 class LaneOutcome:
     repository: str
     lane: str
-    record_state: str
+    record_state: str  # the latest ATTEMPT's transaction-record state; informational only
     pipeline_good: bool = False
+    version_set: str = ""  # short fingerprint of the version set this outcome is counted in
+    current: bool = True  # counted in the CURRENT version set (False: an older set, never summed)
     bucket: str = ""  # ACCEPTED / UNCALIBRATED / UNREVIEWED, "" when not pipeline-good
     reason: str = ""
     publication_ready: bool = False
@@ -163,21 +179,25 @@ def classify_lane(
     allowlist: dict[str, Any],
     github: GitHub,
 ) -> LaneOutcome:
-    """One repository-lane's five outcomes. ``record`` is a ``RepositoryRecord`` or None."""
+    """One repository-lane's five outcomes within one version set. ``record`` is a
+    ``RepositoryRecord`` or None, read ONLY for the latest attempt's state (reported, never
+    counted) and its proposal; ``evidence`` is the seal being counted. Whether the lane counts is
+    decided by the seal alone, so a later failed attempt (record INVALIDATED) cannot demote it."""
     state = "NO_RECORD" if record is None else str(record.state)
     out = LaneOutcome(repository=repository, lane=lane, record_state=state)
-    out.pipeline_good = state in PIPELINE_GOOD
-    if out.pipeline_good:
-        if evidence is None:
-            out.bucket, out.reason = UNREVIEWED, evidence_error or "no sealed bundle"
+    if evidence is None:
+        if evidence_error:
+            out.notes.append(evidence_error)
+    else:
+        out.evidence_source = evidence.source
+        out.version_set = evidence.version_set[:12]
+        if str(evidence.manifest.get("state")) not in PIPELINE_GOOD:
+            out.bucket, out.reason = UNREVIEWED, (
+                f"sealed bundle state is {evidence.manifest.get('state')!r}"
+            )
         else:
-            out.evidence_source = evidence.source
-            if str(evidence.manifest.get("state")) not in PIPELINE_GOOD:
-                out.bucket, out.reason = UNREVIEWED, (
-                    f"sealed bundle state is {evidence.manifest.get('state')!r}"
-                )
-            else:
-                out.bucket, out.reason = classify_review(evidence.review, calibration)
+            out.pipeline_good = True
+            out.bucket, out.reason = classify_review(evidence.review, calibration)
     out.publication_ready = out.independently_accepted and allowlisted_for_pr(allowlist, repository)
 
     proposal = None if record is None else record.proposal
@@ -210,6 +230,7 @@ def read_sealed(lane_root: Path, lane: str, repository: str, source: str) -> Sea
     """Verify ``lane_root``'s CURRENT bundle and read the parts the counter needs. Raises on any
     integrity failure (the caller records it as the reason the lane is not accepted)."""
     from repo_presenter.core.candidates import CURRENT_FILENAME, verify_bundle
+    from repo_presenter.core.version_set import fingerprint
 
     revision = (lane_root / CURRENT_FILENAME).read_text(encoding="utf-8").strip()
     bundle = lane_root / revision
@@ -222,40 +243,101 @@ def read_sealed(lane_root: Path, lane: str, repository: str, source: str) -> Sea
     review = None
     if REVIEW_VERDICT_NAME in files:  # only manifest-sealed files are evidence
         review = json.loads((bundle / REVIEW_VERDICT_NAME).read_text(encoding="utf-8"))
+    if DEPENDENCIES_NAME not in files:
+        raise ValueError(f"{source} bundle seals no {DEPENDENCIES_NAME}: no version set to count it in")
+    dependencies = json.loads((bundle / DEPENDENCIES_NAME).read_text(encoding="utf-8"))
     readme = (bundle / README_NAME).read_bytes() if README_NAME in files else None
-    return SealedEvidence(source=source, manifest=manifest, review=review, readme=readme)
+    return SealedEvidence(
+        source=source, manifest=manifest, review=review, readme=readme,
+        version_set=fingerprint(dependencies, lane),
+    )
 
 
-def load_evidence(repository: str, lane: str, stored: frozenset[str], scratch: Path):
-    """(SealedEvidence | None, error). Durable bundle ref first, committed candidates/ second."""
+def from_seal_record(seal: Any) -> SealedEvidence | None:
+    """A ``bundle_store.SealRecord`` (one commit of the durable bundle ref) as evidence, or None
+    when that commit did not verify or sealed no dependencies record."""
+    from repo_presenter.core.version_set import fingerprint
+
+    if seal.error or seal.dependencies is None:
+        return None
+    return SealedEvidence(
+        source="durable-ref",
+        manifest={"state": seal.manifest_state, "revision": seal.revision},
+        review=seal.review,
+        readme=seal.readme,
+        version_set=fingerprint(seal.dependencies, seal.lane),
+        commit=seal.commit,
+    )
+
+
+_RANK = {ACCEPTED: 0, UNCALIBRATED: 1, UNREVIEWED: 2}
+
+
+def best_by_version_set(
+    seals: list[SealedEvidence], calibration: Any
+) -> dict[str, SealedEvidence]:
+    """``{version-set fingerprint: the seal that represents the lane in that set}``. Pure.
+
+    Within one set the strongest seal stands (independently accepted, then uncalibrated, then
+    unreviewed, then a non-terminal manifest state), the LATEST of equals. A later seal can
+    therefore never take a set's count away from an earlier one: seals are immutable, and only a
+    seal under the same set competes for it."""
+    best: dict[str, tuple[int, SealedEvidence]] = {}
+    for seal in seals:  # oldest first
+        if str(seal.manifest.get("state")) in PIPELINE_GOOD:
+            rank = _RANK[classify_review(seal.review, calibration)[0]]
+        else:
+            rank = len(_RANK)
+        held = best.get(seal.version_set)
+        if held is None or rank <= held[0]:
+            best[seal.version_set] = (rank, seal)
+    return {key: seal for key, (_rank, seal) in best.items()}
+
+
+def lane_seals(repository: str, lane: str, history: dict, scratch: Path) -> tuple[list[SealedEvidence], list[str]]:
+    """(every seal of the lane as evidence -- durable bundle-ref history then the committed
+    ``candidates/`` tree --, the reasons any seal could not be read)."""
     from repo_presenter.core.candidates import CANDIDATES_DIRNAME, lane_directory
-    from repo_presenter.core.state.bundle_store import bundle_ref, export_bundle
 
-    errors = []
-    if bundle_ref(repository, lane) in stored:
-        try:
-            root = export_bundle(repository, lane, scratch / lane)
-            return read_sealed(root, lane, repository, "durable-ref"), ""
-        except Exception as exc:  # noqa: BLE001 -- any failure is a reason, never a count
-            errors.append(f"durable bundle ref: {exc}")
+    seals: list[SealedEvidence] = []
+    errors: list[str] = []
+    for record in history.get((repository, lane), ()):
+        evidence = from_seal_record(record)
+        if evidence is None:
+            errors.append(
+                f"durable seal {record.commit[:12]}: {record.error or 'no dependencies record'}"
+            )
+        else:
+            seals.append(evidence)
     committed = lane_directory(REPO_ROOT / CANDIDATES_DIRNAME / repository.replace("/", "__"), lane)
     if (committed / "CURRENT").is_file():
         try:
-            return read_sealed(committed, lane, repository, "committed"), ""
-        except Exception as exc:  # noqa: BLE001
+            seals.append(read_sealed(committed, lane, repository, "committed"))
+        except Exception as exc:  # noqa: BLE001 -- any failure is a reason, never a count
             errors.append(f"committed bundle: {exc}")
-    return None, "; ".join(errors) or "no sealed bundle (neither a durable bundle ref nor a committed one)"
+    return seals, errors
 
 
 def summarize(outcomes: list[LaneOutcome], calibration: Any) -> dict[str, Any]:
+    """Headline numbers are the CURRENT version set's only (``o.current``); every older set is
+    reported on its own under ``older_version_sets`` and never added to them."""
     summary: dict[str, Any] = {
         "reviewer_calibration": calibration.status
         + (f" ({calibration.problem})" if calibration.problem else ""),
     }
     for lane in ("R", "L"):
-        rows = [o for o in outcomes if o.lane == lane]
+        lane_rows = [o for o in outcomes if o.lane == lane]
+        rows = [o for o in lane_rows if o.current]
         buckets = Counter(o.bucket for o in rows if o.pipeline_good)
+        older: dict[str, dict[str, int]] = {}
+        for o in lane_rows:
+            if o.current or not o.pipeline_good:
+                continue
+            group = older.setdefault(o.version_set, {"pipeline_good": 0, ACCEPTED: 0, UNCALIBRATED: 0, UNREVIEWED: 0})
+            group["pipeline_good"] += 1
+            group[o.bucket] += 1
         summary[f"lane_{lane.lower()}"] = {
+            "version_set": next((o.version_set for o in rows if o.version_set), ""),
             "records": sum(1 for o in rows if o.record_state != "NO_RECORD"),
             "pipeline_good": sum(1 for o in rows if o.pipeline_good),
             ACCEPTED: buckets[ACCEPTED],
@@ -265,12 +347,14 @@ def summarize(outcomes: list[LaneOutcome], calibration: Any) -> dict[str, Any]:
             "effect_executed": sum(1 for o in rows if o.effect_executed),
             "live_verified": sum(1 for o in rows if o.live_verified),
             "accepted_repositories": sorted(o.repository for o in rows if o.independently_accepted),
+            "older_version_sets": dict(sorted(older.items())),
         }
     return summary
 
 
 def evaluate(summary: dict[str, Any], per_lane: int | None, live_verified: int | None) -> list[str]:
-    """The failed gate conditions (empty = the selected gate holds). Pure."""
+    """The failed gate conditions (empty = the selected gate holds). Pure. Only the CURRENT
+    version set's numbers are gated: an older set can never form a release set."""
     failures = []
     if per_lane is not None:
         for lane in ("r", "l"):
@@ -284,16 +368,50 @@ def evaluate(summary: dict[str, Any], per_lane: int | None, live_verified: int |
     return failures
 
 
+def outcomes_for_lane(
+    repository: str,
+    lane: str,
+    record: Any,
+    seals: list[SealedEvidence],
+    errors: list[str],
+    current: str,
+    calibration: Any,
+    allowlist: dict[str, Any],
+    github: GitHub,
+) -> list[LaneOutcome]:
+    """One CURRENT-set outcome for the lane (always, even with no seal under it) plus one outcome
+    per older version set the lane has a seal under. Pure apart from ``github``."""
+    by_set = best_by_version_set(seals, calibration)
+    head = classify_lane(
+        repository, lane, record, by_set.get(current), "; ".join(errors),
+        calibration, allowlist, github,
+    )
+    head.current = True
+    head.version_set = current[:12]
+    result = [head]
+    for key, evidence in sorted(by_set.items()):
+        if key == current:
+            continue
+        # No record: the attempt and its proposal belong to the current outcome only.
+        older = classify_lane(repository, lane, None, evidence, "", calibration, allowlist, github)
+        older.current = False
+        older.publication_ready = False  # an older set can never form a release set
+        result.append(older)
+    return result
+
+
 def collect(remote: str = "origin") -> tuple[list[LaneOutcome], Any]:
-    from repo_presenter.core.portfolio_matrix import stored_bundle_refs
     from repo_presenter.core.registry.loader import load_registry
+    from repo_presenter.core.state.bundle_store import seal_history
     from repo_presenter.core.state.git_backend import GitStateBackend
+    from repo_presenter.core.version_set import current_fingerprints
     from repo_presenter.readme.review.calibration_status import load_calibration
 
     calibration = load_calibration(CALIBRATION)
     allowlist = json.loads(ALLOWLIST.read_text(encoding="utf-8")) if ALLOWLIST.exists() else {}
     entries = load_registry(REGISTRY).entries
-    stored = stored_bundle_refs(remote)
+    current = current_fingerprints(PROMPTS)
+    history = seal_history(remote=remote)
     outcomes: list[LaneOutcome] = []
     with tempfile.TemporaryDirectory(prefix="p1-count-") as tmp:
         backends = {lane: GitStateBackend(remote=remote, lane=lane) for lane in ("R", "L")}
@@ -301,12 +419,10 @@ def collect(remote: str = "origin") -> tuple[list[LaneOutcome], Any]:
             for entry in entries:
                 for lane in ("R", "L"):
                     record = backends[lane].load(entry.repository)
-                    evidence, error = (None, "")
-                    if record is not None and str(record.state) in PIPELINE_GOOD:
-                        evidence, error = load_evidence(entry.repository, lane, stored, Path(tmp))
-                    outcomes.append(
-                        classify_lane(
-                            entry.repository, lane, record, evidence, error,
+                    seals, errors = lane_seals(entry.repository, lane, history, Path(tmp))
+                    outcomes.extend(
+                        outcomes_for_lane(
+                            entry.repository, lane, record, seals, errors, current[lane],
                             calibration, allowlist, gh_api,
                         )
                     )
@@ -342,7 +458,9 @@ def main(argv: list[str]) -> int:
                 print(f"  accepted: {', '.join(names)}")
         for o in outcomes:
             if o.pipeline_good and not o.independently_accepted:
-                print(f"  [{o.lane}] {o.repository}: {o.bucket} -- {o.reason}")
+                where = "current" if o.current else "older"
+                print(f"  [{o.lane}] {o.repository} ({where} set {o.version_set}): "
+                      f"{o.bucket} -- {o.reason}")
             for note in o.notes:
                 print(f"  [{o.lane}] {o.repository}: {note}")
 

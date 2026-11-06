@@ -141,6 +141,54 @@ def test_uncalibrated_pipeline_good_records_are_reported_separately_and_never_co
     assert lane_r[pdc.UNCALIBRATED] == 30 and lane_r[pdc.ACCEPTED] == 0
 
 
+def sealed(vs, rev=None, state="ACCEPTED"):
+    return pdc.SealedEvidence(source="durable-ref", manifest={"state": state},
+                              review=rev if rev is not None else review(), readme=b"x",
+                              version_set=vs)
+
+
+def test_a_v1_seal_stays_counted_under_v1_after_a_failed_attempt_under_v2():
+    """Owner rule 2: the record's latest attempt failed (INVALIDATED) under the new set v2; the
+    v1 seal is still counted -- under v1, never under v2."""
+    outs = pdc.outcomes_for_lane("o/a", "R", record(state="INVALIDATED"), [sealed("v1" * 32)], [],
+                                 "v2" * 32, PASSED, {}, no_github)
+    summary = pdc.summarize(outs, PASSED)["lane_r"]
+    assert summary[pdc.ACCEPTED] == 0 and summary["pipeline_good"] == 0
+    assert summary["older_version_sets"] == {
+        ("v1" * 32)[:12]: {"pipeline_good": 1, pdc.ACCEPTED: 1, pdc.UNCALIBRATED: 0, pdc.UNREVIEWED: 0}
+    }
+    same = pdc.outcomes_for_lane("o/a", "R", record(state="INVALIDATED"), [sealed("v1" * 32)], [],
+                                 "v1" * 32, PASSED, {}, no_github)
+    assert pdc.summarize(same, PASSED)["lane_r"][pdc.ACCEPTED] == 1
+
+
+def test_repositories_under_different_version_sets_are_never_summed():
+    outs = (
+        pdc.outcomes_for_lane("o/a", "R", None, [sealed("v1" * 32)], [], "v1" * 32, PASSED, {}, no_github)
+        + pdc.outcomes_for_lane("o/b", "R", None, [sealed("v2" * 32)], [], "v1" * 32, PASSED, {}, no_github)
+    )
+    lane_r = pdc.summarize(outs, PASSED)["lane_r"]
+    assert lane_r[pdc.ACCEPTED] == 1 and lane_r["accepted_repositories"] == ["o/a"]
+    assert lane_r["older_version_sets"][("v2" * 32)[:12]][pdc.ACCEPTED] == 1
+    assert pdc.evaluate(pdc.summarize(outs, PASSED), 2, None) != []
+
+
+def test_calibration_applies_within_a_version_set_and_a_later_seal_never_demotes_an_earlier():
+    accepted = sealed("v1" * 32)
+    later_uncalibrated = sealed("v1" * 32, rev=review(calibration_status="NOT_PASSED"))
+    best = pdc.best_by_version_set([accepted, later_uncalibrated], PASSED)
+    assert best["v1" * 32] is accepted
+    only_uncal = pdc.outcomes_for_lane("o/a", "R", None, [later_uncalibrated], [], "v1" * 32,
+                                       PASSED, {}, no_github)
+    assert only_uncal[0].bucket == pdc.UNCALIBRATED and not only_uncal[0].independently_accepted
+
+
+def test_the_record_state_alone_never_counts():
+    outs = pdc.outcomes_for_lane("o/a", "R", record(state="READY_FOR_PROPOSAL"), [], [], "v1" * 32,
+                                 PASSED, {}, no_github)
+    assert not outs[0].pipeline_good and not outs[0].independently_accepted
+
+
 def test_upstream_delivery_is_a_separate_gate_from_acceptance():
     outcomes = _outcomes("R", [f"o/r{i}" for i in range(25)]) + _outcomes("L", [f"o/l{i}" for i in range(25)])
     summary = pdc.summarize(outcomes, PASSED)
