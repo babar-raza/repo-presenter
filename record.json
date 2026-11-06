@@ -5,7 +5,7 @@
   "provider_repository_id": 1301317734,
   "registry_revision": null,
   "active_transaction_id": "988837a00d2f41d9a50ecbb3f41367bf",
-  "state": "ACCEPTED",
+  "state": "INVALIDATED",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "PresentFailure: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; F01 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in development_testing blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-06T06:13:34.004386+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:42170833669",
     "acquired_at": "2026-11-06T05:51:57.854903+00:00",
@@ -26,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "d76a59c488774dfda746c57127cfc72b",
+    "transition_id": "50ce82ac49b041ad8321609a4a00a8fe",
     "transaction_id": "988837a00d2f41d9a50ecbb3f41367bf",
     "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Rust",
-    "from_state": "REVIEWING",
-    "to_state": "ACCEPTED",
-    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
-    "occurred_at": "2026-11-01T12:43:18.321402+00:00",
+    "from_state": "ACCEPTED",
+    "to_state": "INVALIDATED",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-11-06T06:13:33.681749+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust",
     "output_manifest": "candidates/aspose-cells-foss__Aspose.Cells-FOSS-for-Rust/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 41,
+  "state_version": 42,
   "recent_trigger_dedup_keys": {
     "run:40555609801:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust": "384ec130f5d042919913581b3645c9e9",
     "run:40571555199:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust": "7e1dc318b1af4ce2ad24ff6ceefe1c1b",
