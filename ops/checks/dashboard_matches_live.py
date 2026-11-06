@@ -9,7 +9,10 @@ card exists to prevent).
 2026-11-06 (owner version-set rules, ``core/version_set.py``): the live numbers are the CURRENT
 version set's counted seals per lane, read from the seal history -- never the transaction
 records' latest state, which a failed re-run under a new version set demotes. Older version sets'
-counts are printed for visibility and never added in.
+counts are printed for visibility and never added in. Amended the same day (owner rule: a version
+bump never invalidates a seal, ``repo_presenter.recertify``): the live number per lane is the
+count of repositories whose LATEST seal re-certifies under current code (zero provider calls);
+the version sets are provenance.
 
 This needs network access to read the durable state remote's refs -- the card declaring this
 check must set `network: true`.
@@ -31,15 +34,20 @@ def main(argv: list[str]) -> int:
 
     from repo_presenter.core.portfolio_matrix import backend_reader, build_matrix, stored_bundle_refs, summarize
     from repo_presenter.core.registry.loader import load_registry
-    from repo_presenter.core.state.bundle_store import seal_history
+    from repo_presenter.recertify import portfolio_recertification
     from repo_presenter.core.version_set import current_fingerprints
 
     registry_path = REPO_ROOT / "data" / "registry.json"
     entries = load_registry(registry_path).entries
     current = current_fingerprints(REPO_ROOT / "prompts")
-    seals = seal_history(remote="origin")
+    results, seals = portfolio_recertification(
+        remote="origin", registry=registry_path, prompts_dir=REPO_ROOT / "prompts"
+    )
+    certifications = {(r.repository, r.lane): r for r in results}
     with backend_reader("origin") as read_state:
-        rows = build_matrix(entries, read_state, REPO_ROOT, stored_bundle_refs("origin"), seals)
+        rows = build_matrix(
+            entries, read_state, REPO_ROOT, stored_bundle_refs("origin"), seals, certifications
+        )
     live = summarize(rows, current)
     live_r, live_l = live["lane_r_pipeline_good"], live["lane_l_pipeline_good"]
     for lane in ("r", "l"):

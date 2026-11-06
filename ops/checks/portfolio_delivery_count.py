@@ -20,6 +20,16 @@ older fingerprint is reported separately under `older_version_sets` and never su
 calibration rule below is applied within each version set. The record is still read for the
 latest attempt's state (`record_state`, informational) and its proposal (outcomes (d)/(e)).
 
+Re-based again 2026-11-06 (owner rule: "a version bump never invalidates a seal or forces
+regeneration", ``repo_presenter.recertify``): the headline is no longer "seals whose fingerprint
+equals the current one" -- that dropped every count to 0 on each bump. A repository/lane now
+COUNTS when its LATEST durable seal re-certifies under current code (``recertify`` in dry mode:
+re-render, full blocking validation, deterministic reviewer rules; zero provider calls) or was
+sealed by current code. The seal's version set is reported as provenance only. A latest seal that
+is NEEDS_REPAIR is reported with its failing checks (the seal itself is kept). A model ACCEPT made
+by an uncalibrated reviewer is reported as needing a review-only pass (no regeneration), never
+silently dropped.
+
 Five outcomes are measured, separately and per lane, never collapsed into one number:
 
   (a)/(b) independently_accepted -- the lane has a seal under the version set being counted whose
@@ -108,6 +118,12 @@ class LaneOutcome:
     live_verified: bool = False
     evidence_source: str = ""
     notes: list[str] = field(default_factory=list)
+    # re-certification of the latest seal under current code (``repo_presenter.recertify``)
+    certification: str = ""  # RECERTIFIED / NEEDS_REPAIR / "" when not assessed
+    sealed_by_current: bool = False
+    failing_checks: list[str] = field(default_factory=list)
+    regenerations: int = 0
+    needs_review_only_pass: bool = False
 
     @property
     def independently_accepted(self) -> bool:
@@ -336,8 +352,11 @@ def summarize(outcomes: list[LaneOutcome], calibration: Any) -> dict[str, Any]:
             group = older.setdefault(o.version_set, {"pipeline_good": 0, ACCEPTED: 0, UNCALIBRATED: 0, UNREVIEWED: 0})
             group["pipeline_good"] += 1
             group[o.bucket] += 1
+        counted_sets = {o.version_set for o in rows if o.pipeline_good}
         summary[f"lane_{lane.lower()}"] = {
-            "version_set": next((o.version_set for o in rows if o.version_set), ""),
+            # provenance only: the version sets the counted seals were sealed under
+            "version_set": ",".join(sorted(k for k in counted_sets if k))
+            or next((o.version_set for o in rows if o.version_set), ""),
             "records": sum(1 for o in rows if o.record_state != "NO_RECORD"),
             "pipeline_good": sum(1 for o in rows if o.pipeline_good),
             ACCEPTED: buckets[ACCEPTED],
@@ -347,6 +366,14 @@ def summarize(outcomes: list[LaneOutcome], calibration: Any) -> dict[str, Any]:
             "effect_executed": sum(1 for o in rows if o.effect_executed),
             "live_verified": sum(1 for o in rows if o.live_verified),
             "accepted_repositories": sorted(o.repository for o in rows if o.independently_accepted),
+            "recertified": sum(1 for o in rows if o.certification == "RECERTIFIED"),
+            "needs_repair": {
+                o.repository: o.failing_checks for o in rows if o.certification == "NEEDS_REPAIR"
+            },
+            "needs_review_only_pass": sorted(o.repository for o in rows if o.needs_review_only_pass),
+            "regenerated_more_than_once": {
+                o.repository: o.regenerations for o in rows if o.regenerations > 1
+            },
             "older_version_sets": dict(sorted(older.items())),
         }
     return summary
@@ -368,6 +395,58 @@ def evaluate(summary: dict[str, Any], per_lane: int | None, live_verified: int |
     return failures
 
 
+def certified_outcomes(
+    repository: str,
+    lane: str,
+    record: Any,
+    seals: list[SealedEvidence],
+    certification: Any,
+    calibration: Any,
+    allowlist: dict[str, Any],
+    github: GitHub,
+) -> list[LaneOutcome]:
+    """The headline outcome of a lane whose LATEST durable seal was re-certified
+    (``certification`` is a ``recertify.Recertification`` of that seal), plus one provenance row
+    per other version set the lane has seals under. Pure apart from ``github``.
+
+    The lane counts when the latest seal is RECERTIFIED under current code (or was sealed by it)
+    and its preserved model review verdict passes the calibration rule. The seal's version set is
+    provenance: a bump never zeroes the count. NEEDS_REPAIR is reported with its checks."""
+    latest = next((s for s in seals if s.commit and s.commit == certification.seal_commit), None)
+    certified = bool(certification.certified) and latest is not None
+    head = classify_lane(
+        repository, lane, record, latest if certified else None, "", calibration, allowlist, github
+    )
+    head.current = True
+    head.certification = certification.outcome
+    head.sealed_by_current = bool(certification.sealed_by_current)
+    head.failing_checks = list(certification.failing_checks)
+    head.regenerations = int(certification.regenerations)
+    head.version_set = (certification.sealed_version_set or "")[:12]
+    if latest is not None:
+        head.evidence_source = latest.source
+    if not certified:
+        head.reason = (
+            f"latest seal {certification.seal_commit[:12]} is NEEDS_REPAIR under current code: "
+            f"{', '.join(certification.failing_checks) or 'unreadable'} (the seal itself is kept)"
+        )
+        head.notes.append(head.reason)
+    elif head.bucket == UNCALIBRATED:
+        head.needs_review_only_pass = True
+        head.reason += "; needs a review-only pass under a PASSED reviewer (no regeneration)"
+    if certification.regenerations > 1:
+        head.notes.append(f"candidate regenerated {certification.regenerations} times")
+    result = [head]
+    for key, evidence in sorted(best_by_version_set(seals, calibration).items()):
+        if latest is not None and key == latest.version_set:
+            continue
+        older = classify_lane(repository, lane, None, evidence, "", calibration, allowlist, github)
+        older.current = False
+        older.publication_ready = False
+        result.append(older)
+    return result
+
+
 def outcomes_for_lane(
     repository: str,
     lane: str,
@@ -378,9 +457,16 @@ def outcomes_for_lane(
     calibration: Any,
     allowlist: dict[str, Any],
     github: GitHub,
+    certification: Any = None,
 ) -> list[LaneOutcome]:
-    """One CURRENT-set outcome for the lane (always, even with no seal under it) plus one outcome
-    per older version set the lane has a seal under. Pure apart from ``github``."""
+    """With ``certification`` (the re-certification of the lane's latest durable seal), the
+    headline is :func:`certified_outcomes`'s. Without one (a lane with no durable seal), one
+    outcome counted under the CURRENT version set (always, even with no seal under it) plus one per
+    older version set the lane has a seal under. Pure apart from ``github``."""
+    if certification is not None:
+        return certified_outcomes(
+            repository, lane, record, seals, certification, calibration, allowlist, github
+        )
     by_set = best_by_version_set(seals, calibration)
     head = classify_lane(
         repository, lane, record, by_set.get(current), "; ".join(errors),
@@ -402,16 +488,21 @@ def outcomes_for_lane(
 
 def collect(remote: str = "origin") -> tuple[list[LaneOutcome], Any]:
     from repo_presenter.core.registry.loader import load_registry
-    from repo_presenter.core.state.bundle_store import seal_history
     from repo_presenter.core.state.git_backend import GitStateBackend
     from repo_presenter.core.version_set import current_fingerprints
     from repo_presenter.readme.review.calibration_status import load_calibration
+    from repo_presenter.recertify import portfolio_recertification
 
     calibration = load_calibration(CALIBRATION)
     allowlist = json.loads(ALLOWLIST.read_text(encoding="utf-8")) if ALLOWLIST.exists() else {}
     entries = load_registry(REGISTRY).entries
     current = current_fingerprints(PROMPTS)
-    history = seal_history(remote=remote)
+    # Dry re-certification of every bundle ref's latest seal (zero provider calls, read-only); its
+    # seal history is the same one the counter reads, fetched once.
+    results, history = portfolio_recertification(
+        remote=remote, registry=REGISTRY, prompts_dir=PROMPTS
+    )
+    certifications = {(r.repository, r.lane): r for r in results}
     outcomes: list[LaneOutcome] = []
     with tempfile.TemporaryDirectory(prefix="p1-count-") as tmp:
         backends = {lane: GitStateBackend(remote=remote, lane=lane) for lane in ("R", "L")}
@@ -424,6 +515,7 @@ def collect(remote: str = "origin") -> tuple[list[LaneOutcome], Any]:
                         outcomes_for_lane(
                             entry.repository, lane, record, seals, errors, current[lane],
                             calibration, allowlist, gh_api,
+                            certification=certifications.get((entry.repository, lane)),
                         )
                     )
         finally:
@@ -457,6 +549,8 @@ def main(argv: list[str]) -> int:
             if names:
                 print(f"  accepted: {', '.join(names)}")
         for o in outcomes:
+            if o.certification == "NEEDS_REPAIR":
+                print(f"  [{o.lane}] {o.repository}: NEEDS_REPAIR -- {', '.join(o.failing_checks)}")
             if o.pipeline_good and not o.independently_accepted:
                 where = "current" if o.current else "older"
                 print(f"  [{o.lane}] {o.repository} ({where} set {o.version_set}): "

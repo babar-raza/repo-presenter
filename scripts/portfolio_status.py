@@ -2,8 +2,9 @@
 records, and candidates/.
 
 Counts come from the SEAL HISTORY (every commit on every bundle ref), grouped by version-set
-fingerprint (``core/version_set.py``): ``lane_*_pipeline_good`` is the CURRENT version set's count,
-and every older set's count is listed separately, never summed in. The transaction records are
+fingerprint (``core/version_set.py``) as provenance; ``lane_*_pipeline_good`` is the number of
+repositories whose LATEST seal re-certifies under current code (``repo_presenter.recertify``, dry,
+zero provider calls) -- a version bump never zeroes it. The transaction records are
 shown as the latest attempt per lane only.
 
 Read-only: it fetches state refs, never writes one, dispatches nothing and calls no provider.
@@ -29,8 +30,8 @@ from repo_presenter.core.portfolio_matrix import (
     summarize,
 )
 from repo_presenter.core.registry.loader import load_registry
-from repo_presenter.core.state.bundle_store import seal_history
 from repo_presenter.core.version_set import current_fingerprints
+from repo_presenter.recertify import portfolio_recertification
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -44,10 +45,16 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     entries = load_registry(args.registry).entries
     current = current_fingerprints(args.prompts)
-    seals = seal_history(remote=args.remote)
+    # Dry re-certification of every latest seal (zero provider calls, read-only); its seal history
+    # is the one the matrix reads.
+    results, seals = portfolio_recertification(
+        remote=args.remote, registry=args.registry, prompts_dir=args.prompts
+    )
+    certifications = {(r.repository, r.lane): r for r in results}
     with backend_reader(args.remote) as read_state:
         rows = build_matrix(
-            entries, read_state, REPO_ROOT, stored_bundle_refs(args.remote), seals
+            entries, read_state, REPO_ROOT, stored_bundle_refs(args.remote), seals,
+            certifications,
         )
     summary = summarize(rows, current)
     if args.json:

@@ -16,6 +16,12 @@ fingerprint. ``lane_*_pipeline_good`` is the CURRENT fingerprint's count -- the 
 form a release set; every older fingerprint's count is reported separately and never summed in.
 A seal is immutable: a later failed run never removes it from the count of its own version set.
 
+Re-certification (owner rule, 2026-11-06: a version bump never invalidates a seal or forces
+regeneration; ``repo_presenter.recertify``): when ``build_matrix`` is given ``certifications`` (the
+dry re-certification of every bundle ref's latest seal), ``lane_*_pipeline_good`` is the number of
+repositories whose LATEST seal re-certifies under current code (or was sealed by it) -- the
+"current fingerprint only" headline zeroed on every bump and is kept only as version provenance.
+
 Owner review is not tracked anywhere in this repository, so the summary says so instead of
 inventing a number.
 """
@@ -74,6 +80,11 @@ class MatrixRow:
     # Every seal commit on the lane's bundle ref (counted or not).
     seals_r: int = 0
     seals_l: int = 0
+    # Re-certification of the latest seal under current code: RECERTIFIED / NEEDS_REPAIR / "".
+    certification_r: str = ""
+    certification_l: str = ""
+    certified_r: bool = False
+    certified_l: bool = False
 
 
 def counted_fingerprints(seals: Iterable[SealRecord], lane: str) -> tuple[str, ...]:
@@ -120,10 +131,12 @@ def build_matrix(
     root: Path,
     stored_refs: Iterable[str] = (),
     seals: SealHistory | None = None,
+    certifications: Mapping[tuple[str, str], object] | None = None,
 ) -> list[MatrixRow]:
     candidates = root / CANDIDATES_DIRNAME
     stored = frozenset(stored_refs)
     seals = seals or {}
+    certs = certifications or {}
     rows: list[MatrixRow] = []
     for entry in entries:
         slug_dir = candidates / entry.repository.replace("/", "__")
@@ -132,6 +145,7 @@ def build_matrix(
             for lane in LANES
         }
         lane_seals = {lane: list(seals.get((entry.repository, lane), ())) for lane in LANES}
+        cert = {lane: certs.get((entry.repository, lane)) for lane in LANES}
         rows.append(
             MatrixRow(
                 repository=entry.repository,
@@ -147,6 +161,10 @@ def build_matrix(
                 seal_sets_l=counted_fingerprints(lane_seals[LANE_L], LANE_L),
                 seals_r=len(lane_seals[LANE_R]),
                 seals_l=len(lane_seals[LANE_L]),
+                certification_r=getattr(cert[LANE_R], "outcome", ""),
+                certification_l=getattr(cert[LANE_L], "outcome", ""),
+                certified_r=bool(getattr(cert[LANE_R], "certified", False)),
+                certified_l=bool(getattr(cert[LANE_L], "certified", False)),
             )
         )
     return rows
@@ -175,8 +193,14 @@ def summarize(
     l_states = Counter(row.record_l for row in rows)
     sets_r = lane_version_sets(rows, LANE_R, current.get(LANE_R))
     sets_l = lane_version_sets(rows, LANE_L, current.get(LANE_L))
-    good_r = set(sets_r["current_repositories"])  # type: ignore[call-overload]
-    good_l = set(sets_l["current_repositories"])  # type: ignore[call-overload]
+    recertified = any(row.certification_r or row.certification_l for row in rows)
+    if recertified:
+        # The headline: the latest seal re-certifies under current code (version sets: provenance).
+        good_r = {row.repository for row in rows if row.certified_r}
+        good_l = {row.repository for row in rows if row.certified_l}
+    else:
+        good_r = set(sets_r["current_repositories"])  # type: ignore[call-overload]
+        good_l = set(sets_l["current_repositories"])  # type: ignore[call-overload]
     return {
         "registry_total": len(rows),
         "write_eligible_mode_full": sum(1 for row in rows if row.mode == "full"),
@@ -189,6 +213,15 @@ def summarize(
         "lane_r_pipeline_good": len(good_r),
         "lane_l_pipeline_good": len(good_l),
         "both_lanes_pipeline_good": sorted(good_r & good_l),
+        "counted_by": "latest seal re-certified under current code"
+        if recertified
+        else "seals under the current version set",
+        "lane_r_needs_repair": sorted(
+            row.repository for row in rows if row.certification_r == "NEEDS_REPAIR"
+        ),
+        "lane_l_needs_repair": sorted(
+            row.repository for row in rows if row.certification_l == "NEEDS_REPAIR"
+        ),
         "lane_r_version_sets": sets_r,
         "lane_l_version_sets": sets_l,
         "lane_r_seals_total": sum(row.seals_r for row in rows),
