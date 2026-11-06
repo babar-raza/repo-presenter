@@ -92,20 +92,23 @@ commits, documentation, or architecture alone — only on the eleven-state disti
    the supervisor verifies each result independently (tests, gate review, real runs) and merges.
    Waiting on a single worker while other READY work exists is a defect.
 
-### Version sets and release trains (owner ruling 2026-11-06 — binding)
+### One standard for every candidate; a bump never loses a seal (owner ruling 2026-11-06 — binding)
 
-5. **One version set per release set.** Every candidate that is counted, accepted or delivered together was
-   produced under the same single version set: every prompt (name, version, sha), reviewer logic, renderer,
-   shell, normalisation, correction engine, detectors, model routes. Candidates under different version sets
-   are never summed, compared as one portfolio, or delivered as one set.
-6. **A version bump never invalidates a seal.** A sealed candidate is an immutable record of what its version
-   set produced; a later change or a failed re-run never demotes or deletes it. Counts come from seal history
-   grouped by version-set fingerprint, never from a transaction record's latest state.
-7. **Release trains, not drip regeneration.** Mechanism changes accumulate on `main`. A release train pins one
-   version set and regenerates every target repository under it; while a train runs, no mechanism change
-   merges (a change that must land restarts the train from zero under the new set). Counts reported to the
-   owner are the current train's, with older version sets shown separately. Per-fix pilot runs are diagnostics
-   and are never counted as a release set.
+The predecessors died of this: candidates were sealed, a later change bumped a version, every earlier seal was
+treated as lost, the count fell to 0, and everything had to be resealed. Never again:
+
+5. **One standard for all.** Every candidate -- already sealed or new -- is held to the same current pipeline
+   and checks. There are no per-candidate exceptions and no product-specific patches.
+6. **A bump never invalidates a seal and never forces regeneration.** When a mechanism version changes, every
+   existing seal is **re-certified**: the deterministic stages (render, all blocking checks, reviewer pre-checks)
+   re-run from the seal's stored outputs with zero provider calls. A seal that passes stays valid and counted,
+   now under the current standard; the version it was made under is provenance only. A seal that fails a new
+   check gets a targeted repair of that defect alone; its original seal is never deleted or demoted. Where
+   acceptance needs the current calibrated reviewer, a re-certified seal gets a review-only pass, never a
+   regeneration.
+7. **Counts never drop because a number moved.** A repository/lane counts while its latest seal re-certifies
+   under current code. Mechanism changes are still batched and kept rare, so re-certification stays cheap and
+   rare, and a change that would make good seals fail is treated as a defect in the change.
 
 ## Channel
 

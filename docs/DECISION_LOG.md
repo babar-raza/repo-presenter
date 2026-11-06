@@ -3376,3 +3376,19 @@ bar (parity with aspose.org), so the train is not widened before that is measure
 until the train completes (`ops/SUPERVISOR.md` item 7). Runs `run-requests/train-1-{1,2,3}`. Reviewer
 calibration iteration 5 is measuring this same reviewer version concurrently; if it does not pass, the train's
 seals remain a recorded version set and are not counted as independently accepted.
+
+---
+
+## 2026-11-06: correction — re-certify seals on a version bump, never regenerate or zero the count
+
+The owner clarified that both concerns were one: in the predecessor projects a version bump made every earlier
+seal count as lost, the number fell to 0, and everything had to be resealed. The supervisor had implemented the
+opposite (counting only seals made under the current version-set fingerprint, so every bump zeroes the count) and
+the release-train policy text encoded it. Both are withdrawn.
+
+Rule now (`ops/SUPERVISOR.md` items 5-7): one current standard for every candidate; on a mechanism change every
+existing seal is re-certified from its stored outputs with zero provider calls (re-render + every blocking check +
+reviewer pre-checks) and keeps counting if it passes; only a seal that fails a new check gets a targeted repair,
+and no seal is ever deleted or demoted; version provenance is recorded, never used to zero a count. Preflight no
+longer reopens generation stages for a mechanism-version change alone. Release train 1 (already running) is kept:
+its new seals add to, and never replace, the existing ones.
