@@ -119,7 +119,7 @@ from repo_presenter.readme.repair.accounting import (
     accounting_document,
 )
 from repo_presenter.readme.repair.targeted import (
-    MAX_ROUNDS,
+    MAX_SETTLE_ROUNDS,
     REPAIRS_FILENAME,
     Defect,
     RepairLedger,
@@ -667,7 +667,7 @@ def run_cascade(
     config: GatewayConfig,
     prompts_path: Path = DEFAULT_PROMPTS_PATH,
     registry_path: Path = DEFAULT_REGISTRY_PATH,
-    max_rounds: int = MAX_ROUNDS,
+    max_rounds: int = MAX_SETTLE_ROUNDS,
     review_repair_rounds: int = MAX_REVIEW_REPAIR_ROUNDS,
 ) -> CascadeResult:
     """Run S3 (investigation) through S8 (coherence), the S9 validation and the independent
