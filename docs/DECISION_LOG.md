@@ -3392,3 +3392,17 @@ reviewer pre-checks) and keeps counting if it passes; only a seal that fails a n
 and no seal is ever deleted or demoted; version provenance is recorded, never used to zero a count. Preflight no
 longer reopens generation stages for a mechanism-version change alone. Release train 1 (already running) is kept:
 its new seals add to, and never replace, the existing ones.
+
+---
+
+## 2026-11-06: R9–R11 recorded as owner rulings in the top authority; superseded statements withdrawn
+
+`docs/CONSOLIDATED_GOALS_2026-11-06.md` Part B gains R9 (attribution internal only), R10 (one standard for every
+candidate; a version bump never loses a seal; re-certify, targeted bounded repair, no-regression merge gate) and R11
+(supervisor decides, reports results, works in parallel); AGENTS.md carries a binding summary at the top. Withdrawn by
+R10: this log's "release train 1" entry where it says the train's seals count only under its pinned set and that
+mechanism changes are frozen until it completes -- the no-regression gate replaces the freeze, and train-1 seals add
+to existing seals. The owner further directed that these rules be enforced by the pipeline and CI, not only written:
+R9 by BC-07 (`validation/public_text.py`) and re-certification of every seal; R10 by re-certification, the preflight
+change, the no-regression gate in CI and the regeneration counter; "one standard for all" by a static check that no
+product-specific special case enters the pipeline code.

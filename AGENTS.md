@@ -9,11 +9,25 @@ document overrides those.
 ## READ THIS BEFORE ANYTHING — owner's consolidated goals (2026-11-06)
 
 `docs/CONSOLIDATED_GOALS_2026-11-06.md` is the owner's consolidated statement of goals and requirements
-(14 sections, verbatim) plus the owner's rulings on the eight points where older records conflicted with it
+(14 sections, verbatim) plus the owner's rulings on the points where older records conflicted with it
 (benchmark, upstream writes, accepted-candidate target, Lane L definition, new sections, issue scope,
-autonomous resumption, record order). It is the **top row** of the authority table below: where any other
+autonomous resumption, record order, public attribution, versions and seals, supervisor conduct). It is the **top row** of the authority table below: where any other
 record in this repository (this file included) disagrees with it, it wins and the other record is corrected.
 The sections below remain binding wherever they do not conflict with it.
+
+## BINDING OWNER RULINGS R9–R11 (2026-11-06) — every session and worker follows these
+
+Full text: `docs/CONSOLIDATED_GOALS_2026-11-06.md` Part B; operating detail: `ops/SUPERVISOR.md` items 1–7.
+
+- **R9 — attribution is internal only.** Never print a maintainer attribution, "not verified" note or any
+  provenance wording in a public README. Attribution lives only in internal records. BC-07 enforces it.
+- **R10 — one standard for all candidates; a version bump never loses a seal.** Never count only "current
+  version" seals, never let a bump zero a count, never regenerate a sealed candidate because a version moved.
+  Re-certify existing seals from stored outputs (zero provider calls); repair only a seal that fails a real
+  check, by a bounded targeted repair; never delete or demote a seal. Every mechanism change must pass the
+  no-regression gate (no passing seal may start failing unless each case is a justified genuine defect).
+- **R11 — decide, don't ask; report results; work in parallel.** Ask the owner only for actions only the owner
+  can perform; lead every report with accepted-per-lane and delivered-upstream numbers.
 
 ## READ THIS FIRST — owner-adopted corrective plan (2026-11-03)
 
