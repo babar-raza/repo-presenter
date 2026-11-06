@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import math
 import re
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Collection, Mapping, Sequence
 
 from repo_presenter.readme.composition.list_coverage import (
     item_links,
@@ -175,9 +175,60 @@ def carries_hard_tokens(text: str, document: str) -> bool:
     )
 
 
-def _carries_all(text: str, shown: Destinations) -> bool:
-    """Whether the document holds every command and link ``text`` carries."""
-    return carries_hard_tokens(text, shown.document)
+_IDENT_SPAN = re.compile(
+    r"^[A-Za-z_][A-Za-z0-9_]*(?:(?:\.|::)[A-Za-z_][A-Za-z0-9_]*)*(?:\(\))?$"
+)
+
+
+def api_identifiers(text: str, api_names: Collection[str]) -> list[str]:
+    """The inline-code API identifiers ``text`` names: spans spelling a symbol (``Type.Member``,
+    ``Member()``, ``ns::Name``) whose last segment is one of ``api_names`` (the SUPPORTED public
+    symbols' simple names), each without its call parentheses."""
+    if not api_names:
+        return []
+    found = []
+    for span in _SPAN.findall(text):
+        span = span.strip()
+        if not _IDENT_SPAN.match(span):
+            continue
+        name = span.removesuffix("()")
+        if re.split(r"\.|::", name)[-1] in api_names:
+            found.append(name)
+    return list(dict.fromkeys(found))
+
+
+def _has_word(document: str, token: str) -> bool:
+    return re.search(r"(?<![\w.])" + re.escape(token) + r"(?![\w])", document) is not None
+
+
+def carries_identity_tokens(
+    text: str, document: str, api_names: Collection[str] = ()
+) -> bool:
+    """Whether ``document`` prints every verified API identifier and every release number ``text``
+    names. A kept unit naming ``CfbReader.FromStream()`` is not "stated" by a destination that only
+    names ``CfbReader.FromFile`` merely because most of its words recur, and a ``6.0.2`` the
+    document prints nowhere is not stated by a sentence about the same package: an identifier the
+    facts support and a version number are content in their own right. A release number the
+    document restates with another release in the same words (the unit, versions aside, printed
+    as written) is an update, not a loss."""
+    if not all(_has_word(document, name) for name in api_identifiers(text, api_names)):
+        return False
+    releases = [match.group(0) for match in _RELEASE.finditer(text)]
+    if all(_has_word(document, release) for release in releases):
+        return True
+    return _squash(unversioned(text)).strip() != "" and _squash(unversioned(text)) in _squash(
+        unversioned(document)
+    )
+
+
+def _carries_all(
+    text: str, shown: Destinations, api_names: Collection[str] = ()
+) -> bool:
+    """Whether the document holds every command, link, verified API identifier and release number
+    ``text`` carries."""
+    return carries_hard_tokens(text, shown.document) and carries_identity_tokens(
+        text, shown.document, api_names
+    )
 
 
 def _uncovered_items(
@@ -186,6 +237,7 @@ def _uncovered_items(
     shown: Destinations,
     by_link: bool,
     elsewhere: _Indexed | None = None,
+    api_names: Collection[str] = (),
 ) -> str | None:
     """The items of a kept list the destination does not state, or ``None`` for text that is not
     a list."""
@@ -216,7 +268,7 @@ def _uncovered_items(
         item = " ".join(list_items(block))
         first = next(iter(list_items(block)), "")
         if (first in absent and not stated_elsewhere(item)) or not _carries_all(
-            block, shown
+            block, shown, api_names
         ):
             open_items.append(block)
     return text if len(open_items) == len(blocks) else "\n".join(open_items)
@@ -232,6 +284,7 @@ def uncovered(
     lead_in: bool = False,
     also: Sequence[str] = (),
     only_also: bool = False,
+    api_names: Collection[str] = (),
 ) -> str:
     """The part of the kept unit ``text`` that section ``section_id`` of ``shown`` does not state,
     as written; empty when it states all of it."""
@@ -242,7 +295,9 @@ def uncovered(
         if links and all(link in destination.text for link in links):
             return ""
     if unit_id.rsplit(".", 1)[-1] == "list":
-        remainder = _uncovered_items(text, destination, shown, by_link, elsewhere)
+        remainder = _uncovered_items(
+            text, destination, shown, by_link, elsewhere, api_names
+        )
         if remainder is not None:
             return remainder
     parts = sentences(text)
@@ -251,7 +306,7 @@ def uncovered(
     open_parts = [
         part
         for part in parts
-        if not _carries_all(part, shown)
+        if not _carries_all(part, shown, api_names)
         or not (
             lead_in
             or destination.states(part, SENTENCE_SHARE)
