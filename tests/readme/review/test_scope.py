@@ -341,3 +341,116 @@ def test_sections_are_still_named_for_a_live_readme() -> None:
         + 1
     )
     assert section_of_line(LIVE, n, rendered=False) == "license"
+
+
+# --- table cells (root cause of calibration iteration 4, docs/investigations/2026-11-06-reviewer-rootcause.md)
+
+# Iteration 4 recorded 19 of its 81 real defects on lines no review unit showed. 14 sat in a table
+# body cell: on 11 reference bases (``rendered=False``, e.g. ref:cells-typescript/real:unsupported_claim:54,
+# a "<Type> | Interface with N properties." row whose count no fact supports) and in the API table of
+# 3 own bases, whose description cell is the sentence authored for a type with no docstring
+# (own:html-python/real:unsupported_claim:2, below). The fixtures reproduce those shapes; the
+# reference text itself stays local (iteration 4, section 1.2).
+
+LIVE_TABLE = """# Widget
+
+Widget renders widgets.
+
+## API Reference
+
+| Class | Description |
+| --- | --- |
+| `Widget` | Class with 4 properties. |
+| `Exporter` | Writes every widget to PDF, SVG and EPS. |
+
+## License
+
+MIT.
+"""
+
+
+def test_a_live_readme_table_body_row_is_reviewable_but_its_header_and_rule_are_not() -> None:
+    rows = LIVE_TABLE.splitlines()
+    shown = {rows[n - 1] for n in reviewable_lines(LIVE_TABLE, rendered=False)}
+    assert "| `Widget` | Class with 4 properties. |" in shown
+    assert "| `Exporter` | Writes every widget to PDF, SVG and EPS. |" in shown
+    assert "| Class | Description |" not in shown
+    assert "| --- | --- |" not in shown
+    row = rows.index("| `Widget` | Class with 4 properties. |") + 1
+    assert section_of_line(LIVE_TABLE, row, rendered=False) == "api_reference"
+
+
+def test_a_rendered_candidate_still_withholds_its_tables_by_default() -> None:
+    rows = LIVE_TABLE.splitlines()
+    shown = {rows[n - 1] for n in reviewable_lines(LIVE_TABLE)}
+    assert not any(row.startswith("|") for row in shown)
+
+
+def _symbol(value: str, **attributes: str):
+    from repo_presenter.core.facts import Evidence, Fact
+
+    return Fact(
+        f"public_symbol:{value.lower()}",
+        "public_symbol",
+        value,
+        (Evidence("src/x.py"),),
+        "SUPPORTED",
+        attributes={"symbol_kind": "class", **attributes},
+    )
+
+
+RENDERED_TABLE = """# Aspose.HTML FOSS for Python
+
+Aspose.HTML FOSS parses HTML.
+
+## API Reference
+
+The verified public surface has 3 types.
+
+<details>
+<summary>View the Complete Public API Surface</summary>
+
+### Core API
+
+| Class | Description |
+| --- | --- |
+| `Document` | Parses an HTML document. |
+| `Node` | Public class. |
+| `SubtleCrypto` | SubtleCrypto provides cryptographic operations such as encryption, decryption, signing, and verification. |
+
+</details>
+"""
+
+
+def test_an_api_table_row_whose_description_an_author_wrote_is_reviewable() -> None:
+    """own:html-python/real:unsupported_claim:2: ``SubtleCrypto`` has no docstring, so the renderer
+    printed the sentence authored for it; the row a docstring printed and the ``Public class.``
+    fallback stay the renderer's."""
+    from repo_presenter.core.facts import FactsDocument
+    from repo_presenter.readme.review.scope import authored_table_lines
+    from repo_presenter.readme.review.sectionwise import plan_units, unit_text
+
+    facts = FactsDocument(
+        "o/r",
+        "a" * 40,
+        (
+            _symbol("aspose.html.Document", docstring="Parses an HTML document."),
+            _symbol("aspose.html.Node"),
+            _symbol("aspose.html.SubtleCrypto"),
+        ),
+    )
+    rows = RENDERED_TABLE.splitlines()
+    authored = authored_table_lines(RENDERED_TABLE, facts)
+    assert [rows[n - 1].split("|")[1].strip() for n in sorted(authored)] == [
+        "`SubtleCrypto`"
+    ]
+    # without it the row is in no unit: the reviewer can neither see nor cite it
+    assert not any(
+        "SubtleCrypto" in unit_text(u, RENDERED_TABLE) for u in plan_units(RENDERED_TABLE)
+    )
+    units = plan_units(RENDERED_TABLE, authored=authored)
+    text = "\n".join(unit_text(u, RENDERED_TABLE) for u in units)
+    assert "cryptographic operations such as encryption" in text
+    assert "Parses an HTML document." not in text and "Public class." not in text
+    (unit,) = [u for u in units if "api_reference" in u.sections]
+    assert set(authored) <= set(unit.lines)

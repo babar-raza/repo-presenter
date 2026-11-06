@@ -167,6 +167,55 @@ def test_load_reference_candidate_refuses_another_repositorys_facts(tmp_path, li
         )
 
 
+#: A live README holding the twin's limitations section, as the live README of every iteration-4
+#: reference base whose drop_section mutant removed "Scope and Limitations" did.
+LIVE_WITH_LIMITS = """# Aspose.Widget FOSS for Python
+
+Renders widgets to PNG and SVG.
+
+## Installation
+
+pip install aspose-widget-foss
+
+## Scope and Limitations
+
+- Rendering to `.pdf` is not implemented in this build.
+"""
+
+
+def _lane_l_like(tmp_path: Path, original: str):
+    return replace(reference(tmp_path), original=original)
+
+
+def test_a_reference_drop_section_mutant_is_blocked_as_lane_l_blocks_it(tmp_path):
+    """Root cause 2026-11-06: iteration 4's reference bases ran only the text rules, so 0 of 34
+    dropped sections were caught deterministically, although Lane L's production holdouts
+    (``lane_l_review.holdout_findings``) run ``live_readme_loss`` against the live README."""
+    cases = {c.role if c.operator is None else c.operator: c for c in base_cases(
+        Base(_lane_l_like(tmp_path, LIVE_WITH_LIMITS))
+    )}
+    assert cases["clean"].role == "clean" and cases["clean"].baseline_rules == ()
+    assert "live_readme_loss" in pre_llm(cases["drop_section"]).rules
+    assert not pre_llm(cases["inject_unsupported_claim"]).blocked
+
+
+def test_a_new_finding_of_a_rule_the_twin_already_trips_is_still_a_catch(tmp_path):
+    """The twin loses a live link (iteration 4: 24 of 34 reference twins already lost some live
+    content), so ``live_readme_loss`` is a baseline rule. A rule-level baseline then hid the
+    dropped section; the finding-level baseline counts the new finding and only it."""
+    live = LIVE_WITH_LIMITS + "\nSee the [docs](https://example.org/widget/docs).\n"
+    cases = {c.role if c.operator is None else c.operator: c for c in base_cases(
+        Base(_lane_l_like(tmp_path, live))
+    )}
+    twin = cases["unscored_twin"]
+    assert twin.baseline_rules == ("live_readme_loss",)
+    assert any("example.org/widget/docs" in key[1] for key in twin.baseline_findings)
+    assert pre_llm(cases["drop_section"]).rules == ("live_readme_loss",)
+    # the link the twin already lost is not a catch of anything built from it
+    assert not pre_llm(cases["inject_unsupported_claim"]).blocked
+    assert not pre_llm(cases["add_promotional_filler"]).blocked
+
+
 def test_load_bundle_candidate_refuses_facts_of_another_revision(tmp_path, listed):
     clone = _clone(tmp_path, FACTS.repository)
     revision_dir = tmp_path / ("c" * 40)
