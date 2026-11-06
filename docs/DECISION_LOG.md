@@ -3151,3 +3151,29 @@ contradiction, quality/promotion and other findings on them still apply. The exi
 `unsupported_claim` is unclearable, and "the original README says it too" is not a clearance (maintainer
 text can be false). Verbatim maintainer text in Lane L and reference READMEs (no `PRESERVE_ATTRIBUTED`
 dispositions) relies on the prompt rule and is measured in calibration iteration 5.
+
+---
+
+## 2026-11-06: owner's consolidated goals adopted as top authority; eight conflict rulings
+
+The owner supplied a consolidated statement of goals and requirements (14 sections) and asked that it be verified as
+recorded and that the cloud supervisor be verified as working toward it. Traced bullet by bullet against every
+governing record; recorded verbatim as `docs/CONSOLIDATED_GOALS_2026-11-06.md` with the owner's rulings on the eight
+conflicts the trace found (interactive forms, options with trade-offs):
+
+* **R1** the document is the top row of AGENTS.md's authority table; lower records amended with pointers
+  (AGENTS.md, mission doc §10, `plans/idea.md`, release contract, MISSION_AUTHORITY.md).
+* **R2** the aspose.org readme-refresh outputs **published upstream** are the minimum quality floor for both lanes.
+* **R3** upstream PRs/issues: standing, gated authorization for repositories on `data/upstream_write_allowlist.json`
+  (committed empty: nothing authorized until the owner lists a repository). Supersedes the 2026-11-04 NO-UPSTREAM-WRITES
+  rule and 2026-10-31 decision 7 for listed repositories only.
+* **R4** target: about 25 accepted candidates per lane, counted independently (TC-011's check to be re-authored).
+* **R5** Lane L is change-driven as well as defect-driven.
+* **R6** a specifically named new section may hold maintainer content that fits no standard section; generic
+  catch-alls stay forbidden.
+* **R7** issues: upstream product defects only; this repository's own blockers and findings as issues here.
+* **R8** port dispatch-next/worker-tick into gatecli and add a scheduled supervisor tick.
+
+Part D of the document assesses the supervisor's work honestly: verified quality and governance fixes, **no upstream
+value yet**; blocked externally by the LLM gateway's ~30 s timeout, the session's lack of workflow-dispatch rights,
+and an empty allowlist.

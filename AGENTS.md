@@ -1,9 +1,19 @@
 # AGENTS.md — Repository Presenter (new repository)
 
 Binding authority table and roles for anyone or anything working in this
-repository. Keep this short; detailed requirements live in
-`docs/MISSION_AUTHORITY.md`, the live cursor lives in `project/state.yaml`, and
-neither this file nor a derived document ever overrides those.
+repository. Keep this short; the owner's goals and conflict rulings live in
+`docs/CONSOLIDATED_GOALS_2026-11-06.md` (top authority), detailed requirements in
+`docs/MISSION_AUTHORITY.md`, the live cursor in `project/state.yaml`; no derived
+document overrides those.
+
+## READ THIS BEFORE ANYTHING — owner's consolidated goals (2026-11-06)
+
+`docs/CONSOLIDATED_GOALS_2026-11-06.md` is the owner's consolidated statement of goals and requirements
+(14 sections, verbatim) plus the owner's rulings on the eight points where older records conflicted with it
+(benchmark, upstream writes, accepted-candidate target, Lane L definition, new sections, issue scope,
+autonomous resumption, record order). It is the **top row** of the authority table below: where any other
+record in this repository (this file included) disagrees with it, it wins and the other record is corrected.
+The sections below remain binding wherever they do not conflict with it.
 
 ## READ THIS FIRST — owner-adopted corrective plan (2026-11-03)
 
@@ -49,6 +59,7 @@ treating any status number in this repository as current.
 
 | Question | Authority |
 |---|---|
+| What are the project's goals and requirements, and how were conflicts between older records resolved? | `docs/CONSOLIDATED_GOALS_2026-11-06.md` (owner, 2026-11-06; top authority — corrects every lower row where they disagree) |
 | What must get fixed before the mission's own goals count as delivered? | `docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md`, strengthened by `docs/RELEASE_CONTRACT_P1-P5.md` (owner-adopted 2026-11-03/04; corrective-plan cards live in `project/taskcards/TC-001..TC-012.yaml`, enforced via `ops/gatecli.py`) |
 | What must the product do, for whom, with what quality bar? | `docs/MISSION_AUTHORITY.md` |
 | What is currently true / in progress / blocked right now? | `project/state.yaml` (the only execution cursor — never hand-edited; see below) |
@@ -101,10 +112,12 @@ accepted" property from `ops/SUPERVISOR.md` even in a single-session context.
    lanes produce across the whole portfolio (the "forest," mission plan §6),
    never optimize for one repository or one defect class in isolation. Each
    candidate's structure, tone, and presentation follow aspose.org's own
-   README-refresh skill output (mission plan §10: "optional acceleration, not
-   another authority" — it informs structure/tone/presentation only, same as
-   item 2's live-upstream-README reference; repository evidence still wins
-   for factual truth). A fix that clears one hosted-run failure but does not
+   README-refresh skill output. **Amended 2026-11-06 (owner ruling,
+   `docs/CONSOLIDATED_GOALS_2026-11-06.md` ruling R2):** the aspose.org
+   readme-refresh outputs already PUBLISHED upstream are the **minimum quality
+   floor** for both lanes — a candidate must equal or exceed the published
+   README for its product — not merely a structure/tone reference; repository
+   evidence still wins for factual truth. A fix that clears one hosted-run failure but does not
    move the portfolio-wide candidate count, or that drifts from this
    structural/tone reference, is incomplete relative to this goal even if its
    own tests are green.

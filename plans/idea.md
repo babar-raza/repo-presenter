@@ -411,7 +411,7 @@ GitHub-generated contributors, languages, activity, stars, and forks are observa
 
 Aspose FOSS repositories currently vary in product explanation, README structure, examples, and
 link placement. Existing bot-produced README changes are evidence and reusable input, not the
-quality standard. Because product agents and publishing workflows continue to update repositories,
+quality standard. *(Amended 2026-11-06, owner ruling R2 in `docs/CONSOLIDATED_GOALS_2026-11-06.md`: the aspose.org readme-refresh outputs already published upstream are the minimum quality floor; ruling R6 allows a new, specifically named section for maintainer content that fits no standard section.)* Because product agents and publishing workflows continue to update repositories,
 the solution must be a durable central control with drift detection and protected content—not a
 one-time cleanup.
 
