@@ -3362,3 +3362,17 @@ pinned version set, every target regenerated under it, no mechanism merge mid-tr
 `ops/SUPERVISOR.md`, items 5-7). Consequence stated plainly: the pilot seals made today under differing versions are
 diagnostics, not a release set; the first release train runs once the in-flight mechanism fixes (attribution,
 reviewer v21, calibration) have landed.
+
+---
+
+## 2026-11-06: release train 1 — pinned version set, three pilot repositories, both lanes
+
+Pinned at `main` 419ce74: Lane R version set `b8a37816041027af436bd03d3e1bd04f1a4ec45df1ce8eeb243f04959538d974`,
+Lane L `e2195bcb029d17968aa5bc221e2d9b339b8de7491a98470c843ca52cc8b43e28` (`core.version_set.current_fingerprints`):
+reviewer independent_review v21 / logic 10, source_reconciliation v15, renderer 36 (no public attribution), S9
+settle rounds 5. Targets: the three pilot repositories (Cells-Rust, Email .NET, Imaging .NET) -- the owner-upheld
+sweep pause allows bounded pilots of at most three and lifts objectively when this pilot set reaches the quality
+bar (parity with aspose.org), so the train is not widened before that is measured. No mechanism change merges
+until the train completes (`ops/SUPERVISOR.md` item 7). Runs `run-requests/train-1-{1,2,3}`. Reviewer
+calibration iteration 5 is measuring this same reviewer version concurrently; if it does not pass, the train's
+seals remain a recorded version set and are not counted as independently accepted.
