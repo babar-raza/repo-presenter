@@ -22,9 +22,21 @@ from urllib.parse import unquote
 from repo_presenter.core.ecosystems import spec_for
 from repo_presenter.core.facts import Fact, FactsDocument
 from repo_presenter.readme.composition.components.shell import SEMANTIC_SHELL
-from repo_presenter.readme.composition.coverage import Destinations, uncovered, uncovered_block
-from repo_presenter.readme.composition.source_topics import root_heading, unit_topic
-from repo_presenter.readme.evidence.facts.commands import CI_MATRIX_FACT_ID, RELEASE_WORKFLOW_FACT_ID
+from repo_presenter.readme.composition.coverage import (
+    Destinations,
+    uncovered,
+    uncovered_block,
+)
+from repo_presenter.readme.composition.source_topics import (
+    path_topic,
+    root_heading,
+    source_heading,
+    unit_topic,
+)
+from repo_presenter.readme.evidence.facts.commands import (
+    CI_MATRIX_FACT_ID,
+    RELEASE_WORKFLOW_FACT_ID,
+)
 from repo_presenter.readme.evidence.facts.links import heading_slug
 
 #: The disposition that keeps maintainer-authored content no fact can confirm, printed as written
@@ -303,6 +315,79 @@ def resolve_intra_document_anchors(text: str, planned_slugs: frozenset[str]) -> 
     return _INTRA_DOC_ANCHOR.sub(resolve, text)
 
 
+_LISTING_CODE_SPAN = re.compile(r"`([^`\n]+)`")
+
+
+def _listed_name(span: str) -> str:
+    """The name a listing's span stands for: its last dotted segment, without the generic, array
+    or module suffix (``reconciliation.dispositions._type_name``'s rule)."""
+    base = re.split(r"[<\[(\s]", span, maxsplit=1)[0].split("-", 1)[0]
+    return re.split(r"::|\.", base)[-1]
+
+
+_LISTING_ITEM = re.compile(r"^(?P<indent>\s*)(?:[-*+]|\d+[.)])\s+(?P<rest>.*)$")
+_LEADING_CODE = re.compile(r"^(?:\*\*)?`([^`\n]+)`")
+_LEAD_IDENTIFIER = re.compile(r"^[A-Za-z_][\w:.<>&\[\]-]*(?:\(.*\))?(?:\s*(?:->|:).*)?$")
+
+
+def _listing_leads(unit_id: str, text: str) -> tuple[list[str | None], int]:
+    """(the leading code span of each item -- top-level list item or table body row -- or
+    ``None`` for an item that does not lead with one; the number of code spans in the unit)."""
+    leads: list[str | None] = []
+    if unit_id.rsplit(".", 1)[-1] == "table":
+        for row in text.splitlines()[2:]:
+            cell = row.strip().strip("|").split("|", 1)[0].strip()
+            if cell:
+                match = _LEADING_CODE.match(cell)
+                leads.append(match.group(1) if match else None)
+    else:
+        items = [m for line in text.splitlines() if (m := _LISTING_ITEM.match(line))]
+        top = min((len(m.group("indent")) for m in items), default=0)
+        for item in items:
+            if len(item.group("indent")) == top:
+                match = _LEADING_CODE.match(item.group("rest").strip())
+                leads.append(match.group(1) if match else None)
+    return leads, len(_LISTING_CODE_SPAN.findall(text))
+
+
+def api_listing_units(facts: FactsDocument) -> frozenset[str]:
+    """The inherited lists and tables that list the public API's members: every item (top-level
+    list item, or table row) leads with an identifier in a code span, and either the unit sits
+    under the upstream README's own API heading and names a SUPPORTED public symbol, or at least
+    half of its leads name one and it spells members beyond the names it leads with (``Cell`` /
+    ``CellMut`` followed by ``put_value_string(value)``, ...). Such a unit is API Reference content: the renderer's API
+    Reference is collapsed, so it never counts against the visible budget there, and placement
+    prints whatever of it the generated surface does not already state."""
+    public = {
+        _listed_name(f.value).lower()
+        for f in facts.by_kind("public_symbol")
+        if f.polarity == "SUPPORTED"
+    }
+    if not public:
+        return frozenset()
+    units = list(facts.by_kind("inherited_unit"))
+    root = root_heading(units)
+    found: set[str] = set()
+    for unit in units:
+        if unit.id.rsplit(".", 1)[-1] not in {"list", "table"}:
+            continue
+        leads, spans = _listing_leads(unit.id, unit.value)
+        if not leads or any(
+            lead is None or not _LEAD_IDENTIFIER.match(lead.strip()) for lead in leads
+        ):
+            continue
+        named = sum(1 for lead in leads if lead and _listed_name(lead.strip()).lower() in public)
+        if path_topic(source_heading(unit), root) == "api":
+            # Under the upstream's own API heading one verified name suffices: Cells-Rust's struct
+            # table lists 85 public types beside 92 private ``*Model`` ones BC-05 does not owe.
+            listing = named > 0
+        else:
+            listing = 2 * named >= len(leads) and spans > len(leads)
+        if listing:
+            found.add(unit.id)
+    return frozenset(found)
+
+
 def _table_owes_its_rows(unit_id: str, destination: str, *, text_known: bool) -> bool:
     """A kept table destined for Scope and Limitations is printed, never dropped on a shared
     fact."""
@@ -410,6 +495,7 @@ def placements(
     by_ordinal = _entries_by_ordinal(dispositions)
     root = root_heading(tuple(by_id.values()))
     api_names = supported_api_names(facts)
+    api_listings = api_listing_units(facts)
     shown: Destinations | None = None
     result: list[Placement] = []
     for entry in dispositions.get("dispositions", []):
@@ -443,17 +529,25 @@ def placements(
             | renderer_fact_ids(destination, facts, plan)
             | lead_in_of
         )
+        # A kept API-member listing in the (collapsed) API Reference prints as written, never
+        # dropped on a shared fact: the generated surface names the members, but the listing's
+        # signatures and notes are what the maintainer wrote, and a kept unit the README does not
+        # print is a disposition_coverage loss (Cells-Rust Lane R, 2026-11-06: superseded, BC-05
+        # failed; kept visible, BC-07's budget failed; kept here and dropped as overlap, the
+        # reviewer's disposition_coverage failed). Collapsed content costs no visible line.
+        owes = _table_owes_its_rows(unit_id, destination, text_known=destinations is not None) or (
+            destination == "api_reference" and unit_id.endswith(".list") and unit_id in api_listings
+        )
         overlap = (
             ()
-            if unit_id.endswith(".code_block")
-            or _table_owes_its_rows(unit_id, destination, text_known=destinations is not None)
+            if unit_id.endswith(".code_block") or owes
             else tuple(sorted(set(entry.get("fact_ids") or []) & covered))
         )
         if (
             not overlap
             and unit_id in covered
             and not unit_id.endswith(".code_block")
-            and not _table_owes_its_rows(unit_id, destination, text_known=destinations is not None)
+            and not owes
         ):
             overlap = (unit_id,)
         text = unit.value
@@ -468,6 +562,7 @@ def placements(
             if (
                 also
                 and not overlap
+                and not owes
                 and (unit_id.endswith(".code_block") or not text.rstrip().endswith(":"))
             ):
                 overlap, topical = also, True
