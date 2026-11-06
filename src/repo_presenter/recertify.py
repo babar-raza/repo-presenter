@@ -44,6 +44,7 @@ change records it as NEEDS_REPAIR with a ``justification`` naming every newly fa
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import json
 import os
@@ -225,7 +226,10 @@ def _rerun_lane_r(
     from repo_presenter.readme.composition.authoring import authoring_tasks
     from repo_presenter.readme.composition.renderer import render_patch, render_readme
     from repo_presenter.readme.review.independent_reviewer import review_candidate
-    from repo_presenter.readme.validation.blocking import blocking_failures, validate_candidate
+    from repo_presenter.readme.validation.blocking import (
+        blocking_failures,
+        validate_candidate,
+    )
     from repo_presenter.readme.validation.failures import Candidate
 
     document = read_facts(bundle / "facts.json")
@@ -299,7 +303,10 @@ def _rerun_lane_l(
     from repo_presenter.readme.composition.renderer import render_patch
     from repo_presenter.readme.correction.engine import correct, is_stable
     from repo_presenter.readme.correction.model import Context
-    from repo_presenter.readme.correction.report import canonical_json, corrections_document
+    from repo_presenter.readme.correction.report import (
+        canonical_json,
+        corrections_document,
+    )
 
     document: FactsDocument = read_facts(bundle / "facts.json")
     original_bytes = (bundle / "README.original.md").read_bytes()
@@ -371,10 +378,8 @@ def recertify_bundle(
     # 2026-11-06: Cells Cpp/Go/Java/Rust/TypeScript and PDF Java Lane R).
     from repo_presenter.extractors.platforms.registry import plugin_for
 
-    try:
+    with contextlib.suppress(Exception):  # an unknown ecosystem is reported by the check that needs it
         plugin_for(entry.ecosystem)
-    except Exception:  # noqa: BLE001 -- an unknown ecosystem is reported by the check that needs it
-        pass
 
     def needs(revision: str, checks: Sequence[str], why: Sequence[str], sealed: str = "") -> Recertification:
         return Recertification(
@@ -606,11 +611,11 @@ def recertify_history(
             continue
         latest = seals[-1]
         regenerations = regeneration_count(seals, lane)
-        base = dict(
-            repository=repository, lane=lane, revision=latest.revision,
-            outcome=OUTCOME_NEEDS_REPAIR, current_version_set=current.get(lane, ""),
-            seal_commit=latest.commit, regenerations=regenerations,
-        )
+        base = {
+            "repository": repository, "lane": lane, "revision": latest.revision,
+            "outcome": OUTCOME_NEEDS_REPAIR, "current_version_set": current.get(lane, ""),
+            "seal_commit": latest.commit, "regenerations": regenerations,
+        }
         if latest.error or getattr(latest, "bundle", None) is None:
             results.append(Recertification(**base, failing_checks=("BUNDLE",),
                                            details=(f"BUNDLE: {latest.error or 'not materialized'}",)))

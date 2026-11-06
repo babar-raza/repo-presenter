@@ -63,8 +63,7 @@ assert _SPEC.loader is not None
 sys.modules[_SPEC.name] = pdc
 _SPEC.loader.exec_module(pdc)
 
-from repo_presenter.readme.review.calibration_status import Calibration  # noqa: E402
-
+from repo_presenter.readme.review.calibration_status import Calibration
 
 # --- fixtures -----------------------------------------------------------------------------------
 
