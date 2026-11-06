@@ -43,6 +43,7 @@ from repo_presenter.readme.composition.retained_examples import (
 )
 from repo_presenter.readme.validation.deferrals import review_deferrals
 from repo_presenter.readme.validation.failures import Candidate, CausalStage, Failure
+from repo_presenter.readme.validation.supersession import superseded_failures
 from repo_presenter.readme.validation.text import (
     COMMAND,
     SPAN,
@@ -345,6 +346,8 @@ def disposition_failures(candidate: Candidate) -> list[Failure]:
                     unit=finding.unit_id,
                 )
             )
+    # A superseded unit's replacement must carry its whole substance (validation/supersession.py).
+    failures.extend(superseded_failures(candidate))
     headed = {section.id for section in SEMANTIC_SHELL if section.heading}
     texts = section_texts(candidate.readme)
     for placement in placements_of(candidate):

@@ -61,3 +61,24 @@ Read-only: `dispositions.json` and `facts.json` of each sealed bundle (exported 
 `bundle_store.export_bundle`), rationale text classified by keyword (`contradicted`; `redundant`/`duplicat`;
 heading/html_block/badge_row unit kinds or `wrapper`/`heading`; `promot`/`marketing`; otherwise "no fact
 supports it"). No provider call, no upstream access.
+
+## Re-measured after v14 (2026-11-06 hosted pilot): the prompt rule did not hold
+
+Email .NET and Imaging .NET were regenerated on current `main` (source_reconciliation v14). Supersession did not
+fall (Email 48 -> 48, Imaging 38 -> 39 units) and both Email losses the v14 rule names as examples are still
+superseded and absent from the new README: "runs on Windows, Linux, macOS, Docker containers, and serverless
+functions" (unit 016) and `CfbReader` being "useful when diagnosing a damaged or non-standard file" (unit 036).
+`PRESERVE_ATTRIBUTED` is now used (5 units across the two).
+
+Why the existing mechanical test missed them: `content_presence.unstated` judges a sentence that spells an anchor
+(`.NET 8.0`, `CfbReader`) by its anchors alone, and the README prints the anchor. `strict=True` also word-tests
+such a sentence on its non-anchor words; on the 550 superseded units of the 12 sealed bundles it flags 98
+(lenient: 80), and after exempting markup the renderer replaces by design (headings, badge rows, HTML wrappers,
+the mermaid diagram, lead-ins carried with their block) units in all 12 bundles: paragraphs ~23, lists ~23
+(Rust method lists, dependency-purpose notes), tables ~29 (type descriptions the API Reference lists only by
+name). Both Email losses are among them.
+
+Change (owner decision 2026-11-06: blocking, auto-repaired): BC-05 runs `validation/supersession.py`; each such
+unit is a RECONCILING failure naming the unit, so the repair loop issues a per-unit reconciliation patch with the
+missing pieces quoted, and a candidate that still loses the content is rejected. `RENDERER_VERSION` 35 reopens
+every sealed candidate at RECONCILING. Re-measure with this script after the next regeneration.

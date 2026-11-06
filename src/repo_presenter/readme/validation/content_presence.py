@@ -104,11 +104,18 @@ def _sentences(text: str, kind: str) -> list[str]:
     return [part for part in _SENTENCE_END.split(_SPACE.sub(" ", text).strip()) if part]
 
 
-def unstated(unit_text: str, readme: str, *, kind: str = "paragraph") -> list[str]:
+def unstated(
+    unit_text: str, readme: str, *, kind: str = "paragraph", strict: bool = False
+) -> list[str]:
     """The pieces of ``unit_text`` the README does not state: empty when it carries them all.
 
     ``kind`` is the inherited unit's kind (``paragraph``, ``list``, ``table``, ``code_block``,
-    ``heading``). Each piece is a short quotation, ready for a failure message."""
+    ``heading``). Each piece is a short quotation, ready for a failure message.
+
+    ``strict`` also word-tests a sentence that spells an anchor, on its words outside the
+    anchors: the README printing ``.NET 8.0`` does not state "runs on Windows, Linux, macOS,
+    Docker containers, and serverless functions" (Email .NET, 2026-11-06 pilot). A superseded
+    unit claims its whole substance is carried, so ``validation/supersession.py`` asks this."""
     document = _plain(readme)
     if kind == "code_block":
         return [line for line in _code_lines(unit_text) if line not in document][:6]
@@ -119,7 +126,9 @@ def unstated(unit_text: str, readme: str, *, kind: str = "paragraph") -> list[st
     block_stems: list[set[str]] | None = None
     for sentence in _sentences(unit_text, kind):
         if _anchors(sentence):
-            continue  # judged by its anchors above
+            if not strict:
+                continue  # judged by its anchors above
+            sentence = _CODE_SPAN.sub(" ", _MARKDOWN_LINK.sub(r"\1", sentence))
         wanted = stems(sentence)
         if len(wanted) < _CLAIM_STEMS:
             continue

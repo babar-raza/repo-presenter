@@ -3217,3 +3217,17 @@ and an empty allowlist.
   candidate is in a run artifact this session cannot download. Fix: `present.py` now prints every blocking finding
   (rule, section, quote, evidence) and the recorded failure detail to the job log.
 - No upstream PR was or could be opened: reviewer calibration is NOT_PASSED (TC-007).
+
+---
+
+## 2026-11-06: superseded maintainer content is checked deterministically and blocks (owner decision)
+
+The v14 prompt rule failed on the first hosted candidates under it (Email .NET still drops its platform list and
+the `CfbReader` diagnosis note; `docs/investigations/2026-11-05-maintainer-content-calibration.md`). **Owner chose
+(interactive form) "blocking, auto-repaired"** over "block prose, advise tables" and "advisory only": BC-05 fails
+any SUPERSEDE_REDUNDANT unit whose substance `content_presence.unstated(strict=True)` finds missing from the
+README (headings, badge rows, HTML wrappers, the mermaid diagram and carried lead-ins exempt); the failure is
+RECONCILING and names its unit, so the existing repair loop patches that unit (at most 3 rounds) before any
+reject. Measured today it would flag units in all 12 sealed Lane R candidates; expected cost is extra
+reconciliation calls per run and some rejects until repairs succeed. `RENDERER_VERSION` 35 reopens sealed
+candidates so none keeps a loss by preflight skip.
