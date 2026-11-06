@@ -9,10 +9,9 @@
       "fact_ids": [
         "public_symbol:aspose.email.foss.msg.mapimessage",
         "public_symbol:aspose.email.foss.cfb.cfbreader",
-        "public_symbol:aspose.email.foss.cfb.cfbdocument",
         "public_symbol:aspose.email.foss.msg.msgreader",
-        "public_symbol:aspose.email.foss.msg.msgwriter",
-        "public_symbol:aspose.email.foss.cfb.cfbwriter"
+        "public_symbol:aspose.email.foss.cfb.cfbwriter",
+        "public_symbol:aspose.email.foss.msg.msgstoragerole"
       ],
       "symbol_fact_id": "public_symbol:aspose.email.foss"
     }
@@ -22,7 +21,9 @@
       "Read and write MSG files",
       "Create messages programmatically",
       "Convert between MSG and EML",
-      "Inspect CFB containers"
+      "Inspect CFB containers",
+      "Access arbitrary MAPI properties",
+      "Attach recipients and files"
     ],
     "input_format_ids": [],
     "output_format_ids": []
@@ -31,59 +32,61 @@
     {
       "fact_ids": [
         "example:001",
-        "public_symbol:aspose.email.foss.msg.mapimessage"
+        "public_symbol:aspose.email.foss"
       ],
       "shared_fact_ids": [
-        "public_symbol:aspose.email.foss.msg.mapimessage"
+        "public_symbol:aspose.email.foss"
       ],
       "title": "Read and write MSG files"
     },
     {
       "fact_ids": [
         "example:002",
-        "public_symbol:aspose.email.foss.msg.mapimessage"
+        "public_symbol:aspose.email.foss"
       ],
       "shared_fact_ids": [
         "example:002",
-        "public_symbol:aspose.email.foss.msg.mapimessage"
+        "public_symbol:aspose.email.foss"
       ],
       "title": "Create messages programmatically"
     },
     {
       "fact_ids": [
         "example:003",
-        "public_symbol:aspose.email.foss.msg.mapimessage"
+        "public_symbol:aspose.email.foss"
       ],
       "shared_fact_ids": [
-        "public_symbol:aspose.email.foss.msg.mapimessage"
+        "public_symbol:aspose.email.foss"
       ],
       "title": "Convert between MSG and EML"
     },
     {
       "fact_ids": [
         "example:004",
-        "public_symbol:aspose.email.foss.cfb.cfbreader"
+        "public_symbol:aspose.email.foss"
       ],
-      "shared_fact_ids": [],
+      "shared_fact_ids": [
+        "public_symbol:aspose.email.foss"
+      ],
       "title": "Inspect CFB containers"
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.email.foss.msg.mapimessage"
+        "public_symbol:aspose.email.foss"
       ],
       "shared_fact_ids": [
-        "public_symbol:aspose.email.foss.msg.mapimessage"
+        "public_symbol:aspose.email.foss"
       ],
       "title": "Access arbitrary MAPI properties"
     },
     {
       "fact_ids": [
         "example:002",
-        "public_symbol:aspose.email.foss.msg.mapimessage"
+        "public_symbol:aspose.email.foss"
       ],
       "shared_fact_ids": [
         "example:002",
-        "public_symbol:aspose.email.foss.msg.mapimessage"
+        "public_symbol:aspose.email.foss"
       ],
       "title": "Attach recipients and files"
     }
@@ -91,16 +94,74 @@
   "deviations": [
     {
       "fact_ids": [
-        "license:file",
-        "license:spdx",
-        "link_target:product.enterprise"
+        "public_symbol:aspose.email.foss"
       ],
-      "section_id": "enterprise_relationship",
-      "text": "The Enterprise Edition comparison paragraph is placed in the enterprise_relationship section as it introduces the FOSS vs Enterprise context."
+      "section_id": "api_reference",
+      "text": "The inherited table of public symbols is replaced by a compact hub listing to stay within the 12-symbol ceiling."
     }
   ],
   "flagship_example_id": "example:003",
   "links": [
+    {
+      "link_fact_id": "link_target:001",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:003",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:005",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:007",
+      "section_id": "banner"
+    },
+    {
+      "link_fact_id": "link_target:009",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:010",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:011",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:012",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:013",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:014",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:015",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:016",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:017",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:018",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:019",
+      "section_id": "navigation"
+    },
     {
       "link_fact_id": "link_target:020",
       "section_id": "documentation_resources"
@@ -123,15 +184,15 @@
     },
     {
       "link_fact_id": "link_target:025",
-      "section_id": "development_testing"
+      "section_id": "documentation_resources"
     },
     {
       "link_fact_id": "link_target:027",
-      "section_id": "development_testing"
+      "section_id": "additional_examples"
     },
     {
       "link_fact_id": "link_target:028",
-      "section_id": "development_testing"
+      "section_id": "additional_examples"
     }
   ],
   "material_limitations": [
