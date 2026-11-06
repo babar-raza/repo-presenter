@@ -54,7 +54,11 @@ lang.LANGUAGES.setdefault("javascript", lang.typescript)
 # 5: wave 6 (G3-W08, cut 6): an unpublished package with a documented build is a source_checkout
 # install fact, registry readings are classed, example receipts hold no wall-clock text, and the
 # Python format facts tell a saved fixture from an opened one.
-EXTRACTOR_VERSION = "5"
+# 6: the class-B audit's source-detail facts (readme/evidence/facts/source_detail.py and
+# project_detail.py): full doc comments, declarations, enum members for TypeScript/Go/Python,
+# fields, module exports, internal symbols, throws/constants, specifications, project files and
+# package traits.
+EXTRACTOR_VERSION = "6"
 
 SymbolKind = Literal["module", "class", "enum", "function", "method", "unknown"]
 
