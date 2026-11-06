@@ -58,7 +58,10 @@ progress:
   lane_l_accepted: 12
   lane_l_corrected_non_empty_patch: 15
   lane_l_blocked: 0
-  lane_r_accepted: 10
+  lane_r_accepted: 9
+  # 2026-11-06 resync (scripts/portfolio_status.py): 10 -> 9. Cells-Rust Lane R was re-run on current
+  # main (run-request pilot, hosted run 42170833669); the independent reviewer rejected the new candidate
+  # (2 unsupported_claim findings), so its earlier acceptance on changed inputs is INVALIDATED.
   lane_r_blocked_or_not_authored: 2
   lane_r_blocked_detail: >
     aspose-psd-foss/Aspose.PSD-FOSS-for-.NET and aspose-slides-foss/Aspose.Slides-FOSS-for-.NET:
