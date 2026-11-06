@@ -64,6 +64,12 @@ a wrong package name in prose, or a format the product does not read):
     a SUPPORTED ``format`` fact, names only SUPPORTED formats; an extension in such a list that no
     format fact states is flagged. One extension alone is not a list (BC-04 owns single identifiers).
 
+Rules (h)-(m) (2026-11-06, the mechanically checkable false claims and generator-authored counts
+and verification narratives of the iteration-5 claim-class audit: type counts, API-table names
+the public surface does not hold, stubs described as working, CONTRADICTED examples printed, the
+stated package name, uncomputed structure and verification narrative) live in
+``readme/validation/surface_claims.py`` and run from ``claim_findings`` with these.
+
 This module imports nothing from `validation/registry.py`: it reports a line index and a causal
 stage, and the registry maps the line to its shell section.
 """
@@ -212,6 +218,11 @@ class ClaimFinding:
     line: int
     stage: str  # "EXTRACTING" (a fact carries the defect) or "COMPOSING" (only the prose does)
     detail: str
+    #: The last line of the statement when it spans several (a wrapped sentence, a fence).
+    last: int | None = None
+    #: The SUPPORTED ``inherited_unit`` that carries the statement verbatim, when the README keeps
+    #: the maintainers' text: the defect is then the disposition's (RECONCILING), not the prose's.
+    unit: str | None = None
 
 
 def _fact(facts: FactsDocument, fact_id: str) -> Fact | None:
@@ -907,11 +918,17 @@ def install_identity_findings(text: str, facts: FactsDocument) -> list[ClaimFind
 
 
 def claim_findings(readme: str, facts: FactsDocument) -> list[ClaimFinding]:
-    """Every statement in ``readme`` that a fact in ``facts`` positively contradicts."""
+    """Every statement in ``readme`` that a fact in ``facts`` positively contradicts: rules (a)-(g)
+    here, held to the package identity, and the surface rules (h)-(m) of
+    ``readme/validation/surface_claims.py``, held to the symbol, example and limitation facts."""
+    # Imported here: surface_claims builds on this module's line and paragraph readers.
+    from repo_presenter.readme.validation.surface_claims import surface_findings
+
+    lines = _lines(readme)
+    surface = surface_findings(lines, facts)
     identity = _fact(facts, "package:name")
     if identity is None:
-        return []
-    lines = _lines(readme)
+        return surface
     versions, _ = _version_findings(readme, lines, facts, identity)
     return [
         *versions,
@@ -921,6 +938,7 @@ def claim_findings(readme: str, facts: FactsDocument) -> list[ClaimFinding]:
         *_prose_name_findings(lines, facts, identity),
         *_license_findings(lines, facts),
         *_format_findings(lines, facts),
+        *surface,
     ]
 
 
