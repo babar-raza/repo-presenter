@@ -3248,3 +3248,17 @@ cause) while the supervisor drives the pilots and the TC-009a mint (secrets adde
 An independent audit (2026-11-06) was verified before acting: its claims about the hardcoded control-repo write
 guard, missing `draft`, the 25-common TC-011 rule, the absent `dispatch-next`/`worker-tick`, and the
 branch-controlled code in `run-request.yml` are each confirmed in the code.
+
+---
+
+## 2026-11-06: TC-009a — the one authorized App installation token was minted and verified
+
+Run 42200695015 (`run-requests/mint-2`, after the owner added `GH_APP_ID`/`GH_APP_PRIVATE_KEY` to this repository)
+minted one read-only installation token for `aspose-cells-foss/Aspose.Cells-FOSS-for-Java` via the
+`repository-presenter` App and verified it with `token_provenance.verify_installation_token`
+(`verified_via_token_provenance: true`). The token was never printed or stored and was revoked at job end;
+zero upstream writes. Proof: `evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json`, committed by
+`github-actions[bot]` on `tc-009a/mint-proof` (d2e16f7), copied byte-identically. TC-009a now also checks the
+proof against GitHub itself (`ops/checks/actions_run_proof.py`: run completed/success from the expected
+workflow, file authored by the bot in a commit naming the run, bytes identical). The first attempt (run
+42170741214) failed because the App secrets existed only in the legacy repository.
