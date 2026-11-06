@@ -11,6 +11,9 @@ fresh ``store_dir`` per repeat is what bypasses the cache for a repeatability me
 
 from __future__ import annotations
 
+import dataclasses
+import hashlib
+import json
 from pathlib import Path
 from typing import Any
 
@@ -31,8 +34,11 @@ from repo_presenter.readme.review.calibration.outcomes import (
     REJECT,
     UNAVAILABLE,
 )
-from repo_presenter.readme.review.llm_review import review_with_model
-from repo_presenter.readme.review.verdict import ReviewUnavailable
+from repo_presenter.readme.review.llm_review import JOB, review_with_model
+from repo_presenter.readme.review.verdict import (
+    REVIEWER_LOGIC_VERSION,
+    ReviewUnavailable,
+)
 
 
 def always_accept(case: Case) -> ReviewOutcome:
@@ -98,6 +104,62 @@ def _tokens(appended: list) -> int:
     )
 
 
+def review_key(scope: str, case: Case, prompt_sha256: str, model: str) -> str:
+    """The identity of one review in a run's journal: where it was asked (the store, or the fresh
+    ``askNNNN`` store of a repeat), the case, the exact README, the prompt, the reviewer logic and the
+    model. A change to any of them is a different review, never a journal replay."""
+    readme = hashlib.sha256(case.readme.encode("utf-8")).hexdigest()
+    return "/".join(
+        (
+            scope,
+            case.case_id,
+            readme[:16],
+            prompt_sha256[:16],
+            f"logic{REVIEWER_LOGIC_VERSION}",
+            model,
+        )
+    )
+
+
+class ReviewJournal:
+    """Every completed review of a run, appended as one JSON line as soon as it is known.
+
+    A resumed run (same ``--out`` and tag) takes a journaled review's outcome as it was recorded,
+    first-reply flags and spent calls included, and sends nothing. Without it a resume replays each
+    answered unit from the call store but re-asks a unit whose reply broke the contract twice (it was
+    never stored), and loses the first-reply flags of everything it replays (iteration 4, section
+    2.1). A review the budget interrupted is not journaled: its answered units replay from the store
+    and only the units never answered are asked."""
+
+    def __init__(self, path: Path) -> None:
+        self.path = path
+        self.entries: dict[str, dict[str, Any]] = {}
+        if path.is_file():
+            for line in path.read_text(encoding="utf-8").splitlines():
+                if line.strip():
+                    record = json.loads(line)
+                    self.entries[record["key"]] = record["outcome"]
+
+    def keys(self) -> frozenset[str]:
+        return frozenset(self.entries)
+
+    def get(self, key: str) -> ReviewOutcome | None:
+        stored = self.entries.get(key)
+        if stored is None:
+            return None
+        fields = dict(stored)
+        for name in ("blocking_kinds", "evidence", "quotes"):
+            fields[name] = tuple(fields.get(name, ()))
+        return ReviewOutcome(**fields)
+
+    def put(self, key: str, outcome: ReviewOutcome) -> None:
+        record = dataclasses.asdict(outcome)
+        self.entries[key] = record
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        with self.path.open("a", encoding="utf-8", newline="\n") as stream:
+            stream.write(json.dumps({"key": key, "outcome": record}, sort_keys=True) + "\n")
+
+
 class LiveReviewer:
     def __init__(
         self,
@@ -109,6 +171,7 @@ class LiveReviewer:
         cap: int,
         models: ModelSelection | None = None,
         fresh_store_per_call: bool = False,
+        journal: ReviewJournal | None = None,
     ) -> None:
         self.prompts = prompts
         self.config = config
@@ -119,15 +182,33 @@ class LiveReviewer:
         self.asked = 0
         self.cap = cap
         self.models = models
+        self.journal = journal
+
+    def _key(self, case: Case) -> str:
+        loaded = self.prompts[JOB]
+        route = loaded.manifest.model_route
+        model = route if self.models is None else self.models.model_for(route)
+        scope = self.store.directory.relative_to(self.store_dir.parent).as_posix()
+        return review_key(scope, case, loaded.sha256, model)
 
     def __call__(self, case: Case) -> ReviewOutcome:
+        if self.fresh_store_per_call:
+            self.asked += 1
+            self.store = CallStore(self.store_dir / f"ask{self.asked:04d}")
+        if self.journal is not None:
+            recorded = self.journal.get(self._key(case))
+            if recorded is not None:
+                return recorded
+        outcome = self._review(case)
+        if self.journal is not None:
+            self.journal.put(self._key(case), outcome)
+        return outcome
+
+    def _review(self, case: Case) -> ReviewOutcome:
         spent = physical_calls(self.ledger_path)
         if spent >= self.cap:
             raise BudgetExhausted(f"{spent} provider calls made; the cap is {self.cap}")
         ledger = Ledger(self.ledger_path, call_budget=self.cap - spent)
-        if self.fresh_store_per_call:
-            self.asked += 1
-            self.store = CallStore(self.store_dir / f"ask{self.asked:04d}")
         source = case.source
         context = JobContext(
             repository=source.repository,

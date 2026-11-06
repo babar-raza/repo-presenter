@@ -3,6 +3,18 @@
     python scripts/run_reviewer_calibration.py corpus --work NAME=PATH ... --recorded-clones DIR
         [--lane-r NAME=OUTPUT_DIR,CLONE_DIR[,BC-07,...] ...]
     python scripts/run_reviewer_calibration.py live   --work NAME=PATH ... --cap 200 [--out DIR]
+    python scripts/run_reviewer_calibration.py register ... --registration-out FILE
+    python scripts/run_reviewer_calibration.py estimate ... --registered FILE --out DIR --max-calls N
+    python scripts/run_reviewer_calibration.py live     ... --registered FILE --out DIR --max-calls N
+
+``register`` (zero calls) freezes the selection (``--exclude``d ids never selected, real defects
+hash-ranked per base, the stability subset) with each case's role, expected verdict and README
+digest in a file to commit before any run; ``live``/``estimate --registered`` rebuild the corpus and
+refuse to run when it is not the registered one. ``estimate`` makes no provider call: it counts the
+unit requests the run would send that its call store and journal would not replay
+(``calibration/estimate.py``). ``live`` journals every completed review, so re-running the same
+command after an interruption replays answered reviews and stored units and spends calls only on
+what was never answered; ``--max-calls`` (``--cap``) bounds the ledger file's total across resumes.
 
 ``--work`` points at the ``.present-work`` directory of a downloaded hosted cascade run (named
 ``run5``, ``run7`` or ``run9``; the curated repairs below belong to those candidates). ``corpus``
@@ -32,6 +44,11 @@ from repo_presenter.readme.review.calibration.corpus import (
     Repair,
     build_corpus,
 )
+from repo_presenter.readme.review.calibration.estimate import (
+    DEFAULT_REASK_RATE,
+    case_requests,
+    estimate_run,
+)
 from repo_presenter.readme.review.calibration.harness import (
     CaseResult,
     PreLLM,
@@ -46,8 +63,13 @@ from repo_presenter.readme.review.calibration.record import (
     merge_repeats,
     status_document,
 )
+from repo_presenter.readme.review.calibration.registration import (
+    registered_cases,
+    registration_document,
+)
 from repo_presenter.readme.review.calibration.reviewers import (
     LiveReviewer,
+    ReviewJournal,
     physical_calls,
 )
 from repo_presenter.readme.review.calibration.selection import (
@@ -57,6 +79,7 @@ from repo_presenter.readme.review.calibration.selection import (
 from repo_presenter.readme.review.calibration.sources import (
     load_bundle_candidate,
     load_cascade_candidate,
+    load_lane_l_bundle_candidate,
     load_lane_r_candidate,
     load_reference_candidate,
 )
@@ -207,6 +230,28 @@ def load_repairs(path: Path | None) -> dict[str, tuple[Repair, ...]]:
     }
 
 
+def load_unscored(path: Path | None) -> dict[str, str]:
+    """Bases whose twin is asked but not scored, from ``--unscored`` (JSON ``{base: reason}``)."""
+    if path is None:
+        return {}
+    document = json.loads(path.read_text(encoding="utf-8"))
+    for name, reason in document.items():
+        if not str(reason).strip():
+            raise SystemExit(f"--unscored {name}: an unscored twin needs a stated reason")
+    return {name: str(reason) for name, reason in document.items()}
+
+
+def load_exclusions(path: Path | None) -> frozenset[str]:
+    """Case ids never to select (one per line; ``#`` starts a comment)."""
+    if path is None:
+        return frozenset()
+    return frozenset(
+        line.split("#", 1)[0].strip()
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.split("#", 1)[0].strip()
+    )
+
+
 def build(
     work: dict[str, Path],
     clones: Path | None,
@@ -215,14 +260,18 @@ def build(
     references: list[tuple[str, tuple[Path, ...]]] = (),
     repairs: dict[str, tuple[Repair, ...]] | None = None,
     tolerated: dict[str, tuple[str, ...]] | None = None,
+    lane_l: list[tuple[str, tuple[Path, ...]]] = (),
+    unscored: dict[str, str] | None = None,
 ) -> list[Case]:
     repairs = repairs or {}
     tolerated = tolerated or {}
-    unknown = sorted(
-        set(repairs) - {name for name, _ in (*bundles, *references)}
-    )
+    unscored = unscored or {}
+    named = {name for name, _ in (*bundles, *references, *lane_l)}
+    unknown = sorted((set(repairs) | set(unscored) | set(tolerated)) - named)
     if unknown:
-        raise SystemExit(f"repairs name bases that are not in the corpus: {unknown}")
+        raise SystemExit(
+            f"repairs, tolerations or unscored entries name bases not in the corpus: {unknown}"
+        )
     bases = [
         Base(
             load_cascade_candidate(path, name=name),
@@ -242,13 +291,25 @@ def build(
     for name, (revision_dir, clone) in bundles:
         source = load_bundle_candidate(revision_dir, clone=clone, name=name)
         bases.append(
-            Base(source, repairs.get(name, ()), tolerated_checks=tolerated.get(name, ()))
+            Base(
+                source,
+                repairs.get(name, ()),
+                tolerated_checks=tolerated.get(name, ()),
+                unscored_reason=unscored.get(name, ""),
+            )
         )
     for name, (readme, facts, clone) in references:
         source = load_reference_candidate(
             readme, facts_path=facts, clone=clone, name=name
         )
-        bases.append(Base(source, repairs.get(name, ())))
+        bases.append(
+            Base(source, repairs.get(name, ()), unscored_reason=unscored.get(name, ""))
+        )
+    for name, (revision_dir,) in lane_l:
+        source = load_lane_l_bundle_candidate(revision_dir, name=name)
+        bases.append(
+            Base(source, repairs.get(name, ()), unscored_reason=unscored.get(name, ""))
+        )
     recorded = []
     if clones is not None:
         for key, (repo, output, klass, repairs, note, targets) in RECORDED.items():
@@ -261,6 +322,42 @@ def build(
             )
             recorded.append(RecordedDefect(source, klass, repairs, note, targets))
     return build_corpus(bases, recorded)
+
+
+def register(cases: list[Case], args: argparse.Namespace) -> int:
+    """Freeze the selection: every case not ``--exclude``d, real defects capped per base
+    (hash-ranked), and a hash-ranked stability subset; written with each case's digests."""
+    if args.registration_out is None:
+        raise SystemExit("register needs --registration-out")
+    excluded = load_exclusions(args.exclude)
+    kept = [c for c in cases if c.case_id not in excluded]
+    selected = cap_real_defects(kept, args.real_per_base)
+    pool = selected
+    if args.stability_max_units:
+        prompts = load_manifests(args.prompts)
+        pool = [
+            c for c in selected if len(case_requests(c, prompts)) <= args.stability_max_units
+        ]
+    stability = stability_subset(pool, args.stability)
+    document = registration_document(
+        selected,
+        stability,
+        corpus_size=len(cases),
+        notes={
+            "excluded_case_ids": len(excluded & {c.case_id for c in cases}),
+            "real_per_base": args.real_per_base,
+            "stability": args.stability,
+            "stability_max_units": args.stability_max_units,
+        },
+    )
+    args.registration_out.write_text(
+        json.dumps(document, indent=1, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    print(
+        f"registered {len(selected)} of {len(cases)} cases ({document['by_role']}), "
+        f"{len(stability)} stability cases -> {args.registration_out}"
+    )
+    return 0
 
 
 def describe(case: Case, pre: PreLLM) -> str:
@@ -367,8 +464,10 @@ def print_metrics(run: Run) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("mode", choices=["corpus", "live"])
+    parser = argparse.ArgumentParser(
+        description=__doc__.splitlines()[0], fromfile_prefix_chars="@"
+    )
+    parser.add_argument("mode", choices=["corpus", "register", "estimate", "live"])
     parser.add_argument("--work", action="append", default=[], metavar="NAME=PATH")
     parser.add_argument("--recorded-clones", type=Path)
     parser.add_argument(
@@ -390,7 +489,49 @@ def main(argv: list[str] | None = None) -> int:
         "clone's revision, and the clone",
     )
     parser.add_argument(
-        "--repairs", type=Path, help="pre-registered repairs of --bundle/--reference bases"
+        "--lane-l",
+        dest="lane_l",
+        action="append",
+        default=[],
+        metavar="NAME=REVISION_DIR",
+        help="a sealed Lane L bundle (export_bundle(..., 'L', ...)'s <root>/lane-l/<revision>)",
+    )
+    parser.add_argument(
+        "--repairs",
+        type=Path,
+        help="pre-registered repairs of --bundle/--reference/--lane-l bases",
+    )
+    parser.add_argument(
+        "--unscored",
+        type=Path,
+        help="bases whose twin is asked but never scored, JSON {base: reason}",
+    )
+    parser.add_argument(
+        "--exclude",
+        type=Path,
+        help="case ids register never selects (one per line): cases an earlier iteration asked",
+    )
+    parser.add_argument(
+        "--stability-max-units",
+        type=int,
+        default=0,
+        help="register: draw the stability subset only from cases with at most this many review "
+        "units (a cost bound fixed before any verdict; 0 = no bound)",
+    )
+    parser.add_argument(
+        "--registration-out", type=Path, help="register: write the frozen selection here"
+    )
+    parser.add_argument(
+        "--registered",
+        type=Path,
+        help="estimate/live: ask exactly the cases of this registration file (refused when the "
+        "built corpus differs from it)",
+    )
+    parser.add_argument(
+        "--reask-rate",
+        type=float,
+        default=DEFAULT_REASK_RATE,
+        help="estimate: share of unit requests expected to need the one re-ask",
     )
     parser.add_argument(
         "--stability",
@@ -417,7 +558,14 @@ def main(argv: list[str] | None = None) -> int:
         "every gate passes and every selected case was asked)",
     )
     parser.add_argument("--out", type=Path, default=Path(".calibration"))
-    parser.add_argument("--cap", type=int, default=200)
+    parser.add_argument(
+        "--cap",
+        "--max-calls",
+        dest="cap",
+        type=int,
+        default=200,
+        help="hard cap on physical provider calls in --out's ledger, summed across resumes",
+    )
     parser.add_argument("--per-class", type=int, default=2)
     parser.add_argument("--repeats", type=int, default=1)
     parser.add_argument(
@@ -474,6 +622,8 @@ def main(argv: list[str] | None = None) -> int:
             parse_specs(args.reference, 3),
             load_repairs(args.repairs),
             load_tolerated(args.tolerate),
+            parse_specs(args.lane_l, 1),
+            load_unscored(args.unscored),
         )
         if args.cache_corpus is not None:
             args.cache_corpus.write_bytes(pickle.dumps(cases))
@@ -490,7 +640,17 @@ def main(argv: list[str] | None = None) -> int:
 
     from repo_presenter.core.llm.fallback import ModelSelection, RouteDecision
 
-    if args.only:
+    if args.mode == "register":
+        return register(cases, args)
+    stability_cases = None
+    if args.registered is not None:
+        document = json.loads(args.registered.read_text(encoding="utf-8"))
+        selected, stability_cases = registered_cases(document, cases)
+        print(
+            f"registration {args.registered}: {len(selected)} cases, "
+            f"{len(stability_cases)} stability cases; the built corpus matches it"
+        )
+    elif args.only:
         selected = [c for c in cases if c.case_id in set(args.only.split(","))]
     elif args.all:
         selected = cap_real_defects(cases, args.real_per_base)
@@ -502,8 +662,32 @@ def main(argv: list[str] | None = None) -> int:
         models = ModelSelection(
             (), {route: RouteDecision(route, (route,), args.model, None, "calibration")}
         )
+    journal_path = args.out / f"journal-{args.tag}.jsonl"
+    if args.mode == "estimate":
+        repeated = (
+            stability_cases
+            if stability_cases is not None
+            else stability_subset(selected, args.stability)
+        )
+        estimate = estimate_run(
+            selected,
+            repeated,
+            load_manifests(args.prompts),
+            store_dir=args.out / "calls" / args.tag,
+            stability_dir=args.out / "calls" / f"{args.tag}-stability",
+            models=models,
+            reask_rate=args.reask_rate,
+            journaled=ReviewJournal(journal_path).keys(),
+        )
+        spent = physical_calls(args.out / "ledger.jsonl")
+        print("estimate (zero provider calls):")
+        for line in estimate.lines(args.cap - spent):
+            print(f"  {line}")
+        print(f"  the ledger already holds {spent} calls of the cap {args.cap}")
+        return 0
     args.out.mkdir(parents=True, exist_ok=True)
     ledger_path = args.out / "ledger.jsonl"
+    journal = ReviewJournal(journal_path)
     reviewer = LiveReviewer(
         prompts=load_manifests(args.prompts),
         config=load_gateway_config(os.environ),
@@ -512,15 +696,21 @@ def main(argv: list[str] | None = None) -> int:
         cap=args.cap,
         models=models,
         fresh_store_per_call=args.fresh,
+        journal=journal,
     )
     print(
         f"{len(selected)} cases selected; ledger holds {physical_calls(ledger_path)} of {args.cap} calls"
     )
     run = run_corpus(selected, reviewer, repeats=args.repeats)
-    if args.stability:
-        repeated = stability_subset(
-            [r.case for r in run.results], args.stability
-        )
+    if run.stopped:
+        repeated = []
+    elif stability_cases is not None:
+        repeated = stability_cases
+    elif args.stability:
+        repeated = stability_subset([r.case for r in run.results], args.stability)
+    else:
+        repeated = []
+    if repeated:
         fresh = LiveReviewer(
             prompts=load_manifests(args.prompts),
             config=load_gateway_config(os.environ),
@@ -529,6 +719,7 @@ def main(argv: list[str] | None = None) -> int:
             cap=args.cap,
             models=models,
             fresh_store_per_call=True,
+            journal=journal,
         )
         print(f"stability: {len(repeated)} cases x 3 fresh reviews")
         run = merge_repeats(run, run_corpus(repeated, fresh, repeats=3))
@@ -544,10 +735,14 @@ def main(argv: list[str] | None = None) -> int:
         document = status_document(
             evaluate_tiers(metrics),
             metrics,
-            complete=complete and bool(args.all),
+            complete=complete and bool(args.all or args.registered),
             incomplete_reason=(
                 run.stopped
-                or ("" if args.all else "a sample (--all not given), not the whole corpus")
+                or (
+                    ""
+                    if args.all or args.registered
+                    else "a sample (--all or --registered not given), not the whole corpus"
+                )
             ),
             prompt_version=str(manifest.version),
             model=args.model or manifest.model_route,

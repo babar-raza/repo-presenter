@@ -1,0 +1,139 @@
+{
+ "own5:cells-python": [],
+ "own5:cells-typescript": [
+  {
+   "klass": "unsupported_claim",
+   "new": "The toolchain uses dependencies handling",
+   "old": "The toolchain requires Node.js 18 or later and TypeScript 5 or later, with dependencies handling",
+   "reason": "Node.js 18 / TypeScript 5 minimums: no fact states a version floor",
+   "targets": [
+    "node.js 18",
+    "typescript 5"
+   ]
+  },
+  {
+   "klass": "unsupported_claim",
+   "new": "",
+   "old": " It adds a full commercial spreadsheet engine, broader format coverage, and active support beyond this FOSS TypeScript edition's own scope.",
+   "reason": "what the Enterprise Edition adds: no fact states it (iteration-4 label policy)",
+   "targets": [
+    "enterprise"
+   ]
+  }
+ ],
+ "own5:email-net": [
+  {
+   "klass": "unsupported_claim",
+   "new": "",
+   "old": " and runs on Windows, Linux, macOS, Docker containers, and\nserverless functions",
+   "reason": "platform list (Windows, Linux, macOS, Docker, serverless): no fact states any platform; unattributed inherited text, judged as the README's own claim",
+   "targets": [
+    "windows",
+    "docker",
+    "serverless"
+   ]
+  },
+  {
+   "klass": "unsupported_claim",
+   "new": "",
+   "old": " It adds broader format and protocol coverage: direct IMAP/SMTP/POP3 mail-server connectivity, TNEF (winmail.dat) support, calendar and appointment APIs, and classic .NET Framework support alongside this edition's MSG, CFB, and EML processing.",
+   "reason": "what the Enterprise Edition adds: no fact states it (iteration-4 label policy)",
+   "targets": [
+    "enterprise",
+    "imap"
+   ]
+  },
+  {
+   "klass": "unsupported_claim",
+   "new": "The test project is located under tests/`Aspose.Email.Foss.Tests`. ",
+   "old": "The test project, located under tests/`Aspose.Email.Foss.Tests`, uses the xUnit test framework with Microsoft.NET.Test.Sdk 17.8.0, xunit 2.5.3, and xunit.runner.visualstudio 2.5.3, along with coverlet.collector 6.0.0 for code coverage; these dependencies apply only to the test project and are not included in the published package. ",
+   "reason": "test dependencies and versions (xunit 2.5.3, Test.Sdk 17.8.0, coverlet 6.0.0): the only dependency fact is dependency:none",
+   "targets": [
+    "xunit",
+    "17.8.0",
+    "coverlet"
+   ]
+  }
+ ],
+ "own5:imaging-net": [
+  {
+   "klass": "unsupported_claim",
+   "new": "",
+   "old": "; only placeable WMF yields Width and Height assuming a conventional 96 DPI target",
+   "reason": "96 DPI assumption: no fact states it",
+   "targets": [
+    "96",
+    "dpi"
+   ]
+  },
+  {
+   "klass": "unsupported_claim",
+   "new": "",
+   "old": "- DICOM parsing covers Implicit VR Little Endian and Explicit VR Little/Big Endian transfer syntaxes, including common compressed ones, and stops at the first undefined-length element, since Rows, Columns, and `BitsAllocated` always precede such elements in a conformant file.\n",
+   "reason": "DICOM transfer syntaxes and `BitsAllocated`: no fact states them",
+   "targets": [
+    "dicom",
+    "transfer"
+   ]
+  },
+  {
+   "klass": "unsupported_claim",
+   "new": "- The test host and adapter, used only by the test project.",
+   "old": "- `Microsoft.NET.Test.Sdk` 17.12.0, `xunit` 2.9.2, and `xunit.runner.visualstudio` 2.8.2 — the\n  xUnit test host and adapter used only by the test project.",
+   "reason": "test packages and versions: the only dependency fact is dependency:none",
+   "targets": [
+    "xunit",
+    "17.12.0"
+   ]
+  },
+  {
+   "klass": "unsupported_claim",
+   "new": "The test project references",
+   "old": "The test project targets `net9.0` and references",
+   "reason": "net9.0: the only target-framework fact is netstandard2.0;net8.0",
+   "targets": [
+    "net9.0"
+   ]
+  }
+ ],
+ "own5:note-python": [
+  {
+   "klass": "unsupported_claim",
+   "new": "for the public types.",
+   "old": "for all 39 public types.",
+   "reason": "'39 public types': the facts hold 37 type-level public symbols (the same line says 37)",
+   "targets": [
+    "39"
+   ]
+  },
+  {
+   "klass": "unsupported_claim",
+   "new": ".",
+   "old": ", and the optional PDF-export dependency `ReportLab` is BSD-3-Clause licensed.",
+   "reason": "ReportLab's BSD-3-Clause license: no fact states it",
+   "targets": [
+    "bsd"
+   ]
+  },
+  {
+   "klass": "unsupported_claim",
+   "new": "is a third-party dependency; see",
+   "old": "is BSD-3-Clause licensed; see",
+   "reason": "ReportLab's BSD-3-Clause license (second statement): no fact states it",
+   "targets": [
+    "bsd"
+   ]
+  }
+ ],
+ "own5:pdf-java": [
+  {
+   "klass": "unsupported_claim",
+   "new": "public API surface is grouped by module in",
+   "old": "public API surface spans 1026 public types across",
+   "reason": "'1026 public types': the facts hold 1181 type-level public symbols",
+   "targets": [
+    "1026"
+   ]
+  }
+ ]
+}

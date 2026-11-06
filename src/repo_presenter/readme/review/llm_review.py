@@ -31,6 +31,7 @@ from __future__ import annotations
 import hashlib
 import json
 from collections.abc import Mapping, Sequence
+from dataclasses import dataclass
 from functools import partial
 from typing import Any
 
@@ -221,6 +222,57 @@ def _unit_record(
     }
 
 
+@dataclass(frozen=True)
+class PlannedRequest:
+    """One review unit's request, exactly as ``review_with_model`` would send it."""
+
+    unit: ReviewUnit
+    packet: dict[str, Any]
+    schema: dict[str, Any]
+    request_sha256: str
+
+
+def planned_requests(
+    *,
+    prompts: PromptRegistry,
+    context: JobContext,
+    candidate_readme: str,
+    original_readme: str,
+    facts: FactsDocument,
+    plan: Mapping[str, Any],
+    dispositions: Mapping[str, Any],
+    rendered: bool = True,
+) -> tuple[tuple[ReviewUnit, ...], frozenset[int], tuple[PlannedRequest, ...]]:
+    """The review units of ``candidate_readme``, its attributed maintainer lines, and each unit's
+    packet, call schema and request hash. No call is made: this is the part of
+    ``review_with_model`` that decides WHAT is asked, so a dry run counts exactly the requests a
+    live review would send (``calibration/estimate.py``)."""
+    loaded = prompts[JOB]
+    authored = authored_table_lines(candidate_readme, facts) if rendered else frozenset()
+    units = plan_units(candidate_readme, rendered=rendered, authored=authored)
+    attributed = (
+        maintainer_lines(candidate_readme, facts, dispositions) if rendered else frozenset()
+    )
+    model = effective_model(loaded, context)
+    requests = []
+    for unit in units:
+        packet = unit_packet(
+            unit,
+            units=units,
+            repository=context.repository,
+            candidate_readme=candidate_readme,
+            original_readme=original_readme,
+            facts=facts,
+            plan=plan,
+            maintainer_lines=attributed,
+        )
+        schema = unit_schema(loaded, unit)
+        requests.append(
+            PlannedRequest(unit, packet, schema, request_hash(loaded, packet, schema, model=model))
+        )
+    return units, attributed, tuple(requests)
+
+
 def review_with_model(
     *,
     prompts: PromptRegistry,
@@ -248,36 +300,30 @@ def review_with_model(
     packet names them and its contract refuses an ``unsupported_claim`` citing only them. A Lane L
     review has no such disposition, so the set is empty and nothing changes there."""
     loaded = prompts[JOB]
-    authored = authored_table_lines(candidate_readme, facts) if rendered else frozenset()
-    units = plan_units(candidate_readme, rendered=rendered, authored=authored)
-    attributed = (
-        maintainer_lines(candidate_readme, facts, dispositions) if rendered else frozenset()
+    units, attributed, planned = planned_requests(
+        prompts=prompts,
+        context=context,
+        candidate_readme=candidate_readme,
+        original_readme=original_readme,
+        facts=facts,
+        plan=plan,
+        dispositions=dispositions,
+        rendered=rendered,
     )
     if not units:
         raise ReviewUnavailable(
             "the candidate has no author-written text to review (every line is renderer-printed)",
             [],
         )
-    model = effective_model(loaded, context)
     replies: list[tuple[ReviewUnit, dict[str, Any]]] = []
     records: list[dict[str, Any]] = []
     request_hashes: list[str] = []
     request_of: dict[str, str] = {}
     unavailable: list[tuple[ReviewUnit, ReviewUnavailable]] = []
     model_served: str | None = None
-    for unit in units:
-        packet = unit_packet(
-            unit,
-            units=units,
-            repository=context.repository,
-            candidate_readme=candidate_readme,
-            original_readme=original_readme,
-            facts=facts,
-            plan=plan,
-            maintainer_lines=attributed,
-        )
-        schema = unit_schema(loaded, unit)
-        request_sha256 = request_hash(loaded, packet, schema, model=model)
+    for request in planned:
+        unit, packet, schema = request.unit, request.packet, request.schema
+        request_sha256 = request.request_sha256
         request_hashes.append(request_sha256)
         request_of[unit.label] = request_sha256
         _refuse_reroll(store, request_sha256)
