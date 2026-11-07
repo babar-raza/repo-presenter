@@ -32,7 +32,6 @@ from repo_presenter.github.client import (
     default_put,
     reopen_issue,
 )
-from repo_presenter.readme.review.calibration_status import load_calibration
 from repo_presenter.readme.review.independent_reviewer import ReviewVerdict
 
 LISTED = "aspose-cells-foss/Aspose.Cells-FOSS-for-Rust"
@@ -337,16 +336,18 @@ def test_no_environment_override_exists() -> None:
 # ------------------------------------------------------------------ composite publish gate
 
 
-def test_a_listed_repository_is_still_refused_while_reviewer_calibration_is_not_passed(
+def test_a_listed_repository_is_still_refused_while_acceptance_is_not_certified(
     monkeypatch: pytest.MonkeyPatch, _no_http: list[tuple[str, str, Any]]
 ) -> None:
-    """The allowlist is a necessary condition only. With the repository's own committed
-    data/reviewer_calibration.json (NOT_PASSED), propose_candidate refuses an allowlisted
-    repository with REVIEW_UNCALIBRATED, using the real client primitives, before any request."""
+    """The allowlist is a necessary condition only. Gate 3b (2026-11-07, TC-013) now reads
+    repo_presenter.acceptance.record.classify instead of the old reviewer calibration status;
+    with neither data/acceptance_calibration.json nor data/acceptance_responsibility.json
+    committed yet, classify() fails closed and propose_candidate refuses an allowlisted
+    repository with ACCEPTANCE_NOT_CERTIFIED, using the real client primitives, before any
+    request. Renamed from ...reviewer_calibration_is_not_passed (that file,
+    data/reviewer_calibration.json, is now frozen history and this test no longer touches it)."""
     from repo_presenter.propose import effect
 
-    assert load_calibration().status == "NOT_PASSED"
-    monkeypatch.setattr(effect, "load_calibration", load_calibration)
     assert authorize_write(LISTED, "pull_request").upstream is True  # the client would allow it
 
     def must_not_run(*args: Any, **kwargs: Any) -> Any:
@@ -377,5 +378,5 @@ def test_a_listed_repository_is_still_refused_while_reviewer_calibration_is_not_
         pr_body="b",
     )
     assert result.effected is False
-    assert result.reason_code == Refusal.REVIEW_UNCALIBRATED
+    assert result.reason_code == Refusal.ACCEPTANCE_NOT_CERTIFIED
     assert _no_http == []

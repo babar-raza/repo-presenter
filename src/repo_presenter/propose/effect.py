@@ -23,9 +23,12 @@ Every gate below runs, in this order, before the first write, and each refusal i
    (`ReviewVerdict.model_reviewed`), refuses with `Refusal.REVIEW_REJECTED`
    before any token or network call; there is no override parameter, because a veto that can be
    bypassed by the caller is not a veto.
-3b. The reviewer's calibration status (`readme/review/calibration_status.py`): the verdict must have
-   been made while the committed status was PASSED or PASSED_WITH_DECLARED_LIMITS, and the committed
-   status must permit it now; otherwise `Refusal.REVIEW_UNCALIBRATED`. No parameter overrides it.
+3b. The acceptance contract (`acceptance/record.py`, TC-013): the candidate must classify as one of
+   `acceptance.record.PUBLISHABLE_STATES` (`publication-ready` or later) via
+   `acceptance.record.classify`; otherwise `Refusal.ACCEPTANCE_NOT_CERTIFIED`. No parameter
+   overrides it. (Superseded 2026-11-07, TC-013: the old gate read
+   `readme/review/calibration_status.load_calibration` directly; every OTHER gate in this module
+   is unchanged by that swap.)
 4. A write-scoped token is supplied (`GH_PROPOSAL_WRITE_TOKEN` - never `GH_TOKEN`).
 5. The authorization record (`core/authorization/proposal.py`): a persisted, reviewed file committed
    to the control repository before this run was triggered, which `load_authorization` loads and
@@ -69,6 +72,7 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from datetime import UTC, datetime
 
+from repo_presenter.acceptance.record import PUBLISHABLE_STATES, classify
 from repo_presenter.authorization.proposal import (
     ProposalAuthorization,
     validate_authorization,
@@ -112,7 +116,6 @@ from repo_presenter.github.token_provenance import (
     verify_pull_request_app as default_verify_pull_request_app,
 )
 from repo_presenter.propose.pull_request import PullRequestContent
-from repo_presenter.readme.review.calibration_status import load_calibration
 from repo_presenter.readme.review.independent_reviewer import ReviewVerdict
 
 AUTHORIZATION_VARIABLE = "REPOSITORY_PRESENTER_PROPOSAL_WRITE_AUTHORIZED"
@@ -328,17 +331,25 @@ def propose_candidate(
             "the independent review the mission requires, so it is never proposed",
         )
 
-    current = load_calibration()
-    if not review.pr_eligible or not current.permits:
+    # Gate 3b (TC-013): the acceptance contract, not the raw reviewer-calibration file. `lane` is
+    # identifying metadata only in `acceptance.record` - `propose_candidate` is not told which
+    # lane produced this candidate, and `classify_record`'s own logic never reads it.
+    acceptance_state = classify(
+        repository,
+        "unspecified",
+        sealed=True,
+        mechanism_verdicts={"independent_review": review.pr_eligible},
+    )
+    if acceptance_state not in PUBLISHABLE_STATES:
         return _refuse(
             True,
-            Refusal.REVIEW_UNCALIBRATED,
-            "the independent reviewer has not passed its calibration gate, so no candidate is "
-            f"eligible for a pull request (committed status {current.status}"
-            f"{': ' + current.problem if current.problem else ''}; this verdict was made under "
-            f"{review.calibration_status or 'no recorded status'}); PASSED, or "
-            "PASSED_WITH_DECLARED_LIMITS with an owner acceptance in data/reviewer_calibration.json, "
-            "is required and no caller can override it",
+            Refusal.ACCEPTANCE_NOT_CERTIFIED,
+            "the acceptance contract (repo_presenter.acceptance.record) classifies this "
+            f"candidate as {acceptance_state!r}, not one of {sorted(PUBLISHABLE_STATES)}: no "
+            "candidate is eligible for a pull request until the acceptance certificate chain "
+            "(data/acceptance_calibration.json against data/acceptance_responsibility.json), "
+            "this candidate's own mechanism verdicts and canaries, and an audited, attested "
+            "record all agree; no caller can override it",
         )
 
     if not token:
