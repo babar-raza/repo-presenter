@@ -43,9 +43,17 @@ PINS: dict[str, tuple[tuple[str, ...], str]] = {
         ("1",),
         "831000cf4390bb73d51bcff348a6c914c23c80e1a3fc414e386d0fc84d85adb5",
     ),
+    "stale_package_version.py": (
+        ("1",),
+        "8858633a106222a7edff519207826d8727e1019779d8f5f8231a041e1cdf051a",
+    ),
     "structure.py": (
         ("1", "1", "1"),
         "7c836b19f79488ef3f857c9e9b40df9813d717539e4cfe26050227ea9871c573",
+    ),
+    "versioned_link_target.py": (
+        ("1",),
+        "bc344c363ce398201946044fdf4c2ac9b92f2e490cfbd26a31b59bc777d3ffff",
     ),
 }
 

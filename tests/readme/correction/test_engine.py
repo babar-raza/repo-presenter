@@ -68,8 +68,10 @@ def test_every_registered_detector_is_loaded_by_name() -> None:
         "format_overclaim",
         "report_gaps",
         "second_h1",
+        "stale_package_version",
         "stray_fence",
         "unclosed_details",
+        "versioned_link_target",
     ]
 
 
