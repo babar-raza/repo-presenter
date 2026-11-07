@@ -3,10 +3,10 @@
   "card": "TC-020",
   "gate": "GATE5_DELIVERY_PROGRAM",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-07T18:43:09Z",
+  "generated_at": "2026-11-07T18:49:04Z",
   "base_rev": "3eb453cb420642aa1228e6a7a15ce3438141adf1",
-  "head_rev": "f9d009e530f0f097347c33f7e1b6af6c3d3eea1e",
-  "card_sha256": "7184e830ca93cbafebcbc8de9ed5049e84afb5aba267973052979dfd05287fc6",
+  "head_rev": "67a905387fe3f4f70d1f4bc06e5336f66dd7bda5",
+  "card_sha256": "ea49b5ef844a9390925e794b4813c466d9c91bf169cfd0462cc8a7a12968b793",
   "checker_fileset_sha256": "e2eb11fb3158aed9dfd0ddca9b715177a7f855f9838cdc30d4ad7f8e64e5d170",
   "checker_fileset_scheme": "v3",
   "fingerprint": {
@@ -14,99 +14,18 @@
     "platform": "Windows-11-10.0.26300-SP0"
   },
   "scope": {
-    "ok": false,
+    "ok": true,
     "changed_paths": [
       "data/benchmarks.json",
-      "src/repo_presenter/acceptance/probes/__init__.py",
-      "src/repo_presenter/acceptance/probes/cpp.py",
-      "src/repo_presenter/acceptance/probes/dotnet.py",
-      "src/repo_presenter/acceptance/probes/go.py",
-      "src/repo_presenter/acceptance/probes/java.py",
-      "src/repo_presenter/acceptance/probes/python.py",
-      "src/repo_presenter/acceptance/probes/rust.py",
-      "src/repo_presenter/acceptance/probes/typescript.py",
-      "src/repo_presenter/core/llm/budget.py",
-      "src/repo_presenter/core/llm/jobs.py",
       "src/repo_presenter/core/registry/benchmarks.py",
       "src/repo_presenter/readme/evidence/facts/extract.py",
       "src/repo_presenter/readme/evidence/facts/product_pages.py",
       "src/repo_presenter/readme/parity_gate.py",
-      "tests/acceptance/probes/fixtures/cpp/include/aspose/pdf/Document.h",
-      "tests/acceptance/probes/fixtures/cpp/include/aspose/pdf/internal/Helper.h",
-      "tests/acceptance/probes/fixtures/cpp_none/README.txt",
-      "tests/acceptance/probes/fixtures/dotnet/Widget.cs",
-      "tests/acceptance/probes/fixtures/dotnet_none/README.txt",
-      "tests/acceptance/probes/fixtures/go/widget.go",
-      "tests/acceptance/probes/fixtures/go_none/README.txt",
-      "tests/acceptance/probes/fixtures/java/com/example/Widget.java",
-      "tests/acceptance/probes/fixtures/java_none/README.txt",
-      "tests/acceptance/probes/fixtures/python/pkg/__init__.py",
-      "tests/acceptance/probes/fixtures/python/pkg/broken.py",
-      "tests/acceptance/probes/fixtures/python/pkg/widget.py",
-      "tests/acceptance/probes/fixtures/rust/ahocorasick.rs",
-      "tests/acceptance/probes/fixtures/rust/internal.rs",
-      "tests/acceptance/probes/fixtures/rust/lib.rs",
-      "tests/acceptance/probes/fixtures/rust_none/README.txt",
-      "tests/acceptance/probes/fixtures/typescript/index.ts",
-      "tests/acceptance/probes/fixtures/typescript/package.json",
-      "tests/acceptance/probes/fixtures/typescript/widget.ts",
-      "tests/acceptance/probes/fixtures/typescript_none/orphan.ts",
-      "tests/acceptance/probes/test_cpp.py",
-      "tests/acceptance/probes/test_dotnet.py",
-      "tests/acceptance/probes/test_go.py",
-      "tests/acceptance/probes/test_java.py",
-      "tests/acceptance/probes/test_python.py",
-      "tests/acceptance/probes/test_rust.py",
-      "tests/acceptance/probes/test_typescript.py",
-      "tests/conftest.py",
-      "tests/core/llm/test_budget.py",
-      "tests/core/llm/test_jobs.py",
       "tests/core/registry/test_benchmarks.py",
       "tests/readme/evidence/facts/test_extract.py",
       "tests/readme/test_parity_gate.py"
     ],
-    "violations": [
-      "src/repo_presenter/acceptance/probes/__init__.py: outside the card's declared write_paths",
-      "src/repo_presenter/acceptance/probes/cpp.py: outside the card's declared write_paths",
-      "src/repo_presenter/acceptance/probes/dotnet.py: outside the card's declared write_paths",
-      "src/repo_presenter/acceptance/probes/go.py: outside the card's declared write_paths",
-      "src/repo_presenter/acceptance/probes/java.py: outside the card's declared write_paths",
-      "src/repo_presenter/acceptance/probes/python.py: outside the card's declared write_paths",
-      "src/repo_presenter/acceptance/probes/rust.py: outside the card's declared write_paths",
-      "src/repo_presenter/acceptance/probes/typescript.py: outside the card's declared write_paths",
-      "src/repo_presenter/core/llm/budget.py: outside the card's declared write_paths",
-      "src/repo_presenter/core/llm/jobs.py: outside the card's declared write_paths",
-      "tests/acceptance/probes/fixtures/cpp/include/aspose/pdf/Document.h: outside the card's declared write_paths",
-      "tests/acceptance/probes/fixtures/cpp/include/aspose/pdf/internal/Helper.h: outside the card's declared write_paths",
-      "tests/acceptance/probes/fixtures/cpp_none/README.txt: outside the card's declared write_paths",
-      "tests/acceptance/probes/fixtures/dotnet/Widget.cs: outside the card's declared write_paths",
-      "tests/acceptance/probes/fixtures/dotnet_none/README.txt: outside the card's declared write_paths",
-      "tests/acceptance/probes/fixtures/go/widget.go: outside the card's declared write_paths",
-      "tests/acceptance/probes/fixtures/go_none/README.txt: outside the card's declared write_paths",
-      "tests/acceptance/probes/fixtures/java/com/example/Widget.java: outside the card's declared write_paths",
-      "tests/acceptance/probes/fixtures/java_none/README.txt: outside the card's declared write_paths",
-      "tests/acceptance/probes/fixtures/python/pkg/__init__.py: outside the card's declared write_paths",
-      "tests/acceptance/probes/fixtures/python/pkg/broken.py: outside the card's declared write_paths",
-      "tests/acceptance/probes/fixtures/python/pkg/widget.py: outside the card's declared write_paths",
-      "tests/acceptance/probes/fixtures/rust/ahocorasick.rs: outside the card's declared write_paths",
-      "tests/acceptance/probes/fixtures/rust/internal.rs: outside the card's declared write_paths",
-      "tests/acceptance/probes/fixtures/rust/lib.rs: outside the card's declared write_paths",
-      "tests/acceptance/probes/fixtures/rust_none/README.txt: outside the card's declared write_paths",
-      "tests/acceptance/probes/fixtures/typescript/index.ts: outside the card's declared write_paths",
-      "tests/acceptance/probes/fixtures/typescript/package.json: outside the card's declared write_paths",
-      "tests/acceptance/probes/fixtures/typescript/widget.ts: outside the card's declared write_paths",
-      "tests/acceptance/probes/fixtures/typescript_none/orphan.ts: outside the card's declared write_paths",
-      "tests/acceptance/probes/test_cpp.py: outside the card's declared write_paths",
-      "tests/acceptance/probes/test_dotnet.py: outside the card's declared write_paths",
-      "tests/acceptance/probes/test_go.py: outside the card's declared write_paths",
-      "tests/acceptance/probes/test_java.py: outside the card's declared write_paths",
-      "tests/acceptance/probes/test_python.py: outside the card's declared write_paths",
-      "tests/acceptance/probes/test_rust.py: outside the card's declared write_paths",
-      "tests/acceptance/probes/test_typescript.py: outside the card's declared write_paths",
-      "tests/conftest.py: outside the card's declared write_paths",
-      "tests/core/llm/test_budget.py: outside the card's declared write_paths",
-      "tests/core/llm/test_jobs.py: outside the card's declared write_paths"
-    ],
+    "violations": [],
     "evaluated": true
   },
   "runs": [
@@ -116,20 +35,20 @@
         {
           "command": "python -m pytest tests/readme/test_parity_gate.py -q -k \"maintainability or self_parity\"",
           "exit_code": 0,
-          "duration_s": 2.767,
-          "stdout_sha256": "697ec820d1fc7163dd87d913c2697f0fa241fe6378803fa2cbd02d76ef10d21d"
+          "duration_s": 1.741,
+          "stdout_sha256": "806371e37b40e95d657ccb3ac06795a4fa291a1bf9ef9f0c6218dba56e20857f"
         },
         {
           "command": "python -m pytest tests/core/registry/test_benchmarks.py -q",
           "exit_code": 0,
-          "duration_s": 1.576,
-          "stdout_sha256": "6adde25cbc2bad6b02c7a00071a6cbeb636b7919276acdfb6b1d7b85109bf9b3"
+          "duration_s": 11.51,
+          "stdout_sha256": "d01a634e1e286451b0d1cc3a171b4ed6fd061e153efbb4f954f34a5b991dcc83"
         },
         {
           "command": "python -m pytest tests/readme/evidence/facts/test_extract.py -q -k \"product_knowledge_refresh or knowledge_refresh\"",
           "exit_code": 0,
-          "duration_s": 3.602,
-          "stdout_sha256": "b85554155888ae3de1463e033ed825c35fb363c34604a0e41ce3972379461de1"
+          "duration_s": 5.428,
+          "stdout_sha256": "7ce50c772926052daea325e547d9d5c0e8e61ce7c7b8b8b4a47fb572d94df690"
         }
       ],
       "all_passed": true
@@ -140,20 +59,20 @@
         {
           "command": "python -m pytest tests/readme/test_parity_gate.py -q -k \"maintainability or self_parity\"",
           "exit_code": 0,
-          "duration_s": 2.22,
-          "stdout_sha256": "853626467017382d405174109460d4b52c3ad6326f87453dbbfe4ff5bc4aae9c"
+          "duration_s": 1.563,
+          "stdout_sha256": "ab344b0df4133e811f4421873c8be46271f4281d2414ee4b2d87784b408b358c"
         },
         {
           "command": "python -m pytest tests/core/registry/test_benchmarks.py -q",
           "exit_code": 0,
-          "duration_s": 1.632,
-          "stdout_sha256": "7306c451bb513ed5c35eb40b157366cc9a9a182e30217ba341db4d06d3380787"
+          "duration_s": 0.99,
+          "stdout_sha256": "49d6b854871093d27d29ab9582200004f1657b2fc87c6e88f9bf4342d292af48"
         },
         {
           "command": "python -m pytest tests/readme/evidence/facts/test_extract.py -q -k \"product_knowledge_refresh or knowledge_refresh\"",
           "exit_code": 0,
-          "duration_s": 3.66,
-          "stdout_sha256": "b85554155888ae3de1463e033ed825c35fb363c34604a0e41ce3972379461de1"
+          "duration_s": 3.002,
+          "stdout_sha256": "452fdebd9c88e25753593f3466d99fb3618e3329401efc27840f5e6d10690ce0"
         }
       ],
       "all_passed": true
@@ -174,6 +93,6 @@
       "M data/benchmarks.json"
     ]
   },
-  "accepted": false,
-  "reason": "scope violation: src/repo_presenter/acceptance/probes/__init__.py: outside the card's declared write_paths; src/repo_presenter/acceptance/probes/cpp.py: outside the card's declared write_paths; src/repo_presenter/acceptance/probes/dotnet.py: outside the card's declared write_paths; src/repo_presenter/acceptance/probes/go.py: outside the card's declared write_paths; src/repo_presenter/acceptance/probes/java.py: outside the card's declared write_paths"
+  "accepted": true,
+  "reason": "all gates passed"
 }

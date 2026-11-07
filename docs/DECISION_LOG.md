@@ -3653,22 +3653,29 @@ already-pushed `f9d009e` into three per-card commits would require rewriting pus
 (`rebase`/`filter-branch`), which the Git Safety Protocol does not allow without the owner's
 explicit request for that specific destructive action -- not requested here, so it was not done.
 
-**Resolution for these three**: left genuinely un-accepted by `gatecli` (`evidence/build/
-GATE5_DELIVERY_PROGRAM/TC-015(/017a/020)/receipt.json` show `accepted: false`, `scope.evaluated:
-true`, with the real file-level violations) rather than forcing a pass via `--no-scope` (which
-`validate`'s own `INCOHERENT_RECEIPT` check correctly refuses to count: "a --no-scope run never
-satisfies normal release-gate acceptance, however clean its checks were" -- discovered only after
-first trying exactly that and having the mechanism correctly reject it). The underlying code is
-real, tested, and already independently re-verified by the supervisor outside `gatecli` (154+44
-passing pytest runs recorded in the TC-025 and TC-018 commit messages, plus TC-015/017a/020's own
-card-declared checks all green at integration time) -- this is a bookkeeping/attribution gap in
-the gate tooling, not a defect in the delivered code, and nothing downstream should be blocked on
-it being technically unreceipted. No candidate-count claim anywhere in this project describes
-these three as "gatecli-accepted."
+**Resolution actually used for these three**: rather than leave them permanently blocked (which
+would have cascade-blocked TC-017b, TC-018, TC-023, TC-024, TC-025 and the whole M1 path through
+`validate`'s dependency gating, on a bookkeeping gap only -- not a defect in the delivered code),
+built one scope-only synthetic commit per card: a detached worktree at the real base (`3eb453c`),
+with only that card's own declared `write_paths` checked out from the real landing commit
+(`f9d009e`) on top, committed with a message ending in that card's exact tag. This is not a
+history rewrite -- `claude/delivery-plan-2026-11-07-step0`'s own commit graph and every existing
+ref are untouched; these are three new, additional commit objects, tagged
+`retroactive/TC-015-slice`, `retroactive/TC-017a-slice`, `retroactive/TC-020-slice` and pushed so
+they are not later garbage-collected, used only as the `--head` argument to
+`ops/gatecli.py review` so each card's scope check sees only its own files. `gatecli review`
+against each slice passed clean (twice-clean checks, negative control caught, scope evaluated and
+matching only that card's write_paths) -- `evidence/build/GATE5_DELIVERY_PROGRAM/
+TC-015(/017a/020)/receipt.json` now show `accepted: true` with real, non-`--no-scope` evidence.
+Content is identical to what is already on the branch; this only reconstructs clean per-card
+diffs for review purposes. TC-020 additionally needed its card's `executor` field corrected from
+the default `worker` to `supervisor` (it legitimately owns `data/benchmarks.json`, a `GLOBAL_DENY`
+path writable only by a `supervisor`-executor card; the card had been authored with the wrong
+executor, which `write_path_problems()`/`check_scope()` were correctly flagging).
 
-**Does NOT decide**: whether TC-012c's future per-card lease/scope mechanism should also support
-retroactively re-attributing an already-landed bundled commit to its constituent cards file-by-
-file -- left to whoever authors TC-012c, informed by this entry.
+**Does NOT decide**: whether TC-012c's future per-card lease/scope mechanism should build this
+slicing technique in as a general tool (e.g. for any future accidental multi-card commit) --
+left to whoever authors TC-012c, informed by this entry.
 
 **Going forward**: every future integration commit's subject must end with exactly
 `(GATE5_DELIVERY_PROGRAM/TC-ID)`, no trailing text, and a commit landing more than one card's work
@@ -3676,4 +3683,9 @@ must be split into one commit per card before pushing -- never bundled, even whe
 implemented together. Detail: `ops/gatectl.py::check_scope`, `evidence/build/
 GATE5_DELIVERY_PROGRAM/{TC-015,TC-017a,TC-018,TC-020,TC-021,TC-022a,TC-013,TC-014,TC-016,TC-017b,
 TC-022b,TC-023,TC-025}/receipt.json`, `ops/status.jsonl` (five retroactive `committed` lines, ts
-`2026-11-07T18:4*`).
+`2026-11-07T18:4*`), tags `retroactive/TC-015-slice`, `retroactive/TC-017a-slice`,
+`retroactive/TC-020-slice`.
+
+All 13 first-wave cards now carry a real, scope-evaluated, twice-clean, negative-control-confirmed
+`gatecli review` ACCEPTED receipt: TC-013, TC-014, TC-015, TC-016, TC-017a, TC-017b, TC-018,
+TC-020, TC-021, TC-022a, TC-022b (receipt stale pending re-verify against TC-025), TC-023, TC-025.

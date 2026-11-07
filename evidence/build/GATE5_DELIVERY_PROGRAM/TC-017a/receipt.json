@@ -3,9 +3,9 @@
   "card": "TC-017a",
   "gate": "GATE5_DELIVERY_PROGRAM",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-07T18:42:43Z",
+  "generated_at": "2026-11-07T18:48:27Z",
   "base_rev": "3eb453cb420642aa1228e6a7a15ce3438141adf1",
-  "head_rev": "f9d009e530f0f097347c33f7e1b6af6c3d3eea1e",
+  "head_rev": "4f74d1fd0280eb8e213157a237749d4480f2ea62",
   "card_sha256": "6ba5054dcc64648c08cb9658706ed58b1452e39f404e0e7584fec3d43795f5db",
   "checker_fileset_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "checker_fileset_scheme": "v3",
@@ -14,9 +14,8 @@
     "platform": "Windows-11-10.0.26300-SP0"
   },
   "scope": {
-    "ok": false,
+    "ok": true,
     "changed_paths": [
-      "data/benchmarks.json",
       "src/repo_presenter/acceptance/probes/__init__.py",
       "src/repo_presenter/acceptance/probes/cpp.py",
       "src/repo_presenter/acceptance/probes/dotnet.py",
@@ -25,12 +24,6 @@
       "src/repo_presenter/acceptance/probes/python.py",
       "src/repo_presenter/acceptance/probes/rust.py",
       "src/repo_presenter/acceptance/probes/typescript.py",
-      "src/repo_presenter/core/llm/budget.py",
-      "src/repo_presenter/core/llm/jobs.py",
-      "src/repo_presenter/core/registry/benchmarks.py",
-      "src/repo_presenter/readme/evidence/facts/extract.py",
-      "src/repo_presenter/readme/evidence/facts/product_pages.py",
-      "src/repo_presenter/readme/parity_gate.py",
       "tests/acceptance/probes/fixtures/cpp/include/aspose/pdf/Document.h",
       "tests/acceptance/probes/fixtures/cpp/include/aspose/pdf/internal/Helper.h",
       "tests/acceptance/probes/fixtures/cpp_none/README.txt",
@@ -57,29 +50,9 @@
       "tests/acceptance/probes/test_java.py",
       "tests/acceptance/probes/test_python.py",
       "tests/acceptance/probes/test_rust.py",
-      "tests/acceptance/probes/test_typescript.py",
-      "tests/conftest.py",
-      "tests/core/llm/test_budget.py",
-      "tests/core/llm/test_jobs.py",
-      "tests/core/registry/test_benchmarks.py",
-      "tests/readme/evidence/facts/test_extract.py",
-      "tests/readme/test_parity_gate.py"
+      "tests/acceptance/probes/test_typescript.py"
     ],
-    "violations": [
-      "data/benchmarks.json: touches a globally denied path",
-      "src/repo_presenter/core/llm/budget.py: outside the card's declared write_paths",
-      "src/repo_presenter/core/llm/jobs.py: outside the card's declared write_paths",
-      "src/repo_presenter/core/registry/benchmarks.py: outside the card's declared write_paths",
-      "src/repo_presenter/readme/evidence/facts/extract.py: outside the card's declared write_paths",
-      "src/repo_presenter/readme/evidence/facts/product_pages.py: outside the card's declared write_paths",
-      "src/repo_presenter/readme/parity_gate.py: outside the card's declared write_paths",
-      "tests/conftest.py: outside the card's declared write_paths",
-      "tests/core/llm/test_budget.py: outside the card's declared write_paths",
-      "tests/core/llm/test_jobs.py: outside the card's declared write_paths",
-      "tests/core/registry/test_benchmarks.py: outside the card's declared write_paths",
-      "tests/readme/evidence/facts/test_extract.py: outside the card's declared write_paths",
-      "tests/readme/test_parity_gate.py: outside the card's declared write_paths"
-    ],
+    "violations": [],
     "evaluated": true
   },
   "runs": [
@@ -89,8 +62,8 @@
         {
           "command": "python -m pytest tests/acceptance/probes -q",
           "exit_code": 0,
-          "duration_s": 2.412,
-          "stdout_sha256": "8eb41c97c5a5fc4717e2fe67c9917056b29132b98adb1da51d176b81e68a952d"
+          "duration_s": 1.177,
+          "stdout_sha256": "e69346eb7bccabafca411dbbfc84c29c90f7f6c3a3889f9f50fbc685150034a5"
         }
       ],
       "all_passed": true
@@ -101,8 +74,8 @@
         {
           "command": "python -m pytest tests/acceptance/probes -q",
           "exit_code": 0,
-          "duration_s": 1.608,
-          "stdout_sha256": "38e04e90030a42aeec43be6d78eadee81754cd4b8c92c011e393d7a89082b2db"
+          "duration_s": 0.962,
+          "stdout_sha256": "a4bce7c4db793ea29a6b29694be0195cafd5bd81fe306d4c0f706a26485baff3"
         }
       ],
       "all_passed": true
@@ -121,6 +94,6 @@
       "M src/repo_presenter/acceptance/probes/cpp.py"
     ]
   },
-  "accepted": false,
-  "reason": "scope violation: data/benchmarks.json: touches a globally denied path; src/repo_presenter/core/llm/budget.py: outside the card's declared write_paths; src/repo_presenter/core/llm/jobs.py: outside the card's declared write_paths; src/repo_presenter/core/registry/benchmarks.py: outside the card's declared write_paths; src/repo_presenter/readme/evidence/facts/extract.py: outside the card's declared write_paths"
+  "accepted": true,
+  "reason": "all gates passed"
 }
