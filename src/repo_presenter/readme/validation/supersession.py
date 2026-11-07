@@ -16,6 +16,18 @@ the missing pieces quoted (keep it, move it, or attribute it), and a candidate t
 content is rejected. Exempt, because the renderer replaces them by design and the reader loses
 nothing a maintainer wrote: headings, badge rows, raw HTML wrappers, the mermaid diagram (the
 renderer draws At a Glance from verified facts), and a lead-in carried with its block.
+
+TC-018: ``superseded_failures`` above only ever looked at units given the one disposition
+SUPERSEDE_REDUNDANT. The drop inventory (``docs/investigations/2026-11-06-drop-inventory.md``)
+found that a must-carry obligation is violated the same way under VERIFIED_REWRITE, OMIT_UNSUPPORTED
+and DEFER_UNRESOLVED (a public API member's maintainer description replaced by generic filler is
+just as real a loss as the member being dropped outright, whatever disposition the row carries).
+``obligation_failures`` below covers every inherited unit's every disposition: it classifies each
+decomposed piece with ``readme/obligations/classify.py``'s ``classify_unit`` (the same mechanical
+rule table ``superseded_failures``'s own exemptions already approximate, now applied uniformly)
+and fails only a ``must_carry`` piece whose substance ``content_presence.unstated(strict=True)``
+cannot find in the candidate -- never a ``may_drop`` or ``undecided`` one, so an over-flag
+(a re-qualified name, a badge, a diagram the candidate draws itself) is never raised twice.
 """
 
 from __future__ import annotations
@@ -146,6 +158,49 @@ def superseded_failures(candidate: Candidate) -> list[Failure]:
                 "carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or "
                 "PRESERVE_ATTRIBUTED when no fact confirms it",
                 unit=unit_id,
+            )
+        )
+    return failures
+
+
+# --- TC-018: every disposition, not only SUPERSEDE_REDUNDANT -----------------------------------
+
+#: The phrase every failure of ``obligation_failures`` carries, so a repair loop can recognize it
+#: the same way it already recognizes :data:`LOSS_MARKER`.
+OBLIGATION_LOSS_MARKER = "is must_carry, but the README does not state"
+_ALREADY_CHECKED = frozenset({SUPERSEDED})
+
+
+def obligation_failures(candidate: Candidate) -> list[Failure]:
+    """One RECONCILING failure per decomposed piece that :mod:`readme.obligations.classify` rates
+    ``must_carry`` and :func:`content_presence.unstated` (strict) cannot find in the candidate,
+    for EVERY inherited unit regardless of its disposition.
+
+    SUPERSEDE_REDUNDANT units are left to :func:`superseded_failures` above (unchanged, so its own
+    existing exemptions and failure wording keep working); this only adds coverage for the
+    dispositions the drop inventory found losing content the same way: VERIFIED_REWRITE,
+    OMIT_UNSUPPORTED, DEFER_UNRESOLVED, CORRECT_WITH_EVIDENCE and any other non-SUPERSEDE
+    disposition. A ``may_drop`` or ``undecided`` piece is never flagged, so an obligation this
+    module cannot yet decide is left to the model/supervisor judgement path, never guessed.
+    """
+    from repo_presenter.readme.obligations.ledger import ledger_from_candidate
+
+    by_unit: dict[str, str] = {
+        str(entry.get("unit_id", "")): str(entry.get("disposition", ""))
+        for entry in candidate.dispositions.get("dispositions", [])
+    }
+    failures: list[Failure] = []
+    for record in ledger_from_candidate(candidate):
+        if record.obligation != "must_carry" or record.carried is not False:
+            continue
+        if by_unit.get(record.unit_id) in _ALREADY_CHECKED:
+            continue  # superseded_failures already judges this unit, with its own exemptions
+        failures.append(
+            Failure(
+                "RECONCILING",
+                f"{record.unit_id} {OBLIGATION_LOSS_MARKER} its {record.piece_kind} "
+                f"{record.text[:160]!r} ({record.evidence})",
+                unit=record.unit_id,
             )
         )
     return failures
