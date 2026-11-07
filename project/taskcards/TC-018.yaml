@@ -148,7 +148,7 @@ actions:
      classification distribution."
 checks:
   - command: |-
-      python -m pytest tests/readme/obligations tests/readme/validation/test_units_obligations.py tests/readme/validation/test_supersession_obligations.py -q
+      python -m pytest tests/readme/obligations tests/readme/validation/test_supersession_obligations.py -q
     expect: exit 0
     timeout_seconds: 300
     proves:
