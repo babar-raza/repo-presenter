@@ -3458,3 +3458,86 @@ audit; calibration per mechanism with thresholds unchanged or stricter; the fall
 acceptance reachable at zero calls even if no LLM passes. `data/reviewer_calibration.json` stays the frozen record of
 the old reviewer. Stages S1-S5 (zero calls) start now in parallel; S6-S12 follow in order. The one owner action item
 (design §7.4.1, R3 wording) is raised once, when S9 wires the acceptance record to upstream writes.
+
+## 2026-11-07: independent delivery review reconciled; R16-R26 and the Final Directive adopted; Step 0 executed
+
+An external independent review of `origin/main` (`545259436`) found 0 independently accepted candidates, five
+failed reviewer calibrations, 14 of 24 latest seals needing repair, and 207 of 649 dropped README items wrongly
+dropped, diagnosing a monolithic LLM reviewer asked to prove everything and a supervisor that monitors but does
+not execute (`docs/reviews/2026-11-07-plan-reconciliation.md` records the review's own concerns A-L and how
+each was resolved).
+
+**What was retained** (no restart, per the review's own recommendation and R12): the facts extractor, the
+deterministic checks (BC-02/04/05/06/07/12/14/17), `recertify`'s zero-call re-certification and R10 machinery,
+the durable bundle store and two-job trust boundary, `gatecli`/`gateverify`, the App-token mint proof, the
+example-verifier fixes, the drop inventory, the class audit, and the acceptance redesign's own mechanisms
+(M1-M10) and hidden-factor analysis (`docs/design/2026-11-06-acceptance-redesign.md`, now marked ADOPTED where
+its header had drifted out of sync with its own adoption record).
+
+**What was corrected:** the review's findings were independently verified against the code (not taken on
+faith) and 21 further findings were made (F1-F21, `docs/reviews/2026-11-07-plan-reconciliation.md`), most
+consequentially: 8 of the 9 "counted" Lane L seals are byte-identical no-ops; the old reviewer blocks sealing as
+well as counting; the model does not repeat itself at temperature 0/seed 1, so reruns genuinely differ; a Lane
+L census of all 36 upstream repositories found only 19 with a real R5 trigger, 16 of those also with a detected
+defect, and almost none convertible because L-05 requires every detected defect repaired and most unrepaired
+defects are false-positive-prone failing examples; the R14 rules are post-generation checks, not pre-generation
+obligations, and cover drops only (59% of sealed units are superseded, outside R14's scope); and independent
+export probes exist for only 2 of 7 ecosystems. A first delivery plan was built from this, then the owner's own
+review (concerns A-L) found gaps (acceptance integrity, supervisor self-certification, zero-call honesty, Lane
+R deferral, Lane L orphaned classes, false portfolio completion, evaluation/scheduling conflation, no vertical
+slice, replay/freshness/security gaps, a flat critical path, conflated milestones, missing pre-execution
+verification), and a second independent-architect audit of the reconciled plan found 14 further defects, most
+damaging a circular audit requirement that made the first acceptance mathematically unreachable and forgeable
+acceptance records (no server-side protection on state refs, and the supervisor holds push rights). All of
+these are corrected in `docs/DELIVERY_PLAN_2026-11-07.md`, with the single acceptance contract in its §5 now the
+one source `TC-007`, `TC-011`, the counter and `propose.effect` all read.
+
+**What the owner decided** (R16-R26, verbatim with the exact question asked, in
+`docs/CONSOLIDATED_GOALS_2026-11-06.md` Part E; summarized in `AGENTS.md`'s new binding-rulings section): a
+justified Lane L no-edit is terminal but never counted (R16); only sandbox writes before R15 (R17); qwen3-next
+stays the only product model route, with the supervisor (Claude/Codex) doing manual review of its output for
+audit and prompt tuning (R18); strict R5, with Lane L "done" meaning every repository reaches a terminal
+outcome and excluded defects route to Lane R as owned findings, never silently dropped (R20); Lane L accepts on
+net improvement with residuals recorded internally and in the PR description, never the README (R21); one write
+authority reconciling the R3 allowlist and the registry's inherited `full` modes, PRs only, issues off upstream
+(R22); a reproduced, evidenced external blocker is terminal for R15 rather than an indefinite portfolio-wide
+block (R24); a 9,000-call/100M-token envelope spent in capped batches, with zero-call steps never charged
+against it (R25, after the owner's first answer -- R23 -- declined to allocate a budget until the project is
+production-ready); and the M8 prose judge is measured before any fallback to a deterministic-plus-audit
+substitute (R26). The owner separately issued a "Final Directive" authorizing continuous autonomous execution
+(`PLAN -> DISPATCH -> EXECUTE -> VERIFY -> INTEGRATE -> UPDATE STATE -> SELECT NEXT WORK -> REPEAT`, never
+stopping at a card, milestone, commit, failure or report), which supersedes R19's "lower priority" wording for
+the engineering bridge (`TC-032`, now moved to the front of the program, directly after `TC-012c`).
+
+**What was rejected:** the first plan's own reading of a no-edit Lane L seal as a Lane L defect requiring
+"drift-only" causation (narrower than R5 itself; removed per the owner's review concern D-L); counting
+provisional (deterministic-only) acceptance as if it were calibrated acceptance ("judge-off mode" as an
+acceptance route, rejected per concern A and R26 -- it is now `mechanism-passing`, reported separately and
+never published); and treating identity metadata ("a fresh subagent") as sufficient proof of audit independence
+(rejected per concern B and the second audit's finding 14 -- independence now rests on blind seeds, clean
+controls, hosted scoring and attestation, not on who ran the audit).
+
+**Step 0 executed this session:** local `main` fast-forwarded to `origin/main` (0 ahead, 105 behind, now
+current); confirmed sole supervisor ownership against the one other local session on this repository (idle,
+acknowledged); reproduced the committed recertification baseline exactly (R 1/12, L 9/12) after finding and
+working around a local-machine defect (F27: this machine's system-level `core.autocrlf=true` corrupts
+`git archive`'s output, which `recertify`/`seal_history` depend on, producing a false "BUNDLE: corrupt" on every
+seal -- fixed with a per-invocation `GIT_CONFIG_COUNT`/`GIT_CONFIG_KEY_0`/`GIT_CONFIG_VALUE_0` environment
+override, never a persisted `git config` change, per the Git Safety Protocol); recorded R16-R26 and the Final
+Directive in `docs/CONSOLIDATED_GOALS_2026-11-06.md` Part E and summarized them in `AGENTS.md`; committed
+`docs/DELIVERY_PLAN_2026-11-07.md` and `docs/reviews/2026-11-07-plan-reconciliation.md`; made four routine-tier
+fixes with no taskcard needed (the design doc's stale "not yet adopted" header; the checkpoint's false "no
+upstream write ever" line, corrected against the real `aspose-3d-foss/Aspose.3D-FOSS-for-Python` issue #4;
+`gatecli tick` no longer prints the bootstrap-era `current_gate`/`active_work_item` narrative state.yaml itself
+calls superseded; and the mission matrix's stale "0 real token mints" line, corrected against TC-009a's own
+ACCEPTED mint-proof receipt); wrote `data/provider_budget.json` from R25; and ran VS0, the zero-call vertical
+slice (`docs/investigations/2026-11-07-vs0-vertical-slice.md`), which confirmed against real sealed/recorded
+evidence (not inference) that Email .NET Lane R fails exactly one gate -- the global calibration status -- and
+that Slides Java Lane L already has a real, recorded R5-valid run blocked by exactly one unrepaired naming
+shape, both matching the plan's own diagnosis and critical-path choices.
+
+**Next:** author `project/taskcards/TC-012c.yaml` and the Track A/B first-wave cards
+(`docs/DELIVERY_PLAN_2026-11-07.md` §8.2), then dispatch them as parallel worktree workers per the Final
+Directive's continuous-execution loop. Owner actions 1-4 (restricted Environment, required recertification
+check, CODEOWNERS on acceptance/audit paths, confirming R3's calibration wording) are raised once, as precise
+items, and gate M1; everything else proceeds without waiting on them.
