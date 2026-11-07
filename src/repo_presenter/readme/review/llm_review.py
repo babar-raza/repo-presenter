@@ -24,6 +24,16 @@ Provider calls per review: one per unit when every first reply is valid, two for
 the re-ask, none when the identical request was answered before (the call store replays the accepted
 reply and the verdict is rebuilt from it, byte for byte). Every attempt is a ledger record on the
 caller's invocation; a transport retry of one attempt is its own counted call.
+
+TC-024 (seal-path switch): every unit record now carries an ``"m8"`` field -- TC-023's narrow prose
+judge's (``readme.review.prose_judge``) recorded verdict for that unit, additive and backward
+compatible (a record read back from a seal made before this card simply has none, read the same as
+``M8_NOT_RUN``). Nothing in this module makes the real M8 provider call yet (that calibration is
+separately budgeted, owner ruling R26 -- see ``prose_judge``'s own module docstring): every record
+this module writes carries ``M8_NOT_RUN`` until a future card wires a real draw. ``m8_blocking_units``
+is the one place a caller (``present.py``, ``recertify.py``, ``core.state.bundle_store``) reads
+whether M8 ever recorded an actual objection for a unit; it is never anything other than empty while
+no real M8 call has been made, by construction.
 """
 
 from __future__ import annotations
@@ -75,6 +85,23 @@ from repo_presenter.readme.review.verdict import (
 )
 
 JOB = "independent_review"
+#: TC-023's narrow prose judge (``readme.review.prose_judge``) has not made a real provider call
+#: for this unit (the only status every record this module writes carries today -- see the module
+#: docstring). Read as "no M8 objection", exactly like an absent ``"m8"`` key on a record sealed
+#: before this card existed.
+M8_NOT_RUN = "not_run"
+#: A future real M8 call classified this unit "none"/cleared a pairwise or paraphrase check: no
+#: objection, same as ``M8_NOT_RUN`` for gating purposes, but recorded as an actual, made call.
+M8_OK = "ok"
+#: A future real M8 call found an actual defect (a classification other than "none", or a failed
+#: pairwise/paraphrase check): blocks exactly like the old reviewer's own REJECT did.
+M8_REJECT = "reject"
+#: Three independent draws disagreed with no two-of-three majority (``prose_judge.INCONCLUSIVE``):
+#: never silently resolved to any one of them -- blocks, the same as ``INSUFFICIENT_EVIDENCE``.
+M8_INCONCLUSIVE = "inconclusive"
+#: Every status ``m8_blocking_units`` reads as "no objection" -- the only two that may appear on a
+#: unit this module reviews until a future card wires a real M8 provider call.
+M8_PASSING_STATUSES = frozenset({M8_NOT_RUN, M8_OK})
 #: Re-reviews after a repair: a candidate that still blocks after this many repair rounds is BLOCKED.
 #: Raised 2 -> 4, 2026-10-30 (measured live, aspose-cells-foss, Rust and Cpp): each round repairs
 #: whichever findings its own fingerprint bucket has not already tried, so a REAL, still-
@@ -201,6 +228,17 @@ def _merged_reply(
     return merged_reply, {fid: unit for fid, unit in origin.items() if fid in kept}
 
 
+def _m8_record(
+    status: str = M8_NOT_RUN, *, shape: str | None = None, verdict: Any = None
+) -> dict[str, Any]:
+    """TC-023's per-unit record (TC-024 part a): ``status`` is one of ``M8_NOT_RUN``/``M8_OK``
+    (no objection), ``M8_REJECT``/``M8_INCONCLUSIVE`` (blocks -- see ``m8_blocking_units``).
+    ``shape`` names which of the three prompt shapes (``readme.review.prose_judge.PROMPT_SHAPES``)
+    produced it, and ``verdict`` is that shape's own raw value (a category, or a bool) -- both
+    ``None`` while nothing was asked (the only case this module itself ever produces)."""
+    return {"status": status, "shape": shape, "verdict": verdict}
+
+
 def _unit_record(
     unit: ReviewUnit,
     request_sha256: str,
@@ -208,6 +246,7 @@ def _unit_record(
     reply: Mapping[str, Any] | None = None,
     reply_sha256: str | None = None,
     reason: str = "",
+    m8: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     return {
         "unit": unit.label,
@@ -219,7 +258,29 @@ def _unit_record(
         "findings": None if reply is None else len(reply["findings"]),
         "status": "reviewed" if reply is not None else "unavailable",
         "reason": reason,
+        "m8": dict(m8) if m8 is not None else _m8_record(),
     }
+
+
+def m8_blocking_units(unit_reviews: Sequence[Mapping[str, Any]]) -> tuple[str, ...]:
+    """TC-013/TC-024's M8 gate (part b): the label of every unit (in order, de-duplicated) whose
+    recorded ``m8`` status is an actual objection (``M8_REJECT``/``M8_INCONCLUSIVE``) -- never one
+    whose status is absent, ``M8_NOT_RUN`` or ``M8_OK``. ``()`` is the ordinary case until a future
+    card wires a real M8 provider call: this module never writes anything else today (see the
+    module docstring); a caller treats a non-empty result exactly like the old reviewer's own
+    REJECT -- blocking, never silently overruled (non-negotiable 5)."""
+    blocked: list[str] = []
+    for record in unit_reviews:
+        if not isinstance(record, Mapping):
+            continue
+        m8 = record.get("m8")
+        if not isinstance(m8, Mapping):
+            continue
+        if m8.get("status") not in M8_PASSING_STATUSES:
+            label = str(record.get("unit", "?"))
+            if label not in blocked:
+                blocked.append(label)
+    return tuple(blocked)
 
 
 @dataclass(frozen=True)
