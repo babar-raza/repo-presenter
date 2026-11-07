@@ -3,14 +3,14 @@
 $ python -m pytest tests/test_present.py -q -k "toolchain or splits_the_untrusted"
 --- stdout ---
 ....                                                                     [100%]
-4 passed, 28 deselected in 1.52s
+4 passed, 28 deselected in 1.49s
 
 --- stderr ---
 
 $ python -m pytest tests/test_sandbox_execute.py -q
 --- stdout ---
 .........                                                                [100%]
-9 passed in 0.39s
+9 passed in 0.21s
 
 --- stderr ---
 
@@ -24,7 +24,7 @@ $ python -c "import yaml, pathlib; d = yaml.safe_load(pathlib.Path('.github/work
 $ python -m pytest tests/test_present.py -q -k "toolchain or splits_the_untrusted"
 --- stdout ---
 ....                                                                     [100%]
-4 passed, 28 deselected in 0.62s
+4 passed, 28 deselected in 0.60s
 
 --- stderr ---
 
@@ -64,7 +64,7 @@ _ test_the_workflow_splits_the_untrusted_facts_job_from_the_credentialed_present
         assert any("setup-java" in use for use in _uses(facts))
 >       assert any("setup-go" in use for use in _uses(facts))
 E       assert False
-E        +  where False = any(<generator object test_the_workflow_splits_the_untrusted_facts_job_from_the_credentialed_present_job.<locals>.<genexpr> at 0x00000206F59A5490>)
+E        +  where False = any(<generator object test_the_workflow_splits_the_untrusted_facts_job_from_the_credentialed_present_job.<locals>.<genexpr> at 0x00000190A5B39490>)
 
 tests\test_present.py:789: AssertionError
 _ test_each_of_the_four_new_toolchain_steps_is_present_and_conditioned_on_its_own_ecosystem _
@@ -87,14 +87,14 @@ tests\test_present.py:874: AssertionError
 =========================== short test summary info ===========================
 FAILED tests/test_present.py::test_the_workflow_splits_the_untrusted_facts_job_from_the_credentialed_present_job
 FAILED tests/test_present.py::test_each_of_the_four_new_toolchain_steps_is_present_and_conditioned_on_its_own_ecosystem
-2 failed, 2 passed, 28 deselected in 0.81s
+2 failed, 2 passed, 28 deselected in 0.83s
 
 --- stderr ---
 
 $ python -m pytest tests/test_sandbox_execute.py -q
 --- stdout ---
 .........                                                                [100%]
-9 passed in 0.22s
+9 passed in 0.21s
 
 --- stderr ---
 

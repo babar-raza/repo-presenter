@@ -3,21 +3,21 @@
 $ python -m pytest tests/readme/test_parity_gate.py -q -k "maintainability or self_parity"
 --- stdout ---
 ..........                                                               [100%]
-10 passed, 52 deselected in 1.43s
+10 passed, 52 deselected in 1.05s
 
 --- stderr ---
 
 $ python -m pytest tests/core/registry/test_benchmarks.py -q
 --- stdout ---
 .............                                                            [100%]
-13 passed in 0.41s
+13 passed in 0.39s
 
 --- stderr ---
 
 $ python -m pytest tests/readme/evidence/facts/test_extract.py -q -k "product_knowledge_refresh or knowledge_refresh"
 --- stdout ---
 ..                                                                       [100%]
-2 passed, 36 deselected in 2.68s
+2 passed, 36 deselected in 2.33s
 
 --- stderr ---
 
@@ -26,21 +26,21 @@ $ python -m pytest tests/readme/evidence/facts/test_extract.py -q -k "product_kn
 $ python -m pytest tests/readme/test_parity_gate.py -q -k "maintainability or self_parity"
 --- stdout ---
 ..........                                                               [100%]
-10 passed, 52 deselected in 0.87s
+10 passed, 52 deselected in 0.89s
 
 --- stderr ---
 
 $ python -m pytest tests/core/registry/test_benchmarks.py -q
 --- stdout ---
 .............                                                            [100%]
-13 passed in 0.25s
+13 passed in 0.32s
 
 --- stderr ---
 
 $ python -m pytest tests/readme/evidence/facts/test_extract.py -q -k "product_knowledge_refresh or knowledge_refresh"
 --- stdout ---
 ..                                                                       [100%]
-2 passed, 36 deselected in 2.25s
+2 passed, 36 deselected in 2.33s
 
 --- stderr ---
 
@@ -50,7 +50,7 @@ mutated: M data/benchmarks.json
 $ python -m pytest tests/readme/test_parity_gate.py -q -k "maintainability or self_parity"
 --- stdout ---
 ..........                                                               [100%]
-10 passed, 52 deselected in 0.83s
+10 passed, 52 deselected in 0.75s
 
 --- stderr ---
 
@@ -73,14 +73,14 @@ E         Use -v to get more diff
 tests\core\registry\test_benchmarks.py:26: AssertionError
 =========================== short test summary info ===========================
 FAILED tests/core/registry/test_benchmarks.py::test_the_real_committed_benchmarks_document_is_consistent_with_the_registry
-1 failed, 12 passed in 0.54s
+1 failed, 12 passed in 0.49s
 
 --- stderr ---
 
 $ python -m pytest tests/readme/evidence/facts/test_extract.py -q -k "product_knowledge_refresh or knowledge_refresh"
 --- stdout ---
 ..                                                                       [100%]
-2 passed, 36 deselected in 2.23s
+2 passed, 36 deselected in 2.19s
 
 --- stderr ---
 

@@ -3,7 +3,7 @@
 $ python -m pytest tests/core/llm/test_budget.py tests/core/llm/test_jobs.py -q
 --- stdout ---
 ...............................                                          [100%]
-31 passed in 1.02s
+31 passed in 0.87s
 
 --- stderr ---
 
@@ -12,7 +12,7 @@ $ python -m pytest tests/core/llm/test_budget.py tests/core/llm/test_jobs.py -q
 $ python -m pytest tests/core/llm/test_budget.py tests/core/llm/test_jobs.py -q
 --- stdout ---
 ...............................                                          [100%]
-31 passed in 0.92s
+31 passed in 0.84s
 
 --- stderr ---
 
@@ -23,10 +23,10 @@ $ python -m pytest tests/core/llm/test_budget.py tests/core/llm/test_jobs.py -q
 --- stdout ---
 
 --- stderr ---
-ImportError while loading conftest 'C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-rhnj_dpy\tests\conftest.py'.
+ImportError while loading conftest 'C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-kkov2ub2\tests\conftest.py'.
 tests\conftest.py:10: in <module>
     from repo_presenter.core.llm import jobs as jobs_module
 src\repo_presenter\core\llm\jobs.py:70: in <module>
     from repo_presenter.core.llm.budget import DEFAULT_BUDGET_PATH, check_budget, record_spend
-E   ImportError: cannot import name 'check_budget' from 'repo_presenter.core.llm.budget' (C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-rhnj_dpy\src\repo_presenter\core\llm\budget.py)
+E   ImportError: cannot import name 'check_budget' from 'repo_presenter.core.llm.budget' (C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-kkov2ub2\src\repo_presenter\core\llm\budget.py)
 

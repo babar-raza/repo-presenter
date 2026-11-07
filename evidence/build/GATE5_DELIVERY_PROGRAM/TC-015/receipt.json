@@ -3,7 +3,7 @@
   "card": "TC-015",
   "gate": "GATE5_DELIVERY_PROGRAM",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-07T18:31:29Z",
+  "generated_at": "2026-11-07T18:42:35Z",
   "base_rev": "3eb453cb420642aa1228e6a7a15ce3438141adf1",
   "head_rev": "f9d009e530f0f097347c33f7e1b6af6c3d3eea1e",
   "card_sha256": "3daddff67db5c656ca3c7351ce5ed8a43e7cc21e50a294ad79a905851bb29c88",
@@ -14,10 +14,104 @@
     "platform": "Windows-11-10.0.26300-SP0"
   },
   "scope": {
-    "ok": true,
-    "changed_paths": [],
-    "violations": [],
-    "evaluated": false
+    "ok": false,
+    "changed_paths": [
+      "data/benchmarks.json",
+      "src/repo_presenter/acceptance/probes/__init__.py",
+      "src/repo_presenter/acceptance/probes/cpp.py",
+      "src/repo_presenter/acceptance/probes/dotnet.py",
+      "src/repo_presenter/acceptance/probes/go.py",
+      "src/repo_presenter/acceptance/probes/java.py",
+      "src/repo_presenter/acceptance/probes/python.py",
+      "src/repo_presenter/acceptance/probes/rust.py",
+      "src/repo_presenter/acceptance/probes/typescript.py",
+      "src/repo_presenter/core/llm/budget.py",
+      "src/repo_presenter/core/llm/jobs.py",
+      "src/repo_presenter/core/registry/benchmarks.py",
+      "src/repo_presenter/readme/evidence/facts/extract.py",
+      "src/repo_presenter/readme/evidence/facts/product_pages.py",
+      "src/repo_presenter/readme/parity_gate.py",
+      "tests/acceptance/probes/fixtures/cpp/include/aspose/pdf/Document.h",
+      "tests/acceptance/probes/fixtures/cpp/include/aspose/pdf/internal/Helper.h",
+      "tests/acceptance/probes/fixtures/cpp_none/README.txt",
+      "tests/acceptance/probes/fixtures/dotnet/Widget.cs",
+      "tests/acceptance/probes/fixtures/dotnet_none/README.txt",
+      "tests/acceptance/probes/fixtures/go/widget.go",
+      "tests/acceptance/probes/fixtures/go_none/README.txt",
+      "tests/acceptance/probes/fixtures/java/com/example/Widget.java",
+      "tests/acceptance/probes/fixtures/java_none/README.txt",
+      "tests/acceptance/probes/fixtures/python/pkg/__init__.py",
+      "tests/acceptance/probes/fixtures/python/pkg/broken.py",
+      "tests/acceptance/probes/fixtures/python/pkg/widget.py",
+      "tests/acceptance/probes/fixtures/rust/ahocorasick.rs",
+      "tests/acceptance/probes/fixtures/rust/internal.rs",
+      "tests/acceptance/probes/fixtures/rust/lib.rs",
+      "tests/acceptance/probes/fixtures/rust_none/README.txt",
+      "tests/acceptance/probes/fixtures/typescript/index.ts",
+      "tests/acceptance/probes/fixtures/typescript/package.json",
+      "tests/acceptance/probes/fixtures/typescript/widget.ts",
+      "tests/acceptance/probes/fixtures/typescript_none/orphan.ts",
+      "tests/acceptance/probes/test_cpp.py",
+      "tests/acceptance/probes/test_dotnet.py",
+      "tests/acceptance/probes/test_go.py",
+      "tests/acceptance/probes/test_java.py",
+      "tests/acceptance/probes/test_python.py",
+      "tests/acceptance/probes/test_rust.py",
+      "tests/acceptance/probes/test_typescript.py",
+      "tests/conftest.py",
+      "tests/core/llm/test_budget.py",
+      "tests/core/llm/test_jobs.py",
+      "tests/core/registry/test_benchmarks.py",
+      "tests/readme/evidence/facts/test_extract.py",
+      "tests/readme/test_parity_gate.py"
+    ],
+    "violations": [
+      "data/benchmarks.json: touches a globally denied path",
+      "src/repo_presenter/acceptance/probes/__init__.py: outside the card's declared write_paths",
+      "src/repo_presenter/acceptance/probes/cpp.py: outside the card's declared write_paths",
+      "src/repo_presenter/acceptance/probes/dotnet.py: outside the card's declared write_paths",
+      "src/repo_presenter/acceptance/probes/go.py: outside the card's declared write_paths",
+      "src/repo_presenter/acceptance/probes/java.py: outside the card's declared write_paths",
+      "src/repo_presenter/acceptance/probes/python.py: outside the card's declared write_paths",
+      "src/repo_presenter/acceptance/probes/rust.py: outside the card's declared write_paths",
+      "src/repo_presenter/acceptance/probes/typescript.py: outside the card's declared write_paths",
+      "src/repo_presenter/core/registry/benchmarks.py: outside the card's declared write_paths",
+      "src/repo_presenter/readme/evidence/facts/extract.py: outside the card's declared write_paths",
+      "src/repo_presenter/readme/evidence/facts/product_pages.py: outside the card's declared write_paths",
+      "src/repo_presenter/readme/parity_gate.py: outside the card's declared write_paths",
+      "tests/acceptance/probes/fixtures/cpp/include/aspose/pdf/Document.h: outside the card's declared write_paths",
+      "tests/acceptance/probes/fixtures/cpp/include/aspose/pdf/internal/Helper.h: outside the card's declared write_paths",
+      "tests/acceptance/probes/fixtures/cpp_none/README.txt: outside the card's declared write_paths",
+      "tests/acceptance/probes/fixtures/dotnet/Widget.cs: outside the card's declared write_paths",
+      "tests/acceptance/probes/fixtures/dotnet_none/README.txt: outside the card's declared write_paths",
+      "tests/acceptance/probes/fixtures/go/widget.go: outside the card's declared write_paths",
+      "tests/acceptance/probes/fixtures/go_none/README.txt: outside the card's declared write_paths",
+      "tests/acceptance/probes/fixtures/java/com/example/Widget.java: outside the card's declared write_paths",
+      "tests/acceptance/probes/fixtures/java_none/README.txt: outside the card's declared write_paths",
+      "tests/acceptance/probes/fixtures/python/pkg/__init__.py: outside the card's declared write_paths",
+      "tests/acceptance/probes/fixtures/python/pkg/broken.py: outside the card's declared write_paths",
+      "tests/acceptance/probes/fixtures/python/pkg/widget.py: outside the card's declared write_paths",
+      "tests/acceptance/probes/fixtures/rust/ahocorasick.rs: outside the card's declared write_paths",
+      "tests/acceptance/probes/fixtures/rust/internal.rs: outside the card's declared write_paths",
+      "tests/acceptance/probes/fixtures/rust/lib.rs: outside the card's declared write_paths",
+      "tests/acceptance/probes/fixtures/rust_none/README.txt: outside the card's declared write_paths",
+      "tests/acceptance/probes/fixtures/typescript/index.ts: outside the card's declared write_paths",
+      "tests/acceptance/probes/fixtures/typescript/package.json: outside the card's declared write_paths",
+      "tests/acceptance/probes/fixtures/typescript/widget.ts: outside the card's declared write_paths",
+      "tests/acceptance/probes/fixtures/typescript_none/orphan.ts: outside the card's declared write_paths",
+      "tests/acceptance/probes/test_cpp.py: outside the card's declared write_paths",
+      "tests/acceptance/probes/test_dotnet.py: outside the card's declared write_paths",
+      "tests/acceptance/probes/test_go.py: outside the card's declared write_paths",
+      "tests/acceptance/probes/test_java.py: outside the card's declared write_paths",
+      "tests/acceptance/probes/test_python.py: outside the card's declared write_paths",
+      "tests/acceptance/probes/test_rust.py: outside the card's declared write_paths",
+      "tests/acceptance/probes/test_typescript.py: outside the card's declared write_paths",
+      "tests/conftest.py: outside the card's declared write_paths",
+      "tests/core/registry/test_benchmarks.py: outside the card's declared write_paths",
+      "tests/readme/evidence/facts/test_extract.py: outside the card's declared write_paths",
+      "tests/readme/test_parity_gate.py: outside the card's declared write_paths"
+    ],
+    "evaluated": true
   },
   "runs": [
     {
@@ -26,8 +120,8 @@
         {
           "command": "python -m pytest tests/core/llm/test_budget.py tests/core/llm/test_jobs.py -q",
           "exit_code": 0,
-          "duration_s": 3.011,
-          "stdout_sha256": "728b31d4b0ce392935e2d4ca99f10ef1a45990754a92a0e5e7d0d33b7fd504b2"
+          "duration_s": 2.528,
+          "stdout_sha256": "c54b2a875d082d6afed40bdd84af0c318be4f5d06b7a1bf2a50b8322e99be4e1"
         }
       ],
       "all_passed": true
@@ -38,8 +132,8 @@
         {
           "command": "python -m pytest tests/core/llm/test_budget.py tests/core/llm/test_jobs.py -q",
           "exit_code": 0,
-          "duration_s": 2.306,
-          "stdout_sha256": "f531af35fca553f145a6b9eafbb4c64f6baaa3b3775b3ae7a9480b26298fc0fb"
+          "duration_s": 1.938,
+          "stdout_sha256": "923f750f3f8179fdd14d3ae1791b1f5fcc4566b3b28ef64cc07c718578f3c175"
         }
       ],
       "all_passed": true
@@ -58,6 +152,6 @@
       "M src/repo_presenter/core/llm/budget.py"
     ]
   },
-  "accepted": true,
-  "reason": "all gates passed"
+  "accepted": false,
+  "reason": "scope violation: data/benchmarks.json: touches a globally denied path; src/repo_presenter/acceptance/probes/__init__.py: outside the card's declared write_paths; src/repo_presenter/acceptance/probes/cpp.py: outside the card's declared write_paths; src/repo_presenter/acceptance/probes/dotnet.py: outside the card's declared write_paths; src/repo_presenter/acceptance/probes/go.py: outside the card's declared write_paths"
 }

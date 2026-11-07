@@ -10,7 +10,7 @@ $ python -m pytest tests/readme/obligations tests/readme/validation/test_superse
 ........................................................................ [ 82%]
 ........................................................................ [ 95%]
 ......................                                                   [100%]
-526 passed in 4.53s
+526 passed in 4.25s
 
 --- stderr ---
 
@@ -33,7 +33,7 @@ $ python -m pytest tests/readme/obligations tests/readme/validation/test_superse
 ........................................................................ [ 82%]
 ........................................................................ [ 95%]
 ......................                                                   [100%]
-526 passed in 4.16s
+526 passed in 4.30s
 
 --- stderr ---
 
@@ -73,7 +73,7 @@ tests\readme\obligations\test_classify.py:42: in <module>
     from repo_presenter.readme.obligations.classify import Unit, UnitFacts, classify_unit
 src\repo_presenter\readme\obligations\__init__.py:17: in <module>
     from repo_presenter.readme.obligations.classify import (
-E     File "C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-6jsxwdoo\src\repo_presenter\readme\obligations\classify.py", line 234
+E     File "C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-se8v7vhf\src\repo_presenter\readme\obligations\classify.py", line 234
 E       _disabled_def classify_unit(
 E                     ^^^^^^^^^^^^^
 E   SyntaxError: invalid syntax
@@ -99,7 +99,7 @@ tests\readme\obligations\test_ledger.py:16: in <module>
     from repo_presenter.readme.obligations.ledger import (
 src\repo_presenter\readme\obligations\__init__.py:17: in <module>
     from repo_presenter.readme.obligations.classify import (
-E     File "C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-6jsxwdoo\src\repo_presenter\readme\obligations\classify.py", line 234
+E     File "C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-se8v7vhf\src\repo_presenter\readme\obligations\classify.py", line 234
 E       _disabled_def classify_unit(
 E                     ^^^^^^^^^^^^^
 E   SyntaxError: invalid syntax
@@ -107,7 +107,7 @@ E   SyntaxError: invalid syntax
 ERROR tests/readme/obligations/test_classify.py
 ERROR tests/readme/obligations/test_ledger.py
 !!!!!!!!!!!!!!!!!!! Interrupted: 2 errors during collection !!!!!!!!!!!!!!!!!!!
-2 errors in 0.55s
+2 errors in 0.52s
 
 --- stderr ---
 
@@ -116,15 +116,15 @@ $ python scripts/build_content_ledger.py --self-test
 
 --- stderr ---
 Traceback (most recent call last):
-  File "C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-6jsxwdoo\scripts\build_content_ledger.py", line 36, in <module>
+  File "C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-se8v7vhf\scripts\build_content_ledger.py", line 36, in <module>
     from repo_presenter.readme.obligations.ledger import (  # noqa: E402
     ...<4 lines>...
     )
-  File "C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-6jsxwdoo\src\repo_presenter\readme\obligations\__init__.py", line 17, in <module>
+  File "C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-se8v7vhf\src\repo_presenter\readme\obligations\__init__.py", line 17, in <module>
     from repo_presenter.readme.obligations.classify import (
     ...<6 lines>...
     )
-  File "C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-6jsxwdoo\src\repo_presenter\readme\obligations\classify.py", line 234
+  File "C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-se8v7vhf\src\repo_presenter\readme\obligations\classify.py", line 234
     _disabled_def classify_unit(
                   ^^^^^^^^^^^^^
 SyntaxError: invalid syntax

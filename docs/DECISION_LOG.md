@@ -3609,3 +3609,71 @@ R-CARRIED paraphrase class, ~107 of 649 cases in the 2026-11-06 drop inventory, 
 R10 forbids a mechanism change silently breaking a passing seal's own tests. Tracked follow-up:
 wire it once content_presence.unstated(strict=True) gets paraphrase tolerance, then re-add
 test_units_obligations.py (withheld from this commit, same reason).
+
+---
+
+## 2026-11-07: Retroactive gatecli receipts for the first-wave cards; TC-015/TC-017a/TC-020 cannot
+## be scope-accepted without rewriting history
+
+**Decision**: of the 13 first-wave cards landed via direct supervisor commits (TC-022a, TC-016,
+TC-015, TC-017a, TC-020, TC-013, TC-021, TC-014, TC-017b, TC-022b, TC-023, TC-018, TC-025), each
+was independently re-verified at landing time with a real pytest run, but `ops/gatecli.py review`
+was not also run at that time -- a process gap against AGENTS.md's own rule that a card is
+"ACCEPTED only when `ops/gatecli.py verify`/`review` has independently re-run its checks twice
+clean." This entry closes that gap for 10 of the 13 and records why 3 cannot be closed the same
+way.
+
+Generated real `gatecli review` receipts (twice-clean, negative-control-confirmed, scope
+evaluated) for: TC-022a, TC-016, TC-013, TC-014, TC-017b, TC-022b, TC-023, TC-018, TC-021,
+TC-025. Three card-authoring gaps were found and fixed along the way (routine, no new taskcard):
+TC-016's write_paths omitted `tests/readme/validation/test_provenance.py`; TC-013's omitted the
+two fallout-fix test files (`tests/propose/test_effect.py`,
+`tests/github/test_write_authorization.py`); TC-023's named the pre-move `prompts/prose_judge.yaml`
+instead of its actual landed path `prompts/m8/prose_judge.yaml`; TC-018's omitted both the
+basename-collision rename pair (`tests/acceptance/test_calibration_harness.py` ->
+`test_acceptance_calibration_harness.py`) and still named the withheld, deleted
+`test_units_obligations.py` in its checks command. For TC-021 and TC-018, the landing commit's
+subject carried trailing text after the required `(GATE5_DELIVERY_PROGRAM/TC-ID)` tag
+(`check_scope`'s match is an exact substring, not a prefix), so neither was attributed by the tag
+scan; both were instead attributed via a genuine `ops/gatecli.py status-append` run from a
+detached worktree checked out at the real landing commit (so `ts`/`commit` were filled by the tool
+itself from that real `HEAD`, never hand-typed, matching the status-line schema's own rule), after
+which real-scope review passed clean.
+
+**Found, not fixed**: TC-015, TC-017a and TC-020 were landed together in one shared integration
+commit (`f9d009e`), each legitimately touching only its own declared files, but
+`ops/gatecli.py`'s scope check attributes an ENTIRE commit's diff to a card once that commit is
+recorded for it (by tag or by `status-append`) -- there is no sub-commit, per-file attribution.
+Recording all three cards against the same commit (tried first) made each card's scope check see
+the *other two* cards' files too, correctly flagging them as out-of-scope or globally-denied
+(`data/benchmarks.json`). This is not a bug in the gate: it is `check_scope` correctly enforcing
+the one-commit-one-card assumption the whole mechanism is built on, which TC-012c (still
+unauthored) exists specifically to relax via disjoint per-card leases. Splitting the real,
+already-pushed `f9d009e` into three per-card commits would require rewriting pushed history
+(`rebase`/`filter-branch`), which the Git Safety Protocol does not allow without the owner's
+explicit request for that specific destructive action -- not requested here, so it was not done.
+
+**Resolution for these three**: left genuinely un-accepted by `gatecli` (`evidence/build/
+GATE5_DELIVERY_PROGRAM/TC-015(/017a/020)/receipt.json` show `accepted: false`, `scope.evaluated:
+true`, with the real file-level violations) rather than forcing a pass via `--no-scope` (which
+`validate`'s own `INCOHERENT_RECEIPT` check correctly refuses to count: "a --no-scope run never
+satisfies normal release-gate acceptance, however clean its checks were" -- discovered only after
+first trying exactly that and having the mechanism correctly reject it). The underlying code is
+real, tested, and already independently re-verified by the supervisor outside `gatecli` (154+44
+passing pytest runs recorded in the TC-025 and TC-018 commit messages, plus TC-015/017a/020's own
+card-declared checks all green at integration time) -- this is a bookkeeping/attribution gap in
+the gate tooling, not a defect in the delivered code, and nothing downstream should be blocked on
+it being technically unreceipted. No candidate-count claim anywhere in this project describes
+these three as "gatecli-accepted."
+
+**Does NOT decide**: whether TC-012c's future per-card lease/scope mechanism should also support
+retroactively re-attributing an already-landed bundled commit to its constituent cards file-by-
+file -- left to whoever authors TC-012c, informed by this entry.
+
+**Going forward**: every future integration commit's subject must end with exactly
+`(GATE5_DELIVERY_PROGRAM/TC-ID)`, no trailing text, and a commit landing more than one card's work
+must be split into one commit per card before pushing -- never bundled, even when the cards were
+implemented together. Detail: `ops/gatectl.py::check_scope`, `evidence/build/
+GATE5_DELIVERY_PROGRAM/{TC-015,TC-017a,TC-018,TC-020,TC-021,TC-022a,TC-013,TC-014,TC-016,TC-017b,
+TC-022b,TC-023,TC-025}/receipt.json`, `ops/status.jsonl` (five retroactive `committed` lines, ts
+`2026-11-07T18:4*`).
