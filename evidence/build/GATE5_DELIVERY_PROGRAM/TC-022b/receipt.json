@@ -3,11 +3,11 @@
   "card": "TC-022b",
   "gate": "GATE5_DELIVERY_PROGRAM",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-07T19:04:20Z",
+  "generated_at": "2026-11-07T19:06:56Z",
   "base_rev": "4e63fc7d84f7a325c9b1843c516822e6ab3f90e9",
-  "head_rev": "e2fdbb54860de1890f6c10659d9c9a3262db47f1",
-  "card_sha256": "6de3db016a1fe9cb03a6a45c9c5f6e78ab9e44b0aedda3e6ee4a52f45fe8784a",
-  "checker_fileset_sha256": "94929a4165535289b27e5acf71d44c4dfce2ee7424303afd9e1361c0a28a2098",
+  "head_rev": "5d6da2cd0b562d8e4887d360f5951b0501b4103a",
+  "card_sha256": "d644066aee0b3b7ba3779da71486e6662b507f01390b792e5104d63af2fa6f80",
+  "checker_fileset_sha256": "27cdcbc5056da59929853aeb62c12407139966263f61942d893352526bea485b",
   "checker_fileset_scheme": "v3",
   "fingerprint": {
     "python": "3.13.15",
@@ -17,7 +17,7 @@
     "ok": true,
     "changed_paths": [
       "src/repo_presenter/acceptance/calibration_harness.py",
-      "tests/acceptance/test_calibration_harness.py"
+      "tests/acceptance/test_acceptance_calibration_harness.py"
     ],
     "violations": [],
     "evaluated": true
@@ -27,10 +27,10 @@
       "run": 1,
       "checks": [
         {
-          "command": "python -m pytest tests/acceptance/test_calibration_harness.py -q",
+          "command": "python -m pytest tests/acceptance/test_acceptance_calibration_harness.py -q",
           "exit_code": 0,
-          "duration_s": 2.466,
-          "stdout_sha256": "80e572137eb90fc2c28f08728596bed5780eaa18bff07095ff2a0087378c472d"
+          "duration_s": 9.041,
+          "stdout_sha256": "079cc774d6e79163502db8f5a58945b3f0c852f39e242709caf6c440a0de9c02"
         }
       ],
       "all_passed": true
@@ -39,10 +39,10 @@
       "run": 2,
       "checks": [
         {
-          "command": "python -m pytest tests/acceptance/test_calibration_harness.py -q",
+          "command": "python -m pytest tests/acceptance/test_acceptance_calibration_harness.py -q",
           "exit_code": 0,
-          "duration_s": 2.282,
-          "stdout_sha256": "617ba76bb6b070600c01dd3f19ed4d754ac105e675dde5ff1f95c58ca555696a"
+          "duration_s": 1.51,
+          "stdout_sha256": "d6f65139ae360a0012243694c6f55dda8d14152e59055313dae2014458719286"
         }
       ],
       "all_passed": true
