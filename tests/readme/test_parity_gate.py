@@ -592,3 +592,211 @@ def test_a_maintainer_diagram_is_owed_unless_the_candidate_draws_its_own():
     assert not without.passed
     with_own = dim(run(cand(benchmark() + "\n" + OWN_DIAGRAM), bench=bench), "technical_content")
     assert with_own.passed
+
+
+# --- 7 maintainability -------------------------------------------------------------------------
+
+
+def test_heading_nested_more_than_one_level_deeper_fails():
+    bench = benchmark().replace("## Support", "## Support")  # unchanged baseline
+    deeper = benchmark().replace("## Support", "#### Support")
+    d = dim(run(cand(deeper)), "maintainability")
+    assert not d.passed and d.numbers["heading_depth_violations"] == 1
+    assert "Support" in d.details[0]
+
+
+def test_heading_nested_one_level_deeper_passes():
+    one_deeper = benchmark().replace("## Support", "### Support")
+    d = dim(run(cand(one_deeper)), "maintainability")
+    assert d.passed and d.numbers["heading_depth_violations"] == 0
+
+
+def test_a_paragraph_more_than_twice_the_benchmarks_longest_fails():
+    long_paragraph = " ".join(["word"] * 400)
+    readme = benchmark().replace(
+        "Ask questions on the community forum, where maintainers answer support requests within two business days.",
+        long_paragraph,
+    )
+    d = dim(run(cand(readme)), "maintainability")
+    assert not d.passed and d.numbers["long_paragraphs"] == 1
+
+
+def test_an_emptied_section_that_had_content_fails():
+    emptied = benchmark().replace(
+        "Ask questions on the community forum, where maintainers answer support requests within two business days.",
+        "",
+    )
+    d = dim(run(cand(emptied)), "maintainability")
+    assert not d.passed and d.numbers["emptied_sections"] == 1
+    assert "Support" in d.details[0]
+
+
+def test_maintainability_passes_a_well_formed_candidate():
+    d = dim(run(cand()), "maintainability")
+    assert d.passed and d.numbers["heading_depth_violations"] == 0
+
+
+# --- 8 required sections -----------------------------------------------------------------------
+
+
+def _with_required_section(name: str) -> str:
+    return "\n".join(
+        [
+            "# Foo for .NET",
+            "",
+            f"## {name}",
+            "",
+            "Real content for this section.",
+            "",
+        ]
+    )
+
+
+def test_a_backbone_section_entirely_absent_fails_even_without_a_disposition_excuse():
+    bench = _with_required_section("Dependencies")
+    missing = bench.replace("## Dependencies", "## Something Else")
+    d = dim(run(cand(missing, facts=[]), bench=bench), "required_sections")
+    assert not d.passed and d.numbers["missing"] == 1
+    assert "Dependencies" in d.details[0]
+
+
+def test_a_non_backbone_benchmark_section_is_not_this_dimensions_concern():
+    bench = _with_required_section("Troubleshooting")
+    missing = bench.replace("## Troubleshooting", "## Something Else")
+    d = dim(run(cand(missing, facts=[]), bench=bench), "required_sections")
+    assert d.passed and d.numbers["carried_by_benchmark"] == 0
+
+
+def test_a_backbone_section_present_passes():
+    bench = _with_required_section("License")
+    d = dim(run(cand(bench, facts=[]), bench=bench), "required_sections")
+    assert d.passed and d.numbers["carried_by_benchmark"] == 1 and d.numbers["missing"] == 0
+
+
+# --- 9 badge / banner completeness --------------------------------------------------------------
+
+
+BADGE_ROW = (
+    "[![NuGet version](https://img.shields.io/nuget/v/Foo.Bar.svg)](https://nuget.org) "
+    "[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)\n"
+)
+BANNER_LINE = (
+    "[![Foo for .NET](https://products.aspose.org/media/foo/net/banner-readme.png)]"
+    "(https://products.aspose.org/foo/net/)\n"
+)
+
+
+def _with_badges_and_banner(text: str) -> str:
+    lines = text.splitlines()
+    return "\n".join([lines[0], "", BADGE_ROW, BANNER_LINE, *lines[1:]])
+
+
+def test_a_missing_banner_fails_when_the_benchmark_carries_one():
+    bench = _with_badges_and_banner(benchmark())
+    without_banner = bench.replace(BANNER_LINE, "")
+    d = dim(run(cand(without_banner), bench=bench), "badge_banner_completeness")
+    assert not d.passed and d.numbers["benchmark_has_banner"] and not d.numbers["candidate_has_banner"]
+    assert "banner" in d.details[0]
+
+
+def test_a_shrunk_badge_row_fails():
+    bench = _with_badges_and_banner(benchmark())
+    one_badge = bench.replace(
+        " [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)", ""
+    )
+    d = dim(run(cand(one_badge), bench=bench), "badge_banner_completeness")
+    assert not d.passed and d.numbers["badge_deficit"] == 1
+
+
+def test_badge_and_banner_parity_passes():
+    bench = _with_badges_and_banner(benchmark())
+    d = dim(run(cand(bench), bench=bench), "badge_banner_completeness")
+    assert d.passed and d.numbers["badge_deficit"] == 0
+
+
+def test_no_badge_or_banner_in_the_benchmark_is_not_this_dimensions_concern():
+    d = dim(run(cand()), "badge_banner_completeness")
+    assert d.passed and d.numbers["benchmark_badges"] == 0 and not d.numbers["benchmark_has_banner"]
+
+
+# --- self-parity: the same text as both candidate and benchmark must pass every dimension -------
+
+
+def _committed_benchmark_texts() -> list[tuple[str, str]]:
+    """Real README texts this repository already has committed for parity work: the one real
+    sealed Lane candidate text under ``candidates/`` (docs/PARITY_BENCHMARK_PILOT.md), and the
+    live upstream README snapshots committed per repository under
+    ``evidence/build/P1_PORTFOLIO_SCALE`` (the same texts ``parity_gate.fetch_benchmark`` would
+    read live, captured once so this proof needs no network)."""
+    root = pg.REPO_ROOT
+    named = [
+        (
+            "candidates/aspose-3d-foss",
+            root
+            / "candidates"
+            / "aspose-3d-foss__Aspose.3D-FOSS-for-.NET"
+            / "52b0f00ebf28a0b4173921725ff170685ec2c502"
+            / "README.md",
+        ),
+        (
+            "live_readme/3d-net",
+            root
+            / "evidence/build/P1_PORTFOLIO_SCALE/aspose-3d-foss__Aspose.3D-FOSS-for-.NET"
+            / "live_readme.md",
+        ),
+        (
+            "live_readme/imaging-net",
+            root
+            / "evidence/build/P1_PORTFOLIO_SCALE/aspose-imaging-foss__Aspose.Imaging-FOSS-for-.NET"
+            / "live_readme.md",
+        ),
+        (
+            "live_readme/cells-rust",
+            root
+            / "evidence/build/P1_PORTFOLIO_SCALE/aspose-cells-foss__Aspose.Cells-FOSS-for-Rust"
+            / "live_readme.md",
+        ),
+        (
+            "live_readme/email-net",
+            root
+            / "evidence/build/P1_PORTFOLIO_SCALE/aspose-email-foss__Aspose.Email-FOSS-for-.Net"
+            / "live_readme.md",
+        ),
+        (
+            "live_readme/barcode-python",
+            root
+            / "evidence/build/P1_PORTFOLIO_SCALE/aspose-barcode-foss__Aspose.BarCode-FOSS-for-Python"
+            / "live_readme.md",
+        ),
+    ]
+    return [(label, path.read_text(encoding="utf-8")) for label, path in named]
+
+
+SELF_PARITY_TEXTS = _committed_benchmark_texts() + [("synthetic_small_fixture", benchmark())]
+
+
+@pytest.mark.parametrize("label,text", SELF_PARITY_TEXTS, ids=[t[0] for t in SELF_PARITY_TEXTS])
+def test_self_parity_on_every_committed_benchmark_text(label, text):
+    """M7 self-parity 1.00 (docs/design/2026-11-06-acceptance-redesign.md section 4.1): the same
+    text as both candidate and benchmark must report full parity on every dimension this module
+    computes -- a dimension that reads differently depending on which text is "candidate" vs
+    "benchmark" is asymmetric and wrong, whatever its number looks like on a real asymmetric pair.
+    Lane L is used throughout (empty facts/dispositions are sufficient for it; Lane R's own
+    self-parity, with full facts/dispositions, is already proven above for the synthetic fixture)."""
+    candidate = pg.SealedCandidate("L", text, ())
+    result = pg.evaluate("self-parity", candidate, text)
+    assert result.parity, pg.render([result])
+    assert {d.name for d in result.dimensions} == set(pg.DIMENSIONS)
+    assert all(d.passed for d in result.dimensions), [
+        (d.name, d.numbers, d.details) for d in result.dimensions if not d.passed
+    ]
+
+
+def test_self_parity_holds_for_lane_r_with_full_dispositions_too():
+    """The existing synthetic fixture already exercises Lane R's own disposition/fact accounting
+    (test_identical_candidate_reaches_parity_on_every_dimension); this asserts it by name for every
+    current dimension, so a future dimension added without updating that test cannot pass silently
+    un-exercised under Lane R."""
+    result = run(cand())
+    assert result.parity
+    assert {d.name for d in result.dimensions} == set(pg.DIMENSIONS)
