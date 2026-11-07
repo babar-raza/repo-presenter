@@ -261,10 +261,31 @@ class SealRecord:
     def pipeline_good(self) -> bool:
         return not self.error and self.manifest_state in SEALED_GOOD_STATES
 
+    #: ``unit_reviews[*]["m8"]["status"]`` values read as "no M8 objection" -- mirrors
+    #: ``readme.review.llm_review.M8_PASSING_STATUSES`` and ``repo_presenter.recertify``'s own
+    #: ``_M8_PASSING_STATUSES`` (duplicated rather than imported, so this module stays free of
+    #: the gateway/ledger/call-store machinery those pull in; update all three together).
+    _M8_PASSING_STATUSES = frozenset({None, "not_run", "ok"})
+
     @property
     def model_accept(self) -> bool:
+        """TC-013/TC-024's seal-path contract -- see ``repo_presenter.recertify._model_accept``'s
+        docstring for the full reasoning (kept identical here; update both together).
+        Deterministically-validated (``verdict == "ACCEPT"``) AND a real model review was made
+        (``model_verdict`` recorded) AND no unit's recorded M8 verdict is an objection. Replaces
+        the old reviewer's stricter ``model_verdict == "ACCEPT"`` requirement."""
         review = self.review or {}
-        return review.get("verdict") == "ACCEPT" and review.get("model_verdict") == "ACCEPT"
+        if review.get("verdict") != "ACCEPT":
+            return False
+        if review.get("model_verdict") is None:
+            return False
+        for record in review.get("unit_reviews") or ():
+            if not isinstance(record, dict):
+                continue
+            m8 = record.get("m8")
+            if isinstance(m8, dict) and m8.get("status") not in self._M8_PASSING_STATUSES:
+                return False
+        return True
 
     @property
     def counted(self) -> bool:
@@ -299,7 +320,10 @@ def _read_seal(git_dir: Path, commit: str, repository: str, lane: str, scratch: 
         return SealRecord(repository, lane, commit, revision, "", None, None, None, why)
 
     archive = subprocess.run(
-        ["git", "--git-dir", str(git_dir), "archive", "--format=tar", commit],
+        [
+            "git", "-c", "core.autocrlf=false",
+            "--git-dir", str(git_dir), "archive", "--format=tar", commit,
+        ],
         stdin=subprocess.DEVNULL,
         capture_output=True,
         check=False,

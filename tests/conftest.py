@@ -1,3 +1,4 @@
+import json
 import sys
 from collections.abc import Iterator
 from pathlib import Path
@@ -6,6 +7,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
+from repo_presenter.core.llm import jobs as jobs_module
 from repo_presenter.extractors.platforms import cpp
 from repo_presenter.extractors.surface.registry import observe
 from repo_presenter.readme.evidence.facts import links, published_version
@@ -55,6 +57,36 @@ def no_ambient_llm_streaming(monkeypatch: pytest.MonkeyPatch) -> None:
     answer the plain request shape, so the ambient value broke 130 tests in such a session while
     hosted CI (which does not set it) passed. Deleted by default; a streaming test sets it itself."""
     monkeypatch.delenv("GPT_OSS_STREAMING", raising=False)
+
+
+@pytest.fixture(autouse=True)
+def no_production_provider_budget_gate(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """2026-11-07 (owner ruling R25, TC-015): ``run_job``'s default ``budget_path`` falls back,
+    at call time, to ``repo_presenter.core.llm.jobs.DEFAULT_BUDGET_PATH`` -- the real, committed
+    ``data/provider_budget.json``, which has no open batch by design (nothing is authorized to
+    spend yet). Every test that calls ``run_job`` (directly, or through cascade/authoring/repair/
+    llm_review) without threading its own ``budget_path`` would otherwise hit that real file and
+    be refused with ``BudgetExceededError`` even when its transport is a fake that spends nothing
+    -- this fixture gives every test, by default, a throwaway budget file with one effectively
+    unlimited open batch, so existing tests of FAKE-transport logic are never gated by a real
+    production budget they have nothing to do with. A test that wants to exercise the real gate
+    (missing file, exhausted batch, etc.) passes its own ``budget_path`` explicitly, which always
+    wins over this default."""
+    permissive = tmp_path / "permissive_provider_budget.json"
+    permissive.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "total_calls_cap": 10**9,
+                "total_tokens_cap": 10**12,
+                "spent": {"calls": 0, "tokens": 0},
+                "batches": [{"id": "test-fixture", "calls_cap": 10**9, "tokens_cap": 10**12,
+                             "calls_spent": 0, "tokens_spent": 0}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(jobs_module, "DEFAULT_BUDGET_PATH", permissive)
 
 
 @pytest.fixture(autouse=True)

@@ -203,6 +203,62 @@ def _no_github(_args: list[str]) -> bytes | None:
     raise AssertionError("no GitHub call expected")
 
 
+# --- TC-024: the seal-path contract's _model_accept -----------------------------------------------
+
+
+def test_model_accept_rejects_a_deterministic_only_verdict() -> None:
+    """A deterministic-only ACCEPT (no model ever asked) never re-certifies as accepted -- the
+    one invariant present.py's own "no LLM review...never sealed" refusal protects at seal time,
+    mirrored here for a STORED review being re-read."""
+    assert recertify._model_accept({"verdict": "ACCEPT", "model_verdict": None}) is False
+    assert recertify._model_accept({"verdict": "ACCEPT"}) is False
+    assert recertify._model_accept(None) is False
+    assert recertify._model_accept({}) is False
+
+
+def test_model_accept_rejects_a_non_accept_verdict() -> None:
+    assert recertify._model_accept({"verdict": "REJECT", "model_verdict": "ACCEPT"}) is False
+
+
+def test_model_accept_no_longer_requires_the_old_reviewers_own_accept() -> None:
+    """TC-024's actual behavior change: ``verdict == "ACCEPT"`` already means (by
+    ``readme.review.verdict.fold_verdict``'s own invariant) that any ``REJECT_*`` the old
+    reviewer's one call returned was deterministically cleared -- non-negotiable 5 is enforced
+    there, not by also demanding the old reviewer's single call said ACCEPT outright. The OLD
+    ``_model_accept`` (``verdict == "ACCEPT" and model_verdict == "ACCEPT"``) would have rejected
+    this; TC-024's accepts it."""
+    assert recertify._model_accept(
+        {"verdict": "ACCEPT", "model_verdict": "REJECT_PRESENTATION"}
+    ) is True
+
+
+def test_model_accept_rejects_a_unit_m8_marked_reject_or_inconclusive() -> None:
+    base = {"verdict": "ACCEPT", "model_verdict": "ACCEPT"}
+    assert recertify._model_accept(
+        {**base, "unit_reviews": [{"unit": "u1", "m8": {"status": "reject"}}]}
+    ) is False
+    assert recertify._model_accept(
+        {**base, "unit_reviews": [{"unit": "u1", "m8": {"status": "inconclusive"}}]}
+    ) is False
+
+
+def test_model_accept_accepts_unit_m8_not_run_ok_or_absent() -> None:
+    """Every status this card's own code can actually produce today (no real M8 provider call is
+    wired yet -- TC-023's own scope boundary, owner ruling R26) reads as "no objection", and a
+    seal made before this card (no ``"m8"`` key at all) is read the same way."""
+    base = {"verdict": "ACCEPT", "model_verdict": "ACCEPT"}
+    assert recertify._model_accept(
+        {**base, "unit_reviews": [{"unit": "u1", "m8": {"status": "not_run"}}]}
+    ) is True
+    assert recertify._model_accept(
+        {**base, "unit_reviews": [{"unit": "u1", "m8": {"status": "ok"}}]}
+    ) is True
+    assert recertify._model_accept(
+        {**base, "unit_reviews": [{"unit": "u1"}]}  # no "m8" key at all (a pre-TC-024 seal)
+    ) is True
+    assert recertify._model_accept(base) is True  # no unit_reviews at all
+
+
 # --- D1: renderer N -> N+1, zero calls, still counts ----------------------------------------------
 
 

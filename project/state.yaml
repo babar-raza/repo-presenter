@@ -152,7 +152,7 @@ owner_review_status:
 
 release_gate_dashboard:
   generated_by: gatecli
-  generated_at: '2026-11-06T15:34:36Z'
+  generated_at: '2026-11-07T18:56:07Z'
   note: Tool-generated from gateverify.rebuild_state() -- never hand-edit this block.
     Historical current_gate/active_work_item below are preserved bootstrap-era narrative,
     not this cursor; this block is the real, evidence-derived release-gate status
@@ -208,13 +208,12 @@ release_gate_dashboard:
     commit: 1f426ec19ae6dc7e5c26dc75536d459300daa942
     receipt: GATE1_QUALITY/TC-006/receipt.json
   - id: TC-007
-    gate: GATE1_QUALITY
-    status: VERIFICATION_FAILED
+    gate: GATE5_DELIVERY_PROGRAM
+    status: AWAITING_PREREQUISITE
     attempt: 0
     blocker:
-      class: VERIFICATION_FAILED
-      summary: 'checks failed: python ops/checks/calibration_status.py PASSED; negative-control
-        patch did not apply'
+      class: AWAITING_PREREQUISITE
+      summary: depends on TC-022b, not yet accepted
   - id: TC-008
     gate: GATE1_QUALITY
     status: ACCEPTED
@@ -224,11 +223,11 @@ release_gate_dashboard:
     receipt: GATE1_QUALITY/TC-008/receipt.json
   - id: TC-008a
     gate: GATE1_QUALITY
-    status: ACCEPTED
+    status: STALE_RECEIPT
     attempt: 0
-    blocker: null
-    commit: eaa1b811211a406f9807148795af6d51150f4890
-    receipt: GATE1_QUALITY/TC-008a/receipt.json
+    blocker:
+      class: STALE_RECEIPT
+      summary: card definition changed since this receipt was generated -- re-verify
   - id: TC-009
     gate: GATE2_INTEGRATIONS
     status: ACCEPTED
@@ -267,36 +266,141 @@ release_gate_dashboard:
         filed=True resolved_or_closed=True independently_confirmed_via_gh_api=True;
         negative-control patch did not apply'
   - id: TC-011
-    gate: GATE3_PORTFOLIO
+    gate: GATE5_DELIVERY_PROGRAM
     status: AWAITING_PREREQUISITE
     attempt: 0
     blocker:
       class: AWAITING_PREREQUISITE
-      summary: depends on TC-007, not yet accepted
+      summary: depends on TC-007, TC-022b, TC-024, not yet accepted
   - id: TC-012
     gate: GATE4_PRODUCTION
-    status: ACCEPTED
+    status: AWAITING_PREREQUISITE
     attempt: 0
-    blocker: null
-    commit: 6335d8e1de5ee0f7d032ce8b552062ffb369a607
-    receipt: GATE4_PRODUCTION/TC-012/receipt.json
+    blocker:
+      class: AWAITING_PREREQUISITE
+      summary: 'depends on TC-008a, not yet accepted (receipt also stale: card changed
+        since verification)'
   - id: TC-012a
     gate: GATE4_PRODUCTION
     status: AWAITING_PREREQUISITE
     attempt: 0
     blocker:
       class: AWAITING_PREREQUISITE
-      summary: depends on TC-009b, TC-010a, TC-011, TC-012b, not yet accepted
+      summary: depends on TC-009b, TC-010a, TC-011, TC-012, TC-012b, not yet accepted
   - id: TC-012b
     gate: GATE4_PRODUCTION
     status: AWAITING_PREREQUISITE
     attempt: 0
     blocker:
       class: AWAITING_PREREQUISITE
-      summary: depends on TC-007, not yet accepted
+      summary: depends on TC-012, TC-007, not yet accepted
+  - id: TC-013
+    gate: GATE5_DELIVERY_PROGRAM
+    status: ACCEPTED
+    attempt: 0
+    blocker: null
+    commit: ad2d8c744b49fa366d3d273fa63bc7a958c13fd4
+    receipt: GATE5_DELIVERY_PROGRAM/TC-013/receipt.json
+  - id: TC-014
+    gate: GATE5_DELIVERY_PROGRAM
+    status: ACCEPTED
+    attempt: 0
+    blocker: null
+    commit: f90d1baf787a57434e68af4de83863ff4e9e8697
+    receipt: GATE5_DELIVERY_PROGRAM/TC-014/receipt.json
+  - id: TC-015
+    gate: GATE5_DELIVERY_PROGRAM
+    status: ACCEPTED
+    attempt: 0
+    blocker: null
+    commit: 9f7b4df7036bdf4504268553c1d9bb4b672a16af
+    receipt: GATE5_DELIVERY_PROGRAM/TC-015/receipt.json
+  - id: TC-016
+    gate: GATE5_DELIVERY_PROGRAM
+    status: ACCEPTED
+    attempt: 0
+    blocker: null
+    commit: 3eb453cb420642aa1228e6a7a15ce3438141adf1
+    receipt: GATE5_DELIVERY_PROGRAM/TC-016/receipt.json
+  - id: TC-017a
+    gate: GATE5_DELIVERY_PROGRAM
+    status: ACCEPTED
+    attempt: 0
+    blocker: null
+    commit: 4f74d1fd0280eb8e213157a237749d4480f2ea62
+    receipt: GATE5_DELIVERY_PROGRAM/TC-017a/receipt.json
+  - id: TC-017b
+    gate: GATE5_DELIVERY_PROGRAM
+    status: ACCEPTED
+    attempt: 0
+    blocker: null
+    commit: 4e63fc7d84f7a325c9b1843c516822e6ab3f90e9
+    receipt: GATE5_DELIVERY_PROGRAM/TC-017b/receipt.json
+  - id: TC-018
+    gate: GATE5_DELIVERY_PROGRAM
+    status: ACCEPTED
+    attempt: 0
+    blocker: null
+    commit: 476650a57902b97ab9f26d305b741206790781c6
+    receipt: GATE5_DELIVERY_PROGRAM/TC-018/receipt.json
+  - id: TC-020
+    gate: GATE5_DELIVERY_PROGRAM
+    status: ACCEPTED
+    attempt: 0
+    blocker: null
+    commit: 67a905387fe3f4f70d1f4bc06e5336f66dd7bda5
+    receipt: GATE5_DELIVERY_PROGRAM/TC-020/receipt.json
+  - id: TC-021
+    gate: GATE5_DELIVERY_PROGRAM
+    status: ACCEPTED
+    attempt: 0
+    blocker: null
+    commit: 1fec3a4e42e42988c0e32838fdd88210f55d03d8
+    receipt: GATE5_DELIVERY_PROGRAM/TC-021/receipt.json
+  - id: TC-022a
+    gate: GATE5_DELIVERY_PROGRAM
+    status: ACCEPTED
+    attempt: 0
+    blocker: null
+    commit: 4076ea62ba6e09e92aa864e8a87570e7a9aeea8e
+    receipt: GATE5_DELIVERY_PROGRAM/TC-022a/receipt.json
+  - id: TC-022b
+    gate: GATE5_DELIVERY_PROGRAM
+    status: STALE_RECEIPT
+    attempt: 0
+    blocker:
+      class: STALE_RECEIPT
+      summary: card definition changed since this receipt was generated -- re-verify
+  - id: TC-022c
+    gate: GATE5_DELIVERY_PROGRAM
+    status: READY
+    attempt: 0
+    blocker: null
+  - id: TC-023
+    gate: GATE5_DELIVERY_PROGRAM
+    status: ACCEPTED
+    attempt: 0
+    blocker: null
+    commit: 069bc0ad594ab2d21db6f3651a4f68b2a074d482
+    receipt: GATE5_DELIVERY_PROGRAM/TC-023/receipt.json
+  - id: TC-024
+    gate: GATE5_DELIVERY_PROGRAM
+    status: READY
+    attempt: 0
+    blocker: null
+  - id: TC-025
+    gate: GATE5_DELIVERY_PROGRAM
+    status: ACCEPTED
+    attempt: 0
+    blocker: null
+    commit: 14eba8cc99c47a38ffe5c712e8a831a3d5d9c3a4
+    receipt: GATE5_DELIVERY_PROGRAM/TC-025/receipt.json
   ready:
   - TC-005
-  - TC-007
+  - TC-008a
+  - TC-022b
+  - TC-022c
+  - TC-024
 current_gate:
   id: P1_PORTFOLIO_SCALE
   status: ACCEPTED

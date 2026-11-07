@@ -214,9 +214,42 @@ def fetch_source(
 # --- the deterministic re-run, per lane --------------------------------------------------------
 
 
-def _model_accept(review: Mapping[str, Any] | None) -> bool:
+#: ``unit_reviews[*]["m8"]["status"]`` values TC-013/TC-024's contract reads as "no M8 objection"
+#: -- mirrors ``readme.review.llm_review.M8_PASSING_STATUSES`` exactly (duplicated, not imported:
+#: this module's own docstring promises "nothing here imports a gateway, a ledger or a call
+#: store", and ``llm_review`` pulls all three in; update both sets together).
+_M8_PASSING_STATUSES = frozenset({None, "not_run", "ok"})
+
+
+def _model_accept(review):
+    """TC-013/TC-024's seal-path contract: deterministically-validated (``verdict == "ACCEPT"``,
+    which ``readme.review.verdict.fold_verdict``'s own invariant already means no deterministic
+    mechanism -- M1-M7, M10, ``readme.validation.blocking``, unchanged -- found a blocking finding,
+    and every model-reported REJECT_* was deterministically cleared: non-negotiable 5 is never
+    weakened by this) AND a real model review was made (``model_verdict`` recorded; a
+    deterministic-only verdict never re-certifies) AND M8's recorded verdict (TC-023,
+    ``readme.review.prose_judge``, carried per unit in ``unit_reviews[*]["m8"]``) is never a
+    REJECT/INCONCLUSIVE for any unit. Replaces the old reviewer's own stricter
+    ``model_verdict == "ACCEPT"`` requirement -- that required the OLD monolithic reviewer's
+    single call to have said ACCEPT outright, which is exactly "the old reviewer's
+    one-call-does-everything verdict" TC-024 moves this gate away from. A unit's ``m8`` field
+    absent (every seal made before this card), or recorded ``"not_run"``/``"ok"``, is read as "no
+    M8 objection" -- TC-023's real provider-backed calibration is separately budgeted (owner
+    ruling R26) and not yet wired; a future card's real ``"reject"``/``"inconclusive"`` blocks
+    exactly like the old reviewer's REJECT did, with zero further change to this function. Mirrors
+    ``core.state.bundle_store.SealRecord.model_accept`` -- update both together."""
     review = review or {}
-    return review.get("verdict") == "ACCEPT" and review.get("model_verdict") == "ACCEPT"
+    if review.get("verdict") != "ACCEPT":
+        return False
+    if review.get("model_verdict") is None:
+        return False
+    for record in review.get("unit_reviews") or ():
+        if not isinstance(record, Mapping):
+            continue
+        m8 = record.get("m8")
+        if isinstance(m8, Mapping) and m8.get("status") not in _M8_PASSING_STATUSES:
+            return False
+    return True
 
 
 def _rerun_lane_r(

@@ -1,0 +1,145 @@
+id: TC-022a
+gate: GATE5_DELIVERY_PROGRAM
+track: acceptance-calibration
+executor: worker
+purpose: >
+  Freeze the held-out acceptance registration "A1" WITHOUT needing any new production
+  candidates. depends_on: []. Self-contained context (the worker never reads
+  docs/DELIVERY_PLAN_2026-11-07.md or docs/design/2026-11-06-acceptance-redesign.md; everything
+  needed is restated here).
+
+  Why this card exists, exactly: an earlier draft of the acceptance-calibration plan had the
+  held-out evaluation set "A1" draw some of its clean-twin cases from freshly generated
+  production candidates -- but those production candidates could not be generated until the
+  acceptance pipeline they were meant to calibrate was already switched on, which itself needed
+  A1 to exist first. That is a real cycle, not a sequencing detail: nothing can be first. This
+  card breaks it by building A1 entirely from data that already exists on disk or in the
+  project's own git history, at zero provider calls, so A1 can be frozen before any new
+  candidate is produced.
+
+  Existing sources to build A1 from (read each before writing code):
+  1. `docs/investigations/2026-11-05-reviewer-calibration-iteration-4.md` and
+     `docs/investigations/2026-11-06-reviewer-calibration-iteration-5.md`, plus their sibling
+     `-data/` directories (e.g. `docs/investigations/2026-11-06-reviewer-calibration-iteration-5-data/registration.json`)
+     -- these record a much larger universe of real review cases than the 113 that were
+     individually hand-audited (see `docs/investigations/2026-11-06-unsupported-claim-class-audit.md`,
+     which audited exactly 113 of them). The remaining cases in that universe were registered
+     (so their labels and digests exist) but never individually hand-audited the way those 113
+     were. `scripts/run_reviewer_calibration.py` has a `corpus`/`estimate` mode with a
+     `--cache-corpus` flag that rebuilds a case corpus from a local cache with zero provider
+     calls (`docs/investigations/2026-11-06-unsupported-claim-class-audit.md`'s own method
+     section describes using exactly this path to re-read the iteration-5 corpus without calling
+     the model). Read that script and `src/repo_presenter/readme/review/calibration/corpus.py`,
+     `registration.py`, and `sources.py` to find the real case count and how to enumerate it
+     without a provider call. Report the real number you find; do not assume it is exactly 924.
+  2. The units of the 24 currently-sealed candidates: read `data/recertification_baseline.json`
+     (committed, lists each sealed repository/lane/revision/outcome) and, for the ones useful as
+     clean-twin or labelled material, their `dispositions.json`/`content_units.json` via the
+     existing `bundle_store.seal_history` reader (`src/repo_presenter/core/state/bundle_store.py`)
+     -- read-only, no new seal is produced.
+  3. Synthetic twins from existing mutation operators: `src/repo_presenter/readme/validation/`
+     and `src/repo_presenter/readme/review/calibration/` already contain mutation-operator code
+     used by earlier calibration iterations (e.g. `format_overclaim`, `duplicate_paragraph`,
+     `add_promotional_filler` -- grep for these exact operator names across
+     `src/repo_presenter/readme/review/calibration/` and `tests/readme/review/calibration/` to
+     find the real module). Reuse what exists; do not write new mutation operators in this card.
+
+  Build a registration process (new module, see write_paths) that: selects a stratified sample
+  from the three sources above; labels each case by the five classes A (false claim the
+  repository contradicts), B (true claim the facts miss), C (unverifiable but plausible
+  maintainer knowledge), D (generator-authored and unsupported), E (label error) -- defined
+  exactly as in `docs/investigations/2026-11-06-unsupported-claim-class-audit.md` section 1,
+  which the worker should read for this definition only (it is data, not an instruction to the
+  worker about scope); computes and commits a SHA-256 digest of the exact selected case set
+  BEFORE any verdict is ever computed against it (the digest must be computed from a canonical,
+  sorted, deterministic serialization of the selection, so two runs over the same inputs produce
+  byte-identical digests); and reports, honestly, whether the selection reaches n>=30 per recall
+  class and n>=50 clean twins from existing data alone. If it does not reach those minimums, the
+  registration module must say so explicitly in its own output (a `shortfall` field naming which
+  classes are short and by how much) rather than silently padding the sample or lowering the
+  target -- a later, budgeted card is expected to grow A1 with real production candidates once
+  the pipeline this registration will calibrate actually exists; this card's job is to build
+  the honest zero-call floor, not to manufacture a false pass.
+
+  Second-labeller pass: over a hash-ranked 20% sample of the selection, run a second labelling
+  pass and report agreement (Cohen's kappa, or if no second independent labelling source is
+  available in this zero-call, zero-model context, implement a documented simple-majority /
+  rule-based second pass and say plainly in the module's docstring that it is a stand-in, not a
+  true independent second labeller -- do not claim kappa was computed from two genuinely
+  independent sources if it was not).
+
+  This card produces the SELECTION LOGIC and its own local, test-driven proof that it is
+  deterministic and reports its own shortfall honestly. It does NOT write the real, committed
+  registration file into `data/` (that path is globally denied to a worker card by
+  `ops/gatectl.py`'s `GLOBAL_DENY`, which also covers `ops/**`, `.github/**`, `docs/**`,
+  `evidence/**` and others -- confirm this for yourself by reading `GLOBAL_DENY` in
+  `ops/gatectl.py` before choosing write_paths). Instead, the module's own tests construct the
+  registration in a temporary directory and assert its properties there; freezing the real
+  committed `data/registrations/A1.json` (or equivalent path) is a separate, supervisor-direct
+  follow-up step once this card is accepted, exactly as `data/reviewer_calibration.json` and
+  other committed data files in this repository are supervisor-owned, never worker-committed.
+depends_on: []
+write_paths:
+  - src/repo_presenter/acceptance/registration.py
+  - src/repo_presenter/acceptance/__init__.py
+  - tests/acceptance/test_registration.py
+satisfies:
+  - REQ-A1-001
+  - REQ-A1-002
+source_refs:
+  - file: docs/investigations/2026-11-06-unsupported-claim-class-audit.md
+    anchor: "## 1. Result"
+  - file: docs/investigations/2026-11-06-reviewer-calibration-iteration-5-data/registration.json
+    anchor: "registration"
+  - file: scripts/run_reviewer_calibration.py
+    anchor: "--cache-corpus"
+  - file: data/recertification_baseline.json
+    anchor: "seals"
+  - file: ops/gatectl.py
+    anchor: "GLOBAL_DENY"
+inputs: []
+actions:
+  - "Read scripts/run_reviewer_calibration.py and src/repo_presenter/readme/review/calibration/{corpus.py,registration.py,sources.py} to find the real zero-call case universe and how to enumerate it; report the real count found."
+  - "Read data/recertification_baseline.json and the bundle_store seal-history reader to enumerate the 24 sealed candidates' units as a second source, read-only."
+  - "Find and reuse (do not reinvent) the existing mutation-operator code for synthetic clean twins."
+  - "Write src/repo_presenter/acceptance/registration.py: a pure, deterministic selection/labelling/stratification function plus a canonical-digest function, with an honest shortfall report."
+  - "Write a second-labeller pass over a hash-ranked 20% sample, with agreement reported and its own nature (true second source vs documented stand-in) stated plainly."
+  - "Write tests/acceptance/test_registration.py proving: (a) two runs over the same fixed local inputs produce a byte-identical digest; (b) the shortfall report is correct against a constructed small fixture where the minimums are deliberately not met; (c) every case in the output selection carries exactly one of the five classes A/B/C/D/E."
+checks:
+  - command: |-
+      python -m pytest tests/acceptance/test_registration.py -q
+    expect: exit 0
+    timeout_seconds: 300
+    proves:
+      - REQ-A1-001
+      - REQ-A1-002
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -X utf8 -c "import pathlib; p = pathlib.Path('src/repo_presenter/acceptance/registration.py'); t = p.read_text(encoding='utf-8'); p.write_text(t.replace('sha256', 'md5'), encoding='utf-8')"
+  rationale: >
+    Swaps the digest algorithm the determinism test pins its expected value against (assuming the
+    worker's implementation names the hash function literally, as instructed). If the test
+    asserted a specific digest value rather than only "two runs match", this mutation must break
+    it, proving the test checks a real, specific digest rather than only internal self-consistency
+    that would pass under any hash function. If the worker's test only checks that two runs agree
+    with each other (not a pinned expected value), this negative control is replaced in the same
+    commit by one that corrupts the selection logic itself (e.g. makes the sort non-stable) so
+    that determinism genuinely breaks -- per ops/SUPERVISOR.md's rule that a falsifier must
+    actually exercise the real behavior, not a detail that happens not to matter.
+evidence:
+  - src/repo_presenter/acceptance/registration.py
+  - tests/acceptance/test_registration.py
+closeout:
+  - "This card does not freeze the real, committed A1 registration file. Once ACCEPTED, the
+     supervisor runs this module directly against the real, full existing-data universe (not the
+     worker's own small test fixtures) and commits the resulting registration and its digest as
+     data/registrations/A1.json (or equivalent, supervisor-owned path) as its own, separate,
+     non-taskcard action, reporting honestly whether the n>=30/n>=50 minimums were actually
+     reached from existing data alone."
+  - "TC-022b (the calibration harness that measures against A1) depends on the real, committed
+     A1 existing -- it does not depend on this card's own worker-authored test fixtures."
+recovery: "Revert src/repo_presenter/acceptance/registration.py and its test; no committed data
+  file exists yet for this card to have touched, so there is nothing else to roll back."

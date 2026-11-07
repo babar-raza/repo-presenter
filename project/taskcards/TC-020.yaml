@@ -1,0 +1,157 @@
+id: TC-020
+gate: GATE5_DELIVERY_PROGRAM
+track: benchmark-parity
+executor: supervisor
+purpose: >
+  Part of the 2026-11-07 delivery program (docs/DELIVERY_PLAN_2026-11-07.md section 8.2, row
+  TC-020; the worker never reads that document, only this card). depends_on: []. Three
+  self-contained pieces, all zero provider calls:
+  (1) M7 benchmark scorecard. src/repo_presenter/readme/parity_gate.py already measures six
+  deterministic dimensions of a sealed candidate against the README published upstream (owner
+  ruling R2): section_coverage, technical_content, verified_examples, links, internal_markers,
+  maintainer_preservation. The owner's consolidated goals (docs/CONSOLIDATED_GOALS_2026-11-06.md
+  section 6) name a seventh evaluation dimension this module has never computed: "maintainability".
+  Add a seventh scorecard dimension, maintainability, to DIMENSIONS and evaluate() in
+  src/repo_presenter/readme/parity_gate.py. Define it deterministically and document the
+  definition in the module docstring exactly as the other six are documented (a short paragraph
+  stating what it measures and what counts as a pass), for example: heading depth/nesting does
+  not exceed the benchmark's by more than one level anywhere a benchmark heading has a candidate
+  counterpart, no single paragraph in a generated/rewritten section exceeds roughly 2x the
+  benchmark's longest paragraph word count, and no section in the candidate is empty where the
+  benchmark's corresponding section has content. Whatever exact rule you choose, it must be
+  computed from the two texts alone (no provider call) and must report a number, not just
+  pass/fail, exactly like the other six dimensions. Add a documented "self-parity" proof: running
+  parity_gate.evaluate() with the SAME text passed as both candidate and benchmark must report
+  full parity (every one of the seven dimensions passing) for every one of the six existing
+  benchmark texts this repository already has committed for parity work (see
+  docs/PARITY_BENCHMARK_PILOT.md for where those are) plus at least one synthetic small README
+  fixture. If self-parity does not already hold for all seven dimensions, fix whichever
+  dimension's comparison logic is asymmetric (reads differently depending on which text is
+  "candidate" vs "benchmark") until it does -- this is the acceptance redesign's M7 "self-parity
+  1.00" requirement (docs/design/2026-11-06-acceptance-redesign.md section 4.1, M7 row). Add this
+  as a real, named pytest test (not a manual check) in tests/readme/test_parity_gate.py.
+  (2) Per-repository benchmark provenance. Today readme/parity_gate.py reads whatever benchmark
+  text a caller hands it at run time; nothing records, for any of the 36 registry repositories,
+  whether a real aspose.org readme-refresh output is actually known to be live upstream for that
+  product today. Add data/benchmarks.json: schema_version, ruling (quote "R2,
+  docs/CONSOLIDATED_GOALS_2026-11-06.md"), meaning (one sentence), and one entry per repository
+  in data/registry.json ({repository, benchmark_status: one of "live_upstream_readme_refresh" |
+  "unknown" | "no_benchmark_claimed", evidence: a short string or empty, checked: an ISO date you
+  set to today}). Populate benchmark_status from what you can actually determine by reading
+  data/registry.json and docs/PARITY_BENCHMARK_PILOT.md (which already names at least the three
+  pilot repositories) and docs/PARITY_BENCHMARK_PILOT.md's own coverage table; mark every entry
+  you cannot determine "unknown" -- never guess "live_upstream_readme_refresh" without a cited
+  source. IMPORTANT SCOPE LIMIT (`ops/gatectl.py` `GLOBAL_DENY`): no taskcard may ever declare a
+  write_path under `ops/**`, so the consistency checker does NOT live at `ops/checks/
+  benchmarks_registry.py` in this card -- build it as a plain function,
+  `src/repo_presenter/core/registry/benchmarks.py::check_coverage(registry_path, benchmarks_path)
+  -> list[str]` (empty = consistent; one problem string per missing or mismatched repository),
+  with a pytest test driving it. The eventual thin `ops/checks/benchmarks_registry.py` CLI
+  wrapper CI calls is a direct supervisor follow-up (no card) dispatched right after this card is
+  ACCEPTED, same pattern as TC-013's `ops/checks/*.py` follow-up.
+  (3) Product-knowledge refresh as a declared pipeline stage. src/repo_presenter/readme/evidence
+  /facts/product_pages.py already performs a live-200 product-page read
+  (product_page_facts/enterprise_fact), wired into the facts pipeline from
+  src/repo_presenter/readme/evidence/facts/extract.py. The owner's consolidated goals section 4
+  ("refresh product/platform knowledge... before generation") was found, in Part C item 4 of
+  docs/CONSOLIDATED_GOALS_2026-11-06.md, to have no separately recorded step for this -- it exists
+  only as an incidental fact kind, not a declared refresh stage with its own evidence. Make it one:
+  add a small, explicit function (e.g. product_knowledge_refresh(entry, probes) in
+  product_pages.py) that calls the existing probes, returns a typed result naming what was
+  checked (the product homepage URL, the Enterprise Edition target URL, each resulting HTTP
+  status) and whether anything changed versus the facts document's own source_revision-scoped
+  cache, and have the main facts-extraction entry point (extract.py) call it explicitly and record
+  its result as a named, test-covered artifact in the facts document (not merely as loose Fact
+  objects indistinguishable from any other fact kind). Add a pytest test proving this function is
+  actually called during a normal facts-extraction run (not merely unit-tested in isolation).
+depends_on: []
+executor: supervisor
+write_paths:
+  - src/repo_presenter/readme/parity_gate.py
+  - src/repo_presenter/readme/evidence/facts/product_pages.py
+  - src/repo_presenter/readme/evidence/facts/extract.py
+  - src/repo_presenter/core/registry/benchmarks.py
+  - data/benchmarks.json
+  - tests/readme/test_parity_gate.py
+  - tests/readme/evidence/facts/test_extract.py
+  - tests/readme/evidence/facts/test_source_detail.py
+  - tests/core/registry/test_benchmarks.py
+satisfies:
+  - REQ-BENCH-001
+  - REQ-BENCH-002
+  - REQ-KNOW-001
+source_refs:
+  - file: docs/DELIVERY_PLAN_2026-11-07.md
+    anchor: "F23"
+  - file: docs/CONSOLIDATED_GOALS_2026-11-06.md
+    anchor: "## 6. Quality Benchmark and Independent Evaluation"
+  - file: docs/CONSOLIDATED_GOALS_2026-11-06.md
+    anchor: "4. §4: a separate **product/platform knowledge refresh** step is not recorded."
+  - file: docs/design/2026-11-06-acceptance-redesign.md
+    anchor: "M7 | Benchmark parity"
+  - file: src/repo_presenter/readme/parity_gate.py
+    anchor: "Quality parity of one sealed candidate against the README already published upstream"
+inputs: []
+actions:
+  - "Add the maintainability dimension to DIMENSIONS and evaluate() in
+     src/repo_presenter/readme/parity_gate.py, documented in the module docstring."
+  - "Add a self-parity pytest test proving every dimension passes when the candidate and
+     benchmark text are identical, for every committed parity benchmark text plus one synthetic
+     fixture; fix any asymmetric dimension logic until it holds."
+  - "Create data/benchmarks.json with one entry per active data/registry.json repository, marking
+     unknowns honestly, and core/registry/benchmarks.py::check_coverage to keep the two files in
+     agreement (its thin ops/ CLI wrapper is a separate supervisor follow-up, not this card's job)."
+  - "Add a declared product_knowledge_refresh step in product_pages.py, call it from extract.py,
+     and add a test proving it runs as part of normal facts extraction."
+checks:
+  - command: |-
+      python -m pytest tests/readme/test_parity_gate.py -q -k "maintainability or self_parity"
+    expect: exit 0
+    timeout_seconds: 300
+    proves:
+      - REQ-BENCH-001
+  - command: |-
+      python -m pytest tests/core/registry/test_benchmarks.py -q
+    expect: exit 0
+    timeout_seconds: 60
+    proves:
+      - REQ-BENCH-002
+  - command: |-
+      python -m pytest tests/readme/evidence/facts/test_extract.py -q -k "product_knowledge_refresh or knowledge_refresh"
+    expect: exit 0
+    timeout_seconds: 300
+    proves:
+      - REQ-KNOW-001
+requires:
+  - python
+network: true
+negative_control:
+  mutate: |-
+    python -X utf8 -c "import json, pathlib; p = pathlib.Path('data/benchmarks.json'); d = json.loads(p.read_text(encoding='utf-8')); d['entries'] = d['entries'][1:] if isinstance(d.get('entries'), list) else d.get('entries', {}); p.write_text(json.dumps(d, indent=2), encoding='utf-8')"
+  rationale: >
+    Once data/benchmarks.json genuinely has one entry per active registry repository, deleting
+    one entry must make the check_coverage test fail (a missing repository), proving the checker
+    actually counts entries against the live registry rather than only checking the file parses.
+    Before the real file exists with full coverage, the clean run already correctly fails for the
+    same reason (incomplete coverage), so this control is meaningful only once the card's own
+    work is genuinely done.
+evidence:
+  - tests/readme/test_parity_gate.py
+  - data/benchmarks.json
+  - src/repo_presenter/core/registry/benchmarks.py
+  - tests/readme/evidence/facts/test_extract.py
+closeout:
+  - "This card adds measurement and record-keeping only; it changes no acceptance gate by
+     itself. Self-parity (M7 row of the acceptance redesign) becomes a certified mechanism only
+     once TC-022b measures it on held-out registration A1 -- this card is a prerequisite for that
+     measurement, not the measurement itself."
+  - "data/benchmarks.json entries marked unknown are not failures of this card; they are honest
+     records to be refined by whoever later audits that specific repository. Do not mark an entry
+     live_upstream_readme_refresh without a citable source."
+  - "IMMEDIATELY after this card is ACCEPTED, the supervisor adds the thin ops/checks/
+     benchmarks_registry.py CLI wrapper around check_coverage() as direct, routine supervisor
+     work (no card -- ops/** is globally denied to every taskcard), with its own decision-log
+     entry and independent re-verification."
+recovery: "No pipeline mechanism is changed by this card beyond adding a measurement dimension
+  and two data files; revert the four touched files and the two new data files together if the
+  maintainability definition or the benchmark records are found wrong."

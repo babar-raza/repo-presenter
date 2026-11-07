@@ -85,8 +85,21 @@ def is_defect(finding: Finding) -> bool:
 
 
 def unrepaired_defects(result: CorrectionResult) -> list[Finding]:
-    """The engine's findings that are defects, in the engine's own (line, detector) order."""
-    return [finding for finding in result.findings if is_defect(finding)]
+    """The engine's findings that are defects, in the engine's own (line, detector) order.
+
+    A finding whose evidence (``fact_ids``) is also what an applied edit cites is excluded: two
+    detectors reading the same fact can disagree about whether it is repairable (one reports it,
+    another -- TC-025's ``versioned_link_target`` beside ``broken_link``, for one real case --
+    repairs it), and the applied edit is the stronger, acted-upon claim. Without this, a defect a
+    sibling detector already fixed would stay "unrepaired" forever, by construction, which is not
+    an honest defect count.
+    """
+    fixed: set[str] = {fact_id for edit in result.edits for fact_id in edit.fact_ids}
+    return [
+        finding
+        for finding in result.findings
+        if is_defect(finding) and not (set(finding.fact_ids) & fixed)
+    ]
 
 
 def defect_findings(result: CorrectionResult) -> list[ReviewFinding]:
@@ -277,3 +290,29 @@ def correction_dispositions(ctx: Context, edits: Sequence[Edit]) -> dict[str, An
             }
         )
     return {"dispositions": rows}
+
+
+def finding_rows(
+    ctx: Context, result: CorrectionResult, *, route: str, first_seen_at: str
+) -> list[dict[str, Any]]:
+    """Every defect this run's engine could not repair, as the keyword arguments
+    ``readme_findings.append_finding`` needs (TC-025 point 3) -- one row per defect, never per
+    opportunity (``report_gaps`` and the rest of :data:`INFORMATIONAL_DETECTORS` stay
+    informational, exactly as :func:`unrepaired_defects` already treats them).
+
+    ``route`` is the caller's own classification of whether an R5(a) upstream-change trigger was
+    present when this run found the defect (``readme_findings.LANE_L``) or not
+    (``readme_findings.LANE_R``: a defect with no upstream change is still a real, owned finding,
+    routed to Lane R rather than silently dropped for lack of a reason to run Lane L again). This
+    module names neither constant directly, so it stays usable without importing the register.
+    """
+    return [
+        {
+            "repository": ctx.facts.repository,
+            "description": f"{defect.detector} line {defect.line}: {defect.reason}",
+            "evidence": defect.text or defect.reason,
+            "route": route,
+            "first_seen_at": first_seen_at,
+        }
+        for defect in unrepaired_defects(result)
+    ]

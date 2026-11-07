@@ -1,0 +1,152 @@
+id: TC-014
+gate: GATE5_DELIVERY_PROGRAM
+track: audit-independence
+executor: worker
+purpose: >
+  Part of the 2026-11-07 delivery program (docs/DELIVERY_PLAN_2026-11-07.md section 8.2, row
+  TC-014; the worker never reads that document, only this card). depends_on: [TC-013] (the
+  acceptance record format this card's writer appends to). This card builds the PURE, OFFLINE,
+  UNIT-TESTABLE LOGIC of the independent-audit mechanism (M9) only; it explicitly does NOT stand
+  up the live hosted seeder/scorer/writer workflows, because those need a GitHub Environment
+  restricted to the main branch holding a provider/audit-seed secret key that does not exist yet
+  (an action only the repository owner can take) and CODEOWNERS review on this card's own code
+  paths (also owner-only) -- both are OPEN OWNER ACTIONS, not something this card can create.
+  Build and test three independent pieces of pure logic, each as its own Python module with its
+  own pytest file, under a new src/repo_presenter/acceptance/audit/ package:
+  (1) SEEDING LOGIC (seed.py). Given a sealed candidate's rendered README text and its evidence
+  (facts.json, dispositions.json or corrections.json), produce a seeded COPY with a small number
+  of blind-injected defects, each tagged internally with its shape and location so a later,
+  separate scoring step (never the auditor) can check what was actually caught. Implement at
+  least one realistic mutation operator for each of these five defect shapes, matching the exact
+  definitions in docs/design/2026-11-06-acceptance-redesign.md section 2.2's defect table (read it
+  in full): class A (false checkable claim -- e.g. change a stated public-type count to a wrong
+  number, or rename an API-table entry to a name that does not exist in the facts); class D
+  (ungrounded generated claim -- insert a plausible-sounding but fact-less sentence such as an
+  invented verification narrative, matching the "invent_api_name"/"inject_unsupported_claim"
+  operator pattern the design doc names); class D9 (semantic description mismatch -- swap in a
+  plausible but wrong one-line description for a named type, matching the design doc's
+  "misdescribe_type" operator); class D14 (promotional/generic prose -- insert filler language,
+  matching "add_promotional_filler"); class D15 (incoherent reordering -- swap the order of two
+  adjacent steps or paragraphs in a procedure, matching "incoherent_reorder"). Use real examples
+  from docs/investigations/2026-11-06-unsupported-claim-class-audit.md's per-case table as the
+  model for what a realistic mutant of each shape looks like -- do not invent shapes not grounded
+  in that document. Also add a "clean control" mode that returns the candidate completely
+  unmodified with a tag marking it clean (for the false-flag-rate measurement in part 2). Write
+  the seed manifest (which copies got which mutation, at which shape, with the exact span changed)
+  to a structured record, but DO NOT wire it to any encryption yet -- add a clearly named stub
+  function encrypt_seed_manifest(manifest, key: bytes) -> bytes using a standard, already-vendored
+  or stdlib-available primitive (e.g. cryptography.fernet if that library is already a
+  dependency -- check pyproject.toml first; otherwise use stdlib hashlib+hmac or note in this
+  card's closeout that a dependency addition is needed and name it) that this card unit-tests with
+  a fixture key, so the real hosted step can call it once the Environment exists.
+  (2) SCORING LOGIC (score.py). Given completed audit findings (a list of {candidate_id,
+  claim, verdict: supported|false|unverifiable, path, line} records, matching the shape
+  docs/DELIVERY_PLAN_2026-11-07.md section 5.3's "source inspection" row describes) and a
+  decrypted seed manifest plus a set of known-clean-control ids, compute: seeded recall (of the
+  seeded defects, what fraction the auditor's findings correctly flagged at the right location and
+  shape), false-flag rate (of the clean-control candidates, what fraction the auditor incorrectly
+  flagged any defect on), and defective-accepted rate (of unseeded, already-accepted candidates in
+  the sample, what fraction have at least one class A/D/D9 finding -- see the design doc's section
+  4.3 gate: 0 of the first 5, then <=1 of 10, <=2 of 25). This is pure arithmetic over already-
+  computed inputs; no provider call, no network.
+  (3) ATTESTATION-VERIFICATION LOGIC (attest.py). The eventual hosted writer will emit a GitHub
+  artifact attestation (the `actions/attest-build-provenance` action and `gh attestation verify
+  --signer-workflow <workflow>@refs/heads/main` CLI command -- confirm these are the correct,
+  current GitHub feature names before relying on them; if GitHub has since renamed or changed this
+  mechanism, use whatever the current equivalent actually is and say so in this card's closeout).
+  Build a function verify_attestation(artifact_path, expected_signer_workflow, subject_digest) ->
+  bool that shells out to `gh attestation verify` (or the then-current equivalent) and parses its
+  result, with a corresponding record-reader that refuses (returns False, never raises past the
+  caller) on: a missing attestation, a signer workflow that does not match, or a subject digest
+  mismatch. Unit-test this against a FAKE/FIXTURE attestation bundle and a stubbed `gh` subprocess
+  (do not require a real `gh` binary or live GitHub access in this card's own tests -- mock the
+  subprocess call) covering: a valid matching attestation (returns True), a wrong signer (False),
+  a tampered digest (False), and `gh` itself failing/absent (False, not an exception).
+  Clearly state in this card's closeout which parts are genuinely done (all three modules' pure
+  logic, fully unit-tested, no live dependency) versus explicitly NOT done (the live hosted
+  seeder/scorer/writer workflows, which need owner actions 1 and 3 first) -- do not let this
+  card's ACCEPTED status be read anywhere as "the audit mechanism is live."
+depends_on:
+  - TC-013
+write_paths:
+  - src/repo_presenter/acceptance/audit/__init__.py
+  - src/repo_presenter/acceptance/audit/seed.py
+  - src/repo_presenter/acceptance/audit/score.py
+  - src/repo_presenter/acceptance/audit/attest.py
+  - tests/acceptance/audit/test_seed.py
+  - tests/acceptance/audit/test_score.py
+  - tests/acceptance/audit/test_attest.py
+satisfies:
+  - REQ-AUDIT-001
+  - REQ-AUDIT-002
+  - REQ-AUDIT-003
+source_refs:
+  - file: docs/DELIVERY_PLAN_2026-11-07.md
+    anchor: "### 5.3 Audit independence (M9)"
+  - file: docs/design/2026-11-06-acceptance-redesign.md
+    anchor: "### 2.2 Responsibility matrix"
+  - file: docs/design/2026-11-06-acceptance-redesign.md
+    anchor: "M9 auditor | >= 20 defects seeded blind (A, D and D9 shapes) into >= 10 accepted candidates"
+  - file: docs/investigations/2026-11-06-unsupported-claim-class-audit.md
+    anchor: "## 1. Result"
+inputs: []
+actions:
+  - "Build src/repo_presenter/acceptance/audit/seed.py with mutation operators for A, D, D9, D14,
+     D15 plus a clean-control mode, and a stubbed (not wired) encrypt_seed_manifest."
+  - "Build src/repo_presenter/acceptance/audit/score.py computing seeded recall, false-flag rate
+     and defective-accepted rate from findings plus a decrypted manifest."
+  - "Build src/repo_presenter/acceptance/audit/attest.py verifying a (fixture, mocked-subprocess)
+     GitHub artifact attestation, refusing closed on every failure mode."
+  - "Write real pytest coverage for all three modules, with no live network or gh dependency."
+  - "State explicitly in closeout which parts are live-ready and which need owner actions 1 and 3."
+checks:
+  - command: |-
+      python -m pytest tests/acceptance/audit/test_seed.py -q
+    expect: exit 0
+    timeout_seconds: 120
+    proves:
+      - REQ-AUDIT-001
+  - command: |-
+      python -m pytest tests/acceptance/audit/test_score.py -q
+    expect: exit 0
+    timeout_seconds: 120
+    proves:
+      - REQ-AUDIT-002
+  - command: |-
+      python -m pytest tests/acceptance/audit/test_attest.py -q
+    expect: exit 0
+    timeout_seconds: 120
+    proves:
+      - REQ-AUDIT-003
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -X utf8 -c "import pathlib; p = pathlib.Path('src/repo_presenter/acceptance/audit/score.py'); s = p.read_text(encoding='utf-8'); s2 = s.replace('recall', 'recal_BROKEN'); p.write_text(s2, encoding='utf-8')"
+  rationale: >
+    Once score.py genuinely exposes a recall computation its own tests exercise by that name,
+    corrupting the identifier must break test collection or an assertion, proving the tests bind
+    to real code rather than a vacuous import. Before the real module exists the clean run already
+    correctly fails (module absent), so this control is meaningful only once the card's own work
+    is genuinely done.
+evidence:
+  - src/repo_presenter/acceptance/audit/seed.py
+  - src/repo_presenter/acceptance/audit/score.py
+  - src/repo_presenter/acceptance/audit/attest.py
+  - tests/acceptance/audit/test_seed.py
+  - tests/acceptance/audit/test_score.py
+  - tests/acceptance/audit/test_attest.py
+closeout:
+  - "ACCEPTED here means the seeding, scoring and attestation-verification LOGIC is correct and
+     unit-tested offline. It does NOT mean the M9 audit is operational: the hosted seeder,
+     scorer and writer workflows that call this logic for real, against the real Environment key
+     and real GitHub attestations, are separate, later work gated on owner actions 1 (restricted
+     Environment) and 3 (CODEOWNERS on these exact paths) -- do not report 'audit mechanism
+     built' from this card alone."
+  - "If cryptography.fernet is not already a dependency, name the exact package you would add (or
+     the stdlib-only alternative you chose instead) in this list rather than silently adding a new
+     dependency."
+recovery: "No live mechanism exists yet to revert; these are new, isolated pure-logic modules with
+  no callers elsewhere in the pipeline -- delete the four new files and their tests to fully undo
+  this card."

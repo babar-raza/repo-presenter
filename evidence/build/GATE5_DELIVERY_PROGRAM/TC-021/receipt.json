@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "card": "TC-021",
+  "gate": "GATE5_DELIVERY_PROGRAM",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-07T18:43:25Z",
+  "base_rev": "ad2d8c744b49fa366d3d273fa63bc7a958c13fd4",
+  "head_rev": "1fec3a4e42e42988c0e32838fdd88210f55d03d8",
+  "card_sha256": "d42878ff3024adef230923c0e08151c6dc298b2533a4e0f6f40b246a2c6eef43",
+  "checker_fileset_sha256": "9921b77e94c90b8452c409461911e6eff61ac3fbe90eeb169d8e5df1beae8405",
+  "checker_fileset_scheme": "v3",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [
+      ".github/workflows/ci.yml",
+      ".github/workflows/present.yml",
+      "tests/fixtures/sandbox/cpp/hello.cpp",
+      "tests/fixtures/sandbox/typescript/hello.js",
+      "tests/test_present.py",
+      "tests/test_sandbox_execute.py"
+    ],
+    "violations": [],
+    "evaluated": true
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python -m pytest tests/test_present.py -q -k \"toolchain or splits_the_untrusted\"",
+          "exit_code": 0,
+          "duration_s": 3.172,
+          "stdout_sha256": "cbc726c7708c1b709eae928e5fe288ab6644673eb5378655d2e99ea52dcc349b"
+        },
+        {
+          "command": "python -m pytest tests/test_sandbox_execute.py -q",
+          "exit_code": 0,
+          "duration_s": 1.337,
+          "stdout_sha256": "71808535af46fe626b2fea83bedf237f0912b36bb6b3a50d553c8d93e57f99a8"
+        },
+        {
+          "command": "python -c \"import yaml, pathlib; d = yaml.safe_load(pathlib.Path('.github/workflows/ci.yml').read_text(encoding='utf-8')); steps = d['jobs']['docker']['steps']; names = [s.get('name', '') for s in steps]; assert any('network' in n.lower() and 'secret' not in str(s).lower().replace('no secret', '') for n, s in zip(names, steps)), names\"",
+          "exit_code": 0,
+          "duration_s": 0.098,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python -m pytest tests/test_present.py -q -k \"toolchain or splits_the_untrusted\"",
+          "exit_code": 0,
+          "duration_s": 1.781,
+          "stdout_sha256": "1b0961f7897b0ca2c4106804503f1ca316a6732997a5b0d3d94540dfd968fbe4"
+        },
+        {
+          "command": "python -m pytest tests/test_sandbox_execute.py -q",
+          "exit_code": 0,
+          "duration_s": 1.416,
+          "stdout_sha256": "deeedbceb6551d064276f830b72205a3dbd47337f27ffa20e85e73b21cddb66e"
+        },
+        {
+          "command": "python -c \"import yaml, pathlib; d = yaml.safe_load(pathlib.Path('.github/workflows/ci.yml').read_text(encoding='utf-8')); steps = d['jobs']['docker']['steps']; names = [s.get('name', '') for s in steps]; assert any('network' in n.lower() and 'secret' not in str(s).lower().replace('no secret', '') for n, s in zip(names, steps)), names\"",
+          "exit_code": 0,
+          "duration_s": 0.102,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -X utf8 -c \"import pathlib; p = pathlib.Path('.github/workflows/present.yml'); s = p.read_text(encoding='utf-8'); s2 = s.replace('setup-go', 'removed-go-step'); p.write_text(s2, encoding='utf-8')\"",
+    "patch_sha256": "064cc9f0a35ede9e472487f07da0d2bc4f1353199460b7e3ca87f08005354ca3",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      1,
+      0,
+      0
+    ],
+    "tree_changed": [
+      "M .github/workflows/present.yml"
+    ]
+  },
+  "accepted": true,
+  "reason": "all gates passed"
+}

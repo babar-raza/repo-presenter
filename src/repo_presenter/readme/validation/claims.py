@@ -78,6 +78,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+from pathlib import Path
 
 from repo_presenter.core.facts import Fact, FactsDocument
 from repo_presenter.core.package_registry import (
@@ -917,15 +918,24 @@ def install_identity_findings(text: str, facts: FactsDocument) -> list[ClaimFind
     return _identity_findings(_lines(text), facts, identity)
 
 
-def claim_findings(readme: str, facts: FactsDocument) -> list[ClaimFinding]:
+def claim_findings(
+    readme: str, facts: FactsDocument, probe_root: str | Path | None = None
+) -> list[ClaimFinding]:
     """Every statement in ``readme`` that a fact in ``facts`` positively contradicts: rules (a)-(g)
     here, held to the package identity, and the surface rules (h)-(m) of
-    ``readme/validation/surface_claims.py``, held to the symbol, example and limitation facts."""
+    ``readme/validation/surface_claims.py``, held to the symbol, example and limitation facts.
+
+    ``probe_root`` (TC-017b) is the repository's own checked-out source tree, when the caller has
+    one on disk; it is threaded through to ``surface_findings`` alone, which wires TC-017a's
+    independent probes in as a second signal for rules (h)/(i). Every existing caller (and every
+    rule here other than (h)/(i)) is unaffected by it either way -- see ``surface_findings``'s own
+    docstring.
+    """
     # Imported here: surface_claims builds on this module's line and paragraph readers.
     from repo_presenter.readme.validation.surface_claims import surface_findings
 
     lines = _lines(readme)
-    surface = surface_findings(lines, facts)
+    surface = surface_findings(lines, facts, probe_root)
     identity = _fact(facts, "package:name")
     if identity is None:
         return surface

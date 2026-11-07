@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "card": "TC-025",
+  "gate": "GATE5_DELIVERY_PROGRAM",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-07T18:39:44Z",
+  "base_rev": "ef5f40e29fe8a44351a560c55a81015acfb4b3cd",
+  "head_rev": "14eba8cc99c47a38ffe5c712e8a831a3d5d9c3a4",
+  "card_sha256": "67c38da8a5739b669154e50041dd1471080a05de7a60dd54b80a469d4e270964",
+  "checker_fileset_sha256": "a519278bdc7c869d4789772cf52e6d63e1cec12aa7fd95e0d52141675ae900b1",
+  "checker_fileset_scheme": "v3",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [
+      "src/repo_presenter/lane_l_review.py",
+      "src/repo_presenter/lane_l_run.py",
+      "src/repo_presenter/lane_l_trigger.py",
+      "src/repo_presenter/readme/correction/detectors/__init__.py",
+      "src/repo_presenter/readme/correction/detectors/stale_package_version.py",
+      "src/repo_presenter/readme/correction/detectors/versioned_link_target.py",
+      "src/repo_presenter/readme/correction/report.py",
+      "src/repo_presenter/readme_findings.py",
+      "tests/readme/correction/detectors/test_stale_package_version.py",
+      "tests/readme/correction/detectors/test_versioned_link_target.py",
+      "tests/readme/correction/test_detector_versions.py",
+      "tests/readme/correction/test_engine.py",
+      "tests/readme/correction/test_net_improvement.py",
+      "tests/test_lane_l_trigger.py",
+      "tests/test_readme_findings.py"
+    ],
+    "violations": [],
+    "evaluated": true
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python -m pytest tests/test_lane_l_trigger.py -q",
+          "exit_code": 0,
+          "duration_s": 1.892,
+          "stdout_sha256": "8e4b3699497ab4b7f7b6d603078754b8492b75fa505b7dd3e456c07790c9cd74"
+        },
+        {
+          "command": "python -m pytest tests/readme/correction -q",
+          "exit_code": 0,
+          "duration_s": 11.206,
+          "stdout_sha256": "6e13dec95768db806409c1ad63a3b89d91c01ee664812033aed2c049152842b8"
+        },
+        {
+          "command": "python -m pytest tests/test_readme_findings.py -q",
+          "exit_code": 0,
+          "duration_s": 1.701,
+          "stdout_sha256": "0cd84d8f58cf2301d81dd1ccc3dc72c742a1c22c4c937f1c717e2010220f3b25"
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python -m pytest tests/test_lane_l_trigger.py -q",
+          "exit_code": 0,
+          "duration_s": 1.335,
+          "stdout_sha256": "825b6727fceaedd7feedac51e0d0c095b7ccde29fe9cf165ccb025cb0b6672ac"
+        },
+        {
+          "command": "python -m pytest tests/readme/correction -q",
+          "exit_code": 0,
+          "duration_s": 2.483,
+          "stdout_sha256": "9c51b88e664bdf1752113b7445be43562ff9f8b11a1a86f45de4ced0dbedebfc"
+        },
+        {
+          "command": "python -m pytest tests/test_readme_findings.py -q",
+          "exit_code": 0,
+          "duration_s": 1.433,
+          "stdout_sha256": "7639c4ed0a2ed22fce7e4e1386776a89779938e35b2155d151dde3aba64c1f01"
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -X utf8 -c \"import pathlib; p = pathlib.Path('src/repo_presenter/readme_findings.py'); t = p.read_text(encoding='utf-8'); p.write_text(t.replace('def append_finding', 'def append_finding_disabled'), encoding='utf-8')\"",
+    "patch_sha256": "e3669de05f6e34fc05de083904398e8e2a9f5eb47ab4ade90bf2337d8c783de6",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      0,
+      1,
+      2
+    ],
+    "tree_changed": [
+      "M src/repo_presenter/readme_findings.py"
+    ]
+  },
+  "accepted": true,
+  "reason": "all gates passed"
+}

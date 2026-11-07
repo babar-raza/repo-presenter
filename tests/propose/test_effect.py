@@ -28,11 +28,14 @@ from repo_presenter.propose.effect import (
     ProposalEffectResult,
     propose_candidate,
 )
-from repo_presenter.propose.pull_request import PullRequestContent
-from repo_presenter.readme.review.calibration_status import (
-    Calibration,
-    load_calibration,
+from repo_presenter.acceptance.record import (
+    DELIVERED,
+    LIVE_VERIFIED,
+    PROVISIONALLY_ACCEPTED,
+    PUBLICATION_READY,
 )
+from repo_presenter.acceptance.record import classify as real_classify
+from repo_presenter.propose.pull_request import PullRequestContent
 from repo_presenter.readme.review.independent_reviewer import (
     Finding,
     ReviewVerdict,
@@ -63,11 +66,16 @@ REJECTED_REVIEW = ReviewVerdict(
 
 @pytest.fixture(autouse=True)
 def _committed_calibration_permits(monkeypatch: pytest.MonkeyPatch) -> None:
-    """The gate mechanics below are tested with a reviewer whose committed status permits; the
-    calibration gate itself is tested at the end of this file."""
+    """The gate mechanics below are tested with a candidate the acceptance contract (TC-013,
+    ``repo_presenter.acceptance.record``) classifies as ready to publish; gate 3b itself - the
+    acceptance classification, superseding the old reviewer-calibration-file gate - is tested at
+    the end of this file. Kept as a monkeypatch of ``effect.classify`` (same style the retired
+    ``effect.load_calibration`` patch used) rather than real
+    ``data/acceptance_calibration.json``/``data/acceptance_responsibility.json`` fixtures, which
+    this test file does not need for its own (non-gate-3b) mechanics."""
     monkeypatch.setattr(
-        "repo_presenter.propose.effect.load_calibration",
-        lambda: Calibration("PASSED"),
+        "repo_presenter.propose.effect.classify",
+        lambda *args, **kwargs: PUBLICATION_READY,
     )
 
 
@@ -960,86 +968,64 @@ def test_the_text_must_come_from_exactly_one_source() -> None:
 
 
 # ---------------------------------------------------------------------------
-# the reviewer's calibration status: no candidate is PR-eligible until it permits
+# gate 3b, the acceptance contract (TC-013, repo_presenter.acceptance.record): no candidate is
+# PR-eligible until classify() reports a PUBLISHABLE_STATES result. This block superseded the
+# retired reviewer-calibration-file gate 3b (``load_calibration``) 2026-11-07; the equivalent,
+# more exhaustive state-chain coverage (every one of the eight states, the attestation call, the
+# certificate-reader fixtures) lives in ``tests/acceptance/`` - this block only proves gate 3b's
+# OWN place and effect inside ``propose_candidate``, end to end against ``FakeGitHub``.
 # ---------------------------------------------------------------------------
-
-UNCALIBRATED_ACCEPT = ReviewVerdict.folded(
-    (),
-    model_verdict="ACCEPT",
-    prompt_version="17",
-    model_served="qwen3-next",
-    request_sha256="a" * 64,
-    reply_sha256="b" * 64,
-    calibration_status="NOT_PASSED",
-)
 
 
 @pytest.mark.parametrize(
-    "review",
-    [
-        UNCALIBRATED_ACCEPT,
-        ReviewVerdict.folded(
-            (),
-            model_verdict="ACCEPT",
-            prompt_version="17",
-            model_served="qwen3-next",
-            request_sha256="a" * 64,
-            reply_sha256="b" * 64,
-        ),
-    ],
-    ids=["recorded-not-passed", "no-recorded-status"],
+    "stuck_state", ["generated", "sealed", "deterministically-validated", PROVISIONALLY_ACCEPTED]
 )
-def test_an_accept_made_under_an_unpassed_calibration_is_never_proposed(
-    review: ReviewVerdict,
-) -> None:
-    github = FakeGitHub()
-    result = _propose(github, review=review)
-    _assert_refused_without_writes(github, result, Refusal.REVIEW_UNCALIBRATED)
-    assert "calibration gate" in result.reason
-
-
-@pytest.mark.parametrize("status", ["PASSED", "PASSED_WITH_DECLARED_LIMITS"])
-def test_a_permitting_status_on_the_verdict_and_in_the_file_proceeds(
-    status: str, monkeypatch: pytest.MonkeyPatch
+def test_a_candidate_not_yet_publishable_is_never_proposed(
+    stuck_state: str, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     monkeypatch.setattr(
-        "repo_presenter.propose.effect.load_calibration",
-        lambda: Calibration(status, owner_acceptance="owner, 2026-11-01"),
-    )
-    review = ReviewVerdict.folded(
-        (),
-        model_verdict="ACCEPT",
-        prompt_version="17",
-        model_served="qwen3-next",
-        request_sha256="a" * 64,
-        reply_sha256="b" * 64,
-        calibration_status=status,
-    )
-    assert _propose(FakeGitHub(), review=review).effected is True
-
-
-def test_a_verdict_made_under_a_passing_status_is_refused_once_the_file_no_longer_permits(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    monkeypatch.setattr(
-        "repo_presenter.propose.effect.load_calibration",
-        lambda: Calibration("NOT_PASSED", problem="revoked"),
+        "repo_presenter.propose.effect.classify", lambda *a, **k: stuck_state
     )
     github = FakeGitHub()
     result = _propose(github, review=ACCEPTED_REVIEW)
-    _assert_refused_without_writes(github, result, Refusal.REVIEW_UNCALIBRATED)
-    assert "revoked" in result.reason
+    _assert_refused_without_writes(github, result, Refusal.ACCEPTANCE_NOT_CERTIFIED)
+    assert stuck_state in result.reason
 
 
-def test_the_repositorys_committed_file_blocks_the_real_gate_today(
+@pytest.mark.parametrize("ready_state", [PUBLICATION_READY, DELIVERED, LIVE_VERIFIED])
+def test_a_publishable_classification_proceeds(
+    ready_state: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(
+        "repo_presenter.propose.effect.classify", lambda *a, **k: ready_state
+    )
+    assert _propose(FakeGitHub(), review=ACCEPTED_REVIEW).effected is True
+
+
+def test_a_classification_that_regresses_mid_run_is_refused_regardless_of_the_review(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """With the repository's own data/reviewer_calibration.json (not a fixture), nothing is
-    proposed: its status is NOT_PASSED until a passing gate or the owner's committed acceptance."""
+    """No parameter overrides gate 3b: even an ACCEPT made under a reviewer calibration the
+    review itself records as PASSED is refused once the acceptance contract's own classification
+    is not publishable."""
     monkeypatch.setattr(
-        "repo_presenter.propose.effect.load_calibration", load_calibration
+        "repo_presenter.propose.effect.classify",
+        lambda *a, **k: PROVISIONALLY_ACCEPTED,
     )
-    assert load_calibration().status == "NOT_PASSED"
     github = FakeGitHub()
     result = _propose(github, review=ACCEPTED_REVIEW)
-    _assert_refused_without_writes(github, result, Refusal.REVIEW_UNCALIBRATED)
+    _assert_refused_without_writes(github, result, Refusal.ACCEPTANCE_NOT_CERTIFIED)
+
+
+def test_the_repositorys_real_committed_files_block_the_real_gate_today(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Undoes this file's own autouse ``classify`` stub to call the REAL ``classify``, reading
+    the real, not-yet-existing ``data/acceptance_calibration.json``/
+    ``data/acceptance_responsibility.json``: nothing is proposed. TC-022a/TC-022b have not yet
+    populated those files, so the acceptance contract fails closed exactly like the old
+    ``data/reviewer_calibration.json`` (NOT_PASSED) gate did."""
+    monkeypatch.setattr("repo_presenter.propose.effect.classify", real_classify)
+    github = FakeGitHub()
+    result = _propose(github, review=ACCEPTED_REVIEW)
+    _assert_refused_without_writes(github, result, Refusal.ACCEPTANCE_NOT_CERTIFIED)

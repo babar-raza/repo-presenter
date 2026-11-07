@@ -1,0 +1,86 @@
+
+===== CLEAN RUN 1 =====
+$ python -m pytest tests/readme/test_parity_gate.py -q -k "maintainability or self_parity"
+--- stdout ---
+..........                                                               [100%]
+10 passed, 52 deselected in 1.01s
+
+--- stderr ---
+
+$ python -m pytest tests/core/registry/test_benchmarks.py -q
+--- stdout ---
+.............                                                            [100%]
+13 passed in 10.82s
+
+--- stderr ---
+
+$ python -m pytest tests/readme/evidence/facts/test_extract.py -q -k "product_knowledge_refresh or knowledge_refresh"
+--- stdout ---
+..                                                                       [100%]
+2 passed, 36 deselected in 4.70s
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python -m pytest tests/readme/test_parity_gate.py -q -k "maintainability or self_parity"
+--- stdout ---
+..........                                                               [100%]
+10 passed, 52 deselected in 0.79s
+
+--- stderr ---
+
+$ python -m pytest tests/core/registry/test_benchmarks.py -q
+--- stdout ---
+.............                                                            [100%]
+13 passed in 0.18s
+
+--- stderr ---
+
+$ python -m pytest tests/readme/evidence/facts/test_extract.py -q -k "product_knowledge_refresh or knowledge_refresh"
+--- stdout ---
+..                                                                       [100%]
+2 passed, 36 deselected in 2.22s
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M data/benchmarks.json
+$ python -m pytest tests/readme/test_parity_gate.py -q -k "maintainability or self_parity"
+--- stdout ---
+..........                                                               [100%]
+10 passed, 52 deselected in 0.74s
+
+--- stderr ---
+
+$ python -m pytest tests/core/registry/test_benchmarks.py -q
+--- stdout ---
+F............                                                            [100%]
+================================== FAILURES ===================================
+_ test_the_real_committed_benchmarks_document_is_consistent_with_the_registry _
+
+    def test_the_real_committed_benchmarks_document_is_consistent_with_the_registry():
+        """The actual, committed data/benchmarks.json: every active registry repository has exactly
+        one entry, no entry names an unknown repository, and nothing is marked
+        live_upstream_readme_refresh without evidence. The one check this card's checker exists for."""
+>       assert check_coverage(REGISTRY_PATH, BENCHMARKS_PATH) == []
+E       AssertionError: assert ['missing ben...OSS-for-.NET'] == []
+E         
+E         Left contains one more item: 'missing benchmark entry for aspose-3d-foss/Aspose.3D-FOSS-for-.NET'
+E         Use -v to get more diff
+
+tests\core\registry\test_benchmarks.py:26: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/core/registry/test_benchmarks.py::test_the_real_committed_benchmarks_document_is_consistent_with_the_registry
+1 failed, 12 passed in 0.43s
+
+--- stderr ---
+
+$ python -m pytest tests/readme/evidence/facts/test_extract.py -q -k "product_knowledge_refresh or knowledge_refresh"
+--- stdout ---
+..                                                                       [100%]
+2 passed, 36 deselected in 2.15s
+
+--- stderr ---
+

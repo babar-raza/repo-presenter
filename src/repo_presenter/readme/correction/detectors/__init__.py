@@ -31,8 +31,10 @@ DETECTOR_VERSIONS: dict[str, str] = {
     "format_overclaim": "2",
     "report_gaps": "1",
     "second_h1": "1",
+    "stale_package_version": "1",
     "stray_fence": "1",
     "unclosed_details": "1",
+    "versioned_link_target": "1",
 }
 
 

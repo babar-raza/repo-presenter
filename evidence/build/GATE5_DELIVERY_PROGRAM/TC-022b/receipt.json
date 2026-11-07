@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "card": "TC-022b",
+  "gate": "GATE5_DELIVERY_PROGRAM",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-07T18:50:48Z",
+  "base_rev": "4e63fc7d84f7a325c9b1843c516822e6ab3f90e9",
+  "head_rev": "e2fdbb54860de1890f6c10659d9c9a3262db47f1",
+  "card_sha256": "6de3db016a1fe9cb03a6a45c9c5f6e78ab9e44b0aedda3e6ee4a52f45fe8784a",
+  "checker_fileset_sha256": "94929a4165535289b27e5acf71d44c4dfce2ee7424303afd9e1361c0a28a2098",
+  "checker_fileset_scheme": "v3",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [
+      "src/repo_presenter/acceptance/calibration_harness.py",
+      "tests/acceptance/test_calibration_harness.py"
+    ],
+    "violations": [],
+    "evaluated": true
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python -m pytest tests/acceptance/test_calibration_harness.py -q",
+          "exit_code": 0,
+          "duration_s": 2.526,
+          "stdout_sha256": "c8141c382c8c913fe58b1c090511b195ef7c311b167cbb7f0ba6ebc78b552dcf"
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python -m pytest tests/acceptance/test_calibration_harness.py -q",
+          "exit_code": 0,
+          "duration_s": 1.587,
+          "stdout_sha256": "1b0ddcf7de41a17b74c8797091f21bf2cfe5917c7d9d01b4b09c2625a5e4f7dd"
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -X utf8 -c \"import pathlib; p = pathlib.Path('src/repo_presenter/acceptance/calibration_harness.py'); t = p.read_text(encoding='utf-8'); p.write_text(t.replace('0.90', '0.50'), encoding='utf-8')\"",
+    "patch_sha256": "8373e07b4117fb6385fe1fe6cb74ae69e06aa5630674fdc4a4fd4ab11d9bc036",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      1
+    ],
+    "tree_changed": [
+      "M src/repo_presenter/acceptance/calibration_harness.py"
+    ]
+  },
+  "accepted": true,
+  "reason": "all gates passed"
+}

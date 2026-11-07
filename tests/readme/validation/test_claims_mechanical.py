@@ -321,6 +321,84 @@ def test_maintainer_text_and_a_negated_or_factual_mention_pass() -> None:
     )
 
 
+# --- TC-017b work item 4: the verification-narrative ban, now conditional ----------------------
+
+
+def _executed_example(ordinal: str, code: str = CODE) -> Fact:
+    """A genuinely, fully passed example: SUPPORTED at confidence 1.0, the only thing
+    ``readme/evidence/facts/examples.py`` ever writes for an ``EXECUTED`` receipt."""
+    return Fact(
+        f"example:{ordinal}",
+        "example",
+        code,
+        (Evidence("docs/quickstart.md", f"example {ordinal}: EXECUTED"),),
+        polarity="SUPPORTED",
+        confidence=1.0,
+    )
+
+
+def _unresolved_example(ordinal: str, code: str = CODE) -> Fact:
+    """A TIMED_OUT (or NEEDS_INPUT/NOT_VERIFIED) receipt: UNRESOLVED at confidence 0.5, post-
+    TC-016's own fix -- a timeout proves nothing either way, so it must never, by itself, license
+    a verification narrative."""
+    return Fact(
+        f"example:{ordinal}",
+        "example",
+        code,
+        (Evidence("docs/quickstart.md", f"example {ordinal}: TIMED_OUT"),),
+        polarity="UNRESOLVED",
+        confidence=0.5,
+    )
+
+
+NARRATIVE = (
+    "Everything below was exercised through the public API and then confirmed by reading the "
+    "output.\n"
+)
+
+
+def test_a_verification_narrative_backed_by_a_fully_verified_example_passes() -> None:
+    facts = _facts(_executed_example("001"))
+    assert _details(NARRATIVE, facts) == []
+
+
+def test_a_verification_narrative_with_no_example_facts_at_all_still_fails() -> None:
+    details = _details(NARRATIVE, _facts())
+    assert len(details) == 1 and "narrates a verification" in details[0]
+    assert "no real, fully-passed verification record" in details[0]
+
+
+def test_a_timed_out_example_never_backs_a_verification_narrative() -> None:
+    # The card's own wording: "NOT merely not UNRESOLVED -- only a genuinely passed execution
+    # counts." One real EXECUTED example beside one TIMED_OUT (UNRESOLVED, confidence 0.5) one
+    # is not "every example fully passed," so the narrative is still rejected.
+    facts = _facts(_executed_example("001"), _unresolved_example("002"))
+    details = _details(NARRATIVE, facts)
+    assert len(details) == 1 and "narrates a verification" in details[0]
+
+
+def test_a_contradicted_example_among_passes_also_blocks_the_narrative() -> None:
+    failed = Fact(
+        "example:002",
+        "example",
+        CODE,
+        (Evidence("docs/quickstart.md", "example 2: FAILED; AttributeError"),),
+        polarity="CONTRADICTED",
+        confidence=1.0,
+    )
+    facts = _facts(_executed_example("001"), failed)
+    details = _details(NARRATIVE, facts)
+    assert len(details) == 1 and "narrates a verification" in details[0]
+
+
+def test_maintainer_text_narrating_verification_is_never_judged_by_this_ban() -> None:
+    # Rule (m)'s own open-world carve-out, unaffected by the new condition: quoted maintainer
+    # text is the reconciliation stage's concern, not this generator-only ban's, whether or not
+    # any example fact exists at all.
+    facts = _facts(_unit("090", NARRATIVE.strip(), "paragraph"))
+    assert _details(f"{NARRATIVE.strip()}\n", facts) == []
+
+
 # --- routing ---------------------------------------------------------------------------------
 
 

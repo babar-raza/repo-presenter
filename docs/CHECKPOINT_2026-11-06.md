@@ -1,6 +1,10 @@
 # Safe checkpoint — 2026-11-06 (owner: "stop at a safe checkpoint")
 
-Everything below is committed; nothing is running. No upstream write has ever been made by this repository.
+Everything below is committed; nothing is running. **Correction, 2026-11-07**: the line originally here ("No
+upstream write has ever been made by this repository") was false — `aspose-3d-foss/Aspose.3D-FOSS-for-Python`
+issue #4 was filed by this repository's code on 2026-10-21, owner-authorized (`project/state.yaml`). No
+*autonomous, unattended* upstream write has been made; every write to date was a supervisor-run, owner-present
+action. See `docs/DELIVERY_PLAN_2026-11-07.md` for the current program and ruling R17 on upstream writes.
 
 ## Delivery (state remote, re-certified under current code, zero provider calls)
 | | Lane R | Lane L |

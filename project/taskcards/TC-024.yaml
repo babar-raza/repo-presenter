@@ -1,0 +1,143 @@
+id: TC-024
+gate: GATE5_DELIVERY_PROGRAM
+track: seal-path-switch
+executor: worker
+purpose: >
+  Switch the live Lane R/L seal path from the old monolithic reviewer to the narrow M8 prose
+  judge (TC-023) plus TC-013's acceptance contract, and add per-candidate canaries and an
+  import-graph independence check. Self-contained context (do not read the delivery plan itself):
+
+  Today, two places refuse to seal a candidate that has no model-reviewed ACCEPT: (1)
+  `src/repo_presenter/present.py` around line 348 (`PresentFailure` is raised: "Lane L: no LLM
+  review of this candidate was made, and a deterministic-only verdict is never sealed" -- read
+  the surrounding ~40 lines and the equivalent Lane R path in the same module); (2)
+  `src/repo_presenter/recertify.py`'s `_model_accept` (around line 217: `review.get("verdict") ==
+  "ACCEPT" and review.get("model_verdict") == "ACCEPT"`), used when re-certifying a stored seal
+  (around line 408). Both currently mean "the OLD monolithic `independent_reviewer` accepted it".
+  This card's job: change what "accepted" means at both sites to TC-013's contract (a candidate
+  needs `deterministically-validated` plus TC-023's M8 judge verdict on its prose units, not the
+  old reviewer's one-call-does-everything verdict), WITHOUT weakening non-negotiable 5
+  (AGENTS.md: "No agent, test harness, or reviewer may silently grade or overrule its own
+  negative finding. A REJECT is blocking unless an explicit, proven, deterministic refutation
+  resolves it.") -- a deterministic REJECT from any TC-016/TC-017b/TC-018 mechanism still blocks
+  sealing exactly as before; only the PROSE judgement step changes from the old reviewer to M8.
+
+  Concretely: (a) `review_verdict.json`'s shape changes from the old reviewer's single verdict to
+  a structure carrying TC-023's per-unit M8 classifications (promotional/generic_template/
+  incoherent/misleading_framing/pairwise/M8-S) plus the deterministic mechanisms' own pass/fail
+  (M1-M7, M10) -- read `src/repo_presenter/readme/review/llm_review.py` and
+  `independent_reviewer.py` to see today's verdict-writing path before changing it, and read
+  `src/repo_presenter/readme/bundle/seal.py` (seal_candidate) for exactly where
+  `review_verdict.json` is written into a sealed bundle. (b) Sealing now requires: every
+  deterministic mechanism applicable to the candidate's lane PASS (reuse what already blocks
+  today -- the blocking-checks path in `readme/validation/blocking.py`, UNCHANGED), AND M8's
+  verdict on every prose unit is not REJECT (an M8 REJECT is a non-negotiable-5 block exactly like
+  the old reviewer's REJECT was). This produces a `deterministically-validated` or
+  `provisionally-accepted` record per TC-013's contract (not yet `independently-accepted` -- that
+  additionally needs TC-014's audit, out of this card's scope). (c) `recertify.py`'s
+  `_model_accept` is replaced by a check against TC-013's reader: a stored seal re-certifies as
+  long as its recorded verdict still satisfies the new contract's deterministic+M8 conditions
+  under CURRENT code (read `src/repo_presenter/recertify.py`'s module docstring in full first --
+  R10's "re-certify from stored outputs with zero provider calls" must keep working: a re-run
+  reads the STORED `review_verdict.json`, it does not re-ask M8, unless TC-022b/TC-030's "M8
+  re-asks key on unit digests" review-only pass explicitly triggers a re-ask, which is OUT OF
+  SCOPE here -- for this card, a stored M8 verdict that already satisfies the new shape simply
+  re-certifies, same as today). (d) Add PER-CANDIDATE CANARIES: when a candidate is about to be
+  sealed, also run it through every applicable deterministic mutation operator this repository
+  already has test fixtures for (grep `tests/` for "mutant"/"mutation" fixtures already built for
+  the calibration harness -- reuse them, do not invent new ones) and confirm each one is still
+  caught; record canary ids and outcomes in the acceptance record (TC-013's schema) -- "the
+  acceptance record carries canary ids and outcomes; a record without them is not an acceptance"
+  per the adopted design (`docs/design/2026-11-06-acceptance-redesign.md`, I5). (e) Add an
+  IMPORT-GRAPH INDEPENDENCE check (design doc I1): a static test (e.g. using `ast` or `importlib`
+  to walk imports) asserting the acceptance/verification code (TC-013's `src/repo_presenter/
+  acceptance/`, plus whatever module now computes the deterministic+M8 verdict) does NOT import
+  from `readme/composition/`, `readme/reconciliation/` or `readme/repair/` (the generation/repair
+  modules) -- mirroring the existing "no ACCEPT assigned elsewhere" invariant test pattern if one
+  exists (search `tests/` for it first).
+
+  `reviewer_calibration.json` stays frozen (R10): confirm after your changes that nothing you
+  wrote can ever set its status to PASSED (TC-013 already added a static test for this; do not
+  weaken or remove it).
+depends_on:
+  - TC-013
+  - TC-017b
+  - TC-018
+  - TC-021
+write_paths:
+  - src/repo_presenter/present.py
+  - src/repo_presenter/recertify.py
+  - src/repo_presenter/core/state/bundle_store.py
+  - src/repo_presenter/cascade.py
+  - src/repo_presenter/readme/bundle/seal.py
+  - src/repo_presenter/readme/review/llm_review.py
+  - tests/test_recertify.py
+  - tests/readme/bundle/test_seal.py
+  - tests/readme/review/test_llm_review.py
+  - tests/acceptance/test_import_graph.py
+  - tests/acceptance/test_canaries.py
+satisfies:
+  - REQ-SEAL-001
+  - REQ-SEAL-002
+  - REQ-SEAL-003
+source_refs:
+  - file: docs/DELIVERY_PLAN_2026-11-07.md
+    anchor: "TC-024 | Seal-path switch"
+  - file: src/repo_presenter/present.py
+    anchor: "no LLM review of this candidate was made"
+  - file: src/repo_presenter/recertify.py
+    anchor: "def _model_accept"
+  - file: AGENTS.md
+    anchor: "Non-negotiables"
+inputs: []
+actions:
+  - "Change review_verdict.json's shape and writer to carry M8's per-unit verdicts plus the
+     deterministic mechanisms' pass/fail; keep a non-negotiable-5 REJECT blocking."
+  - "Swap present.py's sealing gate and recertify.py's _model_accept to TC-013's contract."
+  - "Add per-candidate canaries (reuse existing mutation fixtures) recorded in the acceptance
+     record."
+  - "Add the import-graph independence static test."
+  - "Confirm (with a test) data/reviewer_calibration.json can never be written PASSED."
+checks:
+  - command: |-
+      python -m pytest tests/test_recertify.py tests/readme/bundle/test_seal.py tests/readme/review/test_llm_review.py -q
+    expect: exit 0
+    timeout_seconds: 400
+    proves:
+      - REQ-SEAL-001
+  - command: |-
+      python -m pytest tests/acceptance/test_import_graph.py tests/acceptance/test_canaries.py -q
+    expect: exit 0
+    timeout_seconds: 200
+    proves:
+      - REQ-SEAL-002
+  - command: |-
+      python -m pytest tests/test_owner_rulings_enforced.py -q
+    expect: exit 0
+    timeout_seconds: 120
+    proves:
+      - REQ-SEAL-003
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -X utf8 -c "import pathlib; p = pathlib.Path('src/repo_presenter/recertify.py'); t = p.read_text(encoding='utf-8'); marker = 'def _model_accept(review):'; t2 = t.replace(marker, marker + chr(10) + '    return True  # negctl', 1); p.write_text(t2, encoding='utf-8')"
+  rationale: >
+    Forces every stored seal, including ones that never had a real prose verdict, to re-certify
+    as accepted. This must break the new non-negotiable-5/canary tests (a seal that should fail
+    the deterministic or M8 check now wrongly re-certifies), proving the gate still does real
+    work rather than passing vacuously once the plumbing is in place.
+evidence:
+  - tests/test_recertify.py
+  - tests/readme/bundle/test_seal.py
+  - tests/acceptance/test_import_graph.py
+  - tests/acceptance/test_canaries.py
+closeout:
+  - "Do not dispatch TC-022b's full measurement or TC-029's publish gate wiring against this
+     seal path until this card is ACCEPTED -- they read what this card produces."
+  - "This card does not itself make any new provider call -- it only changes which stored/future
+     verdict shape the seal path accepts. Real M8 calibration spend happens in TC-023/TC-022b."
+recovery: "Revert present.py, recertify.py, bundle_store.py, cascade.py, seal.py, llm_review.py and
+  their tests together; the old reviewer-ACCEPT seal path returns exactly as committed before
+  this card."

@@ -3,7 +3,7 @@
 Owner ruling R2 (``docs/CONSOLIDATED_GOALS_2026-11-06.md``): the aspose.org readme-refresh output
 already live upstream is the **minimum quality floor** for both lanes. This module recomputes, from
 the two texts and the seal's own evidence (``facts.json``, ``dispositions.json`` for Lane R,
-``corrections.json`` for Lane L), six objective, deterministic dimensions, each pass/fail with
+``corrections.json`` for Lane L), nine objective, deterministic dimensions, each pass/fail with
 numbers. Parity is every dimension passing. It is a measurement: it changes no pipeline mechanism,
 calls no provider, and writes nothing anywhere but the caller's scratch directory.
 
@@ -22,6 +22,34 @@ calls no provider, and writes nothing anywhere but the caller's scratch director
 6. ``maintainer_preservation`` -- Lane R: every ``SUPERSEDE_REDUNDANT`` unit is carried
    (``scripts/maintainer_content_audit.coverage`` >= its own "carried" bound); Lane L: every
    benchmark line missing from the candidate sits inside an evidenced edit.
+7. ``maintainability`` (docs/CONSOLIDATED_GOALS_2026-11-06.md section 6) -- structural upkeep of
+   the candidate relative to the benchmark, computed from the two texts alone: (a) nesting -- for
+   every benchmark heading with a candidate counterpart (by topic, closest level preferred), the
+   counterpart is no more than one level deeper than the benchmark's own heading; (b) paragraph
+   length -- no candidate paragraph exceeds roughly twice the word count of the benchmark's own
+   longest paragraph; (c) emptied sections -- no benchmark H2 section that has content (a
+   paragraph, fence, list, table, blockquote, HTML block or nested subheading) matches a
+   candidate H2 section with nothing under it. A pass needs none of the three violated; the
+   numbers report the benchmark's longest paragraph word count, the limit derived from it, and a
+   count for each violation kind. Self-parity (the same text as both candidate and benchmark) is
+   automatic for every rule here: an identical document can never nest deeper than itself, never
+   write a paragraph longer than its own longest, and never leave a section empty that it itself
+   fills.
+8. ``required_sections`` (2026-11-07, checked directly against the aspose.org readme-refresh
+   skill's own durable template contract, ``aspose.org/data/readme_template_contract.json``, and
+   its hard-gate checks ``check_banner_present``/``check_badge_row_meets_verified_floor`` in
+   ``readme_refresh_checks.py``) -- the fixed, aspose.org-mandated backbone section names (At a
+   Glance, Key Capabilities, Installation, Dependencies, Quick Start, API Reference,
+   Documentation & Resources, Scope and Limitations, Development and Testing, License):
+   whichever of these the benchmark itself carries as an H2 must be a candidate H2/H3 topic too,
+   unconditionally -- never excused by a non-loss disposition or an evidenced edit the way
+   ``section_coverage`` allows. A real candidate found missing all four of Dependencies, API
+   Reference, Scope and Limitations and Development and Testing (Aspose.3D-FOSS-for-.NET) is
+   exactly the degradation this gate exists to catch, and ``section_coverage`` alone did not.
+9. ``badge_banner_completeness`` (2026-11-07, same aspose.org parity check) -- computed from the
+   two texts alone: a shields.io badge count in the candidate at least equal to the benchmark's,
+   and a banner image link (``...banner-readme...``) in the candidate whenever the benchmark
+   carries one.
 
 "Non-loss" follows goal section 5: content may go only when demonstrably incorrect, obsolete,
 duplicated or contradictory. ``NON_CONTENT`` and ``CORRECT_WITH_EVIDENCE`` qualify; an
@@ -62,7 +90,28 @@ DIMENSIONS = (
     "links",
     "internal_markers",
     "maintainer_preservation",
+    "maintainability",
+    "required_sections",
+    "badge_banner_completeness",
 )
+#: The aspose.org readme-refresh skill's own durable, mechanically-verified backbone section
+#: list (``aspose.org/data/readme_template_contract.json`` ``required_sections``, schema_version
+#: 2, verified_at 2026-09-02) -- the fixed names ``required_sections`` (the dimension) holds the
+#: candidate to whenever the benchmark itself carries one of them.
+ASPOSE_REQUIRED_SECTIONS = (
+    "At a Glance",
+    "Key Capabilities",
+    "Installation",
+    "Dependencies",
+    "Quick Start",
+    "API Reference",
+    "Documentation & Resources",
+    "Scope and Limitations",
+    "Development and Testing",
+    "License",
+)
+_BADGE_IMG = re.compile(r"!\[[^\]]*\]\(([^)]*shields\.io[^)]*)\)", re.IGNORECASE)
+_BANNER_IMG = re.compile(r"!\[[^\]]*\]\(([^)]*banner-readme[^)]*)\)", re.IGNORECASE)
 REPO_ROOT = Path(__file__).resolve().parents[3]
 _AUDIT_SCRIPT = REPO_ROOT / "scripts" / "maintainer_content_audit.py"
 
@@ -155,10 +204,29 @@ class Document:
     fences: tuple[Fence, ...]
     inline_code: tuple[str, ...]
     hrefs: tuple[str, ...]
+    paragraphs: tuple[str, ...] = ()
+    #: Every level-2 heading's name, in document order, paired with whether anything (a
+    #: paragraph, fence, list, table, blockquote, HTML block or a nested H3+ subheading) sits
+    #: under it before the next H2 -- the ``maintainability`` dimension's emptied-section check.
+    h2_sections: tuple[tuple[str, bool], ...] = ()
 
     @property
     def h2(self) -> tuple[str, ...]:
         return tuple(name for level, name in self.headings if level == 2)
+
+
+#: Top-level (sibling-to-headings) block token types that count as "this H2 has content".
+_BLOCK_OPEN = frozenset(
+    {
+        "paragraph_open",
+        "bullet_list_open",
+        "ordered_list_open",
+        "table_open",
+        "blockquote_open",
+        "html_block",
+        "hr",
+    }
+)
 
 
 def read_markdown(text: str) -> Document:
@@ -166,17 +234,46 @@ def read_markdown(text: str) -> Document:
     headings: list[tuple[int, str]] = []
     fences: list[Fence] = []
     inline: list[str] = []
+    paragraphs: list[str] = []
+    h2_sections: list[list[Any]] = []
+    current_h2: int | None = None
     for index, token in enumerate(tokens):
         if token.type == "heading_open":
-            headings.append((int(token.tag[1]), tokens[index + 1].content.strip()))
-        elif token.type in {"fence", "code_block"}:
+            level = int(token.tag[1])
+            name = tokens[index + 1].content.strip()
+            headings.append((level, name))
+            if level == 2:
+                h2_sections.append([name, False])
+                current_h2 = len(h2_sections) - 1
+            elif level == 1:
+                current_h2 = None
+            elif current_h2 is not None:
+                h2_sections[current_h2][1] = True
+            continue
+        if token.type in {"fence", "code_block"}:
             fences.append(Fence(token.info.strip(), token.content))
-        elif token.type == "inline":
+            if token.level == 0 and current_h2 is not None:
+                h2_sections[current_h2][1] = True
+            continue
+        if token.type == "inline":
             inline.extend(
                 c.content for c in token.children or [] if c.type == "code_inline"
             )
+            if token.level == 1 and tokens[index - 1].type == "paragraph_open":
+                paragraphs.append(token.content)
+            continue
+        if token.level == 0 and token.type in _BLOCK_OPEN and current_h2 is not None:
+            h2_sections[current_h2][1] = True
     hrefs = tuple(target.href for target in extract_links(text))
-    return Document(text, tuple(headings), tuple(fences), tuple(inline), hrefs)
+    return Document(
+        text,
+        tuple(headings),
+        tuple(fences),
+        tuple(inline),
+        hrefs,
+        tuple(paragraphs),
+        tuple((name, has_content) for name, has_content in h2_sections),
+    )
 
 
 def code_lines(code: str) -> frozenset[str]:
@@ -557,9 +654,14 @@ def technical_content(
             elif category == "install_commands":
                 here = " ".join(item.split()) in " ".join(cand.readme.split())
             elif category == "versions":
+                # The same trailing boundary _VERSION itself uses: a bare "2.99m" decimal
+                # literal (a C# ``decimal`` suffix, not a version) still carries no further
+                # digit after it, so it must count as present the same way it was extracted --
+                # self-parity requires one boundary rule, not two (found asymmetric 2026-11-07,
+                # Aspose.Cells-FOSS-for-.NET's live README: `2.99m`/`1.99m` decimal literals).
                 here = (
                     re.search(
-                        r"(?<![\w.])v?" + re.escape(item) + r"(?![\w]|\.\d)",
+                        r"(?<![\w.])v?" + re.escape(item) + r"(?![\w.]*\d)",
                         cand.readme,
                     )
                     is not None
@@ -704,6 +806,131 @@ def markers(cand: SealedCandidate) -> Dimension:
     )
 
 
+def _match_section(
+    name: str, index: int, sections: Sequence[tuple[str, bool]]
+) -> tuple[str, bool] | None:
+    """The candidate H2 section matching ``name`` (one of ``sections``): same index first
+    (self-parity's exact alignment), else the first topic match."""
+    if index < len(sections) and topics_match(name, sections[index][0]):
+        return sections[index]
+    return next((s for s in sections if topics_match(name, s[0])), None)
+
+
+def maintainability(bench: Document, cand_doc: Document) -> Dimension:
+    """Structural upkeep (docstring section 7): nesting, paragraph length, emptied sections."""
+    depth_violations: list[str] = []
+    for index, (level, name) in enumerate(bench.headings):
+        matches = [
+            lvl for lvl, other in cand_doc.headings if topics_match(name, other)
+        ]
+        if not matches:
+            continue
+        if index < len(cand_doc.headings) and topics_match(
+            name, cand_doc.headings[index][1]
+        ):
+            cand_level = cand_doc.headings[index][0]
+        else:
+            cand_level = min(matches, key=lambda lvl: abs(lvl - level))
+        if cand_level - level > 1:
+            depth_violations.append(
+                f"heading nested {cand_level - level} levels deeper: {_label(name)}"
+            )
+    bench_paras = [p for p in bench.paragraphs if p.strip()]
+    bench_longest = max((len(p.split()) for p in bench_paras), default=0)
+    limit = max(1, bench_longest * 2)
+    long_paragraphs = [
+        p for p in cand_doc.paragraphs if p.strip() and len(p.split()) > limit
+    ]
+    emptied: list[str] = []
+    for index, (name, has_content) in enumerate(bench.h2_sections):
+        if not has_content:
+            continue
+        match = _match_section(name, index, cand_doc.h2_sections)
+        if match is not None and not match[1]:
+            emptied.append(name)
+    passed = not depth_violations and not long_paragraphs and not emptied
+    numbers = {
+        "benchmark_longest_paragraph_words": bench_longest,
+        "paragraph_limit_words": limit,
+        "heading_depth_violations": len(depth_violations),
+        "long_paragraphs": len(long_paragraphs),
+        "emptied_sections": len(emptied),
+    }
+    details = (
+        depth_violations
+        + [
+            f"paragraph too long ({len(p.split())}w > {limit}w): {_label(p)}"
+            for p in long_paragraphs
+        ]
+        + [f"section emptied: {_label(n)}" for n in emptied]
+    )
+    return Dimension("maintainability", passed, numbers, details)
+
+
+def required_sections(bench: Document, cand_doc: Document) -> Dimension:
+    """Hard, unconditional backbone-section gate (docstring section 8): unlike
+    ``section_coverage``, never excused by a non-loss disposition or an evidenced edit, and
+    scoped to the fixed ``ASPOSE_REQUIRED_SECTIONS`` names the benchmark itself carries -- a
+    benchmark H2 outside that fixed list is still ``section_coverage``'s job alone."""
+    cand_topics = [name for level, name in cand_doc.headings if level in (2, 3)]
+    carried_by_benchmark = [
+        name
+        for name in ASPOSE_REQUIRED_SECTIONS
+        if any(topics_match(name, h) for h in bench.h2)
+    ]
+    missing = [
+        name
+        for name in carried_by_benchmark
+        if not any(topics_match(name, other) for other in cand_topics)
+    ]
+    return Dimension(
+        "required_sections",
+        not missing,
+        {
+            "backbone_sections": len(ASPOSE_REQUIRED_SECTIONS),
+            "carried_by_benchmark": len(carried_by_benchmark),
+            "missing": len(missing),
+        },
+        [f"required section entirely absent from the candidate: {name}" for name in missing],
+    )
+
+
+def badge_banner_completeness(bench: Document, cand_doc: Document) -> Dimension:
+    """Badge/banner floor (docstring section 9), from the two texts alone: aspose.org's own
+    ``check_badge_row_meets_verified_floor`` and ``check_banner_present`` hard gates, approximated
+    here without the live badge-availability facts those checks read -- a shields.io badge count
+    that does not shrink, and a banner image link whenever the benchmark carries one."""
+    bench_badges = _BADGE_IMG.findall(bench.text)
+    cand_badges = _BADGE_IMG.findall(cand_doc.text)
+    bench_banner = bool(_BANNER_IMG.search(bench.text))
+    cand_banner = bool(_BANNER_IMG.search(cand_doc.text))
+    missing_banner = bench_banner and not cand_banner
+    badge_deficit = max(0, len(bench_badges) - len(cand_badges))
+    passed = not missing_banner and badge_deficit == 0
+    details = []
+    if missing_banner:
+        details.append(
+            "banner image missing: the benchmark carries the product banner, the candidate does not"
+        )
+    if badge_deficit:
+        details.append(
+            f"badge row shrank by {badge_deficit} "
+            f"(benchmark {len(bench_badges)}, candidate {len(cand_badges)})"
+        )
+    return Dimension(
+        "badge_banner_completeness",
+        passed,
+        {
+            "benchmark_badges": len(bench_badges),
+            "candidate_badges": len(cand_badges),
+            "badge_deficit": badge_deficit,
+            "benchmark_has_banner": bench_banner,
+            "candidate_has_banner": cand_banner,
+        },
+        details,
+    )
+
+
 def _load_audit() -> Any:
     spec = importlib.util.spec_from_file_location(
         "maintainer_content_audit", _AUDIT_SCRIPT
@@ -837,6 +1064,9 @@ def evaluate(
         links(cand_doc, candidate),
         markers(candidate),
         maintainer_preservation(bench, candidate, acct),
+        maintainability(bench, cand_doc),
+        required_sections(bench, cand_doc),
+        badge_banner_completeness(bench, cand_doc),
     ]
     return ParityResult(
         repository,

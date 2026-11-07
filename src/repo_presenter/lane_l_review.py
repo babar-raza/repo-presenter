@@ -37,7 +37,8 @@ which text was changed and under which facts.
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
+import dataclasses
+from collections.abc import Callable, Mapping, Sequence
 from typing import Any
 
 from repo_presenter.core.config import GatewayConfig
@@ -46,11 +47,13 @@ from repo_presenter.core.llm.jobs import CallStore, JobContext
 from repo_presenter.core.llm.ledger import Ledger
 from repo_presenter.core.llm.prompts import PromptRegistry
 from repo_presenter.readme.correction.apply import apply_edits, confinement_violations
+from repo_presenter.readme.correction.engine import correct
 from repo_presenter.readme.correction.model import Context, CorrectionResult
 from repo_presenter.readme.correction.report import (
     RULE_UNREPAIRED_DEFECT,
     correction_dispositions,
     defect_findings,
+    unrepaired_defects,
 )
 from repo_presenter.readme.review.independent_reviewer import (
     Finding,
@@ -89,7 +92,11 @@ _CHECKS: tuple[tuple[str, str, str], ...] = (
         "Nothing of the live README is lost unless an evidenced edit accounts for it",
         RULE_LOSS,
     ),
-    ("L-05", "Every defect a detector found was repaired", RULE_UNREPAIRED_DEFECT),
+    (
+        "L-05",
+        "An unrepaired defect blocks unless this run is itself a net improvement (R21)",
+        RULE_UNREPAIRED_DEFECT,
+    ),
 )
 IDEMPOTENT_CHECK = (
     "L-06",
@@ -134,20 +141,67 @@ def nondeterminism_findings(deterministic: bool) -> list[Finding]:
     ]
 
 
+def net_improvement(
+    ctx: Context,
+    result: CorrectionResult,
+    compute: Callable[[Context], CorrectionResult] = correct,
+) -> bool:
+    """R21 (TC-025 point 4, replacing the old all-or-nothing L-05): at least one evidenced edit was
+    made, AND a second detector pass over the corrected text (``compute``, the engine's own
+    ``correct`` by default, re-run here rather than trusted) finds no defect absent from what the
+    first pass already reported. An edit that fixes one defect while creating another is not an
+    improvement.
+
+    This is the one signal that decides whether an unrepaired defect may still be recorded (the
+    ``corrections.json`` ``outcome`` field, via ``report.outcome_of``, keeps stating the honest,
+    unconditional ``REFUSED_LANE_R_RECOMMENDED`` when a defect remains -- that record never
+    changes) rather than block this run's holdout outright. Zero edits is never a net improvement,
+    whatever else is true: there is nothing to point to as the improvement.
+    """
+    if not result.edits:
+        return False
+    # The facts an edit cites still describe the ORIGINAL README; re-running a detector against
+    # the CORRECTED text with those same (now one-sided) facts can manufacture its own finding
+    # purely because the text it already fixed no longer matches what the fact says to look for
+    # (``broken_link`` rerun on its own repaired line is the real case this excludes) -- that is
+    # an artifact of stale facts, never a defect the edit introduced. A defect citing exactly the
+    # same evidence an edit already acted on is excluded from the "after" count for that reason;
+    # anything else the rerun finds is a genuinely new defect and fails this.
+    fixed_fact_ids = {fact_id for edit in result.edits for fact_id in edit.fact_ids}
+    after = compute(dataclasses.replace(ctx, readme=result.corrected))
+    before_keys = {(finding.detector, finding.reason) for finding in unrepaired_defects(result)}
+    after_keys = {
+        (finding.detector, finding.reason)
+        for finding in unrepaired_defects(after)
+        if not (set(finding.fact_ids) & fixed_fact_ids)
+    }
+    return not (after_keys - before_keys)
+
+
 def holdout_findings(
     ctx: Context, result: CorrectionResult, *, deterministic: bool
 ) -> list[Finding]:
-    """Every deterministic finding against the final README, in the document order of the checks."""
+    """Every deterministic finding against the final README, in the document order of the checks.
+
+    An unrepaired defect (``RULE_UNREPAIRED_DEFECT``) is included, and so blocks, UNLESS this run
+    is itself a net improvement (:func:`net_improvement`): a candidate that fixes at least one real
+    defect without introducing a new one may still carry another, unrelated defect it could not
+    repair, and that remaining defect is recorded (``report.corrections_document``'s own
+    ``unapplied`` list already carries it, independent of this gate) and surfaced in the PR
+    description, never blocked on here and never printed into the README itself.
+    """
     dispositions = correction_dispositions(ctx, result.edits)
-    return [
+    findings = [
         *confinement_findings(ctx.readme, result),
         *nondeterminism_findings(deterministic),
         *claim_contradiction_rule(result.corrected, ctx.facts),
         *live_readme_loss_rule(
             ctx.readme, result.corrected, facts=ctx.facts, dispositions=dispositions
         ),
-        *defect_findings(result),
     ]
+    if not net_improvement(ctx, result):
+        findings.extend(defect_findings(result))
+    return findings
 
 
 def holdouts_document(
