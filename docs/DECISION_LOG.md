@@ -3598,3 +3598,14 @@ tooling, never from model narration").
 **Next:** commit the 19 cards plus `data/readme_findings.json` and the regenerated dashboard/state.yaml on
 the same branch as PR #44 (a second commit, as that commit's own message promised), then dispatch the six
 immediately-`READY` cards (`TC-013, TC-015, TC-016, TC-017a, TC-020, TC-022a`) as parallel worktree workers.
+
+## 2026-11-07: TC-018 landed partial -- obligations wiring deferred, a real R-CARRIED false positive found
+
+Landed classify_unit/ledger/build_content_ledger.py and obligation_failures() as a standalone,
+tested function. Did NOT wire obligation_failures() into units.py's disposition_failures(): doing
+so broke 5 existing tests/test_recertify.py tests against the real Email .NET fixture (a must_carry
+list item phrased differently in the sealed README than its source unit -- the already-documented
+R-CARRIED paraphrase class, ~107 of 649 cases in the 2026-11-06 drop inventory, not a new defect).
+R10 forbids a mechanism change silently breaking a passing seal's own tests. Tracked follow-up:
+wire it once content_presence.unstated(strict=True) gets paraphrase tolerance, then re-add
+test_units_obligations.py (withheld from this commit, same reason).
