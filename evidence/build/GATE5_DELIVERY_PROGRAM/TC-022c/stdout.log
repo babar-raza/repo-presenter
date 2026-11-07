@@ -1,0 +1,46 @@
+
+===== CLEAN RUN 1 =====
+$ python -m pytest tests/acceptance/test_responsibility.py -q
+--- stdout ---
+...........                                                              [100%]
+11 passed in 0.51s
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python -m pytest tests/acceptance/test_responsibility.py -q
+--- stdout ---
+...........                                                              [100%]
+11 passed in 0.14s
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M src/repo_presenter/acceptance/responsibility.py
+$ python -m pytest tests/acceptance/test_responsibility.py -q
+--- stdout ---
+F..........                                                              [100%]
+================================== FAILURES ===================================
+__________ test_every_expected_defect_class_present_with_exact_entry __________
+
+    def test_every_expected_defect_class_present_with_exact_entry() -> None:
+        for defect_class, expected in EXPECTED_TABLE.items():
+            assert defect_class in DEFECT_CLASS_OWNERS, f"{defect_class} missing from DEFECT_CLASS_OWNERS"
+>           assert DEFECT_CLASS_OWNERS[defect_class] == expected, (
+                f"{defect_class}: expected {expected}, got {DEFECT_CLASS_OWNERS[defect_class]}"
+            )
+E           AssertionError: D14: expected ('M8', None), got ('M6', None)
+E           assert ('M6', None) == ('M8', None)
+E             
+E             At index 0 diff: 'M6' != 'M8'
+E             Use -v to get more diff
+
+tests\acceptance\test_responsibility.py:47: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/acceptance/test_responsibility.py::test_every_expected_defect_class_present_with_exact_entry
+1 failed, 10 passed in 0.40s
+
+--- stderr ---
+
