@@ -1,0 +1,59 @@
+
+===== CLEAN RUN 1 =====
+$ python -m pytest tests/acceptance/test_calibration_harness.py -q
+--- stdout ---
+............................................                             [100%]
+44 passed in 0.46s
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python -m pytest tests/acceptance/test_calibration_harness.py -q
+--- stdout ---
+............................................                             [100%]
+44 passed in 0.46s
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M src/repo_presenter/acceptance/calibration_harness.py
+$ python -m pytest tests/acceptance/test_calibration_harness.py -q
+--- stdout ---
+...........................F........F.......                             [100%]
+================================== FAILURES ===================================
+____________ test_score_m2_fails_when_one_owned_class_below_recall ____________
+
+    def test_score_m2_fails_when_one_owned_class_below_recall() -> None:
+        cases = _defect_cases("A", 50, 45) + _defect_cases("D", 50, 30) + _clean_cases("A", 100, 0)
+        result = score_m2(cases)
+>       assert result.status == "NOT_PASSED"
+E       AssertionError: assert 'PASSED' == 'NOT_PASSED'
+E         
+E         - NOT_PASSED
+E         ? ----
+E         + PASSED
+
+tests\acceptance\test_calibration_harness.py:347: AssertionError
+_________ test_score_end_to_end_fails_when_one_operator_below_recall __________
+
+    def test_score_end_to_end_fails_when_one_operator_below_recall() -> None:
+        inputs = _passing_end_to_end_inputs()
+        inputs["mutation_cases"] = _defect_cases("duplicate_paragraph", 20, 10)  # 0.50 recall
+        result = score_end_to_end(**inputs)
+>       assert result.status == "NOT_PASSED"
+E       AssertionError: assert 'PASSED' == 'NOT_PASSED'
+E         
+E         - NOT_PASSED
+E         ? ----
+E         + PASSED
+
+tests\acceptance\test_calibration_harness.py:441: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/acceptance/test_calibration_harness.py::test_score_m2_fails_when_one_owned_class_below_recall
+FAILED tests/acceptance/test_calibration_harness.py::test_score_end_to_end_fails_when_one_operator_below_recall
+2 failed, 42 passed in 0.71s
+
+--- stderr ---
+

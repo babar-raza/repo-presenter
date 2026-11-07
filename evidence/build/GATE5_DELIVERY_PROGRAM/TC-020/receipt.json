@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "card": "TC-020",
+  "gate": "GATE5_DELIVERY_PROGRAM",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-07T18:32:08Z",
+  "base_rev": "3eb453cb420642aa1228e6a7a15ce3438141adf1",
+  "head_rev": "f9d009e530f0f097347c33f7e1b6af6c3d3eea1e",
+  "card_sha256": "7184e830ca93cbafebcbc8de9ed5049e84afb5aba267973052979dfd05287fc6",
+  "checker_fileset_sha256": "e2eb11fb3158aed9dfd0ddca9b715177a7f855f9838cdc30d4ad7f8e64e5d170",
+  "checker_fileset_scheme": "v3",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [],
+    "violations": [],
+    "evaluated": false
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python -m pytest tests/readme/test_parity_gate.py -q -k \"maintainability or self_parity\"",
+          "exit_code": 0,
+          "duration_s": 3.352,
+          "stdout_sha256": "f8466091a20bf5a407f1eca39f8cff19ff777ae4a749b5cbd1bb2f7bfd2dd496"
+        },
+        {
+          "command": "python -m pytest tests/core/registry/test_benchmarks.py -q",
+          "exit_code": 0,
+          "duration_s": 1.875,
+          "stdout_sha256": "5f9e216aad3508c24933586c89f55213316824cb73379461aa5467701df3a379"
+        },
+        {
+          "command": "python -m pytest tests/readme/evidence/facts/test_extract.py -q -k \"product_knowledge_refresh or knowledge_refresh\"",
+          "exit_code": 0,
+          "duration_s": 4.071,
+          "stdout_sha256": "c433faeaf834cae1f66f0190dcd66a9c99a88545725d66f2c56b220f873d0797"
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python -m pytest tests/readme/test_parity_gate.py -q -k \"maintainability or self_parity\"",
+          "exit_code": 0,
+          "duration_s": 2.316,
+          "stdout_sha256": "2c2a27eb58a4c0fb177c0420400864d066b5facd9a5dd6c12ad9decedbe631a6"
+        },
+        {
+          "command": "python -m pytest tests/core/registry/test_benchmarks.py -q",
+          "exit_code": 0,
+          "duration_s": 1.703,
+          "stdout_sha256": "b1eb6abf9e348ecbf135268790ce41a3309300c1c62afbc045ef987b2ea247d9"
+        },
+        {
+          "command": "python -m pytest tests/readme/evidence/facts/test_extract.py -q -k \"product_knowledge_refresh or knowledge_refresh\"",
+          "exit_code": 0,
+          "duration_s": 3.579,
+          "stdout_sha256": "126bbbb9c866267b099957b446af52f9881b19a007f8d8689d0a3628dcdfecc0"
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -X utf8 -c \"import json, pathlib; p = pathlib.Path('data/benchmarks.json'); d = json.loads(p.read_text(encoding='utf-8')); d['entries'] = d['entries'][1:] if isinstance(d.get('entries'), list) else d.get('entries', {}); p.write_text(json.dumps(d, indent=2), encoding='utf-8')\"",
+    "patch_sha256": "967a7e5e91240ba475df3bae1e46fa97ed2cdef5c0d014d7b07fa5e26b029ea3",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      0,
+      1,
+      0
+    ],
+    "tree_changed": [
+      "M data/benchmarks.json"
+    ]
+  },
+  "accepted": true,
+  "reason": "all gates passed"
+}

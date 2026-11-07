@@ -1,0 +1,105 @@
+
+===== CLEAN RUN 1 =====
+$ python -m pytest tests/test_present.py -q -k "toolchain or splits_the_untrusted"
+--- stdout ---
+....                                                                     [100%]
+4 passed, 28 deselected in 1.52s
+
+--- stderr ---
+
+$ python -m pytest tests/test_sandbox_execute.py -q
+--- stdout ---
+.........                                                                [100%]
+9 passed in 0.39s
+
+--- stderr ---
+
+$ python -c "import yaml, pathlib; d = yaml.safe_load(pathlib.Path('.github/workflows/ci.yml').read_text(encoding='utf-8')); steps = d['jobs']['docker']['steps']; names = [s.get('name', '') for s in steps]; assert any('network' in n.lower() and 'secret' not in str(s).lower().replace('no secret', '') for n, s in zip(names, steps)), names"
+--- stdout ---
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python -m pytest tests/test_present.py -q -k "toolchain or splits_the_untrusted"
+--- stdout ---
+....                                                                     [100%]
+4 passed, 28 deselected in 0.62s
+
+--- stderr ---
+
+$ python -m pytest tests/test_sandbox_execute.py -q
+--- stdout ---
+.........                                                                [100%]
+9 passed in 0.22s
+
+--- stderr ---
+
+$ python -c "import yaml, pathlib; d = yaml.safe_load(pathlib.Path('.github/workflows/ci.yml').read_text(encoding='utf-8')); steps = d['jobs']['docker']['steps']; names = [s.get('name', '') for s in steps]; assert any('network' in n.lower() and 'secret' not in str(s).lower().replace('no secret', '') for n, s in zip(names, steps)), names"
+--- stdout ---
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M .github/workflows/present.yml
+$ python -m pytest tests/test_present.py -q -k "toolchain or splits_the_untrusted"
+--- stdout ---
+F.F.                                                                     [100%]
+================================== FAILURES ===================================
+_ test_the_workflow_splits_the_untrusted_facts_job_from_the_credentialed_present_job _
+
+    def test_the_workflow_splits_the_untrusted_facts_job_from_the_credentialed_present_job() -> (
+        None
+    ):
+        workflow = _load_workflow()
+        # sandbox-execute (TC-021) is a third, independent, workflow_dispatch-only job: infrastructure
+        # validation for a future stage, not part of this trust boundary's own two-job split.
+        assert {"facts", "present"} <= set(workflow["jobs"])
+        assert_facts_job_is_unprivileged(workflow)
+        assert_present_job_runs_no_repository_code(workflow)
+    
+        facts, presenting = workflow["jobs"]["facts"], workflow["jobs"]["present"]
+        assert any("setup-dotnet" in use for use in _uses(facts))
+        assert any("setup-java" in use for use in _uses(facts))
+>       assert any("setup-go" in use for use in _uses(facts))
+E       assert False
+E        +  where False = any(<generator object test_the_workflow_splits_the_untrusted_facts_job_from_the_credentialed_present_job.<locals>.<genexpr> at 0x00000206F59A5490>)
+
+tests\test_present.py:789: AssertionError
+_ test_each_of_the_four_new_toolchain_steps_is_present_and_conditioned_on_its_own_ecosystem _
+
+    def test_each_of_the_four_new_toolchain_steps_is_present_and_conditioned_on_its_own_ecosystem() -> (
+        None
+    ):
+        """TC-021: data/registry.json registers go, rust, cpp and typescript alongside the
+        already-toolchained net/java -- each of their steps must exist in the facts job and run only
+        for its own ecosystem, the same discipline the existing .NET/Java steps already follow."""
+        workflow = _load_workflow()
+        facts = workflow["jobs"]["facts"]
+    
+        go_step = _step_by_use(facts, "setup-go")
+>       assert go_step is not None, "expected a setup-go step"
+E       AssertionError: expected a setup-go step
+E       assert None is not None
+
+tests\test_present.py:874: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_present.py::test_the_workflow_splits_the_untrusted_facts_job_from_the_credentialed_present_job
+FAILED tests/test_present.py::test_each_of_the_four_new_toolchain_steps_is_present_and_conditioned_on_its_own_ecosystem
+2 failed, 2 passed, 28 deselected in 0.81s
+
+--- stderr ---
+
+$ python -m pytest tests/test_sandbox_execute.py -q
+--- stdout ---
+.........                                                                [100%]
+9 passed in 0.22s
+
+--- stderr ---
+
+$ python -c "import yaml, pathlib; d = yaml.safe_load(pathlib.Path('.github/workflows/ci.yml').read_text(encoding='utf-8')); steps = d['jobs']['docker']['steps']; names = [s.get('name', '') for s in steps]; assert any('network' in n.lower() and 'secret' not in str(s).lower().replace('no secret', '') for n, s in zip(names, steps)), names"
+--- stdout ---
+
+--- stderr ---
+

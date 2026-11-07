@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "card": "TC-022a",
+  "gate": "GATE5_DELIVERY_PROGRAM",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-07T18:28:05Z",
+  "base_rev": "bcc253139f4bcd4a92ba07937d6295184c9b5fa1",
+  "head_rev": "4076ea62ba6e09e92aa864e8a87570e7a9aeea8e",
+  "card_sha256": "a47c78f9ef3f6c35b9ac6498cdb046bc5660ad01a28a5eb322a43cbe518ac5e5",
+  "checker_fileset_sha256": "ce93439fb4952eaece1ef0eb232997fdf1fd8d09035fcb03a9a67feb5d43adcc",
+  "checker_fileset_scheme": "v3",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [
+      "src/repo_presenter/acceptance/__init__.py",
+      "src/repo_presenter/acceptance/registration.py",
+      "tests/acceptance/test_registration.py"
+    ],
+    "violations": [],
+    "evaluated": true
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python -m pytest tests/acceptance/test_registration.py -q",
+          "exit_code": 0,
+          "duration_s": 0.988,
+          "stdout_sha256": "2b2d767105fcadd6caca0788dc8b5865e63271d079fdf44070bda78649e483f5"
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python -m pytest tests/acceptance/test_registration.py -q",
+          "exit_code": 0,
+          "duration_s": 0.963,
+          "stdout_sha256": "2bb2eadc6c2a1b118c98ac0e6c7eb2258ded0a0b372d1a31cbe852c5176f33de"
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -X utf8 -c \"import pathlib; p = pathlib.Path('src/repo_presenter/acceptance/registration.py'); t = p.read_text(encoding='utf-8'); p.write_text(t.replace('sha256', 'md5'), encoding='utf-8')\"",
+    "patch_sha256": "9d313f2627889b6f450ab53cd36b5267327c2b6185dce69fcde7fb25784570cb",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      1
+    ],
+    "tree_changed": [
+      "M src/repo_presenter/acceptance/registration.py"
+    ]
+  },
+  "accepted": true,
+  "reason": "all gates passed"
+}

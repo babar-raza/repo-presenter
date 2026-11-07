@@ -1,0 +1,32 @@
+
+===== CLEAN RUN 1 =====
+$ python -m pytest tests/core/llm/test_budget.py tests/core/llm/test_jobs.py -q
+--- stdout ---
+...............................                                          [100%]
+31 passed in 1.02s
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python -m pytest tests/core/llm/test_budget.py tests/core/llm/test_jobs.py -q
+--- stdout ---
+...............................                                          [100%]
+31 passed in 0.92s
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M src/repo_presenter/core/llm/budget.py
+$ python -m pytest tests/core/llm/test_budget.py tests/core/llm/test_jobs.py -q
+--- stdout ---
+
+--- stderr ---
+ImportError while loading conftest 'C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-rhnj_dpy\tests\conftest.py'.
+tests\conftest.py:10: in <module>
+    from repo_presenter.core.llm import jobs as jobs_module
+src\repo_presenter\core\llm\jobs.py:70: in <module>
+    from repo_presenter.core.llm.budget import DEFAULT_BUDGET_PATH, check_budget, record_spend
+E   ImportError: cannot import name 'check_budget' from 'repo_presenter.core.llm.budget' (C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-rhnj_dpy\src\repo_presenter\core\llm\budget.py)
+

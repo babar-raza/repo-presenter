@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "card": "TC-018",
+  "gate": "GATE5_DELIVERY_PROGRAM",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-07T18:39:10Z",
+  "base_rev": "069bc0ad594ab2d21db6f3651a4f68b2a074d482",
+  "head_rev": "476650a57902b97ab9f26d305b741206790781c6",
+  "card_sha256": "f6c78088e1d2fa39a96e48549ab18c4306706b2be7dbe59fb490733cc086fd83",
+  "checker_fileset_sha256": "879b60ae16deace389c9115caa6c0522ed0b4193a594b35219fe30e4da76a18b",
+  "checker_fileset_scheme": "v3",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [],
+    "violations": [],
+    "evaluated": false
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python -m pytest tests/readme/obligations tests/readme/validation/test_supersession_obligations.py -q",
+          "exit_code": 0,
+          "duration_s": 6.237,
+          "stdout_sha256": "b5162d6f2f3d8407a7e5276c7bfee5c1d9a567f54a2cb5dd66b2c0aec77846bf"
+        },
+        {
+          "command": "python scripts/build_content_ledger.py --self-test",
+          "exit_code": 0,
+          "duration_s": 0.125,
+          "stdout_sha256": "a0e0fa352e0e2fba15a82506befcd7976af848f5fa4aa01ebd6602876dca6269"
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python -m pytest tests/readme/obligations tests/readme/validation/test_supersession_obligations.py -q",
+          "exit_code": 0,
+          "duration_s": 5.375,
+          "stdout_sha256": "bacae707efcdaa4cdecfde60d0fd5ab0bf46029b89a896e3fbbea9eb32eec8af"
+        },
+        {
+          "command": "python scripts/build_content_ledger.py --self-test",
+          "exit_code": 0,
+          "duration_s": 0.123,
+          "stdout_sha256": "a0e0fa352e0e2fba15a82506befcd7976af848f5fa4aa01ebd6602876dca6269"
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -X utf8 -c \"import pathlib; p = pathlib.Path('src/repo_presenter/readme/obligations/classify.py'); t = p.read_text(encoding='utf-8'); marker = 'def classify_unit'; t2 = t.replace(marker, '_disabled_' + marker, 1); p.write_text(t2, encoding='utf-8')\"",
+    "patch_sha256": "8423e2225b20ee71f45fce6fba7745aaa9de3df7ea12d1221aa09046839ba1e0",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      2,
+      1
+    ],
+    "tree_changed": [
+      "M src/repo_presenter/readme/obligations/classify.py"
+    ]
+  },
+  "accepted": true,
+  "reason": "all gates passed"
+}

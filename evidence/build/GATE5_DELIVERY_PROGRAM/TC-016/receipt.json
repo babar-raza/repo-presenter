@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "card": "TC-016",
+  "gate": "GATE5_DELIVERY_PROGRAM",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-07T18:29:48Z",
+  "base_rev": "4076ea62ba6e09e92aa864e8a87570e7a9aeea8e",
+  "head_rev": "3eb453cb420642aa1228e6a7a15ce3438141adf1",
+  "card_sha256": "b35fbe26a0a11d679b59fd53910a82b7329008c42381bbdaa29bf9a07a988d4f",
+  "checker_fileset_sha256": "2fbaa09a6ae8ce737afa6746cab759ba4c60a774eaf59f1732b425a797fa5b74",
+  "checker_fileset_scheme": "v3",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [
+      "src/repo_presenter/readme/evidence/facts/examples.py",
+      "tests/extractors/platforms/test_example_verifier_outcomes.py",
+      "tests/readme/evidence/facts/test_examples.py",
+      "tests/readme/validation/test_provenance.py"
+    ],
+    "violations": [],
+    "evaluated": true
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python -m pytest tests/readme/evidence/facts/test_examples.py tests/extractors/platforms/test_example_verifier_outcomes.py tests/readme/correction/ tests/readme/validation/test_provenance.py -q",
+          "exit_code": 0,
+          "duration_s": 2.11,
+          "stdout_sha256": "d19e3765a52a694af99e4b48550b7859a7e637b5c4418ade331a0abbda03cfb0"
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python -m pytest tests/readme/evidence/facts/test_examples.py tests/extractors/platforms/test_example_verifier_outcomes.py tests/readme/correction/ tests/readme/validation/test_provenance.py -q",
+          "exit_code": 0,
+          "duration_s": 4.223,
+          "stdout_sha256": "1bf3e9dfec870610a35f9a308dd0546780d12d7911517ba0abcf7fb01bb88a73"
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -c \"import pathlib; p = pathlib.Path('src/repo_presenter/readme/evidence/facts/examples.py'); s = p.read_text(encoding='utf-8'); s2 = s.replace(chr(34) + 'TIMED_OUT' + chr(34) + ': ' + chr(34) + 'UNRESOLVED' + chr(34), chr(34) + 'TIMED_OUT' + chr(34) + ': ' + chr(34) + 'CONTRADICTED' + chr(34)); p.write_text(s2, encoding='utf-8')\"",
+    "patch_sha256": "700574250dab3bbd981c437fe6faa376807abc5122db07a48a7f6ee1f935be86",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      1
+    ],
+    "tree_changed": [
+      "M src/repo_presenter/readme/evidence/facts/examples.py"
+    ]
+  },
+  "accepted": true,
+  "reason": "all gates passed"
+}

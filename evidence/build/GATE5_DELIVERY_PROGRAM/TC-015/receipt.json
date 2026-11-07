@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "card": "TC-015",
+  "gate": "GATE5_DELIVERY_PROGRAM",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-07T18:31:29Z",
+  "base_rev": "3eb453cb420642aa1228e6a7a15ce3438141adf1",
+  "head_rev": "f9d009e530f0f097347c33f7e1b6af6c3d3eea1e",
+  "card_sha256": "3daddff67db5c656ca3c7351ce5ed8a43e7cc21e50a294ad79a905851bb29c88",
+  "checker_fileset_sha256": "64f5d0dd9c475c793dc3ba50136a8c6436f2fb747c2cd5ee11de51fabe8bdb36",
+  "checker_fileset_scheme": "v3",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [],
+    "violations": [],
+    "evaluated": false
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python -m pytest tests/core/llm/test_budget.py tests/core/llm/test_jobs.py -q",
+          "exit_code": 0,
+          "duration_s": 3.011,
+          "stdout_sha256": "728b31d4b0ce392935e2d4ca99f10ef1a45990754a92a0e5e7d0d33b7fd504b2"
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python -m pytest tests/core/llm/test_budget.py tests/core/llm/test_jobs.py -q",
+          "exit_code": 0,
+          "duration_s": 2.306,
+          "stdout_sha256": "f531af35fca553f145a6b9eafbb4c64f6baaa3b3775b3ae7a9480b26298fc0fb"
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -c \"import pathlib; p = pathlib.Path('src/repo_presenter/core/llm/budget.py'); s = p.read_text(encoding='utf-8'); s2 = s.replace('def check_budget', 'def _disabled_check_budget'); p.write_text(s2, encoding='utf-8')\"",
+    "patch_sha256": "b5d1154fe8e2eabaaf1eba5b956911409bba1db51b91020486b10ee6a99c8436",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      4
+    ],
+    "tree_changed": [
+      "M src/repo_presenter/core/llm/budget.py"
+    ]
+  },
+  "accepted": true,
+  "reason": "all gates passed"
+}

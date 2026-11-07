@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "card": "TC-017a",
+  "gate": "GATE5_DELIVERY_PROGRAM",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-07T18:31:40Z",
+  "base_rev": "3eb453cb420642aa1228e6a7a15ce3438141adf1",
+  "head_rev": "f9d009e530f0f097347c33f7e1b6af6c3d3eea1e",
+  "card_sha256": "6ba5054dcc64648c08cb9658706ed58b1452e39f404e0e7584fec3d43795f5db",
+  "checker_fileset_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "checker_fileset_scheme": "v3",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [],
+    "violations": [],
+    "evaluated": false
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python -m pytest tests/acceptance/probes -q",
+          "exit_code": 0,
+          "duration_s": 2.87,
+          "stdout_sha256": "9f2633fc24ae8ced2208eaa829d613c02859b123f79dcedb4fc95c4fdc1d36f3"
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python -m pytest tests/acceptance/probes -q",
+          "exit_code": 0,
+          "duration_s": 1.976,
+          "stdout_sha256": "8014b8dfe2acafa1d60533312e63828edc712aec9758c751090e73389d6ab55a"
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -X utf8 -c \"import pathlib; p = pathlib.Path('src/repo_presenter/acceptance/probes/cpp.py'); t = p.read_text(encoding='utf-8'); marker = 'def exported'; t2 = t.replace(marker, '_disabled_' + marker, 1); p.write_text(t2, encoding='utf-8')\"",
+    "patch_sha256": "98a28155fd41b10ab79aea3d119fb77f369f9c21db1bbb295aa777b61adf18c3",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      2
+    ],
+    "tree_changed": [
+      "M src/repo_presenter/acceptance/probes/cpp.py"
+    ]
+  },
+  "accepted": true,
+  "reason": "all gates passed"
+}
