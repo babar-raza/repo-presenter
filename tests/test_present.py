@@ -777,13 +777,18 @@ def test_the_workflow_splits_the_untrusted_facts_job_from_the_credentialed_prese
     None
 ):
     workflow = _load_workflow()
-    assert set(workflow["jobs"]) == {"facts", "present"}
+    # sandbox-execute (TC-021) is a third, independent, workflow_dispatch-only job: infrastructure
+    # validation for a future stage, not part of this trust boundary's own two-job split.
+    assert {"facts", "present"} <= set(workflow["jobs"])
     assert_facts_job_is_unprivileged(workflow)
     assert_present_job_runs_no_repository_code(workflow)
 
     facts, presenting = workflow["jobs"]["facts"], workflow["jobs"]["present"]
     assert any("setup-dotnet" in use for use in _uses(facts))
     assert any("setup-java" in use for use in _uses(facts))
+    assert any("setup-go" in use for use in _uses(facts))
+    assert any("rust-toolchain" in use for use in _uses(facts))
+    assert any("setup-node" in use for use in _uses(facts))
     assert "secrets.GPT_OSS_API_KEY" in json.dumps(presenting)
     assert _effective_permissions(workflow, presenting) == {"contents": "write"}
     assert "--stage facts" in json.dumps(facts)
@@ -840,6 +845,52 @@ def test_every_toolchain_step_pins_an_exact_patch_version() -> None:
             f"{action}'s {key}={version!r} is not pinned to an exact patch version"
         )
     assert found_any, "expected at least one toolchain step to check"
+
+
+def _step_by_use(job: dict[str, Any], keyword: str) -> dict[str, Any] | None:
+    for step in job["steps"]:
+        if keyword in str(step.get("uses", "")):
+            return step
+    return None
+
+
+def _step_by_run_keyword(job: dict[str, Any], keyword: str) -> dict[str, Any] | None:
+    for step in job["steps"]:
+        if "uses" not in step and keyword in str(step.get("run", "")):
+            return step
+    return None
+
+
+def test_each_of_the_four_new_toolchain_steps_is_present_and_conditioned_on_its_own_ecosystem() -> (
+    None
+):
+    """TC-021: data/registry.json registers go, rust, cpp and typescript alongside the
+    already-toolchained net/java -- each of their steps must exist in the facts job and run only
+    for its own ecosystem, the same discipline the existing .NET/Java steps already follow."""
+    workflow = _load_workflow()
+    facts = workflow["jobs"]["facts"]
+
+    go_step = _step_by_use(facts, "setup-go")
+    assert go_step is not None, "expected a setup-go step"
+    assert "ecosystem == 'go'" in str(go_step.get("if", ""))
+
+    rust_step = _step_by_use(facts, "rust-toolchain")
+    assert rust_step is not None, "expected a Rust toolchain step"
+    assert "ecosystem == 'rust'" in str(rust_step.get("if", ""))
+
+    node_step = _step_by_use(facts, "setup-node")
+    assert node_step is not None, "expected a setup-node step"
+    assert "ecosystem == 'typescript'" in str(node_step.get("if", ""))
+
+    cpp_step = _step_by_run_keyword(facts, "g++")
+    assert cpp_step is not None, "expected a cpp (g++/cmake) verification step"
+    assert "ecosystem == 'cpp'" in str(cpp_step.get("if", ""))
+    assert "cmake" in str(cpp_step.get("run", ""))
+
+    for step in (go_step, rust_step, node_step, cpp_step):
+        assert "authorized == 'true'" in str(step.get("if", "")), (
+            f"{step.get('name')} must also stay gated on the scheduled-run authorization output"
+        )
 
 
 def test_a_toolchain_step_in_the_present_job_fails_the_structure_check() -> None:
