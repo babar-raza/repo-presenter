@@ -3677,6 +3677,51 @@ executor, which `write_path_problems()`/`check_scope()` were correctly flagging)
 slicing technique in as a general tool (e.g. for any future accidental multi-card commit) --
 left to whoever authors TC-012c, informed by this entry.
 
+---
+
+## 2026-11-07: A1 registration run for real; it does not meet its own minimum from existing data
+
+**Decision**: ran `repo_presenter.acceptance.registration.build_a1_from_existing_data` for real
+(the supervisor-owned closeout action the module's own docstring and TC-022a's card text name --
+"the real, end-to-end builder the supervisor calls directly, against the real paths, as a
+separate, non-taskcard, supervisor-owned action once this module is accepted") against the three
+real committed sources, and committed its real output to `data/registrations/A1.json`, rather
+than leaving this zero-call, already-accepted module uncalled (exactly the "library code nothing
+calls" failure mode the original 2026-11-01 audit found four separate times).
+
+**Result, honestly reported, not padded**: `shortfall.met = False`. Per-class achieved against the
+required minimum of 30: A=23 (short 7), B=70 (met), C=14 (short 16), D=4 (short 26), E=2 (short
+28). Clean twins: 61 achieved against a minimum of 50 (met). Zero unmatched audit labels (the
+audit markdown and the calibration registration agree on every case they both name). Second-
+labeller stand-in agreement (simple-majority baseline, not a real second rater): kappa 0.0 on a
+23-case sample -- expected and uninformative on its own, per the module's own docstring warning,
+since B is the overwhelming plurality class.
+
+**What this means for the M1 path**: TC-022b's calibration harness (now wirable -- TC-016,
+TC-017a, TC-017b, TC-018, TC-020, TC-021 are all `gatecli`-ACCEPTED, so the harness-wiring step
+its own docstring deferred, "done once all of those are accepted," is now unblocked) cannot
+produce a certified PASSED verdict for any mechanism whose owned defect classes include C, D or E
+until more real cases exist for those classes. Per the delivery plan's own §9 confidence section
+("A1 reaching minimum n from existing data (if not, the gap is reported and A1 waits for
+production candidates under budget)"), this is exactly that anticipated gap, now measured rather
+than assumed: real Lane R/L generation runs (under the R25 provider envelope) will need to supply
+new, class-audited D/E cases (D: generator-authored ungrounded claims; E: label-error cases) and
+more C cases (unverifiable-but-plausible maintainer knowledge) before certification on those
+classes can clear n>=30. This does not block M1 outright -- B is the plurality real-defect class
+in practice and the clean-twin pool is sufficient -- but it does mean full, all-class M2/M5
+certification is not yet reachable from today's zero-call data alone, and should not be reported
+as reachable.
+
+**Does NOT decide**: the exact content of `data/acceptance_responsibility.json` (the mechanism-
+class-to-defect-class matrix `docs/design/2026-11-06-acceptance-redesign.md` section 2.1's table
+defines, and which `record.py`'s own docstring says "TC-022a/TC-022b create and populate ... later"
+-- a gap neither card's authored text actually closes). That matrix is correctness-critical (a
+wrong required-mechanism set can produce a false acceptance, exactly what R10/R16 exist to
+prevent) and deserves its own careful, dedicated pass rather than a guess made while also tracking
+TC-024's integration -- tracked as a new card, TC-022c, authored separately.
+
+Detail: `src/repo_presenter/acceptance/registration.py`, `data/registrations/A1.json`.
+
 **Going forward**: every future integration commit's subject must end with exactly
 `(GATE5_DELIVERY_PROGRAM/TC-ID)`, no trailing text, and a commit landing more than one card's work
 must be split into one commit per card before pushing -- never bundled, even when the cards were
