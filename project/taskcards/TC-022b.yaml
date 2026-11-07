@@ -61,7 +61,7 @@ depends_on:
   - TC-022a
 write_paths:
   - src/repo_presenter/acceptance/calibration_harness.py
-  - tests/acceptance/test_calibration_harness.py
+  - tests/acceptance/test_acceptance_calibration_harness.py
 satisfies:
   - REQ-CALIB-001
   - REQ-CALIB-002
@@ -82,7 +82,7 @@ actions:
      of M1-M7 and M10's thresholds above, and an end-to-end aggregate scorer, producing a result
      object shaped like the real data/acceptance_calibration.json schema (per-mechanism status,
      version, corpus digest, gates, provider_calls)."
-  - "Write tests/acceptance/test_calibration_harness.py with worker-constructed fixtures proving
+  - "Write tests/acceptance/test_acceptance_calibration_harness.py with worker-constructed fixtures proving
      each threshold's scoring math is correct at known boundary values (e.g. a fixture exactly at
      0.90 recall passes, one at 0.89 fails), plus the R14 100%-agreement check against a small
      fixture mirroring data/drop_decisions.json's shape, plus the harness's own two-run
@@ -93,7 +93,7 @@ actions:
      against), not silent."
 checks:
   - command: |-
-      python -m pytest tests/acceptance/test_calibration_harness.py -q
+      python -m pytest tests/acceptance/test_acceptance_calibration_harness.py -q
     expect: exit 0
     timeout_seconds: 300
     proves:
@@ -115,7 +115,7 @@ negative_control:
     observable is not a valid falsifier.
 evidence:
   - src/repo_presenter/acceptance/calibration_harness.py
-  - tests/acceptance/test_calibration_harness.py
+  - tests/acceptance/test_acceptance_calibration_harness.py
 closeout:
   - "This card does not run a live measurement against the real A1 registration or any real
      mechanism implementation, and does not write data/acceptance_calibration.json. Once TC-022a's
