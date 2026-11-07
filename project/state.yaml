@@ -152,7 +152,7 @@ owner_review_status:
 
 release_gate_dashboard:
   generated_by: gatecli
-  generated_at: '2026-11-06T15:34:36Z'
+  generated_at: '2026-11-07T15:14:06Z'
   note: Tool-generated from gateverify.rebuild_state() -- never hand-edit this block.
     Historical current_gate/active_work_item below are preserved bootstrap-era narrative,
     not this cursor; this block is the real, evidence-derived release-gate status
@@ -208,13 +208,12 @@ release_gate_dashboard:
     commit: 1f426ec19ae6dc7e5c26dc75536d459300daa942
     receipt: GATE1_QUALITY/TC-006/receipt.json
   - id: TC-007
-    gate: GATE1_QUALITY
-    status: VERIFICATION_FAILED
+    gate: GATE5_DELIVERY_PROGRAM
+    status: AWAITING_PREREQUISITE
     attempt: 0
     blocker:
-      class: VERIFICATION_FAILED
-      summary: 'checks failed: python ops/checks/calibration_status.py PASSED; negative-control
-        patch did not apply'
+      class: AWAITING_PREREQUISITE
+      summary: depends on TC-013, TC-022a, TC-022b, not yet accepted
   - id: TC-008
     gate: GATE1_QUALITY
     status: ACCEPTED
@@ -267,12 +266,12 @@ release_gate_dashboard:
         filed=True resolved_or_closed=True independently_confirmed_via_gh_api=True;
         negative-control patch did not apply'
   - id: TC-011
-    gate: GATE3_PORTFOLIO
+    gate: GATE5_DELIVERY_PROGRAM
     status: AWAITING_PREREQUISITE
     attempt: 0
     blocker:
       class: AWAITING_PREREQUISITE
-      summary: depends on TC-007, not yet accepted
+      summary: depends on TC-007, TC-013, TC-022b, TC-024, TC-025, not yet accepted
   - id: TC-012
     gate: GATE4_PRODUCTION
     status: ACCEPTED
@@ -294,9 +293,100 @@ release_gate_dashboard:
     blocker:
       class: AWAITING_PREREQUISITE
       summary: depends on TC-007, not yet accepted
+  - id: TC-013
+    gate: GATE5_DELIVERY_PROGRAM
+    status: READY
+    attempt: 0
+    blocker: null
+  - id: TC-014
+    gate: GATE5_DELIVERY_PROGRAM
+    status: AWAITING_PREREQUISITE
+    attempt: 0
+    blocker:
+      class: AWAITING_PREREQUISITE
+      summary: depends on TC-013, not yet accepted
+  - id: TC-015
+    gate: GATE5_DELIVERY_PROGRAM
+    status: READY
+    attempt: 0
+    blocker: null
+  - id: TC-016
+    gate: GATE5_DELIVERY_PROGRAM
+    status: READY
+    attempt: 0
+    blocker: null
+  - id: TC-017a
+    gate: GATE5_DELIVERY_PROGRAM
+    status: READY
+    attempt: 0
+    blocker: null
+  - id: TC-017b
+    gate: GATE5_DELIVERY_PROGRAM
+    status: AWAITING_PREREQUISITE
+    attempt: 0
+    blocker:
+      class: AWAITING_PREREQUISITE
+      summary: depends on TC-017a, TC-016, not yet accepted
+  - id: TC-018
+    gate: GATE5_DELIVERY_PROGRAM
+    status: AWAITING_PREREQUISITE
+    attempt: 0
+    blocker:
+      class: AWAITING_PREREQUISITE
+      summary: depends on TC-017a, not yet accepted
+  - id: TC-020
+    gate: GATE5_DELIVERY_PROGRAM
+    status: READY
+    attempt: 0
+    blocker: null
+  - id: TC-021
+    gate: GATE5_DELIVERY_PROGRAM
+    status: AWAITING_PREREQUISITE
+    attempt: 0
+    blocker:
+      class: AWAITING_PREREQUISITE
+      summary: depends on TC-016, not yet accepted
+  - id: TC-022a
+    gate: GATE5_DELIVERY_PROGRAM
+    status: READY
+    attempt: 0
+    blocker: null
+  - id: TC-022b
+    gate: GATE5_DELIVERY_PROGRAM
+    status: AWAITING_PREREQUISITE
+    attempt: 0
+    blocker:
+      class: AWAITING_PREREQUISITE
+      summary: depends on TC-022a, not yet accepted
+  - id: TC-023
+    gate: GATE5_DELIVERY_PROGRAM
+    status: AWAITING_PREREQUISITE
+    attempt: 0
+    blocker:
+      class: AWAITING_PREREQUISITE
+      summary: depends on TC-015, TC-022a, not yet accepted
+  - id: TC-024
+    gate: GATE5_DELIVERY_PROGRAM
+    status: AWAITING_PREREQUISITE
+    attempt: 0
+    blocker:
+      class: AWAITING_PREREQUISITE
+      summary: depends on TC-013, TC-017b, TC-018, TC-021, not yet accepted
+  - id: TC-025
+    gate: GATE5_DELIVERY_PROGRAM
+    status: AWAITING_PREREQUISITE
+    attempt: 0
+    blocker:
+      class: AWAITING_PREREQUISITE
+      summary: depends on TC-016, TC-017a, not yet accepted
   ready:
   - TC-005
-  - TC-007
+  - TC-013
+  - TC-015
+  - TC-016
+  - TC-017a
+  - TC-020
+  - TC-022a
 current_gate:
   id: P1_PORTFOLIO_SCALE
   status: ACCEPTED

@@ -1,0 +1,192 @@
+id: TC-018
+gate: GATE5_DELIVERY_PROGRAM
+track: obligations-inventory
+executor: worker
+purpose: >
+  Part of the 2026-11-07 delivery program (docs/DELIVERY_PLAN_2026-11-07.md section 8.2, row
+  TC-018; the worker never reads that document, only this card). depends_on: [TC-017a]. Turn the
+  R14 drop-decision rule table into a pre-generation obligations inventory covering EVERY
+  inherited unit (not only drops), wire it into the existing verification path, and build a
+  byte-computed content ledger per seal.
+
+  Context, self-contained. `docs/investigations/2026-11-06-drop-inventory.md` and
+  `docs/investigations/2026-11-06-drop-inventory-data/decide.py` (336 lines) are the R14 rule
+  table this card generalizes: 649 decided items, 23 named rules (e.g. `R-CODE-EVIDENCE`,
+  `R-API-PRIVATE`, `R-API-DESC`, `R-LINK-RESOLVES`, `R-LINK-DEAD`, `R-VERSION`,
+  `R-VERSION-REPLACED`, `R-DIAGRAM`, `R-HEADING`, `R-BADGE`, `R-CONTRADICTED`, `R-HARNESS`,
+  `R-PROSE-VALID`, `R-CARRIED`, `R-POSITIONAL`, `R-COUNT`, `R-NAMING`, `R-LEADIN` -- read the full
+  23-rule table in the investigation doc's "Rule table" section, with each rule's predicate,
+  decision (READD or KEEP_DROPPED) and item counts). Read `decide.py` in full: it decides each
+  item's fate AFTER the fact, by inspecting a finished candidate ("the candidate prints nowhere",
+  "owed_spans"). This card's job is to turn the MECHANICAL rules (the ones whose predicate is
+  computable from bytes alone: public/private surface membership, link resolution, version
+  pinning, code-block evidence, diagrams, headings, badges -- the investigation doc's own count is
+  463 fully mechanical + 40 partly mechanical of 649) into OBLIGATIONS decided BEFORE/independent
+  of generation: for a given live-README item, is it must-carry (the mechanical READD rules:
+  public API members with maintainer descriptions, resolving links, pinned versions, install
+  snippets with code evidence, diagrams), may-drop (the mechanical KEEP rules: genuinely private
+  API, dead links, a contradicted example, renderer-owned headings, decorative badges), or
+  undecided (the remaining ~147 judgement rules -- `R-PROSE-VALID`, `R-CARRIED` paraphrase cases
+  -- which this card does NOT try to decide mechanically; it classifies them as `undecided` and
+  stops there, leaving their resolution to the model/supervisor path other cards own).
+
+  Crucially, R14's own rules cover DROPPED items only (649 of roughly 912 live-README-derived
+  units across the 12 Lane R seals the investigation sampled; read `readme/reconciliation/
+  dispositions.py`'s module docstring for the disposition vocabulary -- SUPERSEDE_REDUNDANT,
+  PRESERVE, MOVE, REWRITE, CORRECT_WITH_EVIDENCE, ATTRIBUTED, OMIT, DEFER, NON_CONTENT). This
+  card's obligations inventory must classify EVERY inherited unit a candidate's reconciliation
+  touches, not only ones that end up dropped -- a must-carry obligation on a KEPT unit (e.g. a
+  public API member whose maintainer description was replaced by generic filler, rule
+  `R-API-DESC`'s own logic) is just as real a violation as a must-carry item being dropped
+  outright.
+
+  Where the R14 rules need independent surface-membership facts (is this name public/exported),
+  wire in TC-017a's probes (`src/repo_presenter/acceptance/probes/`, three-valued
+  count/exists/exported) as an ADDITIONAL, independent signal alongside whatever
+  `supersession.py`'s existing `public_names`/`owed` functions already compute from facts (read
+  both in full first -- the same common-mode risk TC-017b addresses for claims applies here: an
+  extractor bug could make a unit wrongly "owed" or wrongly "not owed" if only same-origin facts
+  decide it).
+
+  Build a new package `src/repo_presenter/readme/obligations/` with: (1) a classifier function,
+  e.g. `classify_unit(unit, facts, live_readme, probes) -> Literal["must_carry", "may_drop",
+  "undecided"]`, implementing the mechanical rules from the investigation doc's rule table
+  (reread each rule's precise predicate before encoding it -- do not approximate; where a rule's
+  predicate needs a positive existence/export check, call TC-017a's probe and treat its `None`
+  answer as `undecided` for that specific obligation, never as `may_drop` or `must_carry`); (2)
+  a verification function wired into the existing check path: `readme/validation/units.py`'s
+  `unit_failures`/`disposition_failures` (around lines 131, 317) and
+  `readme/validation/supersession.py`'s `superseded_failures` (around line 113) each decide
+  whether a candidate's handling of a unit is acceptable -- add a new check (or extend one of
+  these, whichever integrates more naturally once you've read them) that fails when a `must_carry`
+  unit's substance is absent from the candidate (reuse `content_presence.unstated(strict=True)`,
+  the same test BC-05/the drop inventory itself already uses, rather than inventing a new
+  presence test) OR when a `may_drop` unit is kept with the SAME rationale (REWRITE/SUPERSEDE etc.)
+  the investigation doc's "over-flag" findings show the current pipeline gets wrong (read the
+  "Over-flags" section: `R-CARRIED` equivalence -- re-qualified names, the same file at another
+  path, the same snippet at the verified current version, decorative badges -- must count as
+  carried, not re-flagged as missing); `readme/validation/parity.py` similarly, for whatever it
+  currently decides about content loss (read it before changing it) -- do not duplicate logic
+  that already correctly handles a case per the investigation's own "Agree" column, only add
+  coverage for the specific "Misses" and "Over-flags" the doc's §"Disagreements by rule" section
+  names (R-PROSE-VALID misses, R-LEADIN misses, R-LINK-RESOLVES misses, R-API-DESC/R-API-IDENT
+  misses from missing struct fields/enum variants/attributes the facts extractor doesn't record,
+  R-HARNESS misses, R-API-ROW-MISSING misses, R-VERSION misses, R-CORRECTION-PRINTED misses,
+  R-CODE-EVIDENCE misses on the three recorded exceptions; R-CARRIED/R-BADGE/R-API-REQUALIFIED/
+  R-API-PRIVATE/R-VERSION-REPLACED/R-API-FILLER over-flags).
+
+  Build a byte-computed content ledger: a function producing, per seal, a `content_ledger.json`
+  recording for every live-README item: its text (or a stable hash/excerpt), its obligation class
+  from (1), its actual disposition in the candidate (retained/superseded/transformed/omitted), and
+  the evidence for that outcome (a cited fact id, a probe answer, or "undecided -- model
+  decision"). This can and should be run standalone over the 24 EXISTING sealed bundles right
+  away (read `core/state/bundle_store.py`'s `seal_history`/`export_bundle` for how to materialize
+  a sealed bundle locally, read-only, zero provider calls) -- write a script, e.g.
+  `scripts/build_content_ledger.py`, that does this for a given repository/lane and writes the
+  ledger file, as immediate, standalone value independent of the verification wiring above.
+
+  Gate/test requirement 1 (regression fixture, NOT a holdout -- say so explicitly in your own
+  test/report): reproduce the drop-inventory's 649 decisions through your new `classify_unit`
+  function at 1.00 agreement for the ~463 fully-mechanical + 40 partly-mechanical items (503 of
+  649); write a test that loads `data/drop_decisions.json` (schema 2) and asserts your classifier
+  agrees with its `decision` field for every item whose `rule` is one of the mechanical/partly-
+  mechanical rules named above. The ~147 judgement-rule items (`R-PROSE-VALID`, `R-CARRIED`
+  paraphrase cases) are explicitly NOT required to agree at 1.00 -- your test must report (print,
+  do not assert a threshold on) how many of those your classifier marks `undecided` versus how
+  many it happens to also get right, since getting a judgement item "right" by the mechanical
+  classifier is not a property this card's gate depends on.
+
+  Gate/test requirement 2: the content-ledger script runs end to end, at zero provider calls, over
+  at least 3 real existing sealed bundles (any repository/lane you can materialize read-only) and
+  produces a ledger file accounting for every item the drop inventory's own method would find in
+  those same seals (cross-check against `data/drop_decisions.json`'s entries for those specific
+  repositories as a sanity check, not a 1.00 gate -- the ledger's job is completeness of
+  accounting, not reproducing R14's exact historical judgement calls on non-mechanical items).
+depends_on:
+  - TC-017a
+write_paths:
+  - src/repo_presenter/readme/obligations/__init__.py
+  - src/repo_presenter/readme/obligations/classify.py
+  - src/repo_presenter/readme/obligations/ledger.py
+  - src/repo_presenter/readme/validation/units.py
+  - src/repo_presenter/readme/validation/supersession.py
+  - src/repo_presenter/readme/validation/parity.py
+  - scripts/build_content_ledger.py
+  - tests/readme/obligations/test_classify.py
+  - tests/readme/obligations/test_ledger.py
+  - tests/readme/validation/test_units_obligations.py
+  - tests/readme/validation/test_supersession_obligations.py
+satisfies:
+  - REQ-OBLIG-001
+  - REQ-OBLIG-002
+  - REQ-OBLIG-003
+source_refs:
+  - file: docs/investigations/2026-11-06-drop-inventory.md
+    anchor: "Rule table"
+  - file: docs/investigations/2026-11-06-drop-inventory-data/decide.py
+    anchor: "def owed_spans"
+  - file: data/drop_decisions.json
+    anchor: "decisions"
+  - file: src/repo_presenter/readme/validation/units.py
+    anchor: "def unit_failures"
+  - file: src/repo_presenter/readme/validation/supersession.py
+    anchor: "def superseded_failures"
+inputs: []
+actions:
+  - "Read the drop-inventory doc's full 23-rule table and decide.py's actual predicates before
+     encoding any rule; do not approximate a rule from its name alone."
+  - "Build readme/obligations/classify.py's classify_unit(), covering every inherited unit (kept
+     or dropped), with probe None answers always mapped to undecided, never must_carry/may_drop."
+  - "Wire a new verification check into units.py/supersession.py/parity.py (whichever integrates
+     most naturally per your own reading) that fails a candidate violating a must_carry or
+     may_drop obligation, reusing content_presence.unstated(strict=True) rather than a new
+     presence test."
+  - "Build scripts/build_content_ledger.py and run it over at least 3 real sealed bundles,
+     producing committed-format content_ledger.json output as evidence."
+  - "Write the regression-fixture test against data/drop_decisions.json's mechanical/partly-
+     mechanical items (1.00 agreement required) and report (never gate on) the judgement-item
+     classification distribution."
+checks:
+  - command: |-
+      python -m pytest tests/readme/obligations tests/readme/validation/test_units_obligations.py tests/readme/validation/test_supersession_obligations.py -q
+    expect: exit 0
+    timeout_seconds: 300
+    proves:
+      - REQ-OBLIG-001
+      - REQ-OBLIG-002
+  - command: |-
+      python scripts/build_content_ledger.py --self-test
+    expect: exit 0
+    timeout_seconds: 300
+    proves:
+      - REQ-OBLIG-003
+requires:
+  - python
+network: true
+negative_control:
+  mutate: |-
+    python -X utf8 -c "import pathlib; p = pathlib.Path('src/repo_presenter/readme/obligations/classify.py'); t = p.read_text(encoding='utf-8'); marker = 'def classify_unit'; t2 = t.replace(marker, '_disabled_' + marker, 1); p.write_text(t2, encoding='utf-8')"
+  rationale: >
+    Renames classify_unit so the regression-fixture test (which must call the real function to
+    reproduce data/drop_decisions.json's mechanical decisions) raises AttributeError instead of
+    silently passing regardless of whether the classifier exists or agrees with anything. No
+    backslashes or escaped quotes, per ops/SUPERVISOR.md's falsifier-authoring rule.
+evidence:
+  - src/repo_presenter/readme/obligations/
+  - scripts/build_content_ledger.py
+  - tests/readme/obligations/
+  - tests/readme/validation/test_units_obligations.py
+  - tests/readme/validation/test_supersession_obligations.py
+closeout:
+  - "This card verifies obligations AFTER a candidate exists; it does not yet change how the
+     generator/reconciliation model is prompted to respect them in the first place (that is a
+     later card's job, per the delivery program -- do not expand this card's scope to cover it)."
+  - "The 147 judgement-rule items are explicitly out of this card's 1.00 gate; report their
+     distribution honestly rather than silently narrowing the regression fixture to only the
+     items your classifier happens to get right."
+  - "network: true only because build_content_ledger.py materializes real sealed bundles from
+     the state remote (core.state.bundle_store); the pytest unit tests themselves need no
+     network -- say so if you split the check commands further."
+recovery: "Revert the new readme/obligations/ package, the verification wiring in units.py/
+  supersession.py/parity.py, and scripts/build_content_ledger.py; existing sealed candidates are
+  unaffected until next recertified or repaired (R10)."

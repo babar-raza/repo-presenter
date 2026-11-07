@@ -320,6 +320,23 @@ Tokens at the measured ~11.6-14k per call: **~59-98M of the 100M envelope**, so 
 5. **VS0, zero calls:** the full path with today's mechanisms on Email .NET (Lane R; F22) and Slides Java (Lane L; R5 trigger present, naming defect). Record every gate each fails. Work follows those failures.
 6. Raise owner actions 1-4 once, as precise items.
 
+### CORRECTION (2026-11-07, during authoring): "TC-012c" is not a taskcard
+
+`ops/gatectl.py`'s `GLOBAL_DENY` forbids EVERY taskcard, worker or supervisor-executor, from ever
+declaring a write_path under `ops/**` (also `schemas/**`, `project/**`, `.claude/**`,
+`.gitattributes`, `.gitignore`, `AGENTS.md`) -- `gatecli doctor` enforces this live. Extending
+`ops/gatecli.py`'s lease mechanism to multiple concurrent leases is therefore, by this
+repository's own governance, ALWAYS direct supervisor work (branch, decision-log entry,
+independent re-verification) -- it can never be a dispatched card, however large. §0 point 2's
+claim that a card gates `satisfies` enforcement was also already false when written:
+`schemas/taskcard.schema.json` already requires `satisfies` with `minItems: 1` on every card, and
+`cmd_validate` already schema-validates every card -- confirmed live, 2026-11-07. Every "TC-012c"
+reference below is therefore a PROSE LABEL for "the per-card-lease extension, done directly by
+the supervisor, not dispatched" -- it never appears in `project/taskcards/` and is never passed to
+`gatecli dispatch-next`. Cards that listed it as a dependency have had that dependency removed
+during authoring (none of the 19 landed cards reference it); treat "depends on TC-012c" below as
+"depends on that direct supervisor work having landed."
+
 ### 8.2 Cards (each in its own worktree and lease; merged in the stated order; verified by a fresh subagent plus `gatecli review`)
 
 | Card | Scope | Depends | Owns | For |
@@ -351,6 +368,24 @@ Tokens at the measured ~11.6-14k per call: **~59-98M of the 100M envelope**, so 
 | TC-009b, TC-010a | Re-authored per §6.4 and R17 | TC-029, TC-035; sandbox | existing | M6 |
 | TC-012b | 72-hour unattended proof with injected failures | TC-032, TC-033 | evidence only | M5 |
 | TC-034, TC-012a | Cutover preparation; owner-approved cutover | M6 | — | M7 |
+
+**Further corrections made while authoring the actual cards (2026-11-07):** TC-013's write_paths
+never include `ops/checks/*.py` (same GLOBAL_DENY reason as the TC-012c correction above) -- it
+exposes a single `classify()` entry point instead, and the `ops/checks/calibration_status.py` /
+`portfolio_delivery_count.py` glue is a direct supervisor follow-up dispatched immediately after
+TC-013 is ACCEPTED. TC-020 is `executor: supervisor` (needed for `data/benchmarks.json`, which
+GLOBAL_DENY also forbids a plain worker card from writing) and its registry-consistency checker
+lives at `src/repo_presenter/core/registry/benchmarks.py::check_coverage`, not
+`ops/checks/benchmarks_registry.py` (also a supervisor follow-up). TC-021 is `executor:
+supervisor` (every write_path is under `.github/**`, which GLOBAL_DENY forbids a plain worker
+card from touching, though a supervisor-executor card may). TC-025 never includes
+`data/readme_findings.json` in its write_paths (GLOBAL_DENY forbids `data/**` on a worker card);
+the supervisor seeded that file directly and TC-025 builds a `readme_findings.py` module that
+operates on a path parameter, tested only against temporary fixtures. **The pattern, for any
+future card:** `src/**` and most of `tests/**` are open to worker cards; `data/**`, `docs/**`,
+`evidence/**`, `.github/**` and `README.md` need `executor: supervisor`; `ops/**`, `schemas/**`,
+`project/**` and `.claude/**` are closed to every card, always, and are supervisor-direct work
+with no card file, regardless of size.
 
 **Serialized merges for shared files:**
 

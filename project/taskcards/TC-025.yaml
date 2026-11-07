@@ -1,0 +1,181 @@
+id: TC-025
+gate: GATE5_DELIVERY_PROGRAM
+track: lane-l-rebuild
+executor: worker
+purpose: >
+  Rebuild Lane L so it can actually produce real, R5-valid, net-improvement edits instead of
+  near-always doing nothing. Self-contained context (do not read the delivery plan itself):
+
+  Evidence, already gathered and committed this session (read these first, they are the ground
+  truth, not the delivery plan's summary of them):
+  `docs/investigations/2026-11-07-vs0-vertical-slice.md` (one concrete, real, already-recorded
+  failure: `aspose-slides-foss/Aspose.Slides-FOSS-for-Java`'s 2026-11-01 Lane L run found one
+  genuine Enterprise Edition naming defect the `enterprise_edition_naming` detector refused to
+  auto-fix because the product name and platform are not co-located on one line, and holdout L-05
+  blocked sealing entirely over that single unrepaired defect). Separately: a zero-cost census of
+  all 36 upstream registry repositories found 19 with a real upstream change since their README
+  was last reconciled, 16 of those also carrying a detected defect, 1 (`aspose-gis-foss/
+  Aspose.GIS.FOSS-for-.Net`) with no README at all, and the two Lane L edits ever sealed
+  (3D-Java, Words-Python, both a bare "commercial X" -> "X -- Enterprise Edition" rename) would
+  both FAIL a strict R5 reading because neither repository had an upstream change -- they were
+  sealed only because today's engine runs on ANY detected defect, with no R5(a) upstream-change
+  gate at all.
+
+  Code to read before changing anything: `src/repo_presenter/lane_l_run.py` (the whole Lane L
+  entry point -- note it makes exactly one provider call, the independent review, around its
+  `review_correction` call), `src/repo_presenter/readme/correction/engine.py` (`collect`/
+  `assemble`/`is_stable` -- note `engine.py` around line 77 is where detectors run with NO upstream
+  change check of any kind today), `src/repo_presenter/readme/correction/detectors/*.py` (8
+  detectors; only 3 families -- `enterprise_edition_naming`, `broken_link`, and the 3 markup
+  detectors in `structure.py` -- can actually PRODUCE an edit; `failing_example`,
+  `format_overclaim` and `report_gaps` only ever produce findings, never edits), and
+  `src/repo_presenter/lane_l_review.py` (the L-01..L-05 holdouts; L-05,
+  `lane_l_unrepaired_defect`, is the all-or-nothing rule that blocks sealing on ANY unrepaired
+  finding, which is the single biggest reason Lane L converts almost nothing -- 22 of the 22
+  Lane L runs this repository has attempted ended `FAILED_INTERNAL`, almost all on L-03 or L-05).
+
+  Build, in order:
+
+  1. **R5(a) baseline and trigger.** A new module (e.g. `src/repo_presenter/lane_l_trigger.py`)
+     computing, per repository: the baseline revision (latest Lane L seal's `source_revision` if
+     one exists, else the presenter's own last README-touching commit if one exists, else the
+     upstream repository's last commit that touched README.md), and whether anything changed
+     upstream since that baseline (source files, package manifests, or examples -- reuse
+     whatever upstream-diff capability already exists; `src/repo_presenter/monitor/drift.py`
+     exists but today only works against an already-sealed bundle and has no caller outside
+     `monitor/` -- read it and either extend it or write a narrower, correctly-scoped check; do
+     not assume it is usable as-is without verifying). A seal only advances the baseline when it
+     ran under the CURRENT defect-detector set (so an old no-edit seal can never suppress a
+     genuinely new defect that a newly-added detector would catch).
+  2. **Outcome taxonomy.** Three outcomes, each with its own deterministic seal path (today only
+     "sealed with edits" and "FAILED_INTERNAL" exist): `EDIT_CANDIDATE` (R5 trigger present, at
+     least one net-improvement edit made -- see point 4), `NO_ACTION_JUSTIFIED` (no R5(a) upstream
+     trigger, or R5(a) present but every finding was already correctly fixed/absent -- this must
+     be an EARNED result, not silence: run TC-017a's probes over the live README first and
+     require that no probe finds an unaddressed contradiction before a no-action seals),
+     `NOT_APPLICABLE` (no README exists at all, e.g. the GIS .NET case -- Lane R is the correct
+     lane there, not Lane L). All three get a real seal (manifest state, durable record) -- none
+     of them raises `PresentFailure` the way today's "no action" case does.
+  3. **Findings register.** `data/readme_findings.json` already exists (the supervisor seeded it
+     empty: `{"schema_version": 1, "findings": []}`) -- IMPORTANT SCOPE LIMIT (`ops/gatectl.py`
+     `GLOBAL_DENY`): no taskcard may ever declare `data/**` as a write_path, so this card's own
+     commit must NOT include that file at all, even to update it; build a module (e.g.
+     `src/repo_presenter/readme_findings.py`) with `append_finding(...)`/`read_findings(...)`
+     functions that operate on whatever path is passed to them (default
+     `Path("data/readme_findings.json")`, overridable for tests), and test them against TEMPORARY
+     fixture copies only, never the real committed file. Every defect this engine (or Lane R's own
+     checks) ever detects gets exactly one row via `append_finding`: repository, defect
+     description/evidence, route (`lane_l` if R5(a) triggers were present when found, `lane_r`
+     otherwise -- a defect with NO upstream change is explicitly routed to Lane R as an owned,
+     visible finding, never silently dropped), status (`OPEN`/`RESOLVED`), and an age. The actual
+     committed `data/readme_findings.json` is only ever updated by real pipeline RUNS (which write
+     to the working tree, not to this card's PR diff), or by a later direct supervisor action --
+     never by this card's own commit.
+  4. **Net improvement replaces L-05.** Remove the "every detected defect must be repaired or
+     nothing seals" rule. A Lane L candidate seals when: every edit it makes is justified and
+     verified (reuse the existing confinement proof, `readme/correction/apply.py`, UNCHANGED --
+     spans/byte-identity-outside-edits stay exactly as strict as today), it introduces no NEW
+     defect, and it removes at least one real defect. Any defect left unrepaired is recorded
+     internally (the manifest/record) and surfaced in the generated PR description text ONLY --
+     never printed into the README itself (R9: no attribution or qualification wording in public
+     text; reuse `validation/public_text.py`'s existing enforcement, do not weaken it). If a
+     candidate has an R5 trigger but genuinely zero edits can be made (e.g. every finding is a
+     `report_gaps`/advisory-only kind, never counted as a defect), that is `NO_ACTION_JUSTIFIED`,
+     not a failure.
+  5. **New deterministic detectors**, ordered by what the census showed blocks the most real
+     repositories: (a) stale package/version claims (e.g. the PDF Java "pins version 26.6.0,
+     registry lists 26.9.0" and PSD .NET "says not published to NuGet, registry lists it" shapes
+     found in this session's recertification baseline / Lane L findings -- reuse the package
+     registry lookups `core/package_registry.py` already has); (b) the `enterprise_edition_naming`
+     shape the current detector declines (product name and platform not co-located on one line --
+     the Slides Java case above is your exact, real test fixture); (c) a link-target detector for
+     the "no unique target in the tree" cases the current `broken_link` detector gives up on
+     (Cells .NET / Cells Python RELEASE_NOTES*.md, PSD Python). Each new detector needs its own
+     unit test with a real or faithfully-reconstructed fixture from the cases named above.
+  6. **Hunk byte-identity outside edits**, and **earned no-action** (TC-017a's probes run over
+     every live README Lane L considers, not just ones it edits) are both required per point 2/4
+     above -- do not treat them as optional extras.
+depends_on:
+  - TC-016
+  - TC-017a
+write_paths:
+  - src/repo_presenter/lane_l_trigger.py
+  - src/repo_presenter/lane_l_run.py
+  - src/repo_presenter/lane_l_review.py
+  - src/repo_presenter/readme_findings.py
+  - src/repo_presenter/readme/correction/**
+  - tests/test_lane_l_trigger.py
+  - tests/test_readme_findings.py
+  - tests/readme/correction/**
+satisfies:
+  - REQ-LANEL-001
+  - REQ-LANEL-002
+  - REQ-LANEL-003
+source_refs:
+  - file: docs/investigations/2026-11-07-vs0-vertical-slice.md
+    anchor: "Lane L: Aspose.Slides-FOSS-for-Java"
+  - file: src/repo_presenter/lane_l_review.py
+    anchor: "L-05"
+  - file: src/repo_presenter/readme/correction/engine.py
+    anchor: "def collect"
+  - file: src/repo_presenter/monitor/drift.py
+    anchor: "NO_BUNDLE"
+inputs: []
+actions:
+  - "Build the R5(a) baseline/trigger module with a test proving it reproduces this session's
+     census result for at least 5 real repositories (3D .NET: no trigger; Cells .NET: trigger
+     present; Slides Java: trigger present) from committed/fixture data, zero provider calls."
+  - "Add the three-outcome taxonomy with real seal paths for each, replacing the PresentFailure
+     no-action case."
+  - "Build src/repo_presenter/readme_findings.py (append_finding/read_findings over a path
+     parameter) and wire both lanes to call it; test only against temporary fixture copies,
+     never data/readme_findings.json itself."
+  - "Replace L-05 with net improvement; add the three new deterministic detectors with tests
+     reproducing the named real cases."
+checks:
+  - command: |-
+      python -m pytest tests/test_lane_l_trigger.py -q
+    expect: exit 0
+    timeout_seconds: 200
+    proves:
+      - REQ-LANEL-001
+  - command: |-
+      python -m pytest tests/readme/correction -q
+    expect: exit 0
+    timeout_seconds: 400
+    proves:
+      - REQ-LANEL-002
+  - command: |-
+      python -m pytest tests/test_readme_findings.py -q
+    expect: exit 0
+    timeout_seconds: 60
+    proves:
+      - REQ-LANEL-003
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -X utf8 -c "import pathlib; p = pathlib.Path('src/repo_presenter/readme_findings.py'); t = p.read_text(encoding='utf-8'); p.write_text(t.replace('def append_finding', 'def append_finding_disabled'), encoding='utf-8')"
+  rationale: >
+    Once append_finding is genuinely called by both lanes and exercised by real test fixtures,
+    renaming it must break test collection or an assertion in tests/test_readme_findings.py,
+    proving the tests bind to real code rather than a vacuous import. Before the module exists
+    the clean run already correctly fails (module absent).
+evidence:
+  - tests/test_lane_l_trigger.py
+  - tests/readme/correction/
+  - tests/test_readme_findings.py
+  - src/repo_presenter/readme_findings.py
+closeout:
+  - "Report the real, measured Lane L eligibility number this card's own test run produces against
+     the current registry -- do not restate the 19/16 census numbers from the investigation doc
+     without re-deriving them from the implemented trigger module."
+  - "This card makes NO new provider call beyond the one independent-review call Lane L already
+     made before this card; no M8 wiring is required here (TC-024 handles that review's shape)."
+  - "data/readme_findings.json already exists, seeded empty by the supervisor; this card's own
+     commit never touches it (ops/gatectl.py GLOBAL_DENY forbids data/** on any taskcard) -- only
+     the deployed code, when it actually runs, appends to it."
+recovery: "Revert lane_l_trigger.py, lane_l_run.py, lane_l_review.py, readme_findings.py and
+  readme/correction/ together; Lane L returns to today's all-or-nothing, no-R5-gate behavior.
+  data/readme_findings.json is unaffected since this card's commit never touches it."

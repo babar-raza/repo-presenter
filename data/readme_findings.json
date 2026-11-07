@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "ruling": "docs/DELIVERY_PLAN_2026-11-07.md section 6.2 (owner-approved delivery program, 2026-11-07)",
+  "meaning": "Every defect this system's checks ever detect, in either lane, gets exactly one row here: repository, defect, route (lane_l when an R5(a) upstream-change trigger was present when found, lane_r otherwise -- never silently dropped), status (OPEN/RESOLVED), and an age. Appended only by src/repo_presenter/readme_findings.py's append_finding() at runtime; no taskcard may ever declare this file as a write_path (ops/gatectl.py GLOBAL_DENY forbids data/** on any taskcard).",
+  "findings": []
+}

@@ -1,0 +1,170 @@
+id: TC-013
+gate: GATE5_DELIVERY_PROGRAM
+track: acceptance-contract
+executor: worker
+purpose: >
+  Build the ONE acceptance contract docs/DELIVERY_PLAN_2026-11-07.md section 5 defines, so
+  TC-007, TC-011, the portfolio counter and the upstream-publish gate all read the same source
+  instead of each inventing its own notion of "accepted". This card does NOT need the Environment
+  or CODEOWNERS (owner actions 1/3) to be mergeable: it builds the record schema, the fail-closed
+  reader, the attestation-VERIFICATION function (as a pure function tested against a fixture
+  attestation bundle, not a live GitHub call), and wires the counter/publish gate to read it --
+  it does not need the live hosted seeder/scorer/writer workflows to exist yet (that is TC-014's
+  job). Context the worker needs, self-contained (do not read the delivery plan itself -- this
+  card restates everything):
+
+  Today `data/reviewer_calibration.json` (frozen, iteration 5, status NOT_PASSED, logic version
+  10, prompt version 21) is read by two places that must both change: (1)
+  `ops/checks/portfolio_delivery_count.py`'s `classify_review` function (around line 133) decides
+  a candidate is "independently accepted" only when its sealed `review_verdict.json` carries
+  `verdict=ACCEPT`, `model_verdict=ACCEPT`, and the FILE's own top-level `status` field equals
+  "PASSED" (checked before anything else, so a version-matching reviewer under a NOT_PASSED file
+  still fails) -- read that function in full, and `ops/checks/calibration_status.py` (the thin
+  CLI wrapper TC-007's check calls) and `src/repo_presenter/readme/review/calibration_status.py`
+  (the real fail-closed reader `load_calibration`/`parse_calibration` uses -- read this module in
+  full, it is the discipline to copy: every doubt (missing file, malformed JSON, unknown status,
+  PASSED beside failed_gates, version mismatch) reads as NOT_PASSED, never an exception, never a
+  silent pass). (2) `src/repo_presenter/propose/effect.py`'s gate "3b" (read the module docstring,
+  item 3b) refuses a PR unless the reviewer's calibration permits it, via the same
+  `readme.review.calibration_status.load_calibration`.
+
+  Build a NEW, parallel package `src/repo_presenter/acceptance/` (new, does not replace the
+  modules above -- `data/reviewer_calibration.json` and its reader stay exactly as they are,
+  frozen, per owner ruling R10: nothing may ever write PASSED into that file again, and a test
+  must assert this): a `record.py` module defining the 8 states below, an `AcceptanceRecord`
+  dataclass, and a fail-closed reader of a NEW committed file `data/acceptance_calibration.json`
+  (does not exist yet; this card does not populate it with real measurements -- TC-022a/TC-022b
+  do that later -- it only defines and tests the schema and the reader against fixtures you
+  construct). States (append-only, computed by code, never hand-set): `generated`, `sealed`,
+  `deterministically-validated`, `provisionally-accepted`, `independently-accepted`,
+  `publication-ready`, `delivered`, `live-verified`. `independently-accepted` requires exactly:
+  (a) every mechanism class in `data/acceptance_responsibility.json` (will exist once TC-022a
+  lands; until then, fail closed as NOT_PASSED/missing-matrix, exactly like the existing reader
+  fails closed on a missing calibration file -- read `_not_passed` in the existing module for the
+  pattern) has an append-only PASSED certificate in `data/acceptance_calibration.json`; (b) the
+  candidate's own mechanism verdicts all PASS; (c) every per-candidate canary was caught; (d) an
+  `audit_passed: true` boolean field is present and true in the record (this card does not
+  compute that field -- it only refuses when it is absent or false, exactly as it refuses on a
+  missing certificate; TC-014's hosted writer is the only thing that may ever set it true, and a
+  record this module reads is only trusted if it also carries a verified GitHub artifact
+  attestation -- see below). `provisionally-accepted` is (a)+(b)+(c) only, no audit required.
+  `deterministically-validated` needs none of the above -- it is just "recertify / the blocking
+  checks pass under current code" (reuse the existing outcome from `src/repo_presenter/recertify.py`,
+  do not reinvent it). `mechanism-passing` is a REPORTING LABEL meaning
+  `deterministically-validated` OR `provisionally-accepted` -- a test must prove a record in
+  either of those states, lacking audit_passed, is NEVER classified as `independently-accepted`
+  and NEVER satisfies the publish gate below.
+
+  Attestation: an acceptance record is trusted by the reader ONLY if a GitHub artifact
+  attestation for it verifies against the writer workflow running on `main`
+  (`gh attestation verify --signer-workflow <workflow>@refs/heads/main <artifact>` -- read GitHub's
+  own `gh attestation verify` documentation if you are unsure of exact flags; the point this card
+  must prove is that the VERIFICATION function correctly accepts a fixture attestation bundle you
+  construct that matches, and correctly REJECTS one that does not match signer/workflow/ref, or
+  is simply absent). Since no real hosted writer exists yet (TC-014), build this as a pure
+  function `verify_attestation(artifact_path, expected_workflow, expected_ref) -> bool` that calls
+  `gh attestation verify` as a subprocess (or the `gh` CLI equivalent you confirm exists) and
+  returns False on any non-zero exit, with a unit test that fakes the subprocess call (do not
+  require a live `gh` CLI session or real GitHub attestation in this card's own checks -- that
+  live proof is TC-014's and later M1's own closeout evidence, not this card's).
+
+  IMPORTANT SCOPE LIMIT (this repository's own governance, `ops/gatectl.py` `GLOBAL_DENY`): no
+  taskcard, worker or supervisor-executor, may EVER declare a write_path under `ops/**` --
+  `gatecli doctor` refuses any card that tries. This means the worker on this card must NOT edit
+  `ops/checks/calibration_status.py` or `ops/checks/portfolio_delivery_count.py` directly, even
+  though they are the ultimate callers of this card's new package -- that CLI-wrapper wiring is a
+  separate, direct supervisor action (no card) dispatched immediately after this card is
+  ACCEPTED. This card's job is only: `src/repo_presenter/acceptance/` (the record schema, the
+  fail-closed reader, the attestation-verification function) and `propose/effect.py` gate 3b.
+  Build it so the follow-up wiring is a thin, mechanical glue change: expose a single public
+  function, e.g. `acceptance.record.classify(repository, lane) -> AcceptanceState` (or a shape
+  you find cleaner -- your choice, document it clearly), that `ops/checks/portfolio_delivery_count.py`
+  and `ops/checks/calibration_status.py` will import and call, so the supervisor follow-up never
+  needs to touch this card's own logic, only call it. `propose/effect.py` gate 3b must read
+  `publication-ready` from this new reader instead of `readme.review.calibration_status.
+  load_calibration` -- every other gate in that module (write token, authorization record, token
+  provenance, source freshness, PR history) is UNCHANGED; only swap what feeds gate 3b's refusal.
+  Add a negative test proving a candidate stuck at `provisionally-accepted` (no audit) is refused
+  by `propose.effect` with a `Refusal` naming why (reuse the existing `Refusal` enum in
+  `src/repo_presenter/authorization/refusals.py`, add a new member if none fits -- e.g.
+  `ACCEPTANCE_NOT_CERTIFIED`).
+depends_on: []
+write_paths:
+  - src/repo_presenter/acceptance/**
+  - src/repo_presenter/propose/effect.py
+  - src/repo_presenter/authorization/refusals.py
+  - tests/acceptance/**
+satisfies:
+  - REQ-ACCEPT-001
+  - REQ-ACCEPT-002
+  - REQ-ACCEPT-003
+source_refs:
+  - file: docs/DELIVERY_PLAN_2026-11-07.md
+    anchor: "5. The acceptance contract"
+  - file: ops/checks/portfolio_delivery_count.py
+    anchor: "def classify_review"
+  - file: src/repo_presenter/readme/review/calibration_status.py
+    anchor: "Failing closed means every doubt reads as NOT_PASSED"
+  - file: src/repo_presenter/propose/effect.py
+    anchor: "3b. The reviewer's calibration status"
+inputs: []
+actions:
+  - "Build src/repo_presenter/acceptance/record.py: the 8-state model, AcceptanceRecord, and a
+     fail-closed reader of data/acceptance_calibration.json against data/acceptance_responsibility.json
+     (both may not exist yet -- missing means NOT_PASSED/no-certificate, never an exception)."
+  - "Expose one clean public classify() entry point for the later ops/checks/*.py glue to call --
+     document its signature clearly in a module docstring; do not touch anything under ops/**
+     yourself."
+  - "Build the attestation-verification pure function with a subprocess-faked unit test."
+  - "Switch propose/effect.py gate 3b to the new reader; add the Refusal member if needed; add a
+     negative test for the provisionally-accepted-but-not-audited case."
+  - "Add a test asserting data/reviewer_calibration.json is never written PASSED by any code path
+     this repository ships (grep-based or AST-based static assertion is acceptable)."
+checks:
+  - command: |-
+      python -m pytest tests/acceptance -q
+    expect: exit 0
+    timeout_seconds: 300
+    proves:
+      - REQ-ACCEPT-001
+      - REQ-ACCEPT-002
+  - command: |-
+      python -m pytest tests/github/test_write_authorization.py -q -k effect
+    expect: exit 0
+    timeout_seconds: 300
+    proves:
+      - REQ-ACCEPT-003
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -X utf8 -c "import pathlib; p = pathlib.Path('src/repo_presenter/acceptance/record.py'); t = p.read_text(encoding='utf-8'); p.write_text(t.replace('independently-accepted', 'provisionally-accepted'), encoding='utf-8')"
+  rationale: >
+    Collapses the distinction the whole card exists to enforce: if independently-accepted and
+    provisionally-accepted become the same string throughout the reader, a candidate with no
+    audit would classify as fully accepted. This must break the tests/acceptance suite (a
+    provisional-only fixture would then wrongly report independently-accepted) and
+    tests/ops/test_portfolio_delivery_count.py's negative case, proving the two states are
+    genuinely distinguished by the code, not just by naming convention in a docstring.
+evidence:
+  - src/repo_presenter/acceptance/record.py
+  - tests/acceptance/
+  - tests/github/test_write_authorization.py
+closeout:
+  - "data/reviewer_calibration.json is unchanged and untouched by this card; it stays the frozen
+     iteration-5 record. The new data/acceptance_calibration.json and
+     data/acceptance_responsibility.json are NOT populated by this card -- they do not exist on
+     disk yet, and the reader must prove it fails closed on their absence. TC-022a/TC-022b create
+     and populate them later; this card's tests use local fixtures only, never the real files."
+  - "IMMEDIATELY after this card is ACCEPTED, the supervisor (never a card -- ops/** is globally
+     denied to every taskcard) wires ops/checks/calibration_status.py (--file/--matrix flags) and
+     ops/checks/portfolio_delivery_count.py's acceptance classification to call this card's
+     classify() entry point, as routine direct supervisor work with its own decision-log entry
+     and independent re-verification -- not a second taskcard."
+  - "Do not dispatch TC-024 until this card is ACCEPTED and the ops/ follow-up above is done --
+     TC-024 switches the live seal path onto this contract."
+recovery: "Revert src/repo_presenter/acceptance/ and the effect.py/refusals.py edits and their
+  tests together; propose.effect falls back to its prior (still-committed-in-history) gate 3b
+  behavior. If the ops/ follow-up has already landed separately, revert that too in the same
+  change."

@@ -1,0 +1,140 @@
+id: TC-016
+gate: GATE5_DELIVERY_PROGRAM
+track: example-verifier
+executor: worker
+purpose: >
+  Part of the 2026-11-07 delivery program (docs/DELIVERY_PLAN_2026-11-07.md section 8.2, row
+  TC-016; the worker never reads that document, only this card). depends_on: []. Make the README
+  code-example verifier three-valued in practice, not just in its type signature: a genuinely
+  broken example must register as a real defect, but an inconclusive verification (a fragment run
+  without its surrounding context, a timeout, a substituted test input, a missing optional
+  helper, or an environment limitation) must never be treated as proof the example is false.
+
+  Context, self-contained. `src/repo_presenter/core/examples.py` already declares
+  `ExampleOutcome = Literal["EXECUTED", "FAILED", "TIMED_OUT", "NEEDS_INPUT", "NOT_VERIFIED"]`.
+  `src/repo_presenter/readme/evidence/facts/examples.py` turns that outcome into a fact polarity
+  via a dict, `_POLARITY` (read the whole file, it is short):
+  `{"EXECUTED": "SUPPORTED", "FAILED": "CONTRADICTED", "TIMED_OUT": "CONTRADICTED",
+  "NEEDS_INPUT": "UNRESOLVED", "NOT_VERIFIED": "UNRESOLVED"}`, with `confidence=1.0` for
+  `{"EXECUTED", "FAILED", "TIMED_OUT"}` and `0.5` otherwise.
+
+  **This is the one confirmed, concrete defect this card must fix.** `TIMED_OUT` is mapped to
+  `CONTRADICTED` at confidence 1.0 -- the same certainty as a genuine executed failure. A timeout
+  proves nothing about whether the example is wrong: it can equally mean the harness hung waiting
+  on unexpected stdin, a network call that should have been mocked never returned, or the
+  environment is simply slow -- "we could not finish checking it" is being recorded as "we checked
+  it and it is false", which is exactly the confusion this project's own aspose.org-reused example
+  verifier docstrings warn against elsewhere (see
+  `src/repo_presenter/extractors/platforms/cpp_examples.py`'s module docstring, which states the
+  general principle correctly for C++'s own unbound-identifier case: "we could not check" is not
+  "we checked and it is false" -- `TIMED_OUT` breaks that same principle for every ecosystem that
+  can produce it). Fix: `TIMED_OUT` must map to polarity `"UNRESOLVED"` with `confidence=0.5`,
+  exactly like `"NEEDS_INPUT"` and `"NOT_VERIFIED"` -- never `"CONTRADICTED"`. Update the
+  `_POLARITY` dict and the confidence-set literal in the same file; do not change any other
+  mapping in that dict without independently confirming (per the next paragraph) that it is also
+  wrong, since `EXECUTED`->SUPPORTED and `FAILED`->CONTRADICTED and `NEEDS_INPUT`/`NOT_VERIFIED`->
+  UNRESOLVED are correct as they stand.
+
+  **Second, a verification task, not an assumed defect.** The project has independently sampled
+  and classified 33 real Lane L "failing example" findings against their actual upstream source
+  and found that about 61% were verifier false positives, not genuine defects, falling into these
+  observed categories: fragments run without surrounding context (a snippet referencing a name
+  like `doc` or `sheet`/`workbook` that a different, uninherited section of the README
+  established); substituted test inputs (the verifier staged a synthetic fixture file the example
+  was never written against, e.g. a missing font/image asset); missing optional helpers the
+  example calls that the repository itself does not define as a public export; and environment
+  limitations (a toolchain or dependency genuinely absent on the machine that ran the check, not a
+  fact about the example's correctness). Before changing anything for ecosystems other than the
+  confirmed TIMED_OUT fix above, read each of the seven ecosystem verifier modules under
+  `src/repo_presenter/extractors/platforms/` (`python_examples.py`, `net_examples.py`,
+  `java_examples.py`, `cpp_examples.py`, `go_examples.py`, `rust_examples.py`,
+  `typescript_examples.py`) and, for each, determine from the code itself (not from this card's
+  assumption) whether that ecosystem already correctly routes each of the four false-positive
+  categories above to `NEEDS_INPUT`/`NOT_VERIFIED`/`TIMED_OUT`(now UNRESOLVED) rather than
+  `FAILED`. `cpp_examples.py` already has an explicit, documented rule for unbound identifiers
+  (`unbound_identifiers()`, read it) that appears correct on inspection -- verify this with a
+  concrete test case rather than assuming either way. For any ecosystem where you find a case that
+  is genuinely a fragment/substituted-input/missing-helper/environment limitation but is currently
+  classified `FAILED` (which becomes `CONTRADICTED`), fix that ecosystem's verifier to classify it
+  as `NOT_VERIFIED` or `NEEDS_INPUT` instead (whichever this project's existing convention for that
+  shape already is in that module -- match the existing pattern, do not invent a new outcome
+  value). Do not relabel a genuine defect (an example that is actually wrong given the real,
+  current, available source) as inconclusive merely because it is inconvenient -- the goal is
+  three genuinely correct outcomes, not fewer real defects caught.
+
+  **Downstream check.** Confirm that nothing reachable from these facts ever treats an
+  `UNRESOLVED` example-fact polarity as grounds to drop, repair, or flag README content as
+  defective -- search `src/repo_presenter/readme/correction/detectors/examples.py` and
+  `src/repo_presenter/readme/validation/provenance.py` for where example facts are consumed, and
+  confirm (with a test, not just a read) that only `CONTRADICTED` ever triggers a finding/repair
+  and `UNRESOLVED` never does.
+depends_on: []
+write_paths:
+  - src/repo_presenter/core/examples.py
+  - src/repo_presenter/readme/evidence/facts/examples.py
+  - src/repo_presenter/extractors/platforms/python_examples.py
+  - src/repo_presenter/extractors/platforms/net_examples.py
+  - src/repo_presenter/extractors/platforms/java_examples.py
+  - src/repo_presenter/extractors/platforms/cpp_examples.py
+  - src/repo_presenter/extractors/platforms/go_examples.py
+  - src/repo_presenter/extractors/platforms/rust_examples.py
+  - src/repo_presenter/extractors/platforms/typescript_examples.py
+  - tests/readme/evidence/facts/test_examples.py
+  - tests/extractors/platforms/test_example_verifier_outcomes.py
+satisfies:
+  - REQ-VERIFIER-001
+source_refs:
+  - file: src/repo_presenter/readme/evidence/facts/examples.py
+    anchor: "_POLARITY"
+  - file: src/repo_presenter/core/examples.py
+    anchor: "ExampleOutcome"
+  - file: src/repo_presenter/extractors/platforms/cpp_examples.py
+    anchor: "unbound_identifiers"
+inputs: []
+actions:
+  - "Fix the confirmed defect: readme/evidence/facts/examples.py's _POLARITY['TIMED_OUT'] becomes
+     'UNRESOLVED', and the confidence-set literal that currently includes TIMED_OUT at 1.0 no
+     longer does (TIMED_OUT falls to the 0.5 default alongside NEEDS_INPUT/NOT_VERIFIED)."
+  - "Write a test in tests/readme/evidence/facts/test_examples.py that builds a receipt with
+     outcome='TIMED_OUT' and asserts the resulting fact's polarity is UNRESOLVED at
+     confidence=0.5, replacing/extending whatever test currently (if any) asserts the old,
+     wrong behaviour."
+  - "Read all seven extractors/platforms/*_examples.py modules. For each, write at least one test
+     in tests/extractors/platforms/test_example_verifier_outcomes.py proving its current behaviour
+     for at least the false-positive category most relevant to that ecosystem (your judgement,
+     informed by reading each module's own existing fixtures/tests), and fix any case you find
+     that genuinely misclassifies an inconclusive check as FAILED."
+  - "Add or extend a test proving an UNRESOLVED example fact never triggers a Lane L
+     repair/finding in readme/correction/detectors/examples.py or a blocking validation in
+     readme/validation/provenance.py."
+checks:
+  - command: |-
+      python -m pytest tests/readme/evidence/facts/test_examples.py tests/extractors/platforms/test_example_verifier_outcomes.py tests/readme/correction/ tests/readme/validation/test_provenance.py -q
+    expect: exit 0
+    timeout_seconds: 300
+    proves:
+      - REQ-VERIFIER-001
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -c "import pathlib; p = pathlib.Path('src/repo_presenter/readme/evidence/facts/examples.py'); s = p.read_text(encoding='utf-8'); s2 = s.replace(chr(34) + 'TIMED_OUT' + chr(34) + ': ' + chr(34) + 'UNRESOLVED' + chr(34), chr(34) + 'TIMED_OUT' + chr(34) + ': ' + chr(34) + 'CONTRADICTED' + chr(34)); p.write_text(s2, encoding='utf-8')"
+  rationale: >
+    Reverts the one confirmed fix (TIMED_OUT -> UNRESOLVED) back to the original wrong mapping
+    (TIMED_OUT -> CONTRADICTED) via real string construction (chr(34) for the double-quote,
+    never a literal backslash-escaped quote crossing YAML and the shell -- ops/SUPERVISOR.md's
+    falsifier rule). The new test built for this exact case must then fail, proving it actually
+    exercises the real polarity mapping rather than passing regardless of what _POLARITY says.
+evidence:
+  - src/repo_presenter/readme/evidence/facts/examples.py
+  - tests/readme/evidence/facts/test_examples.py
+  - tests/extractors/platforms/test_example_verifier_outcomes.py
+closeout:
+  - "The 61% false-positive estimate is from a small (33-case) sample classified by hand, not
+     this card's own measurement -- do not report a new, precise false-positive rate as this
+     card's result; report only the specific defects you confirmed and fixed from reading the
+     real code."
+recovery: "Revert readme/evidence/facts/examples.py's _POLARITY change and any per-ecosystem
+  extractor fixes; existing sealed candidates are unaffected until they are next recertified or
+  repaired, per R10's zero-regeneration rule."
