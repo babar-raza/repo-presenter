@@ -67,6 +67,7 @@ from repo_presenter.core.config import GatewayConfig
 from repo_presenter.core.errors import ConfigError, JobError, OutputRejectedError
 from repo_presenter.core.facts import FactsDocument
 from repo_presenter.core.llm import transport
+from repo_presenter.core.llm.budget import DEFAULT_BUDGET_PATH, check_budget, record_spend
 from repo_presenter.core.llm.binding import (
     add_silent_units,
     binding_errors,
@@ -587,6 +588,7 @@ def run_job(
     call_schema: dict[str, Any] | None = None,
     recover: Callable[[dict[str, Any]], dict[str, Any] | None] | None = None,
     narrow: Narrow | Narrowing | None = None,
+    budget_path: Path | None = None,
 ) -> JobResult:
     """The accepted output of one job, from the store when the same request was accepted before.
 
@@ -602,6 +604,10 @@ def run_job(
     ``recover``'s own say-so.
 
     ``narrow`` is one further, narrower ask for the part of the second reply that is still wrong.
+
+    ``budget_path`` is the owner-ruling-R25 provider-call budget file (``core/llm/budget.py``)
+    checked immediately before a fresh call is attempted, and credited immediately after one
+    succeeds; the cache-hit/replay path below never consults or updates it at all.
     """
     job = manifest.manifest.prompt_id
     model = effective_model(manifest, context)
@@ -659,6 +665,7 @@ def run_job(
             ledger.append(reuse)
             return JobResult(job, output, request_sha256, 0, 0, True, None, None)
 
+    check_budget(budget_path if budget_path is not None else DEFAULT_BUDGET_PATH)
     attempts = _Attempts(manifest, context, ledger, request_sha256, model)
     narrowing = _narrowing(narrow, manifest, facts)
     current = payload
@@ -701,6 +708,7 @@ def run_job(
         output, rejection = _parse(manifest, content, facts, checks, call_schema)
         if output is not None:
             store.put(request_sha256, job, reply.model, output)
+            record_spend(budget_path if budget_path is not None else DEFAULT_BUDGET_PATH, 1, reply.total_tokens or 0)
             return JobResult(
                 job,
                 output,

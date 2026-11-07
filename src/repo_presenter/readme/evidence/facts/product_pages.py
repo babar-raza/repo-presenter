@@ -13,13 +13,20 @@ A fact's evidence is hashed into dependencies.json, so it carries only a verdict
 (RESOLVED, BROKEN or UNCHECKED); the HTTP status, the final URL after redirects and the time the
 read took go to a ProbeRecord (``core/probes.py``, sealed unhashed as probes.json), so a changed
 status with the same verdict reopens nothing (TC-INV-02).
+
+``product_knowledge_refresh`` is the same live lookup declared explicitly as its own pipeline
+stage (CONSOLIDATED_GOALS_2026-11-06.md section 4): a typed, named record of exactly what was
+checked and whether it changed versus the last reading cached for this revision, rather than an
+incidental fact kind indistinguishable from any other. ``extract.py`` calls it, not
+``product_page_facts`` directly.
 """
 
 from __future__ import annotations
 
 import re
 import time
-from collections.abc import Sequence
+from collections.abc import MutableMapping, Sequence
+from dataclasses import dataclass
 
 import httpx
 
@@ -194,6 +201,104 @@ def product_page_facts(
         _lookup(HOMEPAGE_FACT_ID, homepage, "product homepage", probes),
         _lookup(BANNER_FACT_ID, banner, "banner illustration", probes),
     ]
+
+
+REFRESH_FACT_ID = fact_id("identity", "product-knowledge-refresh")
+
+#: Process-lifetime fallback cache for :func:`product_knowledge_refresh` when a caller passes no
+#: ``cache`` of its own: keyed ``(repository, source_revision)`` -> the statuses last observed
+#: for that exact revision, so a second extraction of the SAME revision in the same process can
+#: tell "unchanged" from "first reading", while a different revision is always a different key.
+_REFRESH_CACHE: dict[tuple[str, str], tuple[int | None, ...]] = {}
+
+
+@dataclass(frozen=True)
+class CheckedPage:
+    """One page the product-knowledge refresh stage checked: what it is, the URL it read, and
+    the HTTP status that URL answered with (``None`` when the read failed outright)."""
+
+    role: str
+    url: str
+    status: int | None
+
+
+@dataclass(frozen=True)
+class ProductKnowledgeRefresh:
+    """What the product/platform knowledge refresh stage (CONSOLIDATED_GOALS_2026-11-06.md
+    section 4, "refresh product/platform knowledge... before generation") actually checked for
+    one repository at one revision, and whether either page's answer changed versus the last
+    reading cached for that exact ``(repository, source_revision)`` pair. A different revision is
+    always a different cache key, so a genuinely changed source tree is never read as "unchanged"
+    against stale history, and a first-ever reading for a revision is never reported as a change
+    (there is nothing yet to have changed from)."""
+
+    repository: str
+    source_revision: str
+    checked: tuple[CheckedPage, ...]
+    changed: bool
+
+    def summary_fact(self) -> Fact:
+        """A single, named, distinctly-tagged artifact recording this refresh in the facts
+        document -- not just the loose ``link_target`` facts :func:`product_page_facts` already
+        produces, which carry no record of this being a declared pipeline stage at all."""
+        evidence = tuple(
+            Evidence(page.url, f"{page.role}; status {page.status}") for page in self.checked
+        )
+        value = (
+            f"checked {len(self.checked)} page(s) at revision {self.source_revision[:12]}; "
+            f"changed={self.changed}"
+        )
+        return Fact(
+            REFRESH_FACT_ID,
+            "identity",
+            value,
+            evidence,
+            attributes={
+                "stage": "product_knowledge_refresh",
+                "changed": "true" if self.changed else "false",
+                **{
+                    f"{page.role}_status": "unchecked" if page.status is None else str(page.status)
+                    for page in self.checked
+                },
+            },
+        )
+
+
+def product_knowledge_refresh(
+    entry: RegistryEntry,
+    probes: list[ProbeRecord],
+    source_revision: str,
+    *,
+    cache: MutableMapping[tuple[str, str], tuple[int | None, ...]] | None = None,
+) -> tuple[ProductKnowledgeRefresh, list[Fact]]:
+    """The product/platform knowledge refresh as its own declared pipeline stage, not merely an
+    incidental fact kind: re-probes the product homepage and the Enterprise Edition target live
+    (through the same probes ``product_page_facts`` already calls -- one live pass, not two),
+    names exactly what was checked and each resulting HTTP status, and reports whether either
+    answer changed versus this exact revision's own last-cached reading.
+
+    Returns ``(result, facts)`` -- ``facts`` is ``product_page_facts``'s own three facts plus one
+    more, ``result.summary_fact()``, so a caller that extends its facts list with the second
+    element gets both the existing product-page facts and this stage's own named record."""
+    cache = _REFRESH_CACHE if cache is None else cache
+    facts = product_page_facts(entry, probes)
+    homepage = next(f for f in facts if f.id == HOMEPAGE_FACT_ID)
+    enterprise = next(f for f in facts if f.id == ENTERPRISE_FACT_ID)
+
+    def _status_of(url: str) -> int | None:
+        return next((p.status for p in reversed(probes) if p.target == url), None)
+
+    checked = (
+        CheckedPage("product_homepage", homepage.value, _status_of(homepage.value)),
+        CheckedPage("enterprise_target", enterprise.value, _status_of(enterprise.value)),
+    )
+    key = (entry.repository, source_revision)
+    previous = cache.get(key)
+    current = tuple(page.status for page in checked)
+    changed = previous is not None and previous != current
+    cache[key] = current
+    result = ProductKnowledgeRefresh(entry.repository, source_revision, checked, changed)
+    return result, [*facts, result.summary_fact()]
 
 
 def enterprise_target(facts: tuple[Fact, ...] | list[Fact]) -> Fact | None:
