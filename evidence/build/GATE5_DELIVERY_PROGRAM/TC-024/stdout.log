@@ -1,0 +1,108 @@
+
+===== CLEAN RUN 1 =====
+$ python -m pytest tests/test_recertify.py tests/readme/bundle/test_seal.py tests/readme/review/test_llm_review.py -q
+--- stdout ---
+.......................................................................  [100%]
+71 passed in 26.09s
+
+--- stderr ---
+
+$ python -m pytest tests/acceptance/test_import_graph.py tests/acceptance/test_canaries.py -q
+--- stdout ---
+............                                                             [100%]
+12 passed in 6.40s
+
+--- stderr ---
+
+$ python -m pytest tests/test_owner_rulings_enforced.py -q
+--- stdout ---
+...                                                                      [100%]
+3 passed in 10.07s
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python -m pytest tests/test_recertify.py tests/readme/bundle/test_seal.py tests/readme/review/test_llm_review.py -q
+--- stdout ---
+.......................................................................  [100%]
+71 passed in 24.41s
+
+--- stderr ---
+
+$ python -m pytest tests/acceptance/test_import_graph.py tests/acceptance/test_canaries.py -q
+--- stdout ---
+............                                                             [100%]
+12 passed in 0.49s
+
+--- stderr ---
+
+$ python -m pytest tests/test_owner_rulings_enforced.py -q
+--- stdout ---
+...                                                                      [100%]
+3 passed in 6.77s
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M src/repo_presenter/recertify.py
+$ python -m pytest tests/test_recertify.py tests/readme/bundle/test_seal.py tests/readme/review/test_llm_review.py -q
+--- stdout ---
+FF.F...................................................................  [100%]
+================================== FAILURES ===================================
+___________ test_model_accept_rejects_a_deterministic_only_verdict ____________
+
+    def test_model_accept_rejects_a_deterministic_only_verdict() -> None:
+        """A deterministic-only ACCEPT (no model ever asked) never re-certifies as accepted -- the
+        one invariant present.py's own "no LLM review...never sealed" refusal protects at seal time,
+        mirrored here for a STORED review being re-read."""
+>       assert recertify._model_accept({"verdict": "ACCEPT", "model_verdict": None}) is False
+E       AssertionError: assert True is False
+E        +  where True = <function _model_accept at 0x00000217D2FE6D40>({'verdict': 'ACCEPT', 'model_verdict': None})
+E        +    where <function _model_accept at 0x00000217D2FE6D40> = recertify._model_accept
+
+tests\test_recertify.py:213: AssertionError
+_______________ test_model_accept_rejects_a_non_accept_verdict ________________
+
+    def test_model_accept_rejects_a_non_accept_verdict() -> None:
+>       assert recertify._model_accept({"verdict": "REJECT", "model_verdict": "ACCEPT"}) is False
+E       AssertionError: assert True is False
+E        +  where True = <function _model_accept at 0x00000217D2FE6D40>({'verdict': 'REJECT', 'model_verdict': 'ACCEPT'})
+E        +    where <function _model_accept at 0x00000217D2FE6D40> = recertify._model_accept
+
+tests\test_recertify.py:220: AssertionError
+______ test_model_accept_rejects_a_unit_m8_marked_reject_or_inconclusive ______
+
+    def test_model_accept_rejects_a_unit_m8_marked_reject_or_inconclusive() -> None:
+        base = {"verdict": "ACCEPT", "model_verdict": "ACCEPT"}
+>       assert recertify._model_accept(
+            {**base, "unit_reviews": [{"unit": "u1", "m8": {"status": "reject"}}]}
+        ) is False
+E       AssertionError: assert True is False
+E        +  where True = <function _model_accept at 0x00000217D2FE6D40>({'verdict': 'ACCEPT', 'model_verdict': 'ACCEPT', 'unit_reviews': [{'unit': 'u1', 'm8': {'status': 'reject'}}]})
+E        +    where <function _model_accept at 0x00000217D2FE6D40> = recertify._model_accept
+
+tests\test_recertify.py:237: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_recertify.py::test_model_accept_rejects_a_deterministic_only_verdict
+FAILED tests/test_recertify.py::test_model_accept_rejects_a_non_accept_verdict
+FAILED tests/test_recertify.py::test_model_accept_rejects_a_unit_m8_marked_reject_or_inconclusive
+3 failed, 68 passed in 23.82s
+
+--- stderr ---
+
+$ python -m pytest tests/acceptance/test_import_graph.py tests/acceptance/test_canaries.py -q
+--- stdout ---
+............                                                             [100%]
+12 passed in 0.50s
+
+--- stderr ---
+
+$ python -m pytest tests/test_owner_rulings_enforced.py -q
+--- stdout ---
+...                                                                      [100%]
+3 passed in 0.98s
+
+--- stderr ---
+

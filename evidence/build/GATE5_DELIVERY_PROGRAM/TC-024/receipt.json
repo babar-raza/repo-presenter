@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "card": "TC-024",
+  "gate": "GATE5_DELIVERY_PROGRAM",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-07T19:03:02Z",
+  "base_rev": "e745bb78e75321e1e754482c7e8bcd3a249a9c99",
+  "head_rev": "147edabdcff0262dd37bb946e43f961a8782c7e7",
+  "card_sha256": "50de597d0a321cfdbc958519e738fd9edac7109193dd92297a724001e9761879",
+  "checker_fileset_sha256": "7308d123a1f0c2e42856113bb6a6bb92483b59a1418910775c1485003c445902",
+  "checker_fileset_scheme": "v3",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [
+      "src/repo_presenter/core/state/bundle_store.py",
+      "src/repo_presenter/present.py",
+      "src/repo_presenter/readme/bundle/seal.py",
+      "src/repo_presenter/readme/review/llm_review.py",
+      "src/repo_presenter/recertify.py",
+      "tests/acceptance/test_canaries.py",
+      "tests/acceptance/test_import_graph.py",
+      "tests/readme/bundle/test_seal.py",
+      "tests/readme/review/test_llm_review.py",
+      "tests/test_recertify.py"
+    ],
+    "violations": [],
+    "evaluated": true
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python -m pytest tests/test_recertify.py tests/readme/bundle/test_seal.py tests/readme/review/test_llm_review.py -q",
+          "exit_code": 0,
+          "duration_s": 27.951,
+          "stdout_sha256": "e3b91712731c7a135d0aa3dbb515dfa792c7c8e61577ad9c6cdf99799da17011"
+        },
+        {
+          "command": "python -m pytest tests/acceptance/test_import_graph.py tests/acceptance/test_canaries.py -q",
+          "exit_code": 0,
+          "duration_s": 7.634,
+          "stdout_sha256": "1df234437e2ed9924652e7ac58afe020bc758dccdc6f081d11689b84a94cb5c8"
+        },
+        {
+          "command": "python -m pytest tests/test_owner_rulings_enforced.py -q",
+          "exit_code": 0,
+          "duration_s": 11.329,
+          "stdout_sha256": "495b062f6e81f2062abfeb7df8b63ff8ab3fa9d275481faeb6934ebf0fb65374"
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python -m pytest tests/test_recertify.py tests/readme/bundle/test_seal.py tests/readme/review/test_llm_review.py -q",
+          "exit_code": 0,
+          "duration_s": 25.97,
+          "stdout_sha256": "7a2f974d987f0ee1d10b47d32e1b04714ca04d0209c31d761a6abfb5aee9d841"
+        },
+        {
+          "command": "python -m pytest tests/acceptance/test_import_graph.py tests/acceptance/test_canaries.py -q",
+          "exit_code": 0,
+          "duration_s": 1.724,
+          "stdout_sha256": "b3e7eba178c09c282e1dc25ffbf8b9b9fb8a36f891c9c8e1c72e0003878e3a9d"
+        },
+        {
+          "command": "python -m pytest tests/test_owner_rulings_enforced.py -q",
+          "exit_code": 0,
+          "duration_s": 7.947,
+          "stdout_sha256": "e89f0df54d102a8374d65d3d86c83f82dc5f082a85fa36c9fd854cfe1e23079a"
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -X utf8 -c \"import pathlib; p = pathlib.Path('src/repo_presenter/recertify.py'); t = p.read_text(encoding='utf-8'); marker = 'def _model_accept(review):'; t2 = t.replace(marker, marker + chr(10) + '    return True  # negctl', 1); p.write_text(t2, encoding='utf-8')\"",
+    "patch_sha256": "590a42ac8e647a0a042e47d12e02b4d00154fe003fcb3225261601dfc0e195c3",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      1,
+      0,
+      0
+    ],
+    "tree_changed": [
+      "M src/repo_presenter/recertify.py"
+    ]
+  },
+  "accepted": true,
+  "reason": "all gates passed"
+}
