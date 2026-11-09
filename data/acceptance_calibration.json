@@ -226,11 +226,11 @@
       "status": "PASSED"
     },
     {
-      "corpus": "2 real spans (one real README sentence from the sealed Aspose.3D-FOSS-for-.NET candidate, one synthetic obviously-promotional positive control), judged live through TC-023b's prose_judge_live.py wiring against the real qwen3-next gateway (provider_budget.json batch 001-m8-live-proof)",
+      "corpus": "10 real README sentences (clean) + 10 promotional spans (2 real seed.py operator sentences + synthetic marketing sentences), classification shape only -- not pairwise or paraphrase; still short of the design's n>=30-per-class minimum",
       "gates": [
         {
           "direction": ">=",
-          "n": 1,
+          "n": 10,
           "name": "M8.recall[promotional]",
           "passed": false,
           "threshold": 0.9,
@@ -238,17 +238,17 @@
         },
         {
           "direction": "<=",
-          "n": 1,
+          "n": 10,
           "name": "M8.false_reject_rate",
           "passed": false,
           "threshold": 0.02,
-          "value": 0.0
+          "value": 0.1
         }
       ],
       "measured_at": "2026-11-09T00:00:00Z",
       "mechanism_class": "M8",
-      "note": "NOT a certified calibration -- n=1 per class is far short of the design's own n>=30 minimum (docs/design/2026-11-06-acceptance-redesign.md section 4.1). 'passed: false' on each gate here is literal (make_rate_gate's own n>=1 minimum is met, but this is reported NOT_PASSED deliberately, not because the live result was wrong): the real result was correct on both of the two real draws made (a real factual README sentence correctly classified 'none' with 2/2 draw agreement; a synthetic obviously-promotional sentence correctly classified 'promotional' with 2/2 agreement) -- see the ledger/receipts under this batch for the raw verdicts. This entry exists to record that the FIRST real, live M8 call was made, succeeded, and produced sane output, per R26 ('measure the M8 prose judge before any fallback'); it is not a basis for M8.status=PASSED, which needs a real, class-stratified n>=30 run against the A1 registration -- still open work.",
-      "provider_calls": 4,
+      "note": "Real result: 9/10 clean correctly NOT flagged promotional; 10/10 promotional spans correctly caught. Status is NOT_PASSED whenever n<30 per class regardless of the observed rate, per the design's own minimum -- this is a calibration PROOF at larger n than the first 2-case run, not yet a certification.",
+      "provider_calls": 40,
       "provisional": true,
       "status": "NOT_PASSED"
     }
