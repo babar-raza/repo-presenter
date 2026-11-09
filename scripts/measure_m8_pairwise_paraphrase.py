@@ -92,7 +92,13 @@ def _pairwise_cases() -> list[dict]:
                 for i, p in enumerate(parts)
                 if p.lstrip().startswith(("```", "~~~"))
                 and i > 0
-                and "install" in parts[i - 1].lower()
+                and (
+                    "install" in parts[i - 1].lower()
+                    # a short lead-in ending in ":" is a general, reliable signal that the next
+                    # block is what it introduces (e.g. "Maven:", "Gradle (Kotlin DSL):") --
+                    # broader than matching the literal word "install".
+                    or (len(parts[i - 1].strip()) < 150 and parts[i - 1].rstrip().endswith(":"))
+                )
             ),
             None,
         )

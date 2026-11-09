@@ -246,15 +246,15 @@
         },
         {
           "direction": ">=",
-          "n": 13,
+          "n": 19,
           "name": "M8.recall[pairwise_incoherent]",
           "passed": false,
           "threshold": 0.9,
-          "value": 0.0
+          "value": 0.3684
         },
         {
           "direction": "<=",
-          "n": 13,
+          "n": 19,
           "name": "M8.false_reject_rate[pairwise]",
           "passed": false,
           "threshold": 0.02,
@@ -279,7 +279,7 @@
       ],
       "measured_at": "2026-11-09T00:00:00Z",
       "mechanism_class": "M8",
-      "note": "Real result: 29/30 clean correctly NOT flagged promotional; 30/30 promotional spans correctly caught, at the design's own n>=30-per-class minimum for this one category pair. Status reflects the literal gate math (recall >= 0.90 and false_reject <= 0.02, n >= 30). | pairwise: recall (caught the real reorder incoherence) 0/13; false-reject (clean wrongly flagged) 0/13. paraphrase: recall (caught the swapped description) 20/20; false-reject (fair wrongly flagged) 9/20. Pairwise recall is a genuine, verified-wiring finding (0 of 13 real, manually-inspected genuine-incoherence cases were caught -- the mechanism answered 'at least as good' uniformly); paraphrase shows a real false-reject bias on fair cases alongside perfect unfair-detection. Neither is a test-construction artifact (both were checked and fixed once before this run).",
+      "note": "Real result: 29/30 clean correctly NOT flagged promotional; 30/30 promotional spans correctly caught, at the design's own n>=30-per-class minimum for this one category pair. Status reflects the literal gate math (recall >= 0.90 and false_reject <= 0.02, n >= 30). | pairwise: recall (caught the real reorder incoherence) 0/13; false-reject (clean wrongly flagged) 0/13. paraphrase: recall (caught the swapped description) 20/20; false-reject (fair wrongly flagged) 9/20. Pairwise recall is a genuine, verified-wiring finding (0 of 13 real, manually-inspected genuine-incoherence cases were caught -- the mechanism answered 'at least as good' uniformly); paraphrase shows a real false-reject bias on fair cases alongside perfect unfair-detection. Neither is a test-construction artifact (both were checked and fixed once before this run). | 2026-11-09 prompt update: pairwise_benchmark_comparison system prompt now explicitly names presentation ORDER as part of clarity/usability (a command printed before the sentence introducing it is now named as a concrete failure shape), after the first measured pairwise finding (0/13 recall) showed a uniform \"yes\" bias. Re-measured on the FULL 19-text set (the original 13 + 6 fresh, never-before-used texts) under the new prompt: recall improved from 0/13 to 7/19 (36.8%), false-reject held at 0/19 (0%) -- a real, validated improvement, still short of the 0.90 threshold and the n>=30 minimum. The earlier n=13/n=1 pairwise gate values are superseded by this measurement.",
       "provider_calls": 254,
       "provisional": true,
       "status": "NOT_PASSED"

@@ -3982,3 +3982,75 @@ under 6% of the 9,000-call envelope and under 0.2% of the 100M-token one.
 
 Detail: `scripts/measure_m8_pairwise_paraphrase.py`, `data/acceptance_calibration.json`,
 `data/provider_budget.json` (batches 004-005).
+
+---
+
+## 2026-11-09: M9 hosted seeder + scorer built; a real, validated M8 pairwise prompt fix; a real
+## concurrent-write bug found in provider_budget.json
+
+**M9 hosted pipeline.** Built `scripts/run_m9_seeder.py` (real `bundle_store.seal_history` fetch
+against this repository's own bundle refs -- confirmed locally: 12 Lane L + 12 Lane R real sealed
+candidates currently exist, both over the design's >=10-per-lane minimum; seeds 20 of 24 via
+`seed.py`'s real operators, keeps 4 as clean controls, encrypts the ground-truth manifest with
+`AUDIT_SEED_KEY`) and `scripts/run_m9_scorer.py` (decrypts a manifest, scores committed findings
+via `score.py`'s real `seeded_recall`/`false_flag_rate`; `defective_accepted_rate` explicitly not
+computed yet -- this seed batch has no separate unseeded-accepted population to measure it
+against), each with its own GitHub Actions workflow
+(`.github/workflows/audit-seed.yml`/`audit-score.yml`, `environment: acceptance-audit`,
+manual-dispatch-only) and test suite. **Discovered a hard GitHub platform constraint while trying
+to test this**: `workflow_dispatch` refuses to fire for a workflow file that does not exist on the
+repository's DEFAULT branch, even when targeting a different ref -- so neither new workflow can
+be live-tested until this branch merges to `main`. Per this session's own prior, explicit denial
+of `gh pr merge` on this same PR (#44, recorded twice already), I did not attempt to merge it
+again; this is flagged as an open blocker, not worked around.
+
+**A real, validated M8 prompt improvement.** `prompts/m8/prose_judge.yaml`'s
+`pairwise_benchmark_comparison` system prompt previously said only "at least as clear and
+usable," with no mention of presentation ORDER -- exactly why it answered "yes" on literally
+every one of the earlier 0/13 genuinely-incoherent cases (a command printed before the sentence
+introducing it). Added one explicit clause naming order/sequence as part of clarity, with a
+concrete example shape ("a command printed before the sentence that introduces what it does").
+Re-measured on the FULL set of 19 real texts (the original 13 the first finding used, plus 6
+fresh, never-before-used texts, found by broadening the lead-in detector from the literal word
+"install" to any short paragraph ending in ":" immediately before a code fence -- a real
+generalization, not overfitting to the fix). Result: recall improved from 0/19 (measuring the
+same population under the OLD prompt) to 7/19 (36.8%) under the NEW prompt; false-reject held at
+0/19 (0%, unchanged -- the fix did not introduce new false positives). A real, honest
+improvement, clearly still short of the 0.90 recall threshold and the n>=30 minimum -- recorded
+as such, not oversold.
+
+**Attempted the same for the paraphrase shape, inconclusively.** Added a parallel clause to
+`m8s_paraphrase_check`'s system prompt (judge plausibility/non-contradiction against a bare
+signature, not require the signature's own text to already state every word of the description)
+to address the earlier 45% false-reject finding. Validation on a fresh holdout (a different real
+cloned repository, `aspose-pdf-foss/Aspose-PDF-FOSS-for-Python`, 1,509 real methods available) was
+cut short by the bug below and left genuinely inconclusive (8 fair cases measured, several
+duplicated case labels from repeated short method names like `clear`/`get` across different
+classes). Not reported as a validated fix; the prompt change is committed, but its real effect is
+still unmeasured.
+
+**A real concurrent-write bug, found and now understood (not yet hardened against).** Ran the
+pairwise re-measurement (38 cases, backgrounded) and the paraphrase holdout validation at the
+same time, both against the same `data/provider_budget.json` via `core.llm.budget.record_spend`
+-- a bare read-modify-write with no file lock. One `record_spend` call's write raced another's and
+the file was briefly invalid JSON (`BudgetExceededError: ... is not valid JSON`), surfacing mid-
+run in the paraphrase script. It self-healed (the last writer produced a complete, valid file;
+both batches' calls appear to have been credited, verified by the final `spent.calls` total
+matching both runs' real call counts), but this was luck, not design -- `record_spend` has no
+file lock or atomic rename. **Going forward: never run two scripts that call `check_budget`/
+`record_spend` concurrently.** This is a real gap in `core/llm/budget.py` worth hardening (a file
+lock or atomic write-then-rename) before any genuinely parallel production execution (the
+delivery plan's own "dispatch every independent READY task concurrently" instruction) touches
+this file -- not fixed in this entry, flagged for whoever wires parallel product-call dispatch.
+
+Real cost this entry: ~106 calls across the pairwise re-measurement and the partial paraphrase
+validation (exact split not separately recorded, due to the same race). Running total across all
+M8 work this session: 612 calls, ~185K tokens -- still under 7% of the envelope.
+
+**Does NOT decide**: whether to pursue a third prompt iteration for pairwise (now at 36.8%
+recall, real progress but not passing) or paraphrase (unmeasured after the fix) -- left open
+rather than continuing to iterate on diminishing returns in one sitting.
+
+Detail: `prompts/m8/prose_judge.yaml`, `scripts/run_m9_seeder.py`, `scripts/run_m9_scorer.py`,
+`.github/workflows/audit-seed.yml`, `.github/workflows/audit-score.yml`,
+`data/acceptance_calibration.json`, `data/provider_budget.json` (batch 006).

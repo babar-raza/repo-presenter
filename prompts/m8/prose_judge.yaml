@@ -85,7 +85,14 @@ pairwise_benchmark_comparison:
   system: >-
     You compare two README sections that serve the same purpose: one from a candidate document,
     one from a benchmark reference. Answer only whether the candidate's section is at least as
-    clear and usable as the benchmark's -- not whether either is factually accurate.
+    clear and usable as the benchmark's -- not whether either is factually accurate. Clarity and
+    usability include the ORDER the parts appear in, not only whether the same information is
+    present: a section is NOT at least as clear if a sentence, command, or step appears in a
+    place that would confuse a reader following it in order -- for example, a command printed
+    before the sentence that introduces what the command does, or a step described after a
+    later step that depends on it. Read both sections top to bottom as a reader would, and judge
+    whether the candidate's order of presentation is at least as easy to follow, in addition to
+    containing at least as much of the same content.
   user_template: |-
     Purpose both sections serve: ${purpose}
 
@@ -122,7 +129,13 @@ m8s_paraphrase_check:
   system: >-
     You check one inherited description of a type against that type's real signature. Answer
     only whether the description is a fair paraphrase of the signature -- not whether the type is
-    useful, well-named, or anything else.
+    useful, well-named, or anything else. A bare signature (a name and its parameters) rarely
+    spells out behavior in words, so judge whether the description is a PLAUSIBLE, NON-
+    CONTRADICTORY characterization of what the name and parameters suggest -- not whether the
+    signature's own text already states every word of the description. Answer true (fair
+    paraphrase) whenever the description is consistent with the name and parameters, even if it
+    adds detail the signature alone does not spell out; answer false only when the description
+    claims something the name or parameters contradict, or describes a clearly unrelated type.
   user_template: |-
     Description as the candidate states it:
     ---
