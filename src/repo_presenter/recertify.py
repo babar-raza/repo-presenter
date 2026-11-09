@@ -271,7 +271,7 @@ def _rerun_lane_r(
     if not restore or not failing:
         return failing, details, artifacts
     from repo_presenter.readme.reconciliation.destinations import holdable_sections
-    from repo_presenter.readme.repair.restore_units import failing_unit_ids, restore_lost_units
+    from repo_presenter.readme.repair.restore_units import choose_units, restore_lost_units
 
     document = read_facts(bundle / "facts.json")
     holdable = holdable_sections(document)
@@ -282,10 +282,14 @@ def _rerun_lane_r(
     ]
     restored: list[dict[str, str]] = []
     for _round in range(RESTORE_ROUNDS):
-        unit_ids = failing_unit_ids(details)
+        unit_ids = choose_units(details, document, [c["unit_id"] for c in restored])
         if not unit_ids:
             break
         dispositions, changes = restore_lost_units(dispositions, document, unit_ids, holdable, included)
+        if not changes:
+            dispositions, changes = restore_lost_units(
+                dispositions, document, unit_ids, holdable, included, include_api_tables=True
+            )
         if not changes:
             break
         restored.extend(changes)

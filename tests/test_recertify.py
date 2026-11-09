@@ -613,3 +613,53 @@ def test_a_platform_ecosystem_spec_is_registered_before_recertifying(
     entry = SimpleNamespace(repository="o/n", ecosystem="rust")
     rc.recertify_bundle(tmp_path / "missing", "R", entry=entry, source=None)
     assert asked == ["rust"]
+
+
+# --- TC-019b: zero-call restore of a unit a parity check names as lost ------------------------------
+
+
+def test_restore_re_dispositions_a_unit_a_check_names_and_writes_a_verifying_seal(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, no_provider: list[str]
+) -> None:
+    bundle = seal_lane_r(tmp_path, monkeypatch, renderer="35")
+    unit = "inherited_unit:024.paragraph"  # SUPERSEDE_REDUNDANT -> development_testing in the seal
+    kept = {"VERIFIED_PRESERVE", "VERIFIED_MOVE", "PRESERVE_ATTRIBUTED"}
+
+    def lost_unless_kept(candidate: Any) -> list[Failure]:
+        entry = next(e for e in candidate.dispositions["dispositions"] if e["unit_id"] == unit)
+        if entry["disposition"] in kept:
+            return []
+        return [
+            Failure(
+                "RECONCILING",
+                f"{unit} holds h2 'Examples', which the published README prints and this candidate "
+                "loses (section_coverage): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE)",
+                unit=unit,
+            )
+        ]
+
+    judges = dict(blocking.JUDGES)
+    judges["BC-17"] = lost_unless_kept
+    monkeypatch.setattr(blocking, "JUDGES", judges)
+
+    common = dict(entry=entry(), source=source(), current_version_set="current", seal_commit="c" * 40)
+    dry = recertify.recertify_bundle(bundle, LANE_R, **common)
+    assert dry.outcome == OUTCOME_NEEDS_REPAIR and "BC-17" in dry.failing_checks
+    assert "restored_units.json" not in dry.artifacts  # the dry counter and the gate never restore
+
+    rec = recertify.recertify_bundle(bundle, LANE_R, restore=True, **common)
+    assert rec.outcome == OUTCOME_RECERTIFIED, rec.details
+    restored = json.loads(rec.artifacts["restored_units.json"])["restored"]
+    assert [r["unit_id"] for r in restored] == [unit]
+    assert restored[0]["was"].startswith("SUPERSEDE_REDUNDANT")
+    assert rec.provider_calls == 0 and no_provider == []
+
+    written = recertify.write_recertified(
+        bundle, rec, candidates_root=tmp_path / "repaired", prompts=load_manifests(PROMPTS),
+        seal_commit="c" * 40,
+    )
+    assert verify_bundle(written, LANE_R) is not None
+    after = {e["unit_id"]: e for e in json.loads((written / "dispositions.json").read_text())["dispositions"]}
+    before = {e["unit_id"]: e for e in json.loads((bundle / "dispositions.json").read_text())["dispositions"]}
+    assert after[unit]["disposition"] in kept and before[unit]["disposition"] == "SUPERSEDE_REDUNDANT"
+    assert {k: v for k, v in after.items() if k != unit} == {k: v for k, v in before.items() if k != unit}
