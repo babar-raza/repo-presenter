@@ -5,7 +5,7 @@
   "provider_repository_id": 1230713255,
   "registry_revision": null,
   "active_transaction_id": "85434835fe1542a789f91e15ee83310d",
-  "state": "FAILED_INTERNAL",
+  "state": "SNAPSHOTTING",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -33,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "2ac3245fb83c44f1a09f6312328e9976",
-    "transaction_id": "e65dbf54ddda4516a2e1edb27530a6d7",
+    "transition_id": "e6e8e7103ff2475c9d8271d93af16897",
+    "transaction_id": "85434835fe1542a789f91e15ee83310d",
     "repository": "aspose-font-foss/Aspose.Font-FOSS-for-Python",
-    "from_state": "OBSERVED",
-    "to_state": "FAILED_INTERNAL",
-    "event": "present.yml hosted transaction failed",
-    "occurred_at": "2026-11-01T08:59:48.941984+00:00",
+    "from_state": "FAILED_INTERNAL",
+    "to_state": "SNAPSHOTTING",
+    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
+    "occurred_at": "2026-11-09T19:25:43.704469+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-font-foss/Aspose.Font-FOSS-for-Python",
     "output_manifest": "candidates/aspose-font-foss__Aspose.Font-FOSS-for-Python/lane-l/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 7,
+  "state_version": 8,
   "recent_trigger_dedup_keys": {
     "run:41290970102:aspose-font-foss/Aspose.Font-FOSS-for-Python": "e65dbf54ddda4516a2e1edb27530a6d7",
     "run:4c5d3fe037374d66b899ad7ecae052be:aspose-font-foss/Aspose.Font-FOSS-for-Python": "6147ee5d4e524ccca6bcac9e1b77de23",
