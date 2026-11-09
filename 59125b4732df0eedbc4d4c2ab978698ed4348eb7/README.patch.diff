@@ -15,7 +15,7 @@
 -data directly.
 +# Aspose.Email FOSS for .Net
 +
-+[![NuGet](https://img.shields.io/nuget/v/Aspose.Email.Foss.svg)](https://www.nuget.org/packages/Aspose.Email.Foss/) ![.NET](https://img.shields.io/badge/.net-net8.0-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Contributors](https://img.shields.io/github/contributors/aspose-email-foss/Aspose.Email-FOSS-for-.Net)](https://github.com/aspose-email-foss/Aspose.Email-FOSS-for-.Net/graphs/contributors)
++[![NuGet version](https://img.shields.io/nuget/v/Aspose.Email.Foss.svg)](https://www.nuget.org/packages/Aspose.Email.Foss/) ![.NET](https://img.shields.io/badge/.net-net8.0-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Contributors](https://img.shields.io/github/contributors/aspose-email-foss/Aspose.Email-FOSS-for-.Net.svg)](https://github.com/aspose-email-foss/Aspose.Email-FOSS-for-.Net/graphs/contributors)
 +
 +[![Aspose.Email FOSS for .Net](https://products.aspose.org/media/email/net/banner-readme.png)](https://products.aspose.org/email/net/)
 +
@@ -27,7 +27,7 @@
  
  ## Navigation
  
-@@ -28,82 +27,61 @@
+@@ -28,82 +27,64 @@
  ## At a Glance
  
  ```mermaid
@@ -67,22 +67,22 @@
  ```
  
  ## Key Capabilities
- 
--- **Open and traverse CFB containers** from a file, stream, or byte array via `CfbReader.FromFile()`, `CfbReader.FromStream()`, or `new CfbReader(data)`, then walk the directory tree with `IterStorages()`, `IterStreams()`, `IterChildren()`, and `IterTree()`.
--- **Build CFB containers programmatically** with `CfbDocument`, `CfbStorage`, and `CfbStream`, and serialize them with `CfbWriter.ToBytes()` or `CfbWriter.WriteFile()`.
--- **Read and write Outlook `.msg` files at the MAPI level** through `MsgReader`, `MsgWriter`, and `MsgDocument`, exposing property streams, recipient storages, and attachment sub-storages directly — useful for forensic inspection or repair of a `.msg` file's raw structure.
++
 +- **Read and write MSG files.** It reads Outlook MSG files from streams or files using `MapiMessage.FromStream` and writes them back with Save, preserving MAPI property streams, recipient storages, and attachment sub-storages.
 +- **Create messages programmatically.** It creates new messages in memory with `MapiMessage.Create`, sets `SenderName` and `SenderEmailAddress`, adds recipients with `AddRecipient`, and attaches files with `AddAttachment` before saving to disk.
 +- **Convert between MSG and EML.** It converts EML files to MSG using `MapiMessage.LoadFromEml` and back to EML using `SaveToEml`, implementing native MIME parsing and serialization without external dependencies.
 +- **Inspect CFB containers.** It opens Compound File Binary containers with `CfbReader.FromFile`, exposes sector size and directory entry count, and iterates the internal tree structure with `IterTree` to inspect nested storages and streams.
 +- **Access arbitrary MAPI properties.** It reads and writes arbitrary MAPI properties on messages using `SetProperty` and `GetPropertyValue`, beyond the strongly-typed properties `MapiMessage` exposes directly.
 +- **Attach recipients and files.** It adds recipients with `AddRecipient` and attaches files or nested embedded messages with `AddAttachment` and `AddEmbeddedMessageAttachment`, supporting both external files and in-memory content.
-+
+ 
+ - **Open and traverse CFB containers** from a file, stream, or byte array via `CfbReader.FromFile()`, `CfbReader.FromStream()`, or `new CfbReader(data)`, then walk the directory tree with `IterStorages()`, `IterStreams()`, `IterChildren()`, and `IterTree()`.
+ - **Build CFB containers programmatically** with `CfbDocument`, `CfbStorage`, and `CfbStream`, and serialize them with `CfbWriter.ToBytes()` or `CfbWriter.WriteFile()`.
+-- **Read and write Outlook `.msg` files at the MAPI level** through `MsgReader`, `MsgWriter`, and `MsgDocument`, exposing property streams, recipient storages, and attachment sub-storages directly — useful for forensic inspection or repair of a `.msg` file's raw structure.
  - **Create, edit, save, and reload complete, high-level mutable message objects** through `MapiMessage`: set `Subject`, `Body`, `HtmlBody`, `SenderName`, and `SenderEmailAddress`, then persist with `Save()` and reload with `FromFile()` or `FromStream()` — a free .NET API for building and processing email messages entirely in memory.
 -- **Set and read arbitrary MAPI properties** with `SetProperty()` and `GetPropertyValue()`, beyond the strongly-typed properties `MapiMessage` exposes directly.
 -- **Attach recipients and files** with `AddRecipient()` and `AddAttachment()`, including nested embedded messages via `AddEmbeddedMessageAttachment()`.
 -- **Convert between MSG and EML with no external MIME parser**: `MapiMessage.LoadFromEml()` parses a standard `.eml` file (RFC 5322 / MIME) directly into a `MapiMessage`, and `SaveToEml()` serializes one back to MIME — both implemented natively within the library.
--- **Inspect parsing problems** on a loaded message or MSG document through the read-only `ValidationIssues` list, populated whenever strict parsing encounters a structural anomaly.
+ - **Inspect parsing problems** on a loaded message or MSG document through the read-only `ValidationIssues` list, populated whenever strict parsing encounters a structural anomaly.
  
  ## Installation
  
@@ -141,7 +141,7 @@
  
  ```csharp
  using System.IO;
-@@ -116,9 +94,26 @@
+@@ -116,9 +97,26 @@
  
  ## Additional Examples
  
@@ -171,7 +171,7 @@
  
  ```csharp
  using System.IO;
-@@ -134,28 +129,7 @@
+@@ -134,28 +132,7 @@
  message.Save(output);
  ```
  
@@ -201,7 +201,7 @@
  
  ```csharp
  using Aspose.Email.Foss.Cfb;
-@@ -170,20 +144,9 @@
+@@ -170,20 +147,9 @@
  }
  ```
  
@@ -225,7 +225,7 @@
  
  | Class | Description |
  |---|---|
-@@ -211,48 +174,94 @@
+@@ -211,48 +177,94 @@
  | `MsgStream` | MsgStream.MsgStream initializes a new stream with a name and optional data bytes. |
  | `MsgWriter` | MsgWriter.WriteFile(document, path) writes a MsgDocument to the given file path in MSG format. |
  
@@ -331,7 +331,7 @@
  
  - `MapiMessage` (implements `IDisposable`)
    - `Create(subject, body, unicodeStrings)`, `FromFile(path, strict)`, `FromStream(stream, strict)`, `FromMsgDocument(document)`
-@@ -262,9 +271,11 @@
+@@ -262,9 +274,11 @@
    - `AddRecipient(emailAddress, displayName, recipientType)`, `AddAttachment(filename, data, mimeType, contentId)`, `AddAttachment(filename, stream, mimeType, contentId)`, `AddEmbeddedMessageAttachment(message, filename, mimeType)`
    - `SetProperty(propertyId, propertyType, value, flags)`, `GetPropertyValue(propertyId, propertyType, decode)`, `IterProperties()`, `IterPropertyKeys()`
    - Properties: `Subject`, `Body`, `HtmlBody`, `SenderName`, `SenderEmailAddress`, `MessageClass`, `InternetMessageId`, `MessageDeliveryTime`, `Recipients`, `Attachments`, `ValidationIssues`
@@ -343,7 +343,7 @@
  - `MapiPropertyCollection`
    - `Set(property)`, `Add(propertyId, propertyType, value, flags)`, `Get(propertyId, propertyType)`, `Remove(propertyId, propertyType)`, `IterProperties()`
  
-@@ -272,29 +283,45 @@
+@@ -272,29 +286,45 @@
  
  ## Documentation & Resources
  
@@ -401,7 +401,7 @@
  
  ```bash
  git clone https://github.com/aspose-email-foss/Aspose.Email-FOSS-for-.Net.git
-@@ -315,6 +342,4 @@
+@@ -315,6 +345,4 @@
  
  ## License
  
