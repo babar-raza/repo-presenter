@@ -1,0 +1,65 @@
+id: TC-019b
+gate: GATE5_DELIVERY_PROGRAM
+track: seal-repair
+executor: worker
+purpose: >
+  TC-019's item-level restore, zero-call share (docs/DELIVERY_PLAN_2026-11-07.md section 8.2, TC-019:
+  "item-level restore (zero-call share measured first)"). A sealed Lane R candidate that BC-05 or
+  BC-17 reports as having lost inherited maintainer content is repaired by re-dispositioning the
+  named units (VERIFIED_PRESERVE when every cited fact is SUPPORTED, otherwise PRESERVE_ATTRIBUTED,
+  into a section the sealed plan includes) and re-judging with the full blocking validation and the
+  reviewer's deterministic rules, with no provider call and no new mechanism: the stored dispositions
+  are the only thing changed. Entry points that already exist: readme/repair/restore_units.py and
+  recertify.py's `_rerun_lane_r(restore=True)` / `recertify --write --restore-lost-units`.
+  Measured on the 11 real NEEDS_REPAIR Lane R seals on 2026-11-09: Imaging .NET passes with one
+  restored unit; the others pass BC-05/BC-17 but expose residual defects (BC-14 stated type counts,
+  BC-07 visible-line budget when a restored API listing duplicates the table, BC-06 raw HTML,
+  BC-12 product-name spelling, BC-04 substance). This card's job is to FIX those residuals in the
+  restore path itself, deterministically, where a mechanical fix exists (reuse
+  readme/repair/zero_call_restore.py's accepted restore_stated_count for BC-14 counts; never
+  restore a unit whose members the rendered table already states; never restore raw HTML that BC-06
+  forbids), and to leave honestly failing any seal that genuinely needs a model call.
+  Self-contained: you never read the delivery plan, only this card.
+depends_on:
+  - TC-018
+  - TC-019a
+  - TC-024
+write_paths:
+  - src/repo_presenter/readme/repair/restore_units.py
+  - tests/readme/repair/test_restore_units.py
+  - src/repo_presenter/recertify.py
+  - tests/test_recertify.py
+satisfies:
+  - REQ-REPAIR-001
+source_refs:
+  - file: src/repo_presenter/readme/validation/parity.py
+    anchor: "PARITY_LOSS_MARKER"
+  - file: src/repo_presenter/recertify.py
+    anchor: "def _rerun_lane_r"
+inputs: []
+actions:
+  - "Using sealed bundles fetched with repo_presenter.core.state.bundle_store.seal_history(remote='origin', scratch=<dir>), run recertify with restore on each NEEDS_REPAIR Lane R seal and tabulate the residual failing checks per seal."
+  - "For each residual defect class with a mechanical fix, fix it in restore_units.py / the restore loop in recertify.py with a real-text test (verbatim excerpts from the real sealed bundles) and a negative control; never weaken a validator and never edit unit text."
+  - "Report per seal: before/after failing checks, which residuals remain and why each needs a model call."
+checks:
+  - command: |-
+      python -m pytest tests/readme/repair/test_restore_units.py tests/test_recertify.py -q
+    expect: exit 0
+    timeout_seconds: 600
+    proves:
+      - REQ-REPAIR-001
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -X utf8 -c "import pathlib; p = pathlib.Path('src/repo_presenter/readme/repair/restore_units.py'); nl = chr(10); t = p.read_text(encoding='utf-8'); p.write_text(t + nl + 'restore_lost_units = lambda d, f, u, h, i=None: (d, [])' + nl, encoding='utf-8')"
+  rationale: >
+    Replaces restore_lost_units with a no-op after the real definition, which must fail the tests
+    asserting that a deferred unit is re-dispositioned, proving they exercise the real restore.
+evidence:
+  - src/repo_presenter/readme/repair/restore_units.py
+  - src/repo_presenter/recertify.py
+closeout:
+  - "No sealed bundle or state ref is written by this card; publishing a repaired seal is a separate supervisor action after independent review."
+recovery: "Revert the four write_paths; stored seals are untouched."
