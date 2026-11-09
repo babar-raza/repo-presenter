@@ -503,3 +503,53 @@ def test_oversized_split_never_fires_when_rc06_already_split_the_list() -> None:
     assert len(split) == len(many_symbols)
     assert len(split) != -(-item_count // LIST_SPLIT_CHUNK_SIZE)
     assert [u.sub_ordinal for u in split] == list(range(1, len(many_symbols) + 1))
+
+
+# --- an image-only line is a badge row only when it is a header row or every image is a badge ----
+
+_PAGE_EXAMPLE_RESULTS = """# Aspose.Page FOSS for Python
+
+## Examples
+
+### Example Results
+
+![XPS to PDF to PNG result](readme.resources/mb03.png)
+
+![PS to PDF to PNG result](readme.resources/TestImages.png)
+
+![PS to image sample](readme.resources/RGB10.png)
+"""
+
+_HEADER_BADGES = """# Aspose.Cells FOSS for .NET
+
+[![NuGet](https://img.shields.io/nuget/v/Aspose.Cells.FOSS.svg)](https://www.nuget.org/packages/Aspose.Cells.FOSS/) [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+## Install
+"""
+
+
+def _kinds(text: str) -> list[str]:
+    from repo_presenter.readme.evidence.facts.inherited import inventory_units
+
+    return [unit.unit_type for unit in inventory_units(text)]
+
+
+def test_body_images_under_a_sub_heading_are_paragraphs_not_badge_rows() -> None:
+    """Real lines from Aspose.Page-FOSS-for-Python: three example-result screenshots, which the
+    renderer must be able to print (it never prints a badge_row unit)."""
+    kinds = _kinds(_PAGE_EXAMPLE_RESULTS)
+    assert kinds.count("badge_row") == 0
+    assert kinds.count("paragraph") == 3
+
+
+def test_a_header_badge_row_directly_under_the_title_stays_a_badge_row() -> None:
+    kinds = _kinds(_HEADER_BADGES)
+    assert kinds == ["heading", "badge_row", "heading"]
+
+
+def test_a_badge_only_line_under_a_sub_heading_still_counts_when_every_image_fills_a_slot() -> None:
+    text = (
+        "# Product\n\n## Status\n\n"
+        "[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)\n"
+    )
+    assert "badge_row" in _kinds(text)
