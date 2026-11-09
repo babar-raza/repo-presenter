@@ -74,6 +74,10 @@ from typing import Any
 
 from markdown_it import MarkdownIt
 
+from repo_presenter.core.package_registry import (
+    is_unconfirmed_registry_install,
+    unconfirmed_registry_packages,
+)
 from repo_presenter.readme.evidence.facts.links import (
     check_anchor,
     extract_links,
@@ -735,6 +739,7 @@ def technical_content(
         if f.get("polarity") == "CONTRADICTED"
     ]
     install_facts = _verified_values(cand, lambda f: f.get("kind") == "install_command")
+    unconfirmed_packages = unconfirmed_registry_packages(cand.facts)
     version_facts = _verified_values(
         cand,
         lambda f: (
@@ -800,6 +805,15 @@ def technical_content(
                     for v in install_facts
                 ):
                     why = "replaced by the verified install command"
+            if (
+                why is None
+                and category == "install_commands"
+                and is_unconfirmed_registry_install(item, unconfirmed_packages)
+            ):
+                why = (
+                    "its registry install is not confirmed as this repository's own (BC-02); the "
+                    "Installation section states that and gives the source install"
+                )
             if why is None and category == "versions":
                 shape = item.count(".")
                 if any(

@@ -279,6 +279,29 @@ def test_lost_install_command_fails_and_verified_replacement_is_accounted():
     )
 
 
+def test_registry_install_of_an_unconfirmed_package_is_accounted_not_lost():
+    """BC-02 forbids printing the registry install of a package whose ownership the registry does not
+    confirm (Aspose.3D-FOSS-for-Python), so BC-17 must not demand the maintainers' copy of it."""
+    readme = benchmark().replace(
+        "dotnet add package Foo.Bar", "git clone https://example.com/foo.git"
+    )
+    unconfirmed = {
+        **fact("install_command:dotnet", "install_command", "dotnet add package Foo.Bar", "UNRESOLVED"),
+        "evidence": [
+            {
+                "path": "https://api.nuget.org/x",
+                "detail": "package registry: a distribution of this name exists, but ownership "
+                "not confirmed: the registry's project URLs point at another repository",
+            }
+        ],
+    }
+    facts = [unconfirmed if f["id"] == "install_command:dotnet" else f for f in base_facts()]
+    numbers = dim(run(cand(readme, facts=facts)), "technical_content").numbers["install_commands"]
+    assert numbers["lost"] == 0 and numbers["accounted"] == 1
+    # with no ownership reading on the install fact it is still owed
+    assert dim(run(cand(readme)), "technical_content").numbers["install_commands"]["lost"] == 1
+
+
 def test_version_number_lost_fails_unless_updated_to_the_verified_version():
     readme = benchmark().replace("1.2.3", "a recent release")
     assert dim(run(cand(readme)), "technical_content").numbers["versions"]["lost"] == 1

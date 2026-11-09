@@ -34,6 +34,10 @@ from __future__ import annotations
 
 import re
 
+from repo_presenter.core.package_registry import (
+    is_unconfirmed_registry_install,
+    unconfirmed_registry_packages,
+)
 from repo_presenter.readme.composition.references import positional_only
 from repo_presenter.readme.validation.content_presence import unstated
 from repo_presenter.readme.validation.failures import Candidate, Failure
@@ -130,6 +134,9 @@ def superseded_failures(candidate: Candidate) -> list[Failure]:
     }
     failures: list[Failure] = []
     public = public_names(candidate)
+    # BC-02 refuses to print the registry install of a package whose ownership the registry does not
+    # confirm, so a superseded unit's copy of that command is not owed by its replacement.
+    unconfirmed = unconfirmed_registry_packages(candidate.facts.by_kind("install_command"))
     for entry in candidate.dispositions.get("dispositions", []):
         if entry.get("disposition") != SUPERSEDED:
             continue
@@ -145,7 +152,7 @@ def superseded_failures(candidate: Candidate) -> list[Failure]:
                 kind=_kind(unit_id),
                 strict=True,
             )
-            if owed(piece, public)
+            if owed(piece, public) and not is_unconfirmed_registry_install(piece, unconfirmed)
         ]
         if not missing:
             continue

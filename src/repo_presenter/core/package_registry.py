@@ -20,7 +20,7 @@ module would leave one of the two taskcards importing a module the other owns.
 from __future__ import annotations
 
 import re
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass
 from typing import Literal
 
@@ -143,6 +143,47 @@ def fact_registry_reading(fact: Fact) -> RegistryReading | None:
         if reading is not None:
             return reading
     return None
+
+
+def _field(fact: object, name: str) -> object:
+    return fact.get(name) if isinstance(fact, Mapping) else getattr(fact, name, None)
+
+
+def unconfirmed_registry_packages(facts: Iterable[object]) -> frozenset[str]:
+    """The package names whose registry install an ``install_command`` fact records as an
+    UNRESOLVED-ownership reading (a distribution of that name exists, but nothing ties it to this
+    repository: Aspose.3D-FOSS-for-Python, whose PyPI project URL names another repository).
+
+    Works on :class:`Fact` objects and on the plain mappings a sealed ``facts.json`` holds. The name
+    is the last word of the fact's recorded command (``pip install aspose-3d-foss``)."""
+    names: set[str] = set()
+    for fact in facts:
+        if _field(fact, "kind") != "install_command" or _field(fact, "polarity") == "SUPPORTED":
+            continue
+        details = [
+            str(_field(item, "detail") or "")
+            for item in (_field(fact, "evidence") or [])  # type: ignore[attr-defined]
+        ]
+        reading = next(
+            (found for found in (registry_reading(d) for d in reversed(details)) if found), None
+        )
+        words = str(_field(fact, "value") or "").split()
+        if reading == "ownership_unconfirmed" and words:
+            names.add(re.split(r"==|@|=|>=|<=", words[-1])[0].lower())
+    return frozenset(names)
+
+
+def is_unconfirmed_registry_install(text: str, packages: frozenset[str]) -> bool:
+    """Whether ``text`` (one command line) is the registry install of a package in ``packages``.
+
+    BC-02 forbids printing such a command, so no inherited unit that carried it is owed it: the
+    Installation section states the package as unconfirmed and gives the source install instead."""
+    if not packages:
+        return False
+    words = text.strip().removeprefix("$ ").lower().split()
+    if not ({"install", "add", "get"} & set(words)) or "clone" in words:
+        return False
+    return any(re.split(r"==|@|=|>=|<=", word)[0] in packages for word in words)
 
 
 @dataclass(frozen=True)
