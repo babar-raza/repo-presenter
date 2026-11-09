@@ -354,6 +354,19 @@ _SECTION_RENDERS: dict[str, frozenset[str]] = {
     "license": frozenset({"heading", "paragraph"}),
 }
 _NAVIGATION_ITEM = re.compile(r"^\s*[-*+]\s*\[[^\]]+\]\(#[^)\s]*\)\s*$")
+_TOC_ITEM = re.compile(r"^\s*(?:[-*+]|\d+[.)])\s*\[[^\]]+\]\(#[^)\s]*\)\s*$")
+#: A list whose non-empty lines are at least this share intra-document links is a table of contents.
+_TOC_SHARE = 0.8
+_TOC_MIN_LINKS = 3
+
+
+def is_table_of_contents(text: str) -> bool:
+    """Whether a list is the maintainers' table of contents: at least ``_TOC_MIN_LINKS`` lines that
+    are only an intra-document ``[text](#anchor)`` link and at least ``_TOC_SHARE`` of its non-empty
+    lines (a stray non-link line, such as a requirement note, does not make it content)."""
+    lines = [line for line in text.splitlines() if line.strip()]
+    links = sum(1 for line in lines if _TOC_ITEM.match(line))
+    return links >= _TOC_MIN_LINKS and links >= _TOC_SHARE * len(lines)
 _CODE_SPAN = re.compile(r"`([^`\n]+)`")
 _NAME_SPAN = re.compile(
     r"[A-Za-z_][A-Za-z0-9_]*(?:(?:\.|::|-)[A-Za-z0-9_]+)*"
@@ -668,8 +681,10 @@ def _supersession_gap(
                 SECTION_RENDERS_OTHER_KINDS,
                 f"{destination} renders from facts and prints no {kind.replace('_', ' ')}",
             )
-        if destination == "navigation" and not all(
-            _NAVIGATION_ITEM.match(line) for line in text.splitlines() if line.strip()
+        if (
+            destination == "navigation"
+            and not is_table_of_contents(text)
+            and not all(_NAVIGATION_ITEM.match(line) for line in text.splitlines() if line.strip())
         ):
             return (NOT_NAVIGATION, "navigation lists the document's own sections only")
         unrendered = (
@@ -1714,10 +1729,46 @@ def normalize(
             + str(entry.get("rationale") or "")
         )[:_RATIONALE_LIMIT]
     _fold_positional_pointers(output, facts)
+    _fold_table_of_contents(output, facts, identity_fact_id)
     _fold_dangling_rewrites(output, facts)
     _fold_headings_into_kept_body(output, facts)
     _prune_incidental_coverage(output, coverage)
     return errors
+
+
+def _fold_table_of_contents(
+    output: dict[str, Any], facts: FactsDocument, identity_fact_id: str | None
+) -> None:
+    """A list kept as written (VERIFIED_PRESERVE/VERIFIED_MOVE) that is the maintainers' table of
+    contents (``is_table_of_contents``) is navigation: SUPERSEDE_REDUNDANT into ``navigation``,
+    citing the identity fact the Navigation row renders from.
+
+    Measured live (hosted Lane R, Aspose.Cells-FOSS-for-Go): the nested ``[text](#anchor)`` list
+    inherited_unit:006.list, with one stray non-link line, was kept in the opening. Placement then
+    de-links every anchor whose heading is not rendered, so the printed text differed from the
+    unit's and the reviewer's disposition_coverage rule rejected it as "kept but not printed"; the
+    README would also have carried a second table of contents above the generated Navigation.
+    The section links are the Navigation row's job; the stray line is covered by the facts it
+    states (a requirement the Installation or Dependencies rows render)."""
+    texts = {fact.id: fact.value for fact in facts.by_kind("inherited_unit")}
+    for entry in output.get("dispositions", []):
+        unit = str(entry.get("unit_id", ""))
+        if _unit_kind(unit) != "list" or entry.get("disposition") not in _BODY_KEPT:
+            continue
+        if not is_table_of_contents(texts.get(unit, "")):
+            continue
+        cited = set(entry.get("fact_ids") or [])
+        if identity_fact_id is not None:
+            cited.add(identity_fact_id)
+        if not cited:
+            continue
+        entry["disposition"] = "SUPERSEDE_REDUNDANT"
+        entry["destination_section"] = "navigation"
+        entry["fact_ids"] = sorted(cited)
+        entry["rationale"] = (
+            "A table of contents: the generated Navigation lists the document's own sections. "
+            + str(entry.get("rationale") or "")
+        )[:_RATIONALE_LIMIT]
 
 
 def _fold_positional_pointers(output: dict[str, Any], facts: FactsDocument) -> None:

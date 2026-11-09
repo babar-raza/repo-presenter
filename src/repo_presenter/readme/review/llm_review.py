@@ -59,6 +59,10 @@ from repo_presenter.core.llm.jobs import (
 from repo_presenter.core.llm.ledger import Ledger, canonical_hash
 from repo_presenter.core.llm.prompts import PromptRegistry
 from repo_presenter.core.retry import RetryableOperationError
+from repo_presenter.readme.review.applied_edits import (
+    applied_edits_for_lines,
+    evidenced_edit_errors,
+)
 from repo_presenter.readme.review.calibration_status import load_calibration
 from repo_presenter.readme.review.findings import CLEARANCES_FOR_KIND, Finding
 from repo_presenter.readme.review.reply import (
@@ -185,7 +189,11 @@ LANE_L_INSTRUCTION = (
     "unchanged maintainer text shown only as context; defects that already existed in it are "
     "recorded elsewhere (residuals) and are not this review's question. A finding must cite at "
     "least one changed line (a span may extend into neighbouring unchanged lines when the edit "
-    "interacts with them); a finding that cites only unchanged lines is a contract error. A "
+    "interacts with them); a finding that cites only unchanged lines is a contract error. "
+    "applied_edits, when present, lists the deterministic edits that wrote a changed line, each "
+    "with the SUPPORTED fact ids it was derived from: the term such an edit wrote is evidenced by "
+    "that derivation (the validators re-derive it from the same facts), so do not fault it as an "
+    "unsupported claim. A "
     "unit with no changed lines has nothing to fault: return ACCEPT unless an edit elsewhere "
     "contradicts it, which you cite on the changed line."
 )
@@ -228,9 +236,16 @@ def edit_scope(
 
 
 def _lane_l_scope(
-    unit: ReviewUnit, changed: frozenset[int], residuals: Sequence[Any]
+    unit: ReviewUnit,
+    changed: frozenset[int],
+    residuals: Sequence[Any],
+    applied: Sequence[Mapping[str, Any]] = (),
+    candidate_readme: str = "",
 ) -> dict[str, Any]:
+    unit_changed = sorted(n for n in unit.lines if n in changed)
+    derived = applied_edits_for_lines(applied, candidate_readme, unit_changed) if applied else []
     return {
+        **({"applied_edits": derived} if derived else {}),
         "instruction": LANE_L_INSTRUCTION,
         "changed_lines": sorted(n for n in unit.lines if n in changed),
         "residuals_already_recorded": [
@@ -274,6 +289,8 @@ def review_checks(
     plan: Mapping[str, Any],
     scope: ReviewScope | None = None,
     changed: frozenset[int] | None = None,
+    applied: Sequence[Mapping[str, Any]] = (),
+    original_readme: str = "",
 ) -> list[str]:
     """The job's ``checks``: the cited lines resolved to the candidate's own text, identical findings
     merged, then the Phase 1 contract (scoped to the unit); the errors are quoted back to the model
@@ -286,6 +303,13 @@ def review_checks(
         unchanged = unchanged_text_errors(output, changed=changed, unit_lines=scope.lines)
         if unchanged:
             return unchanged
+    if changed is not None and applied:
+        evidenced = evidenced_edit_errors(
+            output, rows=applied, candidate_readme=candidate_readme,
+            original_readme=original_readme, facts=facts, changed=changed,
+        )
+        if evidenced:
+            return evidenced
     merge_repeated_findings(output)
     return validate_review_reply(
         output, candidate_readme=candidate_readme, facts=facts, plan=plan, scope=scope
@@ -423,6 +447,7 @@ def planned_requests(
         candidate_readme=candidate_readme, original_readme=original_readme,
     )
     residuals = list((validation or {}).get("residuals") or []) if changed is not None else []
+    applied = list((validation or {}).get("applied_edits") or []) if changed is not None else []
     requests = []
     for unit in units:
         packet = unit_packet(
@@ -437,7 +462,8 @@ def planned_requests(
         )
         if changed is not None:
             packet["review_scope"] = {
-                **packet["review_scope"], "lane_l": _lane_l_scope(unit, changed, residuals),
+                **packet["review_scope"],
+                "lane_l": _lane_l_scope(unit, changed, residuals, applied, candidate_readme),
             }
         schema = unit_schema(loaded, unit)
         requests.append(
@@ -527,6 +553,10 @@ def review_with_model(
                     plan=plan,
                     scope=scope,
                     changed=changed,
+                    applied=list((validation or {}).get("applied_edits") or [])
+                    if changed is not None
+                    else [],
+                    original_readme=original_readme,
                 ),
             )
             served = result.model_served or store.record(result.request_sha256).get(

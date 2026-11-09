@@ -424,6 +424,19 @@ def test_live_loss_rejects_a_lost_link_target() -> None:
     )
 
 
+def test_live_loss_ignores_an_in_page_anchor_link_the_renderers_own_navigation_replaces() -> None:
+    """Slides .NET: the maintainers' ``[What it can do](#what-it-can-do)`` navigation entry; the
+    renderer prints its own navigation to its own headings. BC-17 skips ``#`` links for the same
+    reason (a heading is the anchor's address, judged on its own), and a link to a heading the
+    candidate does not have would dangle."""
+    live = LIVE + "\n- [What it can do](#what-it-can-do)\n"
+    candidate = LIVE + "\n- [Key capabilities](#key-capabilities)\n"
+    messages = _messages(
+        live_readme_loss_rule(live, candidate, facts=_facts(*UNITS), dispositions=_all_kept())
+    )
+    assert not any("#what-it-can-do" in message for message in messages)
+
+
 # ---------------------------------------------------------------------------
 # end to end: the rules inside review_candidate; the verdict fold is untouched
 # ---------------------------------------------------------------------------

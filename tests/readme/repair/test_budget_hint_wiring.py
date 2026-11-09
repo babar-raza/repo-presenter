@@ -26,6 +26,7 @@ def _rc(readme):
         store=SimpleNamespace(get=lambda key: PLAN),
         readme=readme,
         units={},
+        visible_lines_budget=300,
     )
 
 
@@ -202,3 +203,52 @@ def test_a_non_budget_defect_is_judged_only_by_the_plan_checks(monkeypatch):
     rc.units = {"units": []}
     loop._repair_plan(rc, _defect("BC-02"), SimpleNamespace(record=lambda *a, **k: None))
     assert seen["checks"]({}) == marker
+
+
+# --- the repair is judged by the budget BC-07 judges by -----------------------------------------
+# Slides Java: BC-07 held the candidate to max(300, the published README's 367 visible lines), but
+# the repair rejected every revision above 300, so a repository whose published README is longer
+# than 300 lines could never be repaired.
+
+
+def test_the_repair_context_budget_is_the_effective_budget_bc07_uses():
+    from repo_presenter.readme.repair.loop import RepairContext
+    from repo_presenter.readme.validation.rules import effective_visible_lines_budget
+    from repo_presenter.readme.composition.policy import DEFAULT_POLICY
+
+    published = chr(10).join(f"line {i}" for i in range(367))
+    shared = effective_visible_lines_budget(DEFAULT_POLICY, published)
+    assert shared == 367
+    rc = RepairContext.__new__(RepairContext)
+    object.__setattr__(rc, "benchmark", published)
+    assert rc.visible_lines_budget == shared
+    object.__setattr__(rc, "benchmark", "")
+    assert rc.visible_lines_budget == DEFAULT_POLICY.visible_lines_budget
+
+
+def test_a_revision_between_the_policy_and_the_effective_budget_is_accepted(monkeypatch):
+    monkeypatch.setattr(loop, "planning_packet", lambda *a, **k: {})
+    monkeypatch.setattr(loop, "planning_schema", lambda *a, **k: {})
+    monkeypatch.setattr(loop, "request_hash", lambda *a, **k: "k")
+    monkeypatch.setattr(loop, "effective_model", lambda *a, **k: "m")
+    monkeypatch.setattr(loop, "refuse_noop", lambda original, checks: checks)
+    monkeypatch.setattr(loop, "plan_checks", lambda revised, **k: [])
+    monkeypatch.setattr(
+        loop, "render_readme", lambda entry, facts, plan, units, dispositions: chr(10).join(["x"] * 342)
+    )
+    captured = {}
+
+    def fake_call(rc, d, loaded, original, checks, **kwargs):
+        captured["checks"] = checks
+        return "outcome"
+
+    monkeypatch.setattr(loop, "_targeted_call", fake_call)
+    monkeypatch.setattr(loop, "_accept", lambda *a, **k: True)
+    rc = _rc(chr(10).join(["x"] * 373))
+    rc.units = {"units": []}
+    rc.visible_lines_budget = 367
+    loop._repair_plan(rc, _defect("BC-07"), SimpleNamespace(record=lambda *a, **k: None))
+    assert captured["checks"](dict(PLAN)) == []
+    rc.visible_lines_budget = 300
+    loop._repair_plan(rc, _defect("BC-07"), SimpleNamespace(record=lambda *a, **k: None))
+    assert captured["checks"](dict(PLAN))  # 342 > 300: still rejected under the plain budget

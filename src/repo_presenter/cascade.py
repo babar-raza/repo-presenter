@@ -519,7 +519,7 @@ def _settle_defects(
 def _repair_defects(
     *, defects: list[Defect], composed: _Composition, investigation: dict, entry: RegistryEntry,
     document: FactsDocument, prompts: PromptRegistry, config: GatewayConfig, ledger: Ledger,
-    store: CallStore, context: JobContext, repairs: RepairLedger,
+    store: CallStore, context: JobContext, repairs: RepairLedger, benchmark: str = "",
 ) -> bool:
     """One targeted repair per fresh defect, each a ``run_job`` call routed by its own causal
     stage (``repair.loop.repair_defect``: S4's per-unit patch, S5's plan revision, or S6's section
@@ -538,7 +538,7 @@ def _repair_defects(
             else composed.dispositions
         ),
         plan=composed.plan, tasks=composed.tasks, name=product_name(entry),
-        readme=composed.readme, units=composed.coherent_units,
+        readme=composed.readme, units=composed.coherent_units, benchmark=benchmark,
     )
     fresh = merge_equivalent([d for d in defects if not repairs.attempted(d.fingerprint)])
     for defect in defects:
@@ -594,7 +594,7 @@ def _settle_s9(
         if not defects or not _repair_defects(
             defects=defects, composed=composed, investigation=investigation, entry=entry,
             document=document, prompts=prompts, config=config, ledger=ledger, store=store,
-            context=context, repairs=repairs,
+            context=context, repairs=repairs, benchmark=original,
         ):
             break
     return _Settled(composed, validation, verdict, rounds)
@@ -604,6 +604,9 @@ def _settle_s9(
 #: settled candidate lost (BC-17) and a superseded unit whose replacement does not carry it (BC-05).
 #: A candidate that also fails any other blocking check is left exactly as it was.
 RESTORABLE_CHECKS = frozenset({"BC-05", "BC-17"})
+#: Failing beside them without ruling the restore out: the line budget and fence rules move with the
+#: printed content, so a restore is attempted and kept only if it leaves NO blocking failure.
+RESTORE_COMPANION_CHECKS = frozenset({"BC-07"})
 RESTORED_UNITS_FILENAME = "restored_units.json"
 
 
@@ -622,7 +625,8 @@ def _restore_lost_content(
 
     composed = settled.composed
     failing = blocking_failures(settled.validation)
-    if not failing or not {str(check["id"]) for check in failing} <= RESTORABLE_CHECKS:
+    failing_ids = {str(check["id"]) for check in failing}
+    if not failing_ids & RESTORABLE_CHECKS or not failing_ids <= RESTORABLE_CHECKS | RESTORE_COMPANION_CHECKS:
         return settled
     holdable = holdable_sections(document)
     included = [
@@ -867,7 +871,7 @@ def run_cascade(
         if not defects or not _repair_defects(
             defects=defects, composed=settled.composed, investigation=investigation, entry=entry,
             document=document, prompts=prompts, config=config, ledger=ledger, store=store,
-            context=context, repairs=repairs,
+            context=context, repairs=repairs, benchmark=original,
         ):
             break
         review_rounds += 1

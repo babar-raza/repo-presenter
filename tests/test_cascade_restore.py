@@ -104,3 +104,45 @@ def test_negative_control_without_the_restore_the_same_run_is_stopped_at_the_blo
     assert seen.get("reached") is None  # blocking checks still failed, so no model review was made
     assert "BC-17" in {c["id"] for c in _blocking_without_fixture_noise(run.json("validation.json"))}
     assert not (run.out / "restored_units.json").exists()
+
+
+# --- which failing sets a restore is attempted for ---------------------------------------------
+# Slides Java failed BC-05 AND BC-07 (the line budget); the restore was skipped because BC-07 is
+# not a restorable check, although re-rendering with the unit kept is what the pair needs. BC-07 may
+# accompany BC-05/BC-17; any other failing check, or BC-07 alone, still leaves the candidate as is.
+
+
+def _attempted(monkeypatch: pytest.MonkeyPatch, failing_ids: list[str]) -> bool:
+    from types import SimpleNamespace
+
+    calls: list[bool] = []
+    checks = [{"id": check_id, "details": []} for check_id in failing_ids]
+    monkeypatch.setattr(cascade_module, "blocking_failures", lambda validation: checks)
+    monkeypatch.setattr(cascade_module, "holdable_sections", lambda document: calls.append(True) or {})
+    settled = SimpleNamespace(
+        composed=SimpleNamespace(plan={"sections": []}, dispositions={}), validation={}, verdict=None
+    )
+    try:
+        result = cascade_module._restore_lost_content(
+            settled, entry=None, document=None, investigation={}, tree_paths=[], original="",
+            out_dir=Path("."),
+        )
+    except Exception:  # noqa: BLE001 - past the gate the fake settled cannot be rendered
+        return True
+    assert result is settled
+    return bool(calls)
+
+
+def test_a_restore_is_attempted_for_bc05_and_bc17_with_bc07(monkeypatch: pytest.MonkeyPatch) -> None:
+    assert _attempted(monkeypatch, ["BC-05", "BC-07"])
+    assert _attempted(monkeypatch, ["BC-17", "BC-07"])
+    assert _attempted(monkeypatch, ["BC-05", "BC-17"])
+
+
+def test_a_restore_is_not_attempted_for_bc07_alone_or_with_another_check(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    assert not _attempted(monkeypatch, ["BC-07"])
+    assert not _attempted(monkeypatch, ["BC-05", "BC-07", "BC-04"])
+    assert not _attempted(monkeypatch, ["BC-02", "BC-17"])
+    assert not _attempted(monkeypatch, [])

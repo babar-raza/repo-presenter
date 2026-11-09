@@ -186,6 +186,15 @@ def _fence_and_spacing_failures(candidate: Candidate) -> list[Failure]:
         for placement in placements_of(candidate)
         if placement.outcome == "placed" and placement.unit_id.endswith(".code_block")
     }
+    # A fence NESTED in a kept maintainers' list or paragraph (Slides Java: a bare fence under a
+    # list item) is the upstream's own text, printed as written; it is exempt like a code_block unit.
+    for placement in placements_of(candidate):
+        if placement.outcome == "placed" and placement.unit_id.startswith("inherited_unit:"):
+            verbatim_bodies.update(
+                token.content.strip()
+                for token in MarkdownIt("commonmark").parse(placement.text)
+                if token.type == "fence" and token.content.strip()
+            )
     failures: list[Failure] = []
     for token in MarkdownIt("commonmark").parse(candidate.readme):
         if token.type != "fence" or token.content.strip() in verbatim_bodies:

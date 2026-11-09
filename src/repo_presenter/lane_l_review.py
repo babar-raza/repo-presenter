@@ -59,6 +59,7 @@ from repo_presenter.readme.correction.report import (
     defect_findings,
     unrepaired_defects,
 )
+from repo_presenter.readme.review.applied_edits import applied_edit_rows
 from repo_presenter.readme.review.independent_reviewer import (
     Finding,
     ReviewVerdict,
@@ -70,7 +71,7 @@ from repo_presenter.readme.review.llm_review import review_with_model
 #: Bump whenever a holdout, the accounting of edits as dispositions, or the call into the reviewer
 #: changes meaning. A Lane L bundle records it as ``components.correction_review``: the reviewer
 #: scope, so a bump rechecks the review and regenerates nothing.
-LANE_L_REVIEW_VERSION = "2"
+LANE_L_REVIEW_VERSION = "3"
 HOLDOUTS_FILENAME = "holdouts.json"
 
 RULE_CONFINEMENT = "lane_l_confinement"
@@ -343,6 +344,7 @@ def review_correction(
     live one and the facts; ``ReviewUnavailable`` propagates when no valid review exists."""
     if findings:
         return ReviewVerdict.folded(findings)
+    applied = applied_edit_rows(result.edits, facts)
     return review_with_model(
         prompts=prompts,
         config=config,
@@ -354,7 +356,10 @@ def review_correction(
         facts=facts,
         plan={"sections": []},
         dispositions=correction_dispositions(ctx, result.edits),
-        validation=holdouts,
+        # The derivation of each value a detector computed from SUPPORTED facts rides with the
+        # holdouts the reviewer reads, never into the recorded holdouts document: it is the
+        # evidence for the edited line, not part of the sealed record.
+        validation={**holdouts, "applied_edits": applied} if applied else holdouts,
         deterministic_findings=(),
         # Lane L's README is the maintainers' own text plus minimal evidenced edits, not rendered
         # from facts: installation, license, fenced code and tables are exactly what the model

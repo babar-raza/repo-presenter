@@ -83,6 +83,7 @@ from repo_presenter.readme.composition.planning import (
 )
 from repo_presenter.readme.composition.policy import DEFAULT_POLICY
 from repo_presenter.readme.composition.renderer import line_counts, render_readme
+from repo_presenter.readme.validation.rules import effective_visible_lines_budget
 from repo_presenter.readme.reconciliation.dispositions import (
     reconcile_checks,
     reconciliation_batch_facts,
@@ -220,6 +221,15 @@ class RepairContext:
     #: The coherent units document the README was rendered from; with it a budget repair can
     #: MEASURE what clearing a plan field removes instead of estimating.
     units: dict[str, Any] = field(default_factory=dict)
+    #: The published README the candidate is held to (BC-07's line budget is
+    #: ``max(policy budget, its visible lines)``); empty when there is none.
+    benchmark: str = ""
+
+    @property
+    def visible_lines_budget(self) -> int:
+        """The budget BC-07 judges this candidate by -- the one shared function, so a repair is
+        never judged against a stricter budget than the check that raised the defect."""
+        return effective_visible_lines_budget(DEFAULT_POLICY, self.benchmark or None)
 
 
 def _read_text(path: Path) -> str:
@@ -371,7 +381,7 @@ def _budget_hint(
         plan,
         rc.facts,
         visible,
-        DEFAULT_POLICY.visible_lines_budget,
+        rc.visible_lines_budget,
         measure=_measure_by_render(rc, plan, visible),
     )
 
@@ -383,7 +393,7 @@ def _fits_the_budget(rc: RepairContext, checks: Checks, hint: Mapping[str, Any])
     revision whose render still exceeds the budget is rejected with the measured levers named, so
     the job's own bounded re-asks can correct it. A revision that cannot be rendered is left to the
     plan checks: this adds a requirement, it never decides on a render it could not make."""
-    budget = DEFAULT_POLICY.visible_lines_budget
+    budget = rc.visible_lines_budget
     levers = hint.get("optional_plan_fields_and_their_visible_line_cost_if_cleared") or {}
 
     def judged(revised: dict[str, Any]) -> list[str]:
@@ -721,6 +731,7 @@ def _load_context(
     prompts: PromptRegistry,
     config: GatewayConfig,
     ledger: Ledger,
+    benchmark: str = "",
 ) -> RepairContext:
     entry = require_listed(load_registry(registry_path), result.repository)
     # facts.json stores the inherited units in sorted position, but the cascade builds its document
@@ -762,6 +773,7 @@ def _load_context(
         name=product_name(entry),
         readme=_read_text(out_dir / "README.coherent.md"),
         units=_read_json(out_dir / "content_units.coherent.json"),
+        benchmark=benchmark,
     )
 
 
@@ -806,6 +818,7 @@ def settle_candidate(
             prompts=prompts,
             config=config,
             ledger=ledger,
+            benchmark=_read_text(clone_path / "README.md"),
         )
         units = _read_json(out_dir / "content_units.coherent.json").get("units", [])
         defects = build_defects(

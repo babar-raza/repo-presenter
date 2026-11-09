@@ -33,6 +33,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any, NamedTuple
 
+from repo_presenter.readme.composition.components.shell import SEMANTIC_SHELL
 from repo_presenter.readme.composition.coverage import carries_hard_tokens, states_all
 from repo_presenter.readme.composition.list_coverage import stems
 from repo_presenter.readme.composition.placement import (
@@ -435,6 +436,80 @@ def _uncited_kept_heading_identity(
     )
 
 
+def _heading_level(text: str) -> int:
+    return len(text) - len(text.lstrip("#"))
+
+
+def _deferred_subheading(
+    entry: Mapping[str, Any], candidate: Candidate, known: frozenset[str]
+) -> _Decision | None:
+    """A sub-heading S4 parked (``DEFER_UNRESOLVED``, no fact) under a heading that a section the
+    renderer builds deterministically from facts prints itself.
+
+    Measured live (aspose-psd-foss/Aspose.PSD-FOSS-for-Python): the maintainers' ``## Dependencies``
+    held ``### Required``, ``### Native / System`` and ``### Development``; S4 deferred all three
+    ("rendered deterministically by the dependencies section") and the render printed the
+    section's own ``### Required Package Dependencies``, so ``live_readme_loss`` refused the three
+    headings. A section of owner ``D`` prints its own sub-headings and never an inherited one as
+    written (``renders_verbatim``): the heading belongs to that section, citing the facts it
+    renders from. Only when the heading is not printed, the parent heading above it is printed and
+    is a ``D`` section's own title, and that section renders from SUPPORTED facts; what the
+    sub-heading introduced is judged by its own disposition (BC-17, ``disposition_coverage``), not
+    here."""
+    unit_id = str(entry.get("unit_id", ""))
+    values = _unit_values(candidate)
+    value = values.get(unit_id)
+    match = _ORDINAL.match(unit_id)
+    if (
+        value is None
+        or match is None
+        or not unit_id.endswith(".heading")
+        or entry.get("disposition") != "DEFER_UNRESOLVED"
+        or any(fact_id in known for fact_id in entry.get("fact_ids") or [])
+        or heading_printed(value, candidate.readme)
+    ):
+        return None
+    level = _heading_level(value)
+    parent: str | None = None
+    for ordinal, other in sorted(
+        (
+            (int(m.group(1)), other)
+            for other in values
+            if other.endswith(".heading")
+            and (m := _ORDINAL.match(other)) is not None
+            and int(m.group(1)) < int(match.group(1))
+        ),
+        reverse=True,
+    ):
+        if _heading_level(values[other]) < level:
+            parent = values[other]
+            break
+    if parent is None or not heading_printed(parent, candidate.readme):
+        return None
+    included = {
+        str(item.get("section_id"))
+        for item in candidate.plan.get("sections", [])
+        if item.get("include")
+    }
+    section = next(
+        (
+            shell
+            for shell in SEMANTIC_SHELL
+            if shell.owner == "D"
+            and shell.heading is not None
+            and shell.id in included
+            and heading_printed(parent, f"## {shell.heading}")
+        ),
+        None,
+    )
+    if section is None:
+        return None
+    facts = sorted(set(rendering_fact_ids(section.id, candidate.facts)) & known)
+    if not facts:
+        return None
+    return _Decision(section.id, RATIONALE_HEADING.format(section=section.id.replace("_", " ")), facts)
+
+
 def _included_sections(plan: Mapping[str, Any]) -> list[str]:
     return [
         str(item.get("section_id"))
@@ -788,6 +863,9 @@ def account_unprinted_units(
         if decided is None:
             decided = _uncited_redundant_omission(entry, candidate, known)
             reason = "uncited_redundant_omission"
+        if decided is None:
+            decided = _deferred_subheading(entry, candidate, known)
+            reason = "deferred_subheading"
         if decided is None:
             continue
         was = str(entry.get("disposition"))

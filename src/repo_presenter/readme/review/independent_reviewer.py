@@ -540,6 +540,13 @@ def live_readme_loss_rule(
     contradicted = _contradicted_links(facts)
     for link in extract_links(original_readme):
         target = link.href.rstrip("/")
+        if target.startswith("#"):
+            # An in-page anchor is its heading's address, not content of its own: the heading is
+            # judged above, and the parity gate (BC-17, ``technical_content``) skips ``#`` links
+            # for the same reason -- the two rules must agree. Printing it would also be wrong when
+            # the renderer re-titled the section, as the link would dangle (Slides .NET:
+            # ``#what-it-can-do`` of the maintainers' own navigation, replaced by the renderer's).
+            continue
         if (
             target not in new_targets
             and not accounted(link.href)

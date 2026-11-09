@@ -3816,3 +3816,40 @@ def test_attributed_maintainer_content_is_shown_to_the_reviewer_with_no_public_l
     # The maintainer content is still shown and judged; its attribution lives only in the
     # dispositions (the reviewer's maintainer_lines), never in the README.
     assert line_sections(candidate.readme)[rows.index(_MAINTAINER_NOTE)] == "scope_limitations"
+
+def test_a_bare_fence_nested_in_a_placed_inherited_list_is_exempt_from_the_language_rule(
+    tmp_path: Path,
+) -> None:
+    """Slides Java: the upstream's own list item holds a bare fence (``refusal names the
+    alternatives:`` then an indented ``` block). The list prints as written, so the fence is the
+    upstream's spelling; an authored bare fence elsewhere still fails."""
+    item = "- **Save formats**: the refusal names the alternatives:\n\n  ```\n  Export failed\n  ```\n"
+    facts = FactsDocument(
+        FACTS.repository,
+        FACTS.source_revision,
+        (*FACTS.facts, _fact("inherited_unit:902.list", "inherited_unit", item)),
+    )
+    dispositions = {
+        "dispositions": [
+            *DISPOSITIONS["dispositions"],
+            {
+                "unit_id": "inherited_unit:902.list",
+                "disposition": "VERIFIED_MOVE",
+                "destination_section": "scope_limitations",
+                "fact_ids": [],
+                "rationale": "r",
+            },
+        ]
+    }
+    candidate = _candidate(facts=facts, dispositions=dispositions)
+    assert "  ```\n  Export failed" in candidate.readme
+    assert not any("has no language" in d for d in _structure_details(candidate, tmp_path))
+    authored = candidate.readme.replace(
+        "## Scope and Limitations\n\n", "## Scope and Limitations\n\n```\nsome output\n```\n\n"
+    )
+    assert any(
+        "has no language" in d
+        for d in _structure_details(
+            _candidate(authored, facts=facts, dispositions=dispositions), tmp_path
+        )
+    )
