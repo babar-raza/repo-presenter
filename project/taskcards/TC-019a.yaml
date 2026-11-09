@@ -1,0 +1,129 @@
+id: TC-019a
+gate: GATE5_DELIVERY_PROGRAM
+track: seal-repair
+executor: worker
+purpose: >
+  First step of TC-019's own scope ("item-level restore (zero-call share measured first)" --
+  docs/DELIVERY_PLAN_2026-11-07.md section 8.2): for the REAL, already-diagnosed NEEDS_REPAIR
+  seals this session found (listed below, with their exact failing-check detail already
+  captured), determine and implement a PURE, DETERMINISTIC, ZERO-PROVIDER-CALL repair for every
+  one that genuinely admits one -- a textual edit computable entirely from already-sealed facts,
+  with no model call -- and report, honestly, which remaining failures genuinely need a real
+  generator call (out of this card's scope; a separate, later, budgeted card). depends_on: [].
+  Self-contained context follows; you never read docs/DELIVERY_PLAN_2026-11-07.md or this
+  project's other narrative docs, only this card.
+
+  Why this matters: `src/repo_presenter/readme/repair/targeted.py` (already in this repository,
+  ported from an old project) exists to route a defect to a repair stage via a real generator
+  call, but "nothing in this repository yet calls it" (its own module docstring says so) --
+  wiring that FULL pipeline (a 2,996-line unported reviewer, a BC-01..BC-12 validator dispatch)
+  is large, multi-session work, deliberately NOT this card's scope. This card is the narrower,
+  genuinely zero-call-first question the design's own text asks before assuming a repair needs a
+  model: for each real failing check below, is the fix a MECHANICAL text substitution a Python
+  function can compute directly from already-committed facts (no judgement call, no new prose),
+  or does it genuinely require generating new sentences/explanations (a real generator call)?
+
+  The real, already-diagnosed failing checks to classify and, where possible, fix (read each
+  repository's OWN real sealed README via a clean, read-only `git worktree`/`git show` against
+  this repository's bundle refs -- `repo_presenter.core.state.bundle_store.seal_history(remote=
+  "origin")` gives you every seal's real `readme` bytes and `facts` by repository/lane; do not
+  guess the content):
+
+  1. `aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python` lane L, check L-05: "the README says
+     the package is not published to PyPI; no package:published_version fact is on record to
+     check it against" (line 68). This is explicitly flagged by the detector itself as
+     "no deterministic edit can repair" -- confirm this independently (read the real line and
+     the real facts) rather than trusting that label blindly, but expect to classify this as
+     NOT zero-call-repairable (no fact exists to derive a replacement from).
+  2. `aspose-html-foss/Aspose.HTML-FOSS-for-Python` lane L, check L-03: two lines state
+     "243 public types" where the real facts record 303 (302 classes); five API-table rows name
+     types (`CSSDeclarationBlock`, `BrowsingContext`, `WindowEventLoop`, `ModuleLoadPolicy`,
+     `BreakHints`) absent from the real public surface. The COUNT lines are a strong zero-call
+     candidate: the detector's own message says "state the computed count or none" -- a pure
+     substitution of the literal "243" for the real computed count (303, with a correct "302
+     classes" parenthetical, matching the existing sentence's own grammar) requires no new
+     judgement. The five absent-type table rows are a judgement call (drop the row? find the
+     right real name? leave for a human?) -- classify these as NOT zero-call-repairable, do not
+     guess a replacement name.
+  3. `aspose-words-foss/Aspose.Words-FOSS-for-Python` lane L, check L-03: same shape, "146 public
+     types" vs the real 198 (175 classes), two absent API-table rows (`ShapeNode`,
+     `ReaderContext`). Same classification approach as #2.
+
+  For any fix you implement, it must be provably correct: a pure function taking the real facts
+  and the real README text, producing the exact corrected text, with a test asserting the exact
+  before/after strings (not a vague "the number changed somehow" assertion) and a negative
+  control proving the function does NOT fire when the stated count already matches the facts
+  (so it can never "fix" something that was never broken). Do NOT write the result back into any
+  sealed candidate or bundle ref -- that write path (and whether a fixed seal needs re-attestation
+  under R10) is explicitly out of this card's scope; this card proves the repair FUNCTION is
+  correct against the real text, nothing more.
+depends_on: []
+write_paths:
+  - src/repo_presenter/readme/repair/zero_call_restore.py
+  - tests/readme/repair/test_zero_call_restore.py
+satisfies:
+  - REQ-REPAIR-001
+source_refs:
+  - file: src/repo_presenter/readme/repair/targeted.py
+    anchor: "nothing in this repository yet calls it"
+  - file: src/repo_presenter/core/state/bundle_store.py
+    anchor: "def seal_history"
+  - file: data/recertification_baseline.json
+    anchor: "aspose-barcode-foss"
+inputs: []
+actions:
+  - "Fetch the three real sealed READMEs and their real facts via
+     repo_presenter.core.state.bundle_store.seal_history(remote='origin') -- read the actual
+     bytes, never assume or reconstruct the text from this card's own quotes above (they are
+     excerpts, not the full README)."
+  - "Write src/repo_presenter/readme/repair/zero_call_restore.py: a pure function (or small set of
+     functions), e.g. restore_stated_count(readme_text, facts) -> str | None, returning the
+     corrected text when a stated public-type count genuinely contradicts the facts and a
+     deterministic substitution is unambiguous, and None when no such mechanical fix applies
+     (including: the five/two absent-API-table-row cases above, and the barcode-python L-05 case,
+     which this card's own analysis above expects to classify as non-zero-call-repairable)."
+  - "Write tests/readme/repair/test_zero_call_restore.py using the REAL text (a verbatim excerpt
+     around the real failing line, fetched as this card's actions direct -- not a synthetic
+     stand-in) for aspose-html-foss and aspose-words-foss: assert the exact corrected string for
+     the count fix; assert the function returns None for the five/two absent-table-row cases
+     (do not invent a fix for a judgement call); assert it returns None for barcode-python's L-05
+     case too, with a one-line justification in the test's own docstring; assert a clean case
+     (stated count already correct) returns None (negative control: the function must never
+     report a fix where none is needed)."
+  - "In closeout, report plainly: of the real failing checks above, how many were classified as
+     zero-call-repairable and fixed, how many classified as needing a real generator call (and
+     why, specifically, not just 'it's complex'), with the exact fixed text shown for each case
+     your function actually handles."
+checks:
+  - command: |-
+      python -m pytest tests/readme/repair/test_zero_call_restore.py -q
+    expect: exit 0
+    timeout_seconds: 120
+    proves:
+      - REQ-REPAIR-001
+requires:
+  - python
+network: true
+negative_control:
+  mutate: |-
+    python -X utf8 -c "import pathlib; p = pathlib.Path('src/repo_presenter/readme/repair/zero_call_restore.py'); nl = chr(10); marker = '# NEGATIVE_CONTROL_APPEND'; t = p.read_text(encoding='utf-8'); t2 = t + nl + marker + nl + 'restore_stated_count = lambda *a, **k: None' + nl; p.write_text(t2, encoding='utf-8')"
+  rationale: >
+    Appends a line that reassigns restore_stated_count to always return None (shadowing the
+    worker's own real implementation at module load time, no regex or backslash needed), which
+    must make the worker's own "exact corrected string" assertion for the count fix fail, proving
+    the test actually exercises the real substitution logic rather than passing regardless. If
+    the worker's real function name differs from restore_stated_count, replace this mutation in
+    the same commit with one reassigning the real function name, so the falsifier still targets
+    real code.
+evidence:
+  - src/repo_presenter/readme/repair/zero_call_restore.py
+  - tests/readme/repair/test_zero_call_restore.py
+closeout:
+  - "This card never writes to any sealed candidate, bundle ref, or data/ file -- it proves the
+     repair function's correctness against real text only. Writing a fix back into a real seal
+     (and whatever re-attestation R10 requires) is separate, later, supervisor-owned work."
+  - "This card does not attempt the full TC-019 scope (generator constraints, the unported
+     reviewer, BC-01..BC-12 validator wiring) -- only the zero-call-first question for the three
+     real cases named above."
+recovery: "Revert src/repo_presenter/readme/repair/zero_call_restore.py and its test; no sealed
+  candidate or committed data file is touched by this card."
