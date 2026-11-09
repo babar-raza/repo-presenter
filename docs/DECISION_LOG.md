@@ -3873,3 +3873,48 @@ TC-022b,TC-023,TC-025}/receipt.json`, `ops/status.jsonl` (five retroactive `comm
 All 13 first-wave cards now carry a real, scope-evaluated, twice-clean, negative-control-confirmed
 `gatecli review` ACCEPTED receipt: TC-013, TC-014, TC-015, TC-016, TC-017a, TC-017b, TC-018,
 TC-020, TC-021, TC-022a, TC-022b (receipt stale pending re-verify against TC-025), TC-023, TC-025.
+
+---
+
+## 2026-11-09: M8 classification shape measured at the real n>=30-per-class minimum -- genuinely
+## fails its own false-reject budget (not a blocker, a real finding)
+
+**Decision**: scaled `scripts/measure_m8_live.py` from the earlier n=10/class proof run to the
+design's own required minimum (30 clean + 30 promotional spans), reusing the same real sources
+(30 real sentences across all 6 already-committed README texts this session's other scripts use;
+2 real `seed.py::op_add_promotional_filler` sentences + 28 varied synthetic marketing sentences).
+Fixed a real inefficiency from the n=10 run before scaling: the script previously made its real
+calls twice when run once without `--write` and once with it; it now caches results to
+`scripts/.m8_live_cache.json` (gitignored-by-convention, not committed) after the first real run
+so `--write` reuses them instead of re-spending.
+
+Opened `data/provider_budget.json` batch `003-m8-classification-n30` (160 calls / 60,000 tokens).
+Real cost: 120 calls, 31,418 tokens (total across all three M8 batches opened this session: 181
+calls, 58,386 tokens -- still under 2% of the 9,000-call envelope and far under 0.1% of the
+100M-token one).
+
+**Real result: 30/30 promotional spans correctly caught (recall 1.00, gate passes clean); 29/30
+clean sentences correctly NOT flagged (false-reject rate 0.0333, which FAILS the design's own
+<=0.02 budget).** The one miss is the same borderline case the n=10 run already surfaced
+("Most .NET image libraries make you fully decode an image just to answer...", an implicit
+competitive comparison) -- at n=30 this is no longer dismissible as small-sample noise: it is a
+real, measured finding that M8's classification shape, as currently prompted, does not meet its
+own false-reject budget. `data/acceptance_calibration.json`'s M8 entry is `NOT_PASSED`,
+honestly, on real data.
+
+**This is the record R26 requires before any fallback-ladder rung (c) work may be considered**
+("Rung (c) ... is used only after a recorded M8 calibration failure, never pre-emptively") -- this
+entry is that record. It does NOT itself decide to pursue rung (c), or to prompt-tune M8's
+classification shape, or to chase this single case further: a reflexive rebuild in response to
+one unfavorable number would repeat exactly the premature-architecture pattern the owner has
+twice this session warned against. The honest result is reported; what (if anything) to do about
+it is left open, not auto-escalated into new work.
+
+**Does NOT decide**: whether this specific false-reject is a defect in the prompt/model worth
+fixing, or an acceptably rare edge case the 0.02 budget is simply strict about (one real miss in
+30 is already close to the budget's own boundary) -- that judgement call is left for whoever
+reviews this finding next, with the real evidence (the exact sentence, both real draws agreeing on
+"promotional") already on record above.
+
+Detail: `scripts/measure_m8_live.py`, `data/acceptance_calibration.json`,
+`data/provider_budget.json` (batches 001-003).

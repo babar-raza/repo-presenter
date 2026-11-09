@@ -226,29 +226,29 @@
       "status": "PASSED"
     },
     {
-      "corpus": "10 real README sentences (clean) + 10 promotional spans (2 real seed.py operator sentences + synthetic marketing sentences), classification shape only -- not pairwise or paraphrase; still short of the design's n>=30-per-class minimum",
+      "corpus": "30 real README sentences (clean, across 6 real committed texts) + 30 promotional spans (2 real seed.py operator sentences + 28 varied synthetic marketing sentences), classification shape only -- not pairwise or paraphrase",
       "gates": [
         {
           "direction": ">=",
-          "n": 10,
+          "n": 30,
           "name": "M8.recall[promotional]",
-          "passed": false,
+          "passed": true,
           "threshold": 0.9,
           "value": 1.0
         },
         {
           "direction": "<=",
-          "n": 10,
+          "n": 30,
           "name": "M8.false_reject_rate",
           "passed": false,
           "threshold": 0.02,
-          "value": 0.1
+          "value": 0.0333
         }
       ],
       "measured_at": "2026-11-09T00:00:00Z",
       "mechanism_class": "M8",
-      "note": "Real result: 9/10 clean correctly NOT flagged promotional; 10/10 promotional spans correctly caught. Status is NOT_PASSED whenever n<30 per class regardless of the observed rate, per the design's own minimum -- this is a calibration PROOF at larger n than the first 2-case run, not yet a certification.",
-      "provider_calls": 40,
+      "note": "Real result: 29/30 clean correctly NOT flagged promotional; 30/30 promotional spans correctly caught, at the design's own n>=30-per-class minimum for this one category pair. Status reflects the literal gate math (recall >= 0.90 and false_reject <= 0.02, n >= 30).",
+      "provider_calls": 120,
       "provisional": true,
       "status": "NOT_PASSED"
     }
