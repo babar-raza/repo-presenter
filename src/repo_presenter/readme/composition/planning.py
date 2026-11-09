@@ -635,8 +635,9 @@ def _settle_excluded_link_sections(
     a link whose URL another link already carries in an included section is dropped (it is
     printed there); otherwise it moves to ``documentation_resources`` when that section can hold
     it (a verified, non-shell link target and the section is not absent for this repository).
-    A link no included section can hold is left as written, so the existing check still rejects
-    it. A link a disposition requires (``protected``) is never touched. Returns whether any
+    A link no included section can hold (documentation_resources absent for this repository) is
+    dropped from the assignment rather than failing the plan; an id that is not a verified link
+    target is left as written, so the existing check still rejects it. A link a disposition requires (``protected``) is never touched. Returns whether any
     assignment changed."""
     links = output.get("links")
     if not isinstance(links, list):
@@ -673,7 +674,7 @@ def _settle_excluded_link_sections(
             carried.add(values[target])
             changed = True
             continue
-        settled.append(link)
+        changed = True  # no included section can hold it: drop the assignment, not the plan
     if changed:
         output["links"] = settled
     return changed
@@ -885,7 +886,13 @@ def plan_checks(
         fact.id: fact.value for fact in facts.by_kind("link_target") if fact.polarity == "SUPPORTED"
     }
     if _settle_excluded_link_sections(
-        output, facts, included, protected=set(_required_link_sections(dispositions))
+        output,
+        facts,
+        included,
+        protected={
+            *_required_link_sections(dispositions),
+            *_kept_list_links(output, facts, dispositions),
+        },
     ):
         # The settlement may have given documentation_resources its first link: re-decide it.
         conditions["documentation_resources"] = _documentation_resources_holds(

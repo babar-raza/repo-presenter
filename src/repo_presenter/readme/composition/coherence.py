@@ -386,6 +386,73 @@ def recover_coherence_overlong_units(
     return output if changed else None
 
 
+#: Shortest prose paragraph whose repeat counts as a duplicate: the independent reviewer's
+#: ``duplicate_paragraph`` rule (``review.independent_reviewer.MIN_DUPLICATE_CHARS``) uses the same cut.
+_COHERENCE_MIN_DUPLICATE_CHARS = 120
+
+
+def _normalized_paragraphs(text: str) -> list[str]:
+    """The paragraphs of ``text`` (blank-line separated), whitespace-collapsed and case-folded,
+    keeping only those long enough to be a duplicate defect when repeated."""
+    keys = (" ".join(chunk.casefold().split()) for chunk in re.split(r"\n\s*\n", text))
+    return [key for key in keys if len(key) >= _COHERENCE_MIN_DUPLICATE_CHARS]
+
+
+def recover_coherence_duplicated_units(
+    output: dict[str, Any], *, existing_units: list[dict[str, Any]]
+) -> dict[str, Any] | None:
+    """Last-resort correction for S8 coherence's own ``run_job`` call: a revised unit that now
+    carries a paragraph it did not carry before AND that another unit of the assembled document
+    already prints is reverted, in full, to its pre-coherence text and fact_ids.
+
+    Measured live (Aspose.Email-FOSS-for-Cpp, Lane R, 2026-11-10): coherence rewrote the
+    ``api_reference`` intro into a verbatim copy of an inherited ``mapi_message`` paragraph further
+    down; the independent reviewer then rejected the README (``duplicate_paragraph``, "paragraph
+    occurs 2 times"). The pre-coherence unit never had the problem, so reverting loses nothing."""
+    units = output.get("units")
+    if not isinstance(units, list):
+        return None
+    key_of = lambda unit: (str(unit.get("section")), str(unit.get("slot")))  # noqa: E731
+    existing_by_key = {key_of(unit): unit for unit in existing_units}
+    current: dict[tuple[str, str], str] = {
+        key: str(unit.get("text", "")) for key, unit in existing_by_key.items()
+    }
+    for unit in units:
+        if isinstance(unit, dict):
+            current[key_of(unit)] = str(unit.get("text", ""))
+    changed = False
+    for unit in units:
+        if not isinstance(unit, dict):
+            continue
+        key = key_of(unit)
+        existing = existing_by_key.get(key)
+        if existing is None or str(existing.get("text", "")) == str(unit.get("text", "")):
+            continue
+        had = set(_normalized_paragraphs(str(existing.get("text", ""))))
+        introduced = {
+            paragraph
+            for paragraph in _normalized_paragraphs(str(unit.get("text", "")))
+            if paragraph not in had
+        }
+        if not introduced:
+            continue
+        elsewhere = {
+            paragraph
+            for other_key, text in current.items()
+            if other_key != key
+            for paragraph in _normalized_paragraphs(text)
+        }
+        if not introduced & elsewhere:
+            continue
+        unit["text"] = existing.get("text", unit.get("text"))
+        existing_fact_ids = existing.get("fact_ids")
+        if isinstance(existing_fact_ids, list):
+            unit["fact_ids"] = list(existing_fact_ids)
+        current[key] = str(unit["text"])
+        changed = True
+    return output if changed else None
+
+
 def recover_coherence_carried_units(
     output: dict[str, Any], *, existing_units: list[dict[str, Any]], tasks: list[SectionTask]
 ) -> dict[str, Any] | None:
@@ -784,6 +851,10 @@ def recover_coherence_regressions(
     )
     if content_fixed is not None:
         output = content_fixed
+        changed = True
+    duplicate_fixed = recover_coherence_duplicated_units(output, existing_units=existing_units)
+    if duplicate_fixed is not None:
+        output = duplicate_fixed
         changed = True
     carry_fixed = recover_coherence_carried_units(
         output, existing_units=existing_units, tasks=tasks

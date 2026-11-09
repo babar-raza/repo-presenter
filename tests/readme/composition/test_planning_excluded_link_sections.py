@@ -74,3 +74,35 @@ def test_an_unverified_link_in_an_excluded_section_still_rejects() -> None:
     errors = plan_checks(plan, _facts(), ecosystem="python")
     assert any("link_target:999" in e and "not a verified link target" in e for e in errors)
     assert any("not included" in e for e in errors)
+
+
+def _anchor_only_facts() -> Any:
+    base = make_facts()
+    kept = tuple(fact for fact in base.facts if fact.kind != "link_target")
+    anchor = Fact("link_target:021", "link_target", "#usage", (Evidence("README.md"),))
+    return replace(base, facts=(*kept, anchor))
+
+
+def test_a_link_no_included_section_can_hold_is_dropped_not_rejected() -> None:
+    plan = _plan()
+    plan["links"] = [{"link_fact_id": "link_target:021", "section_id": "additional_examples"}]
+    errors = plan_checks(plan, _anchor_only_facts(), ecosystem="python")
+    assert not [e for e in errors if "not included" in e], errors
+    assert _links(plan) == []
+
+
+def test_an_unknown_id_in_an_excluded_section_is_not_dropped() -> None:
+    plan = _plan()
+    plan["links"] = [{"link_fact_id": "link_target:999", "section_id": "additional_examples"}]
+    plan_checks(plan, _facts(), ecosystem="python")
+    assert _links(plan) == [("link_target:999", "additional_examples")]
+
+
+def test_a_duplicate_assignment_is_still_rejected() -> None:
+    plan = _plan()
+    plan["links"] = [
+        {"link_fact_id": "link_target:011", "section_id": "api_reference"},
+        {"link_fact_id": "link_target:011", "section_id": "api_reference"},
+    ]
+    errors = plan_checks(plan, _facts(), ecosystem="python")
+    assert any("assigned more than once" in e for e in errors)
