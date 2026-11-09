@@ -4258,3 +4258,36 @@ and could not be deleted (the deletion was blocked by the auto-mode classifier);
 Cost this block: batch 008 calls/tokens are in `data/provider_budget.json`. Nothing was merged to
 `main`; `independently-accepted` still needs the M9 hosted workflows on `main`, so the counts remain
 mechanism-passing only.
+
+## 2026-11-10: generation-batch findings turned into fixes (S4 remedies, restore in the cascade,
+## badge carry, Lane L detectors) -- all inside existing mechanisms
+
+Batch 008 (six Python repositories, local `present --stage combined`) plus Lane L runs produced a
+failure-signature list; each signature was fixed in the mechanism that owns it, with real-text tests
+and an independent re-run, and nothing new was added to the architecture:
+
+- **S4 rejections that killed whole runs** (`dispositions.normalize`): a command block with build
+  facts and no install fact (`uncited_redundant_defer`, PSD Python) becomes VERIFIED_PRESERVE into
+  development_testing; a kept paragraph/list with a dangling pointer (`dangling_pointer`, 3D Python)
+  becomes VERIFIED_REWRITE. Both are the remedy the rejection text itself names.
+- **BC-05/BC-17 at the seal gate** (Email Python, TeX Python completed every paid stage then stopped
+  "nothing sealed"): TC-019c wires the accepted zero-call restore (TC-019b) into the cascade's settle
+  step; it acts only when BC-05/BC-17 are the only blockers.
+- **Badge-row link loss** (BC-17 technical_content, Email/Font Python, Cells .NET/Rust/Python): the
+  renderer now carries the maintainers' badges the slot badges omit (self-verifying or matching the
+  verified floor, never CONTRADICTED); the badge validator accepts exactly the renderer-derived
+  extras and nothing else (reviewed). Cells .NET now re-certifies with restore; Email/Imaging .NET
+  verdicts unchanged.
+- **Accounting**: a kept badge row the renderer does not print as written is superseded into badges
+  only when every link in it is printed elsewhere (Font Python's review REJECT showed the rest is
+  genuine link loss, now handled by the badge carry).
+- **Lane L**: `stale_type_count` v1 (stated "N public types" below the computed count);
+  `stale_package_version` v2 consumes the trailing "yet" of "is not published to NuGet yet" (the
+  independent review correctly REJECTed "is published to NuGet yet" on PSD .NET -- the reviewer
+  caught a detector bug, which is the review working as designed).
+- **R21** (net-improvement acceptance of unrepaired Lane L residuals) is being implemented by an
+  agent; Font Python's Lane L run showed why it is needed (REJECT only for pre-existing defects).
+
+Operational notes: Lane L can run locally only for python and .NET (no JDK/g++/Go/Node/Rust here);
+other ecosystems need the hosted toolchain jobs. Generation costs about 23k tokens per call (above
+the planned 14k), still far inside the envelope.
