@@ -2,8 +2,8 @@
 ===== CLEAN RUN 1 =====
 $ python -m pytest tests/readme/repair/test_restore_units.py tests/test_recertify.py -q
 --- stdout ---
-.......................................                                  [100%]
-39 passed in 26.71s
+............................................                             [100%]
+44 passed in 28.93s
 
 --- stderr ---
 
@@ -11,8 +11,8 @@ $ python -m pytest tests/readme/repair/test_restore_units.py tests/test_recertif
 ===== CLEAN RUN 2 =====
 $ python -m pytest tests/readme/repair/test_restore_units.py tests/test_recertify.py -q
 --- stdout ---
-.......................................                                  [100%]
-39 passed in 23.54s
+............................................                             [100%]
+44 passed in 26.07s
 
 --- stderr ---
 
@@ -21,7 +21,7 @@ $ python -m pytest tests/readme/repair/test_restore_units.py tests/test_recertif
 mutated: M src/repo_presenter/readme/repair/restore_units.py
 $ python -m pytest tests/readme/repair/test_restore_units.py tests/test_recertify.py -q
 --- stdout ---
-.FF.F.F.F.........F...................F                                  [100%]
+.FF.F.F.FF........F....F...................F                             [100%]
 ================================== FAILURES ===================================
 _ test_a_deferred_unit_with_only_supported_facts_is_kept_verbatim_in_a_section_the_plan_includes _
 
@@ -94,6 +94,31 @@ E         Right contains one more item: 'inherited_unit:037.table'
 E         Use -v to get more diff
 
 tests\readme\repair\test_restore_units.py:197: AssertionError
+_ test_a_type_table_naming_something_the_public_surface_lacks_is_restored_without_that_row _
+
+    def test_a_type_table_naming_something_the_public_surface_lacks_is_restored_without_that_row() -> None:
+        """Cells Rust: the maintainers' type table lists `BorderStyle`, which lives in an internal
+        module. The table is restored (R2 floor); the renderer prints it without the absent row, so
+        BC-14 holds and BC-05 / disposition_coverage judge "printed" against the filtered table."""
+        from repo_presenter.readme.repair.restore_units import table_contradicts_surface
+        from repo_presenter.readme.validation.surface_claims import without_absent_type_rows
+    
+        facts = _type_table_facts()
+        text = facts.by_kind("inherited_unit")[0].value
+        assert table_contradicts_surface(text, facts)
+        printed = without_absent_type_rows(text, facts)
+        assert "BorderStyle" not in printed
+        assert all(row in printed for row in ("`Workbook`", "`Cell`", "`Range`", "| Class | Description |"))
+        new, changes = restore_lost_units(
+            _ts_dispositions(), facts, ["inherited_unit:037.table"], TS_HOLDABLE, TS_HOLDABLE
+        )
+>       assert [c["unit_id"] for c in changes] == ["inherited_unit:037.table"]
+E       AssertionError: assert [] == ['inherited_unit:037.table']
+E         
+E         Right contains one more item: 'inherited_unit:037.table'
+E         Use -v to get more diff
+
+tests\readme\repair\test_restore_units.py:241: AssertionError
 _ test_a_kept_paragraph_is_never_homed_in_api_reference_where_nothing_renders_it _
 
     def test_a_kept_paragraph_is_never_homed_in_api_reference_where_nothing_renders_it() -> None:
@@ -117,11 +142,24 @@ _ test_a_kept_paragraph_is_never_homed_in_api_reference_where_nothing_renders_it
 >       assert changes and new["dispositions"][0]["destination_section"] != "api_reference"
 E       assert ([])
 
-tests\readme\repair\test_restore_units.py:416: AssertionError
+tests\readme\repair\test_restore_units.py:423: AssertionError
+____ test_restoring_the_bc08_unit_returns_the_rewrite_to_verbatim_preserve ____
+
+    def test_restoring_the_bc08_unit_returns_the_rewrite_to_verbatim_preserve() -> None:
+        facts = _ts_facts()
+        [unit] = choose_units([BC08], facts, mandatory_checks=("BC-05", "BC-08"))
+        new, changes = restore_lost_units(_ts_dispositions(), facts, [unit], TS_HOLDABLE, TS_HOLDABLE)
+>       assert [c["unit_id"] for c in changes] == [unit]
+E       AssertionError: assert [] == ['inherited_unit:010.list']
+E         
+E         Right contains one more item: 'inherited_unit:010.list'
+E         Use -v to get more diff
+
+tests\readme\repair\test_restore_units.py:505: AssertionError
 _ test_restore_re_dispositions_a_unit_a_check_names_and_writes_a_verifying_seal _
 
-tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-1650/test_restore_re_dispositions_a0')
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001C3FBC50C90>
+tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-1824/test_restore_re_dispositions_a0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023F4648FE70>
 no_provider = []
 
     def test_restore_re_dispositions_a_unit_a_check_names_and_writes_a_verifying_seal(
@@ -168,9 +206,11 @@ FAILED tests/readme/repair/test_restore_units.py::test_a_unit_citing_an_unconfir
 FAILED tests/readme/repair/test_restore_units.py::test_a_unit_no_validator_named_is_never_touched_and_the_input_is_not_mutated
 FAILED tests/readme/repair/test_restore_units.py::test_a_rewritten_unit_a_validator_still_names_returns_to_verbatim_preserve
 FAILED tests/readme/repair/test_restore_units.py::test_a_maintainers_api_table_is_restored_now_that_bc07_counts_only_the_renderers_tables
+FAILED tests/readme/repair/test_restore_units.py::test_a_type_table_naming_something_the_public_surface_lacks_is_restored_without_that_row
 FAILED tests/readme/repair/test_restore_units.py::test_a_kept_paragraph_is_never_homed_in_api_reference_where_nothing_renders_it
+FAILED tests/readme/repair/test_restore_units.py::test_restoring_the_bc08_unit_returns_the_rewrite_to_verbatim_preserve
 FAILED tests/test_recertify.py::test_restore_re_dispositions_a_unit_a_check_names_and_writes_a_verifying_seal
-7 failed, 32 passed in 23.79s
+9 failed, 35 passed in 27.49s
 
 --- stderr ---
 
