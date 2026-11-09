@@ -45,7 +45,7 @@ loop used to repair S4 defects only -- widened to every stage ``repair_defect`` 
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
@@ -98,6 +98,7 @@ from repo_presenter.readme.investigation.dossier import (
     investigation_schema,
     write_investigation,
 )
+from repo_presenter.readme.reconciliation.destinations import holdable_sections
 from repo_presenter.readme.reconciliation.dispositions import (
     coordinate_neighbor_promises,
     merge_dispositions,
@@ -118,6 +119,7 @@ from repo_presenter.readme.repair.accounting import (
     account_unprinted_units,
     accounting_document,
 )
+from repo_presenter.readme.repair.restore_units import choose_units, restore_lost_units
 from repo_presenter.readme.repair.targeted import (
     MAX_SETTLE_ROUNDS,
     REPAIRS_FILENAME,
@@ -597,6 +599,102 @@ def _settle_s9(
     return _Settled(composed, validation, verdict, rounds)
 
 
+#: The blocking checks a zero-call restore can answer: content the published README prints that the
+#: settled candidate lost (BC-17) and a superseded unit whose replacement does not carry it (BC-05).
+#: A candidate that also fails any other blocking check is left exactly as it was.
+RESTORABLE_CHECKS = frozenset({"BC-05", "BC-17"})
+RESTORED_UNITS_FILENAME = "restored_units.json"
+
+
+def _restore_lost_content(
+    settled: _Settled, *, entry: RegistryEntry, document: FactsDocument, investigation: dict,
+    tree_paths: list[str], original: str, out_dir: Path,
+) -> _Settled:
+    """TC-019c: when the settled candidate's ONLY blocking failures are BC-05/BC-17, keep the units
+    they name (``readme.repair.restore_units``: the remedy those checks' own text states), re-render
+    from the same plan and authored units, and re-judge with the unchanged validators and the
+    deterministic reviewer rules. Zero provider calls: the stored plan, authored and coherent units
+    are reused, as ``recertify`` reuses a sealed bundle's. Returns ``settled`` unchanged unless a
+    restore both changed something and left the candidate with no blocking failure -- so a run that
+    this cannot rescue behaves exactly as it did before, and the checks are never weakened."""
+    from repo_presenter.recertify import RESTORE_ROUNDS
+
+    composed = settled.composed
+    failing = blocking_failures(settled.validation)
+    if not failing or not {str(check["id"]) for check in failing} <= RESTORABLE_CHECKS:
+        return settled
+    holdable = holdable_sections(document)
+    included = [
+        section["section_id"] for section in composed.plan.get("sections", []) if section.get("include")
+    ]
+    dispositions = composed.dispositions
+    restored: list[dict[str, str]] = []
+    readme, tasks, accounted = composed.readme, composed.tasks, composed.accounted
+    validation, verdict = settled.validation, settled.verdict
+    for _round in range(RESTORE_ROUNDS):
+        details = [
+            f"{check['id']}: {detail}" for check in failing for detail in check.get("details") or []
+        ]
+        unit_ids = choose_units(details, document, [change["unit_id"] for change in restored])
+        if not unit_ids:
+            break
+        dispositions, changes = restore_lost_units(dispositions, document, unit_ids, holdable, included)
+        if not changes:
+            dispositions, changes = restore_lost_units(
+                dispositions, document, unit_ids, holdable, included, include_api_tables=True
+            )
+        if not changes:
+            break
+        restored.extend(changes)
+        readme = render_readme(entry, document, composed.plan, composed.coherent_units, dispositions)
+        tasks = authoring_tasks(entry, document, investigation, dispositions, composed.plan)
+        candidate = _candidate(
+            entry, document, composed.plan, composed.coherent_units, dispositions, readme,
+            tree_paths, tasks, benchmark=original,
+        )
+        accounted_dispositions, accounted = account_unprinted_units(candidate)
+        if accounted and render_readme(
+            entry, document, composed.plan, composed.coherent_units, accounted_dispositions
+        ) == readme:
+            dispositions = accounted_dispositions
+        else:
+            accounted = []
+        candidate = _candidate(
+            entry, document, composed.plan, composed.coherent_units, dispositions, readme,
+            tree_paths, tasks, benchmark=original,
+        )
+        validation = validate_candidate(candidate, out_dir, [])
+        verdict = review_candidate(
+            readme_text=readme, units=composed.coherent_units.get("units", []), facts=document,
+            dispositions=dispositions, original_readme=original,
+        )
+        failing = blocking_failures(validation)
+        if not failing:
+            break
+    if not restored or failing:
+        return settled
+    write_dispositions(dispositions, out_dir / "dispositions.json")
+    (out_dir / ACCOUNTING_FILENAME).write_text(
+        json.dumps(accounting_document(accounted), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
+    (out_dir / "README.coherent.md").write_text(readme, encoding="utf-8", newline="\n")
+    (out_dir / "README.patch.diff").write_text(
+        render_patch(original, readme), encoding="utf-8", newline="\n"
+    )
+    (out_dir / RESTORED_UNITS_FILENAME).write_text(
+        json.dumps({"restored": restored}, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
+    write_review_verdict(verdict, out_dir / REVIEW_VERDICT_FILENAME)
+    return _Settled(
+        replace(composed, dispositions=dispositions, readme=readme, tasks=tasks, accounted=accounted),
+        validation, verdict, settled.rounds,
+    )
+
+
 def _review_defects(
     *, settled: _Settled, verdict: ReviewVerdict, entry: RegistryEntry, document: FactsDocument,
     prompts: PromptRegistry, repairs: RepairLedger,
@@ -732,7 +830,11 @@ def run_cascade(
         "ledger": ledger, "store": store, "context": context, "repairs": repairs,
         "max_rounds": max_rounds,
     }
-    settled = _settle_s9(**settle)
+    restoring = {
+        "entry": entry, "document": document, "investigation": investigation,
+        "tree_paths": tree_paths, "original": original, "out_dir": out_dir,
+    }
+    settled = _restore_lost_content(_settle_s9(**settle), **restoring)
     rounds = settled.rounds
     verdict = settled.verdict
     review_rounds = 0
@@ -760,7 +862,7 @@ def run_cascade(
         ):
             break
         review_rounds += 1
-        settled = _settle_s9(**settle)
+        settled = _restore_lost_content(_settle_s9(**settle), **restoring)
         rounds += settled.rounds
         verdict = settled.verdict
     composed, validation = settled.composed, settled.validation
