@@ -3918,3 +3918,67 @@ reviews this finding next, with the real evidence (the exact sentence, both real
 
 Detail: `scripts/measure_m8_live.py`, `data/acceptance_calibration.json`,
 `data/provider_budget.json` (batches 001-003).
+
+---
+
+## 2026-11-09: M8's pairwise and paraphrase shapes measured for real -- genuine, verified defects
+## (pairwise recall 0/13; paraphrase false-reject 9/20), after catching two of my own test bugs
+
+**Decision**: continued completing M8's real picture by measuring the two shapes
+`measure_m8_live.py` did not cover: pairwise benchmark comparison and the M8-S paraphrase check.
+Built `scripts/measure_m8_pairwise_paraphrase.py`.
+
+**First attempt was wrong, caught before being reported as a finding.** The first real run
+(batch `004-m8-pairwise-paraphrase`, 120 calls) showed pairwise at 10/20 and paraphrase at 30/40
+-- but inspecting the actual mutated text by hand found the test material itself was defective,
+not the model: (1) `op_incoherent_reorder`'s swap landed on a badge-row vs. intro-paragraph pair
+(a near-cosmetic difference, not genuine incoherence) because the section extraction always took
+the first few paragraphs of each README, which is exactly the weak swap target; (2) the
+paraphrase cases used bare class signatures (`"class ChartAxis"`), which carry almost no
+content beyond the name itself -- too thin for the shape's own premise ("is this a fair
+paraphrase of the real signature") to be answerable from at all. **Discarded that result
+entirely** (`git checkout --` on `data/acceptance_calibration.json`, reverting to the
+classification-only M8 entry) rather than let a misleading NOT_PASSED-for-the-wrong-reason
+certificate stand.
+
+**Fixed both and re-ran for real** (batch `005-m8-pairwise-paraphrase-v2`, 134 calls): pairwise
+sections now specifically target a real "install" lead-in immediately followed by its own code
+fence (verified by hand across several real texts -- the reorder reliably produces a genuinely
+orphaned lead-in sentence stranded after the code it introduces); paraphrase cases now use real
+METHOD signatures with parameters (`def filter(self, col_index, values)`), not bare class lines,
+pulled from a real cloned repository (`aspose-cells-foss/Aspose.Cells-FOSS-for-Python`, 719 real
+methods with docstrings and signatures available). Confirmed the prompt substitution wiring
+itself was correct (dumped the actual rendered messages before re-running) so the result could
+not be attributed to a wiring bug either.
+
+**Also caught and fixed a THIRD bug, in my own scoring, before the second real run's numbers
+were even written**: the script's first version computed one combined "accuracy" rate per shape
+(clean and defect cases together), which is not what `calibration_harness.py`'s own convention
+measures (recall over defect cases only, false-reject over clean cases only, kept separate) --
+this conflated a 0.5 "accuracy" for pairwise's uniform wrong answers with what should have read
+as a stark 0.0 recall. Fixed before committing anything.
+
+**Real, verified results**: pairwise recall (catching the genuine reorder incoherence) **0 of
+13** -- the mechanism answered "at least as good" on every single real case, including every
+hand-inspected, genuinely orphaned-lead-in case; pairwise false-reject 0/13 (the clean cases were
+all correctly judged "at least as good," so this is a one-sided bias toward "yes," not random
+noise). Paraphrase: recall (catching the swapped, genuinely wrong description) 20/20 perfect;
+false-reject (a real, matching description wrongly judged "not a fair paraphrase") 9/20 (45%) --
+a real, one-sided bias toward "no" on this shape, the opposite direction from pairwise's bias.
+
+**This is now a second and third recorded M8 calibration failure** (alongside classification's
+0.0333 false-reject at n=30), on material verified NOT to be a test-construction artifact.
+Reported as findings; no fallback-ladder (rung (c), R26) work started in response, same
+discipline as the classification finding's own entry.
+
+**Does NOT decide**: why pairwise is uniformly biased toward "yes" and paraphrase uniformly
+biased toward "no" -- both are real, measured, and worth a prompt-tuning review, but that
+review is left for whoever picks this up next, with the exact prompts and real responses
+already on record (`scripts/.m8_pairwise_paraphrase_cache.json`, not committed -- local
+artifact; the calibration certificate's own `note` field carries the summary numbers).
+
+Total M8 real-call cost across every batch this session: 458 calls, 127,345 tokens -- still
+under 6% of the 9,000-call envelope and under 0.2% of the 100M-token one.
+
+Detail: `scripts/measure_m8_pairwise_paraphrase.py`, `data/acceptance_calibration.json`,
+`data/provider_budget.json` (batches 004-005).

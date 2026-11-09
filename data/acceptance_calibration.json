@@ -226,7 +226,7 @@
       "status": "PASSED"
     },
     {
-      "corpus": "30 real README sentences (clean, across 6 real committed texts) + 30 promotional spans (2 real seed.py operator sentences + 28 varied synthetic marketing sentences), classification shape only -- not pairwise or paraphrase",
+      "corpus": "30 real README sentences (clean, across 6 real committed texts) + 30 promotional spans (2 real seed.py operator sentences + 28 varied synthetic marketing sentences), classification shape only -- not pairwise or paraphrase; pairwise: 26 real-section cases (clean vs. a genuine op_incoherent_reorder lead-in/code-fence orphan, scanned across all real committed live_readme.md texts); paraphrase: 40 real (description, signature) pairs using real METHOD signatures with parameters (not bare class lines) from a real cloned repo (fair vs. swapped-description unfair) -- both short of n>=30 on at least one side",
       "gates": [
         {
           "direction": ">=",
@@ -243,12 +243,44 @@
           "passed": false,
           "threshold": 0.02,
           "value": 0.0333
+        },
+        {
+          "direction": ">=",
+          "n": 13,
+          "name": "M8.recall[pairwise_incoherent]",
+          "passed": false,
+          "threshold": 0.9,
+          "value": 0.0
+        },
+        {
+          "direction": "<=",
+          "n": 13,
+          "name": "M8.false_reject_rate[pairwise]",
+          "passed": false,
+          "threshold": 0.02,
+          "value": 0.0
+        },
+        {
+          "direction": ">=",
+          "n": 20,
+          "name": "M8-S.recall[paraphrase_unfair]",
+          "passed": false,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        {
+          "direction": "<=",
+          "n": 20,
+          "name": "M8-S.false_reject_rate[paraphrase_fair]",
+          "passed": false,
+          "threshold": 0.02,
+          "value": 0.45
         }
       ],
       "measured_at": "2026-11-09T00:00:00Z",
       "mechanism_class": "M8",
-      "note": "Real result: 29/30 clean correctly NOT flagged promotional; 30/30 promotional spans correctly caught, at the design's own n>=30-per-class minimum for this one category pair. Status reflects the literal gate math (recall >= 0.90 and false_reject <= 0.02, n >= 30).",
-      "provider_calls": 120,
+      "note": "Real result: 29/30 clean correctly NOT flagged promotional; 30/30 promotional spans correctly caught, at the design's own n>=30-per-class minimum for this one category pair. Status reflects the literal gate math (recall >= 0.90 and false_reject <= 0.02, n >= 30). | pairwise: recall (caught the real reorder incoherence) 0/13; false-reject (clean wrongly flagged) 0/13. paraphrase: recall (caught the swapped description) 20/20; false-reject (fair wrongly flagged) 9/20. Pairwise recall is a genuine, verified-wiring finding (0 of 13 real, manually-inspected genuine-incoherence cases were caught -- the mechanism answered 'at least as good' uniformly); paraphrase shows a real false-reject bias on fair cases alongside perfect unfair-detection. Neither is a test-construction artifact (both were checked and fixed once before this run).",
+      "provider_calls": 254,
       "provisional": true,
       "status": "NOT_PASSED"
     }
