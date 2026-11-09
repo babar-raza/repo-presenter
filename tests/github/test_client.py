@@ -416,13 +416,16 @@ def test_create_pull_request_posts_head_base_title_and_body() -> None:
             "body": "body",
         },
     )
+    # A repository NOT on the upstream-write allowlist (R22 lists the nine mode:full ones, Cells Cpp
+    # among them, which forces draft=true): this test pins the plain, non-draft payload shape.
+    owner, repo = "aspose-3d-foss", "Aspose.3D-FOSS-for-Python"
     created = create_pull_request(
-        OWNER, REPO, title="Update README", body="body", head="presenter/readme-update",
+        owner, repo, title="Update README", body="body", head="presenter/readme-update",
         base="main", token="ghp_w", write=write,
     )
     assert len(write.calls) == 1
     url, _token, payload = write.calls[0]
-    assert url == f"{API_ROOT}/repos/{OWNER}/{REPO}/pulls"
+    assert url == f"{API_ROOT}/repos/{owner}/{repo}/pulls"
     assert payload == {
         "title": "Update README",
         "body": "body",

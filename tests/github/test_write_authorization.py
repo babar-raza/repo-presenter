@@ -83,10 +83,10 @@ def _entry(repository: str = LISTED, **overrides: Any) -> dict[str, Any]:
 # ------------------------------------------------------------------ the committed allowlist
 
 
-def test_the_committed_allowlist_grants_only_pull_requests_on_its_three_repositories() -> None:
+def test_the_committed_allowlist_grants_only_pull_requests_on_its_nine_repositories() -> None:
     data = json.loads(client.UPSTREAM_WRITE_ALLOWLIST.read_text("utf-8"))
     repositories = [entry["repository"] for entry in data["repositories"]]
-    assert len(repositories) == 3 and LISTED in repositories
+    assert len(repositories) == 9 and LISTED in repositories  # R22: 3 pilots + 6 inherited full
     for repository in repositories:
         grant = authorize_write(repository, "pull_request")
         assert grant.upstream is True and grant.draft_required is True
