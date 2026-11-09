@@ -1,0 +1,64 @@
+{
+  "checks": [
+    {
+      "details": [],
+      "id": "L-01",
+      "name": "Every change is a listed, evidenced edit; the text outside them is unchanged",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-02",
+      "name": "A second run of the correction over the same inputs gives the same bytes",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-03",
+      "name": "No claim in the final README contradicts a verified fact",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-04",
+      "name": "Nothing of the live README is lost unless an evidenced edit accounts for it",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-05",
+      "name": "An unrepaired defect blocks unless this run is itself a net improvement (R21)",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-06",
+      "name": "A run over the corrected text finds nothing further to correct (recorded, not blocking)",
+      "verdict": "PASS"
+    }
+  ],
+  "lane": "L",
+  "residuals": [
+    {
+      "detail": "the README prints example:001, which the facts record CONTRADICTED (running it failed with AttributeError): repair the example or omit it",
+      "kind": "claim_contradiction",
+      "line": 103,
+      "quote": "```python\nfrom aspose.note import Document\n\ndoc = Document(\"SimpleTable.one\")\nprint(doc.DisplayName)\nfor page in doc:\n    print(page.Title.TitleText.Text)\n```",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 104-111: example 1: FAILED; AttributeError",
+      "kind": "unrepaired_defect",
+      "line": 104,
+      "quote": "from aspose.note import Document",
+      "rule": "lane_l_unrepaired_defect"
+    }
+  ],
+  "review_logic_version": "2",
+  "schema_version": 1,
+  "source_revision": "0fd1cf7bcadb279a6dd73ddcba3d5241376badd3",
+  "summary": {
+    "fail": 0,
+    "pass": 6
+  }
+}

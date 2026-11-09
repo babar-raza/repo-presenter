@@ -1,0 +1,56 @@
+{
+  "confinement": {
+    "edits": 1,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "ef660f575cfa79c32deb633f5c20643ee9dd9821573f13dd639b46565cac129f",
+  "edits": [
+    {
+      "detector": "enterprise_edition_naming",
+      "end": 19714,
+      "evidence": [
+        {
+          "fact_id": "link_target:product.enterprise",
+          "kind": "link_target",
+          "status": "SUPPORTED",
+          "value": "https://products.aspose.com/note/"
+        }
+      ],
+      "index": 0,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 451,
+      "original": "the commercial product",
+      "rationale": "line 451 names the aspose.com product with a substitute for its proper name ('the commercial product'); the mission naming rule requires \"Enterprise Edition\" with no substitute wording",
+      "replacement": "Aspose.Note — Enterprise Edition",
+      "start": 19692
+    }
+  ],
+  "lane": "L",
+  "original_sha256": "1ca057674c1642628145d08f31d3db4e47a71800f256e99b65bdf1623851d48a",
+  "outcome": "REFUSED_LANE_R_RECOMMENDED",
+  "readme_path": "README.md",
+  "repository": "aspose-note-foss/Aspose.Note-FOSS-for-Python",
+  "schema_version": 1,
+  "source_revision": "0fd1cf7bcadb279a6dd73ddcba3d5241376badd3",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {
+    "FALSE_CLAIM_FIX": 1
+  },
+  "unapplied": [
+    {
+      "defect": true,
+      "detector": "failing_example",
+      "fact_ids": [
+        "example:001"
+      ],
+      "line": 104,
+      "reason": "the example verifier recorded a failure for the example on lines 104-111: example 1: FAILED; AttributeError",
+      "text": "from aspose.note import Document"
+    }
+  ]
+}

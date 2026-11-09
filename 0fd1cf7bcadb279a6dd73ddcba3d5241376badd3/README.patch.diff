@@ -1,0 +1,11 @@
+--- a/README.md
++++ b/README.md
+@@ -448,7 +448,7 @@
+ - Writing back to `.one` is not implemented — this library only reads OneNote files.
+ - `LoadOptions.DocumentPassword` / encrypted documents are not supported — supplying a password raises `IncorrectPasswordException`.
+ - `SaveFormat` currently declares only `Pdf` — `Document.Save()` raises `UnsupportedSaveFormatException` for any other format or options object.
+-- `License.SetLicense()` and `Metered.SetMeteredKey()` are present for API-shape compatibility with the commercial product but are no-ops in this edition — no license is required to use this library.
++- `License.SetLicense()` and `Metered.SetMeteredKey()` are present for API-shape compatibility with Aspose.Note — Enterprise Edition but are no-ops in this edition — no license is required to use this library.
+ - `DetectLayoutChanges()` is a compatibility stub and performs no layout computation.
+ 
+ These limitations don't apply to
