@@ -3,9 +3,9 @@
   "card": "TC-023",
   "gate": "GATE5_DELIVERY_PROGRAM",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-07T18:38:03Z",
-  "base_rev": "e2fdbb54860de1890f6c10659d9c9a3262db47f1",
-  "head_rev": "069bc0ad594ab2d21db6f3651a4f68b2a074d482",
+  "generated_at": "2026-11-09T14:15:31Z",
+  "base_rev": "069bc0ad594ab2d21db6f3651a4f68b2a074d482",
+  "head_rev": "e6aad6ecb93c3ca7757000df4aa095f63f5cdeac",
   "card_sha256": "efc6c6a5411b7c8fe8f929c342802c3914467b8ddbbca10f0761da5ef1a1178d",
   "checker_fileset_sha256": "64567297b1a326d2b25bef94cc6390c2faa8d71fbe1cccaa07096ab3d828bb46",
   "checker_fileset_scheme": "v3",
@@ -16,9 +16,7 @@
   "scope": {
     "ok": true,
     "changed_paths": [
-      "prompts/m8/prose_judge.yaml",
-      "src/repo_presenter/readme/review/prose_judge.py",
-      "tests/readme/review/test_prose_judge.py"
+      "prompts/m8/prose_judge.yaml"
     ],
     "violations": [],
     "evaluated": true
@@ -30,13 +28,13 @@
         {
           "command": "python -m pytest tests/readme/review/test_prose_judge.py -q",
           "exit_code": 0,
-          "duration_s": 2.419,
-          "stdout_sha256": "30ba62140af95e2115a4fa33c07e33b34b94a2c9ed57c159b138b3e96d192d36"
+          "duration_s": 1.935,
+          "stdout_sha256": "9d262d4dd7387dc607a30711865ebad38a1acaa49131c452897d8091c4bb81f6"
         },
         {
           "command": "python -X utf8 -c \"import pathlib,sys; t = pathlib.Path('src/repo_presenter/readme/review/prose_judge.py').read_text(encoding='utf-8'); sys.exit(1 if 'gpt-oss' in t or 'gpt_oss' in t else 0)\"",
           "exit_code": 0,
-          "duration_s": 0.087,
+          "duration_s": 0.072,
           "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
         }
       ],
@@ -48,13 +46,13 @@
         {
           "command": "python -m pytest tests/readme/review/test_prose_judge.py -q",
           "exit_code": 0,
-          "duration_s": 1.73,
-          "stdout_sha256": "80695829e79ecb8018f48492ad87ce64065a712ecace8589d1821fdd72788f16"
+          "duration_s": 1.367,
+          "stdout_sha256": "ffed5a7e4cc03e20f9317a9d99c3d85a541cd95b8f58d8b41b1b042cb3f96512"
         },
         {
           "command": "python -X utf8 -c \"import pathlib,sys; t = pathlib.Path('src/repo_presenter/readme/review/prose_judge.py').read_text(encoding='utf-8'); sys.exit(1 if 'gpt-oss' in t or 'gpt_oss' in t else 0)\"",
           "exit_code": 0,
-          "duration_s": 0.081,
+          "duration_s": 0.069,
           "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
         }
       ],

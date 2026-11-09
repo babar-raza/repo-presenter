@@ -3,11 +3,11 @@
   "card": "TC-015",
   "gate": "GATE5_DELIVERY_PROGRAM",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-07T18:48:15Z",
-  "base_rev": "3eb453cb420642aa1228e6a7a15ce3438141adf1",
-  "head_rev": "9f7b4df7036bdf4504268553c1d9bb4b672a16af",
+  "generated_at": "2026-11-09T14:15:00Z",
+  "base_rev": "c1a6dd1fd99868c8565ffd2120dcf8c23e4163d7",
+  "head_rev": "8ccd5715b4647bd5e2011356b7d5ef89ddf7767e",
   "card_sha256": "3daddff67db5c656ca3c7351ce5ed8a43e7cc21e50a294ad79a905851bb29c88",
-  "checker_fileset_sha256": "64f5d0dd9c475c793dc3ba50136a8c6436f2fb747c2cd5ee11de51fabe8bdb36",
+  "checker_fileset_sha256": "de62481a513aa9665afe06193a4deb480fc4e48dcb0c751f1ca45acb2d4ec3c2",
   "checker_fileset_scheme": "v3",
   "fingerprint": {
     "python": "3.13.15",
@@ -17,9 +17,7 @@
     "ok": true,
     "changed_paths": [
       "src/repo_presenter/core/llm/budget.py",
-      "src/repo_presenter/core/llm/jobs.py",
-      "tests/core/llm/test_budget.py",
-      "tests/core/llm/test_jobs.py"
+      "tests/core/llm/test_budget.py"
     ],
     "violations": [],
     "evaluated": true
@@ -31,8 +29,8 @@
         {
           "command": "python -m pytest tests/core/llm/test_budget.py tests/core/llm/test_jobs.py -q",
           "exit_code": 0,
-          "duration_s": 2.831,
-          "stdout_sha256": "77440b41434b2dc50d5bbfa742d8d27de6513efb7e9238cef691b65e0fc0e9e3"
+          "duration_s": 3.862,
+          "stdout_sha256": "b313d57c311ad0a2e62c11e8ce0ba48b9995f8680db33da56f82e21f97536304"
         }
       ],
       "all_passed": true
@@ -43,8 +41,8 @@
         {
           "command": "python -m pytest tests/core/llm/test_budget.py tests/core/llm/test_jobs.py -q",
           "exit_code": 0,
-          "duration_s": 2.949,
-          "stdout_sha256": "2e4e5003b7f66a6ac49514455a7b53c06e173a6b9ef842a2d3024073b00039df"
+          "duration_s": 3.171,
+          "stdout_sha256": "c751834aa59d6dd77a4b3f2ea28f8aa49f2911bbfc8f4c72938438788de3a40e"
         }
       ],
       "all_passed": true
@@ -57,7 +55,7 @@
     "applied": true,
     "patch_applied_failed": true,
     "exit_codes": [
-      2
+      4
     ],
     "tree_changed": [
       "M src/repo_presenter/core/llm/budget.py"

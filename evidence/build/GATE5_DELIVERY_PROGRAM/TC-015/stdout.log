@@ -2,8 +2,8 @@
 ===== CLEAN RUN 1 =====
 $ python -m pytest tests/core/llm/test_budget.py tests/core/llm/test_jobs.py -q
 --- stdout ---
-...............................                                          [100%]
-31 passed in 2.02s
+.................................                                        [100%]
+33 passed in 2.25s
 
 --- stderr ---
 
@@ -11,8 +11,8 @@ $ python -m pytest tests/core/llm/test_budget.py tests/core/llm/test_jobs.py -q
 ===== CLEAN RUN 2 =====
 $ python -m pytest tests/core/llm/test_budget.py tests/core/llm/test_jobs.py -q
 --- stdout ---
-...............................                                          [100%]
-31 passed in 2.18s
+.................................                                        [100%]
+33 passed in 2.06s
 
 --- stderr ---
 
@@ -22,34 +22,11 @@ mutated: M src/repo_presenter/core/llm/budget.py
 $ python -m pytest tests/core/llm/test_budget.py tests/core/llm/test_jobs.py -q
 --- stdout ---
 
-=================================== ERRORS ====================================
-_______________ ERROR collecting tests/core/llm/test_budget.py ________________
-ImportError while importing test module 'C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-nneqhbc5\tests\core\llm\test_budget.py'.
-Hint: make sure your test modules/packages have valid Python names.
-Traceback:
-C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\importlib\__init__.py:88: in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-tests\core\llm\test_budget.py:14: in <module>
-    from repo_presenter.core.llm.budget import (
-E   ImportError: cannot import name 'check_budget' from 'repo_presenter.core.llm.budget' (C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-nneqhbc5\src\repo_presenter\core\llm\budget.py)
-________________ ERROR collecting tests/core/llm/test_jobs.py _________________
-ImportError while importing test module 'C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-nneqhbc5\tests\core\llm\test_jobs.py'.
-Hint: make sure your test modules/packages have valid Python names.
-Traceback:
-C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\importlib\__init__.py:88: in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-tests\core\llm\test_jobs.py:27: in <module>
+--- stderr ---
+ImportError while loading conftest 'C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-qkj5p9ww\tests\conftest.py'.
+tests\conftest.py:10: in <module>
     from repo_presenter.core.llm import jobs as jobs_module
 src\repo_presenter\core\llm\jobs.py:70: in <module>
     from repo_presenter.core.llm.budget import DEFAULT_BUDGET_PATH, check_budget, record_spend
-E   ImportError: cannot import name 'check_budget' from 'repo_presenter.core.llm.budget' (C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-nneqhbc5\src\repo_presenter\core\llm\budget.py)
-=========================== short test summary info ===========================
-ERROR tests/core/llm/test_budget.py
-ERROR tests/core/llm/test_jobs.py
-!!!!!!!!!!!!!!!!!!! Interrupted: 2 errors during collection !!!!!!!!!!!!!!!!!!!
-2 errors in 0.81s
-
---- stderr ---
+E   ImportError: cannot import name 'check_budget' from 'repo_presenter.core.llm.budget' (C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-qkj5p9ww\src\repo_presenter\core\llm\budget.py)
 
