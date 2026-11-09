@@ -1,0 +1,136 @@
+id: TC-023b
+gate: GATE5_DELIVERY_PROGRAM
+track: m8-wiring
+executor: worker
+purpose: >
+  Wire M8's three prompt shapes (TC-023's own contract, already accepted:
+  src/repo_presenter/readme/review/prose_judge.py's ClassificationRequest/PairwiseComparisonRequest/
+  ParaphraseCheckRequest, and sequential_majority_vote) to a REAL, governed provider call through
+  core/llm/jobs.py::run_job -- the first time this mechanism is allowed to spend real budget.
+  depends_on: [TC-023 (already accepted)]. Self-contained context follows; you never read
+  docs/DELIVERY_PLAN_2026-11-07.md, only this card.
+
+  Why this is its own card and was not done inside TC-023: `prompts/m8/prose_judge.yaml`'s own
+  module docstring says so explicitly -- "NOT yet loaded through core.llm.prompts.load_manifests()
+  ... Giving M8 its own place in that governed registry (a seventh job id, or a separate registry
+  entirely) is a decision for the future, separately budgeted card that wires M8's first live
+  provider call." `core/llm/prompts.py`'s `JOB_STAGES` dict currently names exactly six job ids
+  (repository_investigation, source_reconciliation, presentation_planning, section_authoring,
+  independent_review, targeted_repair), each stage S3/S4/S5/S6/S10/S11; `load_manifests()` fails
+  the whole `prompts/` directory closed on any file that is not one of those six manifests (a
+  non-recursive `prompts_dir.iterdir()` scan -- this is why `prompts/m8/prose_judge.yaml` lives in
+  a subdirectory, invisible to that scan, per TC-023's own commit).
+
+  **Your real choice, make it and document it clearly in closeout: EITHER (a) add three new job
+  ids to JOB_STAGES (e.g. `m8_classification`, `m8_pairwise`, `m8_paraphrase`, stage "S8" or
+  whatever you judge fits `core/llm/prompts.py`'s own stage-naming convention) with three new
+  manifest files under `prompts/` (top level, in `core.llm.prompts`'s OWN manifest shape --
+  read `core/llm/prompts.py` in full first; its manifest schema is NOT the same shape as
+  `prompts/m8/prose_judge.yaml`'s own three-shape YAML, which only `prose_judge.py`'s own small
+  loader reads), OR (b) write a new, narrower governed call path alongside `run_job` (a thinner
+  function) that still goes through the SAME budget gate (`core/llm/budget.py::check_budget`/
+  `record_spend`), the SAME model-route enforcement (qwen3-next only -- read
+  `core/llm/jobs.py::effective_model` and the withdrawn-model project-wide ban,
+  `tests/test_withdrawn_model.py`), and the SAME `CallStore`/`Ledger` recording discipline `run_job`
+  already has, WITHOUT duplicating `run_job`'s own re-ask/recovery/narrowing machinery M8 does not
+  need (M8's own majority-vote retry logic, already built and accepted in TC-023, replaces that).
+  Prefer (a) unless you find a concrete reason (b) is safer or simpler once you have read both
+  modules; either choice must still enforce the budget gate and the model route, with a test
+  proving each is enforced (a call attempted with no open budget batch raises; a call attempted
+  with a non-qwen3-next route raises), and must NEVER call a real provider in this card's own
+  checks -- every test here uses a fake/injected transport, exactly like TC-015/TC-023's own tests
+  do (`tests/core/llm/test_jobs.py` and `tests/readme/review/test_prose_judge.py` are your
+  reference pattern for how this project fakes a provider call without a network call).
+
+  Build three small functions, one per M8 shape, each taking the typed request from
+  `prose_judge.py` (ClassificationRequest/PairwiseComparisonRequest/ParaphraseCheckRequest) plus
+  whatever gateway/config/store/context objects your chosen path needs, and returning a single
+  real draw (the type `sequential_majority_vote`'s `DrawSource` protocol expects -- read
+  `prose_judge.py`'s `ScriptedDraws` class to see exactly what shape a draw source must have, then
+  build a REAL one backed by your governed call instead of a script). Wire these three functions
+  as the production `draws` argument `classify_prose_span`/`compare_section_to_benchmark`/
+  `check_type_paraphrase` (TC-023's own entry points) would use when called for real -- but do NOT
+  change `prose_judge.py`'s own public API or its existing tests; add the new, real draw-source
+  wiring in a NEW module (e.g. `src/repo_presenter/readme/review/prose_judge_live.py`) that imports
+  from `prose_judge.py`, never the reverse (so `prose_judge.py` stays the pure, zero-import-risk
+  module TC-023's own `test_module_never_wires_a_real_provider_call` test already proves it is --
+  do not break that test; it is not in your write_paths and must still pass unmodified after your
+  change, since you are not editing that file).
+
+  **Closeout must state, explicitly and honestly**: (1) which of the two wiring choices you made
+  and why; (2) the exact real cost of ONE real classification/pairwise/paraphrase call at this
+  mechanism's own `sampling` block (temperature 0.0, seed 1, the token caps `prompts/m8/
+  prose_judge.yaml` already states) -- you do not make a real call in this card, but state the
+  theoretical per-call token ceiling from the prompt file's own `max_output_tokens` plus a rough
+  estimate of the input packet size, so the supervisor can decide the real budget-opening amount
+  afterward with real numbers, not a guess; (3) confirm nothing in your new module can be reached
+  from `src/repo_presenter/acceptance/calibration_harness.py` or any other already-accepted zero-
+  call measurement path (a grep for your new module's name finding no match outside this card's
+  own files is sufficient proof).
+depends_on:
+  - TC-023
+write_paths:
+  - src/repo_presenter/readme/review/prose_judge_live.py
+  - tests/readme/review/test_prose_judge_live.py
+satisfies:
+  - REQ-JUDGE-003
+source_refs:
+  - file: prompts/m8/prose_judge.yaml
+    anchor: "NOT yet loaded through core.llm.prompts.load_manifests()"
+  - file: src/repo_presenter/core/llm/jobs.py
+    anchor: "def run_job"
+  - file: src/repo_presenter/core/llm/prompts.py
+    anchor: "JOB_STAGES"
+  - file: src/repo_presenter/core/llm/budget.py
+    anchor: "check_budget"
+  - file: src/repo_presenter/readme/review/prose_judge.py
+    anchor: "ScriptedDraws"
+inputs: []
+actions:
+  - "Read core/llm/jobs.py, core/llm/prompts.py and core/llm/budget.py in full; decide and
+     document wiring choice (a) or (b) from this card's purpose text."
+  - "Implement the three real draw-source functions in a new module,
+     src/repo_presenter/readme/review/prose_judge_live.py, each enforcing the budget gate and the
+     qwen3-next-only model route through the exact same mechanisms run_job already uses (reuse,
+     never reimplement, the budget/model-route checks)."
+  - "Write tests/readme/review/test_prose_judge_live.py: every test uses a fake/injected
+     transport, never a real network or subprocess call. Prove: (1) a real draw correctly threads
+     through sequential_majority_vote's call-counting contract (reuse ScriptedDraws-shaped
+     assertions, now against your real draw source with its transport faked); (2) a call attempted
+     with no open provider_budget.json batch raises BudgetExceededError (or equivalent) before any
+     fake transport is even invoked; (3) a call attempted with a non-qwen3-next model route raises,
+     proven via a deliberately mutated config/manifest, never a literal withdrawn-model string
+     (reuse the chr()-built-string convention from test_prose_judge.py to avoid tripping
+     tests/test_withdrawn_model.py's project-wide scan)."
+checks:
+  - command: |-
+      python -m pytest tests/readme/review/test_prose_judge_live.py tests/readme/review/test_prose_judge.py tests/core/llm/test_jobs.py tests/core/llm/test_budget.py -q
+    expect: exit 0
+    timeout_seconds: 180
+    proves:
+      - REQ-JUDGE-003
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -X utf8 -c "import pathlib; p = pathlib.Path('src/repo_presenter/readme/review/prose_judge_live.py'); t = p.read_text(encoding='utf-8'); q = chr(34); old = q + 'check_budget' + q; new = q + '_disabled_check_budget' + q; t2 = t.replace('check_budget', '_disabled_check_budget') if 'check_budget' in t else t; p.write_text(t2, encoding='utf-8')"
+  rationale: >
+    Renames every reference to check_budget so the module can no longer call it; the test proving
+    a call with no open budget batch raises must then fail (the module would instead proceed to
+    the fake transport unguarded), proving that test actually exercises the real budget-gate call
+    site rather than passing regardless. If your module calls the budget gate under a different
+    name or indirection, replace this mutation in the same commit with one targeting your actual
+    call site, so the falsifier still targets real code.
+evidence:
+  - src/repo_presenter/readme/review/prose_judge_live.py
+  - tests/readme/review/test_prose_judge_live.py
+closeout:
+  - "State the wiring choice made (a or b), the real per-call token ceiling estimate, and confirm
+     via grep that this card's new module is unreachable from any already-accepted zero-call
+     measurement path, per this card's purpose text."
+  - "This card makes NO real provider call anywhere in its own checks. The supervisor decides,
+     separately and after this card is accepted, whether/when to open a real provider_budget.json
+     batch and make the first real call through this wiring."
+recovery: "Revert src/repo_presenter/readme/review/prose_judge_live.py and its test; prose_judge.py
+  and its own existing tests are untouched and unaffected."
