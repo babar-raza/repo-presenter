@@ -5,7 +5,7 @@
   "provider_repository_id": 1137426093,
   "registry_revision": null,
   "active_transaction_id": "727c2a24d25449988eab05f0005cb5df",
-  "state": "ACCEPTED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -18,12 +18,12 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link tools/regenerate_pdf_goldens.py)",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-01T09:14:34.483867+00:00",
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "ACCEPTED",
+    "occurred_at": "2026-11-09T20:47:48.885178+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 1
   },
   "lease": null,
   "last_transition": {
@@ -40,10 +40,10 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 14,
+  "state_version": 15,
   "recent_trigger_dedup_keys": {
     "run:41290974964:aspose-note-foss/Aspose.Note-FOSS-for-Python": "10810f00958342968212709f350bf056",
     "run:41657452717:aspose-note-foss/Aspose.Note-FOSS-for-Python": "727c2a24d25449988eab05f0005cb5df"
   },
-  "recovery_count": 0
+  "recovery_count": 1
 }
