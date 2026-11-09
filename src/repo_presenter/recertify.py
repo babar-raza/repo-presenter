@@ -78,6 +78,9 @@ OUTCOME_NEEDS_REPAIR = "NEEDS_REPAIR"
 RECERTIFICATION_FILENAME = "recertification.json"
 #: Bump when what re-certification re-runs, or how it records the result, changes meaning.
 RECERTIFY_VERSION = "1"
+#: Most restore-and-rejudge passes ``_rerun_lane_r(restore=True)`` makes (each pass can expose a unit
+#: the previous one made renderable); a bound, so a restore that keeps failing stops and reports.
+RESTORE_ROUNDS = 3
 DEFAULT_BASELINE = Path("data/recertification_baseline.json")
 #: Manifest states whose sealed files are a model-accepted candidate. VALID_UPDATE_AVAILABLE is a
 #: proven seal beside which a later, different rerun was merely recorded (``seal._record_update``):
@@ -253,9 +256,51 @@ def _model_accept(review):
 
 
 def _rerun_lane_r(
-    bundle: Path, entry: Any, source: SourceSnapshot
+    bundle: Path, entry: Any, source: SourceSnapshot, *, restore: bool = False
 ) -> tuple[list[str], list[str], dict[str, bytes]]:
-    """(failing check ids, details, re-derived artifacts) for a Lane R bundle."""
+    """(failing check ids, details, re-derived artifacts) for a Lane R bundle.
+
+    With ``restore`` (opt-in, used only when WRITING a repaired seal, never by the dry counter or
+    the no-regression gate), units BC-05/BC-17 name as lost are re-dispositioned deterministically
+    (``readme.repair.restore_units``) and the bundle is re-judged, up to ``RESTORE_ROUNDS`` times;
+    the restored ``dispositions.json`` and the list of restored units ride along in the artifacts.
+    A restore that does not clear every blocking check still returns the checks it leaves failing:
+    the verdict is the validators', never this loop's."""
+    dispositions = _load_json(bundle, "dispositions.json")
+    failing, details, artifacts = _evaluate_lane_r(bundle, entry, source, dispositions)
+    if not restore or not failing:
+        return failing, details, artifacts
+    from repo_presenter.readme.reconciliation.destinations import holdable_sections
+    from repo_presenter.readme.repair.restore_units import failing_unit_ids, restore_lost_units
+
+    document = read_facts(bundle / "facts.json")
+    holdable = holdable_sections(document)
+    included = [
+        section["section_id"]
+        for section in _load_json(bundle, "plan.json").get("sections", [])
+        if section.get("include")
+    ]
+    restored: list[dict[str, str]] = []
+    for _round in range(RESTORE_ROUNDS):
+        unit_ids = failing_unit_ids(details)
+        if not unit_ids:
+            break
+        dispositions, changes = restore_lost_units(dispositions, document, unit_ids, holdable, included)
+        if not changes:
+            break
+        restored.extend(changes)
+        failing, details, artifacts = _evaluate_lane_r(bundle, entry, source, dispositions)
+        if not failing:
+            break
+    if restored:
+        artifacts["dispositions.json"] = _canonical_json(dispositions)
+        artifacts["restored_units.json"] = _canonical_json({"restored": restored})
+    return failing, details, artifacts
+
+
+def _evaluate_lane_r(
+    bundle: Path, entry: Any, source: SourceSnapshot, dispositions: Mapping[str, Any]
+) -> tuple[list[str], list[str], dict[str, bytes]]:
     from repo_presenter.readme.composition.authoring import authoring_tasks
     from repo_presenter.readme.composition.renderer import render_patch, render_readme
     from repo_presenter.readme.review.independent_reviewer import review_candidate
@@ -267,7 +312,6 @@ def _rerun_lane_r(
 
     document = read_facts(bundle / "facts.json")
     plan = _load_json(bundle, "plan.json")
-    dispositions = _load_json(bundle, "dispositions.json")
     units_name = (
         "content_units.coherent.json"
         if (bundle / "content_units.coherent.json").is_file()
@@ -402,6 +446,7 @@ def recertify_bundle(
     source: SourceSnapshot,
     current_version_set: str = "",
     seal_commit: str = "",
+    restore: bool = False,
 ) -> Recertification:
     """Re-run the deterministic stages of ``bundle`` (one ``<revision>`` directory) with current
     code. Pure apart from reading ``bundle``; zero provider calls; writes nothing."""
@@ -441,8 +486,10 @@ def recertify_bundle(
     if not _model_accept(review):
         return needs(revision, ["SEAL"], ["SEAL: the seal carries no model-reviewed ACCEPT"], sealed_set)
     try:
-        rerun = _rerun_lane_l if lane == LANE_L else _rerun_lane_r
-        failing, details, artifacts = rerun(bundle, entry, source)
+        if lane == LANE_L:
+            failing, details, artifacts = _rerun_lane_l(bundle, entry, source)
+        else:
+            failing, details, artifacts = _rerun_lane_r(bundle, entry, source, restore=restore)
     except Exception as exc:  # noqa: BLE001 -- a stored output current code cannot read needs repair
         return needs(revision, ["RERUN"], [f"RERUN: {type(exc).__name__}: {exc}"], sealed_set)
     readme = artifacts["README.md"]
@@ -507,7 +554,10 @@ def write_recertified(
         name: (bundle / name).read_bytes() for name in manifest.get("files", {})
     }
     staged.pop(RECERTIFICATION_FILENAME, None)
-    for name in ("README.md", "README.patch.diff", "corrections.json", "holdouts.json"):
+    for name in (
+        "README.md", "README.patch.diff", "corrections.json", "holdouts.json",
+        "dispositions.json", "restored_units.json",
+    ):
         if name in rec.artifacts:
             staged[name] = rec.artifacts[name]
     dependencies = recertified_dependencies(sealed_deps, rec.lane, prompts, facts, original)
@@ -634,6 +684,7 @@ def recertify_history(
     entries: Mapping[str, Any],
     fetch: SourceFetcher,
     current: Mapping[str, str],
+    restore: bool = False,
 ) -> list[Recertification]:
     """Re-certify the LATEST seal of every bundle ref in ``history`` (``bundle_store.seal_history``
     read with a ``scratch`` directory, so each record names its materialized ``bundle``). Dry:
@@ -673,6 +724,7 @@ def recertify_history(
         rec = recertify_bundle(
             latest.bundle, lane, entry=entry, source=source,
             current_version_set=current.get(lane, ""), seal_commit=latest.commit,
+            restore=restore,
         )
         results.append(_with(rec, regenerations=regenerations))
     return results
@@ -818,6 +870,16 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--lane", choices=LANES, default=None)
     parser.add_argument("--write", action="store_true",
                         help="publish each RECERTIFIED result as a new seal commit on its bundle ref")
+    parser.add_argument(
+        "--restore-lost-units", action="store_true",
+        help="with --write: re-disposition the inherited units BC-05/BC-17 name as lost "
+        "(readme.repair.restore_units; zero provider calls) before judging the seal",
+    )
+    parser.add_argument(
+        "--no-publish", action="store_true",
+        help="with --write: stage the re-certified seal under --out-dir and publish nothing",
+    )
+    parser.add_argument("--out-dir", type=Path, default=None)
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--remote", default="origin")
     parser.add_argument("--registry", type=Path, default=Path("data/registry.json"))
@@ -896,15 +958,21 @@ def _write_mode(args: Any, token: str | None, lanes: Sequence[str]) -> int:
         results = recertify_history(
             history, entries=entries, current=current,
             fetch=lambda repo, rev: fetch_source(repo, rev, scratch / "src"),
+            restore=bool(getattr(args, "restore_lost_units", False)),
         )
         _print_table(results)
         for rec in results:
-            if not rec.recertified or rec.sealed_by_current:
+            repaired = "restored_units.json" in rec.artifacts
+            if not rec.recertified or (rec.sealed_by_current and not repaired):
                 continue
             latest = history[(rec.repository, rec.lane)][-1]
-            out_root = scratch / "out" / f"{rec.lane}-{rec.repository.replace('/', '__')}"
+            kept = getattr(args, "out_dir", None)
+            out_root = (kept or scratch / "out") / f"{rec.lane}-{rec.repository.replace('/', '__')}"
             write_recertified(latest.bundle, rec, candidates_root=out_root, prompts=prompts,
                               seal_commit=latest.commit)
+            if getattr(args, "no_publish", False):
+                print(f"staged (not published): {out_root}")
+                continue
             try:
                 publication = publish_bundle(
                     rec.repository, rec.lane,
