@@ -4054,3 +4054,55 @@ rather than continuing to iterate on diminishing returns in one sitting.
 Detail: `prompts/m8/prose_judge.yaml`, `scripts/run_m9_seeder.py`, `scripts/run_m9_scorer.py`,
 `.github/workflows/audit-seed.yml`, `.github/workflows/audit-score.yml`,
 `data/acceptance_calibration.json`, `data/provider_budget.json` (batch 006).
+
+## 2026-11-09: M8 paraphrase prompt fix validated for real (45% false-reject -> 10%, genuine
+## improvement, still failing); two real bugs found and fixed in the measurement/budget machinery
+
+**The paraphrase prompt fix (committed under commit `c1a6dd1`, left unmeasured by the prior
+entry's concurrency crash) is now cleanly re-validated.** Opened budget batch
+`007-m8-paraphrase-prompt-fix-revalidation` (180 calls / 150,000 tokens cap) and ran
+`scripts/measure_m8_pairwise_paraphrase.py --fresh` end to end, uninterrupted, against the full
+real corpus (19 live-README texts for pairwise, 20 real method signature/docstring pairs from a
+fresh clone for paraphrase). Real result: paraphrase false-reject (a FAIR description wrongly
+flagged unfair) improved from 9/20 (45%) to 2/20 (10%) -- a genuine, validated improvement from
+the prompt's "plausible, non-contradictory" wording, not a measurement artifact (same script,
+same corpus shape, cold run). Paraphrase recall (catching a genuinely swapped description) is
+17/20 (85%). Both still fail their design thresholds (false-reject <=0.02, recall >=0.90) and
+both are short of n>=30 -- reported honestly as `NOT_PASSED`, not oversold as a fix. Pairwise,
+measured in the same run on the now-larger 19-text corpus (up from 13), holds at 7/19 recall
+(36.8%) -- the same real limitation as before, now confirmed on more material rather than
+resolved by a larger sample.
+
+**Bug 1 (found, fixed): a crash mid-run threw away real, paid-for provider spend.**
+`measure_m8_pairwise_paraphrase.py`'s `_run_live` only wrote its results cache after the whole
+loop finished. The prior session's run hit `BudgetExceededError` partway through (batch 006's
+remaining 62 calls / 25,968 tokens were spent on real draws before the cap was reached) and
+crashed before ever writing the cache -- those 62 calls' results are unrecoverable, a real,
+wasted cost (not double-spent, just lost). Fixed by writing the cache after every case instead of
+once at the end, so a future interruption at any point keeps everything paid for so far.
+
+**Bug 2 (found, fixed): `--write` appended new M8 gates without removing the stale ones it was
+replacing.** The same four gate names (`M8.recall[pairwise_incoherent]`,
+`M8.false_reject_rate[pairwise]`, `M8-S.recall[paraphrase_unfair]`,
+`M8-S.false_reject_rate[paraphrase_fair]`) ended up listed TWICE in
+`data/acceptance_calibration.json` after this run's first `--write` -- once from the earlier,
+superseded measurement, once from the fresh one -- because the script's gate list was built by
+appending onto the certificate's existing `gates` array rather than replacing by name. Both
+listings happened to agree on `passed: false` this time, so the top-level `status` field
+`ops/checks/calibration_status.py` actually reads was not wrong today, but the bug was real and
+latent: a future measurement that newly passed would have been permanently outvoted by its own
+stale predecessor, since `all_passed = all(g["passed"] for g in gates)` ANDs across every gate of
+that name still sitting in the list. Fixed by keying gates by name and replacing, confirmed by
+re-running `--write` against the unchanged cache (zero new calls) and checking the certificate
+now has exactly 6 gates, not 8.
+
+Real cost this entry: 156 calls / 49,161 tokens (batch 007, cleanly spent, no further crashes);
+running total across all M8 work this session: 840 calls, ~265K tokens -- still under 10% of the
+provider envelope (9,000 calls / 100,000,000 tokens).
+
+**Does NOT decide**: whether to pursue a third prompt iteration for either shape, or to let M8
+stand as `NOT_PASSED` and open the R26 rung-(c) fallback -- left for the next increment of work,
+not decided here.
+
+Detail: `scripts/measure_m8_pairwise_paraphrase.py`, `data/acceptance_calibration.json`,
+`data/provider_budget.json` (batch 007).

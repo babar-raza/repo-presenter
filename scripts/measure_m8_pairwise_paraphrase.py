@@ -166,9 +166,13 @@ def _paraphrase_cases(clone_root: Path, limit: int = 20) -> list[dict]:
 
 
 def _run_live(cases: list[dict]) -> list[dict]:
+    """Runs every case and saves the cache file after EACH one -- a batch exhaustion or any other
+    crash mid-run must not lose the real provider spend already made (a prior run crashed on
+    BudgetExceededError after 62 real calls because the cache was written only at the very end,
+    throwing those results away even though they were paid for; this never repeats that)."""
     prompts = load_prose_judge_prompts(PROMPT_PATH)
     gateway = load_gateway_config(os.environ)
-    results = []
+    results: list[dict] = []
     for case in cases:
         if case["kind"] == "pairwise":
             request = PairwiseComparisonRequest(
@@ -193,6 +197,7 @@ def _run_live(cases: list[dict]) -> list[dict]:
             case = {**case, "verdict": verdict.verdict, "draws": list(verdict.draws),
                     "agreement": verdict.agreement}
         results.append(case)
+        CACHE_PATH.write_text(json.dumps(results, indent=2), encoding="utf-8")
     return results
 
 
@@ -278,23 +283,31 @@ def main() -> int:
         m8_entries = [c for c in doc["certificates"] if c.get("mechanism_class") == "M8"]
         base = m8_entries[0] if m8_entries else {"gates": [], "corpus": "", "provider_calls": 0}
         certs = [c for c in doc["certificates"] if c.get("mechanism_class") != "M8"]
-        gates = list(base.get("gates", []))
-        gates.append(_rate_gate(
-            "M8.recall[pairwise_incoherent]", pw["defect_ok"], pw["defect_n"],
-            direction=">=", threshold=0.9,
-        ))
-        gates.append(_rate_gate(
-            "M8.false_reject_rate[pairwise]", pw["clean_n"] - pw["clean_ok"], pw["clean_n"],
-            direction="<=", threshold=0.02,
-        ))
-        gates.append(_rate_gate(
-            "M8-S.recall[paraphrase_unfair]", pp["defect_ok"], pp["defect_n"],
-            direction=">=", threshold=0.9,
-        ))
-        gates.append(_rate_gate(
-            "M8-S.false_reject_rate[paraphrase_fair]", pp["clean_n"] - pp["clean_ok"], pp["clean_n"],
-            direction="<=", threshold=0.02,
-        ))
+        # Replace any prior gate of the SAME name rather than append: an earlier version of this
+        # script appended unconditionally, which left a stale pairwise/paraphrase gate sitting
+        # alongside the freshly measured one under the same name -- two "passed" verdicts for one
+        # gate, with calibration_status.py's own reader picking only one of them unpredictably.
+        gates_by_name = {g["name"]: g for g in base.get("gates", [])}
+        for gate in (
+            _rate_gate(
+                "M8.recall[pairwise_incoherent]", pw["defect_ok"], pw["defect_n"],
+                direction=">=", threshold=0.9,
+            ),
+            _rate_gate(
+                "M8.false_reject_rate[pairwise]", pw["clean_n"] - pw["clean_ok"], pw["clean_n"],
+                direction="<=", threshold=0.02,
+            ),
+            _rate_gate(
+                "M8-S.recall[paraphrase_unfair]", pp["defect_ok"], pp["defect_n"],
+                direction=">=", threshold=0.9,
+            ),
+            _rate_gate(
+                "M8-S.false_reject_rate[paraphrase_fair]", pp["clean_n"] - pp["clean_ok"], pp["clean_n"],
+                direction="<=", threshold=0.02,
+            ),
+        ):
+            gates_by_name[gate["name"]] = gate
+        gates = list(gates_by_name.values())
         all_passed = all(g["passed"] for g in gates) if gates else False
         certs.append({
             "mechanism_class": "M8",
