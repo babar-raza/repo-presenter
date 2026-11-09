@@ -4372,3 +4372,24 @@ Real hosted `present.yml` runs from this branch (the workflow exists on `main`, 
   non-fabrication rule forbids. Ruling: `BLOCKED_EXTERNAL` under R24 with a 7-day re-check; no generation
   budget is spent on it until the upstream build is fixed. The code tweaks wait for a building product
   with no README.
+
+## 2026-11-10: fourth Pareto pass -- hosted Lane R failures ranked by repositories blocked
+
+- **Ranking (from the hosted run artifacts, 3D TS / 3D Java / PDF Go / PDF TS / Email Cpp / Cells Go):**
+  (1) maintainers' API member tables lost (BC-05/BC-17), 9 Lane R repositories; (2) `presentation_planning`
+  HTTP 400 (oversize packet), 2; (3) singles. Four of the five runs predated the fixes already committed
+  (9512f12 packet kinds, dadb186 badge-slot equivalence, 7d85b48 API member tables, 39d8d66 stated-count
+  correction), so they are re-run, not re-diagnosed.
+- **API-table ruling:** an inherited API member table is maintainers' content (R2 floor). It is kept inside
+  the details block; BC-07 counts only the renderer's own Core API/Enumerations tables; the earlier "never
+  restore API tables" rule (14edd28) is reversed for member tables, and still defers a type table naming
+  something the surface lacks (rows filtered, BC-14 rule i).
+- **Slot-equivalence ruling:** a badge that fills the same slot as a published one (same slot of
+  `parity_gate.badge_slot_of_url`) satisfies BC-17 for that badge; it is not a loss.
+- **Fixed this pass:** S8 coherence reverts a revision that duplicates another unit's paragraph (Email Cpp
+  `duplicate_paragraph`); S5 planning drops an excluded-section link with no home and protects kept-list
+  links (3D TS); S4 re-dispositions a heading that was parked without evidence to follow its kept body
+  (Email Cpp `live_readme_loss`). All inside existing mechanisms; zero provider calls to prove them.
+- **Cost finding:** 3D TS burned the 100-call invocation cap on 76 `targeted_repair` calls (61 rejected) over ~30
+  unrepairable table items. The cap worked as designed (fail fast, no runaway spend); the cause was the
+  API-table defect, now fixed. No cap change.
