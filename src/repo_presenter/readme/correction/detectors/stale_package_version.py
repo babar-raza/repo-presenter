@@ -50,6 +50,10 @@ _PINNED_VERSION = re.compile(
 _NOT_PUBLISHED = re.compile(
     r"(?i)\bis\s+not(?:\s+yet)?\s+published\s+to\s+"
     r"(NuGet|PyPI|Maven(?:\s+Central)?|npm|crates\.io|RubyGems|pkg\.go\.dev)\b"
+    # A trailing "yet" ("is not published to NuGet yet") belongs to the claim: leaving it behind
+    # produced "is published to NuGet yet", which the independent review rightly REJECTed
+    # (Aspose.PSD-FOSS-for-.NET Lane L, 2026-11-09).
+    r"(?:\s+yet\b)?"
 )
 
 
