@@ -46,7 +46,7 @@ from repo_presenter.readme.correction.text_gate import narration_patterns
 from repo_presenter.readme.evidence.facts.assets import CI_BADGE_FACT_ID
 from repo_presenter.readme.evidence.facts.product_pages import banner_target
 from repo_presenter.readme.validation.failures import Candidate, Failure
-from repo_presenter.readme.validation.rules import badge_problems
+from repo_presenter.readme.validation.rules import badge_problems, effective_visible_lines_budget
 from repo_presenter.readme.validation.text import (
     fence_body,
     fences,
@@ -514,12 +514,12 @@ def structure_failures(candidate: Candidate) -> list[Failure]:
     visible, total = line_counts(candidate.readme)
     policy = candidate.policy
     # Collapsed content is unbounded; only visible lines count against the budget.
-    if visible > policy.visible_lines_budget:
+    budget = effective_visible_lines_budget(policy, candidate.benchmark_readme)
+    if visible > budget:
         failures.append(
             Failure(
                 "PLANNING",
-                f"{visible} visible lines of {total} exceed the visible budget "
-                f"{policy.visible_lines_budget}",
+                f"{visible} visible lines of {total} exceed the visible budget {budget}",
             )
         )
     return failures
