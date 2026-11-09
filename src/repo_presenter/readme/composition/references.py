@@ -42,6 +42,9 @@ _TABLE_ROW = re.compile(r"^\s*\|.*\|\s*$")
 _SENTENCE_END = re.compile(r"(?<=[.!?])\s+(?=[A-Z`*\[(])")
 _MARKUP = re.compile(r"[*_`]+|\[([^\]]*)\]\([^)]*\)")
 _SPACE = re.compile(r"\s+")
+_CONTENT_LINK = re.compile(r"\[[^\]]*\]\((?!#)[^)\s]+[^)]*\)")
+_CODE_SPAN = re.compile(r"`[^`]+`")
+_POINTER_MAX_WORDS = 25
 
 _KIND_WORDS = {
     "table": "table",
@@ -212,7 +215,17 @@ def positional_only(text: str) -> bool:
     """Every sentence of ``text`` points at something by position ("the example above", "the
     following table"): it states nothing a reader loses when the block it points at is printed
     elsewhere, and kept out of its place it is a dangling reference (BC-07). Used by
-    ``validation/supersession.py`` so superseding such a sentence is not judged a content loss."""
+    ``validation/supersession.py`` so superseding such a sentence is not judged a content loss.
+
+    A content-rich text is never positional-only even when it contains a pointer phrase: one that
+    carries a link to a file or URL (an in-page ``(#anchor)`` link is navigation), inline code, or
+    more than ``_POINTER_MAX_WORDS`` words names things a reader loses when it is superseded
+    (Aspose.PDF-FOSS-for-Cpp: "Additional Examples below extends this into ... [`examples/12.cpp`]
+    ...")."""
+    if _CONTENT_LINK.search(text) or _CODE_SPAN.search(text):
+        return False
+    if len(_plain(_SPACE.sub(" ", text)).split()) > _POINTER_MAX_WORDS:
+        return False
     sentences = [_plain(raw) for raw in _SENTENCE_END.split(_SPACE.sub(" ", text))]
     sentences = [sentence for sentence in sentences if sentence]
     return bool(sentences) and all(
