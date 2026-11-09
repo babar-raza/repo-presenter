@@ -1,0 +1,78 @@
+{
+  "checks": [
+    {
+      "details": [],
+      "id": "L-01",
+      "name": "Every change is a listed, evidenced edit; the text outside them is unchanged",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-02",
+      "name": "A second run of the correction over the same inputs gives the same bytes",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-03",
+      "name": "No claim in the final README contradicts a verified fact",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-04",
+      "name": "Nothing of the live README is lost unless an evidenced edit accounts for it",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-05",
+      "name": "An unrepaired defect blocks unless this run is itself a net improvement (R21)",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-06",
+      "name": "A run over the corrected text finds nothing further to correct (recorded, not blocking)",
+      "verdict": "PASS"
+    }
+  ],
+  "lane": "L",
+  "residuals": [
+    {
+      "detail": "the README lists the format(s) .otf, .woff, .woff2, .cff, .cff2, .pfa, .pfb, .eot, but no SUPPORTED format fact states them",
+      "kind": "claim_contradiction",
+      "line": 29,
+      "quote": "* **Supported Formats:** TrueType (`.ttf`), OpenType (`.otf`), Web Open Font Format (`.woff`, `.woff2`), Compact Font Format (`.cff`, `.cff2`), PostScript Type ",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "the README prints example:007, which the facts record CONTRADICTED (running it failed with TypeError): repair the example or omit it",
+      "kind": "claim_contradiction",
+      "line": 189,
+      "quote": "```python\nfrom aspose_font import FontLoader, VariableInstanceBuilder\n\nfont = FontLoader.open(\"Roboto-VariableFont_wdth,wght.ttf\")\npackage = VariableInstanceBui",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 70-75: example 2: FAILED; ImportError",
+      "kind": "unrepaired_defect",
+      "line": 70,
+      "quote": "from aspose_font import FontLoader, FontConverter",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 190-203: example 7: FAILED; TypeError",
+      "kind": "unrepaired_defect",
+      "line": 190,
+      "quote": "from aspose_font import FontLoader, VariableInstanceBuilder",
+      "rule": "lane_l_unrepaired_defect"
+    }
+  ],
+  "review_logic_version": "2",
+  "schema_version": 1,
+  "source_revision": "50f6f98037b78042c984689eed5b1ec6da500248",
+  "summary": {
+    "fail": 0,
+    "pass": 6
+  }
+}

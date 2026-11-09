@@ -1,0 +1,93 @@
+{
+  "confinement": {
+    "edits": 1,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "73ee4a740680f6160a3fef83ea9eab56f576c4cc1750845f938d330dd5ecb5fd",
+  "edits": [
+    {
+      "detector": "enterprise_edition_naming",
+      "end": 3531,
+      "evidence": [
+        {
+          "fact_id": "link_target:product.enterprise",
+          "kind": "link_target",
+          "status": "SUPPORTED",
+          "value": "https://products.aspose.com/font/"
+        }
+      ],
+      "index": 0,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 32,
+      "original": "the commercial Aspose.Font product",
+      "rationale": "line 32 names the aspose.com product with a substitute for its proper name ('the commercial Aspose.Font product'); the mission naming rule requires \"Enterprise Edition\" with no substitute wording",
+      "replacement": "Aspose.Font — Enterprise Edition",
+      "start": 3497
+    }
+  ],
+  "lane": "L",
+  "original_sha256": "bafc0874e65218936e9db0fbb0ac64743abc344e05059d11fca5b0f7f9f3b467",
+  "outcome": "REFUSED_LANE_R_RECOMMENDED",
+  "readme_path": "README.md",
+  "repository": "aspose-font-foss/Aspose.Font-FOSS-for-Python",
+  "schema_version": 1,
+  "source_revision": "50f6f98037b78042c984689eed5b1ec6da500248",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {
+    "FALSE_CLAIM_FIX": 1
+  },
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "public_symbol:aspose_font.activetuplesummary",
+        "public_symbol:aspose_font.animation.animationexportpackage",
+        "public_symbol:aspose_font.animationasset",
+        "public_symbol:aspose_font.animationframepackage",
+        "public_symbol:aspose_font.animationpreset",
+        "public_symbol:aspose_font.animationpreviewbuilder",
+        "public_symbol:aspose_font.animationreviewpackage",
+        "public_symbol:aspose_font.animationshowcasepackage"
+      ],
+      "line": 0,
+      "reason": "238 of 246 verified public types are named nowhere in the README; would fill API Reference: public_symbol:aspose_font.activetuplesummary, public_symbol:aspose_font.animation.animationexportpackage, public_symbol:aspose_font.animationasset, public_symbol:aspose_font.animationframepackage, public_symbol:aspose_font.animationpreset, public_symbol:aspose_font.animationpreviewbuilder, public_symbol:aspose_font.animationreviewpackage, public_symbol:aspose_font.animationshowcasepackage (+230 more)",
+      "text": ""
+    },
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "link_target:product.enterprise"
+      ],
+      "line": 0,
+      "reason": "no Enterprise Edition paragraph; would be filled from link_target:product.enterprise (SUPPORTED, https://products.aspose.com/font/) and the anchor rule of the Scope and Limitations closing paragraph",
+      "text": ""
+    },
+    {
+      "defect": true,
+      "detector": "failing_example",
+      "fact_ids": [
+        "example:002"
+      ],
+      "line": 70,
+      "reason": "the example verifier recorded a failure for the example on lines 70-75: example 2: FAILED; ImportError",
+      "text": "from aspose_font import FontLoader, FontConverter"
+    },
+    {
+      "defect": true,
+      "detector": "failing_example",
+      "fact_ids": [
+        "example:007"
+      ],
+      "line": 190,
+      "reason": "the example verifier recorded a failure for the example on lines 190-203: example 7: FAILED; TypeError",
+      "text": "from aspose_font import FontLoader, VariableInstanceBuilder"
+    }
+  ]
+}
