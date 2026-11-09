@@ -33,41 +33,86 @@ D15    incoherent or less usable than benchmark                M8 (pairwise) M9
 D16    (Lane L only) unjustified/non-minimal edit               M10           --
 =====  ===================================================  ============  =========
 
-Two deliberate departures from a literal transcription, both required by this card's own text,
-not left to guesswork:
+2026-11-09 (owner ruling R26, rung-(c) fallback, docs/design/2026-11-06-acceptance-redesign.md
+section 6): a real, recorded M8 calibration failure now exists --
+``data/acceptance_calibration.json``'s M8 certificate, measured for real this session, is
+``NOT_PASSED`` on all three of its shapes (classification false-reject 0.0333 > 0.02;
+pairwise-benchmark recall 0.3684 < 0.90; M8-S paraphrase recall 0.85 < 0.90 and false-reject
+0.10 > 0.02). Rung (b) (an owner-approved second model route for M8 only) is pre-declined as a
+standing matter, not something re-asked per candidate: owner ruling R18 already states
+qwen3-next is the only model route "including for M8", project-wide, with no second route ever
+introduced. Per the design's own fallback-ladder text ("b fails, or the owner declines"), rung
+(c) is therefore authorized now, without a further owner round-trip. D9, D14 and D15 are
+reassigned below accordingly; M8 itself keeps running (TC-023's contract, still real and still
+measured) but becomes advisory, never required for ``provisionally-accepted``.
+
+Three deliberate departures from a literal transcription, all required by this card's own text
+(the first two predate rung (c); the third is rung (c) itself), not left to guesswork:
 
 * **D7 is not a mechanism_classes entry at all.** The table's own primary column for D7 reads
   "none may reject it" -- D7 is owned by the facts extractor, not by any acceptance mechanism.
   ``DEFECT_CLASS_OWNERS`` therefore has no ``"D7"`` key, and
   :func:`responsibility_matches_calibration_harness` (and the test suite) assert that absence
   directly, so a future edit cannot silently reinstate it as a fake mechanism requirement.
-* **D9's real owning mechanism, for calibration purposes, is M8, not M9.** The design table lists
-  D9's primary as "M9", but its own worked-through fallback text immediately qualifies that:
-  generated text is "prevented by construction" (so M9 never actually fires against it), while
-  "inherited text: M8-S" -- i.e. the case that can actually occur routes to M8's semantic-mismatch
-  sub-gate. M9 itself is not a mechanism this codebase measures anywhere (it is not in
-  ``calibration_harness.MECHANISMS``, and no card implements an "M9" scorer) -- only D9's row
-  mentions it at all, as a label for a check that is structurally impossible to need. Requiring
-  "M9" in ``mechanism_classes`` would make ``provisionally-accepted`` permanently unreachable (no
-  certificate for a mechanism nothing produces can ever exist). So ``DEFECT_CLASS_OWNERS["D9"]``
-  records primary ``"M8"`` here, not ``"M9"`` -- this is the real, calibration-relevant owner, with
-  this docstring as the record of why it differs from the design table's literal primary column.
+* **D9 is now "none", like D7, not M8 or M9 -- the rung-(c) reassignment.** Before rung (c), this
+  module recorded D9's primary as ``"M8"`` (a correction from the design table's literal, but
+  structurally-impossible-to-need, "M9" -- requiring an uncounted mechanism would have made
+  ``provisionally-accepted`` permanently unreachable). Rung (c) removes M8 from the gate
+  entirely: generated descriptions are already "prevented by construction" (M2 allows a
+  generated type description only from ``docstring_full``, never a semantic paraphrase), and the
+  one case that can actually occur -- an INHERITED description M8-S would have checked -- is now
+  routed as a ``PRESERVE_ATTRIBUTED`` disposition (§6.3's preservation policy: source-consistent
+  maintainer material is must-carry unless a probe positively contradicts it) and checked by M9's
+  audit rubric downstream, at the ``independently-accepted`` stage, never as a
+  ``provisionally-accepted`` gate requirement. This is exactly D7's own shape (a class no
+  mechanism in this matrix may reject), so D9 joins it as a second ``"none"`` entry rather than
+  inventing a different label for the same structural case.
+* **D14 splits by generated vs. inherited text -- the rung-(c) reassignment.** Before rung (c),
+  this module recorded D14's primary as ``"M8"`` (the prose judge, uncalibrated). Rung (c)'s own
+  text: "Generated prose is limited to renderer templates and bounded lead-ins with a
+  deterministic lexicon ban on promotional/superlative wording, which moves D14 for generated
+  text to M6" -- ``repo_presenter.readme.validation.wording.promotional_wording_matches``, folded
+  into M6's own certificate as a second, independently-gated case group (``wording_ban``,
+  alongside the existing ``duplicate_paragraph`` group). This lexicon ban is the backstop half
+  only; constraining the generator itself ("bounded lead-ins") is TC-019's own, separately-scoped,
+  not-yet-built "generator constraints (S3)" work -- see ``wording.py``'s module docstring for
+  that caveat in full. For INHERITED promotional-sounding prose, rung (c)'s text routes it as "a
+  disposition decision under the R14 pattern" -- i.e. the existing drop/keep preservation policy
+  (``data/drop_decisions.json``, M5, already ``ACCEPTED`` via TC-018) decides whether to carry it,
+  the same mechanism D8 (unverifiable maintainer knowledge) already uses for an analogous
+  disposition call. ``DEFECT_CLASS_OWNERS["D14"]`` therefore records primary ``"M6"`` (the
+  generated-text case, real code, real gate), secondary ``"M5"`` (the inherited-text disposition
+  case, no new code needed -- an existing policy, not a new mechanism).
+* **D15 moves to M7, M8 dropped -- the rung-(c) reassignment.** Rung (c)'s own text: "M8 becomes
+  advisory and is not in the gate; D15 relative to the benchmark is covered by M7's scorecard and
+  M9's rubric." ``DEFECT_CLASS_OWNERS["D15"]`` therefore records primary ``"M7"`` (mirroring
+  D13's existing "below benchmark" mapping -- D15's "less usable than benchmark" is the same
+  benchmark-comparison shape M7 already owns), secondary ``None`` (M9's rubric is a downstream
+  audit check at ``independently-accepted``, not a second ``provisionally-accepted`` gate
+  requirement -- the same reasoning D9's own departure note gives for never requiring "M9" in
+  ``mechanism_classes``).
 
 ``REQUIRED_MECHANISM_CLASSES`` is derived, not independently chosen: it is the sorted tuple of
 every mechanism that owns at least one defect class as a PRIMARY in ``DEFECT_CLASS_OWNERS``,
-after the D9 correction above. That derivation yields ``M1`` through ``M8`` plus ``M10`` -- M9
-never appears (D9's primary was corrected to M8 before this derivation runs), and D7 contributes
-nothing (it is not in the mapping at all).
+after the three departures above. That derivation yields ``M1`` through ``M7`` plus ``M10`` --
+**M8 no longer appears** (rung (c): no defect class's primary is M8 any more), M9 never appears
+(same structural-impossibility reasoning as before, now applying to D9 and D15 too), and D7
+contributes nothing (it is not in the mapping at all).
 
-M8's cross-check: ``calibration_harness.MECHANISMS`` deliberately excludes M8 (it is TC-023's
-separate prose-judge contract, not a case this harness's deterministic/model-free scorers can
-run). So the real invariant this module's own correctness depends on is not
-``REQUIRED_MECHANISM_CLASSES <= calibration_harness.MECHANISMS``, but the weaker, true one stated
-in this card: ``REQUIRED_MECHANISM_CLASSES - {"M8"}`` IS a subset of ``calibration_harness.MECHANISMS``
-(in fact equal to it, for the mechanisms as they stand today) -- i.e. this module can never require
-a mechanism that neither the harness nor TC-023's M8 contract actually measures.
-:func:`responsibility_matches_calibration_harness` checks exactly that, against the real,
-imported ``calibration_harness.MECHANISMS`` tuple -- not a copy or a guess.
+M8's cross-check, updated for rung (c): ``calibration_harness.MECHANISMS`` deliberately excludes
+M8 (it was always TC-023's separate prose-judge contract, not a case this harness's
+deterministic/model-free scorers can run) -- this was true before rung (c) and remains true
+now, except that ``REQUIRED_MECHANISM_CLASSES`` no longer contains ``"M8"`` at all, so the
+subtraction below is a no-op for today's table but is kept so a future re-addition of an M8-owned
+defect class (a reversal of rung (c), which this module does not anticipate but does not forbid
+either) does not silently break this invariant. The real invariant this module's own correctness
+depends on is not ``REQUIRED_MECHANISM_CLASSES <= calibration_harness.MECHANISMS``, but the
+weaker, true one stated in this card: ``REQUIRED_MECHANISM_CLASSES - {"M8"}`` IS a subset of
+``calibration_harness.MECHANISMS`` (today, equal to it, since M8 is no longer a member to
+subtract) -- i.e. this module can never require a mechanism that neither the harness nor TC-023's
+M8 contract actually measures. :func:`responsibility_matches_calibration_harness` checks exactly
+that, against the real, imported ``calibration_harness.MECHANISMS`` tuple -- not a copy or a
+guess.
 """
 
 from __future__ import annotations
@@ -83,11 +128,12 @@ __all__ = [
     "responsibility_matches_calibration_harness",
 ]
 
-#: Defect-class id -> (primary_mechanism, secondary_mechanism_or_None). D7 is intentionally
-#: absent (see module docstring): it is owned by the facts extractor, not by any acceptance
-#: mechanism, and must never become a mechanism_classes entry. D9's primary is recorded as the
-#: real calibration-relevant owner, "M8", per the module docstring's documented correction from
-#: the design table's literal (but structurally-impossible-to-need) "M9".
+#: Defect-class id -> (primary_mechanism, secondary_mechanism_or_None). D7 and D9 are
+#: intentionally absent from any mechanism-owned pairing (both map to primary "none", see module
+#: docstring): D7 is owned by the facts extractor, D9 is a PRESERVE_ATTRIBUTED disposition
+#: checked by M9's audit downstream -- neither may become a mechanism_classes entry. D14 and D15
+#: were reassigned off M8 by the 2026-11-09 rung-(c) fallback (R26); see module docstring for the
+#: full reassignment rationale.
 DEFECT_CLASS_OWNERS: dict[str, tuple[str, str | None]] = {
     "D1": ("M1", None),
     "D2": ("M4", "M2"),
@@ -96,13 +142,12 @@ DEFECT_CLASS_OWNERS: dict[str, tuple[str, str | None]] = {
     "D5": ("M2", None),
     "D6": ("M2", None),
     "D8": ("M5", "M2"),
-    "D9": ("M8", None),
     "D10": ("M5", "M7"),
     "D11": ("M6", None),
     "D12": ("M6", None),
     "D13": ("M7", "M5"),
-    "D14": ("M8", None),
-    "D15": ("M8", "M9"),
+    "D14": ("M6", "M5"),
+    "D15": ("M7", None),
     "D16": ("M10", None),
 }
 

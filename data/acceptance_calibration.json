@@ -116,24 +116,6 @@
       "status": "PASSED"
     },
     {
-      "corpus": "readme.review.calibration.mutations OPERATORS + independent_reviewer.duplicate_paragraph_rule",
-      "gates": [
-        {
-          "direction": ">=",
-          "n": 1,
-          "name": "M6.recall[overall]",
-          "passed": true,
-          "threshold": 0.9,
-          "value": 1.0
-        }
-      ],
-      "measured_at": "2026-11-09T00:00:00Z",
-      "mechanism_class": "M6",
-      "provider_calls": 0,
-      "provisional": false,
-      "status": "PASSED"
-    },
-    {
       "corpus": "tests/extractors/platforms/test_example_verifier_outcomes.py fixtures, 7 ecosystems, already-captured diagnostic text (no real toolchain run)",
       "gates": [
         {
@@ -283,6 +265,32 @@
       "provider_calls": 566,
       "provisional": true,
       "status": "NOT_PASSED"
+    },
+    {
+      "corpus": "readme.review.calibration.mutations OPERATORS + independent_reviewer.duplicate_paragraph_rule (duplicate_paragraph group) + readme.validation.wording.promotional_wording_matches against the real M8 classification dev corpus (scripts/measure_m8_live.py: 30 real clean README sentences, 30 promotional spans) plus the add_promotional_filler fixture (wording_ban group) -- rung-(c) fallback, R26; dev-corpus measurement, not independently held out (see wording.py module docstring)",
+      "gates": [
+        {
+          "direction": ">=",
+          "n": 1,
+          "name": "M6.recall[duplicate_paragraph]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        {
+          "direction": ">=",
+          "n": 31,
+          "name": "M6.recall[wording_ban]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        }
+      ],
+      "measured_at": "2026-11-09T00:00:00Z",
+      "mechanism_class": "M6",
+      "provider_calls": 0,
+      "provisional": false,
+      "status": "PASSED"
     }
   ],
   "harness_schema_version": 1,
