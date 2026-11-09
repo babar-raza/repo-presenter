@@ -839,3 +839,46 @@ def test_a_version_is_held_by_the_unit_printing_it_not_by_one_printing_a_longer_
     accounting = pg.Accounting(candidate)
     assert accounting.loss_units("24.0") == ("inherited_unit:090.code_block",)
     assert accounting.loss_units("24.04") == ("inherited_unit:108.paragraph",)
+
+
+def test_an_identifier_is_held_only_by_a_unit_printing_it_as_a_whole_token() -> None:
+    """Email Cpp: the enum value ``red`` was held by units printing "Required" / "registered"."""
+    units = (
+        {"id": "inherited_unit:021.paragraph", "kind": "inherited_unit",
+         "value": "Required: a registered license."},
+        {"id": "inherited_unit:030.table", "kind": "inherited_unit",
+         "value": "| Name | Value |\n| red | 1 |\n| green | 2 |"},
+        {"id": "inherited_unit:040.paragraph", "kind": "inherited_unit",
+         "value": "Call `Page.BeginLayer(ctx)` to start; see Page.BeginLayer."},
+    )
+    accounting = pg.Accounting(pg.SealedCandidate("R", "", units, (), ()))
+    assert accounting.loss_units("red") == ("inherited_unit:030.table",)
+    assert accounting.loss_units("Page.BeginLayer") == ("inherited_unit:040.paragraph",)
+    assert accounting.loss_units("Page.BeginLayer()") == ("inherited_unit:040.paragraph",)
+    # case-sensitive; a longer word does not hold its prefix
+    assert accounting.loss_units("Required") == ("inherited_unit:021.paragraph",)
+    assert accounting.loss_units("Requir") == ()
+    # non-identifier items (spaces/punctuation) keep the substring behaviour
+    assert accounting.loss_units("a registered license") == ("inherited_unit:021.paragraph",)
+
+
+def test_rewrite_dropping_an_unverified_example_accounts_for_its_code_fence_only() -> None:
+    """Slides Cpp ``102.list``: a VERIFIED_REWRITE that dropped an unverified example (BC-03)."""
+    fence = 'pres.save("report.pdf", SaveFormat::PDF); // throws std::invalid_argument'
+    unit = {"id": "inherited_unit:102.list", "kind": "inherited_unit",
+            "value": f"- Saving may fail.\n\n{FENCE}cpp\n{fence}\n{FENCE}\n- See https://x.example/limits"}
+
+    def acct(rationale: str, disposition: str = "VERIFIED_REWRITE") -> pg.Accounting:
+        row = {"unit_id": unit["id"], "disposition": disposition, "fact_ids": [],
+               "rationale": rationale}
+        return pg.Accounting(pg.SealedCandidate("R", "", (unit,), (row,), ()))
+
+    cited = "Restated: it embeds an unverified code example BC-03 forbids. Scope limits."
+    assert acct(cited).reason(fence, code=True) is not None
+    assert acct(cited).loss_units(fence, code=True) == ()
+    # not other item kinds the same rewrite dropped
+    assert acct(cited).reason("https://x.example/limits") is None
+    assert acct(cited).loss_units("https://x.example/limits") == (unit["id"],)
+    # no exemption without the rationale, or for another disposition
+    assert acct("Rewritten for scope.").reason(fence, code=True) is None
+    assert acct(cited, "VERIFIED_PRESERVE").reason(fence, code=True) is None

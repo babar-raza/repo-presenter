@@ -124,6 +124,13 @@ _NON_LOSS_RATIONALE = re.compile(
     r"contradict|incorrect|obsolete|outdated|deprecated|version[\s_-]*skew|no\s+longer",
     re.IGNORECASE,
 )
+# The marker the reconciler writes when a rewrite restates a unit without an unverified code
+# example (``RECOVERED_FENCE_RATIONALE``: "it embeds an unverified code example BC-03 forbids").
+_UNVERIFIED_EXAMPLE_RATIONALE = re.compile(
+    r"unverified\s+(?:code\s+)?example|embeds\s+an\s+unverified|BC-03", re.IGNORECASE
+)
+# An identifier-like item: dotted / ``::`` / underscore names (an optional trailing ``()``).
+_IDENT_ITEM = re.compile(r"^\w+(?:(?:\.|::)\w+)*(?:\(\))?$")
 _COMMAND_LANGS = frozenset(
     {
         "bash",
@@ -489,6 +496,25 @@ def disposition_is_non_loss(
     return False
 
 
+def row_accounts_for_item(
+    row: Mapping[str, Any], facts: Mapping[str, Mapping[str, Any]], *, code: bool
+) -> bool:
+    """Whether ``row`` accounts for the absence of one benchmark item held by its unit.
+
+    ``disposition_is_non_loss`` for every item, plus one narrow item-level rule: a
+    ``VERIFIED_REWRITE`` whose rationale says the rewrite dropped an unverified code example
+    (BC-03; the reconciler's ``RECOVERED_FENCE_RATIONALE``) accounts for a missing CODE-FENCE item
+    only. Prose, links, identifiers, versions and commands the same rewrite dropped stay losses,
+    and a row without that rationale gets no exemption."""
+    if disposition_is_non_loss(row, facts):
+        return True
+    return (
+        code
+        and str(row.get("disposition")) == "VERIFIED_REWRITE"
+        and bool(_UNVERIFIED_EXAMPLE_RATIONALE.search(str(row.get("rationale") or "")))
+    )
+
+
 def _edit_is_evidenced(edit: Mapping[str, Any]) -> bool:
     return bool(edit.get("evidence") or edit.get("fact_ids") or edit.get("locators"))
 
@@ -509,8 +535,22 @@ class Accounting:
         # number it is a prefix of ("24.0" in a sample call is not held by "Ubuntu 24.04"): the
         # same boundary ``_VERSION`` extracts it with (measured on Slides Cpp: the unit with
         # "24.04" was blamed for the loss of ``set_font_height(24.0)``).
-        boundary = (re.compile(r"(?<![\w.])v?" + re.escape(item) + r"(?![\w.]*\d)")
-                    if not code and _VERSION.fullmatch(item) else None)
+        #
+        # An identifier-like item is likewise held only by a unit that prints it as a whole token
+        # (the ``_has_word`` boundary the candidate-side check uses): the enum value ``red`` is not
+        # held by "Required" / "registered" (measured on Email Cpp: five units falsely held it).
+        # A trailing ``()`` is ignored, so ``Page.BeginLayer`` still matches ``Page.BeginLayer(``;
+        # items with spaces, punctuation, URLs or paths keep the plain substring test.
+        if code:
+            boundary = None
+        elif _VERSION.fullmatch(item):
+            boundary = re.compile(r"(?<![\w.])v?" + re.escape(item) + r"(?![\w.]*\d)")
+        elif _IDENT_ITEM.match(item):
+            boundary = re.compile(
+                r"(?<![\w.])" + re.escape(item.removesuffix("()")) + r"(?![\w])"
+            )
+        else:
+            boundary = None
         for unit_id, unit in self.units.items():
             value = str(unit.get("value") or "")
             if boundary is not None:
@@ -535,7 +575,8 @@ class Accounting:
             return None
         rows = [self.rows.get(unit_id) for unit_id in unit_ids]
         if all(
-            row is not None and disposition_is_non_loss(row, self.facts) for row in rows
+            row is not None and row_accounts_for_item(row, self.facts, code=code)
+            for row in rows
         ):
             return "disposition " + ",".join(
                 sorted({str(r.get("disposition")) for r in rows if r is not None})
@@ -552,7 +593,7 @@ class Accounting:
             unit_id
             for unit_id in self._units_containing(item, code=code)
             if (row := self.rows.get(unit_id)) is None
-            or not disposition_is_non_loss(row, self.facts)
+            or not row_accounts_for_item(row, self.facts, code=code)
         )
 
     def section_reason(self, heading: str) -> str | None:
