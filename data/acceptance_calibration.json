@@ -25,6 +25,77 @@
       "provider_calls": 0,
       "provisional": false,
       "status": "PASSED"
+    },
+    {
+      "corpus": "6 real committed README snapshots + drop-last-section mutations",
+      "gates": [
+        {
+          "direction": ">=",
+          "n": 6,
+          "name": "M7.recall[overall]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        {
+          "direction": ">=",
+          "n": 6,
+          "name": "M7.self_parity",
+          "passed": true,
+          "threshold": 1.0,
+          "value": 1.0
+        }
+      ],
+      "measured_at": "2026-11-09T00:00:00Z",
+      "mechanism_class": "M7",
+      "provider_calls": 0,
+      "provisional": false,
+      "status": "PASSED"
+    },
+    {
+      "corpus": "lane_l_review.py L-01/L-02 holdouts, reused from test_lane_l_review.py fixtures",
+      "gates": [
+        {
+          "direction": ">=",
+          "n": 3,
+          "name": "M10.recall[overall]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        }
+      ],
+      "measured_against": "src/repo_presenter/lane_l_review.py (L-01/L-02 holdouts)",
+      "measured_at": "2026-11-09T00:00:00Z",
+      "mechanism_class": "M10",
+      "provider_calls": 0,
+      "provisional": true,
+      "status": "PASSED"
+    },
+    {
+      "corpus": "lane_l_trigger.py real 5-repository census + fail-closed determinism cases",
+      "gates": [
+        {
+          "direction": ">=",
+          "n": 3,
+          "name": "M1.recall[overall]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        {
+          "direction": ">=",
+          "n": 3,
+          "name": "M1.determinism",
+          "passed": true,
+          "threshold": 1.0,
+          "value": 1.0
+        }
+      ],
+      "measured_at": "2026-11-09T00:00:00Z",
+      "mechanism_class": "M1",
+      "provider_calls": 0,
+      "provisional": false,
+      "status": "PASSED"
     }
   ],
   "harness_schema_version": 1,
