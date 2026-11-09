@@ -56,6 +56,17 @@ _NOT_PUBLISHED = re.compile(
     r"(?:\s+yet\b)?"
 )
 
+#: "The package metadata is defined in this repository, but `Aspose.PSD.FOSS` is not published to
+#: NuGet yet." -- a whole sentence whose only contrast ("..., but X is not published") the fix
+#: removes. Rewriting just "is not published" left "..., but `X` is published to NuGet.", which the
+#: independent review REJECTed as a contradiction (PSD .NET and 3D .NET Lane L, 2026-11-10), so a
+#: sentence of exactly this shape is replaced as a whole by "`X` is published to R.".
+_NOT_PUBLISHED_SENTENCE = re.compile(
+    r"(?i)(?:(?<=^)|(?<=[.!?]\s))[^.!?\n]{0,120}?,\s+but\s+(`[^`\n]{1,60}`)\s+is\s+not(?:\s+yet)?"
+    r"\s+published\s+to\s+"
+    r"(NuGet|PyPI|Maven(?:\s+Central)?|npm|crates\.io|RubyGems|pkg\.go\.dev)(?:\s+yet)?\s*\."
+)
+
 
 @detector(DETECTOR)
 def stale_package_version(ctx: Context) -> DetectorResult:
@@ -98,7 +109,33 @@ def stale_package_version(ctx: Context) -> DetectorResult:
                     ),
                 )
             )
+        sentence_spans: list[tuple[int, int]] = []
+        for match in _NOT_PUBLISHED_SENTENCE.finditer(line.text):
+            registry = match.group(2)
+            if published is None:
+                continue  # the plain rule below reports it as a finding
+            start, end = match.start(), match.end()
+            if end - start > MAX_SPAN:
+                continue
+            sentence_spans.append((start, end))
+            edits.append(
+                Edit(
+                    kind=FALSE_CLAIM_FIX,
+                    detector=DETECTOR,
+                    start=line.start + start,
+                    end=line.start + end,
+                    original=match.group(0),
+                    replacement=f"{match.group(1)} is published to {registry}.",
+                    fact_ids=(published.id,),
+                    rationale=(
+                        f"line {line.number} says {match.group(1)} is not published to {registry}; "
+                        f"the package registry already lists it at {published.value!r}"
+                    ),
+                )
+            )
         for match in _NOT_PUBLISHED.finditer(line.text):
+            if any(match.start() < e and match.end() > b for b, e in sentence_spans):
+                continue
             registry = match.group(1)
             if published is None:
                 findings.append(

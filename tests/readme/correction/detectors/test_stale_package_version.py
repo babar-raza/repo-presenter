@@ -134,3 +134,28 @@ def test_a_trailing_yet_is_consumed_with_the_not_published_claim(
     (edit,) = stale_package_version(ctx).edits
     assert edit.original == "is not published to NuGet yet"
     assert edit.replacement == "is published to NuGet"
+
+
+def test_the_whole_but_not_published_sentence_is_rewritten_not_just_its_verb(
+    make_context: Any, make_facts: Any, make_fact: Any
+) -> None:
+    """Real Aspose.PSD-FOSS-for-.NET line: rewriting only 'is not published' left a dangling 'but'
+    ('..., but `X` is published to NuGet.'), which the independent review REJECTed."""
+    readme = (
+        "The package metadata is defined in this repository, but `Aspose.PSD.FOSS` is not "
+        "published to NuGet yet.\n"
+    )
+    ctx = make_context(readme, make_facts(published(make_fact, "26.10.0")))
+    (edit,) = stale_package_version(ctx).edits
+    assert edit.original == readme.strip()
+    assert edit.replacement == "`Aspose.PSD.FOSS` is published to NuGet."
+    assert readme[edit.start : edit.end] == edit.original
+
+
+def test_a_not_published_clause_that_is_not_a_but_sentence_keeps_the_plain_rewrite(
+    make_context: Any, make_facts: Any, make_fact: Any
+) -> None:
+    readme = "The package is not published to NuGet yet.\n"
+    ctx = make_context(readme, make_facts(published(make_fact, "26.10.0")))
+    (edit,) = stale_package_version(ctx).edits
+    assert edit.replacement == "is published to NuGet"
