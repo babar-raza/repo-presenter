@@ -18,10 +18,10 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "transient",
-    "detail": "attempt under version set b8a378160410: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected three times (the third a narrowed ask for the units a rejection actually named); last rejection: inherited_unit:012.code_block: uncited_redundant_defer: DEFER_UNRESOLVED on a code_block that is not a tracked example is never correct, cited or not -- choose a real disposition (VERIFIED_PRESERVE/MOVE if it is kept as written, SUPERSEDE_REDUNDANT if another section already renders it, OMIT_UNSUPPORTED with a cited reason if nothing supports it); a deferral with no destination leaves it unaccounted for later, as if the content had simply vanished",
+    "classification": "validation_failed",
+    "detail": "attempt under version set b8a378160410: PresentFailure: independent review returned REJECT with 4 blocking finding(s) of 4; nothing sealed; live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (heading 'Dependencies'); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (heading 'Required'); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (heading 'Native / System'); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (heading 'Development')",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-09T18:29:09.872218+00:00",
+    "occurred_at": "2026-11-09T19:17:50.885677+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 2
   },
-  "state_version": 7,
+  "state_version": 8,
   "recent_trigger_dedup_keys": {
     "run:8e649857264d4662800e636edb31972a:aspose-psd-foss/Aspose.PSD-FOSS-for-Python": "705d38b81cc1458da4e45ccd702f2acc",
     "run:46877a5adfdd42b0b3ffea116f62b637:aspose-psd-foss/Aspose.PSD-FOSS-for-Python": "1840cdfab86b4ecc9a155549553518d6"
