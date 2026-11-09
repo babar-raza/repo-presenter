@@ -27,7 +27,7 @@
     {
       "details": [],
       "id": "L-05",
-      "name": "Every defect a detector found was repaired",
+      "name": "An unrepaired defect blocks unless this run is itself a net improvement (R21)",
       "verdict": "PASS"
     },
     {
@@ -38,7 +38,23 @@
     }
   ],
   "lane": "L",
-  "review_logic_version": "1",
+  "residuals": [
+    {
+      "detail": "the API table lists `ShapeNode`, but no public_symbol fact states it (it is not a type of the public surface: absent or not exported)",
+      "kind": "claim_contradiction",
+      "line": 392,
+      "quote": "| `ShapeNode` | Class with 25 properties. |",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "the API table lists `ReaderContext`, but no public_symbol fact states it (it is not a type of the public surface: absent or not exported)",
+      "kind": "claim_contradiction",
+      "line": 462,
+      "quote": "| `ReaderContext` | Class extending Protocol. |",
+      "rule": "claim_contradiction"
+    }
+  ],
+  "review_logic_version": "2",
   "schema_version": 1,
   "source_revision": "2d2efee2787cb9e56d071d17f8d7b740dce8b784",
   "summary": {

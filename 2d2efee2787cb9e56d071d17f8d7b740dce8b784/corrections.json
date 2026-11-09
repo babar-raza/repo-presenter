@@ -1,10 +1,10 @@
 {
   "confinement": {
-    "edits": 2,
+    "edits": 4,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "b72c828b7052164e4eaeadb47db7623122c885bb4d23027631c8d39ba3f97ea0",
+  "corrected_sha256": "c51f0d3ece9830b2a371d0e085b94938bff96dc5571fc0fc6c8f852aa5d75fe3",
   "edits": [
     {
       "detector": "enterprise_edition_naming",
@@ -26,6 +26,128 @@
       "start": 1104
     },
     {
+      "detector": "stale_type_count",
+      "end": 12036,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:apiexamples",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.conftest",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.conftest"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.convert_document",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.convert_document"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.convert_document.convertdocument",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.convert_document.ConvertDocument"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.convert_document.convertdocument.test_all_conversions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.convert_document.ConvertDocument.test_all_conversions"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.convert_document.convertdocument.test_get_text_from_all_formats",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.convert_document.ConvertDocument.test_get_text_from_all_formats"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.docs_examples_base",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.docs_examples_base"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.docs_examples_base.docsexamplesbase",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.docs_examples_base.DocsExamplesBase"
+        }
+      ],
+      "index": 1,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 328,
+      "original": "146",
+      "rationale": "line 328 states '146 public types'; the facts record 198 public types (175 classes), so a count of 146 is refuted and is replaced by the computed 198",
+      "replacement": "198",
+      "start": 12033
+    },
+    {
+      "detector": "stale_type_count",
+      "end": 26433,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:apiexamples",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.conftest",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.conftest"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.convert_document",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.convert_document"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.convert_document.convertdocument",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.convert_document.ConvertDocument"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.convert_document.convertdocument.test_all_conversions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.convert_document.ConvertDocument.test_all_conversions"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.convert_document.convertdocument.test_get_text_from_all_formats",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.convert_document.ConvertDocument.test_get_text_from_all_formats"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.docs_examples_base",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.docs_examples_base"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.docs_examples_base.docsexamplesbase",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.docs_examples_base.DocsExamplesBase"
+        }
+      ],
+      "index": 2,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 607,
+      "original": "146",
+      "rationale": "line 607 states '146 public types'; the facts record 198 public types (175 classes), so a count of 146 is refuted and is replaced by the computed 198",
+      "replacement": "198",
+      "start": 26430
+    },
+    {
       "detector": "enterprise_edition_naming",
       "end": 27953,
       "evidence": [
@@ -36,7 +158,7 @@
           "value": "https://products.aspose.com/words/python-net/"
         }
       ],
-      "index": 1,
+      "index": 3,
       "kind": "FALSE_CLAIM_FIX",
       "line": 625,
       "original": "the commercial Aspose.Words",
@@ -58,7 +180,7 @@
     "provider_calls": 0
   },
   "summary": {
-    "FALSE_CLAIM_FIX": 2
+    "FALSE_CLAIM_FIX": 4
   },
   "unapplied": [
     {
