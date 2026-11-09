@@ -18,6 +18,7 @@ import ast
 from pathlib import Path
 
 from repo_presenter.core.examples import FormatDeclaration, FormatDirection
+from repo_presenter.extractors.platforms.python_format_dispatch import dispatch_declarations
 
 _ENTRY_METHODS = frozenset(
     {"export", "save", "save_to_stream", "import_scene", "load", "load_from_stream", "read"}
@@ -232,5 +233,5 @@ def _plugin_formats(
 def format_declarations(root: Path, tree_paths: list[str]) -> list[FormatDeclaration]:
     """Declarations and registrations of the product's formats, in a stable order."""
     index = _Index(root, tree_paths)
-    found = _declarations(index) + _registrations(index)
+    found = _declarations(index) + _registrations(index) + dispatch_declarations(index.modules)
     return sorted(found, key=lambda d: (d.kind, d.direction or "", d.extension, d.source_path))
