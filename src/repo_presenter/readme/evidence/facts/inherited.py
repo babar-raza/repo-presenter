@@ -116,7 +116,14 @@ _LEADING_IDENTIFIER = re.compile(r"^`([A-Za-z_][A-Za-z0-9_]*)`")
 # a `paragraph`, not a `badge_row` (Page Python's three "Example Results" screenshots were typed
 # `badge_row`, which the renderer never prints, so the content was unrestorable). Unit kinds (hence
 # ids) of those lines change for NEW generations; sealed bundles keep their stored facts.
-INHERITED_UNITS_VERSION = "5"
+#
+# "5" -> "6" (2026-11-10): a bare "# ..." heading after the document's first heading is clamped to
+# level 2, not treated as a second document root (Aspose.Cells FOSS for Go's Installation section
+# contains "# Requires **Go 1.24.5+** ..." as a heading, mid-document; resetting the whole
+# breadcrumb stack for it corrupted every later unit's `section` attribute with a bogus "... > "
+# prefix, which made BC-05/BC-17 report real content lost under the wrong destination). `section`
+# attributes (hence restore's destination lookups) change for units at or after such a heading.
+INHERITED_UNITS_VERSION = "6"
 
 # This change's own thresholds (module docstring has the full survey and justification): a plain
 # list that RC-06 leaves whole (no member-reference match) is still split into fixed-size chunks
@@ -281,6 +288,7 @@ def inventory_units(
     units: list[InheritedUnit] = []
     block_ordinal = 0
     heading_path: list[str] = []
+    seen_heading = False
     index = 0
     while index < len(tokens):
         token = tokens[index]
@@ -296,6 +304,17 @@ def inventory_units(
         heading_level: int | None = None
         if unit_type == "heading":
             heading_level = int(token.tag[1])
+            if seen_heading and heading_level == 1:
+                # A document has exactly one true top-level heading: its title, the first heading
+                # the file opens with. A later bare "# ..." is a maintainer-authoring quirk, not a
+                # second document root (Aspose.Cells FOSS for Go's Installation section contains
+                # "# Requires **Go 1.24.5+** (see `go.mod`). ..." as a heading, mid-document).
+                # Resetting the whole breadcrumb stack for it corrupted every later heading's
+                # ``section`` ("Requires ... modules. > Documentation & Resources" instead of
+                # "Documentation & Resources"), which made BC-05/BC-17 report the content lost and
+                # under the wrong destination. Treat it as a sibling of the surrounding h2 context.
+                heading_level = 2
+            seen_heading = True
             heading_text = tokens[index + 1].content.strip()
             del heading_path[heading_level - 1 :]
             heading_path.extend([""] * (heading_level - 1 - len(heading_path)))

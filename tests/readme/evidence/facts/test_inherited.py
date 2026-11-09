@@ -553,3 +553,46 @@ def test_a_badge_only_line_under_a_sub_heading_still_counts_when_every_image_fil
         "[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)\n"
     )
     assert "badge_row" in _kinds(text)
+
+
+# Real lines 1, 99-121 and 460 of Aspose.Cells-FOSS-for-Go's live README: the Installation section
+# contains a bare "# ..." heading (a maintainer-authoring quirk, not a second document title).
+_STRAY_MID_DOCUMENT_H1 = """# Aspose.Cells FOSS for Go
+
+## Installation
+
+```bash
+go get github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Go/v26/aspose/cells_foss
+```
+
+# Requires **Go 1.24.5+** (see `go.mod`). Depends only on the Go standard library — no third-party modules.
+
+The module supports Go 1.24.5 or later and has zero third-party dependencies.
+
+## Dependencies
+
+No required third-party package dependencies.
+
+## Documentation & Resources
+
+- [Getting started guide](https://docs.aspose.org/cells/go/)
+"""
+
+
+def test_a_stray_mid_document_h1_does_not_overwrite_the_title_in_later_sections() -> None:
+    """Before the fix, the stray "# Requires ..." heading reset the whole breadcrumb stack
+    (``del heading_path[0:]``), so every later unit's ``section`` carried its text as a bogus
+    prefix instead of the real title ("Requires ... modules. > Documentation & Resources" instead
+    of "Aspose.Cells FOSS for Go > Documentation & Resources") -- BC-05/BC-17 then reported real,
+    correctly-dispositioned content as lost because the restore/placement lookup never matched it."""
+    units = inventory_units(_STRAY_MID_DOCUMENT_H1)
+    by_source = {u.source.splitlines()[0]: u for u in units}
+    stray = by_source["# Requires **Go 1.24.5+** (see `go.mod`). Depends only on the Go standard library — no third-party modules."]
+    assert stray.heading_level == 2  # clamped: not a second document root
+    assert stray.section == "Aspose.Cells FOSS for Go"
+    dependencies = by_source["No required third-party package dependencies."]
+    assert dependencies.section == "Aspose.Cells FOSS for Go > Dependencies"
+    resources = by_source["- [Getting started guide](https://docs.aspose.org/cells/go/)"]
+    assert resources.section == "Aspose.Cells FOSS for Go > Documentation & Resources"
+    assert "Requires" not in dependencies.section
+    assert "Requires" not in resources.section
