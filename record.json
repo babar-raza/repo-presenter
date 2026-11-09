@@ -5,7 +5,7 @@
   "provider_repository_id": 1193857039,
   "registry_revision": null,
   "active_transaction_id": "072527933b7c4d99b984ca450e16adb3",
-  "state": "FAILED_INTERNAL",
+  "state": "SNAPSHOTTING",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -33,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "0739a2353ae84d3f91a5ca1cdd9b1a1f",
-    "transaction_id": "7bfaa65a8f6e4c67bd27d4025fc50030",
+    "transition_id": "d722a67a65534e8bb28796c507d1f9e1",
+    "transaction_id": "072527933b7c4d99b984ca450e16adb3",
     "repository": "aspose-email-foss/Aspose.Email-FOSS-for-Cpp",
-    "from_state": "OBSERVED",
-    "to_state": "FAILED_INTERNAL",
-    "event": "present.yml hosted transaction failed",
-    "occurred_at": "2026-11-01T07:31:48.343434+00:00",
+    "from_state": "FAILED_INTERNAL",
+    "to_state": "SNAPSHOTTING",
+    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
+    "occurred_at": "2026-11-09T19:15:51.043148+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-email-foss/Aspose.Email-FOSS-for-Cpp",
     "output_manifest": "candidates/aspose-email-foss__Aspose.Email-FOSS-for-Cpp/lane-l/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 4,
+  "state_version": 5,
   "recent_trigger_dedup_keys": {
     "run:41284679867:aspose-email-foss/Aspose.Email-FOSS-for-Cpp": "7bfaa65a8f6e4c67bd27d4025fc50030",
     "run:42681433574:aspose-email-foss/Aspose.Email-FOSS-for-Cpp": "072527933b7c4d99b984ca450e16adb3"
