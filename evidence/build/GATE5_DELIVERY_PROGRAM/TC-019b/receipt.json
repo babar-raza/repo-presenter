@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "card": "TC-019b",
+  "gate": "GATE5_DELIVERY_PROGRAM",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-09T18:47:32Z",
+  "base_rev": "b1b4cdeacfaa82271ed7c519fcb506068b364a3d",
+  "head_rev": "9f9a1f64ef276b878d6b633a8241098441cb3642",
+  "card_sha256": "d6983017539fab11b4974364942929a186c43bdca6b1177aa33c879b5df198ba",
+  "checker_fileset_sha256": "66f4e5471fa1814132a99f2ee419b7393bf0bf9b06b8320dd9f4598c02ebff80",
+  "checker_fileset_scheme": "v3",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [
+      "src/repo_presenter/readme/repair/restore_units.py",
+      "src/repo_presenter/recertify.py",
+      "tests/readme/repair/test_restore_units.py",
+      "tests/test_recertify.py"
+    ],
+    "violations": [],
+    "evaluated": true
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python -m pytest tests/readme/repair/test_restore_units.py tests/test_recertify.py -q",
+          "exit_code": 0,
+          "duration_s": 32.481,
+          "stdout_sha256": "23d2f8f0d50748036a99c0b6d1b2abb6335a90be9be0a1cd0d8ac2d92c40eb7f"
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python -m pytest tests/readme/repair/test_restore_units.py tests/test_recertify.py -q",
+          "exit_code": 0,
+          "duration_s": 31.272,
+          "stdout_sha256": "e1f5472b1d1d9c382824ece5e4b05c8ac3a43cf8b7bac84e6fcba085c3d27ac5"
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -X utf8 -c \"import pathlib; p = pathlib.Path('src/repo_presenter/readme/repair/restore_units.py'); nl = chr(10); t = p.read_text(encoding='utf-8'); p.write_text(t + nl + 'restore_lost_units = lambda d, f, u, h, i=None: (d, [])' + nl, encoding='utf-8')\"",
+    "patch_sha256": "e8106e05f4d8af347e58d157d19b0ad12701063283de0b3362c9150dc5fdeb4a",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      1
+    ],
+    "tree_changed": [
+      "M src/repo_presenter/readme/repair/restore_units.py"
+    ]
+  },
+  "accepted": true,
+  "reason": "all gates passed"
+}
