@@ -198,6 +198,32 @@
       "provider_calls": 0,
       "provisional": false,
       "status": "PASSED"
+    },
+    {
+      "corpus": "real shallow clone of https://github.com/aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python.git (deleted after measurement); real TC-017a python probe against it; hand-built facts, small n=3 -- a first real-source proof, not yet a full-recall measurement",
+      "gates": [
+        {
+          "direction": ">=",
+          "n": 2,
+          "name": "M2.recall[D5]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        {
+          "direction": "<=",
+          "n": 1,
+          "name": "M2.false_reject_rate",
+          "passed": true,
+          "threshold": 0.04,
+          "value": 0.0
+        }
+      ],
+      "measured_at": "2026-11-09T00:00:00Z",
+      "mechanism_class": "M2",
+      "provider_calls": 0,
+      "provisional": false,
+      "status": "PASSED"
     }
   ],
   "harness_schema_version": 1,
