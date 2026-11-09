@@ -1,0 +1,83 @@
+
+===== CLEAN RUN 1 =====
+$ python -m pytest tests/readme/validation/test_wording.py tests/acceptance/test_responsibility.py tests/acceptance/ -q
+--- stdout ---
+........................................................................ [ 30%]
+........................................................................ [ 60%]
+........................................................................ [ 90%]
+......................                                                   [100%]
+238 passed in 5.55s
+
+--- stderr ---
+
+$ python ops/checks/calibration_status.py PASSED --file data/acceptance_calibration.json --matrix data/acceptance_responsibility.json
+--- stdout ---
+OK: acceptance calibration status is 'PASSED'
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python -m pytest tests/readme/validation/test_wording.py tests/acceptance/test_responsibility.py tests/acceptance/ -q
+--- stdout ---
+........................................................................ [ 30%]
+........................................................................ [ 60%]
+........................................................................ [ 90%]
+......................                                                   [100%]
+238 passed in 3.72s
+
+--- stderr ---
+
+$ python ops/checks/calibration_status.py PASSED --file data/acceptance_calibration.json --matrix data/acceptance_responsibility.json
+--- stdout ---
+OK: acceptance calibration status is 'PASSED'
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M src/repo_presenter/acceptance/responsibility.py
+$ python -m pytest tests/readme/validation/test_wording.py tests/acceptance/test_responsibility.py tests/acceptance/ -q
+--- stdout ---
+........................................................................ [ 30%]
+........................................................................ [ 60%]
+........................................................................ [ 90%]
+.........F...F........                                                   [100%]
+================================== FAILURES ===================================
+__________ test_every_expected_defect_class_present_with_exact_entry __________
+
+    def test_every_expected_defect_class_present_with_exact_entry() -> None:
+        for defect_class, expected in EXPECTED_TABLE.items():
+            assert defect_class in DEFECT_CLASS_OWNERS, f"{defect_class} missing from DEFECT_CLASS_OWNERS"
+>           assert DEFECT_CLASS_OWNERS[defect_class] == expected, (
+                f"{defect_class}: expected {expected}, got {DEFECT_CLASS_OWNERS[defect_class]}"
+            )
+E           AssertionError: D14: expected ('M6', 'M5'), got ('M8', None)
+E           assert ('M8', None) == ('M6', 'M5')
+E             
+E             At index 0 diff: 'M8' != 'M6'
+E             Use -v to get more diff
+
+tests\acceptance\test_responsibility.py:47: AssertionError
+________________ test_m8_is_not_in_required_mechanism_classes _________________
+
+    def test_m8_is_not_in_required_mechanism_classes() -> None:
+        # Rung (c) (R26): a real, recorded M8 calibration failure authorizes removing M8 from the
+        # gate entirely -- no defect class's primary may be M8 any more.
+>       assert "M8" not in REQUIRED_MECHANISM_CLASSES
+E       AssertionError: assert 'M8' not in ('M1', 'M10', 'M2', 'M3', 'M4', 'M5', ...)
+
+tests\acceptance\test_responsibility.py:72: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/acceptance/test_responsibility.py::test_every_expected_defect_class_present_with_exact_entry
+FAILED tests/acceptance/test_responsibility.py::test_m8_is_not_in_required_mechanism_classes
+2 failed, 236 passed in 4.46s
+
+--- stderr ---
+
+$ python ops/checks/calibration_status.py PASSED --file data/acceptance_calibration.json --matrix data/acceptance_responsibility.json
+--- stdout ---
+OK: acceptance calibration status is 'PASSED'
+
+--- stderr ---
+

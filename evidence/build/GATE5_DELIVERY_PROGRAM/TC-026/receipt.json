@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "card": "TC-026",
+  "gate": "GATE5_DELIVERY_PROGRAM",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-09T16:21:57Z",
+  "base_rev": "e9c6030e7c66333b12cafee89885184c15b34bb9",
+  "head_rev": "4ee8b92875b0c15fbaa552652140859d2f725114",
+  "card_sha256": "9080c2d2e710a5fe3f97e07adee9af38e5e9ac6dc70ba24119f75140824054cb",
+  "checker_fileset_sha256": "d3db912768aaae47436fe3d27866712a6b92add3edd8d3f1a6d1faa5a43a175a",
+  "checker_fileset_scheme": "v3",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [
+      "data/acceptance_calibration.json",
+      "data/acceptance_responsibility.json",
+      "scripts/measure_m6_wording_ban.py",
+      "src/repo_presenter/acceptance/responsibility.py",
+      "src/repo_presenter/readme/validation/wording.py",
+      "tests/acceptance/test_responsibility.py",
+      "tests/readme/validation/test_wording.py"
+    ],
+    "violations": [],
+    "evaluated": true
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python -m pytest tests/readme/validation/test_wording.py tests/acceptance/test_responsibility.py tests/acceptance/ -q",
+          "exit_code": 0,
+          "duration_s": 8.925,
+          "stdout_sha256": "63c8e62bd160e2a1179fdc754a0a666182292d78447f40e3269fd4ad9d29a87a"
+        },
+        {
+          "command": "python ops/checks/calibration_status.py PASSED --file data/acceptance_calibration.json --matrix data/acceptance_responsibility.json",
+          "exit_code": 0,
+          "duration_s": 0.13,
+          "stdout_sha256": "77fb3bc7754e48b5a7162489b089571161c8a542601bb0abd6a1b4c4edddd428"
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python -m pytest tests/readme/validation/test_wording.py tests/acceptance/test_responsibility.py tests/acceptance/ -q",
+          "exit_code": 0,
+          "duration_s": 5.618,
+          "stdout_sha256": "fbf7931ddffffc313aa116a9734bc812753928b46320ab5de65eccd2f3423374"
+        },
+        {
+          "command": "python ops/checks/calibration_status.py PASSED --file data/acceptance_calibration.json --matrix data/acceptance_responsibility.json",
+          "exit_code": 0,
+          "duration_s": 0.184,
+          "stdout_sha256": "77fb3bc7754e48b5a7162489b089571161c8a542601bb0abd6a1b4c4edddd428"
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -X utf8 -c \"import pathlib; p = pathlib.Path('src/repo_presenter/acceptance/responsibility.py'); t = p.read_text(encoding='utf-8'); t2 = t.replace(chr(34)+'D14'+chr(34)+': ('+chr(34)+'M6'+chr(34)+', '+chr(34)+'M5'+chr(34)+'),', chr(34)+'D14'+chr(34)+': ('+chr(34)+'M8'+chr(34)+', None),'); p.write_text(t2, encoding='utf-8')\"",
+    "patch_sha256": "011c7885ea1ca13f1730e7c1cc632d53c66183288314d9afc29a1746f7993a5d",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      1,
+      0
+    ],
+    "tree_changed": [
+      "M src/repo_presenter/acceptance/responsibility.py"
+    ]
+  },
+  "accepted": true,
+  "reason": "all gates passed"
+}
