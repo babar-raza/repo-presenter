@@ -5,7 +5,7 @@
   "provider_repository_id": 1183488768,
   "registry_revision": null,
   "active_transaction_id": "1fa5d07104b740a6b27d1eab319a9e1c",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "attempt under version set b8a378160410: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-17; nothing sealed",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-09T18:52:02.669211+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:64904",
     "acquired_at": "2026-11-09T18:21:18.422576+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-11-09T18:36:18.422576+00:00",
     "fencing_token": 2
   },
-  "last_transition": null,
-  "state_version": 4,
+  "last_transition": {
+    "transition_id": "09dae1bf87fb4c5aa293c1194bd63c6b",
+    "transaction_id": "1fa5d07104b740a6b27d1eab319a9e1c",
+    "repository": "aspose-email-foss/Aspose.Email-FOSS-for-Python",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-11-09T18:52:00.457034+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-email-foss/Aspose.Email-FOSS-for-Python",
+    "output_manifest": "candidates/aspose-email-foss__Aspose.Email-FOSS-for-Python/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 2
+  },
+  "state_version": 5,
   "recent_trigger_dedup_keys": {
     "run:db18c12c51f3412f8bd68e169709484b:aspose-email-foss/Aspose.Email-FOSS-for-Python": "1fa5d07104b740a6b27d1eab319a9e1c"
   },
