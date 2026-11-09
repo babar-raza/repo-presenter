@@ -34,7 +34,10 @@ open (no batch has ever been opened yet).
 
 from __future__ import annotations
 
+import contextlib
 import json
+import os
+import time
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -173,27 +176,75 @@ def check_budget(
         )
 
 
+_LOCK_TIMEOUT_SECONDS = 10.0
+_LOCK_POLL_SECONDS = 0.05
+
+
+@contextlib.contextmanager
+def _locked(budget_path: Path):
+    """A simple, portable (POSIX and Windows) mutex over ``budget_path``'s own read-modify-write
+    cycle: exclusive-create a sibling ``.lock`` file (``os.O_CREAT | os.O_EXCL`` -- atomic on both
+    platforms, unlike a lock-free read-check-write), retrying with a short poll until
+    ``_LOCK_TIMEOUT_SECONDS`` elapses, then raise. Found necessary 2026-11-09: two scripts
+    calling :func:`record_spend` at the same time raced this exact read-modify-write and briefly
+    produced invalid JSON (see docs/DECISION_LOG.md, the same date) -- this lock, plus the atomic
+    rename in :func:`_write_document_atomically`, closes that gap for any two CALLERS OF THIS
+    MODULE; it does not make ``check_budget`` + the provider call + ``record_spend`` atomic as
+    one unit across a call site (a separate, larger gap, not fixed here)."""
+    lock_path = budget_path.with_suffix(budget_path.suffix + ".lock")
+    deadline = time.monotonic() + _LOCK_TIMEOUT_SECONDS
+    fd = None
+    while fd is None:
+        try:
+            fd = os.open(str(lock_path), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+        except FileExistsError:
+            if time.monotonic() >= deadline:
+                raise TimeoutError(
+                    f"could not acquire {lock_path} within {_LOCK_TIMEOUT_SECONDS}s "
+                    "(another process is updating the provider budget file)"
+                ) from None
+            time.sleep(_LOCK_POLL_SECONDS)
+    try:
+        os.close(fd)
+        yield
+    finally:
+        with contextlib.suppress(OSError):
+            lock_path.unlink()
+
+
+def _write_document_atomically(budget_path: Path, document: dict[str, Any]) -> None:
+    """Write ``document`` to ``budget_path`` via a same-directory temp file plus
+    ``os.replace`` -- atomic on both POSIX and Windows, so a reader never observes a partially
+    written (truncated or interleaved) file, which a direct ``write_text`` cannot promise."""
+    text = json.dumps(document, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+    tmp_path = budget_path.with_suffix(budget_path.suffix + f".tmp{os.getpid()}")
+    tmp_path.write_text(text, encoding="utf-8")
+    os.replace(tmp_path, budget_path)
+
+
 def record_spend(budget_path: Path, calls: int, tokens: int) -> None:
     """Record a ``PRODUCT`` call that actually succeeded: add ``calls``/``tokens`` to the
     program-wide ``spent`` totals and to the currently open batch's own running
     ``calls_spent``/``tokens_spent`` totals (see module docstring for what "open" means), then
-    write the file back whole.
+    write the file back whole -- the read-modify-write is locked (:func:`_locked`) and the write
+    itself is atomic (:func:`_write_document_atomically`), so two concurrent callers can never
+    corrupt the file or silently lose one another's update.
 
     Called only after the call it accounts for has already happened -- it never itself decides
     whether a call may proceed; that is :func:`check_budget`'s job, always called first.
     """
-    document = _load_document(budget_path)
-    spent = document.get("spent")
-    if not isinstance(spent, dict):
-        spent = {}
-        document["spent"] = spent
-    spent["calls"] = (_number(spent.get("calls")) or 0.0) + calls
-    spent["tokens"] = (_number(spent.get("tokens")) or 0.0) + tokens
-    located = _open_batch(document)
-    if located is not None:
-        index, batch = located
-        batch["calls_spent"] = (_number(batch.get("calls_spent")) or 0.0) + calls
-        batch["tokens_spent"] = (_number(batch.get("tokens_spent")) or 0.0) + tokens
-        document["batches"][index] = batch
-    text = json.dumps(document, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
-    budget_path.write_text(text, encoding="utf-8")
+    with _locked(budget_path):
+        document = _load_document(budget_path)
+        spent = document.get("spent")
+        if not isinstance(spent, dict):
+            spent = {}
+            document["spent"] = spent
+        spent["calls"] = (_number(spent.get("calls")) or 0.0) + calls
+        spent["tokens"] = (_number(spent.get("tokens")) or 0.0) + tokens
+        located = _open_batch(document)
+        if located is not None:
+            index, batch = located
+            batch["calls_spent"] = (_number(batch.get("calls_spent")) or 0.0) + calls
+            batch["tokens_spent"] = (_number(batch.get("tokens_spent")) or 0.0) + tokens
+            document["batches"][index] = batch
+        _write_document_atomically(budget_path, document)

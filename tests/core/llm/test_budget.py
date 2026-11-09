@@ -197,3 +197,61 @@ def test_record_spend_then_check_budget_reflects_the_new_spend(tmp_path: Path) -
 
     with pytest.raises(BudgetExceededError):
         check_budget(path)  # calls_spent is now 3, which has reached calls_cap: no longer open
+
+
+# --- concurrency (2026-11-09: two scripts calling record_spend at the same time raced its
+# read-modify-write and briefly produced invalid JSON) ------------------------------------------
+
+
+def test_many_concurrent_record_spend_calls_never_corrupt_the_file_and_lose_no_update(
+    tmp_path: Path,
+) -> None:
+    import threading
+
+    batch = _open_batch(calls_cap=10_000, calls_spent=0)
+    path = _write(tmp_path, _document(total_calls_cap=10_000, batches=[batch]))
+
+    n_threads = 20
+    calls_per_thread = 5
+    errors: list[BaseException] = []
+
+    def _spend() -> None:
+        try:
+            for _ in range(calls_per_thread):
+                record_spend(path, 1, 10)
+        except BaseException as error:  # noqa: BLE001 -- recorded, re-raised by the main thread
+            errors.append(error)
+
+    threads = [threading.Thread(target=_spend) for _ in range(n_threads)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+
+    assert not errors, errors
+    # The file must still be valid JSON (never truncated/interleaved mid-write) with every
+    # thread's spend accounted for -- no lost update from the race.
+    document = json.loads(path.read_text(encoding="utf-8"))
+    expected_calls = n_threads * calls_per_thread
+    assert document["spent"]["calls"] == expected_calls
+    assert document["spent"]["tokens"] == expected_calls * 10
+    assert document["batches"][0]["calls_spent"] == expected_calls
+    assert document["batches"][0]["tokens_spent"] == expected_calls * 10
+
+
+def test_record_spend_lock_times_out_instead_of_hanging_forever(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from repo_presenter.core.llm import budget as budget_module
+
+    monkeypatch.setattr(budget_module, "_LOCK_TIMEOUT_SECONDS", 0.2)
+    monkeypatch.setattr(budget_module, "_LOCK_POLL_SECONDS", 0.01)
+    batch = _open_batch(calls_cap=10, calls_spent=0)
+    path = _write(tmp_path, _document(batches=[batch]))
+    lock_path = path.with_suffix(path.suffix + ".lock")
+    lock_path.write_text("", encoding="utf-8")  # simulate another process already holding it
+
+    with pytest.raises(TimeoutError):
+        record_spend(path, 1, 10)
+
+    lock_path.unlink()
