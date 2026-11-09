@@ -1,6 +1,6 @@
 # Aspose.Cells FOSS for .NET
 
-[![NuGet](https://img.shields.io/nuget/v/Aspose.Cells.FOSS.svg)](https://www.nuget.org/packages/Aspose.Cells.FOSS/) ![.NET](https://img.shields.io/badge/.net-net8.0-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.txt) [![Contributors](https://img.shields.io/github/contributors/aspose-cells-foss/Aspose.Cells-FOSS-for-.NET)](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-.NET/graphs/contributors)
+[![NuGet version](https://img.shields.io/nuget/v/Aspose.Cells.FOSS.svg)](https://www.nuget.org/packages/Aspose.Cells.FOSS/) ![.NET](https://img.shields.io/badge/.net-net8.0-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.txt) [![Contributors](https://img.shields.io/github/contributors/aspose-cells-foss/Aspose.Cells-FOSS-for-.NET.svg)](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-.NET/graphs/contributors) [![Issues](https://img.shields.io/github/issues/aspose-cells-foss/Aspose.Cells-FOSS-for-.NET.svg)](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-.NET/issues)
 
 [![Aspose.Cells FOSS for .NET](https://products.aspose.org/media/cells/net/banner-readme.png)](https://products.aspose.org/cells/net/)
 
@@ -117,6 +117,24 @@ if (workbook.LoadDiagnostics.HasDataLossRisk)
 workbook.Worksheets[0].Cells["A1"].PutValue("Updated");
 workbook.Save("updated.xlsx");
 ```
+
+Runnable samples live under [`samples/`](samples/README.md). Feature areas currently covered include:
+
+- basic workbook and cell operations
+- load and repair behavior
+- styles
+- worksheet settings
+- validations
+- conditional formatting
+- hyperlinks and defined names
+- page setup
+- comments
+- charts
+- list objects
+- pictures
+- document properties
+- shapes
+- PDF conversion
 
 Run one sample from the repository root:
 
@@ -458,6 +476,8 @@ dotnet build src\Aspose.Cells_FOSS\Aspose.Cells_FOSS.csproj -c Debug
 ```bash
 dotnet build samples\Aspose.Cells_FOSS.Samples.Basic\Aspose.Cells_FOSS.Samples.Basic.csproj -c Debug
 ```
+
+This project is licensed under the [MIT License](License/LICENSE.txt).
 
 ## Third-Party Notices
 

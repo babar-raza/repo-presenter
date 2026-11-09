@@ -1,12 +1,12 @@
 {
   "files": {
     "README.md": {
-      "bytes": 25750,
-      "sha256": "506e3e9444016103ab07eeb38ae1576cea2bbb2a3b6eb56fef41020c94f849d6"
+      "bytes": 26380,
+      "sha256": "2212207a054f396e35d2d64fed2a585d791206bfad634804c6a7ab1ee9f8e335"
     },
     "README.patch.diff": {
-      "bytes": 28884,
-      "sha256": "71952d62e2ab46c3ae3f1089a8e252171501c8629c27d4ef98108dab157f02a7"
+      "bytes": 28668,
+      "sha256": "07c0f54e2b7a96a1febf783a2ee6e6ee34c1ecd008d118196a6eb49ed81f290b"
     },
     "content_units.coherent.json": {
       "bytes": 22444,
@@ -17,12 +17,12 @@
       "sha256": "c558eefe813ebdbefce8c81993cfa034aa59b93e478c1b1a4150162eca2be3d3"
     },
     "dependencies.json": {
-      "bytes": 93752,
-      "sha256": "2ceb79d2d81ef1fdcc0f8cdc73579d4c66b72cf0924d0d27c5ba9e29c45450b1"
+      "bytes": 93753,
+      "sha256": "a4b364a19aedb2fda732b19b45274b5ecf50d98ff0ed1c77a8ccdf1bda9ddf47"
     },
     "dispositions.json": {
-      "bytes": 14255,
-      "sha256": "63e86f34c6bf1fbacaf855ab08d0577c676549794d30900b312c81adc62c0c99"
+      "bytes": 14379,
+      "sha256": "2b59b4e7e0993de629ca56bd238b860f7df4414e89f40f285d5c0b8e29f105a2"
     },
     "facts.json": {
       "bytes": 401828,
@@ -40,6 +40,14 @@
       "bytes": 10163,
       "sha256": "25e4606c52293e495cef6880a34b289cc7d47ceb8221f2b1d88ea70a030e7134"
     },
+    "recertification.json": {
+      "bytes": 3102,
+      "sha256": "acc8557e73ccff28e88f91eb65d2bf5d9d07d248378f2c89278870cf7fe6b221"
+    },
+    "restored_units.json": {
+      "bytes": 505,
+      "sha256": "3885b09d2c60c6b0648aaf9f16147f596bee80e85bf460a829269d315de0c32a"
+    },
     "review_verdict.json": {
       "bytes": 1906,
       "sha256": "fd70d3ad022d80f3e44b2bd5cfeb8f8f33b0daefccec1db7ac26dd30e0c23f71"
@@ -53,36 +61,47 @@
     "records": 73,
     "total_tokens": null
   },
-  "no_op_proof": {
-    "byte_identical": true,
-    "first_run": {
-      "identity": {
-        "boot_id": "boot:0922b0a4-9888-4032-81aa-6b7635a139d4",
-        "nonce": "5fd300fcc2444d2fb3e44a832a3795d3",
-        "pid": 2613,
-        "started": "proc:9629"
-      },
-      "invocation_id": "3106aade91c742a3a5b01832f7041ea7",
-      "started_at": "2026-10-30T15:22:26Z"
-    },
-    "fresh_process": true,
-    "proven_at": "2026-10-30T15:59:28Z",
-    "provider_calls": 0,
-    "rerun": {
-      "cache_reuses": 18,
-      "identity": {
-        "boot_id": "boot:26bb42e0-2026-4763-ba0b-910e87c9733f",
-        "nonce": "dedf6523b6974d9c9480842b2c45e331",
-        "pid": 2296,
-        "started": "proc:2651"
-      },
-      "invocation_id": "b1ef43a7c4d147b6b05c14d01d630396",
-      "provider_calls": 0,
-      "records": 18,
-      "started_at": "2026-10-30T15:59:24Z"
-    }
-  },
+  "no_op_proof": null,
   "provider_calls": 0,
+  "recertified_at": "2026-11-09T19:06:39Z",
+  "recertified_from": {
+    "commit": "b4fda1b6a67766261a8b7a18328e20886ea9fead",
+    "dependencies_sha256": "2ceb79d2d81ef1fdcc0f8cdc73579d4c66b72cf0924d0d27c5ba9e29c45450b1",
+    "no_op_proof": {
+      "byte_identical": true,
+      "first_run": {
+        "identity": {
+          "boot_id": "boot:0922b0a4-9888-4032-81aa-6b7635a139d4",
+          "nonce": "5fd300fcc2444d2fb3e44a832a3795d3",
+          "pid": 2613,
+          "started": "proc:9629"
+        },
+        "invocation_id": "3106aade91c742a3a5b01832f7041ea7",
+        "started_at": "2026-10-30T15:22:26Z"
+      },
+      "fresh_process": true,
+      "proven_at": "2026-10-30T15:59:28Z",
+      "provider_calls": 0,
+      "rerun": {
+        "cache_reuses": 18,
+        "identity": {
+          "boot_id": "boot:26bb42e0-2026-4763-ba0b-910e87c9733f",
+          "nonce": "dedf6523b6974d9c9480842b2c45e331",
+          "pid": 2296,
+          "started": "proc:2651"
+        },
+        "invocation_id": "b1ef43a7c4d147b6b05c14d01d630396",
+        "provider_calls": 0,
+        "records": 18,
+        "started_at": "2026-10-30T15:59:24Z"
+      }
+    },
+    "readme_sha256": "506e3e9444016103ab07eeb38ae1576cea2bbb2a3b6eb56fef41020c94f849d6",
+    "revision": "f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2",
+    "sealed_at": "2026-10-30T15:59:28Z",
+    "state": "VALID_UPDATE_AVAILABLE",
+    "version_set": "87b2c7a75a65699be2c8f68a1e293779b1b36beaeb1db5522c32abb1655a3e7d"
+  },
   "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-.NET",
   "revision": "f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2",
   "schema_version": 2,
@@ -97,51 +116,5 @@
     "invocation_id": "b1ef43a7c4d147b6b05c14d01d630396",
     "started_at": "2026-10-30T15:59:24Z"
   },
-  "state": "VALID_UPDATE_AVAILABLE",
-  "update": {
-    "available": true,
-    "changed": [
-      "README.md",
-      "README.patch.diff",
-      "content_units.coherent.json",
-      "content_units.json",
-      "dependencies.json",
-      "dispositions.json",
-      "plan.json",
-      "review_verdict.json"
-    ],
-    "classification": "presentation",
-    "earliest_affected_stage": "RECONCILING",
-    "files": {
-      "README.md": "a75a52302cd901748a9c92c7e566a80b8a5b69b8fe0c3a36919d4a6677ac2d41",
-      "README.patch.diff": "2dbfb1ea79c68c6e242930fca0fba14ca3699edd35c71b9ba4b10c25bd87a89d",
-      "content_units.coherent.json": "25aa16795bdb50e909baaaaa50de5d6f1233d75a9e0ee56464759b9cdfd5e130",
-      "content_units.json": "e7b49a1393e9d1cfbafd0675bb6b22cda887a9d600b16af408c594d3289a7880",
-      "dependencies.json": "fde45ee1ee1bb5c5149f4715eca9a04e730d7afd646e070704eee52e29461b39",
-      "dispositions.json": "b4b862fae6a338a31ae4bde481d64ff24a3f56dd99d3d7c80c915a9ed2b2d4b0",
-      "facts.json": "5675a6a9064d8f9c4558b500de11a2a6d5338a02bd648dfa27d742d717166368",
-      "investigation.json": "34edebdb76aa305336d70f64780fe6d66b997a15a968eb00a54126e6093f7ac9",
-      "plan.json": "d1b00295e17e5ac36b0e87ca20a1c1c6cdfcf59a8278488f1fc3a59b3c4fc914",
-      "review_verdict.json": "ff0b38d63eb77838a405b9af644ca111573e1d27ec76342efb37167588358fbe"
-    },
-    "recorded_at": "2026-11-01T11:00:43Z",
-    "recorded_by": {
-      "identity": {
-        "boot_id": "boot:5ba94708-d397-48e4-87e5-601f1bd7a5dc",
-        "nonce": "4c25212873544cbd986bd05cccd036cd",
-        "pid": 2305,
-        "started": "proc:2616"
-      },
-      "invocation_id": "4a2de8efafd64705bf82d23172f2b8fb",
-      "started_at": "2026-11-01T10:35:37Z"
-    },
-    "scope_basis": "artifacts",
-    "scopes": [
-      "reconciliation",
-      "planning",
-      "authoring",
-      "reviewer"
-    ],
-    "triggering_scope": "reconciliation"
-  }
+  "state": "ACCEPTED"
 }
