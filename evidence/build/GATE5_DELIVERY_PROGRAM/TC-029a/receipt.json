@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "card": "TC-029a",
+  "gate": "GATE5_DELIVERY_PROGRAM",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-09T18:25:15Z",
+  "base_rev": "83c00bd652bf263959151ee10b47f8b00b31948c",
+  "head_rev": "7d7a276df23dde2cba32c3f54a604e63f1930603",
+  "card_sha256": "8b2cb1808fb52cec88a27067e2a2ab67c2eeb22d2caf23d3f9f44c1caa07e034",
+  "checker_fileset_sha256": "d368abdf528ec4db953318b4edff30160f2d50faecec8d99cd378c5888d504d9",
+  "checker_fileset_scheme": "v3",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [
+      "data/registry.json",
+      "data/upstream_write_allowlist.json",
+      "tests/github/test_client.py",
+      "tests/github/test_write_authorization.py",
+      "tests/test_write_authority_r22.py"
+    ],
+    "violations": [],
+    "evaluated": true
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python -m pytest tests/test_write_authority_r22.py tests/core/registry tests/github tests/propose -q",
+          "exit_code": 0,
+          "duration_s": 30.428,
+          "stdout_sha256": "81d692e8c4a4f60ac450d37a0f73f40c3cd0d2cda2914efa1c195c77e8df41c3"
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python -m pytest tests/test_write_authority_r22.py tests/core/registry tests/github tests/propose -q",
+          "exit_code": 0,
+          "duration_s": 22.1,
+          "stdout_sha256": "60a7e69b897251d84b8eb287294b3a9b4c29f225af54105eb0809f3d4bedc167"
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -X utf8 -c \"import json, pathlib; p = pathlib.Path('data/upstream_write_allowlist.json'); d = json.loads(p.read_text(encoding='utf-8')); d['repositories'].pop(); p.write_text(json.dumps(d, indent=2), encoding='utf-8')\"",
+    "patch_sha256": "55c20f2ba69ad7b4cca9f074e5ddccd83b1e86156463102d866253d011b0a59e",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      1
+    ],
+    "tree_changed": [
+      "M data/upstream_write_allowlist.json"
+    ]
+  },
+  "accepted": true,
+  "reason": "all gates passed"
+}
