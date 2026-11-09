@@ -1,0 +1,64 @@
+{
+  "checks": [
+    {
+      "details": [],
+      "id": "L-01",
+      "name": "Every change is a listed, evidenced edit; the text outside them is unchanged",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-02",
+      "name": "A second run of the correction over the same inputs gives the same bytes",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-03",
+      "name": "No claim in the final README contradicts a verified fact",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-04",
+      "name": "Nothing of the live README is lost unless an evidenced edit accounts for it",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-05",
+      "name": "An unrepaired defect blocks unless this run is itself a net improvement (R21)",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-06",
+      "name": "A run over the corrected text finds nothing further to correct (recorded, not blocking)",
+      "verdict": "PASS"
+    }
+  ],
+  "lane": "L",
+  "residuals": [
+    {
+      "detail": "org.aspose:aspose-pdf-foss is shown at version 26.6.0, but the registry's current stable release is 26.9.0",
+      "kind": "claim_contradiction",
+      "line": 127,
+      "quote": "implementation 'org.aspose:aspose-pdf-foss:26.6.0'",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "org.aspose:aspose-pdf-foss is shown at version 26.6.0, but the registry's current stable release is 26.9.0",
+      "kind": "claim_contradiction",
+      "line": 120,
+      "quote": "    <version>26.6.0</version>",
+      "rule": "claim_contradiction"
+    }
+  ],
+  "review_logic_version": "2",
+  "schema_version": 1,
+  "source_revision": "736cedaa2922e4952f429364bdb9a4bbb1d97863",
+  "summary": {
+    "fail": 0,
+    "pass": 6
+  }
+}

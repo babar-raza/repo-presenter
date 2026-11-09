@@ -1,0 +1,194 @@
+{
+  "confinement": {
+    "edits": 1,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "5bcc8c26cbb5aaa96df53f91a492233be84997999148860e7356f27bff17881a",
+  "edits": [
+    {
+      "detector": "stale_type_count",
+      "end": 11849,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:org",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "org"
+        },
+        {
+          "fact_id": "public_symbol:org.aspose",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "org.aspose"
+        },
+        {
+          "fact_id": "public_symbol:org.aspose.pdf",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "org.aspose.pdf"
+        },
+        {
+          "fact_id": "public_symbol:org.aspose.pdf.annotations",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "org.aspose.pdf.annotations"
+        },
+        {
+          "fact_id": "public_symbol:org.aspose.pdf.annotations.annotation",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "org.aspose.pdf.annotations.Annotation"
+        },
+        {
+          "fact_id": "public_symbol:org.aspose.pdf.annotations.annotation.actions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "org.aspose.pdf.annotations.Annotation.actions"
+        },
+        {
+          "fact_id": "public_symbol:org.aspose.pdf.annotations.annotation.border",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "org.aspose.pdf.annotations.Annotation.border"
+        },
+        {
+          "fact_id": "public_symbol:org.aspose.pdf.annotations.annotation.color",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "org.aspose.pdf.annotations.Annotation.color"
+        }
+      ],
+      "index": 0,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 330,
+      "original": "1026",
+      "rationale": "line 330 states '1026 public types'; the facts record 1181 public types (986 classes), so a count of 1026 is refuted and is replaced by the computed 1181",
+      "replacement": "1181",
+      "start": 11845
+    }
+  ],
+  "lane": "L",
+  "original_sha256": "e0f0940594cfe27ac1da6b7c90b508a643213572e17ba4ea6e772b1a9bf667d3",
+  "outcome": "CORRECTED",
+  "readme_path": "README.md",
+  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-Java",
+  "schema_version": 1,
+  "source_revision": "736cedaa2922e4952f429364bdb9a4bbb1d97863",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {
+    "FALSE_CLAIM_FIX": 1
+  },
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "public_symbol:org.aspose.pdf.antialiasingprocessingtype",
+        "public_symbol:org.aspose.pdf.columnreflow",
+        "public_symbol:org.aspose.pdf.compactionoptions",
+        "public_symbol:org.aspose.pdf.compactionresult",
+        "public_symbol:org.aspose.pdf.docformat",
+        "public_symbol:org.aspose.pdf.docloadoptions",
+        "public_symbol:org.aspose.pdf.docsaveoptions",
+        "public_symbol:org.aspose.pdf.engine.colorspace.cmykprintlut"
+      ],
+      "line": 0,
+      "reason": "137 of 1181 verified public types are named nowhere in the README; would fill API Reference: public_symbol:org.aspose.pdf.antialiasingprocessingtype, public_symbol:org.aspose.pdf.columnreflow, public_symbol:org.aspose.pdf.compactionoptions, public_symbol:org.aspose.pdf.compactionresult, public_symbol:org.aspose.pdf.docformat, public_symbol:org.aspose.pdf.docloadoptions, public_symbol:org.aspose.pdf.docsaveoptions, public_symbol:org.aspose.pdf.engine.colorspace.cmykprintlut (+129 more)",
+      "text": ""
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [
+        "format:input.pdf"
+      ],
+      "line": 32,
+      "reason": "the README marks 'PDF' supported; format:input.pdf is on record as UNRESOLVED, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "i1[\"An existing PDF file\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [
+        "format:input.html"
+      ],
+      "line": 33,
+      "reason": "the README marks 'HTML' supported; format:input.html is on record as UNRESOLVED, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "i2[\"An existing HTML file\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 34,
+      "reason": "the README marks 'TIFF' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "i3[\"TIFF images (multi-frame)\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [
+        "format:input.pdf"
+      ],
+      "line": 58,
+      "reason": "the README marks 'PDF' supported; format:input.pdf is on record as UNRESOLVED, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o1[\"A PDF file\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [
+        "format:input.html"
+      ],
+      "line": 59,
+      "reason": "the README marks 'HTML' supported; format:input.html is on record as UNRESOLVED, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o2[\"An HTML file\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 60,
+      "reason": "the README marks 'BMP' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o3[\"BMP images\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 61,
+      "reason": "the README marks 'GIF' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o4[\"GIF images\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 62,
+      "reason": "the README marks 'JPEG' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o5[\"JPEG images\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 63,
+      "reason": "the README marks 'TIFF' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o6[\"TIFF images\"]"
+    }
+  ]
+}
