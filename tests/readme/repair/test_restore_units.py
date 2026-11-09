@@ -506,3 +506,73 @@ def test_restoring_the_bc08_unit_returns_the_rewrite_to_verbatim_preserve() -> N
     entry = next(e for e in new["dispositions"] if e["unit_id"] == unit)
     assert entry["disposition"] == "VERIFIED_PRESERVE"
     assert entry["destination_section"] == "key_capabilities"
+
+
+# --- a unit whose restored text would carry a dangling in-document pointer is not restored ----------
+# Hosted PDF Go 025.paragraph: "covered in [Encryption and Signing](#encryption-and-signing) below".
+# It was VERIFIED_REWRITE precisely for that pointer; restoring it re-triggers BC-07.
+
+_POINTER_UNIT = "inherited_unit:025.paragraph"
+
+
+def _pointer_facts() -> FactsDocument:
+    return FactsDocument(
+        "r", "0" * 40,
+        (
+            _fact(
+                _POINTER_UNIT, "inherited_unit",
+                "Encryption options are covered in [Encryption and Signing](#encryption-and-signing) below.",
+                section="X > Features",
+            ),
+            *(
+                _fact(f"inherited_unit:09{i}.paragraph", "inherited_unit", f"Filler {i}.", section="X > Features")
+                for i in range(3)
+            ),
+        ),
+    )
+
+
+def _pointer_dispositions(disposition: str = "VERIFIED_REWRITE") -> dict:
+    return {
+        "dispositions": [
+            {
+                "unit_id": _POINTER_UNIT, "disposition": disposition,
+                "destination_section": "key_capabilities", "fact_ids": [], "rationale": "folded",
+            }
+        ]
+    }
+
+
+def test_a_unit_whose_restored_text_carries_a_dangling_pointer_is_skipped_and_recorded() -> None:
+    original = _pointer_dispositions()
+    skipped: list[dict[str, str]] = []
+    new, changes = restore_lost_units(
+        original, _pointer_facts(), [_POINTER_UNIT], HOLDABLE, INCLUDED, skipped=skipped
+    )
+    assert changes == []
+    assert new == original  # disposition, destination, rationale all as they were
+    assert skipped == [{"unit_id": _POINTER_UNIT, "reason": "dangling_pointer"}]
+
+
+def test_negative_control_the_same_unit_without_the_pointer_is_restored() -> None:
+    facts = FactsDocument(
+        "r", "0" * 40,
+        tuple(
+            f if f.id != _POINTER_UNIT else _fact(_POINTER_UNIT, "inherited_unit", "Encryption is supported.", section="X > Features")
+            for f in _pointer_facts().facts
+        ),
+    )
+    skipped: list[dict[str, str]] = []
+    _, changes = restore_lost_units(
+        _pointer_dispositions(), facts, [_POINTER_UNIT], HOLDABLE, INCLUDED, skipped=skipped
+    )
+    assert [c["unit_id"] for c in changes] == [_POINTER_UNIT] and skipped == []
+
+
+def test_choose_units_never_picks_an_excluded_holder_so_another_holder_is_chosen() -> None:
+    details = [
+        "BC-17: inherited_unit:019.paragraph holds links 'a.md', which the published README prints",
+        "BC-17: inherited_unit:020.list holds links 'a.md', which the published README prints",
+    ]
+    facts = _facts()
+    assert choose_units(details, facts, exclude=["inherited_unit:019.paragraph"]) == ["inherited_unit:020.list"]

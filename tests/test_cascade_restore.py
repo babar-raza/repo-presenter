@@ -254,3 +254,183 @@ def test_a_restore_is_attempted_for_bc08_and_not_beside_a_non_restorable_check(
     assert _attempted(monkeypatch, ["BC-08"])
     assert _attempted(monkeypatch, ["BC-08", "BC-17", "BC-07"])
     assert not _attempted(monkeypatch, ["BC-08", "BC-02"])
+
+
+# --- a unit with a dangling pointer is not restorable, so its defect still goes to the repair --------
+# Hosted PDF Go: 025.paragraph's text points at "[Encryption and Signing](#encryption-and-signing)
+# below"; restoring it re-triggers BC-07's dangling pointer, so the restore does not keep it and the
+# model repair must still be asked about its BC-08/BC-17 lines.
+
+_POINTER = "inherited_unit:025.paragraph"
+_PLAIN = "inherited_unit:026.paragraph"
+
+
+def _pointer_document() -> Any:
+    from repo_presenter.core.facts import Evidence, Fact, FactsDocument
+
+    def unit(unit_id: str, text: str) -> Fact:
+        return Fact(
+            id=unit_id, kind="inherited_unit", value=text,  # type: ignore[arg-type]
+            evidence=(Evidence("README.md", None),), polarity="SUPPORTED",  # type: ignore[arg-type]
+            attributes={"section": "X > Features"},
+        )
+
+    return FactsDocument(
+        "r", "0" * 40,
+        (
+            unit(_POINTER, "Options are covered in [Encryption and Signing](#encryption-and-signing) below."),
+            unit(_PLAIN, "Run `go run ./_examples/feature_showcase` to see them."),
+            *(unit(f"inherited_unit:09{i}.paragraph", f"Filler {i}.") for i in range(3)),
+        ),
+    )
+
+
+def _bc17_defect(unit: str) -> Any:
+    from repo_presenter.readme.repair.targeted import Defect
+
+    line = f"{unit} holds commands 'x', which the published README prints and this candidate loses"
+    return Defect(
+        f"fp-{unit}", "validation", "BC-17", None, "S4",
+        {"id": "BC-17", "details": [line], "failures": [{"detail": line, "unit_id": unit}]},
+    )
+
+
+def _without_restorable_left(monkeypatch: pytest.MonkeyPatch) -> list[str]:
+    from types import SimpleNamespace
+
+    monkeypatch.setattr(cascade_module, "holdable_sections", lambda document: {"key_capabilities"})
+    dispositions = {
+        "dispositions": [
+            {
+                "unit_id": unit, "disposition": "VERIFIED_REWRITE",
+                "destination_section": "key_capabilities", "fact_ids": [], "rationale": "r",
+            }
+            for unit in (_POINTER, _PLAIN)
+        ]
+    }
+    composed = SimpleNamespace(
+        dispositions=dispositions, plan={"sections": [{"section_id": "key_capabilities", "include": True}]}
+    )
+    left = cascade_module._without_restorable(
+        [_bc17_defect(_POINTER), _bc17_defect(_PLAIN)], composed=composed, document=_pointer_document()
+    )
+    return [d.fingerprint for d in left]
+
+
+def test_a_defect_naming_a_unit_with_a_dangling_pointer_is_still_sent_to_the_repair(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # 026 (no pointer) is restorable and dropped; 025 (pointer) is not restorable, so it stays
+    assert _without_restorable_left(monkeypatch) == [f"fp-{_POINTER}"]
+
+
+def test_negative_control_without_the_pointer_guard_both_defects_are_dropped(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import repo_presenter.readme.reconciliation.dispositions as dispositions_module
+
+    monkeypatch.setattr(dispositions_module, "dangling_pointers", lambda output, facts: [])
+    assert _without_restorable_left(monkeypatch) == []
+
+
+# --- a partial restore is kept when the blocking failures strictly shrink and none is new ---------------
+
+
+def _check(check_id: str, *details: str) -> dict[str, Any]:
+    return {"id": check_id, "details": list(details)}
+
+
+def _bc17(*items: str) -> dict[str, Any]:
+    return _check("BC-17", *(f"inherited_unit:0{i}.paragraph holds links '{i}'" for i in items))
+
+
+def _drive_restore(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, before: list[dict[str, Any]],
+    after: list[dict[str, Any]], *, review_blocking: int = 0,
+) -> tuple[Any, Any]:
+    import dataclasses
+    from types import SimpleNamespace
+
+    @dataclasses.dataclass(frozen=True)
+    class FakeComposed:
+        plan: Any
+        coherent_units: Any
+        dispositions: Any
+        readme: str
+        tasks: Any
+        accounted: Any
+
+    verdict_after = SimpleNamespace(blocking_findings=("f",) * review_blocking)
+    verdict_before = SimpleNamespace(blocking_findings=())
+    monkeypatch.setattr(cascade_module, "blocking_failures", lambda validation: validation["checks"])
+    monkeypatch.setattr(cascade_module, "holdable_sections", lambda document: {"key_capabilities"})
+    monkeypatch.setattr(cascade_module, "choose_units", lambda *a, **k: ["inherited_unit:01.paragraph"])
+    monkeypatch.setattr(
+        cascade_module, "restore_lost_units",
+        lambda d, f, u, h, i=None, **k: (d, [{"unit_id": "inherited_unit:01.paragraph", "was": "a", "now": "b"}]),
+    )
+    monkeypatch.setattr(cascade_module, "render_readme", lambda *a, **k: "RESTORED README\n")
+    monkeypatch.setattr(cascade_module, "authoring_tasks", lambda *a, **k: [])
+    monkeypatch.setattr(cascade_module, "_candidate", lambda *a, **k: SimpleNamespace())
+    monkeypatch.setattr(cascade_module, "account_unprinted_units", lambda c: ({}, []))
+    monkeypatch.setattr(cascade_module, "validate_candidate", lambda *a, **k: {"checks": after})
+    monkeypatch.setattr(cascade_module, "review_candidate", lambda **k: verdict_after)
+    monkeypatch.setattr(
+        cascade_module, "write_dispositions", lambda d, p: Path(p).write_text("{}", encoding="utf-8")
+    )
+    monkeypatch.setattr(cascade_module, "write_review_verdict", lambda v, p: None)
+    composed = FakeComposed(
+        {"sections": [{"section_id": "key_capabilities", "include": True}]},
+        {"units": []}, {"dispositions": []}, "OLD README\n", [], [],
+    )
+    settled = cascade_module._Settled(composed, {"checks": before}, verdict_before, 1)
+    result = cascade_module._restore_lost_content(
+        settled, entry=None, document=None, investigation={}, tree_paths=[], original="OLD\n",
+        out_dir=tmp_path,
+    )
+    return settled, result
+
+
+def test_a_partial_restore_that_clears_two_of_three_items_and_adds_none_is_kept(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    pointer = _check("BC-07", "refers to a 'X below' section this README does not have")
+    settled, result = _drive_restore(
+        monkeypatch, tmp_path, [_bc17("1", "2", "3"), pointer], [_bc17("3"), pointer]
+    )
+    assert result is not settled and result.composed.readme == "RESTORED README\n"
+    assert [c["id"] for c in result.validation["checks"]] == ["BC-17", "BC-07"]
+    assert (tmp_path / "restored_units.json").exists()
+
+
+def test_a_restore_that_introduces_a_new_failing_check_is_discarded(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    after = [_bc17("3"), _check("BC-07", "refers to a 'X below' section this README does not have")]
+    settled, result = _drive_restore(monkeypatch, tmp_path, [_bc17("1", "2", "3")], after)
+    assert result is settled
+    assert not (tmp_path / "restored_units.json").exists()
+
+
+def test_a_restore_that_changes_an_item_without_clearing_any_is_discarded(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    settled, result = _drive_restore(monkeypatch, tmp_path, [_bc17("1", "2")], [_bc17("1", "9")])
+    assert result is settled
+
+
+def test_a_partial_restore_with_a_new_blocking_review_finding_is_discarded(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    settled, result = _drive_restore(
+        monkeypatch, tmp_path, [_bc17("1", "2")], [_bc17("2")], review_blocking=1
+    )
+    assert result is settled
+
+
+def test_a_restore_that_does_not_shrink_the_failures_is_discarded(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    same = [_bc17("1", "2")]
+    settled, result = _drive_restore(monkeypatch, tmp_path, same, same)
+    assert result is settled

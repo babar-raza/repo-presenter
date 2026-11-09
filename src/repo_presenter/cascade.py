@@ -656,7 +656,11 @@ def _settle_s9(
             require_clean_review=True,
         )
         if restored.composed is not composed:
-            return restored
+            if not blocking_failures(restored.validation):
+                return restored
+            # A PARTIAL restore (fewer blocking failures, none new) is the improved candidate the
+            # model repair continues from; the S9 loop recomposes and the final restore re-applies.
+            composed, validation, verdict = restored.composed, restored.validation, restored.verdict
         defects = _settle_defects(
             composed=composed, validation=validation, verdict=verdict, entry=entry,
             document=document, prompts=prompts,
@@ -680,6 +684,37 @@ RESTORABLE_CHECKS = frozenset({"BC-05", "BC-08", "BC-17"})
 #: printed content, so a restore is attempted and kept only if it leaves NO blocking failure.
 RESTORE_COMPANION_CHECKS = frozenset({"BC-07"})
 RESTORED_UNITS_FILENAME = "restored_units.json"
+
+
+def _strictly_fewer_failures(old: list[dict[str, Any]], new: list[dict[str, Any]]) -> bool:
+    """Whether ``new`` blocking failures are a strict improvement on ``old``: no check id outside the
+    old set, no restorable-check item (BC-05/BC-08/BC-17 detail) outside the old items, no companion
+    check (BC-07) with more details than before, and at least one item or check id cleared."""
+    old_ids = {str(check["id"]) for check in old}
+    new_ids = {str(check["id"]) for check in new}
+    if not new_ids <= old_ids:
+        return False
+
+    def items(checks: list[dict[str, Any]]) -> set[tuple[str, str]]:
+        return {
+            (str(check["id"]), str(detail))
+            for check in checks if str(check["id"]) in RESTORABLE_CHECKS
+            for detail in check.get("details") or [str(check.get("message", ""))]
+        }
+
+    def sizes(checks: list[dict[str, Any]]) -> dict[str, int]:
+        return {
+            str(check["id"]): len(check.get("details") or [1])
+            for check in checks if str(check["id"]) not in RESTORABLE_CHECKS
+        }
+
+    old_items, new_items = items(old), items(new)
+    old_sizes, new_sizes = sizes(old), sizes(new)
+    if not new_items <= old_items or any(n > old_sizes.get(i, 0) for i, n in new_sizes.items()):
+        return False
+    return new_items < old_items or new_ids < old_ids or any(
+        new_sizes.get(i, 0) < n for i, n in old_sizes.items()
+    )
 
 
 def _restore_lost_content(
@@ -706,6 +741,7 @@ def _restore_lost_content(
     ]
     dispositions = composed.dispositions
     restored: list[dict[str, str]] = []
+    skipped: list[dict[str, str]] = []
     readme, tasks, accounted = composed.readme, composed.tasks, composed.accounted
     validation, verdict = settled.validation, settled.verdict
     for _round in range(RESTORE_ROUNDS):
@@ -714,14 +750,17 @@ def _restore_lost_content(
         ]
         unit_ids = choose_units(
             details, document, [change["unit_id"] for change in restored],
-            mandatory_checks=("BC-05", "BC-08"),
+            mandatory_checks=("BC-05", "BC-08"), exclude=[s["unit_id"] for s in skipped],
         )
         if not unit_ids:
             break
-        dispositions, changes = restore_lost_units(dispositions, document, unit_ids, holdable, included)
+        dispositions, changes = restore_lost_units(
+            dispositions, document, unit_ids, holdable, included, skipped=skipped
+        )
         if not changes:
             dispositions, changes = restore_lost_units(
-                dispositions, document, unit_ids, holdable, included, include_api_tables=True
+                dispositions, document, unit_ids, holdable, included, include_api_tables=True,
+                skipped=skipped,
             )
         if not changes:
             break
@@ -759,9 +798,17 @@ def _restore_lost_content(
             + "; ".join(str(c['id']) + ' ' + '|'.join(str(d)[:140] for d in (c.get('details') or [])[:3]) for c in failing),
             file=sys.stderr,
         )
-    if not restored or failing:
+    if not restored:
         return settled
-    if require_clean_review and verdict.blocking_findings:
+    if failing:
+        # Partial restore: kept only when the blocking failures strictly shrink and nothing outside
+        # the old set appears (BC-07 must not newly fail), and the deterministic review gains no
+        # blocking finding. Otherwise the candidate is left exactly as it was.
+        if not _strictly_fewer_failures(blocking_failures(settled.validation), failing) or len(
+            verdict.blocking_findings
+        ) > len(settled.verdict.blocking_findings):
+            return settled
+    elif require_clean_review and verdict.blocking_findings:
         return settled  # the S9 loop still has review defects to repair; write nothing yet
     write_dispositions(dispositions, out_dir / "dispositions.json")
     (out_dir / ACCOUNTING_FILENAME).write_text(
@@ -774,7 +821,8 @@ def _restore_lost_content(
         render_patch(original, readme), encoding="utf-8", newline="\n"
     )
     (out_dir / RESTORED_UNITS_FILENAME).write_text(
-        json.dumps({"restored": restored}, indent=2, sort_keys=True) + "\n",
+        json.dumps({"restored": restored, "skipped_for_pointer": skipped}, indent=2, sort_keys=True)
+        + "\n",
         encoding="utf-8",
         newline="\n",
     )

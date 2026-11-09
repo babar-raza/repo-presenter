@@ -43,6 +43,13 @@ _UNIT = re.compile(r"inherited_unit:\d+(?:\.\d+)*\.[a-z_]+")
 #: A unit whose validator-named loss is a kind this module never re-dispositions: headings and
 #: badge rows are rendered by the shell, never printed from the inherited unit itself.
 _SHELL_RENDERED = frozenset({"heading", "badge_row", "html_block"})
+#: ``documentation_resources`` renders only its own per-link generated bullets
+#: (``renderer._documentation_resources`` reads ``plan["links"]``, never a placed unit's text), so
+#: ANY unit kind dispositioned there -- a kept list, paragraph or table -- is "placed" but never
+#: rendered (BC-05, measured on Cells Go: a kept list of the same five documentation links the
+#: generated bullets already cover). Unlike ``api_reference`` (which does print a table), no unit
+#: kind ever prints here.
+_GENERATED_ONLY_DESTINATIONS = frozenset({"documentation_resources"})
 
 
 def failing_unit_ids(
@@ -137,6 +144,7 @@ def choose_units(
     facts: FactsDocument,
     already: Collection[str] = (),
     mandatory_checks: Collection[str] = ("BC-05",),
+    exclude: Collection[str] = (),
 ) -> list[str]:
     """The fewest units whose restoration clears what BC-05 / BC-17 name, in first-seen order.
 
@@ -148,15 +156,21 @@ def choose_units(
     prints the same identifiers several times and pushes the README over BC-07's visible-line
     budget (Cells Go 312 of 300 lines, Java 313, measured after restoring every named unit). An
     item that is STILL named after one of its holders was restored (``already``) was not cleared by
-    that carrier, so it escalates: every remaining holder of it is chosen."""
-    mandatory = failing_unit_ids(details, checks=tuple(mandatory_checks))
+    that carrier, so it escalates: every remaining holder of it is chosen.
+
+    ``exclude`` names units restore will not keep (``restore_lost_units(skipped=...)``: a unit whose
+    text carries a dangling pointer): they are never chosen, so another holder of the same item
+    is."""
+    skip = set(exclude)
+    mandatory = [u for u in failing_unit_ids(details, checks=tuple(mandatory_checks)) if u not in skip]
     holders: dict[tuple[str, str], list[str]] = {}
     for detail in details:
         check, _, rest = detail.partition(": ")
         match = _HOLDS.match(rest) if check == "BC-17" else None
         if match is None:
             continue
-        holders.setdefault((match["category"], match["item"]), []).append(match["unit"])
+        if match["unit"] not in skip:
+            holders.setdefault((match["category"], match["item"]), []).append(match["unit"])
     restored = set(already)
     covered = set(mandatory) | restored
     texts = {fact.id: len(fact.value) for fact in facts.by_kind("inherited_unit")}
@@ -203,6 +217,7 @@ def restore_lost_units(
     included: Collection[str] | None = None,
     *,
     include_api_tables: bool = True,  # retained for callers; maintainers' API tables are restored
+    skipped: list[dict[str, str]] | None = None,
 ) -> tuple[dict[str, Any], list[dict[str, str]]]:
     """``(new dispositions, changes)``. ``changes`` records, per re-dispositioned unit, its
     previous and new disposition and destination, so the caller can show exactly what moved.
@@ -216,8 +231,23 @@ def restore_lost_units(
     A maintainers' TABLE bound for ``api_reference`` is restored like any other unit: BC-07's row
     count judges only the tables the renderer itself emits there (``structure.renderer_api_rows``),
     so the published README's member tables (R2: the floor) are preserved, placed verbatim after the
-    renderer's own tables. ``include_api_tables`` is retained only so existing callers keep working."""
+    renderer's own tables. ``include_api_tables`` is retained only so existing callers keep working.
+
+    A unit whose restored text would carry a dangling in-document pointer (BC-07's "refers to a
+    'X below' section this README does not have", the detector ``dangling_pointers`` that
+    ``_fold_dangling_rewrites`` also uses) is NOT restored: it was ``VERIFIED_REWRITE`` precisely
+    because of that pointer, and restoring it trades BC-17/BC-08 for BC-07 (hosted PDF Go
+    ``025.paragraph``). Each such unit is appended to ``skipped`` (when given) and left as it was."""
+    from repo_presenter.readme.reconciliation.dispositions import dangling_pointers
+
     output = copy.deepcopy(dict(dispositions))
+    before = {
+        entry.get("unit_id"): (
+            entry.get("disposition"), entry.get("destination_section"), entry.get("rationale"),
+            copy.deepcopy(entry.get("fact_ids")),
+        )
+        for entry in output.get("dispositions", [])
+    }
     units = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
     by_id = {fact.id: fact for fact in facts.facts}
     changes: list[dict[str, str]] = []
@@ -235,19 +265,49 @@ def restore_lost_units(
             continue
         unit = units[unit_id]
         attributes = unit.attributes or {}
-        if entry.get("disposition") in PLACED or entry.get("disposition") == "CORRECT_WITH_EVIDENCE":
+        placed = entry.get("disposition") in PLACED
+        if entry.get("disposition") == "CORRECT_WITH_EVIDENCE":
             continue
-        destination = entry.get("destination_section")
+        current_destination = entry.get("destination_section")
+        misrendered = current_destination in _GENERATED_ONLY_DESTINATIONS or (
+            current_destination == "api_reference" and unit_id.rsplit(".", 1)[-1] != "table"
+        )
+        if placed and not misrendered:
+            # Already kept verbatim, and its destination is one that does render a placed unit:
+            # nothing to change (the common case).
+            continue
+        destination = current_destination
         if destination not in holdable_set:
             destination = nearest_holdable(unit_id, attributes.get("section"), holdable_set)
         if destination == "api_reference" and unit_id.rsplit(".", 1)[-1] != "table":
             # api_reference prints the Core API table and its hubs from the verified surface; a
             # kept paragraph/list/code block "placed" there is never rendered (BC-05, measured on
-            # Cells Cpp: 041.paragraph once the escalation restored its holders), so it is re-homed.
+            # Cells Cpp: 041.paragraph). This re-homes it whether it was just chosen here or was
+            # already kept (PLACED) under that destination from an earlier disposition round.
             destination = nearest_holdable(
                 unit_id, attributes.get("section"), holdable_set - {"api_reference"}
             )
+        elif destination in _GENERATED_ONLY_DESTINATIONS:
+            # Same reasoning for documentation_resources (see _GENERATED_ONLY_DESTINATIONS):
+            # measured on Cells Go, a kept list already VERIFIED_MOVE'd there.
+            destination = nearest_holdable(
+                unit_id, attributes.get("section"), holdable_set - _GENERATED_ONLY_DESTINATIONS
+            )
         if destination is None:
+            continue
+        if placed:
+            # Already kept verbatim with a sound disposition; only its destination was wrong.
+            # Leave the disposition, fact_ids and rationale exactly as they were.
+            if destination == current_destination:
+                continue
+            changes.append(
+                {
+                    "unit_id": unit_id,
+                    "was": f"{entry.get('disposition')} -> {current_destination}",
+                    "now": f"{entry.get('disposition')} -> {destination}",
+                }
+            )
+            entry["destination_section"] = destination
             continue
         printed = kept_table_form(unit.value, facts) if unit_id.endswith(".table") else unit.value
         if unsafe_html_failures(printed):
@@ -273,4 +333,29 @@ def restore_lost_units(
             "Kept as the maintainers wrote it: the published README prints this content and the "
             "candidate would otherwise lose it (BC-17 / BC-05)."
         )
+    if changes:
+        # Only PLACED units are judged, and none of these was placed before, so none was flagged before.
+        flagged = {unit for unit, _, _ in dangling_pointers(output, facts)}
+        pointed = {change["unit_id"] for change in changes} & flagged
+        if pointed:
+            for entry in output.get("dispositions", []):
+                unit_id = entry.get("unit_id")
+                if unit_id not in pointed:
+                    continue
+                (entry["disposition"], entry["destination_section"], rationale, fact_ids) = before[unit_id]
+                if rationale is None:
+                    entry.pop("rationale", None)
+                else:
+                    entry["rationale"] = rationale
+                if fact_ids is None:
+                    entry.pop("fact_ids", None)
+                else:
+                    entry["fact_ids"] = fact_ids
+            if skipped is not None:
+                skipped.extend(
+                    {"unit_id": unit_id, "reason": "dangling_pointer"}
+                    for unit_id in dict.fromkeys(c["unit_id"] for c in changes)
+                    if unit_id in pointed
+                )
+            changes = [change for change in changes if change["unit_id"] not in pointed]
     return output, changes
