@@ -1,0 +1,54 @@
+id: TC-029a
+gate: GATE5_DELIVERY_PROGRAM
+track: write-authority
+executor: supervisor
+purpose: >
+  Owner ruling R22 (docs/CONSOLIDATED_GOALS_2026-11-06.md Part E, 2026-11-07): ONE write authority.
+  All nine repositories -- the three R3 pilots (Cells Rust, Email .NET, Imaging .NET) plus the six
+  inherited `mode: full` repositories (3D Java, Cells .NET/Cpp/Go/Java/TypeScript) -- are on the
+  upstream-write allowlist for DRAFT pull requests only; the three pilots are `mode: full` in the
+  registry; upstream issue filing is off on every repository (`issues_mode: dry_run`); and CI fails
+  if the allowlist and the registry's `full` set ever disagree. This is the first slice of the
+  plan's TC-029; R15/R16/R20/R24 states, BLOCKED_EXTERNAL validity and App-permission recording
+  remain TC-029's later slices. Listing authorizes nothing by itself (publication-ready, R15, R3
+  gates and the write authorization record all still apply).
+depends_on:
+  - TC-013
+write_paths:
+  - data/upstream_write_allowlist.json
+  - data/registry.json
+  - tests/test_write_authority_r22.py
+  - tests/github/test_write_authorization.py
+  - tests/github/test_client.py
+satisfies:
+  - REQ-G4-001
+source_refs:
+  - file: docs/CONSOLIDATED_GOALS_2026-11-06.md
+    anchor: "R22"
+inputs: []
+actions:
+  - "Add the six inherited full repositories to data/upstream_write_allowlist.json (pull_request, first_pr_as_draft)."
+  - "Set the three pilots to mode full and every full entry's issues_mode to dry_run in data/registry.json."
+  - "Add tests/test_write_authority_r22.py (allowlist == registry full set; draft PR only; issues off everywhere) and update the two existing tests that encoded the old three-repository list."
+checks:
+  - command: |-
+      python -m pytest tests/test_write_authority_r22.py tests/core/registry tests/github tests/propose -q
+    expect: exit 0
+    timeout_seconds: 300
+    proves:
+      - REQ-G4-001
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -X utf8 -c "import json, pathlib; p = pathlib.Path('data/upstream_write_allowlist.json'); d = json.loads(p.read_text(encoding='utf-8')); d['repositories'].pop(); p.write_text(json.dumps(d, indent=2), encoding='utf-8')"
+  rationale: >
+    Drops one allowlisted repository so the allowlist no longer equals the registry's full set,
+    which the R22 consistency test must reject.
+evidence:
+  - data/upstream_write_allowlist.json
+  - data/registry.json
+closeout:
+  - "No upstream write is performed or enabled by this card: every effect still needs the acceptance contract, R15/R24, a valid authorization record and a token."
+recovery: "Revert the five write_paths."
