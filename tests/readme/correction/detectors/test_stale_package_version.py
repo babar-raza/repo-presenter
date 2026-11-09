@@ -124,12 +124,10 @@ def test_a_fence_is_never_scanned_for_either_shape(
 def test_a_trailing_yet_is_consumed_with_the_not_published_claim(
     make_context: Any, make_facts: Any, make_fact: Any
 ) -> None:
-    """Real text from Aspose.PSD-FOSS-for-.NET's README: leaving "yet" behind produced "is published
-    to NuGet yet", which the independent review REJECTed as a contradiction."""
-    readme = (
-        "The package metadata is defined in this repository, but `Aspose.PSD.FOSS` is not "
-        "published to NuGet yet.\n"
-    )
+    """Leaving "yet" behind produced "is published to NuGet yet", which the independent review
+    REJECTed as a contradiction (found on Aspose.PSD-FOSS-for-.NET; its full ', but ...' sentence is
+    now rewritten whole -- see the next test -- so this pins the plain, non-'but' shape)."""
+    readme = "Note that the package is not published to NuGet yet.\n"
     ctx = make_context(readme, make_facts(published(make_fact, "26.9.0")))
     (edit,) = stale_package_version(ctx).edits
     assert edit.original == "is not published to NuGet yet"
