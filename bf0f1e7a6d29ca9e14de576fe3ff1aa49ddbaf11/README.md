@@ -1,6 +1,6 @@
 # Aspose.HTML FOSS for Python
 
-![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Contributors](https://img.shields.io/github/contributors/aspose-html-foss/Aspose.HTML-FOSS-for-Python)](https://github.com/aspose-html-foss/Aspose.HTML-FOSS-for-Python/graphs/contributors)
+![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Contributors](https://img.shields.io/github/contributors/aspose-html-foss/Aspose.HTML-FOSS-for-Python.svg)](https://github.com/aspose-html-foss/Aspose.HTML-FOSS-for-Python/graphs/contributors)
 
 [![Aspose.HTML FOSS for Python](https://products.aspose.org/media/html/python/banner-readme.png)](https://products.aspose.org/html/python/)
 
@@ -52,6 +52,10 @@ Product["Aspose.HTML FOSS for Python"] --> Cap8["Tokenizer control"]
 - **JavaScript execution.** It executes JavaScript against a parsed DOM through `aspose_html.js.JSContext`, an optional QuickJS-backed bridge exposing read-only DOM proxies to script code; requires the js extra.
 - **Serialization.** It serializes complete documents, fragments, and individual elements back to an HTML string with the `aspose_html.serialise` function or `aspose_html.XMLSerializer`, and provides `aspose_html.serialiser.inner_html` and `aspose_html.serialiser.outer_html` for granular output control.
 - **Tokenizer control.** It exposes the tokenizer's token stream through `aspose_html.tokenizer.Tokenizer.tokenize`, producing token types including `aspose_html.tokenizer.StartTagToken`, `aspose_html.tokenizer.EndTagToken`, `aspose_html.tokenizer.CharacterToken`, `aspose_html.tokenizer.CommentToken`, and `aspose_html.tokenizer.DoctypeToken` for callers who need fine-grained parsing control.
+
+- Parse HTML strings, bytes, fragments, and files into a DOM document with `HTMLDocument.parse()`, `HTMLDocument.parse_fragment()`, and `HTMLDocument.load()`; the lower-level `Tokenizer` and `TreeBuilder` classes implement the WHATWG tokenization and tree-construction algorithms directly, for callers who need that level of control.
+- Work with a broad set of specialized HTML element classes — `HTMLFormElement`, `HTMLInputElement`, `HTMLSelectElement`, `HTMLTableElement`, `HTMLMediaElement`, and dozens more — each exposing the element-specific properties defined by its HTML interface.
+- Validate and manipulate URLs with `URL`, read and edit query strings with `URLSearchParams`, and detect byte-stream character encodings (BOM and content sniffing) with `detect_encoding()`.
 
 ## Installation
 
@@ -226,7 +230,7 @@ The verified public surface has 303 types.
 | `CSSNamespaceRule` | The aspose_html.cssom.CSSNamespaceRule class represents a @namespace rule in a CSS style sheet. |
 | `CSSPageRule` | The aspose_html.cssom.CSSPageRule class represents a @page rule in a CSS style sheet. |
 | `CSSPropertyRule` | The aspose_html.cssom.CSSPropertyRule class represents a @property rule in a CSS style sheet. |
-| `CSSRule` | The aspose_html.cssom.CSSRule class is the base interface for all CSS rules. |
+| `CSSRule` | The aspose_html.cssom.CSSRule class is the base interface for all CSS rules (some members not implemented). |
 | `CSSRuleList` | The aspose_html.cssom.CSSRuleList class represents an ordered collection of CSSRule objects. |
 | `CSSStyleRule` | The aspose_html.cssom.CSSStyleRule class represents a CSS style rule consisting of a selector and a declaration block. |
 | `CSSStyleSheet` | The aspose_html.cssom.CSSStyleSheet class represents a CSS style sheet. |
@@ -555,6 +559,245 @@ The `aspose_html.serialise` function and `aspose_html.XMLSerializer` class seria
 
 The `aspose_html.tokenizer.Tokenizer` class exposes the lower-level HTML parsing pipeline, producing tokens such as `aspose_html.tokenizer.StartTagToken` during tokenization.
 
+| Class | Description |
+|---|---|
+| `CSS` | Namespace class for CSS static utilities (CSS Conditional Rules §6). |
+| `CSSCounterStyleRule` | A `@counter-style` rule (CSS Counter Styles Level 3 §3, CSSOM §5.4 type 11). |
+| `CSSFontFaceRule` | A `@font-face` rule holding font descriptor declarations (CSS Fonts §4.4). |
+| `CSSImportRule` | An `@import` statement rule (CSSOM §6.7). |
+| `CSSKeyframeRule` | A single keyframe descriptor within a `@keyframes` rule (CSSOM Animations §7). |
+| `CSSKeyframesRule` | A `@keyframes` rule containing animation keyframe descriptors (CSSOM Animations §7). |
+| `CSSLayerBlockRule` | A CSS `@layer` block rule assigning child rules to a named cascade layer. |
+| `CSSLayerStatementRule` | A CSS `@layer` statement rule declaring cascade layer order. |
+| `CSSMediaRule` | Media rule scaffold for nested style rules. |
+| `CSSNamespaceRule` | A `@namespace` rule (CSSOM §6.6, type 10). |
+| `CSSPageRule` | CSS `@page` rule (CSSOM §6.4). |
+| `CSSPropertyRule` | CSS `@property` rule stub (CSS Properties and Values API §3). |
+| `CSSRule` | Base class for CSSOM rules. |
+| `CSSRuleList` | Ordered, live CSS rule collection. |
+| `CSSStyleRule` | Style rule (`selector { declarations }`). |
+| `CSSStyleSheet` | Minimal CSSOM stylesheet object (CSSOM §6.4). |
+| `CSSSupportsRule` | A `@supports` rule with a condition and nested style rules (CSS Conditional Rules §2). |
+
+| Class | Description |
+|---|---|
+| `AbortController` | Controls cancellation of operations via an `AbortSignal`. |
+| `AbortSignal` | Represents the signal half of an AbortController pair. |
+| `AbstractRange` | Read-only boundary-point contract shared by range-family APIs. |
+| `Attr` | An attribute attached to an Element. |
+| `BarProp` | Represents a browser toolbar object (WHATWG HTML §7.7.3). |
+| `BroadcastChannel` | Deterministic same-runtime BroadcastChannel fan-out delivery. |
+| `CDATASection` | A CDATA section node (extends Text per WHATWG DOM Standard). |
+| `CSSStyleDeclaration` | A live view of an element's inline style attribute. |
+| `CharacterData` | Abstract base for Text, Comment, CDATASection, and ProcessingInstruction. |
+| `Comment` | An HTML comment node. |
+| `ComputedStyleDeclaration` | Read-only resolved style declarations for an element. |
+| `Console` | Headless console stub exposing `log`, `info`, `warn`, `error`, and `debug` methods (WHATWG Console Standard). |
+| `Crypto` | Minimal stub for the Crypto interface (W3C Web Crypto API §10.1). |
+| `CustomElementRegistry` | Registers and resolves custom element constructors via `define()`, `get()`, and `when_defined()`. |
+| `CustomEvent` | An Event carrying an arbitrary detail payload. |
+| `DOMConfiguration` | Baseline DOMConfiguration compatibility surface. |
+| `DOMException` | Base for all DOM exceptions. |
+| `DOMImplementation` | Legacy DOMImplementation compatibility surface. |
+| `DOMParser` | Parse markup strings into DOM documents. |
+| `DOMRect` | An axis-aligned bounding rectangle (CSSOM View §7.1). |
+| `DOMRectList` | An immutable sequence of `DOMRect` objects (CSSOM View §7.2). |
+| `DOMStringMap` | A live dict-like view of an element's `data-*` custom attributes. |
+| `DOMTokenList` | A live, mutable set of space-separated tokens backed by an element attribute. |
+| `DataCloneError` | Raised when a value cannot be serialized by the structured clone algorithm. |
+| `Document` | The root of a DOM tree. |
+| `DocumentFragment` | A lightweight container for a sub-tree. |
+| `DocumentPosition` | Named constants for the bitmask returned by `Node.compare_document_position`. |
+| `DocumentType` | A document type declaration node (`<!DOCTYPE html>`). |
+| `Element` | An HTML or XML element node. |
+| `ErrorEvent` | Script error event (WHATWG HTML §8.1.3.6). |
+| `Event` | A DOM event object per WHATWG DOM §2.2. |
+| `EventTarget` | Base class for objects that can receive DOM events. |
+| `FocusEvent` | Focus transition event (WHATWG UI Events §5.4). |
+| `FormData` | Snapshot collection of form control name/value pairs. |
+| `HTMLAddressElement` | HTML `<address>` element. |
+| `HTMLAnchorElement` | HTML `<a>` anchor element. |
+| `HTMLAreaElement` | HTML `<area>` image-map hyperlink area. |
+| `HTMLArticleElement` | HTML `<article>` element. |
+| `HTMLAsideElement` | HTML `<aside>` element. |
+| `HTMLAudioElement` | HTML `<audio>` element. |
+| `HTMLBRElement` | HTML `<br>` line-break element (structural subclass). |
+| `HTMLBaseElement` | HTML `<base>` element. |
+| `HTMLBodyElement` | HTML `<body>` element (structural subclass). |
+| `HTMLButtonElement` | HTML `<button>` element. |
+| `HTMLCanvasElement` | HTML `<canvas>` element. |
+| `HTMLCollection` | A live, ordered collection of Element-type children only. |
+| `HTMLDListElement` | HTML `<dl>` definition list element. |
+| `HTMLDataElement` | HTML `<data>` element. |
+| `HTMLDataListElement` | HTML `<datalist>` element providing autocomplete suggestions. |
+| `HTMLDetailsElement` | HTML `<details>` disclosure widget element. |
+| `HTMLDialogElement` | HTML `<dialog>` modal/non-modal dialog element. |
+| `HTMLDivElement` | HTML `<div>` block container element. |
+| `HTMLElement` | Base class for all HTML-namespace element types. |
+| `HTMLEmbedElement` | HTML `<embed>` element. |
+| `HTMLFieldSetElement` | HTML `<fieldset>` element for grouping form controls. |
+| `HTMLFigCaptionElement` | HTML `<figcaption>` element. |
+| `HTMLFigureElement` | HTML `<figure>` element. |
+| `HTMLFooterElement` | HTML `<footer>` element. |
+| `HTMLFormElement` | HTML `<form>` element. |
+| `HTMLHRElement` | HTML `<hr>` thematic-break element (structural subclass). |
+| `HTMLHeadElement` | HTML `<head>` element (structural subclass). |
+| `HTMLHeaderElement` | HTML `<header>` element. |
+| `HTMLHeadingElement` | HTML heading element — covers `<h1>` through `<h6>`. |
+| `HTMLHtmlElement` | HTML `<html>` document element (structural subclass). |
+| `HTMLIFrameElement` | HTML `<iframe>` element. |
+| `HTMLImageElement` | HTML `<img>` image element. |
+| `HTMLInputElement` | HTML `<input>` form control element. |
+| `HTMLLIElement` | HTML `<li>` list item element. |
+| `HTMLLabelElement` | HTML `<label>` element. |
+| `HTMLLegendElement` | HTML `<legend>` element (WHATWG §4.10.4). |
+| `HTMLLinkElement` | HTML `<link>` element. |
+| `HTMLMainElement` | HTML `<main>` element. |
+| `HTMLMapElement` | HTML `<map>` element. |
+| `HTMLMarkElement` | HTML `<mark>` element. |
+| `HTMLMediaElement` | Base class for HTML media elements (`<audio>` / `<video>`). |
+| `HTMLMenuElement` | Represents an HTML `<menu>` element. |
+| `HTMLMetaElement` | HTML `<meta>` element. |
+| `HTMLMeterElement` | HTML `<meter>` element for displaying a scalar value in a range. |
+| `HTMLModElement` | HTML `<ins>`/`<del>` modification element. |
+| `HTMLNavElement` | HTML `<nav>` element. |
+| `HTMLNoScriptElement` | HTML `<noscript>` element. |
+| `HTMLOListElement` | HTML `<ol>` ordered list element. |
+| `HTMLObjectElement` | HTML `<object>` element. |
+| `HTMLOptGroupElement` | HTML `<optgroup>` element for grouping options in a select list. |
+| `HTMLOptionElement` | HTML `<option>` element representing a choice in a select list. |
+| `HTMLOptionsCollection` | Live collection of `<option>` elements for a `<select>`. |
+| `HTMLOutputElement` | HTML `<output>` element for displaying calculation results. |
+| `HTMLParagraphElement` | HTML `<p>` paragraph element. |
+| `HTMLParamElement` | HTML `<param>` element. |
+| `HTMLPictureElement` | HTML `<picture>` element (structural subclass). |
+| `HTMLPreElement` | HTML `<pre>` preformatted text element (structural subclass). |
+| `HTMLProgressElement` | HTML `<progress>` element showing task completion. |
+| `HTMLQuoteElement` | HTML `<blockquote>`/`<q>` quote element. |
+| `HTMLRubyElement` | HTML `<ruby>`/`<rt>`/`<rp>` element. |
+| `HTMLScriptElement` | HTML `<script>` element. |
+| `HTMLSectionElement` | HTML `<section>` element. |
+| `HTMLSelectElement` | HTML `<select>` element. |
+| `HTMLSmallElement` | HTML `<small>` element. |
+| `HTMLSourceElement` | HTML `<source>` element. |
+| `HTMLSpanElement` | HTML `<span>` inline container element. |
+| `HTMLStyleElement` | HTML `<style>` element. |
+| `HTMLSummaryElement` | Represents an HTML `<summary>` element. |
+| `HTMLTableCaptionElement` | HTML `<caption>` element. |
+| `HTMLTableCellElement` | HTML `<td>` or `<th>` element. |
+| `HTMLTableColElement` | HTML `<col>` or `<colgroup>` element. |
+| `HTMLTableElement` | HTML `<table>` element. |
+| `HTMLTableRowElement` | HTML `<tr>` element. |
+| `HTMLTableSectionElement` | HTML `<thead>`, `<tbody>`, or `<tfoot>` element. |
+| `HTMLTemplateElement` | HTML `<template>` element holding inert content. |
+| `HTMLTextAreaElement` | HTML `<textarea>` multi-line text input element. |
+| `HTMLTimeElement` | HTML `<time>` element. |
+| `HTMLTitleElement` | HTML `<title>` element. |
+| `HTMLTrackElement` | HTML `<track>` element. |
+| `HTMLUListElement` | HTML `<ul>` unordered list element. |
+| `HTMLUnknownElement` | Represents an element with an unrecognized tag name; constructible directly, though the parser's tag-registry dispatch does not produce it automatically. |
+| `HTMLVideoElement` | HTML `<video>` element. |
+| `HTMLWBRElement` | HTML `<wbr>` element. |
+| `HashChangeEvent` | Same-document fragment navigation event. |
+| `HierarchyRequestError` | Raised when the tree hierarchy is violated. |
+| `History` | In-memory session history for a Window. |
+| `InUseAttributeError` | Raised when an Attr is already in use by another element. |
+| `IndexSizeError` | Raised when an index or size is out of range. |
+| `InputEvent` | Text-input event (WHATWG Input Events Level 2 / WHATWG UI Events §5.6). |
+| `IntersectionObserver` | Headless IntersectionObserver API-shape stub. |
+| `IntersectionObserverEntry` | Headless IntersectionObserver entry stub. |
+| `InvalidCharacterError` | Raised when an invalid character is used. |
+| `InvalidStateError` | Raised when an operation is performed in an invalid state. |
+| `KeyboardEvent` | Keyboard event (WHATWG UI Events §5.3). |
+| `Location` | Browsing-context location object exposing URL components (`href`, `protocol`, `host`, `pathname`) plus `assign()`/`replace()`/`reload()` navigation stubs. |
+| `MediaQueryList` | MediaQueryList returned by `Window.match_media`. |
+| `MessageChannel` | Pair of linked `MessagePort` endpoints. |
+| `MessagePort` | Deterministic same-runtime MessagePort queue baseline. |
+| `MouseEvent` | Mouse or pointer event (WHATWG UI Events §5.2). |
+| `MutationObserver` | Observe DOM mutations on a target node. |
+| `MutationRecord` | One DOM mutation notification record. |
+| `NamedNodeMap` | An ordered map of Attr objects keyed by attribute name. |
+| `Navigator` | Browser-environment stub exposing user-agent, platform, and feature-detection properties (`user_agent`, `platform`, `languages`, `hardware_concurrency`). |
+| `NoModificationAllowedError` | Raised when a node cannot be modified in its current context. |
+| `Node` | Abstract base class for all WHATWG DOM nodes. |
+| `NodeFilter` | Constants for TreeWalker and NodeIterator filtering. |
+| `NodeIterator` | Flat, stateful iteration over DOM nodes matching a filter. |
+| `NodeList` | A live, ordered collection of Node objects. |
+| `NodeType` | Integer constants for the `node_type` property of DOM nodes. |
+| `NotFoundError` | Raised when a node is not found in the expected location. |
+| `NotSupportedError` | Raised when an operation is not supported. |
+| `ParseError` | A parse error recorded during tree construction. |
+| `Performance` | Minimal stub for the Performance interface. |
+| `PerformanceEntry` | A single performance timeline entry. |
+| `PerformanceTiming` | Legacy Navigation Timing Level 1 interface stub. |
+| `PopStateEvent` | History traversal event carrying the active entry state. |
+| `ProcessingInstruction` | A processing instruction node (e.g. `<?xml version="1.0"?>`); `node_name` returns the target and `node_value`/`data` return the PI data. |
+| `Range` | A contiguous portion of a document tree (WHATWG DOM §5). |
+| `ResizeObserver` | Headless ResizeObserver API-shape stub. |
+| `ResizeObserverEntry` | Headless ResizeObserver entry stub. |
+| `Screen` | Browser screen geometry — all values are stubs (server-side context). |
+| `SecurityError` | Raised when an operation is blocked for security reasons. |
+| `Selection` | Document-scoped selection with single-range semantics. |
+| `StaticRange` | Immutable boundary-point range initialized from an init object. |
+| `Storage` | Key-value store implementing the WHATWG HTML §12 Storage interface. |
+| `StyleSheetList` | Live ordered stylesheet collection. |
+| `SubtleCrypto` | Stub for the SubtleCrypto interface (W3C Web Crypto API §10). |
+| `SyntaxError` | Raised when a string does not match the expected pattern or grammar. |
+| `Text` | A text node. |
+| `TreeWalker` | Cursor-style DOM traversal bounded to a root subtree. |
+| `UIEvent` | Base class for user-interface events (WHATWG UI Events §5.1). |
+| `ValidityState` | Constraint-validation flags for a form control. |
+| `VisualViewport` | CSSOM View §9 VisualViewport — all values are headless stubs. |
+| `Window` | Per-document window object with EventTarget behavior. |
+| `WrongDocumentError` | Raised when a node belongs to a different document. |
+| `XMLSerializer` | Serialise DOM nodes to strings. |
+
+| Class | Description |
+|---|---|
+| `BlockFragment` | Geometry fragment for a block-level box. |
+| `BoxNode` | Single box-tree node produced by `build_box_tree`. |
+| `BoxRoot` | Root wrapper returned by `build_box_tree`. |
+| `ComputedStyle` | Immutable layout-facing snapshot of an element's resolved style. |
+| `Display` | Resolved display triple per CSS Display L3 §2. |
+| `EdgeSizes` | Logical edge sizes in CSS px units. |
+| `FragmentRoot` | Root wrapper for block-layout fragment output. |
+| `InlineTextFragment` | Positioned inline text fragment for a single shaped run. |
+| `LineFragment` | Single inline formatting context line box. |
+| `PageFragment` | Single paginated fragmentainer (page box) with ordered content. |
+| `PageMarginBoxes` | Placeholder page-margin-box container for later paint stages. |
+| `ShapedRun` | Shaped text-run payload with deterministic metrics. |
+
+| Class | Description |
+|---|---|
+| `CharacterToken` | A character token carrying one or more Unicode characters. |
+| `CommentToken` | A comment token, e.g. `<!-- text -->`. |
+| `DoctypeToken` | A DOCTYPE token emitted by the WHATWG tokeniser. |
+| `EndTagToken` | An end tag token, e.g. `</div>`. |
+| `EofToken` | An end-of-file token. |
+| `StartTagToken` | A start tag token, e.g. `<div class="x">`. |
+| `Tokenizer` | WHATWG HTML tokeniser (§13.2.5). |
+
+| Class | Description |
+|---|---|
+| `TokenizerState` | All tokeniser states defined in WHATWG HTML Living Standard §13.2.5. |
+
+| Class | Description |
+|---|---|
+| `ActiveFormattingList` | The list of active formatting elements as defined in §13.2.4.3. |
+| `StackOfOpenElements` | The stack of open elements as defined in §13.2.4.2. |
+| `TemplateInsertionModeStack` | The template insertion mode stack per §13.2.4.1. |
+| `TreeBuilder` | Drives the WHATWG tree construction algorithm. |
+
+| Class | Description |
+|---|---|
+| `InsertionMode` | The 23 WHATWG insertion modes (§13.2.6). |
+
+| Class | Description |
+|---|---|
+| `URL` | WHATWG-style URL object with `parse()`/`can_parse()` and component properties (`href`, `protocol`, `host`, `search_params`). |
+| `URLParseError` | Raised when a string cannot be parsed as a URL. |
+| `URLSearchParams` | Ordered query-string pairs with duplicate-key support. |
+
 - `HTMLDocument` — `parse(html, *, encoding=None, base_url=None)`, `parse_fragment(html, context_element=None, *, encoding=None)`, `load(path)`.
 - `parse_html(html, *, base_url=None) -> Document` / `TreeBuilder.run()` / `Tokenizer(text).tokenize()` — the lower-level parsing pipeline `HTMLDocument.parse()` is built on.
 
@@ -572,7 +815,7 @@ The `aspose_html.tokenizer.Tokenizer` class exposes the lower-level HTML parsing
 
 - **[Getting started guide](https://docs.aspose.org/html/python/)** — The Getting started guide covers installation, walkthroughs, and feature guides for this library.
 - **[How-to guides & FAQ](https://kb.aspose.org/html/python/)** — The How-to guides & FAQ provide task-focused answers for common HTML, DOM, and `CSS`-processing questions.
-- **[Full API reference](https://reference.aspose.org/html/python/)** — The Full API reference offers the complete, browsable reference for all 243 public types. It covers all 303 verified public types; the [API Reference](#api-reference) section above covers the essentials.
+- **[Full API reference](https://reference.aspose.org/html/python/)** — The Full API reference offers the complete, browsable reference for all 303 public types. It covers all 303 verified public types; the [API Reference](#api-reference) section above covers the essentials.
 - **[Public API surface](PUBLIC_API.md)** — The Public API surface documents the stable top-level entry points covered by this library's compatibility guarantees.
 - **[examples](examples/)** — The examples directory contains real, scenario-focused scripts beyond the Quick Start.
 - **[Contributing guide](CONTRIBUTING.md)** — The Contributing guide describes development setup, test commands, and contribution guidelines.
@@ -591,6 +834,10 @@ Aspose.HTML FOSS for Python reads and writes HTML documents, supports `CSS` sele
 - `JavaScript` execution (`JSContext`) requires the optional quickjs extra and exposes a read-only DOM proxy to script code; its dynamic `import()` bridge is not implemented, though static module registration via `ModuleRegistry` works.
 - The library does not implement rendering to image or PDF formats.
 
+- `URL` — `parse(input, base)`, `can_parse(input, base)`; `href`, `protocol`, `host`, `pathname`, `search`, `search_params` (`URLSearchParams`).
+- `URLSearchParams` — ordered query-string pairs with duplicate-key support.
+- `detect_encoding(data, *, override_encoding=None) -> EncodingDetectionResult` — WHATWG-sequence BOM/meta-charset/UTF-8-default sniffing; `get_canonical_name(label)` normalizes an encoding label.
+
 These limitations don't apply to [full-featured Aspose.HTML for Python — Enterprise Edition](https://products.aspose.com/html/python-net/). It adds full `CSS` selector and pseudo-class coverage, constraint validation, image and PDF rendering, and unrestricted JavaScript execution.
 
 ## Development and Testing
@@ -598,6 +845,10 @@ These limitations don't apply to [full-featured Aspose.HTML for Python — Enter
 Aspose.HTML FOSS for Python requires Python 3.10 or later and uses skia-python for text-layout metrics as its only runtime dependency. The test suite resides in tests/ and uses pytest to run assertions against the local source checkout; JavaScript-bridge tests and doctests in src/`aspose_html`/js/ require quickjs to run, otherwise they are skipped automatically. To build and test, clone the repository, install the required dependencies, and run pytest directly from the checkout root.
 
 The suite covers 178 test files under `tests/`.
+
+Install from a source checkout by putting the source tree on `PYTHONPATH` directly — the same
+mechanism the repository's own test suite already relies on (`pyproject.toml`'s
+`[tool.pytest.ini_options]` sets `pythonpath = ["src"]`):
 
 ```bash
 git clone https://github.com/aspose-html-foss/Aspose.HTML-FOSS-for-Python.git
