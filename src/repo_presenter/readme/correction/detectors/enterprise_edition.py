@@ -24,16 +24,25 @@ lane_l_candidate.diff`` for the before/after text this detector's test fixtures 
 Both rules fire only when the product's own name (with its platform) is already spelled out, in
 full, on the exact physical line the edit replaces -- no name is ever invented or looked up from
 elsewhere, the same "repair only what is unique and already there" discipline every other detector
-in this package follows (see ``links.broken_link``). One further shape is fixed under a narrower,
-explicit condition (detector version 2), and one shape remains deliberately NOT auto-fixed:
+in this package follows (see ``links.broken_link``). Two further shapes are fixed under a
+narrower, explicit condition (detector versions 2 and 3), and one shape remains deliberately NOT
+auto-fixed:
 
 * a bare "the commercial product" with no product name on its own line is rewritten to
-  ``<name> — Enterprise Edition`` ONLY when every OTHER commercial-product mention in the README's
+  ``<name> — Enterprise Edition`` when every OTHER commercial-product mention in the README's
   prose (outside code fences) names one and the same product (compared case- and whitespace-
   insensitively): then the bare phrase can only mean that product, and the name is one the README
-  itself already spells out. With no such mention, or with two or more different names (the bare
-  phrase could mean either, and asserting the wrong platform is a worse error than leaving the
-  sentence alone), it stays a finding -- "not guessed" -- exactly as before;
+  itself already spells out;
+* 2026-11-09 (VS0's real Slides-FOSS-for-Java finding, line 754 -- "the commercial product" with
+  NO other commercial-product mention anywhere in the prose at all, so the rule above found
+  nothing): falls back to the README's own H1, with " FOSS" removed, derived EXACTLY the way
+  ``readme.composition.renderer._enterprise_paragraph`` already derives the same name for
+  GENERATED text (further truncated at " for " when the live-verified enterprise target is a
+  family-level page, not platform-specific). The H1 is the candidate's canonical FOSS name by
+  construction (this package's own ``structure.second_h1`` rule enforces there is exactly one),
+  never a guess and never looked up from the registry -- see ``_commercial_name_from_h1``'s own
+  docstring. With NEITHER a prose mention NOR a readable H1 (never happens in practice, but never
+  assumed), it stays a finding, exactly as before;
 * a "commercial ... product" phrase split across a hard line-wrap (a real, if rarer, shape in a
   hard-wrapped README) -- this architecture's ``FALSE_CLAIM_FIX`` edit kind is one physical line by
   construction (``model.Edit.__post_init__``), so a multi-line rewrap is out of scope for this
@@ -106,10 +115,44 @@ def _single_named_product(ctx: Context) -> str | None:
     return next(iter(names.values())) if len(names) == 1 else None
 
 
+#: The README's one H1 (the template has exactly one -- ``structure.py``'s own ``second_h1``
+#: detector enforces that elsewhere in this package), matching that module's own ``_H1`` pattern.
+_H1_LINE = re.compile(r"^#(?!#)[ \t]+(\S.*)$")
+
+
+def _commercial_name_from_h1(ctx: Context, enterprise) -> str | None:
+    """2026-11-09 (VS0's Slides-FOSS-for-Java finding, line 754: a bare 'commercial product'
+    phrase with no product name named anywhere else in the README's own prose -- ``sole_product``
+    reads None, and the fix used to be skipped there). The commercial Enterprise Edition name,
+    derived EXACTLY the way ``readme.composition.renderer._enterprise_paragraph`` already derives
+    it for GENERATED text (``name = context.name.replace(" FOSS", "")``, further truncated at
+    " for " when the live-verified target is a family-level page, not a platform-specific one):
+    the README's own H1 is always the candidate's canonical FOSS name (enforced by this same
+    package's own ``structure.second_h1`` rule, so it is never a guess, never looked up from the
+    registry, and already matches the H1's own ``family``/``platform`` exactly because both the
+    H1 and ``enterprise``'s URL are derived from the same registry entry). ``None`` when no H1
+    line is found at all -- never invented."""
+    for line in ctx.lines:
+        if line.in_fence:
+            continue
+        match = _H1_LINE.match(line.text)
+        if match is not None:
+            name = match.group(1).strip().replace(" FOSS", "")
+            if (enterprise.attributes or {}).get("level") == "family":
+                name = name.split(" for ", 1)[0]
+            return name
+    return None
+
+
 @detector(DETECTOR)
 def enterprise_edition_naming(ctx: Context) -> DetectorResult:
     enterprise = ctx.fact(ENTERPRISE_FACT_ID)
     sole_product = _single_named_product(ctx)
+    # Fall back to the H1-derived name only when the README's own prose names no commercial
+    # product at all (sole_product is None) -- a prose mention, when one exists, is never
+    # overridden by this fallback.
+    if sole_product is None and enterprise is not None:
+        sole_product = _commercial_name_from_h1(ctx, enterprise)
     edits: list[Edit] = []
     findings: list[Finding] = []
     for line in ctx.lines:

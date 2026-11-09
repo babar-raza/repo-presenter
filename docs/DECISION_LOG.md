@@ -4170,3 +4170,49 @@ Detail: `src/repo_presenter/readme/validation/wording.py`, `scripts/measure_m6_w
 `src/repo_presenter/acceptance/responsibility.py`, `data/acceptance_responsibility.json`,
 `data/acceptance_calibration.json`, `project/taskcards/TC-026.yaml`, `project/taskcards/TC-007.yaml`
 (depends_on), `ops/checks/portfolio_delivery_count.py`, `tests/ops/test_portfolio_delivery_count.py`.
+
+## 2026-11-09: `enterprise_edition_naming` detector fixed to resolve VS0's real,
+## already-recorded Slides-FOSS-for-Java blocker (bare "commercial product", no name anywhere
+## in the README's prose)
+
+VS0 (`docs/investigations/2026-11-07-vs0-vertical-slice.md`) recorded, on 2026-11-07, a real,
+already-sealed finding: `aspose-slides-foss/Aspose.Slides-FOSS-for-Java`'s Lane L run found one
+genuine Enterprise Edition naming violation at line 754 ("the commercial product") but declined
+to auto-fix it, because the product's own name is not named anywhere else in the README's prose
+either -- `_single_named_product` found zero candidate names, not one, so the existing rule
+(resolve a bare phrase only when the README's prose names exactly one commercial product) could
+not fire. With one defect found and zero repaired, L-05 blocked sealing outright. VS0 named this
+"the first concrete TC-025 work item" and deferred it rather than re-running speculatively.
+
+**Fixed for real**, using a source of truth the detector did not previously consult: the
+candidate's OWN H1, which is always its canonical FOSS name by construction (this package's own
+`structure.second_h1` rule enforces exactly one H1) -- fetched the real, live Slides-FOSS-for-Java
+README (`gh api repos/aspose-slides-foss/Aspose.Slides-FOSS-for-Java/readme`) and confirmed its H1
+is literally `# Aspose.Slides FOSS for Java`. `readme/composition/renderer.py::_enterprise_paragraph`
+already derives the commercial name this exact way for GENERATED text (`name.replace(" FOSS",
+"")`, further truncated at `" for "` when the live-verified enterprise target is family-level, not
+platform-specific) -- this is REUSE of an existing, already-shipped convention, not an invented
+one. Added `_commercial_name_from_h1` to `enterprise_edition.py`, used ONLY as a fallback when the
+README's own prose names no commercial product at all (never overriding a real prose mention, and
+never guessing without an H1). Bumped the detector's version (2 -> 3, `DETECTOR_VERSIONS` +
+`test_detector_versions.py`'s source pin) since its matching/edit semantics genuinely changed.
+
+**Verified non-regressing by construction, not just by testing**: the fix only converts an
+existing, previously-UNRESOLVED finding into an edit when `sole_product` was `None` before; it
+never changes which spans are MATCHED as suspect, and a seal with zero `enterprise_edition_naming`
+findings today has nothing for this change to touch. Confirmed empirically too: a real
+`python -m repo_presenter.recertify --gate --remote origin` run against all 24 real sealed seals
+reports "no seal that re-certified in the baseline regressed" -- identical RECERTIFIED/NEEDS_REPAIR
+distribution to before this change. New tests use the real, live-fetched Slides-Java H1 and line
+754 text (not invented strings), plus a family-level-truncation case and a case proving a real
+prose mention still wins over the H1 fallback. 14/14 new+existing `test_enterprise_edition.py`
+cases pass; `test_detector_versions.py`'s pin updated and passing.
+
+**Does NOT decide**: whether this actually unblocks Slides-FOSS-for-Java's Lane L seal end to end
+(the detector fix is necessary but this session did not re-run that repository's full Lane L
+pipeline to confirm sealing now succeeds) -- a real, separate next step, not claimed here.
+
+Detail: `src/repo_presenter/readme/correction/detectors/enterprise_edition.py`,
+`src/repo_presenter/readme/correction/detectors/__init__.py`,
+`tests/readme/correction/detectors/test_enterprise_edition.py`,
+`tests/readme/correction/test_detector_versions.py`.
