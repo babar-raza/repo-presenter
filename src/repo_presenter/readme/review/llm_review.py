@@ -38,6 +38,7 @@ no real M8 call has been made, by construction.
 
 from __future__ import annotations
 
+import difflib
 import hashlib
 import json
 from collections.abc import Mapping, Sequence
@@ -170,6 +171,101 @@ def _record_blocks(
     (store.directory / BLOCKED_FILENAME).write_bytes(text.encode("utf-8"))
 
 
+#: The out-of-scope contract error a Lane L finding earns when every line it cites is live-README text
+#: the corrections did not touch (see :func:`edit_scope`).
+UNCHANGED_TEXT_ERROR = (
+    "lines {lines} are unchanged live-README text, outside what this review judges; a finding must "
+    "cite at least one changed line (see review_scope.lane_l.changed_lines) or concern how a "
+    "change interacts with its surroundings - cite the changed line"
+)
+LANE_L_INSTRUCTION = (
+    "This is a Lane L review: the candidate is the maintainers' own live README plus minimal "
+    "evidenced edits. You are asked to judge THE EDITS: the lines listed in changed_lines, and "
+    "whether each edit contradicts, or leaves incoherent, the text around it. Every other line is "
+    "unchanged maintainer text shown only as context; defects that already existed in it are "
+    "recorded elsewhere (residuals) and are not this review's question. A finding must cite at "
+    "least one changed line (a span may extend into neighbouring unchanged lines when the edit "
+    "interacts with them); a finding that cites only unchanged lines is a contract error. A "
+    "unit with no changed lines has nothing to fault: return ACCEPT unless an edit elsewhere "
+    "contradicts it, which you cite on the changed line."
+)
+
+
+def lane_l_changed_lines(candidate_readme: str, original_readme: str) -> frozenset[int]:
+    """The 1-based candidate lines a Lane L correction wrote: the candidate rows that are not
+    in the original, in order (``difflib`` over whole lines). A pure deletion changes no candidate
+    row, so the rows on either side of it count, because the edit's effect is on its surroundings."""
+    new = candidate_readme.splitlines()
+    old = original_readme.splitlines()
+    changed: set[int] = set()
+    matcher = difflib.SequenceMatcher(None, old, new, autojunk=False)
+    for tag, _i1, _i2, j1, j2 in matcher.get_opcodes():
+        if tag in ("replace", "insert"):
+            changed.update(range(j1 + 1, j2 + 1))
+        elif tag == "delete":
+            changed.update(n for n in (j1, j1 + 1) if 1 <= n <= len(new))
+    return frozenset(changed)
+
+
+def edit_scope(
+    *,
+    rendered: bool,
+    validation: Mapping[str, Any] | None,
+    candidate_readme: str,
+    original_readme: str,
+) -> frozenset[int] | None:
+    """The changed candidate lines when this review is edit-scoped, else ``None``.
+
+    Edit-scoped only for a real Lane L correction run (``rendered=False`` and the holdouts document
+    that ``lane_l_review.review_correction`` passes as ``validation`` names ``lane == "L"``) whose
+    final README differs from the live one. Lane R, the calibration harness and any caller that
+    does not pass the Lane L holdouts are unchanged byte for byte."""
+    if rendered or not isinstance(validation, Mapping) or validation.get("lane") != "L":
+        return None
+    if candidate_readme == original_readme:
+        return None
+    return lane_l_changed_lines(candidate_readme, original_readme)
+
+
+def _lane_l_scope(
+    unit: ReviewUnit, changed: frozenset[int], residuals: Sequence[Any]
+) -> dict[str, Any]:
+    return {
+        "instruction": LANE_L_INSTRUCTION,
+        "changed_lines": sorted(n for n in unit.lines if n in changed),
+        "residuals_already_recorded": [
+            str(row.get("reason") or row.get("summary") or row.get("text") or row)[:300]
+            if isinstance(row, Mapping)
+            else str(row)[:300]
+            for row in residuals
+        ][:20],
+    }
+
+
+def unchanged_text_errors(
+    output: Mapping[str, Any], *, changed: frozenset[int], unit_lines: frozenset[int]
+) -> list[str]:
+    """Contract errors for findings that cite specific lines, all of them live-README text the
+    corrections did not touch. An omission, an absence, or a finding that cites no line is about
+    something absent and is not subject to this rule. Quoted back to the model in the one re-ask,
+    exactly like every other contract error; nothing is demoted silently."""
+    errors: list[str] = []
+    for finding in output.get("findings", []) or []:
+        if not isinstance(finding, Mapping):
+            continue
+        if finding.get("claim_kind") in ("omission", "absence"):
+            continue
+        lines = [n for n in finding.get("lines") or [] if isinstance(n, int)]
+        if not lines:
+            continue
+        first, last = min(lines), max(lines)
+        span = [n for n in range(first, last + 1) if n in unit_lines]
+        if span and not any(n in changed for n in span):
+            where = f"{first}-{last}" if first != last else str(first)
+            errors.append(f"finding {finding.get('id', '?')}: " + UNCHANGED_TEXT_ERROR.format(lines=where))
+    return errors
+
+
 def review_checks(
     output: dict[str, Any],
     *,
@@ -177,13 +273,19 @@ def review_checks(
     facts: FactsDocument,
     plan: Mapping[str, Any],
     scope: ReviewScope | None = None,
+    changed: frozenset[int] | None = None,
 ) -> list[str]:
     """The job's ``checks``: the cited lines resolved to the candidate's own text, identical findings
     merged, then the Phase 1 contract (scoped to the unit); the errors are quoted back to the model
-    in the one re-ask."""
+    in the one re-ask. ``changed`` (Lane L edit scope only, see :func:`edit_scope`) adds the rule
+    that a finding must cite at least one changed line."""
     cited = resolve_cited_lines(output, candidate_readme, scope)
     if cited:
         return cited
+    if changed is not None and scope is not None:
+        unchanged = unchanged_text_errors(output, changed=changed, unit_lines=scope.lines)
+        if unchanged:
+            return unchanged
     merge_repeated_findings(output)
     return validate_review_reply(
         output, candidate_readme=candidate_readme, facts=facts, plan=plan, scope=scope
@@ -303,6 +405,7 @@ def planned_requests(
     plan: Mapping[str, Any],
     dispositions: Mapping[str, Any],
     rendered: bool = True,
+    validation: Mapping[str, Any] | None = None,
 ) -> tuple[tuple[ReviewUnit, ...], frozenset[int], tuple[PlannedRequest, ...]]:
     """The review units of ``candidate_readme``, its attributed maintainer lines, and each unit's
     packet, call schema and request hash. No call is made: this is the part of
@@ -315,6 +418,11 @@ def planned_requests(
         maintainer_lines(candidate_readme, facts, dispositions) if rendered else frozenset()
     )
     model = effective_model(loaded, context)
+    changed = edit_scope(
+        rendered=rendered, validation=validation,
+        candidate_readme=candidate_readme, original_readme=original_readme,
+    )
+    residuals = list((validation or {}).get("residuals") or []) if changed is not None else []
     requests = []
     for unit in units:
         packet = unit_packet(
@@ -327,6 +435,10 @@ def planned_requests(
             plan=plan,
             maintainer_lines=attributed,
         )
+        if changed is not None:
+            packet["review_scope"] = {
+                **packet["review_scope"], "lane_l": _lane_l_scope(unit, changed, residuals),
+            }
         schema = unit_schema(loaded, unit)
         requests.append(
             PlannedRequest(unit, packet, schema, request_hash(loaded, packet, schema, model=model))
@@ -370,6 +482,11 @@ def review_with_model(
         plan=plan,
         dispositions=dispositions,
         rendered=rendered,
+        validation=validation,
+    )
+    changed = edit_scope(
+        rendered=rendered, validation=validation,
+        candidate_readme=candidate_readme, original_readme=original_readme,
     )
     if not units:
         raise ReviewUnavailable(
@@ -409,6 +526,7 @@ def review_with_model(
                     facts=facts,
                     plan=plan,
                     scope=scope,
+                    changed=changed,
                 ),
             )
             served = result.model_served or store.record(result.request_sha256).get(
