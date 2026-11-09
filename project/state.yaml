@@ -169,7 +169,7 @@ owner_review_status:
 
 release_gate_dashboard:
   generated_by: gatecli
-  generated_at: '2026-11-09T18:48:08Z'
+  generated_at: '2026-11-09T18:53:30Z'
   note: Tool-generated from gateverify.rebuild_state() -- never hand-edit this block.
     Historical current_gate/active_work_item below are preserved bootstrap-era narrative,
     not this cursor; this block is the real, evidence-derived release-gate status
@@ -288,11 +288,9 @@ release_gate_dashboard:
         negative-control patch did not apply'
   - id: TC-011
     gate: GATE5_DELIVERY_PROGRAM
-    status: AWAITING_PREREQUISITE
+    status: READY
     attempt: 0
-    blocker:
-      class: AWAITING_PREREQUISITE
-      summary: depends on TC-024, not yet accepted
+    blocker: null
   - id: TC-012
     gate: GATE4_PRODUCTION
     status: AWAITING_PREREQUISITE
@@ -373,11 +371,16 @@ release_gate_dashboard:
     receipt: GATE5_DELIVERY_PROGRAM/TC-019a/receipt.json
   - id: TC-019b
     gate: GATE5_DELIVERY_PROGRAM
-    status: AWAITING_PREREQUISITE
+    status: ACCEPTED
     attempt: 0
-    blocker:
-      class: AWAITING_PREREQUISITE
-      summary: depends on TC-024, not yet accepted
+    blocker: null
+    commit: 9f9a1f64ef276b878d6b633a8241098441cb3642
+    receipt: GATE5_DELIVERY_PROGRAM/TC-019b/receipt.json
+  - id: TC-019c
+    gate: GATE5_DELIVERY_PROGRAM
+    status: READY
+    attempt: 0
+    blocker: null
   - id: TC-020
     gate: GATE5_DELIVERY_PROGRAM
     status: ACCEPTED
@@ -429,11 +432,11 @@ release_gate_dashboard:
     receipt: GATE5_DELIVERY_PROGRAM/TC-023b/receipt.json
   - id: TC-024
     gate: GATE5_DELIVERY_PROGRAM
-    status: STALE_RECEIPT
+    status: ACCEPTED
     attempt: 0
-    blocker:
-      class: STALE_RECEIPT
-      summary: card definition changed since this receipt was generated -- re-verify
+    blocker: null
+    commit: 03506a24f8f4ba4d9b3124b999ddbaaab35cb5ae
+    receipt: GATE5_DELIVERY_PROGRAM/TC-024/receipt.json
   - id: TC-025
     gate: GATE5_DELIVERY_PROGRAM
     status: ACCEPTED
@@ -458,7 +461,8 @@ release_gate_dashboard:
   ready:
   - TC-005
   - TC-008a
-  - TC-024
+  - TC-011
+  - TC-019c
 current_gate:
   id: P1_PORTFOLIO_SCALE
   status: ACCEPTED
