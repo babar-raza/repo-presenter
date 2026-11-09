@@ -1,10 +1,20 @@
 # Aspose.Cells FOSS for Rust
 
-![Rust edition](https://img.shields.io/badge/rust_edition-2021-blue.svg) [![Build Status](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Rust/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Rust/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.txt)
+![Rust edition](https://img.shields.io/badge/rust_edition-2021-blue.svg) [![Build Status](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Rust/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Rust/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.txt) [![Rust edition](https://img.shields.io/badge/Rust-2021%20edition-orange.svg)](Cargo.toml)
 
 [![Aspose.Cells FOSS for Rust](https://products.aspose.org/media/cells/rust/banner-readme.png)](https://products.aspose.org/cells/rust/)
 
 Aspose.Cells FOSS for Rust reads and writes `.xlsx` workbooks and provides programmatic access to workbook content including cells, styles, charts, shapes, pictures, tables, validations, conditional formatting, and auto-filters. It supports loading from files or byte arrays, and offers repair options for damaged packages or XML. The product exposes methods to read cell values as strings, doubles, booleans, or date-time values, and to write formulas with cached values. It allows setting worksheet properties such as name, visibility, tab color, zoom level, freeze panes, and page setup paper size, as well as workbook-level features like document properties and protection.
+
+Aspose.Cells FOSS for Rust is a free, open-source, pure-Rust library for creating,
+loading, editing, and saving Excel `.xlsx` (Office Open XML / SpreadsheetML) workbooks.
+It exposes an API modeled after Aspose.Cells, so
+the familiar `Workbook` / `Worksheet` / `Cells` object model is available to Rust
+programs with no proprietary runtime, no Microsoft Office installation, and no external
+Aspose dependency. The OOXML packaging — ZIP container, relationships, shared strings,
+styles, worksheet XML, and charts — is implemented from scratch on top of a small set of
+general-purpose crates: `zip` (package container), `roxmltree` (XML parsing), `chrono`
+(date/time), `sha2` / `base64` / `getrandom` (protection hashing), and `serde_json`.
 
 ## Navigation
 
@@ -127,8 +137,6 @@ cargo check --all-targets
 Create a workbook, write typed values and a formula with a cached result, save it as
 XLSX, and load it back:
 
-> **Not verified:** this example is carried over unchanged from the project's existing README. It could not be compiled or run here.
-
 ```rust
 use aspose_cells_foss_rust::{CellValue, Workbook};
 use std::error::Error;
@@ -163,8 +171,6 @@ fn main() -> Result<(), Box<dyn Error>> {
 
 ## Additional Examples
 
-> **Not verified:** this example is carried over unchanged from the project's existing README. It could not be compiled or run here.
-
 ```rust
 let options = LoadOptions {
     try_repair_package: true,
@@ -186,8 +192,6 @@ println!(
 <details>
 <summary>View Additional Examples</summary>
 
-> **Not verified:** this example is carried over unchanged from the project's existing README. It could not be compiled or run here.
-
 ```rust
 let mut charts = sheet.get_charts();
 charts.add(
@@ -206,8 +210,6 @@ let first = charts.get(0).expect("chart");
 println!("Chart count: {}", chart_count);
 println!("First chart type: {:?}", first.get_chart_type());
 ```
-
-> **Not verified:** this example is carried over unchanged from the project's existing README. It could not be compiled or run here.
 
 ```rust
 let mut collections = sheet.get_conditional_formattings();
@@ -229,8 +231,6 @@ style.fill_color = Some("FFFFC7CE".to_string());
 rule.set_style(style);
 ```
 
-> **Not verified:** this example is carried over unchanged from the project's existing README. It could not be compiled or run here.
-
 ```rust
 let mut validations = sheet.get_validations();
 let list_index = validations.add(CellArea::create_cell_area_a1("A1", "A3")?)?;
@@ -243,8 +243,6 @@ list_validation.set_error_title("Invalid");
 list_validation.set_error_message("Choose from the list");
 ```
 
-> **Not verified:** this example is carried over unchanged from the project's existing README. It could not be compiled or run here.
-
 ```rust
 let mut tables = sheet.get_list_objects();
 let table_index = tables.add_a1("A1", "D5", true)?;
@@ -256,8 +254,6 @@ table.set_show_totals(true);
 let mut columns = table.get_list_columns();
 columns.get(3).expect("quantity column").set_totals_calculation(TotalsCalculation::Sum);
 ```
-
-> **Not verified:** this example is carried over unchanged from the project's existing README. It could not be compiled or run here.
 
 ```rust
 let mut hyperlinks = links_sheet.get_hyperlinks();
@@ -839,6 +835,39 @@ Aspose.Cells FOSS for Rust reads and writes `.xlsx` (OOXML/SpreadsheetML) workbo
 - A recent stable Rust toolchain (2021 edition or later) is required to build and use aspose-cells-foss-rust.
 - `WorksheetsMut.remove_at` returns a CellsError::Unsupported error when asked to remove the last remaining worksheet.
 
+More real, runnable examples are collected below — see [`samples/`](samples/) and
+[`samples/README.md`](samples/README.md) for the complete set.
+
+- `Cells` / `CellsMut`
+  - `get(a1_address) -> Result<Cell, CellsError>` / `get_by_index(row, column)`
+  - `get_rows() -> Rows`, `get_columns() -> Columns`
+
+- `Cell` / `CellMut`
+  - `put_value_string(value)`, `put_value_i32(value)`, `put_value_f64(value)`,
+    `put_value_bool(value)`, `put_value_decimal(value)`, `put_value_date_time(value)`
+  - `put_formula_with_cached_value(formula, CellValue)`
+  - `display_string_value() -> String`, `value_type() -> CellValueType`
+  - `get_style() -> CellStyle` / `set_style(style)`
+
+- `CellStyle`
+  - `get_font_mut() -> &mut Font`, `pattern: FillPattern`, `fill_color: Option<String>`
+
+- `Font`
+  - `set_color(value)`, `set_is_bold(value)`, `set_is_italic(value)`, `set_underline(value)`
+
+- `Color`
+  - `from_argb(a, r, g, b) -> Color`
+
+- `LoadOptions`
+  - `try_repair_package: bool`, `try_repair_xml: bool` (`..LoadOptions::default()`)
+
+- `FormatCondition` — `set_priority(value)`, `set_stop_if_true(value)`, `get_style()` / `set_style(style)`
+
+- `CellsError` (enum, 10 members including `Unsupported(&'static str)`, `Io(String)`)
+
+- A workbook must always keep at least one worksheet: `WorksheetsMut::remove_at` returns
+  a `CellsError::Unsupported` error when asked to remove the last remaining worksheet.
+
 These limitations don't apply to [full-featured Aspose.Cells — Enterprise Edition](https://products.aspose.com/cells/). It adds broader format coverage (including legacy XLS, CSV, and ODS), full feature completeness, and commercial support.
 
 ## Development and Testing
@@ -871,6 +900,9 @@ cd Aspose.Cells-FOSS-for-Rust
 cargo build
 ```
 
+The repository currently has no unit or integration test suite —
+`cargo test --all-targets` reports 0 tests.
+
 ```bash
 cargo build
 cargo check --all-targets
@@ -881,6 +913,18 @@ cargo run --bin sample_basic
 cargo run --bin sample_loading
 cargo run --bin sample_styles
 ```
+
+CI ([`ci.yml`](.github/workflows/ci.yml)) runs `fmt`, `check`, `clippy`, `test`, the three
+samples above as smoke tests, and `cargo bench` on Linux x64, Windows x64, macOS ARM, and
+macOS x64. The `samples/` directory demonstrates every feature area — `basic.rs`,
+`styles.rs`, `worksheet_settings.rs`, `validations.rs`, `conditional_formatting.rs`,
+`hyperlinks_and_names.rs`, `pagesetup.rs`, `comments.rs`, `charts.rs`, `list_objects.rs`,
+`pictures.rs`, `shapes.rs`, and `document_properties.rs` (see
+[`samples/README.md`](samples/README.md) for the full overview). Generate local API docs
+with `cargo doc --no-deps --open`; published API docs are deployed by GitHub Pages
+through [`pages.yml`](.github/workflows/pages.yml) — enabling
+`Settings -> Pages -> GitHub Actions` on the repository makes pushes to `main`
+automatically rebuild and publish the rustdoc site.
 
 ## License
 
