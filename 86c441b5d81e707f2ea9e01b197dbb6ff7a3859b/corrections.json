@@ -1,0 +1,146 @@
+{
+  "confinement": {
+    "edits": 2,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "eba1a891f97d153d722164a304a66e6813d31d34023c44d44f1fc68cd7784458",
+  "edits": [
+    {
+      "detector": "enterprise_edition_naming",
+      "end": 21800,
+      "evidence": [
+        {
+          "fact_id": "link_target:product.enterprise",
+          "kind": "link_target",
+          "status": "SUPPORTED",
+          "value": "https://products.aspose.com/slides/net/"
+        }
+      ],
+      "index": 0,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 511,
+      "original": "the commercial product",
+      "rationale": "line 511 names the aspose.com product with a substitute for its proper name ('the commercial product'); the mission naming rule requires \"Enterprise Edition\" with no substitute wording",
+      "replacement": "Aspose.Slides for .NET — Enterprise Edition",
+      "start": 21778
+    },
+    {
+      "detector": "enterprise_edition_naming",
+      "end": 22417,
+      "evidence": [
+        {
+          "fact_id": "link_target:product.enterprise",
+          "kind": "link_target",
+          "status": "SUPPORTED",
+          "value": "https://products.aspose.com/slides/net/"
+        }
+      ],
+      "index": 1,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 519,
+      "original": "the commercial product",
+      "rationale": "line 519 names the aspose.com product with a substitute for its proper name ('the commercial product'); the mission naming rule requires \"Enterprise Edition\" with no substitute wording",
+      "replacement": "Aspose.Slides for .NET — Enterprise Edition",
+      "start": 22395
+    }
+  ],
+  "lane": "L",
+  "original_sha256": "520e9a21b541f1aff3e6b9c42f189caedb79b5b0c63dfffaeb6255f314dad660",
+  "outcome": "REFUSED_LANE_R_RECOMMENDED",
+  "readme_path": "README.md",
+  "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-.NET",
+  "schema_version": 1,
+  "source_revision": "86c441b5d81e707f2ea9e01b197dbb6ff7a3859b",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {
+    "FALSE_CLAIM_FIX": 2
+  },
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "public_symbol:aspose.slides.foss.adjustvalue",
+        "public_symbol:aspose.slides.foss.adjustvaluecollection",
+        "public_symbol:aspose.slides.foss.basehandoutnotesslideheaderfootermanager",
+        "public_symbol:aspose.slides.foss.baseportionformat",
+        "public_symbol:aspose.slides.foss.baseshapelock",
+        "public_symbol:aspose.slides.foss.baseslide",
+        "public_symbol:aspose.slides.foss.bevelpresettype",
+        "public_symbol:aspose.slides.foss.bulletformat"
+      ],
+      "line": 0,
+      "reason": "219 of 264 verified public types are named nowhere in the README; would fill API Reference: public_symbol:aspose.slides.foss.adjustvalue, public_symbol:aspose.slides.foss.adjustvaluecollection, public_symbol:aspose.slides.foss.basehandoutnotesslideheaderfootermanager, public_symbol:aspose.slides.foss.baseportionformat, public_symbol:aspose.slides.foss.baseshapelock, public_symbol:aspose.slides.foss.baseslide, public_symbol:aspose.slides.foss.bevelpresettype, public_symbol:aspose.slides.foss.bulletformat (+211 more)",
+      "text": ""
+    },
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "link_target:product.enterprise"
+      ],
+      "line": 0,
+      "reason": "no Enterprise Edition paragraph; would be filled from link_target:product.enterprise (SUPPORTED, https://products.aspose.com/slides/net/) and the anchor rule of the Scope and Limitations closing paragraph",
+      "text": ""
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [
+        "format:output.ppt"
+      ],
+      "line": 25,
+      "reason": "the README marks 'PPTX' supported; format:output.ppt is on record as UNRESOLVED, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "i1[\"An existing PPTX presentation\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [
+        "format:output.pot"
+      ],
+      "line": 47,
+      "reason": "the README marks 'POTX' supported; format:output.pot is on record as UNRESOLVED, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o1[\"PPTX, PPSX or POTX package\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [
+        "format:output.pps"
+      ],
+      "line": 47,
+      "reason": "the README marks 'PPSX' supported; format:output.pps is on record as UNRESOLVED, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o1[\"PPTX, PPSX or POTX package\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [
+        "format:output.ppt"
+      ],
+      "line": 47,
+      "reason": "the README marks 'PPTX' supported; format:output.ppt is on record as UNRESOLVED, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o1[\"PPTX, PPSX or POTX package\"]"
+    },
+    {
+      "defect": true,
+      "detector": "failing_example",
+      "fact_ids": [
+        "example:002"
+      ],
+      "line": 175,
+      "reason": "the example verifier recorded a failure for the example on lines 175-179: example 2: FAILED; CSC : error CS5001: Program does not contain a static 'Main' method suitable for an entry point",
+      "text": "using Aspose.Slides.Foss;           // Presentation, the I* interfaces, ShapeTyp"
+    }
+  ]
+}
