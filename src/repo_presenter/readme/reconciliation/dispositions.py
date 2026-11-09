@@ -1267,6 +1267,7 @@ def normalize(
     contradicted_links = contradicted_link_hrefs(facts)
     commands = command_block_units(facts)
     unpublished = unpublished_registry_blocks(facts)
+    example_status = _example_status(facts)
     units_by_id = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
     wrapper_bounds = _collapsible_wrapper_bounds(output, units_by_id)
     fence_languages = _example_languages(facts)
@@ -1577,6 +1578,33 @@ def normalize(
                         + str(entry.get("rationale") or "")
                     )[:_RATIONALE_LIMIT]
                     continue
+            if (
+                unit in commands
+                and build_ids
+                and "development_testing" not in absent
+                and unit not in unresolved
+                and unit not in contradicted
+                and unit not in unpublished
+                and unit not in example_status
+            ):
+                # Measured live (aspose-psd-foss/Aspose.PSD-FOSS-for-Python, 2026-11-09, batch 1,
+                # unit 012.code_block "pip install aspose-psd-foss"): a repository with no
+                # install_command fact at all, so the Installation section renders nothing for the
+                # block to be redundant with. The model's SUPERSEDE_REDUNDANT into installation
+                # was folded to DEFER_UNRESOLVED just below, which placement_errors's own
+                # uncited_redundant_defer then refused three asks running -- the run died at S4.
+                # That refusal's own text names the remedy for a block "kept as written"
+                # (VERIFIED_PRESERVE); this is the same remedy and destination the OMIT_UNSUPPORTED
+                # command-block fold above already applies, reached by the one path it missed.
+                entry["disposition"] = "VERIFIED_PRESERVE"
+                entry["destination_section"] = "development_testing"
+                entry["fact_ids"] = sorted(cited | set(build_ids))
+                entry["rationale"] = (
+                    "Kept as written: the Installation section renders no verified command this "
+                    "block could be redundant with. "
+                    + str(entry.get("rationale") or "")
+                )[:_RATIONALE_LIMIT]
+                continue
             entry["disposition"] = "DEFER_UNRESOLVED"
             entry["destination_section"] = None
             continue
@@ -1676,6 +1704,7 @@ def normalize(
             + str(entry.get("rationale") or "")
         )[:_RATIONALE_LIMIT]
     _fold_positional_pointers(output, facts)
+    _fold_dangling_rewrites(output, facts)
     _prune_incidental_coverage(output, coverage)
     return errors
 
@@ -1703,6 +1732,38 @@ def _fold_positional_pointers(output: dict[str, Any], facts: FactsDocument) -> N
         entry["disposition"] = "SUPERSEDE_REDUNDANT"
         entry["rationale"] = (
             "A pointer to a block the section prints itself; kept as written it would dangle. "
+            + str(entry.get("rationale") or "")
+        )[:_RATIONALE_LIMIT]
+
+
+def _fold_dangling_rewrites(output: dict[str, Any], facts: FactsDocument) -> None:
+    """A paragraph or list kept as written (VERIFIED_PRESERVE/VERIFIED_MOVE) that still carries a
+    pointer to something that follows it where it is kept, and states more than that pointer, is
+    re-authored from facts instead: VERIFIED_REWRITE, in place, keeping its destination and the
+    facts it already cites.
+
+    Measured live (aspose-3d-foss/Aspose.3D-FOSS-for-Python, 2026-11-09, batch 1, unit
+    057.paragraph: a sentence on ``Scene`` ending "The full public class index is listed below by
+    module."): the model kept it three asks running, each refused as a dangling_pointer, and the
+    run died at S4. The refusal names three remedies; VERIFIED_REWRITE is the only one that needs
+    no new fact and no other unit ("the wording is re-authored from facts, without the pointer"),
+    so it is the one applied here. Nothing is invented and no text is edited: only the
+    disposition changes, and the section's authoring job writes the wording. A unit whose every
+    sentence is a pointer was already folded to SUPERSEDE_REDUNDANT just above. VERIFIED_REWRITE
+    needs no cited fact (the narrowed ask for this very rejection says so); an attributed unit
+    (unverified, so never re-authored from facts) is left to the refusal, as is every other
+    disposition."""
+    flagged = {unit for unit, _sentence, _reason in dangling_pointers(output, facts)}
+    for entry in output.get("dispositions", []):
+        unit = str(entry.get("unit_id", ""))
+        if unit not in flagged or _unit_kind(unit) not in {"paragraph", "list"}:
+            continue
+        if entry.get("disposition") not in {"VERIFIED_PRESERVE", "VERIFIED_MOVE"}:
+            continue
+        entry["disposition"] = "VERIFIED_REWRITE"
+        entry["rationale"] = (
+            "Re-authored from the facts: kept as written it would point at content "
+            "that does not follow it in its section. "
             + str(entry.get("rationale") or "")
         )[:_RATIONALE_LIMIT]
 
