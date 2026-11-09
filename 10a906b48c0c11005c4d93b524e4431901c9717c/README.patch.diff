@@ -14,7 +14,7 @@
 -MSG readers/writers alongside a high-level, mutable `MapiMessage` API for creating, editing, and
 -saving messages, including two-way conversion with Python's own
 -[`email.message.EmailMessage`](https://docs.python.org/3/library/email.message.html#email.message.EmailMessage).
-+Aspose.Email FOSS for Python reads `.eml` and `.msg` files, writes `.msg` files, and converts between `.eml` and `.msg` formats. It parses Outlook message structures using the CFB format through `email_foss.cfb` and handles MAPI message properties through `email_foss.msg`. The package supports reading and writing `.txt` files as attachment content and provides classes such as `MsgReader`, `MsgWriter`, `CFBReader`, `CFBWriter`, `MapiMessage`, `MapiAttachment`, `MapiRecipient`, and `MapiNamedProperty` for programmatic access to message components.
++Aspose.Email FOSS for Python reads `.eml` and `.msg` files, writes `.msg` files, and converts between `.eml` and `.msg` formats. It parses Outlook message structures using the CFB format through `email_foss.cfb` and handles MAPI message properties through `email_foss.msg`. The package supports reading and writing `.txt` files as attachment content and provides classes such as `MsgReader`, `MsgWriter`, `CFBReader`, `CFBWriter`, `MapiMessage`, `MapiAttachment`, `MapiRecipient`, and `MapiNamedProperty` for programmatic access to message components. It is licensed under the MIT License and requires no external runtime dependencies.
  
  ## Navigation
  
@@ -69,7 +69,7 @@
  
  ## Key Capabilities
 +
-+- **Read and write MSG files.** It reads and writes Outlook `.msg` files using `MsgReader` and `MsgWriter`, supporting direct property-stream parsing and file or bytes I/O.
++- **Read and write MSG files.** It reads and writes Outlook `.msg` files using `MsgReader` and `MsgWriter`, supporting direct property-stream parsing and file or bytes I/O, and provides a high-level `MapiMessage` API for message creation, editing, and conversion.
 +- **Convert between MSG and EML.** It converts between `.msg` and `.eml` formats by parsing `.msg` into `MapiMessage` and exporting to EmailMessage, or importing an EmailMessage and saving as `.msg`.
 +- **Low-level CFB processing.** It processes Compound File Binary containers with `CFBReader` and `CFBWriter`, enabling traversal of storages and streams, and building custom CFB documents from scratch.
 +- **Message composition and editing.** It composes and edits messages using `MapiMessage`, supporting recipients, attachments, and MAPI properties, with methods to create, load, and save messages.
@@ -232,7 +232,7 @@
 -`MsgDocument`, for direct property-stream access; and the low-level CFB API, centered on
 -`CFBReader`, `CFBWriter`, and `CFBDocument`, for raw Compound File Binary container access. The
 -CFB and MSG modules are listed separately in the tables below.
-+Aspose.Email FOSS for Python provides high-level and low-level APIs for reading and writing `.msg` files. The high-level MSG API centers on `email_foss.msg.MapiMessage` for creating, editing, and converting messages, while the low-level MSG API uses `email_foss.msg.MsgReader` and `email_foss.msg.MsgWriter` for direct property-stream access, and the low-level CFB API uses `email_foss.cfb.CFBReader` and `email_foss.cfb.CFBWriter` for raw Compound File Binary container access.
++Aspose.Email FOSS for Python provides high-level and low-level APIs for reading and writing `.msg` files. The high-level MSG API centers on `email_foss.msg.MapiMessage` for creating, editing, and converting messages, while the low-level MSG API uses `email_foss.msg.MsgReader` and `email_foss.msg.MsgWriter` for direct property-stream access, and the low-level CFB API uses `email_foss.cfb.CFBReader` and `email_foss.cfb.CFBWriter` for raw Compound File Binary container access. The CFB and MSG modules are listed separately in the tables below.
 +
 +The verified public surface has 30 types.
  
@@ -277,7 +277,7 @@
  | `MapiRecipient` | Mutable recipient object. |
  | `MsgDocument` | Mutable MSG document model that can be serialized through the CFB writer. |
  | `MsgError` | Raised for malformed or unsupported MSG structures. |
-@@ -259,20 +228,43 @@
+@@ -259,20 +228,40 @@
  | `PropertyStreamHeaderSubobject` | Property stream header used in recipient and attachment storages, containing only reserved bytes. |
  | `PropertyStreamHeaderTopLevel` | Top-level property stream header containing next-id counters and counts for recipients and attachments. |
  | `StorageLayout` | Naming and containment rules for recipient, attachment, embedded message, and nameid storages. |
@@ -319,13 +319,10 @@
 +- `parse_subobject_property_stream`: Read the property stream in recipient/attachment storage and decode fixed-length entries.
 +- `parse_subobject_property_stream_data`: Decode recipient/attachment property stream header and fixed-length entries.
 +- `parse_top_level_property_stream`: Decode top-level property stream header and fixed-length entries.
-+
-+The
-+CFB and MSG modules are listed separately in the tables below.
  
  - `MapiMessage`
    - `create(subject, body, unicode_strings) -> "MapiMessage"`
-@@ -293,16 +285,19 @@
+@@ -293,16 +282,19 @@
    - `to_msg_document() -> MsgDocument`
    - properties: `subject`, `body`, `body_html`, `message_class`, `unicode_strings`, `properties`,
      `recipients`, `attachments`, `validation_issues`
@@ -347,7 +344,7 @@
  
  - `MsgReader`
    - `from_file(path, strict) -> "MsgReader"`
-@@ -310,17 +305,20 @@
+@@ -310,17 +302,20 @@
    - `parse_message_property_stream(storage_stream_id)` / `parse_subobject_property_stream(storage_stream_id)`
    - `parse_top_level_property_stream(data)` (classmethod) / `parse_subobject_property_stream_data(data)` (classmethod)
    - properties: `cfb_reader`, `storage_layout`, `strict`, `validation_issues`
@@ -370,7 +367,7 @@
  
  - `CFBReader`
    - `from_file(path) -> "CFBReader"` / `CFBReader(data)` (constructs directly from `bytes`)
-@@ -329,61 +327,69 @@
+@@ -329,61 +324,69 @@
    - `find_child_by_name(storage_stream_id, name)`, `resolve_path(names, start_stream_id)`
    - properties: `header`, `difat`, `fat`, `mini_fat`, `directory_entries`, `root_entry`, `data_size`,
      `major_version`, `sector_size`, `mini_sector_size`, `file_size`
@@ -468,7 +465,7 @@
  
  Install the package in editable mode and run the test suite:
  
-@@ -392,20 +398,14 @@
+@@ -392,20 +395,14 @@
  python -m unittest discover -s tests -v
  ```
  
