@@ -59,6 +59,10 @@ RATIONALE_HEADING = (
     "Heading owned by the renderer: {section} prints its own headings, so this inherited "
     "heading is not printed as written."
 )
+RATIONALE_BADGES = (
+    "Superseded by the {section} the renderer prints from the verified facts: every link this "
+    "badge row carried is printed in the README."
+)
 RATIONALE_DIAGRAM = (
     "Superseded by the At a Glance diagram the renderer draws from the verified formats "
     "and capabilities."
@@ -629,6 +633,41 @@ def _uncited_contradicted_omission(
     return _Decision(None, rationale, facts, "OMIT_UNSUPPORTED")
 
 
+def _badge_row(
+    placement: Placement,
+    entry: Mapping[str, Any],
+    candidate: Candidate,
+    known: frozenset[str],
+) -> _Decision | None:
+    """A kept inherited badge row. The renderer prints its own badges and banner from facts and
+    never an inherited badge row as written (``placement._RENDERED_ELSEWHERE``), so a row S4 kept
+    (``VERIFIED_PRESERVE``/``VERIFIED_MOVE``) claims an effect that does not happen; the
+    disposition that matches what happened is ``SUPERSEDE_REDUNDANT`` into the badges (or banner)
+    section, citing the facts that section renders (``rendering_fact_ids``, the very rule S4's own
+    supersession of a badge row cites).
+
+    Only when the row is in fact redundant: every link the row carries must still be printed
+    somewhere in the README (``coverage.carries_hard_tokens``). A badge, banner or license link the
+    published README prints and the candidate lost is R2 content loss, not a redundancy, and is
+    left to the reviewer's ``live_readme_loss`` and to the badge rendering that must carry it."""
+    value = _unit_values(candidate).get(placement.unit_id)
+    if value is None or not carries_hard_tokens(value, candidate.readme):
+        return None
+    included = set(_included_sections(candidate.plan))
+    chosen = entry.get("destination_section")
+    section = (
+        chosen
+        if chosen in {"badges", "banner"} and chosen in included
+        else next((name for name in ("badges", "banner") if name in included), None)
+    )
+    if section is None:
+        return None
+    facts = sorted(set(rendering_fact_ids(section, candidate.facts)) & known)
+    if not facts:
+        return None
+    return _Decision(section, RATIONALE_BADGES.format(section=section), facts)
+
+
 def _decide(
     placement: Placement,
     entry: Mapping[str, Any],
@@ -657,6 +696,8 @@ def _decide(
         return _Decision(
             section, RATIONALE_HEADING.format(section=section.replace("_", " ")), facts
         )
+    if unit_id.endswith(".badge_row"):
+        return _badge_row(placement, entry, candidate, known)
     if unit_id.endswith(".code_block") and _is_mermaid(placement.text):
         facts = _diagram_fact_ids(candidate.plan, known)
         if not facts or not _drawn(candidate.plan, candidate.readme):
