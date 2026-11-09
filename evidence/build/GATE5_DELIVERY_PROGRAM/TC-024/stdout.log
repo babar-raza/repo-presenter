@@ -2,22 +2,22 @@
 ===== CLEAN RUN 1 =====
 $ python -m pytest tests/test_recertify.py tests/readme/bundle/test_seal.py tests/readme/review/test_llm_review.py -q
 --- stdout ---
-.......................................................................  [100%]
-71 passed in 26.09s
+........................................................................ [100%]
+72 passed in 40.91s
 
 --- stderr ---
 
 $ python -m pytest tests/acceptance/test_import_graph.py tests/acceptance/test_canaries.py -q
 --- stdout ---
 ............                                                             [100%]
-12 passed in 6.40s
+12 passed in 1.41s
 
 --- stderr ---
 
 $ python -m pytest tests/test_owner_rulings_enforced.py -q
 --- stdout ---
 ...                                                                      [100%]
-3 passed in 10.07s
+3 passed in 2.57s
 
 --- stderr ---
 
@@ -25,22 +25,22 @@ $ python -m pytest tests/test_owner_rulings_enforced.py -q
 ===== CLEAN RUN 2 =====
 $ python -m pytest tests/test_recertify.py tests/readme/bundle/test_seal.py tests/readme/review/test_llm_review.py -q
 --- stdout ---
-.......................................................................  [100%]
-71 passed in 24.41s
+........................................................................ [100%]
+72 passed in 45.54s
 
 --- stderr ---
 
 $ python -m pytest tests/acceptance/test_import_graph.py tests/acceptance/test_canaries.py -q
 --- stdout ---
 ............                                                             [100%]
-12 passed in 0.49s
+12 passed in 0.78s
 
 --- stderr ---
 
 $ python -m pytest tests/test_owner_rulings_enforced.py -q
 --- stdout ---
 ...                                                                      [100%]
-3 passed in 6.77s
+3 passed in 1.68s
 
 --- stderr ---
 
@@ -49,7 +49,7 @@ $ python -m pytest tests/test_owner_rulings_enforced.py -q
 mutated: M src/repo_presenter/recertify.py
 $ python -m pytest tests/test_recertify.py tests/readme/bundle/test_seal.py tests/readme/review/test_llm_review.py -q
 --- stdout ---
-FF.F...................................................................  [100%]
+FF.F.................................................................... [100%]
 ================================== FAILURES ===================================
 ___________ test_model_accept_rejects_a_deterministic_only_verdict ____________
 
@@ -59,8 +59,8 @@ ___________ test_model_accept_rejects_a_deterministic_only_verdict ____________
         mirrored here for a STORED review being re-read."""
 >       assert recertify._model_accept({"verdict": "ACCEPT", "model_verdict": None}) is False
 E       AssertionError: assert True is False
-E        +  where True = <function _model_accept at 0x00000217D2FE6D40>({'verdict': 'ACCEPT', 'model_verdict': None})
-E        +    where <function _model_accept at 0x00000217D2FE6D40> = recertify._model_accept
+E        +  where True = <function _model_accept at 0x0000017DAEBEFB00>({'verdict': 'ACCEPT', 'model_verdict': None})
+E        +    where <function _model_accept at 0x0000017DAEBEFB00> = recertify._model_accept
 
 tests\test_recertify.py:213: AssertionError
 _______________ test_model_accept_rejects_a_non_accept_verdict ________________
@@ -68,8 +68,8 @@ _______________ test_model_accept_rejects_a_non_accept_verdict ________________
     def test_model_accept_rejects_a_non_accept_verdict() -> None:
 >       assert recertify._model_accept({"verdict": "REJECT", "model_verdict": "ACCEPT"}) is False
 E       AssertionError: assert True is False
-E        +  where True = <function _model_accept at 0x00000217D2FE6D40>({'verdict': 'REJECT', 'model_verdict': 'ACCEPT'})
-E        +    where <function _model_accept at 0x00000217D2FE6D40> = recertify._model_accept
+E        +  where True = <function _model_accept at 0x0000017DAEBEFB00>({'verdict': 'REJECT', 'model_verdict': 'ACCEPT'})
+E        +    where <function _model_accept at 0x0000017DAEBEFB00> = recertify._model_accept
 
 tests\test_recertify.py:220: AssertionError
 ______ test_model_accept_rejects_a_unit_m8_marked_reject_or_inconclusive ______
@@ -80,29 +80,29 @@ ______ test_model_accept_rejects_a_unit_m8_marked_reject_or_inconclusive ______
             {**base, "unit_reviews": [{"unit": "u1", "m8": {"status": "reject"}}]}
         ) is False
 E       AssertionError: assert True is False
-E        +  where True = <function _model_accept at 0x00000217D2FE6D40>({'verdict': 'ACCEPT', 'model_verdict': 'ACCEPT', 'unit_reviews': [{'unit': 'u1', 'm8': {'status': 'reject'}}]})
-E        +    where <function _model_accept at 0x00000217D2FE6D40> = recertify._model_accept
+E        +  where True = <function _model_accept at 0x0000017DAEBEFB00>({'verdict': 'ACCEPT', 'model_verdict': 'ACCEPT', 'unit_reviews': [{'unit': 'u1', 'm8': {'status': 'reject'}}]})
+E        +    where <function _model_accept at 0x0000017DAEBEFB00> = recertify._model_accept
 
 tests\test_recertify.py:237: AssertionError
 =========================== short test summary info ===========================
 FAILED tests/test_recertify.py::test_model_accept_rejects_a_deterministic_only_verdict
 FAILED tests/test_recertify.py::test_model_accept_rejects_a_non_accept_verdict
 FAILED tests/test_recertify.py::test_model_accept_rejects_a_unit_m8_marked_reject_or_inconclusive
-3 failed, 68 passed in 23.82s
+3 failed, 69 passed in 39.53s
 
 --- stderr ---
 
 $ python -m pytest tests/acceptance/test_import_graph.py tests/acceptance/test_canaries.py -q
 --- stdout ---
 ............                                                             [100%]
-12 passed in 0.50s
+12 passed in 1.53s
 
 --- stderr ---
 
 $ python -m pytest tests/test_owner_rulings_enforced.py -q
 --- stdout ---
 ...                                                                      [100%]
-3 passed in 0.98s
+3 passed in 1.64s
 
 --- stderr ---
 
