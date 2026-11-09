@@ -2,16 +2,18 @@
 ===== CLEAN RUN 1 =====
 $ python -m pytest tests/acceptance -q
 --- stdout ---
-........................................................................ [ 69%]
-...............................                                          [100%]
-103 passed in 4.31s
+........................................................................ [ 30%]
+........................................................................ [ 61%]
+........................................................................ [ 92%]
+.................                                                        [100%]
+233 passed in 21.94s
 
 --- stderr ---
 
 $ python -m pytest tests/github/test_write_authorization.py -q -k effect
 --- stdout ---
 .........................                                                [100%]
-25 passed, 36 deselected in 0.43s
+25 passed, 36 deselected in 2.48s
 
 --- stderr ---
 
@@ -19,16 +21,18 @@ $ python -m pytest tests/github/test_write_authorization.py -q -k effect
 ===== CLEAN RUN 2 =====
 $ python -m pytest tests/acceptance -q
 --- stdout ---
-........................................................................ [ 69%]
-...............................                                          [100%]
-103 passed in 1.94s
+........................................................................ [ 30%]
+........................................................................ [ 61%]
+........................................................................ [ 92%]
+.................                                                        [100%]
+233 passed in 12.59s
 
 --- stderr ---
 
 $ python -m pytest tests/github/test_write_authorization.py -q -k effect
 --- stdout ---
 .........................                                                [100%]
-25 passed, 36 deselected in 0.64s
+25 passed, 36 deselected in 1.41s
 
 --- stderr ---
 
@@ -37,12 +41,14 @@ $ python -m pytest tests/github/test_write_authorization.py -q -k effect
 mutated: M src/repo_presenter/acceptance/record.py
 $ python -m pytest tests/acceptance -q
 --- stdout ---
-..................................................F..................... [ 69%]
-..F.....F...F..................                                          [100%]
+........................................................................ [ 30%]
+........................................................................ [ 61%]
+...........F...................................F.....F...F.............. [ 92%]
+.................                                                        [100%]
 ================================== FAILURES ===================================
 __ test_classify_reaches_independently_accepted_with_a_verified_attestation ___
 
-tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-828/test_classify_reaches_independ0')
+tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-1390/test_classify_reaches_independ0')
 
     def test_classify_reaches_independently_accepted_with_a_verified_attestation(
         tmp_path: Path,
@@ -118,14 +124,14 @@ FAILED tests/acceptance/test_build_and_classify.py::test_classify_reaches_indepe
 FAILED tests/acceptance/test_record.py::test_the_eight_states_are_exactly_these_literal_strings
 FAILED tests/acceptance/test_record.py::test_independently_accepted_needs_audit_passed_and_attested
 FAILED tests/acceptance/test_record.py::test_publication_ready_delivered_live_verified_chain
-4 failed, 99 passed in 11.32s
+4 failed, 229 passed in 14.52s
 
 --- stderr ---
 
 $ python -m pytest tests/github/test_write_authorization.py -q -k effect
 --- stdout ---
 .........................                                                [100%]
-25 passed, 36 deselected in 0.49s
+25 passed, 36 deselected in 3.08s
 
 --- stderr ---
 
