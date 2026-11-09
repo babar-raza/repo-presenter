@@ -1,0 +1,33 @@
+{
+  "certificates": [
+    {
+      "corpus": "data/drop_decisions.json",
+      "gates": [
+        {
+          "direction": ">=",
+          "n": 168,
+          "name": "M5.recall[overall]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        {
+          "direction": ">=",
+          "n": 503,
+          "name": "M5.r14_agreement",
+          "passed": true,
+          "threshold": 1.0,
+          "value": 1.0
+        }
+      ],
+      "measured_at": "2026-11-08T00:00:00Z",
+      "mechanism_class": "M5",
+      "provider_calls": 0,
+      "provisional": false,
+      "status": "PASSED"
+    }
+  ],
+  "harness_schema_version": 1,
+  "harness_version": "1",
+  "schema": "acceptance-calibration/1"
+}

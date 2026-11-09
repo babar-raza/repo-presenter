@@ -3722,6 +3722,69 @@ TC-024's integration -- tracked as a new card, TC-022c, authored separately.
 
 Detail: `src/repo_presenter/acceptance/registration.py`, `data/registrations/A1.json`.
 
+---
+
+## 2026-11-08: M5 wired and measured for real (PASSED); calibration_status.py's --file/--matrix
+## follow-up wired; portfolio_delivery_count.py's rewiring deliberately deferred
+
+**Decision**: with TC-016/TC-017a/TC-017b/TC-018/TC-020/TC-021/TC-022a/TC-022b/TC-022c/TC-024/
+TC-025 all `gatecli`-ACCEPTED, began the real "wire the harness to real mechanism execution" step
+every one of those cards' own text deferred to the supervisor. Started with M5 (preservation /
+the R14 drop-decision rule table) because `data/drop_decisions.json` (650 real, already-decided
+cases, self-contained -- the disputed text is embedded in the record, no upstream clone needed)
+and `tests/readme/obligations/test_classify.py`'s own evidence-text parsers (`facts_for_record`,
+already proving 1.00 agreement on the 503 mechanical decisions as a committed, CI-enforced test)
+made it the one mechanism answerable from already-committed, zero-network data without a larger
+corpus-rebuild effort.
+
+**What was built and measured**: `scripts/measure_m5.py` (a supervisor-run, not-a-taskcard
+script, reusing `test_classify.py`'s parsers rather than duplicating ~150 lines of regex logic)
+runs `repo_presenter.readme.obligations.classify.classify_unit` over all 503 mechanical
+`drop_decisions.json` records, builds `CaseVerdict`/`R14Case` and calls
+`calibration_harness.score_m5`. Real result: **M5 PASSED** -- recall 1.00 (168/168 real
+`READD` defects caught), R14 agreement 1.00 (503/503). Written for real to
+`data/acceptance_calibration.json` (`--write` flag), the first real, non-fixture entry in that
+file.
+
+**Found while testing TC-007's own literal check command**: `ops/checks/calibration_status.py`
+was still the OLD script (a single positional arg, hardcoded to the frozen
+`data/reviewer_calibration.json`) -- TC-007's re-authored card text calls it with `--file`/
+`--matrix` flags that did not exist. `TC-013.yaml`'s own closeout already named this exact gap
+("IMMEDIATELY after this card is ACCEPTED, the supervisor ... wires
+ops/checks/calibration_status.py (--file/--matrix flags) ... as routine direct supervisor work
+... not a second taskcard") -- `ops/**` is `GLOBAL_DENY` for every card, including a
+`supervisor`-executor one (`SUPERVISOR_CARD_DENY` also lists it), so this could only ever be
+direct supervisor action, never a taskcard. Rewrote it: with `--file`/`--matrix`, it calls
+`acceptance.record.load_certificates()` and reports PASSED only when `.complete` is True
+(fail-closed, same contract); without them, it is byte-for-byte the old legacy behavior (no other
+caller found depends on the old form; `data/reviewer_calibration.json` stays untouched and
+unreadable-as-PASSED, per R10). Verified both modes directly and re-ran the existing test suite
+(`tests/acceptance/`, `tests/readme/review/test_calibration_status.py`, `tests/ops/`) clean.
+
+**TC-013's same closeout note also named `ops/checks/portfolio_delivery_count.py`** (TC-011's
+counter) as needing the identical rewiring (`classify_review()`'s logic reads the OLD, frozen,
+permanently-`NOT_PASSED` `data/reviewer_calibration.json` and several `review_verdict.json`
+fields -- `model_verdict`, `calibration_status`, `reviewer_logic_version`, `prompt_version` -- a
+monolithic-reviewer shape the new acceptance contract does not produce; as written, this script
+can never count anything `independently_accepted`, by construction). **Deliberately NOT done
+yet**: this is a large, multi-signal rewrite (mapping `SealedEvidence`/`review_verdict.json` into
+every keyword `acceptance.record.build_record` needs -- sealed, deterministically-validated,
+mechanism-verdicts-pass, canaries-caught, audit-passed, attested) against a script that also
+handles version-set grouping, re-certification and live-PR verification, and is not yet
+load-bearing: no candidate has reached even `provisionally-accepted` under the new contract (M5
+is the first of nine required certificates), so there is nothing real for it to miscount today.
+Rushing this now, under the same push as M5's measurement, risked a subtle, correctness-critical
+bug in exactly the script that will decide M1's own headline number later. Tracked explicitly,
+matches TC-024's own already-flagged residual note (same two scripts), to be done together once
+more mechanisms are certified and a real sealed candidate exists to test the rewiring against.
+
+**Does NOT decide**: the M2/M3/M8 wiring path (M2/M3 likely need the uncached reviewer-calibration
+corpus pickle rebuilt from real upstream clones -- network and time; M8 needs real, R25-budgeted
+provider calls) -- those remain open, substantial, separately-scoped work, not attempted here.
+
+Detail: `scripts/measure_m5.py`, `data/acceptance_calibration.json`,
+`ops/checks/calibration_status.py`.
+
 **Going forward**: every future integration commit's subject must end with exactly
 `(GATE5_DELIVERY_PROGRAM/TC-ID)`, no trailing text, and a commit landing more than one card's work
 must be split into one commit per card before pushing -- never bundled, even when the cards were
