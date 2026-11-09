@@ -11,9 +11,9 @@ purpose: >
   an owner-approved second model route for M8 only -- is pre-declined as a standing matter by
   owner ruling R18 ("qwen3-next for every product route... including for M8; no second route is
   ever introduced"), so per the design's own ladder text ("b fails, OR the owner declines"), rung
-  (c) is authorized now without a further owner round-trip. depends_on: [] (this card only
-  touches code/data this session already has access to; it does not require any new owner
-  action). Self-contained context follows; you never read
+  (c) is authorized now without a further owner round-trip. This card only touches code/data this
+  session already has access to; it does not require any new owner action. Self-contained context
+  follows; you never read
   docs/design/2026-11-06-acceptance-redesign.md or docs/DELIVERY_PLAN_2026-11-07.md, only this
   card.
 
@@ -39,6 +39,7 @@ purpose: >
   disposition decisions; TC-014/TC-019 (scripts/run_m9_seeder.py, score.py)'s already-real audit
   pipeline for the M9 rubric) -- this card's job for those three defect classes is the
   responsibility.py reassignment alone, not new mechanism code.
+depends_on: []
 write_paths:
   - src/repo_presenter/readme/validation/wording.py
   - scripts/measure_m6_wording_ban.py
