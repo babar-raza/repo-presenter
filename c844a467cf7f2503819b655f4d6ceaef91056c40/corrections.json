@@ -1,0 +1,156 @@
+{
+  "confinement": {
+    "edits": 1,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "ba86d55b318da847d7c9b4751a3a11efe15a497871a5d395e1e00d51d08cd7e1",
+  "edits": [
+    {
+      "detector": "enterprise_edition_naming",
+      "end": 22898,
+      "evidence": [
+        {
+          "fact_id": "link_target:product.enterprise",
+          "kind": "link_target",
+          "status": "SUPPORTED",
+          "value": "https://products.aspose.com/email/cpp/"
+        }
+      ],
+      "index": 0,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 450,
+      "original": "commercial product",
+      "rationale": "line 450 names the aspose.com product with a substitute for its proper name ('commercial product'); the mission naming rule requires \"Enterprise Edition\" with no substitute wording",
+      "replacement": "Aspose.Email for C++ — Enterprise Edition",
+      "start": 22880
+    }
+  ],
+  "lane": "L",
+  "original_sha256": "22f67406a341178188eba01b4ce6fe7e83c57d4c02f9a8d646b2376127f4add1",
+  "outcome": "REFUSED_LANE_R_RECOMMENDED",
+  "readme_path": "README.md",
+  "repository": "aspose-email-foss/Aspose.Email-FOSS-for-Cpp",
+  "schema_version": 1,
+  "source_revision": "c844a467cf7f2503819b655f4d6ceaef91056c40",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {
+    "FALSE_CLAIM_FIX": 1
+  },
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 34,
+      "reason": "the README marks 'MSG' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "i1[\"An existing MSG file (Outlook Message)\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 35,
+      "reason": "the README marks 'EML' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "i2[\"An existing EML file (RFC 5322 / MIME)\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 35,
+      "reason": "the README marks 'MIME' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "i2[\"An existing EML file (RFC 5322 / MIME)\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 35,
+      "reason": "the README marks 'RFC' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "i2[\"An existing EML file (RFC 5322 / MIME)\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 36,
+      "reason": "the README marks 'CFB' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "i3[\"An existing CFB container (Compound File Binary)\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 49,
+      "reason": "the README marks 'MSG' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o1[\"MSG files (Outlook Message)\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 50,
+      "reason": "the README marks 'EML' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o2[\"EML files (RFC 5322 / MIME)\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 50,
+      "reason": "the README marks 'MIME' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o2[\"EML files (RFC 5322 / MIME)\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 50,
+      "reason": "the README marks 'RFC' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o2[\"EML files (RFC 5322 / MIME)\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 51,
+      "reason": "the README marks 'CFB' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o3[\"CFB containers (Compound File Binary)\"]"
+    },
+    {
+      "defect": true,
+      "detector": "failing_example",
+      "fact_ids": [
+        "example:003"
+      ],
+      "line": 178,
+      "reason": "the example verifier recorded a failure for the example on lines 178-233: example 3: FAILED; example_003.cpp:3:27: error: ‘read_option’ was not declared in this scope",
+      "text": "int main(int argc, char* argv[])"
+    },
+    {
+      "defect": true,
+      "detector": "failing_example",
+      "fact_ids": [
+        "example:004"
+      ],
+      "line": 245,
+      "reason": "the example verifier recorded a failure for the example on lines 245-273: example 4: FAILED; example_004.cpp:5:14: error: ‘cerr’ is not a member of ‘std’",
+      "text": "int main(int argc, char* argv[])"
+    }
+  ]
+}
