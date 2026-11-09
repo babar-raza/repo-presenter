@@ -1,0 +1,93 @@
+{
+  "confinement": {
+    "edits": 1,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "662876a3559ba0c0190f297ba684ebb2405804ccb6838ad293d368a8cbae4243",
+  "edits": [
+    {
+      "detector": "stray_fence",
+      "end": 9222,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:219"
+        }
+      ],
+      "index": 0,
+      "kind": "STRUCTURE_FIX",
+      "line": 219,
+      "original": "```  ",
+      "rationale": "line 219 is a closing code fence that closes nothing; it turns the lines after it into a code block until the next fence, so their headings and tags are not rendered as such",
+      "replacement": "",
+      "start": 9217
+    }
+  ],
+  "lane": "L",
+  "original_sha256": "5c33c4362990eebec75e741164e715130f4e7f8e10e4eebd281d347d7f19e85f",
+  "outcome": "REFUSED_LANE_R_RECOMMENDED",
+  "readme_path": "README.md",
+  "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Python",
+  "schema_version": 1,
+  "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {
+    "STRUCTURE_FIX": 1
+  },
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.colormodes",
+        "public_symbol:aspose_psd_foss.layerandmasksectionreader",
+        "public_symbol:aspose_psd_foss.layerandmasksectionwriter",
+        "public_symbol:aspose_psd_foss.layers.blendrange.blendrange",
+        "public_symbol:aspose_psd_foss.layers.globallayermaskinfo.globallayermaskinfo",
+        "public_symbol:aspose_psd_foss.layers.layermaskdata.layermaskdata",
+        "public_symbol:aspose_psd_foss.layers.layerrecordreader.layerrecordreader",
+        "public_symbol:aspose_psd_foss.layers.layerrecordwriter.layerrecordwriter"
+      ],
+      "line": 0,
+      "reason": "33 of 77 verified public types are named nowhere in the README; would fill API Reference: public_symbol:aspose_psd_foss.colormodes, public_symbol:aspose_psd_foss.layerandmasksectionreader, public_symbol:aspose_psd_foss.layerandmasksectionwriter, public_symbol:aspose_psd_foss.layers.blendrange.blendrange, public_symbol:aspose_psd_foss.layers.globallayermaskinfo.globallayermaskinfo, public_symbol:aspose_psd_foss.layers.layermaskdata.layermaskdata, public_symbol:aspose_psd_foss.layers.layerrecordreader.layerrecordreader, public_symbol:aspose_psd_foss.layers.layerrecordwriter.layerrecordwriter (+25 more)",
+      "text": ""
+    },
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "link_target:product.enterprise"
+      ],
+      "line": 0,
+      "reason": "no Enterprise Edition paragraph; would be filled from link_target:product.enterprise (SUPPORTED, https://products.aspose.com/psd/python-net/) and the anchor rule of the Scope and Limitations closing paragraph",
+      "text": ""
+    },
+    {
+      "defect": true,
+      "detector": "broken_link",
+      "fact_ids": [
+        "link_target:005"
+      ],
+      "line": 3,
+      "reason": "link to 'License/LICENSE.txt' not found on its line",
+      "text": "[![PyPI version](https://img.shields.io/pypi/v/aspose-psd-foss.svg)](https://pypi.org/project/aspose-psd-foss/)  "
+    },
+    {
+      "defect": true,
+      "detector": "failing_example",
+      "fact_ids": [
+        "example:005"
+      ],
+      "line": 142,
+      "reason": "the example verifier recorded a failure for the example on lines 142-162: example 5: FAILED; NameError; ran against the repository source tree; the package would not build",
+      "text": "with open(input_path, \"rb\") as f:"
+    }
+  ]
+}
