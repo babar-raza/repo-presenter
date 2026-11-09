@@ -207,6 +207,56 @@ def _ranked(unit_words: frozenset[str], candidates: list[Fact]) -> list[Fact]:
     return sorted((row[2] for row in scored[:MAX_RANKED]), key=lambda fact: fact.id)
 
 
+#: Fact kinds a claim's distinctive term can be proven (or refuted) by beyond the symbols and core
+#: facts: what the source implements, its fields and project files. Maintainer README units are
+#: never term evidence (they are the claims, not support for them).
+_TERM_EVIDENCE_KINDS = frozenset(
+    {"implementation", "member_field", "internal_symbol", "project_file", "package"}
+)
+#: Most facts one distinctive name pulls in, and the most the whole term group may carry.
+MAX_TERM_FACTS_PER_NAME = 3
+MAX_TERM_FACTS = 24
+#: A format-named enumeration (``LoadFormat``, ``SaveFormat``, ``ImageFormat``) lists, by its
+#: members, the formats the product reads or writes -- the proof a "reads DOCX, RTF, Markdown"
+#: claim needs, though the claim names no identifier.
+MAX_FORMAT_MEMBERS = 16
+_FORMAT_TOKEN = re.compile(r"[A-Za-z][A-Za-z0-9]{2,}")
+
+
+def _format_members(text: str, enum_members: list[Fact]) -> list[Fact]:
+    """Members of format-named enumerations whose own name (``DOCX``, ``MARKDOWN``, ``PDF``) the
+    unit's text writes as a word, in any case: the enumeration is what makes the format claim
+    checkable, and ``_symbol_matches`` only finds a member the text writes as a dotted path."""
+    tokens = {token.lower() for token in _FORMAT_TOKEN.findall(text)}
+    chosen = [
+        fact
+        for fact in enum_members
+        if "format" in fact.id.lower()
+        and fact.value.rsplit(".", 1)[-1].lower() in tokens
+    ]
+    return sorted(chosen, key=lambda fact: fact.id)[:MAX_FORMAT_MEMBERS]
+
+
+def _term_support(names: Iterable[str], candidates: list[Fact]) -> list[Fact]:
+    """Facts of the evidence kinds whose id or value spells a name the unit writes as code, so a
+    claim about ``Document.light_document_model`` is shown what the source says that attribute
+    does (here: its getter raises ``ValueError``), whatever its word overlap with the unit."""
+    chosen: dict[str, Fact] = {}
+    for name in names:
+        wanted = name.lower()
+        hits = [
+            fact
+            for fact in candidates
+            if wanted in fact.id.lower() or wanted in fact.value.lower()
+        ]
+        hits.sort(key=lambda fact: (len(fact.id), fact.id))
+        for fact in hits[:MAX_TERM_FACTS_PER_NAME]:
+            chosen.setdefault(fact.id, fact)
+        if len(chosen) >= MAX_TERM_FACTS:
+            break
+    return sorted(chosen.values(), key=lambda fact: fact.id)[:MAX_TERM_FACTS]
+
+
 def unit_facts(
     document: FactsDocument, text: str, *, sections: Iterable[str]
 ) -> list[dict[str, str]]:
@@ -219,6 +269,10 @@ def unit_facts(
     symbols = _symbol_matches(
         identifiers(text),
         [fact for fact in facts if fact.kind in {"public_symbol", "enum_member"}],
+    )
+    enum_members = [fact for fact in facts if fact.kind == "enum_member"]
+    support = _format_members(text, enum_members) + _term_support(
+        identifiers(text), [fact for fact in facts if fact.kind in _TERM_EVIDENCE_KINDS]
     )
     ranked = _ranked(
         unit_words,
@@ -242,7 +296,9 @@ def unit_facts(
     records: list[dict[str, str]] = []
     seen: set[str] = set()
     size = 2
-    for group in (core, ranked, symbols, examples, links):
+    # ``support`` is last: it only spends budget the groups above left over, so adding it can never
+    # displace a fact the reviewer was already shown.
+    for group in (core, ranked, symbols, examples, links, support):
         for fact in group:
             if fact.id in seen:
                 continue
