@@ -71,6 +71,7 @@ def test_a_pinned_version_with_no_published_version_fact_is_reported_not_guessed
     assert result.edits == ()
     (finding,) = result.findings
     assert "26.6.0" in finding.text and PUBLISHED_VERSION_FACT_ID in finding.reason
+    assert finding.report_only_reason == "NO_EVIDENCE_OF_ABSENCE"
 
 
 # --- the "not published" shape ---------------------------------------------------------------------
@@ -110,6 +111,23 @@ def test_a_not_published_claim_with_no_published_version_fact_is_reported_not_gu
     assert result.edits == ()
     (finding,) = result.findings
     assert "not published" in finding.reason and PUBLISHED_VERSION_FACT_ID in finding.reason
+    assert finding.report_only_reason == "NO_EVIDENCE_OF_ABSENCE"
+
+
+def test_a_not_published_claim_with_no_fact_is_not_a_blocking_lane_l_defect(
+    make_context: Any, make_facts: Any
+) -> None:
+    """Aspose.BarCode FOSS for Python: the README correctly says the package is not published,
+    PyPI genuinely has no release under that name, and there is no fact either way -- this must
+    not be an ``unrepaired_defect`` that blocks Lane L (``readme.correction.report.is_defect``)."""
+    from repo_presenter.readme.correction.report import is_defect
+
+    ctx = make_context(
+        "The package is not published to PyPI.\n",
+        make_facts(drop=(PUBLISHED_VERSION_FACT_ID,)),
+    )
+    (finding,) = stale_package_version(ctx).findings
+    assert is_defect(finding) is False
 
 
 def test_a_fence_is_never_scanned_for_either_shape(

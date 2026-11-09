@@ -44,8 +44,8 @@ PINS: dict[str, tuple[tuple[str, ...], str]] = {
         "831000cf4390bb73d51bcff348a6c914c23c80e1a3fc414e386d0fc84d85adb5",
     ),
     "stale_package_version.py": (
-        ("3",),
-        "cb4c5f63713997d2c3557fbb2816167acebd87de811231f68ddb9a29fc8af242",
+        ("4",),
+        "67dbec29314cb666e285cb9efe64a9129fc7256baabf178435fd01cbe028ed2c",
     ),
     "stale_type_count.py": (
         ("1",),

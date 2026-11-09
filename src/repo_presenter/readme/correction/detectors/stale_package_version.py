@@ -17,6 +17,14 @@ on record (SUPPORTED) nothing is corrected, only reported -- the same "never gue
 against verified evidence" discipline every detector in this package follows (see
 ``enterprise_edition.enterprise_edition_naming``).
 
+Without that fact, a "pinned version" or "not published" claim is reported with
+``report_only_reason="NO_EVIDENCE_OF_ABSENCE"`` (not a blocking defect): no fact confirms OR
+refutes it, so it may already be true (Aspose.BarCode FOSS for Python: the README correctly says
+the package is not published, PyPI genuinely has no release under that name, and the detector has
+no fact either way). ``format_overclaim`` reports the same shape the same way. A fact that exists
+and contradicts the claim always becomes an edit, never a finding, so every finding this detector
+raises is this no-evidence shape.
+
 Each match is a one-line, short span (``FALSE_CLAIM_FIX``): the pinned-version rule replaces only
 the version number's own characters, the publication rule replaces only the "is not ... published
 to <registry>" fragment it matched, in each case leaving the surrounding sentence exactly as the
@@ -86,6 +94,7 @@ def stale_package_version(ctx: Context) -> DetectorResult:
                         claimed,
                         f"the README pins version {claimed!r}; no "
                         f"{PUBLISHED_VERSION_FACT_ID} fact is on record to check it against",
+                        report_only_reason="NO_EVIDENCE_OF_ABSENCE",
                     )
                 )
                 continue
@@ -146,6 +155,7 @@ def stale_package_version(ctx: Context) -> DetectorResult:
                         "the README says the package is not published to "
                         f"{registry}; no {PUBLISHED_VERSION_FACT_ID} fact is on record to check "
                         "it against",
+                        report_only_reason="NO_EVIDENCE_OF_ABSENCE",
                     )
                 )
                 continue
