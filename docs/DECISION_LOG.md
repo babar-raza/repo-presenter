@@ -4291,3 +4291,34 @@ and an independent re-run, and nothing new was added to the architecture:
 Operational notes: Lane L can run locally only for python and .NET (no JDK/g++/Go/Node/Rust here);
 other ecosystems need the hosted toolchain jobs. Generation costs about 23k tokens per call (above
 the planned 14k), still far inside the envelope.
+
+## 2026-11-10: owner principles adopted -- explore first, Pareto, banner READMEs prove a solution exists;
+## Pareto exploration and the three fixes it ranked; supervisor ruling on the BC-07 line budget
+
+**Principles (owner, 2026-11-10), now AGENTS.md operating rule 8.** Explore before deciding; work the
+vital few. A live README carrying the aspose.org product banner (`products.aspose.org/media/<family>/
+<platform>/banner-readme.png`) was produced by aspose.org's own refresh, so a good README for that
+product provably exists; a lane or reviewer rejecting such a product means our system has not yet
+found the same-or-better solution -- a defect to close, never an outcome to record.
+
+**Exploration (read-only agent, real data).** 31 of 36 live READMEs carry the banner (no banner: Font
+Python, PSD .NET, Slides .NET, Words .NET; GIS .NET has no README). All 9 Lane R repositories still
+NEEDS_REPAIR are banner repositories. Pareto of the 31 blocking-signature instances: (1) BC-17
+residual content loss 26% (8 repos); (2) type-count / absent-type mismatch 26% (7 repos); (3) BC-07
+visible-line budget 16% (5 repos): top three = 68%. Findings that shaped the fixes: BC-17 counts per
+holding unit while `choose_units` restored one carrier per item; the published READMEs themselves
+print stale type counts (Go "14 public types" vs 192 SUPPORTED public symbols), so the target is the
+corrected count; the published READMEs are 545-598 lines, above our fixed 300-visible-line budget.
+
+**Supervisor ruling -- BC-07 line budget.** Under R2 (the published README is the minimum floor, the
+top authority) a floor must be satisfiable: the BC-07 *line* budget becomes max(300, the published
+README's own visible lines at the sealed revision) for Lane R when a benchmark README is present,
+300 otherwise. Only the line budget relaxes; every other BC-07 sub-rule is unchanged. Recorded here
+because it relaxes a validator; it follows from R2, it does not override it.
+
+**Also landed this block:** Email Python sealed (Lane R, ACCEPTED) after the S4 remedies, badge carry
+and cascade restore; Words .NET Lane L sealed (real Enterprise Edition naming edit, review ACCEPT);
+Imaging .NET and Cells .NET repaired seals published (zero provider calls); TC-019b/019c/028a/029a
+accepted by `gatecli review`. Hosted `present.yml` dispatched from this branch for the ecosystems
+that cannot run locally (Go, Java, C++): the workflow file exists on `main`, so dispatch with
+`--ref <branch>` runs the branch's version.
