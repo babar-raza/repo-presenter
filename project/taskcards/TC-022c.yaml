@@ -105,13 +105,18 @@ requires:
 network: false
 negative_control:
   mutate: |-
-    python -X utf8 -c "import pathlib; p = pathlib.Path('src/repo_presenter/acceptance/responsibility.py'); t = p.read_text(encoding='utf-8'); q = chr(34); old = q + 'D14' + q + ': (' + q + 'M8' + q; new = q + 'D14' + q + ': (' + q + 'M6' + q; t2 = t.replace(old, new); p.write_text(t2, encoding='utf-8')"
+    python -X utf8 -c "import pathlib; p = pathlib.Path('src/repo_presenter/acceptance/responsibility.py'); t = p.read_text(encoding='utf-8'); q = chr(34); old = q + 'D14' + q + ': (' + q + 'M6' + q; new = q + 'D14' + q + ': (' + q + 'M8' + q; t2 = t.replace(old, new); p.write_text(t2, encoding='utf-8')"
   rationale: >
-    Reassigns D14 (promotional/generic prose) from its real owning mechanism M8 to M6, which must
-    make the test asserting D14's exact table entry fail. If D14 is not represented with that
-    exact literal in your module (your own formatting differs), replace this mutation in the same
-    commit with one that edits whichever literal your file actually uses for D14's tuple entry, so
-    the falsifier still targets a real table entry rather than doing nothing observable.
+    2026-11-09 correction (TC-026, the M8 rung-(c) fallback): D14's real owning mechanism was
+    reassigned from M8 to M6 that day, for real, documented reasons (R26) -- the ORIGINAL version
+    of this mutation (M8 -> M6) therefore no longer changes anything real, since the file already
+    reads M6; it would have silently stopped matching after that legitimate change, exactly the
+    "textual mutation that silently stops matching after a refactor" failure ops/SUPERVISOR.md
+    warns against. This version reverts the CURRENT real M6 back to the pre-rung-(c) M8, which
+    must make the test asserting D14's exact table entry fail. If D14 is not represented with
+    that exact literal in your module (your own formatting differs), replace this mutation in the
+    same commit with one that edits whichever literal your file actually uses for D14's tuple
+    entry, so the falsifier still targets a real table entry rather than doing nothing observable.
 evidence:
   - src/repo_presenter/acceptance/responsibility.py
   - tests/acceptance/test_responsibility.py
