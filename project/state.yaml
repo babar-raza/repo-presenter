@@ -169,7 +169,7 @@ owner_review_status:
 
 release_gate_dashboard:
   generated_by: gatecli
-  generated_at: '2026-11-09T18:22:52Z'
+  generated_at: '2026-11-09T18:26:02Z'
   note: Tool-generated from gateverify.rebuild_state() -- never hand-edit this block.
     Historical current_gate/active_work_item below are preserved bootstrap-era narrative,
     not this cursor; this block is the real, evidence-derived release-gate status
@@ -226,11 +226,11 @@ release_gate_dashboard:
     receipt: GATE1_QUALITY/TC-006/receipt.json
   - id: TC-007
     gate: GATE5_DELIVERY_PROGRAM
-    status: ACCEPTED
+    status: AWAITING_PREREQUISITE
     attempt: 0
-    blocker: null
-    commit: e55f8be6d8ab3102353a860c03245639406b8a32
-    receipt: GATE5_DELIVERY_PROGRAM/TC-007/receipt.json
+    blocker:
+      class: AWAITING_PREREQUISITE
+      summary: depends on TC-013, not yet accepted
   - id: TC-008
     gate: GATE1_QUALITY
     status: ACCEPTED
@@ -261,15 +261,11 @@ release_gate_dashboard:
     receipt: GATE2_INTEGRATIONS/TC-009a/receipt.json
   - id: TC-009b
     gate: GATE2_INTEGRATIONS
-    status: AWAITING_OWNER_DECISION
+    status: AWAITING_PREREQUISITE
     attempt: 0
     blocker:
-      class: AWAITING_OWNER_DECISION
-      summary: 'checks failed: python ops/checks/owner_decision_record.py docs/DECISION_LOG.md
-        PUBLISHING_PILOT_AUTHORIZED:; python ops/checks/execution_proof.py evidence/build/GATE2_INTEGRATIONS/TC-009b/pilot_proof.json
-        cells_net_pr_opened=True cells_net_content_hash_matches=True threed_python_mode_change_authorized=True
-        threed_python_pr_opened=True threed_python_content_hash_matches=True; negative-control
-        patch did not apply'
+      class: AWAITING_PREREQUISITE
+      summary: depends on TC-007, not yet accepted
   - id: TC-010
     gate: GATE2_INTEGRATIONS
     status: ACCEPTED
@@ -288,9 +284,11 @@ release_gate_dashboard:
         negative-control patch did not apply'
   - id: TC-011
     gate: GATE5_DELIVERY_PROGRAM
-    status: READY
+    status: AWAITING_PREREQUISITE
     attempt: 0
-    blocker: null
+    blocker:
+      class: AWAITING_PREREQUISITE
+      summary: depends on TC-007, TC-013, TC-024, not yet accepted
   - id: TC-012
     gate: GATE4_PRODUCTION
     status: AWAITING_PREREQUISITE
@@ -312,21 +310,21 @@ release_gate_dashboard:
     attempt: 0
     blocker:
       class: AWAITING_PREREQUISITE
-      summary: depends on TC-012, not yet accepted
+      summary: depends on TC-012, TC-007, not yet accepted
   - id: TC-013
     gate: GATE5_DELIVERY_PROGRAM
-    status: ACCEPTED
+    status: STALE_RECEIPT
     attempt: 0
-    blocker: null
-    commit: ad2d8c744b49fa366d3d273fa63bc7a958c13fd4
-    receipt: GATE5_DELIVERY_PROGRAM/TC-013/receipt.json
+    blocker:
+      class: STALE_RECEIPT
+      summary: card definition changed since this receipt was generated -- re-verify
   - id: TC-014
     gate: GATE5_DELIVERY_PROGRAM
-    status: ACCEPTED
+    status: AWAITING_PREREQUISITE
     attempt: 0
-    blocker: null
-    commit: f90d1baf787a57434e68af4de83863ff4e9e8697
-    receipt: GATE5_DELIVERY_PROGRAM/TC-014/receipt.json
+    blocker:
+      class: AWAITING_PREREQUISITE
+      summary: depends on TC-013, not yet accepted
   - id: TC-015
     gate: GATE5_DELIVERY_PROGRAM
     status: ACCEPTED
@@ -371,9 +369,11 @@ release_gate_dashboard:
     receipt: GATE5_DELIVERY_PROGRAM/TC-019a/receipt.json
   - id: TC-019b
     gate: GATE5_DELIVERY_PROGRAM
-    status: READY
+    status: AWAITING_PREREQUISITE
     attempt: 0
-    blocker: null
+    blocker:
+      class: AWAITING_PREREQUISITE
+      summary: depends on TC-024, not yet accepted
   - id: TC-020
     gate: GATE5_DELIVERY_PROGRAM
     status: ACCEPTED
@@ -425,11 +425,11 @@ release_gate_dashboard:
     receipt: GATE5_DELIVERY_PROGRAM/TC-023b/receipt.json
   - id: TC-024
     gate: GATE5_DELIVERY_PROGRAM
-    status: ACCEPTED
+    status: AWAITING_PREREQUISITE
     attempt: 0
-    blocker: null
-    commit: 147edabdcff0262dd37bb946e43f961a8782c7e7
-    receipt: GATE5_DELIVERY_PROGRAM/TC-024/receipt.json
+    blocker:
+      class: AWAITING_PREREQUISITE
+      summary: depends on TC-013, not yet accepted
   - id: TC-025
     gate: GATE5_DELIVERY_PROGRAM
     status: ACCEPTED
@@ -446,15 +446,15 @@ release_gate_dashboard:
     receipt: GATE5_DELIVERY_PROGRAM/TC-026/receipt.json
   - id: TC-029a
     gate: GATE5_DELIVERY_PROGRAM
-    status: READY
+    status: AWAITING_PREREQUISITE
     attempt: 0
-    blocker: null
+    blocker:
+      class: AWAITING_PREREQUISITE
+      summary: depends on TC-013, not yet accepted
   ready:
   - TC-005
   - TC-008a
-  - TC-011
-  - TC-019b
-  - TC-029a
+  - TC-013
 current_gate:
   id: P1_PORTFOLIO_SCALE
   status: ACCEPTED
