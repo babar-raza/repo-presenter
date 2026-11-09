@@ -4352,3 +4352,23 @@ Real hosted `present.yml` runs from this branch (the workflow exists on `main`, 
   (Slides Python), (6) 11 `unsupported_claim` review findings on Words Python (claims also present in
   the aspose.org README; the review packet budget may be hiding the support facts). (4)-(6) are being
   fixed or explained by agents; none is closed by weakening a check.
+
+## 2026-11-10: third Pareto pass -- hosted artifacts are the reproduction source; GIS .NET is BLOCKED_EXTERNAL
+
+- **Method:** every hosted `present` run uploads its cascade directory (`present-<ecosystem>-<run id>` artifact:
+  README.coherent.md, plan, dispositions, validation, repairs). `gh run download <id> -n present-<eco>-<id>`
+  gives the exact failed candidate, so a hosted failure is diagnosed and its fix proved offline with the
+  deterministic validators, instead of rerunning a 60-90 minute job per guess.
+- **Fixed this pass (each by the owning mechanism, no check weakened):** a maintainers' API table whose rows
+  name types the public surface lacks is kept with those rows removed (BC-14 rule i; Cells Rust passes);
+  a kept table prints a raw HTML element name in a code span and BC-06/BC-07 ignore inline code spans (HTML
+  Python); BC-05/BC-17/parity no longer owe the registry install command of a package whose registry
+  ownership is unconfirmed, because BC-02 forbids printing it (3D Python: PyPI's project URL points at
+  another repository); S5 planning settles a link assigned to a section the plan itself excludes instead of
+  rejecting twice (3D TypeScript).
+- **GIS .NET (no README):** exploration found the missing README is a small blocker (four code tweaks); the
+  real one is that the product does not build (`F-SOURCE-INCOMPLETE-DOES-NOT-BUILD`, 381 compile errors,
+  independently reproduced). Writing a README for it would invent install steps and examples, which the
+  non-fabrication rule forbids. Ruling: `BLOCKED_EXTERNAL` under R24 with a 7-day re-check; no generation
+  budget is spent on it until the upstream build is fixed. The code tweaks wait for a building product
+  with no README.
