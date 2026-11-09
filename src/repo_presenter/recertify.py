@@ -288,10 +288,6 @@ def _rerun_lane_r(
             break
         dispositions, changes = restore_lost_units(dispositions, document, unit_ids, holdable, included)
         if not changes:
-            dispositions, changes = restore_lost_units(
-                dispositions, document, unit_ids, holdable, included, include_api_tables=True
-            )
-        if not changes:
             break
         restored.extend(changes)
         failing, details, artifacts = _evaluate_lane_r(bundle, entry, source, dispositions)

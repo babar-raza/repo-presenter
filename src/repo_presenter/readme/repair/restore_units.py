@@ -28,6 +28,7 @@ from typing import Any
 from repo_presenter.core.facts import FactsDocument
 from repo_presenter.readme.composition.placement import ATTRIBUTED, PLACED
 from repo_presenter.readme.reconciliation.destinations import nearest_holdable
+from repo_presenter.readme.validation.links import unsafe_html_failures
 
 __all__ = ["choose_units", "failing_unit_ids", "restore_lost_units"]
 
@@ -69,11 +70,13 @@ def choose_units(
     """The fewest units whose restoration clears what BC-05 / BC-17 name, in first-seen order.
 
     BC-05 names a unit that must be kept (its replacement does not carry its substance): every one
-    is chosen. BC-17 names, per LOST ITEM, every unit that holds it, and one carrier is enough -
-    so an item a chosen (or already restored) unit holds is covered, and each remaining item takes
-    the carrier that covers the most uncovered items, shortest text first. Restoring every holder
+    is chosen. BC-17 names, per LOST ITEM, every unit that holds it. On the first pass one carrier
+    is enough - an item a chosen unit holds is covered, and each remaining item takes the carrier
+    that covers the most uncovered items, shortest text first - because restoring every holder
     prints the same identifiers several times and pushes the README over BC-07's visible-line
-    budget (Cells Go 312 of 300 lines, Java 313, measured after restoring every named unit)."""
+    budget (Cells Go 312 of 300 lines, Java 313, measured after restoring every named unit). An
+    item that is STILL named after one of its holders was restored (``already``) was not cleared by
+    that carrier, so it escalates: every remaining holder of it is chosen."""
     mandatory = failing_unit_ids(details, checks=("BC-05",))
     holders: dict[tuple[str, str], list[str]] = {}
     for detail in details:
@@ -82,9 +85,19 @@ def choose_units(
         if match is None:
             continue
         holders.setdefault((match["category"], match["item"]), []).append(match["unit"])
-    covered = set(mandatory) | set(already)
+    restored = set(already)
+    covered = set(mandatory) | restored
     texts = {fact.id: len(fact.value) for fact in facts.by_kind("inherited_unit")}
     chosen = list(mandatory)
+    # An item still named in ``details`` after one of its holders was restored was NOT cleared by
+    # that carrier (BC-17 counts per holding unit, and the restored unit's printed text may not
+    # carry the very link/identifier the published README prints at every holder: measured on
+    # Cells Rust, `samples/` printed four times live, once in the seal). One carrier was enough
+    # for the first pass; an item that survives it escalates to every remaining holder.
+    for item, units in holders.items():
+        if restored.intersection(units):
+            chosen.extend(unit for unit in dict.fromkeys(units) if unit not in restored)
+    covered = covered | set(chosen)
     pending = {item: units for item, units in holders.items() if not covered.intersection(units)}
     while pending:
         tally: dict[str, int] = {}
@@ -105,7 +118,7 @@ def restore_lost_units(
     holdable: Collection[str],
     included: Collection[str] | None = None,
     *,
-    include_api_tables: bool = False,
+    include_api_tables: bool = False,  # retained for callers; maintainers' API tables are never restored
 ) -> tuple[dict[str, Any], list[dict[str, str]]]:
     """``(new dispositions, changes)``. ``changes`` records, per re-dispositioned unit, its
     previous and new disposition and destination, so the caller can show exactly what moved.
@@ -145,13 +158,26 @@ def restore_lost_units(
         destination = entry.get("destination_section")
         if destination not in holdable_set:
             destination = nearest_holdable(unit_id, attributes.get("section"), holdable_set)
+        if destination == "api_reference" and unit_id.rsplit(".", 1)[-1] != "table":
+            # api_reference prints the Core API table and its hubs from the verified surface; a
+            # kept paragraph/list/code block "placed" there is never rendered (BC-05, measured on
+            # Cells Cpp: 041.paragraph once the escalation restored its holders), so it is re-homed.
+            destination = nearest_holdable(
+                unit_id, attributes.get("section"), holdable_set - {"api_reference"}
+            )
         if destination is None:
             continue
-        if (
-            destination == "api_reference"
-            and unit_id.rsplit(".", 1)[-1] == "table"
-            and not include_api_tables
-        ):
+        if destination == "api_reference" and unit_id.rsplit(".", 1)[-1] == "table":
+            # Never restored (``include_api_tables`` is retained only so existing callers keep
+            # working): the validator counts every first-cell row of the README against the
+            # verified public types, so a maintainers' class table printed beside the rendered
+            # Core API table fails BC-07 even when every row is also in the rendered table
+            # (measured: TypeScript 139 rows/31 types, Cpp 357/195, Java 215/183, Note 72/37,
+            # HTML 504/303 -- each caused by this restore, none present in the stored seals).
+            continue
+        if unsafe_html_failures(unit.value):
+            # Raw HTML BC-06 forbids outside a fence (<base>, <meta>, <iframe>, ...) would be
+            # printed as written; restoring it trades BC-17 for BC-06 (measured on HTML Python).
             continue
         supported = bool(cited) and all(fact.polarity == "SUPPORTED" for fact in cited)
         disposition = "VERIFIED_PRESERVE" if supported else ATTRIBUTED

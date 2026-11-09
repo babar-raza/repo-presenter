@@ -188,18 +188,47 @@ def test_a_corrected_unit_is_never_reverted_to_its_original_text() -> None:
     assert changes == [] and new == corrected
 
 
-def test_a_maintainers_api_table_is_deferred_until_asked_for() -> None:
+def test_a_maintainers_api_table_is_never_restored_even_when_asked() -> None:
     """Printing the maintainers' class table beside the rendered Core API table fails BC-07
-    ("lists 139 rows for 31 verified public types", measured on this seal), so it is restored only
-    when the caller asks for it after everything else has been tried."""
+    ("lists 139 rows for 31 verified public types", measured on this seal); the validator counts
+    every first-cell row, so even a table whose rows are all in the rendered table breaks it. The
+    old `include_api_tables=True` retry caused the BC-07 failures on TypeScript, Cpp, Java, Note
+    and HTML (none present in the stored seals), so the flag no longer restores a table."""
     ids = ["inherited_unit:037.table"]
     deferred, none = restore_lost_units(_ts_dispositions(), _ts_facts(), ids, TS_HOLDABLE, TS_HOLDABLE)
     assert none == [] and deferred["dispositions"][1]["disposition"] == "DEFER_UNRESOLVED"
     asked, changes = restore_lost_units(
         _ts_dispositions(), _ts_facts(), ids, TS_HOLDABLE, TS_HOLDABLE, include_api_tables=True
     )
-    assert [c["now"] for c in changes] == ["PRESERVE_ATTRIBUTED -> api_reference"]
-    assert asked["dispositions"][1]["destination_section"] == "api_reference"
+    assert changes == [] and asked["dispositions"][1]["disposition"] == "DEFER_UNRESOLVED"
+
+
+def test_a_unit_holding_raw_html_bc06_forbids_is_not_restored() -> None:
+    """HTML Python: restoring the maintainers' units put `<base`, `<embed`, `<iframe`, `<meta`
+    outside a fence into the README (BC-06) -- a trade of BC-17 for BC-06, so such a unit stays."""
+    dispositions = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:041.paragraph", "disposition": "DEFER_UNRESOLVED",
+                "destination_section": None, "fact_ids": ["link_target:019"], "rationale": "x",
+            },
+        ]
+    }
+    facts = FactsDocument(
+        "r/x", "0" * 40,
+        (
+            _fact(
+                "inherited_unit:041.paragraph", "inherited_unit",
+                'See the demo <iframe src="https://example.org/embed"></iframe> for details.',
+                section="Demo",
+            ),
+            _fact("link_target:019", "link_target", "x"),
+        ),
+    )
+    new, changes = restore_lost_units(
+        dispositions, facts, ["inherited_unit:041.paragraph"], HOLDABLE, INCLUDED
+    )
+    assert changes == []
 
 
 def test_failing_unit_ids_reads_bc04_only_when_asked_to() -> None:
@@ -270,3 +299,63 @@ def test_choose_units_reads_the_h2_category_whose_name_contains_a_digit() -> Non
     facts = FactsDocument("r/x", "0" * 40, (_fact("inherited_unit:073.list", "inherited_unit", "- a"),))
     details = [_holds("inherited_unit:073.list", "h2", "Constraints")]
     assert choose_units(details, facts) == ["inherited_unit:073.list"]
+
+
+def test_an_item_still_lost_after_its_carrier_was_restored_escalates_to_every_other_holder() -> None:
+    """Cells Rust, verbatim shape from recertify after the first restore pass: the published README
+    prints `samples/README.md` in units 028, 046, 072, 077 and 079 (BC-17 counts per holding unit),
+    one carrier (028) was restored and the link is STILL named lost, so the carrier did not clear it.
+    The first pass takes one carrier; the next pass takes the four remaining holders."""
+    texts = {"028": 300, "046": 900, "072": 120, "077": 700, "079": 400}
+    facts = FactsDocument(
+        "r/x", "0" * 40,
+        tuple(_fact(f"inherited_unit:{n}.paragraph", "inherited_unit", "x" * size) for n, size in texts.items()),
+    )
+    details = [_holds(f"inherited_unit:{n}.paragraph", "links", "samples/README.md") for n in texts]
+    first = choose_units(details, facts)
+    assert first == ["inherited_unit:072.paragraph"]  # shortest holder, one carrier only
+    second = choose_units(details, facts, already=first)
+    assert second == [f"inherited_unit:{n}.paragraph" for n in ("028", "046", "077", "079")]
+    # once every holder is restored nothing is left to choose
+    assert choose_units(details, facts, already=first + second) == []
+
+
+def test_escalation_leaves_an_item_whose_holders_were_never_restored_to_the_one_carrier_rule() -> None:
+    facts = FactsDocument(
+        "r/x", "0" * 40,
+        (
+            _fact("inherited_unit:010.list", "inherited_unit", "x" * 400),
+            _fact("inherited_unit:031.table", "inherited_unit", "x" * 900),
+            _fact("inherited_unit:042.list", "inherited_unit", "x" * 120),
+        ),
+    )
+    details = [
+        _holds("inherited_unit:010.list", "api_identifiers", "toCsv()"),
+        _holds("inherited_unit:031.table", "api_identifiers", "toCsv()"),
+        _holds("inherited_unit:042.list", "api_identifiers", "load()"),
+    ]
+    # an unrelated restored unit (not a holder of either item) changes nothing about the rule
+    assert choose_units(details, facts, already=["inherited_unit:999.list"]) == [
+        "inherited_unit:042.list", "inherited_unit:010.list",
+    ]
+
+
+def test_a_kept_paragraph_is_never_homed_in_api_reference_where_nothing_renders_it() -> None:
+    """Cells Cpp: 'BC-05: inherited_unit:041.paragraph was placed in api_reference but the candidate
+    does not render it there' -- api_reference prints the verified Core API table, not prose."""
+    facts = _facts()
+    dispositions = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:019.paragraph", "disposition": "SUPERSEDE_REDUNDANT",
+                "destination_section": "api_reference", "fact_ids": ["link_target:019"],
+                "rationale": "x",
+            }
+        ]
+    }
+    new, changes = restore_lost_units(
+        dispositions, facts, ["inherited_unit:019.paragraph"],
+        ("api_reference", "quick_start", "development_testing"),
+        ("api_reference", "quick_start", "development_testing"),
+    )
+    assert changes and new["dispositions"][0]["destination_section"] != "api_reference"
