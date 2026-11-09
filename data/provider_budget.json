@@ -58,14 +58,19 @@
       "tokens_spent": 49161.0
     },
     {
-      "calls_cap": 300,
-      "calls_spent": 3.0,
-      "id": "008-lane-r-pilot-3d-python",
+      "calls_cap": 800,
+      "calls_spent": 242.0,
+      "id": "008-lane-r-batch1-python",
       "repositories": [
-        "aspose-3d-foss/Aspose.3D-FOSS-for-Python"
+        "aspose-3d-foss/Aspose.3D-FOSS-for-Python",
+        "aspose-email-foss/Aspose.Email-FOSS-for-Python",
+        "aspose-font-foss/Aspose.Font-FOSS-for-Python",
+        "aspose-page-foss/Aspose.Page-FOSS-for-Python",
+        "aspose-tex-foss/Aspose.TeX-FOSS-for-Python",
+        "aspose-psd-foss/Aspose.PSD-FOSS-for-Python"
       ],
-      "tokens_cap": 6000000,
-      "tokens_spent": 83709.0
+      "tokens_cap": 12000000,
+      "tokens_spent": 5279483.0
     }
   ],
   "meaning": "The total provider-call envelope for the whole 2026-11-07 delivery program (docs/DELIVERY_PLAN_2026-11-07.md), read by the budget gate (TC-015, src/repo_presenter/core/llm/budget.py) before any non-replay provider call. Zero-call activity classes (recertification, obligations/rule checks, probes, the example verifier, ledgers, funnel, census, item-level restore where proved zero-call) are never charged against this envelope and need no entry here to proceed. A call outside an open batch, or past either cap, raises instead of calling the provider -- see docs/DELIVERY_PLAN_2026-11-07.md section 7 for the inference-class table this derives from. Only the owner raises total_calls_cap or total_tokens_cap, or changes batch_size, per_batch_cap_multiplier or stop_rule_multiplier; the supervisor opens and records batches within them.",
@@ -74,8 +79,8 @@
   "ruling": "R25, docs/CONSOLIDATED_GOALS_2026-11-06.md Part E (owner, 2026-11-07, re-asked after R23)",
   "schema_version": 1,
   "spent": {
-    "calls": 843.0,
-    "tokens": 348494.0
+    "calls": 1082.0,
+    "tokens": 5544268.0
   },
   "stop_rule_cost_per_sealed_candidate_multiplier": 2.0,
   "total_calls_cap": 9000,
