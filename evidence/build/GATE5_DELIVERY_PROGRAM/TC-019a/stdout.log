@@ -1,0 +1,68 @@
+
+===== CLEAN RUN 1 =====
+$ python -m pytest tests/readme/repair/test_zero_call_restore.py -q
+--- stdout ---
+..........                                                               [100%]
+10 passed in 0.57s
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python -m pytest tests/readme/repair/test_zero_call_restore.py -q
+--- stdout ---
+..........                                                               [100%]
+10 passed in 1.62s
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M src/repo_presenter/readme/repair/zero_call_restore.py
+$ python -m pytest tests/readme/repair/test_zero_call_restore.py -q
+--- stdout ---
+F..FF.....                                                               [100%]
+================================== FAILURES ===================================
+______________ test_html_real_count_restored_in_both_real_lines _______________
+
+    def test_html_real_count_restored_in_both_real_lines() -> None:
+        """Both real 243-vs-303 lines, concatenated exactly as they sit in the real README (far
+        apart in the real file; joined here only to prove one call fixes every occurrence)."""
+        facts = _facts("aspose-html-foss/Aspose.HTML-FOSS-for-Python", classes=302, enums=1)
+        assert type_counts(facts) == (303, 302)
+        before = _HTML_LINE_213_BEFORE + "\n\n" + _HTML_LINE_566_BEFORE
+        expected = _HTML_LINE_213_AFTER + "\n\n" + _HTML_LINE_566_AFTER
+>       assert restore_stated_count(before, facts) == expected
+E       AssertionError: assert None == 'The primary entry point is `HTMLDocument`, which parses HTML into a `Document` tree built from `Node`/`Element` and t... reference](https://reference.aspose.org/html/python/)** — the complete, browsable reference for all 303 public types.'
+E        +  where None = restore_stated_count('The primary entry point is `HTMLDocument`, which parses HTML into a `Document` tree built from `Node`/`Element` and t... reference](https://reference.aspose.org/html/python/)** — the complete, browsable reference for all 243 public types.', FactsDocument(repository='aspose-html-foss/Aspose.HTML-FOSS-for-Python', source_revision='deadbeef', facts=(Fact(id='p...lder.py', detail=None),), polarity='SUPPORTED', confidence=1.0, attributes={'symbol_kind': 'enum'})), schema_version=1))
+
+tests\readme\repair\test_zero_call_restore.py:91: AssertionError
+__________ test_words_real_count_restored_across_the_real_line_wrap ___________
+
+    def test_words_real_count_restored_across_the_real_line_wrap() -> None:
+        """The real sentence wraps "146" onto one line and "public types" onto the next; the fix
+        must still fire across that real line break, replacing only the digits, nothing else."""
+        facts = _facts("aspose-words-foss/Aspose.Words-FOSS-for-Python", classes=175, enums=23)
+        assert type_counts(facts) == (198, 175)
+>       assert restore_stated_count(_WORDS_326_330_BEFORE, facts) == _WORDS_326_330_AFTER
+E       AssertionError: assert None == '`Document` is the primary entry point: construct it from a file path, then call `save()` with a\n`SaveFormat` constan...rs, the DOCX/Markdown/PDF writers, and the\nshared Light Document Model, summarized in the module-grouped table below.'
+E        +  where None = restore_stated_count('`Document` is the primary entry point: construct it from a file path, then call `save()` with a\n`SaveFormat` constan...rs, the DOCX/Markdown/PDF writers, and the\nshared Light Document Model, summarized in the module-grouped table below.', FactsDocument(repository='aspose-words-foss/Aspose.Words-FOSS-for-Python', source_revision='deadbeef', facts=(Fact(id=...lder.py', detail=None),), polarity='SUPPORTED', confidence=1.0, attributes={'symbol_kind': 'enum'})), schema_version=1))
+
+tests\readme\repair\test_zero_call_restore.py:143: AssertionError
+____________________ test_words_real_second_count_restored ____________________
+
+    def test_words_real_second_count_restored() -> None:
+        facts = _facts("aspose-words-foss/Aspose.Words-FOSS-for-Python", classes=175, enums=23)
+>       assert restore_stated_count(_WORDS_LINE_607_BEFORE, facts) == _WORDS_LINE_607_AFTER
+E       AssertionError: assert None == '- **[Full API reference](https://reference.aspose.org/words/python/)** — the complete, browsable reference for all 198 public types (the [API reference](#api-reference) section above covers the essentials).'
+E        +  where None = restore_stated_count('- **[Full API reference](https://reference.aspose.org/words/python/)** — the complete, browsable reference for all 146 public types (the [API reference](#api-reference) section above covers the essentials).', FactsDocument(repository='aspose-words-foss/Aspose.Words-FOSS-for-Python', source_revision='deadbeef', facts=(Fact(id=...lder.py', detail=None),), polarity='SUPPORTED', confidence=1.0, attributes={'symbol_kind': 'enum'})), schema_version=1))
+
+tests\readme\repair\test_zero_call_restore.py:148: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/readme/repair/test_zero_call_restore.py::test_html_real_count_restored_in_both_real_lines
+FAILED tests/readme/repair/test_zero_call_restore.py::test_words_real_count_restored_across_the_real_line_wrap
+FAILED tests/readme/repair/test_zero_call_restore.py::test_words_real_second_count_restored
+3 failed, 7 passed in 0.43s
+
+--- stderr ---
+
