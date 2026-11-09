@@ -3,7 +3,7 @@
 $ python -m pytest tests/readme/review/test_prose_judge_live.py tests/readme/review/test_prose_judge.py tests/core/llm/test_jobs.py tests/core/llm/test_budget.py -q
 --- stdout ---
 ..............................................................           [100%]
-62 passed in 1.13s
+62 passed in 1.02s
 
 --- stderr ---
 
@@ -12,7 +12,7 @@ $ python -m pytest tests/readme/review/test_prose_judge_live.py tests/readme/rev
 $ python -m pytest tests/readme/review/test_prose_judge_live.py tests/readme/review/test_prose_judge.py tests/core/llm/test_jobs.py tests/core/llm/test_budget.py -q
 --- stdout ---
 ..............................................................           [100%]
-62 passed in 1.57s
+62 passed in 1.07s
 
 --- stderr ---
 
@@ -24,7 +24,7 @@ $ python -m pytest tests/readme/review/test_prose_judge_live.py tests/readme/rev
 
 =================================== ERRORS ====================================
 ________ ERROR collecting tests/readme/review/test_prose_judge_live.py ________
-ImportError while importing test module 'C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-g7o61ap9\tests\readme\review\test_prose_judge_live.py'.
+ImportError while importing test module 'C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-89_21xd9\tests\readme\review\test_prose_judge_live.py'.
 Hint: make sure your test modules/packages have valid Python names.
 Traceback:
 C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\importlib\__init__.py:88: in import_module
@@ -34,11 +34,11 @@ tests\readme\review\test_prose_judge_live.py:24: in <module>
     from repo_presenter.readme.review import prose_judge_live
 src\repo_presenter\readme\review\prose_judge_live.py:89: in <module>
     from repo_presenter.core.llm.budget import DEFAULT_BUDGET_PATH, _disabled_check_budget, record_spend
-E   ImportError: cannot import name '_disabled_check_budget' from 'repo_presenter.core.llm.budget' (C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-g7o61ap9\src\repo_presenter\core\llm\budget.py)
+E   ImportError: cannot import name '_disabled_check_budget' from 'repo_presenter.core.llm.budget' (C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-89_21xd9\src\repo_presenter\core\llm\budget.py)
 =========================== short test summary info ===========================
 ERROR tests/readme/review/test_prose_judge_live.py
 !!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
-1 error in 0.43s
+1 error in 0.42s
 
 --- stderr ---
 
