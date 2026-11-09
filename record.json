@@ -18,10 +18,10 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "transient",
-    "detail": "attempt under version set b8a378160410: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected three times (the third a narrowed ask for the units a rejection actually named); last rejection: inherited_unit:057.paragraph: dangling_pointer: VERIFIED_PRESERVE keeps it as written in opening, but its sentence \"The full public class index is listed below by module.\" points 'below' but nothing follows it in this section. Kept units print after the section's own content, so a pointer to what follows is answered only by a unit kept right after it in the same section: keep that unit there too, or choose VERIFIED_REWRITE (the wording is re-authored from facts, without the pointer), or OMIT_UNSUPPORTED citing the fact that shows the claim unsupported",
+    "classification": "validation_failed",
+    "detail": "attempt under version set b8a378160410: PresentFailure: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README states '305 public types' ('- **[Full API reference](https://reference.aspose.org/3d/python/)** — The full API reference offers the complete, browsable reference for all 305 public types.'), but the facts record 337 public types (332 classes); state the computed count or none); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README describes `Watermark` as working ('| Watermark | Utility to encode/decode blind watermark to/from a mesh.'), but inherited_unit:067.list states `Watermark.decode_watermark` only throws (a stub): describe it as not implemented or omit it)",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-09T18:25:58.716483+00:00",
+    "occurred_at": "2026-11-09T19:19:15.722998+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 11,
+  "state_version": 12,
   "recent_trigger_dedup_keys": {
     "run:40489172171:aspose-3d-foss/Aspose.3D-FOSS-for-Python": "95e73af9b45847168cac589f659f3603",
     "run:41304447823:aspose-3d-foss/Aspose.3D-FOSS-for-Python": "f8fa8f70ee8e4c2ab9874cb644627cd3",
