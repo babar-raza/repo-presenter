@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "card": "TC-019c",
+  "gate": "GATE5_DELIVERY_PROGRAM",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-09T19:04:43Z",
+  "base_rev": "4c51ce5a23072c058e3875a2cfe6349ebb5f7842",
+  "head_rev": "58f72dc71abe030722c41d32c37e93dc95394664",
+  "card_sha256": "68ab3eaea267b23589b117041952f65a85c649f67546531ff7f44127f445bec6",
+  "checker_fileset_sha256": "ff02f83a42e7abf0647d694c5f1c6d474533540868fa11aadb57ad6ff479868d",
+  "checker_fileset_scheme": "v3",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [
+      "src/repo_presenter/cascade.py",
+      "tests/test_cascade_restore.py"
+    ],
+    "violations": [],
+    "evaluated": true
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/test_cascade_s9.py tests/test_cascade_s10.py tests/test_cascade_repair_context.py -q",
+          "exit_code": 0,
+          "duration_s": 30.783,
+          "stdout_sha256": "f3feda2a6eb948268834656e6c84b69c1d32a2868a40eb5808e0bd93ab9cce54"
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/test_cascade_s9.py tests/test_cascade_s10.py tests/test_cascade_repair_context.py -q",
+          "exit_code": 0,
+          "duration_s": 24.962,
+          "stdout_sha256": "7c0423a5f6a52e34fd021ca646881135164500d118aaa6877afc1be3e4508b0f"
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -X utf8 -c \"import pathlib; p = pathlib.Path('src/repo_presenter/cascade.py'); nl = chr(10); t = p.read_text(encoding='utf-8'); p.write_text(t + nl + 'restore_lost_units = lambda d, f, u, h, i=None: (d, [])' + nl, encoding='utf-8')\"",
+    "patch_sha256": "0ff5eb360de5948079584973aef67aedfed6c8b79792fabdd2ae7036f48cc5c7",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      1
+    ],
+    "tree_changed": [
+      "M src/repo_presenter/cascade.py"
+    ]
+  },
+  "accepted": true,
+  "reason": "all gates passed"
+}

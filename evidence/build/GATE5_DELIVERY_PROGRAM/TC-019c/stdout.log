@@ -1,0 +1,101 @@
+
+===== CLEAN RUN 1 =====
+$ python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/test_cascade_s9.py tests/test_cascade_s10.py tests/test_cascade_repair_context.py -q
+--- stdout ---
+...............................                                          [100%]
+31 passed in 27.76s
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/test_cascade_s9.py tests/test_cascade_s10.py tests/test_cascade_repair_context.py -q
+--- stdout ---
+...............................                                          [100%]
+31 passed in 22.05s
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M src/repo_presenter/cascade.py
+$ python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/test_cascade_s9.py tests/test_cascade_s10.py tests/test_cascade_repair_context.py -q
+--- stdout ---
+F..............................                                          [100%]
+================================== FAILURES ===================================
+_ test_a_candidate_that_loses_only_a_link_the_published_readme_prints_reaches_review_restored _
+
+tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-1463/test_a_candidate_that_loses_on0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000021C936E7490>
+
+    def test_a_candidate_that_loses_only_a_link_the_published_readme_prints_reaches_review_restored(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+>       run, seen = _run_to_review(tmp_path, monkeypatch, "DEFER_UNRESOLVED", None)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_cascade_restore.py:86: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_cascade_restore.py:77: in _run_to_review
+    run.cascade(max_rounds=1)
+tests\test_cascade_s9.py:97: in cascade
+    return run_cascade(
+src\repo_presenter\cascade.py:837: in run_cascade
+    settled = _restore_lost_content(_settle_s9(**settle), **restoring)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+settled = _Settled(composed=_Composition(dispositions={'dispositions': [{'unit_id': 'inherited_unit:001.heading', 'disposition':...n=None, model_served=None, request_sha256=None, reply_sha256=None, calibration_status=None, unit_reviews=()), rounds=1)
+entry = RegistryEntry(repository='org/Aspose.Widget-FOSS-for-Python', family='widget', platform='python', ecosystem='python', ...', active=True, provider_identity=ProviderIdentity(provider='github', repository_id=1, node_id='MDEwOlJlcG9zaXRvcnkx'))
+document = FactsDocument(repository='org/Aspose.Widget-FOSS-for-Python', source_revision='fffffffffffffffffffffffffffffffffffffff...s'),), polarity='SUPPORTED', confidence=1.0, attributes={'section': 'Aspose Widget > Limitations'})), schema_version=1)
+investigation = {'product_summary': {'text': 'A widget library.', 'fact_ids': ['package:name']}, 'audience': {'text': 'Python develope...]}, 'problems_solved': [{'text': 'Rendering widgets is tedious.', 'fact_ids': ['package:name']}], 'workflows': [], ...}
+tree_paths = ['README.md']
+original = '# Aspose Widget\n\nA widget you can render.\n\n## Usage\n\n```python\nimport aspose_widget_foss\n```\n\n## Limitation...y PNG output is currently supported.\n\nRead the [full guide](https://widget.example.org/guide) for everything else.\n'
+out_dir = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-1463/test_a_candidate_that_loses_on0/out')
+
+    def _restore_lost_content(
+        settled: _Settled, *, entry: RegistryEntry, document: FactsDocument, investigation: dict,
+        tree_paths: list[str], original: str, out_dir: Path,
+    ) -> _Settled:
+        """TC-019c: when the settled candidate's ONLY blocking failures are BC-05/BC-17, keep the units
+        they name (``readme.repair.restore_units``: the remedy those checks' own text states), re-render
+        from the same plan and authored units, and re-judge with the unchanged validators and the
+        deterministic reviewer rules. Zero provider calls: the stored plan, authored and coherent units
+        are reused, as ``recertify`` reuses a sealed bundle's. Returns ``settled`` unchanged unless a
+        restore both changed something and left the candidate with no blocking failure -- so a run that
+        this cannot rescue behaves exactly as it did before, and the checks are never weakened."""
+        from repo_presenter.recertify import RESTORE_ROUNDS
+    
+        composed = settled.composed
+        failing = blocking_failures(settled.validation)
+        if not failing or not {str(check["id"]) for check in failing} <= RESTORABLE_CHECKS:
+            return settled
+        holdable = holdable_sections(document)
+        included = [
+            section["section_id"] for section in composed.plan.get("sections", []) if section.get("include")
+        ]
+        dispositions = composed.dispositions
+        restored: list[dict[str, str]] = []
+        readme, tasks, accounted = composed.readme, composed.tasks, composed.accounted
+        validation, verdict = settled.validation, settled.verdict
+        for _round in range(RESTORE_ROUNDS):
+            details = [
+                f"{check['id']}: {detail}" for check in failing for detail in check.get("details") or []
+            ]
+            unit_ids = choose_units(details, document, [change["unit_id"] for change in restored])
+            if not unit_ids:
+                break
+            dispositions, changes = restore_lost_units(dispositions, document, unit_ids, holdable, included)
+            if not changes:
+>               dispositions, changes = restore_lost_units(
+                    dispositions, document, unit_ids, holdable, included, include_api_tables=True
+                )
+E               TypeError: <lambda>() got an unexpected keyword argument 'include_api_tables'
+
+src\repo_presenter\cascade.py:643: TypeError
+=========================== short test summary info ===========================
+FAILED tests/test_cascade_restore.py::test_a_candidate_that_loses_only_a_link_the_published_readme_prints_reaches_review_restored
+1 failed, 30 passed in 25.26s
+
+--- stderr ---
+
