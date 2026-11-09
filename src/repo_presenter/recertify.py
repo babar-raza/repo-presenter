@@ -48,6 +48,7 @@ import contextlib
 import hashlib
 import json
 import os
+import re
 import shutil
 import sys
 import tempfile
@@ -775,6 +776,18 @@ def _rows(document: Mapping[str, Any] | None) -> dict[tuple[str, str, str], Mapp
     }
 
 
+_CHECK_TOKEN = re.compile(r"[A-Za-z0-9_:.\-]+")
+
+
+def _justification_names(justification: str) -> frozenset[str]:
+    """The check ids a free-text justification names, as WHOLE tokens: ``BC-17`` names ``BC-17`` and
+    nothing shorter (``BC-1`` is not "named" by a sentence about ``BC-17``), and trailing sentence
+    punctuation does not hide an id."""
+    return frozenset(
+        token.rstrip(".:-").lstrip(".:-") for token in _CHECK_TOKEN.findall(justification)
+    ) - {""}
+
+
 def gate(
     results: Iterable[Recertification],
     baseline: Mapping[str, Any],
@@ -785,22 +798,37 @@ def gate(
     A regression is a seal the BASE baseline (the target branch's committed file; the working
     baseline when none is given) records RECERTIFIED that re-certifies NEEDS_REPAIR now. It is
     allowed only when the working baseline records that same seal NEEDS_REPAIR with a
-    ``justification`` that names every newly failing check."""
+    ``justification`` that names every newly failing check, each as a whole token.
+
+    Judged per seal commit AND per (repository, lane): a lane whose base baseline holds a
+    RECERTIFIED seal and whose latest seal is a different commit that does not certify has lost its
+    count just the same, so that seal is held to the same justified-NEEDS_REPAIR rule (R10: a
+    replacement can never be a way around the gate)."""
     base = _rows(base_baseline if base_baseline is not None else baseline)
     working = _rows(baseline)
+    base_lane_recertified: dict[tuple[str, str], Mapping[str, Any]] = {}
+    for (repository, lane, _commit), row in sorted(base.items()):
+        if row.get("outcome") == OUTCOME_RECERTIFIED:
+            base_lane_recertified.setdefault((repository, lane), row)
     problems: list[str] = []
     for rec in results:
         key = (rec.repository, rec.lane, rec.seal_commit)
         before = base.get(key)
-        if before is None or before.get("outcome") != OUTCOME_RECERTIFIED or rec.recertified:
-            continue
+        if before is not None:
+            if before.get("outcome") != OUTCOME_RECERTIFIED or rec.recertified:
+                continue
+        else:
+            before = base_lane_recertified.get((rec.repository, rec.lane))
+            if before is None or rec.certified:
+                continue
         newly = sorted(set(rec.failing_checks) - set(before.get("failing_checks") or []))
         row = working.get(key) or {}
         justification = str(row.get("justification") or "").strip()
+        named = _justification_names(justification)
         justified = (
             row.get("outcome") == OUTCOME_NEEDS_REPAIR
             and bool(justification)
-            and all(check in justification for check in newly)
+            and all(check in named for check in newly)
         )
         if justified:
             continue
@@ -919,11 +947,18 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(f"FAIL: no baseline at {args.baseline}")
             return 1
         baseline = json.loads(args.baseline.read_text(encoding="utf-8"))
-        base = (
-            json.loads(args.base_baseline.read_text(encoding="utf-8"))
-            if args.base_baseline is not None and args.base_baseline.is_file()
-            else None
-        )
+        base = None
+        if args.base_baseline is not None:
+            # An explicitly passed base baseline that cannot be read must fail the gate: silently
+            # falling back to the working baseline would let a PR vouch for itself.
+            try:
+                base = json.loads(args.base_baseline.read_text(encoding="utf-8"))
+            except (OSError, ValueError) as exc:
+                print(f"FAIL: --base-baseline {args.base_baseline} is unreadable: {exc}")
+                return 1
+            if not isinstance(base, dict):
+                print(f"FAIL: --base-baseline {args.base_baseline} is not a JSON object")
+                return 1
         problems = gate(results, baseline, base)
         known = _rows(baseline)
         for rec in results:
