@@ -1,0 +1,72 @@
+name: audit-score
+
+# M9 hosted scorer (TC-014's score.py logic, wired 2026-11-09 -- docs/design/2026-11-06-
+# acceptance-redesign.md section 4.3). Downloads a prior audit-seed.yml run's encrypted
+# manifest artifact, decrypts it with AUDIT_SEED_KEY (environment: acceptance-audit), reads the
+# COMMITTED, FROZEN auditor findings for that same run, and computes the real seeded-recall and
+# false-flag-rate gates. Decryption only happens here, after the findings are already committed
+# (unchangeable) -- never before, and never by the supervisor locally.
+
+on:
+  workflow_dispatch:
+    inputs:
+      seed_run_id:
+        description: "the audit-seed.yml run id whose manifest artifact to score"
+        required: true
+        type: string
+      findings_path:
+        description: "path (in this repository) to the committed, frozen auditor findings JSON"
+        required: true
+        type: string
+
+permissions:
+  contents: write  # only to commit the scorecard to its own branch
+  actions: read     # to download the seeder run's artifact
+
+concurrency:
+  group: audit-score
+  cancel-in-progress: false
+
+jobs:
+  score:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: acceptance-audit
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install
+        run: python -m pip install -e .
+
+      - name: Download the seeder run's encrypted manifest artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: m9-seed-manifest-${{ inputs.seed_run_id }}
+          path: ${{ runner.temp }}/m9-score
+          run-id: ${{ inputs.seed_run_id }}
+          github-token: ${{ github.token }}
+
+      - name: Score (decrypt manifest, read committed findings)
+        env:
+          AUDIT_SEED_KEY: ${{ secrets.AUDIT_SEED_KEY }}
+        run: |
+          python scripts/run_m9_scorer.py \
+            --manifest "${{ runner.temp }}/m9-score/seed_manifest.enc" \
+            --findings "${{ inputs.findings_path }}" \
+            --out "${{ runner.temp }}/m9-score/scorecard.json"
+
+      - name: Commit the scorecard (permanent, public -- never the manifest plaintext)
+        run: |
+          mkdir -p evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT
+          cp "${{ runner.temp }}/m9-score/scorecard.json" \
+            "evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/scorecard-${{ inputs.seed_run_id }}.json"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "audit-score/seed-run-${{ inputs.seed_run_id }}"
+          git add -f evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/
+          git commit -m "M9 audit scorecard for seed run ${{ inputs.seed_run_id }} (GATE5_DELIVERY_PROGRAM/M9_AUDIT)"
+          git push origin "audit-score/seed-run-${{ inputs.seed_run_id }}"
