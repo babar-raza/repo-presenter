@@ -1,0 +1,171 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:platform",
+      "package:cxx_standard",
+      "dependency:none"
+    ],
+    "text": "C++ developers building desktop or server applications that require deterministic parsing and generation of MSG, CFB, and EML email formats without external dependencies."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss",
+        "public_symbol:aspose.email",
+        "public_symbol:aspose"
+      ],
+      "text": "Read, build, and write generic Compound File Binary containers directly through `cfb_reader`, `cfb_storage`/`cfb_stream`, and `cfb_writer`, working with file paths, in-memory streams, or raw byte buffers.",
+      "title": "Low-level CFB access"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss",
+        "public_symbol:aspose.email",
+        "public_symbol:aspose"
+      ],
+      "text": "Parse and reconstruct the raw MSG directory/stream structure with `msg_reader`, `msg_document`, and `msg_writer`, including an optional strict-validation mode surfaced through `validation_issues()`.",
+      "title": "Low-level MSG document model"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss",
+        "public_symbol:aspose.email",
+        "public_symbol:aspose"
+      ],
+      "text": "Create, edit, save, and reload Outlook-style messages through `mapi_message`, setting the subject, plain-text and HTML bodies, and sender identity, or reaching arbitrary MAPI properties via `set_property()`/`get_property_value()`.",
+      "title": "High-level message authoring"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss",
+        "public_symbol:aspose.email",
+        "public_symbol:aspose"
+      ],
+      "text": "Add To/Cc/Bcc recipients with `add_recipient()`, attach regular files from byte buffers or streams with `add_attachment()`, and nest a full `mapi_message` as an embedded-message attachment with `add_embedded_message_attachment()`.",
+      "title": "Recipients and attachments"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss",
+        "public_symbol:aspose.email",
+        "public_symbol:aspose"
+      ],
+      "text": "Save an in-memory `mapi_message` to `.eml` and load `.eml` back into a `mapi_message`, both through the library's own MIME engine, with no external MIME dependency.",
+      "title": "MSG/EML interoperability"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "identity:family"
+      ],
+      "text": "No SMTP, IMAP, POP3, or other network mail-protocol support — this library reads and writes MSG, CFB, and EML containers and messages already on disk, in memory, or in a stream; it is not a mail client or transport library."
+    },
+    {
+      "fact_ids": [
+        "identity:family"
+      ],
+      "text": "No PST (Outlook Personal Folders) archive support — only single MSG-format messages and generic CFB containers are supported, not multi-message PST stores."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss"
+      ],
+      "text": "Only a curated subset of MAPI properties has a dedicated named accessor on `mapi_message`; every other property must be read and written through the generic `get_property_value()`/`set_property()` pair."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "identity:family",
+        "package:cxx_standard",
+        "dependency:none",
+        "public_symbol:aspose.email.foss"
+      ],
+      "text": "Enables deterministic, byte-level processing of Outlook MSG and CFB email containers without third-party dependencies, supporting both low-level structural access and high-level message authoring."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email",
+        "public_symbol:aspose.email.foss",
+        "package:name"
+      ],
+      "text": "Provides a unified API for reading and writing MSG, CFB, and EML formats, including MSG-to-EML and EML-to-MSG conversion through a built-in MIME engine."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose",
+        "public_symbol:aspose.email",
+        "public_symbol:aspose.email.foss"
+      ],
+      "text": "Supports both low-level CFB/MSG structure inspection and high-level message authoring via `mapi_message`, allowing fine-grained control or rapid development as needed."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:repository",
+      "package:cxx_standard",
+      "dependency:none",
+      "import_path:asposeemailfoss"
+    ],
+    "text": "Aspose.Email FOSS for C++ is a C++17 library for reading and writing binary email containers and messages — Compound File Binary (CFB) containers, Outlook MSG documents, and RFC 5322 / MIME EML files — with deterministic, byte-level output and no third-party library dependency of its own."
+  },
+  "uncertainties": [
+    "The exact set of MAPI properties supported by `common_message_property_id` and `property_type_code` is not listed in the facts.",
+    "Whether `mapi_message::load_from_eml()` supports all RFC-compliant MIME constructs or only a subset is not specified.",
+    "The behavior of `strict` mode in `msg_reader`/`msg_document` constructors is not detailed beyond the presence of `validation_issues()`.",
+    "The byte-level determinism guarantees (e.g., ordering, padding, encoding) for output formats are not explicitly defined.",
+    "The scope of `cfb_reader`/`cfb_writer` for non-MSG use cases (e.g., general OLE2 files) is not clarified beyond MSG support.",
+    "Whether embedded-message attachments preserve full MAPI property fidelity when reloaded is not stated.",
+    "The threading model or thread-safety guarantees of `mapi_message` and related classes are not provided.",
+    "The versioning policy for the public API surface (`PUBLIC_API.md`) and compatibility across releases is not detailed."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss",
+        "public_symbol:aspose.email",
+        "public_symbol:aspose"
+      ],
+      "name": "Read MSG file subject",
+      "text": "Open an MSG file as a binary stream and extract the subject using `mapi_message::from_stream(stream, strict).subject()`."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss",
+        "public_symbol:aspose.email",
+        "public_symbol:aspose"
+      ],
+      "name": "Create and save message",
+      "text": "Create a message with `mapi_message::create()`, set subject/body/sender, add recipients/attachments, and save as MSG or EML using `save()` or `save_to_eml()`."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss",
+        "public_symbol:aspose.email",
+        "public_symbol:aspose"
+      ],
+      "name": "Inspect low-level MSG structure",
+      "text": "Parse MSG files using `msg_reader` and `msg_document` to walk the underlying CFB directory/stream structure and inspect raw storage and stream entries."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:examples",
+        "package:cmake_minimum",
+        "package:cxx_standard"
+      ],
+      "name": "Build and run examples",
+      "text": "Enable `ASPOSE_EMAIL_FOSS_BUILD_EXAMPLES` in CMake to build CLI examples in `examples/` that demonstrate MSG/EML reading, writing, and inspection workflows."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:tests",
+        "package:cmake_minimum",
+        "package:cxx_standard"
+      ],
+      "name": "Run tests",
+      "text": "Build and run three CTest-registered test executables (`aspose_email_foss_cfb_tests`, `aspose_email_foss_msg_tests`, `aspose_email_foss_public_tests`) without external test frameworks."
+    }
+  ]
+}
