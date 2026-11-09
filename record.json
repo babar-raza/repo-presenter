@@ -18,10 +18,10 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "transient",
-    "detail": "attempt under version set 2e1cacfdb7dc: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: presentation_planning: output rejected twice; last rejection: link 'link_target:011' is assigned to a section that is not included: 'quick_start'; link 'link_target:012' is assigned to a section that is not included: 'additional_examples'",
+    "classification": "validation_failed",
+    "detail": "attempt under version set 2e1cacfdb7dc: ProviderCallBudgetError: provider-call budget of 100 reached in this invocation; no further calls are made and the run stops",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-09T20:38:44.972139+00:00",
+    "occurred_at": "2026-11-09T21:30:22.842639+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 16,
+  "state_version": 17,
   "recent_trigger_dedup_keys": {
     "run:41133521004:aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript": "d87fa8e49fcb4e54a1dced96c2933b26",
     "run:41236496887:aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript": "f0e03721a98e4dc49dce5ae223574f3a",
