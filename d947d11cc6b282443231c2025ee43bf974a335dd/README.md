@@ -1,6 +1,6 @@
 # Aspose.Imaging FOSS for .NET
 
-![.NET](https://img.shields.io/badge/.net-netstandard2.0_%7C_net8.0-blue.svg) [![Build Status](https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Contributors](https://img.shields.io/github/contributors/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET)](https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET/graphs/contributors)
+![.NET](https://img.shields.io/badge/.net-netstandard2.0_%7C_net8.0-blue.svg) [![CI](https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET/actions/workflows/ci.yml/badge.svg)](https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Contributors](https://img.shields.io/github/contributors/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET.svg)](https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET/graphs/contributors)
 
 [![Aspose.Imaging FOSS for .NET](https://products.aspose.org/media/imaging/net/banner-readme.png)](https://products.aspose.org/imaging/net/)
 
@@ -232,12 +232,17 @@ cd Aspose.Imaging-FOSS-for-.NET
 dotnet build src/Aspose.Imaging.Foss/Aspose.Imaging.Foss.csproj -c Release
 ```
 
+```xml
+<ProjectReference Include="..\Aspose.Imaging-FOSS-for-.NET\src\Aspose.Imaging.Foss\Aspose.Imaging.Foss.csproj" />
+```
+
 The library builds from
 `src/Aspose.Imaging.Foss/Aspose.Imaging.Foss.csproj`, which declares zero `<PackageReference>`
 entries — every format's header parsing is implemented natively within the library.
 
 - `Microsoft.NET.Test.Sdk` 17.12.0, `xunit` 2.9.2, and `xunit.runner.visualstudio` 2.8.2 — the
   xUnit test host and adapter used only by the test project.
+- `coverlet.collector` 6.0.2 — code-coverage collection for the test suite.
 
 None of these are referenced by the main library project; they apply only to
 `tests/Aspose.Imaging.Foss.Tests/Aspose.Imaging.Foss.Tests.csproj` and are never shipped with
