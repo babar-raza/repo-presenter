@@ -30,6 +30,7 @@ from typing import Any
 from urllib.parse import unquote
 
 from repo_presenter.core.facts import (
+    EVIDENCE_ONLY_KINDS,
     FACT_KINDS,
     POLARITIES,
     FactsDocument,
@@ -248,6 +249,19 @@ def _examples_summary(facts: FactsDocument) -> dict[str, Any]:
     }
 
 
+def packet_fact_kinds(manifest: PromptManifest) -> tuple[str, ...]:
+    """The fact kinds the planner is shown AND may cite: the manifest's own list, or - when it
+    names none - every kind EXCEPT the evidence-only source-detail kinds (``EVIDENCE_ONLY_KINDS``:
+    implementation, project_file, internal_symbol, ... they can number in the thousands and are
+    evidence a validator binds to, never composition input). Falling back to every kind put ~0.8M
+    tokens of them in Words .NET's planning request (gateway HTTP 400, 2026-11-10; planning calls
+    that succeeded were 224-235k tokens). The packet and the citable-ID enum share this one
+    function so they can never disagree about what the plan may cite."""
+    if manifest.packet.fact_kinds:
+        return tuple(manifest.packet.fact_kinds)
+    return tuple(kind for kind in FACT_KINDS if kind not in EVIDENCE_ONLY_KINDS)
+
+
 def planning_packet(
     entry: RegistryEntry,
     facts: FactsDocument,
@@ -263,7 +277,7 @@ def planning_packet(
     shell = [
         {**section, "condition_holds": conditions[section["id"]]} for section in shell_packet()
     ]
-    kinds = manifest.packet.fact_kinds or FACT_KINDS
+    kinds = packet_fact_kinds(manifest)
     return {
         "repository": entry.repository,
         "facts": _capped_facts(facts, kinds),
@@ -313,7 +327,7 @@ def citable_fact_ids(
 ) -> list[str]:
     """Every fact ID a plan may write, sorted."""
     supported = {fact.id for fact in facts.facts if fact.polarity == "SUPPORTED"}
-    kinds = manifest.packet.fact_kinds or FACT_KINDS
+    kinds = packet_fact_kinds(manifest)
     shown = {record["id"] for record in _capped_facts(facts, kinds)}
     shown.update(_examples_summary(facts)["verified_ids"])
     shown.update(r["id"] for records in _verified_formats(facts).values() for r in records)

@@ -146,6 +146,26 @@ class JobResult:
     total_tokens: int | None
 
 
+_ERROR_BODY_LIMIT = 400
+
+
+def _error_body(exc: APIStatusError, config: GatewayConfig) -> str:
+    """``": <gateway's reply>"`` for an error message - truncated and secret-redacted - or ``""``.
+
+    A bare "gateway answered HTTP 400" (Words .NET planning, 2026-11-10) gave no way to tell a
+    context-window overflow from a malformed request; the body the gateway returned says which."""
+    from repo_presenter.core.secrets import redact
+
+    try:
+        body = exc.response.text
+    except Exception:  # noqa: BLE001 -- an unreadable body must never mask the real error
+        return ""
+    body = " ".join(str(body or "").split())
+    if not body:
+        return ""
+    return ": " + redact(body[:_ERROR_BODY_LIMIT], [config.api_key])
+
+
 @dataclass(frozen=True)
 class _Reply:
     content: str
@@ -415,6 +435,7 @@ class _Attempts:
                 ) from None
             raise JobError(
                 f"{self.manifest.manifest.prompt_id}: gateway answered HTTP {exc.status_code}"
+                f"{_error_body(exc, config)}"
             ) from None
         except APITimeoutError as exc:
             self._record(payload, started_at, started, "timeout", None, type(exc).__name__)

@@ -52,6 +52,7 @@ from repo_presenter.readme.composition.authoring_retry import (
     withdraw_out_of_slot_citations,
 )
 from repo_presenter.readme.composition.components.identity import product_name
+from repo_presenter.readme.composition.text_hygiene import MAX_UNIT_CHARS
 from repo_presenter.readme.composition.output_bounds import (
     largest_slot_citation_count,
     omittable_count,
@@ -350,6 +351,38 @@ def recover_coherence_content_loss(
                 else unit.get("fact_ids", [])
             )
             changed = True
+    return output if changed else None
+
+
+def recover_coherence_overlong_units(
+    output: dict[str, Any], *, existing_units: list[dict[str, Any]]
+) -> dict[str, Any] | None:
+    """Last-resort correction for S8 coherence's own ``run_job`` call: a unit whose revision runs
+    past ``MAX_UNIT_CHARS`` while its own pre-coherence text fits is reverted, in full, to that
+    text and its fact_ids - losing nothing, since the pre-coherence unit already passed every
+    check the revision is being held to.
+
+    Measured live (aspose-slides-foss/Aspose.Slides-FOSS-for-Python, 2026-11-10, batch 1): the
+    ``opening`` unit was 737 characters before coherence; attempt 1 dropped cited facts, attempt 2
+    kept them by piling API names into 2066 characters, past the 1500 cap, and the run died."""
+    units = output.get("units")
+    if not isinstance(units, list):
+        return None
+    existing_by_key = {
+        (str(unit.get("section")), str(unit.get("slot"))): unit for unit in existing_units
+    }
+    changed = False
+    for unit in units:
+        if not isinstance(unit, dict) or len(str(unit.get("text", ""))) <= MAX_UNIT_CHARS:
+            continue
+        existing = existing_by_key.get((str(unit.get("section")), str(unit.get("slot"))))
+        if existing is None or len(str(existing.get("text", ""))) > MAX_UNIT_CHARS:
+            continue
+        unit["text"] = existing.get("text", unit.get("text"))
+        existing_fact_ids = existing.get("fact_ids")
+        if isinstance(existing_fact_ids, list):
+            unit["fact_ids"] = list(existing_fact_ids)
+        changed = True
     return output if changed else None
 
 
@@ -741,6 +774,10 @@ def recover_coherence_regressions(
     )
     if slot_fixed is not None:
         output = slot_fixed
+        changed = True
+    overlong_fixed = recover_coherence_overlong_units(output, existing_units=existing_units)
+    if overlong_fixed is not None:
+        output = overlong_fixed
         changed = True
     content_fixed = recover_coherence_content_loss(
         output, existing_units=existing_units, facts=facts
