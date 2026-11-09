@@ -5,7 +5,7 @@
   "provider_repository_id": 1137426093,
   "registry_revision": null,
   "active_transaction_id": "727c2a24d25449988eab05f0005cb5df",
-  "state": "ACCEPTED",
+  "state": "INVALIDATED",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "attempt under version set 2e1cacfdb7dc: PresentFailure: independent review returned REJECT with 3 blocking finding(s) of 3; nothing sealed; F01 [unsupported_claim] in documentation_resources blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-09T21:40:11.160174+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:85272",
     "acquired_at": "2026-11-09T20:47:59.618321+00:00",
@@ -26,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "c8adb00fa0064b2ba822bdb8ac8607ec",
+    "transition_id": "ab13f899018e4c25a45e0bd3e9f67eb8",
     "transaction_id": "727c2a24d25449988eab05f0005cb5df",
     "repository": "aspose-note-foss/Aspose.Note-FOSS-for-Python",
-    "from_state": "REVIEWING",
-    "to_state": "ACCEPTED",
-    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
-    "occurred_at": "2026-11-03T14:58:51.309643+00:00",
+    "from_state": "ACCEPTED",
+    "to_state": "INVALIDATED",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-11-09T21:40:09.040684+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-note-foss/Aspose.Note-FOSS-for-Python",
     "output_manifest": "candidates/aspose-note-foss__Aspose.Note-FOSS-for-Python/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 17,
+  "state_version": 18,
   "recent_trigger_dedup_keys": {
     "run:41290974964:aspose-note-foss/Aspose.Note-FOSS-for-Python": "10810f00958342968212709f350bf056",
     "run:41657452717:aspose-note-foss/Aspose.Note-FOSS-for-Python": "727c2a24d25449988eab05f0005cb5df"
