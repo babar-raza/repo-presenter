@@ -18,10 +18,10 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "transient",
-    "detail": "attempt under version set b8a378160410: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected three times (the third a narrowed ask for the units a rejection actually named); last rejection: no disposition for inherited units: inherited_unit:113.code_block, inherited_unit:114.paragraph, inherited_unit:115.heading, inherited_unit:116.code_block, inherited_unit:117.paragraph, inherited_unit:118.heading, inherited_unit:119.code_block, inherited_unit:120.paragraph, inherited_unit:121.heading, inherited_unit:122.code_block, inherited_unit:123.paragraph, inherited_unit:124.heading, inherited_unit:125.code_block, inherited_unit:126.paragraph, inherited_unit:127.code_block, inherited_unit:129.heading, inherited_unit:130.code_block, inherited_unit:131.paragraph, inherited_unit:132.paragraph",
+    "classification": "validation_failed",
+    "detail": "attempt under version set b8a378160410: JobError: presentation_planning: gateway answered HTTP 400",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-09T19:25:18.144539+00:00",
+    "occurred_at": "2026-11-09T20:08:57.891285+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 13,
+  "state_version": 14,
   "recent_trigger_dedup_keys": {
     "run:41142404776:aspose-pdf-foss/Aspose-PDF-FOSS-for-Python": "fbc76990855041eb8011727b165ee2bd",
     "run:41276313821:aspose-pdf-foss/Aspose-PDF-FOSS-for-Python": "45c3f42e6a9d431991bc33f6963548a2",
