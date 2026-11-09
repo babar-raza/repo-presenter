@@ -3458,3 +3458,13 @@ audit; calibration per mechanism with thresholds unchanged or stricter; the fall
 acceptance reachable at zero calls even if no LLM passes. `data/reviewer_calibration.json` stays the frozen record of
 the old reviewer. Stages S1-S5 (zero calls) start now in parallel; S6-S12 follow in order. The one owner action item
 (design §7.4.1, R3 wording) is raised once, when S9 wires the acceptance record to upstream writes.
+
+---
+
+## 2026-11-09: owner ruling R27 — architecture freeze; get the existing system working
+
+Owner: "freeze any further architecture expansion and make the tweaks and fixes to get the system working as
+expected." Recorded as R27 (top authority Part B, AGENTS.md, `ops/SUPERVISOR.md` item 11). Consequence decided by
+the supervisor: PR #44 (the 2026-11-07 delivery programme, 136 commits, CI red on all three checks) is not merged
+wholesale; any part of it lands only as a small fix a named failure needs. Work is judged by candidates produced,
+sealed and passing.

@@ -42,6 +42,9 @@ Full text: `docs/CONSOLIDATED_GOALS_2026-11-06.md` Part B; operating detail: `op
 
 - **R15 — no upstream push until every candidate of both lanes is sealed, validated and passed.**
 
+- **R27 — ARCHITECTURE FREEZE (2026-11-09): only tweaks and fixes that make the existing system work; no new
+  mechanisms, stages, programmes, workflows or record types. Judge work only by candidates produced, sealed, passing.**
+
 ## READ THIS FIRST — owner-adopted corrective plan (2026-11-03)
 
 `docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md` is **owner-adopted, binding authority**,
