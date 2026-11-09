@@ -72,10 +72,16 @@ progress:
   # something that changed about the live READMEs themselves. Per R10 ("no passing seal may start
   # failing unless each case is a justified genuine defect"), these are justified; the count is
   # resynced downward, honestly, rather than suppressed.
-  lane_l_accepted: 8
+  # RESYNCED 2026-11-10 (lane_l_accepted 8 -> 17, lane_r_accepted 1 -> 5) after re-running
+  # `ops/checks/dashboard_matches_live.py` (live=17/5): the zero-call restore, badge carry, stated-
+  # count and S4 fixes (TC-019b/c) re-certify Cells .NET, Cells Rust, Imaging .NET and Email Python
+  # in Lane R, and R21/stale_type_count re-certify HTML/Words Python in Lane L plus new Lane L seals
+  # (Words .NET, Slides .NET, Email Cpp, 3D Python, Note Python, PSD Python). These are
+  # deterministic re-certification counts, NOT independently-accepted candidates (0 of those).
+  lane_l_accepted: 17
   lane_l_corrected_non_empty_patch: 15
   lane_l_blocked: 0
-  lane_r_accepted: 1
+  lane_r_accepted: 5
   # Lane L 11 -> 9: BC-14 mechanical rules find genuine false claims in two live READMEs (HTML Python, Words Python:
   # non-exported or nonexistent types, wrong type counts) -- justified in data/recertification_baseline.json; Lane L corrects them.
   # 2026-11-06 BC-17 (benchmark parity) blocks Imaging .NET Lane R on a genuine loss (justified in the gate baseline); targeted repair restores it.
