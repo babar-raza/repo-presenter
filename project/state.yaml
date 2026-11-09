@@ -169,7 +169,7 @@ owner_review_status:
 
 release_gate_dashboard:
   generated_by: gatecli
-  generated_at: '2026-11-09T16:54:30Z'
+  generated_at: '2026-11-09T16:55:51Z'
   note: Tool-generated from gateverify.rebuild_state() -- never hand-edit this block.
     Historical current_gate/active_work_item below are preserved bootstrap-era narrative,
     not this cursor; this block is the real, evidence-derived release-gate status
@@ -413,11 +413,11 @@ release_gate_dashboard:
     receipt: GATE5_DELIVERY_PROGRAM/TC-023/receipt.json
   - id: TC-023b
     gate: GATE5_DELIVERY_PROGRAM
-    status: STALE_RECEIPT
+    status: ACCEPTED
     attempt: 0
-    blocker:
-      class: STALE_RECEIPT
-      summary: card definition changed since this receipt was generated -- re-verify
+    blocker: null
+    commit: f8a3ab64876ec2a38286455eae1a5c10b497f51b
+    receipt: GATE5_DELIVERY_PROGRAM/TC-023b/receipt.json
   - id: TC-024
     gate: GATE5_DELIVERY_PROGRAM
     status: ACCEPTED
@@ -443,7 +443,6 @@ release_gate_dashboard:
   - TC-005
   - TC-008a
   - TC-011
-  - TC-023b
 current_gate:
   id: P1_PORTFOLIO_SCALE
   status: ACCEPTED
