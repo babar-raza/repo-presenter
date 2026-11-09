@@ -1,14 +1,137 @@
 {
   "confinement": {
-    "edits": 0,
+    "edits": 2,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "a5faac70e76cbeac20a4c110a1ce7a692411639a7c44ef2ab2679e4657144f00",
-  "edits": [],
+  "corrected_sha256": "c12b53aa269a9f08833464b5b2568382201b97037e7412a2b16ed3a9ed556e6d",
+  "edits": [
+    {
+      "detector": "stale_type_count",
+      "end": 8339,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose_html",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.css",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.css"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.css.element_matches",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.css.element_matches"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.css.select",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.css.select"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom.css",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom.CSS"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom.css.supports",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom.CSS.supports"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom.csscounterstylerule",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom.CSSCounterStyleRule"
+        }
+      ],
+      "index": 0,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 213,
+      "original": "243",
+      "rationale": "line 213 states '243 public types'; the facts record 303 public types (302 classes), so a count of 243 is refuted and is replaced by the computed 303",
+      "replacement": "303",
+      "start": 8336
+    },
+    {
+      "detector": "stale_type_count",
+      "end": 29814,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose_html",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.css",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.css"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.css.element_matches",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.css.element_matches"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.css.select",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.css.select"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom.css",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom.CSS"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom.css.supports",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom.CSS.supports"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom.csscounterstylerule",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom.CSSCounterStyleRule"
+        }
+      ],
+      "index": 1,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 566,
+      "original": "243",
+      "rationale": "line 566 states '243 public types'; the facts record 303 public types (302 classes), so a count of 243 is refuted and is replaced by the computed 303",
+      "replacement": "303",
+      "start": 29811
+    }
+  ],
   "lane": "L",
   "original_sha256": "a5faac70e76cbeac20a4c110a1ce7a692411639a7c44ef2ab2679e4657144f00",
-  "outcome": "NO_CHANGE_WARRANTED",
+  "outcome": "CORRECTED",
   "readme_path": "README.md",
   "repository": "aspose-html-foss/Aspose.HTML-FOSS-for-Python",
   "schema_version": 1,
@@ -18,7 +141,9 @@
     "idempotent": true,
     "provider_calls": 0
   },
-  "summary": {},
+  "summary": {
+    "FALSE_CLAIM_FIX": 2
+  },
   "unapplied": [
     {
       "defect": false,
