@@ -59,14 +59,19 @@ requires:
 network: false
 negative_control:
   mutate: |-
-    python -X utf8 -c "import json, pathlib; p = pathlib.Path('data/acceptance_calibration.json'); d = json.loads(p.read_text(encoding='utf-8')); d['status'] = 'NOT_PASSED'; p.write_text(json.dumps(d, indent=2), encoding='utf-8')"
+    python -X utf8 -c "import json, pathlib; p = pathlib.Path('data/acceptance_calibration.json'); d = json.loads(p.read_text(encoding='utf-8')); [c.update(status='NOT_PASSED') for c in d['certificates'] if c.get('mechanism_class') == 'M1']; p.write_text(json.dumps(d, indent=2), encoding='utf-8')"
   rationale: >
-    Reverts a real PASSED status back to NOT_PASSED via real JSON editing (no raw-text quote
-    juggling, no backslashes crossing YAML and the shell -- ops/SUPERVISOR.md's own falsifier
-    rule). Proves the check reads data/acceptance_calibration.json (not the frozen, untouched
-    data/reviewer_calibration.json) and distinguishes a genuine pass from the substring trap
-    where "NOT_PASSED" itself contains "PASSED": calibration_status.py parses the JSON and
-    compares the status field by equality, not by substring.
+    Flips the real M1 certificate's own status from PASSED to NOT_PASSED via real JSON editing
+    (no raw-text quote juggling, no backslashes crossing YAML and the shell -- ops/SUPERVISOR.md's
+    own falsifier rule). 2026-11-09 correction: an earlier version of this mutation set a
+    top-level "status" key on the document, which record.py's AcceptanceCertificates.complete
+    never reads (it is derived from each certificate's own status field against the
+    responsibility matrix, never from a stored top-level field) -- that mutation silently did
+    nothing, the exact "textual mutation that silently stops matching" failure
+    ops/SUPERVISOR.md's falsifier rule warns against. This version mutates a real, always-present,
+    always-required certificate's own status field instead, which load_certificates genuinely
+    reads, proving the check actually depends on every required mechanism's real certificate
+    status rather than passing regardless.
 evidence:
   - data/acceptance_calibration.json
   - data/acceptance_responsibility.json
