@@ -4322,3 +4322,33 @@ Imaging .NET and Cells .NET repaired seals published (zero provider calls); TC-0
 accepted by `gatecli review`. Hosted `present.yml` dispatched from this branch for the ecosystems
 that cannot run locally (Go, Java, C++): the workflow file exists on `main`, so dispatch with
 `--ref <branch>` runs the branch's version.
+
+## 2026-11-10: second Pareto pass -- Lane L review rejections, format-fact gap, generation-stage failures
+
+Real hosted `present.yml` runs from this branch (the workflow exists on `main`, so dispatch with
+`--ref <branch>` runs the branch's version with the toolchain jobs) and local runs produced:
+
+- **Lane L sealed (real edits, review ACCEPT):** Words .NET, Slides .NET, Email Cpp, Cells Cpp, 3D
+  Python, Note Python, PSD Python. **Lane L terminal non-candidates (no edit possible, correct per
+  R16/R20):** Cells Python, Page Python, Email Python, TeX Python, Slides Python -- each rejected only
+  for a pre-existing `README marks <FORMAT> supported but no SUPPORTED format fact` defect.
+- **Top Lane L signature (6 repos, 100% banner repos): missing/incomplete `format` facts.** The
+  product demonstrably supports the formats (aspose.org's README says so), so this is an extraction
+  gap, not a README defect; an agent is fixing format-fact extraction from real source evidence.
+- **Second Lane L signature: the LLM review faults text the edit did not touch** (Slides Java, PDF
+  Cpp, 3D .NET). R21 (committed) records pre-existing issues as residuals deterministically; an agent
+  is scoping the Lane L review to the edited text and residuals, without weakening checks on changed
+  text and without touching Lane R's review.
+- **`stale_package_version` v3** rewrites the whole "..., but `X` is not published to R yet." sentence
+  (the verb-only edit left a dangling "but"; both PSD .NET and 3D .NET were rejected for it). 3D .NET
+  also has a second, non-sentence-shaped stale clause ("...as a project; it is not published to
+  NuGet.") that stays a Lane R/human matter.
+- **Hosted sandbox canary** matched its own traceback source line and failed every run; fixed with a
+  whole-line match (`grep -x`).
+- **Generation-stage failures (Lane R), Pareto:** (1) badge-row loss at review (fixed), (2) S4
+  rejections (fixed), (3) BC-05/BC-17 at the seal gate (fixed by the cascade restore), (4) planning
+  packet overflow (`HTTP 400`; Words .NET: ~0.8M tokens because evidence-only fact kinds were not
+  excluded from the planning packet), (5) a coherence revision exceeding the 1500-character unit cap
+  (Slides Python), (6) 11 `unsupported_claim` review findings on Words Python (claims also present in
+  the aspose.org README; the review packet budget may be hiding the support facts). (4)-(6) are being
+  fixed or explained by agents; none is closed by weakening a check.
