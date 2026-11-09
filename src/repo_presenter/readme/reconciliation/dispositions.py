@@ -2186,17 +2186,86 @@ def _reconciliation_merge(merged: str, narrowed: str, unit_ids: Sequence[str]) -
         for unit in extra.get("dispositions", [])
         if isinstance(unit, dict) and unit.get("unit_id") in wanted
     }
-    if frozenset(replacements) != wanted:
+    if not replacements:
         return narrowed
+    # A narrowed reply that answers SOME of the asked units (measured live, aspose-pdf-foss/
+    # Aspose-PDF-FOSS-for-Python, 2026-11-09: asked for 128 and 132, answered 128 only) used to be
+    # returned alone, which turned one unanswered unit into "no disposition for" the batch's other
+    # nineteen already-accepted ones and hid the real cause. The answered units replace theirs;
+    # the unanswered keep the entry the base had, judged by the ordinary checks (and settled by
+    # ``_settle_unresolved`` if they still fail, since this merge is the last ask).
     base_entries = [unit for unit in base.get("dispositions", []) if isinstance(unit, dict)]
     present = {str(unit.get("unit_id")) for unit in base_entries}
     merged_entries = [
         replacements.get(str(unit.get("unit_id")), unit) for unit in base_entries
     ]
     merged_entries.extend(
-        replacements[unit_id] for unit_id in unit_ids if unit_id not in present
+        replacements[unit_id] for unit_id in unit_ids if unit_id in replacements and unit_id not in present
     )
     return json.dumps({"dispositions": merged_entries})
+
+
+#: Dispositions that drop or park a unit instead of keeping it: the only ones ``_settle_unresolved``
+#: replaces. A unit already kept as written, rewritten or superseded is left to the ordinary checks.
+_UNKEPT = frozenset({"OMIT_UNSUPPORTED", "DEFER_UNRESOLVED"})
+_SHELL_RENDERED_KINDS = frozenset({"heading", "badge_row", "html_block"})
+
+
+def _settle_unresolved(merged: str, unit_ids: Sequence[str], facts: FactsDocument) -> str:
+    """After the LAST ask (the narrowed merge), keep as written every asked unit that is still
+    refused by this module's own checks and is dropped or parked (OMIT_UNSUPPORTED /
+    DEFER_UNRESOLVED), instead of failing the whole batch on it (R14: maintainer content is
+    must-carry unless a fact contradicts it; no careless drops).
+
+    A unit becomes VERIFIED_PRESERVE when every fact it cites is SUPPORTED and it cites at least
+    one (or it is a code block, which is never kept unverified), else PRESERVE_ATTRIBUTED (prose
+    kept as written, attribution internal only - ruling R9), into the holdable section nearest its
+    source heading. Never OMIT, never edited text. Left alone: a unit citing a CONTRADICTED fact
+    or whose own example is CONTRADICTED (a legitimate omission), shell-rendered kinds, and any
+    unit with no holdable home - those stay refused. Nothing runs before the final ask, so the
+    model always gets its chances first."""
+    try:
+        document = json.loads(merged)
+    except json.JSONDecodeError:
+        return merged
+    if not isinstance(document, dict) or not isinstance(document.get("dispositions"), list):
+        return merged
+    probe = copy.deepcopy(document)
+    named = _rejected_unit_ids(reconcile_checks(probe, facts))
+    wanted = [unit for unit in unit_ids if unit in named]
+    if not wanted:
+        return merged
+    units = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
+    by_id = {fact.id: fact for fact in facts.facts}
+    contradicted = code_units_by_polarity(facts, "CONTRADICTED")
+    holdable = holdable_sections(facts)
+    root = root_heading(list(units.values()))
+    for entry in document["dispositions"]:
+        unit_id = str(entry.get("unit_id", ""))
+        if unit_id not in wanted or unit_id not in units or unit_id in contradicted:
+            continue
+        kind = _unit_kind(unit_id)
+        if kind in _SHELL_RENDERED_KINDS or entry.get("disposition") not in _UNKEPT:
+            continue
+        cited = [by_id[f] for f in entry.get("fact_ids") or [] if f in by_id]
+        if any(fact.polarity == "CONTRADICTED" for fact in cited):
+            continue
+        heading = source_heading(units[unit_id])
+        destination = nearest_holdable(unit_id, heading, holdable, root)
+        if destination is None:
+            continue
+        was = entry.get("disposition")
+        verified = kind == "code_block" or (
+            bool(cited) and all(fact.polarity == "SUPPORTED" for fact in cited)
+        )
+        entry["disposition"] = "VERIFIED_PRESERVE" if verified else ATTRIBUTED
+        entry["destination_section"] = destination
+        entry["rationale"] = (
+            "Kept as the maintainers wrote it: no fact contradicts it, and it was still "
+            f"{'omitted' if was == 'OMIT_UNSUPPORTED' else 'unplaced'} after "
+            "the final ask. " + str(entry.get("rationale") or "")
+        )[:_RATIONALE_LIMIT]
+    return json.dumps(document)
 
 
 def _reconciliation_repeated(first: str, second: str, unit_ids: Sequence[str]) -> list[str]:
@@ -2258,10 +2327,15 @@ def reconciliation_narrowing(
             manifest=manifest,
         )
 
+    def merge(merged: str, narrowed: str, unit_ids: Sequence[str]) -> str:
+        return _settle_unresolved(
+            _reconciliation_merge(merged, narrowed, unit_ids), unit_ids, batch_facts
+        )
+
     return Narrowing(
         pending=lambda content, rejection: _rejected_unit_ids(rejection),
         ask=ask,
-        merge=_reconciliation_merge,
+        merge=merge,
         subject="the units a rejection actually named",
         repeated=_reconciliation_repeated,
     )
