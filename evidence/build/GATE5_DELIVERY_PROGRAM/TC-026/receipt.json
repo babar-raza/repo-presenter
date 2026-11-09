@@ -3,10 +3,10 @@
   "card": "TC-026",
   "gate": "GATE5_DELIVERY_PROGRAM",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-09T16:26:14Z",
+  "generated_at": "2026-11-09T16:28:02Z",
   "base_rev": "e9c6030e7c66333b12cafee89885184c15b34bb9",
-  "head_rev": "a01aab8b52b7f383256fcbb20843d26939cb00ae",
-  "card_sha256": "9080c2d2e710a5fe3f97e07adee9af38e5e9ac6dc70ba24119f75140824054cb",
+  "head_rev": "98d92342e0e65b5cadc83748def2049a5f8bfb08",
+  "card_sha256": "412ca84e02c8e634bb18354706bf1d7c9cea2cb72c7f134f69253d30f27ba6d3",
   "checker_fileset_sha256": "7b9d1863dd36faa52fd6bc251c64c3132327322b7f9b137211844c697ea41560",
   "checker_fileset_scheme": "v3",
   "fingerprint": {
@@ -34,13 +34,13 @@
         {
           "command": "python -m pytest tests/readme/validation/test_wording.py tests/acceptance/test_responsibility.py tests/acceptance/ -q",
           "exit_code": 0,
-          "duration_s": 8.421,
-          "stdout_sha256": "c1d7f309b688ecb9d9e2e076bffdf8214d6eba1784c3706ec8bd2029fd8b2eaa"
+          "duration_s": 7.734,
+          "stdout_sha256": "837a8d70f8a6bd6c933c9f79b9f86401e7c0bbc06de41367c86fda1dabf634d1"
         },
         {
           "command": "python ops/checks/calibration_status.py PASSED --file data/acceptance_calibration.json --matrix data/acceptance_responsibility.json",
           "exit_code": 0,
-          "duration_s": 0.151,
+          "duration_s": 0.145,
           "stdout_sha256": "77fb3bc7754e48b5a7162489b089571161c8a542601bb0abd6a1b4c4edddd428"
         }
       ],
@@ -52,13 +52,13 @@
         {
           "command": "python -m pytest tests/readme/validation/test_wording.py tests/acceptance/test_responsibility.py tests/acceptance/ -q",
           "exit_code": 0,
-          "duration_s": 5.551,
-          "stdout_sha256": "06d1db93705467e70b1504254b49a431c52e75525ed69a8aaa27887143a310b7"
+          "duration_s": 5.924,
+          "stdout_sha256": "769961d69ccd1b72714cb3dcc623b486f3ff066195de769f52a77141e2d956db"
         },
         {
           "command": "python ops/checks/calibration_status.py PASSED --file data/acceptance_calibration.json --matrix data/acceptance_responsibility.json",
           "exit_code": 0,
-          "duration_s": 0.166,
+          "duration_s": 0.151,
           "stdout_sha256": "77fb3bc7754e48b5a7162489b089571161c8a542601bb0abd6a1b4c4edddd428"
         }
       ],
