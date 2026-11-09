@@ -3,7 +3,7 @@
   "schema_version": 1,
   "seals": [
     {
-      "commit": "9e77ceebd2cd2bd5253eff10da99ac8f45ef995d",
+      "commit": "1ca74225616a599276844f518b8ddb2921dea20e",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -12,7 +12,7 @@
       "revision": "3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3"
     },
     {
-      "commit": "3a636b27c720ab2349fd4754f8ee5cb7b50acb50",
+      "commit": "ace3de13f6d35c3f28325e35f01ce35964184207",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -21,7 +21,7 @@
       "revision": "65b1f577c0f16d0d9112bb6c1153d3024543ac02"
     },
     {
-      "commit": "c60deb790bb8cd6604ba50b6c9c9febf7cd19b9f",
+      "commit": "7c4bfca28916fae7afdd942873bb199de6c571b4",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -31,18 +31,15 @@
     },
     {
       "commit": "7e431a56a850ca690c4966d5ed6e35b87f9c513a",
-      "failing_checks": [
-        "L-05"
-      ],
-      "justification": "L-05 newly fails 2026-11-09: TC-025 (GATE5_DELIVERY_PROGRAM) added the real stale_package_version detector this session, which found a genuine, pre-existing, previously-undetected defect at line 68 -- the README claims the package is not published to PyPI, but no package:published_version fact exists to check that claim against (an unresolvable claim, not a deterministically repairable one). Confirmed by direct investigation (repo_presenter.recertify.portfolio_recertification, real per-check detail) before accepting this as justified, per R10 (\"no passing seal may start failing unless each case is a justified genuine defect\") -- not a regression in the detector, a real catch it is now able to make. The seal itself is kept, unmodified, per R10's own \"never regenerate a sealed candidate\" rule; repair is separate, later work.",
+      "failing_checks": [],
       "lane": "L",
-      "outcome": "NEEDS_REPAIR",
+      "outcome": "RECERTIFIED",
       "regenerations": 0,
       "repository": "aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python",
       "revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151"
     },
     {
-      "commit": "fcb41f15e8963bbeb1516c68c81d886741e7e093",
+      "commit": "36cd4ab654d88e67b2943e861ec1668945db9734",
       "failing_checks": [],
       "lane": "R",
       "outcome": "RECERTIFIED",
@@ -51,7 +48,7 @@
       "revision": "f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2"
     },
     {
-      "commit": "67092580c4e4576093bd7a58c65a9c843386232b",
+      "commit": "9d97c13db3fc8b1f11622411b8c1f4c5f069fb6b",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -62,6 +59,7 @@
     {
       "commit": "d0baa3b814077b68659984bcdce8e1d48e72ca44",
       "failing_checks": [
+        "BC-02",
         "BC-05",
         "BC-17"
       ],
@@ -85,7 +83,7 @@
       "revision": "99c789e9175f2b12ad82bafeeba148ddcc1367fb"
     },
     {
-      "commit": "b4167102df1a309bde229c616c07933014042717",
+      "commit": "8faa30ec22afb5d262f7de3745fb29802a738991",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -108,14 +106,11 @@
       "revision": "c65329e7257b1311abb9686d7e4957a8cc002955"
     },
     {
-      "commit": "f36a02fd5d2647dc5bc08915c486b77544ac9fef",
-      "failing_checks": [
-        "BC-04",
-        "BC-05"
-      ],
+      "commit": "781decb87147220e4790c25ab449be78e57d84d6",
+      "failing_checks": [],
       "lane": "R",
-      "outcome": "NEEDS_REPAIR",
-      "regenerations": 0,
+      "outcome": "RECERTIFIED",
+      "regenerations": 1,
       "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Python",
       "revision": "952317cad8db1880ed85be9814c24e9303930d49"
     },
@@ -131,7 +126,7 @@
       "revision": "1a6004af47b1ef15385f9d36d381a8172428cc7e"
     },
     {
-      "commit": "c22186f666f471fdb13ad1fc58a7007e26fc38b3",
+      "commit": "a5948abf8a1667b4c2880095a280926f2e4bbcf2",
       "failing_checks": [],
       "lane": "R",
       "outcome": "RECERTIFIED",
@@ -140,7 +135,7 @@
       "revision": "1a6004af47b1ef15385f9d36d381a8172428cc7e"
     },
     {
-      "commit": "d7a9dfec31701e18f7de07d1eeabc516081ec159",
+      "commit": "8aab4a6f6af104e9b2b118cce3c1a3f05240312c",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -151,7 +146,6 @@
     {
       "commit": "f10b84af4eeb3c6fe01d719d1ea8f4984eeb0119",
       "failing_checks": [
-        "BC-04",
         "BC-05",
         "BC-17"
       ],
@@ -162,7 +156,7 @@
       "revision": "fc186507e5b7124f4664aa6035f25cfd3112367d"
     },
     {
-      "commit": "e7465aae4a4bb82ff65aca11bcc318efe50caaca",
+      "commit": "b3513f7aa57f68dc345ab07bf2c59af12ab2599d",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -171,7 +165,7 @@
       "revision": "59125b4732df0eedbc4d4c2ab978698ed4348eb7"
     },
     {
-      "commit": "781a8f60e7d36bc63c21f94500124e1f0e4dfe9d",
+      "commit": "2ccb4ecd8becc21a6ca1ad56e94f545f7318908a",
       "failing_checks": [],
       "lane": "R",
       "outcome": "RECERTIFIED",
@@ -180,7 +174,7 @@
       "revision": "59125b4732df0eedbc4d4c2ab978698ed4348eb7"
     },
     {
-      "commit": "d7e332e6ac9e816f9db5e1788b0059c2928e70e2",
+      "commit": "7bc46258f96a1d5283084ce4921716955e483146",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -189,7 +183,7 @@
       "revision": "c844a467cf7f2503819b655f4d6ceaef91056c40"
     },
     {
-      "commit": "7e392a07a6084d98522f0fcd66f8dcbbe3f179d0",
+      "commit": "a294efedfbe397e5dc14e36761f979b19624b48e",
       "failing_checks": [],
       "lane": "R",
       "outcome": "RECERTIFIED",
@@ -209,7 +203,7 @@
       "revision": "50f6f98037b78042c984689eed5b1ec6da500248"
     },
     {
-      "commit": "22a3ac40baf7eabe81739a6b2644c65a5482c6f0",
+      "commit": "be2657db8703818e8159924869abacfbc8b9591a",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -218,19 +212,16 @@
       "revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11"
     },
     {
-      "commit": "9c31949d852f5109d9754275faac6e1e8278d66c",
-      "failing_checks": [
-        "BC-05",
-        "BC-17"
-      ],
+      "commit": "f1178bc649f5b7674bc81a1e1a569ac53de6efdb",
+      "failing_checks": [],
       "lane": "R",
-      "outcome": "NEEDS_REPAIR",
-      "regenerations": 0,
+      "outcome": "RECERTIFIED",
+      "regenerations": 1,
       "repository": "aspose-html-foss/Aspose.HTML-FOSS-for-Python",
       "revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11"
     },
     {
-      "commit": "4955acf30844648e179223ef1eb057e7efe462f9",
+      "commit": "1fa02f80336928a93a8b7abbdf48af11e811e35d",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -239,7 +230,7 @@
       "revision": "d947d11cc6b282443231c2025ee43bf974a335dd"
     },
     {
-      "commit": "7702c02f0bb443adefa4cdec8c79d15fa7d0063e",
+      "commit": "0ff9bfba3a0fc8c2b4db0cca05340b5df560e50c",
       "failing_checks": [],
       "lane": "R",
       "outcome": "RECERTIFIED",
@@ -248,7 +239,7 @@
       "revision": "d947d11cc6b282443231c2025ee43bf974a335dd"
     },
     {
-      "commit": "688b2d373f80ab5b6f314594fe73f3a756e20c63",
+      "commit": "dbdc1985224ae051a2834436f69e44fd75eecbd1",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -259,7 +250,6 @@
     {
       "commit": "42dbb54971d879cef53d29d3ef0d2385a5093113",
       "failing_checks": [
-        "BC-04",
         "BC-05",
         "BC-17"
       ],
@@ -270,7 +260,7 @@
       "revision": "0fd1cf7bcadb279a6dd73ddcba3d5241376badd3"
     },
     {
-      "commit": "01525ac949d77aa83aecaf24ecb55fa2eb08580c",
+      "commit": "fcd99aa0df7bd59b4756d3c53fdea408d840e162",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -279,13 +269,22 @@
       "revision": "5bc58466e703024671f0f6d843f2d37c397c8a0e"
     },
     {
-      "commit": "3a9c9b779526d12079520469d0c761a0eefd3630",
+      "commit": "092a3ea8f794c4fec9e3562b3b7afa9dde6ce0dc",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
       "regenerations": 0,
       "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET",
       "revision": "10a363830fea952c29df20fdb37d35ad3a881433"
+    },
+    {
+      "commit": "01b296d05b90b958797a4cc8a69a997f212bd588",
+      "failing_checks": [],
+      "lane": "L",
+      "outcome": "RECERTIFIED",
+      "regenerations": 0,
+      "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-Java",
+      "revision": "736cedaa2922e4952f429364bdb9a4bbb1d97863"
     },
     {
       "commit": "391e1d5bdc04606cc80913fe5bf0e138586e61fd",
@@ -301,7 +300,16 @@
       "revision": "736cedaa2922e4952f429364bdb9a4bbb1d97863"
     },
     {
-      "commit": "c2579d3f09996fafd7686c558c63a829bc328e9e",
+      "commit": "b4a1c6e154474c1fc9d6c48a3b63c40733d7d00e",
+      "failing_checks": [],
+      "lane": "R",
+      "outcome": "RECERTIFIED",
+      "regenerations": 1,
+      "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-.NET",
+      "revision": "b6f778e926aa6249a26d3fba7480a663beb3cdfc"
+    },
+    {
+      "commit": "d03557eeef48e76391de54bfbdea398781a0e47a",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -310,7 +318,7 @@
       "revision": "2271c228d991bcd79048bb61773bcbcb415399c6"
     },
     {
-      "commit": "d815be6251eef75f570f9491b3f119e443a99c4a",
+      "commit": "7bae303ddcfcee9a61d2f5214c89359f33a99499",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -319,7 +327,7 @@
       "revision": "86c441b5d81e707f2ea9e01b197dbb6ff7a3859b"
     },
     {
-      "commit": "a7299d3867b12fefd1205a0145e25ceea6ebd18d",
+      "commit": "4b8150fbef437805dab1772640fc28445859403a",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -328,7 +336,7 @@
       "revision": "0d3f1add920f5294d726b4f286c2d6ba7c3ae22c"
     },
     {
-      "commit": "4a8e51236788baa6d05405120edc31090fec3063",
+      "commit": "bf6d15e262ee45b6e70fdfaac5887627f72ab505",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
