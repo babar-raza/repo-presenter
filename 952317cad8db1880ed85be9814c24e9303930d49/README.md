@@ -1,10 +1,13 @@
 # Aspose.Cells FOSS for Python
 
-[![PyPI](https://img.shields.io/pypi/v/aspose-cells-foss.svg)](https://pypi.org/project/aspose-cells-foss/) ![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](License/LICENSE.txt) [![Contributors](https://img.shields.io/github/contributors/aspose-cells-foss/Aspose.Cells-FOSS-for-Python)](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Python/graphs/contributors)
+[![PyPI version](https://img.shields.io/pypi/v/aspose-cells-foss.svg)](https://pypi.org/project/aspose-cells-foss/) ![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](License/LICENSE.txt) [![Contributors](https://img.shields.io/github/contributors/aspose-cells-foss/Aspose.Cells-FOSS-for-Python.svg)](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Python/graphs/contributors) [![Python](https://img.shields.io/pypi/pyversions/aspose-cells-foss.svg)](https://pypi.org/project/aspose-cells-foss/)
 
 [![Aspose.Cells FOSS for Python](https://products.aspose.org/media/cells/python/banner-readme.png)](https://products.aspose.org/cells/python/)
 
 Aspose.Cells FOSS for Python reads and writes `.xlsx` files. It converts workbooks to CSV, JSON, Markdown, and PDF formats. It supports workbook encryption and decryption with password protection, and provides classes for data validation, charts, sparklines, and tables.
+
+Aspose.Cells FOSS for Python is a free, open-source, pure-Python library for creating, reading,
+modifying, and exporting Excel `.xlsx` workbooks without requiring Microsoft Excel.
 
 ## Navigation
 

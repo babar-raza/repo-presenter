@@ -1,25 +1,25 @@
 --- a/README.md
 +++ b/README.md
-@@ -1,51 +1,102 @@
+@@ -1,51 +1,105 @@
  # Aspose.Cells FOSS for Python
  
 -[![PyPI version](https://img.shields.io/pypi/v/aspose-cells-foss.svg)](https://pypi.org/project/aspose-cells-foss/)
 -[![Python](https://img.shields.io/pypi/pyversions/aspose-cells-foss.svg)](https://pypi.org/project/aspose-cells-foss/)
 -[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](License/LICENSE.txt)
 -[![Contributors](https://img.shields.io/github/contributors/aspose-cells-foss/Aspose.Cells-FOSS-for-Python.svg)](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Python/graphs/contributors)
-+[![PyPI](https://img.shields.io/pypi/v/aspose-cells-foss.svg)](https://pypi.org/project/aspose-cells-foss/) ![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](License/LICENSE.txt) [![Contributors](https://img.shields.io/github/contributors/aspose-cells-foss/Aspose.Cells-FOSS-for-Python)](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Python/graphs/contributors)
++[![PyPI version](https://img.shields.io/pypi/v/aspose-cells-foss.svg)](https://pypi.org/project/aspose-cells-foss/) ![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](License/LICENSE.txt) [![Contributors](https://img.shields.io/github/contributors/aspose-cells-foss/Aspose.Cells-FOSS-for-Python.svg)](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Python/graphs/contributors) [![Python](https://img.shields.io/pypi/pyversions/aspose-cells-foss.svg)](https://pypi.org/project/aspose-cells-foss/)
  
  [![Aspose.Cells FOSS for Python](https://products.aspose.org/media/cells/python/banner-readme.png)](https://products.aspose.org/cells/python/)
++
++Aspose.Cells FOSS for Python reads and writes `.xlsx` files. It converts workbooks to CSV, JSON, Markdown, and PDF formats. It supports workbook encryption and decryption with password protection, and provides classes for data validation, charts, sparklines, and tables.
  
--Aspose.Cells FOSS for Python is a free, open-source, pure-Python library for creating, reading,
--modifying, and exporting Excel `.xlsx` workbooks without requiring Microsoft Excel.
--
+ Aspose.Cells FOSS for Python is a free, open-source, pure-Python library for creating, reading,
+ modifying, and exporting Excel `.xlsx` workbooks without requiring Microsoft Excel.
+ 
 -## Features
 -
 -- Create, load, edit, and save `.xlsx` workbooks
 -- Read and write cell values and formulas using A1 references
-+Aspose.Cells FOSS for Python reads and writes `.xlsx` files. It converts workbooks to CSV, JSON, Markdown, and PDF formats. It supports workbook encryption and decryption with password protection, and provides classes for data validation, charts, sparklines, and tables.
-+
 +## Navigation
 +
 +- [At a Glance](#at-a-glance)
@@ -134,7 +134,7 @@
  
  ```python
  from aspose.cells_foss import Workbook
-@@ -61,7 +112,7 @@
+@@ -61,7 +115,7 @@
  workbook.save("report.xlsx")
  ```
  
@@ -143,7 +143,7 @@
  
  ```python
  from aspose.cells_foss import Workbook
-@@ -72,7 +123,27 @@
+@@ -72,7 +126,27 @@
  print(worksheet.cells["B2"].value)
  ```
  
@@ -172,7 +172,7 @@
  
  ```python
  from aspose.cells_foss import Workbook
-@@ -90,7 +161,7 @@
+@@ -90,7 +164,7 @@
  workbook.save("styled.xlsx")
  ```
  
@@ -181,7 +181,7 @@
  
  ```python
  from aspose.cells_foss import DataValidationType, Workbook
-@@ -105,67 +176,464 @@
+@@ -105,34 +179,453 @@
  workbook.save("validation.xlsx")
  ```
  
@@ -213,36 +213,8 @@
 -```
 -
 -## Supported formats
--
--| Format | Load | Save |
--|---|:---:|:---:|
--| XLSX | Yes | Yes |
--| Encrypted XLSX | Yes | Yes |
--| CSV | Yes | Yes |
--| TSV | No | Yes |
--| JSON | No | Yes |
--| Markdown | No | Yes |
--| PDF | No | Yes |
--
- CSV import is available through `Workbook.load_csv()` or `load_csv_workbook()`.
- 
--## Scope
--
--- Formula expressions and cached results are preserved, but this project is not a full Excel
--  calculation engine.
--- Native workbook loading and saving targets the Open XML `.xlsx` format. Other spreadsheet
--  formats such as `.xls`, `.ods`, and `.xlsb` are not supported.
--- Some advanced Excel features are preserved as source package parts rather than exposed as
--  editable Python objects.
--- PDF output depends on locally available fonts and the optional `skia-python` renderer.
--
--## Examples and API
--
--- Browse the executable [examples](examples) for feature-specific workflows.
--- See the package's public exports in
--  [`aspose/cells_foss/__init__.py`](aspose/cells_foss/__init__.py).
--- Read the current [release notes](RELEASE_NOTES.md).
--- Review development conventions in [AGENTS.md](AGENTS.md).
++CSV import is available through `Workbook.load_csv()` or `load_csv_workbook()`.
++
 +</details>
 +
 +## API Reference
@@ -675,24 +647,51 @@
 +
 +## Documentation & Resources
 +
-+- **[examples](examples)** — The examples directory contains executable scripts demonstrating feature-specific workflows for working with spreadsheets.
-+- **[aspose/cells_foss/__init__.py](aspose/cells_foss/__init__.py)** — The package's public exports are defined in the `aspose/cells_foss/__init__.py` module.
-+- **[AGENTS.md](AGENTS.md)** — `AGENTS.md` outlines development conventions for contributors to the Aspose.Cells FOSS for Python project.
- - Found a bug or have a feature request? [Open an issue](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Python/issues).
- 
--## Development
++- **[examples](examples)** — Browse the executable examples for feature-specific workflows.
++- **[aspose/cells_foss/__init__.py](aspose/cells_foss/__init__.py)** — See the package's public exports in `aspose/cells_foss/__init__.py`.
++- **[AGENTS.md](AGENTS.md)** — Review development conventions in `AGENTS.md`.
++- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Python/issues).
++
 +## Scope and Limitations
 +
 +Aspose.Cells FOSS for Python reads and writes Excel workbooks in the `.xlsx` format, supports loading encrypted `.xlsx` files, and provides basic workbook manipulation capabilities including cell access, styling, and formula handling while preserving formula expressions and cached results.
 +
-+- The project is not a full Excel calculation engine, and native workbook loading and saving targets only the Open XML `.xlsx` format; other spreadsheet formats such as .xls, .ods, and .xlsb are not supported, and some advanced Excel features are preserved as source package parts rather than exposed as editable Python objects.
-+- The project supports loading and saving `.xlsx` files, loading encrypted `.xlsx` files, loading .csv files, saving .tsv, .json, and .markdown files, and saving PDF files, but does not support loading .tsv, .json, or .markdown files.
-+- The public symbols `aspose.cells_foss.xml_loader` and `aspose.cells_foss.xml_saver` are available for XML handling, but the project does not provide native support for loading or saving XML workbook formats beyond these explicit utilities.
-+- PDF output depends on locally available fonts and the optional `aspose.cells_foss.SkiaPdfRenderer` class, requiring the skia-python renderer to be installed separately for PDF export functionality.
-+
++- Formula expressions and cached results are preserved, but this project is not a full Excel calculation engine.
++- Native workbook loading and saving targets the Open XML `.xlsx` format; other spreadsheet formats such as .xls, .ods, and .xlsb are not supported.
++- Some advanced Excel features are preserved as source package parts rather than exposed as editable Python objects.
++- PDF output depends on locally available fonts and the optional `aspose.cells_foss.SkiaPdfRenderer` class.
+ 
+ | Format | Load | Save |
+ |---|:---:|:---:|
+@@ -144,28 +637,16 @@
+ | Markdown | No | Yes |
+ | PDF | No | Yes |
+ 
+-CSV import is available through `Workbook.load_csv()` or `load_csv_workbook()`.
+-
+-## Scope
+-
+-- Formula expressions and cached results are preserved, but this project is not a full Excel
+-  calculation engine.
+-- Native workbook loading and saving targets the Open XML `.xlsx` format. Other spreadsheet
+-  formats such as `.xls`, `.ods`, and `.xlsb` are not supported.
+-- Some advanced Excel features are preserved as source package parts rather than exposed as
+-  editable Python objects.
+-- PDF output depends on locally available fonts and the optional `skia-python` renderer.
+-
+-## Examples and API
+-
+-- Browse the executable [examples](examples) for feature-specific workflows.
+-- See the package's public exports in
+-  [`aspose/cells_foss/__init__.py`](aspose/cells_foss/__init__.py).
+-- Read the current [release notes](RELEASE_NOTES.md).
+-- Review development conventions in [AGENTS.md](AGENTS.md).
+-- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Python/issues).
+-
+-## Development
 +## Development and Testing
 +
-+The package requires Python 3.10 or later with core runtime dependencies pycryptodome and olefile. To enable PDF export, install skia-python separately. Development dependencies are installed and the example test suite is run to verify functionality. Generated workbooks are written below examples/outputfiles/ and are not intended for source control.
++Development dependencies are installed and the example test suite is run to verify functionality. Generated workbooks are written below examples/outputfiles/ and are not intended for source control.
 +
 +PDF export uses `skia-python`, which is not currently installed by the core package.
 +Install the renderer separately:
@@ -703,7 +702,7 @@
  
  Install the development dependencies and collect or run the examples:
  
-@@ -177,7 +645,10 @@
+@@ -177,7 +658,10 @@
  Generated workbooks are written below `examples/outputfiles/` and are not intended for source
  control.
  
