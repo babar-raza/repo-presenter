@@ -379,9 +379,12 @@ def test_real_build_reports_the_honest_zero_call_floor() -> None:
     assert registration.shortfall.met is False
     assert registration.shortfall.short_classes() == ["A", "C", "D", "E"]
 
-    # Clean twins (28 registered "clean" + 23 "unscored_twin" + 10 sealed RECERTIFIED-clean) do
-    # reach the n>=50 minimum from existing data alone.
-    assert registration.shortfall.clean_twin_achieved == 61
+    # Clean twins (28 registered "clean" + 23 "unscored_twin" + 9 sealed RECERTIFIED-clean) do
+    # reach the n>=50 minimum from existing data alone. 9, not 10: 2026-11-09 found
+    # aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python lane L genuinely NEEDS_REPAIR (L-05,
+    # justified in data/recertification_baseline.json's own row), so it no longer contributes a
+    # RECERTIFIED-clean twin -- a real, cascading, honest drop, not a test-fixture artifact.
+    assert registration.shortfall.clean_twin_achieved == 60
     assert registration.shortfall.clean_twin_shortfall == 0
 
     assert len(registration.labelled_cases) == 113
