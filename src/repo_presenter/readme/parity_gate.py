@@ -302,6 +302,111 @@ def topics_match(left: str, right: str) -> bool:
     return a == b or a <= b or b <= a
 
 
+# --- badge / banner slot equivalence ----------------------------------------------------------
+#
+# R2 is content equivalence, not byte identity. A maintainers' badge or banner whose SLOT
+# (banner, package, runtime, build, license, contributors) the candidate fills with the renderer's
+# own verified slot badge is REPLACED, not lost -- the same standing the module already gives a
+# command replaced by the verified install command or a version replaced by the verified published
+# version. ONE function judges it (``badge_slot_replaced``); BC-17 (``technical_content`` below),
+# the independent reviewer's ``live_readme_loss`` and ``disposition_coverage`` rules, and S9
+# accounting all call it, so "replaced" can never mean one thing in one gate and another elsewhere.
+# A slot the candidate leaves empty is never exempt, and neither is a link_target fact the facts
+# record CONTRADICTED (callers pass those hrefs in ``contradicted``).
+
+_LINKED_BADGE = re.compile(r"\[!\[[^\]]*\]\(([^)\s]+)[^)]*\)\]\(([^)\s]+)[^)]*\)")
+_ANY_IMAGE = re.compile(r"!\[[^\]]*\]\(([^)\s]+)")
+_ANY_BADGE_MARKDOWN = re.compile(
+    r"\[!\[[^\]]*\]\([^)]*\)\]\([^)]*\)|!\[[^\]]*\]\([^)]*\)"
+)
+
+
+def badge_slot_of_url(url: str) -> str | None:
+    """The slot an image URL fills: ``banner``, ``package``, ``runtime``, ``build``, ``license``
+    or ``contributors``; ``None`` for anything that is not recognisably a badge or a banner
+    (a body image, a diagram) -- those are content and are never exempted here."""
+    low = url.strip().lower()
+    path = low.split("?", 1)[0]
+    if "banner" in path.rsplit("/", 1)[-1]:
+        return "banner"
+    if "shields.io" not in low and "/badge.svg" not in path and "badgen.net" not in low:
+        return None
+    if "github/contributors" in low:
+        return "contributors"
+    if "/actions/workflows/" in low or "/workflow/status" in low or "travis" in low or "circleci" in low:
+        return "build"
+    if "/pypi/l/" in low or "/github/license" in low or "/npm/l/" in low or "/crates/l/" in low \
+            or "/nuget/l" in low or "/badge/license" in low:
+        return "license"
+    if "/pypi/pyversions" in low or "/badge/python" in low or "/badge/go" in low \
+            or "/badge/java" in low or "/badge/.net" in low or "/badge/dotnet" in low \
+            or "/badge/node" in low or "/badge/rust" in low or "/badge/c%2b%2b" in low \
+            or "/badge/typescript" in low or "/badge/c++" in low:
+        return "runtime"
+    if any(f"/{registry}/v/" in low for registry in ("pypi", "npm", "nuget", "crates", "maven-central", "gem")):
+        return "package"
+    return None
+
+
+def candidate_badge_slots(candidate_text: str) -> frozenset[str]:
+    """Every slot some image in the candidate fills."""
+    return frozenset(
+        slot
+        for url in _ANY_IMAGE.findall(candidate_text)
+        if (slot := badge_slot_of_url(url)) is not None
+    )
+
+
+def badge_slot_replaced(
+    href: str,
+    benchmark_text: str,
+    candidate_text: str,
+    contradicted: frozenset[str] | set[str] = frozenset(),
+) -> str | None:
+    """Why ``href`` (an image URL of the benchmark, or the link target of one of its linked
+    badges) is replaced rather than lost, or ``None``: the badge's slot is filled in the
+    candidate and the href is not CONTRADICTED."""
+    if href in contradicted:
+        return None
+    filled = candidate_badge_slots(candidate_text)
+    own = badge_slot_of_url(href)
+    if own is not None:
+        return f"replaced by the candidate's verified {own} badge" if own in filled else None
+    for image, target in _LINKED_BADGE.findall(benchmark_text):
+        if target.strip().rstrip("/") == href.strip().rstrip("/"):
+            slot = badge_slot_of_url(image)
+            if slot is not None and slot in filled:
+                return f"link of a {slot} badge the candidate replaces with its verified one"
+    return None
+
+
+def badge_row_replaced(
+    unit_text: str,
+    candidate_text: str,
+    contradicted: frozenset[str] | set[str] = frozenset(),
+) -> bool:
+    """Whether an inherited badge-row unit is wholly accounted for in the candidate: it is nothing
+    but badges, and every one of them is printed as written or replaced by its slot's verified
+    badge. A row carrying any other text, or any badge the candidate neither prints nor replaces,
+    is not (and keeps the stricter 'printed as written' standard)."""
+    if _ANY_BADGE_MARKDOWN.sub("", unit_text).strip():
+        return False
+    badges = _ANY_BADGE_MARKDOWN.findall(unit_text)
+    if not badges:
+        return False
+    squeezed = " ".join(candidate_text.split())
+    for badge in badges:
+        if " ".join(badge.split()) in squeezed:
+            continue
+        images = _ANY_IMAGE.findall(badge)
+        if not images:
+            return False
+        image = images[0]
+        if badge_slot_replaced(image, unit_text, candidate_text, contradicted) is None:
+            return False
+    return True
+
+
 def _norm_href(href: str) -> str:
     href = href.strip()
     match = _GH_BLOB.match(href)
@@ -684,6 +789,10 @@ def technical_content(
                 why = "its example fact is CONTRADICTED"
             if why is None and category == "links" and item in contradicted_links:
                 why = "its link_target fact is CONTRADICTED"
+            if why is None and category == "links":
+                why = badge_slot_replaced(
+                    item, bench.text, cand.readme, frozenset(contradicted_links)
+                )
             if why is None and category == "install_commands":
                 tool = " ".join(item.split()[:2]).lower()
                 if any(

@@ -86,6 +86,7 @@ from repo_presenter.readme.composition.coverage import (
 )
 from repo_presenter.readme.composition.list_coverage import list_items, missing_items
 from repo_presenter.readme.evidence.facts.links import extract_links
+from repo_presenter.readme.parity_gate import badge_row_replaced, badge_slot_replaced
 from repo_presenter.readme.review.findings import Finding
 from repo_presenter.readme.review.matching import plain
 from repo_presenter.readme.review.scope import reviewable_lines
@@ -341,12 +342,29 @@ def _list_items_stated(
     )
 
 
+def _contradicted_links(facts: FactsDocument) -> frozenset[str]:
+    return frozenset(
+        str(fact.value)
+        for fact in facts.facts
+        if fact.kind == "link_target" and fact.polarity == "CONTRADICTED"
+    )
+
+
 def _kept_text_printed(
     unit_text: str,
     unit_id: str,
     readme_text: str,
     destination: str | None = None,
+    contradicted: frozenset[str] = frozenset(),
+    slot_equivalence: bool = True,
 ) -> bool:
+    if slot_equivalence and unit_id.endswith(".badge_row") and badge_row_replaced(
+        unit_text, readme_text, contradicted
+    ):
+        # R2 is content equivalence: a maintainers' badge row whose every badge is printed or
+        # replaced by its slot's verified badge (parity_gate.badge_slot_replaced, the ONE judgement
+        # BC-17 and live_readme_loss share) is accounted for.
+        return True
     if unit_id.endswith(".heading"):
         # A heading is printed only as a heading. A substring match would call
         # "### Convert a Lambert Material to PBR" printed because the README says
@@ -387,18 +405,27 @@ def unprinted_kept_units(
     *,
     facts: FactsDocument,
     dispositions: Mapping[str, Any],
+    slot_equivalence: bool = True,
 ) -> list[tuple[str, str]]:
     """``(unit_id, disposition)`` for each kept unit whose text the README does not print: the
     one test ``disposition_coverage_rule`` judges by, shared with the stage that accounts for
-    such a unit (``readme.repair.accounting``) so the two can never disagree about "printed"."""
+    such a unit (``readme.repair.accounting``) so the two can never disagree about "printed".
+
+    ``slot_equivalence`` (default on, the reviewer's judgement): a badge row whose every badge is
+    printed or replaced by its slot's verified badge counts as printed (R2: content equivalence).
+    The accounting stage passes ``False`` so it still records such a row explicitly as
+    SUPERSEDE_REDUNDANT whenever it can; the reviewer's lenient reading is the backstop for the rows
+    it cannot supersede (a link of the row printed nowhere else)."""
     units = _inherited_units(facts)
+    contradicted = _contradicted_links(facts)
     return [
         (unit, str(row.get("disposition")))
         for row in _dispositions_list(dispositions)
         if row.get("disposition") in KEPT_DISPOSITIONS
         and (unit := str(row.get("unit_id", ""))) in units
         and not _kept_text_printed(
-            units[unit], unit, readme_text, row.get("destination_section")
+            units[unit], unit, readme_text, row.get("destination_section"), contradicted,
+            slot_equivalence,
         )
     ]
 
@@ -506,9 +533,14 @@ def live_readme_loss_rule(
                 (fence, f"code block {fence.splitlines()[0][:50] if fence else ''!r}")
             )
     new_targets = {link.href.rstrip("/") for link in extract_links(readme_text)}
+    contradicted = _contradicted_links(facts)
     for link in extract_links(original_readme):
         target = link.href.rstrip("/")
-        if target not in new_targets and not accounted(link.href):
+        if (
+            target not in new_targets
+            and not accounted(link.href)
+            and badge_slot_replaced(link.href, original_readme, readme_text, contradicted) is None
+        ):
             lost.append((link.href, f"link {link.href}"))
     candidate_text = _code(readme_text)
     for command in _verified_install_commands(facts, original_readme):

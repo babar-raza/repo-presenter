@@ -749,7 +749,10 @@ def account_unprinted_units(
     unprinted = {
         unit
         for unit, _disposition in unprinted_kept_units(
-            candidate.readme, facts=candidate.facts, dispositions=candidate.dispositions
+            candidate.readme,
+            facts=candidate.facts,
+            dispositions=candidate.dispositions,
+            slot_equivalence=False,
         )
     }
     by_unit = {p.unit_id: p for p in placements_of(candidate)}
