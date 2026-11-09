@@ -104,6 +104,7 @@ from repo_presenter.readme.review.verdict_io import (
     write_review_verdict,
 )
 from repo_presenter.readme.validation.claims import claim_findings
+from repo_presenter.readme.validation.surface_claims import without_absent_type_rows
 from repo_presenter.readme.validation.text import section_texts
 
 #: The reviewer's public surface: callers import the finding model, verdict, fold and verdict-file
@@ -416,7 +417,10 @@ def unprinted_kept_units(
     The accounting stage passes ``False`` so it still records such a row explicitly as
     SUPERSEDE_REDUNDANT whenever it can; the reviewer's lenient reading is the backstop for the rows
     it cannot supersede (a link of the row printed nowhere else)."""
-    units = _inherited_units(facts)
+    units = {
+        unit_id: (without_absent_type_rows(text, facts) if unit_id.endswith(".table") else text)
+        for unit_id, text in _inherited_units(facts).items()
+    }
     contradicted = _contradicted_links(facts)
     return [
         (unit, str(row.get("disposition")))

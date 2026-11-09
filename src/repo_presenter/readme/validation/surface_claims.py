@@ -344,6 +344,50 @@ def _row_name(cell: str) -> str:
     return name
 
 
+def absent_type_rows(text: str, facts: FactsDocument) -> list[str]:
+    """The rows of a maintainers' API TYPE table that name something the public surface lacks:
+    the rows BC-14 rule (i) would flag. Empty unless the table reads as a type table (at least
+    ``_TABLE_MIN_ROWS`` rows, at least ``_TABLE_TYPE_SHARE`` of whose first cells are verified public
+    types). A delegate/callback row is never absent (a kind no ``public_symbol`` fact records)."""
+    known, types, _qualified = _surface_names(facts)
+    if not types:
+        return []
+    rows: list[tuple[str, str]] = []
+    for line in text.splitlines():
+        match = _TABLE_ROW.match(line)
+        if match is not None:
+            rows.append((_row_name(match.group("name")), line))
+    if len(rows) < _TABLE_MIN_ROWS:
+        return []
+
+    def is_type(name: str) -> bool:
+        return name in types or name.split("-", 1)[0] in types
+
+    if sum(is_type(name) for name, _ in rows) / len(rows) < _TABLE_TYPE_SHARE:
+        return []
+    return [
+        line
+        for name, line in rows
+        if name
+        and not (
+            name in known or name.split("-", 1)[0] in known or _SEGMENTS.split(name)[-1] in known
+        )
+        and not _UNEXTRACTED_KIND.search(line.split("|", 2)[-1])
+    ]
+
+
+def without_absent_type_rows(text: str, facts: FactsDocument) -> str:
+    """``text`` with the rows ``absent_type_rows`` names removed, every other line (header,
+    separator, remaining rows, surrounding prose) exactly as written. The ONE printable form of a
+    kept maintainers' type table: the renderer prints it, and BC-05 / the independent reviewer's
+    ``disposition_coverage`` judge "printed" against it, so the three can never disagree. A row
+    dropped here is dropped on evidence -- the facts hold no public type of that name (BC-14)."""
+    drop = set(absent_type_rows(text, facts))
+    if not drop:
+        return text
+    return "\n".join(line for line in text.split("\n") if line.rstrip("\r") not in drop)
+
+
 def _table_findings(
     lines: list[_Line], facts: FactsDocument, origin: _Origin, probes: _Probes | None = None
 ) -> list[ClaimFinding]:

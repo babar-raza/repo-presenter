@@ -28,16 +28,8 @@ from typing import Any
 from repo_presenter.core.facts import FactsDocument
 from repo_presenter.readme.composition.placement import ATTRIBUTED, PLACED
 from repo_presenter.readme.reconciliation.destinations import nearest_holdable
-from repo_presenter.readme.validation.surface_claims import (
-    _SEGMENTS,
-    _TABLE_MIN_ROWS,
-    _TABLE_ROW,
-    _TABLE_TYPE_SHARE,
-    _UNEXTRACTED_KIND,
-    _row_name,
-    _surface_names,
-)
 from repo_presenter.readme.validation.links import unsafe_html_failures
+from repo_presenter.readme.validation.surface_claims import absent_type_rows
 
 __all__ = ["choose_units", "failing_unit_ids", "restore_lost_units"]
 
@@ -121,41 +113,15 @@ def choose_units(
 
 
 def table_contradicts_surface(text: str, facts: FactsDocument) -> bool:
-    """Whether printing this maintainers' table would trip BC-14's API-table rule: it reads as a
-    type table (>= 60% of its first cells are verified public types, at least 3 rows) and a row
-    names something the public surface does not know. Such a table is not restored verbatim:
-    keeping it would trade BC-05/BC-17 for a false claim about the public surface (measured on
-    Cells Rust -- ``BorderStyle``/``CellValueKind`` live in an internal module -- and HTML Python's
-    ``CSSDeclarationBlock``/``BreakHints``); dropping those rows needs a fact that contradicts
-    them, which this module never invents. Member tables (``Detect``, ``add(time, value)``,
-    ``NORMALIZE``) are not type tables and are restored."""
-    known, types, _qualified = _surface_names(facts)
-    if not types:
-        return False
-    names = []
-    texts = []
-    for line in text.splitlines():
-        match = _TABLE_ROW.match(line)
-        if match is not None:
-            names.append(_row_name(match.group("name")))
-            texts.append(line)
-    if len(names) < _TABLE_MIN_ROWS:
-        return False
-
-    def is_type(name: str) -> bool:
-        return name in types or name.split("-", 1)[0] in types
-
-    if sum(is_type(name) for name in names) / len(names) < _TABLE_TYPE_SHARE:
-        return False
-    for name, row in zip(names, texts):
-        if not name:
-            continue
-        known_name = (
-            name in known or name.split("-", 1)[0] in known or _SEGMENTS.split(name)[-1] in known
-        )
-        if not known_name and not _UNEXTRACTED_KIND.search(row.split("|", 2)[-1]):
-            return True
-    return False
+    """Whether this maintainers' table is a type table (BC-14 rule (i): >= 60% of its first cells
+    are verified public types, at least 3 rows) with a row naming something the public surface
+    does not know. Such a row is not printed (``composition.placement`` filters it out of the
+    kept table, BC-14 / ``surface_claims.without_absent_type_rows``), so the table itself is
+    still restored: the maintainers' other rows are the published floor (R2). Measured on Cells
+    Rust (``BorderStyle``/``CellValueKind`` live in an internal module) and HTML Python
+    (``CSSDeclarationBlock``/``BreakHints``). Member tables (``Detect``, ``add(time, value)``) are
+    not type tables."""
+    return bool(absent_type_rows(text, facts))
 
 
 def restore_lost_units(
@@ -211,12 +177,6 @@ def restore_lost_units(
                 unit_id, attributes.get("section"), holdable_set - {"api_reference"}
             )
         if destination is None:
-            continue
-        if (
-            destination == "api_reference"
-            and unit_id.rsplit(".", 1)[-1] == "table"
-            and table_contradicts_surface(unit.value, facts)
-        ):
             continue
         if unsafe_html_failures(unit.value):
             # Raw HTML BC-06 forbids outside a fence (<base>, <meta>, <iframe>, ...) would be

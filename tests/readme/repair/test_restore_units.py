@@ -222,17 +222,24 @@ def _type_table_facts() -> FactsDocument:
     )
 
 
-def test_a_type_table_naming_something_the_public_surface_lacks_stays_deferred() -> None:
+def test_a_type_table_naming_something_the_public_surface_lacks_is_restored_without_that_row() -> None:
     """Cells Rust: the maintainers' type table lists `BorderStyle`, which lives in an internal
-    module; printing it would be a BC-14 false claim, so it is not restored."""
+    module. The table is restored (R2 floor); the renderer prints it without the absent row, so
+    BC-14 holds and BC-05 / disposition_coverage judge "printed" against the filtered table."""
     from repo_presenter.readme.repair.restore_units import table_contradicts_surface
+    from repo_presenter.readme.validation.surface_claims import without_absent_type_rows
 
     facts = _type_table_facts()
-    assert table_contradicts_surface(facts.by_kind("inherited_unit")[0].value, facts)
+    text = facts.by_kind("inherited_unit")[0].value
+    assert table_contradicts_surface(text, facts)
+    printed = without_absent_type_rows(text, facts)
+    assert "BorderStyle" not in printed
+    assert all(row in printed for row in ("`Workbook`", "`Cell`", "`Range`", "| Class | Description |"))
     new, changes = restore_lost_units(
         _ts_dispositions(), facts, ["inherited_unit:037.table"], TS_HOLDABLE, TS_HOLDABLE
     )
-    assert changes == [] and new["dispositions"][1]["disposition"] == "DEFER_UNRESOLVED"
+    assert [c["unit_id"] for c in changes] == ["inherited_unit:037.table"]
+    assert new["dispositions"][1]["destination_section"] == "api_reference"
 
 
 def test_a_member_table_is_not_a_type_table_and_is_restored() -> None:
