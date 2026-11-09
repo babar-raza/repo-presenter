@@ -877,7 +877,40 @@ def _symbol_description(context: RenderContext, fact: Fact) -> str:
         return f"Defined as `{signature}`."
     if not text:
         text = f"Public {attributes.get('symbol_kind', 'symbol')}."
-    return context.canonical(text.replace("|", "/").replace("`", ""))
+    return _stub_marked(context, fact, context.canonical(text.replace("|", "/").replace("`", "")))
+
+
+def _stub_marked(context: RenderContext, fact: Fact, description: str) -> str:
+    """``description`` with a type or member the maintainers' own limitation statements say only
+    throws (``validation.surface_claims.StubIndex``) described as such, not as working.
+
+    Measured 2026-11-10 (Aspose.3D-FOSS-for-Python, batch 1): the Core API row for ``Watermark``
+    printed its docstring ("Utility to encode/decode blind watermark ...") while the README's own
+    limitations say ``Watermark.decode_watermark`` only throws, so BC-14 / claim_contradiction
+    blocked the seal. The rule's remedy is "describe it as not implemented or omit it". A whole
+    stubbed type reads "Not implemented."; a type with stubbed members keeps its description and
+    says so. Mechanical, from facts only; no unit text is edited, and a type the index does not
+    name is returned unchanged. The row's first cell is what the validator judges, so the owner is
+    that cell's first segment, exactly as ``surface_claims._stub_findings`` takes it."""
+    from repo_presenter.readme.validation.surface_claims import StubIndex
+
+    cached = getattr(context, "_stub_cache", None)
+    if cached is None:
+        index = StubIndex(context.facts)
+        cached = (index, api_reference_names(context.facts) if index else {})
+        context._stub_cache = cached  # type: ignore[attr-defined]
+    stubs, names = cached
+    if not stubs:
+        return description
+    owner = names.get(fact.value, fact.value).split(".", 1)[0]
+    if owner in stubs.types:
+        return "Not implemented."
+    if stubs.members.get(owner):
+        # Inside the first sentence: the validator judges one sentence at a time, so a suffix after
+        # the description's final full stop would be a separate sentence and miss the limitation cue.
+        body = description.rstrip().removesuffix(".")
+        return f"{body} (some members not implemented)."
+    return description
 
 
 def _member_summary(context: RenderContext, fact: Fact) -> str:
@@ -1408,7 +1441,53 @@ def render_readme(
             continue
         heading = [f"## {section.heading}", ""] if section.heading else []
         blocks.append("\n".join(heading + body).rstrip("\n"))
-    return collapse_document_blank_runs("\n\n".join(blocks) + "\n")
+    return correct_stated_type_counts(
+        collapse_document_blank_runs("\n\n".join(blocks) + "\n"), facts
+    )
+
+
+def correct_stated_type_counts(text: str, facts: FactsDocument) -> str:
+    """``text`` with every "N public types" / "N ... classes[ and enumerations]" statement that
+    the facts' own public surface contradicts corrected to the facts' number, prose outside fenced
+    code blocks only.
+
+    Measured 2026-11-10 (Pareto #2 across the first generation batch): the PUBLISHED aspose.org
+    READMEs themselves print stale counts (Go "14 public types" against 192 SUPPORTED
+    ``public_symbol`` facts; Java 183, Cpp 197, HTML 243) and the candidate inherits them verbatim,
+    so BC-14 and the reviewer's claim_contradiction block it. The validator is right and the
+    benchmark is stale, so the target is the corrected count. The substitution is exactly the one
+    ``readme.repair.zero_call_restore.restore_stated_count`` defines (accepted under TC-019a):
+    digits only, the sentence's own words untouched, nothing when the count already matches or the
+    facts compute no type count. Fenced code is never edited (a sample may legitimately print a
+    number)."""
+    from repo_presenter.readme.repair.zero_call_restore import restore_stated_count
+
+    out: list[str] = []
+    chunk: list[str] = []
+    inside = False
+
+    def flush() -> None:
+        if not chunk:
+            return
+        block = "\n".join(chunk)
+        out.append(restore_stated_count(block, facts) or block)
+        chunk.clear()
+
+    for line in text.split("\n"):
+        fence = line.strip().startswith(("```", "~~~"))
+        if fence and not inside:
+            flush()
+            inside = True
+            out.append(line)
+        elif fence and inside:
+            inside = False
+            out.append(line)
+        elif inside:
+            out.append(line)
+        else:
+            chunk.append(line)
+    flush()
+    return "\n".join(out)
 
 
 def collapse_document_blank_runs(text: str) -> str:
