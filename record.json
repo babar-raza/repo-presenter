@@ -18,10 +18,10 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; duplicate_paragraph [quality] blocks until rule duplicate_paragraph no longer finds it (the paragraph occurs 2 times)",
+    "classification": "transient",
+    "detail": "attempt under version set b8a378160410: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit opening: is 2066 characters, past the 1500 a single unit may take; say each point once, in a sentence, and leave the rest to the section's other units",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-01T10:44:09.112285+00:00",
+    "occurred_at": "2026-11-09T19:31:29.310370+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 13,
+  "state_version": 14,
   "recent_trigger_dedup_keys": {
     "run:41142575744:aspose-slides-foss/Aspose.Slides-FOSS-for-Python": "749bc2a2789d44f4a06527e6fa5f431e",
     "run:41162835931:aspose-slides-foss/Aspose.Slides-FOSS-for-Python": "d3043e1665a44495911e43ead88cd3bd",
