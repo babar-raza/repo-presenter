@@ -67,7 +67,7 @@ def main(argv: list[str]) -> int:
         return 0
     print(
         f"Lane R {r['independently_accepted']}/25 | Lane L {l['independently_accepted']}/25 | "
-        f"mechanism-passing only R {r['mechanism_passing']} L {l['mechanism_passing']} | "
+        f"mechanism-passing only R {r['mechanism_passing']} L {l['mechanism_passing']} (Lane L count includes byte-identical no-op seals, R16: never an accepted candidate) | "
         f"upstream PRs {r['pr_created'] + l['pr_created']} | upstream issues 0 | "
         f"live-verified {r['live_verified'] + l['live_verified']}"
     )
