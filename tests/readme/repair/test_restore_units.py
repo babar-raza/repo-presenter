@@ -188,19 +188,74 @@ def test_a_corrected_unit_is_never_reverted_to_its_original_text() -> None:
     assert changes == [] and new == corrected
 
 
-def test_a_maintainers_api_table_is_never_restored_even_when_asked() -> None:
-    """Printing the maintainers' class table beside the rendered Core API table fails BC-07
-    ("lists 139 rows for 31 verified public types", measured on this seal); the validator counts
-    every first-cell row, so even a table whose rows are all in the rendered table breaks it. The
-    old `include_api_tables=True` retry caused the BC-07 failures on TypeScript, Cpp, Java, Note
-    and HTML (none present in the stored seals), so the flag no longer restores a table."""
+def test_a_maintainers_api_table_is_restored_now_that_bc07_counts_only_the_renderers_tables() -> None:
+    """The published README's class/member table is the R2 floor. It used to stay deferred because
+    BC-07 counted every first-cell row; BC-07 now judges only the tables the renderer emits under
+    "### Core API" / "#### Enumerations", so the table is kept (verbatim) and placed."""
     ids = ["inherited_unit:037.table"]
-    deferred, none = restore_lost_units(_ts_dispositions(), _ts_facts(), ids, TS_HOLDABLE, TS_HOLDABLE)
-    assert none == [] and deferred["dispositions"][1]["disposition"] == "DEFER_UNRESOLVED"
-    asked, changes = restore_lost_units(
-        _ts_dispositions(), _ts_facts(), ids, TS_HOLDABLE, TS_HOLDABLE, include_api_tables=True
+    new, changes = restore_lost_units(_ts_dispositions(), _ts_facts(), ids, TS_HOLDABLE, TS_HOLDABLE)
+    assert [c["unit_id"] for c in changes] == ids
+    # No fact backs the maintainers' table, so it is kept attributed, in the API Reference.
+    assert new["dispositions"][1]["disposition"] == "PRESERVE_ATTRIBUTED"
+    assert new["dispositions"][1]["destination_section"] == "api_reference"
+
+
+def _type_table_facts() -> FactsDocument:
+    table = "\n".join(
+        (
+            "| Class | Description |",
+            "|---|---|",
+            "| `Workbook` | The workbook. |",
+            "| `Cell` | A cell. |",
+            "| `Range` | A range. |",
+            "| `BorderStyle` | Border styles. |",
+        )
     )
-    assert changes == [] and asked["dispositions"][1]["disposition"] == "DEFER_UNRESOLVED"
+    return FactsDocument(
+        "r/x", "0" * 40,
+        (
+            _fact("inherited_unit:037.table", "inherited_unit", table, section="API Reference > Core API"),
+            _fact("public_symbol:workbook", "public_symbol", "Workbook", symbol_kind="class"),
+            _fact("public_symbol:cell", "public_symbol", "Cell", symbol_kind="class"),
+            _fact("public_symbol:range", "public_symbol", "Range", symbol_kind="class"),
+        ),
+    )
+
+
+def test_a_type_table_naming_something_the_public_surface_lacks_stays_deferred() -> None:
+    """Cells Rust: the maintainers' type table lists `BorderStyle`, which lives in an internal
+    module; printing it would be a BC-14 false claim, so it is not restored."""
+    from repo_presenter.readme.repair.restore_units import table_contradicts_surface
+
+    facts = _type_table_facts()
+    assert table_contradicts_surface(facts.by_kind("inherited_unit")[0].value, facts)
+    new, changes = restore_lost_units(
+        _ts_dispositions(), facts, ["inherited_unit:037.table"], TS_HOLDABLE, TS_HOLDABLE
+    )
+    assert changes == [] and new["dispositions"][1]["disposition"] == "DEFER_UNRESOLVED"
+
+
+def test_a_member_table_is_not_a_type_table_and_is_restored() -> None:
+    """3D .NET: `Detect`/`GetFormatByExtension`/... are members, not public types."""
+    from repo_presenter.readme.repair.restore_units import table_contradicts_surface
+
+    table = "\n".join(
+        (
+            "| Method | Description |",
+            "|---|---|",
+            "| `Detect` | Detects. |",
+            "| `GetFormatByExtension` | Maps. |",
+            "| `WavefrontOBJ` | OBJ. |",
+        )
+    )
+    facts = FactsDocument(
+        "r/x", "0" * 40,
+        (
+            _fact("inherited_unit:050.table", "inherited_unit", table, section="API Reference"),
+            _fact("public_symbol:scene", "public_symbol", "Scene", symbol_kind="class"),
+        ),
+    )
+    assert not table_contradicts_surface(table, facts)
 
 
 def test_a_unit_holding_raw_html_bc06_forbids_is_not_restored() -> None:

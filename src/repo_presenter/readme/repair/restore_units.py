@@ -28,6 +28,15 @@ from typing import Any
 from repo_presenter.core.facts import FactsDocument
 from repo_presenter.readme.composition.placement import ATTRIBUTED, PLACED
 from repo_presenter.readme.reconciliation.destinations import nearest_holdable
+from repo_presenter.readme.validation.surface_claims import (
+    _SEGMENTS,
+    _TABLE_MIN_ROWS,
+    _TABLE_ROW,
+    _TABLE_TYPE_SHARE,
+    _UNEXTRACTED_KIND,
+    _row_name,
+    _surface_names,
+)
 from repo_presenter.readme.validation.links import unsafe_html_failures
 
 __all__ = ["choose_units", "failing_unit_ids", "restore_lost_units"]
@@ -111,6 +120,44 @@ def choose_units(
     return list(dict.fromkeys(chosen))
 
 
+def table_contradicts_surface(text: str, facts: FactsDocument) -> bool:
+    """Whether printing this maintainers' table would trip BC-14's API-table rule: it reads as a
+    type table (>= 60% of its first cells are verified public types, at least 3 rows) and a row
+    names something the public surface does not know. Such a table is not restored verbatim:
+    keeping it would trade BC-05/BC-17 for a false claim about the public surface (measured on
+    Cells Rust -- ``BorderStyle``/``CellValueKind`` live in an internal module -- and HTML Python's
+    ``CSSDeclarationBlock``/``BreakHints``); dropping those rows needs a fact that contradicts
+    them, which this module never invents. Member tables (``Detect``, ``add(time, value)``,
+    ``NORMALIZE``) are not type tables and are restored."""
+    known, types, _qualified = _surface_names(facts)
+    if not types:
+        return False
+    names = []
+    texts = []
+    for line in text.splitlines():
+        match = _TABLE_ROW.match(line)
+        if match is not None:
+            names.append(_row_name(match.group("name")))
+            texts.append(line)
+    if len(names) < _TABLE_MIN_ROWS:
+        return False
+
+    def is_type(name: str) -> bool:
+        return name in types or name.split("-", 1)[0] in types
+
+    if sum(is_type(name) for name in names) / len(names) < _TABLE_TYPE_SHARE:
+        return False
+    for name, row in zip(names, texts):
+        if not name:
+            continue
+        known_name = (
+            name in known or name.split("-", 1)[0] in known or _SEGMENTS.split(name)[-1] in known
+        )
+        if not known_name and not _UNEXTRACTED_KIND.search(row.split("|", 2)[-1]):
+            return True
+    return False
+
+
 def restore_lost_units(
     dispositions: Mapping[str, Any],
     facts: FactsDocument,
@@ -118,7 +165,7 @@ def restore_lost_units(
     holdable: Collection[str],
     included: Collection[str] | None = None,
     *,
-    include_api_tables: bool = False,  # retained for callers; maintainers' API tables are never restored
+    include_api_tables: bool = True,  # retained for callers; maintainers' API tables are restored
 ) -> tuple[dict[str, Any], list[dict[str, str]]]:
     """``(new dispositions, changes)``. ``changes`` records, per re-dispositioned unit, its
     previous and new disposition and destination, so the caller can show exactly what moved.
@@ -129,12 +176,10 @@ def restore_lost_units(
     returned to ``VERIFIED_PRESERVE``; ``CORRECT_WITH_EVIDENCE`` is never reverted (its text was
     corrected against a fact and the original is the wrong text).
 
-    A maintainers' TABLE bound for ``api_reference`` is deferred (``include_api_tables`` False):
-    the Core API table is rendered from the verified public surface, and printing the maintainers'
-    class table beside it fails BC-07 ("lists N rows for M verified public types", measured on
-    Cells TypeScript/Go/Cpp/Java after the first restore pass). Other units usually carry the same
-    identifiers, so the caller restores those first and asks for the deferred tables only when the
-    items are still lost."""
+    A maintainers' TABLE bound for ``api_reference`` is restored like any other unit: BC-07's row
+    count judges only the tables the renderer itself emits there (``structure.renderer_api_rows``),
+    so the published README's member tables (R2: the floor) are preserved, placed verbatim after the
+    renderer's own tables. ``include_api_tables`` is retained only so existing callers keep working."""
     output = copy.deepcopy(dict(dispositions))
     units = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
     by_id = {fact.id: fact for fact in facts.facts}
@@ -167,13 +212,11 @@ def restore_lost_units(
             )
         if destination is None:
             continue
-        if destination == "api_reference" and unit_id.rsplit(".", 1)[-1] == "table":
-            # Never restored (``include_api_tables`` is retained only so existing callers keep
-            # working): the validator counts every first-cell row of the README against the
-            # verified public types, so a maintainers' class table printed beside the rendered
-            # Core API table fails BC-07 even when every row is also in the rendered table
-            # (measured: TypeScript 139 rows/31 types, Cpp 357/195, Java 215/183, Note 72/37,
-            # HTML 504/303 -- each caused by this restore, none present in the stored seals).
+        if (
+            destination == "api_reference"
+            and unit_id.rsplit(".", 1)[-1] == "table"
+            and table_contradicts_surface(unit.value, facts)
+        ):
             continue
         if unsafe_html_failures(unit.value):
             # Raw HTML BC-06 forbids outside a fence (<base>, <meta>, <iframe>, ...) would be
