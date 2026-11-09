@@ -4216,3 +4216,45 @@ Detail: `src/repo_presenter/readme/correction/detectors/enterprise_edition.py`,
 `src/repo_presenter/readme/correction/detectors/__init__.py`,
 `tests/readme/correction/detectors/test_enterprise_edition.py`,
 `tests/readme/correction/test_detector_versions.py`.
+
+## 2026-11-09: owner freeze on architecture expansion; supervisor operating rule (multiple agents);
+## R22 one write authority (TC-029a); zero-call item-level restore (TC-019b); first real generation batch
+
+**Owner direction (2026-11-09).** Freeze on architecture expansion: from here only fixes and tweaks
+that make the existing system work; the delivery plan (`docs/DELIVERY_PLAN_2026-11-07.md`, unchanged)
+is executed as written, continuously and autonomously. A self-governing rule was added to
+`AGENTS.md` ("Supervisor operating rule"): the supervisor runs the program through parallel agents
+(forks for investigation, worktree workers for implementation, a separate verifier for acceptance),
+one owner per file set, at most 4 concurrent writers and 6 concurrent generation runs, and keeps for
+itself the critical path, budget, commits/pushes and all shared or external state.
+
+**TC-029a ACCEPTED -- R22.** The allowlist and the registry's `mode: full` set are now the same nine
+repositories (Cells Rust, Email .NET, Imaging .NET as the R3 pilots plus the six inherited `full`
+entries), draft pull requests only, `issues_mode: dry_run` on every one, and
+`tests/test_write_authority_r22.py` fails CI if the two files ever disagree. Two existing tests that
+encoded the old three-repository list were updated (one used Cells Cpp as its "unlisted" example,
+which is now correctly listed and forces `draft=true`). Authorizes nothing by itself: acceptance
+contract, R15/R24 and the authorization record still gate every write.
+
+**TC-019b (item-level restore, zero provider calls).** `readme/repair/restore_units.py` plus
+`recertify --write --restore-lost-units` re-disposition the inherited units BC-05/BC-17 name as lost.
+Measured on the 11 real NEEDS_REPAIR Lane R seals: Imaging .NET re-certifies with one restored unit
+(the `<ProjectReference ...csproj />` block R14 already decided to READD); the Cells .NET Examples
+section and license units clear BC-05/BC-17; the others expose residual defects (BC-14 counts, BC-07
+visible budget, BC-06 raw HTML, BC-12, BC-04) which the card's worker is fixing inside the restore
+path. Nothing was published; the repaired Imaging seal is staged locally only.
+
+**First real generation batch (R25 batch 008, six Python repositories, local `present --stage
+combined`).** Findings: (1) launching six processes at once makes GitHub reject several first-time
+state-ref pushes ("remote rejected (failed)" -- ref-lock contention on one repository), so launches
+are staggered 40 s apart; (2) a killed run leaves an in-flight transaction that dedupes the next
+trigger until its lease (900 s) lapses; (3) two of the first four runs died at S4
+`source_reconciliation` after the bounded re-asks (`dangling_pointer`, `uncited_redundant_defer`) --
+rejections whose text names a mechanical remedy, which an agent is now folding into the existing
+`dispositions.normalize` rather than failing the run. One diagnostic state ref
+(`refs/repository-presenter-state/probe/zz-probe`, an empty commit) was created to test push rights
+and could not be deleted (the deletion was blocked by the auto-mode classifier); it is inert.
+
+Cost this block: batch 008 calls/tokens are in `data/provider_budget.json`. Nothing was merged to
+`main`; `independently-accepted` still needs the M9 hosted workflows on `main`, so the counts remain
+mechanism-passing only.
