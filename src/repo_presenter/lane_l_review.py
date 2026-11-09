@@ -17,7 +17,10 @@ cheaper already rejects it):
 * ``lane_l_nondeterministic``: a second run of the engine over the same inputs gave other bytes, so
   no zero-drift rerun could ever be proven;
 * ``claim_contradiction``: no claim in the final README (version, install command, publication)
-  contradicts a verified fact, via the reviewer's own rule over the final text;
+  contradicts a verified fact, via the reviewer's own rule over the final text. R21: a contradiction
+  the LIVE README already carried, which no edit of this run touched or created, is a RESIDUAL
+  when (and only when) the run is a strict net improvement (:func:`net_improvement`); a
+  contradiction that is new in the corrected text always blocks;
 * ``live_readme_loss``: nothing of the live README (a heading, a fenced block, a link target, a
   verified install command) is missing from the final README unless an evidenced edit accounts for
   it, via the reviewer's own rule with the edits as the accounting dispositions;
@@ -38,6 +41,7 @@ which text was changed and under which facts.
 from __future__ import annotations
 
 import dataclasses
+from collections import Counter
 from collections.abc import Callable, Mapping, Sequence
 from typing import Any
 
@@ -66,7 +70,7 @@ from repo_presenter.readme.review.llm_review import review_with_model
 #: Bump whenever a holdout, the accounting of edits as dispositions, or the call into the reviewer
 #: changes meaning. A Lane L bundle records it as ``components.correction_review``: the reviewer
 #: scope, so a bump rechecks the review and regenerates nothing.
-LANE_L_REVIEW_VERSION = "1"
+LANE_L_REVIEW_VERSION = "2"
 HOLDOUTS_FILENAME = "holdouts.json"
 
 RULE_CONFINEMENT = "lane_l_confinement"
@@ -146,19 +150,29 @@ def net_improvement(
     result: CorrectionResult,
     compute: Callable[[Context], CorrectionResult] = correct,
 ) -> bool:
-    """R21 (TC-025 point 4, replacing the old all-or-nothing L-05): at least one evidenced edit was
-    made, AND a second detector pass over the corrected text (``compute``, the engine's own
-    ``correct`` by default, re-run here rather than trusted) finds no defect absent from what the
-    first pass already reported. An edit that fixes one defect while creating another is not an
-    improvement.
+    """R21 (TC-025 point 4, replacing the old all-or-nothing L-05), defined strictly:
 
-    This is the one signal that decides whether an unrepaired defect may still be recorded (the
-    ``corrections.json`` ``outcome`` field, via ``report.outcome_of``, keeps stating the honest,
+    1. at least one evidenced edit was made (zero edits is never an improvement: there is nothing
+       to point to);
+    2. the corrected text is the original plus exactly those edits and nothing else
+       (:func:`confinement_findings`, re-proved here from the edit list);
+    3. a second detector pass over the corrected text (``compute``, the engine's own ``correct``
+       by default, re-run here rather than trusted) finds no defect absent from what the first
+       pass already reported -- an edit that fixes one defect while creating another is not an
+       improvement;
+    4. the claim-vs-fact contradictions of the corrected text are a sub-multiset of those of the
+       live README: no edit created a contradiction.
+
+    This is the one signal that decides whether a pre-existing unrepaired defect or contradiction
+    may be carried as a RESIDUAL (recorded in ``holdouts.json``, surfaced in the pull request
+    description, never printed into the README) rather than block this run outright. The
+    ``corrections.json`` ``outcome`` field (``report.outcome_of``) keeps stating the honest,
     unconditional ``REFUSED_LANE_R_RECOMMENDED`` when a defect remains -- that record never
-    changes) rather than block this run's holdout outright. Zero edits is never a net improvement,
-    whatever else is true: there is nothing to point to as the improvement.
+    changes.
     """
     if not result.edits:
+        return False
+    if confinement_findings(ctx.readme, result):
         return False
     # The facts an edit cites still describe the ORIGINAL README; re-running a detector against
     # the CORRECTED text with those same (now one-sided) facts can manufacture its own finding
@@ -175,33 +189,97 @@ def net_improvement(
         for finding in unrepaired_defects(after)
         if not (set(finding.fact_ids) & fixed_fact_ids)
     }
-    return not (after_keys - before_keys)
+    if after_keys - before_keys:
+        return False
+    _carried, introduced = split_claim_contradictions(ctx, result)
+    return not introduced
+
+
+def split_claim_contradictions(
+    ctx: Context, result: CorrectionResult
+) -> tuple[list[Finding], list[Finding]]:
+    """``(carried, introduced)``: the corrected text's claim contradictions split into those the
+    live README already had (matched one-for-one by their detail text, so a SECOND copy of a
+    pre-existing contradiction counts as introduced) and those that are new."""
+    before = Counter(f.evidence for f in claim_contradiction_rule(ctx.readme, ctx.facts))
+    carried: list[Finding] = []
+    introduced: list[Finding] = []
+    for finding in claim_contradiction_rule(result.corrected, ctx.facts):
+        if before[finding.evidence] > 0:
+            before[finding.evidence] -= 1
+            carried.append(finding)
+        else:
+            introduced.append(finding)
+    return carried, introduced
+
+
+class HoldoutFindings(list):
+    """The blocking holdout findings (a plain ``list`` of ``Finding``, so every existing caller
+    keeps working) plus ``residuals``: the pre-existing defects and contradictions a net-improving
+    run carries instead of blocking on. ``holdouts_document`` records them."""
+
+    residuals: list[dict[str, Any]]
+
+    def __init__(self, findings: Sequence[Finding] = (), residuals: Sequence[dict[str, Any]] = ()):
+        super().__init__(findings)
+        self.residuals = list(residuals)
+
+
+def _residual_row(kind: str, rule: str, detail: str, line: int | None, quote: str) -> dict[str, Any]:
+    return {"kind": kind, "rule": rule, "detail": detail, "line": line, "quote": quote[:160]}
+
+
+def _line_of(message: str) -> int | None:
+    """The README line a ``claim_contradiction`` message names (``"line 255 (COMPOSING): ..."``)."""
+    head = message.split(" ", 2)
+    return int(head[1]) if len(head) > 1 and head[0] == "line" and head[1].isdigit() else None
 
 
 def holdout_findings(
     ctx: Context, result: CorrectionResult, *, deterministic: bool
-) -> list[Finding]:
-    """Every deterministic finding against the final README, in the document order of the checks.
+) -> HoldoutFindings:
+    """Every deterministic finding against the final README, in the document order of the checks,
+    with the residuals a net-improving run carries (``.residuals``).
 
-    An unrepaired defect (``RULE_UNREPAIRED_DEFECT``) is included, and so blocks, UNLESS this run
-    is itself a net improvement (:func:`net_improvement`): a candidate that fixes at least one real
-    defect without introducing a new one may still carry another, unrelated defect it could not
-    repair, and that remaining defect is recorded (``report.corrections_document``'s own
-    ``unapplied`` list already carries it, independent of this gate) and surfaced in the PR
-    description, never blocked on here and never printed into the README itself.
+    When this run is a strict net improvement (:func:`net_improvement`), a defect the engine could
+    not repair (``RULE_UNREPAIRED_DEFECT``) and a claim contradiction the live README already had
+    (and no edit touched or created) no longer block: each becomes a residual row, recorded in
+    ``holdouts.json`` and surfaced in the pull request description, never in the README. A
+    contradiction that is NEW in the corrected text blocks always. When the run is not a net
+    improvement (no edit, a new defect, a broken confinement) nothing changes: every finding
+    blocks, exactly as before.
     """
     dispositions = correction_dispositions(ctx, result.edits)
+    improved = net_improvement(ctx, result)
+    claims = claim_contradiction_rule(result.corrected, ctx.facts)
+    residuals: list[dict[str, Any]] = []
+    if improved:
+        carried, claims = split_claim_contradictions(ctx, result)
+        for finding in carried:
+            residuals.append(
+                _residual_row(
+                    "claim_contradiction", RULE_CLAIMS, finding.evidence,
+                    _line_of(finding.message), finding.quote,
+                )
+            )
+        for defect in unrepaired_defects(result):
+            residuals.append(
+                _residual_row(
+                    "unrepaired_defect", RULE_UNREPAIRED_DEFECT,
+                    f"{defect.detector}: {defect.reason}", defect.line, defect.text,
+                )
+            )
     findings = [
         *confinement_findings(ctx.readme, result),
         *nondeterminism_findings(deterministic),
-        *claim_contradiction_rule(result.corrected, ctx.facts),
+        *claims,
         *live_readme_loss_rule(
             ctx.readme, result.corrected, facts=ctx.facts, dispositions=dispositions
         ),
     ]
-    if not net_improvement(ctx, result):
+    if not improved:
         findings.extend(defect_findings(result))
-    return findings
+    return HoldoutFindings(findings, residuals)
 
 
 def holdouts_document(
@@ -231,7 +309,7 @@ def holdouts_document(
         }
     )
     failed = sum(1 for check in checks if check["verdict"] == "FAIL")
-    return {
+    document: dict[str, Any] = {
         "schema_version": 1,
         "lane": "L",
         "review_logic_version": LANE_L_REVIEW_VERSION,
@@ -239,6 +317,12 @@ def holdouts_document(
         "checks": checks,
         "summary": {"pass": len(checks) - failed, "fail": failed},
     }
+    residuals = list(getattr(findings, "residuals", ()))
+    if residuals:
+        # R21: pre-existing defects/contradictions this net-improving run did not touch and could
+        # not repair. Internal record and pull request description only; never README text (R9).
+        document["residuals"] = residuals
+    return document
 
 
 def review_correction(

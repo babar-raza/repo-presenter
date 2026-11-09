@@ -37,6 +37,10 @@ from repo_presenter.core.examples import RECEIPTS_FILENAME
 VALIDATION_FILENAME = "validation.json"
 #: Only a correction bundle (components/readme_correction/bundle.py) holds this file.
 CORRECTIONS_FILENAME = "corrections.json"
+#: A Lane L bundle's deterministic holdouts; R21 records the residuals of a net-improving run there.
+HOLDOUTS_FILENAME = "holdouts.json"
+#: Residual lines listed in the pull request body before the remainder is summarized as a count.
+MAX_LISTED_RESIDUALS = 10
 #: The blocking check that verifies the README's install command against the package manifest.
 INSTALL_CHECK = "BC-02"
 #: Section headings listed per category before the remainder is summarized as a count.
@@ -208,6 +212,43 @@ def compose_title(product: str, live: str | None, changes: SectionChanges) -> st
     return f"docs(readme): refresh {product} README ({changes.count} {noun} updated)"
 
 
+def load_correction_residuals(bundle: Path) -> tuple[str, ...]:
+    """R21: the pre-existing defects a net-improving Lane L run carried instead of blocking on,
+    one plain line each, read from the bundle's ``holdouts.json``. Empty when the file is absent,
+    unreadable, or records none -- never a guess."""
+    document = _read_json(bundle / HOLDOUTS_FILENAME)
+    rows = document.get("residuals") if isinstance(document, dict) else None
+    if not isinstance(rows, list):
+        return ()
+    lines: list[str] = []
+    for row in rows:
+        if not isinstance(row, dict) or not isinstance(row.get("detail"), str):
+            continue
+        line = row.get("line")
+        where = f"line {line}: " if isinstance(line, int) else ""
+        lines.append(f"{where}{row['detail']}".strip())
+    return tuple(lines)
+
+
+def _residual_section(residuals: Sequence[str]) -> list[str]:
+    """The pull request body's note on what this change deliberately leaves as it was. Omitted
+    entirely (so the body is byte-identical to one without the parameter) when there are none."""
+    if not residuals:
+        return []
+    shown = [f"- {text}" for text in residuals[:MAX_LISTED_RESIDUALS]]
+    rest = len(residuals) - MAX_LISTED_RESIDUALS
+    if rest > 0:
+        shown.append(f"- and {rest} more")
+    return [
+        "### Left as it was",
+        "These were already in the README before this change. They are outside what this "
+        "change corrects, so they are unchanged; they are listed so the whole picture is "
+        "visible to you:",
+        *shown,
+        "",
+    ]
+
+
 def _listed(label: str, headings: Sequence[str]) -> str | None:
     if not headings:
         return None
@@ -252,8 +293,12 @@ def compose_pull_request(
     candidate_hash: str,
     source_revision: str,
     policy_version: str,
+    residuals: Sequence[str] = (),
 ) -> PullRequestContent:
-    """The title and body for one candidate against the README the target has now."""
+    """The title and body for one candidate against the README the target has now.
+
+    ``residuals`` (R21, Lane L only): pre-existing defects the change left as they were, from
+    :func:`load_correction_residuals`; they appear here and never in the README."""
     product = product_name(candidate_readme, repository)
     changes = diff_sections(live_readme or "", candidate_readme)
     title = compose_title(product, live_readme, changes)
@@ -285,6 +330,7 @@ def compose_pull_request(
             "### What was verified",
             *_verified_lines(evidence),
             "",
+            *_residual_section(residuals),
             "### How to review",
             "Open **Files changed**: the whole proposal is the `README.md` diff there. Every "
             "statement in the new text was checked against this repository at the revision "
