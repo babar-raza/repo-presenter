@@ -1,0 +1,113 @@
+{
+  "checks": [
+    {
+      "details": [],
+      "id": "L-01",
+      "name": "Every change is a listed, evidenced edit; the text outside them is unchanged",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-02",
+      "name": "A second run of the correction over the same inputs gives the same bytes",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-03",
+      "name": "No claim in the final README contradicts a verified fact",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-04",
+      "name": "Nothing of the live README is lost unless an evidenced edit accounts for it",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-05",
+      "name": "An unrepaired defect blocks unless this run is itself a net improvement (R21)",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-06",
+      "name": "A run over the corrected text finds nothing further to correct (recorded, not blocking)",
+      "verdict": "PASS"
+    }
+  ],
+  "lane": "L",
+  "residuals": [
+    {
+      "detail": "the API table lists `AutoFilterCustomFilterCollection_Iterator`, but no public_symbol fact states it (it is not a type of the public surface: absent or not exported)",
+      "kind": "claim_contradiction",
+      "line": 279,
+      "quote": "| `AutoFilterCustomFilterCollection_Iterator` | Class in the Cells CPP API. |",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "the API table lists `AutoFilterSortConditionCollection_Iterator`, but no public_symbol fact states it (it is not a type of the public surface: absent or not exported)",
+      "kind": "claim_contradiction",
+      "line": 286,
+      "quote": "| `AutoFilterSortConditionCollection_Iterator` | Class in the Cells CPP API. |",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "the API table lists `BitReader`, but no public_symbol fact states it (it is not a type of the public surface: absent or not exported)",
+      "kind": "claim_contradiction",
+      "line": 293,
+      "quote": "| `BitReader` | Internal bit-level reader used while inflating DEFLATE-compressed ZIP entry data. |",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "the API table lists `FilterColumnCollection_Iterator`, but no public_symbol fact states it (it is not a type of the public surface: absent or not exported)",
+      "kind": "claim_contradiction",
+      "line": 335,
+      "quote": "| `FilterColumnCollection_Iterator` | Class in the Cells CPP API. |",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "the API table lists `XmlParser`, but no public_symbol fact states it (it is not a type of the public surface: absent or not exported)",
+      "kind": "claim_contradiction",
+      "line": 431,
+      "quote": "| `XmlParser` | Internal recursive-descent XML parser used to build an `XmlDocument`'s node tree. |",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "the API table lists `HuffmanTable`, but no public_symbol fact states it (it is not a type of the public surface: absent or not exported)",
+      "kind": "claim_contradiction",
+      "line": 444,
+      "quote": "| `HuffmanTable` | Struct with 2 methods and 4 properties. |",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "the API table lists `ParsedNumericFormat`, but no public_symbol fact states it (it is not a type of the public surface: absent or not exported)",
+      "kind": "claim_contradiction",
+      "line": 445,
+      "quote": "| `ParsedNumericFormat` | Struct with 10 properties. |",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "the API table lists `Workbook_Impl`, but no public_symbol fact states it (it is not a type of the public surface: absent or not exported)",
+      "kind": "claim_contradiction",
+      "line": 446,
+      "quote": "| `Workbook_Impl` | Struct with 1 method and 7 properties. |",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 174-187: example 2: FAILED; example_002.cpp:10:48: error: no match for ‘operator[]’ (operand types are ‘Aspose::Cells_FOSS::WorksheetCollection’ and ‘const char [9]’)",
+      "kind": "unrepaired_defect",
+      "line": 174,
+      "quote": "#include \"aspose/cells_foss/Workbook.h\"",
+      "rule": "lane_l_unrepaired_defect"
+    }
+  ],
+  "review_logic_version": "2",
+  "schema_version": 1,
+  "source_revision": "9f852d0ff1cfdad2d661556d6b87a8eff8c063a2",
+  "summary": {
+    "fail": 0,
+    "pass": 6
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "confinement": {
+    "edits": 1,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "055b5a982d439fb4726ee18ba510f9f9b4a0e02fb550eba7d887c054237cbe72",
+  "edits": [
+    {
+      "detector": "enterprise_edition_naming",
+      "end": 31815,
+      "evidence": [
+        {
+          "fact_id": "link_target:product.enterprise",
+          "kind": "link_target",
+          "status": "SUPPORTED",
+          "value": "https://products.aspose.com/cells/cpp/"
+        }
+      ],
+      "index": 0,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 567,
+      "original": "commercial product",
+      "rationale": "line 567 names the aspose.com product with a substitute for its proper name ('commercial product'); the mission naming rule requires \"Enterprise Edition\" with no substitute wording",
+      "replacement": "Aspose.Cells for C++ — Enterprise Edition",
+      "start": 31797
+    }
+  ],
+  "lane": "L",
+  "original_sha256": "a811deaebdd5aab3faad8b95f3e83b9ce00d8045190443c2f3848cf54ebef5a2",
+  "outcome": "REFUSED_LANE_R_RECOMMENDED",
+  "readme_path": "README.md",
+  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp",
+  "schema_version": 1,
+  "source_revision": "9f852d0ff1cfdad2d661556d6b87a8eff8c063a2",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {
+    "FALSE_CLAIM_FIX": 1
+  },
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "public_symbol:aspose.cells_foss.autofiltercustomfiltercollection.iterator",
+        "public_symbol:aspose.cells_foss.autofiltersortconditioncollection.iterator",
+        "public_symbol:aspose.cells_foss.filtercolumncollection.iterator",
+        "public_symbol:aspose.cells_foss.iwarningcallback",
+        "public_symbol:aspose.cells_foss.packaging.ipackagereader",
+        "public_symbol:aspose.cells_foss.packaging.ipackagewriter"
+      ],
+      "line": 0,
+      "reason": "6 of 195 verified public types are named nowhere in the README; would fill API Reference: public_symbol:aspose.cells_foss.autofiltercustomfiltercollection.iterator, public_symbol:aspose.cells_foss.autofiltersortconditioncollection.iterator, public_symbol:aspose.cells_foss.filtercolumncollection.iterator, public_symbol:aspose.cells_foss.iwarningcallback, public_symbol:aspose.cells_foss.packaging.ipackagereader, public_symbol:aspose.cells_foss.packaging.ipackagewriter",
+      "text": ""
+    },
+    {
+      "defect": true,
+      "detector": "failing_example",
+      "fact_ids": [
+        "example:002"
+      ],
+      "line": 174,
+      "reason": "the example verifier recorded a failure for the example on lines 174-187: example 2: FAILED; example_002.cpp:10:48: error: no match for ‘operator[]’ (operand types are ‘Aspose::Cells_FOSS::WorksheetCollection’ and ‘const char [9]’)",
+      "text": "#include \"aspose/cells_foss/Workbook.h\""
+    }
+  ]
+}
