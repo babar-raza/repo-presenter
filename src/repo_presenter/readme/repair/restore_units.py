@@ -29,7 +29,7 @@ from repo_presenter.core.facts import FactsDocument
 from repo_presenter.readme.composition.placement import ATTRIBUTED, PLACED
 from repo_presenter.readme.reconciliation.destinations import nearest_holdable
 from repo_presenter.readme.validation.links import unsafe_html_failures
-from repo_presenter.readme.validation.surface_claims import absent_type_rows
+from repo_presenter.readme.validation.surface_claims import absent_type_rows, kept_table_form
 
 __all__ = ["choose_units", "failing_unit_ids", "restore_lost_units"]
 
@@ -178,9 +178,12 @@ def restore_lost_units(
             )
         if destination is None:
             continue
-        if unsafe_html_failures(unit.value):
-            # Raw HTML BC-06 forbids outside a fence (<base>, <meta>, <iframe>, ...) would be
-            # printed as written; restoring it trades BC-17 for BC-06 (measured on HTML Python).
+        printed = kept_table_form(unit.value, facts) if unit_id.endswith(".table") else unit.value
+        if unsafe_html_failures(printed):
+            # Raw HTML BC-06 forbids outside a fence or a code span (<base>, <meta>, <iframe>, ...)
+            # would be printed as written; restoring it trades BC-17 for BC-06. A kept table prints
+            # such an element name in a code span (``kept_table_form``), so only text that stays raw
+            # in its printed form is refused (measured on HTML Python).
             continue
         supported = bool(cited) and all(fact.polarity == "SUPPORTED" for fact in cited)
         disposition = "VERIFIED_PRESERVE" if supported else ATTRIBUTED

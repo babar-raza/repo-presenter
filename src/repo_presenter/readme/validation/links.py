@@ -160,11 +160,55 @@ def _dangerous_url_spans(prose_text: str) -> list[tuple[int, str]]:
     return found
 
 
+_CODE_SPAN = re.compile(r"(`+)(?:(?!\1).)+?\1")
+_UNSAFE_TAG_TOKEN = re.compile(
+    r"(?is)<\s*/?\s*(?:script|iframe|object|embed|meta|base)\b[^<>`]*>"
+)
+
+
+def _wrap_unsafe_tags(segment: str) -> str:
+    return _UNSAFE_TAG_TOKEN.sub(lambda match: f"`{match.group(0)}`", segment)
+
+
+def defang_unsafe_html(text: str) -> str:
+    """The kept form of maintainer text that names an unsafe HTML element in prose (``HTML <base>
+    element.``, a reference table of DOM interfaces): each such tag outside a code span is wrapped in
+    a code span, so it is shown as the element's name and is no longer the raw HTML BC-06 forbids.
+    The tag's characters are unchanged (BC-05/BC-17 still find them), and a tag already inside a code
+    span or a fence is left exactly as written."""
+    lines: list[str] = []
+    inside = False
+    for line in text.split("\n"):
+        stripped = line.strip()
+        if stripped.startswith("```") and not inside:
+            inside = True
+            lines.append(line)
+            continue
+        if inside:
+            if stripped == "```":
+                inside = False
+            lines.append(line)
+            continue
+        out: list[str] = []
+        position = 0
+        for span in _CODE_SPAN.finditer(line):
+            out.append(_wrap_unsafe_tags(line[position : span.start()]))
+            out.append(span.group(0))
+            position = span.end()
+        out.append(_wrap_unsafe_tags(line[position:]))
+        lines.append("".join(out))
+    return "\n".join(lines)
+
+
 def unsafe_html_failures(readme: str) -> list[Failure]:
     """Every executing or navigating raw-HTML hazard outside a fenced code block, each distinct
     span named once in document order so a repair has something concrete to remove. A scheme word
     in ordinary prose is not a URL and is not named."""
-    prose_text = "\n".join(outside_fences(readme))
+    # An inline code span is inert on GitHub (a tag in backticks is shown, never parsed), so its
+    # content is blanked, not matched.
+    prose_text = _CODE_SPAN.sub(
+        lambda span: " " * len(span.group(0)), "\n".join(outside_fences(readme))
+    )
     found = [
         (match.start(), match.group(0))
         for pattern in (_UNSAFE_HTML_TAG, _EVENT_HANDLER_ATTR)

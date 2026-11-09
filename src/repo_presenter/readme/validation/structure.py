@@ -68,6 +68,9 @@ BADGE_ROW = re.compile(rf"{BADGE_TOKEN}(?: {BADGE_TOKEN})*")
 GLANCE_FENCE = re.compile(r"```mermaid\n.*?\n```", re.DOTALL)
 DETAILS_OPEN = re.compile(r"(?i)<details\b")
 DETAILS_CLOSE = re.compile(r"(?i)</details\s*>")
+#: An inline code span is inert: a ``<details>`` shown in backticks (a DOM-interface table row,
+#: ``HTMLDetailsElement | HTML `<details>` element``) neither opens nor closes a collapsed block.
+_INLINE_CODE = re.compile(r"(`+)(?:(?!\1).)+?\1")
 RENDERER_OWNER = "D"  # shell sections the renderer owns, not the authoring stage
 NAME_SEPARATOR = r"[\s._-]*"
 # The words that make a no-space spelling a technical identifier rather than the product name.
@@ -166,9 +169,10 @@ def _collapsed_section_failures(readme: str) -> list[Failure]:
                         f"visible section {heading!r} renders inside a collapsed <details> block",
                     )
                 )
+        markup = _INLINE_CODE.sub("", line)
         depth = max(
             0,
-            depth + len(DETAILS_OPEN.findall(line)) - len(DETAILS_CLOSE.findall(line)),
+            depth + len(DETAILS_OPEN.findall(markup)) - len(DETAILS_CLOSE.findall(markup)),
         )
     return failures
 

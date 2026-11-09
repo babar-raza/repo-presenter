@@ -388,6 +388,15 @@ def without_absent_type_rows(text: str, facts: FactsDocument) -> str:
     return "\n".join(line for line in text.split("\n") if line.rstrip("\r") not in drop)
 
 
+def kept_table_form(text: str, facts: FactsDocument) -> str:
+    """The ONE printable form of a kept maintainers' table: absent-type rows removed (BC-14) and any
+    unsafe HTML element it names in prose shown in a code span (BC-06). The renderer, BC-05, the
+    independent reviewer and the restore guard all judge "printed" against this form."""
+    from repo_presenter.readme.validation.links import defang_unsafe_html
+
+    return defang_unsafe_html(without_absent_type_rows(text, facts))
+
+
 def _table_findings(
     lines: list[_Line], facts: FactsDocument, origin: _Origin, probes: _Probes | None = None
 ) -> list[ClaimFinding]:
