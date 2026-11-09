@@ -38,7 +38,23 @@
     }
   ],
   "lane": "L",
-  "review_logic_version": "1",
+  "residuals": [
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 178-233: example 3: FAILED; example_003.cpp:3:27: error: ‘read_option’ was not declared in this scope",
+      "kind": "unrepaired_defect",
+      "line": 178,
+      "quote": "int main(int argc, char* argv[])",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 245-273: example 4: FAILED; example_004.cpp:5:14: error: ‘cerr’ is not a member of ‘std’",
+      "kind": "unrepaired_defect",
+      "line": 245,
+      "quote": "int main(int argc, char* argv[])",
+      "rule": "lane_l_unrepaired_defect"
+    }
+  ],
+  "review_logic_version": "2",
   "schema_version": 1,
   "source_revision": "c844a467cf7f2503819b655f4d6ceaef91056c40",
   "summary": {
