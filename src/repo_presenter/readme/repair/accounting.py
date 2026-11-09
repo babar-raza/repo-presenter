@@ -42,7 +42,12 @@ from repo_presenter.readme.composition.placement import (
     planned_fact_ids,
     renderer_fact_ids,
 )
-from repo_presenter.readme.reconciliation.dispositions import rendering_fact_ids
+from repo_presenter.readme.reconciliation.dispositions import (
+    _DETAILS_WRAPPER_CLOSE,
+    _DETAILS_WRAPPER_OPEN,
+    _RENDERER_OWNED_COLLAPSIBLES,
+    rendering_fact_ids,
+)
 from repo_presenter.readme.review.independent_reviewer import (
     heading_printed,
     unprinted_kept_units,
@@ -79,6 +84,10 @@ RATIONALE_EXAMPLE_HEADING = (
 RATIONALE_LEAD_HEADING = (
     "Omitted with the example it introduced: that example is contradicted ({facts}), so its "
     "heading has nothing left to introduce."
+)
+RATIONALE_WRAPPER = (
+    "Collapsible wrapper owned by the renderer: the {section} section prints its own "
+    "<details> wrapper, so this inherited wrapper tag is not printed as written."
 )
 MERMAID_FENCE = "mermaid"
 EXAMPLE_SECTIONS = frozenset({"quick_start", "additional_examples"})
@@ -280,16 +289,29 @@ def _payload_row(
 def _example_heading(
     entry: Mapping[str, Any], candidate: Candidate, known: frozenset[str], section: str
 ) -> _Decision | None:
-    """A kept heading that introduced a SUPPORTED example the section prints under its own title."""
+    """A kept heading that introduced an example (SUPPORTED, or UNRESOLVED and reprinted with a
+    not-verified note) whose code the README prints under an example section's own title.
+
+    The section is the heading's own destination when that is an example section; otherwise the
+    destination of the code block it introduced (a heading S4 kept into ``opening`` over an
+    example S4 moved into ``additional_examples``). Either way the example's code must be printed."""
     payload = _payload_row(str(entry.get("unit_id", "")), candidate)
     if payload is None:
         return None
     unit_id, row = payload
-    facts = _examples(row, candidate, "SUPPORTED", known)
+    destination = section if section in EXAMPLE_SECTIONS else row.get("destination_section")
+    if destination not in EXAMPLE_SECTIONS:
+        return None
+    facts = sorted(
+        {
+            *_examples(row, candidate, "SUPPORTED", known),
+            *_examples(row, candidate, "UNRESOLVED", known),
+        }
+    )
     text = _unit_values(candidate).get(unit_id, "")
     if not facts or not _code_printed(text, candidate):
         return None
-    return _Decision(section, RATIONALE_EXAMPLE_HEADING, facts)
+    return _Decision(str(destination), RATIONALE_EXAMPLE_HEADING, facts)
 
 
 def _lead_heading_omitted(
@@ -359,6 +381,46 @@ def _uncited_heading(
     return _Decision(destination, rationale, facts)
 
 
+def _identity_fact(candidate: Candidate, known: frozenset[str]) -> str | None:
+    """The repository's own SUPPORTED identity fact: always real and always true of it."""
+    return next(
+        (
+            fact.id
+            for fact in candidate.facts.by_kind("identity")
+            if fact.polarity == "SUPPORTED" and fact.id in known
+        ),
+        None,
+    )
+
+
+def _details_wrapper(
+    placement: Placement, candidate: Candidate, known: frozenset[str]
+) -> _Decision | None:
+    """A kept inherited ``<details>`` wrapper tag (the opener with or without its ``<summary>``,
+    or the bare closer) the render does not print. The sections that collapse their content
+    (``api_reference``, ``additional_examples``) print their own wrapper and never the inherited
+    one, so a kept wrapper claims an effect that does not happen; the disposition that matches is
+    ``SUPERSEDE_REDUNDANT``, citing the repository's identity fact (a wrapper tag carries no
+    content of its own to cite). Only a wrapper tag: any other HTML block is left alone."""
+    value = _unit_values(candidate).get(placement.unit_id)
+    if value is None or not (
+        _DETAILS_WRAPPER_OPEN.match(value) or _DETAILS_WRAPPER_CLOSE.match(value)
+    ):
+        return None
+    identity = _identity_fact(candidate, known)
+    if identity is None:
+        return None
+    included = _included_sections(candidate.plan)
+    section = placement.destination
+    if section not in included:
+        section = next(
+            (name for name in sorted(_RENDERER_OWNED_COLLAPSIBLES) if name in included), None
+        )
+    if section is None:
+        return None
+    return _Decision(section, RATIONALE_WRAPPER.format(section=section.replace("_", " ")), [identity])
+
+
 def _uncited_kept_heading_identity(
     entry: Mapping[str, Any], candidate: Candidate, known: frozenset[str]
 ) -> _Decision | None:
@@ -421,14 +483,7 @@ def _uncited_kept_heading_identity(
     }
     if destination not in included:
         return None
-    identity = next(
-        (
-            fact.id
-            for fact in candidate.facts.by_kind("identity")
-            if fact.polarity == "SUPPORTED" and fact.id in known
-        ),
-        None,
-    )
+    identity = _identity_fact(candidate, known)
     if identity is None:
         return None
     return _Decision(
@@ -764,7 +819,7 @@ def _decide(
         return None
     if unit_id.endswith(".heading"):
         facts = _heading_facts(placement, candidate, known)
-        if not facts and section in EXAMPLE_SECTIONS:
+        if not facts:
             return _example_heading(entry, candidate, known, section)
         if not facts:
             return None
@@ -773,6 +828,8 @@ def _decide(
         )
     if unit_id.endswith(".badge_row"):
         return _badge_row(placement, entry, candidate, known)
+    if unit_id.endswith(".html_block"):
+        return _details_wrapper(placement, candidate, known)
     if unit_id.endswith(".code_block") and _is_mermaid(placement.text):
         facts = _diagram_fact_ids(candidate.plan, known)
         if not facts or not _drawn(candidate.plan, candidate.readme):
