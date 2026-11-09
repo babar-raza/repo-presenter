@@ -619,6 +619,66 @@ def _placed_into(dispositions: dict[str, Any] | None, section: str) -> bool:
     )
 
 
+def _settle_excluded_link_sections(
+    output: dict[str, Any],
+    facts: FactsDocument,
+    included: set[str],
+    *,
+    protected: set[str],
+) -> bool:
+    """Settle a model-chosen link assignment to a section the plan itself excludes, rather than
+    rejecting the whole plan twice (3D TypeScript: links assigned to ``quick_start`` and
+    ``additional_examples`` while both were excluded).
+
+    A link renders only in ``documentation_resources`` (plus the kept lists reconciliation places),
+    so the assignment names a home the plan does not have, not a different decision. In order:
+    a link whose URL another link already carries in an included section is dropped (it is
+    printed there); otherwise it moves to ``documentation_resources`` when that section can hold
+    it (a verified, non-shell link target and the section is not absent for this repository).
+    A link no included section can hold is left as written, so the existing check still rejects
+    it. A link a disposition requires (``protected``) is never touched. Returns whether any
+    assignment changed."""
+    links = output.get("links")
+    if not isinstance(links, list):
+        return False
+    values = {
+        fact.id: fact.value for fact in facts.by_kind("link_target") if fact.polarity == "SUPPORTED"
+    }
+    carried = {
+        values[str(link.get("link_fact_id"))]
+        for link in links
+        if isinstance(link, dict)
+        and link.get("section_id") in included
+        and str(link.get("link_fact_id")) in values
+    }
+    home_open = section_conditions(facts, DEFAULT_POLICY).get("documentation_resources") is not False
+    settled: list[Any] = []
+    changed = False
+    for link in links:
+        target = str(link.get("link_fact_id")) if isinstance(link, dict) else ""
+        if (
+            not isinstance(link, dict)
+            or link.get("section_id") in included
+            or target in protected
+            or target in _SHELL_OWNED_LINKS
+            or target not in values
+        ):
+            settled.append(link)
+            continue
+        if values[target] in carried:
+            changed = True
+            continue
+        if home_open:
+            settled.append({**link, "section_id": "documentation_resources"})
+            carried.add(values[target])
+            changed = True
+            continue
+        settled.append(link)
+    if changed:
+        output["links"] = settled
+    return changed
+
+
 def _documentation_resources_holds(
     output: dict[str, Any], facts: FactsDocument, dispositions: dict[str, Any] | None
 ) -> bool:
@@ -824,6 +884,17 @@ def plan_checks(
     link_facts = {
         fact.id: fact.value for fact in facts.by_kind("link_target") if fact.polarity == "SUPPORTED"
     }
+    if _settle_excluded_link_sections(
+        output, facts, included, protected=set(_required_link_sections(dispositions))
+    ):
+        # The settlement may have given documentation_resources its first link: re-decide it.
+        conditions["documentation_resources"] = _documentation_resources_holds(
+            output, facts, dispositions
+        )
+        output["sections"] = [
+            _decision(section, conditions[section.id]) for section in SEMANTIC_SHELL
+        ]
+        included = {entry["section_id"] for entry in output["sections"] if entry["include"]}
     unrenderable_anchors = _unrenderable_anchor_ids(facts)
     required_link_sections = {
         **_required_link_sections(dispositions),

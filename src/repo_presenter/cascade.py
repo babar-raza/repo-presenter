@@ -45,6 +45,7 @@ loop used to repair S4 defects only -- widened to every stage ``repair_defect`` 
 from __future__ import annotations
 
 import json
+import sys
 from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
@@ -671,6 +672,14 @@ def _restore_lost_content(
         failing = blocking_failures(validation)
         if not failing:
             break
+    if restored and failing:
+        # Observation only: say what the restore did and what it could not clear, so a rescue that
+        # fell short is diagnosable from the run log instead of guessed at.
+        print(
+            f"restore: {len(restored)} unit(s) restored but blocking still fails: "
+            + "; ".join(str(c['id']) + ' ' + '|'.join(str(d)[:140] for d in (c.get('details') or [])[:3]) for c in failing),
+            file=sys.stderr,
+        )
     if not restored or failing:
         return settled
     write_dispositions(dispositions, out_dir / "dispositions.json")
