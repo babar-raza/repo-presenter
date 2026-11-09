@@ -1,0 +1,25 @@
+
+===== CLEAN RUN 1 =====
+$ python ops/checks/calibration_status.py PASSED --file data/acceptance_calibration.json --matrix data/acceptance_responsibility.json
+--- stdout ---
+OK: acceptance calibration status is 'PASSED'
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python ops/checks/calibration_status.py PASSED --file data/acceptance_calibration.json --matrix data/acceptance_responsibility.json
+--- stdout ---
+OK: acceptance calibration status is 'PASSED'
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M data/acceptance_calibration.json
+$ python ops/checks/calibration_status.py PASSED --file data/acceptance_calibration.json --matrix data/acceptance_responsibility.json
+--- stdout ---
+FAIL: acceptance calibration status is 'NOT_PASSED', need 'PASSED' (problem='', missing=['M1'])
+
+--- stderr ---
+
