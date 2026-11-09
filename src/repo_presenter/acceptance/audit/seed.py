@@ -38,13 +38,14 @@ clearly-named STUB pair - see their own docstrings - not wired to any live hoste
 
 from __future__ import annotations
 
-import hashlib
-import hmac
+import base64
 import json
 import re
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any, Callable
+
+from cryptography.fernet import Fernet, InvalidToken
 
 __all__ = [
     "CLEAN_SHAPE",
@@ -489,60 +490,41 @@ def seed_shape(
 
 
 # ---------------------------------------------------------------------------
-# Manifest encryption - STUB, not wired to any live hosted step
+# Manifest encryption - real AEAD (cryptography.fernet.Fernet), wired 2026-11-09 once the
+# restricted GitHub Environment holding AUDIT_SEED_KEY existed (owner action 1, complete).
 # ---------------------------------------------------------------------------
 
 
-def _hmac_keystream(key: bytes, length: int) -> bytes:
-    """A deterministic keystream of ``length`` bytes: concatenated HMAC-SHA256(key, counter)
-    blocks, stdlib only. Internal to the stub cipher below."""
-    blocks: list[bytes] = []
-    produced = 0
-    counter = 0
-    while produced < length:
-        block = hmac.new(key, counter.to_bytes(8, "big"), hashlib.sha256).digest()
-        blocks.append(block)
-        produced += len(block)
-        counter += 1
-    return b"".join(blocks)[:length]
+def _fernet_key(key: bytes) -> bytes:
+    """Fernet needs a 32-byte key, urlsafe-base64-encoded. This module's own external contract
+    (every caller, every existing test) passes a raw 32-byte key -- ``AUDIT_SEED_KEY`` is stored
+    as a 64-char hex string in the GitHub Environment and read as
+    ``bytes.fromhex(os.environ["AUDIT_SEED_KEY"])`` by the hosted seeder/scorer, giving exactly
+    32 raw bytes here. Deriving the Fernet-formatted key from that raw key, instead of asking
+    every caller to pre-encode it, keeps the external contract exactly as it was under the old
+    stub cipher -- no caller or test needed to change."""
+    if len(key) != 32:
+        raise ValueError(f"seed manifest key must be 32 raw bytes, got {len(key)}")
+    return base64.urlsafe_b64encode(key)
 
 
 def encrypt_seed_manifest(
     manifest: Sequence[Mapping[str, Any]] | Mapping[str, Any], key: bytes
 ) -> bytes:
-    """STUB - not wired to any live hosted step yet. ``cryptography`` is NOT a dependency of this
-    project today (checked ``pyproject.toml`` before writing this: it ships ``httpx``,
-    ``jsonschema``, ``markdown-it-py``, ``openai``, ``packaging``, ``pydantic``, ``tenacity``,
-    ``pyyaml`` and the pinned ``tree-sitter`` family - no crypto library at all). Rather than add
-    a dependency this card was not asked to add, this stub is built stdlib-only
-    (``hashlib``/``hmac``): canonical JSON is XORed with an HMAC-SHA256 keystream
-    (``_hmac_keystream``) and the ciphertext is prefixed with its own HMAC-SHA256 MAC, so
-    ``decrypt_seed_manifest`` can both recover the plaintext and detect tampering or the wrong
-    key. This is good enough to unit-test the CONTRACT this card needs - canonical-JSON-in,
-    opaque-authenticated-bytes-out, round-trippable with the matching key, and fails closed
-    (raises) on a wrong key or tampered ciphertext - but it is NOT a production-grade AEAD (no
-    nonce; a key must never be reused across two different manifests). Before this is used for a
-    real seed manifest, the hosted writer should swap it for ``cryptography.fernet.Fernet``
-    (add ``cryptography>=42`` to ``pyproject.toml``'s dependencies) once the restricted GitHub
-    Environment holding the real key exists - see this card's own closeout note, as the card
-    requires."""
+    """Encrypt ``manifest`` (canonical JSON) with ``cryptography.fernet.Fernet`` under ``key`` (a
+    raw 32-byte key -- see ``_fernet_key``). Fernet is a real, audited AEAD: unlike the stub this
+    replaced, it includes its own random nonce (safe to reuse a key across manifests) and a
+    verified HMAC, so ``decrypt_seed_manifest`` fails closed on a wrong key or any tampering."""
     canonical = json.dumps(manifest, sort_keys=True, separators=(",", ":")).encode("utf-8")
-    keystream = _hmac_keystream(key, len(canonical))
-    ciphertext = bytes(a ^ b for a, b in zip(canonical, keystream))
-    mac = hmac.new(key, ciphertext, hashlib.sha256).digest()
-    return mac + ciphertext
+    return Fernet(_fernet_key(key)).encrypt(canonical)
 
 
 def decrypt_seed_manifest(blob: bytes, key: bytes) -> Any:
     """The inverse of ``encrypt_seed_manifest``. Raises ``ValueError`` (never returns a silently
-    wrong result) if the MAC does not match - a tampered ciphertext or the wrong key are
-    indistinguishable, and both must fail closed."""
-    if len(blob) < hashlib.sha256().digest_size:
-        raise ValueError("seed manifest blob is too short to contain a MAC")
-    mac, ciphertext = blob[: hashlib.sha256().digest_size], blob[hashlib.sha256().digest_size :]
-    expected_mac = hmac.new(key, ciphertext, hashlib.sha256).digest()
-    if not hmac.compare_digest(mac, expected_mac):
-        raise ValueError("seed manifest MAC mismatch: tampered ciphertext or wrong key")
-    keystream = _hmac_keystream(key, len(ciphertext))
-    canonical = bytes(a ^ b for a, b in zip(ciphertext, keystream))
+    wrong result, and never leaks Fernet's own ``InvalidToken`` type past this module's own
+    contract) on a wrong key, a tampered blob, or an expired/malformed token."""
+    try:
+        canonical = Fernet(_fernet_key(key)).decrypt(blob)
+    except InvalidToken as error:
+        raise ValueError("seed manifest decryption failed: tampered blob or wrong key") from error
     return json.loads(canonical.decode("utf-8"))
