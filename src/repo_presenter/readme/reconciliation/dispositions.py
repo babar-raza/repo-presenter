@@ -1715,6 +1715,7 @@ def normalize(
         )[:_RATIONALE_LIMIT]
     _fold_positional_pointers(output, facts)
     _fold_dangling_rewrites(output, facts)
+    _fold_headings_into_kept_body(output, facts)
     _prune_incidental_coverage(output, coverage)
     return errors
 
@@ -1785,6 +1786,68 @@ def _fold_dangling_rewrites(output: dict[str, Any], facts: FactsDocument) -> Non
 # ``dangling_pointers``, ``coordinate_neighbor_promises``, and ``recover_uncited_prose_omits`` are
 # still NOT ported -- the refusal-message/repair layer built on top of ``coverage_findings``,
 # needed only once a real rejection or repair round is being driven, not to fire one real call.
+
+
+#: Dispositions that keep a body unit as written, which a heading above it then follows.
+_BODY_KEPT = frozenset({"VERIFIED_PRESERVE", "VERIFIED_MOVE"})
+
+
+def _fold_headings_into_kept_body(output: dict[str, Any], facts: FactsDocument) -> None:
+    """An inherited heading that is parked or dropped without evidence (DEFER_UNRESOLVED, or an
+    OMIT_UNSUPPORTED / SUPERSEDE_REDUNDANT citing no fact) while a unit under it is kept as written
+    follows that body: same disposition, destination and citations as the first kept unit under it.
+
+    Measured live (aspose-email-foss/Aspose.Email-FOSS-for-Cpp, hosted Lane R): ``017.heading``
+    ("Install (Optional)") was DEFER_UNRESOLVED ("superseded by the installation section") while
+    its body units 018/019 were VERIFIED_PRESERVE into ``development_testing``. The body printed,
+    the heading was printed nowhere, and the reviewer refused live_readme_loss on it. The heading
+    is the title of content that stays, so it is kept with it; S9's accounting
+    (``repair.accounting``) then records it as the renderer-owned heading it is (the renderer
+    prints its own headings, never an inherited one). Only the disposition fields of the heading
+    change, never any text; a heading citing a CONTRADICTED fact, a heading whose body is wholly
+    dropped, and any heading already kept or accounted for with evidence are left alone."""
+    order = [fact.id for fact in facts.by_kind("inherited_unit")]
+    entries = {
+        str(entry.get("unit_id", "")): entry for entry in output.get("dispositions", [])
+    }
+    polarity = {fact.id: fact.polarity for fact in facts.facts}
+    for position, unit in enumerate(order):
+        entry = entries.get(unit)
+        if entry is None or _unit_kind(unit) != "heading":
+            continue
+        disposition = entry.get("disposition")
+        cited = list(entry.get("fact_ids") or [])
+        if not (
+            disposition == "DEFER_UNRESOLVED"
+            or (disposition in {"OMIT_UNSUPPORTED", "SUPERSEDE_REDUNDANT"} and not cited)
+        ):
+            continue
+        if any(polarity.get(fact_id) == "CONTRADICTED" for fact_id in cited):
+            continue
+        body = None
+        for following in order[position + 1 :]:
+            if _unit_kind(following) == "heading":
+                break
+            candidate = entries.get(following)
+            if (
+                candidate is not None
+                and candidate.get("disposition") in _BODY_KEPT
+                and candidate.get("destination_section")
+            ):
+                body = (following, candidate)
+                break
+        if body is None:
+            continue
+        body_unit, kept = body
+        was = disposition
+        entry["disposition"] = kept["disposition"]
+        entry["destination_section"] = kept["destination_section"]
+        entry["fact_ids"] = sorted(set(cited) | set(kept.get("fact_ids") or []))
+        entry["rationale"] = (
+            f"Kept with the content under it ({body_unit} is kept in "
+            f"{kept['destination_section']}); it was {was} before. "
+            + str(entry.get("rationale") or "")
+        )[:_RATIONALE_LIMIT]
 
 
 def _longest(node: Mapping[str, Any]) -> int | None:
