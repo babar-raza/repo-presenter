@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "attempt under version set b8a378160410: PresentFailure: independent review returned REJECT with 17 blocking finding(s) of 17; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README states '14 public types' ('- **[Full API reference](https://reference.aspose.org/cells/go/)** — The full API reference offers a complete, browsable reference for all 14 public types.'), but the facts record 28 public types (28 classes); state the computed count or none); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:006.list is kept (VERIFIED_PRESERVE) but its text is not printed in the README); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link #asposecells-foss-for-go); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link #requires-go-1245-see-gomod-depends-only-on-the-go-standard-library--no-third-party-modules); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link #required-package-dependencies); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link #native-and-system-requirements); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link #formulas-and-the-calculation-engine); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link #data-validation); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link #picture-embedding); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link #streaming-large-files); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link #styling); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link #structured-tables); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link #csv-import); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link #project-structure); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link #cells-foss); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link #detailed-documentation); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link #constraints)",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-09T20:01:42.308367+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:42680632584",
     "acquired_at": "2026-11-09T19:12:23.195185+00:00",
@@ -39,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 34,
+  "state_version": 35,
   "recent_trigger_dedup_keys": {
     "run:40555603173:aspose-cells-foss/Aspose.Cells-FOSS-for-Go": "50fef97592e549af92340b0eedede7d5",
     "run:40571547837:aspose-cells-foss/Aspose.Cells-FOSS-for-Go": "407ac860a6314594a20b566b3ec49165",
