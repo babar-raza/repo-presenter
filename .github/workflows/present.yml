@@ -434,6 +434,7 @@ jobs:
             -v "$PWD/tests/fixtures/sandbox:/fixtures:ro" \
             --entrypoint sh repo-presenter-facts -c '
               set -e
+              export TMPDIR=/work
               cp /fixtures/cpp/hello.cpp /work/hello.cpp
               g++ -O0 -o /work/hello /work/hello.cpp
               test "$(/work/hello)" = "hello from cpp"
