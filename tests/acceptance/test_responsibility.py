@@ -1,10 +1,11 @@
-"""Tests for the mechanism-class responsibility matrix (TC-022c).
+"""Tests for the mechanism-class responsibility matrix (TC-022c; rung-(c) reassignment 2026-11-09).
 
 These tests are the falsifier for ``src/repo_presenter/acceptance/responsibility.py``: they pin
-down the exact D1-D16 -> mechanism table transcribed in TC-022c's own card text, assert the
-deliberate D7/D9 departures from a literal reading of the design table, and cross-check the
-derived ``REQUIRED_MECHANISM_CLASSES`` against the real, imported
-``calibration_harness.MECHANISMS`` tuple.
+down the exact D1-D16 -> mechanism table (as reassigned by the M8 rung-(c) fallback, R26: D9
+joins D7 as a "none" entry, D14/D15 move off M8 to M6/M5 and M7), assert the deliberate
+departures from a literal reading of the original design table, and cross-check the derived
+``REQUIRED_MECHANISM_CLASSES`` against the real, imported ``calibration_harness.MECHANISMS``
+tuple.
 """
 
 from __future__ import annotations
@@ -19,9 +20,9 @@ from repo_presenter.acceptance.responsibility import (
     responsibility_matches_calibration_harness,
 )
 
-#: The exact table this card's purpose section transcribes, after its own documented D9
-#: correction (real primary "M8", not the design table's literal "M9" -- see the module
-#: docstring). D7 is deliberately absent from this expectation, and asserted absent below.
+#: The exact table this module now derives, after its own documented rung-(c) reassignment (see
+#: the module docstring in full). D7 and D9 are deliberately absent from this expectation (both
+#: map to primary "none"), and asserted absent below.
 EXPECTED_TABLE: dict[str, tuple[str, str | None]] = {
     "D1": ("M1", None),
     "D2": ("M4", "M2"),
@@ -30,13 +31,12 @@ EXPECTED_TABLE: dict[str, tuple[str, str | None]] = {
     "D5": ("M2", None),
     "D6": ("M2", None),
     "D8": ("M5", "M2"),
-    "D9": ("M8", None),
     "D10": ("M5", "M7"),
     "D11": ("M6", None),
     "D12": ("M6", None),
     "D13": ("M7", "M5"),
-    "D14": ("M8", None),
-    "D15": ("M8", "M9"),
+    "D14": ("M6", "M5"),
+    "D15": ("M7", None),
     "D16": ("M10", None),
 }
 
@@ -59,9 +59,23 @@ def test_d7_is_not_present() -> None:
     assert "D7" not in DEFECT_CLASS_OWNERS
 
 
-def test_required_mechanism_classes_contains_m1_through_m8_and_m10() -> None:
+def test_d9_is_not_present() -> None:
+    # D9 ("semantic description mismatch") is, after rung (c), a PRESERVE_ATTRIBUTED disposition
+    # checked by M9's audit downstream, not a provisionally-accepted gate requirement -- it must
+    # never become a mechanism_classes entry, same shape as D7.
+    assert "D9" not in DEFECT_CLASS_OWNERS
+
+
+def test_m8_is_not_in_required_mechanism_classes() -> None:
+    # Rung (c) (R26): a real, recorded M8 calibration failure authorizes removing M8 from the
+    # gate entirely -- no defect class's primary may be M8 any more.
+    assert "M8" not in REQUIRED_MECHANISM_CLASSES
+    assert all(primary != "M8" for primary, _secondary in DEFECT_CLASS_OWNERS.values())
+
+
+def test_required_mechanism_classes_contains_m1_through_m7_and_m10() -> None:
     required = set(REQUIRED_MECHANISM_CLASSES)
-    for mechanism in ("M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M10"):
+    for mechanism in ("M1", "M2", "M3", "M4", "M5", "M6", "M7", "M10"):
         assert mechanism in required, f"{mechanism} missing from REQUIRED_MECHANISM_CLASSES"
 
 
