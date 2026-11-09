@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "card": "TC-023b",
+  "gate": "GATE5_DELIVERY_PROGRAM",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-09T12:23:07Z",
+  "base_rev": "c660c974a9e21f60c5c389d8ab52dc6b50f30043",
+  "head_rev": "18c678d96edb4df2e2cc29fea9eecc61564f2279",
+  "card_sha256": "be53dfc694ffd96fb9afaea0020f6ba40005590361dd2733ab8987d3a01a0c59",
+  "checker_fileset_sha256": "9ef1e4e46245422fa966a0931078cea7e35d1063a61748a43a80fe7a9bf03dca",
+  "checker_fileset_scheme": "v3",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [
+      "src/repo_presenter/readme/review/prose_judge_live.py",
+      "tests/readme/review/test_prose_judge_live.py"
+    ],
+    "violations": [],
+    "evaluated": true
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python -m pytest tests/readme/review/test_prose_judge_live.py tests/readme/review/test_prose_judge.py tests/core/llm/test_jobs.py tests/core/llm/test_budget.py -q",
+          "exit_code": 0,
+          "duration_s": 3.757,
+          "stdout_sha256": "e9e0c6bf6668b7c297c49d93821251c41347fd753a034c488c2bae7a7e808d47"
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python -m pytest tests/readme/review/test_prose_judge_live.py tests/readme/review/test_prose_judge.py tests/core/llm/test_jobs.py tests/core/llm/test_budget.py -q",
+          "exit_code": 0,
+          "duration_s": 2.951,
+          "stdout_sha256": "23c2192a734d2865a6c697f6fdc866455f233b35ed7b058aaf685d46e4524eec"
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -X utf8 -c \"import pathlib; p = pathlib.Path('src/repo_presenter/readme/review/prose_judge_live.py'); t = p.read_text(encoding='utf-8'); q = chr(34); old = q + 'check_budget' + q; new = q + '_disabled_check_budget' + q; t2 = t.replace('check_budget', '_disabled_check_budget') if 'check_budget' in t else t; p.write_text(t2, encoding='utf-8')\"",
+    "patch_sha256": "ff5b923ac7f7efb823f04eb43dbdfc5a51e681af9cb4af73707b7c3caf258386",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      2
+    ],
+    "tree_changed": [
+      "M src/repo_presenter/readme/review/prose_judge_live.py"
+    ]
+  },
+  "accepted": true,
+  "reason": "all gates passed"
+}
