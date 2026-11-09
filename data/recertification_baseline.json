@@ -22,9 +22,12 @@
     },
     {
       "commit": "7e431a56a850ca690c4966d5ed6e35b87f9c513a",
-      "failing_checks": [],
+      "failing_checks": [
+        "L-05"
+      ],
+      "justification": "L-05 newly fails 2026-11-09: TC-025 (GATE5_DELIVERY_PROGRAM) added the real stale_package_version detector this session, which found a genuine, pre-existing, previously-undetected defect at line 68 -- the README claims the package is not published to PyPI, but no package:published_version fact exists to check that claim against (an unresolvable claim, not a deterministically repairable one). Confirmed by direct investigation (repo_presenter.recertify.portfolio_recertification, real per-check detail) before accepting this as justified, per R10 (\"no passing seal may start failing unless each case is a justified genuine defect\") -- not a regression in the detector, a real catch it is now able to make. The seal itself is kept, unmodified, per R10's own \"never regenerate a sealed candidate\" rule; repair is separate, later work.",
       "lane": "L",
-      "outcome": "RECERTIFIED",
+      "outcome": "NEEDS_REPAIR",
       "regenerations": 0,
       "repository": "aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python",
       "revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151"
@@ -173,12 +176,12 @@
       "failing_checks": [
         "L-03"
       ],
+      "justification": "BC-14 (R14/R12 mechanical claims, 2026-11-06): the live README's API table lists CSSDeclarationBlock, BrowsingContext, WindowEventLoop, ModuleLoadPolicy, BreakHints, each defined only in a private _module and not exported, and states 243 public types against 303 in the facts -- genuine false claims in the upstream README; Lane L must correct them, not seal them.",
       "lane": "L",
       "outcome": "NEEDS_REPAIR",
       "regenerations": 0,
       "repository": "aspose-html-foss/Aspose.HTML-FOSS-for-Python",
-      "revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11",
-      "justification": "BC-14 (R14/R12 mechanical claims, 2026-11-06): the live README's API table lists CSSDeclarationBlock, BrowsingContext, WindowEventLoop, ModuleLoadPolicy, BreakHints, each defined only in a private _module and not exported, and states 243 public types against 303 in the facts -- genuine false claims in the upstream README; Lane L must correct them, not seal them."
+      "revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11"
     },
     {
       "commit": "9c31949d852f5109d9754275faac6e1e8278d66c",
@@ -268,12 +271,12 @@
       "failing_checks": [
         "L-03"
       ],
+      "justification": "BC-14 (mechanical claims, 2026-11-06): the live README lists ShapeNode (exists nowhere in the source) and ReaderContext (a private Protocol), and states 146 public types against 198 in the facts -- genuine false claims; Lane L must correct them.",
       "lane": "L",
       "outcome": "NEEDS_REPAIR",
       "regenerations": 0,
       "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Python",
-      "revision": "2d2efee2787cb9e56d071d17f8d7b740dce8b784",
-      "justification": "BC-14 (mechanical claims, 2026-11-06): the live README lists ShapeNode (exists nowhere in the source) and ReaderContext (a private Protocol), and states 146 public types against 198 in the facts -- genuine false claims; Lane L must correct them."
+      "revision": "2d2efee2787cb9e56d071d17f8d7b740dce8b784"
     }
   ]
 }
