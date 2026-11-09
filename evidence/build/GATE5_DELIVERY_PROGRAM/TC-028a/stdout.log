@@ -1,0 +1,126 @@
+
+===== CLEAN RUN 1 =====
+$ python -m pytest tests/test_recertify_gate.py tests/test_recertify.py -q
+--- stdout ---
+..............................                                           [100%]
+30 passed in 32.42s
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python -m pytest tests/test_recertify_gate.py tests/test_recertify.py -q
+--- stdout ---
+..............................                                           [100%]
+30 passed in 29.76s
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M src/repo_presenter/recertify.py
+$ python -m pytest tests/test_recertify_gate.py tests/test_recertify.py -q
+--- stdout ---
+FF.F..FF.................FF...                                           [100%]
+================================== FAILURES ===================================
+_____ test_a_justification_must_name_each_failing_check_as_a_whole_token ______
+
+    def test_a_justification_must_name_each_failing_check_as_a_whole_token() -> None:
+        base = doc(row(OLD, "RECERTIFIED"))
+        bad = doc(row(OLD, "NEEDS_REPAIR", ["BC-17"], "BC-1 newly fails because of a detector change"))
+>       assert gate([result(OLD)], bad, base), "BC-1 must not 'name' BC-17"
+E       AssertionError: BC-1 must not 'name' BC-17
+E       assert []
+E        +  where [] = gate([Recertification(repository='aspose-3d-foss/Aspose.3D-FOSS-for-Java', lane='L', revision='3d2ed6be', outcome='NEEDS_RE...t='', readme_changed=False, seal_commit='e0d4134ef1ea7d75b8d8d528887f20fec8c3479a', regenerations=0, provider_calls=0)], {'recertify_version': '1', 'schema_version': 1, 'seals': [{'commit': 'e0d4134ef1ea7d75b8d8d528887f20fec8c3479a', 'failing_checks': ['BC-17'], 'lane': 'L', 'outcome': 'NEEDS_REPAIR', ...}]}, {'recertify_version': '1', 'schema_version': 1, 'seals': [{'commit': 'e0d4134ef1ea7d75b8d8d528887f20fec8c3479a', 'failing_checks': [], 'lane': 'L', 'outcome': 'RECERTIFIED', ...}]})
+
+tests\test_recertify_gate.py:40: AssertionError
+_______________ test_a_check_id_inside_a_longer_id_never_counts _______________
+
+    def test_a_check_id_inside_a_longer_id_never_counts() -> None:
+        base = doc(row(OLD, "RECERTIFIED"))
+        working = doc(row(OLD, "NEEDS_REPAIR", ["L-05"], "L-051 is the only thing mentioned here"))
+>       assert gate([result(OLD, ["L-05"])], working, base)
+E       AssertionError: assert []
+E        +  where [] = gate([Recertification(repository='aspose-3d-foss/Aspose.3D-FOSS-for-Java', lane='L', revision='3d2ed6be', outcome='NEEDS_RE...t='', readme_changed=False, seal_commit='e0d4134ef1ea7d75b8d8d528887f20fec8c3479a', regenerations=0, provider_calls=0)], {'recertify_version': '1', 'schema_version': 1, 'seals': [{'commit': 'e0d4134ef1ea7d75b8d8d528887f20fec8c3479a', 'failing_checks': ['L-05'], 'lane': 'L', 'outcome': 'NEEDS_REPAIR', ...}]}, {'recertify_version': '1', 'schema_version': 1, 'seals': [{'commit': 'e0d4134ef1ea7d75b8d8d528887f20fec8c3479a', 'failing_checks': [], 'lane': 'L', 'outcome': 'RECERTIFIED', ...}]})
+
+tests\test_recertify_gate.py:48: AssertionError
+_____ test_a_replaced_latest_seal_that_fails_is_held_to_the_base_lane_row _____
+
+    def test_a_replaced_latest_seal_that_fails_is_held_to_the_base_lane_row() -> None:
+        base = doc(row(OLD, "RECERTIFIED"))
+        # the lane's latest seal is a NEW commit the base never saw; with no working row it is a regression
+        problems = gate([result(NEW)], doc(row(OLD, "RECERTIFIED")), base)
+>       assert len(problems) == 1 and "no baseline row records it" in problems[0]
+E       assert (0 == 1)
+E        +  where 0 = len([])
+
+tests\test_recertify_gate.py:61: AssertionError
+_ test_existing_behaviour_a_same_commit_regression_without_justification_fails _
+
+    def test_existing_behaviour_a_same_commit_regression_without_justification_fails() -> None:
+        base = doc(row(OLD, "RECERTIFIED"))
+>       assert len(gate([result(OLD)], base, base)) == 1
+E       AssertionError: assert 0 == 1
+E        +  where 0 = len([])
+E        +    where [] = gate([Recertification(repository='aspose-3d-foss/Aspose.3D-FOSS-for-Java', lane='L', revision='3d2ed6be', outcome='NEEDS_RE...t='', readme_changed=False, seal_commit='e0d4134ef1ea7d75b8d8d528887f20fec8c3479a', regenerations=0, provider_calls=0)], {'recertify_version': '1', 'schema_version': 1, 'seals': [{'commit': 'e0d4134ef1ea7d75b8d8d528887f20fec8c3479a', 'failing_checks': [], 'lane': 'L', 'outcome': 'RECERTIFIED', ...}]}, {'recertify_version': '1', 'schema_version': 1, 'seals': [{'commit': 'e0d4134ef1ea7d75b8d8d528887f20fec8c3479a', 'failing_checks': [], 'lane': 'L', 'outcome': 'RECERTIFIED', ...}]})
+
+tests\test_recertify_gate.py:78: AssertionError
+________ test_the_working_baseline_vouches_only_when_no_base_is_given _________
+
+    def test_the_working_baseline_vouches_only_when_no_base_is_given() -> None:
+        working = doc(row(OLD, "RECERTIFIED"))
+>       assert gate([result(OLD)], working, None)  # falls back to the working baseline as the base
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert []
+E        +  where [] = gate([Recertification(repository='aspose-3d-foss/Aspose.3D-FOSS-for-Java', lane='L', revision='3d2ed6be', outcome='NEEDS_RE...t='', readme_changed=False, seal_commit='e0d4134ef1ea7d75b8d8d528887f20fec8c3479a', regenerations=0, provider_calls=0)], {'recertify_version': '1', 'schema_version': 1, 'seals': [{'commit': 'e0d4134ef1ea7d75b8d8d528887f20fec8c3479a', 'failing_checks': [], 'lane': 'L', 'outcome': 'RECERTIFIED', ...}]}, None)
+
+tests\test_recertify_gate.py:83: AssertionError
+_ test_the_gate_fails_when_a_passing_seal_breaks_and_passes_with_a_justification _
+
+    def test_the_gate_fails_when_a_passing_seal_breaks_and_passes_with_a_justification() -> None:
+        passing = [_rec("o/a"), _rec("o/b", commit="d" * 40)]
+        baseline = recertify.baseline_document(passing)
+        assert recertify.gate(passing, baseline) == []  # an unchanged tree passes
+    
+        broken = [_rec("o/a", outcome=OUTCOME_NEEDS_REPAIR, checks=("BC-99",)), passing[1]]
+        problems = recertify.gate(broken, baseline)
+>       assert len(problems) == 1 and "o/a" in problems[0] and "BC-99" in problems[0]
+E       assert (0 == 1)
+E        +  where 0 = len([])
+
+tests\test_recertify.py:545: AssertionError
+________________ test_the_gate_end_to_end_against_a_real_seal _________________
+
+tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-1472/test_the_gate_end_to_end_again0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000026F7C5A1E10>
+no_provider = []
+
+    def test_the_gate_end_to_end_against_a_real_seal(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, no_provider: list[str]
+    ) -> None:
+        remote = _remote_with_seal(tmp_path, monkeypatch)
+        results, _ = _recertify_remote(remote, tmp_path / "s1")
+        assert [r.outcome for r in results] == [OUTCOME_RECERTIFIED]
+        baseline = recertify.baseline_document(results)
+        assert recertify.gate(results, baseline) == []
+    
+        _new_failing_check(monkeypatch)  # "the change"
+        after, _ = _recertify_remote(remote, tmp_path / "s2")
+>       assert recertify.gate(after, baseline)
+E       AssertionError: assert []
+E        +  where [] = <function <lambda> at 0x0000026F7BF03B00>([Recertification(repository='aspose-email-foss/Aspose.Email-FOSS-for-.Net', lane='R', revision='59125b4732df0eedbc4d4c...rent', readme_changed=True, seal_commit='0d3c408c4b69b93cd0c98bc9c01bc9d47c863487', regenerations=0, provider_calls=0)], {'schema_version': 1, 'recertify_version': '1', 'seals': [{'repository': 'aspose-email-foss/Aspose.Email-FOSS-for-.Net...', 'commit': '0d3c408c4b69b93cd0c98bc9c01bc9d47c863487', 'revision': '59125b4732df0eedbc4d4c2ab978698ed4348eb7', ...}]})
+E        +    where <function <lambda> at 0x0000026F7BF03B00> = recertify.gate
+
+tests\test_recertify.py:571: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_recertify_gate.py::test_a_justification_must_name_each_failing_check_as_a_whole_token
+FAILED tests/test_recertify_gate.py::test_a_check_id_inside_a_longer_id_never_counts
+FAILED tests/test_recertify_gate.py::test_a_replaced_latest_seal_that_fails_is_held_to_the_base_lane_row
+FAILED tests/test_recertify_gate.py::test_existing_behaviour_a_same_commit_regression_without_justification_fails
+FAILED tests/test_recertify_gate.py::test_the_working_baseline_vouches_only_when_no_base_is_given
+FAILED tests/test_recertify.py::test_the_gate_fails_when_a_passing_seal_breaks_and_passes_with_a_justification
+FAILED tests/test_recertify.py::test_the_gate_end_to_end_against_a_real_seal
+7 failed, 23 passed in 30.73s
+
+--- stderr ---
+
