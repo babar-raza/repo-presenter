@@ -3,7 +3,7 @@
 $ python -m pytest tests/test_recertify_gate.py tests/test_recertify.py -q
 --- stdout ---
 ..............................                                           [100%]
-30 passed in 32.42s
+30 passed in 27.95s
 
 --- stderr ---
 
@@ -12,7 +12,7 @@ $ python -m pytest tests/test_recertify_gate.py tests/test_recertify.py -q
 $ python -m pytest tests/test_recertify_gate.py tests/test_recertify.py -q
 --- stdout ---
 ..............................                                           [100%]
-30 passed in 29.76s
+30 passed in 26.34s
 
 --- stderr ---
 
@@ -91,8 +91,8 @@ E        +  where 0 = len([])
 tests\test_recertify.py:545: AssertionError
 ________________ test_the_gate_end_to_end_against_a_real_seal _________________
 
-tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-1472/test_the_gate_end_to_end_again0')
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000026F7C5A1E10>
+tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-1662/test_the_gate_end_to_end_again0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000016EA4D93770>
 no_provider = []
 
     def test_the_gate_end_to_end_against_a_real_seal(
@@ -108,8 +108,8 @@ no_provider = []
         after, _ = _recertify_remote(remote, tmp_path / "s2")
 >       assert recertify.gate(after, baseline)
 E       AssertionError: assert []
-E        +  where [] = <function <lambda> at 0x0000026F7BF03B00>([Recertification(repository='aspose-email-foss/Aspose.Email-FOSS-for-.Net', lane='R', revision='59125b4732df0eedbc4d4c...rent', readme_changed=True, seal_commit='0d3c408c4b69b93cd0c98bc9c01bc9d47c863487', regenerations=0, provider_calls=0)], {'schema_version': 1, 'recertify_version': '1', 'seals': [{'repository': 'aspose-email-foss/Aspose.Email-FOSS-for-.Net...', 'commit': '0d3c408c4b69b93cd0c98bc9c01bc9d47c863487', 'revision': '59125b4732df0eedbc4d4c2ab978698ed4348eb7', ...}]})
-E        +    where <function <lambda> at 0x0000026F7BF03B00> = recertify.gate
+E        +  where [] = <function <lambda> at 0x0000016EA4867BA0>([Recertification(repository='aspose-email-foss/Aspose.Email-FOSS-for-.Net', lane='R', revision='59125b4732df0eedbc4d4c...rent', readme_changed=True, seal_commit='4406de4f97291a730c16aac4153e3b4f10ad5c3c', regenerations=0, provider_calls=0)], {'schema_version': 1, 'recertify_version': '1', 'seals': [{'repository': 'aspose-email-foss/Aspose.Email-FOSS-for-.Net...', 'commit': '4406de4f97291a730c16aac4153e3b4f10ad5c3c', 'revision': '59125b4732df0eedbc4d4c2ab978698ed4348eb7', ...}]})
+E        +    where <function <lambda> at 0x0000016EA4867BA0> = recertify.gate
 
 tests\test_recertify.py:571: AssertionError
 =========================== short test summary info ===========================
@@ -120,7 +120,7 @@ FAILED tests/test_recertify_gate.py::test_existing_behaviour_a_same_commit_regre
 FAILED tests/test_recertify_gate.py::test_the_working_baseline_vouches_only_when_no_base_is_given
 FAILED tests/test_recertify.py::test_the_gate_fails_when_a_passing_seal_breaks_and_passes_with_a_justification
 FAILED tests/test_recertify.py::test_the_gate_end_to_end_against_a_real_seal
-7 failed, 23 passed in 30.73s
+7 failed, 23 passed in 23.62s
 
 --- stderr ---
 

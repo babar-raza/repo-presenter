@@ -3,7 +3,7 @@
 $ python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/test_cascade_s9.py tests/test_cascade_s10.py tests/test_cascade_repair_context.py -q
 --- stdout ---
 ...............................                                          [100%]
-31 passed in 27.76s
+31 passed in 15.15s
 
 --- stderr ---
 
@@ -12,7 +12,7 @@ $ python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/tes
 $ python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/test_cascade_s9.py tests/test_cascade_s10.py tests/test_cascade_repair_context.py -q
 --- stdout ---
 ...............................                                          [100%]
-31 passed in 22.05s
+31 passed in 15.64s
 
 --- stderr ---
 
@@ -25,8 +25,8 @@ F..............................                                          [100%]
 ================================== FAILURES ===================================
 _ test_a_candidate_that_loses_only_a_link_the_published_readme_prints_reaches_review_restored _
 
-tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-1463/test_a_candidate_that_loses_on0')
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000021C936E7490>
+tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-1654/test_a_candidate_that_loses_on0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E9EEF63A80>
 
     def test_a_candidate_that_loses_only_a_link_the_published_readme_prints_reaches_review_restored(
         tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -51,7 +51,7 @@ document = FactsDocument(repository='org/Aspose.Widget-FOSS-for-Python', source_
 investigation = {'product_summary': {'text': 'A widget library.', 'fact_ids': ['package:name']}, 'audience': {'text': 'Python develope...]}, 'problems_solved': [{'text': 'Rendering widgets is tedious.', 'fact_ids': ['package:name']}], 'workflows': [], ...}
 tree_paths = ['README.md']
 original = '# Aspose Widget\n\nA widget you can render.\n\n## Usage\n\n```python\nimport aspose_widget_foss\n```\n\n## Limitation...y PNG output is currently supported.\n\nRead the [full guide](https://widget.example.org/guide) for everything else.\n'
-out_dir = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-1463/test_a_candidate_that_loses_on0/out')
+out_dir = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-1654/test_a_candidate_that_loses_on0/out')
 
     def _restore_lost_content(
         settled: _Settled, *, entry: RegistryEntry, document: FactsDocument, investigation: dict,
@@ -95,7 +95,7 @@ E               TypeError: <lambda>() got an unexpected keyword argument 'includ
 src\repo_presenter\cascade.py:643: TypeError
 =========================== short test summary info ===========================
 FAILED tests/test_cascade_restore.py::test_a_candidate_that_loses_only_a_link_the_published_readme_prints_reaches_review_restored
-1 failed, 30 passed in 25.26s
+1 failed, 30 passed in 17.00s
 
 --- stderr ---
 
