@@ -87,6 +87,11 @@ _UNDER = re.compile(
     r"(?:under|in)\s+(?:the\s+)?[\"“'‘]?"
     r"(?P<name>[A-Z][A-Za-z0-9&/' -]{2,48}?)[\"”'’]?\s*[.;,]?\s*$"
 )
+# A capitalised verb before the kind word ("See Examples below") is a sentence opening, not part
+# of a Title-Case heading name.
+_POINTING_VERBS = frozenset(
+    {"the", "this", "these", "those", "every", "each", "all", "any", "see", "refer", "view", "read", "check", "use", "run", "try", "find", "consult", "browse"}
+)
 _GENERIC_SECTION_NAMES = frozenset(
     {"this", "that", "next", "previous", "following", "above", "below"}
 )
@@ -233,6 +238,23 @@ def positional_only(text: str) -> bool:
     )
 
 
+def _cased(raw: str) -> str:
+    """``_plain`` without the lower-casing."""
+    return _SPACE.sub(" ", _MARKUP.sub(lambda m: m.group(1) or "", raw)).strip()
+
+
+def _heading_name(cased: str, match: re.Match[str]) -> bool:
+    """Whether a ``_DIRECT`` match (found in the lower-cased ``_plain`` of ``cased``) is a
+    Title-Case heading name, not a pointer: the kind word is capitalised and the word before it
+    is too ("Additional Examples below extends this into ...", PDF-Cpp). "the examples below"
+    and a sentence-initial "Examples below" stay pointers."""
+    if not cased[match.start("kind") :][:1].isupper():
+        return False
+    before = cased[: match.start("kind")].split()
+    word = before[-1] if before else ""
+    return word[:1].isupper() and word.isalpha() and word.lower() not in _POINTING_VERBS
+
+
 def dangling_references(readme: str) -> list[DanglingReference]:
     """Every prose sentence of ``readme`` that points at something the README does not have."""
     blocks, headings = _parse(readme)
@@ -247,8 +269,11 @@ def dangling_references(readme: str) -> list[DanglingReference]:
             sentence = _plain(raw)
             if not sentence:
                 continue
+            cased = _cased(raw)
             reasons: list[str] = []
             for match in _DIRECT.finditer(sentence):
+                if len(cased) == len(sentence) and _heading_name(cased, match):
+                    continue
                 wanted = _KIND_WORDS[match.group("kind").lower()]
                 below = match.group("way").lower() == "below"
                 lo, hi = (position + 1, end) if below else (start, position)
