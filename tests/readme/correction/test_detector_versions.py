@@ -47,6 +47,10 @@ PINS: dict[str, tuple[tuple[str, ...], str]] = {
         ("1",),
         "8858633a106222a7edff519207826d8727e1019779d8f5f8231a041e1cdf051a",
     ),
+    "stale_type_count.py": (
+        ("1",),
+        "b24921b7c8c707148dae63adac0fe6bb9eb70e2190b1dc850836255a9ce81811",
+    ),
     "structure.py": (
         ("1", "1", "1"),
         "7c836b19f79488ef3f857c9e9b40df9813d717539e4cfe26050227ea9871c573",
