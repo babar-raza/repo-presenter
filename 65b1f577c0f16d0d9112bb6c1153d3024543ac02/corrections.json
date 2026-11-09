@@ -1,0 +1,115 @@
+{
+  "confinement": {
+    "edits": 1,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "208c82c9a59ef701260d8d5af0a9c667c90e51898a891ccb6e8dfcd8cd521d2d",
+  "edits": [
+    {
+      "detector": "stale_type_count",
+      "end": 41375,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose"
+        },
+        {
+          "fact_id": "public_symbol:aspose.pydrawing",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.pydrawing"
+        },
+        {
+          "fact_id": "public_symbol:aspose.pydrawing.design",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.pydrawing.design"
+        },
+        {
+          "fact_id": "public_symbol:aspose.pydrawing.drawing2d",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.pydrawing.drawing2d"
+        },
+        {
+          "fact_id": "public_symbol:aspose.pydrawing.imaging",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.pydrawing.imaging"
+        },
+        {
+          "fact_id": "public_symbol:aspose.pydrawing.printing",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.pydrawing.printing"
+        },
+        {
+          "fact_id": "public_symbol:aspose.pydrawing.text",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.pydrawing.text"
+        },
+        {
+          "fact_id": "public_symbol:aspose.threed",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.threed"
+        }
+      ],
+      "index": 0,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 712,
+      "original": "305",
+      "rationale": "line 712 states '305 public types'; the facts record 337 public types (332 classes), so a count of 305 is refuted and is replaced by the computed 337",
+      "replacement": "337",
+      "start": 41372
+    }
+  ],
+  "lane": "L",
+  "original_sha256": "68511527d2414b51fba25c60146587000b7a18ae339962c19fac4b1250b12ac2",
+  "outcome": "REFUSED_LANE_R_RECOMMENDED",
+  "readme_path": "README.md",
+  "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Python",
+  "schema_version": 1,
+  "source_revision": "65b1f577c0f16d0d9112bb6c1153d3024543ac02",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {
+    "FALSE_CLAIM_FIX": 1
+  },
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "public_symbol:aspose.threed.entities.iindexedvertexelement",
+        "public_symbol:aspose.threed.entities.iorientable",
+        "public_symbol:aspose.threed.formats.ioconfig",
+        "public_symbol:aspose.threed.inamedobject",
+        "public_symbol:aspose.threed.ioextension",
+        "public_symbol:aspose.threed.render.ibuffer",
+        "public_symbol:aspose.threed.render.icommandlist",
+        "public_symbol:aspose.threed.render.idescriptorset"
+      ],
+      "line": 0,
+      "reason": "22 of 337 verified public types are named nowhere in the README; would fill API Reference: public_symbol:aspose.threed.entities.iindexedvertexelement, public_symbol:aspose.threed.entities.iorientable, public_symbol:aspose.threed.formats.ioconfig, public_symbol:aspose.threed.inamedobject, public_symbol:aspose.threed.ioextension, public_symbol:aspose.threed.render.ibuffer, public_symbol:aspose.threed.render.icommandlist, public_symbol:aspose.threed.render.idescriptorset (+14 more)",
+      "text": ""
+    },
+    {
+      "defect": true,
+      "detector": "failing_example",
+      "fact_ids": [
+        "example:008"
+      ],
+      "line": 274,
+      "reason": "the example verifier recorded a failure for the example on lines 274-286: example 8: FAILED; TypeError",
+      "text": "from aspose.threed import Scene"
+    }
+  ]
+}
