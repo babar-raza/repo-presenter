@@ -1,0 +1,245 @@
+# Aspose.PSD FOSS for .NET
+
+[![NuGet](https://img.shields.io/nuget/v/Aspose.PSD.FOSS.svg)](https://www.nuget.org/packages/Aspose.PSD.FOSS/) ![.NET](https://img.shields.io/badge/.net-netstandard2.1_%7C_net10.0-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.txt)
+
+[![Aspose.PSD FOSS for .NET](https://products.aspose.org/media/psd/net/banner-readme.png)](https://products.aspose.org/psd/net/)
+
+It reads and writes PSD and PSB files for metadata-safe structural inspection and limited non-rendering edits. It exposes image dimensions through `Image.Width` and `Image.Height`, and layer information through `image.Layers`. It supports mutating layer properties such as Name, `IsVisible`, Left, Top, Right, Bottom, Opacity, and `BlendModeKey`.
+
+- The library parses only a small supported subset of the PSD/PSB format.
+- Known structures are exposed through a compact public API.
+- Image resources are exposed through lightweight unknown-only summaries rather than ID-specific semantic reconstruction.
+- Unsupported sections are preserved as raw bytes where possible.
+- When you mutate supported metadata, the library rewrites only the affected supported structures and keeps the rest of the file in raw-preserved form.
+
+## Navigation
+
+- [At a Glance](#at-a-glance)
+- [Key Capabilities](#key-capabilities)
+- [Installation](#installation)
+- [Dependencies](#dependencies)
+- [Quick Start](#quick-start)
+- [API Reference](#api-reference)
+- [Scope and Limitations](#scope-and-limitations)
+- [Development and Testing](#development-and-testing)
+- [License](#license)
+
+## At a Glance
+
+```mermaid
+flowchart LR
+Product["Aspose.PSD FOSS for .NET"]
+Product["Aspose.PSD FOSS for .NET"] --> Cap1["Load PSD/PSB from file or stream"]
+Cap2["Read document metadata"]
+Cap3["Read and edit layer metadata"]
+Cap4["Save without rendering"]
+Cap5["Build and test with .NET CLI"]
+Product["Aspose.PSD FOSS for .NET"] --> Cap2["Read document metadata"]
+Product["Aspose.PSD FOSS for .NET"] --> Cap3["Read and edit layer metadata"]
+Product["Aspose.PSD FOSS for .NET"] --> Cap4["Save without rendering"]
+Product["Aspose.PSD FOSS for .NET"] --> Cap5["Build and test with .NET CLI"]
+```
+
+## Key Capabilities
+
+- **Load PSD/PSB from file or stream.** It loads PSD and PSB files from file paths or streams using `Aspose.PSD.Image.Load` and `Aspose.PSD.ImageLoader.Load`, with `Aspose.PSD.StreamContainer` providing stream access.
+- **Read document metadata.** It reads document metadata including Width, Height, `ChannelsCount`, `BitsPerChannel`, `ColorMode`, Version, Compression, and `ImageResources`, and exposes `Size` and Bounds.
+- **Read and edit layer metadata.** It reads and edits layer metadata such as Name, Bounds, `BlendModeKey`, `IsVisible`, and Opacity, and updates layer geometry using coordinate properties like Left, Top, Right, and Bottom.
+- **Save without rendering.** It saves PSD and PSB files back to disk without rendering pixels, preserving the original structure and metadata.
+- **Build and test with .NET CLI.** It builds and tests using the .NET CLI with dotnet build Aspose.PSD-FOSS-for-.NET.sln and dotnet test Aspose.PSD-FOSS-for-.NET.sln, and installs via dotnet add package `Aspose.PSD.FOSS`.
+
+- make small safe edits to layer metadata;
+
+- Read additional document metadata: `Size`, `Bounds`, `Compression`, `ImageResources`, `IsFlatten`
+- Read layer metadata: `Name`, local `Bounds` `Rectangle`, `Width`, `Height`, `Top`, `Left`, `Bottom`, `Right`, `IsVisible`, `Opacity`, `Clipping`, `BlendModeKey`
+- Inspect supported official-style resource, channel, mask, and blending-range surfaces
+- Change `Name`, `IsVisible`, `Opacity`, `BlendModeKey`, `Clipping`, and layer geometry through coordinate properties
+- Preserve unsupported sections as raw bytes where possible
+
+- Load the currently supported PSB subset
+- Change `Name`, `IsVisible`, `Opacity`, `BlendModeKey`, `Clipping`, and layer geometry through coordinate properties
+
+## Installation
+
+Install the published package from NuGet (`Aspose.PSD.FOSS`, version 26.10.0):
+
+```bash
+dotnet add package Aspose.PSD.FOSS
+```
+
+## Dependencies
+
+### Required Package Dependencies
+
+No required third-party package dependencies; in `src/Aspose.PSD.FOSS/Aspose.PSD.FOSS.csproj`, no `PackageReference` a consumer would install is declared.
+
+### Native and System Requirements
+
+- Requires .NET `netstandard2.1;net10.0` (`TargetFrameworks` in `src/Aspose.PSD.FOSS/Aspose.PSD.FOSS.csproj`).
+
+## Quick Start
+
+This example loads a PSD file, inspects its structural metadata and layer properties, updates the first layer's name, visibility, opacity, blend mode, and geometry, then saves the modified file.
+
+```csharp
+using Aspose.PSD;
+using Aspose.PSD.FileFormats.Core.Blending;
+using Aspose.PSD.FileFormats.Psd;
+using Aspose.PSD.FileFormats.Psd.Layers;
+
+using var image = (PsdImage)Image.Load("input.psd");
+
+Console.WriteLine(image.Width);
+Console.WriteLine(image.Height);
+Console.WriteLine(image.ChannelsCount);
+Console.WriteLine(image.BitsPerChannel);
+Console.WriteLine(image.ColorMode);
+Console.WriteLine(image.Version);
+Console.WriteLine(image.Compression);
+Console.WriteLine(image.Layers.Length);
+Console.WriteLine(image.ImageResources.Length);
+
+foreach (Layer layer in image.Layers)
+{
+    Console.WriteLine(layer.Name);
+    Console.WriteLine(layer.Bounds);
+    Console.WriteLine(layer.BlendModeKey);
+    Console.WriteLine(layer.IsVisible);
+    Console.WriteLine(layer.Opacity);
+}
+
+image.Layers[0].Name = "Updated layer";
+image.Layers[0].IsVisible = false;
+image.Layers[0].Left = 10;
+image.Layers[0].Top = 20;
+image.Layers[0].Right = 110;
+image.Layers[0].Bottom = 120;
+image.Layers[0].Opacity = 128;
+image.Layers[0].BlendModeKey = BlendMode.Multiply;
+image.Save("output.psd");
+```
+
+- Enumerate layers and read their basic properties.
+
+If you do not pass an output file to the stream or structural-editing samples, they save into the repository `tmp/` folder by default.
+
+## API Reference
+
+The verified public surface includes `Aspose.PSD.Image` for loading, manipulating, and saving PSD files, `Aspose.PSD.ImageLoader` for custom image loading, and supporting types such as `Aspose.PSD.StreamContainer`, `Aspose.PSD.Rectangle`, `Aspose.PSD.RectangleF`, `Aspose.PSD.Point`, and `Aspose.PSD.Size` for geometric and stream operations.
+
+The verified public surface has 26 types.
+
+<details>
+<summary>View the Complete Public API Surface</summary>
+
+### Core API
+
+| Class | Description |
+| --- | --- |
+| `BuildVersionInfo` | Contains the current build version information. |
+| `BlendRange` | Represents a PSD layer blend range. |
+| `ChannelInformation` | Represents PSD layer channel information. |
+| `GlobalLayerMaskInfo` | Represents global layer mask information. |
+| `Layer` | Represents a single PSD layer with basic metadata used by the FOSS library. |
+| `LayerBlendingRangesData` | Represents PSD layer blending ranges data. |
+| `LayerMaskData` | Defines the base class for PSD layer mask data. |
+| `LayerMaskDataShort` | Defines layer mask data for layers that have only a raster or vector mask. |
+| `LayerResource` | Represents a PSD layer resource. |
+| `PsdImage` | Represents a PSD image that can be loaded, inspected, and saved without rendering. |
+| `PsdLoadException` | Exception that is thrown when an error occurs while loading a PSD file. |
+| `PsdSaveException` | Exception that is thrown when an error occurs while saving a PSD file. |
+| `ResourceBlock` | Represents a PSD image resource block. |
+| `Image` | Provides the Aspose.PSD-compatible base image entry point for loading PSD/PSB documents. |
+| `ImageLoader` | Provides the Load functionality for Images. |
+| `Point` | Represents an ordered pair of integer x- and y-coordinates that defines a point in a two-dimensional plane. |
+| `Rectangle` | Stores a set of four integers that represent the location and size of a rectangle. |
+| `RectangleF` | Stores a set of four floating-point numbers that represent the location and size of a rectangle. |
+| `Size` | Represents an ordered pair of integer width and height values that defines a size. |
+| `StreamContainer` | Represents a stream container used by resource save APIs. |
+
+#### Enumerations
+
+| Enumeration | Description |
+| --- | --- |
+| `BlendMode` | Defines the blend modes used for layers in PSD files. |
+| `ColorModes` | Defines the color modes supported by PSD files. |
+| `CompressionMethod` | Defines the compression methods used for image data in PSD files. |
+| `LayerMaskFlags` | Defines PSD layer mask flags. |
+| `PsdVersion` | Represents the supported PSD container versions. |
+| `ResourceBlockState` | Represents resource block state. |
+
+#### Detailed Member Reference
+
+### PSD
+
+The Aspose.PSD namespace provides core types including `Aspose.PSD.Image` for handling PSD image data with methods such as Load, Save, and Dispose, and properties such as Width, Height, and Bounds; `Aspose.PSD.ImageLoader` for custom image loading; `Aspose.PSD.StreamContainer` for stream-based I/O; and geometric types `Aspose.PSD.Rectangle`, `Aspose.PSD.RectangleF`, `Aspose.PSD.Point`, and `Aspose.PSD.Size` for coordinate and dimension operations.
+
+Markdown documentation is available in the repository:
+
+- `documentation/README.md`
+- `documentation/getting-started.md`
+- `documentation/developer-guide/basic-psd-operations.md`
+- `documentation/limitations.md`
+
+</details>
+
+## Scope and Limitations
+
+Aspose.PSD FOSS for .NET reads and writes PSD and PSB files for metadata-safe structural inspection and limited non-rendering edits.
+
+- It does not render PSD/PSB content, edit pixels or export raster images, interpret the full Photoshop feature set semantically, or replace the commercial Aspose.PSD API surface one-to-one.
+- Rendering, pixel editing, export to PNG, JPEG, or other raster formats, full image resource editing, semantic recognition of specific image resource kinds, full tagged block editing, and text, vector, effects, smart filters, and adjustment rendering are not implemented.
+- This library is not a rendering engine, a raster editor, or an open-source replacement for the full commercial Aspose.PSD product.
+
+These limitations don't apply to [full-featured Aspose.PSD for .NET — Enterprise Edition](https://products.aspose.com/psd/net/). Choose the commercial Aspose.PSD product if you need broad Photoshop feature support such as rendering, raster editing, export pipelines, richer resource/tag handling, or wider PSD/PSB compatibility.
+
+## Development and Testing
+
+Aspose.PSD FOSS for .NET targets .NET Standard 2.1 and .NET 10.0, requiring the .NET 10.0 SDK or later. The solution builds with dotnet build Aspose.PSD-FOSS-for-.NET.sln and tests run from src/Aspose.PSD.FOSS.Test/ using dotnet test Aspose.PSD-FOSS-for-.NET.sln. Runnable sample projects reside in the samples/ folder, including `Aspose.PSD.FOSS.Samples.Basic`, `Aspose.PSD.FOSS.Samples.Layers`, `Aspose.PSD.FOSS.Samples.StructuralEditing`, `Aspose.PSD.FOSS.Samples.Streams`, `Aspose.PSD.NuGet.Samples.Basic`, `Aspose.PSD.NuGet.Samples.Layers`, `Aspose.PSD.NuGet.Samples.StructuralEditing`, and `Aspose.PSD.NuGet.Samples.Streams`. Each FOSS sample has a corresponding NuGet sample with identical `Program.cs` to validate workflow parity across the FOSS and commercial libraries.
+
+The suite covers 11 test files under `src/Aspose.PSD.FOSS.Test/`.
+
+To build and run the tests from a clone, run:
+
+```bash
+dotnet build Aspose.PSD-FOSS-for-.NET.sln
+dotnet test Aspose.PSD-FOSS-for-.NET.sln
+```
+
+- .NET 10.0 SDK or later
+
+```bash
+dotnet pack src/Aspose.PSD.FOSS/Aspose.PSD.FOSS.csproj -c Release
+```
+
+The package will be created under `src/Aspose.PSD.FOSS/bin/Release/`.
+
+The `Aspose.PSD.FOSS.Samples.*` projects reference this FOSS library. The `Aspose.PSD.NuGet.Samples.*` projects run the same workflows against the official `Aspose.PSD` NuGet package.
+
+Each FOSS sample must have a fully analogous NuGet sample, and the matching `Program.cs` files must always remain identical. Keep only the project files different so the same application source can be compiled and exercised against both libraries for the supported migration scenarios.
+
+This parity requirement applies to sample source and covered workflows, not to byte-for-byte identical runtime output. The commercial `Aspose.PSD` package may report different values or save different bytes for the same input document even when both sample projects successfully run the same scenario.
+
+| FOSS sample | NuGet sample | Main workflow | What it demonstrates |
+|---|---|---|---|
+| `Aspose.PSD.FOSS.Samples.Basic` | `Aspose.PSD.NuGet.Samples.Basic` | Document inspection | Aspose.PSD-compatible document metadata and supported resource/layer counts |
+| `Aspose.PSD.FOSS.Samples.Layers` | `Aspose.PSD.NuGet.Samples.Layers` | Layer inspection | Layer metadata, derived geometry, blend mode key, channel information, mask data, and blending ranges |
+| `Aspose.PSD.FOSS.Samples.StructuralEditing` | `Aspose.PSD.NuGet.Samples.StructuralEditing` | Supported metadata editing | Renaming layers, changing visibility, opacity, clipping, blend mode key, and geometry, then saving without rendering |
+| `Aspose.PSD.FOSS.Samples.Streams` | `Aspose.PSD.NuGet.Samples.Streams` | Stream-based round trip | Loading from a stream, saving to a stream, and working with in-memory PSD/PSB data |
+
+```bash
+dotnet run --project samples/Aspose.PSD.FOSS.Samples.Basic
+dotnet run --project samples/Aspose.PSD.FOSS.Samples.Layers
+dotnet run --project samples/Aspose.PSD.FOSS.Samples.StructuralEditing
+dotnet run --project samples/Aspose.PSD.FOSS.Samples.Streams
+dotnet run --project samples/Aspose.PSD.NuGet.Samples.Basic
+dotnet run --project samples/Aspose.PSD.NuGet.Samples.Layers
+dotnet run --project samples/Aspose.PSD.NuGet.Samples.StructuralEditing
+dotnet run --project samples/Aspose.PSD.NuGet.Samples.Streams
+```
+
+If you do not pass an input file, the samples try to use the repository PSD test fixture.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE.txt). The MIT License permits use, copying, modification, distribution, sublicensing, and commercial use, provided its copyright and permission notice are retained. The software is provided without warranty.
