@@ -31,7 +31,13 @@ from repo_presenter.readme.reconciliation.destinations import nearest_holdable
 from repo_presenter.readme.validation.links import unsafe_html_failures
 from repo_presenter.readme.validation.surface_claims import absent_type_rows, kept_table_form
 
-__all__ = ["choose_units", "failing_unit_ids", "restore_lost_units"]
+__all__ = [
+    "choose_units",
+    "failing_unit_ids",
+    "restore_lost_units",
+    "owed_citations",
+    "cite_owed_units",
+]
 
 _UNIT = re.compile(r"inherited_unit:\d+(?:\.\d+)*\.[a-z_]+")
 #: A unit whose validator-named loss is a kind this module never re-dispositions: headings and
@@ -57,6 +63,67 @@ def failing_unit_ids(
         if match is not None and match.group(0) not in seen:
             seen.append(match.group(0))
     return seen
+
+
+#: BC-04's "a superseded unit is owed a citation in its destination section" detail
+#: (``"BC-04: scope_limitations: inherited_unit:007.paragraph: superseded into this section by
+#: reconciliation, so a unit must cite it ..."``). Another BC-04 shape ("cites facts outside this
+#: section's set") is a different defect and is not matched.
+_SUPERSEDED_INTO_SECTION = "superseded into this section by reconciliation"
+
+
+def owed_citations(details: Sequence[str]) -> list[tuple[str, str]]:
+    """``(section, unit id)`` for every superseded unit BC-04 says that section's authored units must
+    cite (``"BC-04: scope_limitations: inherited_unit:007.paragraph: superseded into this section ..."``)."""
+    owed: list[tuple[str, str]] = []
+    for detail in details:
+        check, _, rest = detail.partition(": ")
+        if check != "BC-04" or _SUPERSEDED_INTO_SECTION not in rest:
+            continue
+        section, _, tail = rest.partition(": ")
+        match = _UNIT.search(tail)
+        if match is not None and (section, match.group(0)) not in owed:
+            owed.append((section, match.group(0)))
+    return owed
+
+
+def _words(text: str) -> set[str]:
+    return {word for word in re.findall(r"[a-z0-9_]{4,}", text.lower())}
+
+
+def cite_owed_units(
+    units_document: Mapping[str, Any], facts: FactsDocument, owed: Sequence[tuple[str, str]]
+) -> tuple[dict[str, Any], list[dict[str, str]]]:
+    """``(new units document, changes)``: the citation BC-04 asks for, added where the section
+    already STATES the unit's substance. BC-05 independently proves the substance is carried (BC-04
+    is the only check naming the unit), so what is missing is the authored unit's reference to the
+    inherited unit it restates: the unit of that section whose text shares the most words with the
+    inherited unit cites it. Nothing is written when no unit of the section shares a word. The
+    caller keeps the result only if the re-judged candidate has no blocking failure."""
+    output = copy.deepcopy(dict(units_document))
+    inherited = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
+    changes: list[dict[str, str]] = []
+    for section, unit_id in owed:
+        fact = inherited.get(unit_id)
+        if fact is None:
+            continue
+        target_words = _words(fact.value)
+        best: tuple[int, dict[str, Any]] | None = None
+        for unit in output.get("units", []):
+            if not isinstance(unit, dict) or unit.get("section") != section:
+                continue
+            if unit_id in unit.get("fact_ids", []):
+                best = None
+                break
+            shared = len(target_words & _words(str(unit.get("text") or "")))
+            if shared and (best is None or shared > best[0]):
+                best = (shared, unit)
+        if best is None:
+            continue
+        unit = best[1]
+        unit["fact_ids"] = [*unit.get("fact_ids", []), unit_id]
+        changes.append({"unit_id": unit_id, "cited_by": f"{section}/{unit.get('slot')}"})
+    return output, changes
 
 
 _HOLDS = re.compile(

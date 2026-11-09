@@ -256,6 +256,13 @@ class SectionTask:
     must_carry: frozenset[str] = frozenset()
     must_carry_text: Mapping[str, str] = field(default_factory=dict)
     owed_lists: frozenset[str] = frozenset()
+    #: Inherited units reconciliation superseded INTO this section. Not part of the packet and not a
+    #: new permission to write about them: only the guard's "outside this section's set" test reads
+    #: it, because a unit that cites what reconciliation superseded into its own section does not
+    #: cite a fact from outside the section's set. S9 accounting (after authoring) supersedes
+    #: units that were placed when the section was authored, so a judge that reads the settled
+    #: dispositions (``recertify``) must still accept the citations the authored unit made.
+    superseded_ids: frozenset[str] = frozenset()
 
     @property
     def label(self) -> str:
@@ -288,6 +295,15 @@ def _placed_units(dispositions: dict[str, Any], section: str) -> list[str]:
         and entry.get("disposition")
         in {"VERIFIED_PRESERVE", "VERIFIED_REWRITE", "VERIFIED_MOVE", "PRESERVE_ATTRIBUTED"}
     ]
+
+
+def _superseded_units(dispositions: dict[str, Any], section: str) -> frozenset[str]:
+    return frozenset(
+        str(entry["unit_id"])
+        for entry in dispositions.get("dispositions", [])
+        if entry.get("destination_section") == section
+        and str(entry.get("disposition", "")).startswith("SUPERSEDE_")
+    )
 
 
 _CARRIABLE_SUFFIXES = (".paragraph", ".list")
@@ -888,6 +904,7 @@ def authoring_tasks(
                 must_carry=must_carry,
                 must_carry_text=carried_substance(must_carry, facts),
                 owed_lists=owed,
+                superseded_ids=_superseded_units(dispositions, section),
             )
         )
         if section == "api_reference":
@@ -1592,7 +1609,7 @@ def unit_checks(
             errors.append(
                 f"unit {slot}: identifiers that are not accepted fact values: {', '.join(shown)}"
             )
-        outside = sorted(set(unit_fact_ids) - task.accepted_ids)
+        outside = sorted(set(unit_fact_ids) - task.accepted_ids - task.superseded_ids)
         if outside:
             errors.append(
                 f"unit {slot}: cites facts outside this section's set: {', '.join(outside)}"

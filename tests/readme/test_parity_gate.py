@@ -823,3 +823,19 @@ def test_self_parity_holds_for_lane_r_with_full_dispositions_too():
     result = run(cand())
     assert result.parity
     assert {d.name for d in result.dimensions} == set(pg.DIMENSIONS)
+
+
+def test_a_version_is_held_by_the_unit_printing_it_not_by_one_printing_a_longer_number() -> None:
+    """Slides Cpp: ``set_font_height(24.0)`` (a sample call) was blamed on the CI paragraph that
+    prints ``Ubuntu 24.04``, because ``"24.0" in "...24.04..."``; BC-17 then asked to restore a unit
+    that never held the number."""
+    units = (
+        {"id": "inherited_unit:108.paragraph", "kind": "inherited_unit",
+         "value": "CI runs on Ubuntu 22.04 and 24.04 with GCC."},
+        {"id": "inherited_unit:090.code_block", "kind": "inherited_unit",
+         "value": "fmt.set_font_height(24.0);"},
+    )
+    candidate = pg.SealedCandidate("R", "", units, (), ())
+    accounting = pg.Accounting(candidate)
+    assert accounting.loss_units("24.0") == ("inherited_unit:090.code_block",)
+    assert accounting.loss_units("24.04") == ("inherited_unit:108.paragraph",)

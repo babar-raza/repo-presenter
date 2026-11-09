@@ -272,9 +272,37 @@ def _rerun_lane_r(
     if not restore or not failing:
         return failing, details, artifacts
     from repo_presenter.readme.reconciliation.destinations import holdable_sections
-    from repo_presenter.readme.repair.restore_units import choose_units, restore_lost_units
+    from repo_presenter.readme.repair.restore_units import (
+        choose_units,
+        cite_owed_units,
+        owed_citations,
+        restore_lost_units,
+    )
 
     document = read_facts(bundle / "facts.json")
+    units_name = (
+        "content_units.coherent.json"
+        if (bundle / "content_units.coherent.json").is_file()
+        else "content_units.json"
+    )
+    units_override: Mapping[str, Any] | None = None
+    owed = owed_citations(details)
+    if owed:
+        # BC-04: a superseded unit the section's authored units must cite. The substance is carried
+        # (BC-05 does not name it), so the authored unit that restates it cites it; kept only when
+        # the re-judged candidate no longer owes any of them.
+        cited_units, cited = cite_owed_units(_load_json(bundle, units_name), document, owed)
+        if cited:
+            c_failing, c_details, c_artifacts = _evaluate_lane_r(
+                bundle, entry, source, dispositions, cited_units
+            )
+            if len(owed_citations(c_details)) < len(owed):
+                units_override = cited_units
+                failing, details, artifacts = c_failing, c_details, c_artifacts
+                artifacts[units_name] = _canonical_json(cited_units)
+                artifacts["cited_units.json"] = _canonical_json({"cited": cited})
+                if not failing:
+                    return failing, details, artifacts
     holdable = holdable_sections(document)
     included = [
         section["section_id"]
@@ -290,7 +318,11 @@ def _rerun_lane_r(
         if not changes:
             break
         restored.extend(changes)
-        failing, details, artifacts = _evaluate_lane_r(bundle, entry, source, dispositions)
+        failing, details, artifacts = _evaluate_lane_r(
+            bundle, entry, source, dispositions, units_override
+        )
+        if units_override is not None:
+            artifacts[units_name] = _canonical_json(units_override)
         if not failing:
             break
     if restored:
@@ -300,7 +332,11 @@ def _rerun_lane_r(
 
 
 def _evaluate_lane_r(
-    bundle: Path, entry: Any, source: SourceSnapshot, dispositions: Mapping[str, Any]
+    bundle: Path,
+    entry: Any,
+    source: SourceSnapshot,
+    dispositions: Mapping[str, Any],
+    units_override: Mapping[str, Any] | None = None,
 ) -> tuple[list[str], list[str], dict[str, bytes]]:
     from repo_presenter.readme.composition.authoring import authoring_tasks
     from repo_presenter.readme.composition.renderer import render_patch, render_readme
@@ -318,7 +354,7 @@ def _evaluate_lane_r(
         if (bundle / "content_units.coherent.json").is_file()
         else "content_units.json"
     )
-    units = _load_json(bundle, units_name)
+    units = dict(units_override) if units_override is not None else _load_json(bundle, units_name)
     investigation = (
         _load_json(bundle, "investigation.json")
         if (bundle / "investigation.json").is_file()
@@ -557,7 +593,8 @@ def write_recertified(
     staged.pop(RECERTIFICATION_FILENAME, None)
     for name in (
         "README.md", "README.patch.diff", "corrections.json", "holdouts.json",
-        "dispositions.json", "restored_units.json",
+        "dispositions.json", "restored_units.json", "cited_units.json",
+        "content_units.json", "content_units.coherent.json",
     ):
         if name in rec.artifacts:
             staged[name] = rec.artifacts[name]

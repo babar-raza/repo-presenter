@@ -2020,8 +2020,42 @@ def test_an_omitted_badge_is_allowed() -> None:
     assert _badge_failures(_row_candidate(f"{PYPI} {LICENSE_BADGE}")) == []
 
 
+LONE_LINKED_IMAGE = "[![Feature showcase preview](docs/feature_showcase.png)](docs/feature_showcase.pdf)"
+
+
+def _badge_count_failures(candidate: Candidate) -> list[str]:
+    return [
+        f.detail
+        for f in structure_failures(candidate)
+        if "expected one badge row" in f.detail
+    ]
+
+
+def test_a_lone_linked_image_in_a_later_section_is_not_a_second_badge_row() -> None:
+    base = _candidate()
+    assert _badge_count_failures(base) == []
+    readme = base.readme.rstrip("\n") + f"\n\n## Gallery\n\n{LONE_LINKED_IMAGE}\n"
+    assert _badge_count_failures(dataclasses.replace(base, readme=readme)) == []
+
+
+def test_two_badge_rows_in_the_opening_block_still_fail() -> None:
+    base = _candidate()
+    lines = base.readme.splitlines()
+    index = next(i for i, line in enumerate(lines) if line.startswith("[![PyPI]"))
+    lines.insert(index + 1, LONE_LINKED_IMAGE)
+    doubled = dataclasses.replace(base, readme="\n".join(lines) + "\n")
+    assert _badge_count_failures(doubled) == ["expected one badge row; found 2"]
+
+
+def test_a_missing_badge_row_where_facts_require_one_still_fails() -> None:
+    base = _candidate()
+    lines = [line for line in base.readme.splitlines() if not line.startswith("[![PyPI]")]
+    stripped = dataclasses.replace(base, readme="\n".join(lines) + "\n")
+    assert _badge_count_failures(stripped) == ["expected one badge row; found 0"]
+
+
 CONTRIBUTORS_GRAPH = f"https://github.com/{ENTRY.repository}/graphs/contributors"
-UP_PYPI = "[![PyPI version](https://img.shields.io/pypi/v/aspose-3d-foss)](https://pypi.org/project/aspose-3d-foss/)"
+UP_PYPI ="[![PyPI version](https://img.shields.io/pypi/v/aspose-3d-foss)](https://pypi.org/project/aspose-3d-foss/)"
 UP_CI = f"[![CI]({CI_FACT.value}/badge.svg)]({CI_FACT.value})"
 UP_LICENSE = "[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)"
 UP_CONTRIBUTORS = (

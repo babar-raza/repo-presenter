@@ -355,9 +355,13 @@ def structure_failures(candidate: Candidate) -> list[Failure]:
     pair = banner_target(candidate.facts.facts)
     if pair is not None:
         banner = f"[![{name}]({pair[0].value})]({pair[1].value})"
+    # The badge row sits in the opening, above the first section heading. A linked-image line a kept
+    # maintainers' unit prints lower down (a screenshot or preview under a sub-heading) is body
+    # content, not a second badge row (Aspose.PDF FOSS for Go: "Feature showcase preview").
+    first_section = next((i for i, line in enumerate(outside) if line.startswith("## ")), len(outside))
     badge_rows = [
         line
-        for line in outside
+        for line in outside[:first_section]
         if BADGE_ROW.fullmatch(line.strip()) and line.strip() != banner
     ]
     if len(badge_rows) != 1:

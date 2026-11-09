@@ -421,3 +421,62 @@ def test_a_kept_paragraph_is_never_homed_in_api_reference_where_nothing_renders_
         ("api_reference", "quick_start", "development_testing"),
     )
     assert changes and new["dispositions"][0]["destination_section"] != "api_reference"
+
+
+# --- BC-04: a superseded unit the section's authored units must cite -------------------------------
+
+BC04_OWED = (
+    "BC-04: scope_limitations: inherited_unit:007.paragraph: superseded into this section by "
+    "reconciliation, so a unit must cite it and state its substance, or omitted must list it with a "
+    "reason. Substance to carry: Do not use Aspose.PSD.FOSS when you need to:"
+)
+BC04_OUTSIDE = (
+    "BC-04: api_reference: unit intro: cites facts outside this section's set: inherited_unit:034.paragraph"
+)
+
+
+def test_owed_citations_read_the_section_and_unit_and_skip_the_outside_set_shape() -> None:
+    from repo_presenter.readme.repair.restore_units import owed_citations
+
+    assert owed_citations([BC04_OWED, BC04_OUTSIDE, *DETAILS]) == [
+        ("scope_limitations", "inherited_unit:007.paragraph")
+    ]
+
+
+def test_the_authored_unit_restating_the_substance_cites_the_owed_unit() -> None:
+    from repo_presenter.readme.repair.restore_units import cite_owed_units
+
+    facts = _facts(
+        _fact(
+            "inherited_unit:007.paragraph", "inherited_unit",
+            "Do not use Aspose.PSD.FOSS when you need to render text layers or run Photoshop actions:",
+            section="Aspose.PSD FOSS > Scope and Limitations",
+        )
+    )
+    units = {
+        "units": [
+            {"section": "opening", "slot": "opening", "fact_ids": ["package:name"], "text": "A library."},
+            {
+                "section": "scope_limitations", "slot": "limit:1", "fact_ids": ["format:psd"],
+                "text": "Aspose.PSD.FOSS does not render text layers or run Photoshop actions.",
+            },
+            {
+                "section": "scope_limitations", "slot": "limit:2", "fact_ids": [],
+                "text": "Nothing else applies.",
+            },
+        ]
+    }
+    new, changes = cite_owed_units(units, facts, [("scope_limitations", "inherited_unit:007.paragraph")])
+    assert changes == [{"unit_id": "inherited_unit:007.paragraph", "cited_by": "scope_limitations/limit:1"}]
+    assert new["units"][1]["fact_ids"] == ["format:psd", "inherited_unit:007.paragraph"]
+    assert units["units"][1]["fact_ids"] == ["format:psd"]  # the input is not mutated
+
+
+def test_no_unit_of_the_section_sharing_a_word_means_nothing_is_cited() -> None:
+    from repo_presenter.readme.repair.restore_units import cite_owed_units
+
+    facts = _facts(
+        _fact("inherited_unit:007.paragraph", "inherited_unit", "Entirely different words here.")
+    )
+    units = {"units": [{"section": "scope_limitations", "slot": "a", "fact_ids": [], "text": "zzz qqq"}]}
+    assert cite_owed_units(units, facts, [("scope_limitations", "inherited_unit:007.paragraph")])[1] == []

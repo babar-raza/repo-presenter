@@ -505,9 +505,19 @@ class Accounting:
 
     def _units_containing(self, item: str, *, code: bool) -> list[str]:
         found = []
+        # A version is held by a unit that prints that version, not by one that prints a longer
+        # number it is a prefix of ("24.0" in a sample call is not held by "Ubuntu 24.04"): the
+        # same boundary ``_VERSION`` extracts it with (measured on Slides Cpp: the unit with
+        # "24.04" was blamed for the loss of ``set_font_height(24.0)``).
+        boundary = (re.compile(r"(?<![\w.])v?" + re.escape(item) + r"(?![\w.]*\d)")
+                    if not code and _VERSION.fullmatch(item) else None)
         for unit_id, unit in self.units.items():
             value = str(unit.get("value") or "")
-            if contains_code(value, item) if code else item in value:
+            if boundary is not None:
+                hit = boundary.search(value) is not None
+            else:
+                hit = contains_code(value, item) if code else item in value
+            if hit:
                 found.append(unit_id)
         return found
 
