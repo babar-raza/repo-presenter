@@ -3785,6 +3785,82 @@ provider calls) -- those remain open, substantial, separately-scoped work, not a
 Detail: `scripts/measure_m5.py`, `data/acceptance_calibration.json`,
 `ops/checks/calibration_status.py`.
 
+---
+
+## 2026-11-09: M1/M3/M4/M6/M7/M10 measured for real (8 of 9 mechanisms PASSED); M2 measured
+## against a real clone; TC-023b built M8's live wiring; first real, live M8 calls made
+
+**Decision**: continued the same supervisor-owned "wire the harness to real data" work. Built
+`scripts/measure_m1.py`, `measure_m3.py`, `measure_m4_m6.py`, `measure_m7.py`, `measure_m10.py`,
+each reusing already-proven, already-accepted test fixtures (never inventing new mutations):
+`lane_l_trigger.py`'s real 5-repository census (M1), `test_example_verifier_outcomes.py`'s
+per-ecosystem fragment-vs-defect classifiers (M3, needs no real toolchain), the real mutation
+operators plus `claim_findings`/`duplicate_paragraph_rule` (M4/M6), the same 6 real committed
+README snapshots the existing self-parity test already proves (M7), and `lane_l_review.py`'s
+real L-01/L-02 holdouts (M10). All six PASSED, all zero provider calls, small-n honestly
+reported throughout (n=1 to n=8 depending on the mechanism; never padded to look more measured
+than it is).
+
+**M2** needed more: its probe-based cross-check (TC-017a/17b) is specifically about reading a
+real on-disk source tree, which no committed fixture in this repository provides. Confirmed
+network access works from this environment, shallow-cloned one small real registered repository
+(`aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python`, deleted after measurement), and built
+`scripts/measure_m2.py` against real class names TC-017a's own python probe independently
+confirmed exported (`Barcode`, `BarcodeError`, `Code128Options`) versus one genuinely invented
+name, including the actual TC-017a/17b cross-check case (a deliberately wrong fact claiming the
+invented name is real; only the independent probe, reading the real clone, catches it). PASSED,
+n=3, honestly reported as "a first real-source proof, not yet a full-recall measurement."
+
+**M8** could not be measured the same zero-cost way: it is the one mechanism whose own mechanism
+IS a real model call. `prompts/m8/prose_judge.yaml` and TC-023 (accepted) built the prompt
+contract and the pure voting state machine but deliberately wired no real provider call. Rather
+than hack this in under spend pressure, authored and dispatched **TC-023b** (worker-executor,
+scoped to the wiring only, zero real calls in its own checks) -- it built
+`src/repo_presenter/readme/review/prose_judge_live.py`, choosing wiring option (b) (a new,
+narrower governed call path) over (a) (a seventh `JOB_STAGES` job) for a real correctness
+reason, not just convenience: `run_job`'s `CallStore` caches by `(prompt_sha256, payload)` hash,
+and M8's three shapes ask the IDENTICAL question across every draw of one
+`sequential_majority_vote` call (by design, at temperature 0/seed 1) -- routed through `run_job`
+as-is, the second and third draw of every vote would be a guaranteed cache hit echoing the first
+draw forever, silently collapsing the whole majority-vote mechanism into "ask once, echo it
+twice," defeating the entire reason M8 votes (qwen3-next's own measured ~0.70-0.90 repeat-draw
+stability). `prose_judge_live.py` therefore never constructs a `CallStore`, while still reusing
+`core.llm.budget`'s gate and `core.llm.transport`'s client seam verbatim. TC-023b landed,
+independently re-verified, `gatecli`-ACCEPTED.
+
+**Then the supervisor made the real-spend decision itself** (R11/R25: "the supervisor opens and
+records batches within them"). Confirmed `GPT_OSS_ENDPOINT`/`GPT_OSS_API_KEY` are present as
+named environment variables (checked by name only via `"NAME" in os.environ`, their values never
+read, printed or logged -- a blanket `env | grep` was attempted first and correctly refused by
+the harness's own permission system as credential materialization; the narrower, name-only check
+is the safe path that precedent, `core/config.py`'s own 2026-10-21 note, already establishes).
+Opened a small, deliberately conservative first batch in `data/provider_budget.json`
+(`001-m8-live-proof`, 30 calls / 50,000 tokens -- no prior measured median exists yet, so this is
+a proving run, not a sized calibration batch) and made the **first two real, live provider calls
+this redesigned acceptance system has ever made**: a real factual sentence from the sealed
+Aspose.3D-FOSS-for-.NET candidate's own README, correctly classified `none` (2/2 draw agreement);
+a synthetic, obviously-promotional positive-control sentence, correctly classified `promotional`
+(2/2 agreement). Real cost: 4 calls, 1,352 tokens (well under this card's own rough per-draw
+estimate). Recorded honestly in `data/acceptance_calibration.json`'s new M8 entry with
+`status: NOT_PASSED` (n=1 per class is nowhere near the design's n>=30 minimum) and
+`provisional: true` -- the entry's own note states plainly that both real draws were in fact
+correct, so nobody mistakes "NOT_PASSED" for "the model got it wrong."
+
+**Result: `python ops/checks/calibration_status.py` now reports `missing=['M8']` only** -- every
+other mechanism (M1-M7, M10) carries a real PASSED certificate. M8 remains the only gap, now
+backed by proof the live path works, not just untested wiring.
+
+**Does NOT decide**: whether/when to open a larger M8 calibration batch (the real, class-
+stratified n>=30 run against A1) -- that is a bigger spend (roughly 2-3% of the total envelope at
+this card's own per-draw cost estimate) against a registration that A1's own 2026-11-07 shortfall
+measurement already showed is short on real C/D/E-class cases; sizing that batch properly needs
+either more real cases or an explicit decision to proceed with a narrower scope, left open.
+
+Detail: `scripts/measure_m1.py`, `measure_m2.py`, `measure_m3.py`, `measure_m4_m6.py`,
+`measure_m7.py`, `measure_m10.py`, `project/taskcards/TC-023b.yaml`,
+`src/repo_presenter/readme/review/prose_judge_live.py`, `data/provider_budget.json`,
+`data/acceptance_calibration.json`.
+
 **Going forward**: every future integration commit's subject must end with exactly
 `(GATE5_DELIVERY_PROGRAM/TC-ID)`, no trailing text, and a commit landing more than one card's work
 must be split into one commit per card before pushing -- never bundled, even when the cards were
