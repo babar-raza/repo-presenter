@@ -132,6 +132,72 @@
       "provider_calls": 0,
       "provisional": false,
       "status": "PASSED"
+    },
+    {
+      "corpus": "tests/extractors/platforms/test_example_verifier_outcomes.py fixtures, 7 ecosystems, already-captured diagnostic text (no real toolchain run)",
+      "gates": [
+        {
+          "direction": ">=",
+          "n": 1,
+          "name": "M3.recall[cpp]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        {
+          "direction": ">=",
+          "n": 1,
+          "name": "M3.recall[java]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        {
+          "direction": ">=",
+          "n": 1,
+          "name": "M3.recall[net]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        {
+          "direction": ">=",
+          "n": 1,
+          "name": "M3.recall[python]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        {
+          "direction": ">=",
+          "n": 1,
+          "name": "M3.recall[rust]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        {
+          "direction": ">=",
+          "n": 1,
+          "name": "M3.recall[typescript]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        {
+          "direction": "<=",
+          "n": 8,
+          "name": "M3.false_contradicted_rate",
+          "passed": true,
+          "threshold": 0.02,
+          "value": 0.0
+        }
+      ],
+      "measured_at": "2026-11-09T00:00:00Z",
+      "mechanism_class": "M3",
+      "provider_calls": 0,
+      "provisional": false,
+      "status": "PASSED"
     }
   ],
   "harness_schema_version": 1,
