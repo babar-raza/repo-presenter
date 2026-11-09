@@ -4106,3 +4106,67 @@ not decided here.
 
 Detail: `scripts/measure_m8_pairwise_paraphrase.py`, `data/acceptance_calibration.json`,
 `data/provider_budget.json` (batch 007).
+
+## 2026-11-09: TC-007 ACCEPTED for real (first time ever) via the M8 rung-(c) fallback (TC-026);
+## TC-011's counter found still reading the frozen reviewer_calibration.json, fixed to report
+## honestly
+
+**TC-026 (M8 rung-(c) fallback, R26).** A real, recorded M8 calibration failure now existed
+(classification false-reject 0.0333 > 0.02; pairwise recall 0.3684 < 0.90; paraphrase recall 0.85
+< 0.90, false-reject 0.10 > 0.02) -- R26's own trigger for the fallback ladder's rung (c). Rung
+(b) (an owner-approved second model route for M8 only) is pre-declined as a standing matter by
+owner ruling R18 ("qwen3-next for every product route... including for M8"), so rung (c) is
+authorized without a further owner round-trip. Built: a real, deterministic promotional/
+superlative wording-ban rule (`readme/validation/wording.py`), measured honestly (dev-corpus, not
+held-out -- see its own module docstring) against the exact real corpus M8's own classification
+calibration used (30 clean, 30 promotional), recall 1.00, folded into M6's certificate as a second
+case group (`wording_ban`, alongside the pre-existing `duplicate_paragraph`). Reassigned D9
+(-> none, joining D7's shape: a PRESERVE_ATTRIBUTED disposition checked by M9's audit downstream,
+never a gate requirement), D14 (-> M6 primary / M5 secondary: generated-text wording ban / 
+inherited-text disposition under the existing R14 preservation policy), D15 (-> M7 primary: the
+benchmark-comparison shape M7 already owns) in `acceptance/responsibility.py`. M8 itself is
+unchanged, still real, still honestly `NOT_PASSED` -- it is now advisory, not a gate requirement.
+Gated via `gatecli review`, ACCEPTED on the second clean run with its negative control confirmed
+(reverting D14 to M8 re-broke the gate, as expected).
+
+**TC-007 (acceptance calibration PASSED).** With M8 off the required matrix, re-ran every OTHER
+deterministic mechanism's own harness for real (M1, M2, M3, M4, M5, M6 [now including the wording
+ban], M7, M10) at zero provider calls, confirming none had silently regressed. `data/
+acceptance_calibration.json`'s derived status reached `PASSED` for the first time this project has
+ever recorded -- `python ops/checks/calibration_status.py PASSED --file data/
+acceptance_calibration.json --matrix data/acceptance_responsibility.json` now exits 0. Gated via
+`gatecli review`, ACCEPTED on the second clean run; negative control (flipping the real M1
+certificate's own status field) confirmed the check's real dependency -- a first version of this
+negative control mutated a top-level "status" key `AcceptanceCertificates.complete` never reads at
+all (silently did nothing), caught and fixed before relying on it.
+
+**A real, live run of `ops/checks/portfolio_delivery_count.py --per-lane 25` (TC-011) right after
+TC-007 landed still printed "committed reviewer calibration is NOT_PASSED" against every
+pipeline-good candidate** -- misleading, since the file that statement is actually about
+(`data/reviewer_calibration.json`) is frozen forever at `NOT_PASSED` by owner ruling R10/R18, and
+the REAL calibration contract (`data/acceptance_calibration.json`) had just reached PASSED. This
+script's own counting logic (`classify_review`) has not been switched to the new TC-013 contract
+yet -- and a full switch needs a real, attested M9-audit-record reader that does not exist as a
+committed artifact yet (the hosted audit workflows are untestable until this branch merges to
+`main`; `acceptance/record.py`'s own docstring already defers that proof to "TC-014's and later
+M1's own closeout evidence"). Building a fake stand-in attestation reader against nothing real
+would be a worse mistake than leaving this honestly open, so the fix made here is deliberately
+narrower and zero-risk: a new, separate `acceptance_calibration` field in the script's own summary
+output (`repo_presenter.acceptance.record.load_certificates`), reported ALONGSIDE the frozen
+`reviewer_calibration` field, never replacing or being conflated with it. The real per-candidate
+counting switch (and the attestation reader it needs) is left open, explicitly, for the next
+increment -- not silently treated as done because the easier reporting half landed.
+
+Real cost this entry: 0 provider calls (every mechanism re-run above is zero-call deterministic;
+TC-026's wording-ban measurement reused already-fetched real text). Full regression suite run
+clean after all of today's changes: 5227 passed, 18 skipped (pre-existing, unrelated), 0 failed.
+
+**Does NOT decide**: TC-011's real per-candidate switch to the new contract (needs the attestation
+reader); whether to merge this branch to `main` (the one remaining structural blocker for the M9
+hosted audit pipeline, and therefore for `independently-accepted` ever being reachable at all) --
+left for explicit owner/supervisor decision, not assumed here.
+
+Detail: `src/repo_presenter/readme/validation/wording.py`, `scripts/measure_m6_wording_ban.py`,
+`src/repo_presenter/acceptance/responsibility.py`, `data/acceptance_responsibility.json`,
+`data/acceptance_calibration.json`, `project/taskcards/TC-026.yaml`, `project/taskcards/TC-007.yaml`
+(depends_on), `ops/checks/portfolio_delivery_count.py`, `tests/ops/test_portfolio_delivery_count.py`.

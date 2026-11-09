@@ -20,6 +20,24 @@ older fingerprint is reported separately under `older_version_sets` and never su
 calibration rule below is applied within each version set. The record is still read for the
 latest attempt's state (`record_state`, informational) and its proposal (outcomes (d)/(e)).
 
+2026-11-09 (TC-007 landed; see TC-011.yaml's own re-author note): the counting logic below
+(`classify_review`, `classify_lane`) still reads `data/reviewer_calibration.json`, which is
+frozen forever at `NOT_PASSED` (R10/R18) -- this is now a REAL known gap, not an oversight: a
+live run of this script before this note was added printed the misleading
+"committed reviewer calibration is NOT_PASSED" against every pipeline-good candidate, even
+though `data/acceptance_calibration.json` (TC-013's real, new contract) had just reached PASSED
+for the first time. The REAL blocker for `independently_accepted` is not calibration any more --
+it is that no candidate has a real, attested M9 audit record yet (`acceptance/record.py`'s own
+docstring: "live proof is TC-014's and later M1's own closeout evidence, not this card's"), and
+this script has no attestation-record reader to wire in, because no such committed artifact
+exists yet (the hosted audit workflows are untestable until this branch merges to `main` --
+GitHub refuses `workflow_dispatch` for a workflow file not on the default branch). Rather than
+fabricate a stand-in attestation reader against nothing real, this version adds a SEPARATE,
+honest `acceptance_calibration` summary field (`repo_presenter.acceptance.record.load_certificates`)
+reported ALONGSIDE the frozen `reviewer_calibration` field, so a reader is never misled into
+thinking TC-013's real contract is still failing -- the counting logic itself is swapped onto the
+new contract, with real attestation reading, in a later, separately-tracked piece of work.
+
 Re-based again 2026-11-06 (owner rule: "a version bump never invalidates a seal or forces
 regeneration", ``repo_presenter.recertify``): the headline is no longer "seals whose fingerprint
 equals the current one" -- that dropped every count to 0 on each bump. A repository/lane now
@@ -334,12 +352,34 @@ def lane_seals(repository: str, lane: str, history: dict, scratch: Path) -> tupl
     return seals, errors
 
 
-def summarize(outcomes: list[LaneOutcome], calibration: Any) -> dict[str, Any]:
+def summarize(
+    outcomes: list[LaneOutcome], calibration: Any, acceptance_certificates: Any = None
+) -> dict[str, Any]:
     """Headline numbers are the CURRENT version set's only (``o.current``); every older set is
-    reported on its own under ``older_version_sets`` and never added to them."""
+    reported on its own under ``older_version_sets`` and never added to them.
+
+    ``acceptance_certificates`` (2026-11-09, TC-007 landed): the REAL, new TC-013 acceptance
+    contract's global completeness (``repo_presenter.acceptance.record.AcceptanceCertificates``,
+    ``data/acceptance_calibration.json`` against ``data/acceptance_responsibility.json``) --
+    reported ALONGSIDE the frozen, historical ``reviewer_calibration`` field, never in place of
+    it, and NOT YET used by ``independently_accepted``'s own counting logic below. That logic
+    still reads the frozen ``data/reviewer_calibration.json`` path, because TC-011's real switch
+    to the new contract additionally needs a real, attested audit-record reader (TC-014's hosted
+    writer; see ``acceptance/record.py``'s own docstring: "live proof is TC-014's and later M1's
+    own closeout evidence, not this card's") which does not exist as a committed artifact yet --
+    building a fake stand-in for it here would be worse than leaving this honestly open. Optional
+    only so every existing call site and test keeps working unchanged; omitting it reports
+    ``acceptance_calibration: "not measured"`` rather than silently guessing PASSED."""
+    if acceptance_certificates is None:
+        acceptance_status = "not measured"
+    elif acceptance_certificates.complete:
+        acceptance_status = "PASSED"
+    else:
+        acceptance_status = f"NOT_PASSED: {acceptance_certificates.problem}" if acceptance_certificates.problem else "NOT_PASSED"
     summary: dict[str, Any] = {
         "reviewer_calibration": calibration.status
         + (f" ({calibration.problem})" if calibration.problem else ""),
+        "acceptance_calibration": acceptance_status,
     }
     for lane in ("R", "L"):
         lane_rows = [o for o in outcomes if o.lane == lane]
@@ -486,7 +526,8 @@ def outcomes_for_lane(
     return result
 
 
-def collect(remote: str = "origin") -> tuple[list[LaneOutcome], Any]:
+def collect(remote: str = "origin") -> tuple[list[LaneOutcome], Any, Any]:
+    from repo_presenter.acceptance.record import load_certificates
     from repo_presenter.core.registry.loader import load_registry
     from repo_presenter.core.state.git_backend import GitStateBackend
     from repo_presenter.core.version_set import current_fingerprints
@@ -494,6 +535,7 @@ def collect(remote: str = "origin") -> tuple[list[LaneOutcome], Any]:
     from repo_presenter.recertify import portfolio_recertification
 
     calibration = load_calibration(CALIBRATION)
+    acceptance_certificates = load_certificates()
     allowlist = json.loads(ALLOWLIST.read_text(encoding="utf-8")) if ALLOWLIST.exists() else {}
     entries = load_registry(REGISTRY).entries
     current = current_fingerprints(PROMPTS)
@@ -521,7 +563,7 @@ def collect(remote: str = "origin") -> tuple[list[LaneOutcome], Any]:
         finally:
             for backend in backends.values():
                 backend.close()
-    return outcomes, calibration
+    return outcomes, calibration, acceptance_certificates
 
 
 def main(argv: list[str]) -> int:
@@ -536,12 +578,13 @@ def main(argv: list[str]) -> int:
     if args.per_lane is None and args.live_verified is None:
         args.per_lane = 25
 
-    outcomes, calibration = collect(args.remote)
-    summary = summarize(outcomes, calibration)
+    outcomes, calibration, acceptance_certificates = collect(args.remote)
+    summary = summarize(outcomes, calibration, acceptance_certificates)
     if args.json:
         print(json.dumps({"summary": summary, "lanes": [asdict(o) for o in outcomes]}, indent=2))
     else:
         print(f"reviewer_calibration: {summary['reviewer_calibration']}")
+        print(f"acceptance_calibration: {summary['acceptance_calibration']}")
         for lane in ("r", "l"):
             row = dict(summary[f"lane_{lane}"])
             names = row.pop("accepted_repositories")
