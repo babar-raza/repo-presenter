@@ -19,7 +19,7 @@ import re
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote, urlsplit
+from urllib.parse import quote, unquote, urlsplit
 
 from repo_presenter.core.ecosystems import spec_for
 from repo_presenter.core.examples import printed_example
@@ -316,6 +316,9 @@ def anchor(heading: str) -> str:
 
 
 BADGE_ORDER: tuple[str, ...] = ("package", "runtime", "build", "license", "contributors")
+#: The slot name ``badge_slots`` gives each maintainers' badge carried after the slot badges
+#: (``_carried_extra_badges``); any number of them, always last, never in ``BADGE_ORDER``.
+EXTRA_BADGE_SLOT = "extra"
 
 
 def contributors_target(repository: str) -> str:
@@ -361,9 +364,9 @@ def _badge_target(href: str) -> str:
     return href.strip().removeprefix("./").rstrip("/").casefold()
 
 
-def upstream_badges(context: RenderContext) -> list[tuple[str, str, str]]:
-    """The maintainers' header badges as ``(slot, markdown as written, link target)``, first per
-    slot: the linked badges of the live README's first top-level badge row (banner excluded)."""
+def _upstream_badge_row(context: RenderContext) -> list[tuple[str, str, str]]:
+    """Every linked badge of the live README's first top-level badge row (banner excluded) as
+    ``(image url, markdown as written, link target)``, in the order the maintainers wrote them."""
     rows = [
         fact
         for fact in context.facts.by_kind("inherited_unit")
@@ -373,17 +376,25 @@ def upstream_badges(context: RenderContext) -> list[tuple[str, str, str]]:
     banner = banner_target(context.facts.facts)
     banner_image = banner[0].value if banner is not None else None
     for fact in sorted(rows, key=lambda f: f.id):
-        found: list[tuple[str, str, str]] = []
-        for match in _LINKED_BADGE.finditer(fact.value):
-            image, href = match.group(1), match.group(2)
-            if image == banner_image or not image.startswith("https://"):
-                continue
-            slot = badge_slot(match.group(0))
-            if slot is not None and all(slot != seen for seen, _, _ in found):
-                found.append((slot, match.group(0), href))
+        found = [
+            (match.group(1), match.group(0), match.group(2))
+            for match in _LINKED_BADGE.finditer(fact.value)
+            if match.group(1) != banner_image and match.group(1).startswith("https://")
+        ]
         if found:
             return found
     return []
+
+
+def upstream_badges(context: RenderContext) -> list[tuple[str, str, str]]:
+    """The maintainers' header badges as ``(slot, markdown as written, link target)``, first per
+    slot: the linked badges of the live README's first top-level badge row (banner excluded)."""
+    found: list[tuple[str, str, str]] = []
+    for _image, markdown, href in _upstream_badge_row(context):
+        slot = badge_slot(markdown)
+        if slot is not None and all(slot != seen for seen, _, _ in found):
+            found.append((slot, markdown, href))
+    return found
 
 
 def badge_slots(context: RenderContext) -> list[tuple[str, str]]:
@@ -408,7 +419,110 @@ def badge_slots(context: RenderContext) -> list[tuple[str, str]]:
                 own[slot] = markdown
         elif slot in _LINK_VERIFIED_SLOTS and _badge_target(href) in verified:
             own[slot] = markdown
-    return [(slot, own[slot]) for slot in BADGE_ORDER if slot in own]
+    standard = [(slot, own[slot]) for slot in BADGE_ORDER if slot in own]
+    return standard + [(EXTRA_BADGE_SLOT, markdown) for markdown in _carried_extra_badges(context, standard)]
+
+
+def _image_key(url: str) -> str:
+    return url.strip().casefold()
+
+
+_PACKAGE_VERSION_BADGE = re.compile(
+    r"^https://img\.shields\.io/(?:pypi|nuget|npm|maven-central|crates|packagist|gem|go)/v/"
+)
+_VERSION_TOKEN = re.compile(r"\d+(?:\.\d+)*")
+
+
+def _extra_badge_asserts_only_verified(
+    context: RenderContext, image: str, standard: list[tuple[str, str]]
+) -> bool:
+    """Whether carrying the maintainers' badge ``image`` asserts nothing the facts do not back.
+
+    A badge is carried only if it is self-verifying or a fact verifies its text, never merely
+    because it is in the live README (the contract in ``validation.rules.badge_problems`` and
+    ``test_registry_checks`` forbids a badge no fact supports):
+    * a dynamic shields.io badge (``issues``, ``pyversions``, ...: its text is computed live from
+      the repository or registry) -- except a package-VERSION badge when a slot badge already names
+      the package, which would be a second package;
+    * a static shields.io ``/badge/`` runtime badge whose version numbers are exactly the
+      verified runtime-floor fact's ("Rust-2021 edition" against floor ``2021``).
+    Build-status and license badges are never carried this way: only their own facts verify them;
+    an unrecognized host is not carried."""
+    if not image.startswith("https://img.shields.io/"):
+        return False
+    if "/actions/workflows/" in image:
+        return False
+    if not image.startswith("https://img.shields.io/badge/"):
+        if _PACKAGE_VERSION_BADGE.match(image):
+            return all(slot != "package" for slot, _ in standard)
+        return True
+    if badge_slot(f"![]({image})") != "runtime" or "License-" in image:
+        return False
+    floor = context.fact(context.spec.floor_fact_id) if context.spec.floor_fact_id else None
+    if floor is None or floor.polarity != "SUPPORTED":
+        return False
+    tokens = set(_VERSION_TOKEN.findall(unquote(image.rsplit("/", 1)[-1])))
+    return bool(tokens) and tokens <= set(_VERSION_TOKEN.findall(floor.value))
+
+
+def _carried_extra_badges(
+    context: RenderContext, standard: list[tuple[str, str]]
+) -> list[str]:
+    """The maintainers' own header badges the slot badges above did not carry, as written.
+
+    R2 makes the published README the quality floor, and BC-17 reports a badge image or link the
+    candidate loses (a shields.io ``issues`` badge, a ``pyversions`` badge, a Rust edition badge
+    linking ``Cargo.toml``). The badge row is rendered from facts and no inherited ``badge_row``
+    unit is ever printed, so no disposition can restore those; this does, deterministically. A
+    maintainers' badge is carried here only when its image is not already in a slot badge (the
+    renderer's own, or the maintainers' version that replaced it), its link target is not
+    CONTRADICTED by a ``link_target`` fact, and it asserts nothing unverified
+    (:func:`_extra_badge_asserts_only_verified`). Nothing is edited: each badge is appended as the
+    maintainers wrote it, in their order, once per image."""
+    carried = {
+        _image_key(match.group(1))
+        for _slot, markdown in standard
+        for match in _IMAGE_URL.finditer(markdown)
+    }
+    contradicted = {
+        _badge_target(fact.value)
+        for fact in context.facts.by_kind("link_target")
+        if fact.polarity == "CONTRADICTED" and fact.value
+    }
+    extras: list[str] = []
+    verified = {
+        _badge_target(fact.value)
+        for fact in context.facts.by_kind("link_target")
+        if fact.polarity == "SUPPORTED" and fact.value
+    }
+    for image, markdown, href in _upstream_badge_row(context):
+        key = _image_key(image)
+        if key in carried or _badge_target(href) in contradicted:
+            continue
+        if not _extra_badge_asserts_only_verified(context, image, standard):
+            continue
+        # The same rule an upstream badge already follows to take a package or contributors slot:
+        # its link must be a SUPPORTED link_target fact, not merely not contradicted.
+        if badge_slot(markdown) in _LINK_VERIFIED_SLOTS and _badge_target(href) not in verified:
+            continue
+        carried.add(key)
+        extras.append(_alt_without_edition_name(markdown))
+    return extras
+
+
+_BADGE_ALT = re.compile(r"^(\[!\[)([^\]]*)(\])")
+
+
+def _alt_without_edition_name(markdown: str) -> str:
+    """The badge as written, except that a capitalised "Xxx Edition" in its alt text (BC-06 forbids
+    any edition name but Enterprise Edition in public text: the maintainers' "Rust Edition" badge)
+    is lower-cased to "Xxx edition", exactly how the renderer's own runtime badge words it. The
+    image and the link are untouched; only the alt text's capital letter changes."""
+    match = _BADGE_ALT.match(markdown)
+    if match is None:
+        return markdown
+    alt = re.sub(r"(?<!Enterprise )\bEdition\b", "edition", match.group(2))
+    return f"{match.group(1)}{alt}{match.group(3)}{markdown[match.end():]}"
 
 
 def _own_badge_slots(context: RenderContext) -> list[tuple[str, str]]:

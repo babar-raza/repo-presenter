@@ -35,7 +35,7 @@ from repo_presenter.readme.composition.link_budget import (
     resolve_link_budget,
 )
 from repo_presenter.readme.composition.policy import PlanningPolicy
-from repo_presenter.readme.composition.renderer import BADGE_ORDER, badge_slot
+from repo_presenter.readme.composition.renderer import BADGE_ORDER, EXTRA_BADGE_SLOT, badge_slot
 
 # The markers an example fact's evidence carries once it has actually run.
 EXECUTION_MARKERS = (": EXECUTED", ": COMPILED")
@@ -76,10 +76,20 @@ def badge_problems(row: str, expected: Sequence[tuple[str, str]]) -> list[str]:
     out of order, or differ from the supported badge for its slot, because a badge no fact
     supports is a fabricated one.
     """
-    supported = dict(expected)
+    supported = {slot: markdown for slot, markdown in expected if slot != EXTRA_BADGE_SLOT}
+    extras = {markdown for slot, markdown in expected if slot == EXTRA_BADGE_SLOT}
     problems: list[str] = []
     seen: list[str] = []
+    extra_seen: set[str] = set()
     for token in _BADGE.findall(row):
+        if token in extras:
+            # A maintainers' badge the slot badges did not carry (renderer._carried_extra_badges):
+            # verified by being exactly the badge the renderer derives, always after the slots.
+            if token in extra_seen:
+                problems.append(f"duplicate carried badge {token[:60]!r}")
+            extra_seen.add(token)
+            seen.append(EXTRA_BADGE_SLOT)
+            continue
         slot = badge_slot(token)
         if slot is None:
             problems.append(f"badge {token[:60]!r} fills no recognized slot")
@@ -95,7 +105,9 @@ def badge_problems(row: str, expected: Sequence[tuple[str, str]]) -> list[str]:
             problems.append(
                 f"{slot} badge differs from the verified one: {token[:80]!r}"
             )
-    ranks = [BADGE_ORDER.index(slot) for slot in seen]
+    ranks = [
+        len(BADGE_ORDER) if slot == EXTRA_BADGE_SLOT else BADGE_ORDER.index(slot) for slot in seen
+    ]
     if ranks != sorted(ranks):
         problems.append(
             f"badge order {', '.join(seen)} breaks the stable order {', '.join(BADGE_ORDER)}"
