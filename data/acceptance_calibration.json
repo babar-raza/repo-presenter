@@ -96,6 +96,42 @@
       "provider_calls": 0,
       "provisional": false,
       "status": "PASSED"
+    },
+    {
+      "corpus": "readme.review.calibration.mutations OPERATORS + readme.validation.claims.claim_findings",
+      "gates": [
+        {
+          "direction": ">=",
+          "n": 3,
+          "name": "M4.recall[overall]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        }
+      ],
+      "measured_at": "2026-11-09T00:00:00Z",
+      "mechanism_class": "M4",
+      "provider_calls": 0,
+      "provisional": false,
+      "status": "PASSED"
+    },
+    {
+      "corpus": "readme.review.calibration.mutations OPERATORS + independent_reviewer.duplicate_paragraph_rule",
+      "gates": [
+        {
+          "direction": ">=",
+          "n": 1,
+          "name": "M6.recall[overall]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        }
+      ],
+      "measured_at": "2026-11-09T00:00:00Z",
+      "mechanism_class": "M6",
+      "provider_calls": 0,
+      "provisional": false,
+      "status": "PASSED"
     }
   ],
   "harness_schema_version": 1,
