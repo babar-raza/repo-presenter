@@ -633,6 +633,25 @@ def _dependencies(context: RenderContext) -> list[str]:
             "No required third-party package dependencies; in "
             f"`{marker.evidence[0].path}`, {clause}."
         )
+    else:
+        # No manifest declared a dependency and no `dependency:none` marker exists (PSD Python has
+        # no dependency manifest at all): the published README still prints a Dependencies section
+        # (R2 floor), and the verified `package_trait:stdlib_only.*` fact states the same thing
+        # from source. Facts only: nothing is printed without that SUPPORTED fact.
+        stdlib = next(
+            (
+                fact
+                for fact in context.supported("package_trait")
+                if fact.id.startswith("package_trait:stdlib_only.") and fact.evidence
+            ),
+            None,
+        )
+        if stdlib is not None:
+            lines.extend(["### Required Package Dependencies", ""])
+            lines.append(
+                f"No required third-party package dependencies: the package {stdlib.value} "
+                f"(`{stdlib.evidence[0].path}`)."
+            )
     if optional:
         lines.extend(["", "### Optional Dependencies", ""])
         lines.extend(_extra_bullet(fact) for fact in optional)

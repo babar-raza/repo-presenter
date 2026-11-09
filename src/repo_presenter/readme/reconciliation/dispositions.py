@@ -309,6 +309,16 @@ def rendering_fact_ids(section: str, facts: FactsDocument) -> list[str]:
     ids = {
         fact.id for fact in facts.facts if fact.kind in kinds and fact.polarity == "SUPPORTED"
     }
+    if section == "dependencies":
+        # The dependencies component also renders a stdlib-only statement from a SUPPORTED
+        # ``package_trait:stdlib_only.*`` fact when no manifest dependency or ``dependency:none``
+        # marker exists (renderer._dependencies; PSD Python 2026-11-10), so those facts are what
+        # the section renders its content from and what a superseded Dependencies unit may cite.
+        ids |= {
+            fact.id
+            for fact in facts.facts
+            if fact.id.startswith("package_trait:stdlib_only.") and fact.polarity == "SUPPORTED"
+        }
     if section == "installation" and not ids:
         # Measured live (aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, run 41095849129): a
         # repository with no single verified install_command (C++'s install story is a choice of
