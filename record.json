@@ -4,7 +4,7 @@
   "lane": "R",
   "provider_repository_id": 1381084812,
   "registry_revision": null,
-  "active_transaction_id": "9a2805b2c6d2484e9b00f1b379bc1419",
+  "active_transaction_id": "684993bc5cc643f2b69abb9132669e08",
   "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
@@ -25,7 +25,13 @@
     "resume_predicate": null,
     "recovery_count": 0
   },
-  "lease": null,
+  "lease": {
+    "holder_id": "present:42687441140",
+    "acquired_at": "2026-11-09T19:53:02.993947+00:00",
+    "heartbeat_at": "2026-11-09T19:53:02.993947+00:00",
+    "expires_at": "2026-11-09T20:08:02.993947+00:00",
+    "fencing_token": 1
+  },
   "last_transition": {
     "transition_id": "95526a03faa34b9fb1043f802032018d",
     "transaction_id": "9a2805b2c6d2484e9b00f1b379bc1419",
@@ -40,9 +46,10 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 7,
+  "state_version": 8,
   "recent_trigger_dedup_keys": {
-    "run:41130121031:aspose-gis-foss/Aspose.GIS.FOSS-for-.Net": "9a2805b2c6d2484e9b00f1b379bc1419"
+    "run:41130121031:aspose-gis-foss/Aspose.GIS.FOSS-for-.Net": "9a2805b2c6d2484e9b00f1b379bc1419",
+    "run:42687441140:aspose-gis-foss/Aspose.GIS.FOSS-for-.Net": "684993bc5cc643f2b69abb9132669e08"
   },
   "recovery_count": 1
 }
