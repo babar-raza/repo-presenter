@@ -480,3 +480,29 @@ def test_no_unit_of_the_section_sharing_a_word_means_nothing_is_cited() -> None:
     )
     units = {"units": [{"section": "scope_limitations", "slot": "a", "fact_ids": [], "text": "zzz qqq"}]}
     assert cite_owed_units(units, facts, [("scope_limitations", "inherited_unit:007.paragraph")])[1] == []
+
+
+# --- BC-08: a rewritten unit whose kept command the render never printed (hosted PDF Go 025) -----
+
+BC08 = (
+    "BC-08: inherited_unit:010.list: VERIFIED_REWRITE keeps the command 'npm install x' but the "
+    "candidate does not render it"
+)
+
+
+def test_a_bc08_unit_is_mandatory_only_when_the_caller_names_bc08() -> None:
+    facts = _ts_facts()
+    assert choose_units([BC08], facts) == []  # recertify's default: BC-08 is not a restore check
+    assert choose_units([BC08], facts, mandatory_checks=("BC-05", "BC-08")) == [
+        "inherited_unit:010.list"
+    ]
+
+
+def test_restoring_the_bc08_unit_returns_the_rewrite_to_verbatim_preserve() -> None:
+    facts = _ts_facts()
+    [unit] = choose_units([BC08], facts, mandatory_checks=("BC-05", "BC-08"))
+    new, changes = restore_lost_units(_ts_dispositions(), facts, [unit], TS_HOLDABLE, TS_HOLDABLE)
+    assert [c["unit_id"] for c in changes] == [unit]
+    entry = next(e for e in new["dispositions"] if e["unit_id"] == unit)
+    assert entry["disposition"] == "VERIFIED_PRESERVE"
+    assert entry["destination_section"] == "key_capabilities"

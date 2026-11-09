@@ -133,19 +133,23 @@ _HOLDS = re.compile(
 
 
 def choose_units(
-    details: Sequence[str], facts: FactsDocument, already: Collection[str] = ()
+    details: Sequence[str],
+    facts: FactsDocument,
+    already: Collection[str] = (),
+    mandatory_checks: Collection[str] = ("BC-05",),
 ) -> list[str]:
     """The fewest units whose restoration clears what BC-05 / BC-17 name, in first-seen order.
 
     BC-05 names a unit that must be kept (its replacement does not carry its substance): every one
-    is chosen. BC-17 names, per LOST ITEM, every unit that holds it. On the first pass one carrier
+    is chosen (``mandatory_checks`` may add BC-08: a ``VERIFIED_REWRITE`` unit whose kept command the
+    render does not print is returned to ``VERIFIED_PRESERVE``, which prints it as written). BC-17 names, per LOST ITEM, every unit that holds it. On the first pass one carrier
     is enough - an item a chosen unit holds is covered, and each remaining item takes the carrier
     that covers the most uncovered items, shortest text first - because restoring every holder
     prints the same identifiers several times and pushes the README over BC-07's visible-line
     budget (Cells Go 312 of 300 lines, Java 313, measured after restoring every named unit). An
     item that is STILL named after one of its holders was restored (``already``) was not cleared by
     that carrier, so it escalates: every remaining holder of it is chosen."""
-    mandatory = failing_unit_ids(details, checks=("BC-05",))
+    mandatory = failing_unit_ids(details, checks=tuple(mandatory_checks))
     holders: dict[tuple[str, str], list[str]] = {}
     for detail in details:
         check, _, rest = detail.partition(": ")

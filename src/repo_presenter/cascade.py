@@ -120,7 +120,11 @@ from repo_presenter.readme.repair.accounting import (
     account_unprinted_units,
     accounting_document,
 )
-from repo_presenter.readme.repair.restore_units import choose_units, restore_lost_units
+from repo_presenter.readme.repair.restore_units import (
+    choose_units,
+    failing_unit_ids,
+    restore_lost_units,
+)
 from repo_presenter.readme.repair.targeted import (
     MAX_SETTLE_ROUNDS,
     REPAIRS_FILENAME,
@@ -513,7 +517,64 @@ def _settle_defects(
             repairer=repairer,
         ),
     ]
-    return [defect for defect in found if defect.repairable]
+    repairable = [defect for defect in found if defect.repairable]
+    return _without_restorable(repairable, composed=composed, document=document)
+
+
+def _without_restorable(
+    defects: list[Defect], *, composed: _Composition, document: FactsDocument
+) -> list[Defect]:
+    """Leave out what the zero-call restore (``_restore_lost_content``) answers, so the model is
+    asked only about what restore cannot fix. A BC-05/BC-08/BC-17 failure line naming an inherited
+    unit that ``restore_lost_units`` can keep verbatim is dropped from its defect (a defect left
+    with no failure line is dropped whole). Hosted Aspose.3D-FOSS-for-TypeScript (head 98a10a9) sent
+    ~45 such maintainers' member-table defects, two calls each, every one rejected, and spent the
+    100-call invocation budget before the restore could run."""
+    named: dict[int, dict[str, list[str]]] = {}
+    for index, defect in enumerate(defects):
+        if defect.source != "validation" or defect.label not in RESTORABLE_CHECKS:
+            continue
+        failures = defect.record.get("failures") or []
+        lines = [str(f.get("detail", "")) for f in failures] or [
+            str(d) for d in defect.record.get("details") or []
+        ]
+        named[index] = {
+            line: failing_unit_ids([f"{defect.label}: {line}"], checks=(defect.label,))
+            for line in lines
+        }
+    every = list(dict.fromkeys(u for lines in named.values() for ids in lines.values() for u in ids))
+    if not every:
+        return defects
+    included = [
+        section["section_id"] for section in composed.plan.get("sections", []) if section.get("include")
+    ]
+    _, changes = restore_lost_units(
+        composed.dispositions, document, every, holdable_sections(document), included
+    )
+    restorable = {change["unit_id"] for change in changes}
+    if not restorable:
+        return defects
+    kept: list[Defect] = []
+    for index, defect in enumerate(defects):
+        lines = named.get(index)
+        if lines is None:
+            kept.append(defect)
+            continue
+        answered = {
+            line for line, ids in lines.items() if ids and all(unit in restorable for unit in ids)
+        }
+        if not answered:
+            kept.append(defect)
+            continue
+        if len(answered) == len(lines):
+            continue  # every line of this defect is a restore's to answer
+        record = dict(defect.record)
+        record["failures"] = [
+            f for f in record.get("failures") or [] if str(f.get("detail", "")) not in answered
+        ]
+        record["details"] = [d for d in record.get("details") or [] if str(d) not in answered]
+        kept.append(replace(defect, record=record))
+    return kept
 
 
 def _repair_defects(
@@ -587,6 +648,15 @@ def _settle_s9(
         write_review_verdict(verdict, out_dir / REVIEW_VERDICT_FILENAME)
         if rounds >= max_rounds:
             break
+        # Zero-call restore BEFORE any model repair: when the only blocking failures are content
+        # the restore keeps verbatim, the candidate is settled without asking the model anything.
+        restored = _restore_lost_content(
+            _Settled(composed, validation, verdict, rounds), entry=entry, document=document,
+            investigation=investigation, tree_paths=tree_paths, original=original, out_dir=out_dir,
+            require_clean_review=True,
+        )
+        if restored.composed is not composed:
+            return restored
         defects = _settle_defects(
             composed=composed, validation=validation, verdict=verdict, entry=entry,
             document=document, prompts=prompts,
@@ -601,9 +671,11 @@ def _settle_s9(
 
 
 #: The blocking checks a zero-call restore can answer: content the published README prints that the
-#: settled candidate lost (BC-17) and a superseded unit whose replacement does not carry it (BC-05).
+#: settled candidate lost (BC-17), a superseded unit whose replacement does not carry it (BC-05), and
+#: a ``VERIFIED_REWRITE`` unit whose kept command/example the render does not print (BC-08, answered
+#: by returning that unit to ``VERIFIED_PRESERVE``; hosted PDF Go ``025.paragraph``).
 #: A candidate that also fails any other blocking check is left exactly as it was.
-RESTORABLE_CHECKS = frozenset({"BC-05", "BC-17"})
+RESTORABLE_CHECKS = frozenset({"BC-05", "BC-08", "BC-17"})
 #: Failing beside them without ruling the restore out: the line budget and fence rules move with the
 #: printed content, so a restore is attempted and kept only if it leaves NO blocking failure.
 RESTORE_COMPANION_CHECKS = frozenset({"BC-07"})
@@ -612,7 +684,7 @@ RESTORED_UNITS_FILENAME = "restored_units.json"
 
 def _restore_lost_content(
     settled: _Settled, *, entry: RegistryEntry, document: FactsDocument, investigation: dict,
-    tree_paths: list[str], original: str, out_dir: Path,
+    tree_paths: list[str], original: str, out_dir: Path, require_clean_review: bool = False,
 ) -> _Settled:
     """TC-019c: when the settled candidate's ONLY blocking failures are BC-05/BC-17, keep the units
     they name (``readme.repair.restore_units``: the remedy those checks' own text states), re-render
@@ -640,7 +712,10 @@ def _restore_lost_content(
         details = [
             f"{check['id']}: {detail}" for check in failing for detail in check.get("details") or []
         ]
-        unit_ids = choose_units(details, document, [change["unit_id"] for change in restored])
+        unit_ids = choose_units(
+            details, document, [change["unit_id"] for change in restored],
+            mandatory_checks=("BC-05", "BC-08"),
+        )
         if not unit_ids:
             break
         dispositions, changes = restore_lost_units(dispositions, document, unit_ids, holdable, included)
@@ -686,6 +761,8 @@ def _restore_lost_content(
         )
     if not restored or failing:
         return settled
+    if require_clean_review and verdict.blocking_findings:
+        return settled  # the S9 loop still has review defects to repair; write nothing yet
     write_dispositions(dispositions, out_dir / "dispositions.json")
     (out_dir / ACCOUNTING_FILENAME).write_text(
         json.dumps(accounting_document(accounted), indent=2, sort_keys=True) + "\n",
