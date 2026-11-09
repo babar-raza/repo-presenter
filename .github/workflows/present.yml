@@ -402,7 +402,7 @@ jobs:
             -c "import socket; socket.create_connection(('8.8.8.8', 53), timeout=3); print('NETWORK_REACHED')" 2>&1)"
           net_rc=$?
           echo "$net_out"
-          echo "$net_out" | grep -q "NETWORK_REACHED" && { echo "canary: network reach unexpectedly succeeded"; exit 1; }
+          echo "$net_out" | grep -qx "NETWORK_REACHED" && { echo "canary: network reach unexpectedly succeeded"; exit 1; }
           test "$net_rc" -ne 0 || { echo "canary: network attempt unexpectedly exited 0"; exit 1; }
 
           write_out="$(docker run --rm --network none --read-only --tmpfs /work:rw,exec,size=1g \
@@ -411,7 +411,7 @@ jobs:
             -c "echo leaked > /etc/canary-write-test && echo WRITE_SUCCEEDED" 2>&1)"
           write_rc=$?
           echo "$write_out"
-          echo "$write_out" | grep -q "WRITE_SUCCEEDED" && { echo "canary: write outside /work unexpectedly succeeded"; exit 1; }
+          echo "$write_out" | grep -qx "WRITE_SUCCEEDED" && { echo "canary: write outside /work unexpectedly succeeded"; exit 1; }
           test "$write_rc" -ne 0 || { echo "canary: write attempt unexpectedly exited 0"; exit 1; }
 
           env_out="$(docker run --rm --network none --read-only --tmpfs /work:rw,exec,size=1g \
