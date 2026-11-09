@@ -55,7 +55,24 @@ progress:
   # TC-005 (project/taskcards/TC-005.yaml) now asserts this block matches that script's output, so
   # the next drift is a failing check, not a silent stale number. Do not revert to 36/34 (known
   # false) or hand-edit these two fields without re-running the script first.
-  lane_l_accepted: 9
+  #
+  # RESYNCED 2026-11-09 (lane_l_accepted 9 -> 8), investigated before changing, per
+  # `ops/checks/dashboard_matches_live.py`'s own CI failure (recorded=9 but live=8): re-ran
+  # `repo_presenter.recertify.portfolio_recertification` directly and confirmed, with the real
+  # per-repository failing_checks detail, that 3 of the 12 Lane L repositories now genuinely fail
+  # recertification -- NOT a regression this session introduced, but newly-caught, real defects
+  # from mechanisms this same session built and landed (TC-017a/TC-017b's independent export-
+  # surface probes and strengthened M2 table-row checks; TC-025's new stale_package_version
+  # detector): aspose-barcode-foss/Python (L-05: stale_package_version found an unresolvable
+  # "not published to PyPI" claim with no package:published_version fact to check it against);
+  # aspose-html-foss/Python (L-03: README states "243 public types," facts record 303; 5 API-table
+  # rows name types absent from the real public surface); aspose-words-foss/Python (L-03: README
+  # states "146 public types," facts record 198; 2 API-table rows likewise absent). Each is a real,
+  # pre-existing discrepancy a newly-strengthened checker now catches for the first time, not
+  # something that changed about the live READMEs themselves. Per R10 ("no passing seal may start
+  # failing unless each case is a justified genuine defect"), these are justified; the count is
+  # resynced downward, honestly, rather than suppressed.
+  lane_l_accepted: 8
   lane_l_corrected_non_empty_patch: 15
   lane_l_blocked: 0
   lane_r_accepted: 1
