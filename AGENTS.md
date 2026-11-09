@@ -171,6 +171,34 @@ from a clean state before marking the card accepted, exactly as it would for a
 dispatched worker. This preserves the "a worker cannot mark its own tests
 accepted" property from `ops/SUPERVISOR.md` even in a single-session context.
 
+## Supervisor operating rule — manage through multiple agents (owner, 2026-11-09)
+
+The supervisor does not do all the work itself. It runs the program through agents, and keeps for
+itself only what must stay single-threaded and accountable. This is an operating rule, not new
+architecture: it uses the existing roles, cards, leases and `gatecli review`.
+
+1. **Parallelize independent work.** Any task that can be split into pieces with disjoint
+   `write_paths` goes to separate agents in the same message — a fork (inherits context) for
+   investigation and measurement, a worktree-isolated worker with a self-contained card for
+   implementation. Never serialize what is independent; never parallelize what shares a file.
+2. **One owner per file set.** Before dispatch, name each agent's files; two agents never edit the
+   same file. Shared files (`gatecli.py`, `propose/effect.py`, `jobs.py`, `present.yml`,
+   `recertify.py`, `cascade.py`) follow the plan's serialized merge order.
+3. **No self-grading.** The agent that wrote a change is never the one that accepts it: a separate
+   verifier agent (or `gatecli review`'s independent re-run) confirms it from a clean state. The
+   supervisor reads the actual diff and receipts, not the agent's summary.
+4. **The supervisor keeps** the critical path, the budget, dispatch and integration order,
+   commits/pushes, anything touching shared or external state (state refs, provider spend, GitHub),
+   and every decision an agent surfaces. Agents never push, open PRs, spend outside an open batch,
+   or edit `project/**`, `ops/**`, `data/**` unless their card says so.
+5. **Bound the fan-out.** At most 4 concurrent code-writing agents and 6 concurrent generation runs
+   (R25's batch of six); each agent gets a bounded objective, a stop condition and a report-size
+   limit. A long job runs in the background and is watched by a monitor, never by polling.
+6. **Safe by default.** Prefer a read-only investigation fork before a writing agent; reversible
+   steps first; an agent that stalls or drifts is stopped and re-briefed, not left running.
+7. **Always be dispatching.** If an agent is running and another independent card is READY, dispatch
+   it now. The supervisor never idles on an agent's completion while other ready work exists.
+
 ## Non-negotiables (carried from the mission document, not restated in full)
 
 1. Two equal first-class lanes (Lane L, Lane R) — neither disposable, neither
