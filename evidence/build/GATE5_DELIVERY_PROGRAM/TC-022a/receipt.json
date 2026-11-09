@@ -3,11 +3,11 @@
   "card": "TC-022a",
   "gate": "GATE5_DELIVERY_PROGRAM",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-07T18:28:05Z",
-  "base_rev": "bcc253139f4bcd4a92ba07937d6295184c9b5fa1",
-  "head_rev": "4076ea62ba6e09e92aa864e8a87570e7a9aeea8e",
+  "generated_at": "2026-11-09T15:03:41Z",
+  "base_rev": "356001a2187aa0d279a19b905ab55742f4500807",
+  "head_rev": "fcc89dfbe54d03caeb774ab94c4697335382a211",
   "card_sha256": "a47c78f9ef3f6c35b9ac6498cdb046bc5660ad01a28a5eb322a43cbe518ac5e5",
-  "checker_fileset_sha256": "ce93439fb4952eaece1ef0eb232997fdf1fd8d09035fcb03a9a67feb5d43adcc",
+  "checker_fileset_sha256": "d016197517964fd924f7f86bfdd0417747ccf31958830b4fce7113c1dd895c63",
   "checker_fileset_scheme": "v3",
   "fingerprint": {
     "python": "3.13.15",
@@ -16,8 +16,6 @@
   "scope": {
     "ok": true,
     "changed_paths": [
-      "src/repo_presenter/acceptance/__init__.py",
-      "src/repo_presenter/acceptance/registration.py",
       "tests/acceptance/test_registration.py"
     ],
     "violations": [],
@@ -30,8 +28,8 @@
         {
           "command": "python -m pytest tests/acceptance/test_registration.py -q",
           "exit_code": 0,
-          "duration_s": 0.988,
-          "stdout_sha256": "2b2d767105fcadd6caca0788dc8b5865e63271d079fdf44070bda78649e483f5"
+          "duration_s": 3.082,
+          "stdout_sha256": "560b52fba8c9351e1a8f870f90e825e410d62f6e5ef44befae85d2d051ec3011"
         }
       ],
       "all_passed": true
@@ -42,8 +40,8 @@
         {
           "command": "python -m pytest tests/acceptance/test_registration.py -q",
           "exit_code": 0,
-          "duration_s": 0.963,
-          "stdout_sha256": "2bb2eadc6c2a1b118c98ac0e6c7eb2258ded0a0b372d1a31cbe852c5176f33de"
+          "duration_s": 1.597,
+          "stdout_sha256": "2b2d767105fcadd6caca0788dc8b5865e63271d079fdf44070bda78649e483f5"
         }
       ],
       "all_passed": true
