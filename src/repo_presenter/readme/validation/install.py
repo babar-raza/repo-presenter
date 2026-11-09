@@ -65,7 +65,16 @@ def install_failures(candidate: Candidate) -> list[Failure]:
         proved = (fact.attributes or {}).get("build_command", "")
         checkout_kind = (fact.attributes or {}).get("install_kind") == "source_checkout"
         if fact.polarity != "SUPPORTED":
-            if not _stated_by_distribution(candidate, fact):
+            if fact_registry_reading(fact) == "ownership_unconfirmed":
+                # A published name nothing ties to this repository (Aspose.3D-FOSS-for-Python:
+                # PyPI's project URL names another repository). The fact is a claim only when the
+                # README prints its command; a README that prints none states the package as
+                # unconfirmed and claims nothing. A printed command is a line-level, repairable
+                # defect (the section or placed unit that prints it), not an extraction failure no
+                # repair stage can reach (measured 2026-11-10: 3D Python died at the seal gate on
+                # an authored "Install the published package from PyPI" sentence).
+                failures.extend(_printed_unconfirmed_command_failures(candidate, fact))
+            elif not _stated_by_distribution(candidate, fact):
                 failures.append(Failure("EXTRACTING", _unestablished_install(fact)))
         elif problems := _documented_source_failures(candidate, fact):
             failures.extend(problems)
@@ -247,6 +256,39 @@ def _registry_install_lines(
         if exact or variant:
             found.append((index, stripped))
     return found
+
+
+def _printed_unconfirmed_command_failures(candidate: Candidate, fact: Fact) -> list[Failure]:
+    """Each README line that prints the registry install of an UNRESOLVED-ownership package. A line
+    from a placed inherited unit routes to that unit's disposition (RECONCILING), any other line to
+    the section that prints it (COMPOSING), exactly like :func:`_registry_command_failures`."""
+    package = next((f for f in candidate.facts.facts if f.id == "package:name"), None)
+    package_name = package.value.lower() if package is not None else ""
+    implied = {line.strip() for line in fact.value.splitlines() if line.strip()}
+    printed = _registry_install_lines(candidate.readme, implied, package_name)
+    if not printed:
+        return []
+    carriers = {
+        line.strip(): placement.unit_id
+        for placement in placements_of(candidate)
+        if placement.outcome == "placed"
+        for line in placement.text.splitlines()
+    }
+    sections = section_lines(candidate.readme)
+    failures: list[Failure] = []
+    for index, line in printed:
+        detail = (
+            f"{fact.id}: the README prints {line!r}, the registry install of a package whose "
+            "ownership the registry reading does not confirm "
+            f"({(fact.evidence[-1].detail or '') if fact.evidence else 'unconfirmed'}); state the "
+            "source install or say plainly that the package is unconfirmed"
+        )
+        unit = carriers.get(line)
+        if unit is not None:
+            failures.append(Failure("RECONCILING", detail, unit=unit))
+        else:
+            failures.append(Failure("COMPOSING", detail, sections[index]))
+    return failures
 
 
 def _registry_command_failures(candidate: Candidate) -> list[Failure]:
