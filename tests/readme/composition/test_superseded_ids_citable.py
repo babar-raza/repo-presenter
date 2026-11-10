@@ -13,6 +13,7 @@ from __future__ import annotations
 from repo_presenter.core.facts import Evidence, Fact, FactsDocument
 from repo_presenter.readme.composition.authoring import (
     SectionTask,
+    _elsewhere_settled_units,
     _superseded_units,
     unit_checks,
 )
@@ -204,3 +205,61 @@ def test_a_unit_restored_out_of_a_different_section_is_still_outside() -> None:
     assert _outside(errors) == [
         f"unit {SLOT}: cites facts outside this section's set: {STRANGER}"
     ]
+
+
+# --- the durable case: the unit is SETTLED elsewhere, independent of any restore event ----------
+#
+# Cells TypeScript's seal 098d5af8fa90 (local Lane R zero-call recertify, 2026-11-10): the
+# api_reference "intro" unit's citation of 034.paragraph predates a restore that moved it to
+# scope_limitations, same shape as Cells Cpp/Note Python above -- but on THIS repository's seal,
+# a later, uneventful rejudge finds nothing left to restore (the disposition is already settled),
+# so vacated_sections(restored=[]) is empty and restored_out_ids from a fresh restore call is
+# empty too. The stored seal's authored text is never rewritten, so the exact same citation must
+# still be accepted every time, not just the one call that moved it. authoring_tasks folds
+# _elsewhere_settled_units(dispositions, section) into restored_out_ids so this holds without any
+# restore event.
+
+
+def test_elsewhere_settled_units_names_a_unit_the_dispositions_place_in_another_section() -> None:
+    from repo_presenter.readme.composition.authoring import _elsewhere_settled_units
+
+    assert _elsewhere_settled_units(_dispositions(), SECTION) == frozenset({STRANGER})
+    assert _elsewhere_settled_units(_dispositions(), "quick_start") == frozenset({HEADING})
+    assert _elsewhere_settled_units(_dispositions(), "api_reference") == frozenset(
+        {HEADING, STRANGER}
+    )
+
+
+def test_elsewhere_settled_units_ignores_a_unit_with_no_valid_disposition() -> None:
+    from repo_presenter.readme.composition.authoring import _elsewhere_settled_units
+
+    dispositions = {
+        "dispositions": [
+            {
+                "unit_id": "inherited_unit:200.paragraph",
+                "disposition": "CONTRADICTED",
+                "destination_section": "scope_limitations",
+            },
+            {
+                "unit_id": "inherited_unit:201.paragraph",
+                "disposition": "OMIT_UNSUPPORTED",
+                "destination_section": None,
+            },
+        ]
+    }
+    assert _elsewhere_settled_units(dispositions, "api_reference") == frozenset()
+
+
+def test_a_citation_of_a_unit_settled_elsewhere_is_accepted_with_zero_restore_events() -> None:
+    """The scenario plain restored_out={} (no restore ran this call) can no longer represent on
+    its own: ``authoring_tasks`` ORs ``_elsewhere_settled_units`` into ``restored_out_ids``, so
+    the same citation that a restore event used to be required to exempt is now accepted purely
+    from the current dispositions -- the exact gap a stored seal's never-rewritten authored text
+    exposes on a later, uneventful rejudge (Cells TypeScript's seal, above)."""
+    errors = unit_checks(
+        _output("identity:repository", STRANGER),
+        _task_restored_out(_elsewhere_settled_units(_dispositions(), SECTION)),
+        _facts(),
+        "Aspose.Widget FOSS for Go",
+    )
+    assert _outside(errors) == []

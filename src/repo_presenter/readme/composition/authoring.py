@@ -263,14 +263,20 @@ class SectionTask:
     #: units that were placed when the section was authored, so a judge that reads the settled
     #: dispositions (``recertify``) must still accept the citations the authored unit made.
     superseded_ids: frozenset[str] = frozenset()
-    #: The mirror case: inherited units a zero-call RESTORE pass (``readme.repair.restore_units``)
-    #: moved OUT of this section this same pass (``restore_units.vacated_sections``), because their
-    #: destination does not render a placed unit's text (``api_reference``, ``documentation_
-    #: resources``). The authored unit here was written while the moved unit was still accepted
-    #: here, so its citation predates the move and is not a new out-of-scope claim; it is not a
-    #: licence to cite a unit that was never in this section, or one moved out for any other reason
-    #: (measured: Cells Cpp ``041.paragraph``, Note Python ``055.paragraph`` -- restore traded
-    #: BC-05/BC-17 for a fresh BC-04 on the unchanged "intro" unit's existing citation).
+    #: The mirror case: inherited units now disposed OUT of this section, so a pre-existing
+    #: citation of them is not a new out-of-scope claim. Two sources, both folded in by
+    #: ``authoring_tasks`` (never a licence to cite a unit that was never in this section):
+    #: (1) a zero-call RESTORE pass moved it out THIS SAME CALL (``restore_units.
+    #: vacated_sections``), because its destination does not render a placed unit's text
+    #: (``api_reference``, ``documentation_resources``) -- the authored unit here was written
+    #: while the moved unit was still accepted here (measured: Cells Cpp ``041.paragraph``, Note
+    #: Python ``055.paragraph``: restore traded BC-05/BC-17 for a fresh BC-04 on the unchanged
+    #: "intro" unit's existing citation); (2) the unit is *currently* settled somewhere else,
+    #: independent of whether any restore ran this call (``_elsewhere_settled_units``) -- a stored
+    #: seal's authored text is never rewritten, so a later, uneventful rejudge has no restore
+    #: event to populate (1) from, yet the same citation is still not new (measured: Cells
+    #: TypeScript's seal ``098d5af8fa90`` fails BC-04 on ``034.paragraph`` on every zero-call
+    #: recertify that finds nothing left to restore).
     restored_out_ids: frozenset[str] = frozenset()
 
     @property
@@ -312,6 +318,40 @@ def _superseded_units(dispositions: dict[str, Any], section: str) -> frozenset[s
         for entry in dispositions.get("dispositions", [])
         if entry.get("destination_section") == section
         and str(entry.get("disposition", "")).startswith("SUPERSEDE_")
+    )
+
+
+#: Dispositions ``_elsewhere_settled_units`` treats as "genuinely, currently placed somewhere" --
+#: the same set ``_placed_units`` already uses, plus the ``SUPERSEDE_*`` family (a superseded unit
+#: still has a real destination_section; its substance lives there even though its own text is not
+#: printed verbatim).
+_SETTLED_DISPOSITIONS = frozenset(
+    {"VERIFIED_PRESERVE", "VERIFIED_REWRITE", "VERIFIED_MOVE", "PRESERVE_ATTRIBUTED"}
+)
+
+
+def _elsewhere_settled_units(dispositions: dict[str, Any], section: str) -> frozenset[str]:
+    """Every inherited unit the CURRENT, settled dispositions place in some OTHER section, a real
+    disposition, not dropped or contradicted.
+
+    ``restored_out_ids`` (``vacated_sections``) exempts a citation only for the one call that
+    itself just moved the unit; a stored seal's authored text was written once and is never
+    rewritten, so on a later, uneventful rejudge -- nothing left to restore, ``restored_out_ids``
+    empty -- that exact same citation starts failing BC-04 again, forever (measured: Cells
+    TypeScript's seal ``098d5af8fa90`` rejudges BC-04 on ``034.paragraph`` on every zero-call
+    recertify; Note Python's freshly-authored seal never had the stale citation to begin with, so
+    it did not show the gap). This is the state-derived twin of ``_superseded_units``: it needs no
+    restore event, only the disposition bundle every call already has. It does not relax the check
+    against a citation of a unit with no valid disposition at all (dropped, contradicted, or never
+    existing) -- only a unit genuinely, currently living in a different section is exempted."""
+    return frozenset(
+        str(entry["unit_id"])
+        for entry in dispositions.get("dispositions", [])
+        if entry.get("destination_section") not in (None, "", section)
+        and (
+            str(entry.get("disposition", "")) in _SETTLED_DISPOSITIONS
+            or str(entry.get("disposition", "")).startswith("SUPERSEDE_")
+        )
     )
 
 
@@ -921,7 +961,10 @@ def authoring_tasks(
                 must_carry_text=carried_substance(must_carry, facts),
                 owed_lists=owed,
                 superseded_ids=_superseded_units(dispositions, section),
-                restored_out_ids=frozenset(restored_out.get(section, ())) if restored_out else frozenset(),
+                restored_out_ids=(
+                    frozenset(restored_out.get(section, ())) if restored_out else frozenset()
+                )
+                | _elsewhere_settled_units(dispositions, section),
             )
         )
         if section == "api_reference":
