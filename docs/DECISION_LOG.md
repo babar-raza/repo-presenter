@@ -4393,3 +4393,57 @@ Real hosted `present.yml` runs from this branch (the workflow exists on `main`, 
 - **Cost finding:** 3D TS burned the 100-call invocation cap on 76 `targeted_repair` calls (61 rejected) over ~30
   unrepairable table items. The cap worked as designed (fail fast, no runaway spend); the cause was the
   API-table defect, now fixed. No cap change.
+
+## 2026-11-10: fifth Pareto pass -- restore/placement symmetry, toolchain-version false positive, two new real seals
+
+- **New real seals this pass:** Cells Java (Lane R, module-count claim resolved by the ordinary provider-
+  calling repair loop once the Lane L applied-edits fix landed), Note Python (Lane R, once BC-04's
+  restore-symmetry fix landed). Lane R mechanism-passing: 5 -> 12 across this pass; Lane L stays ~19-20
+  (the ~20 target), BarCode Python and PDF Java(L) added as real re-certifications.
+- **Restore/placement fixes landed (each proven offline on the real failing artifact before committing):**
+  - a maintainers' API table whose rows name absent types is kept with those rows filtered (BC-14 rule i);
+  - a kept table's raw HTML element name prints in a code span, and BC-06/BC-07 ignore inline code spans
+    (HTML Python);
+  - BC-05/BC-17/parity stop owing the registry install command of a package whose ownership the registry
+    doesn't confirm (3D Python);
+  - a link assigned to an excluded section is settled (moved or dropped), not rejected twice (3D TS);
+  - BC-04 stops owing a citation of a unit the renderer *supersedes into* the citing section (952fa4c), and
+    -- the new piece this pass -- stops owing a citation of a unit *this same restore pass moved out of*
+    the citing section (`vacated_sections`, symmetric to `superseded_ids`; confirmed on Cells Cpp and Note
+    Python);
+  - a unit the model files in `documentation_resources` (which only ever renders its own generated link
+    bullets) is re-homed to the nearest section that actually prints it (Cells Go);
+  - a bare `# ...` heading mid-document is clamped to level 2 instead of resetting the whole breadcrumb
+    stack (Cells Go's "Requires Go 1.24.5+" heading was corrupting every later unit's `section`);
+  - `stale_package_version` stops blocking a Lane L "not published"/pinned-version finding that has no
+    `package:published_version` fact to check against -- the claim may already be true (BarCode Python,
+    matching `format_overclaim`'s existing `NO_EVIDENCE_OF_ABSENCE` convention);
+  - BC-14 `claim_contradiction` stops reading a language/runtime version requirement right after the
+    package name ("requires Python version 3.10 or later") as a claimed release of the package.
+- **Method, confirmed again this pass:** a failed hosted or local `present` run's cascade directory is the
+  reproduction source (`gh run download`, or the local `.present-work`/workdir); every fix above was proven
+  against the real failing artifact offline before being committed, per R10/R14's own discipline.
+- **Open, evidenced, not yet fixed (each investigated and reported by name, not silently dropped):**
+  - Cells Go: a `VERIFIED_REWRITE` of a maintainers' list (corrected product name) drops 2 of 5 cited
+    links; the opening paragraph's `SUPERSEDE_REDUNDANT` replacement omits one cited detail. Both are
+    model-authored-text completeness gaps the repair loop's round budget didn't resolve, not a
+    reconciliation/restore defect -- needs either more repair rounds or a prompt-level fix, not a one-shot
+    code change.
+  - Cells TypeScript: the `examples` BC-05 "UNCLASSIFIED" deferral is a REAL content loss (the model's
+    "superseded by the deterministic section" rationale is false; checked against the rendered candidate)
+    -- the fix belongs in S4/S9's own disposition choice (VERIFIED_PRESERVE instead of DEFER_UNRESOLVED),
+    not a new deferral class (which would hide the loss). Its BC-02 `PACKAGE_ABSENT` (npm has no such
+    package, confirmed against the real registry) is also a real defect the repair loop didn't fix in its
+    round budget, not a package-registry gap.
+  - Cells Cpp / PDF Java: a restored verbatim unit's OWN stale count/spelling (BC-12 short name, a stale
+    substance count) can still block after re-homing; this is a second-order interaction between restore
+    and the destination's already-current authored text, flagged by two independent forks as needing a
+    dedicated follow-up, not guessed at under time pressure.
+  - GIS .NET stays `BLOCKED_EXTERNAL` (unchanged from the previous pass).
+- **Infrastructure note:** `recertify --gate`/`--write-baseline`/`--all --write` and `ops/checks/
+  delivery_funnel.py` were observed running concurrently from several sessions against the same state
+  refs and the same local `recertification_baseline.json`; no corruption occurred (each write is a full
+  valid JSON document) but it wastes compute. TC-017b/TC-020/TC-022a receipts churn stale on every pass
+  because their scope-check base inescapably spans another card's own tagged refresh commit; the clean fix
+  is the "scope-only-slice" worktree technique already used once for TC-020/022a, not a plain `--base
+  <latest-tag>`, and is left to whichever session next needs that specific card ACCEPTED.
