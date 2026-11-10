@@ -5,7 +5,7 @@
   "provider_repository_id": 1301317734,
   "registry_revision": null,
   "active_transaction_id": "94c6eb7f16cb42a1a944eba1f1549d5a",
-  "state": "INVALIDATED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -18,12 +18,12 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "attempt under version set d5ad089e72de: PresentFailure: Lane L: independent review returned REJECT with 5 blocking finding(s) of 5; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the API table lists `BorderStyle`, but no public_symbol fact states it (it is not a type of the public surface: absent or not exported)); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the API table lists `CellValueKind`, but no public_symbol fact states it (it is not a type of the public surface: absent or not exported)); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the API table lists `FillPatternKind`, but no public_symbol fact states it (it is not a type of the public surface: absent or not exported)); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the API table lists `SheetVisibility`, but no public_symbol fact states it (it is not a type of the public surface: absent or not exported)); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the API table lists `ValidationMessageSeverity`, but no public_symbol fact states it (it is not a type of the public surface: absent or not exported))",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-10T07:45:53.954960+00:00",
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "INVALIDATED",
+    "occurred_at": "2026-11-10T07:59:20.225071+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 6
   },
   "lease": null,
   "last_transition": {
@@ -40,11 +40,11 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 50,
+  "state_version": 51,
   "recent_trigger_dedup_keys": {
     "run:40633293097:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust": "ec3d875c55dc43acafcdc5b8cf0e0be4",
     "run:40635248483:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust": "045f76c313b546d79c3eccb3b0af43f3",
     "run:41306477548:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust": "94c6eb7f16cb42a1a944eba1f1549d5a"
   },
-  "recovery_count": 5
+  "recovery_count": 6
 }
