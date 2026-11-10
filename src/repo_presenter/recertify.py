@@ -80,8 +80,16 @@ RECERTIFICATION_FILENAME = "recertification.json"
 #: Bump when what re-certification re-runs, or how it records the result, changes meaning.
 RECERTIFY_VERSION = "1"
 #: Most restore-and-rejudge passes ``_rerun_lane_r(restore=True)`` makes (each pass can expose a unit
-#: the previous one made renderable); a bound, so a restore that keeps failing stops and reports.
-RESTORE_ROUNDS = 3
+#: the previous one made renderable); a bound, so a restore that keeps failing stops and reports --
+#: zero-call either way, so the cost of a higher bound is wall-clock, never provider spend (R25).
+#: ``choose_units`` deliberately restores one carrier per lost item on its first pass (avoiding a
+#: BC-07 line-budget blowup from printing the same identifier everywhere it is cited) and only
+#: escalates to every holder once an item is STILL lost after that -- real case (PDF Java, local
+#: Lane R, 2026-11-10): seven overlapping maintainers' tables each lost a distinct set of
+#: identifiers, and 3 rounds exhausted before every item finished escalating, leaving several
+#: still one-carrier-restored (insufficient) rather than fully restored. 3 was sized for the
+#: common case of a handful of lost items; a document with many overlapping tables needs more.
+RESTORE_ROUNDS = 10
 DEFAULT_BASELINE = Path("data/recertification_baseline.json")
 #: Manifest states whose sealed files are a model-accepted candidate. VALID_UPDATE_AVAILABLE is a
 #: proven seal beside which a later, different rerun was merely recorded (``seal._record_update``):
