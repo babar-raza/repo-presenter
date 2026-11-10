@@ -9,7 +9,47 @@
  
  <details>
  <summary>View the Supported Public API Surface</summary>
-@@ -563,7 +563,7 @@
+@@ -253,7 +253,6 @@
+ |---|---|
+ | `CSS` | Namespace class for CSS static utilities (CSS Conditional Rules §6). |
+ | `CSSCounterStyleRule` | A `@counter-style` rule (CSS Counter Styles Level 3 §3, CSSOM §5.4 type 11). |
+-| `CSSDeclarationBlock` | A small CSSStyleDeclaration-compatible declaration container. |
+ | `CSSFontFaceRule` | A `@font-face` rule holding font descriptor declarations (CSS Fonts §4.4). |
+ | `CSSImportRule` | An `@import` statement rule (CSSOM §6.7). |
+ | `CSSKeyframeRule` | A single keyframe descriptor within a `@keyframes` rule (CSSOM Animations §7). |
+@@ -280,7 +279,6 @@
+ | `Attr` | An attribute attached to an Element. |
+ | `BarProp` | Represents a browser toolbar object (WHATWG HTML §7.7.3). |
+ | `BroadcastChannel` | Deterministic same-runtime BroadcastChannel fan-out delivery. |
+-| `BrowsingContext` | Internal owner of navigation lifecycle/document state. |
+ | `CDATASection` | A CDATA section node (extends Text per WHATWG DOM Standard). |
+ | `CSSStyleDeclaration` | A live view of an element's inline style attribute. |
+ | `CharacterData` | Abstract base for Text, Comment, CDATASection, and ProcessingInstruction. |
+@@ -443,7 +441,6 @@
+ | `ValidityState` | Constraint-validation flags for a form control. |
+ | `VisualViewport` | CSSOM View §9 VisualViewport — all values are headless stubs. |
+ | `Window` | Per-document window object with EventTarget behavior. |
+-| `WindowEventLoop` | Internal task-source scheduler used by `Window`/`BrowsingContext`. |
+ | `WrongDocumentError` | Raised when a node belongs to a different document. |
+ | `XMLSerializer` | Serialise DOM nodes to strings. |
+ 
+@@ -460,7 +457,6 @@
+ |---|---|
+ | `JSContext` | A JavaScript execution context backed by QuickJS, pre-wired to a DOM. |
+ | `JSEvaluationError` | Raised when a JavaScript expression throws an exception. |
+-| `ModuleLoadPolicy` | Constants governing how a JSContext resolves module specifiers. |
+ | `ModuleNotFoundError` | Raised when a module specifier has no registered source. |
+ | `ModuleRegistry` | Maps module specifiers to ES module source strings. |
+ 
+@@ -471,7 +467,6 @@
+ | `BlockFragment` | Geometry fragment for a block-level box. |
+ | `BoxNode` | Single box-tree node produced by `build_box_tree`. |
+ | `BoxRoot` | Root wrapper returned by `build_box_tree`. |
+-| `BreakHints` | CSS fragmentation break hints (`break_before`, `break_after`, `break_inside`, `widows`, `orphans`) consumed by the layout engine. |
+ | `ComputedStyle` | Immutable layout-facing snapshot of an element's resolved style. |
+ | `Display` | Resolved display triple per CSS Display L3 §2. |
+ | `EdgeSizes` | Logical edge sizes in CSS px units. |
+@@ -563,7 +558,7 @@
  
  - **[Getting started guide](https://docs.aspose.org/html/python/)** — installation, walkthroughs, and feature guides for this library.
  - **[How-to guides & FAQ](https://kb.aspose.org/html/python/)** — task-focused answers for common HTML/DOM/CSS-processing questions.

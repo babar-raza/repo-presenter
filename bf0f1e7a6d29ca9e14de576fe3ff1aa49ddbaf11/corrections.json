@@ -1,10 +1,10 @@
 {
   "confinement": {
-    "edits": 2,
+    "edits": 7,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "c12b53aa269a9f08833464b5b2568382201b97037e7412a2b16ed3a9ed556e6d",
+  "corrected_sha256": "a39460946fad6add2df60c4e674acfc9e4ae36faeef2a68b15e946baec126e7c",
   "edits": [
     {
       "detector": "stale_type_count",
@@ -68,6 +68,311 @@
       "start": 8336
     },
     {
+      "detector": "absent_type_row",
+      "end": 10315,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose_html",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.css",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.css"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.css.element_matches",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.css.element_matches"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.css.select",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.css.select"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom.css",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom.CSS"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom.css.supports",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom.CSS.supports"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom.csscounterstylerule",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom.CSSCounterStyleRule"
+        }
+      ],
+      "index": 1,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 256,
+      "original": "| `CSSDeclarationBlock` | A small CSSStyleDeclaration-compatible declaration container. |\n",
+      "rationale": "line 256 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 10225
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 12069,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose_html",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.css",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.css"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.css.element_matches",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.css.element_matches"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.css.select",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.css.select"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom.css",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom.CSS"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom.css.supports",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom.CSS.supports"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom.csscounterstylerule",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom.CSSCounterStyleRule"
+        }
+      ],
+      "index": 2,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 283,
+      "original": "| `BrowsingContext` | Internal owner of navigation lifecycle/document state. |\n",
+      "rationale": "line 283 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 11990
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 23487,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose_html",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.css",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.css"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.css.element_matches",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.css.element_matches"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.css.select",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.css.select"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom.css",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom.CSS"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom.css.supports",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom.CSS.supports"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom.csscounterstylerule",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom.CSSCounterStyleRule"
+        }
+      ],
+      "index": 3,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 446,
+      "original": "| `WindowEventLoop` | Internal task-source scheduler used by `Window`/`BrowsingContext`. |\n",
+      "rationale": "line 446 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 23396
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 24159,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose_html",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.css",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.css"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.css.element_matches",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.css.element_matches"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.css.select",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.css.select"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom.css",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom.CSS"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom.css.supports",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom.CSS.supports"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom.csscounterstylerule",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom.CSSCounterStyleRule"
+        }
+      ],
+      "index": 4,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 463,
+      "original": "| `ModuleLoadPolicy` | Constants governing how a JSContext resolves module specifiers. |\n",
+      "rationale": "line 463 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 24070
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 24704,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose_html",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.css",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.css"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.css.element_matches",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.css.element_matches"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.css.select",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.css.select"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom.css",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom.CSS"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom.css.supports",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom.CSS.supports"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom.csscounterstylerule",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom.CSSCounterStyleRule"
+        }
+      ],
+      "index": 5,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 474,
+      "original": "| `BreakHints` | CSS fragmentation break hints (`break_before`, `break_after`, `break_inside`, `widows`, `orphans`) consumed by the layout engine. |\n",
+      "rationale": "line 474 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 24555
+    },
+    {
       "detector": "stale_type_count",
       "end": 29814,
       "evidence": [
@@ -120,7 +425,7 @@
           "value": "aspose_html.cssom.CSSCounterStyleRule"
         }
       ],
-      "index": 1,
+      "index": 6,
       "kind": "FALSE_CLAIM_FIX",
       "line": 566,
       "original": "243",
@@ -142,7 +447,8 @@
     "provider_calls": 0
   },
   "summary": {
-    "FALSE_CLAIM_FIX": 2
+    "FALSE_CLAIM_FIX": 2,
+    "TABLE_ROW_REMOVAL": 5
   },
   "unapplied": [
     {
