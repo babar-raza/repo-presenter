@@ -5,7 +5,7 @@
   "provider_repository_id": 1224468949,
   "registry_revision": null,
   "active_transaction_id": "53972fc4e6f746e3a4bccb45a8885075",
-  "state": "INVALIDATED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -18,12 +18,12 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "attempt under version set 2e1cacfdb7dc: PresentFailure: independent review returned REJECT with 3 blocking finding(s) of 3; nothing sealed; F01 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in development_testing blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-09T21:03:47.231733+00:00",
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "INVALIDATED",
+    "occurred_at": "2026-11-10T04:50:44.404807+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 2
   },
   "lease": null,
   "last_transition": {
@@ -40,12 +40,12 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 25,
+  "state_version": 26,
   "recent_trigger_dedup_keys": {
     "run:40555617732:aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript": "b8b09d6469db42c4b94a798807bcff09",
     "run:40571563106:aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript": "17282737701949eb95673de8c2b33f30",
     "run:41112847917:aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript": "c92902d52b6541c28fa52d69b6ad2019",
     "run:41306484277:aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript": "53972fc4e6f746e3a4bccb45a8885075"
   },
-  "recovery_count": 1
+  "recovery_count": 2
 }
