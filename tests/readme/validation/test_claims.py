@@ -139,6 +139,45 @@ def test_other_version_syntaxes_are_held_to_the_same_release() -> None:
     assert claim_findings("```bash\npip install aspose-pdf-foss==v26.9.0\n```\n", facts) == []
 
 
+def test_a_python_version_requirement_beside_the_package_name_is_not_a_release_claim() -> None:
+    """Real local Lane R false positive (Aspose.Slides-FOSS-for-Python): 'The package is named
+    aspose-slides-foss and requires Python version 3.10 or later.' read '3.10' as the attached
+    version of the PACKAGE and flagged a contradiction against the registry's 26.8.0 -- '3.10' is
+    the Python runtime requirement, not a claimed release of the package."""
+    readme = (
+        "## Installation\n\n"
+        "- The package is named aspose-slides-foss and requires Python version 3.10 or later.\n"
+    )
+    facts = _facts(
+        _fact("package:name", "package", "aspose-slides-foss"),
+        _fact("package:published_version", "package", "26.8.0", "current stable release"),
+    )
+    assert claim_findings(readme, facts) == []
+
+
+def test_a_bare_floor_version_right_after_the_package_name_is_also_not_a_release_claim() -> None:
+    """The toolchain word may be out of the 90-char tail window; a bare '+'/'or later' floor right
+    after the number is judged on its own (no registry install syntax uses a floor like this)."""
+    readme = "aspose-slides-foss 3.10+ is required.\n"
+    facts = _facts(
+        _fact("package:name", "package", "aspose-slides-foss"),
+        _fact("package:published_version", "package", "26.8.0", "current stable release"),
+    )
+    assert claim_findings(readme, facts) == []
+
+
+def test_a_package_version_right_after_the_name_with_no_toolchain_word_still_fails() -> None:
+    """Negative control: the toolchain exemption must not swallow a real stale release claim that
+    happens to sit right after the package name with no runtime word nearby."""
+    readme = "aspose-slides-foss 3.10 is the version you should install.\n"
+    facts = _facts(
+        _fact("package:name", "package", "aspose-slides-foss"),
+        _fact("package:published_version", "package", "26.8.0", "current stable release"),
+    )
+    [finding] = claim_findings(readme, facts)
+    assert "26.8.0" in finding.detail
+
+
 # --- Note-Python: a renamed package ----------------------------------------------------------
 NOTE = (
     _fact("package:name", "package", "aspose-note-foss"),

@@ -275,6 +275,29 @@ def _lines(readme: str) -> list[_Line]:
     return lines
 
 
+# A number between a package name and its "version N" that belongs to a language, runtime or
+# toolchain ("aspose-slides-foss requires Python version 3.10 or later"): it is a requirement on
+# the environment, not the release of the package. Real local Lane R false positive
+# (Aspose.Slides-FOSS-for-Python: "shown at version 3.10, but the registry's current stable
+# release is 26.8.0").
+_TOOLCHAIN_BEFORE = re.compile(
+    r"(?i:\b(?:python|pypy|node(?:\.?js)?|npm|java|jdk|jre|jvm|kotlin|scala|rust|rustc|cargo|"
+    r"c\+\+|cpp|cmake|gcc|clang|msvc|typescript|ruby|php|maven|gradle|golang|dotnet|runtime|"
+    r"interpreter|toolchain|compiler|requires?|requiring|supports?|supporting|compatible|"
+    r"requires-python|python_requires)\b|(?<![\w])\.net\b|>=|<=|~=)|(?-i:\bGo\b)"
+)
+_TOOLCHAIN_AFTER = re.compile(
+    r"(?i)^\s*(?:\+|or\s+(?:later|newer|higher|above|greater)\b|and\s+(?:later|newer|above|higher)\b)"
+)
+
+
+def _is_toolchain_version(between: str, after: str) -> bool:
+    """Whether the version found after a package name is a language/runtime/toolchain version:
+    a runtime or "requires/supports" word sits between the name and the number, or the number is
+    a floor ("3.10+", "3.10 or later")."""
+    return bool(_TOOLCHAIN_BEFORE.search(between) or _TOOLCHAIN_AFTER.match(after))
+
+
 def _attached_versions(line: str, names: list[str]) -> list[str]:
     """Every version a README line attaches to one of ``names``.
 
@@ -287,8 +310,9 @@ def _attached_versions(line: str, names: list[str]) -> list[str]:
         for match in _name_pattern(name).finditer(cleaned):
             if match.start() in requested:
                 continue
-            tail = _TAIL.match(cleaned[match.end() : match.end() + 90])
-            if tail:
+            window = cleaned[match.end() : match.end() + 90]
+            tail = _TAIL.match(window)
+            if tail and not _is_toolchain_version(window[: tail.start("version")], window[tail.end("version") :]):
                 found.append(tail.group("version"))
     return list(dict.fromkeys(found))
 
