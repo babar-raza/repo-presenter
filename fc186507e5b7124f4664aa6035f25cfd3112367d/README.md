@@ -1,10 +1,16 @@
 # Aspose.Cells FOSS for TypeScript
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](License/LICENSE.txt) [![Contributors](https://img.shields.io/github/contributors/aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript)](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript/graphs/contributors)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](License/LICENSE.txt) [![Contributors](https://img.shields.io/github/contributors/aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript.svg)](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript/graphs/contributors)
 
 [![Aspose.Cells FOSS for TypeScript](https://products.aspose.org/media/cells/typescript/banner-readme.png)](https://products.aspose.org/cells/typescript/)
 
 Aspose.Cells FOSS for TypeScript reads and writes Excel files using the .xlsx format. It converts workbooks to `.html` and `.htm` files for output, and loads `.html` and `.htm` files as input. It provides methods to create, modify, and save workbooks, including setting cell values and formulas, applying styles, and managing worksheet elements such as comments, hyperlinks, data validation, and conditional formatting.
+
+Aspose.Cells FOSS for TypeScript is a free, open-source TypeScript library for creating,
+loading, editing, and saving Excel `.xlsx` (Office Open XML / SpreadsheetML) workbooks
+without requiring Microsoft Excel. It exposes an Aspose.Cells-compatible API surface —
+`Workbook`, `Worksheet`, `Cell`, `Style` — and additionally reads and writes HTML, and
+exports to CSV, JSON, and Markdown for reporting and data-interchange scenarios.
 
 ## Navigation
 
@@ -61,6 +67,16 @@ Cap8["Import and export HTML"] --> Output["HTM or HTML file"]
 - **Apply conditional formatting rules.** It applies conditional formatting rules to cell ranges using `Worksheet.addConditionalFormat` with `ColorScaleRule`, `DataBarRule`, and `IconSetRule` objects.
 - **Export to text formats.** It exports workbook data as text using `Workbook.toCsv`, `Workbook.toJson`, and `Workbook.toMarkdown`, each returning a string representation of the data.
 - **Import and export HTML.** It imports HTML files with `Workbook.load` and exports workbooks to HTML using `Workbook.toHtml`, supporting the `.html` format for both input and output.
+
+- Read and write cell values, formulas, and shared strings via `Cell.putValue()`/
+  `Cell.setFormula()`, with `Worksheet.getCell2()`/`getCell()` lookups by reference or
+  coordinate.
+- Access embedded pictures and shapes through `Workbook.images` (`ImageInfo[]`) and
+  `Worksheet.shapes` (`ShapeInfo[]`).
+- Import and export HTML — `Workbook.load()` recognizes `.html`/`.htm` files and converts
+  them into a workbook object, and `toHtml()` renders a workbook to a styled HTML document.
+- Export a workbook as text — `toCsv()`, `toJson()`, and `toMarkdown()` each return the
+  workbook's data as a string, ready to write to a file or hand to another process directly.
 
 ## Installation
 
@@ -215,6 +231,117 @@ The `Cell` class allows reading and writing cell values, formulas, hyperlinks, a
 
 The `Style` class provides methods to configure font, fill, border, and alignment properties. It supports setting bold, font color, and foreground color, and exposes getters for alignment, border, fill, and font settings.
 
+| Class | Description |
+|---|---|
+| `AllConnectorShapeInfo` | Class in the Cells TYPESCRIPT API. |
+| `AllShapeInfo` | Class in the Cells TYPESCRIPT API. |
+| `ArrowShapeType` | Class in the Cells TYPESCRIPT API. |
+| `AutoFilter` | Class with 5 methods and 2 properties. |
+| `BasicShapeInfoType` | Class with 1 property. |
+| `BasicShapeSubType` | Class in the Cells TYPESCRIPT API. |
+| `BentConnectorShapeType` | Class in the Cells TYPESCRIPT API. |
+| `BraceShapeType` | Class in the Cells TYPESCRIPT API. |
+| `Cell` | A single cell — value, formula, style, and hyperlink. |
+| `CellValue` | Class in the Cells TYPESCRIPT API. |
+| `CellValue-util` | Class in the Cells TYPESCRIPT API. |
+| `Cells` | Per-sheet collection for reading and writing cell values, formulas, and styles. |
+| `Chart` | Class with 7 methods and 33 properties. |
+| `ChartCollection` | Class with 11 methods and 2 properties. |
+| `ChartLoader` | Class with 1 method and 7 properties. |
+| `ChartRenderer` | Class with 1 method. |
+| `ChartType` | Class in the Cells TYPESCRIPT API. |
+| `CircleVariantShapeType` | Class in the Cells TYPESCRIPT API. |
+| `Comment` | Class with 2 methods and 7 properties. |
+| `CommentCollection` | Class with 6 methods and 1 property. |
+| `ConditionalFormat` | Class with 5 methods. |
+| `ConditionalFormatCollection` | Class with 5 methods and 1 property. |
+| `CurvedConnectorShapeType` | Class in the Cells TYPESCRIPT API. |
+| `DOMParser` | Class with 2 methods. |
+| `DataRelationship` | Class with 3 methods and 1 property. |
+| `DataValidation-validation` | Class with 3 methods and 12 properties. |
+| `DataValidationCollection` | Class with 5 methods and 1 property. |
+| `EllipseShapeType` | Class in the Cells TYPESCRIPT API. |
+| `ExpDrawing` | Class with 9 methods. |
+| `HtmlDocument` | Loads and represents an HTML document for conversion into a `Workbook`. |
+| `HtmlExporter` | Renders a `Workbook` to a styled HTML document. |
+| `HtmlReader` | Reads and parses raw HTML markup into a `HtmlDocument`. |
+| `HtmlTable` | Class with 10 methods and 14 properties. |
+| `HtmlWriter` | Serializes a `HtmlDocument` back to HTML markup. |
+| `Hyperlink` | Class with 2 methods and 8 properties. |
+| `HyperlinkCollection` | Class with 6 methods and 1 property. |
+| `ImpDrawing` | Class with 1 method and 5 properties. |
+| `LineShapeType` | Class in the Cells TYPESCRIPT API. |
+| `MathSymbolShapeType` | Class in the Cells TYPESCRIPT API. |
+| `PolygonShapeType` | Class in the Cells TYPESCRIPT API. |
+| `QuadrilateralShapeType` | Class in the Cells TYPESCRIPT API. |
+| `RectangleShapeType` | Class in the Cells TYPESCRIPT API. |
+| `RectangleVariantShapeType` | Class in the Cells TYPESCRIPT API. |
+| `SealShapeType` | Class in the Cells TYPESCRIPT API. |
+| `Shape3DType` | Class in the Cells TYPESCRIPT API. |
+| `SpecialShapeType` | Class in the Cells TYPESCRIPT API. |
+| `StarShapeType` | Class in the Cells TYPESCRIPT API. |
+| `StraightConnectorShapeType` | Class in the Cells TYPESCRIPT API. |
+| `Style` | Font, fill, border, alignment, and number-format settings for a cell. |
+| `TriangleShapeType` | Class in the Cells TYPESCRIPT API. |
+| `Workbook` | The top-level container — `load()`/`save()`, `worksheets`, `images`, and `toHtml()`/`toCsv()`/`toJson()`/`toMarkdown()`. |
+| `Worksheet` | A single sheet — cell access via `Cells`, styling, images/shapes, and layout settings. |
+| `WorksheetCollection` | Iterable, array-like collection of `Worksheet` objects. |
+| `Alignment` | Interface with 3 properties. |
+| `ArrowShapeInfo` | Interface with 1 property. |
+| `AxisInfo` | Interface with 8 properties. |
+| `BentConnectorShapeInfo` | Interface with 3 properties. |
+| `Border` | Interface with 4 properties. |
+| `BorderLine` | Interface with 2 properties. |
+| `BraceShapeInfo` | Interface with 1 property. |
+| `CellCoordinates` | Interface with 2 properties. |
+| `CellCoordinates-util` | Interface with 2 properties. |
+| `CellRange` | Interface with 4 properties. |
+| `CellRange-util` | Interface with 4 properties. |
+| `CellStyle` | Interface with 23 properties. |
+| `ChartArea` | Interface with 4 properties. |
+| `ChartInfo` | Interface with 21 properties. |
+| `ChartSeries` | Interface with 3 properties. |
+| `CircleVariantShapeInfo` | Interface with 1 property. |
+| `ColorScaleRule` | Interface with 3 properties. |
+| `Comment-types` | Interface with 4 properties. |
+| `ConditionalFormatRule` | Interface with 8 properties. |
+| `CurvedConnectorShapeInfo` | Interface with 3 properties. |
+| `DataBarRule` | Interface with 4 properties. |
+| `DataValidation` | Interface with 12 properties. |
+| `EllipseShapeInfo` | Interface with 1 property. |
+| `Fill` | Interface with 3 properties. |
+| `FilterColumn` | Interface with 3 properties. |
+| `Font` | Interface with 7 properties. |
+| `HtmlParseOptions` | Interface with 2 properties. |
+| `HtmlSaveOptions` | Interface with 2 properties. |
+| `Hyperlink-types` | Interface with 5 properties. |
+| `IconSetRule` | Interface with 2 properties. |
+| `ImageInfo` | Interface with 5 properties. |
+| `LegendInfo` | Interface with 2 properties. |
+| `LineShapeInfo` | Interface with 3 properties. |
+| `MathSymbolShapeInfo` | Interface with 1 property. |
+| `PictureInfo` | Interface with 9 properties. |
+| `PictureShapeInfo` | Interface with 2 properties. |
+| `PlotArea` | Interface with 4 properties. |
+| `PolygonShapeInfo` | Interface with 1 property. |
+| `Protection` | Interface with 2 properties. |
+| `QuadrilateralShapeInfo` | Interface with 1 property. |
+| `RectangleShapeInfo` | Interface with 1 property. |
+| `RectangleVariantShapeInfo` | Interface with 1 property. |
+| `SealShapeInfo` | Interface with 1 property. |
+| `SeriesInfo` | Interface with 3 properties. |
+| `Shape3DInfo` | Interface with 1 property. |
+| `ShapeAnchor` | Interface with 10 properties. |
+| `ShapeFill` | Interface with 10 properties. |
+| `ShapeInfo` | Interface with 26 properties. |
+| `SpecialShapeInfo` | Interface with 1 property. |
+| `StarShapeInfo` | Interface with 1 property. |
+| `StraightConnectorShapeInfo` | Interface with 3 properties. |
+| `Style-types` | Interface with 6 properties. |
+| `TriangleShapeInfo` | Interface with 1 property. |
+| `EncryptionType` | Enum with 1 member. |
+| `SaveFormat` | Enum with 5 members. |
+
 </details>
 
 ## Documentation & Resources
@@ -231,6 +358,10 @@ Aspose.Cells FOSS for TypeScript reads and writes Excel files using the `Workboo
 - Text export is available as a returned string, not as a direct file-write helper — pass the result of `Workbook.toCsv`, `Workbook.toJson`, or `Workbook.toMarkdown` to your own file-writing code, and there is no corresponding import path back into a `Workbook`.
 - This limitation does not apply to Aspose.Cells for .NET — Enterprise Edition.
 - The package excel-cells version 1.0.0 is installed via git clone and npm install from the `aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript` repository.
+
+The library ships a real class surface centered on `Workbook`, `Worksheet`, `Cell`, and
+`Style` — `Workbook.worksheets` is a `WorksheetCollection` of `Worksheet` objects, each
+exposing a `Cells` collection for reading and writing values, formulas, and styles.
 
 These limitations don't apply to [full-featured Aspose.Cells — Enterprise Edition](https://products.aspose.com/cells/). It adds a full commercial spreadsheet engine, broader format coverage, and active support beyond this FOSS TypeScript edition's own scope.
 
@@ -255,6 +386,8 @@ Build and type-check from the repository root:
 npm install
 npx tsc --noEmit
 ```
+
+See [AGENTS.md](agents.md) for contributor guidance.
 
 ## License
 

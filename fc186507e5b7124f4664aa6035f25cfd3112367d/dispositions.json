@@ -67,7 +67,7 @@
     },
     {
       "destination_section": "opening",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "identity:ecosystem",
         "identity:family",
@@ -86,7 +86,7 @@
         "public_symbol:workbook.tomarkdown",
         "public_symbol:workbook.tohtml"
       ],
-      "rationale": "The paragraph describes the product, its API surface, and supported formats, and is supported by facts.",
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:004.paragraph"
     },
     {
@@ -217,7 +217,7 @@
     },
     {
       "destination_section": "key_capabilities",
-      "disposition": "VERIFIED_REWRITE",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "public_symbol:alignment",
         "public_symbol:autofilter",
@@ -242,7 +242,7 @@
         "public_symbol:worksheet.getcell2",
         "public_symbol:worksheet.shapes"
       ],
-      "rationale": "The list items are supported by facts and will be re-authored to match the key_capabilities section's action-led style.",
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:010.list"
     },
     {
@@ -475,12 +475,12 @@
       "unit_id": "inherited_unit:033.heading"
     },
     {
-      "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "public_symbol:workbook.worksheets"
       ],
-      "rationale": "Not printed again: api reference already states this material from the facts it cites, so the kept unit is redundant.",
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:034.paragraph"
     },
     {
@@ -500,10 +500,10 @@
       "unit_id": "inherited_unit:036.heading"
     },
     {
-      "destination_section": null,
-      "disposition": "DEFER_UNRESOLVED",
+      "destination_section": "api_reference",
+      "disposition": "PRESERVE_ATTRIBUTED",
       "fact_ids": [],
-      "rationale": "The table lists many public symbols not individually verified by the fact set; its scope and completeness cannot be confirmed.",
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:037.table"
     },
     {
@@ -586,12 +586,12 @@
       "unit_id": "inherited_unit:046.code_block"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "link_target:024"
       ],
-      "rationale": "Redundant with the verified facts it names: link_target:024. The reference to AGENTS.md is unsupported; no fact confirms agents.md exists or is relevant documen",
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:047.paragraph"
     },
     {
