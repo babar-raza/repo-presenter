@@ -5,7 +5,7 @@
   "provider_repository_id": 1301317734,
   "registry_revision": null,
   "active_transaction_id": "94c6eb7f16cb42a1a944eba1f1549d5a",
-  "state": "ACCEPTED",
+  "state": "INVALIDATED",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "attempt under version set d5ad089e72de: PresentFailure: Lane L: independent review returned REJECT with 5 blocking finding(s) of 5; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the API table lists `BorderStyle`, but no public_symbol fact states it (it is not a type of the public surface: absent or not exported)); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the API table lists `CellValueKind`, but no public_symbol fact states it (it is not a type of the public surface: absent or not exported)); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the API table lists `FillPatternKind`, but no public_symbol fact states it (it is not a type of the public surface: absent or not exported)); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the API table lists `SheetVisibility`, but no public_symbol fact states it (it is not a type of the public surface: absent or not exported)); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the API table lists `ValidationMessageSeverity`, but no public_symbol fact states it (it is not a type of the public surface: absent or not exported))",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-10T07:45:53.954960+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:14340",
     "acquired_at": "2026-11-10T07:44:50.010167+00:00",
@@ -26,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "930f59d4477443bc8ef031e88b099c5e",
+    "transition_id": "bdbbd54b62784079950d5d9cd19d1fba",
     "transaction_id": "94c6eb7f16cb42a1a944eba1f1549d5a",
     "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Rust",
-    "from_state": "REVIEWING",
-    "to_state": "ACCEPTED",
-    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
-    "occurred_at": "2026-11-01T12:43:45.173296+00:00",
+    "from_state": "ACCEPTED",
+    "to_state": "INVALIDATED",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-11-10T07:45:51.707932+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust",
     "output_manifest": "candidates/aspose-cells-foss__Aspose.Cells-FOSS-for-Rust/lane-l/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 48,
+  "state_version": 49,
   "recent_trigger_dedup_keys": {
     "run:40633293097:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust": "ec3d875c55dc43acafcdc5b8cf0e0be4",
     "run:40635248483:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust": "045f76c313b546d79c3eccb3b0af43f3",
