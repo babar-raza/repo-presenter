@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "attempt under version set 68277adca33b: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-05, BC-17; nothing sealed",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-10T07:09:47.701249+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:55368",
     "acquired_at": "2026-11-10T06:33:50.974383+00:00",
@@ -39,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 64,
+  "state_version": 65,
   "recent_trigger_dedup_keys": {
     "run:40555603173:aspose-cells-foss/Aspose.Cells-FOSS-for-Go": "50fef97592e549af92340b0eedede7d5",
     "run:40571547837:aspose-cells-foss/Aspose.Cells-FOSS-for-Go": "407ac860a6314594a20b566b3ec49165",
