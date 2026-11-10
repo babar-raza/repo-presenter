@@ -42,9 +42,21 @@ PLACING_DISPOSITIONS = (
 
 _DIAGRAM_ONLY = frozenset({"at_a_glance"})
 _NEVER_AUTOMATIC = frozenset({"opening"})
+#: A section whose renderer prints NOTHING of a placed unit -- not "incomplete in ``_PRINTS``",
+#: verified against the renderer itself. ``documentation_resources`` (``composition/renderer.py``'s
+#: ``_documentation_resources``) only walks the plan's own generated link entries, each paired
+#: with its own authored one-line sentence, never a kept unit's text
+#: (``readme/repair/restore_units.py``'s ``_GENERATED_ONLY_DESTINATIONS`` names the same fact for
+#: its own, restore-time re-homing; this is the reconciliation-time twin, for a unit the model
+#: itself filed there -- real case: Aspose.Cells FOSS for Go's documentation-links list, BC-05
+#: "was placed in documentation_resources but the candidate does not render it there"). Deliberately
+#: NOT the same thing as an empty/missing ``_PRINTS`` entry: that table is incomplete by design (a
+#: kind ``nearest_holdable`` never proposes for a section is simply absent, not asserted
+#: unprintable), so only a section confirmed generated-only belongs here.
+GENERATED_ONLY_DESTINATIONS = frozenset({"documentation_resources"})
 _PRINTS = {
     "enterprise_relationship": frozenset({"paragraph", "heading"}),
-    "documentation_resources": frozenset({"paragraph", "list", "blockquote"}),
+    "documentation_resources": frozenset(),
     "key_capabilities": frozenset({"paragraph", "list", "blockquote"}),
     "scope_limitations": frozenset({"paragraph", "list", "table", "blockquote"}),
 }
@@ -156,6 +168,8 @@ def _kinds(section: str) -> Collection[str]:
     return _PRINTS.get(
         section, frozenset({"paragraph", "list", "table", "code_block", "blockquote"})
     )
+
+
 
 
 def nearest_for_units(

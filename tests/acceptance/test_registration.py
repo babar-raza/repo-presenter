@@ -379,12 +379,12 @@ def test_real_build_reports_the_honest_zero_call_floor() -> None:
     assert registration.shortfall.met is False
     assert registration.shortfall.short_classes() == ["A", "C", "D", "E"]
 
-    # Clean twins (28 registered "clean" + 23 "unscored_twin" + 22 sealed RECERTIFIED-clean) reach the
-    # n>=50 minimum from existing data alone. 22: the sealed baseline now holds 33 seals (re-certified
+    # Clean twins (28 registered "clean" + 23 "unscored_twin" + 27 sealed RECERTIFIED-clean) reach the
+    # n>=50 minimum from existing data alone. 27: the sealed baseline now holds 35 seals (re-certified
     # under current code); load_sealed_baseline() counts every RECERTIFIED seal with no failing
-    # checks as a clean twin, so the count follows the baseline honestly (60 -> 73): a derived
+    # checks as a clean twin, so the count follows the baseline honestly (60 -> 73 -> 78): a derived
     # number, not a target.
-    assert registration.shortfall.clean_twin_achieved == 73
+    assert registration.shortfall.clean_twin_achieved == 78
     assert registration.shortfall.clean_twin_shortfall == 0
 
     assert len(registration.labelled_cases) == 113

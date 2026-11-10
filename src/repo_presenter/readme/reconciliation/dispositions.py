@@ -113,6 +113,7 @@ from repo_presenter.readme.evidence.facts.product_pages import (
 )
 from repo_presenter.readme.evidence.facts.registry_lag import REGISTRY_LAG_FACT_ID
 from repo_presenter.readme.reconciliation.destinations import (
+    GENERATED_ONLY_DESTINATIONS,
     disposition_variants,
     holdable_sections,
     nearest_holdable,
@@ -1055,6 +1056,48 @@ def _rehome_misfiled_units(
         entry["rationale"] = (lead + reason).strip()
 
 
+UNPRINTABLE_RATIONALE = "Kept in {section}: {old} prints nothing from a placed unit. "
+
+
+def _rehome_unprintable_kind_units(
+    output: dict[str, Any], facts: FactsDocument, units: Mapping[str, Fact]
+) -> None:
+    """Move every kept unit the model filed in a section
+    :data:`destinations.GENERATED_ONLY_DESTINATIONS` names -- confirmed against the renderer
+    itself to print NOTHING of a placed unit, any kind -- to the nearest section that actually
+    holds it. ``_rehome_misfiled_units`` catches a topic-wrong destination; this catches a
+    destination that is topic-right but mechanically cannot render the unit at all, which the
+    model is not told and so sometimes still picks (Aspose.Cells FOSS for Go: a kept list of
+    documentation links, correctly ABOUT documentation_resources, filed there verbatim, which
+    that section's renderer never prints -- BC-05 "was placed ... but the candidate does not
+    render it there"). Deliberately scoped to this confirmed set, not a general "kind not in
+    _PRINTS[section]" check: that table is incomplete by design for sections it was never meant
+    to gate this way (a real regression, caught in CI: a kept code_block in scope_limitations,
+    which is not in its _PRINTS entry but which the renderer does print). Runs after
+    ``_rehome_misfiled_units`` so a unit it already moved is judged at its new destination, not
+    its old one."""
+    holdable = holdable_sections(facts)
+    root = root_heading(list(units.values()))
+    for entry in output.get("dispositions", []):
+        if entry.get("disposition") not in PLACED:
+            continue
+        unit_id = str(entry.get("unit_id", "?"))
+        old = entry.get("destination_section")
+        if old not in GENERATED_ONLY_DESTINATIONS:
+            continue
+        heading = source_heading(units.get(unit_id))
+        home = nearest_holdable(unit_id, heading, holdable, root)
+        if home is None or home == old:
+            continue
+        lead = UNPRINTABLE_RATIONALE.format(section=home, old=old)
+        reason = str(entry.get("rationale") or "").strip()
+        room = _RATIONALE_LIMIT - len(lead)
+        if len(reason) > room:
+            reason = reason[: max(room - 3, 0)].rstrip() + "..."
+        entry["destination_section"] = home
+        entry["rationale"] = (lead + reason).strip()
+
+
 _PROSE_PRINTED_KINDS = frozenset({"paragraph", "list", "table", "blockquote"})
 _OTHER_EDITION = re.compile(r"\b([A-Z][A-Za-z]+) Edition\b")
 _INLINE_CODE = re.compile(r"`[^`\n]*`")
@@ -1638,6 +1681,7 @@ def normalize(
         entry["disposition"] = "SUPERSEDE_REDUNDANT"
         entry["fact_ids"] = sorted(cited | set(ids))
     _rehome_misfiled_units(output, facts, units_by_id)
+    _rehome_unprintable_kind_units(output, facts, units_by_id)
     claims: Claims = {}
     for entry in output.get("dispositions", []):
         destination = entry.get("destination_section")
