@@ -5,7 +5,7 @@
   "provider_repository_id": 1301410121,
   "registry_revision": null,
   "active_transaction_id": "98f4d122ad37438fbee24038c762720b",
-  "state": "INVALIDATED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -18,12 +18,12 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "attempt under version set 68277adca33b: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-05, BC-17; nothing sealed",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-10T05:05:47.085135+00:00",
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "INVALIDATED",
+    "occurred_at": "2026-11-10T06:33:37.783842+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 8
   },
   "lease": null,
   "last_transition": {
@@ -40,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 61,
+  "state_version": 62,
   "recent_trigger_dedup_keys": {
     "run:40555603173:aspose-cells-foss/Aspose.Cells-FOSS-for-Go": "50fef97592e549af92340b0eedede7d5",
     "run:40571547837:aspose-cells-foss/Aspose.Cells-FOSS-for-Go": "407ac860a6314594a20b566b3ec49165",
@@ -49,5 +49,5 @@
     "run:41085530753:aspose-cells-foss/Aspose.Cells-FOSS-for-Go": "b0a4ed2718714dacaf10b89327761c25",
     "run:41180175809:aspose-cells-foss/Aspose.Cells-FOSS-for-Go": "98f4d122ad37438fbee24038c762720b"
   },
-  "recovery_count": 7
+  "recovery_count": 8
 }
