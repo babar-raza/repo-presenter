@@ -1,10 +1,18 @@
 # Aspose.Cells FOSS for Java
 
-![Java](https://img.shields.io/badge/java-17%2B-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](License/LICENSE.txt) [![Contributors](https://img.shields.io/github/contributors/aspose-cells-foss/Aspose.Cells-FOSS-for-Java)](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Java/graphs/contributors)
+[![Maven Central](https://img.shields.io/maven-central/v/org.aspose/aspose-cells-foss.svg)](https://repo1.maven.org/maven2/org/aspose/aspose-cells-foss/) ![Java](https://img.shields.io/badge/java-17%2B-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](License/LICENSE.txt) [![Contributors](https://img.shields.io/github/contributors/aspose-cells-foss/Aspose.Cells-FOSS-for-Java.svg)](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Java/graphs/contributors)
 
 [![Aspose.Cells FOSS for Java](https://products.aspose.org/media/cells/java/banner-readme.png)](https://products.aspose.org/cells/java/)
 
-It reads and writes Excel workbooks in XLSX format, manages cell values and styling, and supports data validation, conditional formatting, embedded content, and repair diagnostics.
+Aspose.Cells FOSS for Java reads and writes Excel workbooks in the .xlsx format. It loads existing files and saves modified ones, supporting strict mode and repair options for damaged packages. It inspects and modifies cell contents, styles, and worksheet properties such as row height and column width. It creates and applies validation rules and conditional formatting to cells.
+
+Aspose.Cells FOSS for Java is a free, open-source, pure-Java spreadsheet library for creating,
+loading, modifying, and saving Excel `.xlsx` workbooks. It targets Java 17, and keeps OOXML
+packaging, XML mapping, and XLSX serialization inside this repository — Apache POI is used only
+in `test` scope for compatibility checks, never at runtime. It covers cell values and formulas,
+styling, page setup, data validation, conditional formatting, auto filters, comments, embedded
+pictures and charts, drawing shapes, and Excel tables (ListObjects). Saving is currently limited
+to `.xlsx`.
 
 ## Navigation
 
@@ -25,33 +33,46 @@ It reads and writes Excel workbooks in XLSX format, manages cell values and styl
 ```mermaid
 flowchart LR
 Product["Aspose.Cells FOSS for Java"]
-Product["Aspose.Cells FOSS for Java"] --> Cap1["Workbook and worksheet management"]
-Cap2["Cell value and formula handling"]
-Cap3["Cell styling and formatting"]
-Cap4["Data validation and conditional formatting"]
-Cap5["Embedded content support"]
-Cap6["Chart and shape rendering"]
-Cap7["Page setup and print configuration"]
-Cap8["Repair and diagnostics"]
-Product["Aspose.Cells FOSS for Java"] --> Cap2["Cell value and formula handling"]
-Product["Aspose.Cells FOSS for Java"] --> Cap3["Cell styling and formatting"]
-Product["Aspose.Cells FOSS for Java"] --> Cap4["Data validation and conditional formatting"]
-Product["Aspose.Cells FOSS for Java"] --> Cap5["Embedded content support"]
-Product["Aspose.Cells FOSS for Java"] --> Cap6["Chart and shape rendering"]
-Product["Aspose.Cells FOSS for Java"] --> Cap7["Page setup and print configuration"]
-Product["Aspose.Cells FOSS for Java"] --> Cap8["Repair and diagnostics"]
+Product["Aspose.Cells FOSS for Java"] --> Cap1["Read and write Excel workbooks"]
+Cap2["Cell styling and formatting"]
+Cap3["Data validation and conditional formatting"]
+Cap4["Work with charts and shapes"]
+Cap5["Page setup and print layout"]
+Cap6["Repair malformed workbooks"]
+Product["Aspose.Cells FOSS for Java"] --> Cap2["Cell styling and formatting"]
+Product["Aspose.Cells FOSS for Java"] --> Cap3["Data validation and conditional formatting"]
+Product["Aspose.Cells FOSS for Java"] --> Cap4["Work with charts and shapes"]
+Product["Aspose.Cells FOSS for Java"] --> Cap5["Page setup and print layout"]
+Product["Aspose.Cells FOSS for Java"] --> Cap6["Repair malformed workbooks"]
 ```
 
 ## Key Capabilities
 
-- **Workbook and worksheet management.** Create, load, and save Excel workbooks through the `Workbook` class, manage individual worksheets via the `WorksheetCollection` including adding, removing, renaming, and setting visibility, and access cell data through the `Cells` collection for string, numeric, boolean, date/time, and formula values.
-- **Cell value and formula handling.** Read and write cell values including string, numeric, boolean, date/time, and formula content using the `Cell` class, and apply custom number formats and font styling to cells through the `Style` class.
-- **Cell styling and formatting.** Apply comprehensive cell styling including font properties, borders, fills, alignment, and custom number formats via the `Style` class, and adjust row heights and column widths explicitly using the `Row` and `Column` classes.
-- **Data validation and conditional formatting.** Enforce data entry rules using `Validation` with types such as whole number and operators like between, and apply conditional formatting to ranges using `FormatCondition` with cell value conditions and custom styling.
-- **Embedded content support.** Embed pictures from bytes, streams, or file paths with two-cell anchor positioning, supporting JPEG, PNG, GIF, and BMP formats, and preserve embedded charts and Excel tables (ListObjects) loaded from existing workbooks.
-- **Chart and shape rendering.** Create 18 of the 25 `ChartType` values programmatically via `ChartCollection.add()`, while the remaining 7 ChartEx types (Waterfall, Treemap, Sunburst, Histogram, Box and Whisker, Funnel, and Map) are preserved verbatim when loaded but cannot be created through the API.
-- **Page setup and print configuration.** Configure page setup and print layout using `PageSetup`, freeze rows and/or columns by coordinate or cell name, and apply worksheet or workbook protection with separate passwords for structure, windows, and revisions.
-- **Repair and diagnostics.** Repair corrupted workbooks by enabling strict mode toggles and package/XML repair in `LoadOptions`, and inspect load diagnostics via `Workbook.getLoadDiagnostics()` to retrieve detailed repair messages and preservation notes.
+- **Read and write Excel workbooks.** It reads, writes, and edits Excel workbooks through the `Workbook` class, which owns a `WorksheetCollection` of `Worksheet` objects, supports adding, removing, and renaming sheets, and exposes a `Cells` collection for reading and writing string, numeric, boolean, date/time, and formula values.
+- **Cell styling and formatting.** It sets font weight, border lines, fill color, cell alignment, numeric display patterns, and cell lock status through the `Style` object obtained from a `Cell`, and applies custom patterns like thousands separators with decimal places.
+- **Data validation and conditional formatting.** It enforces data validation and conditional formatting on worksheet ranges using `Validation` and `FormatCondition` objects, supporting validation types like whole number and operators such as between, and applying formatting like bold font to cells meeting specified criteria.
+- **Work with charts and shapes.** It creates 18 of the 25 `ChartType` values programmatically via `ChartCollection.add()` and preserves the remaining 7 ChartEx types verbatim when loading workbooks, and adds, retrieves, and removes drawing objects across 38 `AutoShapeType` geometries via `ShapeCollection`.
+- **Page setup and print layout.** It configures print layout and page setup via `PageSetup`, freezes rows and/or columns by coordinate or cell name, and controls workbook and worksheet protection with separate passwords for structure, windows, and revisions.
+- **Repair malformed workbooks.** It repairs malformed workbooks by setting `LoadOptions` to non-strict mode and enabling package and XML repair, then exposes load diagnostics through `Workbook.getLoadDiagnostics()` to report issues encountered during loading.
+
+- Read, write, and edit Excel `.xlsx` workbooks through `Workbook`, which owns a
+  `WorksheetCollection` of `Worksheet` objects — add, remove, and rename sheets, select the
+  active sheet through the collection, and control per-sheet visibility on each `Worksheet` via
+  `getVisibilityType()`/`setVisibilityType()` (`VisibilityType`).
+  Each worksheet exposes a `Cells` collection of `Cell` objects for reading and writing string,
+  numeric, boolean, date/time, and formula values. `LoadOptions` exposes strict-mode toggles and
+  package/XML repair, and `Workbook.getLoadDiagnostics()` returns a load diagnostics report —
+  repair details and preservation notes for unsupported package parts encountered during the
+  load/save flow.
+- `Style` carries a cell's full formatting — font, borders, fill, alignment, number format, and
+  protection flags — set through `Cell.getStyle()`/`setStyle()`; `NumberFormat` looks up and
+  resolves built-in Excel number-format codes.
+- Merged cells, defined names (`DefinedNameCollection`), and hyperlinks (`HyperlinkCollection`)
+  round-trip through load and save.
+- Configure calculation mode, reference mode, iterative calculation, and precision via
+  `CalculationProperties`; formulas and error cell values (`#N/A`, `#VALUE!`, `#REF!`, and
+  others) are stored and round-tripped with the correct cell type, but the library is not a
+  full spreadsheet calculation engine.
 
 ## Installation
 
@@ -94,7 +115,7 @@ No required third-party package dependencies; in `pom.xml`, every `<dependency>`
 
 ## Quick Start
 
-The first example creates a new workbook, writes a formatted revenue value to a cell, adjusts row height and column width, and saves the file as `report.xlsx`.
+The first example creates a new workbook, names the first worksheet Report, writes a text value and a number into cells A1 and B1, applies bold formatting and a custom number format to the number, adjusts row height and column width, and saves the result as `report.xlsx`.
 
 ```java
 import java.io.*;
@@ -129,7 +150,7 @@ public class Main {
 }
 ```
 
-The second example loads a potentially corrupted workbook with repair options enabled, prints any repair issues found, updates the document author, and saves the repaired workbook as `output.xlsx`.
+The second example loads a potentially corrupted workbook with repair options enabled, prints any repair issues found, updates the document author property, and saves the repaired workbook as `output.xlsx`.
 
 ```java
 import java.io.*;
@@ -160,11 +181,14 @@ public class LoadWorkbook {
 }
 ```
 
+- Java 17 or later (`maven.compiler.source`/`maven.compiler.target` are both pinned to `17` in
+  `pom.xml`).
+
 ## Additional Examples
 
-Create data validation rules and apply conditional formatting to highlight cells within a specified range.
+Aspose.Cells FOSS for Java supports data validation and conditional formatting workflows. The following examples demonstrate these capabilities.
 
-### Add Validation and Conditional Formatting to a Worksheet Range
+### Create Data Validation and Conditional Formatting Rules in a Worksheet
 
 ```java
 import java.io.*;
@@ -215,7 +239,7 @@ public class RulesExample {
 
 ## API Reference
 
-The public entry point is `org.aspose.cells_foss`, and the classes below cover the full supported public API surface — 183 public types organized into one module.
+Aspose.Cells FOSS for Java provides a Java API for spreadsheet processing, with `org.aspose.cells_foss` as the public entry point. It supports reading, writing, and manipulating spreadsheet files through a set of 183 public types.
 
 The verified public surface has 183 types.
 
@@ -419,28 +443,81 @@ The verified public surface has 183 types.
 
 ### cells_foss
 
-The `org.aspose.cells_foss` package serves as the primary namespace for the library's public API surface, containing 183 public types organized into one module.
+The `org.aspose.cells_foss` package serves as the core API surface for spreadsheet operations in Aspose.Cells FOSS for Java, exposing 183 public types.
+
+The classes below cover the full supported
+public API surface — 183 public types organized into one module.
+
+| Enumeration | Description |
+|---|---|
+| `AutoShapeType` | Specifies the type of an auto shape (preset DrawingML geometry). |
+| `BorderStyle` | Represents the style of a border line in a cell. |
+| `BorderStyleType` | Represents the style of a border. |
+| `CellValueKind` | Represents the kind of a cell value. |
+| `CellValueType` | Represents the type of a cell value. |
+| `ChartType` | Identifies the type of an embedded chart. |
+| `DateSystem` | Represents the date system used in Excel. |
+| `DiagnosticSeverity` | Represents the severity level of a diagnostic message (public `org.aspose.cells_foss` API). |
+| `DiagnosticSeverity-core` | Represents the severity of a diagnostic entry (internal `org.aspose.cells_foss.core` engine layer, a distinct enum). |
+| `FillPattern` | Represents the fill pattern used in cell styling. |
+| `FillPatternKind` | Represents the pattern used to fill a cell. |
+| `FilterOperatorType` | Enumerates the supported FilterOperatorType values. |
+| `FormatConditionType` | Represents the type of a format condition. |
+| `HorizontalAlignment` | Represents horizontal alignment options for cell content in Excel. |
+| `HorizontalAlignmentType` | Represents the type of horizontal alignment for cell content. |
+| `ImageType` | Identifies the format of an embedded image. |
+| `LoadFormat` | Specifies the format of the workbook to be loaded. |
+| `OperatorType` | Represents the operator type used in conditional formatting and filtering. |
+| `PageOrientation` | Represents the page orientation for a worksheet. |
+| `PageOrientationType` | Represents the page orientation type for a worksheet. |
+| `PaperSizeType` | Represents the paper size type for a worksheet. |
+| `SaveFormat` | Specifies the format in which a workbook will be saved. |
+| `SheetVisibility` | Represents the visibility state of a worksheet in an Excel workbook. |
+| `TableStyleType` | Identifies a built-in Excel table style. |
+| `TargetModeType` | Represents the target mode type for cell references. |
+| `TotalsCalculation` | Aggregation function applied to a table's totals row. |
+| `ValidationAlertType` | Represents the alert type for data validation. |
+| `ValidationMessageSeverity` | Represents the severity level of a validation message. |
+| `ValidationType` | Represents the type of cell validation. |
+| `VerticalAlignment` | Represents vertical alignment options for cell content. |
+| `VerticalAlignmentType` | Represents vertical alignment options for cell content. |
+| `VisibilityType` | Represents the visibility type of a worksheet. |
 
 </details>
 
 ## Documentation & Resources
 
-- **[Documentation & Resources](#documentation--resources)** — The documentation and resources section points to the official guides, knowledge base, and repository conventions for Aspose.Cells FOSS for Java.
-- **[Getting started guide](https://docs.aspose.org/cells/java/)** — The getting started guide provides Java documentation for Aspose.Cells FOSS for Java covering workbook creation, cell operations, styling, and data validation.
-- **[How-to guides & FAQ](https://kb.aspose.org/cells/java/)** — The how-to guides and FAQ offer Java knowledge base articles, step-by-step instructions, and troubleshooting guidance for Aspose.Cells FOSS for Java.
+- **[Getting started guide](https://docs.aspose.org/cells/java/)** — The getting started guide covers Java documentation for Aspose.Cells FOSS for Java: workbook creation, cell operations, styling, and data validation.
+- **[How-to guides & FAQ](https://kb.aspose.org/cells/java/)** — The how-to guides and FAQ provide Java knowledge base content for Aspose.Cells FOSS for Java, including how-to articles, frequently asked questions, and troubleshooting guides.
+- **[Full API reference](https://reference.aspose.org/cells/java/)** — The full API reference offers a complete, browsable reference for all 183 public types in Aspose.Cells FOSS for Java. It covers all 183 verified public types; the [API Reference](#api-reference) section above covers the essentials.
 - **[Contributor guide](Agents.md)** — The contributor guide outlines repository conventions to follow when changing supported behavior in Aspose.Cells FOSS for Java.
 - **[Publishing guide](PUBLISHING.md)** — The publishing guide describes how releases are built and published to Maven Central for Aspose.Cells FOSS for Java.
+- **[Documentation & Resources](#documentation--resources)** — This section provides links to documentation and resources for Aspose.Cells FOSS for Java, including guides, references, and contribution information.
 - Found a bug or have a feature request? [Open an issue](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Java/issues).
-
-- **[Full API reference](https://reference.aspose.org/cells/java/)** — the complete, browsable reference for all 183 public types (the [API reference](#api-reference) section above covers the essentials).
 
 ## Scope and Limitations
 
-Aspose.Cells FOSS for Java reads and writes Excel workbooks in the .xlsx format, providing a Java API for workbook, worksheet, cell, style, and collection management, as well as load and save operations.
+Aspose.Cells FOSS for Java reads and writes Excel workbooks in the .xlsx format, supporting workbook creation, data manipulation, and formula handling for the Java 17 runtime.
 
-- Saving is currently limited to .xlsx, and the library is not a full spreadsheet calculation engine, so formulas are stored and round-tripped without evaluation.
-- `ChartEx` types (Waterfall, Treemap, Sunburst, Histogram, Box and Whisker, Funnel, and Map) cannot be created programmatically; charts of these types loaded from an existing workbook are preserved verbatim across load and save.
+- Saving is currently limited to .xlsx, and `ChartEx` types (Waterfall, Treemap, Sunburst, Histogram, Box and Whisker, Funnel, and Map) cannot be created programmatically; charts of these types loaded from an existing workbook are preserved verbatim across load and save.
+- Formulas are stored and round-tripped, but the library is not a full spreadsheet calculation engine.
 - A handful of public XML-mapper classes are unimplemented skeleton code carried over from an early scaffold, and some APIs exist mainly to preserve OOXML metadata and package fidelity rather than to provide full Excel feature parity.
+
+These limitations don't apply to [full-featured Aspose.Cells for Java — Enterprise Edition](https://products.aspose.com/cells/java/). It adds additional spreadsheet save formats beyond .xlsx, a full formula calculation engine, ChartEx chart type creation, and dedicated enterprise support.
+
+## Development and Testing
+
+The project requires JDK 17 and Maven as the build tool. The test suite is located under src/test/java/`org.aspose.cells_foss`/ and contains scenario-driven integration tests for workbook behavior and XLSX round-tripping, as well as fast, focused unit tests for individual API classes without XLSX I/O.
+
+The suite covers 23 test files under `src/test/`. Releases run through the [maven-central-release workflow](.github/workflows/maven-central-release.yml).
+
+The library targets Java 17 and depends on Apache POI only in `test` scope, never at runtime.
+
+- `org.junit.jupiter:junit-jupiter` 5.10.2 — test runner used by the Maven `test` phase; not
+  needed to use the published library.
+- `org.apache.poi:poi-ooxml` 5.3.0 — used across the test suite as an independent XLSX
+  implementation for round-trip and compatibility verification; not needed to use the published
+  library.
 
 The public API lives under `src/main/java/org/aspose/cells_foss/`, with integration tests,
 unit tests, and generated Javadoc alongside it at the repository root:
@@ -455,16 +532,6 @@ unit tests, and generated Javadoc alongside it at the repository root:
 │   └── unit/                             #   Fast, focused unit tests for individual API classes without XLSX I/O
 └── docs/apidocs/                         # Generated HTML Javadoc for the public API (run `mvn javadoc:javadoc` to regenerate)
 ```
-
-These limitations don't apply to [full-featured Aspose.Cells for Java — Enterprise Edition](https://products.aspose.com/cells/java/). It adds additional spreadsheet save formats beyond .xlsx, a full formula calculation engine, ChartEx chart type creation, and dedicated enterprise support.
-
-## Development and Testing
-
-Aspose.Cells FOSS for Java targets Java 17 and uses Maven as the build tool. The test suite resides in src/test/ and asserts the library's behavior for the cells family of functionality. No required third-party package dependencies exist at runtime; Apache POI is used only in test scope. The project builds from `pom.xml` without external dependencies outside test scope.
-
-The suite covers 23 test files under `src/test/`. Releases run through the [maven-central-release workflow](.github/workflows/maven-central-release.yml).
-
-The library targets Java 17 and depends on Apache POI only in `test` scope, never at runtime.
 
 Requires JDK 17+ and Maven as the build tool. Run the test suite:
 

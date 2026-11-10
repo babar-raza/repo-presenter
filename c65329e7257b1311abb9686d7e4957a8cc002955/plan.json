@@ -12,14 +12,12 @@
   ],
   "at_a_glance": {
     "capability_titles": [
-      "Workbook and worksheet management",
-      "Cell value and formula handling",
+      "Read and write Excel workbooks",
       "Cell styling and formatting",
       "Data validation and conditional formatting",
-      "Embedded content support",
-      "Chart and shape rendering",
-      "Page setup and print configuration",
-      "Repair and diagnostics"
+      "Work with charts and shapes",
+      "Page setup and print layout",
+      "Repair malformed workbooks"
     ],
     "input_format_ids": [],
     "output_format_ids": []
@@ -27,25 +25,16 @@
   "core_capabilities": [
     {
       "fact_ids": [
-        "public_symbol:org.aspose.cells_foss",
-        "example:001"
-      ],
-      "shared_fact_ids": [
         "example:001",
-        "public_symbol:org.aspose.cells_foss"
-      ],
-      "title": "Workbook and worksheet management"
-    },
-    {
-      "fact_ids": [
-        "example:001",
+        "example:002",
         "public_symbol:org.aspose.cells_foss"
       ],
       "shared_fact_ids": [
         "example:001",
+        "example:002",
         "public_symbol:org.aspose.cells_foss"
       ],
-      "title": "Cell value and formula handling"
+      "title": "Read and write Excel workbooks"
     },
     {
       "fact_ids": [
@@ -75,7 +64,7 @@
       "shared_fact_ids": [
         "public_symbol:org.aspose.cells_foss"
       ],
-      "title": "Embedded content support"
+      "title": "Work with charts and shapes"
     },
     {
       "fact_ids": [
@@ -84,16 +73,7 @@
       "shared_fact_ids": [
         "public_symbol:org.aspose.cells_foss"
       ],
-      "title": "Chart and shape rendering"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:org.aspose.cells_foss"
-      ],
-      "shared_fact_ids": [
-        "public_symbol:org.aspose.cells_foss"
-      ],
-      "title": "Page setup and print configuration"
+      "title": "Page setup and print layout"
     },
     {
       "fact_ids": [
@@ -101,9 +81,10 @@
         "public_symbol:org.aspose.cells_foss"
       ],
       "shared_fact_ids": [
+        "example:002",
         "public_symbol:org.aspose.cells_foss"
       ],
-      "title": "Repair and diagnostics"
+      "title": "Repair malformed workbooks"
     }
   ],
   "deviations": [
@@ -112,15 +93,16 @@
         "identity:ecosystem",
         "identity:family",
         "identity:platform",
+        "identity:product-knowledge-refresh",
         "identity:repository",
-        "package:name",
-        "package:version",
+        "identity:revision",
         "package:java_release",
-        "dependency:none",
-        "license:spdx"
+        "package:name",
+        "package:published_version",
+        "package:version"
       ],
       "section_id": "identity",
-      "text": "H1 heading matches canonical product name; preserved as-is."
+      "text": "The H1 product name is rendered from facts in the identity section."
     },
     {
       "fact_ids": [
@@ -131,76 +113,72 @@
         "link_target:005",
         "link_target:006",
         "link_target:007",
-        "link_target:008"
+        "link_target:008",
+        "link_target:009",
+        "link_target:010",
+        "link_target:011",
+        "link_target:012"
       ],
       "section_id": "badges",
-      "text": "Badge row rendered from verified facts; redundant inherited unit omitted."
+      "text": "The badge row is rendered from facts in the badges section."
     },
     {
       "fact_ids": [
         "link_target:009",
         "link_target:010",
         "link_target:product.banner",
-        "link_target:product.enterprise",
         "link_target:product.homepage"
       ],
       "section_id": "banner",
-      "text": "Banner image moved to enterprise_relationship per policy for product illustrations."
+      "text": "The banner image is rendered from facts in the banner section."
     },
     {
       "fact_ids": [
         "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "identity:repository",
         "package:name",
         "package:version",
         "package:java_release",
         "dependency:none",
-        "license:spdx",
-        "build_test_asset:test-command",
-        "build_test_asset:build-command"
+        "license:spdx"
       ],
       "section_id": "opening",
-      "text": "Paragraph substance covered by product_summary and workflows; rewritten to avoid duplication."
+      "text": "The paragraph describes the product, its scope, and runtime dependency model, which is supported by facts and adds valuable context not captured by the product."
     },
     {
       "fact_ids": [
         "identity:ecosystem",
         "identity:family",
         "identity:platform",
+        "identity:product-knowledge-refresh",
         "identity:repository",
         "identity:revision"
       ],
       "section_id": "navigation",
-      "text": "Navigation heading and list rendered deterministically; inherited units redundant."
+      "text": "The Navigation heading is rendered by the deterministic navigation section."
     },
     {
       "fact_ids": [
-        "public_symbol:org.aspose.cells_foss",
-        "example:001",
-        "example:002",
-        "example:003"
+        "identity:ecosystem"
       ],
       "section_id": "at_a_glance",
-      "text": "Mermaid diagram preserved as-is; heading rendered deterministically."
+      "text": "The At a Glance heading is rendered by the deterministic at_a_glance section."
     },
     {
       "fact_ids": [
-        "public_symbol:org.aspose.cells_foss",
         "example:001",
         "example:002",
-        "example:003"
+        "example:003",
+        "public_symbol:org.aspose.cells_foss"
       ],
       "section_id": "key_capabilities",
-      "text": "Key Capabilities heading retained; list substance matched to deterministic content."
+      "text": "The list items are supported by facts and match the capabilities section's substance; the wording is re-authored from facts."
     },
     {
       "fact_ids": [
         "install_command:maven"
       ],
       "section_id": "installation",
-      "text": "Installation heading rendered deterministically; Maven snippet preserved."
+      "text": "The Installation heading is rendered by the deterministic installation section."
     },
     {
       "fact_ids": [
@@ -209,14 +187,14 @@
         "dependency:none"
       ],
       "section_id": "dependencies",
-      "text": "Dependencies section rendered deterministically; inherited lists redundant."
+      "text": "The runtime dependency note is superseded by the deterministic dependencies section."
     },
     {
       "fact_ids": [
         "example:001"
       ],
       "section_id": "quick_start",
-      "text": "Quick Start heading retained; first example preserved as minimal workflow."
+      "text": "The 'Quick Start' heading is preserved and moved to the quick_start section where the first example resides."
     }
   ],
   "flagship_example_id": "example:003",
@@ -240,6 +218,34 @@
     {
       "link_fact_id": "link_target:009",
       "section_id": "banner"
+    },
+    {
+      "link_fact_id": "link_target:023",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:024",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:025",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:026",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:027",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:028",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:030",
+      "section_id": "development_testing"
     },
     {
       "link_fact_id": "link_target:011",
@@ -286,51 +292,23 @@
       "section_id": "license"
     },
     {
-      "link_fact_id": "link_target:023",
-      "section_id": "documentation_resources"
+      "link_fact_id": "link_target:002",
+      "section_id": "badges"
     },
     {
-      "link_fact_id": "link_target:024",
-      "section_id": "documentation_resources"
+      "link_fact_id": "link_target:006",
+      "section_id": "badges"
     },
     {
-      "link_fact_id": "link_target:025",
-      "section_id": "api_reference"
+      "link_fact_id": "link_target:004",
+      "section_id": "badges"
     },
     {
-      "link_fact_id": "link_target:026",
-      "section_id": "documentation_resources"
-    },
-    {
-      "link_fact_id": "link_target:027",
-      "section_id": "documentation_resources"
-    },
-    {
-      "link_fact_id": "link_target:028",
-      "section_id": "documentation_resources"
-    },
-    {
-      "link_fact_id": "link_target:030",
-      "section_id": "development_testing"
+      "link_fact_id": "link_target:008",
+      "section_id": "badges"
     }
   ],
   "material_limitations": [
-    {
-      "fact_ids": [
-        "install_command:maven"
-      ],
-      "unit_ids": [
-        "inherited_unit:048.list"
-      ]
-    },
-    {
-      "fact_ids": [
-        "public_symbol:org.aspose.cells_foss"
-      ],
-      "unit_ids": [
-        "inherited_unit:048.list"
-      ]
-    },
     {
       "fact_ids": [
         "public_symbol:org.aspose.cells_foss"
