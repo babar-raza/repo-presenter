@@ -23,6 +23,10 @@ from repo_presenter.readme.correction.engine import CORRECTION_ENGINE_VERSION
 #: module file -> (the versions of the detectors it registers, in name order, sha256 of its
 #: LF-normalised source).
 PINS: dict[str, tuple[tuple[str, ...], str]] = {
+    "absent_type_row.py": (
+        ("1",),
+        "606536ac28df7e7d520a363c931701b3dd459d204cec700267a421dc15573079",
+    ),
     "enterprise_edition.py": (
         ("3",),
         "3188e0ca8c12f622b766aa43559f441880e041f7a150a38da18d2d08e4f88bcc",

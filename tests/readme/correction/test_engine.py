@@ -62,6 +62,7 @@ def build(make_context: Any, make_facts: Any, make_fact: Any) -> Context:
 
 def test_every_registered_detector_is_loaded_by_name() -> None:
     assert sorted(load_detectors()) == [
+        "absent_type_row",
         "broken_link",
         "enterprise_edition_naming",
         "failing_example",

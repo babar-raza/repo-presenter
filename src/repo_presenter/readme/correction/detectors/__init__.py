@@ -25,6 +25,7 @@ DETECTORS: dict[str, Detector] = {}
 #: test_detector_versions.py``, which also pins each module's source so an unversioned logic
 #: change cannot pass quietly.
 DETECTOR_VERSIONS: dict[str, str] = {
+    "absent_type_row": "1",
     "broken_link": "1",
     "enterprise_edition_naming": "3",
     "failing_example": "1",

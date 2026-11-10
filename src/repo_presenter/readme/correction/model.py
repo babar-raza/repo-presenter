@@ -50,9 +50,23 @@ MISSING_INFO = "MISSING_INFO"
 #: body between the fence markers replaced by the drawing the diagram builder writes. The one
 #: correction that replaces several lines; evidence is the README's own fence (a locator).
 DIAGRAM_FIX = "DIAGRAM_FIX"
+#: A maintainers' API table row naming a type the public surface facts do not record (BC-14 rule
+#: i), removed whole -- its own line terminator included, so no orphan blank row is left to end
+#: the GFM table early (BC-07/BC-09). The second kind (after ``DIAGRAM_FIX``) whose span may cross
+#: a line boundary: a table row cannot be deleted by editing one line alone. A pure deletion:
+#: ``replacement`` is always ``""``.
+TABLE_ROW_REMOVAL = "TABLE_ROW_REMOVAL"
 #: The closed set of correction kinds; nothing outside it can be applied or proposed.
 EDIT_KINDS: frozenset[str] = frozenset(
-    {FALSE_CLAIM_FIX, MISSING_SECTION, BROKEN_LINK, STRUCTURE_FIX, MISSING_INFO, DIAGRAM_FIX}
+    {
+        FALSE_CLAIM_FIX,
+        MISSING_SECTION,
+        BROKEN_LINK,
+        STRUCTURE_FIX,
+        MISSING_INFO,
+        DIAGRAM_FIX,
+        TABLE_ROW_REMOVAL,
+    }
 )
 #: Why a detector that could have edited reported its candidate instead (typed, closed).
 REPORT_ONLY_REASONS: dict[str, str] = {
@@ -87,6 +101,8 @@ _FENCE_LINE = re.compile(r"^[ \t]{0,3}(?:`{3,}|~{3,})", re.MULTILINE)
 MAX_ADDITION = 4000
 #: A one-line fix touches a few words, never a sentence the maintainers wrote.
 MAX_SPAN = 200
+#: A table row is longer than a sentence fragment (several cells), but still one line's worth.
+MAX_TABLE_ROW = 2000
 KIND_FIELD = "kind"
 KIND_CORRECTION = "correction"
 #: A bundle of live-anchored operations (old repo's ``live_ops.py``, not ported): the second,
@@ -168,6 +184,18 @@ class Edit:
                 raise InvalidEditError(f"{self.detector}: a diagram fix stays inside one fence")
             if max(len(self.original), len(self.replacement)) > MAX_DIAGRAM:
                 raise InvalidEditError(f"{self.detector}: a diagram body is not this long")
+        elif self.kind == TABLE_ROW_REMOVAL:
+            if self.replacement != "":
+                raise InvalidEditError(f"{self.detector}: a row removal only ever deletes")
+            if self.start == self.end or not self.original:
+                raise InvalidEditError(f"{self.detector}: a row removal removes something")
+            if self.original.count("\n") != 1 or not self.original.endswith("\n"):
+                raise InvalidEditError(
+                    f"{self.detector}: a row removal is exactly one whole table row, its own "
+                    "line terminator included -- never more, never less"
+                )
+            if len(self.original) > MAX_TABLE_ROW:
+                raise InvalidEditError(f"{self.detector}: a row removal is not this long")
         else:
             if not self.original or "\n" in self.original or len(self.original) > MAX_SPAN:
                 raise InvalidEditError(
