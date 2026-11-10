@@ -4,12 +4,12 @@
   "findings": [],
   "model_served": "qwen3-next",
   "model_verdict": "ACCEPT",
-  "prompt_version": "17",
+  "prompt_version": "21",
   "reason": "",
   "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-  "request_sha256": "56537aab9f88214528615aae8c4bf79e751f283ccd33c96228801371411ba5ce",
+  "request_sha256": "92fbbf290b1bee048ccd300dff7eee3693a26e4b0109ab4401fe1a38e66ab062",
   "retryable": false,
-  "reviewer_logic_version": "6",
+  "reviewer_logic_version": "10",
   "schema_version": 2,
   "unit_reviews": [
     {
@@ -19,10 +19,15 @@
         125,
         62
       ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "02e1d2bb5d518b8c80152dd30c708987ff308db27bbbd0aea73a621d5b71712d",
+      "request_sha256": "232c5f9cbc1a772502bc8322c525068a53662e596e67147fe48099bbb9dfc10b",
       "sections": [
         "opening",
         "navigation",
@@ -39,10 +44,15 @@
         307,
         16
       ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "3d4bd206aefb7b47ce6dee03d18359491dd0d89c4ad24937054eb560caa63fd3",
+      "request_sha256": "14c05a10348aa962515aa19c5a07e6397c7a7dbdf06050e5a22b326836f62399",
       "sections": [
         "dependencies",
         "quick_start",
@@ -56,16 +66,20 @@
       "findings": 0,
       "lines": [
         340,
-        661,
-        62
+        421,
+        72
       ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "5bb4e1a3ae9a2390f82fd95dc6e42fc33c46dcbdfff2029746a0a0ac7db68426",
+      "request_sha256": "0cf788ab7c5e31e518b0f038209e531352758df7368b659b58fd634621ca4b34",
       "sections": [
-        "api_reference",
-        "documentation_resources"
+        "api_reference"
       ],
       "status": "reviewed",
       "unit": "u3"
@@ -73,21 +87,93 @@
     {
       "findings": 0,
       "lines": [
-        665,
-        717,
-        34
+        422,
+        493,
+        72
       ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "0cd113df75ac0d01d6372f830ecef9e3fee990c538bf6e30fcbe0973e7cfca41",
+      "request_sha256": "6c5a9280d2c6984c6c27574922197db33d58f10fe6cc7a11952bb0a2c1ea2ffb",
+      "sections": [
+        "api_reference"
+      ],
+      "status": "reviewed",
+      "unit": "u4"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        494,
+        585,
+        75
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "4e2ea1dc47df3b72447b3bfd2697cf098021c8e12d2ebec625c1915dfe2a0b91",
+      "sections": [
+        "api_reference"
+      ],
+      "status": "reviewed",
+      "unit": "u5"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        586,
+        656,
+        51
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "8774e9eb687153a36bc157fb9246a9adb293d2f212c17ada5788462ea1ef757c",
+      "sections": [
+        "api_reference",
+        "documentation_resources"
+      ],
+      "status": "reviewed",
+      "unit": "u6"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        660,
+        712,
+        34
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "f82a76af17ac0ec0f7c0129947d768e68a55c692d87bf2292e5abde68b7ff764",
       "sections": [
         "scope_limitations",
         "development_testing",
         "license"
       ],
       "status": "reviewed",
-      "unit": "u4"
+      "unit": "u7"
     }
   ],
   "verdict": "ACCEPT"

@@ -1,14 +1,320 @@
 {
   "confinement": {
-    "edits": 0,
+    "edits": 5,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "71de1b2fe224df2ec332c6f4b2ee0c181afb659e5c6b01ad4703d9d3ecd8e436",
-  "edits": [],
+  "corrected_sha256": "91e3b0e16bef702ab498ed8122118fcaf52999de9ed8b1ec4641529227055943",
+  "edits": [
+    {
+      "detector": "absent_type_row",
+      "end": 24722,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:autofilter",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.clear"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.filter_columns",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.filter_columns"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.get_filter_columns",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.get_filter_columns"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.get_range",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.get_range"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.get_sort_state",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.get_sort_state"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.range",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.range"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.set_range",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.set_range"
+        }
+      ],
+      "index": 0,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 540,
+      "original": "| `BorderStyle` | Enum with 14 members. |\n",
+      "rationale": "line 540 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 24680
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 24931,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:autofilter",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.clear"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.filter_columns",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.filter_columns"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.get_filter_columns",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.get_filter_columns"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.get_range",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.get_range"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.get_sort_state",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.get_sort_state"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.range",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.range"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.set_range",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.set_range"
+        }
+      ],
+      "index": 1,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 544,
+      "original": "| `CellValueKind` | Enum with 7 members. |\n",
+      "rationale": "line 544 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 24888
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 25257,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:autofilter",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.clear"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.filter_columns",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.filter_columns"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.get_filter_columns",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.get_filter_columns"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.get_range",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.get_range"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.get_sort_state",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.get_sort_state"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.range",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.range"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.set_range",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.set_range"
+        }
+      ],
+      "index": 2,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 551,
+      "original": "| `FillPatternKind` | Enum with 18 members. |\n",
+      "rationale": "line 551 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 25211
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 25968,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:autofilter",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.clear"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.filter_columns",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.filter_columns"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.get_filter_columns",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.get_filter_columns"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.get_range",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.get_range"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.get_sort_state",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.get_sort_state"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.range",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.range"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.set_range",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.set_range"
+        }
+      ],
+      "index": 3,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 563,
+      "original": "| `SheetVisibility` | SheetVisibility enum defines three visibility states: Visible, Hidden, and VeryHidden. |\n",
+      "rationale": "line 563 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 25857
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 26351,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:autofilter",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.clear"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.filter_columns",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.filter_columns"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.get_filter_columns",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.get_filter_columns"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.get_range",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.get_range"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.get_sort_state",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.get_sort_state"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.range",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.range"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.set_range",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.set_range"
+        }
+      ],
+      "index": 4,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 569,
+      "original": "| `ValidationMessageSeverity` | Enum with 3 members. |\n",
+      "rationale": "line 569 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 26296
+    }
+  ],
   "lane": "L",
   "original_sha256": "71de1b2fe224df2ec332c6f4b2ee0c181afb659e5c6b01ad4703d9d3ecd8e436",
-  "outcome": "NO_CHANGE_WARRANTED",
+  "outcome": "CORRECTED",
   "readme_path": "README.md",
   "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Rust",
   "schema_version": 1,
@@ -18,6 +324,8 @@
     "idempotent": true,
     "provider_calls": 0
   },
-  "summary": {},
+  "summary": {
+    "TABLE_ROW_REMOVAL": 5
+  },
   "unapplied": []
 }

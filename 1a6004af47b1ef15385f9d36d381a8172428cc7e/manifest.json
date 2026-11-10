@@ -1,79 +1,118 @@
 {
+  "canaries": {
+    "duplicate_paragraph": true
+  },
   "correction": {
     "defects": 0,
-    "edits": 0,
+    "edits": 5,
     "opportunities": 0,
-    "outcome": "NO_CHANGE_WARRANTED"
+    "outcome": "CORRECTED"
   },
   "files": {
     "README.md": {
-      "bytes": 33905,
-      "sha256": "71de1b2fe224df2ec332c6f4b2ee0c181afb659e5c6b01ad4703d9d3ecd8e436"
+      "bytes": 33608,
+      "sha256": "91e3b0e16bef702ab498ed8122118fcaf52999de9ed8b1ec4641529227055943"
     },
     "README.original.md": {
       "bytes": 33905,
       "sha256": "71de1b2fe224df2ec332c6f4b2ee0c181afb659e5c6b01ad4703d9d3ecd8e436"
     },
     "README.patch.diff": {
-      "bytes": 0,
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      "bytes": 1785,
+      "sha256": "3209ef00d068b3447d2825f18784244ec5846d6f0b8c3c0753ad9c8a1eaa3817"
     },
     "corrections.json": {
-      "bytes": 742,
-      "sha256": "12551511783fb11b8e9f83ed6ff6987ea8a30f17c043e2d0716601294fcc7c56"
+      "bytes": 10571,
+      "sha256": "77a4a388d8d2363c70d0118be6906f4f37211ead2a439dac3b1754b31e5153ea"
     },
     "dependencies.json": {
-      "bytes": 211166,
-      "sha256": "c3a32c603001e117382cf3091a1de4227d14c39f66c81c5199500c7f92e3648c"
+      "bytes": 263649,
+      "sha256": "612bd324f1ac21d701c6913608247feb3f8fe8d258aad85afff8c217aa90aa39"
     },
     "facts.json": {
-      "bytes": 1050452,
-      "sha256": "10842b124d82b66c813975888809b6171f0a46d1f72615f821081ab1fbc79fd3"
+      "bytes": 1264906,
+      "sha256": "54c52510609acd45dc193a7d7cfd2b38616f6aeb6495e85b6dd5f0b9bd2232e2"
     },
     "holdouts.json": {
-      "bytes": 1188,
-      "sha256": "574594ee3f796e771e181e7f3778057bec3ee017c9d486b350da2003d0bab4aa"
+      "bytes": 1223,
+      "sha256": "9efbf00c61236bfd7cc0ad9aa2760d94fa6c09bef8a3995a798834a25cc57986"
     },
     "ledger.jsonl": {
-      "bytes": 9308,
-      "sha256": "661f8edfef669a4d5f41fe8460024d4d3503e866a7a19b2ddf6310a99661ae11"
+      "bytes": 8240,
+      "sha256": "444f70d4576ebc24d461877dcd46d3b460c82b4f5b96c4cafdcf91984faaca94"
     },
     "review_verdict.json": {
-      "bytes": 2456,
-      "sha256": "1ab153842587ed693dfa2dc3c5c9cfd9add85bb053b703cac6a3a4ce2cccdf2f"
+      "bytes": 4446,
+      "sha256": "f08508f11fc179bc52e983aca980c9fcaf0c6b58360825e3639a64d3d712607d"
     }
-  },
-  "invalidated": {
-    "causal_stage": "EXTRACTING",
-    "detail": "dependencies.json, facts.json, review_verdict.json changed",
-    "recorded_at": "2026-11-06T12:26:42Z",
-    "scope": "facts"
   },
   "lane": "L",
   "ledger_totals": {
     "audit_only": 0,
-    "cache_reuses": 4,
-    "provider_calls": 4,
-    "records": 8,
-    "total_tokens": 68513
+    "cache_reuses": 0,
+    "provider_calls": 7,
+    "records": 7,
+    "total_tokens": 134596
   },
-  "no_op_proof": {
-    "byte_identical": true,
-    "first_run": {
-      "identity": {
-        "boot_id": "boot:ef791da7-1568-4718-987b-31e800b82f7d",
-        "nonce": "cca6f29c821f424385b676313faabb83",
-        "pid": 2292,
-        "started": "proc:5379"
-      },
-      "invocation_id": "57d03a2a4571435488edc37e5f0b7b6d",
-      "started_at": "2026-10-28T04:58:57Z"
+  "no_op_proof": null,
+  "provider_calls": 7,
+  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Rust",
+  "revision": "1a6004af47b1ef15385f9d36d381a8172428cc7e",
+  "schema_version": 2,
+  "sealed_at": "2026-11-10T08:25:52Z",
+  "sealed_by": {
+    "identity": {
+      "boot_id": "win:134387585255000000",
+      "nonce": "44a94e9388da442d9401a8ae8924d2cd",
+      "pid": 50016,
+      "started": "win:134387726508037332"
     },
-    "fresh_process": true,
-    "proven_at": "2026-10-28T05:02:07Z",
-    "provider_calls": 0,
-    "rerun": {
-      "cache_reuses": 4,
+    "invocation_id": "db75b39c338942d3a20b987d7d81221a",
+    "started_at": "2026-11-10T08:25:12Z"
+  },
+  "state": "ACCEPTED",
+  "superseded": {
+    "changed": [
+      "README.md",
+      "README.patch.diff",
+      "corrections.json",
+      "dependencies.json",
+      "facts.json",
+      "holdouts.json",
+      "review_verdict.json"
+    ],
+    "earliest_affected_stage": "EXTRACTING",
+    "previous_proof": {
+      "byte_identical": true,
+      "first_run": {
+        "identity": {
+          "boot_id": "boot:ef791da7-1568-4718-987b-31e800b82f7d",
+          "nonce": "cca6f29c821f424385b676313faabb83",
+          "pid": 2292,
+          "started": "proc:5379"
+        },
+        "invocation_id": "57d03a2a4571435488edc37e5f0b7b6d",
+        "started_at": "2026-10-28T04:58:57Z"
+      },
+      "fresh_process": true,
+      "proven_at": "2026-10-28T05:02:07Z",
+      "provider_calls": 0,
+      "rerun": {
+        "cache_reuses": 4,
+        "identity": {
+          "boot_id": "boot:dbaebfba-2a56-4b88-86dd-bb9e910bdda9",
+          "nonce": "47f3d7ab8b80444b909446db3ce4f01a",
+          "pid": 2526,
+          "started": "proc:11240"
+        },
+        "invocation_id": "7b7f331f31494f3e9ff9105e9d0e8b51",
+        "provider_calls": 0,
+        "records": 4,
+        "started_at": "2026-10-28T05:02:07Z"
+      }
+    },
+    "previous_sealed_at": "2026-10-28T05:02:07Z",
+    "previous_sealed_by": {
       "identity": {
         "boot_id": "boot:dbaebfba-2a56-4b88-86dd-bb9e910bdda9",
         "nonce": "47f3d7ab8b80444b909446db3ce4f01a",
@@ -81,63 +120,17 @@
         "started": "proc:11240"
       },
       "invocation_id": "7b7f331f31494f3e9ff9105e9d0e8b51",
-      "provider_calls": 0,
-      "records": 4,
       "started_at": "2026-10-28T05:02:07Z"
-    }
-  },
-  "provider_calls": 0,
-  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Rust",
-  "revision": "1a6004af47b1ef15385f9d36d381a8172428cc7e",
-  "schema_version": 2,
-  "sealed_at": "2026-10-28T05:02:07Z",
-  "sealed_by": {
-    "identity": {
-      "boot_id": "boot:dbaebfba-2a56-4b88-86dd-bb9e910bdda9",
-      "nonce": "47f3d7ab8b80444b909446db3ce4f01a",
-      "pid": 2526,
-      "started": "proc:11240"
     },
-    "invocation_id": "7b7f331f31494f3e9ff9105e9d0e8b51",
-    "started_at": "2026-10-28T05:02:07Z"
-  },
-  "state": "INVALIDATED",
-  "update": {
-    "available": true,
-    "changed": [
-      "dependencies.json",
-      "facts.json",
-      "review_verdict.json"
-    ],
-    "classification": "factual",
-    "earliest_affected_stage": "EXTRACTING",
-    "files": {
-      "README.md": "71de1b2fe224df2ec332c6f4b2ee0c181afb659e5c6b01ad4703d9d3ecd8e436",
-      "README.original.md": "71de1b2fe224df2ec332c6f4b2ee0c181afb659e5c6b01ad4703d9d3ecd8e436",
-      "README.patch.diff": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "corrections.json": "12551511783fb11b8e9f83ed6ff6987ea8a30f17c043e2d0716601294fcc7c56",
-      "dependencies.json": "3dde4a5eebe00fbc9a8fee0e3aed174cc8a5c7b48561e4f26da04783f5041151",
-      "facts.json": "9688dadceb56ec8e6d50af93f4077a65bbbb5cf5413d8afdb4298b55d01b4c4b",
-      "holdouts.json": "574594ee3f796e771e181e7f3778057bec3ee017c9d486b350da2003d0bab4aa",
-      "review_verdict.json": "3fafba4c1f27ec5b846b902990e7c9863d49f270af38ce6d13896a92d9aab848"
-    },
-    "recorded_at": "2026-11-06T12:26:42Z",
-    "recorded_by": {
-      "identity": {
-        "boot_id": "boot:4ba153c2-f86f-42a9-b08b-a072e21fa1e8",
-        "nonce": "8b9ebf16817344c1a8356bd9b3f85e3f",
-        "pid": 3290,
-        "started": "proc:189664"
-      },
-      "invocation_id": "cfab0907a893490da5520838ba42a7b7",
-      "started_at": "2026-11-06T12:26:10Z"
-    },
+    "previous_state": "INVALIDATED",
     "scope_basis": "artifacts",
     "scopes": [
       "facts",
       "reconciliation",
+      "correction",
       "reviewer"
     ],
+    "superseded_at": "2026-11-10T08:25:52Z",
     "triggering_scope": "facts"
   }
 }
