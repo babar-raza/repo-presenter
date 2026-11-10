@@ -4447,3 +4447,55 @@ Real hosted `present.yml` runs from this branch (the workflow exists on `main`, 
   because their scope-check base inescapably spans another card's own tagged refresh commit; the clean fix
   is the "scope-only-slice" worktree technique already used once for TC-020/022a, not a plain `--base
   <latest-tag>`, and is left to whichever session next needs that specific card ACCEPTED.
+
+## 2026-11-10: sixth Pareto pass -- two latent correctness bugs found by a new Lane L detector
+
+- **New real seals:** Cells TypeScript (Lane R, via the state-derived BC-04 fix below) and Cells
+  Rust (Lane L, blocked by the two bugs below until both were fixed). Lane R mechanism-passing:
+  12/36, only Cells Cpp / Cells Go / PDF Java remain NEEDS_REPAIR. Lane L: 20/36 (effectively
+  21/36 once PDF .NET's republish in this pass's recertify run is reflected), only PDF Java(L)
+  shown briefly stale in one funnel snapshot -- its own recertify run RECERTIFIED and republished
+  it cleanly in the same pass, so that reading was a timing artifact, not a regression.
+- **BC-04 made state-derived, not restore-event-derived (`_elsewhere_settled_units`):** the
+  `vacated_sections`/`restored_out_ids` fix from the previous pass only exempted a citation for
+  the ONE call that itself moved a unit out of a section. A stored seal's authored text is never
+  rewritten, so a later, uneventful rejudge (nothing left to restore) had no restore event to
+  repopulate the exemption, and the exact same pre-existing citation started failing BC-04 again
+  -- found on Cells TypeScript's own seal, re-reproduced directly (not guessed) before fixing.
+  Folded a new, purely-dispositions-derived helper into `restored_out_ids` at task-build time, so
+  the exemption now holds on every future rejudge, with zero dependency on this call's history.
+- **Built a new Lane L detector (`absent_type_row`) for the BC-14 rule (i) shape** (a maintainers'
+  API table row naming a type the current public surface doesn't export), reusing Lane R's own
+  `absent_type_rows` matcher so the two readings can never disagree; a new `TABLE_ROW_REMOVAL` edit
+  kind (whole-line deletion, since blanking a row's text alone would end a GFM table early).
+- **That new detector was the first caller to pass a WHOLE multi-table README** to
+  `absent_type_rows` (Lane R always calls it on one already-isolated unit's text). That exposed a
+  real, latent bug: the function pooled every `_TABLE_ROW` line across the ENTIRE text before
+  judging the type-share threshold, so a second, unrelated table in the same document silently
+  diluted the first table's genuinely absent rows to zero. Fixed by grouping into consecutive
+  per-table runs (reusing the grouping `_table_findings`'s VALIDATION reading already does
+  correctly) and judging each table's threshold independently -- a correctness improvement for
+  every caller, not just the new detector.
+- **Also found via the same real run: `holdouts.json` had no registered invalidation scope.**
+  Re-sealing a Lane L bundle whose `holdouts.json` differs from a prior seal's (R21's residuals
+  field alone is enough to differ) raised `ScopeError` and failed the seal closed. Added it to
+  `ARTIFACT_SCOPES` as "reviewer" (the stage that actually writes it). This almost certainly
+  affects every Lane L repo being RE-sealed after the R21 residuals work landed, not just Cells
+  Rust -- worth watching for on the next portfolio-wide Lane L re-seal pass.
+- **Method, unchanged:** every fix proven against the real failing artifact (a probed sealed
+  bundle, or a fresh hosted/local `present` run's cascade directory) before committing, per
+  R10/R14. `tests/readme` + the cascade/recertify/lane-L suites: 2933 passed throughout this pass,
+  no regressions.
+- **Open, named, not yet fixed:** Cells Cpp / Cells Go (model-authored-text completeness gaps a
+  repair-round budget didn't resolve: a `VERIFIED_REWRITE` dropping cited links, an opening
+  paragraph's `SUPERSEDE_REDUNDANT` replacement omitting a cited detail -- needs more rounds or a
+  prompt fix, not a one-shot code change); PDF Java (several large API tables losing overlapping
+  identifiers across tables, not yet root-caused -- large repo, ~45min per local attempt, parked
+  for a dedicated investigation rather than repeated blind relaunches); GIS .NET stays
+  `BLOCKED_EXTERNAL` (unchanged).
+- **Infrastructure note, confirmed again:** this environment runs several Claude Code sessions
+  concurrently against the same working directory and the same remote state refs (not isolated
+  clones) -- commits, `recertify --write`/`--gate`/`--write-baseline` and `delivery_funnel.py`
+  all interleave across sessions. No corruption observed (every write is a complete, valid
+  document), but it wastes compute and makes a single invocation's wall-clock unpredictable; a
+  `git status`/`fetch` before trusting "what changed" is necessary throughout, not optional.
