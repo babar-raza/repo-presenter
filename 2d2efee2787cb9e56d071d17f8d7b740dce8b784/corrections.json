@@ -1,10 +1,10 @@
 {
   "confinement": {
-    "edits": 4,
+    "edits": 6,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "c51f0d3ece9830b2a371d0e085b94938bff96dc5571fc0fc6c8f852aa5d75fe3",
+  "corrected_sha256": "bb2bb531b8064d0995479c08f891153c71d2b68286aa0530eb5dae85311bdfa5",
   "edits": [
     {
       "detector": "enterprise_edition_naming",
@@ -87,6 +87,128 @@
       "start": 12033
     },
     {
+      "detector": "absent_type_row",
+      "end": 15641,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:apiexamples",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.conftest",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.conftest"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.convert_document",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.convert_document"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.convert_document.convertdocument",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.convert_document.ConvertDocument"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.convert_document.convertdocument.test_all_conversions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.convert_document.ConvertDocument.test_all_conversions"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.convert_document.convertdocument.test_get_text_from_all_formats",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.convert_document.ConvertDocument.test_get_text_from_all_formats"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.docs_examples_base",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.docs_examples_base"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.docs_examples_base.docsexamplesbase",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.docs_examples_base.DocsExamplesBase"
+        }
+      ],
+      "index": 2,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 393,
+      "original": "| `ShapeNode` | Class with 25 properties. |\n",
+      "rationale": "line 393 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 15597
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 19115,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:apiexamples",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.conftest",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.conftest"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.convert_document",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.convert_document"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.convert_document.convertdocument",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.convert_document.ConvertDocument"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.convert_document.convertdocument.test_all_conversions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.convert_document.ConvertDocument.test_all_conversions"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.convert_document.convertdocument.test_get_text_from_all_formats",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.convert_document.ConvertDocument.test_get_text_from_all_formats"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.docs_examples_base",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.docs_examples_base"
+        },
+        {
+          "fact_id": "public_symbol:apiexamples.docs_examples_base.docsexamplesbase",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ApiExamples.docs_examples_base.DocsExamplesBase"
+        }
+      ],
+      "index": 3,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 463,
+      "original": "| `ReaderContext` | Class extending Protocol. |\n",
+      "rationale": "line 463 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 19067
+    },
+    {
       "detector": "stale_type_count",
       "end": 26433,
       "evidence": [
@@ -139,7 +261,7 @@
           "value": "ApiExamples.docs_examples_base.DocsExamplesBase"
         }
       ],
-      "index": 2,
+      "index": 4,
       "kind": "FALSE_CLAIM_FIX",
       "line": 607,
       "original": "146",
@@ -158,7 +280,7 @@
           "value": "https://products.aspose.com/words/python-net/"
         }
       ],
-      "index": 3,
+      "index": 5,
       "kind": "FALSE_CLAIM_FIX",
       "line": 625,
       "original": "the commercial Aspose.Words",
@@ -180,7 +302,8 @@
     "provider_calls": 0
   },
   "summary": {
-    "FALSE_CLAIM_FIX": 4
+    "FALSE_CLAIM_FIX": 4,
+    "TABLE_ROW_REMOVAL": 2
   },
   "unapplied": [
     {

@@ -390,7 +390,6 @@ shared Light Document Model, summarized in the module-grouped table below.
 | `SaveFormat` | Document save format constants. |
 | `Section` | Class with 4 properties. |
 | `Shading` | Class with 2 properties. |
-| `ShapeNode` | Class with 25 properties. |
 | `Style` | Class with 11 properties. |
 | `TabStop` | Class with 4 properties. |
 | `TabStopCollection` | Class with 5 methods and 1 property. |
@@ -460,7 +459,6 @@ shared Light Document Model, summarized in the module-grouped table below.
 | `ParagraphData` | Paragraph with style and content. |
 | `ParagraphFormatBuilder` | Build a non-cascaded `ldm.ParagraphFormat` from one `<w:pPr>`. |
 | `ParagraphFormatResolver` | Compose a fully cascaded `ldm.ParagraphFormat`. |
-| `ReaderContext` | Class extending Protocol. |
 | `RowBuilder` | Build `ldm.Row` from a `<w:tr>` element. |
 | `RowData` | Table row. |
 | `RunBuilder` | Build a single `ldm.Run` with a resolved font cascade. |
