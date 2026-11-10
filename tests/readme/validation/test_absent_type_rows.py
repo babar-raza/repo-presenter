@@ -108,3 +108,32 @@ def test_a_readme_missing_a_present_row_is_still_an_unprinted_kept_unit() -> Non
     assert unprinted_kept_units(readme, facts=facts, dispositions=_dispositions()) == [
         ("inherited_unit:037.table", "PRESERVE_ATTRIBUTED")
     ]
+
+
+# --- a second, unrelated table in the same text must not dilute the first one's judgement -------
+#
+# Real case (Aspose.Cells FOSS for Rust, Lane L, 2026-11-10): absent_type_rows pooled every
+# _TABLE_ROW line across the WHOLE document (two separate tables, a blank "Traits" one included)
+# before judging type share, so a genuinely absent row five of a 30-row "Enumerations" table read
+# as zero -- the share was computed over both tables' rows combined, not the one table the row is
+# actually in. Lane R only ever calls this on one already-isolated unit's text, so the dilution
+# never surfaced there; Lane L's absent_type_row detector is the first caller to pass a whole
+# multi-table README.
+
+
+def test_two_separate_tables_are_judged_independently_not_pooled() -> None:
+    first_table_absent_row = "| `BorderStyle` | Border styles. |"
+    second_table = "\n".join(
+        (
+            "| Trait | Description |",
+            "|---|---|",
+            "| `Debug` | Formatting trait. |",
+            "| `Clone` | Cloning trait. |",
+        )
+    )
+    document = f"## API Reference\n\n{TABLE}\n\n## Traits\n\n{second_table}\n"
+    facts = _facts()
+    assert absent_type_rows(document, facts) == [first_table_absent_row]
+    without = without_absent_type_rows(document, facts)
+    assert first_table_absent_row not in without
+    assert second_table in without  # the unrelated table is untouched, not judged at all

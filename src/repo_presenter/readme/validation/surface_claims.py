@@ -344,36 +344,65 @@ def _row_name(cell: str) -> str:
     return name
 
 
+def _consecutive_table_row_groups(text: str) -> list[list[tuple[str, str]]]:
+    """``text`` split into separate runs of consecutive ``_TABLE_ROW`` lines -- one maintainers'
+    table never bleeds into the next, non-adjacent one. A non-matching line (blank, prose, a
+    different heading's table) ends the current run; ``_table_findings`` already groups this way
+    for the VALIDATION finding, and this is that same grouping reused for the EDIT/restore
+    reading, so the two can never disagree about which rows belong to which table."""
+    groups: list[list[tuple[str, str]]] = []
+    current: list[tuple[str, str]] = []
+    for line in text.splitlines():
+        match = _TABLE_ROW.match(line)
+        if match is not None:
+            current.append((_row_name(match.group("name")), line))
+            continue
+        if current:
+            groups.append(current)
+        current = []
+    if current:
+        groups.append(current)
+    return groups
+
+
 def absent_type_rows(text: str, facts: FactsDocument) -> list[str]:
     """The rows of a maintainers' API TYPE table that name something the public surface lacks:
     the rows BC-14 rule (i) would flag. Empty unless the table reads as a type table (at least
     ``_TABLE_MIN_ROWS`` rows, at least ``_TABLE_TYPE_SHARE`` of whose first cells are verified public
-    types). A delegate/callback row is never absent (a kind no ``public_symbol`` fact records)."""
+    types). A delegate/callback row is never absent (a kind no ``public_symbol`` fact records).
+
+    Judged per TABLE (``_consecutive_table_row_groups``), never pooled across every table in
+    ``text``: a second, unrelated table (a short "Traits" table, say) sharing the same call would
+    otherwise dilute the first table's own type share below ``_TABLE_TYPE_SHARE`` and silently
+    stop any row of it being read as absent -- measured passing a whole multi-table README (Lane
+    L's ``absent_type_row`` detector) where the isolated "Enumerations" table alone reads as a
+    type table (len 30, type share high) but the same text pooled with the document's other
+    tables did not."""
     known, types, _qualified = _surface_names(facts)
     if not types:
-        return []
-    rows: list[tuple[str, str]] = []
-    for line in text.splitlines():
-        match = _TABLE_ROW.match(line)
-        if match is not None:
-            rows.append((_row_name(match.group("name")), line))
-    if len(rows) < _TABLE_MIN_ROWS:
         return []
 
     def is_type(name: str) -> bool:
         return name in types or name.split("-", 1)[0] in types
 
-    if sum(is_type(name) for name, _ in rows) / len(rows) < _TABLE_TYPE_SHARE:
-        return []
-    return [
-        line
-        for name, line in rows
-        if name
-        and not (
-            name in known or name.split("-", 1)[0] in known or _SEGMENTS.split(name)[-1] in known
+    dropped: list[str] = []
+    for rows in _consecutive_table_row_groups(text):
+        if len(rows) < _TABLE_MIN_ROWS:
+            continue
+        if sum(is_type(name) for name, _ in rows) / len(rows) < _TABLE_TYPE_SHARE:
+            continue
+        dropped.extend(
+            line
+            for name, line in rows
+            if name
+            and not (
+                name in known
+                or name.split("-", 1)[0] in known
+                or _SEGMENTS.split(name)[-1] in known
+            )
+            and not _UNEXTRACTED_KIND.search(line.split("|", 2)[-1])
         )
-        and not _UNEXTRACTED_KIND.search(line.split("|", 2)[-1])
-    ]
+    return dropped
 
 
 def without_absent_type_rows(text: str, facts: FactsDocument) -> str:
