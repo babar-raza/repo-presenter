@@ -1,6 +1,54 @@
 --- a/README.md
 +++ b/README.md
-@@ -564,7 +564,7 @@
+@@ -277,21 +277,18 @@
+ | `AutoFilterColorFilterModel` | Represents auto filter color filter model. |
+ | `AutoFilterCustomFilter` | Represents auto filter custom filter. |
+ | `AutoFilterCustomFilterCollection` | Represents a collection of auto filter custom filter objects. |
+-| `AutoFilterCustomFilterCollection_Iterator` | Class in the Cells CPP API. |
+ | `AutoFilterCustomFilterModel` | Represents auto filter custom filter model. |
+ | `AutoFilterDynamicFilter` | Represents auto filter dynamic filter. |
+ | `AutoFilterDynamicFilterModel` | Represents auto filter dynamic filter model. |
+ | `AutoFilterModel` | Represents auto filter model. |
+ | `AutoFilterSortCondition` | Represents auto filter sort condition. |
+ | `AutoFilterSortConditionCollection` | Represents a collection of auto filter sort condition objects. |
+-| `AutoFilterSortConditionCollection_Iterator` | Class in the Cells CPP API. |
+ | `AutoFilterSortConditionModel` | Represents auto filter sort condition model. |
+ | `AutoFilterSortState` | Represents auto filter sort state. |
+ | `AutoFilterSortStateModel` | Represents auto filter sort state model. |
+ | `AutoFilterSupport` | Internal helper methods for auto-filter operations. |
+ | `AutoFilterTop10` | Represents auto filter top10. |
+ | `AutoFilterTop10Model` | Represents auto filter top10 model. |
+-| `BitReader` | Internal bit-level reader used while inflating DEFLATE-compressed ZIP entry data. |
+ | `Border` | Represents border. |
+ | `BorderSideValue` | Represents border side value. |
+ | `Borders` | Represents borders. |
+@@ -333,7 +330,6 @@
+ | `FillValue` | Represents fill value. |
+ | `FilterColumn` | Represents filter column. |
+ | `FilterColumnCollection` | Represents a collection of filter column objects. |
+-| `FilterColumnCollection_Iterator` | Class in the Cells CPP API. |
+ | `FilterColumnModel` | Represents filter column model. |
+ | `FilterValueCollection` | Represents a collection of filter value objects. |
+ | `Font` | Represents font. |
+@@ -429,7 +425,6 @@
+ | `XmlAttribute` | Lightweight handle to an XML attribute. |
+ | `XmlDocument` | Represents a parsed XML document. |
+ | `XmlElement` | Lightweight handle to an XML element. |
+-| `XmlParser` | Internal recursive-descent XML parser used to build an `XmlDocument`'s node tree. |
+ | `XmlParsingException` | Represents an error that occurs during xml parsing. |
+ | `ZipArchive` | In-memory representation of a ZIP archive, used to read and write the `.xlsx` package's parts. |
+ | `ZipArchiveEntry` | Represents an entry in a ZipArchive. |
+@@ -442,9 +437,6 @@
+ | `CaseInsensitiveHash` | Case-insensitive hash functor for `std::string` keys, used as a package part-name lookup key. |
+ | `Color` | Represents color. |
+ | `ColorValue` | Represents color value. |
+-| `HuffmanTable` | Struct with 2 methods and 4 properties. |
+-| `ParsedNumericFormat` | Struct with 10 properties. |
+-| `Workbook_Impl` | Struct with 1 method and 7 properties. |
+ | `XmlNodeData` | Internal node representation shared between XML types. |
+ 
+ #### Enumerations
+@@ -564,7 +556,7 @@
  For workflows that need broader spreadsheet format coverage — legacy XLS/XLSB, CSV, ODS, PDF
  rendering, or full-fidelity conditional-formatting and AutoFilter round-tripping — see
  [Aspose.Cells for C++ — Enterprise Edition](https://products.aspose.com/cells/cpp/), the
