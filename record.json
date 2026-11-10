@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "attempt under version set ecb8295ff4a0: SealError: seal: no invalidation scope for the sealed artifact 'holdouts.json'",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-10T08:21:35.040273+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:49600",
     "acquired_at": "2026-11-10T08:19:46.989320+00:00",
@@ -39,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 58,
+  "state_version": 59,
   "recent_trigger_dedup_keys": {
     "run:40633293097:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust": "ec3d875c55dc43acafcdc5b8cf0e0be4",
     "run:40635248483:aspose-cells-foss/Aspose.Cells-FOSS-for-Rust": "045f76c313b546d79c3eccb3b0af43f3",
