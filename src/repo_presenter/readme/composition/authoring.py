@@ -263,6 +263,15 @@ class SectionTask:
     #: units that were placed when the section was authored, so a judge that reads the settled
     #: dispositions (``recertify``) must still accept the citations the authored unit made.
     superseded_ids: frozenset[str] = frozenset()
+    #: The mirror case: inherited units a zero-call RESTORE pass (``readme.repair.restore_units``)
+    #: moved OUT of this section this same pass (``restore_units.vacated_sections``), because their
+    #: destination does not render a placed unit's text (``api_reference``, ``documentation_
+    #: resources``). The authored unit here was written while the moved unit was still accepted
+    #: here, so its citation predates the move and is not a new out-of-scope claim; it is not a
+    #: licence to cite a unit that was never in this section, or one moved out for any other reason
+    #: (measured: Cells Cpp ``041.paragraph``, Note Python ``055.paragraph`` -- restore traded
+    #: BC-05/BC-17 for a fresh BC-04 on the unchanged "intro" unit's existing citation).
+    restored_out_ids: frozenset[str] = frozenset()
 
     @property
     def label(self) -> str:
@@ -781,8 +790,15 @@ def authoring_tasks(
     investigation: dict[str, Any],
     dispositions: dict[str, Any],
     plan: dict[str, Any],
+    *,
+    restored_out: Mapping[str, Collection[str]] | None = None,
 ) -> list[SectionTask]:
-    """One task per included section the LLM authors, in shell order."""
+    """One task per included section the LLM authors, in shell order.
+
+    ``restored_out`` (from ``readme.repair.restore_units.vacated_sections``): ``{section_id:
+    unit_ids}`` a zero-call restore pass this same judging round moved OUT of ``section_id``. Feeds
+    ``SectionTask.restored_out_ids`` so BC-04's re-check of an unchanged authored unit's existing
+    citation of one of them does not newly fail (see that field's own docstring)."""
     included = {item["section_id"] for item in plan.get("sections", []) if item.get("include")}
     name = product_name(entry)
     by_id = {fact.id: fact for fact in facts.facts}
@@ -905,6 +921,7 @@ def authoring_tasks(
                 must_carry_text=carried_substance(must_carry, facts),
                 owed_lists=owed,
                 superseded_ids=_superseded_units(dispositions, section),
+                restored_out_ids=frozenset(restored_out.get(section, ())) if restored_out else frozenset(),
             )
         )
         if section == "api_reference":
@@ -1609,7 +1626,9 @@ def unit_checks(
             errors.append(
                 f"unit {slot}: identifiers that are not accepted fact values: {', '.join(shown)}"
             )
-        outside = sorted(set(unit_fact_ids) - task.accepted_ids - task.superseded_ids)
+        outside = sorted(
+            set(unit_fact_ids) - task.accepted_ids - task.superseded_ids - task.restored_out_ids
+        )
         if outside:
             errors.append(
                 f"unit {slot}: cites facts outside this section's set: {', '.join(outside)}"

@@ -124,6 +124,7 @@ from repo_presenter.readme.repair.restore_units import (
     choose_units,
     failing_unit_ids,
     restore_lost_units,
+    vacated_sections,
 )
 from repo_presenter.readme.repair.targeted import (
     MAX_SETTLE_ROUNDS,
@@ -766,7 +767,10 @@ def _restore_lost_content(
             break
         restored.extend(changes)
         readme = render_readme(entry, document, composed.plan, composed.coherent_units, dispositions)
-        tasks = authoring_tasks(entry, document, investigation, dispositions, composed.plan)
+        tasks = authoring_tasks(
+            entry, document, investigation, dispositions, composed.plan,
+            restored_out=vacated_sections(restored),
+        )
         candidate = _candidate(
             entry, document, composed.plan, composed.coherent_units, dispositions, readme,
             tree_paths, tasks, benchmark=original,

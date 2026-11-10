@@ -277,6 +277,7 @@ def _rerun_lane_r(
         cite_owed_units,
         owed_citations,
         restore_lost_units,
+        vacated_sections,
     )
 
     document = read_facts(bundle / "facts.json")
@@ -319,7 +320,8 @@ def _rerun_lane_r(
             break
         restored.extend(changes)
         failing, details, artifacts = _evaluate_lane_r(
-            bundle, entry, source, dispositions, units_override
+            bundle, entry, source, dispositions, units_override,
+            restored_out=vacated_sections(restored),
         )
         if units_override is not None:
             artifacts[units_name] = _canonical_json(units_override)
@@ -337,6 +339,8 @@ def _evaluate_lane_r(
     source: SourceSnapshot,
     dispositions: Mapping[str, Any],
     units_override: Mapping[str, Any] | None = None,
+    *,
+    restored_out: Mapping[str, Any] | None = None,
 ) -> tuple[list[str], list[str], dict[str, bytes]]:
     from repo_presenter.readme.composition.authoring import authoring_tasks
     from repo_presenter.readme.composition.renderer import render_patch, render_readme
@@ -380,7 +384,9 @@ def _evaluate_lane_r(
         source_revision=document.source_revision,
         readme_sha256=None,
         tree_paths=list(source.tree_paths),
-        tasks=authoring_tasks(entry, document, investigation, dispositions, plan),
+        tasks=authoring_tasks(
+            entry, document, investigation, dispositions, plan, restored_out=restored_out
+        ),
         benchmark_readme=original,  # BC-17: the README the run read, at the sealed revision
     )
     with tempfile.TemporaryDirectory(prefix="recertify-") as empty:

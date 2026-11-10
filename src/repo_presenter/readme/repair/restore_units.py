@@ -37,6 +37,7 @@ __all__ = [
     "restore_lost_units",
     "owed_citations",
     "cite_owed_units",
+    "vacated_sections",
 ]
 
 _UNIT = re.compile(r"inherited_unit:\d+(?:\.\d+)*\.[a-z_]+")
@@ -359,3 +360,22 @@ def restore_lost_units(
                 )
             changes = [change for change in changes if change["unit_id"] not in pointed]
     return output, changes
+
+
+def vacated_sections(changes: Sequence[Mapping[str, str]]) -> dict[str, set[str]]:
+    """``{old_section: {unit_id, ...}}`` for every ``restore_lost_units`` change whose destination
+    actually moved -- the shape BC-04 needs (``composition.authoring.authoring_tasks``'s
+    ``restored_out`` parameter, ``SectionTask.restored_out_ids``) to still accept an authored
+    unit's existing citation of a unit THIS restore pass just moved out of the citing unit's own
+    section: that citation predates the move, so it is not a new out-of-scope claim. A change whose
+    old and new destination are the same (only the disposition changed, e.g. a stale pin) vacates
+    nothing and is not included."""
+    vacated: dict[str, set[str]] = {}
+    for change in changes:
+        was, now = str(change.get("was", "")), str(change.get("now", ""))
+        if " -> " not in was or " -> " not in now:
+            continue
+        old_section, new_section = was.rsplit(" -> ", 1)[1], now.rsplit(" -> ", 1)[1]
+        if old_section and old_section != new_section:
+            vacated.setdefault(old_section, set()).add(str(change["unit_id"]))
+    return vacated
