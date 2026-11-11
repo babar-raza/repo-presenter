@@ -139,13 +139,27 @@ def test_a_restore_is_attempted_for_bc05_and_bc17_with_bc07(monkeypatch: pytest.
     assert _attempted(monkeypatch, ["BC-05", "BC-17"])
 
 
-def test_a_restore_is_not_attempted_for_bc07_alone_or_with_another_check(
+def test_a_restore_is_not_attempted_without_a_restorable_failure(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    # Nothing restore answers is failing: BC-07 alone (it only moves with printed content), or a
+    # non-restorable check alone, or nothing at all.
     assert not _attempted(monkeypatch, ["BC-07"])
-    assert not _attempted(monkeypatch, ["BC-05", "BC-07", "BC-04"])
-    assert not _attempted(monkeypatch, ["BC-02", "BC-17"])
+    assert not _attempted(monkeypatch, ["BC-02"])
+    assert not _attempted(monkeypatch, ["BC-04", "BC-07"])
     assert not _attempted(monkeypatch, [])
+
+
+def test_a_restore_is_attempted_beside_a_non_restorable_check(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Owner directive 2026-11-11 (AGENTS.md rule 9): a restorable loss must not be stranded because
+    another, unrelated check also fails. Measured on a fresh Cells Cpp run: BC-02 (unproven
+    'cmake --build') + BC-05 + BC-17 -- no restore ran, and the model is never asked about restorable
+    defects, so the lost API list was never recovered."""
+    assert _attempted(monkeypatch, ["BC-02", "BC-17"])
+    assert _attempted(monkeypatch, ["BC-05", "BC-07", "BC-04"])
+    assert _attempted(monkeypatch, ["BC-02", "BC-05", "BC-17"])
 
 
 # --- the restore runs inside the S9 settle loop, before any model repair --------------------------
@@ -248,12 +262,12 @@ def test_a_defect_naming_a_unit_the_restore_cannot_keep_is_still_sent(
     assert [d.fingerprint for d in left] == [f"fp-{other}"]
 
 
-def test_a_restore_is_attempted_for_bc08_and_not_beside_a_non_restorable_check(
+def test_a_restore_is_attempted_for_bc08_alone_and_beside_other_checks(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     assert _attempted(monkeypatch, ["BC-08"])
     assert _attempted(monkeypatch, ["BC-08", "BC-17", "BC-07"])
-    assert not _attempted(monkeypatch, ["BC-08", "BC-02"])
+    assert _attempted(monkeypatch, ["BC-08", "BC-02"])
 
 
 # --- a unit with a dangling pointer is not restorable, so its defect still goes to the repair --------
@@ -432,5 +446,52 @@ def test_a_restore_that_does_not_shrink_the_failures_is_discarded(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     same = [_bc17("1", "2")]
+    settled, result = _drive_restore(monkeypatch, tmp_path, same, same)
+    assert result is settled
+
+
+# --- a restorable loss is recovered even while a non-restorable check keeps failing ------------------
+# Fresh Cells Cpp (2026-11-11): BC-02 'cmake --build build' (a build no run proved) fails beside the
+# BC-05/BC-17 losses of inherited_unit:010.list. Restore clears the losses; BC-02 is not restore's to
+# answer and goes on to the repair loop. The result is kept because the failures strictly shrink.
+
+_BC02 = ("BC-02", "install_command:cmake: the README prints 'cmake --build build', the source build "
+         "of a project whose build no run proved")
+
+
+def test_a_restore_clears_the_restorable_loss_and_is_kept_while_bc02_survives(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    settled, result = _drive_restore(
+        monkeypatch, tmp_path, [_check(*_BC02), _bc17("1", "2")], [_check(*_BC02)]
+    )
+    assert result is not settled and result.composed.readme == "RESTORED README\n"
+    assert [c["id"] for c in result.validation["checks"]] == ["BC-02"]  # still the repair loop's
+    assert (tmp_path / "restored_units.json").exists()
+
+
+def test_a_restore_beside_bc02_is_discarded_when_it_adds_a_check(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    after = [_check(*_BC02), _check("BC-04", "api_reference: unit intro: cites facts outside the set")]
+    settled, result = _drive_restore(
+        monkeypatch, tmp_path, [_check(*_BC02), _bc17("1", "2")], after
+    )
+    assert result is settled
+    assert not (tmp_path / "restored_units.json").exists()
+
+
+def test_a_restore_beside_bc02_is_discarded_when_bc02_itself_grows(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    grown = _check(*_BC02, "install_command:cmake: a second unproven command")
+    settled, result = _drive_restore(monkeypatch, tmp_path, [_check(*_BC02), _bc17("1")], [grown])
+    assert result is settled
+
+
+def test_a_restore_beside_bc02_that_clears_nothing_is_discarded(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    same = [_check(*_BC02), _bc17("1", "2")]
     settled, result = _drive_restore(monkeypatch, tmp_path, same, same)
     assert result is settled

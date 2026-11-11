@@ -681,8 +681,9 @@ def _settle_s9(
 #: by returning that unit to ``VERIFIED_PRESERVE``; hosted PDF Go ``025.paragraph``).
 #: A candidate that also fails any other blocking check is left exactly as it was.
 RESTORABLE_CHECKS = frozenset({"BC-05", "BC-08", "BC-17"})
-#: Failing beside them without ruling the restore out: the line budget and fence rules move with the
-#: printed content, so a restore is attempted and kept only if it leaves NO blocking failure.
+#: Checks that move with the printed content (the line budget and fence rules): a restore may change
+#: them either way, so ``_strictly_fewer_failures`` holds them to "no more details than before". The
+#: restore gate itself no longer lists them -- any restorable failure now starts a restore.
 RESTORE_COMPANION_CHECKS = frozenset({"BC-07"})
 RESTORED_UNITS_FILENAME = "restored_units.json"
 
@@ -722,20 +723,30 @@ def _restore_lost_content(
     settled: _Settled, *, entry: RegistryEntry, document: FactsDocument, investigation: dict,
     tree_paths: list[str], original: str, out_dir: Path, require_clean_review: bool = False,
 ) -> _Settled:
-    """TC-019c: when the settled candidate's ONLY blocking failures are BC-05/BC-17, keep the units
+    """TC-019c: when the settled candidate fails a restorable check (BC-05/BC-08/BC-17), keep the units
     they name (``readme.repair.restore_units``: the remedy those checks' own text states), re-render
     from the same plan and authored units, and re-judge with the unchanged validators and the
     deterministic reviewer rules. Zero provider calls: the stored plan, authored and coherent units
     are reused, as ``recertify`` reuses a sealed bundle's. Returns ``settled`` unchanged unless a
-    restore both changed something and left the candidate with no blocking failure -- so a run that
-    this cannot rescue behaves exactly as it did before, and the checks are never weakened."""
+    restore changed something and either left no blocking failure, or strictly shrank them without
+    adding a check id, growing a non-restorable check, or adding a blocking review finding (a PARTIAL
+    restore: the restorable content is back and only what restore cannot answer goes on to the repair
+    loop) -- so a run that this cannot improve behaves exactly as it did before, and the checks are
+    never weakened."""
     from repo_presenter.recertify import RESTORE_ROUNDS
 
     composed = settled.composed
     failing = blocking_failures(settled.validation)
     failing_ids = {str(check["id"]) for check in failing}
-    if not failing_ids & RESTORABLE_CHECKS or not failing_ids <= RESTORABLE_CHECKS | RESTORE_COMPANION_CHECKS:
+    if not failing_ids & RESTORABLE_CHECKS:
         return settled
+    # A non-restorable check failing beside the restorable ones (BC-02's unproven build command,
+    # say) used to rule the whole restore out, which stranded the restorable losses: they are not
+    # sent to the model (``_without_restorable``), so nothing could ever recover them (measured: Cells
+    # Cpp, BC-02 + BC-05 + BC-17 on inherited_unit:010.list/041/044, no restore ever ran). The restore
+    # now runs for the restorable part regardless; ``_strictly_fewer_failures`` below keeps the result
+    # only when no new check id appears, no non-restorable check grows, and something is cleared, so
+    # the surviving non-restorable defects go on to the repair loop with the content already back.
     holdable = holdable_sections(document)
     included = [
         section["section_id"] for section in composed.plan.get("sections", []) if section.get("include")
