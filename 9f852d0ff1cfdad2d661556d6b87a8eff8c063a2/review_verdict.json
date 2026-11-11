@@ -4,27 +4,34 @@
   "findings": [],
   "model_served": "qwen3-next",
   "model_verdict": "ACCEPT",
-  "prompt_version": "17",
+  "prompt_version": "21",
   "reason": "",
   "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-  "request_sha256": "1cb335f4011271edeb6b9eb833c2b6d70d77b29279e3a463f5e8522d92510e2f",
+  "request_sha256": "fb1bf401bf59e4df8b7618927f4fbd324396978c9fc66962f5416baa675ab54d",
   "retryable": false,
-  "reviewer_logic_version": "6",
+  "reviewer_logic_version": "10",
   "schema_version": 2,
   "unit_reviews": [
     {
       "findings": 0,
       "lines": [
         7,
-        7,
-        1
+        141,
+        32
       ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "7fd83c70bc7f9dd2aea154783616aa911d2550ff0dea2e2b36f1dcc060c9a0a8",
+      "request_sha256": "240873e2b423882272d16bacbe2a5eb9aa8ad4fce22360fb92ca9158b8ed13d1",
       "sections": [
-        "opening"
+        "opening",
+        "key_capabilities",
+        "quick_start"
       ],
       "status": "reviewed",
       "unit": "u1"
@@ -32,16 +39,21 @@
     {
       "findings": 0,
       "lines": [
-        55,
-        91,
-        36
+        204,
+        809,
+        27
       ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "e827a679137cb34387fffc7c5abc9bd9936c8a8bfd564e3dc45c84073021162d",
+      "request_sha256": "336a054396635b078275515d70c6d61b0d18ae3c6ea00393f64a943dda75b6a9",
       "sections": [
-        "key_capabilities"
+        "api_reference"
       ],
       "status": "reviewed",
       "unit": "u2"
@@ -49,16 +61,23 @@
     {
       "findings": 0,
       "lines": [
-        110,
-        110,
-        1
+        812,
+        879,
+        28
       ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "aa24d5c6dff6e1f74156a36fac8d080591c61a92c86909f0fae17ef801d7cb9b",
+      "request_sha256": "857f55aa1ed0fad7915e3516f1288318c6dfbf720f336c5185d2f3f7c2ded3b2",
       "sections": [
-        "quick_start"
+        "api_reference",
+        "documentation_resources",
+        "scope_limitations"
       ],
       "status": "reviewed",
       "unit": "u3"
@@ -66,39 +85,24 @@
     {
       "findings": 0,
       "lines": [
-        232,
-        537,
-        30
+        883,
+        919,
+        11
       ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "92fbe95c1f92c301d0543907321e8cacdc1c83be9e91736449a187fa8230cbce",
+      "request_sha256": "d3dd8bc7f8b69ec01608fae95a4c0c2fccccde62e0e2eb8346b013b31cf21d42",
       "sections": [
-        "api_reference"
-      ],
-      "status": "reviewed",
-      "unit": "u4"
-    },
-    {
-      "findings": 0,
-      "lines": [
-        540,
-        604,
-        21
-      ],
-      "model_verdict": "ACCEPT",
-      "reason": "",
-      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "65db0ab02c9f52089cafd9ae3171465256b7ff77e83b67a40661df9678de5839",
-      "sections": [
-        "api_reference",
-        "documentation_resources",
-        "scope_limitations",
         "development_testing"
       ],
       "status": "reviewed",
-      "unit": "u5"
+      "unit": "u4"
     }
   ],
   "verdict": "ACCEPT"

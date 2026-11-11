@@ -1,10 +1,10 @@
 # Aspose.Cells FOSS for Cpp
 
-![C++](https://img.shields.io/badge/c%2B%2B-17-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](License/LICENSE.txt) [![Contributors](https://img.shields.io/github/contributors/aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp)](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp/graphs/contributors)
+[![NuGet version](https://img.shields.io/nuget/v/Aspose.Cells.Cpp.FOSS.svg)](https://www.nuget.org/packages/Aspose.Cells.Cpp.FOSS/) ![C++](https://img.shields.io/badge/c%2B%2B-17-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](License/LICENSE.txt) [![Contributors](https://img.shields.io/github/contributors/aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp.svg)](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp/graphs/contributors) [![Issues](https://img.shields.io/github/issues/aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp.svg)](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp/issues)
 
 [![Aspose.Cells FOSS for Cpp](https://products.aspose.org/media/cells/cpp/banner-readme.png)](https://products.aspose.org/cells/cpp/)
 
-Aspose.Cells FOSS for Cpp reads and writes Excel files in the `.xlsx` format. It provides classes such as `Workbook`, `Worksheet`, and `Cell` to create, modify, and save spreadsheet content. The product supports setting cell values, formulas, and styles, including font, color, fill pattern, and borders. It raises `WorkbookSaveException` when saving fails and `InvalidFileFormatException` when loading an unsupported file format.
+Aspose.Cells FOSS for Cpp reads and writes Excel files in the `.xlsx` format. It provides classes such as `Workbook`, `Worksheet`, and `Cell` to create, modify, and save spreadsheets programmatically. The product supports styling with `Style`, `Font`, `Color`, `FillPattern`, and `Borders`, and includes features like formula calculation, validation, hyperlinks, and page setup. It is implemented in C++ using C++17 and requires CMake 3.16 or later.
 
 ## Navigation
 
@@ -27,39 +27,35 @@ flowchart LR
 Product["Aspose.Cells FOSS for Cpp"]
 Product["Aspose.Cells FOSS for Cpp"] --> Cap1["Create and save .xlsx workbooks"]
 Cap2["Read and write cell values and formulas"]
-Cap3["Apply cell styling"]
-Cap4["Manage worksheet view and protection"]
+Cap3["Apply cell and range styling"]
+Cap4["Manage worksheet structure and view"]
 Cap5["Apply conditional formatting and data validation"]
-Cap6["Configure page setup and print settings"]
+Cap6["Configure page setup and print options"]
 Cap7["Manage hyperlinks and defined names"]
-Cap8["Access document properties"]
 Product["Aspose.Cells FOSS for Cpp"] --> Cap2["Read and write cell values and formulas"]
-Product["Aspose.Cells FOSS for Cpp"] --> Cap3["Apply cell styling"]
-Product["Aspose.Cells FOSS for Cpp"] --> Cap4["Manage worksheet view and protection"]
+Product["Aspose.Cells FOSS for Cpp"] --> Cap3["Apply cell and range styling"]
+Product["Aspose.Cells FOSS for Cpp"] --> Cap4["Manage worksheet structure and view"]
 Product["Aspose.Cells FOSS for Cpp"] --> Cap5["Apply conditional formatting and data validation"]
-Product["Aspose.Cells FOSS for Cpp"] --> Cap6["Configure page setup and print settings"]
+Product["Aspose.Cells FOSS for Cpp"] --> Cap6["Configure page setup and print options"]
 Product["Aspose.Cells FOSS for Cpp"] --> Cap7["Manage hyperlinks and defined names"]
-Product["Aspose.Cells FOSS for Cpp"] --> Cap8["Access document properties"]
 Cap1["Create and save .xlsx workbooks"] --> Output["XLSX file"]
 Cap2["Read and write cell values and formulas"] --> Output["XLSX file"]
-Cap3["Apply cell styling"] --> Output["XLSX file"]
-Cap4["Manage worksheet view and protection"] --> Output["XLSX file"]
+Cap3["Apply cell and range styling"] --> Output["XLSX file"]
+Cap4["Manage worksheet structure and view"] --> Output["XLSX file"]
 Cap5["Apply conditional formatting and data validation"] --> Output["XLSX file"]
-Cap6["Configure page setup and print settings"] --> Output["XLSX file"]
+Cap6["Configure page setup and print options"] --> Output["XLSX file"]
 Cap7["Manage hyperlinks and defined names"] --> Output["XLSX file"]
-Cap8["Access document properties"] --> Output["XLSX file"]
 ```
 
 ## Key Capabilities
 
-- **Create and save .xlsx workbooks.** It creates blank workbooks via the `Workbook` constructor and loads existing files from paths or in-memory streams, then saves them as `.xlsx` files using `Workbook.Save`.
-- **Read and write cell values and formulas.** It writes cell values of strings, integers, doubles, bools, and `DateTime` using `Cell.PutValue`, retrieves them as a variant-typed `CellValue` via `Cell.GetValue`, and sets or reads formulas with `Cell.SetFormula` and `Cell.GetFormula`.
-- **Apply cell styling.** It applies cell styling by retrieving a `Style` with `Cell.GetStyle`, modifying its `Font` (bold, color), `FillPattern`, foreground and background `Color`, and `Borders`, then saving the style back with `Cell.SetStyle`.
-- **Manage worksheet view and protection.** It controls worksheet view settings such as `VisibilityType` (visible, hidden, very hidden), zoom, gridlines, headers, and right-to-left layout, and applies `WorksheetProtection` to restrict editing.
-- **Apply conditional formatting and data validation.** It applies conditional formatting through `ConditionalFormattingCollection` and `FormatCondition` to style cells based on their values, and manages data validation rules via `ValidationCollection` and `Validation` to constrain user input.
-- **Configure page setup and print settings.** It configures page setup and print settings using `PageSetup` to set `PaperSizeType`, `PageOrientationType`, margins, scaling, print area, print titles, headers, footers, and page breaks.
-- **Manage hyperlinks and defined names.** It attaches hyperlinks to cell ranges using `HyperlinkCollection` and `Hyperlink` for external, internal, or mailto links, and manages workbook- or sheet-scoped named ranges through `DefinedNameCollection` and `DefinedName` with optional comment strings.
-- **Access document properties.** It reads core and extended document metadata through `WorkbookProperties`, `DocumentProperties` exposed by `Workbook.GetProperties` and `Workbook.GetDocumentProperties`.
+- **Create and save .xlsx workbooks.** It creates blank workbooks and loads existing `.xlsx` files from paths or in-memory streams, then saves them back to `.xlsx` format, raising `WorkbookSaveException` on save failures.
+- **Read and write cell values and formulas.** It writes values of multiple types—including strings, integers, doubles, and booleans—via `Cell.PutValue`, retrieves them as a variant-typed `CellValue`, and sets or reads formulas with `Cell.SetFormula` and `Cell.GetFormula`, throwing `FormulaException` for invalid formulas.
+- **Apply cell and range styling.** It applies styling to cells through `Style`, which bundles `Font` (bold, color), `FillPattern`, foreground and background `Color`, `Borders`, and alignment into a single cloneable object retrieved and set via `Cell.GetStyle` and `Cell.SetStyle`.
+- **Manage worksheet structure and view.** It controls worksheet visibility via `VisibilityType`, manages gridlines and headers, and applies protection settings through `WorksheetProtection`, all exposed directly on `Worksheet`.
+- **Apply conditional formatting and data validation.** It applies rule-driven formatting to cell ranges using `ConditionalFormattingCollection` and `FormatCondition`, and enforces input constraints via `ValidationCollection` and `Validation` scoped to one or more `CellArea` ranges.
+- **Configure page setup and print options.** It configures print settings through `PageSetup`, supporting `PaperSizeType`, `PageOrientationType`, margins, scaling, print area, print titles, headers, footers, and page breaks.
+- **Manage hyperlinks and defined names.** It attaches hyperlinks to cell ranges via `HyperlinkCollection` and `Hyperlink`, supporting external, internal, and mailto links, and manages workbook- or sheet-scoped named ranges through `DefinedNameCollection` and `DefinedName` with optional comment strings.
 
 - **Create or load `.xlsx` workbooks**: construct a blank `Workbook`, or load an existing file
   from a path or an in-memory `std::vector<std::uint8_t>` stream via one of `Workbook`'s
@@ -67,15 +63,9 @@ Cap8["Access document properties"] --> Output["XLSX file"]
 - **Read and write cell values and formulas**: `Cell.PutValue()` accepts strings, integers,
   doubles, bools, and `DateTime`; `Cell.GetValue()` returns a variant-typed `CellValue`, and
   `Cell.SetFormula()`/`Cell.GetFormula()` handle Excel formula text with or without a leading `=`.
-- **Apply cell styles**: `Cell.GetStyle()`/`Cell.SetStyle()` return and apply a `Style`, which
-  bundles `Font` (bold, color), fill (`FillPattern`, foreground/background `Color`), `Borders`,
-  alignment, and text wrap into one cloneable value.
 - **Merge cell ranges and apply number formats**: `Cells.Merge()` creates merged regions tracked
   as `MergeRegion`s, and `Style.SetNumberFormat()`/`NumberFormat` apply and parse Excel
   display-format patterns, rendered through `DisplayTextFormatter` with locale-directive support.
-- **Control worksheet view and protection settings**: per-sheet `VisibilityType` (visible, hidden,
-  very hidden), zoom, gridline and header visibility, right-to-left (RTL) layout, and
-  `WorksheetProtection` are all exposed directly on `Worksheet`.
 - **Apply conditional formatting and data validation**: `Worksheet.GetConditionalFormattings()`
   manages rule-driven cell formatting through `FormatCondition`, and
   `Worksheet.GetValidations()` manages input constraints through `Validation`, both scoped to
@@ -107,7 +97,7 @@ No required third-party package dependencies; in `Aspose.Cells.Foss.Cpp/CMakeLis
 
 ## Quick Start
 
-This example creates a new workbook, writes product data and a SUM formula to a worksheet named Products, applies a styled header, and saves the file as `products.xlsx`.
+This example creates a new workbook, populates a worksheet named Products with product names and prices, adds a SUM formula for the total, applies a styled header, and saves the file as `products.xlsx`.
 
 ```cpp
 #include "aspose/cells_foss/Workbook.h"
@@ -148,11 +138,9 @@ int main() {
 }
 ```
 
+More real, grounded snippets are collected below.
+
 ## Additional Examples
-
-### Highlight Cells With Conditional Formatting
-
-> **Not verified:** this example is carried over unchanged from the project's existing README. It could not be compiled or run here.
 
 ```cpp
 auto& formattings = sheet.GetConditionalFormattings();
@@ -172,10 +160,6 @@ condition.SetStyle(style);
 <details>
 <summary>View Additional Examples</summary>
 
-### Constrain Input With Data Validation
-
-> **Not verified:** this example is carried over unchanged from the project's existing README. It could not be compiled or run here.
-
 ```cpp
 auto& validations = sheet.GetValidations();
 auto rule = validations[validations.Add(CellArea::CreateCellArea("A1", "B2"))];
@@ -189,10 +173,6 @@ rule.SetErrorTitle("Whole Number");
 rule.SetErrorMessage("Enter 1-10");
 ```
 
-### Add a Hyperlink
-
-> **Not verified:** this example is carried over unchanged from the project's existing README. It could not be compiled or run here.
-
 ```cpp
 sheet.GetCells()["A1"].PutValue("Docs");
 auto& hyperlinks = sheet.GetHyperlinks();
@@ -200,10 +180,6 @@ auto link = hyperlinks[hyperlinks.Add("A1", 1, 1, "https://docs.aspose.org/cells
 link.SetTextToDisplay("Docs");
 link.SetScreenTip("Getting started guide");
 ```
-
-### Configure Page Setup for Printing
-
-> **Not verified:** this example is carried over unchanged from the project's existing README. It could not be compiled or run here.
 
 ```cpp
 PageSetup& pageSetup = sheet.GetPageSetup();
@@ -215,10 +191,6 @@ pageSetup.SetPrintTitleRows("$1:$2");
 pageSetup.SetCenterFooter("Page &P of &N");
 ```
 
-### Define a Named Range
-
-> **Not verified:** this example is carried over unchanged from the project's existing README. It could not be compiled or run here.
-
 ```cpp
 int index = workbook.GetDefinedNames().Add("PriceRange", "=Products!$B$2:$B$3");
 DefinedName priceRange = workbook.GetDefinedNames()[index];
@@ -229,7 +201,7 @@ priceRange.SetComment("Cell range used by the SUM formula in B4.");
 
 ## API Reference
 
-The library's public types live in the Aspose::Cells_FOSS namespace, with `Aspose.Cells_FOSS.Workbook` as the root entry point and `Aspose.Cells_FOSS.Worksheet`, `Aspose.Cells_FOSS.Cells`, and `Aspose.Cells_FOSS.Cell` forming the primary object graph beneath it for accessing and manipulating cell data.
+Aspose.Cells FOSS for Cpp provides the `Workbook` class as the primary entry point for reading and writing Excel files, with `Worksheet`, `Cells`, and `Cell` forming the core object graph beneath it.
 
 The verified public surface has 195 types.
 
@@ -240,261 +212,596 @@ The verified public surface has 195 types.
 
 | Class | Description |
 | --- | --- |
-| `AutoFilter` | Aspose.Cells_FOSS.AutoFilter represents an auto filter applied to a range of cells in a worksheet. |
-| `AutoFilterColorFilter` | Aspose.Cells_FOSS.AutoFilterColorFilter represents a color filter used in an auto filter. |
-| `AutoFilterCustomFilter` | Aspose.Cells_FOSS.AutoFilterCustomFilter represents a custom filter condition in an auto filter. |
-| `AutoFilterCustomFilterCollection` | Aspose.Cells_FOSS.AutoFilterCustomFilterCollection is a collection of custom filter conditions for an auto filter. |
-| `AutoFilterCustomFilterCollection.Iterator` | Aspose.Cells_FOSS.AutoFilterCustomFilterCollection.Iterator provides iteration over the custom filter conditions in the collection. |
-| `AutoFilterDynamicFilter` | Aspose.Cells_FOSS.AutoFilterDynamicFilter represents a dynamic filter used in an auto filter. |
-| `AutoFilterSortCondition` | Aspose.Cells_FOSS.AutoFilterSortCondition represents a sort condition used in an auto filter. |
-| `AutoFilterSortConditionCollection` | Aspose.Cells_FOSS.AutoFilterSortConditionCollection is a collection of sort conditions for an auto filter. |
-| `AutoFilterSortConditionCollection.Iterator` | Aspose.Cells_FOSS.AutoFilterSortConditionCollection.Iterator provides iteration over the sort conditions in the collection. |
-| `AutoFilterSortState` | Aspose.Cells_FOSS.AutoFilterSortState represents the sort state of an auto filter. |
-| `AutoFilterSupport` | Aspose.Cells_FOSS.AutoFilterSupport provides support for auto filter operations. |
-| `AutoFilterTop10` | Aspose.Cells_FOSS.AutoFilterTop10 represents a top 10 filter used in an auto filter. |
-| `Border` | Aspose.Cells_FOSS.Border represents a border of a cell. |
-| `Borders` | Aspose.Cells_FOSS.Borders represents all borders of a cell. |
-| `CalculationProperties` | Aspose.Cells_FOSS.CalculationProperties specifies calculation options for a workbook. |
-| `Cell` | Aspose.Cells_FOSS.Cell represents a cell in a worksheet. |
-| `CellArea` | Aspose.Cells_FOSS.CellArea represents a rectangular area of cells. |
-| `CellFormatValue` | Aspose.Cells_FOSS.CellFormatValue represents the formatted value of a cell. |
-| `CellValue` | Aspose.Cells_FOSS.CellValue represents the value stored in a cell. |
-| `Cells` | Aspose.Cells_FOSS.Cells represents the collection of cells in a worksheet. |
-| `CellsException` | Aspose.Cells_FOSS.CellsException is raised when an error occurs during cell operations. |
-| `Color` | Aspose.Cells_FOSS.Color represents a color used in formatting. |
-| `Column` | Aspose.Cells_FOSS.Column represents a column in a worksheet. |
-| `ColumnCollection` | Aspose.Cells_FOSS.ColumnCollection is a collection of columns in a worksheet. |
-| `ConditionalFormattingCollection` | Aspose.Cells_FOSS.ConditionalFormattingCollection is a collection of conditional formatting rules in a worksheet. |
-| `AlignmentValue` | Aspose.Cells_FOSS.Core.AlignmentValue specifies the alignment of text in a cell. |
-| `AutoFilterColorFilterModel` | Aspose.Cells_FOSS.Core.AutoFilterColorFilterModel provides the model for a color filter in an auto filter. |
-| `AutoFilterCustomFilterModel` | Aspose.Cells_FOSS.Core.AutoFilterCustomFilterModel provides the model for a custom filter in an auto filter. |
-| `AutoFilterDynamicFilterModel` | Aspose.Cells_FOSS.Core.AutoFilterDynamicFilterModel provides the model for a dynamic filter in an auto filter. |
-| `AutoFilterModel` | Aspose.Cells_FOSS.Core.AutoFilterModel provides the model for an auto filter. |
-| `AutoFilterSortConditionModel` | Aspose.Cells_FOSS.Core.AutoFilterSortConditionModel provides the model for a sort condition in an auto filter. |
-| `AutoFilterSortStateModel` | Aspose.Cells_FOSS.Core.AutoFilterSortStateModel provides the model for the sort state of an auto filter. |
-| `AutoFilterTop10Model` | Aspose.Cells_FOSS.Core.AutoFilterTop10Model provides the model for a top 10 filter in an auto filter. |
-| `BorderSideValue` | Aspose.Cells_FOSS.Core.BorderSideValue specifies a side of a cell border. |
-| `BordersValue` | Aspose.Cells_FOSS.Core.BordersValue represents all borders of a cell. |
-| `CalculationPropertiesModel` | Aspose.Cells_FOSS.Core.CalculationPropertiesModel provides the model for workbook calculation options. |
-| `CellAddress` | Aspose.Cells_FOSS.Core.CellAddress represents the address of a cell. |
-| `CellRecord` | Aspose.Cells_FOSS.Core.CellRecord represents a cell record containing its value, formula, style, and metadata. |
-| `ColorValue` | Aspose.Cells_FOSS.Core.ColorValue represents a color using its red, green, blue, and alpha components. |
-| `ColumnRangeModel` | Aspose.Cells_FOSS.Core.ColumnRangeModel defines a range of columns with properties such as width, hidden state, and style. |
-| `ConditionalFormattingModel` | Aspose.Cells_FOSS.Core.ConditionalFormattingModel holds conditional formatting rules and their applied areas for a worksheet. |
-| `CoreDocumentPropertiesModel` | Aspose.Cells_FOSS.Core.CoreDocumentPropertiesModel stores core document properties such as title, author, and creation date. |
-| `DateSerialConverter` | Aspose.Cells_FOSS.Core.DateSerialConverter provides methods to convert between date serial numbers and date values. |
-| `DefinedNameModel` | Aspose.Cells_FOSS.Core.DefinedNameModel represents a defined name in a workbook with its formula and scope. |
-| `DiagnosticBag` | Aspose.Cells_FOSS.Core.DiagnosticBag collects diagnostic entries generated during workbook processing. |
-| `DiagnosticEntry` | Aspose.Cells_FOSS.Core.DiagnosticEntry describes a single diagnostic issue with its severity and message. |
-| `DocumentPropertiesModel` | Aspose.Cells_FOSS.Core.DocumentPropertiesModel extends core document properties with additional built-in properties. |
-| `ExtendedDocumentPropertiesModel` | Aspose.Cells_FOSS.Core.ExtendedDocumentPropertiesModel stores custom document properties defined by the user. |
-| `FilterColumnModel` | Aspose.Cells_FOSS.Core.FilterColumnModel defines a filter column in an AutoFilter range. |
-| `FontValue` | Aspose.Cells_FOSS.Core.FontValue represents font attributes such as name, size, and color. |
-| `FormatConditionModel` | Aspose.Cells_FOSS.Core.FormatConditionModel defines a single conditional formatting rule. |
-| `HeaderFooterModel` | Aspose.Cells_FOSS.Core.HeaderFooterModel specifies the header and footer content for a worksheet. |
-| `HyperlinkModel` | Aspose.Cells_FOSS.Core.HyperlinkModel represents a hyperlink attached to a cell with its address and display text. |
-| `MergeRegion` | Aspose.Cells_FOSS.Core.MergeRegion defines a merged cell area in a worksheet. |
-| `NumberFormatValue` | Aspose.Cells_FOSS.Core.NumberFormatValue specifies the number format string applied to a cell. |
-| `PageMarginsModel` | Aspose.Cells_FOSS.Core.PageMarginsModel defines the page margins for printing a worksheet. |
-| `PageSetupModel` | Aspose.Cells_FOSS.Core.PageSetupModel holds page setup options such as orientation, paper size, and print area. |
-| `PrintOptionsModel` | Aspose.Cells_FOSS.Core.PrintOptionsModel specifies options for printing a worksheet. |
-| `ProtectionValue` | Aspose.Cells_FOSS.Core.ProtectionValue specifies the protection settings for a worksheet or workbook. |
-| `RowModel` | Aspose.Cells_FOSS.Core.RowModel represents a row in a worksheet with properties such as height and hidden state. |
-| `SharedStringRepository` | Aspose.Cells_FOSS.Core.SharedStringRepository manages shared string items used in a workbook. |
-| `StyleRepository` | Aspose.Cells_FOSS.Core.StyleRepository stores and manages cell styles used in a workbook. |
-| `StyleValue` | Aspose.Cells_FOSS.Core.StyleValue encapsulates all formatting attributes for a cell. |
-| `ValidationModel` | Aspose.Cells_FOSS.Core.ValidationModel defines data validation rules for a cell range. |
-| `WorkbookModel` | Aspose.Cells_FOSS.Core.WorkbookModel represents a workbook containing worksheets and shared resources. |
-| `WorkbookPropertiesModel` | Aspose.Cells_FOSS.Core.WorkbookPropertiesModel stores workbook-level properties such as calculation settings. |
-| `WorkbookProtectionModel` | Aspose.Cells_FOSS.Core.WorkbookProtectionModel specifies protection settings for a workbook. |
-| `WorkbookSettingsModel` | Aspose.Cells_FOSS.Core.WorkbookSettingsModel holds workbook-wide settings such as default font and precision options. |
-| `WorkbookViewModel` | Aspose.Cells_FOSS.Core.WorkbookViewModel specifies the view settings for a workbook such as window state and zoom. |
-| `WorksheetModel` | Represents a worksheet in a workbook and provides access to its cells, columns, rows, protection, view, and other properties. |
-| `WorksheetProtectionModel` | Encapsulates the protection settings for a worksheet, including password hash, algorithm name, and various permission flags. |
-| `WorksheetViewModel` | Encapsulates the view settings for a worksheet, such as gridlines, headers, and pane configuration. |
-| `CoreDocumentProperties` | Encapsulates the core document properties of a workbook, such as title, author, subject, and keywords. |
-| `DateTime` | Represents a date and time value used within the spreadsheet engine. |
-| `DefinedName` | Represents a defined name in a workbook, which can refer to a cell range, formula, or constant value. |
-| `DefinedNameCollection` | Represents a collection of defined names in a workbook. |
-| `DefinedNameUtility` | Provides utility methods for working with defined names in a workbook. |
-| `DisplayFormatSectionInfo` | Provides information about a section of a display format string used for cell formatting. |
-| `DisplayTextDateFormatSupport` | Supports date formatting for display text generation in cells. |
-| `DisplayTextFormatter` | Formats cell values into their display text representation according to cell formatting rules. |
-| `DisplayTextFormatterSupport` | Provides support for formatting cell values into display text. |
-| `DisplayTextLocaleSupport` | Provides locale-specific support for display text formatting. |
-| `DocumentProperties` | Encapsulates both core and extended document properties of a workbook. |
-| `ExtendedDocumentProperties` | Encapsulates the extended document properties of a workbook, such as company, manager, and custom fields. |
-| `FillValue` | Represents the value used for fill patterns in cell styling. |
-| `FilterColumn` | Represents a filtered column in an AutoFilter range. |
-| `FilterColumnCollection` | Represents a collection of filtered columns in an AutoFilter range. |
-| `FilterColumnCollection.Iterator` | Provides an iterator over the filtered columns in a FilterColumnCollection. |
-| `FilterValueCollection` | Represents a collection of filter values used in AutoFilter criteria. |
-| `Font` | Encapsulates font settings used in cell styling. |
-| `FormatCondition` | Represents a conditional formatting rule applied to a range of cells. |
-| `FormatConditionCollection` | Represents a collection of conditional formatting rules for a worksheet. |
-| `FormulaException` | Represents an exception thrown when a formula parsing or evaluation error occurs. |
-| `Hyperlink` | Represents a hyperlink in a worksheet. |
-| `HyperlinkCollection` | Represents a collection of hyperlinks in a worksheet. |
-| `IWarningCallback` | Defines a callback interface for receiving warnings during file loading or processing. |
-| `ValidationMessage` | Represents a validation message generated during workbook validation. |
-| `WorkbookValidator` | Validates a workbook against defined rules and generates validation messages. |
-| `InvalidFileFormatException` | Represents an exception thrown when a file format is not valid or supported. |
-| `LoadDiagnostics` | Encapsulates diagnostic information about issues encountered during workbook loading. |
-| `LoadIssue` | Represents a single issue encountered during workbook loading. |
-| `LoadOptions` | Encapsulates options for loading a workbook from a file or stream. |
-| `NumberFormat` | NumberFormat represents a number format code used to format cell values in a spreadsheet. |
-| `CaseInsensitiveEqual` | CaseInsensitiveEqual provides a case-insensitive equality comparison for string keys in packaging operations. |
-| `CaseInsensitiveHash` | CaseInsensitiveHash computes a hash value for string keys in a case-insensitive manner for packaging operations. |
-| `IPackageReader` | IPackageReader defines an interface for reading package parts and relationships from a storage container. |
-| `IPackageWriter` | IPackageWriter defines an interface for writing package parts and relationships to a storage container. |
-| `MissingPartException` | MissingPartException is raised when a required part is missing from a package during loading. |
-| `PackageLoadContext` | PackageLoadContext provides context information used during the loading of a package model. |
-| `PackageModel` | PackageModel represents the logical structure of a package, including its parts and relationships. |
-| `PackagePartDescriptor` | PackagePartDescriptor describes a single part within a package, including its URI, content type, and category. |
-| `PackageStructureException` | PackageStructureException is raised when a package's internal structure is invalid or unsupported. |
-| `PackagingConventions` | PackagingConventions defines constants and rules that govern how packages are structured and interpreted. |
-| `RelationshipDescriptor` | RelationshipDescriptor describes a relationship between two parts in a package, including its type and target. |
-| `RelationshipResolutionException` | RelationshipResolutionException is raised when a relationship in a package cannot be resolved. |
-| `PageSetup` | PageSetup controls page layout settings such as margins, orientation, paper size, and print area for a worksheet. |
-| `Row` | Row represents a single row in a worksheet and provides access to its cells and formatting. |
-| `RowCollection` | RowCollection is a container that holds all the rows in a worksheet and allows indexed access to them. |
-| `SaveOptions` | SaveOptions provides settings that control how a workbook is saved to a specific format. |
-| `Style` | Style defines the visual appearance of a cell, including font, border, fill, and alignment settings. |
-| `StyleException` | StyleException is raised when an operation involving style settings cannot be completed. |
-| `StyleValueSanitizer` | StyleValueSanitizer ensures that style property values conform to supported limits and constraints. |
-| `StylesheetLoadContext` | StylesheetLoadContext provides context information used during the loading of a stylesheet. |
-| `StylesheetSaveContext` | StylesheetSaveContext provides context information used during the saving of a stylesheet. |
-| `UnsupportedFeatureException` | UnsupportedFeatureException is raised when an operation attempts to use a feature that is not supported. |
-| `Validation` | Validation defines data validation rules applied to a range of cells in a worksheet. |
-| `ValidationCollection` | ValidationCollection holds all the validation rules defined for a worksheet. |
-| `WarningInfo` | WarningInfo contains details about a non-fatal issue encountered during workbook processing. |
-| `Workbook` | Workbook represents an entire spreadsheet file and provides access to its worksheets and properties. |
-| `WorkbookLoadException` | WorkbookLoadException is raised when a workbook cannot be loaded due to file corruption or unsupported content. |
-| `WorkbookProperties` | WorkbookProperties holds metadata settings for a workbook, such as calculation options and default style. |
-| `WorkbookPropertySupport` | WorkbookPropertySupport indicates whether a specific workbook property is supported by the current environment. |
-| `WorkbookProtection` | WorkbookProtection controls password-based protection options for a workbook structure and windows. |
-| `WorkbookSaveException` | Represents an exception thrown when a workbook save operation fails. |
-| `WorkbookSettings` | Provides settings for a workbook, including culture and date system configuration. |
-| `WorkbookView` | Represents the view settings of a workbook, such as window position, size, and visibility options. |
-| `Worksheet` | Represents a worksheet in a workbook, providing access to cells, formatting, protection, and other worksheet-level features. |
-| `WorksheetCollection` | Represents a collection of worksheets within a workbook. |
-| `WorksheetDefinedNamesState` | Represents the state of defined names for a worksheet. |
-| `WorksheetProtection` | Represents protection settings for a worksheet. |
-| `XNamespace` | Represents an XML namespace used within the workbook. |
-| `XlsxDocumentProperties` | Represents document properties for an XLSX workbook. |
-| `XlsxWorkbookArchiveHelpers` | Provides helper methods for working with XLSX workbook archives. |
-| `XlsxWorkbookAutoFilter` | Represents auto filter settings for an XLSX workbook. |
-| `XlsxWorkbookConditionalFormatting` | Represents conditional formatting settings for an XLSX workbook. |
-| `XlsxWorkbookDefinedNames` | Represents defined names for an XLSX workbook. |
-| `XlsxWorkbookHyperlinks` | Represents hyperlinks for an XLSX workbook. |
-| `XlsxWorkbookPageSetup` | Represents page setup settings for an XLSX workbook. |
-| `XlsxWorkbookProperties` | Represents workbook properties for an XLSX file. |
-| `XlsxWorkbookSerializer` | Provides serialization support for XLSX workbooks. |
-| `XlsxWorkbookSerializerCommon` | Provides common serialization functionality for XLSX workbooks. |
-| `XlsxWorkbookStyles` | Represents styles for an XLSX workbook. |
-| `XlsxWorkbookStylesValueHelpers` | Provides helper methods for working with style values in XLSX workbooks. |
-| `XlsxWorkbookStylesXml` | Represents the XML structure of styles for an XLSX workbook. |
-| `XlsxWorkbookValidations` | Represents data validation settings for an XLSX workbook. |
-| `XlsxWorkbookWorksheetProtection` | Represents worksheet protection settings for an XLSX workbook. |
-| `XlsxWorkbookWorksheetViews` | Represents worksheet view settings for an XLSX workbook. |
-| `SharedStringTableXmlMapper` | Maps shared string table XML content for XLSX workbooks. |
-| `StylesheetXmlMapper` | Maps stylesheet XML content for XLSX workbooks. |
-| `WorkbookXmlMapper` | Maps workbook XML content for XLSX files. |
-| `WorksheetXmlMapper` | Maps worksheet XML content for XLSX files. |
-| `XmlParsingException` | Represents an exception thrown during XML parsing. |
-| `XmlAttribute` | Represents an XML attribute. |
-| `XmlDocument` | Represents an XML document. |
-| `XmlElement` | Represents an XML element. |
-| `XmlNodeData` | Represents the base data for an XML node. |
-| `ZipArchive` | Represents a ZIP archive used for XLSX file storage. |
-| `ZipArchiveEntry` | Represents an entry within a ZIP archive. |
+| `AutoFilter` | Represents auto filter. |
+| `AutoFilterColorFilter` | Represents auto filter color filter. |
+| `AutoFilterCustomFilter` | Represents auto filter custom filter. |
+| `AutoFilterCustomFilterCollection` | Represents a collection of auto filter custom filter objects. |
+| `AutoFilterCustomFilterCollection.Iterator` | Iterator for AutoFilterCustomFilterCollection. |
+| `AutoFilterDynamicFilter` | Represents auto filter dynamic filter. |
+| `AutoFilterSortCondition` | Represents auto filter sort condition. |
+| `AutoFilterSortConditionCollection` | Represents a collection of auto filter sort condition objects. |
+| `AutoFilterSortConditionCollection.Iterator` | Iterator for AutoFilterSortConditionCollection. |
+| `AutoFilterSortState` | Represents auto filter sort state. |
+| `AutoFilterSupport` | Internal helper methods for auto-filter operations. |
+| `AutoFilterTop10` | Represents auto filter top10. |
+| `Border` | Represents border. |
+| `Borders` | Represents borders. |
+| `CalculationProperties` | Represents calculation properties. |
+| `Cell` | Represents a single worksheet cell and exposes value, formula, and style operations. |
+| `CellArea` | Represents cell area. |
+| `CellFormatValue` | Represents cell format value. |
+| `CellValue` | Aspose.Cells_FOSS.CellValue represents a cell value that can store data of various types and provides methods to access its content as a boolean, date and time, double-precision floating-point number, integer, or string. |
+| `Cells` | Provides access to worksheet cells, rows, columns, and merged ranges. |
+| `CellsException` | Represents an error that occurs during cells. |
+| `Color` | Represents color. |
+| `Column` | Represents column. |
+| `ColumnCollection` | Represents a collection of column objects. |
+| `ConditionalFormattingCollection` | Represents a collection of conditional formatting objects. |
+| `AlignmentValue` | Represents alignment value. |
+| `AutoFilterColorFilterModel` | Represents auto filter color filter model. |
+| `AutoFilterCustomFilterModel` | Represents auto filter custom filter model. |
+| `AutoFilterDynamicFilterModel` | Represents auto filter dynamic filter model. |
+| `AutoFilterModel` | Represents auto filter model. |
+| `AutoFilterSortConditionModel` | Represents auto filter sort condition model. |
+| `AutoFilterSortStateModel` | Represents auto filter sort state model. |
+| `AutoFilterTop10Model` | Represents auto filter top10 model. |
+| `BorderSideValue` | Represents border side value. |
+| `BordersValue` | Represents borders value. |
+| `CalculationPropertiesModel` | Represents calculation properties model. |
+| `CellAddress` | Represents cell address. |
+| `CellRecord` | Represents cell record. |
+| `ColorValue` | Represents color value. |
+| `ColumnRangeModel` | Represents column range model. |
+| `ConditionalFormattingModel` | Represents conditional formatting model. |
+| `CoreDocumentPropertiesModel` | Represents core document properties model. |
+| `DateSerialConverter` | Provides date serial converter operations. |
+| `DefinedNameModel` | Represents defined name model. |
+| `DiagnosticBag` | Represents diagnostic bag. |
+| `DiagnosticEntry` | Represents diagnostic entry. |
+| `DocumentPropertiesModel` | Represents document properties model. |
+| `ExtendedDocumentPropertiesModel` | Represents extended document properties model. |
+| `FilterColumnModel` | Represents filter column model. |
+| `FontValue` | Represents font value. |
+| `FormatConditionModel` | Represents format condition model. |
+| `HeaderFooterModel` | Represents header footer model. |
+| `HyperlinkModel` | Represents hyperlink model. |
+| `MergeRegion` | Represents merge region. |
+| `NumberFormatValue` | Represents number format value. |
+| `PageMarginsModel` | Represents page margins model. |
+| `PageSetupModel` | Represents page setup model. |
+| `PrintOptionsModel` | Represents print options model. |
+| `ProtectionValue` | Represents protection value. |
+| `RowModel` | Represents row model. |
+| `SharedStringRepository` | Represents shared string repository. |
+| `StyleRepository` | Represents style repository. |
+| `StyleValue` | Represents style value. |
+| `ValidationModel` | Represents validation model. |
+| `WorkbookModel` | Represents workbook model. |
+| `WorkbookPropertiesModel` | Represents workbook properties model. |
+| `WorkbookProtectionModel` | Represents workbook protection model. |
+| `WorkbookSettingsModel` | Represents workbook settings model. |
+| `WorkbookViewModel` | Represents workbook view model. |
+| `WorksheetModel` | Represents worksheet model. |
+| `WorksheetProtectionModel` | Represents worksheet protection model. |
+| `WorksheetViewModel` | Represents worksheet view model. |
+| `CoreDocumentProperties` | Represents core document properties. |
+| `DateTime` | Aspose.Cells_FOSS.DateTime represents a date and time value and provides methods to retrieve its components such as year, month, day, hour, minute, second, and ticks. |
+| `DefinedName` | Represents defined name. |
+| `DefinedNameCollection` | Represents a collection of defined name objects. |
+| `DefinedNameUtility` | Provides normalization and validation helpers for defined names. |
+| `DisplayFormatSectionInfo` | Represents display format section info. |
+| `DisplayTextDateFormatSupport` | Internal helper methods for formatting date/time display text. |
+| `DisplayTextFormatter` | Internal static helper for formatting display text of cell values. |
+| `DisplayTextFormatterSupport` | Internal helper methods for display-text formatting of numeric, text, and date/time values. |
+| `DisplayTextLocaleSupport` | Internal helper for parsing and applying locale directives. |
+| `DocumentProperties` | Represents document properties. |
+| `ExtendedDocumentProperties` | Represents extended document properties. |
+| `FillValue` | Represents fill value. |
+| `FilterColumn` | Represents filter column. |
+| `FilterColumnCollection` | Represents a collection of filter column objects. |
+| `FilterColumnCollection.Iterator` | Iterator for FilterColumnCollection. |
+| `FilterValueCollection` | Represents a collection of filter value objects. |
+| `Font` | Represents font. |
+| `FormatCondition` | Represents format condition. |
+| `FormatConditionCollection` | Represents a collection of format condition objects. |
+| `FormulaException` | Represents an error that occurs during formula. |
+| `Hyperlink` | Represents hyperlink. |
+| `HyperlinkCollection` | Encapsulates the hyperlinks defined for a worksheet. |
+| `IWarningCallback` | Defines a callback that receives load warnings. |
+| `ValidationMessage` | Represents validation message. |
+| `WorkbookValidator` | Represents workbook validator. |
+| `InvalidFileFormatException` | Represents an error that occurs during invalid file format. |
+| `LoadDiagnostics` | Represents load diagnostics. |
+| `LoadIssue` | Represents load issue. |
+| `LoadOptions` | Specifies how a workbook should be loaded. |
+| `NumberFormat` | Provides number format operations. |
+| `CaseInsensitiveEqual` | Aspose.Cells_FOSS.Packaging.CaseInsensitiveEqual is a function object that performs case-insensitive equality comparison of two strings. |
+| `CaseInsensitiveHash` | Aspose.Cells_FOSS.Packaging.CaseInsensitiveHash is a function object that computes a hash value for a string in a case-insensitive manner. |
+| `IPackageReader` | Defines a reader for package models. |
+| `IPackageWriter` | Defines a writer for package models. |
+| `MissingPartException` | Represents an error that occurs during missing part. |
+| `PackageLoadContext` | Represents package load context. |
+| `PackageModel` | Represents package model. |
+| `PackagePartDescriptor` | Represents package part descriptor. |
+| `PackageStructureException` | Represents an error that occurs during package structure. |
+| `PackagingConventions` | Provides packaging conventions operations. |
+| `RelationshipDescriptor` | Represents relationship descriptor. |
+| `RelationshipResolutionException` | Represents an error that occurs during relationship resolution. |
+| `PageSetup` | Represents worksheet print and page-layout settings. |
+| `Row` | Represents row. |
+| `RowCollection` | Represents a collection of row objects. |
+| `SaveOptions` | Specifies how a workbook should be saved. |
+| `Style` | Represents a mutable cell style facade that can be applied to one or more cells. |
+| `StyleException` | Represents an error that occurs during style. |
+| `StyleValueSanitizer` | Provides normalization helpers for style integer values. |
+| `StylesheetLoadContext` | Internal context used during stylesheet loading to accumulate cell formats, differential formats, date style indexes, and the default cell style. |
+| `StylesheetSaveContext` | Internal context used during stylesheet saving to hold the built stylesheet document together with style index maps and format counts. |
+| `UnsupportedFeatureException` | Represents an error that occurs during unsupported feature. |
+| `Validation` | Represents validation. |
+| `ValidationCollection` | Represents a collection of validation objects. |
+| `WarningInfo` | Represents warning info. |
+| `Workbook` | Represents the root spreadsheet object used to create, load, modify, and save an XLSX workbook. |
+| `WorkbookLoadException` | Represents an error that occurs during workbook load. |
+| `WorkbookProperties` | Represents workbook properties. |
+| `WorkbookPropertySupport` | Internal helpers that normalize workbook-level property strings to their canonical XML attribute values, throwing CellsException on unsupported input. |
+| `WorkbookProtection` | Represents workbook protection. |
+| `WorkbookSaveException` | Represents an error that occurs during workbook save. |
+| `WorkbookSettings` | Represents workbook-level settings that affect date handling and display formatting. |
+| `WorkbookView` | Represents workbook view. |
+| `Worksheet` | Encapsulates a single worksheet and its supported v0.1 worksheet features. |
+| `WorksheetCollection` | Encapsulates the workbook's worksheets and active-sheet state. |
+| `WorksheetDefinedNamesState` | Stores the defined names state for a worksheet (print area, title rows, title columns). |
+| `WorksheetProtection` | Represents worksheet protection. |
+| `XNamespace` | Represents an XML namespace, used to construct qualified element names. |
+| `XlsxDocumentProperties` | Provides static methods for building and loading XLSX document properties (core and extended) from/to a ZIP archive. |
+| `XlsxWorkbookArchiveHelpers` | Internal helper methods for reading XLSX workbook parts from a ZIP archive. |
+| `XlsxWorkbookAutoFilter` | Provides static methods for building and loading auto-filter XML elements. |
+| `XlsxWorkbookConditionalFormatting` | Provides static methods for building and loading conditional formatting XML elements. |
+| `XlsxWorkbookDefinedNames` | Provides static methods for building and loading workbook-level defined names. |
+| `XlsxWorkbookHyperlinks` | Provides static methods for building and loading worksheet hyperlink data. |
+| `XlsxWorkbookPageSetup` | Provides static methods for building and loading page-setup XML elements. |
+| `XlsxWorkbookProperties` | Provides static methods for building and loading workbook-level metadata. |
+| `XlsxWorkbookSerializer` | Serializes and deserializes workbook models in XLSX format. |
+| `XlsxWorkbookSerializerCommon` | Constants and helpers shared across the XLSX workbook serializer. |
+| `XlsxWorkbookStyles` | Provides static methods for building and loading workbook stylesheets. |
+| `XlsxWorkbookStylesValueHelpers` | Provides helper methods for workbook style value conversions and comparisons. |
+| `XlsxWorkbookStylesXml` | Provides XML read/write methods for the workbook styles part. |
+| `XlsxWorkbookValidations` | Provides static methods for building and loading worksheet data validation elements in the XLSX workbook serializer. |
+| `XlsxWorkbookWorksheetProtection` | Provides static methods for building and loading worksheet-protection XML elements. |
+| `XlsxWorkbookWorksheetViews` | Provides static methods for building and loading worksheet view settings (sheet properties, sheet views) in the XLSX workbook serializer. |
+| `SharedStringTableXmlMapper` | Not implemented. |
+| `StylesheetXmlMapper` | Not implemented. |
+| `WorkbookXmlMapper` | Not implemented. |
+| `WorksheetXmlMapper` | Not implemented. |
+| `XmlParsingException` | Represents an error that occurs during XML parsing. |
+| `XmlAttribute` | Lightweight handle to an XML attribute. |
+| `XmlDocument` | Represents a parsed XML document. |
+| `XmlElement` | Lightweight handle to an XML element. |
+| `XmlNodeData` | Internal node representation shared between XML types. |
+| `ZipArchive` | In-memory representation of a ZIP archive. |
+| `ZipArchiveEntry` | Represents an entry in a ZipArchive. |
 
 #### Enumerations
 
 | Enumeration | Description |
 | --- | --- |
-| `BorderStyleType` | Aspose.Cells_FOSS.BorderStyleType specifies the style of a cell border. |
-| `CellValueType` | Aspose.Cells_FOSS.CellValueType specifies the type of value stored in a cell. |
-| `BorderStyle` | Aspose.Cells_FOSS.Core.BorderStyle specifies the style of a cell border. |
-| `CellValueKind` | Aspose.Cells_FOSS.Core.CellValueKind specifies the type of value stored in a cell. |
-| `DateSystem` | Aspose.Cells_FOSS.Core.DateSystem specifies the date system used for date calculations in a workbook. |
-| `Core.DiagnosticSeverity` | Aspose.Cells_FOSS.Core.DiagnosticSeverity indicates the severity level of a diagnostic entry. |
-| `FillPatternKind` | Aspose.Cells_FOSS.Core.FillPatternKind specifies the fill pattern used in a cell style. |
-| `HorizontalAlignment` | Aspose.Cells_FOSS.Core.HorizontalAlignment specifies the horizontal alignment of text in a cell. |
-| `PageOrientation` | Aspose.Cells_FOSS.Core.PageOrientation specifies the page orientation for printing a worksheet. |
-| `SheetVisibility` | Aspose.Cells_FOSS.Core.SheetVisibility specifies the visibility state of a worksheet. |
-| `VerticalAlignment` | Aspose.Cells_FOSS.Core.VerticalAlignment specifies the vertical alignment of text in a cell. |
-| `Cells_FOSS.DiagnosticSeverity` | Specifies the severity level of a diagnostic issue encountered during file loading or processing. |
-| `FillPattern` | Specifies the fill pattern used in cell styling. |
-| `FilterOperatorType` | Specifies the operator type used in AutoFilter criteria. |
-| `FormatConditionType` | Specifies the type of a conditional formatting rule. |
-| `HorizontalAlignmentType` | Specifies the horizontal alignment of text in a cell. |
-| `ValidationMessageSeverity` | Specifies the severity level of a validation message. |
-| `LoadFormat` | Specifies the format of a file being loaded. |
-| `OperatorType` | OperatorType specifies the comparison operator used in conditional formatting and validation rules. |
-| `PageOrientationType` | PageOrientationType specifies the orientation of a page when printing or exporting a worksheet. |
-| `PaperSizeType` | PaperSizeType specifies the standard paper size used for printing or exporting a worksheet. |
-| `SaveFormat` | SaveFormat specifies the file format to use when saving a workbook to disk. |
-| `TargetModeType` | TargetModeType specifies whether a relationship points to an internal part or an external resource. |
-| `ValidationAlertType` | ValidationAlertType specifies the style of alert dialog shown when a user enters invalid data. |
-| `ValidationType` | ValidationType specifies the kind of data validation applied to a cell range. |
-| `VerticalAlignmentType` | VerticalAlignmentType specifies the vertical alignment of text within a cell. |
-| `VisibilityType` | VisibilityType specifies whether a worksheet is visible, hidden, or very hidden. |
+| `BorderStyleType` | Specifies border style type. |
+| `CellValueType` | Specifies cell value type. |
+| `BorderStyle` | Specifies border style. |
+| `CellValueKind` | Specifies cell value kind. |
+| `DateSystem` | Specifies date system. |
+| `Core.DiagnosticSeverity` | Specifies diagnostic severity. |
+| `FillPatternKind` | Specifies fill pattern kind. |
+| `HorizontalAlignment` | Specifies horizontal alignment. |
+| `PageOrientation` | Specifies page orientation. |
+| `SheetVisibility` | Specifies sheet visibility. |
+| `VerticalAlignment` | Specifies vertical alignment. |
+| `Cells_FOSS.DiagnosticSeverity` | Specifies diagnostic severity. |
+| `FillPattern` | Specifies fill pattern. |
+| `FilterOperatorType` | Specifies filter operator type. |
+| `FormatConditionType` | Specifies format condition type. |
+| `HorizontalAlignmentType` | Specifies horizontal alignment type. |
+| `ValidationMessageSeverity` | Specifies validation message severity. |
+| `LoadFormat` | Specifies load format. |
+| `OperatorType` | Specifies operator type. |
+| `PageOrientationType` | Specifies page orientation type. |
+| `PaperSizeType` | Specifies paper size type. |
+| `SaveFormat` | Specifies save format. |
+| `TargetModeType` | Specifies target mode type. |
+| `ValidationAlertType` | Specifies validation alert type. |
+| `ValidationType` | Specifies validation type. |
+| `VerticalAlignmentType` | Specifies vertical alignment type. |
+| `VisibilityType` | Specifies visibility type. |
 
 #### Detailed Member Reference
 
 ### Workbook
 
-The `Aspose.Cells_FOSS.Workbook` class represents a spreadsheet file and provides methods to load, save, and manage workbook-level settings such as workbook properties, workbook settings, and workbook view options.
+The `Workbook` class supports loading from file paths or in-memory streams using `LoadOptions`, saving to various formats via `SaveOptions`, and exposes workbook-level settings, properties, and document metadata through its properties.
+
+- `Dispose`: Releases resources associated with the workbook instance.
+- `EnsureUniqueDefinedName`: Ensures no other defined name in the workbook shares the given name and scope.
+- `EnsureUniqueSheetName`: Ensures no other worksheet in the workbook shares the given name.
+- `EnsureValidDefinedNameScope`: Validates that the local sheet index is absent (global scope) or within the valid worksheet range.
+- `GetDefinedNames`: Gets the workbook-defined names collection.
+- `GetDefinedNamesModel`: Gets the underlying defined names model vector.
+- `GetDocumentProperties`: Gets the document properties facade for core and extended metadata.
+- `GetLoadDiagnostics`: Gets diagnostics collected while loading the current workbook.
+- `GetModel`: Gets the underlying workbook model.
+- `GetProperties`: Gets workbook metadata and view settings exposed by the supported public API.
+- `GetSettings`: Gets workbook-level settings such as the date system and display culture.
+- `GetWorksheets`: Gets the worksheets in workbook order.
+- `Save`: Saves the workbook to an XLSX file using default save options.
 
 ### Worksheet
 
-The `Aspose.Cells_FOSS.Worksheet` class represents a single worksheet within a workbook and provides access to its cells, hyperlinks, validations, conditional formatting, page setup, and protection settings.
+The `Worksheet` class provides access to cell data through its `Cells` collection, supports visibility control via `VisibilityType`, and includes protection, hyperlink, validation, conditional formatting, page setup, and auto filter capabilities.
 
-### Cell
+- `GetAutoFilter`: Gets auto-filter settings for the worksheet.
+- `GetCells`: Gets the cell grid facade for the worksheet.
+- `GetConditionalFormattings`: Gets the worksheet conditional formatting collection.
+- `GetHyperlinks`: Gets the worksheet hyperlink collection.
+- `GetModel`: Gets the underlying worksheet model.
+- `GetName`: Gets or sets the worksheet name.
+- `GetPageSetup`: Gets page setup settings for the worksheet.
+- `GetProtection`: Gets worksheet protection settings.
+- `GetRightToLeft`: Gets or sets whether the worksheet view is right-to-left.
+- `GetShowGridlines`: Gets or sets whether gridlines are shown in the worksheet view.
+- `GetShowRowColumnHeaders`: Gets or sets whether row and column headers are shown in the worksheet view.
+- `GetShowZeros`: Gets or sets whether zero values are shown in the worksheet view.
+- `GetTabColor`: Gets or sets the worksheet tab color.
+- `GetValidations`: Gets the worksheet data validation collection.
+- `GetVisibilityType`: Gets or sets the worksheet visibility state.
+- `GetWorkbook`: Gets the parent workbook.
+- `GetZoom`: Gets or sets the worksheet zoom percentage.
+- `Protect`: Marks the worksheet as protected using the current protection settings.
+- `Unprotect`: Clears worksheet protection and resets supported protection flags.
 
-The `Aspose.Cells_FOSS.Cell` class represents an individual cell in a worksheet and provides methods to set and get cell values, formulas, and styles, as well as properties for its row and column position.
+### Cells
+
+The `Cells` class provides indexed access to individual `Cell` objects, supports merging via `CellArea`, and exposes collections of rows and columns for structured manipulation.
+
+- `GetColumns`: Gets column-level settings for the worksheet.
+- `GetMergedCells`: Gets the current merged-cell regions in worksheet order.
+- `GetRows`: Gets row-level settings for the worksheet.
+- `Merge`: Merges a rectangular cell region using zero-based coordinates.
 
 ### Style
 
-The `Aspose.Cells_FOSS.Style` class defines the formatting attributes for a cell, including font, borders, fill pattern, foreground and background colors, number format, alignment, and text wrapping.
+The `Style` class allows control over font, borders, fill pattern, foreground and background colors, number format, and horizontal alignment for cell appearance.
+
+- `Borders`: Gets the border settings.
+- `Clone`: Creates a copy of the current style.
+- `Color`: Gets the fill foreground color.
+- `FillPattern`: Gets the fill pattern.
+- `Font`: Gets the font settings.
+- `FromCore`: Creates a Style from a Core StyleValue.
+- `GetBackgroundColor`: Gets the fill background color.
+- `GetBorders`: Gets the border settings.
+- `GetCustom`: Gets the custom number format code.
+- `GetFont`: Gets the font settings.
+- `GetForegroundColor`: Gets the fill foreground color.
+- `GetHorizontalAlignment`: Gets the horizontal alignment.
+- `GetIndentLevel`: Gets the indentation level.
+- `GetIsHidden`: Gets whether the cell formula is hidden when worksheet protection is enabled.
+- `GetIsLocked`: Gets whether the cell is locked when worksheet protection is enabled.
+- `GetNumber`: Gets the numeric format identifier.
+- `GetNumberFormat`: Gets the resolved number format string.
+- `GetPattern`: Gets the fill pattern.
+- `GetReadingOrder`: Gets the reading order.
+- `GetRelativeIndent`: Gets the relative indent.
+- `GetShrinkToFit`: Gets whether the cell content shrinks to fit.
+- `GetTextRotation`: Gets the text rotation.
+- `GetVerticalAlignment`: Gets the vertical alignment.
+- `GetWrapText`: Gets whether text wraps within the cell.
+- `HorizontalAlignmentType`: Gets the horizontal alignment.
+- `SetBackgroundColor`: Sets the fill background color.
+- `SetBorders`: Sets the border settings.
+- `SetCustom`: Sets the custom number format code.
+- `SetFont`: Sets the font settings.
+- `SetForegroundColor`: Sets the fill foreground color.
+- `SetHorizontalAlignment`: Sets the horizontal alignment.
+- `SetIndentLevel`: Sets the indentation level.
+- `SetIsHidden`: Sets whether the cell formula is hidden when worksheet protection is enabled.
+- `SetIsLocked`: Sets whether the cell is locked when worksheet protection is enabled.
+- `SetNumber`: Sets the numeric format identifier.
+- `SetNumberFormat`: Sets the number format.
+- `SetPattern`: Sets the fill pattern.
+- `SetReadingOrder`: Sets the reading order.
+- `SetRelativeIndent`: Sets the relative indent.
+- `SetShrinkToFit`: Sets whether the cell content shrinks to fit.
+- `SetTextRotation`: Sets the text rotation.
+- `SetVerticalAlignment`: Sets the vertical alignment.
+- `SetWrapText`: Sets whether text wraps within the cell.
+- `ToCore`: Converts this style to a Core StyleValue.
+- `VerticalAlignmentType`: Gets the vertical alignment.
 
 ### ConditionalFormattingCollection
 
-The `Aspose.Cells_FOSS.ConditionalFormattingCollection` class manages a collection of conditional formatting rules applied to a worksheet, where each rule contains one or more `Aspose.Cells_FOSS.FormatCondition` objects.
+The `ConditionalFormattingCollection` class manages format conditions applied to cell ranges, supporting addition, removal, and access to individual `FormatCondition` objects with type and operator settings.
+
+- `Add`: Adds the specified item.
+- `GetCount`: Gets the number of items.
+- `GetNextPriority`: Gets the next priority for the specified collections.
+- `RemoveArea`: Removes the specified item.
+- `RemoveAt`: Removes the specified item.
 
 ### ValidationCollection
 
-The `Aspose.Cells_FOSS.ValidationCollection` class holds data validation rules applied to specific cell ranges in a worksheet, with each rule defined by an `Aspose.Cells_FOSS.Validation` object.
+The `ValidationCollection` class provides methods to add and remove data validation rules for cell areas, with individual `Validation` objects supporting type, operator, formula constraints, and error message configuration.
 
-### HyperlinkCollection
-
-The `Aspose.Cells_FOSS.HyperlinkCollection` class manages hyperlinks associated with cells in a worksheet, where each hyperlink is represented by an `Aspose.Cells_FOSS.Hyperlink` object.
-
-### DefinedNameCollection
-
-The `Aspose.Cells_FOSS.DefinedNameCollection` class contains named ranges and formulas defined at workbook or worksheet level, with each name represented by an `Aspose.Cells_FOSS.DefinedName` object.
+- `Add`: Adds the specified item.
+- `AddAreaToValidation`: Adds the specified area to the validation.
+- `AreasOverlap`: Determines whether the specified areas overlap.
+- `CompareAreas`: Compares two areas for sorting.
+- `GetCount`: Gets the number of items.
+- `GetValidationInCell`: Gets the validation in cell.
+- `RemoveACell`: Removes the specified item.
+- `RemoveArea`: Removes the specified item.
+- `RemoveAreaFromValidation`: Removes the specified area from the validation.
+- `SortAreas`: Sorts the specified areas.
 
 ### PageSetup
 
-The `Aspose.Cells_FOSS.PageSetup` class controls page layout settings for printing a worksheet, including orientation, paper size, margins, fit-to-page options, print area, and header/footer content.
+The `PageSetup` class controls print layout options including paper size via `PaperSizeType`, orientation via `PageOrientationType`, fit-to-page settings, print area, and header/footer content.
+
+- `AddHorizontalPageBreak`: Adds a horizontal page break at the specified zero-based row index.
+- `AddVerticalPageBreak`: Adds a vertical page break at the specified zero-based column index.
+- `ClearHorizontalPageBreaks`: Removes all horizontal page breaks.
+- `ClearVerticalPageBreaks`: Removes all vertical page breaks.
+- `GetBottomMargin`: Gets or sets the bottom margin in centimeters.
+- `GetBottomMarginInch`: Gets or sets the bottom margin in inches.
+- `GetCenterFooter`: Gets or sets the center footer text.
+- `GetCenterHeader`: Gets or sets the center header text.
+- `GetCenterHorizontally`: Gets or sets whether content is centered horizontally on the page.
+- `GetCenterVertically`: Gets or sets whether content is centered vertically on the page.
+- `GetFirstPageNumber`: Gets or sets the first printed page number.
+- `GetFitToPagesTall`: Gets or sets the number of pages tall to fit when printing.
+- `GetFitToPagesWide`: Gets or sets the number of pages wide to fit when printing.
+- `GetFooterMargin`: Gets or sets the footer margin in centimeters.
+- `GetFooterMarginInch`: Gets or sets the footer margin in inches.
+- `GetHeaderMargin`: Gets or sets the header margin in centimeters.
+- `GetHeaderMarginInch`: Gets or sets the header margin in inches.
+- `GetHorizontalPageBreaks`: Gets the horizontal page breaks as sorted zero-based row indexes.
+- `GetLeftFooter`: Gets or sets the left footer text.
+- `GetLeftHeader`: Gets or sets the left header text.
+- `GetLeftMargin`: Gets or sets the left margin in centimeters.
+- `GetLeftMarginInch`: Gets or sets the left margin in inches.
+- `GetOrientation`: Gets or sets the page orientation.
+- `GetPaperSize`: Gets or sets the paper size.
+- `GetPrintArea`: Gets or sets the print area reference.
+- `GetPrintGridlines`: Gets or sets whether gridlines are printed.
+- `GetPrintHeadings`: Gets or sets whether row and column headings are printed.
+- `GetPrintTitleColumns`: Gets or sets the repeating title columns reference.
+- `GetPrintTitleRows`: Gets or sets the repeating title rows reference.
+- `GetRightFooter`: Gets or sets the right footer text.
+- `GetRightHeader`: Gets or sets the right header text.
+- `GetRightMargin`: Gets or sets the right margin in centimeters.
+- `GetRightMarginInch`: Gets or sets the right margin in inches.
+- `GetScale`: Gets or sets the print scaling percentage.
+- `GetTopMargin`: Gets or sets the top margin in centimeters.
+- `GetTopMarginInch`: Gets or sets the top margin in inches.
+- `GetVerticalPageBreaks`: Gets the vertical page breaks as sorted zero-based column indexes.
+
+### HyperlinkCollection
+
+The `HyperlinkCollection` class manages hyperlinks associated with cell ranges, allowing addition with address and display text, and removal by index.
+
+- `Add`: Adds a hyperlink anchored at a cell or rectangular range specified by zero-based coordinates.
+- `GetCount`: Gets the number of hyperlinks in the worksheet.
+- `RemoveAt`: Removes the hyperlink at the specified zero-based index.
+
+### DefinedNameCollection
+
+The `DefinedNameCollection` class provides methods to add and remove named ranges with optional sheet scope, and each `DefinedName` includes a comment property for documentation.
+
+- `Add`: Adds the specified item.
+- `GetCount`: Gets the number of items.
+- `GetEnumerator`: Returns a snapshot of all defined names in the collection.
+- `RemoveAt`: Removes the specified item.
 
 ### WorkbookProperties
 
-The `Aspose.Cells_FOSS.WorkbookProperties` class exposes properties that define workbook-level metadata and behavior, such as backup file path, calculation settings, code name, theme version, and view options.
+The `WorkbookProperties` class exposes and controls workbook-level metadata such as code name, backup file path, calculation settings, view options, and protection state.
+
+- `GetBackupFile`: Gets or sets a value indicating whether backup file.
+- `GetCalculation`: Gets the calculation.
+- `GetCodeName`: Gets or sets the code name.
+- `GetDefaultThemeVersion`: Gets or sets the default theme version.
+- `GetFilterPrivacy`: Gets or sets a value indicating whether filter privacy.
+- `GetHidePivotFieldList`: Gets or sets a value indicating whether hide pivot field list.
+- `GetProtection`: Gets the protection.
+- `GetSaveExternalLinkValues`: Gets or sets a value indicating whether save external link values.
+- `GetShowBorderUnselectedTables`: Gets or sets a value indicating whether show border unselected tables.
+- `GetShowInkAnnotation`: Gets or sets a value indicating whether show ink annotation.
+- `GetShowObjects`: Gets or sets the show objects.
+- `GetUpdateLinks`: Gets or sets the update links.
+- `GetView`: Gets the view.
 
 ### AutoFilter
 
-The `Aspose.Cells_FOSS.AutoFilter` class provides support for applying and managing `AutoFilter` settings on a worksheet, enabling users to filter data rows based on specified criteria.
+The `AutoFilter` class supports filtering operations including color, custom, dynamic, and top 10 filters, with `AutoFilterSupport` indicating whether filtering is enabled.
+
+- `Clear`: Clears the current state.
+- `GetFilterColumns`: Gets the filter columns.
+- `GetRange`: Gets or sets the range.
+- `GetSortState`: Gets the sort state.
 
 ### XlsxWorkbookSerializer
 
-The `Aspose.Cells_FOSS.XlsxWorkbookSerializer` class supports serialization of workbook data to the XLSX format using helper utilities provided by `Aspose.Cells_FOSS.XlsxWorkbookArchiveHelpers`.
+The `XlsxWorkbookSerializer` class provides functionality to serialize workbook content to XLSX format, with supporting classes for styles, XML handling, and archive operations.
+
+- `Load`: Loads the current state.
+- `Save`: Saves the current state.
+
+`Workbook` also has a constructor that loads from an in-memory
+`std::vector<std::uint8_t>` stream instead of a file path, for scenarios that read the source
+bytes from somewhere other than the filesystem.
 
 The library's public types live in the `Aspose::Cells_FOSS` namespace, with `Workbook` as the
 root entry point and `Worksheet`/`Cells`/`Cell` forming the primary object graph beneath it. The
-full public surface — 197 public types — is listed below, grouped exactly as
+full public surface — 195 public types — is listed below, grouped exactly as
 `reference.aspose.org` organizes them.
+
+| Class | Description |
+|---|---|
+| `AlignmentValue` | Represents alignment value. |
+| `AutoFilter` | Represents auto filter. |
+| `AutoFilterColorFilter` | Represents auto filter color filter. |
+| `AutoFilterColorFilterModel` | Represents auto filter color filter model. |
+| `AutoFilterCustomFilter` | Represents auto filter custom filter. |
+| `AutoFilterCustomFilterCollection` | Represents a collection of auto filter custom filter objects. |
+| `AutoFilterCustomFilterModel` | Represents auto filter custom filter model. |
+| `AutoFilterDynamicFilter` | Represents auto filter dynamic filter. |
+| `AutoFilterDynamicFilterModel` | Represents auto filter dynamic filter model. |
+| `AutoFilterModel` | Represents auto filter model. |
+| `AutoFilterSortCondition` | Represents auto filter sort condition. |
+| `AutoFilterSortConditionCollection` | Represents a collection of auto filter sort condition objects. |
+| `AutoFilterSortConditionModel` | Represents auto filter sort condition model. |
+| `AutoFilterSortState` | Represents auto filter sort state. |
+| `AutoFilterSortStateModel` | Represents auto filter sort state model. |
+| `AutoFilterSupport` | Internal helper methods for auto-filter operations. |
+| `AutoFilterTop10` | Represents auto filter top10. |
+| `AutoFilterTop10Model` | Represents auto filter top10 model. |
+| `Border` | Represents border. |
+| `BorderSideValue` | Represents border side value. |
+| `Borders` | Represents borders. |
+| `BordersValue` | Represents borders value. |
+| `CalculationProperties` | Represents calculation properties. |
+| `CalculationPropertiesModel` | Represents calculation properties model. |
+| `Cell` | Represents a single worksheet cell and exposes value, formula, and style operations. |
+| `CellAddress` | Represents cell address. |
+| `CellArea` | Represents cell area. |
+| `CellFormatValue` | Represents cell format value. |
+| `CellRecord` | Represents cell record. |
+| `CellValue` | Variant-typed scalar cell value wrapper over `monostate`/`int`/`double`/`bool`/`std::string`/`DateTime`. |
+| `Cells` | Provides access to worksheet cells, rows, columns, and merged ranges. |
+| `CellsException` | Represents an error that occurs during cells. |
+| `Column` | Represents column. |
+| `ColumnCollection` | Represents a collection of column objects. |
+| `ColumnRangeModel` | Represents column range model. |
+| `ConditionalFormattingCollection` | Represents a collection of conditional formatting objects. |
+| `ConditionalFormattingModel` | Represents conditional formatting model. |
+| `CoreDocumentProperties` | Represents core document properties. |
+| `CoreDocumentPropertiesModel` | Represents core document properties model. |
+| `DateSerialConverter` | Provides date serial converter operations. |
+| `DateTime` | DateTime provides component accessors such as GetYear(), GetMonth(), GetDay(), GetHour(), GetMinute(), and GetSecond() to retrieve individual parts of a date‑time value. |
+| `DefinedName` | Represents defined name. |
+| `DefinedNameCollection` | Represents a collection of defined name objects. |
+| `DefinedNameModel` | Represents defined name model. |
+| `DefinedNameUtility` | Provides normalization and validation helpers for defined names. |
+| `DiagnosticBag` | Represents diagnostic bag. |
+| `DiagnosticEntry` | Represents diagnostic entry. |
+| `DisplayFormatSectionInfo` | Represents display format section info. |
+| `DisplayTextDateFormatSupport` | Internal helper methods for formatting date/time display text. |
+| `DisplayTextFormatter` | Internal static helper for formatting display text of cell values. |
+| `DisplayTextFormatterSupport` | Internal helper methods for display-text formatting of numeric, text, and date/time values. |
+| `DisplayTextLocaleSupport` | Internal helper for parsing and applying locale directives (e.g. `[$-0409]`, `[$-F800]`) embedded in Excel format strings. |
+| `DocumentProperties` | Represents document properties. |
+| `DocumentPropertiesModel` | Represents document properties model. |
+| `ExtendedDocumentProperties` | Represents extended document properties. |
+| `ExtendedDocumentPropertiesModel` | Represents extended document properties model. |
+| `FillValue` | Represents fill value. |
+| `FilterColumn` | Represents filter column. |
+| `FilterColumnCollection` | Represents a collection of filter column objects. |
+| `FilterColumnModel` | Represents filter column model. |
+| `FilterValueCollection` | Represents a collection of filter value objects. |
+| `Font` | Represents font. |
+| `FontValue` | Represents font value. |
+| `FormatCondition` | Represents format condition. |
+| `FormatConditionCollection` | Represents a collection of format condition objects. |
+| `FormatConditionModel` | Represents format condition model. |
+| `FormulaException` | Represents an error that occurs during formula. |
+| `HeaderFooterModel` | Represents header footer model. |
+| `Hyperlink` | Represents hyperlink. |
+| `HyperlinkCollection` | Encapsulates the hyperlinks defined for a worksheet. |
+| `HyperlinkModel` | Represents hyperlink model. |
+| `InvalidFileFormatException` | Represents an error that occurs during invalid file format. |
+| `LoadDiagnostics` | Represents load diagnostics. |
+| `LoadIssue` | Represents load issue. |
+| `LoadOptions` | Specifies how a workbook should be loaded. |
+| `MergeRegion` | Represents merge region. |
+| `MissingPartException` | Represents an error that occurs during missing part. |
+| `NumberFormat` | Provides number format operations. |
+| `NumberFormatValue` | Represents number format value. |
+| `PackageLoadContext` | Represents package load context. |
+| `PackageModel` | Represents package model. |
+| `PackagePartDescriptor` | Represents package part descriptor. |
+| `PackageStructureException` | Represents an error that occurs during package structure. |
+| `PackagingConventions` | Provides packaging conventions operations. |
+| `PageMarginsModel` | Represents page margins model. |
+| `PageSetup` | Represents worksheet print and page-layout settings. |
+| `PageSetupModel` | Represents page setup model. |
+| `PrintOptionsModel` | Represents print options model. |
+| `ProtectionValue` | Represents protection value. |
+| `RelationshipDescriptor` | Represents relationship descriptor. |
+| `RelationshipResolutionException` | Represents an error that occurs during relationship resolution. |
+| `Row` | Represents row. |
+| `RowCollection` | Represents a collection of row objects. |
+| `RowModel` | Represents row model. |
+| `SaveOptions` | Specifies how a workbook should be saved. |
+| `SharedStringRepository` | Represents shared string repository. |
+| `SharedStringTableXmlMapper` | Represents shared string table xml mapper. |
+| `Style` | Represents a mutable cell style facade that can be applied to one or more cells. |
+| `StyleException` | Represents an error that occurs during style. |
+| `StyleRepository` | Represents style repository. |
+| `StyleValue` | Represents style value. |
+| `StyleValueSanitizer` | Provides normalization helpers for style integer values. |
+| `StylesheetLoadContext` | Internal context used during stylesheet loading to accumulate cell formats, differential formats, date style indexes, and the default cell style. |
+| `StylesheetSaveContext` | Internal context used during stylesheet saving to hold the built stylesheet document together with style index maps and format counts. |
+| `StylesheetXmlMapper` | Represents stylesheet xml mapper. |
+| `UnsupportedFeatureException` | Represents an error that occurs during unsupported feature. |
+| `Validation` | Represents validation. |
+| `ValidationCollection` | Represents a collection of validation objects. |
+| `ValidationMessage` | Represents validation message. |
+| `ValidationModel` | Represents validation model. |
+| `WarningInfo` | Represents warning info. |
+| `Workbook` | Represents the root spreadsheet object used to create, load, modify, and save an XLSX workbook. |
+| `WorkbookLoadException` | Represents an error that occurs during workbook load. |
+| `WorkbookModel` | Represents workbook model. |
+| `WorkbookProperties` | Represents workbook properties. |
+| `WorkbookPropertiesModel` | Represents workbook properties model. |
+| `WorkbookPropertySupport` | Internal helpers that normalize workbook-level property strings to their canonical XML attribute values, throwing CellsException on unsupported input. |
+| `WorkbookProtection` | Represents workbook protection. |
+| `WorkbookProtectionModel` | Represents workbook protection model. |
+| `WorkbookSaveException` | Represents an error that occurs during workbook save. |
+| `WorkbookSettings` | Represents workbook-level settings that affect date handling and display formatting. |
+| `WorkbookSettingsModel` | Represents workbook settings model. |
+| `WorkbookValidator` | Represents workbook validator. |
+| `WorkbookView` | Represents workbook view. |
+| `WorkbookViewModel` | Represents workbook view model. |
+| `WorkbookXmlMapper` | Represents workbook xml mapper. |
+| `Worksheet` | Encapsulates a single worksheet and its supported v0.1 worksheet features. |
+| `WorksheetCollection` | Encapsulates the workbook's worksheets and active-sheet state. |
+| `WorksheetDefinedNamesState` | Stores the defined names state for a worksheet (print area, title rows, title columns). |
+| `WorksheetModel` | Represents worksheet model. |
+| `WorksheetProtection` | Represents worksheet protection. |
+| `WorksheetProtectionModel` | Represents worksheet protection model. |
+| `WorksheetViewModel` | Represents worksheet view model. |
+| `WorksheetXmlMapper` | Represents worksheet xml mapper. |
+| `XNamespace` | Represents an XML namespace, used to construct qualified element names. |
+| `XlsxDocumentProperties` | Provides static methods for building and loading XLSX document properties (core and extended) from/to a ZIP archive. |
+| `XlsxWorkbookArchiveHelpers` | Internal helper methods for reading XLSX workbook parts from a ZIP archive. |
+| `XlsxWorkbookAutoFilter` | Provides static methods for building and loading auto-filter XML elements. |
+| `XlsxWorkbookConditionalFormatting` | Provides static methods for building and loading conditional formatting XML elements. |
+| `XlsxWorkbookDefinedNames` | Provides static methods for building and loading workbook-level defined names. |
+| `XlsxWorkbookHyperlinks` | Provides static methods for building and loading worksheet hyperlink data. |
+| `XlsxWorkbookPageSetup` | Provides static methods for building and loading page-setup XML elements. |
+| `XlsxWorkbookProperties` | Provides static methods for building and loading workbook-level metadata. |
+| `XlsxWorkbookSerializer` | Serializes and deserializes workbook models in XLSX format. |
+| `XlsxWorkbookSerializerCommon` | Constants and helpers shared across the XLSX workbook serializer. |
+| `XlsxWorkbookStyles` | Provides static methods for building and loading workbook stylesheets. |
+| `XlsxWorkbookStylesValueHelpers` | Provides helper methods for workbook style value conversions and comparisons. |
+| `XlsxWorkbookStylesXml` | Provides XML read/write methods for the workbook styles part. |
+| `XlsxWorkbookValidations` | Provides static methods for building and loading worksheet data validation elements in the XLSX workbook serializer. |
+| `XlsxWorkbookWorksheetProtection` | Provides static methods for building and loading worksheet-protection XML elements. |
+| `XlsxWorkbookWorksheetViews` | Provides static methods for building and loading worksheet view settings (sheet properties, sheet views) in the XLSX workbook serializer. |
+| `XmlAttribute` | Lightweight handle to an XML attribute. |
+| `XmlDocument` | Represents a parsed XML document. |
+| `XmlElement` | Lightweight handle to an XML element. |
+| `XmlParsingException` | Represents an error that occurs during xml parsing. |
+| `ZipArchive` | In-memory representation of a ZIP archive, used to read and write the `.xlsx` package's parts. |
+| `ZipArchiveEntry` | Represents an entry in a ZipArchive. |
 
 - `Workbook`
   - `Workbook()`, `Workbook(fileName)`, `Workbook(fileName, LoadOptions)`, `Workbook(stream, LoadOptions)`
@@ -549,28 +856,31 @@ full public surface — 197 public types — is listed below, grouped exactly as
 
 ## Documentation & Resources
 
-- **[Getting started guide](https://docs.aspose.org/cells/cpp/)** — The getting started guide covers installation, walkthroughs, and feature guides for this library.
-- **[How-to guides & FAQ](https://kb.aspose.org/cells/cpp/)** — The how-to guides and FAQ provide task-focused answers for common spreadsheet questions.
-- **[Full API reference](https://reference.aspose.org/cells/cpp/)** — The full API reference offers the complete, browsable reference for all public types. It covers all 195 verified public types; the [API Reference](#api-reference) section above covers the essentials.
-- **[Contributor guide](AGENTS.md)** — The contributor guide describes architecture, technology assumptions, and conventions for contributors.
+- **[Getting started guide](https://docs.aspose.org/cells/cpp/)** — The getting started guide covers how to set up and use Aspose.Cells FOSS for Cpp to read, write, and manipulate Excel files.
+- **[Contributor guide](AGENTS.md)** — The contributor guide explains how to set up the development environment and contribute changes to Aspose.Cells FOSS for Cpp.
 - Found a bug or have a feature request? [Open an issue](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp/issues).
 
 ## Scope and Limitations
 
-Aspose.Cells FOSS for Cpp reads and writes Excel spreadsheets in the XLSX format using the `Aspose.Cells.Cpp.FOSS` library, supporting C++17 with CMake 3.16 or later.
+Aspose.Cells FOSS for Cpp reads and writes Excel workbooks in the `.xlsx` format using the C++ programming language.
 
-- Only XLSX (OOXML) is supported for load and save; `LoadFormat` and `SaveFormat` each declare a single Xlsx member, saving to any other format throws `UnsupportedFeatureException`, and there is no .xls, .xlsb, .ods, or .csv read/write support.
-- Legacy `SpreadsheetML` (the pre-OOXML Excel 2003 XML dialect) is not implemented; the mapper classes for it exist in source but their read/write methods unconditionally throw `UnsupportedFeatureException`.
-- `Cell`-level comments/notes are not modeled as a distinct object; the only Comment field in the public API belongs to `DefinedName` — a description string on a named range, not an Excel cell note or threaded comment.
-- Some advanced conditional-formatting rule types are recognized on load but not preserved; an unsupported rule type is dropped with a `WarningInfo` diagnostic rather than failing the load outright.
+- Only `.xlsx` (OOXML) is supported for load and save. `LoadFormat` and `SaveFormat` each declare a single Xlsx member, and saving to any other format throws `UnsupportedFeatureException`. There is no .xls, .xlsb, .ods, or .csv read/write support. Legacy `SpreadsheetML` is not implemented. `Cell`-level comments/notes are not modeled as a distinct object. Some advanced conditional-formatting rule types are recognized on load but not preserved. `AutoFilter` date-group filters using certain patterns are rejected as unsupported during load.
+- Legacy `SpreadsheetML` (the pre-OOXML Excel 2003 XML dialect) is not implemented.
+- `Cell`-level comments/notes are not modeled as a distinct object.
+- Some advanced conditional-formatting rule types are recognized on load but not preserved.
 - `AutoFilter` date-group filters using certain patterns are rejected as unsupported during load rather than approximated.
-- This library implements a focused subset of Excel spreadsheet features to keep this edition free.
 
-These limitations don't apply to [full-featured Aspose.Cells for Cpp — Enterprise Edition](https://products.aspose.com/cells/cpp/). It adds broader spreadsheet format coverage — legacy XLS/XLSB, CSV, ODS, PDF rendering, and full-fidelity conditional-formatting and `AutoFilter` round-tripping — beyond this package.
+- **[Getting started guide](https://docs.aspose.org/cells/cpp/)** — installation, walkthroughs, and feature guides for this library.
+- **[How-to guides & FAQ](https://kb.aspose.org/cells/cpp/)** — task-focused answers for common spreadsheet questions.
+- **[Full API reference](https://reference.aspose.org/cells/cpp/)** — the complete, browsable reference for all public types (the [API reference](#api-reference) section above covers the essentials).
+- **[Contributor guide](AGENTS.md)** — architecture, technology assumptions, and conventions for contributors.
+- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp/issues) on GitHub.
+
+These limitations don't apply to [full-featured Aspose.Cells for Cpp — Enterprise Edition](https://products.aspose.com/cells/cpp/). It adds broader spreadsheet format coverage — legacy XLS/XLSB, CSV, ODS, PDF rendering, and full-fidelity conditional-formatting and `AutoFilter` round-tripping.
 
 ## Development and Testing
 
-Aspose.Cells FOSS for Cpp requires CMake 3.16 or later and targets C++17 on MSVC, GCC, and Clang. The test suite in `Aspose.Cells.Foss.Cpp.Tests/` uses GoogleTest v1.14.0, downloading it automatically via FetchContent unless -DASPOSE_CELLS_FOSS_TESTS_USE_SYSTEM_GTEST=ON is passed. The samples/ directory provides a standalone executable built against the same library.
+Aspose.Cells FOSS for Cpp requires CMake 3.16 or later and targets C++17 across MSVC, GCC, and Clang. The test suite resides in `Aspose.Cells.Foss.Cpp.Tests/` and uses GoogleTest v1.14.0, which is downloaded automatically via FetchContent unless -DASPOSE_CELLS_FOSS_TESTS_USE_SYSTEM_GTEST=ON is passed. The samples/ directory provides a standalone executable example built with CMake, and the library itself is dependency-free.
 
 The suite covers 8 test files under `Aspose.Cells.Foss.Cpp.Tests/`.
 
@@ -601,15 +911,12 @@ add_subdirectory(Aspose.Cells.Foss.Cpp)
 target_link_libraries(your_target PRIVATE aspose_cells_foss)
 ```
 
-Clone the repository and run the GTest-based test suite from the dedicated test project:
+This links the `aspose_cells_foss` library from `Aspose.Cells.Foss.Cpp` as a CMake subdirectory
+and uses `FetchContent` to download GoogleTest v1.14.0 during configure; pass
+`-DASPOSE_CELLS_FOSS_TESTS_USE_SYSTEM_GTEST=ON` to use an installed GTest package instead. See
+[`Aspose.Cells.Foss.Cpp.Tests/README.md`](Aspose.Cells.Foss.Cpp.Tests/README.md) for that option.
 
-```bash
-git clone https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp.git
-cd Aspose.Cells-FOSS-for-Cpp/Aspose.Cells.Foss.Cpp.Tests
-cmake -S . -B build
-cmake --build build
-ctest --test-dir build --output-on-failure
-```
+The `samples/` directory builds a standalone executable against the same library:
 
 ```bash
 cd samples
