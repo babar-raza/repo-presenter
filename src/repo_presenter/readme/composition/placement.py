@@ -38,7 +38,7 @@ from repo_presenter.readme.evidence.facts.commands import (
     RELEASE_WORKFLOW_FACT_ID,
 )
 from repo_presenter.readme.evidence.facts.links import heading_slug
-from repo_presenter.readme.validation.surface_claims import kept_table_form
+from repo_presenter.readme.validation.surface_claims import kept_unit_form
 
 #: The disposition that keeps maintainer-authored content no fact can confirm, printed as written
 #: with its attribution recorded internally only, never printed (docs/MAINTAINER_CONTENT_PRESERVATION.md, owner requirement
@@ -556,10 +556,10 @@ def placements(
         ):
             overlap = (unit_id,)
         text = unit.value
-        if unit_id.endswith(".table"):
-            # BC-14 (i): a row naming a type the public surface lacks is never printed; the
-            # filtered table is what "printed" means for this unit (BC-05, disposition_coverage).
-            text = kept_table_form(text, facts)
+        # ONE printable form per kept unit (BC-05, disposition_coverage, BC-12): a table without
+        # the rows naming types the public surface lacks (BC-14 i), and the product named as BC-12
+        # requires wherever the maintainers' own wording used a short variant of it.
+        text = kept_unit_form(unit_id, text, facts)
         also: tuple[str, ...] = ()
         topical = False
         if destinations is not None:

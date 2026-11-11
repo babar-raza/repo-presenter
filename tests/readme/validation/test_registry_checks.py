@@ -2726,8 +2726,15 @@ def test_bc12_routes_a_placed_inherited_units_own_misspelling_to_reconciliation(
     the registry's canonical form. BC-12 hardcoded COMPOSING regardless, so the repair it produced
     had nothing in S6's own stage output to revise -- a no-op, rejected twice. A misspelling a
     placed inherited unit carries verbatim must route to RECONCILING with a resolvable unit_id,
-    the same as BC-07's dangling-reference finding above."""
-    misspelled = "Aspose.3D.FOSS opens every format."
+    the same as BC-07's dangling-reference finding above.
+
+    A plain variant of the name ("Aspose.3D.FOSS opens every format.") is now printed in its
+    corrected kept form (``surface_claims.kept_unit_form``), so it no longer reaches BC-12 at all
+    (``test_a_placed_units_plain_name_variant_prints_corrected_and_passes_bc12`` below). The routing
+    still carries wording the correction deliberately declines to rewrite: the family name followed
+    by ANOTHER platform's tail ("... for Rust") may be a sibling product, not a misspelling of this
+    one, so BC-12 flags it and only reconciliation can revise it."""
+    misspelled = "Aspose.3D.FOSS for Rust opens every format."
     facts = FactsDocument(
         ENTRY.repository,
         REVISION,
@@ -2750,6 +2757,26 @@ def test_bc12_routes_a_placed_inherited_units_own_misspelling_to_reconciliation(
         f for f in failing["failures"] if f["causal_stage"] == "RECONCILING"
     )
     assert reconciling["unit_id"] == "inherited_unit:002.paragraph"
+
+
+def test_a_placed_units_plain_name_variant_prints_corrected_and_passes_bc12(
+    tmp_path: Path,
+) -> None:
+    """The original Cells Cpp case (hosted run 40687656250): a kept unit spelling the product
+    differently from the registry. Its printed form now carries the canonical name, so BC-12 holds
+    and the restore that kept the unit is no longer discarded for it."""
+    facts = FactsDocument(
+        ENTRY.repository,
+        REVISION,
+        tuple(
+            Fact(f.id, f.kind, "Aspose.3D.FOSS opens every format.", f.evidence, polarity=f.polarity)
+            if f.id == "inherited_unit:002.paragraph"
+            else f
+            for f in BASE_FACTS
+        ),
+    )
+    document = validate_candidate(_candidate(facts=facts), tmp_path, ())
+    assert "BC-12" not in {c["id"] for c in document["checks"] if c["verdict"] != "PASS"}
 
 
 def test_canonical_name_pattern_is_built_from_the_name_alone() -> None:

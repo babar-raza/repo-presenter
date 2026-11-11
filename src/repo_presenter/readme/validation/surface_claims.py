@@ -426,6 +426,53 @@ def kept_table_form(text: str, facts: FactsDocument) -> str:
     return defang_unsafe_html(without_absent_type_rows(text, facts))
 
 
+#: Kept maintainers' unit kinds whose prose BC-12 judges and ``kept_unit_form`` corrects. A heading
+#: is not one: reconciliation and the shell own heading text, and live_readme_loss matches a live
+#: heading by its text, so rewriting a kept heading would turn it into a lost one.
+_NAME_CORRECTED_KINDS = (".paragraph", ".list", ".blockquote", ".table")
+#: What a name correction must never touch beyond the fenced blocks and inline code spans the
+#: matcher already leaves alone: a link destination and a bare URL.
+_NAME_PROTECTED = re.compile(r"\]\([^)\n]*\)|https?://[^\s)>\]]+")
+
+
+def canonical_name_form(text: str, facts: FactsDocument) -> str:
+    """``text`` with each separator, case or suffix variant of the product name that stands for it
+    in running prose spelled as the canonical name (``Aspose.PDF FOSS`` -> ``Aspose.PDF FOSS for
+    Cpp``): BC-12's own remedy applied deterministically, through the SAME matcher
+    (``composition.components.identity.canonicalise_name_variants``) the authored prose is held to.
+    Fenced blocks, inline code spans, link destinations and bare URLs are left byte for byte; a text
+    that names the product in no variant is returned unchanged."""
+    from repo_presenter.readme.composition.components.identity import (
+        canonicalise_name_variants,
+        product_name_of_repository,
+    )
+
+    canonical = product_name_of_repository(facts.repository)
+    return canonicalise_name_variants(text, canonical, protect=_NAME_PROTECTED)
+
+
+def kept_unit_form(unit_id: str, text: str, facts: FactsDocument) -> str:
+    """The ONE printable form of a kept maintainers' unit, whatever its kind: a table without the
+    rows naming absent types and with unsafe HTML in code spans (``kept_table_form``), and any
+    paragraph, list, blockquote or table with the product named as BC-12 requires
+    (``canonical_name_form``). The renderer, BC-05, the independent reviewer and the restore guard
+    all judge "printed" against this form, so a restore of the maintainers' own wording no longer
+    fails BC-12 on a short name (measured: PDF Cpp, Slides Cpp, Cells Cpp, Cells Go, 2026-11-11)."""
+    if unit_id.endswith(".table"):
+        text = kept_table_form(text, facts)
+    if unit_id.endswith(_NAME_CORRECTED_KINDS):
+        text = canonical_name_form(text, facts)
+    # The renderer corrects a stated "N public types" the facts contradict over the WHOLE README after
+    # assembly (``renderer.correct_stated_type_counts``), so what a kept unit prints carries the facts'
+    # number, never the maintainers' stale one. Judged against the uncorrected text, BC-05 said "placed
+    # in scope_limitations but the candidate does not render it there" and the reviewer "kept but not
+    # printed" for a paragraph that WAS printed, one digit apart (Cells Cpp 041.paragraph: "197" vs the
+    # computed 195). Idempotent with the renderer's own pass; prose only, fenced code is never edited.
+    from repo_presenter.readme.composition.renderer import correct_stated_type_counts
+
+    return correct_stated_type_counts(text, facts)
+
+
 def _table_findings(
     lines: list[_Line], facts: FactsDocument, origin: _Origin, probes: _Probes | None = None
 ) -> list[ClaimFinding]:
