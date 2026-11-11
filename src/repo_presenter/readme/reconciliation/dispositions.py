@@ -73,6 +73,7 @@ from repo_presenter.core.llm.prompts import LoadedManifest, PromptManifest
 from repo_presenter.core.package_registry import (
     DISTRIBUTION_FACT_PREFIX,
     PUBLISHED_VERSION_FACT_ID,
+    fact_registry_reading,
 )
 from repo_presenter.core.registry.models import RegistryEntry
 from repo_presenter.readme.composition.authoring import (
@@ -240,6 +241,43 @@ def unpublished_registry_blocks(facts: FactsDocument) -> dict[str, str]:
         lines = set(_command_lines(unit.value))
         install_id = next(
             (fid for fid, commands in sorted(implied.items()) if lines and lines <= commands), ""
+        )
+        if install_id:
+            found[unit.id] = install_id
+    return found
+
+
+def unproven_build_commands(facts: FactsDocument) -> dict[str, set[str]]:
+    """The comparable command lines of every UNRESOLVED source build of an ecosystem with no
+    registry to ask (C++), by the install fact that records it: BC-02 refuses a README that prints
+    one (``validation.install._claims_nothing_without_a_registry``), because no build exited 0."""
+    return {
+        fact.id: set(_command_lines(fact.value))
+        for fact in facts.by_kind("install_command")
+        if fact.polarity == "UNRESOLVED" and fact_registry_reading(fact) == "no_registry"
+    }
+
+
+def unproven_source_build_blocks(facts: FactsDocument) -> dict[str, str]:
+    """Inherited command blocks that print a source-build command no build proved, by unit ID, with
+    the UNRESOLVED install fact that records the build as unproven.
+
+    A block with ONE such line is as a whole not a procedure the README may present: keeping the
+    other steps (``cmake -S . -B build``, ``ctest``) without the failed one would leave a half
+    procedure that reads as complete. Measured: Aspose.Cells FOSS for C++, hosted 2026-11-11 -- the
+    measured build failed, the maintainers' test-suite block was kept ``VERIFIED_PRESERVE``, and a
+    BC-02 repair "succeeded" with no change at all (``changes: []``), so the block, and BC-02, stayed."""
+    implied = unproven_build_commands(facts)
+    if not implied:
+        return {}
+    blocks = command_block_units(facts)
+    found: dict[str, str] = {}
+    for unit in facts.by_kind("inherited_unit"):
+        if unit.id not in blocks:
+            continue
+        lines = set(_command_lines(unit.value))
+        install_id = next(
+            (fid for fid, commands in sorted(implied.items()) if lines & commands), ""
         )
         if install_id:
             found[unit.id] = install_id
@@ -1103,6 +1141,14 @@ _OTHER_EDITION = re.compile(r"\b([A-Z][A-Za-z]+) Edition\b")
 _INLINE_CODE = re.compile(r"`[^`\n]*`")
 RECOVERED_LABEL_RATIONALE = "Restated: it names an edition BC-06 forbids. "
 RECOVERED_FENCE_RATIONALE = "Restated: it embeds an unverified code example BC-03 forbids. "
+#: The wording carries "contradicted" on purpose: BC-17's accounting reads that word as the mark of
+#: an omission made on evidence (``parity_gate._NON_LOSS_RATIONALE``), and it is true -- the measured
+#: build of this checkout failed, so the block's build steps are contradicted by that measurement.
+UNPROVEN_BUILD_RATIONALE = (
+    "The build steps in this block are contradicted by the measured build of this checkout, which "
+    "did not exit 0 (BC-02 forbids presenting an unproven source build); the Installation section "
+    "states only what the repository documents."
+)
 
 
 def edition_labels(text: str) -> list[str]:
@@ -1335,6 +1381,7 @@ def normalize(
     contradicted_links = contradicted_link_hrefs(facts)
     commands = command_block_units(facts)
     unpublished = unpublished_registry_blocks(facts)
+    unproven = unproven_source_build_blocks(facts)
     example_status = _example_status(facts)
     units_by_id = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
     wrapper_bounds = _collapsible_wrapper_bounds(output, units_by_id)
@@ -1409,6 +1456,12 @@ def normalize(
             entry["disposition"] = "OMIT_UNSUPPORTED"
             entry["destination_section"] = None
             entry["fact_ids"] = sorted(cited | {unpublished[unit]})
+            continue
+        if unit in unproven and disposition not in ("OMIT_UNSUPPORTED", "DEFER_UNRESOLVED"):
+            entry["rationale"] = UNPROVEN_BUILD_RATIONALE
+            entry["disposition"] = "OMIT_UNSUPPORTED"
+            entry["destination_section"] = None
+            entry["fact_ids"] = sorted(cited | {unproven[unit]})
             continue
         if disposition in PLACING and unit in unresolved:
             entry["disposition"] = "DEFER_UNRESOLVED"
@@ -1653,6 +1706,7 @@ def normalize(
                 and unit not in unresolved
                 and unit not in contradicted
                 and unit not in unpublished
+                and unit not in unproven
                 and unit not in example_status
             ):
                 # Measured live (aspose-psd-foss/Aspose.PSD-FOSS-for-Python, 2026-11-09, batch 1,
@@ -2938,6 +2992,7 @@ def placement_errors(output: dict[str, Any], facts: FactsDocument) -> list[str]:
     contradicted = contradicted_code_units(facts)
     commands = command_block_units(facts)
     unpublished = unpublished_registry_blocks(facts)
+    unproven = unproven_source_build_blocks(facts)
     example_status = _example_status(facts)
     inherited = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
     # Keyed by unit, like example_status just above, never by what a disposition cites: a model
@@ -3054,6 +3109,7 @@ def placement_errors(output: dict[str, Any], facts: FactsDocument) -> list[str]:
             and unit in commands
             and build_facts
             and unit not in unpublished
+            and unit not in unproven
             and not _omits_contradicted_command(entry, unit_text.get(unit, ""), facts)
         ):
             errors.append(

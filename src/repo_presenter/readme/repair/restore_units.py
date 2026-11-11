@@ -239,7 +239,10 @@ def restore_lost_units(
     ``_fold_dangling_rewrites`` also uses) is NOT restored: it was ``VERIFIED_REWRITE`` precisely
     because of that pointer, and restoring it trades BC-17/BC-08 for BC-07 (hosted PDF Go
     ``025.paragraph``). Each such unit is appended to ``skipped`` (when given) and left as it was."""
-    from repo_presenter.readme.reconciliation.dispositions import dangling_pointers
+    from repo_presenter.readme.reconciliation.dispositions import (
+        dangling_pointers,
+        unproven_source_build_blocks,
+    )
 
     output = copy.deepcopy(dict(dispositions))
     before = {
@@ -251,6 +254,10 @@ def restore_lost_units(
     }
     units = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
     by_id = {fact.id: fact for fact in facts.facts}
+    # A block that prints a source-build command no build proved is never restored: BC-02 refuses
+    # the README that prints it, so restoring it would trade BC-05/BC-17 for BC-02 (S4 omits it on
+    # that evidence, ``dispositions.unproven_source_build_blocks``).
+    forbidden = unproven_source_build_blocks(facts)
     changes: list[dict[str, str]] = []
     # A destination the plan omits prints nothing (BC-05: "placed in X, which the plan omits"), so
     # only sections that can hold a unit AND that the sealed plan includes are candidates.
@@ -260,6 +267,10 @@ def restore_lost_units(
         if unit_id not in unit_ids or unit_id not in units:
             continue
         if unit_id.rsplit(".", 1)[-1] in _SHELL_RENDERED:
+            continue
+        if unit_id in forbidden:
+            if skipped is not None:
+                skipped.append({"unit_id": unit_id, "reason": "forbidden_command"})
             continue
         cited = [by_id[f] for f in entry.get("fact_ids") or [] if f in by_id]
         if any(fact.polarity == "CONTRADICTED" for fact in cited):
