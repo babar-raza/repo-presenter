@@ -11,19 +11,21 @@ from __future__ import annotations
 
 import hashlib
 from pathlib import Path
+from typing import Any
 
 from repo_presenter.core.ecosystems import spec_for
 from repo_presenter.core.errors import ExecutionUnavailableError
 from repo_presenter.core.examples import (
     ExampleCandidate,
     ExampleReceipt,
+    MeasuredBuild,
     collapse_blank_runs,
 )
 from repo_presenter.core.facts import FactsDocument
 from repo_presenter.core.registry.models import RegistryEntry
 from repo_presenter.core.snapshot.capture import RepositorySnapshot
 from repo_presenter.core.snapshot.inventory import scan
-from repo_presenter.extractors.platforms.registry import plugin_for
+from repo_presenter.extractors.platforms.registry import plugin_for, verify_build
 from repo_presenter.readme.evidence.facts.extract import extract_facts
 from repo_presenter.readme.evidence.facts.inherited import inventory_units
 
@@ -160,15 +162,37 @@ def build_lane_l_facts(
             )
             for candidate in candidates
         ]
+    manifest = plugin.detect_manifest(root)
     document, _probes = extract_facts(
         entry,
         snapshot,
         root,
         tree_paths,
         plugin,
-        plugin.detect_manifest(root),
+        manifest,
         candidates,
         receipts,
         "receipts.json",
+        _measured_build(plugin, root, manifest, workspace),
     )
     return document
+
+
+def _measured_build(
+    plugin: Any, root: Path, manifest: Path | None, workspace: Path
+) -> MeasuredBuild | None:
+    """The package's own measured build, for an ecosystem that drives one (C++, Node, TypeScript).
+
+    ``extract_facts`` accepted a ``build`` and ``registry.verify_build`` produced one, but nothing
+    ever connected them: ``build`` was always ``None``, so BC-02 read "no build exited 0: not
+    attempted" for every such repository whether or not its build works -- measured on Aspose.Cells
+    FOSS for C++, hosted, 2026-11-11, whose cmake blocks (the maintainers' own, kept verbatim) were
+    refused for a build nobody ran. ``None`` is returned for an ecosystem that drives no build, so
+    its facts stand exactly as before; a harness that cannot start a process is "not attempted",
+    never a crash and never a claim that a build passed."""
+    if manifest is None or getattr(plugin, "verify_build", None) is None:
+        return None
+    try:
+        return verify_build(plugin, root, manifest, workspace)
+    except ExecutionUnavailableError as exc:
+        return MeasuredBuild(False, "", f"not attempted (build unavailable: {exc})")
