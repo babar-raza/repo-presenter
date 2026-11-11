@@ -532,6 +532,9 @@ def _apply_links(output: dict[str, Any], missing: list[Any]) -> None:
     output["links"] = [*output.get("links", []), *missing]
 
 
+_CORRECTED_LIST_DISPOSITIONS = frozenset({"CORRECT_WITH_EVIDENCE"})
+
+
 def _kept_list_links(
     output: dict[str, Any], facts: FactsDocument, dispositions: dict[str, Any] | None
 ) -> dict[str, str]:
@@ -552,17 +555,35 @@ def _kept_list_links(
         for link in output.get("links", [])
         if link.get("section_id") == "documentation_resources"
     }
+    values = {
+        fact.id: fact.value for fact in facts.by_kind("link_target") if fact.polarity == "SUPPORTED"
+    }
     required: dict[str, str] = {}
     for entry in dispositions.get("dispositions", []):
         unit = str(entry.get("unit_id", ""))
+        disposition = entry.get("disposition")
+        # A list the model CORRECTED (VERIFIED_REWRITE is covered by _required_link_sections) is
+        # still a list of links: Documentation and Resources is the only section that prints a
+        # link bullet, so a corrected docs list filed under any other section (Cells Go's
+        # 055.list, corrected into scope_limitations) loses every link the plan did not already
+        # carry. Only the links the unit's own text prints count (a fact cited purely as evidence
+        # is not a link to print).
+        corrected = disposition in _CORRECTED_LIST_DISPOSITIONS
         if (
-            entry.get("disposition") not in PLACED
-            or entry.get("destination_section") != "documentation_resources"
+            not (
+                (disposition in PLACED and entry.get("destination_section") == "documentation_resources")
+                or corrected
+            )
             or not unit.endswith(".list")
             or len(list_items(texts.get(unit, ""))) < 2
         ):
             continue
-        targets = [str(i) for i in entry.get("fact_ids") or [] if str(i) in assignable]
+        targets = [
+            str(i)
+            for i in entry.get("fact_ids") or []
+            if str(i) in assignable
+            and (not corrected or values.get(str(i), "") in texts.get(unit, ""))
+        ]
         if planned_here.intersection(targets):
             required.update(dict.fromkeys(targets, "documentation_resources"))
     return required
