@@ -78,10 +78,20 @@ progress:
   # in Lane R, and R21/stale_type_count re-certify HTML/Words Python in Lane L plus new Lane L seals
   # (Words .NET, Slides .NET, Email Cpp, 3D Python, Note Python, PSD Python). These are
   # deterministic re-certification counts, NOT independently-accepted candidates (0 of those).
-  lane_l_accepted: 17
+  # RESYNCED 2026-11-11 (lane_l_accepted 17 -> 20, lane_r_accepted 5 -> 13) after re-running
+  # `ops/checks/dashboard_matches_live.py` (live=20/13) and `ops/checks/delivery_funnel.py`
+  # (mechanism_passing R 13 / L 20) following this session's reconciliation pass: the real
+  # `run_cascade` recompose fix (a successful repair no longer orphaned behind a stale
+  # review-cache verdict) and the `_has_word` word-boundary fix in parity_gate.py/coverage.py
+  # (a package-qualified identifier like `drawing.GraphInfo` no longer reads as a false BC-17
+  # loss of the bare identifier) each re-certify repositories that were previously drifted stale
+  # by unrelated checker changes, not a new regeneration. Needs-repair residuals (not counted):
+  # Lane R -- Cells Go, PDF Java; Lane L -- Font Python. Still 0/25 independently accepted either
+  # lane (the M9 audit/attestation pipeline is not live yet).
+  lane_l_accepted: 20
   lane_l_corrected_non_empty_patch: 15
   lane_l_blocked: 0
-  lane_r_accepted: 5
+  lane_r_accepted: 13
   # Lane L 11 -> 9: BC-14 mechanical rules find genuine false claims in two live READMEs (HTML Python, Words Python:
   # non-exported or nonexistent types, wrong type counts) -- justified in data/recertification_baseline.json; Lane L corrects them.
   # 2026-11-06 BC-17 (benchmark parity) blocks Imaging .NET Lane R on a genuine loss (justified in the gate baseline); targeted repair restores it.
@@ -175,7 +185,7 @@ owner_review_status:
 
 release_gate_dashboard:
   generated_by: gatecli
-  generated_at: '2026-11-09T21:56:48Z'
+  generated_at: '2026-11-11T15:33:36Z'
   note: Tool-generated from gateverify.rebuild_state() -- never hand-edit this block.
     Historical current_gate/active_work_item below are preserved bootstrap-era narrative,
     not this cursor; this block is the real, evidence-derived release-gate status
@@ -246,11 +256,11 @@ release_gate_dashboard:
     receipt: GATE1_QUALITY/TC-008/receipt.json
   - id: TC-008a
     gate: GATE1_QUALITY
-    status: STALE_RECEIPT
+    status: ACCEPTED
     attempt: 0
-    blocker:
-      class: STALE_RECEIPT
-      summary: card definition changed since this receipt was generated -- re-verify
+    blocker: null
+    commit: 332f0194435aa7c15789fe5d37e42060ec9e7312
+    receipt: GATE1_QUALITY/TC-008a/receipt.json
   - id: TC-009
     gate: GATE2_INTEGRATIONS
     status: ACCEPTED
@@ -299,26 +309,23 @@ release_gate_dashboard:
     blocker: null
   - id: TC-012
     gate: GATE4_PRODUCTION
-    status: AWAITING_PREREQUISITE
+    status: ACCEPTED
     attempt: 0
-    blocker:
-      class: AWAITING_PREREQUISITE
-      summary: 'depends on TC-008a, not yet accepted (receipt also stale: card changed
-        since verification)'
+    blocker: null
+    commit: 9b7d9808d32ec367694f4a73185cc46872a11669
+    receipt: GATE4_PRODUCTION/TC-012/receipt.json
   - id: TC-012a
     gate: GATE4_PRODUCTION
     status: AWAITING_PREREQUISITE
     attempt: 0
     blocker:
       class: AWAITING_PREREQUISITE
-      summary: depends on TC-009b, TC-010a, TC-011, TC-012, TC-012b, not yet accepted
+      summary: depends on TC-009b, TC-010a, TC-011, TC-012b, not yet accepted
   - id: TC-012b
     gate: GATE4_PRODUCTION
-    status: AWAITING_PREREQUISITE
+    status: READY
     attempt: 0
-    blocker:
-      class: AWAITING_PREREQUISITE
-      summary: depends on TC-012, not yet accepted
+    blocker: null
   - id: TC-013
     gate: GATE5_DELIVERY_PROGRAM
     status: ACCEPTED
@@ -359,7 +366,7 @@ release_gate_dashboard:
     status: ACCEPTED
     attempt: 0
     blocker: null
-    commit: 4e63fc7d84f7a325c9b1843c516822e6ab3f90e9
+    commit: 01c1a9e3a9eb131ad89c8e4cc96424d1f37a67f5
     receipt: GATE5_DELIVERY_PROGRAM/TC-017b/receipt.json
   - id: TC-018
     gate: GATE5_DELIVERY_PROGRAM
@@ -380,21 +387,21 @@ release_gate_dashboard:
     status: ACCEPTED
     attempt: 0
     blocker: null
-    commit: 9c08111bd4e9bd89f5983a62f8cde8e50e0d7756
+    commit: 0c3d5b7928cdcab5c6e2330087b4b230e613adf9
     receipt: GATE5_DELIVERY_PROGRAM/TC-019b/receipt.json
   - id: TC-019c
     gate: GATE5_DELIVERY_PROGRAM
-    status: ACCEPTED
+    status: STALE_RECEIPT
     attempt: 0
-    blocker: null
-    commit: 9c08111bd4e9bd89f5983a62f8cde8e50e0d7756
-    receipt: GATE5_DELIVERY_PROGRAM/TC-019c/receipt.json
+    blocker:
+      class: STALE_RECEIPT
+      summary: card definition changed since this receipt was generated -- re-verify
   - id: TC-020
     gate: GATE5_DELIVERY_PROGRAM
     status: ACCEPTED
     attempt: 0
     blocker: null
-    commit: 0b993a83c8b5d8b70688e074655395e9588541df
+    commit: 95c4ecacb2762d7a0bdfea61d81ca3d10a378f59
     receipt: GATE5_DELIVERY_PROGRAM/TC-020/receipt.json
   - id: TC-021
     gate: GATE5_DELIVERY_PROGRAM
@@ -408,7 +415,7 @@ release_gate_dashboard:
     status: ACCEPTED
     attempt: 0
     blocker: null
-    commit: 6d29e832f2c7c2146bee8480979e4053013b7662
+    commit: 48509cc76c1c5081c0fe399af04e3ceea15cbb2d
     receipt: GATE5_DELIVERY_PROGRAM/TC-022a/receipt.json
   - id: TC-022b
     gate: GATE5_DELIVERY_PROGRAM
@@ -475,8 +482,9 @@ release_gate_dashboard:
     receipt: GATE5_DELIVERY_PROGRAM/TC-029a/receipt.json
   ready:
   - TC-005
-  - TC-008a
   - TC-011
+  - TC-012b
+  - TC-019c
 current_gate:
   id: P1_PORTFOLIO_SCALE
   status: ACCEPTED

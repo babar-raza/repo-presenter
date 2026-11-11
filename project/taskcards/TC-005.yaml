@@ -36,7 +36,10 @@ checks:
   - command: |-
       python ops/checks/dashboard_matches_live.py
     expect: exit 0
-    timeout_seconds: 300
+    # 2026-11-11: 300s was too tight now that the portfolio has grown (36 repos x 2 lanes, each
+    # zero-call re-certified) -- measured 735s real on a clean run. Widened with margin rather
+    # than re-tightened, since this only grows as more repositories seal.
+    timeout_seconds: 1200
     proves:
       - REQ-G8-013
   - command: |-
@@ -44,7 +47,8 @@ checks:
     expect: exit 0
     # 2026-11-06: 60 s was too tight. The test runs the live portfolio status, which queries origin
     # over the network (measured 37 s and >60 s on two consecutive runs): a timeout, not a code flake.
-    timeout_seconds: 240
+    # 2026-11-11: 240s was too tight for the same reason as the check above -- measured 718s real.
+    timeout_seconds: 1200
     proves:
       - REQ-G8-013
 requires:
