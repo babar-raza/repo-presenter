@@ -504,7 +504,16 @@ def test_repair_section_regenerates_and_records_it_distinctly_when_the_store_is_
         record={"quote": QUOTE},
     )
 
-    fresh_client = _FakeClient([_completion(_AUTHORING_REPLIES[0])])
+    # A bare regenerate is not the end of it: real evidence (Aspose.Slides-FOSS-for-Cpp, two
+    # hosted runs) showed a plain re-ask of the unchanged packet reproducing the identical
+    # flawed text, so the fallback must fall through into the ordinary defect-aware revision --
+    # one call to regenerate the missing original, a second to revise it against this finding.
+    fresh_client = _FakeClient(
+        [
+            _completion(_AUTHORING_REPLIES[0]),
+            _completion(_opening_repair_reply(defect.fingerprint, QUOTE, REPAIRED_TEXT)),
+        ]
+    )
     monkeypatch.setattr(jobs_module.transport, "build_client", lambda config: fresh_client)
 
     changed = _repair_section(rc, defect, repairs)
@@ -514,6 +523,7 @@ def test_repair_section_regenerates_and_records_it_distinctly_when_the_store_is_
     attempt = repairs.attempts[defect.fingerprint]
     assert attempt["outcome"] == "repaired"
     assert "restored from a sealed bundle" in attempt["reason"]
+    assert "revised in place" in attempt["reason"]
     assert attempt["stage"] == "S6"
 
 

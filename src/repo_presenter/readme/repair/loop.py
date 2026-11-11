@@ -389,19 +389,18 @@ def _repair_plan(rc: RepairContext, defect: Defect, repairs: RepairLedger) -> bo
                 "the causing plan is not in the call store, and a fresh "
                 "presentation_planning call could not produce one",
             )
-        repairs.record(
-            replace(
-                defect,
-                reason=(
-                    "the causing plan was not in the call store (restored from a sealed "
-                    "bundle); regenerated it fresh with the same job and checks initial "
-                    "generation uses, rather than revising in place"
-                ),
+        # A plain regenerate alone is not enough: measured on Aspose.Slides-FOSS-for-Cpp (the
+        # section_authoring sibling of this same gap), a bare re-ask of the unchanged packet
+        # reproduced the identical output and the review re-flagged the identical findings
+        # forever. Falling through into the ordinary defect-aware revision below, which DOES
+        # carry the finding's own reason, is what section_authoring's fix also does.
+        defect = replace(
+            defect,
+            reason=(
+                "the causing plan was not in the call store (restored from a sealed "
+                "bundle); regenerated it fresh, then revised in place against this finding"
             ),
-            "repaired",
-            request_sha256=key,
         )
-        return True
     checks = refuse_noop(
         original,
         partial(
@@ -711,7 +710,13 @@ def _repair_section(rc: RepairContext, defect: Defect, repairs: RepairLedger) ->
         # call store, so a review finding against a RESTORED section has no original call in THIS
         # run's store to revise (measured live, Aspose.Slides-FOSS-for-Cpp, two hosted runs,
         # identical both times: F01-F08 all "the causing section is not in the call store",
-        # discarding every other already-fixed defect too).
+        # discarding every other already-fixed defect too). A plain re-ask of the SAME packet at
+        # this point is not enough on its own: measured on the SAME repository, a bare regenerate
+        # reproduced the identical flawed prose (temperature-0 determinism over an unchanged
+        # packet) and the review re-flagged the identical findings forever. So the fresh call
+        # populates the store and execution falls through into the ordinary defect-aware revision
+        # below, which DOES carry the finding's own quote/reason -- the thing a plain re-ask never
+        # gets a chance to see.
         original = _regenerate_section(rc, task, loaded)
         if original is None:
             return _unrepairable(
@@ -719,19 +724,13 @@ def _repair_section(rc: RepairContext, defect: Defect, repairs: RepairLedger) ->
                 "the causing section is not in the call store, and a fresh "
                 "section_authoring call could not produce one",
             )
-        repairs.record(
-            replace(
-                defect,
-                reason=(
-                    "the causing section was not in the call store (restored from a sealed "
-                    "bundle); regenerated it fresh with the same job and checks initial "
-                    "generation uses, rather than revising in place"
-                ),
+        defect = replace(
+            defect,
+            reason=(
+                "the causing section was not in the call store (restored from a sealed "
+                "bundle); regenerated it fresh, then revised in place against this finding"
             ),
-            "repaired",
-            request_sha256=key,
         )
-        return True
     checks: Checks = refuse_noop(
         original,
         lambda revised: unit_checks(
