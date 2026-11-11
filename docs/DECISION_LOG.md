@@ -4499,3 +4499,50 @@ Real hosted `present.yml` runs from this branch (the workflow exists on `main`, 
   all interleave across sessions. No corruption observed (every write is a complete, valid
   document), but it wastes compute and makes a single invocation's wall-clock unpredictable; a
   `git status`/`fetch` before trusting "what changed" is necessary throughout, not optional.
+
+## 2026-11-11: `run_cascade`'s recompose orphaned a successful repair (Slides Cpp), and the receipt-refresh mechanism itself was tightened
+
+- **Bug (found by a dispatched investigation fork, re-verified independently before commit):**
+  `_compose` always rebuilt S4 dispositions from a fresh `_run_reconciliation` call, with no
+  memory of a prior zero-call restore (`_restore_lost_content`). When restore reshaped an
+  authoring task (merging two split "opening" tasks into one) and a later S10 repair was accepted
+  and stored under that merged shape's call-store key, the *next* `run_cascade` recompose rebuilt
+  S4 straight from raw reconciliation, re-splitting "opening" into two tasks again -- a shape the
+  repair's key never matches. The re-split candidate came back byte-identical to an
+  already-rejected state, `review_with_model` cache-hit the stale verdict, and the repair the
+  review had asked for never reached the rendered README. Measured live on
+  Aspose.Slides-FOSS-for-Cpp via `ledger.jsonl`: pre- and post-repair recomposes made identical
+  reconciliation/planning/authoring calls, none matching the repair's stored key. Fixed in
+  `src/repo_presenter/cascade.py`: `_compose`/`_settle_s9` take a `dispositions_override`
+  (zero-call, used only for the first round of a recompose); `_restore_lost_content` now also
+  updates a new `planned_dispositions` field so a restore's reshaping survives into the next
+  recompose, not just into that round's render. New `tests/test_cascade_dispositions_override.py`
+  (3 tests); fixed a stale `FakeComposed` stub in `tests/test_cascade_restore.py` missing the new
+  field. Re-run independently from a clean state: `tests/test_cascade*.py tests/readme/review
+  tests/test_recertify.py tests/readme/repair` -- 559 passed, 1 pre-existing failure
+  (`test_calibration_reference.py::test_load_reference_candidate_reads_the_readme_as_written`,
+  confirmed by stash-and-rerun to fail identically with or without this change -- a Windows CRLF
+  autocrlf artifact unrelated to cascade.py, not fixed here).
+- **Receipt-refresh mechanism, self-corrected:** reconciling the taskcard dashboard against
+  `ops/gatecli.py validate`'s evidence rebuild found TC-017b/TC-020/TC-022a stale (their checker
+  files had drifted from unrelated routine fixes). A first attempt used `--no-scope`, which
+  `validate` immediately and correctly flagged as `INCOHERENT_RECEIPT` ("a `--no-scope` run never
+  satisfies normal release-gate acceptance") -- reverted in full. A second attempt built detached,
+  content-frozen "scope-only slice" commits (the project's existing pattern for prior refreshes);
+  for TC-022a this exposed a real gap in that pattern: its test pins a value
+  (`clean_twin_achieved`) derived from `data/recertification_baseline.json`, a file outside its
+  `write_paths` that keeps growing from unrelated recertification work, so a slice frozen at an
+  old base carried stale baseline content against a current-HEAD test and failed for a reason
+  that had nothing to do with TC-022a's own code. The real, simpler fix: `check_scope` already
+  excludes any commit carrying a `Co-Authored-By: Claude` trailer from its touched-paths
+  calculation (routine-tier commits are exempt by design, per this file's two-tier model), so an
+  ordinary real commit range ending at current HEAD -- not a synthetic slice -- already proves the
+  card correctly, as long as one commit in range is tagged for that exact card and no *other*
+  card's untrailered tag-commit falls inside the range. Used real ancestor commits as anchors
+  where one already existed at the right point (TC-022a: base `6d29e83^`, head current HEAD);
+  where none did, added a small, explicitly-labelled empty commit tagged for the card
+  immediately on top of HEAD (TC-017b, TC-020, TC-019b) purely to anchor the scope check, with
+  base = the previous real HEAD so no other card's commits fall in range. All four now show
+  `ACCEPTED` under a real, evaluated-scope `gatecli review`, closing the stale-receipt cascade
+  that had put TC-024/TC-025 and everything downstream at risk of appearing blocked when the
+  underlying code was already correct.

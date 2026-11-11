@@ -373,6 +373,7 @@ def _drive_restore(
         readme: str
         tasks: Any
         accounted: Any
+        planned_dispositions: Any = None
 
     verdict_after = SimpleNamespace(blocking_findings=("f",) * review_blocking)
     verdict_before = SimpleNamespace(blocking_findings=())

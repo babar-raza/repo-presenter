@@ -411,14 +411,33 @@ def _compose(
     *, entry: RegistryEntry, document: FactsDocument, investigation: dict, ecosystem: str,
     tree_paths: list[str], original_bytes: bytes, out_dir: Path, prompts: PromptRegistry,
     config: GatewayConfig, ledger: Ledger, store: CallStore, context: JobContext,
+    dispositions_override: dict[str, Any] | None = None,
 ) -> _Composition:
     """S4 through S8, then account for the kept units the render does not print (S9).
 
     Every artifact lands in ``out_dir``; a repaired S4 batch is read back from the call store, so
-    a second pass asks the provider only for what the repair changed."""
+    a second pass asks the provider only for what the repair changed.
+
+    ``dispositions_override``, when given, is used in place of a fresh ``_run_reconciliation``
+    call (zero provider calls for S4). Without it, a recompose that follows a zero-call restore
+    (``_restore_lost_content``) silently discards that restore's reshaping and rebuilds S4 from
+    raw reconciliation output -- the ONLY two states ``_run_reconciliation`` itself ever produces
+    for a fixed document, so a restore that merged a split authoring task back into one (the
+    shape a later repair's call-store key was computed against) is undone the moment the next
+    round recomposes, orphaning the repair under a hash the re-split recompose never looks up
+    again. Measured live on Aspose.Slides-FOSS-for-Cpp: restore merged two "opening" authoring
+    tasks into one, a model-review repair was accepted and stored under that merged task's key,
+    then the next S10 recompose rebuilt "opening" as two tasks again from raw dispositions,
+    neither matching the repair's key -- the rendered README, and the review call made against
+    it, both reverted to the pre-repair text, and the already-rejected candidate's review
+    verdict came back from cache byte-identical to the one the repair was meant to fix."""
     common = {"config": config, "ledger": ledger, "store": store, "context": context}
-    dispositions = _run_reconciliation(
-        entry=entry, document=document, investigation=investigation, prompts=prompts, **common
+    dispositions = (
+        dispositions_override
+        if dispositions_override is not None
+        else _run_reconciliation(
+            entry=entry, document=document, investigation=investigation, prompts=prompts, **common
+        )
     )
     write_dispositions(dispositions, out_dir / "dispositions.json")
     # What the planning, authoring and coherence calls are made from. dispositions.json is
@@ -626,9 +645,15 @@ def _settle_s9(
     tree_paths: list[str], original_bytes: bytes, original: str, out_dir: Path,
     prompts: PromptRegistry, config: GatewayConfig, ledger: Ledger, store: CallStore,
     context: JobContext, repairs: RepairLedger, max_rounds: int,
+    dispositions_override: dict[str, Any] | None = None,
 ) -> _Settled:
     """Compose, validate and review deterministically, repairing S4 defects, until nothing fresh
-    is repairable or ``max_rounds`` passes have been made. No model reviews here (S10 follows)."""
+    is repairable or ``max_rounds`` passes have been made. No model reviews here (S10 follows).
+
+    ``dispositions_override`` carries a prior round's zero-call restore into this call's FIRST
+    ``_compose`` only (see ``_compose``'s own docstring) -- an S4 defect repaired during THIS
+    call's own loop (below) genuinely changes dispositions, so every round after the first goes
+    back to a fresh ``_run_reconciliation``, exactly as before this parameter existed."""
     rounds = 0
     while True:
         rounds += 1
@@ -636,6 +661,7 @@ def _settle_s9(
             entry=entry, document=document, investigation=investigation, ecosystem=ecosystem,
             tree_paths=tree_paths, original_bytes=original_bytes, out_dir=out_dir,
             prompts=prompts, config=config, ledger=ledger, store=store, context=context,
+            dispositions_override=dispositions_override if rounds == 1 else None,
         )
         candidate = _candidate(
             entry, document, composed.plan, composed.coherent_units, composed.dispositions,
@@ -843,7 +869,17 @@ def _restore_lost_content(
     )
     write_review_verdict(verdict, out_dir / REVIEW_VERDICT_FILENAME)
     return _Settled(
-        replace(composed, dispositions=dispositions, readme=readme, tasks=tasks, accounted=accounted),
+        replace(
+            composed,
+            dispositions=dispositions,
+            # Restore's reshaping becomes the new planning baseline too, not just the render-time
+            # value: a recompose that follows this restore (``_settle_s9``'s ``dispositions_override``)
+            # must see the SAME disposition shape ``tasks`` was built from here, or it re-derives
+            # authoring tasks from the stale pre-restore shape and orphans anything keyed against
+            # this one (e.g. a restore-merged section repaired at S10).
+            planned_dispositions=dispositions,
+            readme=readme, tasks=tasks, accounted=accounted,
+        ),
         validation, verdict, settled.rounds,
     )
 
@@ -1015,7 +1051,22 @@ def run_cascade(
         ):
             break
         review_rounds += 1
-        settled = _restore_lost_content(_settle_s9(**settle), **restoring)
+        # Carry the restore's own planning baseline into the recompose (_settle_s9's docstring):
+        # this round's repair was keyed against settled.composed's tasks, which already reflect
+        # whatever _restore_lost_content reshaped (e.g. a split section merged into one) --
+        # planned_dispositions, not dispositions, because the latter also carries this round's
+        # accounting (readme.repair.accounting), an output-only adjustment planning/authoring
+        # were never run against; feeding it back in as if it were would mismatch the packet
+        # _run_planning/_run_authoring already cached and force a needless fresh call. A plain
+        # fresh _settle_s9(**settle) call (no override at all) forgets the restore's reshaping,
+        # rebuilds S4 from raw reconciliation, and silently orphans the repair under a task shape
+        # nothing looks up again (measured live, Aspose.Slides-FOSS-for-Cpp: a repaired "opening"
+        # never reached the rendered README because the recompose re-split it before authoring
+        # ran).
+        settled = _restore_lost_content(
+            _settle_s9(**settle, dispositions_override=settled.composed.planned_dispositions),
+            **restoring,
+        )
         rounds += settled.rounds
         verdict = settled.verdict
     composed, validation = settled.composed, settled.validation
