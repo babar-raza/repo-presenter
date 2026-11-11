@@ -428,7 +428,15 @@ def _norm_href(href: str) -> str:
 
 
 def _has_word(text: str, token: str) -> bool:
-    return re.search(r"(?<![\w.])" + re.escape(token) + r"(?![\w])", text) is not None
+    """Whether ``token`` appears in ``text`` as a whole word, including as the trailing segment
+    of a dotted/qualified name (``drawing.GraphInfo`` carries the bare identifier ``GraphInfo``).
+    Excluding a preceding dot from the boundary (as an earlier version did) made two overlapping
+    short class names from different packages -- a real, common case in a large API surface --
+    register as a false loss the moment the renderer disambiguated them with their package
+    prefix: every one of PDF-FOSS-for-Java's ``api_identifiers`` false BC-17 losses (``GraphInfo``,
+    ``PatternColorSpace``, ``Config``, ``FontRepository``, ``FormField``, ``SplitPlan``, ``Token``)
+    was printed only in qualified form, never bare, and still failed this check."""
+    return re.search(r"(?<!\w)" + re.escape(token) + r"(?![\w])", text) is not None
 
 
 def _versions(text: str) -> set[str]:

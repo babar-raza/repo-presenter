@@ -257,6 +257,17 @@ def test_lost_api_identifier_fails():
     assert not d.passed and d.numbers["api_identifiers"]["lost"] == 1
 
 
+def test_api_identifier_still_present_under_a_longer_qualified_prefix_is_not_lost():
+    """A renderer that disambiguates two short, overlapping class names (``GraphInfo`` in both
+    ``pdf`` and ``drawing``) by printing their package prefix still carries the bare identifier --
+    a preceding dot must not break the word-boundary match (measured on Aspose.PDF-FOSS-for-Java:
+    GraphInfo, PatternColorSpace, Config, FontRepository, FormField, SplitPlan and Token were all
+    printed only in qualified form and every one registered as a false BC-17 loss)."""
+    readme = benchmark().replace("Call `Widget.Save()`", "Call `Thing.Widget.Save()`")
+    d = dim(run(cand(readme)), "technical_content")
+    assert d.passed and d.numbers["api_identifiers"]["lost"] == 0
+
+
 def test_lost_install_command_fails_and_verified_replacement_is_accounted():
     readme = benchmark().replace(
         "dotnet add package Foo.Bar", "dotnet add package Other"

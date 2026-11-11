@@ -198,7 +198,14 @@ def api_identifiers(text: str, api_names: Collection[str]) -> list[str]:
 
 
 def _has_word(document: str, token: str) -> bool:
-    return re.search(r"(?<![\w.])" + re.escape(token) + r"(?![\w])", document) is not None
+    """Whole-word match, including as the trailing segment of a dotted/qualified name
+    (``drawing.GraphInfo`` carries the bare identifier ``GraphInfo``). Excluding a preceding dot
+    from the boundary made two overlapping short class names from different packages -- the
+    renderer's own disambiguation for a large API surface -- read as uncovered the moment either
+    was printed in qualified form, the same false negative parity_gate.py's twin ``_has_word``
+    had (PDF-FOSS-for-Java: GraphInfo, PatternColorSpace, Config, FontRepository, FormField,
+    SplitPlan, Token all printed only in qualified form)."""
+    return re.search(r"(?<!\w)" + re.escape(token) + r"(?![\w])", document) is not None
 
 
 def carries_identity_tokens(
