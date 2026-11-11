@@ -170,3 +170,33 @@ def test_a_build_status_badge_is_never_carried_on_the_maintainers_word() -> None
         "(https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Rust/actions/workflows/ci.yml)"
     )
     assert _extras(_context(RUST, row)) == []
+
+
+# --- a second real badge whose label names a build tool, not the language -----------------------
+#
+# Real text: Aspose.PDF FOSS for C++'s header (hosted Lane R, 2026-11-11) has FOUR linked badges:
+# CI, License, a C++20 runtime badge, and a CMake-3.20+ badge. Both the renderer's own runtime
+# badge and the maintainers' C++20 one already occupy the "runtime" slot, so the CMake badge can
+# only survive as an extra -- and the floor check read the whole image tail, including the hex
+# colour "064F8C" (itself starting with digits), so {"3.20", "064"} was never <= the floor's
+# {"3.20"} and the badge, with its only link to cmake.org, was lost (BC-17).
+
+CPP = "aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp"
+CPP_ROW = (
+    "[![CI](https://github.com/aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp/actions/workflows/ci.yml/badge.svg)]"
+    "(https://github.com/aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp/actions/workflows/ci.yml) "
+    "[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) "
+    "[![C++20](https://img.shields.io/badge/C%2B%2B-20-00599C?logo=cplusplus)](https://en.cppreference.com/w/cpp/20) "
+    "[![CMake](https://img.shields.io/badge/CMake-3.20+-064F8C?logo=cmake)](https://cmake.org/)"
+)
+FLOORS[CPP] = (("package:cmake_minimum", "3.20"),)
+
+
+def test_the_pdf_cpp_cmake_badge_and_its_cmake_org_link_are_carried() -> None:
+    extras = _extras(_context(CPP, CPP_ROW))
+    assert "[![CMake](https://img.shields.io/badge/CMake-3.20+-064F8C?logo=cmake)](https://cmake.org/)" in extras
+
+
+def test_a_build_tool_badge_is_carried_only_when_its_own_number_is_the_verified_floor() -> None:
+    wrong_floor = _context(CPP, CPP_ROW.replace("3.20+", "3.16+"))
+    assert not any("CMake-3.16" in m for m in _extras(wrong_floor))

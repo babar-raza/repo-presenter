@@ -431,6 +431,15 @@ _PACKAGE_VERSION_BADGE = re.compile(
     r"^https://img\.shields\.io/(?:pypi|nuget|npm|maven-central|crates|packagist|gem|go)/v/"
 )
 _VERSION_TOKEN = re.compile(r"\d+(?:\.\d+)*")
+#: A static ``/badge/`` runtime badge's own label, read as its first ``Label-Value-Color`` segment,
+#: can verify against a build-tool's own minimum-version fact instead of the language-runtime floor
+#: (``EcosystemSpec.floor_fact_id``) when its label names that tool. Real case (Aspose.PDF FOSS for
+#: C++: the maintainers' header has both a ``C++-20`` badge, verified against the language floor,
+#: AND a ``CMake-3.20+`` badge -- a second, genuinely different fact, ``package:cmake_minimum``, not
+#: a second reading of the same floor). Extend this mapping for another ecosystem's own build tool
+#: the same way; a label not listed here still falls back to the language floor, unchanged.
+_BUILD_TOOL_FLOOR_FACTS: dict[str, str] = {"cmake": "package:cmake_minimum"}
+_BADGE_LABEL = re.compile(r"^https://img\.shields\.io/badge/([^-]+)-")
 
 
 def _extra_badge_asserts_only_verified(
@@ -444,8 +453,10 @@ def _extra_badge_asserts_only_verified(
     * a dynamic shields.io badge (``issues``, ``pyversions``, ...: its text is computed live from
       the repository or registry) -- except a package-VERSION badge when a slot badge already names
       the package, which would be a second package;
-    * a static shields.io ``/badge/`` runtime badge whose version numbers are exactly the
-      verified runtime-floor fact's ("Rust-2021 edition" against floor ``2021``).
+    * a static shields.io ``/badge/`` runtime badge whose version numbers are exactly the verified
+      runtime-floor fact's ("Rust-2021 edition" against floor ``2021``), or, when its own label
+      names a known build tool (``_BUILD_TOOL_FLOOR_FACTS``), that tool's own minimum-version fact
+      ("CMake-3.20+" against ``package:cmake_minimum``) instead of the language floor.
     Build-status and license badges are never carried this way: only their own facts verify them;
     an unrecognized host is not carried."""
     if not image.startswith("https://img.shields.io/"):
@@ -458,11 +469,28 @@ def _extra_badge_asserts_only_verified(
         return True
     if badge_slot(f"![]({image})") != "runtime" or "License-" in image:
         return False
-    floor = context.fact(context.spec.floor_fact_id) if context.spec.floor_fact_id else None
+    floor_fact_id = context.spec.floor_fact_id
+    label_match = _BADGE_LABEL.match(image)
+    if label_match is not None:
+        tool_fact_id = _BUILD_TOOL_FLOOR_FACTS.get(label_match.group(1).casefold())
+        if tool_fact_id is not None:
+            floor_fact_id = tool_fact_id
+    floor = context.fact(floor_fact_id) if floor_fact_id else None
     if floor is None or floor.polarity != "SUPPORTED":
         return False
-    tokens = set(_VERSION_TOKEN.findall(unquote(image.rsplit("/", 1)[-1])))
+    tokens = set(_VERSION_TOKEN.findall(_badge_value_segment(image)))
     return bool(tokens) and tokens <= set(_VERSION_TOKEN.findall(floor.value))
+
+
+def _badge_value_segment(image: str) -> str:
+    """The ``Value`` of a ``.../badge/Label-Value-Color`` image, unquoted, query stripped: version
+    tokens are read from this segment alone, never the trailing colour. A shields.io hex colour
+    (``064F8C``) starts with digits of its own, so reading the whole tail -- as the floor check
+    once did -- picked up a spurious token the floor fact never has and rejected a real match
+    (Aspose.PDF FOSS for C++: ``CMake-3.20+-064F8C`` against the verified floor ``3.20``)."""
+    stem = unquote(image.rsplit("/", 1)[-1].split("?", 1)[0])
+    segments = stem.split("-")
+    return segments[1] if len(segments) >= 2 else stem
 
 
 def _carried_extra_badges(
