@@ -879,6 +879,11 @@ def test_rewrite_dropping_an_unverified_example_accounts_for_its_code_fence_only
     # not other item kinds the same rewrite dropped
     assert acct(cited).reason("https://x.example/limits") is None
     assert acct(cited).loss_units("https://x.example/limits") == (unit["id"],)
-    # no exemption without the rationale, or for another disposition
+    # no exemption without the rationale
     assert acct("Rewritten for scope.").reason(fence, code=True) is None
-    assert acct(cited, "VERIFIED_PRESERVE").reason(fence, code=True) is None
+    # the SAME marker still exempts the fence after zero-call restore converts the disposition
+    # away from VERIFIED_REWRITE (restore_units.py carries the marker forward precisely so this
+    # holds; Slides Cpp, hosted, 2026-11-11 -- see restore_units.py's own rationale-preservation
+    # test for the conversion itself)
+    assert acct(cited, "VERIFIED_PRESERVE").reason(fence, code=True) is not None
+    assert acct(cited, "PRESERVE_ATTRIBUTED").loss_units(fence, code=True) == ()

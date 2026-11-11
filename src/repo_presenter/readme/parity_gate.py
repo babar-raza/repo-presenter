@@ -501,16 +501,24 @@ def row_accounts_for_item(
 ) -> bool:
     """Whether ``row`` accounts for the absence of one benchmark item held by its unit.
 
-    ``disposition_is_non_loss`` for every item, plus one narrow item-level rule: a
-    ``VERIFIED_REWRITE`` whose rationale says the rewrite dropped an unverified code example
-    (BC-03; the reconciler's ``RECOVERED_FENCE_RATIONALE``) accounts for a missing CODE-FENCE item
-    only. Prose, links, identifiers, versions and commands the same rewrite dropped stay losses,
-    and a row without that rationale gets no exemption."""
+    ``disposition_is_non_loss`` for every item, plus one narrow item-level rule: a rationale that
+    says the unit was restated or kept without an example BC-03 forbids (the reconciler's
+    ``RECOVERED_FENCE_RATIONALE``) accounts for a missing CODE-FENCE item only. Prose, links,
+    identifiers, versions and commands the same rationale's unit dropped stay losses, and a row
+    without that rationale gets no exemption.
+
+    Not restricted to ``disposition == "VERIFIED_REWRITE"``: zero-call restore (``readme.repair.
+    restore_units``) can convert such a rewrite to ``PRESERVE_ATTRIBUTED``/``VERIFIED_PRESERVE``
+    while carrying the SAME marker forward (it must, to recover a different lost item the same
+    unit also held) -- the marker is the one thing the reconciler writes for this exact reason, so
+    it is the authoritative signal, not the disposition label it happened to be written under
+    (Aspose.Slides FOSS for C++, hosted, 2026-11-11: restoring ``102.list`` for its lost
+    ``api_identifiers`` re-opened the ALREADY-exempted fence as a fresh loss, because this check
+    still demanded the pre-restore disposition)."""
     if disposition_is_non_loss(row, facts):
         return True
     return (
         code
-        and str(row.get("disposition")) == "VERIFIED_REWRITE"
         and bool(_UNVERIFIED_EXAMPLE_RATIONALE.search(str(row.get("rationale") or "")))
     )
 
