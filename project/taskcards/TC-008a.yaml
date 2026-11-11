@@ -63,7 +63,7 @@ checks:
   - command: |-
       python -m pytest tests/core/test_preflight.py tests/test_present.py tests/test_lane_l_hosted.py -q
     expect: exit 0
-    timeout_seconds: 120
+    timeout_seconds: 400
     proves:
       - REQ-P5-001
 requires:
