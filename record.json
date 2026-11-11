@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "attempt under version set 68277adca33b: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: presentation_planning: output rejected twice; last rejection: at_a_glance capability title 'Cell styling with Font, Fill, Alignment, and Border' is 51 characters, over the 48-character budget; shorten the title",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-11T13:13:46.764377+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:40876",
     "acquired_at": "2026-11-11T13:04:44.143657+00:00",
@@ -39,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 85,
+  "state_version": 86,
   "recent_trigger_dedup_keys": {
     "run:40555603173:aspose-cells-foss/Aspose.Cells-FOSS-for-Go": "50fef97592e549af92340b0eedede7d5",
     "run:40571547837:aspose-cells-foss/Aspose.Cells-FOSS-for-Go": "407ac860a6314594a20b566b3ec49165",
