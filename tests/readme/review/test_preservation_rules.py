@@ -483,3 +483,61 @@ def test_the_live_readme_is_recovered_from_the_patch_that_produced_the_candidate
 ):
     candidate = _without(LIVE, USAGE_SECTION)
     assert recover_original(candidate, render_patch(LIVE, candidate)) == LIVE
+
+
+# --- a rewrite that openly dropped an unverified code example (BC-03) accounts for the FENCE only ---
+#
+# Aspose.Slides FOSS for C++ (hosted, 2026-11-11): the maintainers' Scope and Limitations list
+# embeds `pres.save("report.pdf", SaveFormat::PDF);  // throws std::invalid_argument`. The reconciler
+# restated the list without that example ("Restated: it embeds an unverified code example BC-03
+# forbids."). BC-17's parity gate accepted that (parity_gate.row_accounts_for_item); this reviewer,
+# needing a cited fact for any accounting, REJECTed it -- two blocking rules on one snippet.
+
+_SAMPLE = 'pres.save("report.pdf", SaveFormat::PDF);  // throws std::invalid_argument'
+_LIMITS_LIST = f"- Saving to PDF is refused:\n\n  ```cpp\n  {_SAMPLE}\n  ```\n- No charts."
+_BC03_RATIONALE = "Restated: it embeds an unverified code example BC-03 forbids. Maintainer list."
+
+
+def _limits_case(rationale: str) -> list[str]:
+    live = f"# Widget FOSS\n\n## Scope and Limitations\n\n{_LIMITS_LIST}\n"
+    candidate = "# Widget FOSS\n\n## Scope and Limitations\n\n- Saving to PDF is refused.\n- No charts.\n"
+    units = (
+        _unit("inherited_unit:001.heading", "# Widget FOSS"),
+        _unit("inherited_unit:002.list", _LIMITS_LIST),
+    )
+    rows = [
+        _row("inherited_unit:001.heading"),
+        _row("inherited_unit:002.list", "VERIFIED_REWRITE", rationale=rationale),
+    ]
+    return _messages(
+        live_readme_loss_rule(
+            live, candidate, facts=_facts(*units), dispositions={"dispositions": rows}
+        )
+    )
+
+
+def test_a_rewrite_that_dropped_an_unverified_example_accounts_for_the_code_fence() -> None:
+    assert not [m for m in _limits_case(_BC03_RATIONALE) if "code block" in m]
+
+
+def test_without_the_bc03_marker_the_same_dropped_fence_is_still_a_loss() -> None:
+    assert [m for m in _limits_case("Restated for clarity.") if "code block" in m]
+
+
+def test_the_bc03_marker_never_accounts_for_a_dropped_link_or_heading() -> None:
+    live = "# Widget FOSS\n\n## Scope\n\n- See [docs](https://widget.example.com/docs/).\n"
+    candidate = "# Widget FOSS\n\n## Scope\n\n- See the docs.\n"
+    units = (
+        _unit("inherited_unit:001.heading", "# Widget FOSS"),
+        _unit("inherited_unit:002.list", "- See [docs](https://widget.example.com/docs/)."),
+    )
+    rows = [
+        _row("inherited_unit:001.heading"),
+        _row("inherited_unit:002.list", "VERIFIED_REWRITE", rationale=_BC03_RATIONALE),
+    ]
+    messages = _messages(
+        live_readme_loss_rule(
+            live, candidate, facts=_facts(*units), dispositions={"dispositions": rows}
+        )
+    )
+    assert any("link https://widget.example.com/docs/" in m for m in messages)

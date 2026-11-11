@@ -86,7 +86,11 @@ from repo_presenter.readme.composition.coverage import (
 )
 from repo_presenter.readme.composition.list_coverage import list_items, missing_items
 from repo_presenter.readme.evidence.facts.links import extract_links
-from repo_presenter.readme.parity_gate import badge_row_replaced, badge_slot_replaced
+from repo_presenter.readme.parity_gate import (
+    badge_row_replaced,
+    badge_slot_replaced,
+    row_accounts_for_item,
+)
 from repo_presenter.readme.review.findings import Finding
 from repo_presenter.readme.review.matching import plain
 from repo_presenter.readme.review.scope import reviewable_lines
@@ -504,6 +508,29 @@ def _accounting_units(
     ]
 
 
+def _code_fence_accounting_units(
+    facts: FactsDocument, dispositions: Mapping[str, Any]
+) -> list[str]:
+    """The text of every inherited unit whose rewrite openly dropped an unverified code example.
+
+    ``parity_gate.row_accounts_for_item`` already lets BC-17 accept a missing CODE-FENCE item when a
+    ``VERIFIED_REWRITE``'s rationale says it restated the unit without an example BC-03 forbids
+    (the reconciler's ``RECOVERED_FENCE_RATIONALE``). That rewrite cites no fact by design, so
+    ``_accounting_units`` (which needs a cited fact) never counted it, and this reviewer REJECTed
+    the very candidate BC-17 passed -- two blocking rules pulling opposite ways on one snippet
+    (Aspose.Slides FOSS for C++, hosted, 2026-11-11: ``pres.save("report.pdf", SaveFormat::PDF);
+    // throws``). Used for the fence check ONLY: prose, links, headings and commands the same rewrite
+    dropped stay losses, exactly as ``row_accounts_for_item`` keeps them."""
+    units = _inherited_units(facts)
+    by_id = {str(fact.id): {"id": str(fact.id), "polarity": fact.polarity} for fact in facts.facts}
+    return [
+        units[str(row.get("unit_id"))]
+        for row in _dispositions_list(dispositions)
+        if str(row.get("unit_id")) in units
+        and row_accounts_for_item(row, by_id, code=True)
+    ]
+
+
 def live_readme_loss_rule(
     original_readme: str,
     readme_text: str,
@@ -516,6 +543,7 @@ def live_readme_loss_rule(
     live fenced block no candidate fence contains, a live link target no candidate link has, or a
     live line equal to a SUPPORTED install command that the candidate does not contain."""
     accounting = _accounting_units(facts, dispositions)
+    fence_accounting = _code_fence_accounting_units(facts, dispositions)
     accounted_headings = {
         _heading_key(unit.lstrip("#")) for unit in accounting if unit.startswith("#")
     }
@@ -532,7 +560,11 @@ def live_readme_loss_rule(
         if key not in new_headings and key not in accounted_headings:
             lost.append((text, f"heading {text!r}"))
     for fence in old.fences:
-        if not any(fence in other for other in new.fences) and not accounted(fence):
+        if (
+            not any(fence in other for other in new.fences)
+            and not accounted(fence)
+            and not any(fence in _code(unit) for unit in fence_accounting)
+        ):
             lost.append(
                 (fence, f"code block {fence.splitlines()[0][:50] if fence else ''!r}")
             )
