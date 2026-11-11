@@ -65,11 +65,14 @@ from repo_presenter.readme.composition.authoring import (
     authoring_schema,
     authoring_tasks,
     carried_unit_errors,
+    recover_opening_duplicates_preserved,
     recover_title_verbatim_opening,
     repair_title_verbatim_opening_errors,
     unit_checks,
 )
 from repo_presenter.readme.composition.authoring_retry import (
+    authoring_narrowing,
+    recover_authoring_output,
     recover_targeted_repair_dropped_citation,
     recover_targeted_repair_restatements,
 )
@@ -80,6 +83,7 @@ from repo_presenter.readme.composition.planning import (
     plan_checks,
     planning_packet,
     planning_schema,
+    recover_planning_output,
 )
 from repo_presenter.readme.composition.policy import DEFAULT_POLICY
 from repo_presenter.readme.composition.renderer import line_counts, render_readme
@@ -331,6 +335,36 @@ def _accept(
     return True
 
 
+def _regenerate_plan(rc: RepairContext, loaded: LoadedManifest) -> dict[str, Any] | None:
+    """A fresh ``presentation_planning`` call, the same job initial generation makes
+    (``cascade._run_planning``), so a missing call-store entry gets a real original instead of
+    stopping the repair cold. ``run_job`` stores its own accepted output under the SAME request
+    hash ``request_hash`` already computed (its own docstring: "the store key ``run_job`` would
+    compute for this exact packet"), so no further bookkeeping is needed here -- the next round's
+    ``rc.store.get(key)`` finds it."""
+
+    def checks(output: dict[str, Any]) -> list[str]:
+        return plan_checks(
+            output, rc.facts, dispositions=rc.dispositions, ecosystem=rc.entry.ecosystem
+        )
+
+    def recover(output: dict[str, Any]) -> dict[str, Any] | None:
+        return recover_planning_output(output, rc.facts)
+
+    try:
+        result = run_job(
+            loaded,
+            planning_packet(rc.entry, rc.facts, rc.investigation, rc.dispositions, loaded.manifest),
+            config=rc.config, facts=rc.facts, ledger=rc.ledger, store=rc.store,
+            context=rc.context,
+            call_schema=planning_schema(loaded, rc.facts, rc.investigation, rc.dispositions),
+            checks=checks, recover=recover,
+        )
+    except JobError:
+        return None
+    return result.output
+
+
 def _repair_plan(rc: RepairContext, defect: Defect, repairs: RepairLedger) -> bool:
     loaded = rc.prompts["presentation_planning"]
     packet = planning_packet(
@@ -342,9 +376,32 @@ def _repair_plan(rc: RepairContext, defect: Defect, repairs: RepairLedger) -> bo
     )
     original = rc.store.get(key)
     if original is None:
-        return _unrepairable(
-            defect, repairs, "the causing plan is not in the call store"
+        # ``--restore-sealed-bundle`` (the hosted default) restores a PREVIOUS seal's call store,
+        # so a defect the independent reviewer raises against a RESTORED plan has no original
+        # call in THIS run's store to revise -- measured live twice on Aspose.Slides-FOSS-for-Cpp,
+        # identical both times, "the causing plan is not in the call store" before this fix. A
+        # fresh generation gives the next round a real original, never weakening what a repair
+        # must satisfy (the regenerated plan is judged by the SAME plan_checks any plan is).
+        original = _regenerate_plan(rc, loaded)
+        if original is None:
+            return _unrepairable(
+                defect, repairs,
+                "the causing plan is not in the call store, and a fresh "
+                "presentation_planning call could not produce one",
+            )
+        repairs.record(
+            replace(
+                defect,
+                reason=(
+                    "the causing plan was not in the call store (restored from a sealed "
+                    "bundle); regenerated it fresh with the same job and checks initial "
+                    "generation uses, rather than revising in place"
+                ),
+            ),
+            "repaired",
+            request_sha256=key,
         )
+        return True
     checks = refuse_noop(
         original,
         partial(
@@ -607,6 +664,36 @@ def _escalate_to_plan(
     return _repair_plan(rc, escalated, repairs)
 
 
+def _regenerate_section(
+    rc: RepairContext, task: SectionTask, loaded: LoadedManifest
+) -> dict[str, Any] | None:
+    """A fresh ``section_authoring`` call for ONE task, the same job and checks initial
+    generation makes (``cascade._run_authoring``) -- see ``_regenerate_plan`` for why a missing
+    call-store entry needs this rather than stopping the repair cold, and why ``run_job`` storing
+    its own result is enough."""
+
+    def checks(output: dict[str, Any]) -> list[str]:
+        return unit_checks(output, task, rc.facts, rc.name, dispositions=rc.dispositions)
+
+    def recover(output: dict[str, Any]) -> dict[str, Any] | None:
+        if task.section_id == "opening":
+            return recover_opening_duplicates_preserved(
+                output, dispositions=rc.dispositions, facts=rc.facts
+            )
+        return recover_authoring_output(output, task=task, facts=rc.facts)
+
+    try:
+        result = run_job(
+            loaded, task.packet, config=rc.config, facts=rc.facts, ledger=rc.ledger,
+            store=rc.store, context=rc.context,
+            call_schema=bound_authoring_citations(authoring_schema(loaded, task), task),
+            checks=checks, recover=recover, narrow=authoring_narrowing(task, loaded),
+        )
+    except JobError:
+        return None
+    return result.output
+
+
 def _repair_section(rc: RepairContext, defect: Defect, repairs: RepairLedger) -> bool:
     task = next((t for t in rc.tasks if t.section_id == defect.section_id), None)
     if task is None:
@@ -620,9 +707,31 @@ def _repair_section(rc: RepairContext, defect: Defect, repairs: RepairLedger) ->
     )
     original = rc.store.get(key)
     if original is None:
-        return _unrepairable(
-            defect, repairs, "the causing section is not in the call store"
+        # Same gap and fix as _repair_plan's: --restore-sealed-bundle restores a previous seal's
+        # call store, so a review finding against a RESTORED section has no original call in THIS
+        # run's store to revise (measured live, Aspose.Slides-FOSS-for-Cpp, two hosted runs,
+        # identical both times: F01-F08 all "the causing section is not in the call store",
+        # discarding every other already-fixed defect too).
+        original = _regenerate_section(rc, task, loaded)
+        if original is None:
+            return _unrepairable(
+                defect, repairs,
+                "the causing section is not in the call store, and a fresh "
+                "section_authoring call could not produce one",
+            )
+        repairs.record(
+            replace(
+                defect,
+                reason=(
+                    "the causing section was not in the call store (restored from a sealed "
+                    "bundle); regenerated it fresh with the same job and checks initial "
+                    "generation uses, rather than revising in place"
+                ),
+            ),
+            "repaired",
+            request_sha256=key,
         )
+        return True
     checks: Checks = refuse_noop(
         original,
         lambda revised: unit_checks(

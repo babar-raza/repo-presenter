@@ -25,11 +25,15 @@ from repo_presenter.core.registry.models import Registry
 from repo_presenter.extractors.platforms.registry import plugin_for
 from repo_presenter.readme.composition.authoring import merge_units
 from repo_presenter.readme.repair.loop import (
+    _load_context,
+    _regenerate_plan,
+    _regenerate_section,
+    _repair_section,
     keep_unflagged_units,
     refuse_noop,
     settle_candidate,
 )
-from repo_presenter.readme.repair.targeted import REPAIRS_FILENAME, RepairLedger
+from repo_presenter.readme.repair.targeted import REPAIRS_FILENAME, Defect, RepairLedger
 from repo_presenter.readme.review.defect_bridge import build_defects
 from repo_presenter.readme.review.independent_reviewer import (
     Finding,
@@ -39,6 +43,7 @@ from tests.readme.composition.synthetic import make_entry, make_facts
 from tests.test_cascade import (
     _AUTHORING_REPLIES,
     _AUTHORING_TEXT,
+    _PLANNING_REPLY,
     CONFIG,
     README,
     _completion,
@@ -363,6 +368,153 @@ def test_a_repair_that_only_restates_the_input_is_unrepairable_and_not_retried(
     assert settled.rounds == 1
     assert settled.result.review_verdict.verdict == "REJECT"
     assert client.chat.completions.replies == []
+
+
+# --- a missing call-store entry (--restore-sealed-bundle) is regenerated, not given up on ------
+#
+# Aspose.Slides-FOSS-for-Cpp (hosted, two separate runs, 2026-11-11): every S6 review finding
+# came back "the causing section is not in the call store" and every S5 one "the causing plan is
+# not in the call store" -- the hosted default restores a PREVIOUS seal's call store, so a
+# section/plan this run never itself generated has no original to revise. _regenerate_section/
+# _regenerate_plan run the SAME job initial generation makes instead of stopping the repair cold.
+
+
+def _real_repair_context(
+    tmp_path: Path, clone_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> tuple[Any, Any]:
+    """A real RepairContext from a real cascade run (phase 1, 9 scripted calls), whose ``store``
+    is then swapped for a FRESH, EMPTY one -- exactly what the call store looks like for a
+    section/plan ``--restore-sealed-bundle`` never re-generated this run. Returns ``(rc, prompts)``."""
+    from dataclasses import replace as dc_replace
+
+    from repo_presenter.core.llm.jobs import CallStore
+
+    plugin_for("python")
+    entry = make_entry()
+    facts_path = tmp_path / "facts.json"
+    write_facts(make_facts(), facts_path)
+    registry_path = _registry(tmp_path)
+    out_dir = tmp_path / "out"
+    prompts_path = Path(__file__).resolve().parents[3] / "prompts"
+
+    client = _FakeClient(_scripted_replies())
+    monkeypatch.setattr(jobs_module.transport, "build_client", lambda config: client)
+    first = run_cascade(
+        entry.repository, "python", clone_path,
+        facts_path=facts_path, out_dir=out_dir, config=CONFIG,
+        registry_path=registry_path, max_rounds=1,
+    )
+    assert client.chat.completions.replies == []
+
+    prompts = load_manifests(prompts_path)
+    from repo_presenter.core.llm.ledger import Ledger
+
+    ledger = Ledger(tmp_path / "ledger2.jsonl", invocation_id="test")
+    rc = _load_context(
+        first, out_dir=out_dir, registry_path=registry_path, prompts=prompts,
+        config=CONFIG, ledger=ledger, benchmark="",
+    )
+    empty_store = CallStore(tmp_path / "empty_calls")
+    return dc_replace(rc, store=empty_store), prompts
+
+
+def test_regenerate_section_runs_a_fresh_authoring_call_and_the_store_keeps_it(
+    tmp_path: Path, clone_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    rc, prompts = _real_repair_context(tmp_path, clone_path, monkeypatch)
+    task = next(t for t in rc.tasks if t.section_id == "opening")
+    loaded = prompts["section_authoring"]
+
+    fresh_client = _FakeClient([_completion(_AUTHORING_REPLIES[0])])
+    monkeypatch.setattr(jobs_module.transport, "build_client", lambda config: fresh_client)
+
+    output = _regenerate_section(rc, task, loaded)
+
+    assert output is not None
+    assert output["units"][0]["text"] == _AUTHORING_TEXT
+    assert fresh_client.chat.completions.replies == []
+
+    from repo_presenter.core.llm.jobs import effective_model, request_hash
+    from repo_presenter.readme.composition.authoring import authoring_schema
+    from repo_presenter.readme.composition.output_bounds import bound_authoring_citations
+
+    key = request_hash(
+        loaded, task.packet,
+        bound_authoring_citations(authoring_schema(loaded, task), task),
+        model=effective_model(loaded, rc.context),
+    )
+    # run_job's own side effect: no extra bookkeeping needed, the previously-empty store now
+    # holds this exact output under the same key _repair_section would look it up by.
+    assert rc.store.get(key) == output
+
+
+def test_regenerate_plan_runs_a_fresh_planning_call_and_the_store_keeps_it(
+    tmp_path: Path, clone_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    rc, prompts = _real_repair_context(tmp_path, clone_path, monkeypatch)
+    loaded = prompts["presentation_planning"]
+
+    fresh_client = _FakeClient([_completion(_PLANNING_REPLY)])
+    monkeypatch.setattr(jobs_module.transport, "build_client", lambda config: fresh_client)
+
+    output = _regenerate_plan(rc, loaded)
+
+    assert output is not None
+    assert fresh_client.chat.completions.replies == []
+
+    from repo_presenter.core.llm.jobs import effective_model, request_hash
+    from repo_presenter.readme.composition.planning import planning_packet, planning_schema
+
+    key = request_hash(
+        loaded,
+        planning_packet(rc.entry, rc.facts, rc.investigation, rc.dispositions, loaded.manifest),
+        planning_schema(loaded, rc.facts, rc.investigation, rc.dispositions),
+        model=effective_model(loaded, rc.context),
+    )
+    assert rc.store.get(key) == output
+
+
+def test_regenerate_section_returns_none_when_the_fresh_call_is_rejected(
+    tmp_path: Path, clone_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Negative control: a fresh call that never clears its own checks falls through to None,
+    not a raised exception -- the caller is the one that turns that into "unrepairable"."""
+    rc, prompts = _real_repair_context(tmp_path, clone_path, monkeypatch)
+    task = next(t for t in rc.tasks if t.section_id == "opening")
+    loaded = prompts["section_authoring"]
+
+    broken = {"units": [], "omitted": []}  # fails unit_checks: wrong slot set, every ask
+    rejecting_client = _FakeClient([_completion(broken), _completion(broken), _completion(broken)])
+    monkeypatch.setattr(jobs_module.transport, "build_client", lambda config: rejecting_client)
+
+    assert _regenerate_section(rc, task, loaded) is None
+
+
+def test_repair_section_regenerates_and_records_it_distinctly_when_the_store_is_empty(
+    tmp_path: Path, clone_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    rc, prompts = _real_repair_context(tmp_path, clone_path, monkeypatch)
+    repairs = RepairLedger(tmp_path / "repairs2.json")
+    defect = Defect(
+        fingerprint="fp-missing-store",
+        source="review",
+        label="unsupported_claim",
+        section_id="opening",
+        stage="S6",
+        record={"quote": QUOTE},
+    )
+
+    fresh_client = _FakeClient([_completion(_AUTHORING_REPLIES[0])])
+    monkeypatch.setattr(jobs_module.transport, "build_client", lambda config: fresh_client)
+
+    changed = _repair_section(rc, defect, repairs)
+
+    assert changed is True
+    assert fresh_client.chat.completions.replies == []
+    attempt = repairs.attempts[defect.fingerprint]
+    assert attempt["outcome"] == "repaired"
+    assert "restored from a sealed bundle" in attempt["reason"]
+    assert attempt["stage"] == "S6"
 
 
 def test_a_revision_that_changes_the_plans_slot_set_escalates_once_to_the_plan(
