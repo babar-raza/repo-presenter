@@ -4546,3 +4546,33 @@ Real hosted `present.yml` runs from this branch (the workflow exists on `main`, 
   `ACCEPTED` under a real, evaluated-scope `gatecli review`, closing the stale-receipt cascade
   that had put TC-024/TC-025 and everything downstream at risk of appearing blocked when the
   underlying code was already correct.
+
+## 2026-11-11: PDF Java's "overlapping identifiers across tables" BC-17 losses root-caused -- a word-boundary bug, not a content gap
+
+- **Root cause (found by a dispatched investigation fork on the live, in-progress PDF Java
+  generation run; re-verified independently before commit):** `_has_word()` in
+  `src/repo_presenter/readme/parity_gate.py` (and an identical duplicate in
+  `src/repo_presenter/readme/composition/coverage.py`) used the boundary
+  `(?<![\w.])TOKEN(?![\w])` -- excluding a preceding dot from a valid word boundary. PDF Java's
+  live README has several short class names that genuinely collide across different packages
+  (`GraphInfo` in both `org.aspose.pdf` and `org.aspose.pdf.drawing`; same for
+  `PatternColorSpace`, `Config`, `FontRepository`, `FormField`, `SplitPlan`, `Token`); the
+  deterministic `api_reference` renderer correctly disambiguates each with its package prefix
+  (`pdf.GraphInfo`, `drawing.GraphInfo`, confirmed present in the real rendered README), but the
+  dot immediately before the bare identifier made every one of these register as a false BC-17
+  loss -- this was the entire "several large API tables losing overlapping identifiers across
+  tables, not yet root-caused" item parked in the 2026-11-10 entry, not a real authoring gap.
+  Fixed by loosening the leading boundary to `(?<!\w)` (a dot now satisfies it; a preceding word
+  character still does not, so a token can't match mid-word). New tests:
+  `tests/readme/test_parity_gate.py::test_api_identifier_still_present_under_a_longer_qualified_prefix_is_not_lost`,
+  an added assertion in `tests/readme/composition/test_identity_carry.py`'s
+  `test_the_same_items_are_trimmed_once_the_document_names_every_identifier`. Re-run clean:
+  `tests/readme/` 2875 passed (the 1 pre-existing CRLF failure noted above, confirmed unrelated),
+  `tests/readme/composition tests/core` 956 passed.
+- **Separately, genuinely open:** the same PDF Java run's BC-05 failure on `inherited_unit:070`
+  (10 pieces not restated: `[a, , c]`, `= += -= ...`, `<xfa:datasets>`, `do body while (test)`)
+  looks like a real authoring/extraction gap, not this bug -- those spans read as PDF/XFA
+  scripting-grammar fragments mixed into the same source table as API class rows, so treating the
+  whole unit as `SUPERSEDE_REDUNDANT` by `api_reference` (which only covers the class rows) may
+  be the wrong disposition for its non-class content. Not fixed here; the fix above was applied
+  and PDF Java relaunched to measure how much it now clears on its own.
