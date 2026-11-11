@@ -206,6 +206,15 @@ architecture: it uses the existing roles, cards, leases and `gatecli review`.
    the rejection is a defect to explain and close, not an outcome to record. Rank failure
    signatures by the number of repositories (and lanes) each blocks and fix the few that unblock
    most of them first; do not polish the long tail while a top-ranked blocker stands.
+9. **A failure is a work item, never a report (owner, 2026-11-11).** When a run, fork or check fails,
+   do not stop to tell the owner: read its artifact, find the root cause, fix the owning mechanism
+   (or the gate that refused to act), prove the fix offline, relaunch, and keep going in the same
+   turn. Learn from the failure, tweak, adjust, fill the gap that is blocking, move forward. A gate
+   that blocks a rescue (e.g. zero-call restore skipped because BC-02 also fails) is itself the gap
+   to fill. "Needs more rounds / a prompt fix / a retry" means do it, not log it. Transient failures
+   (rejected model output, timeout, a restart that killed a run) are relaunched immediately. Never
+   end a turn with a fixable blocker open or a list of what failed; report only a result (a new seal,
+   a counted change) or an action only the owner can take, leading with the numbers.
 
 ## Non-negotiables (carried from the mission document, not restated in full)
 
