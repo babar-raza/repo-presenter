@@ -239,7 +239,9 @@ def restore_lost_units(
     ``_fold_dangling_rewrites`` also uses) is NOT restored: it was ``VERIFIED_REWRITE`` precisely
     because of that pointer, and restoring it trades BC-17/BC-08 for BC-07 (hosted PDF Go
     ``025.paragraph``). Each such unit is appended to ``skipped`` (when given) and left as it was."""
+    from repo_presenter.readme.parity_gate import _UNVERIFIED_EXAMPLE_RATIONALE
     from repo_presenter.readme.reconciliation.dispositions import (
+        RECOVERED_FENCE_RATIONALE,
         dangling_pointers,
         unproven_source_build_blocks,
     )
@@ -341,7 +343,12 @@ def restore_lost_units(
         entry["destination_section"] = destination
         if disposition == "VERIFIED_PRESERVE" and not entry.get("fact_ids"):
             entry["fact_ids"] = []
-        entry["rationale"] = (
+        marker = (
+            RECOVERED_FENCE_RATIONALE
+            if _UNVERIFIED_EXAMPLE_RATIONALE.search(str(entry.get("rationale") or ""))
+            else ""
+        )
+        entry["rationale"] = marker + (
             "Kept as the maintainers wrote it: the published README prints this content and the "
             "candidate would otherwise lose it (BC-17 / BC-05)."
         )

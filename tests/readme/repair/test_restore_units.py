@@ -576,3 +576,65 @@ def test_choose_units_never_picks_an_excluded_holder_so_another_holder_is_chosen
     ]
     facts = _facts()
     assert choose_units(details, facts, exclude=["inherited_unit:019.paragraph"]) == ["inherited_unit:020.list"]
+
+
+# --- a VERIFIED_REWRITE whose rationale exempts a dropped fence (BC-03) keeps that marker ----------
+# Slides Cpp (hosted, 2026-11-11): the maintainers' Scope and Limitations list embeds
+# `pres.save("report.pdf", SaveFormat::PDF);  // throws std::invalid_argument`. The reconciler
+# restated it without that unverified example (RECOVERED_FENCE_RATIONALE), which `parity_gate.
+# row_accounts_for_item` and `independent_reviewer._code_fence_accounting_units` both key off to
+# exempt the dropped fence. BC-17 still named the list lost for OTHER items (api_identifiers), so
+# restore converted it to PRESERVE_ATTRIBUTED -- overwriting the rationale with the generic text
+# erased that marker, the fence read as lost all over again, and the whole restore was discarded.
+
+_REWRITE_UNIT = "inherited_unit:102.list"
+_REWRITE_TEXT = (
+    '- Saving to PDF is refused:\n\n  ```cpp\n  pres.save("report.pdf", SaveFormat::PDF);  '
+    "// throws std::invalid_argument\n  ```\n- No charts."
+)
+
+
+def _rewrite_facts() -> FactsDocument:
+    return FactsDocument(
+        "r", "0" * 40,
+        (_fact(_REWRITE_UNIT, "inherited_unit", _REWRITE_TEXT, section="X > Scope and Limitations"),),
+    )
+
+
+def _rewrite_dispositions(rationale: str) -> dict:
+    return {
+        "dispositions": [
+            {
+                "unit_id": _REWRITE_UNIT,
+                "disposition": "VERIFIED_REWRITE",
+                "destination_section": "scope_limitations",
+                "fact_ids": [],
+                "rationale": rationale,
+            }
+        ]
+    }
+
+
+def test_restoring_a_bc03_exempt_rewrite_keeps_the_fence_exemption_marker() -> None:
+    from repo_presenter.readme.reconciliation.dispositions import RECOVERED_FENCE_RATIONALE
+
+    facts = _rewrite_facts()
+    original = _rewrite_dispositions(RECOVERED_FENCE_RATIONALE + "Maintainer list.")
+    new, changes = restore_lost_units(
+        original, facts, [_REWRITE_UNIT], ("scope_limitations",), ("scope_limitations",)
+    )
+    assert [c["unit_id"] for c in changes] == [_REWRITE_UNIT]
+    entry = next(e for e in new["dispositions"] if e["unit_id"] == _REWRITE_UNIT)
+    assert entry["disposition"] == "PRESERVE_ATTRIBUTED"
+    assert entry["rationale"].startswith(RECOVERED_FENCE_RATIONALE)
+
+
+def test_restoring_a_rewrite_without_that_marker_gets_the_plain_rationale() -> None:
+    facts = _rewrite_facts()
+    original = _rewrite_dispositions("Restated for clarity, no example dropped.")
+    new, changes = restore_lost_units(
+        original, facts, [_REWRITE_UNIT], ("scope_limitations",), ("scope_limitations",)
+    )
+    entry = next(e for e in new["dispositions"] if e["unit_id"] == _REWRITE_UNIT)
+    assert not entry["rationale"].startswith("Restated: it embeds an unverified")
+    assert entry["rationale"].startswith("Kept as the maintainers wrote it")
