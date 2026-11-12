@@ -147,3 +147,12 @@ def test_terminal_non_candidates_never_increment_accepted():
 class SimpleCalibration:
     status = "NOT_PASSED"
     problem = ""
+
+
+def test_a_lane_l_seal_equal_to_the_live_readme_is_no_action_never_accepted():
+    """R16: an audit-passed Lane L candidate with no edit is terminal NO_ACTION_JUSTIFIED."""
+    outcome = pdc.LaneOutcome(repository=REPO, lane="L", record_state="ACCEPTED", pipeline_good=True,
+                              bucket=pdc.UNCALIBRATED, revision="rev1", no_action=True)
+    pdc.apply_attested([outcome], {(REPO, "L"): "rev1"}, {"repositories": [{"repository": REPO, "effects": ["pull_request"]}]})
+    assert outcome.bucket == pdc.NO_ACTION
+    assert not outcome.independently_accepted and not outcome.publication_ready

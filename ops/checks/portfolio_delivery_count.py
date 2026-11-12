@@ -107,6 +107,7 @@ DEPENDENCIES_NAME = "dependencies.json"
 ACCEPTED = "independently_accepted"
 UNCALIBRATED = "pipeline_good_uncalibrated"
 UNREVIEWED = "pipeline_good_unreviewed"
+NO_ACTION = "no_action_justified"  # R16: a Lane L seal byte-identical to the live README is never accepted
 
 
 @dataclass(frozen=True)
@@ -142,6 +143,7 @@ class LaneOutcome:
     failing_checks: list[str] = field(default_factory=list)
     regenerations: int = 0
     needs_review_only_pass: bool = False
+    no_action: bool = False  # Lane L only: the sealed README equals the live README at ``revision``
     revision: str = ""  # the upstream revision the latest seal was made at; an audit binds to it
 
     @property
@@ -392,7 +394,7 @@ def summarize(
                 continue
             group = older.setdefault(o.version_set, {"pipeline_good": 0, ACCEPTED: 0, UNCALIBRATED: 0, UNREVIEWED: 0})
             group["pipeline_good"] += 1
-            group[o.bucket] += 1
+            group[o.bucket] = group.get(o.bucket, 0) + 1
         counted_sets = {o.version_set for o in rows if o.pipeline_good}
         summary[f"lane_{lane.lower()}"] = {
             # provenance only: the version sets the counted seals were sealed under
@@ -403,6 +405,7 @@ def summarize(
             ACCEPTED: buckets[ACCEPTED],
             UNCALIBRATED: buckets[UNCALIBRATED],
             UNREVIEWED: buckets[UNREVIEWED],
+            NO_ACTION: buckets[NO_ACTION],
             "publication_ready": sum(1 for o in rows if o.publication_ready),
             "effect_executed": sum(1 for o in rows if o.effect_executed),
             "live_verified": sum(1 for o in rows if o.live_verified),
@@ -476,6 +479,11 @@ def certified_outcomes(
     elif head.bucket == UNCALIBRATED:
         head.needs_review_only_pass = True
         head.reason += "; needs a review-only pass under a PASSED reviewer (no regeneration)"
+    if lane == "L" and certified and latest is not None and latest.readme is not None and head.revision:
+        live = github([f"repos/{repository}/contents/README.md?ref={head.revision}", "-H", "Accept: application/vnd.github.raw"])
+        if live is not None and live.replace(b"\r\n", b"\n") == latest.readme.replace(b"\r\n", b"\n"):
+            head.no_action = True
+            head.notes.append("sealed README is byte-identical to the live README (R16: NO_ACTION_JUSTIFIED, never accepted)")
     if certification.regenerations > 1:
         head.notes.append(f"candidate regenerated {certification.regenerations} times")
     result = [head]
@@ -629,6 +637,11 @@ def apply_attested(
     demoted here unless an attested record exists, and only the CURRENT version set can count."""
     for o in outcomes:
         if not o.pipeline_good:
+            continue
+        if o.no_action:
+            o.bucket = NO_ACTION
+            o.reason = "R16: the sealed Lane L README equals the live README; terminal NO_ACTION_JUSTIFIED, never accepted"
+            o.publication_ready = False
             continue
         audited_revision = attested.get((o.repository, o.lane))
         if o.current and audited_revision and audited_revision == o.revision:
