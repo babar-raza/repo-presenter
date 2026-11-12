@@ -125,3 +125,21 @@ jobs:
           echo "$out"
           test "$rc" = "3"
           echo "$out" | grep -q "cannot resolve the default-branch revision"
+
+      # TC-021: the step above only proves the fail-closed path (no network). Until now, no facts
+      # stage had ever executed inside this container against a real network at all. This step is
+      # the working-path counterpart: real network, real clone, real extraction -- no secret of
+      # any kind, same as every other step in this job.
+      - name: With network allowed the facts stage actually clones and extracts a real public repository
+        run: |
+          mkdir -p "$RUNNER_TEMP/facts-proof"
+          # The image runs as a non-root, fixed UID (Dockerfile: "runner", uid 10001), which
+          # almost never matches the host runner's own UID that created this bind-mounted
+          # directory -- the container could not write facts.json into it otherwise
+          # (PermissionError). This directory is an ephemeral CI proof path, not a security
+          # control, so a permissive mode here does not weaken the sandbox job's own hardening.
+          chmod 777 "$RUNNER_TEMP/facts-proof"
+          docker run --rm -v "$RUNNER_TEMP/facts-proof:/tmp/facts" repo-presenter-facts \
+            --repository aspose-words-foss/Aspose.Words-FOSS-for-Python --ecosystem python \
+            --workdir /tmp/work --facts-dir /tmp/facts
+          test -s "$RUNNER_TEMP/facts-proof/facts.json"

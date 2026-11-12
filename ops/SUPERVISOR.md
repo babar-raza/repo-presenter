@@ -256,6 +256,10 @@ Not yet ported from foss-mcp, because this repository has at most one taskcard
   `gatecli.py review`.
 - A `REJECT`/`REWORK REQUIRED` verdict is never converted to `ACCEPT` because
   a defect is inconvenient to fix (mission §4, `AGENTS.md` non-negotiable #5).
+- **A failure is a work item, never a report (owner, 2026-11-11, `AGENTS.md` operating rule 9).**
+  A failed run, fork or check is diagnosed from its artifact, fixed at the owning mechanism (or at the
+  gate that refused to act), proved offline, and relaunched in the same turn. Do not end a turn on a
+  list of failures or "named residuals"; a transient failure is relaunched at once.
 - **Never idle-wait on one in-flight thing with nothing else going.** A hosted
   run, a dispatched verifier subagent, and a background test suite all notify
   on completion — waiting for that notification is not a reason to stop

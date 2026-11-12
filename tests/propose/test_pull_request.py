@@ -260,3 +260,40 @@ def test_missing_or_malformed_records_leave_the_counts_unknown(tmp_path: Path) -
     (tmp_path / "examples.json").write_text("{not json", encoding="utf-8")
     (tmp_path / "validation.json").write_text('{"checks": "nope"}', encoding="utf-8")
     assert load_pull_request_evidence(tmp_path) == PullRequestEvidence()
+
+
+# --- R21: the residuals a net-improving Lane L run left as they were -----------------------------
+
+
+def test_no_residuals_leaves_the_body_byte_identical_to_the_golden_file() -> None:
+    assert _compose(residuals=()).body == (GOLDEN / "body.md").read_text(encoding="utf-8")
+
+
+def test_residuals_get_their_own_section_and_never_change_the_title() -> None:
+    from repo_presenter.propose.pull_request import MAX_LISTED_RESIDUALS
+
+    rows = tuple(f"line {n}: the API table lists `Ghost{n}`" for n in range(MAX_LISTED_RESIDUALS + 3))
+    content = _compose(residuals=rows)
+    assert content.title == _compose().title
+    assert "### Left as it was" in content.body
+    assert "- line 0: the API table lists `Ghost0`" in content.body
+    assert "- and 3 more" in content.body
+    assert content.body.index("### Left as it was") < content.body.index("### How to review")
+
+
+def test_residuals_are_read_from_the_bundles_holdouts_record(tmp_path: Path) -> None:
+    from repo_presenter.propose.pull_request import load_correction_residuals
+
+    (tmp_path / "holdouts.json").write_text(
+        json.dumps(
+            {"residuals": [{"kind": "claim_contradiction", "line": 255, "detail": "the API table lists `X`"},
+                           {"kind": "unrepaired_defect", "line": None, "detail": "failing_example: example 2 failed"},
+                           {"kind": "bad"}]}
+        ),
+        encoding="utf-8",
+    )
+    assert load_correction_residuals(tmp_path) == (
+        "line 255: the API table lists `X`",
+        "failing_example: example 2 failed",
+    )
+    assert load_correction_residuals(tmp_path / "missing") == ()

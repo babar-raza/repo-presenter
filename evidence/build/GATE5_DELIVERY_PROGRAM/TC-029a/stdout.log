@@ -1,0 +1,71 @@
+
+===== CLEAN RUN 1 =====
+$ python -m pytest tests/test_write_authority_r22.py tests/core/registry tests/github tests/propose -q
+--- stdout ---
+........................................................................ [ 23%]
+........................................................................ [ 47%]
+........................................................................ [ 70%]
+........................................................................ [ 94%]
+.................                                                        [100%]
+305 passed in 19.39s
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python -m pytest tests/test_write_authority_r22.py tests/core/registry tests/github tests/propose -q
+--- stdout ---
+........................................................................ [ 23%]
+........................................................................ [ 47%]
+........................................................................ [ 70%]
+........................................................................ [ 94%]
+.................                                                        [100%]
+305 passed in 13.97s
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M data/upstream_write_allowlist.json
+$ python -m pytest tests/test_write_authority_r22.py tests/core/registry tests/github tests/propose -q
+--- stdout ---
+F....................................................................... [ 23%]
+...........................................................F............ [ 47%]
+........................................................................ [ 70%]
+........................................................................ [ 94%]
+.................                                                        [100%]
+================================== FAILURES ===================================
+___ test_the_allowlist_and_the_registry_full_set_are_the_same_repositories ____
+
+    def test_the_allowlist_and_the_registry_full_set_are_the_same_repositories() -> None:
+        listed = {entry["repository"] for entry in _allowlist()}
+        full = {entry.repository for entry in _registry().entries if entry.mode == "full"}
+>       assert listed == full, (
+            f"allowlist-only: {sorted(listed - full)}; registry-full-only: {sorted(full - listed)}"
+        )
+E       AssertionError: allowlist-only: []; registry-full-only: ['aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript']
+E       assert {'aspose-3d-f...or-Rust', ...} == {'aspose-3d-f...or-Rust', ...}
+E         
+E         Extra items in the right set:
+E         'aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript'
+E         Use -v to get more diff
+
+tests\test_write_authority_r22.py:31: AssertionError
+_ test_the_committed_allowlist_grants_only_pull_requests_on_its_nine_repositories _
+
+    def test_the_committed_allowlist_grants_only_pull_requests_on_its_nine_repositories() -> None:
+        data = json.loads(client.UPSTREAM_WRITE_ALLOWLIST.read_text("utf-8"))
+        repositories = [entry["repository"] for entry in data["repositories"]]
+>       assert len(repositories) == 9 and LISTED in repositories  # R22: 3 pilots + 6 inherited full
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert (8 == 9)
+E        +  where 8 = len(['aspose-cells-foss/Aspose.Cells-FOSS-for-Rust', 'aspose-email-foss/Aspose.Email-FOSS-for-.Net', 'aspose-imaging-foss/....3D-FOSS-for-Java', 'aspose-cells-foss/Aspose.Cells-FOSS-for-.NET', 'aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp', ...])
+
+tests\github\test_write_authorization.py:89: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_write_authority_r22.py::test_the_allowlist_and_the_registry_full_set_are_the_same_repositories
+FAILED tests/github/test_write_authorization.py::test_the_committed_allowlist_grants_only_pull_requests_on_its_nine_repositories
+2 failed, 303 passed in 21.29s
+
+--- stderr ---
+

@@ -147,6 +147,46 @@ jobs:
           # Pinned exactly, like the .NET SDK below.
           java-version: "21.0.12"
 
+      # TC-021: data/registry.json registers repositories across 7 ecosystems (python, net, java,
+      # cpp, go, rust, typescript); python needs no extra install (setup-python above already
+      # covers it) and net/java are handled above. These four close the remaining gap, each
+      # conditioned on its own ecosystem exactly like the .NET/Java steps.
+      - name: Install Go for example compilation
+        if: steps.target.outputs.authorized == 'true' && steps.target.outputs.ecosystem == 'go'
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.23.4"
+
+      - name: Install the Rust toolchain for example compilation
+        # actions-rs/toolchain is unmaintained; dtolnay/rust-toolchain@stable is this ecosystem's
+        # maintained replacement. "stable" is a channel name (resolved to the current stable
+        # release), the Rust-toolchain equivalent of a pinned SDK -- there is no numbered
+        # major.minor.patch to pin the way .NET/Java/Go/Node are below, since the action itself
+        # has no such input.
+        if: steps.target.outputs.authorized == 'true' && steps.target.outputs.ecosystem == 'rust'
+        uses: dtolnay/rust-toolchain@stable
+
+      # cpp: g++ and cmake are documented as preinstalled on the GitHub-hosted ubuntu-latest
+      # image (actions/runner-images), so no install step is added -- only a lightweight,
+      # fail-loud verification that the finding still holds on the runner actually in use,
+      # per this card's closeout instruction. If this step ever fails, that finding is stale and
+      # an explicit install step belongs here instead.
+      - name: "Verify g++/cmake are present for example compilation (cpp: confirmed preinstalled on ubuntu-latest, no install step added)"
+        if: steps.target.outputs.authorized == 'true' && steps.target.outputs.ecosystem == 'cpp'
+        run: |
+          g++ --version
+          cmake --version
+
+      - name: Install Node.js for example compilation
+        # Node is also documented as preinstalled on ubuntu-latest, but it is pinned here anyway
+        # (matching the existing pinned-version convention for dotnet/java/go) since the default
+        # preinstalled version floats across runner-image updates the same way an unpinned
+        # java-version did.
+        if: steps.target.outputs.authorized == 'true' && steps.target.outputs.ecosystem == 'typescript'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.18.1"
+
       - name: Build the facts
         if: steps.target.outputs.authorized == 'true'
         env:
@@ -310,3 +350,95 @@ jobs:
           include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 14
+
+  # TC-021: proves the SANDBOX MECHANISM is a safe, working place to later run model-written
+  # example repair (deferred to Phase 2 under a provider budget -- this job runs no
+  # candidate-produced code yet). workflow_dispatch-only, deliberately NOT a `needs:` of facts or
+  # present and not needed by either: this is infrastructure validation, not part of the
+  # per-repository transaction. permissions: {} and no secret anywhere in this job -- it has
+  # nothing worth stealing and nothing to authenticate with, by design.
+  sandbox-execute:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions: {}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      # Reuses the exact same image ci.yml's docker job builds and validates -- never a second,
+      # independently-authored Dockerfile. The one extra layer below only adds the two example
+      # ecosystems' toolchains (g++, node) on top of it, with network, at BUILD time; nothing is
+      # installed at container RUN time, since the proof below runs with --network none.
+      - name: Build the facts-stage image (the same image ci.yml's docker job builds)
+        run: docker build -t repo-presenter-facts .
+
+      - name: Extend the facts-stage image, in place, with the two example toolchains this proof needs
+        run: |
+          cat > sandbox.Dockerfile <<'DOCKERFILE'
+          FROM repo-presenter-facts
+          USER root
+          RUN apt-get update \
+              && apt-get install -y --no-install-recommends g++ nodejs \
+              && rm -rf /var/lib/apt/lists/*
+          USER runner
+          DOCKERFILE
+          docker build -f sandbox.Dockerfile -t repo-presenter-facts .
+
+      # The canary proves the restrictive flags actually restrict: a network reach, a write
+      # outside /work, and a dump of every environment variable the container can see, each run
+      # as its own docker invocation under the full isolation flag set. The job itself carries no
+      # secret, so a successful env dump proves nothing by itself -- the assertion that matters,
+      # and the one actually written below (not just described in a comment), is that none of
+      # the three attempts produces a successful, exfiltratable result.
+      - name: Canary -- network reach, write outside /work, and secret-shaped env leakage all fail
+        run: |
+          set +e
+
+          net_out="$(docker run --rm --network none --read-only --tmpfs /work:rw,exec,size=1g \
+            --user 65534 --cpus 2 --memory 2g --pids-limit 256 --cap-drop ALL \
+            --security-opt no-new-privileges --entrypoint python repo-presenter-facts \
+            -c "import socket; socket.create_connection(('8.8.8.8', 53), timeout=3); print('NETWORK_REACHED')" 2>&1)"
+          net_rc=$?
+          echo "$net_out"
+          echo "$net_out" | grep -qx "NETWORK_REACHED" && { echo "canary: network reach unexpectedly succeeded"; exit 1; }
+          test "$net_rc" -ne 0 || { echo "canary: network attempt unexpectedly exited 0"; exit 1; }
+
+          write_out="$(docker run --rm --network none --read-only --tmpfs /work:rw,exec,size=1g \
+            --user 65534 --cpus 2 --memory 2g --pids-limit 256 --cap-drop ALL \
+            --security-opt no-new-privileges --entrypoint sh repo-presenter-facts \
+            -c "echo leaked > /etc/canary-write-test && echo WRITE_SUCCEEDED" 2>&1)"
+          write_rc=$?
+          echo "$write_out"
+          echo "$write_out" | grep -qx "WRITE_SUCCEEDED" && { echo "canary: write outside /work unexpectedly succeeded"; exit 1; }
+          test "$write_rc" -ne 0 || { echo "canary: write attempt unexpectedly exited 0"; exit 1; }
+
+          env_out="$(docker run --rm --network none --read-only --tmpfs /work:rw,exec,size=1g \
+            --user 65534 --cpus 2 --memory 2g --pids-limit 256 --cap-drop ALL \
+            --security-opt no-new-privileges --entrypoint env repo-presenter-facts 2>&1)"
+          echo "$env_out"
+          echo "$env_out" | grep -i -E '(token|secret|password|api_key|GPT_OSS)' && { echo "canary: secret-shaped env var leaked"; exit 1; } || true
+
+          exit 0
+
+      # The legitimate proof: real, tiny, committed fixture code for two of the newly-toolchained
+      # ecosystems (cpp, typescript) actually compiles/runs under the SAME restrictive flags as
+      # the canary above -- proving the sandbox is not merely restrictive, but still usable for
+      # the real work it will later host.
+      - name: Legitimate -- real cpp and typescript fixture examples run inside the same sandbox
+        run: |
+          docker run --rm --network none --read-only --tmpfs /work:rw,exec,size=1g \
+            --user 65534 --cpus 2 --memory 2g --pids-limit 256 --cap-drop ALL \
+            --security-opt no-new-privileges \
+            -v "$PWD/tests/fixtures/sandbox:/fixtures:ro" \
+            --entrypoint sh repo-presenter-facts -c '
+              set -e
+              export TMPDIR=/work
+              cp /fixtures/cpp/hello.cpp /work/hello.cpp
+              g++ -O0 -o /work/hello /work/hello.cpp
+              test "$(/work/hello)" = "hello from cpp"
+              cp /fixtures/typescript/hello.js /work/hello.js
+              test "$(node /work/hello.js)" = "hello from typescript"
+              echo SANDBOX_LEGITIMATE_EXECUTION_OK
+            '

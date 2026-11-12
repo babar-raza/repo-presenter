@@ -52,7 +52,7 @@ from repo_presenter.readme.evidence.facts.links import link_facts
 from repo_presenter.readme.evidence.facts.product_pages import (
     ENTERPRISE_FACT_ID,
     enterprise_from_readme_link,
-    product_page_facts,
+    product_knowledge_refresh,
 )
 from repo_presenter.readme.evidence.facts.project_detail import with_project_detail
 from repo_presenter.readme.evidence.facts.published_version import (
@@ -460,7 +460,14 @@ def extract_facts(
     ci_badge = ci_badge_fact(entry.repository, clone_path, tree_paths)
     if ci_badge is not None:
         facts.append(ci_badge)
-    facts.extend(product_page_facts(entry, probes))
+    # The product/platform knowledge refresh (CONSOLIDATED_GOALS_2026-11-06.md section 4) as its
+    # own declared pipeline stage, not merely an incidental product_page_facts call: this records
+    # exactly what was checked, each page's HTTP status, and whether either changed since this
+    # exact revision's own last reading, as a named artifact in the facts document.
+    _refresh, product_facts = product_knowledge_refresh(
+        entry, probes, snapshot.source_revision
+    )
+    facts.extend(product_facts)
     if snapshot.readme_path is not None:
         readme_bytes = (clone_path / snapshot.readme_path).read_bytes()
         # A package the registry reads as absent AND the maintainers' README says is unpublished is

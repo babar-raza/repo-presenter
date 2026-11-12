@@ -1,0 +1,220 @@
+
+===== CLEAN RUN 1 =====
+$ python -m pytest tests/acceptance/probes -q
+--- stdout ---
+.........................................                                [100%]
+41 passed in 0.44s
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python -m pytest tests/acceptance/probes -q
+--- stdout ---
+.........................................                                [100%]
+41 passed in 0.25s
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M src/repo_presenter/acceptance/probes/cpp.py
+$ python -m pytest tests/acceptance/probes -q
+--- stdout ---
+
+=================================== ERRORS ====================================
+____________ ERROR collecting tests/acceptance/probes/test_cpp.py _____________
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py:508: in importtestmodule
+    mod = import_path(
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\pathlib.py:596: in import_path
+    importlib.import_module(module_name)
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1395: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\assertion\rewrite.py:188: in exec_module
+    exec(co, module.__dict__)
+tests\acceptance\probes\test_cpp.py:13: in <module>
+    from repo_presenter.acceptance.probes import cpp as probe
+src\repo_presenter\acceptance\probes\__init__.py:44: in <module>
+    from repo_presenter.acceptance.probes import (
+E     File "C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-vsk6t_42\src\repo_presenter\acceptance\probes\cpp.py", line 90
+E       _disabled_def exported(repo_root: Path, qualified_name: str) -> bool | None:
+E                     ^^^^^^^^
+E   SyntaxError: invalid syntax
+___________ ERROR collecting tests/acceptance/probes/test_dotnet.py ___________
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py:508: in importtestmodule
+    mod = import_path(
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\pathlib.py:596: in import_path
+    importlib.import_module(module_name)
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1395: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\assertion\rewrite.py:188: in exec_module
+    exec(co, module.__dict__)
+tests\acceptance\probes\test_dotnet.py:15: in <module>
+    from repo_presenter.acceptance.probes import dotnet as probe
+src\repo_presenter\acceptance\probes\__init__.py:44: in <module>
+    from repo_presenter.acceptance.probes import (
+E     File "C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-vsk6t_42\src\repo_presenter\acceptance\probes\cpp.py", line 90
+E       _disabled_def exported(repo_root: Path, qualified_name: str) -> bool | None:
+E                     ^^^^^^^^
+E   SyntaxError: invalid syntax
+_____________ ERROR collecting tests/acceptance/probes/test_go.py _____________
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py:508: in importtestmodule
+    mod = import_path(
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\pathlib.py:596: in import_path
+    importlib.import_module(module_name)
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1395: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\assertion\rewrite.py:188: in exec_module
+    exec(co, module.__dict__)
+tests\acceptance\probes\test_go.py:12: in <module>
+    from repo_presenter.acceptance.probes import go as probe
+src\repo_presenter\acceptance\probes\__init__.py:44: in <module>
+    from repo_presenter.acceptance.probes import (
+E     File "C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-vsk6t_42\src\repo_presenter\acceptance\probes\cpp.py", line 90
+E       _disabled_def exported(repo_root: Path, qualified_name: str) -> bool | None:
+E                     ^^^^^^^^
+E   SyntaxError: invalid syntax
+____________ ERROR collecting tests/acceptance/probes/test_java.py ____________
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py:508: in importtestmodule
+    mod = import_path(
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\pathlib.py:596: in import_path
+    importlib.import_module(module_name)
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1395: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\assertion\rewrite.py:188: in exec_module
+    exec(co, module.__dict__)
+tests\acceptance\probes\test_java.py:12: in <module>
+    from repo_presenter.acceptance.probes import java as probe
+src\repo_presenter\acceptance\probes\__init__.py:44: in <module>
+    from repo_presenter.acceptance.probes import (
+E     File "C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-vsk6t_42\src\repo_presenter\acceptance\probes\cpp.py", line 90
+E       _disabled_def exported(repo_root: Path, qualified_name: str) -> bool | None:
+E                     ^^^^^^^^
+E   SyntaxError: invalid syntax
+___________ ERROR collecting tests/acceptance/probes/test_python.py ___________
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py:508: in importtestmodule
+    mod = import_path(
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\pathlib.py:596: in import_path
+    importlib.import_module(module_name)
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1395: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\assertion\rewrite.py:188: in exec_module
+    exec(co, module.__dict__)
+tests\acceptance\probes\test_python.py:12: in <module>
+    from repo_presenter.acceptance.probes import python as probe
+src\repo_presenter\acceptance\probes\__init__.py:44: in <module>
+    from repo_presenter.acceptance.probes import (
+E     File "C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-vsk6t_42\src\repo_presenter\acceptance\probes\cpp.py", line 90
+E       _disabled_def exported(repo_root: Path, qualified_name: str) -> bool | None:
+E                     ^^^^^^^^
+E   SyntaxError: invalid syntax
+____________ ERROR collecting tests/acceptance/probes/test_rust.py ____________
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py:508: in importtestmodule
+    mod = import_path(
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\pathlib.py:596: in import_path
+    importlib.import_module(module_name)
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1395: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\assertion\rewrite.py:188: in exec_module
+    exec(co, module.__dict__)
+tests\acceptance\probes\test_rust.py:13: in <module>
+    from repo_presenter.acceptance.probes import rust as probe
+src\repo_presenter\acceptance\probes\__init__.py:44: in <module>
+    from repo_presenter.acceptance.probes import (
+E     File "C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-vsk6t_42\src\repo_presenter\acceptance\probes\cpp.py", line 90
+E       _disabled_def exported(repo_root: Path, qualified_name: str) -> bool | None:
+E                     ^^^^^^^^
+E   SyntaxError: invalid syntax
+_________ ERROR collecting tests/acceptance/probes/test_typescript.py _________
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py:508: in importtestmodule
+    mod = import_path(
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\pathlib.py:596: in import_path
+    importlib.import_module(module_name)
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1395: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\assertion\rewrite.py:188: in exec_module
+    exec(co, module.__dict__)
+tests\acceptance\probes\test_typescript.py:12: in <module>
+    from repo_presenter.acceptance.probes import typescript as probe
+src\repo_presenter\acceptance\probes\__init__.py:44: in <module>
+    from repo_presenter.acceptance.probes import (
+E     File "C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-vsk6t_42\src\repo_presenter\acceptance\probes\cpp.py", line 90
+E       _disabled_def exported(repo_root: Path, qualified_name: str) -> bool | None:
+E                     ^^^^^^^^
+E   SyntaxError: invalid syntax
+=========================== short test summary info ===========================
+ERROR tests/acceptance/probes/test_cpp.py
+ERROR tests/acceptance/probes/test_dotnet.py
+ERROR tests/acceptance/probes/test_go.py
+ERROR tests/acceptance/probes/test_java.py
+ERROR tests/acceptance/probes/test_python.py
+ERROR tests/acceptance/probes/test_rust.py
+ERROR tests/acceptance/probes/test_typescript.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 7 errors during collection !!!!!!!!!!!!!!!!!!!
+7 errors in 0.56s
+
+--- stderr ---
+

@@ -29,10 +29,22 @@ rule with no fact to hold a statement to is silent.
     ``aspose-font-foss``) that no SUPPORTED fact states verbatim contradicts it.
 (m) Uncomputed structure and verification narrative (generator guard). A sentence the pipeline
     wrote (not quoted from the maintainers' README, i.e. from no SUPPORTED ``inherited_unit``) may
-    not count modules/packages/namespaces against the facts' module count, and may not narrate a
-    verification ("everything below was exercised ... and confirmed", "fully tested", "real
-    outputs ... fixture-backed"). Quoted maintainer text is the reconciliation stage's, judged
-    by (h)-(l) only.
+    not count modules/packages/namespaces against the facts' module count, and -- TC-017b work
+    item 4, now its own finding function (``_verification_findings``), not part of (m) itself --
+    may not narrate a verification ("everything below was exercised ... and confirmed", "fully
+    tested", "real outputs ... fixture-backed") UNLESS every example fact in the document
+    genuinely, fully passed (``_fully_verified``: SUPPORTED at confidence 1.0 -- post-TC-016, a
+    TIMED_OUT receipt is UNRESOLVED and never counts). Quoted maintainer text is the
+    reconciliation stage's, judged by (h)-(l) only.
+
+TC-017b (2026-11-07) also adds: a line-provenance classifier shared with every check here
+(``readme/validation/line_provenance.py``, replacing this module's own former ``_Origin`` copy of
+the same logic), and TC-017a's independent export-surface probes (``acceptance/probes/``) wired
+in as a second, non-same-origin signal for (h) and (i) -- a probe's definite ``False``/mismatch is
+now itself a finding even when the facts alone say a claim is fine, closing the common-mode gap
+where an extractor bug could both write a wrong fact and fail to flag the claim it then wrongly
+supports. A probe answering ``None`` never overturns a fact-backed pass, and never by itself
+rejects a claim either: it is a second signal, never a replacement for the facts.
 
 Each finding carries the line span it is about and, when the offending text is a SUPPORTED
 ``inherited_unit`` kept verbatim, that unit's id: ``provenance.claim_failures`` routes such a
@@ -44,8 +56,10 @@ from __future__ import annotations
 
 import re
 from collections.abc import Iterable
+from pathlib import Path
 
 from repo_presenter.core.facts import Fact, FactKind, FactsDocument
+from repo_presenter.readme.validation import line_provenance
 from repo_presenter.readme.validation.claims import (
     ClaimFinding,
     _fact,
@@ -72,22 +86,74 @@ def _supported(facts: FactsDocument, kind: FactKind) -> list[Fact]:
 
 
 class _Origin:
-    """Which README text is the maintainers' own: quoted inside a SUPPORTED ``inherited_unit``."""
+    """Which README text is the maintainers' own: quoted inside a SUPPORTED ``inherited_unit``.
+
+    TC-017b work item 1: this used to be the only place that notion lived; it now delegates to
+    ``readme/validation/line_provenance.py`` so every other module (and this card's own new
+    checks) shares exactly one definition of "inherited" rather than a second, parallel one.
+    """
 
     def __init__(self, facts: FactsDocument) -> None:
-        self._units = [
-            (fact.id, _plain(fact.value))
-            for fact in _supported(facts, "inherited_unit")
-        ]
+        self._facts = facts
 
     def unit(self, text: str) -> str | None:
         """The inherited unit that quotes ``text`` verbatim, or ``None`` (pipeline-authored)."""
-        wanted = _plain(text.strip().strip("|").strip().lstrip("-*+ ").strip())
-        if len(wanted) < 12:
+        return line_provenance.unit_for(text, self._facts)
+
+
+def _ecosystem(facts: FactsDocument) -> str | None:
+    """The repository's ecosystem, as the ``identity:ecosystem`` fact already records it
+    (``readme/evidence/facts/extract.py`` writes ``fact_id("identity", "ecosystem")`` with the
+    registry entry's own ``ecosystem`` string as its value) -- never re-derived here."""
+    fact = _fact(facts, "identity:ecosystem")
+    return fact.value if fact is not None else None
+
+
+class _Probes:
+    """TC-017b work item 3: TC-017a's independent export-surface probes, as a second,
+    non-same-origin signal for the mechanical checks below.
+
+    Bound to one repository's checked-out source tree (``probe_root``) and ecosystem, both
+    resolved once per call to ``surface_findings``/``claim_findings``. Every method is three-
+    valued (``True``/``False``/``None``), exactly as the underlying probe is: ``None`` means the
+    probe could not tell (no ``probe_root`` was supplied, the ecosystem has no probe module, or
+    the probe itself could not determine an answer) and is never coerced to ``True`` or ``False``
+    by anything in this module -- the single most important contract property the probes package
+    itself states, carried through here unchanged.
+    """
+
+    def __init__(self, facts: FactsDocument, probe_root: str | Path | None) -> None:
+        self._root = Path(probe_root) if probe_root is not None else None
+        self.ecosystem = _ecosystem(facts) if self._root is not None else None
+        self._module = None
+        if self.ecosystem is not None:
+            from repo_presenter.acceptance import probes
+
+            self._module = probes.ECOSYSTEMS.get(self.ecosystem)
+
+    def __bool__(self) -> bool:
+        return self._module is not None
+
+    def count(self, kind: str) -> int | None:
+        if self._module is None or self._root is None:
             return None
-        return next(
-            (fact_id for fact_id, value in self._units if wanted in value), None
-        )
+        return self._module.count(self._root, kind)
+
+    def exists(self, qualified_name: str) -> bool | None:
+        if self._module is None or self._root is None:
+            return None
+        return self._module.exists(self._root, qualified_name)
+
+    def exported(self, qualified_name: str) -> bool | None:
+        if self._module is None or self._root is None:
+            return None
+        return self._module.exported(self._root, qualified_name)
+
+    def type_count(self) -> int | None:
+        """The probe's own total of TYPE_KINDS (class + enum), or ``None`` when either kind's
+        count is itself unknown -- a partial total is not a count anyone can hold a claim to."""
+        counts = [self.count(kind) for kind in TYPE_KINDS]
+        return None if any(value is None for value in counts) else sum(counts)  # type: ignore[misc]
 
 
 def _finding(
@@ -144,12 +210,14 @@ def _evidence_type_count(facts: FactsDocument) -> int:
 
 
 def _count_findings(
-    lines: list[_Line], facts: FactsDocument, origin: _Origin
+    lines: list[_Line], facts: FactsDocument, origin: _Origin, probes: _Probes | None = None
 ) -> list[ClaimFinding]:
     types, classes = type_counts(facts)
     if types == 0:
         return []
     allowed_types = {types, _evidence_type_count(facts)}
+    probe_types = probes.type_count() if probes is not None else None
+    probe_classes = probes.count("class") if probes is not None else None
     findings: list[ClaimFinding] = []
     for sentence, first, last in _sentences(lines):
         plain = sentence.replace("`", "")
@@ -162,7 +230,26 @@ def _count_findings(
             stated = int(match.group("count").replace(",", ""))
             noun = match.group("noun").lower()
             allowed = allowed_types | ({classes} if noun == "classes" else set())
+            probe_value = probe_classes if noun == "classes" else probe_types
             if stated in allowed:
+                # TC-017b work item 3: the facts call this stated count fine, but TC-017a's probe
+                # is a second, non-same-origin signal -- an extractor bug that wrote a wrong fact
+                # cannot also pass this check, the way it could pass the fact-only check alone.
+                # A probe answer of None never overturns a fact-backed pass (open-world: "could
+                # not help" is not a contradiction).
+                if probe_value is not None and probe_value != stated:
+                    findings.append(
+                        _finding(
+                            origin,
+                            first,
+                            sentence,
+                            f"the README states {match.group(0).strip()!r} "
+                            f"({_plain(sentence)!r}); the facts agree, but the independent "
+                            f"{probes.ecosystem} export-surface probe counts {probe_value}, not "
+                            f"{stated} -- the facts may themselves be wrong",
+                            last=last,
+                        )
+                    )
                 continue
             # Every type fact names a defining location, so a count BELOW the facts' is refuted
             # outright. A count above it can be the maintainers counting kinds the extractor does
@@ -170,6 +257,19 @@ def _count_findings(
             # public delegates): above the facts, only the pipeline's own sentences are held to
             # them, never quoted maintainer text.
             if stated > max(allowed_types) and origin.unit(sentence) is not None:
+                if probe_value is not None and probe_value != stated:
+                    findings.append(
+                        _finding(
+                            origin,
+                            first,
+                            sentence,
+                            f"the README states {match.group(0).strip()!r} "
+                            f"({_plain(sentence)!r}); the facts cannot refute it, but the "
+                            f"independent {probes.ecosystem} export-surface probe counts "
+                            f"{probe_value}, not {stated}",
+                            last=last,
+                        )
+                    )
                 continue
             findings.append(
                 _finding(
@@ -203,13 +303,22 @@ _UNEXTRACTED_KIND = re.compile(
 _TABLE_TYPE_SHARE = 0.6
 
 
-def _surface_names(facts: FactsDocument) -> tuple[set[str], set[str]]:
-    """(every name the public surface uses, the type names): ``public_symbol``, ``enum_member``
-    and ``import_path`` value segments, plus the identifiers public signatures and docstrings
-    use (a return type, a base class). Never an ``inherited_unit``: the README's own text is what
-    is being judged."""
+def _surface_names(
+    facts: FactsDocument,
+) -> tuple[set[str], set[str], dict[str, str]]:
+    """(every name the public surface uses, the type names, {type name: its fact's full dotted
+    value}): ``public_symbol``, ``enum_member`` and ``import_path`` value segments, plus the
+    identifiers public signatures and docstrings use (a return type, a base class). Never an
+    ``inherited_unit``: the README's own text is what is being judged.
+
+    The third element (TC-017b work item 3) is the fully-qualified name a type's own short name
+    maps to -- a ``public_symbol`` fact's value is already the dotted path (``_row_name``/table
+    cells only ever carry the short name), and TC-017a's probes need that full path, not a bare
+    short name that could resolve to the wrong symbol or nothing at all.
+    """
     known: set[str] = set()
     types: set[str] = set()
+    qualified: dict[str, str] = {}
     for fact in facts.facts:
         if fact.polarity == "CONTRADICTED" or fact.kind not in (
             "public_symbol",
@@ -224,7 +333,8 @@ def _surface_names(facts: FactsDocument) -> tuple[set[str], set[str]]:
             known.update(_IDENTIFIER.findall(attributes.get(key, "")))
         if parts and attributes.get("symbol_kind") in TYPE_KINDS:
             types.add(parts[-1])
-    return known, types
+            qualified.setdefault(parts[-1], fact.value)
+    return known, types, qualified
 
 
 def _row_name(cell: str) -> str:
@@ -234,10 +344,139 @@ def _row_name(cell: str) -> str:
     return name
 
 
+def _consecutive_table_row_groups(text: str) -> list[list[tuple[str, str]]]:
+    """``text`` split into separate runs of consecutive ``_TABLE_ROW`` lines -- one maintainers'
+    table never bleeds into the next, non-adjacent one. A non-matching line (blank, prose, a
+    different heading's table) ends the current run; ``_table_findings`` already groups this way
+    for the VALIDATION finding, and this is that same grouping reused for the EDIT/restore
+    reading, so the two can never disagree about which rows belong to which table."""
+    groups: list[list[tuple[str, str]]] = []
+    current: list[tuple[str, str]] = []
+    for line in text.splitlines():
+        match = _TABLE_ROW.match(line)
+        if match is not None:
+            current.append((_row_name(match.group("name")), line))
+            continue
+        if current:
+            groups.append(current)
+        current = []
+    if current:
+        groups.append(current)
+    return groups
+
+
+def absent_type_rows(text: str, facts: FactsDocument) -> list[str]:
+    """The rows of a maintainers' API TYPE table that name something the public surface lacks:
+    the rows BC-14 rule (i) would flag. Empty unless the table reads as a type table (at least
+    ``_TABLE_MIN_ROWS`` rows, at least ``_TABLE_TYPE_SHARE`` of whose first cells are verified public
+    types). A delegate/callback row is never absent (a kind no ``public_symbol`` fact records).
+
+    Judged per TABLE (``_consecutive_table_row_groups``), never pooled across every table in
+    ``text``: a second, unrelated table (a short "Traits" table, say) sharing the same call would
+    otherwise dilute the first table's own type share below ``_TABLE_TYPE_SHARE`` and silently
+    stop any row of it being read as absent -- measured passing a whole multi-table README (Lane
+    L's ``absent_type_row`` detector) where the isolated "Enumerations" table alone reads as a
+    type table (len 30, type share high) but the same text pooled with the document's other
+    tables did not."""
+    known, types, _qualified = _surface_names(facts)
+    if not types:
+        return []
+
+    def is_type(name: str) -> bool:
+        return name in types or name.split("-", 1)[0] in types
+
+    dropped: list[str] = []
+    for rows in _consecutive_table_row_groups(text):
+        if len(rows) < _TABLE_MIN_ROWS:
+            continue
+        if sum(is_type(name) for name, _ in rows) / len(rows) < _TABLE_TYPE_SHARE:
+            continue
+        dropped.extend(
+            line
+            for name, line in rows
+            if name
+            and not (
+                name in known
+                or name.split("-", 1)[0] in known
+                or _SEGMENTS.split(name)[-1] in known
+            )
+            and not _UNEXTRACTED_KIND.search(line.split("|", 2)[-1])
+        )
+    return dropped
+
+
+def without_absent_type_rows(text: str, facts: FactsDocument) -> str:
+    """``text`` with the rows ``absent_type_rows`` names removed, every other line (header,
+    separator, remaining rows, surrounding prose) exactly as written. The ONE printable form of a
+    kept maintainers' type table: the renderer prints it, and BC-05 / the independent reviewer's
+    ``disposition_coverage`` judge "printed" against it, so the three can never disagree. A row
+    dropped here is dropped on evidence -- the facts hold no public type of that name (BC-14)."""
+    drop = set(absent_type_rows(text, facts))
+    if not drop:
+        return text
+    return "\n".join(line for line in text.split("\n") if line.rstrip("\r") not in drop)
+
+
+def kept_table_form(text: str, facts: FactsDocument) -> str:
+    """The ONE printable form of a kept maintainers' table: absent-type rows removed (BC-14) and any
+    unsafe HTML element it names in prose shown in a code span (BC-06). The renderer, BC-05, the
+    independent reviewer and the restore guard all judge "printed" against this form."""
+    from repo_presenter.readme.validation.links import defang_unsafe_html
+
+    return defang_unsafe_html(without_absent_type_rows(text, facts))
+
+
+#: Kept maintainers' unit kinds whose prose BC-12 judges and ``kept_unit_form`` corrects. A heading
+#: is not one: reconciliation and the shell own heading text, and live_readme_loss matches a live
+#: heading by its text, so rewriting a kept heading would turn it into a lost one.
+_NAME_CORRECTED_KINDS = (".paragraph", ".list", ".blockquote", ".table")
+#: What a name correction must never touch beyond the fenced blocks and inline code spans the
+#: matcher already leaves alone: a link destination and a bare URL.
+_NAME_PROTECTED = re.compile(r"\]\([^)\n]*\)|https?://[^\s)>\]]+")
+
+
+def canonical_name_form(text: str, facts: FactsDocument) -> str:
+    """``text`` with each separator, case or suffix variant of the product name that stands for it
+    in running prose spelled as the canonical name (``Aspose.PDF FOSS`` -> ``Aspose.PDF FOSS for
+    Cpp``): BC-12's own remedy applied deterministically, through the SAME matcher
+    (``composition.components.identity.canonicalise_name_variants``) the authored prose is held to.
+    Fenced blocks, inline code spans, link destinations and bare URLs are left byte for byte; a text
+    that names the product in no variant is returned unchanged."""
+    from repo_presenter.readme.composition.components.identity import (
+        canonicalise_name_variants,
+        product_name_of_repository,
+    )
+
+    canonical = product_name_of_repository(facts.repository)
+    return canonicalise_name_variants(text, canonical, protect=_NAME_PROTECTED)
+
+
+def kept_unit_form(unit_id: str, text: str, facts: FactsDocument) -> str:
+    """The ONE printable form of a kept maintainers' unit, whatever its kind: a table without the
+    rows naming absent types and with unsafe HTML in code spans (``kept_table_form``), and any
+    paragraph, list, blockquote or table with the product named as BC-12 requires
+    (``canonical_name_form``). The renderer, BC-05, the independent reviewer and the restore guard
+    all judge "printed" against this form, so a restore of the maintainers' own wording no longer
+    fails BC-12 on a short name (measured: PDF Cpp, Slides Cpp, Cells Cpp, Cells Go, 2026-11-11)."""
+    if unit_id.endswith(".table"):
+        text = kept_table_form(text, facts)
+    if unit_id.endswith(_NAME_CORRECTED_KINDS):
+        text = canonical_name_form(text, facts)
+    # The renderer corrects a stated "N public types" the facts contradict over the WHOLE README after
+    # assembly (``renderer.correct_stated_type_counts``), so what a kept unit prints carries the facts'
+    # number, never the maintainers' stale one. Judged against the uncorrected text, BC-05 said "placed
+    # in scope_limitations but the candidate does not render it there" and the reviewer "kept but not
+    # printed" for a paragraph that WAS printed, one digit apart (Cells Cpp 041.paragraph: "197" vs the
+    # computed 195). Idempotent with the renderer's own pass; prose only, fenced code is never edited.
+    from repo_presenter.readme.composition.renderer import correct_stated_type_counts
+
+    return correct_stated_type_counts(text, facts)
+
+
 def _table_findings(
-    lines: list[_Line], facts: FactsDocument, origin: _Origin
+    lines: list[_Line], facts: FactsDocument, origin: _Origin, probes: _Probes | None = None
 ) -> list[ClaimFinding]:
-    known, types = _surface_names(facts)
+    known, types, qualified = _surface_names(facts)
     if not types:
         return []
     tables: list[list[tuple[int, str, str]]] = []
@@ -270,19 +509,40 @@ def _table_findings(
         if sum(is_type(name) for _, name, _ in table) / len(table) < _TABLE_TYPE_SHARE:
             continue
         for index, name, text in table:
-            if not name or is_known(name):
+            if not name:
                 continue
-            if _UNEXTRACTED_KIND.search(text.split("|", 2)[-1]):
-                continue  # a delegate or callback type: a kind no public_symbol fact records
-            findings.append(
-                _finding(
-                    origin,
-                    index,
-                    text,
-                    f"the API table lists `{name}`, but no public_symbol fact states it (it is "
-                    "not a type of the public surface: absent or not exported)",
+            if not is_known(name):
+                if _UNEXTRACTED_KIND.search(text.split("|", 2)[-1]):
+                    continue  # a delegate/callback type: a kind no public_symbol fact records
+                findings.append(
+                    _finding(
+                        origin,
+                        index,
+                        text,
+                        f"the API table lists `{name}`, but no public_symbol fact states it (it "
+                        "is not a type of the public surface: absent or not exported)",
+                    )
                 )
-            )
+                continue
+            # TC-017b work item 3: the facts call this name known -- the common-mode gap the
+            # card exists to close is exactly here, where a wrong extractor fact would otherwise
+            # go unchallenged. TC-017a's probe is a second, non-same-origin signal: only a
+            # definite False (the probe itself finds the name not exported) is a finding; None
+            # ("could not tell") never overturns the fact-backed pass.
+            if probes is not None and is_type(name):
+                qualified_name = qualified.get(name, name)
+                if probes.exported(qualified_name) is False:
+                    findings.append(
+                        _finding(
+                            origin,
+                            index,
+                            text,
+                            f"the API table lists `{name}`, and a public_symbol fact calls it "
+                            f"known, but the independent {probes.ecosystem} export-surface probe "
+                            f"says `{qualified_name}` is not exported -- the facts may themselves "
+                            "be wrong",
+                        )
+                    )
     return findings
 
 
@@ -392,7 +652,7 @@ class StubIndex:
     def __init__(self, facts: FactsDocument) -> None:
         self.types: dict[str, str] = {}
         self.members: dict[str, dict[str, str]] = {}
-        _, public_types = _surface_names(facts)
+        _, public_types, _ = _surface_names(facts)
         lowered = {name.lower(): name for name in public_types if len(name) >= 5}
         for fact in _supported(facts, "inherited_unit"):
             for clause in _CLAUSE_BREAK.split(fact.value):
@@ -714,7 +974,54 @@ def _generated_findings(
                         last=last,
                     )
                 )
-                continue
+    return findings
+
+
+# --- TC-017b work item 4: the verification-narrative ban -------------------------------------
+#
+# Rule (m) above already refuses an uncomputed structure count; the verification-narrative half
+# of its old docstring now lives here, as its own finding function, because it gained a condition
+# plain prohibition never had: a generated sentence MAY narrate a verification when a real
+# verification record actually backs it. "Real" is deliberately narrow -- post-TC-016's own fix
+# (GATE5_DELIVERY_PROGRAM/TC-016: a TIMED_OUT receipt was being mislabelled CONTRADICTED; it is
+# correctly UNRESOLVED, confidence 0.5, in this codebase) a TIMED_OUT/NEEDS_INPUT/NOT_VERIFIED
+# example proves nothing either way, so it must never, by itself, license a narrative claim.
+
+
+def _fully_verified(facts: FactsDocument) -> bool:
+    """Whether every ``example`` fact in this document genuinely passed a real run: SUPPORTED
+    (an ``EXECUTED``/``COMPILED`` receipt -- never merely "not UNRESOLVED") at full confidence
+    (``readme/evidence/facts/examples.py``: only ``EXECUTED``/``FAILED`` ever carry
+    ``confidence=1.0``; a ``FAILED`` example is ``CONTRADICTED``, so a confidence-1.0 ``SUPPORTED``
+    example fact is, in this codebase, exactly an ``EXECUTED`` one).
+
+    A document with no example facts at all backs nothing (``False``): a generator with zero
+    verification evidence cannot narrate one just because it also printed no failure. A blanket
+    "everything below was exercised and confirmed" is true only when every example this pipeline
+    actually ran did, in fact, pass -- one real pass among other real failures, or a TIMED_OUT
+    receipt alone, does not back it either.
+    """
+    examples = facts.by_kind("example")
+    if not examples:
+        return False
+    return all(fact.polarity == "SUPPORTED" and fact.confidence == 1.0 for fact in examples)
+
+
+def _verification_findings(
+    lines: list[_Line], facts: FactsDocument, origin: _Origin
+) -> list[ClaimFinding]:
+    """A generated sentence may never state or imply that something was verified, tested,
+    exercised, or confirmed working unless ``_fully_verified`` backs it. Quoted maintainer text
+    (``origin.unit(sentence) is not None``) is never judged here -- the maintainers' own claims
+    about their own verification are the disposition stage's concern, not a thing this pipeline
+    invented and must therefore justify."""
+    if _fully_verified(facts):
+        return []
+    findings: list[ClaimFinding] = []
+    for sentence, first, last in _sentences(lines):
+        if origin.unit(sentence) is not None:
+            continue  # the maintainers' own words: never judged by this generator-only ban
+        plain = _plain(sentence)
         narrative = _VERIFICATION_NARRATIVE.search(plain)
         if narrative is not None:
             findings.append(
@@ -722,21 +1029,34 @@ def _generated_findings(
                     first,
                     "COMPOSING",
                     f"the README narrates a verification ({narrative.group(0)!r} in {plain!r}) that "
-                    "no fact records; state what the library does, never how it was checked",
+                    "no real, fully-passed verification record backs; state what the library does, "
+                    "never how it was checked",
                     last=last,
                 )
             )
     return findings
 
 
-def surface_findings(lines: list[_Line], facts: FactsDocument) -> list[ClaimFinding]:
-    """Rules (h)-(m) over one README's lines."""
+def surface_findings(
+    lines: list[_Line], facts: FactsDocument, probe_root: str | Path | None = None
+) -> list[ClaimFinding]:
+    """Rules (h)-(m) over one README's lines, plus the TC-017b work item 4 verification-narrative
+    ban.
+
+    ``probe_root`` (TC-017b work item 3) is the repository's own checked-out source tree, when a
+    caller has one on disk; without it (the default, and every production caller today -- see
+    ``readme/validation/provenance.py``'s ``claim_failures``) the TC-017a probes are never
+    consulted and every probe-based check below answers ``None`` throughout, exactly as if this
+    card had never run: the fact-only checks are completely unaffected either way.
+    """
     origin = _Origin(facts)
+    probes = _Probes(facts, probe_root)
     return [
-        *_count_findings(lines, facts, origin),
-        *_table_findings(lines, facts, origin),
+        *_count_findings(lines, facts, origin, probes),
+        *_table_findings(lines, facts, origin, probes),
         *_stub_findings(lines, facts, origin),
         *_example_findings(lines, facts),
         *_name_findings(lines, facts, origin),
         *_generated_findings(lines, facts, origin),
+        *_verification_findings(lines, facts, origin),
     ]

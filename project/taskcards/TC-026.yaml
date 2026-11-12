@@ -1,0 +1,146 @@
+id: TC-026
+gate: GATE5_DELIVERY_PROGRAM
+track: m8-rung-c-fallback
+executor: supervisor
+purpose: >
+  Build the M8 rung-(c) fallback (owner ruling R26; docs/design/2026-11-06-acceptance-redesign.md
+  section 6's pre-decided fallback ladder) now that a real, recorded M8 calibration failure
+  exists: this session's own real, live-measured M8 certificate in data/acceptance_calibration.json
+  is NOT_PASSED on all three shapes (classification false-reject 0.0333 > 0.02; pairwise-benchmark
+  recall 0.3684 < 0.90; M8-S paraphrase recall 0.85 < 0.90, false-reject 0.10 > 0.02). Rung (b) --
+  an owner-approved second model route for M8 only -- is pre-declined as a standing matter by
+  owner ruling R18 ("qwen3-next for every product route... including for M8; no second route is
+  ever introduced"), so per the design's own ladder text ("b fails, OR the owner declines"), rung
+  (c) is authorized now without a further owner round-trip. This card only touches code/data this
+  session already has access to; it does not require any new owner action. Self-contained context
+  follows; you never read
+  docs/design/2026-11-06-acceptance-redesign.md or docs/DELIVERY_PLAN_2026-11-07.md, only this
+  card.
+
+  Rung (c)'s own text (transcribed in full, so the scope below is traceable to it): "remove the
+  need for judgement by construction. Generated prose is limited to renderer templates and
+  bounded lead-ins with a deterministic lexicon ban on promotional/superlative wording, which
+  moves D14 for generated text to M6. For inherited text, D14/D15 become a disposition decision
+  under the R14 pattern (M5). For M8-S, inherited type descriptions not supported by
+  docstring_full are routed as PRESERVE_ATTRIBUTED and checked by M9. M8 becomes advisory and is
+  not in the gate; D15 relative to the benchmark is covered by M7's scorecard and M9's rubric."
+
+  This card builds only the LEXICON-BAN half of that text (a real, deterministic, zero-provider-
+  call rule, folded into M6's existing certificate) plus the RESPONSIBILITY-MATRIX reassignment
+  (D9/D14/D15 off M8, mechanically removing M8 from REQUIRED_MECHANISM_CLASSES). It deliberately
+  does NOT build the other half -- constraining what the renderer/generator can actually emit
+  ("bounded lead-ins") so the lexicon ban's recall reaches 1.00 "by construction" rather than by
+  guessing at arbitrary free text. That is TC-019's own, separately-scoped, not-yet-built
+  "generator constraints (S3)" work; this card's own new module
+  (src/repo_presenter/readme/validation/wording.py) says so in its own docstring, and its
+  measurement is reported honestly as a dev-corpus result, not a held-out one, for exactly that
+  reason. The D14-inherited/D15/D9 "disposition decision" and "M9 rubric" halves need NO new
+  code: they are already-ACCEPTED policy (TC-018's preservation/obligations module for
+  disposition decisions; TC-014/TC-019 (scripts/run_m9_seeder.py, score.py)'s already-real audit
+  pipeline for the M9 rubric) -- this card's job for those three defect classes is the
+  responsibility.py reassignment alone, not new mechanism code.
+depends_on: []
+write_paths:
+  - src/repo_presenter/readme/validation/wording.py
+  - scripts/measure_m6_wording_ban.py
+  - src/repo_presenter/acceptance/responsibility.py
+  - tests/readme/validation/test_wording.py
+  - tests/acceptance/test_responsibility.py
+  - data/acceptance_responsibility.json
+  - data/acceptance_calibration.json
+satisfies:
+  - REQ-ACCEPT-005
+  - REQ-JUDGE-004
+source_refs:
+  - file: docs/design/2026-11-06-acceptance-redesign.md
+    anchor: "Pre-decided fallback ladder for M8"
+  - file: src/repo_presenter/acceptance/responsibility.py
+    anchor: "DEFECT_CLASS_OWNERS"
+  - file: scripts/measure_m8_live.py
+    anchor: "_cases"
+  - file: docs/CONSOLIDATED_GOALS_2026-11-06.md
+    anchor: "R18"
+inputs: []
+actions:
+  - "Write src/repo_presenter/readme/validation/wording.py: a pure, deterministic
+     promotional_wording_matches(text) -> tuple[str, ...] function over a fixed lexicon of
+     promotional/superlative terms, with a module docstring stating plainly that this is the
+     lexicon-ban half of rung (c) only, measured against a dev corpus, not a held-out one, and
+     that generator-side construction (TC-019) is the other, not-yet-built half."
+  - "Write scripts/measure_m6_wording_ban.py: measure the new rule, with ZERO provider calls,
+     against the real dev corpus scripts/measure_m8_live.py already built for M8's own
+     classification calibration (30 real clean README sentences, 30 promotional spans), plus the
+     existing mutations.py::add_promotional_filler fixture M6 already used for its
+     duplicate_paragraph case -- fold the result into M6's certificate as a second,
+     independently-gated case group (wording_ban), never averaged with duplicate_paragraph."
+  - "Reassign D9 to primary none (joining D7's existing shape); D14 to primary M6 / secondary M5;
+     D15 to primary M7 / secondary None, in src/repo_presenter/acceptance/responsibility.py's
+     DEFECT_CLASS_OWNERS, with the module docstring updated to explain each reassignment and its
+     provenance (R26, R18) in the same documented-departure style the module already uses for
+     D7/D9's pre-existing departures."
+  - "Regenerate data/acceptance_responsibility.json from build_responsibility_document() (never
+     hand-edit it) and confirm M8 no longer appears in mechanism_classes."
+  - "Update tests/acceptance/test_responsibility.py's EXPECTED_TABLE to match the reassignment;
+     add explicit tests asserting D9 is absent and that no defect class's primary is M8 any
+     more."
+  - "Write tests/readme/validation/test_wording.py: the real PROMOTIONAL_FILLER fixture is
+     caught; a plain technical sentence is not flagged; a real false-positive this rule's own dev
+     measurement caught and fixed (a legitimate technical use of a near-promotional word) stays
+     fixed; the real M8 dev corpus clears recall >= 0.90 and false_reject == 0, reported as a
+     regression floor for the already-tuned lexicon, not a generalization claim."
+  - "Re-run scripts/measure_m6_wording_ban.py --write to regenerate M6's certificate for real
+     (never hand-edit data/acceptance_calibration.json), confirm M6 stays PASSED, and confirm
+     python ops/checks/calibration_status.py PASSED --file data/acceptance_calibration.json
+     --matrix data/acceptance_responsibility.json now reports PASSED now that M8 is no longer a
+     required mechanism."
+checks:
+  - command: |-
+      python -m pytest tests/readme/validation/test_wording.py tests/acceptance/test_responsibility.py tests/acceptance/ -q
+    expect: exit 0
+    timeout_seconds: 120
+    proves:
+      - REQ-ACCEPT-005
+      - REQ-JUDGE-004
+  - command: |-
+      python ops/checks/calibration_status.py PASSED --file data/acceptance_calibration.json --matrix data/acceptance_responsibility.json
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-ACCEPT-005
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -X utf8 -c "import pathlib; p = pathlib.Path('src/repo_presenter/acceptance/responsibility.py'); t = p.read_text(encoding='utf-8'); t2 = t.replace(chr(34)+'D14'+chr(34)+': ('+chr(34)+'M6'+chr(34)+', '+chr(34)+'M5'+chr(34)+'),', chr(34)+'D14'+chr(34)+': ('+chr(34)+'M8'+chr(34)+', None),'); p.write_text(t2, encoding='utf-8')"
+  rationale: >
+    Reverts D14's primary back to M8 (the pre-rung-(c) mapping), which must re-add M8 to
+    REQUIRED_MECHANISM_CLASSES and make calibration_status.py report NOT_PASSED again (M8's own
+    certificate is genuinely NOT_PASSED), proving the second check actually depends on D14's real
+    reassignment rather than passing regardless. If the worker's exact string formatting differs,
+    the negative control is updated in the same commit to target whatever literal text is
+    actually present, per ops/SUPERVISOR.md's falsifier rule against a textual mutation that
+    silently stops matching after a refactor.
+evidence:
+  - src/repo_presenter/readme/validation/wording.py
+  - scripts/measure_m6_wording_ban.py
+  - src/repo_presenter/acceptance/responsibility.py
+  - tests/readme/validation/test_wording.py
+  - tests/acceptance/test_responsibility.py
+  - data/acceptance_responsibility.json
+  - data/acceptance_calibration.json
+closeout:
+  - "M8 itself is NOT deleted, disabled, or stopped from running: TC-023's contract and its real
+     measured certificate stay exactly as recorded, honestly NOT_PASSED. M8 is now advisory --
+     informative, still real, never a gate requirement -- per rung (c)'s own text."
+  - "The generator-constraint half of rung (c) (bounded lead-in templates, so the lexicon ban's
+     recall is backed by construction rather than by guessing at arbitrary free text) is NOT
+     built by this card -- it remains TC-019's open, separately-scoped work. This card's own new
+     module says so in its own docstring; do not let this card's passing checks be read as closing
+     that gap."
+  - "TC-007 (data/acceptance_calibration.json PASSED, via calibration_status.py) now depends on
+     this card in addition to its existing TC-013/TC-022a/TC-022b dependencies -- update
+     TC-007.yaml's depends_on in the same change, as a separate, small, honest dependency-graph
+     correction, not left implicit."
+recovery: "Revert this card's write_paths; TC-023's own M8 contract/certificate is untouched and
+  the old (pre-rung-(c)) D9/D14/D15 mapping is restored exactly as it was."

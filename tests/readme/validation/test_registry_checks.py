@@ -2020,8 +2020,42 @@ def test_an_omitted_badge_is_allowed() -> None:
     assert _badge_failures(_row_candidate(f"{PYPI} {LICENSE_BADGE}")) == []
 
 
+LONE_LINKED_IMAGE = "[![Feature showcase preview](docs/feature_showcase.png)](docs/feature_showcase.pdf)"
+
+
+def _badge_count_failures(candidate: Candidate) -> list[str]:
+    return [
+        f.detail
+        for f in structure_failures(candidate)
+        if "expected one badge row" in f.detail
+    ]
+
+
+def test_a_lone_linked_image_in_a_later_section_is_not_a_second_badge_row() -> None:
+    base = _candidate()
+    assert _badge_count_failures(base) == []
+    readme = base.readme.rstrip("\n") + f"\n\n## Gallery\n\n{LONE_LINKED_IMAGE}\n"
+    assert _badge_count_failures(dataclasses.replace(base, readme=readme)) == []
+
+
+def test_two_badge_rows_in_the_opening_block_still_fail() -> None:
+    base = _candidate()
+    lines = base.readme.splitlines()
+    index = next(i for i, line in enumerate(lines) if line.startswith("[![PyPI]"))
+    lines.insert(index + 1, LONE_LINKED_IMAGE)
+    doubled = dataclasses.replace(base, readme="\n".join(lines) + "\n")
+    assert _badge_count_failures(doubled) == ["expected one badge row; found 2"]
+
+
+def test_a_missing_badge_row_where_facts_require_one_still_fails() -> None:
+    base = _candidate()
+    lines = [line for line in base.readme.splitlines() if not line.startswith("[![PyPI]")]
+    stripped = dataclasses.replace(base, readme="\n".join(lines) + "\n")
+    assert _badge_count_failures(stripped) == ["expected one badge row; found 0"]
+
+
 CONTRIBUTORS_GRAPH = f"https://github.com/{ENTRY.repository}/graphs/contributors"
-UP_PYPI = "[![PyPI version](https://img.shields.io/pypi/v/aspose-3d-foss)](https://pypi.org/project/aspose-3d-foss/)"
+UP_PYPI ="[![PyPI version](https://img.shields.io/pypi/v/aspose-3d-foss)](https://pypi.org/project/aspose-3d-foss/)"
 UP_CI = f"[![CI]({CI_FACT.value}/badge.svg)]({CI_FACT.value})"
 UP_LICENSE = "[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)"
 UP_CONTRIBUTORS = (
@@ -2692,8 +2726,15 @@ def test_bc12_routes_a_placed_inherited_units_own_misspelling_to_reconciliation(
     the registry's canonical form. BC-12 hardcoded COMPOSING regardless, so the repair it produced
     had nothing in S6's own stage output to revise -- a no-op, rejected twice. A misspelling a
     placed inherited unit carries verbatim must route to RECONCILING with a resolvable unit_id,
-    the same as BC-07's dangling-reference finding above."""
-    misspelled = "Aspose.3D.FOSS opens every format."
+    the same as BC-07's dangling-reference finding above.
+
+    A plain variant of the name ("Aspose.3D.FOSS opens every format.") is now printed in its
+    corrected kept form (``surface_claims.kept_unit_form``), so it no longer reaches BC-12 at all
+    (``test_a_placed_units_plain_name_variant_prints_corrected_and_passes_bc12`` below). The routing
+    still carries wording the correction deliberately declines to rewrite: the family name followed
+    by ANOTHER platform's tail ("... for Rust") may be a sibling product, not a misspelling of this
+    one, so BC-12 flags it and only reconciliation can revise it."""
+    misspelled = "Aspose.3D.FOSS for Rust opens every format."
     facts = FactsDocument(
         ENTRY.repository,
         REVISION,
@@ -2716,6 +2757,26 @@ def test_bc12_routes_a_placed_inherited_units_own_misspelling_to_reconciliation(
         f for f in failing["failures"] if f["causal_stage"] == "RECONCILING"
     )
     assert reconciling["unit_id"] == "inherited_unit:002.paragraph"
+
+
+def test_a_placed_units_plain_name_variant_prints_corrected_and_passes_bc12(
+    tmp_path: Path,
+) -> None:
+    """The original Cells Cpp case (hosted run 40687656250): a kept unit spelling the product
+    differently from the registry. Its printed form now carries the canonical name, so BC-12 holds
+    and the restore that kept the unit is no longer discarded for it."""
+    facts = FactsDocument(
+        ENTRY.repository,
+        REVISION,
+        tuple(
+            Fact(f.id, f.kind, "Aspose.3D.FOSS opens every format.", f.evidence, polarity=f.polarity)
+            if f.id == "inherited_unit:002.paragraph"
+            else f
+            for f in BASE_FACTS
+        ),
+    )
+    document = validate_candidate(_candidate(facts=facts), tmp_path, ())
+    assert "BC-12" not in {c["id"] for c in document["checks"] if c["verdict"] != "PASS"}
 
 
 def test_canonical_name_pattern_is_built_from_the_name_alone() -> None:
@@ -3816,3 +3877,40 @@ def test_attributed_maintainer_content_is_shown_to_the_reviewer_with_no_public_l
     # The maintainer content is still shown and judged; its attribution lives only in the
     # dispositions (the reviewer's maintainer_lines), never in the README.
     assert line_sections(candidate.readme)[rows.index(_MAINTAINER_NOTE)] == "scope_limitations"
+
+def test_a_bare_fence_nested_in_a_placed_inherited_list_is_exempt_from_the_language_rule(
+    tmp_path: Path,
+) -> None:
+    """Slides Java: the upstream's own list item holds a bare fence (``refusal names the
+    alternatives:`` then an indented ``` block). The list prints as written, so the fence is the
+    upstream's spelling; an authored bare fence elsewhere still fails."""
+    item = "- **Save formats**: the refusal names the alternatives:\n\n  ```\n  Export failed\n  ```\n"
+    facts = FactsDocument(
+        FACTS.repository,
+        FACTS.source_revision,
+        (*FACTS.facts, _fact("inherited_unit:902.list", "inherited_unit", item)),
+    )
+    dispositions = {
+        "dispositions": [
+            *DISPOSITIONS["dispositions"],
+            {
+                "unit_id": "inherited_unit:902.list",
+                "disposition": "VERIFIED_MOVE",
+                "destination_section": "scope_limitations",
+                "fact_ids": [],
+                "rationale": "r",
+            },
+        ]
+    }
+    candidate = _candidate(facts=facts, dispositions=dispositions)
+    assert "  ```\n  Export failed" in candidate.readme
+    assert not any("has no language" in d for d in _structure_details(candidate, tmp_path))
+    authored = candidate.readme.replace(
+        "## Scope and Limitations\n\n", "## Scope and Limitations\n\n```\nsome output\n```\n\n"
+    )
+    assert any(
+        "has no language" in d
+        for d in _structure_details(
+            _candidate(authored, facts=facts, dispositions=dispositions), tmp_path
+        )
+    )

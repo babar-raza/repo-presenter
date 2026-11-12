@@ -48,6 +48,7 @@ import contextlib
 import hashlib
 import json
 import os
+import re
 import shutil
 import sys
 import tempfile
@@ -78,6 +79,17 @@ OUTCOME_NEEDS_REPAIR = "NEEDS_REPAIR"
 RECERTIFICATION_FILENAME = "recertification.json"
 #: Bump when what re-certification re-runs, or how it records the result, changes meaning.
 RECERTIFY_VERSION = "1"
+#: Most restore-and-rejudge passes ``_rerun_lane_r(restore=True)`` makes (each pass can expose a unit
+#: the previous one made renderable); a bound, so a restore that keeps failing stops and reports --
+#: zero-call either way, so the cost of a higher bound is wall-clock, never provider spend (R25).
+#: ``choose_units`` deliberately restores one carrier per lost item on its first pass (avoiding a
+#: BC-07 line-budget blowup from printing the same identifier everywhere it is cited) and only
+#: escalates to every holder once an item is STILL lost after that -- real case (PDF Java, local
+#: Lane R, 2026-11-10): seven overlapping maintainers' tables each lost a distinct set of
+#: identifiers, and 3 rounds exhausted before every item finished escalating, leaving several
+#: still one-carrier-restored (insufficient) rather than fully restored. 3 was sized for the
+#: common case of a handful of lost items; a document with many overlapping tables needs more.
+RESTORE_ROUNDS = 10
 DEFAULT_BASELINE = Path("data/recertification_baseline.json")
 #: Manifest states whose sealed files are a model-accepted candidate. VALID_UPDATE_AVAILABLE is a
 #: proven seal beside which a later, different rerun was merely recorded (``seal._record_update``):
@@ -214,15 +226,130 @@ def fetch_source(
 # --- the deterministic re-run, per lane --------------------------------------------------------
 
 
-def _model_accept(review: Mapping[str, Any] | None) -> bool:
+#: ``unit_reviews[*]["m8"]["status"]`` values TC-013/TC-024's contract reads as "no M8 objection"
+#: -- mirrors ``readme.review.llm_review.M8_PASSING_STATUSES`` exactly (duplicated, not imported:
+#: this module's own docstring promises "nothing here imports a gateway, a ledger or a call
+#: store", and ``llm_review`` pulls all three in; update both sets together).
+_M8_PASSING_STATUSES = frozenset({None, "not_run", "ok"})
+
+
+def _model_accept(review):
+    """TC-013/TC-024's seal-path contract: deterministically-validated (``verdict == "ACCEPT"``,
+    which ``readme.review.verdict.fold_verdict``'s own invariant already means no deterministic
+    mechanism -- M1-M7, M10, ``readme.validation.blocking``, unchanged -- found a blocking finding,
+    and every model-reported REJECT_* was deterministically cleared: non-negotiable 5 is never
+    weakened by this) AND a real model review was made (``model_verdict`` recorded; a
+    deterministic-only verdict never re-certifies) AND M8's recorded verdict (TC-023,
+    ``readme.review.prose_judge``, carried per unit in ``unit_reviews[*]["m8"]``) is never a
+    REJECT/INCONCLUSIVE for any unit. Replaces the old reviewer's own stricter
+    ``model_verdict == "ACCEPT"`` requirement -- that required the OLD monolithic reviewer's
+    single call to have said ACCEPT outright, which is exactly "the old reviewer's
+    one-call-does-everything verdict" TC-024 moves this gate away from. A unit's ``m8`` field
+    absent (every seal made before this card), or recorded ``"not_run"``/``"ok"``, is read as "no
+    M8 objection" -- TC-023's real provider-backed calibration is separately budgeted (owner
+    ruling R26) and not yet wired; a future card's real ``"reject"``/``"inconclusive"`` blocks
+    exactly like the old reviewer's REJECT did, with zero further change to this function. Mirrors
+    ``core.state.bundle_store.SealRecord.model_accept`` -- update both together."""
     review = review or {}
-    return review.get("verdict") == "ACCEPT" and review.get("model_verdict") == "ACCEPT"
+    if review.get("verdict") != "ACCEPT":
+        return False
+    if review.get("model_verdict") is None:
+        return False
+    for record in review.get("unit_reviews") or ():
+        if not isinstance(record, Mapping):
+            continue
+        m8 = record.get("m8")
+        if isinstance(m8, Mapping) and m8.get("status") not in _M8_PASSING_STATUSES:
+            return False
+    return True
 
 
 def _rerun_lane_r(
-    bundle: Path, entry: Any, source: SourceSnapshot
+    bundle: Path, entry: Any, source: SourceSnapshot, *, restore: bool = False
 ) -> tuple[list[str], list[str], dict[str, bytes]]:
-    """(failing check ids, details, re-derived artifacts) for a Lane R bundle."""
+    """(failing check ids, details, re-derived artifacts) for a Lane R bundle.
+
+    With ``restore`` (opt-in, used only when WRITING a repaired seal, never by the dry counter or
+    the no-regression gate), units BC-05/BC-17 name as lost are re-dispositioned deterministically
+    (``readme.repair.restore_units``) and the bundle is re-judged, up to ``RESTORE_ROUNDS`` times;
+    the restored ``dispositions.json`` and the list of restored units ride along in the artifacts.
+    A restore that does not clear every blocking check still returns the checks it leaves failing:
+    the verdict is the validators', never this loop's."""
+    dispositions = _load_json(bundle, "dispositions.json")
+    failing, details, artifacts = _evaluate_lane_r(bundle, entry, source, dispositions)
+    if not restore or not failing:
+        return failing, details, artifacts
+    from repo_presenter.readme.reconciliation.destinations import holdable_sections
+    from repo_presenter.readme.repair.restore_units import (
+        choose_units,
+        cite_owed_units,
+        owed_citations,
+        restore_lost_units,
+        vacated_sections,
+    )
+
+    document = read_facts(bundle / "facts.json")
+    units_name = (
+        "content_units.coherent.json"
+        if (bundle / "content_units.coherent.json").is_file()
+        else "content_units.json"
+    )
+    units_override: Mapping[str, Any] | None = None
+    owed = owed_citations(details)
+    if owed:
+        # BC-04: a superseded unit the section's authored units must cite. The substance is carried
+        # (BC-05 does not name it), so the authored unit that restates it cites it; kept only when
+        # the re-judged candidate no longer owes any of them.
+        cited_units, cited = cite_owed_units(_load_json(bundle, units_name), document, owed)
+        if cited:
+            c_failing, c_details, c_artifacts = _evaluate_lane_r(
+                bundle, entry, source, dispositions, cited_units
+            )
+            if len(owed_citations(c_details)) < len(owed):
+                units_override = cited_units
+                failing, details, artifacts = c_failing, c_details, c_artifacts
+                artifacts[units_name] = _canonical_json(cited_units)
+                artifacts["cited_units.json"] = _canonical_json({"cited": cited})
+                if not failing:
+                    return failing, details, artifacts
+    holdable = holdable_sections(document)
+    included = [
+        section["section_id"]
+        for section in _load_json(bundle, "plan.json").get("sections", [])
+        if section.get("include")
+    ]
+    restored: list[dict[str, str]] = []
+    for _round in range(RESTORE_ROUNDS):
+        unit_ids = choose_units(details, document, [c["unit_id"] for c in restored])
+        if not unit_ids:
+            break
+        dispositions, changes = restore_lost_units(dispositions, document, unit_ids, holdable, included)
+        if not changes:
+            break
+        restored.extend(changes)
+        failing, details, artifacts = _evaluate_lane_r(
+            bundle, entry, source, dispositions, units_override,
+            restored_out=vacated_sections(restored),
+        )
+        if units_override is not None:
+            artifacts[units_name] = _canonical_json(units_override)
+        if not failing:
+            break
+    if restored:
+        artifacts["dispositions.json"] = _canonical_json(dispositions)
+        artifacts["restored_units.json"] = _canonical_json({"restored": restored})
+    return failing, details, artifacts
+
+
+def _evaluate_lane_r(
+    bundle: Path,
+    entry: Any,
+    source: SourceSnapshot,
+    dispositions: Mapping[str, Any],
+    units_override: Mapping[str, Any] | None = None,
+    *,
+    restored_out: Mapping[str, Any] | None = None,
+) -> tuple[list[str], list[str], dict[str, bytes]]:
     from repo_presenter.readme.composition.authoring import authoring_tasks
     from repo_presenter.readme.composition.renderer import render_patch, render_readme
     from repo_presenter.readme.review.independent_reviewer import review_candidate
@@ -234,13 +361,12 @@ def _rerun_lane_r(
 
     document = read_facts(bundle / "facts.json")
     plan = _load_json(bundle, "plan.json")
-    dispositions = _load_json(bundle, "dispositions.json")
     units_name = (
         "content_units.coherent.json"
         if (bundle / "content_units.coherent.json").is_file()
         else "content_units.json"
     )
-    units = _load_json(bundle, units_name)
+    units = dict(units_override) if units_override is not None else _load_json(bundle, units_name)
     investigation = (
         _load_json(bundle, "investigation.json")
         if (bundle / "investigation.json").is_file()
@@ -266,7 +392,9 @@ def _rerun_lane_r(
         source_revision=document.source_revision,
         readme_sha256=None,
         tree_paths=list(source.tree_paths),
-        tasks=authoring_tasks(entry, document, investigation, dispositions, plan),
+        tasks=authoring_tasks(
+            entry, document, investigation, dispositions, plan, restored_out=restored_out
+        ),
         benchmark_readme=original,  # BC-17: the README the run read, at the sealed revision
     )
     with tempfile.TemporaryDirectory(prefix="recertify-") as empty:
@@ -369,6 +497,7 @@ def recertify_bundle(
     source: SourceSnapshot,
     current_version_set: str = "",
     seal_commit: str = "",
+    restore: bool = False,
 ) -> Recertification:
     """Re-run the deterministic stages of ``bundle`` (one ``<revision>`` directory) with current
     code. Pure apart from reading ``bundle``; zero provider calls; writes nothing."""
@@ -408,8 +537,10 @@ def recertify_bundle(
     if not _model_accept(review):
         return needs(revision, ["SEAL"], ["SEAL: the seal carries no model-reviewed ACCEPT"], sealed_set)
     try:
-        rerun = _rerun_lane_l if lane == LANE_L else _rerun_lane_r
-        failing, details, artifacts = rerun(bundle, entry, source)
+        if lane == LANE_L:
+            failing, details, artifacts = _rerun_lane_l(bundle, entry, source)
+        else:
+            failing, details, artifacts = _rerun_lane_r(bundle, entry, source, restore=restore)
     except Exception as exc:  # noqa: BLE001 -- a stored output current code cannot read needs repair
         return needs(revision, ["RERUN"], [f"RERUN: {type(exc).__name__}: {exc}"], sealed_set)
     readme = artifacts["README.md"]
@@ -474,7 +605,11 @@ def write_recertified(
         name: (bundle / name).read_bytes() for name in manifest.get("files", {})
     }
     staged.pop(RECERTIFICATION_FILENAME, None)
-    for name in ("README.md", "README.patch.diff", "corrections.json", "holdouts.json"):
+    for name in (
+        "README.md", "README.patch.diff", "corrections.json", "holdouts.json",
+        "dispositions.json", "restored_units.json", "cited_units.json",
+        "content_units.json", "content_units.coherent.json",
+    ):
         if name in rec.artifacts:
             staged[name] = rec.artifacts[name]
     dependencies = recertified_dependencies(sealed_deps, rec.lane, prompts, facts, original)
@@ -601,6 +736,7 @@ def recertify_history(
     entries: Mapping[str, Any],
     fetch: SourceFetcher,
     current: Mapping[str, str],
+    restore: bool = False,
 ) -> list[Recertification]:
     """Re-certify the LATEST seal of every bundle ref in ``history`` (``bundle_store.seal_history``
     read with a ``scratch`` directory, so each record names its materialized ``bundle``). Dry:
@@ -640,6 +776,7 @@ def recertify_history(
         rec = recertify_bundle(
             latest.bundle, lane, entry=entry, source=source,
             current_version_set=current.get(lane, ""), seal_commit=latest.commit,
+            restore=restore,
         )
         results.append(_with(rec, regenerations=regenerations))
     return results
@@ -686,6 +823,18 @@ def _rows(document: Mapping[str, Any] | None) -> dict[tuple[str, str, str], Mapp
     }
 
 
+_CHECK_TOKEN = re.compile(r"[A-Za-z0-9_:.\-]+")
+
+
+def _justification_names(justification: str) -> frozenset[str]:
+    """The check ids a free-text justification names, as WHOLE tokens: ``BC-17`` names ``BC-17`` and
+    nothing shorter (``BC-1`` is not "named" by a sentence about ``BC-17``), and trailing sentence
+    punctuation does not hide an id."""
+    return frozenset(
+        token.rstrip(".:-").lstrip(".:-") for token in _CHECK_TOKEN.findall(justification)
+    ) - {""}
+
+
 def gate(
     results: Iterable[Recertification],
     baseline: Mapping[str, Any],
@@ -696,22 +845,37 @@ def gate(
     A regression is a seal the BASE baseline (the target branch's committed file; the working
     baseline when none is given) records RECERTIFIED that re-certifies NEEDS_REPAIR now. It is
     allowed only when the working baseline records that same seal NEEDS_REPAIR with a
-    ``justification`` that names every newly failing check."""
+    ``justification`` that names every newly failing check, each as a whole token.
+
+    Judged per seal commit AND per (repository, lane): a lane whose base baseline holds a
+    RECERTIFIED seal and whose latest seal is a different commit that does not certify has lost its
+    count just the same, so that seal is held to the same justified-NEEDS_REPAIR rule (R10: a
+    replacement can never be a way around the gate)."""
     base = _rows(base_baseline if base_baseline is not None else baseline)
     working = _rows(baseline)
+    base_lane_recertified: dict[tuple[str, str], Mapping[str, Any]] = {}
+    for (repository, lane, _commit), row in sorted(base.items()):
+        if row.get("outcome") == OUTCOME_RECERTIFIED:
+            base_lane_recertified.setdefault((repository, lane), row)
     problems: list[str] = []
     for rec in results:
         key = (rec.repository, rec.lane, rec.seal_commit)
         before = base.get(key)
-        if before is None or before.get("outcome") != OUTCOME_RECERTIFIED or rec.recertified:
-            continue
+        if before is not None:
+            if before.get("outcome") != OUTCOME_RECERTIFIED or rec.recertified:
+                continue
+        else:
+            before = base_lane_recertified.get((rec.repository, rec.lane))
+            if before is None or rec.certified:
+                continue
         newly = sorted(set(rec.failing_checks) - set(before.get("failing_checks") or []))
         row = working.get(key) or {}
         justification = str(row.get("justification") or "").strip()
+        named = _justification_names(justification)
         justified = (
             row.get("outcome") == OUTCOME_NEEDS_REPAIR
             and bool(justification)
-            and all(check in justification for check in newly)
+            and all(check in named for check in newly)
         )
         if justified:
             continue
@@ -785,6 +949,16 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--lane", choices=LANES, default=None)
     parser.add_argument("--write", action="store_true",
                         help="publish each RECERTIFIED result as a new seal commit on its bundle ref")
+    parser.add_argument(
+        "--restore-lost-units", action="store_true",
+        help="with --write: re-disposition the inherited units BC-05/BC-17 name as lost "
+        "(readme.repair.restore_units; zero provider calls) before judging the seal",
+    )
+    parser.add_argument(
+        "--no-publish", action="store_true",
+        help="with --write: stage the re-certified seal under --out-dir and publish nothing",
+    )
+    parser.add_argument("--out-dir", type=Path, default=None)
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--remote", default="origin")
     parser.add_argument("--registry", type=Path, default=Path("data/registry.json"))
@@ -820,11 +994,18 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(f"FAIL: no baseline at {args.baseline}")
             return 1
         baseline = json.loads(args.baseline.read_text(encoding="utf-8"))
-        base = (
-            json.loads(args.base_baseline.read_text(encoding="utf-8"))
-            if args.base_baseline is not None and args.base_baseline.is_file()
-            else None
-        )
+        base = None
+        if args.base_baseline is not None:
+            # An explicitly passed base baseline that cannot be read must fail the gate: silently
+            # falling back to the working baseline would let a PR vouch for itself.
+            try:
+                base = json.loads(args.base_baseline.read_text(encoding="utf-8"))
+            except (OSError, ValueError) as exc:
+                print(f"FAIL: --base-baseline {args.base_baseline} is unreadable: {exc}")
+                return 1
+            if not isinstance(base, dict):
+                print(f"FAIL: --base-baseline {args.base_baseline} is not a JSON object")
+                return 1
         problems = gate(results, baseline, base)
         known = _rows(baseline)
         for rec in results:
@@ -863,15 +1044,21 @@ def _write_mode(args: Any, token: str | None, lanes: Sequence[str]) -> int:
         results = recertify_history(
             history, entries=entries, current=current,
             fetch=lambda repo, rev: fetch_source(repo, rev, scratch / "src"),
+            restore=bool(getattr(args, "restore_lost_units", False)),
         )
         _print_table(results)
         for rec in results:
-            if not rec.recertified or rec.sealed_by_current:
+            repaired = "restored_units.json" in rec.artifacts
+            if not rec.recertified or (rec.sealed_by_current and not repaired):
                 continue
             latest = history[(rec.repository, rec.lane)][-1]
-            out_root = scratch / "out" / f"{rec.lane}-{rec.repository.replace('/', '__')}"
+            kept = getattr(args, "out_dir", None)
+            out_root = (kept or scratch / "out") / f"{rec.lane}-{rec.repository.replace('/', '__')}"
             write_recertified(latest.bundle, rec, candidates_root=out_root, prompts=prompts,
                               seal_commit=latest.commit)
+            if getattr(args, "no_publish", False):
+                print(f"staged (not published): {out_root}")
+                continue
             try:
                 publication = publish_bundle(
                     rec.repository, rec.lane,

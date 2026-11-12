@@ -67,6 +67,7 @@ from repo_presenter.core.config import GatewayConfig
 from repo_presenter.core.errors import ConfigError, JobError, OutputRejectedError
 from repo_presenter.core.facts import FactsDocument
 from repo_presenter.core.llm import transport
+from repo_presenter.core.llm.budget import DEFAULT_BUDGET_PATH, check_budget, record_spend
 from repo_presenter.core.llm.binding import (
     add_silent_units,
     binding_errors,
@@ -143,6 +144,26 @@ class JobResult:
     cache_reused: bool
     model_served: str | None
     total_tokens: int | None
+
+
+_ERROR_BODY_LIMIT = 400
+
+
+def _error_body(exc: APIStatusError, config: GatewayConfig) -> str:
+    """``": <gateway's reply>"`` for an error message - truncated and secret-redacted - or ``""``.
+
+    A bare "gateway answered HTTP 400" (Words .NET planning, 2026-11-10) gave no way to tell a
+    context-window overflow from a malformed request; the body the gateway returned says which."""
+    from repo_presenter.core.secrets import redact
+
+    try:
+        body = exc.response.text
+    except Exception:  # noqa: BLE001 -- an unreadable body must never mask the real error
+        return ""
+    body = " ".join(str(body or "").split())
+    if not body:
+        return ""
+    return ": " + redact(body[:_ERROR_BODY_LIMIT], [config.api_key])
 
 
 @dataclass(frozen=True)
@@ -414,6 +435,7 @@ class _Attempts:
                 ) from None
             raise JobError(
                 f"{self.manifest.manifest.prompt_id}: gateway answered HTTP {exc.status_code}"
+                f"{_error_body(exc, config)}"
             ) from None
         except APITimeoutError as exc:
             self._record(payload, started_at, started, "timeout", None, type(exc).__name__)
@@ -587,6 +609,7 @@ def run_job(
     call_schema: dict[str, Any] | None = None,
     recover: Callable[[dict[str, Any]], dict[str, Any] | None] | None = None,
     narrow: Narrow | Narrowing | None = None,
+    budget_path: Path | None = None,
 ) -> JobResult:
     """The accepted output of one job, from the store when the same request was accepted before.
 
@@ -602,6 +625,10 @@ def run_job(
     ``recover``'s own say-so.
 
     ``narrow`` is one further, narrower ask for the part of the second reply that is still wrong.
+
+    ``budget_path`` is the owner-ruling-R25 provider-call budget file (``core/llm/budget.py``)
+    checked immediately before a fresh call is attempted, and credited immediately after one
+    succeeds; the cache-hit/replay path below never consults or updates it at all.
     """
     job = manifest.manifest.prompt_id
     model = effective_model(manifest, context)
@@ -659,6 +686,7 @@ def run_job(
             ledger.append(reuse)
             return JobResult(job, output, request_sha256, 0, 0, True, None, None)
 
+    check_budget(budget_path if budget_path is not None else DEFAULT_BUDGET_PATH)
     attempts = _Attempts(manifest, context, ledger, request_sha256, model)
     narrowing = _narrowing(narrow, manifest, facts)
     current = payload
@@ -701,6 +729,7 @@ def run_job(
         output, rejection = _parse(manifest, content, facts, checks, call_schema)
         if output is not None:
             store.put(request_sha256, job, reply.model, output)
+            record_spend(budget_path if budget_path is not None else DEFAULT_BUDGET_PATH, 1, reply.total_tokens or 0)
             return JobResult(
                 job,
                 output,

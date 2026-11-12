@@ -1,0 +1,299 @@
+{
+  "certificates": [
+    {
+      "corpus": "30 real README sentences (clean, across 6 real committed texts) + 30 promotional spans (2 real seed.py operator sentences + 28 varied synthetic marketing sentences), classification shape only -- not pairwise or paraphrase; pairwise: 26 real-section cases (clean vs. a genuine op_incoherent_reorder lead-in/code-fence orphan, scanned across all real committed live_readme.md texts); paraphrase: 40 real (description, signature) pairs using real METHOD signatures with parameters (not bare class lines) from a real cloned repo (fair vs. swapped-description unfair) -- both short of n>=30 on at least one side; pairwise: 38 real-section cases (clean vs. a genuine op_incoherent_reorder lead-in/code-fence orphan, scanned across all real committed live_readme.md texts); paraphrase: 40 real (description, signature) pairs using real METHOD signatures with parameters (not bare class lines) from a real cloned repo (fair vs. swapped-description unfair) -- both short of n>=30 on at least one side; pairwise: 38 real-section cases (clean vs. a genuine op_incoherent_reorder lead-in/code-fence orphan, scanned across all real committed live_readme.md texts); paraphrase: 40 real (description, signature) pairs using real METHOD signatures with parameters (not bare class lines) from a real cloned repo (fair vs. swapped-description unfair) -- both short of n>=30 on at least one side",
+      "gates": [
+        {
+          "direction": ">=",
+          "n": 30,
+          "name": "M8.recall[promotional]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        {
+          "direction": "<=",
+          "n": 30,
+          "name": "M8.false_reject_rate",
+          "passed": false,
+          "threshold": 0.02,
+          "value": 0.0333
+        },
+        {
+          "direction": ">=",
+          "n": 19,
+          "name": "M8.recall[pairwise_incoherent]",
+          "passed": false,
+          "threshold": 0.9,
+          "value": 0.3684
+        },
+        {
+          "direction": "<=",
+          "n": 19,
+          "name": "M8.false_reject_rate[pairwise]",
+          "passed": false,
+          "threshold": 0.02,
+          "value": 0.0
+        },
+        {
+          "direction": ">=",
+          "n": 20,
+          "name": "M8-S.recall[paraphrase_unfair]",
+          "passed": false,
+          "threshold": 0.9,
+          "value": 0.85
+        },
+        {
+          "direction": "<=",
+          "n": 20,
+          "name": "M8-S.false_reject_rate[paraphrase_fair]",
+          "passed": false,
+          "threshold": 0.02,
+          "value": 0.1
+        }
+      ],
+      "measured_at": "2026-11-09T00:00:00Z",
+      "mechanism_class": "M8",
+      "note": "Real result: 29/30 clean correctly NOT flagged promotional; 30/30 promotional spans correctly caught, at the design's own n>=30-per-class minimum for this one category pair. Status reflects the literal gate math (recall >= 0.90 and false_reject <= 0.02, n >= 30). | pairwise: recall (caught the real reorder incoherence) 0/13; false-reject (clean wrongly flagged) 0/13. paraphrase: recall (caught the swapped description) 20/20; false-reject (fair wrongly flagged) 9/20. Pairwise recall is a genuine, verified-wiring finding (0 of 13 real, manually-inspected genuine-incoherence cases were caught -- the mechanism answered 'at least as good' uniformly); paraphrase shows a real false-reject bias on fair cases alongside perfect unfair-detection. Neither is a test-construction artifact (both were checked and fixed once before this run). | 2026-11-09 prompt update: pairwise_benchmark_comparison system prompt now explicitly names presentation ORDER as part of clarity/usability (a command printed before the sentence introducing it is now named as a concrete failure shape), after the first measured pairwise finding (0/13 recall) showed a uniform \"yes\" bias. Re-measured on the FULL 19-text set (the original 13 + 6 fresh, never-before-used texts) under the new prompt: recall improved from 0/13 to 7/19 (36.8%), false-reject held at 0/19 (0%) -- a real, validated improvement, still short of the 0.90 threshold and the n>=30 minimum. The earlier n=13/n=1 pairwise gate values are superseded by this measurement. | 2026-11-09 second classification prompt update: added a clause distinguishing a specific, verifiable technical comparison (\"most X require Y; this one does not\") from an evaluative/unverifiable one (\"ours is better/faster\"). Validated on 2 new complete comparison sentences (correctly none) and 2 new evaluative-comparison sentences (correctly promotional) -- the fix generalizes to complete, same-span comparisons. It does NOT fix the original n=30 false-reject case itself: that sentence only states a competitor limitation without the contrasting fact in the same span (the library in question is described in an adjacent sentence M8 classification never sees, by design -- one span at a time). This is a real limitation of span-level isolation, not resolved by further prompt wording; the 0.0333 false-reject rate on the original n=30 measurement stands. | pairwise: recall (caught the real reorder incoherence) 7/19; false-reject (clean wrongly flagged) 0/19. paraphrase: recall (caught the swapped description) 17/20; false-reject (fair wrongly flagged) 2/20. Pairwise recall is a genuine, verified-wiring finding (0 of 13 real, manually-inspected genuine-incoherence cases were caught -- the mechanism answered 'at least as good' uniformly); paraphrase shows a real false-reject bias on fair cases alongside perfect unfair-detection. Neither is a test-construction artifact (both were checked and fixed once before this run). | pairwise: recall (caught the real reorder incoherence) 7/19; false-reject (clean wrongly flagged) 0/19. paraphrase: recall (caught the swapped description) 17/20; false-reject (fair wrongly flagged) 2/20. Pairwise recall is a genuine, verified-wiring finding (0 of 13 real, manually-inspected genuine-incoherence cases were caught -- the mechanism answered 'at least as good' uniformly); paraphrase shows a real false-reject bias on fair cases alongside perfect unfair-detection. Neither is a test-construction artifact (both were checked and fixed once before this run).",
+      "provider_calls": 566,
+      "provisional": true,
+      "status": "NOT_PASSED"
+    },
+    {
+      "corpus": "lane_l_trigger.py real 5-repository census + fail-closed determinism cases",
+      "gates": [
+        {
+          "direction": ">=",
+          "n": 3,
+          "name": "M1.recall[overall]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        {
+          "direction": ">=",
+          "n": 3,
+          "name": "M1.determinism",
+          "passed": true,
+          "threshold": 1.0,
+          "value": 1.0
+        }
+      ],
+      "measured_at": "2026-11-09T00:00:00Z",
+      "mechanism_class": "M1",
+      "provider_calls": 0,
+      "provisional": false,
+      "status": "PASSED"
+    },
+    {
+      "corpus": "real shallow clone of https://github.com/aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python.git (deleted after measurement); real TC-017a python probe against it; hand-built facts, small n=3 -- a first real-source proof, not yet a full-recall measurement",
+      "gates": [
+        {
+          "direction": ">=",
+          "n": 2,
+          "name": "M2.recall[D5]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        {
+          "direction": "<=",
+          "n": 1,
+          "name": "M2.false_reject_rate",
+          "passed": true,
+          "threshold": 0.04,
+          "value": 0.0
+        }
+      ],
+      "measured_at": "2026-11-09T00:00:00Z",
+      "mechanism_class": "M2",
+      "provider_calls": 0,
+      "provisional": false,
+      "status": "PASSED"
+    },
+    {
+      "corpus": "tests/extractors/platforms/test_example_verifier_outcomes.py fixtures, 7 ecosystems, already-captured diagnostic text (no real toolchain run)",
+      "gates": [
+        {
+          "direction": ">=",
+          "n": 1,
+          "name": "M3.recall[cpp]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        {
+          "direction": ">=",
+          "n": 1,
+          "name": "M3.recall[java]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        {
+          "direction": ">=",
+          "n": 1,
+          "name": "M3.recall[net]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        {
+          "direction": ">=",
+          "n": 1,
+          "name": "M3.recall[python]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        {
+          "direction": ">=",
+          "n": 1,
+          "name": "M3.recall[rust]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        {
+          "direction": ">=",
+          "n": 1,
+          "name": "M3.recall[typescript]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        {
+          "direction": "<=",
+          "n": 8,
+          "name": "M3.false_contradicted_rate",
+          "passed": true,
+          "threshold": 0.02,
+          "value": 0.0
+        }
+      ],
+      "measured_at": "2026-11-09T00:00:00Z",
+      "mechanism_class": "M3",
+      "provider_calls": 0,
+      "provisional": false,
+      "status": "PASSED"
+    },
+    {
+      "corpus": "readme.review.calibration.mutations OPERATORS + readme.validation.claims.claim_findings",
+      "gates": [
+        {
+          "direction": ">=",
+          "n": 3,
+          "name": "M4.recall[overall]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        }
+      ],
+      "measured_at": "2026-11-09T00:00:00Z",
+      "mechanism_class": "M4",
+      "provider_calls": 0,
+      "provisional": false,
+      "status": "PASSED"
+    },
+    {
+      "corpus": "data/drop_decisions.json",
+      "gates": [
+        {
+          "direction": ">=",
+          "n": 168,
+          "name": "M5.recall[overall]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        {
+          "direction": ">=",
+          "n": 503,
+          "name": "M5.r14_agreement",
+          "passed": true,
+          "threshold": 1.0,
+          "value": 1.0
+        }
+      ],
+      "measured_at": "2026-11-08T00:00:00Z",
+      "mechanism_class": "M5",
+      "provider_calls": 0,
+      "provisional": false,
+      "status": "PASSED"
+    },
+    {
+      "corpus": "6 real committed README snapshots + drop-last-section mutations",
+      "gates": [
+        {
+          "direction": ">=",
+          "n": 6,
+          "name": "M7.recall[overall]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        {
+          "direction": ">=",
+          "n": 6,
+          "name": "M7.self_parity",
+          "passed": true,
+          "threshold": 1.0,
+          "value": 1.0
+        }
+      ],
+      "measured_at": "2026-11-09T00:00:00Z",
+      "mechanism_class": "M7",
+      "provider_calls": 0,
+      "provisional": false,
+      "status": "PASSED"
+    },
+    {
+      "corpus": "lane_l_review.py L-01/L-02 holdouts, reused from test_lane_l_review.py fixtures",
+      "gates": [
+        {
+          "direction": ">=",
+          "n": 3,
+          "name": "M10.recall[overall]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        }
+      ],
+      "measured_against": "src/repo_presenter/lane_l_review.py (L-01/L-02 holdouts)",
+      "measured_at": "2026-11-09T00:00:00Z",
+      "mechanism_class": "M10",
+      "provider_calls": 0,
+      "provisional": true,
+      "status": "PASSED"
+    },
+    {
+      "corpus": "readme.review.calibration.mutations OPERATORS + independent_reviewer.duplicate_paragraph_rule (duplicate_paragraph group) + readme.validation.wording.promotional_wording_matches against the real M8 classification dev corpus (scripts/measure_m8_live.py: 30 real clean README sentences, 30 promotional spans) plus the add_promotional_filler fixture (wording_ban group) -- rung-(c) fallback, R26; dev-corpus measurement, not independently held out (see wording.py module docstring)",
+      "gates": [
+        {
+          "direction": ">=",
+          "n": 1,
+          "name": "M6.recall[duplicate_paragraph]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        {
+          "direction": ">=",
+          "n": 31,
+          "name": "M6.recall[wording_ban]",
+          "passed": true,
+          "threshold": 0.9,
+          "value": 1.0
+        }
+      ],
+      "measured_at": "2026-11-09T00:00:00Z",
+      "mechanism_class": "M6",
+      "provider_calls": 0,
+      "provisional": false,
+      "status": "PASSED"
+    }
+  ],
+  "harness_schema_version": 1,
+  "harness_version": "1",
+  "schema": "acceptance-calibration/1"
+}

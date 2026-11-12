@@ -1,52 +1,83 @@
 id: TC-007
-gate: GATE1_QUALITY
+gate: GATE5_DELIVERY_PROGRAM
 track: quality-calibration
 executor: supervisor
 purpose: >
-  Run reviewer calibration iteration 4 against a held-out corpus (per R5 of the 2026-11-04
-  directive: do not tune prompts without measuring improvement on held-out data; do not treat a
-  discretionary override or a manual JSON edit as equivalent to genuine verification) and reach
-  a real PASSED status. Nothing in this project may be published or counted toward P1 while this
-  card is open. Currently correctly BLOCKED: calibration has failed three times
-  (2026-10-27/27b/27-iter3) and has not been re-attempted since.
+  2026-11-07 RE-AUTHOR (docs/DELIVERY_PLAN_2026-11-07.md section 5; second-architect-audit fix #2
+  in docs/reviews/2026-11-07-plan-reconciliation.md): this card's ORIGINAL text (below, preserved
+  for history) targeted the now-frozen, single-monolithic-reviewer `data/reviewer_calibration.json`
+  file, which five calibration iterations never passed and which owner ruling R10 now forbids
+  ever writing PASSED into again -- no future worker may re-point this card's check back at that
+  file. This card now targets the NEW acceptance contract instead: reach a real, harness-written
+  PASSED status in `data/acceptance_calibration.json`, derived (per TC-013's fail-closed reader)
+  from every mechanism class in `data/acceptance_responsibility.json` holding an append-only
+  PASSED certificate, measured on the held-out registration A1 (TC-022a) by TC-022b's harness,
+  with the thresholds in docs/DELIVERY_PLAN_2026-11-07.md section 5.2 unchanged. Do not hand-edit
+  either file; the status must be the honest output of TC-022b's harness (and, for product-call
+  mechanisms like M8, TC-023's judge, run within the data/provider_budget.json envelope, R25).
+
+  ORIGINAL TEXT (2026-11-04, historical, superseded): "Run reviewer calibration iteration 4
+  against a held-out corpus (per R5 of the 2026-11-04 directive: do not tune prompts without
+  measuring improvement on held-out data; do not treat a discretionary override or a manual JSON
+  edit as equivalent to genuine verification) and reach a real PASSED status. Nothing in this
+  project may be published or counted toward P1 while this card is open. Currently correctly
+  BLOCKED: calibration has failed three times (2026-10-27/27b/27-iter3) and has not been
+  re-attempted since."
 depends_on:
-  - TC-006
+  - TC-013
+  - TC-022a
+  - TC-022b
+  - TC-026
 write_paths:
-  - data/reviewer_calibration.json
+  - data/acceptance_calibration.json
 satisfies:
   - REQ-G4-001
+  - REQ-ACCEPT-004
 source_refs:
-  - file: data/reviewer_calibration.json
+  - file: docs/DELIVERY_PLAN_2026-11-07.md
+    anchor: "5.2 Conditions"
+  - file: data/acceptance_calibration.json
     anchor: "status"
 inputs: []
 actions:
-  - "Run calibration iteration 4 against the aspose.org candidates as a local-only reference
-     corpus (far larger n than the 3 clean twins before), per the 2026-10-31 decision."
-  - "Do not hand-edit status to PASSED; the status must be the honest output of the calibration
-     harness."
+  - "Run TC-022b's harness (deterministic mechanisms, zero calls) and TC-023's M8 judge (within
+     the R25 provider envelope) against the held-out A1 registration; let the harness write
+     data/acceptance_calibration.json -- do not hand-edit status to PASSED."
+  - "If any mechanism fails its gate, fix the responsible component (never the threshold or the
+     label) and re-measure; if M8 specifically fails, record the failure honestly per ruling R26
+     before any rung-(c) fallback work is dispatched."
 checks:
   - command: |-
-      python ops/checks/calibration_status.py PASSED
+      python ops/checks/calibration_status.py PASSED --file data/acceptance_calibration.json --matrix data/acceptance_responsibility.json
     expect: exit 0
     timeout_seconds: 30
     proves:
       - REQ-G4-001
+      - REQ-ACCEPT-004
 requires:
   - python
 network: false
 negative_control:
   mutate: |-
-    python -c "import json, pathlib; p = pathlib.Path('data/reviewer_calibration.json'); d = json.loads(p.read_text(encoding='utf-8')); d['status'] = 'NOT_PASSED'; p.write_text(json.dumps(d, indent=2), encoding='utf-8')"
+    python -X utf8 -c "import json, pathlib; p = pathlib.Path('data/acceptance_calibration.json'); d = json.loads(p.read_text(encoding='utf-8')); [c.update(status='NOT_PASSED') for c in d['certificates'] if c.get('mechanism_class') == 'M1']; p.write_text(json.dumps(d, indent=2), encoding='utf-8')"
   rationale: >
-    Reverts a real PASSED status back to NOT_PASSED via real JSON editing (no raw-text quote
-    juggling, no backslashes crossing YAML and the shell -- ops/SUPERVISOR.md's own falsifier
-    rule). Proves the check distinguishes a genuine pass from the substring trap where
-    "NOT_PASSED" itself contains "PASSED": ops/checks/calibration_status.py parses the JSON and
-    compares the status field by equality, not by substring, so this negative control is the
-    only way to prove the check is not accidentally vacuous against the very string it must
-    currently correctly reject.
+    Flips the real M1 certificate's own status from PASSED to NOT_PASSED via real JSON editing
+    (no raw-text quote juggling, no backslashes crossing YAML and the shell -- ops/SUPERVISOR.md's
+    own falsifier rule). 2026-11-09 correction: an earlier version of this mutation set a
+    top-level "status" key on the document, which record.py's AcceptanceCertificates.complete
+    never reads (it is derived from each certificate's own status field against the
+    responsibility matrix, never from a stored top-level field) -- that mutation silently did
+    nothing, the exact "textual mutation that silently stops matching" failure
+    ops/SUPERVISOR.md's falsifier rule warns against. This version mutates a real, always-present,
+    always-required certificate's own status field instead, which load_certificates genuinely
+    reads, proving the check actually depends on every required mechanism's real certificate
+    status rather than passing regardless.
 evidence:
-  - data/reviewer_calibration.json
+  - data/acceptance_calibration.json
+  - data/acceptance_responsibility.json
 closeout:
-  - "Do not dispatch TC-011 (25-product live delivery) until this card is ACCEPTED."
-recovery: "Calibration status reverts to NOT_PASSED; no product output is affected."
+  - "Do not dispatch TC-011 (25-per-lane acceptance count) until this card is ACCEPTED."
+  - "data/reviewer_calibration.json remains untouched, frozen at its iteration-5 NOT_PASSED
+     record; this card never reads or writes it."
+recovery: "Acceptance calibration status reverts to NOT_PASSED in data/acceptance_calibration.json
+  only; data/reviewer_calibration.json and all sealed/mechanism-passing candidates are unaffected."

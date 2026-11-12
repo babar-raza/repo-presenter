@@ -71,7 +71,7 @@ from repo_presenter.readme.correction.report import (
     OUTCOME_REFUSED,
     lane_r_recommendation,
 )
-from repo_presenter.readme.review.llm_review import blocked_predicate
+from repo_presenter.readme.review.llm_review import blocked_predicate, m8_blocking_units
 from repo_presenter.readme.review.verdict import ReviewUnavailable
 from repo_presenter.readme.validation.blocking import blocking_failures
 
@@ -280,6 +280,14 @@ def _cascade_and_seal(
             + (f"; blocking checks still fail: {failing}" if failing else "")
             + "; nothing sealed"
         )
+    m8_blocked = m8_blocking_units(verdict.unit_reviews)
+    if m8_blocked:
+        # TC-013/TC-024's seal-path contract: a deterministic REJECT or the old reviewer's own
+        # REJECT already raised above; this is the same non-negotiable-5 block, now in M8's
+        # vocabulary (readme.review.prose_judge, TC-023) for whichever unit(s) it rejected.
+        raise PresentFailure(
+            "M8 prose judge rejected unit(s): " + ", ".join(m8_blocked) + "; nothing sealed"
+        )
     seal_candidate(
         SealInputs(
             entry=result.entry,
@@ -349,6 +357,13 @@ def _lane_l_and_seal(
         raise PresentFailure(
             "Lane L: no LLM review of this candidate was made, and a deterministic-only "
             "verdict is never sealed; nothing sealed"
+        )
+    m8_blocked = m8_blocking_units(verdict.unit_reviews)
+    if m8_blocked:
+        raise PresentFailure(
+            "Lane L: M8 prose judge rejected unit(s): "
+            + ", ".join(m8_blocked)
+            + "; nothing sealed"
         )
     seal_candidate(
         SealInputs(

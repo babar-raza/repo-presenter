@@ -1,0 +1,57 @@
+id: TC-019c
+gate: GATE5_DELIVERY_PROGRAM
+track: seal-repair
+executor: worker
+purpose: >
+  TC-019's item-level restore, applied at generation time. First real generation batch (2026-11-09,
+  Email-FOSS-for-Python) completed every LLM stage and then stopped at the seal gate: "blocking
+  checks still fail: BC-17; nothing sealed" -- inherited content the published README prints was
+  lost, with no model review made, so the run's ~80 paid calls produced no candidate. The zero-call
+  restore (readme/repair/restore_units.py, accepted under TC-019b) is exactly the remedy BC-05/BC-17
+  name. This card wires it into the cascade's existing settle step: when the settled candidate's
+  blocking validation fails ONLY in checks restore can address (BC-05/BC-17, plus the checks the
+  restore path itself documents), apply restore_lost_units to the stored dispositions, re-render and
+  re-validate with the unchanged validators, and continue to the independent review if (and only if)
+  the blocking set is then empty; otherwise behave exactly as today. No new mechanism, no validator
+  weakened, no provider call added, and the artifacts the cascade writes (dispositions, README,
+  validation) must record that a restore happened. Self-contained: you never read the delivery plan.
+depends_on:
+  - TC-019b
+  - TC-024
+write_paths:
+  - src/repo_presenter/cascade.py
+  - tests/test_cascade_restore.py
+satisfies:
+  - REQ-REPAIR-001
+source_refs:
+  - file: src/repo_presenter/cascade.py
+    anchor: "blocking_failures(settled.validation)"
+  - file: src/repo_presenter/readme/repair/restore_units.py
+    anchor: "def restore_lost_units"
+inputs: []
+actions:
+  - "Read cascade.py's settle/S9/S10 flow and the present.py failure path ('blocking checks still fail')."
+  - "Insert the restore step at the point where blocking validation fails, bounded to RESTORE_ROUNDS, reusing recertify's restore selection (choose_units / API-table deferral) without duplicating logic: import it."
+  - "Test with a fake provider (the repo's existing cascade test fakes) that a candidate failing only BC-17 now reaches review and seals, a candidate failing BC-14 still fails exactly as before, and the restore is recorded."
+checks:
+  - command: |-
+      python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/test_cascade_s9.py tests/test_cascade_s10.py tests/test_cascade_repair_context.py -q
+    expect: exit 0
+    timeout_seconds: 900
+    proves:
+      - REQ-REPAIR-001
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -X utf8 -c "import pathlib; p = pathlib.Path('src/repo_presenter/cascade.py'); nl = chr(10); t = p.read_text(encoding='utf-8'); p.write_text(t + nl + 'restore_lost_units = lambda d, f, u, h, i=None: (d, [])' + nl, encoding='utf-8')"
+  rationale: >
+    Shadows the restore function the cascade imports with a no-op at module load, which must make
+    the new test (a BC-17-only failing candidate reaches review) fail. If the worker imports restore
+    under another name, update this mutation in the same commit so it still targets the real call.
+evidence:
+  - src/repo_presenter/cascade.py
+closeout:
+  - "No sealed bundle or state ref is written by this card."
+recovery: "Revert cascade.py and the new test."

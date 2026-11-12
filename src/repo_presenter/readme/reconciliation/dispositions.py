@@ -73,6 +73,7 @@ from repo_presenter.core.llm.prompts import LoadedManifest, PromptManifest
 from repo_presenter.core.package_registry import (
     DISTRIBUTION_FACT_PREFIX,
     PUBLISHED_VERSION_FACT_ID,
+    fact_registry_reading,
 )
 from repo_presenter.core.registry.models import RegistryEntry
 from repo_presenter.readme.composition.authoring import (
@@ -113,6 +114,7 @@ from repo_presenter.readme.evidence.facts.product_pages import (
 )
 from repo_presenter.readme.evidence.facts.registry_lag import REGISTRY_LAG_FACT_ID
 from repo_presenter.readme.reconciliation.destinations import (
+    GENERATED_ONLY_DESTINATIONS,
     disposition_variants,
     holdable_sections,
     nearest_holdable,
@@ -245,6 +247,43 @@ def unpublished_registry_blocks(facts: FactsDocument) -> dict[str, str]:
     return found
 
 
+def unproven_build_commands(facts: FactsDocument) -> dict[str, set[str]]:
+    """The comparable command lines of every UNRESOLVED source build of an ecosystem with no
+    registry to ask (C++), by the install fact that records it: BC-02 refuses a README that prints
+    one (``validation.install._claims_nothing_without_a_registry``), because no build exited 0."""
+    return {
+        fact.id: set(_command_lines(fact.value))
+        for fact in facts.by_kind("install_command")
+        if fact.polarity == "UNRESOLVED" and fact_registry_reading(fact) == "no_registry"
+    }
+
+
+def unproven_source_build_blocks(facts: FactsDocument) -> dict[str, str]:
+    """Inherited command blocks that print a source-build command no build proved, by unit ID, with
+    the UNRESOLVED install fact that records the build as unproven.
+
+    A block with ONE such line is as a whole not a procedure the README may present: keeping the
+    other steps (``cmake -S . -B build``, ``ctest``) without the failed one would leave a half
+    procedure that reads as complete. Measured: Aspose.Cells FOSS for C++, hosted 2026-11-11 -- the
+    measured build failed, the maintainers' test-suite block was kept ``VERIFIED_PRESERVE``, and a
+    BC-02 repair "succeeded" with no change at all (``changes: []``), so the block, and BC-02, stayed."""
+    implied = unproven_build_commands(facts)
+    if not implied:
+        return {}
+    blocks = command_block_units(facts)
+    found: dict[str, str] = {}
+    for unit in facts.by_kind("inherited_unit"):
+        if unit.id not in blocks:
+            continue
+        lines = set(_command_lines(unit.value))
+        install_id = next(
+            (fid for fid, commands in sorted(implied.items()) if lines & commands), ""
+        )
+        if install_id:
+            found[unit.id] = install_id
+    return found
+
+
 RENDERING_FACT_KINDS: dict[str, tuple[str, ...]] = {
     "identity": ("identity", "package"),
     "badges": ("link_target",),
@@ -309,6 +348,16 @@ def rendering_fact_ids(section: str, facts: FactsDocument) -> list[str]:
     ids = {
         fact.id for fact in facts.facts if fact.kind in kinds and fact.polarity == "SUPPORTED"
     }
+    if section == "dependencies":
+        # The dependencies component also renders a stdlib-only statement from a SUPPORTED
+        # ``package_trait:stdlib_only.*`` fact when no manifest dependency or ``dependency:none``
+        # marker exists (renderer._dependencies; PSD Python 2026-11-10), so those facts are what
+        # the section renders its content from and what a superseded Dependencies unit may cite.
+        ids |= {
+            fact.id
+            for fact in facts.facts
+            if fact.id.startswith("package_trait:stdlib_only.") and fact.polarity == "SUPPORTED"
+        }
     if section == "installation" and not ids:
         # Measured live (aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, run 41095849129): a
         # repository with no single verified install_command (C++'s install story is a choice of
@@ -344,6 +393,19 @@ _SECTION_RENDERS: dict[str, frozenset[str]] = {
     "license": frozenset({"heading", "paragraph"}),
 }
 _NAVIGATION_ITEM = re.compile(r"^\s*[-*+]\s*\[[^\]]+\]\(#[^)\s]*\)\s*$")
+_TOC_ITEM = re.compile(r"^\s*(?:[-*+]|\d+[.)])\s*\[[^\]]+\]\(#[^)\s]*\)\s*$")
+#: A list whose non-empty lines are at least this share intra-document links is a table of contents.
+_TOC_SHARE = 0.8
+_TOC_MIN_LINKS = 3
+
+
+def is_table_of_contents(text: str) -> bool:
+    """Whether a list is the maintainers' table of contents: at least ``_TOC_MIN_LINKS`` lines that
+    are only an intra-document ``[text](#anchor)`` link and at least ``_TOC_SHARE`` of its non-empty
+    lines (a stray non-link line, such as a requirement note, does not make it content)."""
+    lines = [line for line in text.splitlines() if line.strip()]
+    links = sum(1 for line in lines if _TOC_ITEM.match(line))
+    return links >= _TOC_MIN_LINKS and links >= _TOC_SHARE * len(lines)
 _CODE_SPAN = re.compile(r"`([^`\n]+)`")
 _NAME_SPAN = re.compile(
     r"[A-Za-z_][A-Za-z0-9_]*(?:(?:\.|::|-)[A-Za-z0-9_]+)*"
@@ -658,8 +720,10 @@ def _supersession_gap(
                 SECTION_RENDERS_OTHER_KINDS,
                 f"{destination} renders from facts and prints no {kind.replace('_', ' ')}",
             )
-        if destination == "navigation" and not all(
-            _NAVIGATION_ITEM.match(line) for line in text.splitlines() if line.strip()
+        if (
+            destination == "navigation"
+            and not is_table_of_contents(text)
+            and not all(_NAVIGATION_ITEM.match(line) for line in text.splitlines() if line.strip())
         ):
             return (NOT_NAVIGATION, "navigation lists the document's own sections only")
         unrendered = (
@@ -1030,11 +1094,61 @@ def _rehome_misfiled_units(
         entry["rationale"] = (lead + reason).strip()
 
 
+UNPRINTABLE_RATIONALE = "Kept in {section}: {old} prints nothing from a placed unit. "
+
+
+def _rehome_unprintable_kind_units(
+    output: dict[str, Any], facts: FactsDocument, units: Mapping[str, Fact]
+) -> None:
+    """Move every kept unit the model filed in a section
+    :data:`destinations.GENERATED_ONLY_DESTINATIONS` names -- confirmed against the renderer
+    itself to print NOTHING of a placed unit, any kind -- to the nearest section that actually
+    holds it. ``_rehome_misfiled_units`` catches a topic-wrong destination; this catches a
+    destination that is topic-right but mechanically cannot render the unit at all, which the
+    model is not told and so sometimes still picks (Aspose.Cells FOSS for Go: a kept list of
+    documentation links, correctly ABOUT documentation_resources, filed there verbatim, which
+    that section's renderer never prints -- BC-05 "was placed ... but the candidate does not
+    render it there"). Deliberately scoped to this confirmed set, not a general "kind not in
+    _PRINTS[section]" check: that table is incomplete by design for sections it was never meant
+    to gate this way (a real regression, caught in CI: a kept code_block in scope_limitations,
+    which is not in its _PRINTS entry but which the renderer does print). Runs after
+    ``_rehome_misfiled_units`` so a unit it already moved is judged at its new destination, not
+    its old one."""
+    holdable = holdable_sections(facts)
+    root = root_heading(list(units.values()))
+    for entry in output.get("dispositions", []):
+        if entry.get("disposition") not in PLACED:
+            continue
+        unit_id = str(entry.get("unit_id", "?"))
+        old = entry.get("destination_section")
+        if old not in GENERATED_ONLY_DESTINATIONS:
+            continue
+        heading = source_heading(units.get(unit_id))
+        home = nearest_holdable(unit_id, heading, holdable, root)
+        if home is None or home == old:
+            continue
+        lead = UNPRINTABLE_RATIONALE.format(section=home, old=old)
+        reason = str(entry.get("rationale") or "").strip()
+        room = _RATIONALE_LIMIT - len(lead)
+        if len(reason) > room:
+            reason = reason[: max(room - 3, 0)].rstrip() + "..."
+        entry["destination_section"] = home
+        entry["rationale"] = (lead + reason).strip()
+
+
 _PROSE_PRINTED_KINDS = frozenset({"paragraph", "list", "table", "blockquote"})
 _OTHER_EDITION = re.compile(r"\b([A-Z][A-Za-z]+) Edition\b")
 _INLINE_CODE = re.compile(r"`[^`\n]*`")
 RECOVERED_LABEL_RATIONALE = "Restated: it names an edition BC-06 forbids. "
 RECOVERED_FENCE_RATIONALE = "Restated: it embeds an unverified code example BC-03 forbids. "
+#: The wording carries "contradicted" on purpose: BC-17's accounting reads that word as the mark of
+#: an omission made on evidence (``parity_gate._NON_LOSS_RATIONALE``), and it is true -- the measured
+#: build of this checkout failed, so the block's build steps are contradicted by that measurement.
+UNPROVEN_BUILD_RATIONALE = (
+    "The build steps in this block are contradicted by the measured build of this checkout, which "
+    "did not exit 0 (BC-02 forbids presenting an unproven source build); the Installation section "
+    "states only what the repository documents."
+)
 
 
 def edition_labels(text: str) -> list[str]:
@@ -1267,6 +1381,8 @@ def normalize(
     contradicted_links = contradicted_link_hrefs(facts)
     commands = command_block_units(facts)
     unpublished = unpublished_registry_blocks(facts)
+    unproven = unproven_source_build_blocks(facts)
+    example_status = _example_status(facts)
     units_by_id = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
     wrapper_bounds = _collapsible_wrapper_bounds(output, units_by_id)
     fence_languages = _example_languages(facts)
@@ -1340,6 +1456,12 @@ def normalize(
             entry["disposition"] = "OMIT_UNSUPPORTED"
             entry["destination_section"] = None
             entry["fact_ids"] = sorted(cited | {unpublished[unit]})
+            continue
+        if unit in unproven and disposition not in ("OMIT_UNSUPPORTED", "DEFER_UNRESOLVED"):
+            entry["rationale"] = UNPROVEN_BUILD_RATIONALE
+            entry["disposition"] = "OMIT_UNSUPPORTED"
+            entry["destination_section"] = None
+            entry["fact_ids"] = sorted(cited | {unproven[unit]})
             continue
         if disposition in PLACING and unit in unresolved:
             entry["disposition"] = "DEFER_UNRESOLVED"
@@ -1577,6 +1699,34 @@ def normalize(
                         + str(entry.get("rationale") or "")
                     )[:_RATIONALE_LIMIT]
                     continue
+            if (
+                unit in commands
+                and build_ids
+                and "development_testing" not in absent
+                and unit not in unresolved
+                and unit not in contradicted
+                and unit not in unpublished
+                and unit not in unproven
+                and unit not in example_status
+            ):
+                # Measured live (aspose-psd-foss/Aspose.PSD-FOSS-for-Python, 2026-11-09, batch 1,
+                # unit 012.code_block "pip install aspose-psd-foss"): a repository with no
+                # install_command fact at all, so the Installation section renders nothing for the
+                # block to be redundant with. The model's SUPERSEDE_REDUNDANT into installation
+                # was folded to DEFER_UNRESOLVED just below, which placement_errors's own
+                # uncited_redundant_defer then refused three asks running -- the run died at S4.
+                # That refusal's own text names the remedy for a block "kept as written"
+                # (VERIFIED_PRESERVE); this is the same remedy and destination the OMIT_UNSUPPORTED
+                # command-block fold above already applies, reached by the one path it missed.
+                entry["disposition"] = "VERIFIED_PRESERVE"
+                entry["destination_section"] = "development_testing"
+                entry["fact_ids"] = sorted(cited | set(build_ids))
+                entry["rationale"] = (
+                    "Kept as written: the Installation section renders no verified command this "
+                    "block could be redundant with. "
+                    + str(entry.get("rationale") or "")
+                )[:_RATIONALE_LIMIT]
+                continue
             entry["disposition"] = "DEFER_UNRESOLVED"
             entry["destination_section"] = None
             continue
@@ -1585,6 +1735,7 @@ def normalize(
         entry["disposition"] = "SUPERSEDE_REDUNDANT"
         entry["fact_ids"] = sorted(cited | set(ids))
     _rehome_misfiled_units(output, facts, units_by_id)
+    _rehome_unprintable_kind_units(output, facts, units_by_id)
     claims: Claims = {}
     for entry in output.get("dispositions", []):
         destination = entry.get("destination_section")
@@ -1676,8 +1827,46 @@ def normalize(
             + str(entry.get("rationale") or "")
         )[:_RATIONALE_LIMIT]
     _fold_positional_pointers(output, facts)
+    _fold_table_of_contents(output, facts, identity_fact_id)
+    _fold_dangling_rewrites(output, facts)
+    _fold_headings_into_kept_body(output, facts)
     _prune_incidental_coverage(output, coverage)
     return errors
+
+
+def _fold_table_of_contents(
+    output: dict[str, Any], facts: FactsDocument, identity_fact_id: str | None
+) -> None:
+    """A list kept as written (VERIFIED_PRESERVE/VERIFIED_MOVE) that is the maintainers' table of
+    contents (``is_table_of_contents``) is navigation: SUPERSEDE_REDUNDANT into ``navigation``,
+    citing the identity fact the Navigation row renders from.
+
+    Measured live (hosted Lane R, Aspose.Cells-FOSS-for-Go): the nested ``[text](#anchor)`` list
+    inherited_unit:006.list, with one stray non-link line, was kept in the opening. Placement then
+    de-links every anchor whose heading is not rendered, so the printed text differed from the
+    unit's and the reviewer's disposition_coverage rule rejected it as "kept but not printed"; the
+    README would also have carried a second table of contents above the generated Navigation.
+    The section links are the Navigation row's job; the stray line is covered by the facts it
+    states (a requirement the Installation or Dependencies rows render)."""
+    texts = {fact.id: fact.value for fact in facts.by_kind("inherited_unit")}
+    for entry in output.get("dispositions", []):
+        unit = str(entry.get("unit_id", ""))
+        if _unit_kind(unit) != "list" or entry.get("disposition") not in _BODY_KEPT:
+            continue
+        if not is_table_of_contents(texts.get(unit, "")):
+            continue
+        cited = set(entry.get("fact_ids") or [])
+        if identity_fact_id is not None:
+            cited.add(identity_fact_id)
+        if not cited:
+            continue
+        entry["disposition"] = "SUPERSEDE_REDUNDANT"
+        entry["destination_section"] = "navigation"
+        entry["fact_ids"] = sorted(cited)
+        entry["rationale"] = (
+            "A table of contents: the generated Navigation lists the document's own sections. "
+            + str(entry.get("rationale") or "")
+        )[:_RATIONALE_LIMIT]
 
 
 def _fold_positional_pointers(output: dict[str, Any], facts: FactsDocument) -> None:
@@ -1707,6 +1896,38 @@ def _fold_positional_pointers(output: dict[str, Any], facts: FactsDocument) -> N
         )[:_RATIONALE_LIMIT]
 
 
+def _fold_dangling_rewrites(output: dict[str, Any], facts: FactsDocument) -> None:
+    """A paragraph or list kept as written (VERIFIED_PRESERVE/VERIFIED_MOVE) that still carries a
+    pointer to something that follows it where it is kept, and states more than that pointer, is
+    re-authored from facts instead: VERIFIED_REWRITE, in place, keeping its destination and the
+    facts it already cites.
+
+    Measured live (aspose-3d-foss/Aspose.3D-FOSS-for-Python, 2026-11-09, batch 1, unit
+    057.paragraph: a sentence on ``Scene`` ending "The full public class index is listed below by
+    module."): the model kept it three asks running, each refused as a dangling_pointer, and the
+    run died at S4. The refusal names three remedies; VERIFIED_REWRITE is the only one that needs
+    no new fact and no other unit ("the wording is re-authored from facts, without the pointer"),
+    so it is the one applied here. Nothing is invented and no text is edited: only the
+    disposition changes, and the section's authoring job writes the wording. A unit whose every
+    sentence is a pointer was already folded to SUPERSEDE_REDUNDANT just above. VERIFIED_REWRITE
+    needs no cited fact (the narrowed ask for this very rejection says so); an attributed unit
+    (unverified, so never re-authored from facts) is left to the refusal, as is every other
+    disposition."""
+    flagged = {unit for unit, _sentence, _reason in dangling_pointers(output, facts)}
+    for entry in output.get("dispositions", []):
+        unit = str(entry.get("unit_id", ""))
+        if unit not in flagged or _unit_kind(unit) not in {"paragraph", "list"}:
+            continue
+        if entry.get("disposition") not in {"VERIFIED_PRESERVE", "VERIFIED_MOVE"}:
+            continue
+        entry["disposition"] = "VERIFIED_REWRITE"
+        entry["rationale"] = (
+            "Re-authored from the facts: kept as written it would point at content "
+            "that does not follow it in its section. "
+            + str(entry.get("rationale") or "")
+        )[:_RATIONALE_LIMIT]
+
+
 # S4 job-wiring half, ported later than the rest of this module (2026-10-22): builds the actual
 # LLM packet/schema/batching for ``source_reconciliation``, now that core/llm/prompts.py's
 # plumbing and the real prompts/source_reconciliation.yaml content both exist in this repository.
@@ -1714,6 +1935,68 @@ def _fold_positional_pointers(output: dict[str, Any], facts: FactsDocument) -> N
 # ``dangling_pointers``, ``coordinate_neighbor_promises``, and ``recover_uncited_prose_omits`` are
 # still NOT ported -- the refusal-message/repair layer built on top of ``coverage_findings``,
 # needed only once a real rejection or repair round is being driven, not to fire one real call.
+
+
+#: Dispositions that keep a body unit as written, which a heading above it then follows.
+_BODY_KEPT = frozenset({"VERIFIED_PRESERVE", "VERIFIED_MOVE"})
+
+
+def _fold_headings_into_kept_body(output: dict[str, Any], facts: FactsDocument) -> None:
+    """An inherited heading that is parked or dropped without evidence (DEFER_UNRESOLVED, or an
+    OMIT_UNSUPPORTED / SUPERSEDE_REDUNDANT citing no fact) while a unit under it is kept as written
+    follows that body: same disposition, destination and citations as the first kept unit under it.
+
+    Measured live (aspose-email-foss/Aspose.Email-FOSS-for-Cpp, hosted Lane R): ``017.heading``
+    ("Install (Optional)") was DEFER_UNRESOLVED ("superseded by the installation section") while
+    its body units 018/019 were VERIFIED_PRESERVE into ``development_testing``. The body printed,
+    the heading was printed nowhere, and the reviewer refused live_readme_loss on it. The heading
+    is the title of content that stays, so it is kept with it; S9's accounting
+    (``repair.accounting``) then records it as the renderer-owned heading it is (the renderer
+    prints its own headings, never an inherited one). Only the disposition fields of the heading
+    change, never any text; a heading citing a CONTRADICTED fact, a heading whose body is wholly
+    dropped, and any heading already kept or accounted for with evidence are left alone."""
+    order = [fact.id for fact in facts.by_kind("inherited_unit")]
+    entries = {
+        str(entry.get("unit_id", "")): entry for entry in output.get("dispositions", [])
+    }
+    polarity = {fact.id: fact.polarity for fact in facts.facts}
+    for position, unit in enumerate(order):
+        entry = entries.get(unit)
+        if entry is None or _unit_kind(unit) != "heading":
+            continue
+        disposition = entry.get("disposition")
+        cited = list(entry.get("fact_ids") or [])
+        if not (
+            disposition == "DEFER_UNRESOLVED"
+            or (disposition in {"OMIT_UNSUPPORTED", "SUPERSEDE_REDUNDANT"} and not cited)
+        ):
+            continue
+        if any(polarity.get(fact_id) == "CONTRADICTED" for fact_id in cited):
+            continue
+        body = None
+        for following in order[position + 1 :]:
+            if _unit_kind(following) == "heading":
+                break
+            candidate = entries.get(following)
+            if (
+                candidate is not None
+                and candidate.get("disposition") in _BODY_KEPT
+                and candidate.get("destination_section")
+            ):
+                body = (following, candidate)
+                break
+        if body is None:
+            continue
+        body_unit, kept = body
+        was = disposition
+        entry["disposition"] = kept["disposition"]
+        entry["destination_section"] = kept["destination_section"]
+        entry["fact_ids"] = sorted(set(cited) | set(kept.get("fact_ids") or []))
+        entry["rationale"] = (
+            f"Kept with the content under it ({body_unit} is kept in "
+            f"{kept['destination_section']}); it was {was} before. "
+            + str(entry.get("rationale") or "")
+        )[:_RATIONALE_LIMIT]
 
 
 def _longest(node: Mapping[str, Any]) -> int | None:
@@ -2125,17 +2408,86 @@ def _reconciliation_merge(merged: str, narrowed: str, unit_ids: Sequence[str]) -
         for unit in extra.get("dispositions", [])
         if isinstance(unit, dict) and unit.get("unit_id") in wanted
     }
-    if frozenset(replacements) != wanted:
+    if not replacements:
         return narrowed
+    # A narrowed reply that answers SOME of the asked units (measured live, aspose-pdf-foss/
+    # Aspose-PDF-FOSS-for-Python, 2026-11-09: asked for 128 and 132, answered 128 only) used to be
+    # returned alone, which turned one unanswered unit into "no disposition for" the batch's other
+    # nineteen already-accepted ones and hid the real cause. The answered units replace theirs;
+    # the unanswered keep the entry the base had, judged by the ordinary checks (and settled by
+    # ``_settle_unresolved`` if they still fail, since this merge is the last ask).
     base_entries = [unit for unit in base.get("dispositions", []) if isinstance(unit, dict)]
     present = {str(unit.get("unit_id")) for unit in base_entries}
     merged_entries = [
         replacements.get(str(unit.get("unit_id")), unit) for unit in base_entries
     ]
     merged_entries.extend(
-        replacements[unit_id] for unit_id in unit_ids if unit_id not in present
+        replacements[unit_id] for unit_id in unit_ids if unit_id in replacements and unit_id not in present
     )
     return json.dumps({"dispositions": merged_entries})
+
+
+#: Dispositions that drop or park a unit instead of keeping it: the only ones ``_settle_unresolved``
+#: replaces. A unit already kept as written, rewritten or superseded is left to the ordinary checks.
+_UNKEPT = frozenset({"OMIT_UNSUPPORTED", "DEFER_UNRESOLVED"})
+_SHELL_RENDERED_KINDS = frozenset({"heading", "badge_row", "html_block"})
+
+
+def _settle_unresolved(merged: str, unit_ids: Sequence[str], facts: FactsDocument) -> str:
+    """After the LAST ask (the narrowed merge), keep as written every asked unit that is still
+    refused by this module's own checks and is dropped or parked (OMIT_UNSUPPORTED /
+    DEFER_UNRESOLVED), instead of failing the whole batch on it (R14: maintainer content is
+    must-carry unless a fact contradicts it; no careless drops).
+
+    A unit becomes VERIFIED_PRESERVE when every fact it cites is SUPPORTED and it cites at least
+    one (or it is a code block, which is never kept unverified), else PRESERVE_ATTRIBUTED (prose
+    kept as written, attribution internal only - ruling R9), into the holdable section nearest its
+    source heading. Never OMIT, never edited text. Left alone: a unit citing a CONTRADICTED fact
+    or whose own example is CONTRADICTED (a legitimate omission), shell-rendered kinds, and any
+    unit with no holdable home - those stay refused. Nothing runs before the final ask, so the
+    model always gets its chances first."""
+    try:
+        document = json.loads(merged)
+    except json.JSONDecodeError:
+        return merged
+    if not isinstance(document, dict) or not isinstance(document.get("dispositions"), list):
+        return merged
+    probe = copy.deepcopy(document)
+    named = _rejected_unit_ids(reconcile_checks(probe, facts))
+    wanted = [unit for unit in unit_ids if unit in named]
+    if not wanted:
+        return merged
+    units = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
+    by_id = {fact.id: fact for fact in facts.facts}
+    contradicted = code_units_by_polarity(facts, "CONTRADICTED")
+    holdable = holdable_sections(facts)
+    root = root_heading(list(units.values()))
+    for entry in document["dispositions"]:
+        unit_id = str(entry.get("unit_id", ""))
+        if unit_id not in wanted or unit_id not in units or unit_id in contradicted:
+            continue
+        kind = _unit_kind(unit_id)
+        if kind in _SHELL_RENDERED_KINDS or entry.get("disposition") not in _UNKEPT:
+            continue
+        cited = [by_id[f] for f in entry.get("fact_ids") or [] if f in by_id]
+        if any(fact.polarity == "CONTRADICTED" for fact in cited):
+            continue
+        heading = source_heading(units[unit_id])
+        destination = nearest_holdable(unit_id, heading, holdable, root)
+        if destination is None:
+            continue
+        was = entry.get("disposition")
+        verified = kind == "code_block" or (
+            bool(cited) and all(fact.polarity == "SUPPORTED" for fact in cited)
+        )
+        entry["disposition"] = "VERIFIED_PRESERVE" if verified else ATTRIBUTED
+        entry["destination_section"] = destination
+        entry["rationale"] = (
+            "Kept as the maintainers wrote it: no fact contradicts it, and it was still "
+            f"{'omitted' if was == 'OMIT_UNSUPPORTED' else 'unplaced'} after "
+            "the final ask. " + str(entry.get("rationale") or "")
+        )[:_RATIONALE_LIMIT]
+    return json.dumps(document)
 
 
 def _reconciliation_repeated(first: str, second: str, unit_ids: Sequence[str]) -> list[str]:
@@ -2197,10 +2549,15 @@ def reconciliation_narrowing(
             manifest=manifest,
         )
 
+    def merge(merged: str, narrowed: str, unit_ids: Sequence[str]) -> str:
+        return _settle_unresolved(
+            _reconciliation_merge(merged, narrowed, unit_ids), unit_ids, batch_facts
+        )
+
     return Narrowing(
         pending=lambda content, rejection: _rejected_unit_ids(rejection),
         ask=ask,
-        merge=_reconciliation_merge,
+        merge=merge,
         subject="the units a rejection actually named",
         repeated=_reconciliation_repeated,
     )
@@ -2635,6 +2992,7 @@ def placement_errors(output: dict[str, Any], facts: FactsDocument) -> list[str]:
     contradicted = contradicted_code_units(facts)
     commands = command_block_units(facts)
     unpublished = unpublished_registry_blocks(facts)
+    unproven = unproven_source_build_blocks(facts)
     example_status = _example_status(facts)
     inherited = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
     # Keyed by unit, like example_status just above, never by what a disposition cites: a model
@@ -2751,6 +3109,7 @@ def placement_errors(output: dict[str, Any], facts: FactsDocument) -> list[str]:
             and unit in commands
             and build_facts
             and unit not in unpublished
+            and unit not in unproven
             and not _omits_contradicted_command(entry, unit_text.get(unit, ""), facts)
         ):
             errors.append(

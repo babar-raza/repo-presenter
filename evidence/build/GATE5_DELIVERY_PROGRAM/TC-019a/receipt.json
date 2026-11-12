@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "card": "TC-019a",
+  "gate": "GATE5_DELIVERY_PROGRAM",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-09T15:28:20Z",
+  "base_rev": "569cc26e9bb06b80c08bcdd39a8de772ca3681f1",
+  "head_rev": "23a32c070205a3b01fbce1aa505246ad0353c2f8",
+  "card_sha256": "3d7de705477482e65ff5b536b36a044f242530be6ff4aba5f8f4fc6030cffdca",
+  "checker_fileset_sha256": "cf64026a0c992b13af36c2fb5c9dfbd9867031749a360ada06f757a2e5da2af7",
+  "checker_fileset_scheme": "v3",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [
+      "src/repo_presenter/readme/repair/zero_call_restore.py",
+      "tests/readme/repair/test_zero_call_restore.py"
+    ],
+    "violations": [],
+    "evaluated": true
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python -m pytest tests/readme/repair/test_zero_call_restore.py -q",
+          "exit_code": 0,
+          "duration_s": 4.993,
+          "stdout_sha256": "0af95f18d6ea1d8b2f0752fa3f1e9b96d6499d1058015db987e20fec243adae7"
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python -m pytest tests/readme/repair/test_zero_call_restore.py -q",
+          "exit_code": 0,
+          "duration_s": 3.225,
+          "stdout_sha256": "8af4b77d08258814d7292f161d5bdf59db2e68a516057f2411482309d1652a4b"
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -X utf8 -c \"import pathlib; p = pathlib.Path('src/repo_presenter/readme/repair/zero_call_restore.py'); nl = chr(10); marker = '# NEGATIVE_CONTROL_APPEND'; t = p.read_text(encoding='utf-8'); t2 = t + nl + marker + nl + 'restore_stated_count = lambda *a, **k: None' + nl; p.write_text(t2, encoding='utf-8')\"",
+    "patch_sha256": "8de9518dbc8285fdef16bb7bf893a26b55937b24bf156a9f5dc3635939650ec7",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      1
+    ],
+    "tree_changed": [
+      "M src/repo_presenter/readme/repair/zero_call_restore.py"
+    ]
+  },
+  "accepted": true,
+  "reason": "all gates passed"
+}

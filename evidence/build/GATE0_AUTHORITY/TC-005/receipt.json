@@ -3,21 +3,19 @@
   "card": "TC-005",
   "gate": "GATE0_AUTHORITY",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-06T02:11:36Z",
-  "base_rev": "aadbd18881ffd65b4a048e6252c6d2a1bd477cc8",
-  "head_rev": "1f426ec19ae6dc7e5c26dc75536d459300daa942",
-  "card_sha256": "459db6103b01bcfdb28bfb488f0eccdfec4f1c21b6ebbfbae18ee4ed17e1bb76",
-  "checker_fileset_sha256": "3eed7c8eb4954f91a2f48a3ea7eeb16dee5ce90883f7d7aed1ffd6352b5abcd3",
+  "generated_at": "2026-11-11T16:43:52Z",
+  "base_rev": "84097b7f53d2a61c5a88750b6d51d19410fb1f7f",
+  "head_rev": "b8873d0363c87234c02233745ee660c273832024",
+  "card_sha256": "3bd12378bb6cc4a7134eca9ee8696d6b96c92e9d406601fe3b42f873c3b5ea24",
+  "checker_fileset_sha256": "911fa6820c72b66ff1787bd0853623906d13ef95c9de2dd6b613cd2db65782af",
   "checker_fileset_scheme": "v3",
   "fingerprint": {
-    "python": "3.13.18",
-    "platform": "Linux-6.18.44-fc-v242-x86_64-with-glibc2.39"
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
   },
   "scope": {
     "ok": true,
-    "changed_paths": [
-      "tests/ops/test_gate_guard_tc005.py"
-    ],
+    "changed_paths": [],
     "violations": [],
     "evaluated": true
   },
@@ -28,20 +26,20 @@
         {
           "command": "python ops/checks/marker_check.py docs/RELEASE_CONTRACT_P1-P5.md \"RELEASE_CONTRACT_ADOPTED_2026-11-04\"",
           "exit_code": 0,
-          "duration_s": 0.025,
-          "stdout_sha256": "4c24c97b20afbb1ecae0b9c485f0e838886e9df82c183d72cbd7352bb9a7be91"
+          "duration_s": 0.089,
+          "stdout_sha256": "98f1983e4ab0cd19a7d2384ce827d2dc0d1fed75f38fee9286fde156cfa324a5"
         },
         {
           "command": "python ops/checks/dashboard_matches_live.py",
           "exit_code": 0,
-          "duration_s": 43.262,
-          "stdout_sha256": "1aa806eff6f49058ed2a34d92ea98d8d3de2e245260c7445db3f68e164792058"
+          "duration_s": 649.871,
+          "stdout_sha256": "b03a9b6559a6f071482f90449f27a7607e591a278aac8075763682af51bd705a"
         },
         {
           "command": "python -m pytest tests/ops/test_gate_guard_tc005.py -q",
           "exit_code": 0,
-          "duration_s": 43.705,
-          "stdout_sha256": "0d716aa4c4d5c6d0314975f2ac067c3140715fa6aa874f561fc02fab5ba83ce4"
+          "duration_s": 679.363,
+          "stdout_sha256": "e9a94a8de160b6c7e6019f9abb257d477bd6032e332c3c4e66243e0c60fe91ec"
         }
       ],
       "all_passed": true
@@ -52,20 +50,20 @@
         {
           "command": "python ops/checks/marker_check.py docs/RELEASE_CONTRACT_P1-P5.md \"RELEASE_CONTRACT_ADOPTED_2026-11-04\"",
           "exit_code": 0,
-          "duration_s": 0.024,
-          "stdout_sha256": "4c24c97b20afbb1ecae0b9c485f0e838886e9df82c183d72cbd7352bb9a7be91"
+          "duration_s": 0.083,
+          "stdout_sha256": "98f1983e4ab0cd19a7d2384ce827d2dc0d1fed75f38fee9286fde156cfa324a5"
         },
         {
           "command": "python ops/checks/dashboard_matches_live.py",
           "exit_code": 0,
-          "duration_s": 44.053,
-          "stdout_sha256": "1aa806eff6f49058ed2a34d92ea98d8d3de2e245260c7445db3f68e164792058"
+          "duration_s": 665.743,
+          "stdout_sha256": "b03a9b6559a6f071482f90449f27a7607e591a278aac8075763682af51bd705a"
         },
         {
           "command": "python -m pytest tests/ops/test_gate_guard_tc005.py -q",
           "exit_code": 0,
-          "duration_s": 41.849,
-          "stdout_sha256": "7db5a069a8827000f27009c49b5d3bf6dd99a7bded1394db7450aa235393d1c1"
+          "duration_s": 740.677,
+          "stdout_sha256": "0bb36f5c379c8bfeab9625be4541c5641cd05304cfafb2bda682d3a463de593f"
         }
       ],
       "all_passed": true
@@ -75,17 +73,10 @@
     "kind": "mutate",
     "patch": "python -c \"import pathlib; p = pathlib.Path('project/state.yaml'); s = p.read_text(encoding='utf-8'); s2 = s.replace('lane_r_accepted: 10', 'lane_r_accepted: 999'); p.write_text(s2, encoding='utf-8')\"",
     "patch_sha256": "110c1e4d72df6a0c9c303bf6fe503dea3b4fcf1d1debb062988caefd800e9997",
-    "applied": true,
-    "patch_applied_failed": true,
-    "exit_codes": [
-      0,
-      1,
-      1
-    ],
-    "tree_changed": [
-      "M project/state.yaml"
-    ]
+    "applied": false,
+    "patch_applied_failed": false,
+    "exit_codes": []
   },
-  "accepted": true,
-  "reason": "all gates passed"
+  "accepted": false,
+  "reason": "negative-control patch did not apply"
 }

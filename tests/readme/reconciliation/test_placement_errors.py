@@ -512,8 +512,10 @@ def test_a_kept_unit_with_a_dangling_pointer_is_refused_via_placement_errors() -
 
 def test_reconcile_checks_combines_normalize_and_placement_errors() -> None:
     """reconcile_checks = normalize(...) + placement_errors(...), the old repo's own wiring. (A
-    sentence that is only a pointer is folded to a supersession by normalize since 2026-11-06, so
-    this one carries a claim of its own.)"""
+    sentence that is only a pointer is folded to a supersession by normalize since 2026-11-06, and
+    a VERIFIED_PRESERVE paragraph with a claim of its own plus a dangling pointer is folded to
+    VERIFIED_REWRITE since 2026-11-09 -- see test_s4_rejection_remedies.py; PRESERVE_ATTRIBUTED
+    prose is unverified, never re-authored, so it is what still reaches placement_errors.)"""
     facts = _facts(
         *_padded(
             _unit(
@@ -523,7 +525,7 @@ def test_reconcile_checks_combines_normalize_and_placement_errors() -> None:
         )
     )
     document = {
-        "dispositions": [_entry("inherited_unit:046.paragraph", "VERIFIED_PRESERVE", "api_reference")]
+        "dispositions": [_entry("inherited_unit:046.paragraph", "PRESERVE_ATTRIBUTED", "api_reference")]
     }
     errors = reconcile_checks(document, facts)
     assert any("dangling_pointer" in e for e in errors)

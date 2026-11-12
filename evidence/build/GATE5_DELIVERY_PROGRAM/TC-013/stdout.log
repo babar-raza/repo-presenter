@@ -1,0 +1,137 @@
+
+===== CLEAN RUN 1 =====
+$ python -m pytest tests/acceptance -q
+--- stdout ---
+........................................................................ [ 30%]
+........................................................................ [ 61%]
+........................................................................ [ 92%]
+.................                                                        [100%]
+233 passed in 21.94s
+
+--- stderr ---
+
+$ python -m pytest tests/github/test_write_authorization.py -q -k effect
+--- stdout ---
+.........................                                                [100%]
+25 passed, 36 deselected in 2.48s
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python -m pytest tests/acceptance -q
+--- stdout ---
+........................................................................ [ 30%]
+........................................................................ [ 61%]
+........................................................................ [ 92%]
+.................                                                        [100%]
+233 passed in 12.59s
+
+--- stderr ---
+
+$ python -m pytest tests/github/test_write_authorization.py -q -k effect
+--- stdout ---
+.........................                                                [100%]
+25 passed, 36 deselected in 1.41s
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M src/repo_presenter/acceptance/record.py
+$ python -m pytest tests/acceptance -q
+--- stdout ---
+........................................................................ [ 30%]
+........................................................................ [ 61%]
+...........F...................................F.....F...F.............. [ 92%]
+.................                                                        [100%]
+================================== FAILURES ===================================
+__ test_classify_reaches_independently_accepted_with_a_verified_attestation ___
+
+tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-1390/test_classify_reaches_independ0')
+
+    def test_classify_reaches_independently_accepted_with_a_verified_attestation(
+        tmp_path: Path,
+    ) -> None:
+        responsibility = _matrix(tmp_path)
+        calibration = _calibration(tmp_path, passed=True)
+        artifact = tmp_path / "bundle.tar.gz"
+        artifact.write_bytes(b"fixture")
+    
+        def fake_runner(args: list[str]) -> subprocess.CompletedProcess[bytes]:
+            return subprocess.CompletedProcess(args, 0)
+    
+        state = classify(
+            REPOSITORY,
+            LANE,
+            mechanism_verdicts={"lane_r_pipeline": True, "reviewer_calibration": True},
+            canaries={"c1": True},
+            audit_passed=True,
+            attestation_path=artifact,
+            expected_workflow="babar-raza/repo-presenter/.github/workflows/writer.yml",
+            calibration_path=calibration,
+            responsibility_path=responsibility,
+            gh_runner=fake_runner,
+        )
+>       assert state == "independently-accepted"
+E       AssertionError: assert 'provisionally-accepted' == 'independently-accepted'
+E         
+E         - independently-accepted
+E         + provisionally-accepted
+
+tests\acceptance\test_build_and_classify.py:121: AssertionError
+___________ test_the_eight_states_are_exactly_these_literal_strings ___________
+
+    def test_the_eight_states_are_exactly_these_literal_strings() -> None:
+        """Pinned against hard-coded literals, not against each other - this is what the card's own
+        negative control (collapsing INDEPENDENTLY_ACCEPTED's value into PROVISIONALLY_ACCEPTED's)
+        must break."""
+        assert GENERATED == "generated"
+        assert SEALED == "sealed"
+        assert DETERMINISTICALLY_VALIDATED == "deterministically-validated"
+        assert PROVISIONALLY_ACCEPTED == "provisionally-accepted"
+>       assert INDEPENDENTLY_ACCEPTED == "independently-accepted"
+E       AssertionError: assert 'provisionally-accepted' == 'independently-accepted'
+E         
+E         - independently-accepted
+E         + provisionally-accepted
+
+tests\acceptance\test_record.py:59: AssertionError
+_________ test_independently_accepted_needs_audit_passed_and_attested _________
+
+    def test_independently_accepted_needs_audit_passed_and_attested() -> None:
+        both = _record(**_provisional_fields(), audit_passed=True, attested=True)
+>       assert classify_record(both) == "independently-accepted"
+E       AssertionError: assert 'provisionally-accepted' == 'independently-accepted'
+E         
+E         - independently-accepted
+E         + provisionally-accepted
+
+tests\acceptance\test_record.py:151: AssertionError
+____________ test_publication_ready_delivered_live_verified_chain _____________
+
+    def test_publication_ready_delivered_live_verified_chain() -> None:
+        independent = _record(**_independently_accepted_fields())
+>       assert classify_record(independent) == "independently-accepted"
+E       AssertionError: assert 'provisionally-accepted' == 'independently-accepted'
+E         
+E         - independently-accepted
+E         + provisionally-accepted
+
+tests\acceptance\test_record.py:209: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/acceptance/test_build_and_classify.py::test_classify_reaches_independently_accepted_with_a_verified_attestation
+FAILED tests/acceptance/test_record.py::test_the_eight_states_are_exactly_these_literal_strings
+FAILED tests/acceptance/test_record.py::test_independently_accepted_needs_audit_passed_and_attested
+FAILED tests/acceptance/test_record.py::test_publication_ready_delivered_live_verified_chain
+4 failed, 229 passed in 14.52s
+
+--- stderr ---
+
+$ python -m pytest tests/github/test_write_authorization.py -q -k effect
+--- stdout ---
+.........................                                                [100%]
+25 passed, 36 deselected in 3.08s
+
+--- stderr ---
+

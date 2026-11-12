@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "card": "TC-017b",
+  "gate": "GATE5_DELIVERY_PROGRAM",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-11T14:56:52Z",
+  "base_rev": "48509cc76c1c5081c0fe399af04e3ceea15cbb2d",
+  "head_rev": "01c1a9e3a9eb131ad89c8e4cc96424d1f37a67f5",
+  "card_sha256": "5d363da005819926d1322d174327bc448cad362cb48894c916c8bc0a207367c2",
+  "checker_fileset_sha256": "87d07de1f92c2e005fab69cf27ff54878c87464460f4547d757bddd7f70057d9",
+  "checker_fileset_scheme": "v3",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [],
+    "violations": [],
+    "evaluated": true
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python -m pytest tests/readme/validation/test_line_provenance.py tests/readme/validation/test_claims_mechanical.py tests/readme/validation/test_surface_claims_probes.py tests/readme/validation/test_claims.py -q",
+          "exit_code": 0,
+          "duration_s": 3.538,
+          "stdout_sha256": "7fb5864058a414efea6d118017031d7e9023dad6993d996926537d62224291e8"
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python -m pytest tests/readme/validation/test_line_provenance.py tests/readme/validation/test_claims_mechanical.py tests/readme/validation/test_surface_claims_probes.py tests/readme/validation/test_claims.py -q",
+          "exit_code": 0,
+          "duration_s": 2.518,
+          "stdout_sha256": "78644cebe862ff3ef38b22e653aab7942f2a9abe1c11ee01d3161058b583e701"
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -X utf8 -c \"import pathlib; p = pathlib.Path('src/repo_presenter/readme/validation/surface_claims.py'); t = p.read_text(encoding='utf-8'); marker = 'def _table_findings'; t2 = t.replace(marker, '_disabled_' + marker, 1); p.write_text(t2, encoding='utf-8')\"",
+    "patch_sha256": "cd2ac7926c736e830b92c6f3c9a95108b084b7726dc328bf20efdc1055ba62f6",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      2
+    ],
+    "tree_changed": [
+      "M src/repo_presenter/readme/validation/surface_claims.py"
+    ]
+  },
+  "accepted": true,
+  "reason": "all gates passed"
+}

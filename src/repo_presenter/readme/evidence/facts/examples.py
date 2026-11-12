@@ -19,10 +19,15 @@ from repo_presenter.core.facts import Evidence, Fact, Polarity, fact_id
 _POLARITY: dict[ExampleOutcome, Polarity] = {
     "EXECUTED": "SUPPORTED",
     "FAILED": "CONTRADICTED",
-    "TIMED_OUT": "CONTRADICTED",
+    "TIMED_OUT": "UNRESOLVED",
     "NEEDS_INPUT": "UNRESOLVED",
     "NOT_VERIFIED": "UNRESOLVED",
 }
+
+# Outcomes certain enough to carry full confidence. A timeout proves only that verification
+# could not finish in time -- it is never proof the example is wrong -- so it is deliberately
+# excluded here and falls to the 0.5 default alongside NEEDS_INPUT/NOT_VERIFIED.
+_FULL_CONFIDENCE: frozenset[ExampleOutcome] = frozenset({"EXECUTED", "FAILED"})
 
 
 def example_facts(
@@ -63,7 +68,7 @@ def example_facts(
                 candidate.code,
                 tuple(evidence),
                 polarity=_POLARITY[outcome],
-                confidence=1.0 if outcome in {"EXECUTED", "FAILED", "TIMED_OUT"} else 0.5,
+                confidence=1.0 if outcome in _FULL_CONFIDENCE else 0.5,
                 attributes=(
                     {PRELUDE_ATTRIBUTE: receipt.prelude}
                     if receipt is not None and receipt.prelude and outcome == "EXECUTED"

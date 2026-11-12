@@ -65,11 +65,14 @@ from repo_presenter.readme.composition.authoring import (
     authoring_schema,
     authoring_tasks,
     carried_unit_errors,
+    recover_opening_duplicates_preserved,
     recover_title_verbatim_opening,
     repair_title_verbatim_opening_errors,
     unit_checks,
 )
 from repo_presenter.readme.composition.authoring_retry import (
+    authoring_narrowing,
+    recover_authoring_output,
     recover_targeted_repair_dropped_citation,
     recover_targeted_repair_restatements,
 )
@@ -80,9 +83,11 @@ from repo_presenter.readme.composition.planning import (
     plan_checks,
     planning_packet,
     planning_schema,
+    recover_planning_output,
 )
 from repo_presenter.readme.composition.policy import DEFAULT_POLICY
 from repo_presenter.readme.composition.renderer import line_counts, render_readme
+from repo_presenter.readme.validation.rules import effective_visible_lines_budget
 from repo_presenter.readme.reconciliation.dispositions import (
     reconcile_checks,
     reconciliation_batch_facts,
@@ -220,6 +225,15 @@ class RepairContext:
     #: The coherent units document the README was rendered from; with it a budget repair can
     #: MEASURE what clearing a plan field removes instead of estimating.
     units: dict[str, Any] = field(default_factory=dict)
+    #: The published README the candidate is held to (BC-07's line budget is
+    #: ``max(policy budget, its visible lines)``); empty when there is none.
+    benchmark: str = ""
+
+    @property
+    def visible_lines_budget(self) -> int:
+        """The budget BC-07 judges this candidate by -- the one shared function, so a repair is
+        never judged against a stricter budget than the check that raised the defect."""
+        return effective_visible_lines_budget(DEFAULT_POLICY, self.benchmark or None)
 
 
 def _read_text(path: Path) -> str:
@@ -321,6 +335,36 @@ def _accept(
     return True
 
 
+def _regenerate_plan(rc: RepairContext, loaded: LoadedManifest) -> dict[str, Any] | None:
+    """A fresh ``presentation_planning`` call, the same job initial generation makes
+    (``cascade._run_planning``), so a missing call-store entry gets a real original instead of
+    stopping the repair cold. ``run_job`` stores its own accepted output under the SAME request
+    hash ``request_hash`` already computed (its own docstring: "the store key ``run_job`` would
+    compute for this exact packet"), so no further bookkeeping is needed here -- the next round's
+    ``rc.store.get(key)`` finds it."""
+
+    def checks(output: dict[str, Any]) -> list[str]:
+        return plan_checks(
+            output, rc.facts, dispositions=rc.dispositions, ecosystem=rc.entry.ecosystem
+        )
+
+    def recover(output: dict[str, Any]) -> dict[str, Any] | None:
+        return recover_planning_output(output, rc.facts)
+
+    try:
+        result = run_job(
+            loaded,
+            planning_packet(rc.entry, rc.facts, rc.investigation, rc.dispositions, loaded.manifest),
+            config=rc.config, facts=rc.facts, ledger=rc.ledger, store=rc.store,
+            context=rc.context,
+            call_schema=planning_schema(loaded, rc.facts, rc.investigation, rc.dispositions),
+            checks=checks, recover=recover,
+        )
+    except JobError:
+        return None
+    return result.output
+
+
 def _repair_plan(rc: RepairContext, defect: Defect, repairs: RepairLedger) -> bool:
     loaded = rc.prompts["presentation_planning"]
     packet = planning_packet(
@@ -332,8 +376,30 @@ def _repair_plan(rc: RepairContext, defect: Defect, repairs: RepairLedger) -> bo
     )
     original = rc.store.get(key)
     if original is None:
-        return _unrepairable(
-            defect, repairs, "the causing plan is not in the call store"
+        # ``--restore-sealed-bundle`` (the hosted default) restores a PREVIOUS seal's call store,
+        # so a defect the independent reviewer raises against a RESTORED plan has no original
+        # call in THIS run's store to revise -- measured live twice on Aspose.Slides-FOSS-for-Cpp,
+        # identical both times, "the causing plan is not in the call store" before this fix. A
+        # fresh generation gives the next round a real original, never weakening what a repair
+        # must satisfy (the regenerated plan is judged by the SAME plan_checks any plan is).
+        original = _regenerate_plan(rc, loaded)
+        if original is None:
+            return _unrepairable(
+                defect, repairs,
+                "the causing plan is not in the call store, and a fresh "
+                "presentation_planning call could not produce one",
+            )
+        # A plain regenerate alone is not enough: measured on Aspose.Slides-FOSS-for-Cpp (the
+        # section_authoring sibling of this same gap), a bare re-ask of the unchanged packet
+        # reproduced the identical output and the review re-flagged the identical findings
+        # forever. Falling through into the ordinary defect-aware revision below, which DOES
+        # carry the finding's own reason, is what section_authoring's fix also does.
+        defect = replace(
+            defect,
+            reason=(
+                "the causing plan was not in the call store (restored from a sealed "
+                "bundle); regenerated it fresh, then revised in place against this finding"
+            ),
         )
     checks = refuse_noop(
         original,
@@ -371,7 +437,7 @@ def _budget_hint(
         plan,
         rc.facts,
         visible,
-        DEFAULT_POLICY.visible_lines_budget,
+        rc.visible_lines_budget,
         measure=_measure_by_render(rc, plan, visible),
     )
 
@@ -383,7 +449,7 @@ def _fits_the_budget(rc: RepairContext, checks: Checks, hint: Mapping[str, Any])
     revision whose render still exceeds the budget is rejected with the measured levers named, so
     the job's own bounded re-asks can correct it. A revision that cannot be rendered is left to the
     plan checks: this adds a requirement, it never decides on a render it could not make."""
-    budget = DEFAULT_POLICY.visible_lines_budget
+    budget = rc.visible_lines_budget
     levers = hint.get("optional_plan_fields_and_their_visible_line_cost_if_cleared") or {}
 
     def judged(revised: dict[str, Any]) -> list[str]:
@@ -597,6 +663,36 @@ def _escalate_to_plan(
     return _repair_plan(rc, escalated, repairs)
 
 
+def _regenerate_section(
+    rc: RepairContext, task: SectionTask, loaded: LoadedManifest
+) -> dict[str, Any] | None:
+    """A fresh ``section_authoring`` call for ONE task, the same job and checks initial
+    generation makes (``cascade._run_authoring``) -- see ``_regenerate_plan`` for why a missing
+    call-store entry needs this rather than stopping the repair cold, and why ``run_job`` storing
+    its own result is enough."""
+
+    def checks(output: dict[str, Any]) -> list[str]:
+        return unit_checks(output, task, rc.facts, rc.name, dispositions=rc.dispositions)
+
+    def recover(output: dict[str, Any]) -> dict[str, Any] | None:
+        if task.section_id == "opening":
+            return recover_opening_duplicates_preserved(
+                output, dispositions=rc.dispositions, facts=rc.facts
+            )
+        return recover_authoring_output(output, task=task, facts=rc.facts)
+
+    try:
+        result = run_job(
+            loaded, task.packet, config=rc.config, facts=rc.facts, ledger=rc.ledger,
+            store=rc.store, context=rc.context,
+            call_schema=bound_authoring_citations(authoring_schema(loaded, task), task),
+            checks=checks, recover=recover, narrow=authoring_narrowing(task, loaded),
+        )
+    except JobError:
+        return None
+    return result.output
+
+
 def _repair_section(rc: RepairContext, defect: Defect, repairs: RepairLedger) -> bool:
     task = next((t for t in rc.tasks if t.section_id == defect.section_id), None)
     if task is None:
@@ -610,8 +706,30 @@ def _repair_section(rc: RepairContext, defect: Defect, repairs: RepairLedger) ->
     )
     original = rc.store.get(key)
     if original is None:
-        return _unrepairable(
-            defect, repairs, "the causing section is not in the call store"
+        # Same gap and fix as _repair_plan's: --restore-sealed-bundle restores a previous seal's
+        # call store, so a review finding against a RESTORED section has no original call in THIS
+        # run's store to revise (measured live, Aspose.Slides-FOSS-for-Cpp, two hosted runs,
+        # identical both times: F01-F08 all "the causing section is not in the call store",
+        # discarding every other already-fixed defect too). A plain re-ask of the SAME packet at
+        # this point is not enough on its own: measured on the SAME repository, a bare regenerate
+        # reproduced the identical flawed prose (temperature-0 determinism over an unchanged
+        # packet) and the review re-flagged the identical findings forever. So the fresh call
+        # populates the store and execution falls through into the ordinary defect-aware revision
+        # below, which DOES carry the finding's own quote/reason -- the thing a plain re-ask never
+        # gets a chance to see.
+        original = _regenerate_section(rc, task, loaded)
+        if original is None:
+            return _unrepairable(
+                defect, repairs,
+                "the causing section is not in the call store, and a fresh "
+                "section_authoring call could not produce one",
+            )
+        defect = replace(
+            defect,
+            reason=(
+                "the causing section was not in the call store (restored from a sealed "
+                "bundle); regenerated it fresh, then revised in place against this finding"
+            ),
         )
     checks: Checks = refuse_noop(
         original,
@@ -721,6 +839,7 @@ def _load_context(
     prompts: PromptRegistry,
     config: GatewayConfig,
     ledger: Ledger,
+    benchmark: str = "",
 ) -> RepairContext:
     entry = require_listed(load_registry(registry_path), result.repository)
     # facts.json stores the inherited units in sorted position, but the cascade builds its document
@@ -762,6 +881,7 @@ def _load_context(
         name=product_name(entry),
         readme=_read_text(out_dir / "README.coherent.md"),
         units=_read_json(out_dir / "content_units.coherent.json"),
+        benchmark=benchmark,
     )
 
 
@@ -806,6 +926,7 @@ def settle_candidate(
             prompts=prompts,
             config=config,
             ledger=ledger,
+            benchmark=_read_text(clone_path / "README.md"),
         )
         units = _read_json(out_dir / "content_units.coherent.json").get("units", [])
         defects = build_defects(

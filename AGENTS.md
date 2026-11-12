@@ -6,6 +6,21 @@ repository. Keep this short; the owner's goals and conflict rulings live in
 `docs/MISSION_AUTHORITY.md`, the live cursor in `project/state.yaml`; no derived
 document overrides those.
 
+## READ THIS BEFORE ANYTHING ELSE — the 2026-11-07 reconciled delivery program
+
+`docs/DELIVERY_PLAN_2026-11-07.md` is the current, owner-approved execution program: an independent review
+found 0 accepted candidates, five failed calibrations, 14 of 24 seals needing repair and 207 of 649 wrongly
+dropped README items; the program was built from code evidence, attacked twice by an independent architect,
+preflighted with real cost and reliability measurements, and approved by the owner on 2026-11-07 together with
+a "Final Directive" authorizing continuous autonomous execution (`PLAN → DISPATCH → EXECUTE → VERIFY →
+INTEGRATE → UPDATE STATE → SELECT NEXT WORK → REPEAT`, never stopping at a card, milestone or report). The
+owner's rulings R16–R26 answering it are recorded verbatim in `docs/CONSOLIDATED_GOALS_2026-11-06.md` Part E,
+with the exact question asked and the owner's own words. **Every session must read the delivery plan and Part E
+before doing any work in this repository** — it supersedes the status implied by the taskcard snapshot below
+(TC-012c, TC-013 through TC-035 and re-authored TC-007/009b/010a/011 are the current cards; the ten
+`AUDIT_2026_11_01_ITEM_*`-derived cards TC-001–TC-012 below are historical, already-accepted groundwork, not the
+active frontier).
+
 ## READ THIS BEFORE ANYTHING — owner's consolidated goals (2026-11-06)
 
 `docs/CONSOLIDATED_GOALS_2026-11-06.md` is the owner's consolidated statement of goals and requirements
@@ -41,6 +56,44 @@ Full text: `docs/CONSOLIDATED_GOALS_2026-11-06.md` Part B; operating detail: `op
   (a rule or a labelled case); BC-17 blocks unreviewed losses.
 
 - **R15 — no upstream push until every candidate of both lanes is sealed, validated and passed.**
+
+## BINDING OWNER RULINGS R16–R26 (2026-11-07) — reconciling the independent delivery review
+
+Full text, provenance and the exact question asked: `docs/CONSOLIDATED_GOALS_2026-11-06.md` Part E. Program
+detail: `docs/DELIVERY_PLAN_2026-11-07.md`.
+
+- **R16 — Lane L no-edit is terminal, never accepted.** `NO_ACTION_JUSTIFIED` satisfies R15 coverage; it is
+  never counted toward R4's ~25 Lane L candidates.
+- **R17 — sandbox only before R15.** Real upstream draft PRs and issue lifecycle wait for R15; until then they
+  are proven on an owner-owned sandbox repository, with mandatory targets exercised up to the write only.
+- **R18 — qwen3-next for every product route; the supervisor (Claude/Codex) may review its output.** Manual
+  review of qwen3-next's output for audit and prompt tuning is supervisory work, not a second product model
+  route, and does not reopen the qwen3-next-only ruling.
+- **R19 — superseded by the Final Directive below: the autonomy bridge is not lower priority.**
+- **R20 — strict R5; Lane L "done" = R13's complete-portfolio branch.** Every repository reaches a terminal
+  outcome; a defect with no upstream change routes to Lane R as an owned finding, never silently dropped.
+- **R21 — Lane L accepts on net improvement**, with unrepaired residuals recorded internally and in the PR
+  description only, never in the README (R9).
+- **R22 — one write authority.** All nine repositories (three R3-allowlisted pilots plus six inherited
+  `mode: full` repositories) are allowlisted for draft PRs only; issue filing stays off on every upstream
+  repository; CI fails if the allowlist and registry modes disagree; the legacy system's open PRs count as
+  existing for duplicate detection.
+- **R23 — superseded by R25.**
+- **R24 — a reproduced, evidenced external blocker is terminal for R15**, not an indefinite portfolio-wide
+  block; it is re-checked at least every 7 days and unblocks automatically once the upstream fix lands.
+- **R25 — provider envelope 9,000 calls / 100,000,000 tokens**, spent in batches of six, batch cap 1.5x the
+  previous measured median, stop-and-report at 2x cost-per-sealed-candidate; zero-call steps run first and
+  are never charged against it.
+- **R26 — measure the M8 prose judge before any fallback.** Rung (c) of the acceptance redesign's fallback
+  ladder is used only after a recorded M8 calibration failure, never pre-emptively.
+
+**Final Directive (2026-11-07) — continuous autonomous execution, supersedes R19 and any looser reading of
+R8/R11:** the supervisor is authorized to execute the delivery program and continue autonomously to project
+completion. `PLAN → DISPATCH → EXECUTE → VERIFY → INTEGRATE → UPDATE STATE → SELECT NEXT WORK → REPEAT`, never
+stopping at a card, milestone, commit, failure or report. Extend the existing `gatecli`/`gateverify`/lease/
+run-request mechanisms — no new framework. The scheduled `supervisor-tick` observer is explicitly insufficient
+on its own; the real execution bridge (`TC-032`) must be built and proved to resume and advance work. Detail:
+`docs/DELIVERY_PLAN_2026-11-07.md` §8.4.
 
 ## READ THIS FIRST — owner-adopted corrective plan (2026-11-03)
 
@@ -117,6 +170,51 @@ when the supervisor writes the code, it re-runs the stated tests/falsifier
 from a clean state before marking the card accepted, exactly as it would for a
 dispatched worker. This preserves the "a worker cannot mark its own tests
 accepted" property from `ops/SUPERVISOR.md` even in a single-session context.
+
+## Supervisor operating rule — manage through multiple agents (owner, 2026-11-09)
+
+The supervisor does not do all the work itself. It runs the program through agents, and keeps for
+itself only what must stay single-threaded and accountable. This is an operating rule, not new
+architecture: it uses the existing roles, cards, leases and `gatecli review`.
+
+1. **Parallelize independent work.** Any task that can be split into pieces with disjoint
+   `write_paths` goes to separate agents in the same message — a fork (inherits context) for
+   investigation and measurement, a worktree-isolated worker with a self-contained card for
+   implementation. Never serialize what is independent; never parallelize what shares a file.
+2. **One owner per file set.** Before dispatch, name each agent's files; two agents never edit the
+   same file. Shared files (`gatecli.py`, `propose/effect.py`, `jobs.py`, `present.yml`,
+   `recertify.py`, `cascade.py`) follow the plan's serialized merge order.
+3. **No self-grading.** The agent that wrote a change is never the one that accepts it: a separate
+   verifier agent (or `gatecli review`'s independent re-run) confirms it from a clean state. The
+   supervisor reads the actual diff and receipts, not the agent's summary.
+4. **The supervisor keeps** the critical path, the budget, dispatch and integration order,
+   commits/pushes, anything touching shared or external state (state refs, provider spend, GitHub),
+   and every decision an agent surfaces. Agents never push, open PRs, spend outside an open batch,
+   or edit `project/**`, `ops/**`, `data/**` unless their card says so.
+5. **Bound the fan-out.** At most 4 concurrent code-writing agents and 6 concurrent generation runs
+   (R25's batch of six); each agent gets a bounded objective, a stop condition and a report-size
+   limit. A long job runs in the background and is watched by a monitor, never by polling.
+6. **Safe by default.** Prefer a read-only investigation fork before a writing agent; reversible
+   steps first; an agent that stalls or drifts is stopped and re-briefed, not left running.
+7. **Always be dispatching.** If an agent is running and another independent card is READY, dispatch
+   it now. The supervisor never idles on an agent's completion while other ready work exists.
+8. **Explore before deciding; work the vital few (Pareto).** Never decide from the first failure
+   signature or accept a rejection as the answer: first explore (read-only agents, real data) and
+   quantify. A live README that carries an aspose.org product banner was generated by aspose.org's
+   own refresh, so a good README for that product demonstrably exists (R2's floor): when any lane
+   or reviewer rejects such a product, the system has not yet found the same-or-better solution —
+   the rejection is a defect to explain and close, not an outcome to record. Rank failure
+   signatures by the number of repositories (and lanes) each blocks and fix the few that unblock
+   most of them first; do not polish the long tail while a top-ranked blocker stands.
+9. **A failure is a work item, never a report (owner, 2026-11-11).** When a run, fork or check fails,
+   do not stop to tell the owner: read its artifact, find the root cause, fix the owning mechanism
+   (or the gate that refused to act), prove the fix offline, relaunch, and keep going in the same
+   turn. Learn from the failure, tweak, adjust, fill the gap that is blocking, move forward. A gate
+   that blocks a rescue (e.g. zero-call restore skipped because BC-02 also fails) is itself the gap
+   to fill. "Needs more rounds / a prompt fix / a retry" means do it, not log it. Transient failures
+   (rejected model output, timeout, a restart that killed a run) are relaunched immediately. Never
+   end a turn with a fixable blocker open or a list of what failed; report only a result (a new seal,
+   a counted change) or an action only the owner can take, leading with the numbers.
 
 ## Non-negotiables (carried from the mission document, not restated in full)
 

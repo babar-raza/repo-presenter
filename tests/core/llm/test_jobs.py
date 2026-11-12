@@ -25,6 +25,7 @@ from repo_presenter.core.config import GatewayConfig
 from repo_presenter.core.errors import JobError, OutputRejectedError
 from repo_presenter.core.facts import Evidence, Fact, FactsDocument
 from repo_presenter.core.llm import jobs as jobs_module
+from repo_presenter.core.llm.budget import BudgetExceededError
 from repo_presenter.core.llm.jobs import CallStore, JobContext, run_job
 from repo_presenter.core.llm.ledger import Ledger
 from repo_presenter.core.llm.prompts import (
@@ -112,6 +113,31 @@ def _ledger(tmp_path: Path) -> Ledger:
     return Ledger(tmp_path / "calls.jsonl")
 
 
+def _budget_path(
+    tmp_path: Path, *, calls_cap: float = 1000, tokens_cap: float = 1_000_000, name: str = "budget.json"
+) -> Path:
+    """A fixture provider-budget file with one open, ample-capacity batch -- never the real
+    ``data/provider_budget.json``."""
+    path = tmp_path / name
+    document = {
+        "total_calls_cap": calls_cap,
+        "total_tokens_cap": tokens_cap,
+        "spent": {"calls": 0, "tokens": 0},
+        "batches": [
+            {
+                "id": "test-batch",
+                "repositories": [],
+                "calls_cap": calls_cap,
+                "tokens_cap": tokens_cap,
+                "calls_spent": 0,
+                "tokens_spent": 0,
+            }
+        ],
+    }
+    path.write_text(json.dumps(document, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return path
+
+
 def test_a_valid_first_reply_is_accepted_and_stored(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     client = _wire(monkeypatch, _completion({"summary": "ok", "fact_ids": ["identity:repository"]}))
     result = run_job(
@@ -122,6 +148,7 @@ def test_a_valid_first_reply_is_accepted_and_stored(tmp_path: Path, monkeypatch:
         ledger=_ledger(tmp_path),
         store=_store(tmp_path),
         context=CONTEXT,
+        budget_path=_budget_path(tmp_path),
     )
     assert result.output == {"summary": "ok", "fact_ids": ["identity:repository"]}
     assert result.cache_reused is False
@@ -133,17 +160,18 @@ def test_the_same_request_later_reuses_the_store_with_zero_provider_calls(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     store, ledger = _store(tmp_path), _ledger(tmp_path)
+    budget_path = _budget_path(tmp_path)
     _wire(monkeypatch, _completion({"summary": "ok", "fact_ids": []}))
     first = run_job(
         _manifest(), {"repository": "org/repo"}, config=CONFIG, facts=FACTS, ledger=ledger,
-        store=store, context=CONTEXT,
+        store=store, context=CONTEXT, budget_path=budget_path,
     )
     assert first.cache_reused is False
     # A second client that would error if called at all: zero provider calls proves the reuse.
     client = _wire(monkeypatch, _completion({"summary": "should not be used", "fact_ids": []}))
     second = run_job(
         _manifest(), {"repository": "org/repo"}, config=CONFIG, facts=FACTS, ledger=ledger,
-        store=store, context=CONTEXT,
+        store=store, context=CONTEXT, budget_path=budget_path,
     )
     assert second.cache_reused is True
     assert second.output == {"summary": "ok", "fact_ids": []}
@@ -162,6 +190,7 @@ def test_an_unknown_fact_id_is_rejected_then_the_reask_fixes_it(
     result = run_job(
         _manifest(), {"repository": "org/repo"}, config=CONFIG, facts=FACTS,
         ledger=_ledger(tmp_path), store=_store(tmp_path), context=CONTEXT,
+        budget_path=_budget_path(tmp_path),
     )
     assert result.output["fact_ids"] == ["package:name"]
     assert result.attempts == 2
@@ -179,6 +208,7 @@ def test_two_rejections_with_no_recover_fails_the_job_closed(
         run_job(
             _manifest(), {"repository": "org/repo"}, config=CONFIG, facts=FACTS,
             ledger=_ledger(tmp_path), store=_store(tmp_path), context=CONTEXT,
+            budget_path=_budget_path(tmp_path),
         )
 
 
@@ -198,6 +228,7 @@ def test_recover_fixes_a_final_rejection_the_model_could_not(
     result = run_job(
         _manifest(), {"repository": "org/repo"}, config=CONFIG, facts=FACTS,
         ledger=_ledger(tmp_path), store=_store(tmp_path), context=CONTEXT, recover=recover,
+        budget_path=_budget_path(tmp_path),
     )
     assert result.output["fact_ids"] == ["package:name"]
     repaired = list((tmp_path / "calls").glob("*.repaired-2.json"))
@@ -223,6 +254,7 @@ def test_recover_is_never_tried_on_the_first_attempt(
     result = run_job(
         _manifest(), {"repository": "org/repo"}, config=CONFIG, facts=FACTS,
         ledger=_ledger(tmp_path), store=_store(tmp_path), context=CONTEXT, recover=recover,
+        budget_path=_budget_path(tmp_path),
     )
     assert result.attempts == 2
     assert calls == []
@@ -238,6 +270,7 @@ def test_a_truncated_reply_fails_closed_without_a_retry(
         run_job(
             _manifest(), {"repository": "org/repo"}, config=CONFIG, facts=FACTS,
             ledger=_ledger(tmp_path), store=_store(tmp_path), context=CONTEXT,
+            budget_path=_budget_path(tmp_path),
         )
     assert len(client.chat.completions.requests) == 1
 
@@ -257,6 +290,7 @@ def test_checks_can_reject_an_otherwise_schema_valid_output(
     result = run_job(
         _manifest(), {"repository": "org/repo"}, config=CONFIG, facts=FACTS,
         ledger=_ledger(tmp_path), store=_store(tmp_path), context=CONTEXT, checks=checks,
+        budget_path=_budget_path(tmp_path),
     )
     assert result.output["summary"] == "a proper summary now"
 
@@ -272,7 +306,7 @@ def test_the_ledger_records_every_physical_attempt(
     ledger = _ledger(tmp_path)
     run_job(
         _manifest(), {"repository": "org/repo"}, config=CONFIG, facts=FACTS, ledger=ledger,
-        store=_store(tmp_path), context=CONTEXT,
+        store=_store(tmp_path), context=CONTEXT, budget_path=_budget_path(tmp_path),
     )
     records = ledger.records()
     outcomes = [r.outcome for r in records]
@@ -304,6 +338,7 @@ def _reasked_messages(
     result = run_job(
         _reask_manifest(shape), {"repository": "org/repo"}, config=CONFIG, facts=FACTS,
         ledger=_ledger(tmp_path), store=_store(tmp_path), context=CONTEXT,
+        budget_path=_budget_path(tmp_path),
     )
     first, second = client.chat.completions.requests
     return first["messages"], second["messages"], result
@@ -330,6 +365,81 @@ def test_a_single_user_reask_folds_the_rejected_reply_and_the_correction_into_on
     assert "Fix:" in second[1]["content"]
     assert second[1]["content"].rindex("Fix:") > second[1]["content"].index("package:nonexistent")
     assert result.output["fact_ids"] == ["package:name"] and result.attempts == 2
+
+
+# --- the provider-call budget gate (TC-015, owner ruling R25) -----------------------------------
+
+
+def test_a_replay_cache_hit_never_touches_the_budget_file_at_all(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    store, ledger = _store(tmp_path), _ledger(tmp_path)
+    first_budget = _budget_path(tmp_path, name="first_budget.json")
+    _wire(monkeypatch, _completion({"summary": "ok", "fact_ids": []}))
+    first = run_job(
+        _manifest(), {"repository": "org/repo"}, config=CONFIG, facts=FACTS, ledger=ledger,
+        store=store, context=CONTEXT, budget_path=first_budget,
+    )
+    assert first.cache_reused is False
+
+    def _must_not_be_called(*args: Any, **kwargs: Any) -> None:
+        raise AssertionError("the budget gate must never be consulted on the cache-hit path")
+
+    monkeypatch.setattr(jobs_module, "check_budget", _must_not_be_called)
+    monkeypatch.setattr(jobs_module, "record_spend", _must_not_be_called)
+
+    # A budget path that was never written: reading it would raise BudgetExceededError, and
+    # record_spend would raise trying to read it back too -- so if the replay path consulted the
+    # budget at all (read OR write), this test fails, whether through the monkeypatch above or
+    # through this poisoned, nonexistent file.
+    poisoned_budget = tmp_path / "poisoned_budget.json"
+    assert not poisoned_budget.exists()
+
+    client = _wire(monkeypatch, _completion({"summary": "should not be used", "fact_ids": []}))
+    second = run_job(
+        _manifest(), {"repository": "org/repo"}, config=CONFIG, facts=FACTS, ledger=ledger,
+        store=store, context=CONTEXT, budget_path=poisoned_budget,
+    )
+    assert second.cache_reused is True
+    assert second.output == {"summary": "ok", "fact_ids": []}
+    assert second.provider_calls == 0
+    assert client.chat.completions.requests == []
+    assert not poisoned_budget.exists()
+
+
+def test_a_fresh_product_call_with_no_budget_file_raises_before_the_fake_transport_is_invoked(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    client = _wire(monkeypatch, _completion({"summary": "ok", "fact_ids": []}))
+    missing_budget = tmp_path / "missing_budget.json"
+    assert not missing_budget.exists()
+    with pytest.raises(BudgetExceededError):
+        run_job(
+            _manifest(), {"repository": "org/repo"}, config=CONFIG, facts=FACTS,
+            ledger=_ledger(tmp_path), store=_store(tmp_path), context=CONTEXT,
+            budget_path=missing_budget,
+        )
+    assert client.chat.completions.requests == []
+
+
+def test_a_fresh_product_call_within_budget_succeeds_and_spent_totals_increase_by_real_tokens(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    budget_path = _budget_path(tmp_path)
+    _wire(monkeypatch, _completion({"summary": "ok", "fact_ids": []}))
+    result = run_job(
+        _manifest(), {"repository": "org/repo"}, config=CONFIG, facts=FACTS,
+        ledger=_ledger(tmp_path), store=_store(tmp_path), context=CONTEXT,
+        budget_path=budget_path,
+    )
+    assert result.cache_reused is False
+    document = json.loads(budget_path.read_text(encoding="utf-8"))
+    # _completion's fixed usage is prompt_tokens=10, completion_tokens=5, total_tokens=15.
+    assert document["spent"]["calls"] == 1
+    assert document["spent"]["tokens"] == 15
+    batch = document["batches"][-1]
+    assert batch["calls_spent"] == 1
+    assert batch["tokens_spent"] == 15
 
 
 def test_the_reask_shape_is_not_part_of_the_store_key_so_replay_is_unchanged(

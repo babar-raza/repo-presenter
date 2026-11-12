@@ -1,0 +1,149 @@
+id: TC-021
+gate: GATE5_DELIVERY_PROGRAM
+track: hosted-execution
+executor: supervisor
+purpose: >
+  SCOPE NOTE (`ops/gatectl.py` `GLOBAL_DENY`): executor is `supervisor` because every write_path
+  below is under `.github/**`, which a plain worker card may never touch, but which a
+  supervisor-executor card may (unlike `ops/**`, which is denied to every card, worker or
+  supervisor, and which this card does not touch).
+  Part of the 2026-11-07 delivery program (docs/DELIVERY_PLAN_2026-11-07.md section 8.2, row
+  TC-021; the worker never reads that document, only this card). depends_on: [TC-016] (the
+  three-valued example verifier that decides what "pass" means per ecosystem). Two independent
+  pieces of hosted-workflow work, both in .github/workflows/present.yml and its tests:
+  (1) Explicit per-ecosystem toolchains. data/registry.json registers repositories across 7
+  ecosystems (python, net, java, cpp, go, rust, typescript); read it yourself to confirm the exact
+  set before writing anything. Today present.yml's facts job (read it in full) installs
+  setup-python unconditionally, then setup-dotnet only when ecosystem == net and setup-java only
+  when ecosystem == java -- cpp, go, rust and typescript have NO explicit toolchain step. Read
+  tests/test_present.py's TOOLCHAIN_ACTIONS tuple (it already names setup-go, setup-node,
+  setup-rust/rust-toolchain and setup-cpp, anticipating exactly this gap) and its
+  assert_present_job_runs_no_repository_code helper, which asserts NONE of TOOLCHAIN_ACTIONS
+  appears in the present job (the toolchain belongs only in the untrusted facts job). Add,
+  conditioned on steps.target.outputs.ecosystem exactly like the existing .NET/Java steps: a
+  setup-go step for ecosystem == go; a Rust toolchain step (actions-rs/toolchain is unmaintained --
+  use dtolnay/rust-toolchain@stable or confirm and use whatever the project's own convention
+  already is, pin a stable channel) for ecosystem == rust; a C++ toolchain step for ecosystem ==
+  cpp -- first verify on an actual ubuntu-latest runner (or from GitHub's documented runner-image
+  manifest) whether g++/cmake are already present; if so, a step is only needed if a specific
+  version must be pinned, and you may instead add a lightweight verification step and document
+  the finding in this card's actions rather than adding a redundant install; and a setup-node step
+  for ecosystem == typescript (confirm whether Node is already present by default and pin a
+  specific version regardless, matching the existing pinned-version convention for dotnet/java).
+  Update tests/test_present.py if its fixtures need the new steps reflected, and add a new
+  assertion (next to the existing setup-dotnet/setup-java assertions in
+  test_the_workflow_splits_the_untrusted_facts_job_from_the_credentialed_present_job) that each of
+  the four new toolchain actions is present in the facts job, conditioned correctly.
+  (2) A third, sandboxed execution job -- read docs/DELIVERY_PLAN_2026-11-07.md section 6.4's
+  "Third execution job" row verbatim (quoted in source_refs below) for the exact spec. This job
+  does not yet need to run any real candidate-produced code (model-written example repair is
+  deferred, needs a provider budget); it only has to prove the JOB ITSELF is a safe, working
+  sandbox, because later work (deferred) will feed it untrusted generated code. Add a job named
+  "sandbox-execute" (workflow_dispatch-only for now, not wired into the facts/present chain) with
+  permissions: {} and no secrets, that: (a) checks out the repository with persist-credentials
+  false; (b) builds or reuses the facts-stage Docker image (read the Dockerfile at the repo root,
+  referenced by .github/workflows/ci.yml's docker job -- reuse that same image, do not create a
+  second one); (c) runs two proof scripts inside the container via `docker run --network none
+  --read-only --tmpfs /work:rw,exec,size=1g --user 65534 --cpus 2 --memory 2g --pids-limit 256
+  --cap-drop ALL --security-opt no-new-privileges <image> <script>`: a canary script that tries
+  to reach the network (e.g. curl or a socket connect to a known host), write a file outside
+  /work (e.g. /etc/passwd or $HOME), and dump environment variables to stdout, and asserts in the
+  workflow that this canary's container EXITS NONZERO or produces NO successful network/write/
+  env-dump output (write the exact assertion into the YAML's run: step, not just a comment); and a
+  legitimate script that actually compiles or runs one small real example for at least 2 of the
+  newly-toolchained ecosystems (go, rust, cpp, typescript -- pick 2) from a tiny fixture committed
+  under tests/fixtures/sandbox/, asserting it exits zero. Add tests/test_sandbox_execute.py that
+  parses the workflow YAML (same pattern as tests/test_present.py's _load_workflow helper) and
+  asserts: the sandbox-execute job has permissions: {}, no step references any secrets.* context,
+  and the docker run command line (as a string in the YAML) contains --network none, --read-only
+  and --cap-drop ALL. Separately, read .github/workflows/ci.yml's existing docker job (it only
+  checks the image's static properties -- git present, uid 10001, no secret-shaped env, fails
+  closed with no network) and extend it with ONE additional step that actually runs the facts
+  stage inside the container against a real small public git repository over the real network
+  (e.g. this same repo-presenter repository, or another small public repo you pick), proving the
+  facts stage can clone and extract inside the container with network access allowed (unlike the
+  existing --network=none proof, which deliberately tests the fail-closed path, not the working
+  path) -- today's review found "no facts stage has yet executed inside the container" against a
+  real network at all. This networked proof step must still use no secrets.
+depends_on:
+  - TC-016
+write_paths:
+  - .github/workflows/present.yml
+  - .github/workflows/ci.yml
+  - tests/test_present.py
+  - tests/test_sandbox_execute.py
+  - tests/fixtures/sandbox/**
+satisfies:
+  - REQ-EXEC-001
+  - REQ-EXEC-002
+  - REQ-EXEC-003
+source_refs:
+  - file: docs/DELIVERY_PLAN_2026-11-07.md
+    anchor: "Third execution job | Hosted runner with permissions: {}, no secrets, persist-credentials: false. A preceding step restores dependencies with network but runs no candidate code; the cache is mounted read-only. Candidate code runs in the facts image: docker run --network none --read-only --tmpfs /work:rw,exec,size=1g --user 65534 --cpus 2 --memory 2g --pids-limit 256 --cap-drop ALL --security-opt no-new-privileges, with a timeout. No actions/cache restore. Inputs and outputs are size-limited, schema-validated JSON, treated as hostile"
+  - file: docs/DELIVERY_PLAN_2026-11-07.md
+    anchor: "F19"
+  - file: docs/DELIVERY_PLAN_2026-11-07.md
+    anchor: "F25"
+  - file: tests/test_present.py
+    anchor: "TOOLCHAIN_ACTIONS"
+  - file: .github/workflows/ci.yml
+    anchor: "Build the facts-stage image"
+inputs: []
+actions:
+  - "Add setup-go, a Rust toolchain step, a C++ toolchain step (or a documented reason none is
+     needed) and setup-node to the facts job, each conditioned on the matching ecosystem exactly
+     like the existing .NET/Java steps, with a pinned version."
+  - "Add assertions in tests/test_present.py that each new toolchain step exists and is correctly
+     conditioned, and that none of them appears in the present job."
+  - "Add a sandboxed sandbox-execute job: a canary proof that network/write/env-dump access fails
+     inside the container, and a real proof that 2 of the newly-toolchained ecosystems' example
+     code actually runs inside it."
+  - "Add one networked-execution proof step to ci.yml's existing docker job, using no secrets."
+checks:
+  - command: |-
+      python -m pytest tests/test_present.py -q -k "toolchain or splits_the_untrusted"
+    expect: exit 0
+    timeout_seconds: 300
+    proves:
+      - REQ-EXEC-001
+  - command: |-
+      python -m pytest tests/test_sandbox_execute.py -q
+    expect: exit 0
+    timeout_seconds: 300
+    proves:
+      - REQ-EXEC-002
+  - command: |-
+      python -c "import yaml, pathlib; d = yaml.safe_load(pathlib.Path('.github/workflows/ci.yml').read_text(encoding='utf-8')); steps = d['jobs']['docker']['steps']; names = [s.get('name', '') for s in steps]; assert any('network' in n.lower() and 'secret' not in str(s).lower().replace('no secret', '') for n, s in zip(names, steps)), names"
+    expect: exit 0
+    timeout_seconds: 30
+    proves:
+      - REQ-EXEC-003
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -X utf8 -c "import pathlib; p = pathlib.Path('.github/workflows/present.yml'); s = p.read_text(encoding='utf-8'); s2 = s.replace('setup-go', 'removed-go-step'); p.write_text(s2, encoding='utf-8')"
+  rationale: >
+    Once the facts job genuinely has a conditioned setup-go step, renaming it must make the new
+    toolchain-presence test fail, proving the test actually looks for that specific action rather
+    than passing regardless. Before the real step exists, the clean run already correctly fails
+    (step absent), and the mutation has nothing to rename, so this control is meaningful only
+    once the card's own work is genuinely done.
+evidence:
+  - .github/workflows/present.yml
+  - .github/workflows/ci.yml
+  - tests/test_present.py
+  - tests/test_sandbox_execute.py
+closeout:
+  - "This card proves the sandbox mechanism is safe and that example toolchains exist; it does
+     NOT produce or verify any model-written example repair -- that is explicitly deferred to
+     Phase 2 under the provider budget (docs/DELIVERY_PLAN_2026-11-07.md section 7), and
+     sandbox-execute stays workflow_dispatch-only (not wired into the present/facts chain) until
+     that later work needs it."
+  - "If the C++ or TypeScript toolchain is found already present on ubuntu-latest by default,
+     record that finding here rather than silently adding a no-op install step: 'cpp: g++/cmake
+     confirmed present on ubuntu-latest, no step added, see <evidence>' or the equivalent for
+     typescript/node."
+recovery: "No product-pipeline behavior changes; revert present.yml, ci.yml and the two test
+  files together if a toolchain step is found wrong or the sandbox proof is found insufficient."

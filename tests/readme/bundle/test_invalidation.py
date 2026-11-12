@@ -74,6 +74,15 @@ def test_a_class_or_artifact_with_no_row_raises_rather_than_guessing() -> None:
     assert scope_of("components.a_new_component").name == "presentation"
 
 
+def test_holdouts_json_routes_to_the_reviewer_scope() -> None:
+    """Real case (Aspose.Cells-FOSS-for-Rust, Lane L): holdouts.json -- lane_l_review.
+    review_correction's own holdout-findings-plus-residuals record -- had no row at all, so
+    re-sealing any Lane L bundle whose holdouts.json differs from a prior seal's (R21's residuals
+    field changing is enough) raised ScopeError and failed the seal closed instead of routing the
+    change to REVIEWING, the stage that actually produced it."""
+    assert scope_of_artifact("holdouts.json", lane="L").name == "reviewer"
+
+
 def test_a_class_reopens_its_scope_stage_except_the_one_documented_override() -> None:
     assert STAGE_OVERRIDES == {"components.reviewer_logic": "COMPOSING"}
     concrete = [

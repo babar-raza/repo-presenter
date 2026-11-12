@@ -99,7 +99,12 @@ from repo_presenter.readme.composition.renderer import RENDERER_VERSION
 from repo_presenter.readme.correction.detectors import DETECTOR_VERSIONS
 from repo_presenter.readme.correction.engine import CORRECTION_ENGINE_VERSION
 from repo_presenter.readme.evidence.facts.inherited import INHERITED_UNITS_VERSION
-from repo_presenter.readme.review.independent_reviewer import REVIEWER_LOGIC_VERSION
+from repo_presenter.readme.review.calibration.mutations import OPERATORS
+from repo_presenter.readme.review.calibration.sources import SourceCandidate
+from repo_presenter.readme.review.independent_reviewer import (
+    REVIEWER_LOGIC_VERSION,
+    duplicate_paragraph_rule,
+)
 
 CANDIDATES_DIRNAME = "candidates"
 BUNDLE_MANIFEST_NAME = "manifest.json"
@@ -415,6 +420,68 @@ def _staged_artifacts(inputs: SealInputs) -> dict[str, bytes]:
     return staged
 
 
+#: Per-candidate canaries (TC-024 part d; design doc 2026-11-06-acceptance-redesign.md, I5):
+#: reused, not invented, from the calibration harness's own mutation operators
+#: (``readme.review.calibration.mutations.OPERATORS``). Scoped to the one operator whose injected
+#: defect a DETERMINISTIC rule this repository already runs on every candidate is proven, by
+#: construction, to catch with no model call and no full ``Candidate`` reconstruction (plan/units/
+#: dispositions/tree_paths this module does not have at seal time): a repeated prose paragraph of
+#: at least 120 characters is caught by ``readme.review.independent_reviewer.duplicate_paragraph_rule``
+#: at exactly the same threshold the operator itself uses. Every other operator's defect class
+#: (an unsupported claim, a dropped section judged against the live README, a broken install
+#: command, promotional filler) is caught today only by the old reviewer's model call or by
+#: ``readme.validation.blocking`` checks that need that full ``Candidate`` -- out of this card's
+#: scope (no new provider call; TC-023's M8 is not wired to a real call yet either).
+CANARY_OPERATORS: tuple[str, ...] = ("duplicate_paragraph",)
+
+
+def _canary_source(inputs: SealInputs, readme: str) -> SourceCandidate:
+    """A minimal ``SourceCandidate`` good enough for ``CANARY_OPERATORS``: every field the
+    ``duplicate_paragraph`` operator and ``duplicate_paragraph_rule`` actually read (``readme``)
+    is real; the rest (``plan``/``units``/``dispositions``/``tree_paths``/``tasks``) are empty
+    placeholders no canary operator in this set touches."""
+    return SourceCandidate(
+        name=f"{inputs.entry.repository}@{inputs.source_revision}",
+        entry=inputs.entry,
+        repository=inputs.entry.repository,
+        ecosystem=inputs.entry.ecosystem,
+        readme=readme,
+        original=readme,
+        facts=inputs.facts,
+        plan={},
+        units={},
+        dispositions={},
+        validation={},
+        tree_paths=(),
+        tasks=(),
+        scratch=inputs.out_dir,
+    )
+
+
+def _canary_caught(operator: str, mutated_readme: str) -> bool:
+    if operator == "duplicate_paragraph":
+        return bool(duplicate_paragraph_rule(mutated_readme))
+    raise SealError(f"seal: no canary detector registered for operator {operator!r}")
+
+
+def candidate_canaries(inputs: SealInputs, readme: str) -> dict[str, bool]:
+    """Per-candidate canary ids and outcomes (TC-024 part d): for every operator in
+    ``CANARY_OPERATORS`` this candidate's own clean README admits a mutation for, confirm the
+    deterministic rule that owns its defect class still rejects the mutated text, and record
+    ``{operator: caught}``. An operator the clean README admits no mutation for (e.g. no prose
+    paragraph reaches the 120-character threshold) is left OUT of the result entirely -- never a
+    silently vacuous ``True``: a caller (a future acceptance-record builder, TC-013's
+    ``AcceptanceRecord.canaries``) reads a missing id as "not run", not "caught"."""
+    source = _canary_source(inputs, readme)
+    outcomes: dict[str, bool] = {}
+    for name in CANARY_OPERATORS:
+        mutation = OPERATORS[name](source)
+        if mutation is None:
+            continue
+        outcomes[name] = _canary_caught(name, mutation.readme)
+    return outcomes
+
+
 def _manifest_header(inputs: SealInputs, existing: Mapping[str, Any] | None) -> dict[str, Any]:
     """The manifest's version (and lane). A first seal writes the current layout, which names its
     lane. A bundle already sealed in layout v1 keeps writing layout v1 (no ``lane`` key; it is Lane
@@ -453,6 +520,9 @@ def _write_bundle(
         "ledger_totals": ledger_totals(
             parse_records(staged[LEDGER_BUNDLE_FILENAME].decode("utf-8"), LEDGER_BUNDLE_FILENAME)
         ),
+        # Per-candidate canaries (TC-024 part d): computed from exactly the content being staged
+        # now, so this is the content these outcomes actually describe -- not a cross-run guess.
+        "canaries": candidate_canaries(inputs, staged["README.md"].decode("utf-8", errors="replace")),
         **(lane_l_manifest_summary(staged) if inputs.lane == LANE_L else {}),
         **dict(extra or {}),
     }

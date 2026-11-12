@@ -46,6 +46,12 @@ class Refusal(StrEnum):
     # The reviewer's calibration status (repo_presenter.readme.review.calibration_status): an ACCEPT
     # of a reviewer that has not passed its calibration gate is not a veto anyone measured.
     REVIEW_UNCALIBRATED = "review_uncalibrated"
+    # The acceptance contract (repo_presenter.acceptance.record), wired into propose.effect gate 3b
+    # TC-013: a candidate that has not reached a PUBLISHABLE_STATES classification - the
+    # certificate chain, its own mechanism verdicts, its canaries and an audited, attested record
+    # all agreeing - is not eligible for a pull request, no matter what the reviewer's own verdict
+    # or calibration status says.
+    ACCEPTANCE_NOT_CERTIFIED = "acceptance_not_certified"
 
 
 class WriteRefusedError(Exception):

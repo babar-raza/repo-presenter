@@ -1,0 +1,132 @@
+id: TC-022c
+gate: GATE5_DELIVERY_PROGRAM
+track: acceptance-calibration
+executor: worker
+purpose: >
+  Define, as auditable CODE (not a hand-typed JSON file -- data/** is denied to every worker
+  card; the supervisor runs your code afterward to emit the real committed file), the content of
+  the mechanism-class responsibility matrix that `data/acceptance_responsibility.json` must hold.
+  depends_on: []. Self-contained context follows; you never read
+  docs/DELIVERY_PLAN_2026-11-07.md or docs/design/2026-11-06-acceptance-redesign.md directly, but
+  this card transcribes the one table from the latter that matters, in full, below.
+
+  Why this matters and must not be guessed loosely: `src/repo_presenter/acceptance/record.py`'s
+  `load_certificates()` reads `data/acceptance_responsibility.json`'s `mechanism_classes` (a flat
+  list of strings) as the exact set of mechanism-class certificates a candidate must have, ALL
+  PASSED, before it can reach `provisionally-accepted`. A matrix that is too narrow lets a
+  candidate pass without every mechanism that owns a real defect class having certified recall on
+  it -- a false acceptance, exactly what owner rulings R10/R16 exist to prevent. A matrix that is
+  wrong in the other direction (requiring a mechanism no card actually measures, e.g. "M9") makes
+  `provisionally-accepted` permanently unreachable. Get this from the design table below, not from
+  intuition.
+
+  The design's own defect-class-to-mechanism table (docs/design/2026-11-06-acceptance-redesign.md
+  section 2.1, reproduced here in full so you do not need to read that file):
+
+  | Defect class | Primary mechanism | Secondary |
+  |---|---|---|
+  | D1 stale revision/facts | M1 | -- |
+  | D2 wrong version/package/install | M4 | M2 |
+  | D3 broken link | M4 | -- |
+  | D4 example fails | M3 | M2 |
+  | D5 false checkable claim (mechanical) | M2 | M8 never |
+  | D6 ungrounded generated claim | M2 | -- |
+  | D7 true claim the facts miss | none may reject it (owned by the facts extractor, not an
+    acceptance mechanism -- this is NOT a mechanism_classes entry) | -- |
+  | D8 unverifiable maintainer knowledge | M5 | M2 |
+  | D9 semantic description mismatch | M9 (generated text is prevented by construction; see note
+    below) | -- |
+  | D10 content loss/drop | M5 | M7 |
+  | D11 duplicate content | M6 | -- |
+  | D12 form/attribution leak/naming | M6 | -- |
+  | D13 below benchmark | M7 | M5 |
+  | D14 promotional/generic prose | M8 | -- |
+  | D15 incoherent or less usable than benchmark | M8 (pairwise) | M9 |
+  | D16 (Lane L only) unjustified/non-minimal edit | M10 | -- |
+
+  `calibration_harness.py` (TC-022b, already accepted) already fixes
+  `MECHANISMS = ("M1","M2","M3","M4","M5","M6","M7","M10")` as the set it measures -- M8 and M9
+  are deliberately excluded from that tuple because they are scored by separate cards (TC-023 for
+  M8, TC-014/M9 for the independent audit, which gates `independently-accepted` via a separate
+  `audit_passed`/`attested` field, never through the certificate-matrix path `complete` checks).
+  From the table above, every mechanism that owns at least one defect class AS A PRIMARY, MINUS
+  M9 (audit-gated separately) and MINUS the "none" row (D7, not a mechanism), is: M1, M2, M3, M4,
+  M5, M6, M7, M8, M10. (D9's listed primary is M9 per the table's own worked-through fallback
+  text -- "generated text: prevented by construction... Inherited text: M8-S" -- so D9's real
+  owning mechanism for calibration purposes is M8, not M9; your module's docstring must explain
+  this exact reasoning, do not silently drop or silently keep D9->M9.)
+
+  Build this as a frozen, documented Python structure so it is reviewable and testable, not a
+  hand-typed JSON blob nobody checks: a `DEFECT_CLASS_OWNERS` mapping (defect-class id ->
+  (primary_mechanism, secondary_mechanism_or_None)), a derived `REQUIRED_MECHANISM_CLASSES`
+  (the exact sorted tuple of mechanism ids that are any defect class's primary owner, per the
+  reasoning above), and a `build_responsibility_document()` function returning the exact dict
+  shape `record.py.load_certificates()` reads: `{"schema": "acceptance-responsibility/1",
+  "mechanism_classes": [...]}` (sorted, deterministic). Also write
+  `responsibility_matches_calibration_harness()` (or an equivalent test), asserting
+  `REQUIRED_MECHANISM_CLASSES` is a SUBSET of `calibration_harness.MECHANISMS` union `{"M8"}` --
+  i.e. this module can never require a mechanism that neither the harness nor TC-023's M8 contract
+  actually measures. If this assertion would fail given the real `calibration_harness.MECHANISMS`
+  tuple, that is a real finding to report in closeout, not something to silently work around by
+  loosening your own module.
+depends_on: []
+write_paths:
+  - src/repo_presenter/acceptance/responsibility.py
+  - tests/acceptance/test_responsibility.py
+satisfies:
+  - REQ-CALIB-003
+source_refs:
+  - file: src/repo_presenter/acceptance/record.py
+    anchor: "load_certificates"
+  - file: src/repo_presenter/acceptance/calibration_harness.py
+    anchor: "MECHANISMS"
+inputs: []
+actions:
+  - "Write src/repo_presenter/acceptance/responsibility.py: DEFECT_CLASS_OWNERS (D1-D16 ->
+     (primary, secondary)), REQUIRED_MECHANISM_CLASSES (derived, sorted tuple of primaries, per
+     the D7/D9/M9 reasoning in this card's purpose), and build_responsibility_document() ->
+     {\"schema\": \"acceptance-responsibility/1\", \"mechanism_classes\": sorted(list(...))}."
+  - "Write tests/acceptance/test_responsibility.py: assert every one of D1-D16 is present in
+     DEFECT_CLASS_OWNERS with exactly the primary/secondary this card's table states; assert D7 is
+     NOT present (it owns no mechanism); assert REQUIRED_MECHANISM_CLASSES contains M1-M8 and M10
+     and does NOT contain M9; assert build_responsibility_document()'s output round-trips through
+     json.dumps/json.loads unchanged and is sorted/deterministic across two calls; assert
+     REQUIRED_MECHANISM_CLASSES minus {\"M8\"} is a subset of
+     repo_presenter.acceptance.calibration_harness.MECHANISMS."
+checks:
+  - command: |-
+      python -m pytest tests/acceptance/test_responsibility.py -q
+    expect: exit 0
+    timeout_seconds: 120
+    proves:
+      - REQ-CALIB-003
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -X utf8 -c "import pathlib; p = pathlib.Path('src/repo_presenter/acceptance/responsibility.py'); t = p.read_text(encoding='utf-8'); q = chr(34); old = q + 'D14' + q + ': (' + q + 'M6' + q; new = q + 'D14' + q + ': (' + q + 'M8' + q; t2 = t.replace(old, new); p.write_text(t2, encoding='utf-8')"
+  rationale: >
+    2026-11-09 correction (TC-026, the M8 rung-(c) fallback): D14's real owning mechanism was
+    reassigned from M8 to M6 that day, for real, documented reasons (R26) -- the ORIGINAL version
+    of this mutation (M8 -> M6) therefore no longer changes anything real, since the file already
+    reads M6; it would have silently stopped matching after that legitimate change, exactly the
+    "textual mutation that silently stops matching after a refactor" failure ops/SUPERVISOR.md
+    warns against. This version reverts the CURRENT real M6 back to the pre-rung-(c) M8, which
+    must make the test asserting D14's exact table entry fail. If D14 is not represented with
+    that exact literal in your module (your own formatting differs), replace this mutation in the
+    same commit with one that edits whichever literal your file actually uses for D14's tuple
+    entry, so the falsifier still targets a real table entry rather than doing nothing observable.
+evidence:
+  - src/repo_presenter/acceptance/responsibility.py
+  - tests/acceptance/test_responsibility.py
+closeout:
+  - "This card does not write data/acceptance_responsibility.json itself (GLOBAL_DENY). The
+     supervisor calls build_responsibility_document() directly once this card is accepted and
+     commits the real file as a separate, supervisor-owned action."
+  - "If your own REQUIRED_MECHANISM_CLASSES/calibration_harness.MECHANISMS subset assertion does
+     not hold given the real code, report the exact mismatch in closeout rather than editing
+     calibration_harness.py (out of this card's write_paths) or silently narrowing your own
+     module's correctness."
+recovery: "Revert src/repo_presenter/acceptance/responsibility.py and its test; no committed data
+  file exists yet for this card to have touched."

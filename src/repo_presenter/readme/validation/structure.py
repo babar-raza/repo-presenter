@@ -46,7 +46,7 @@ from repo_presenter.readme.correction.text_gate import narration_patterns
 from repo_presenter.readme.evidence.facts.assets import CI_BADGE_FACT_ID
 from repo_presenter.readme.evidence.facts.product_pages import banner_target
 from repo_presenter.readme.validation.failures import Candidate, Failure
-from repo_presenter.readme.validation.rules import badge_problems
+from repo_presenter.readme.validation.rules import badge_problems, effective_visible_lines_budget
 from repo_presenter.readme.validation.text import (
     fence_body,
     fences,
@@ -68,6 +68,9 @@ BADGE_ROW = re.compile(rf"{BADGE_TOKEN}(?: {BADGE_TOKEN})*")
 GLANCE_FENCE = re.compile(r"```mermaid\n.*?\n```", re.DOTALL)
 DETAILS_OPEN = re.compile(r"(?i)<details\b")
 DETAILS_CLOSE = re.compile(r"(?i)</details\s*>")
+#: An inline code span is inert: a ``<details>`` shown in backticks (a DOM-interface table row,
+#: ``HTMLDetailsElement | HTML `<details>` element``) neither opens nor closes a collapsed block.
+_INLINE_CODE = re.compile(r"(`+)(?:(?!\1).)+?\1")
 RENDERER_OWNER = "D"  # shell sections the renderer owns, not the authoring stage
 NAME_SEPARATOR = r"[\s._-]*"
 # The words that make a no-space spelling a technical identifier rather than the product name.
@@ -83,6 +86,43 @@ IDENTIFIER_CONTINUES = re.compile(r"^(?:\.[A-Za-z_]|[/\\]|::)")
 IDENTIFIER_CONTINUED = re.compile(r"(?:[A-Za-z0-9_]\.|[/\\]|::)$")
 DOTTED_SEGMENT = re.compile(r"^\.([A-Za-z_][A-Za-z0-9_]*)")
 
+
+
+#: The headings the renderer's own type tables sit under (``renderer._api_reference``): the Core
+#: API classes table and the Enumerations table. They are the only tables BC-07's row count judges.
+_RENDERER_TABLE_HEADINGS = ("### Core API", "#### Enumerations")
+_TYPE_ROW = re.compile(r"^\| `([^`]+)` \|")
+
+
+def renderer_api_rows(api_reference: str) -> list[str]:
+    """The type names listed in the tables the renderer itself emits for the API Reference section
+    (the table directly under ``### Core API`` and under ``#### Enumerations``), in order.
+
+    BC-07 compares this count with the verified public types. It used to count every first-cell row
+    of the whole section, which made it impossible to also keep the maintainers' own API member
+    tables the published README prints (R2: the published README is the floor; the restore of a
+    lost maintainers' table failed BC-07 -- Cells TypeScript 139 rows/31 types, Cpp 357/195, Java
+    215/183, HTML 504/303, Note 72/37 -- although every row of the renderer's own table was right).
+    Preserved maintainers' content is placed verbatim after the renderer's tables and is judged by
+    its own checks (BC-05/BC-14/BC-17), not counted here."""
+    names: list[str] = []
+    lines = api_reference.splitlines()
+    index = 0
+    while index < len(lines):
+        if lines[index].strip() in _RENDERER_TABLE_HEADINGS:
+            index += 1
+            while index < len(lines) and not lines[index].lstrip().startswith("|"):
+                if lines[index].strip():
+                    break  # prose, not a table: the heading holds no table
+                index += 1
+            while index < len(lines) and lines[index].lstrip().startswith("|"):
+                match = _TYPE_ROW.match(lines[index])
+                if match is not None:
+                    names.append(match.group(1))
+                index += 1
+            continue
+        index += 1
+    return names
 
 def _heading_case_failures(
     line: str, text: str, forms: dict[str, str], section: str | None
@@ -129,9 +169,10 @@ def _collapsed_section_failures(readme: str) -> list[Failure]:
                         f"visible section {heading!r} renders inside a collapsed <details> block",
                     )
                 )
+        markup = _INLINE_CODE.sub("", line)
         depth = max(
             0,
-            depth + len(DETAILS_OPEN.findall(line)) - len(DETAILS_CLOSE.findall(line)),
+            depth + len(DETAILS_OPEN.findall(markup)) - len(DETAILS_CLOSE.findall(markup)),
         )
     return failures
 
@@ -145,6 +186,15 @@ def _fence_and_spacing_failures(candidate: Candidate) -> list[Failure]:
         for placement in placements_of(candidate)
         if placement.outcome == "placed" and placement.unit_id.endswith(".code_block")
     }
+    # A fence NESTED in a kept maintainers' list or paragraph (Slides Java: a bare fence under a
+    # list item) is the upstream's own text, printed as written; it is exempt like a code_block unit.
+    for placement in placements_of(candidate):
+        if placement.outcome == "placed" and placement.unit_id.startswith("inherited_unit:"):
+            verbatim_bodies.update(
+                token.content.strip()
+                for token in MarkdownIt("commonmark").parse(placement.text)
+                if token.type == "fence" and token.content.strip()
+            )
     failures: list[Failure] = []
     for token in MarkdownIt("commonmark").parse(candidate.readme):
         if token.type != "fence" or token.content.strip() in verbatim_bodies:
@@ -305,9 +355,13 @@ def structure_failures(candidate: Candidate) -> list[Failure]:
     pair = banner_target(candidate.facts.facts)
     if pair is not None:
         banner = f"[![{name}]({pair[0].value})]({pair[1].value})"
+    # The badge row sits in the opening, above the first section heading. A linked-image line a kept
+    # maintainers' unit prints lower down (a screenshot or preview under a sub-heading) is body
+    # content, not a second badge row (Aspose.PDF FOSS for Go: "Feature showcase preview").
+    first_section = next((i for i, line in enumerate(outside) if line.startswith("## ")), len(outside))
     badge_rows = [
         line
-        for line in outside
+        for line in outside[:first_section]
         if BADGE_ROW.fullmatch(line.strip()) and line.strip() != banner
     ]
     if len(badge_rows) != 1:
@@ -364,11 +418,7 @@ def structure_failures(candidate: Candidate) -> list[Failure]:
                     "canonical defining location",
                 )
             )
-    rows = re.findall(
-        r"^\| `([^`]+)` \|",
-        section_texts(candidate.readme).get("api_reference", ""),
-        re.MULTILINE,
-    )
+    rows = renderer_api_rows(section_texts(candidate.readme).get("api_reference", ""))
     if rows and len(rows) != len(types):
         failures.append(
             Failure(
@@ -514,12 +564,12 @@ def structure_failures(candidate: Candidate) -> list[Failure]:
     visible, total = line_counts(candidate.readme)
     policy = candidate.policy
     # Collapsed content is unbounded; only visible lines count against the budget.
-    if visible > policy.visible_lines_budget:
+    budget = effective_visible_lines_budget(policy, candidate.benchmark_readme)
+    if visible > budget:
         failures.append(
             Failure(
                 "PLANNING",
-                f"{visible} visible lines of {total} exceed the visible budget "
-                f"{policy.visible_lines_budget}",
+                f"{visible} visible lines of {total} exceed the visible budget {budget}",
             )
         )
     return failures
