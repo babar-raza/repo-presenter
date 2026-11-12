@@ -508,6 +508,14 @@ def _fernet_key(key: bytes) -> bytes:
     return base64.urlsafe_b64encode(key)
 
 
+def key_manifest_by_case_id(manifest):
+    """The seeder writes each entry as ``{"case_id": <hash>, "candidate_id": "repo@lane@rev", ...}``
+    but auditors, the case index and the findings all name a candidate by its ``case_id``. Scoring
+    joins findings to manifest entries on ``candidate_id``, so re-key every entry to its case id
+    first; without this a real run scores 0 recall and no clean control can ever be flagged."""
+    return [{**entry, "candidate_id": entry.get("case_id", entry["candidate_id"])} for entry in manifest]
+
+
 def encrypt_seed_manifest(
     manifest: Sequence[Mapping[str, Any]] | Mapping[str, Any], key: bytes
 ) -> bytes:

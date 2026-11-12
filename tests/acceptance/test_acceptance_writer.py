@@ -152,3 +152,33 @@ def test_the_real_mode_refuses_to_run_without_the_audit_key(tmp_path, monkeypatc
         recertify=lambda: {},
     )
     assert code == 1 and not (tmp_path / "o.json").exists()
+
+
+def test_a_manifest_in_the_seeders_real_shape_is_joined_to_findings_by_case_id(tmp_path):
+    """The seeder writes {case_id: <hash>, candidate_id: 'repo@lane@rev', ...}; auditors name a
+    candidate by case_id. Joining on the manifest's own candidate_id scored recall 0.000 on the
+    first real run (2026-11-12), so the writer must re-key by case_id before scoring."""
+    manifest, index, findings = [], [], []
+    for i in range(10):
+        case_id, repo = f"seeded{i:02d}", f"org/repo-s{i}"
+        manifest.append({"case_id": case_id, "candidate_id": f"{repo}@R@rev{i}", "shape": SEEDED_SHAPE, "line": 5 + i})
+        index.append({"case_id": case_id, "repository": repo, "lane": "R", "revision": f"rev{i}"})
+        findings.append({"candidate_id": case_id, "claim": "x", "verdict": "false", "path": f"{case_id}.md", "line": 5 + i})
+    for i in range(10):
+        case_id, repo = f"clean{i:02d}", f"org/repo-c{i}"
+        manifest.append({"case_id": case_id, "candidate_id": f"{repo}@R@rev{i}", "shape": CLEAN_SHAPE})
+        index.append({"case_id": case_id, "repository": repo, "lane": "R", "revision": f"rev{i}"})
+    paths = {n: tmp_path / f"{n}.json" for n in ("manifest", "findings", "index", "out")}
+    paths["manifest"].write_text(json.dumps(manifest))
+    paths["findings"].write_text(json.dumps(findings))
+    paths["index"].write_text(json.dumps(index))
+    recert = {(e["repository"], e["lane"]): (e["revision"], True) for e in index}
+    rc = writer.main(
+        ["--seed-run-id", "9", "--manifest", str(paths["manifest"]), "--findings", str(paths["findings"]),
+         "--case-index", str(paths["index"]), "--out", str(paths["out"]), "--dry-run"],
+        recertify=lambda: recert,
+    )
+    doc = json.loads(paths["out"].read_text())
+    assert rc == 0 and doc["gates"]["seeded_recall"]["matched"] == 10
+    assert doc["batch_passed"] is True
+    assert {r["case_id"] for r in doc["records"] if r["audit_passed"]} == {f"clean{i:02d}" for i in range(10)}

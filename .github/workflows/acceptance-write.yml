@@ -4,7 +4,7 @@ name: acceptance-write
 # M9 audit. Consumes a prior audit-seed.yml run (encrypted manifest + case index) and the
 # COMMITTED, frozen auditor findings, applies the audit gates (scripts/run_acceptance_writer.py),
 # writes acceptance-records-<seed_run_id>.json, attests that file (Sigstore, signer = this
-# workflow on main) and commits it to the bot branch acceptance-record/run-<seed_run_id>.
+# workflow on main) and commits it to the bot branch acceptance-record/run-<seed_run_id>-<writer run id> (one branch per writer run, so a corrected re-run never collides with an earlier one; a failed audit's record stays and counts for nothing).
 # ops/checks/portfolio_delivery_count.py counts a record only if `gh attestation verify` ties the
 # file to this exact workflow on refs/heads/main, so a hand-pushed file counts for nothing.
 
@@ -94,8 +94,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b "acceptance-record/run-${{ inputs.seed_run_id }}"
+          git checkout -b "acceptance-record/run-${{ inputs.seed_run_id }}-${{ github.run_id }}"
           cp "$RUNNER_TEMP/acc/out/acceptance-records-${{ inputs.seed_run_id }}.json" .
           git add -f "acceptance-records-${{ inputs.seed_run_id }}.json"
           git commit -m "Acceptance records for seed run ${{ inputs.seed_run_id }} (attested)"
-          git push origin "acceptance-record/run-${{ inputs.seed_run_id }}"
+          git push origin "acceptance-record/run-${{ inputs.seed_run_id }}-${{ github.run_id }}"

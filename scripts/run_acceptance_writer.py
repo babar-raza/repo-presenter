@@ -33,7 +33,11 @@ from repo_presenter.acceptance.audit.score import (  # noqa: E402
     false_flag_rate,
     seeded_recall,
 )
-from repo_presenter.acceptance.audit.seed import CLEAN_SHAPE, decrypt_seed_manifest  # noqa: E402
+from repo_presenter.acceptance.audit.seed import (  # noqa: E402
+    CLEAN_SHAPE,
+    decrypt_seed_manifest,
+    key_manifest_by_case_id,
+)
 
 SCHEMA = "acceptance-records/1"
 SEEDED_RECALL_MIN = 0.90
@@ -157,6 +161,7 @@ def main(argv: Sequence[str] | None = None, *, recertify: Callable[[], Recertifi
             print("FAIL: AUDIT_SEED_KEY is not set", file=sys.stderr)
             return 1
         manifest = decrypt_seed_manifest(args.manifest.read_bytes(), bytes.fromhex(key_hex))
+    manifest = key_manifest_by_case_id(manifest)
     findings = json.loads(args.findings.read_text(encoding="utf-8"))
     case_index = json.loads(args.case_index.read_text(encoding="utf-8"))
     recertified = (recertify or (lambda: recertified_from_remote(args.remote)))()

@@ -31,7 +31,11 @@ from repo_presenter.acceptance.audit.score import (  # noqa: E402
     false_flag_rate,
     seeded_recall,
 )
-from repo_presenter.acceptance.audit.seed import CLEAN_SHAPE, decrypt_seed_manifest  # noqa: E402
+from repo_presenter.acceptance.audit.seed import (  # noqa: E402
+    CLEAN_SHAPE,
+    decrypt_seed_manifest,
+    key_manifest_by_case_id,
+)
 
 
 def load_findings(path: Path) -> list[Finding]:
@@ -77,7 +81,7 @@ def main() -> int:
         return 1
     key = bytes.fromhex(key_hex)
 
-    manifest = decrypt_seed_manifest(args.manifest.read_bytes(), key)
+    manifest = key_manifest_by_case_id(decrypt_seed_manifest(args.manifest.read_bytes(), key))
     findings = load_findings(args.findings)
     result = score(manifest, findings)
     args.out.write_text(json.dumps(result, indent=2), encoding="utf-8")
