@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from typing import Any
 import os
 import sys
 from pathlib import Path
@@ -67,18 +68,75 @@ def select_candidates(remote: str = "origin", scratch: Path | None = None):
     return by_lane
 
 
-def build_seed_plan(by_lane: dict[str, list], salt: int = 0) -> tuple[list[dict], list[dict]]:
+def is_noop(lane: str, seal: Any) -> bool:
+    """A Lane L seal whose README equals its own recorded original: R16 says it can never be
+    accepted, so a control slot spent on it is wasted."""
+    files = getattr(seal, "files", None) or {}
+    new, old = files.get("README.md"), files.get("README.original.md")
+    return lane == "L" and bool(new) and bool(old) and new.get("sha256") == old.get("sha256")
+
+
+def already_accepted(remote: str = "origin") -> set[tuple[str, str, str]]:
+    """(repository, lane, revision) of every clean control any acceptance-record branch marks
+    audit-passed. Public data; only used to avoid spending a control slot on them again."""
+    import subprocess
+
+    found: set[tuple[str, str, str]] = set()
+    listed = subprocess.run(["git", "ls-remote", "--heads", remote, "refs/heads/acceptance-record/*"],
+                            capture_output=True, text=True, check=False).stdout
+    branches = [ln.split("refs/heads/", 1)[1] for ln in listed.splitlines() if "refs/heads/" in ln]
+    if branches:
+        subprocess.run(["git", "fetch", "-q", remote, *[f"+refs/heads/{b}:refs/remotes/{remote}/{b}" for b in branches]],
+                       capture_output=True, check=False)
+    for branch in branches:
+        names = subprocess.run(["git", "ls-tree", "--name-only", f"{remote}/{branch}"], capture_output=True, text=True, check=False).stdout
+        for name in names.split():
+            if not (name.startswith("acceptance-records-") and name.endswith(".json")):
+                continue
+            blob = subprocess.run(["git", "show", f"{remote}/{branch}:{name}"], capture_output=True, check=False).stdout
+            try:
+                doc = json.loads(blob)
+                if doc.get("dry_run") is not False:
+                    continue
+                for r in doc["records"]:
+                    if r.get("role") == "clean_control" and r.get("audit_passed") is True:
+                        found.add((str(r["repository"]), str(r["lane"]), str(r["revision"])))
+            except (ValueError, KeyError, TypeError):
+                continue
+    return found
+
+
+def build_seed_plan(
+    by_lane: dict[str, list], salt: int = 0, accepted: set[tuple[str, str, str]] = frozenset()
+) -> tuple[list[dict], list[dict]]:
     """(case_index_entries, manifest_records) -- deterministic, ordered, so a dry run and the
-    real hosted run select identically given the same seal history."""
+    real hosted run select identically given the same seal history.
+
+    Only a clean control can be accepted, so control slots go to candidates that still can be: a
+    no-op Lane L seal (R16) or one already accepted is seeded first, and the remaining candidates
+    are controls, except that at least MIN_PER_LANE per lane stay seeded (rotated by ``salt`` so a
+    burned batch is not repeated)."""
     case_index: list[dict] = []
     manifest: list[dict] = []
     shape_cycle = list(BLIND_SHAPES)
     for lane, entries in sorted(by_lane.items()):
         shape_i = salt  # a burned batch's seeds must not repeat: rotate shapes and controls by salt
+        unfit = {
+            i for i, (repository, seal) in enumerate(entries)
+            if is_noop(lane, seal) or (repository, lane, seal.revision) in accepted
+        }
+        fit = [i for i in range(len(entries)) if i not in unfit]
+        need_seed = max(0, MIN_PER_LANE - len(unfit))
+        if need_seed and fit:
+            rot = salt % len(fit)
+            fit = fit[rot:] + fit[:rot]
+        controls = set(fit[need_seed:]) if (unfit or need_seed < len(fit)) else set()
+        if not unfit and not accepted:
+            controls = {i for i in range(len(entries)) if (i + salt) % CLEAN_EVERY == 0}
         for i, (repository, seal) in enumerate(entries):
             readme_text = seal.readme.decode("utf-8", errors="replace")
             case_id = hashlib.sha256(f"{repository}|{lane}|{seal.revision}".encode()).hexdigest()[:16]
-            if (i + salt) % CLEAN_EVERY == 0:
+            if i in controls:
                 result = clean_control(f"{repository}@{lane}@{seal.revision}", readme_text)
             else:
                 shape = shape_cycle[shape_i % len(shape_cycle)]
@@ -111,7 +169,7 @@ def main() -> int:
             print(f"WARNING: lane {lane} has only {len(entries)} sealed candidates "
                   f"(design minimum {MIN_PER_LANE})", file=sys.stderr)
 
-    case_index, manifest = build_seed_plan(by_lane, args.salt)
+    case_index, manifest = build_seed_plan(by_lane, args.salt, already_accepted(args.remote))
     seeded_count = sum(1 for m in manifest if m["shape"] != CLEAN_SHAPE)
     print(f"selected {sum(len(v) for v in by_lane.values())} candidates "
           f"({len(by_lane.get('L', []))} L, {len(by_lane.get('R', []))} R); "
