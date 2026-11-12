@@ -2,8 +2,8 @@
 ===== CLEAN RUN 1 =====
 $ python -m pytest tests/readme/repair/test_restore_units.py tests/test_recertify.py -q
 --- stdout ---
-............................................                             [100%]
-44 passed in 28.93s
+.................................................                        [100%]
+49 passed in 21.14s
 
 --- stderr ---
 
@@ -11,8 +11,8 @@ $ python -m pytest tests/readme/repair/test_restore_units.py tests/test_recertif
 ===== CLEAN RUN 2 =====
 $ python -m pytest tests/readme/repair/test_restore_units.py tests/test_recertify.py -q
 --- stdout ---
-............................................                             [100%]
-44 passed in 26.07s
+.................................................                        [100%]
+49 passed in 18.01s
 
 --- stderr ---
 
@@ -21,7 +21,7 @@ $ python -m pytest tests/readme/repair/test_restore_units.py tests/test_recertif
 mutated: M src/repo_presenter/readme/repair/restore_units.py
 $ python -m pytest tests/readme/repair/test_restore_units.py tests/test_recertify.py -q
 --- stdout ---
-.FF.F.F.FF........F....F...................F                             [100%]
+.FF.F.F.FF........F....FFF.FF...................F                        [100%]
 ================================== FAILURES ===================================
 _ test_a_deferred_unit_with_only_supported_facts_is_kept_verbatim_in_a_section_the_plan_includes _
 
@@ -156,10 +156,71 @@ E         Right contains one more item: 'inherited_unit:010.list'
 E         Use -v to get more diff
 
 tests\readme\repair\test_restore_units.py:505: AssertionError
+_ test_a_unit_whose_restored_text_carries_a_dangling_pointer_is_skipped_and_recorded _
+
+    def test_a_unit_whose_restored_text_carries_a_dangling_pointer_is_skipped_and_recorded() -> None:
+        original = _pointer_dispositions()
+        skipped: list[dict[str, str]] = []
+>       new, changes = restore_lost_units(
+            original, _pointer_facts(), [_POINTER_UNIT], HOLDABLE, INCLUDED, skipped=skipped
+        )
+E       TypeError: <lambda>() got an unexpected keyword argument 'skipped'
+
+tests\readme\repair\test_restore_units.py:549: TypeError
+_____ test_negative_control_the_same_unit_without_the_pointer_is_restored _____
+
+    def test_negative_control_the_same_unit_without_the_pointer_is_restored() -> None:
+        facts = FactsDocument(
+            "r", "0" * 40,
+            tuple(
+                f if f.id != _POINTER_UNIT else _fact(_POINTER_UNIT, "inherited_unit", "Encryption is supported.", section="X > Features")
+                for f in _pointer_facts().facts
+            ),
+        )
+        skipped: list[dict[str, str]] = []
+>       _, changes = restore_lost_units(
+            _pointer_dispositions(), facts, [_POINTER_UNIT], HOLDABLE, INCLUDED, skipped=skipped
+        )
+E       TypeError: <lambda>() got an unexpected keyword argument 'skipped'
+
+tests\readme\repair\test_restore_units.py:566: TypeError
+____ test_restoring_a_bc03_exempt_rewrite_keeps_the_fence_exemption_marker ____
+
+    def test_restoring_a_bc03_exempt_rewrite_keeps_the_fence_exemption_marker() -> None:
+        from repo_presenter.readme.reconciliation.dispositions import RECOVERED_FENCE_RATIONALE
+    
+        facts = _rewrite_facts()
+        original = _rewrite_dispositions(RECOVERED_FENCE_RATIONALE + "Maintainer list.")
+        new, changes = restore_lost_units(
+            original, facts, [_REWRITE_UNIT], ("scope_limitations",), ("scope_limitations",)
+        )
+>       assert [c["unit_id"] for c in changes] == [_REWRITE_UNIT]
+E       AssertionError: assert [] == ['inherited_unit:102.list']
+E         
+E         Right contains one more item: 'inherited_unit:102.list'
+E         Use -v to get more diff
+
+tests\readme\repair\test_restore_units.py:626: AssertionError
+____ test_restoring_a_rewrite_without_that_marker_gets_the_plain_rationale ____
+
+    def test_restoring_a_rewrite_without_that_marker_gets_the_plain_rationale() -> None:
+        facts = _rewrite_facts()
+        original = _rewrite_dispositions("Restated for clarity, no example dropped.")
+        new, changes = restore_lost_units(
+            original, facts, [_REWRITE_UNIT], ("scope_limitations",), ("scope_limitations",)
+        )
+        entry = next(e for e in new["dispositions"] if e["unit_id"] == _REWRITE_UNIT)
+        assert not entry["rationale"].startswith("Restated: it embeds an unverified")
+>       assert entry["rationale"].startswith("Kept as the maintainers wrote it")
+E       AssertionError: assert False
+E        +  where False = <built-in method startswith of str object at 0x000001F392DEF150>('Kept as the maintainers wrote it')
+E        +    where <built-in method startswith of str object at 0x000001F392DEF150> = 'Restated for clarity, no example dropped.'.startswith
+
+tests\readme\repair\test_restore_units.py:640: AssertionError
 _ test_restore_re_dispositions_a_unit_a_check_names_and_writes_a_verifying_seal _
 
-tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-1824/test_restore_re_dispositions_a0')
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023F4648FE70>
+tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-2436/test_restore_re_dispositions_a0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F393653700>
 no_provider = []
 
     def test_restore_re_dispositions_a_unit_a_check_names_and_writes_a_verifying_seal(
@@ -209,8 +270,12 @@ FAILED tests/readme/repair/test_restore_units.py::test_a_maintainers_api_table_i
 FAILED tests/readme/repair/test_restore_units.py::test_a_type_table_naming_something_the_public_surface_lacks_is_restored_without_that_row
 FAILED tests/readme/repair/test_restore_units.py::test_a_kept_paragraph_is_never_homed_in_api_reference_where_nothing_renders_it
 FAILED tests/readme/repair/test_restore_units.py::test_restoring_the_bc08_unit_returns_the_rewrite_to_verbatim_preserve
+FAILED tests/readme/repair/test_restore_units.py::test_a_unit_whose_restored_text_carries_a_dangling_pointer_is_skipped_and_recorded
+FAILED tests/readme/repair/test_restore_units.py::test_negative_control_the_same_unit_without_the_pointer_is_restored
+FAILED tests/readme/repair/test_restore_units.py::test_restoring_a_bc03_exempt_rewrite_keeps_the_fence_exemption_marker
+FAILED tests/readme/repair/test_restore_units.py::test_restoring_a_rewrite_without_that_marker_gets_the_plain_rationale
 FAILED tests/test_recertify.py::test_restore_re_dispositions_a_unit_a_check_names_and_writes_a_verifying_seal
-9 failed, 35 passed in 27.49s
+13 failed, 36 passed in 18.43s
 
 --- stderr ---
 

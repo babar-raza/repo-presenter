@@ -2,20 +2,22 @@
 ===== CLEAN RUN 1 =====
 $ python ops/checks/marker_check.py docs/RELEASE_CONTRACT_P1-P5.md "RELEASE_CONTRACT_ADOPTED_2026-11-04"
 --- stdout ---
-OK: docs/RELEASE_CONTRACT_P1-P5.md contains all 1 required marker(s)
+OK: docs\RELEASE_CONTRACT_P1-P5.md contains all 1 required marker(s)
 
 --- stderr ---
 
 $ python ops/checks/dashboard_matches_live.py
 --- stdout ---
-OK: project/state.yaml matches live portfolio_status.py (R=10, L=12)
+lane R: current version set 68277adca33b count=13; older sets (never summed): {'2e1cacfdb7dc': 9, '6a7bd5d82a1f': 10, '87b2c7a75a65': 2, 'b8a378160410': 6, 'be2bf5877633': 2, 'cc6ef23a13c6': 2}
+lane L: current version set ecb8295ff4a0 count=21; older sets (never summed): {'0bec38b2169f': 2, '23c0e51762e7': 18, '2a9afedecca4': 1, '376eb8b0a568': 5, '656bd52a83d9': 1, '72c71e9334a4': 4, '78b73646d86d': 19, 'ac7667df3a08': 10, 'd5ad089e72de': 19, 'e2195bcb029d': 11}
+OK: project/state.yaml matches live portfolio_status.py (R=13, L=20)
 
 --- stderr ---
 
 $ python -m pytest tests/ops/test_gate_guard_tc005.py -q
 --- stdout ---
 .                                                                        [100%]
-1 passed in 43.13s
+1 passed in 677.96s (0:11:17)
 
 --- stderr ---
 
@@ -23,65 +25,24 @@ $ python -m pytest tests/ops/test_gate_guard_tc005.py -q
 ===== CLEAN RUN 2 =====
 $ python ops/checks/marker_check.py docs/RELEASE_CONTRACT_P1-P5.md "RELEASE_CONTRACT_ADOPTED_2026-11-04"
 --- stdout ---
-OK: docs/RELEASE_CONTRACT_P1-P5.md contains all 1 required marker(s)
+OK: docs\RELEASE_CONTRACT_P1-P5.md contains all 1 required marker(s)
 
 --- stderr ---
 
 $ python ops/checks/dashboard_matches_live.py
 --- stdout ---
-OK: project/state.yaml matches live portfolio_status.py (R=10, L=12)
+lane R: current version set 68277adca33b count=13; older sets (never summed): {'2e1cacfdb7dc': 9, '6a7bd5d82a1f': 10, '87b2c7a75a65': 2, 'b8a378160410': 6, 'be2bf5877633': 2, 'cc6ef23a13c6': 2}
+lane L: current version set ecb8295ff4a0 count=21; older sets (never summed): {'0bec38b2169f': 2, '23c0e51762e7': 18, '2a9afedecca4': 1, '376eb8b0a568': 5, '656bd52a83d9': 1, '72c71e9334a4': 4, '78b73646d86d': 19, 'ac7667df3a08': 10, 'd5ad089e72de': 19, 'e2195bcb029d': 11}
+OK: project/state.yaml matches live portfolio_status.py (R=13, L=20)
 
 --- stderr ---
 
 $ python -m pytest tests/ops/test_gate_guard_tc005.py -q
 --- stdout ---
 .                                                                        [100%]
-1 passed in 41.30s
+1 passed in 738.82s (0:12:18)
 
 --- stderr ---
 
 
-===== NEGATIVE CONTROL (checks MUST now fail) =====
-mutated: M project/state.yaml
-$ python ops/checks/marker_check.py docs/RELEASE_CONTRACT_P1-P5.md "RELEASE_CONTRACT_ADOPTED_2026-11-04"
---- stdout ---
-OK: docs/RELEASE_CONTRACT_P1-P5.md contains all 1 required marker(s)
-
---- stderr ---
-
-$ python ops/checks/dashboard_matches_live.py
---- stdout ---
-FAIL: lane_r_accepted recorded=999 but live=10
-
---- stderr ---
-
-$ python -m pytest tests/ops/test_gate_guard_tc005.py -q
---- stdout ---
-F                                                                        [100%]
-=================================== FAILURES ===================================
-___________ test_release_contract_adopted_and_dashboard_matches_live ___________
-
-    def test_release_contract_adopted_and_dashboard_matches_live():
-        _check("ops/checks/marker_check.py", "docs/RELEASE_CONTRACT_P1-P5.md", "RELEASE_CONTRACT_ADOPTED_2026-11-04")
->       _check("ops/checks/dashboard_matches_live.py")
-
-tests/ops/test_gate_guard_tc005.py:17: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-args = ('ops/checks/dashboard_matches_live.py',)
-
-    def _check(*args):
-        r = subprocess.run([sys.executable, *args], cwd=ROOT, capture_output=True, text=True)
->       assert r.returncode == 0, r.stdout + r.stderr
-E       AssertionError: FAIL: lane_r_accepted recorded=999 but live=10
-E         
-E       assert 1 == 0
-E        +  where 1 = CompletedProcess(args=['/usr/local/bin/python', 'ops/checks/dashboard_matches_live.py'], returncode=1, stdout='FAIL: lane_r_accepted recorded=999 but live=10\n', stderr='').returncode
-
-tests/ops/test_gate_guard_tc005.py:12: AssertionError
-=========================== short test summary info ============================
-FAILED tests/ops/test_gate_guard_tc005.py::test_release_contract_adopted_and_dashboard_matches_live
-1 failed in 41.66s
-
---- stderr ---
-
+!! falsifier did not apply (mutate): command exited 0 but left the tree byte-identical - it mutated nothing. This is NOT a passing falsifier.

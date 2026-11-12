@@ -3,11 +3,11 @@
   "card": "TC-017b",
   "gate": "GATE5_DELIVERY_PROGRAM",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-07T18:35:08Z",
-  "base_rev": "f90d1baf787a57434e68af4de83863ff4e9e8697",
-  "head_rev": "4e63fc7d84f7a325c9b1843c516822e6ab3f90e9",
+  "generated_at": "2026-11-11T14:56:52Z",
+  "base_rev": "48509cc76c1c5081c0fe399af04e3ceea15cbb2d",
+  "head_rev": "01c1a9e3a9eb131ad89c8e4cc96424d1f37a67f5",
   "card_sha256": "5d363da005819926d1322d174327bc448cad362cb48894c916c8bc0a207367c2",
-  "checker_fileset_sha256": "b58b667dccf0860542f5795a700030db62d3ae5e05ea38d095fde5f359728f9e",
+  "checker_fileset_sha256": "87d07de1f92c2e005fab69cf27ff54878c87464460f4547d757bddd7f70057d9",
   "checker_fileset_scheme": "v3",
   "fingerprint": {
     "python": "3.13.15",
@@ -15,14 +15,7 @@
   },
   "scope": {
     "ok": true,
-    "changed_paths": [
-      "src/repo_presenter/readme/validation/claims.py",
-      "src/repo_presenter/readme/validation/line_provenance.py",
-      "src/repo_presenter/readme/validation/surface_claims.py",
-      "tests/readme/validation/test_claims_mechanical.py",
-      "tests/readme/validation/test_line_provenance.py",
-      "tests/readme/validation/test_surface_claims_probes.py"
-    ],
+    "changed_paths": [],
     "violations": [],
     "evaluated": true
   },
@@ -33,8 +26,8 @@
         {
           "command": "python -m pytest tests/readme/validation/test_line_provenance.py tests/readme/validation/test_claims_mechanical.py tests/readme/validation/test_surface_claims_probes.py tests/readme/validation/test_claims.py -q",
           "exit_code": 0,
-          "duration_s": 3.33,
-          "stdout_sha256": "ed84222012fef83779e1a92c69adfcb463f81afbc97fd1b81b6d3307fda57ede"
+          "duration_s": 3.538,
+          "stdout_sha256": "7fb5864058a414efea6d118017031d7e9023dad6993d996926537d62224291e8"
         }
       ],
       "all_passed": true
@@ -45,8 +38,8 @@
         {
           "command": "python -m pytest tests/readme/validation/test_line_provenance.py tests/readme/validation/test_claims_mechanical.py tests/readme/validation/test_surface_claims_probes.py tests/readme/validation/test_claims.py -q",
           "exit_code": 0,
-          "duration_s": 2.428,
-          "stdout_sha256": "6b851ffc55ddbeec4ed3b2e0253b358e8ddc09176a57527c31a5f5e6d12f8baa"
+          "duration_s": 2.518,
+          "stdout_sha256": "78644cebe862ff3ef38b22e653aab7942f2a9abe1c11ee01d3161058b583e701"
         }
       ],
       "all_passed": true

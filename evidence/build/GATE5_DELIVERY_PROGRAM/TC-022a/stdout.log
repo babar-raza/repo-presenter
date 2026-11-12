@@ -3,7 +3,7 @@
 $ python -m pytest tests/acceptance/test_registration.py -q
 --- stdout ---
 .................                                                        [100%]
-17 passed in 0.38s
+17 passed in 0.37s
 
 --- stderr ---
 
@@ -12,7 +12,7 @@ $ python -m pytest tests/acceptance/test_registration.py -q
 $ python -m pytest tests/acceptance/test_registration.py -q
 --- stdout ---
 .................                                                        [100%]
-17 passed in 0.29s
+17 passed in 0.28s
 
 --- stderr ---
 
@@ -116,12 +116,12 @@ _____________ test_real_build_reports_the_honest_zero_call_floor ______________
         assert registration.shortfall.met is False
         assert registration.shortfall.short_classes() == ["A", "C", "D", "E"]
     
-        # Clean twins (28 registered "clean" + 23 "unscored_twin" + 22 sealed RECERTIFIED-clean) reach the
-        # n>=50 minimum from existing data alone. 22: the sealed baseline now holds 33 seals (re-certified
+        # Clean twins (28 registered "clean" + 23 "unscored_twin" + 27 sealed RECERTIFIED-clean) reach the
+        # n>=50 minimum from existing data alone. 27: the sealed baseline now holds 35 seals (re-certified
         # under current code); load_sealed_baseline() counts every RECERTIFIED seal with no failing
-        # checks as a clean twin, so the count follows the baseline honestly (60 -> 73): a derived
+        # checks as a clean twin, so the count follows the baseline honestly (60 -> 73 -> 78): a derived
         # number, not a target.
-        assert registration.shortfall.clean_twin_achieved == 73
+        assert registration.shortfall.clean_twin_achieved == 78
         assert registration.shortfall.clean_twin_shortfall == 0
     
         assert len(registration.labelled_cases) == 113
@@ -131,15 +131,15 @@ _____________ test_real_build_reports_the_honest_zero_call_floor ______________
         # The digest is a real SHA-256 hex digest and is itself deterministic across two builds.
 >       assert len(registration.digest) == 64
 E       AssertionError: assert 32 == 64
-E        +  where 32 = len('83e544643028000b882efded0298d1c6')
-E        +    where '83e544643028000b882efded0298d1c6' = A1Registration(labelled_cases=(CaseRecord(case_id='ref:words-python/real:unsupported_claim:8', source='calibration_reg..._in=True, sample_size=23, agreement=0.0, method='simple_majority_baseline'), digest='83e544643028000b882efded0298d1c6').digest
+E        +  where 32 = len('0fe6f02d89e63dc2476f88b942f07b34')
+E        +    where '0fe6f02d89e63dc2476f88b942f07b34' = A1Registration(labelled_cases=(CaseRecord(case_id='ref:words-python/real:unsupported_claim:8', source='calibration_reg..._in=True, sample_size=23, agreement=0.0, method='simple_majority_baseline'), digest='0fe6f02d89e63dc2476f88b942f07b34').digest
 
 tests\acceptance\test_registration.py:395: AssertionError
 =========================== short test summary info ===========================
 FAILED tests/acceptance/test_registration.py::test_digest_is_deterministic_and_pinned
 FAILED tests/acceptance/test_registration.py::test_load_calibration_registration_from_a_small_fixture
 FAILED tests/acceptance/test_registration.py::test_real_build_reports_the_honest_zero_call_floor
-3 failed, 14 passed in 0.89s
+3 failed, 14 passed in 0.49s
 
 --- stderr ---
 

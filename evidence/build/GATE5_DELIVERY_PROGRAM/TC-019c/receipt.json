@@ -3,11 +3,11 @@
   "card": "TC-019c",
   "gate": "GATE5_DELIVERY_PROGRAM",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-09T21:47:54Z",
-  "base_rev": "4c51ce5a23072c058e3875a2cfe6349ebb5f7842",
-  "head_rev": "9c08111bd4e9bd89f5983a62f8cde8e50e0d7756",
+  "generated_at": "2026-11-11T16:31:20Z",
+  "base_rev": "04f91578188d0b03f19c21ad4c0607804deb1222",
+  "head_rev": "caaa8a21fd5eafe4557fdc6fa0dd7bd83089a0bb",
   "card_sha256": "68ab3eaea267b23589b117041952f65a85c649f67546531ff7f44127f445bec6",
-  "checker_fileset_sha256": "39b46d38af420d1ad2f4a621a7c708d782e72838ee2289addfa095a24de7bfd3",
+  "checker_fileset_sha256": "47f80c8b204dffae7360fb9627f0cf00687fbd94f567783e4f8419b403f4f999",
   "checker_fileset_scheme": "v3",
   "fingerprint": {
     "python": "3.13.15",
@@ -15,10 +15,7 @@
   },
   "scope": {
     "ok": true,
-    "changed_paths": [
-      "src/repo_presenter/cascade.py",
-      "tests/test_cascade_restore.py"
-    ],
+    "changed_paths": [],
     "violations": [],
     "evaluated": true
   },
@@ -29,8 +26,8 @@
         {
           "command": "python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/test_cascade_s9.py tests/test_cascade_s10.py tests/test_cascade_repair_context.py -q",
           "exit_code": 0,
-          "duration_s": 24.074,
-          "stdout_sha256": "05d63d246b222b4fa70f0cdaa110a452ba893b631f1c6312202c7909093e9f72"
+          "duration_s": 19.938,
+          "stdout_sha256": "4c6358992468efcf55a8d73dc6664664525398561b165f8c25ea4ccd3a36aab4"
         }
       ],
       "all_passed": true
@@ -41,8 +38,8 @@
         {
           "command": "python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/test_cascade_s9.py tests/test_cascade_s10.py tests/test_cascade_repair_context.py -q",
           "exit_code": 0,
-          "duration_s": 22.297,
-          "stdout_sha256": "296477bc71f6c91ab30d33ce35bd15344ebd60fe5186e570da2a59e8bea58971"
+          "duration_s": 18.573,
+          "stdout_sha256": "57da4fe9fd819a5b06df674ced620820e4b55127a0ee39e7ac9e0c56bf580cad"
         }
       ],
       "all_passed": true

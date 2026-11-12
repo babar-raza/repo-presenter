@@ -3,11 +3,11 @@
   "card": "TC-019b",
   "gate": "GATE5_DELIVERY_PROGRAM",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-09T21:48:16Z",
-  "base_rev": "b1b4cdeacfaa82271ed7c519fcb506068b364a3d",
-  "head_rev": "9c08111bd4e9bd89f5983a62f8cde8e50e0d7756",
+  "generated_at": "2026-11-11T15:01:16Z",
+  "base_rev": "95c4ecacb2762d7a0bdfea61d81ca3d10a378f59",
+  "head_rev": "0c3d5b7928cdcab5c6e2330087b4b230e613adf9",
   "card_sha256": "d6983017539fab11b4974364942929a186c43bdca6b1177aa33c879b5df198ba",
-  "checker_fileset_sha256": "d27ded27383cea2efd1c41785c951c523d09c36332ec2982831fb3db04cba2f8",
+  "checker_fileset_sha256": "884bf354755e82d9528d773fb416faa5ec1b7ee19d84306f1d54c211c1fdf91c",
   "checker_fileset_scheme": "v3",
   "fingerprint": {
     "python": "3.13.15",
@@ -15,12 +15,7 @@
   },
   "scope": {
     "ok": true,
-    "changed_paths": [
-      "src/repo_presenter/readme/repair/restore_units.py",
-      "src/repo_presenter/recertify.py",
-      "tests/readme/repair/test_restore_units.py",
-      "tests/test_recertify.py"
-    ],
+    "changed_paths": [],
     "violations": [],
     "evaluated": true
   },
@@ -31,8 +26,8 @@
         {
           "command": "python -m pytest tests/readme/repair/test_restore_units.py tests/test_recertify.py -q",
           "exit_code": 0,
-          "duration_s": 31.439,
-          "stdout_sha256": "f47b154863abb001fb58eb9d2f01d8daa83349a694d330f240b6b549fdf4da35"
+          "duration_s": 23.103,
+          "stdout_sha256": "914d6adcbf2d509ea93997c48a2900a640f697d5825d0832ef1206c5fae261b5"
         }
       ],
       "all_passed": true
@@ -43,8 +38,8 @@
         {
           "command": "python -m pytest tests/readme/repair/test_restore_units.py tests/test_recertify.py -q",
           "exit_code": 0,
-          "duration_s": 28.159,
-          "stdout_sha256": "042ddae1734591b623675410522dd46008b46cda00109ea3f7743db59c26bfa4"
+          "duration_s": 19.448,
+          "stdout_sha256": "c45a651e7e657c0cbded95ad88d2ee42898e6e238cc0e6827b5f613869997c9b"
         }
       ],
       "all_passed": true

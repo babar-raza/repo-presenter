@@ -2,8 +2,8 @@
 ===== CLEAN RUN 1 =====
 $ python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/test_cascade_s9.py tests/test_cascade_s10.py tests/test_cascade_repair_context.py -q
 --- stdout ---
-......................................                                   [100%]
-38 passed in 21.29s
+..................................................                       [100%]
+50 passed in 17.74s
 
 --- stderr ---
 
@@ -11,8 +11,8 @@ $ python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/tes
 ===== CLEAN RUN 2 =====
 $ python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/test_cascade_s9.py tests/test_cascade_s10.py tests/test_cascade_repair_context.py -q
 --- stdout ---
-......................................                                   [100%]
-38 passed in 20.14s
+..................................................                       [100%]
+50 passed in 16.63s
 
 --- stderr ---
 
@@ -21,12 +21,12 @@ $ python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/tes
 mutated: M src/repo_presenter/cascade.py
 $ python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/test_cascade_s9.py tests/test_cascade_s10.py tests/test_cascade_repair_context.py -q
 --- stdout ---
-F...FFF...............................                                   [100%]
+F....FFF..FF......................................                       [100%]
 ================================== FAILURES ===================================
 _ test_a_candidate_that_loses_only_a_link_the_published_readme_prints_reaches_review_restored _
 
-tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-1823/test_a_candidate_that_loses_on0')
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000027773CD4FC0>
+tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-2494/test_a_candidate_that_loses_on0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000291C3A3D810>
 
     def test_a_candidate_that_loses_only_a_link_the_published_readme_prints_reaches_review_restored(
         tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -40,7 +40,7 @@ tests\test_cascade_restore.py:77: in _run_to_review
     run.cascade(max_rounds=1)
 tests\test_cascade_s9.py:97: in cascade
     return run_cascade(
-src\repo_presenter\cascade.py:927: in run_cascade
+src\repo_presenter\cascade.py:1026: in run_cascade
     settled = _restore_lost_content(_settle_s9(**settle), **restoring)
               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
@@ -51,33 +51,44 @@ document = FactsDocument(repository='org/Aspose.Widget-FOSS-for-Python', source_
 investigation = {'product_summary': {'text': 'A widget library.', 'fact_ids': ['package:name']}, 'audience': {'text': 'Python develope...]}, 'problems_solved': [{'text': 'Rendering widgets is tedious.', 'fact_ids': ['package:name']}], 'workflows': [], ...}
 tree_paths = ['README.md']
 original = '# Aspose Widget\n\nA widget you can render.\n\n## Usage\n\n```python\nimport aspose_widget_foss\n```\n\n## Limitation...y PNG output is currently supported.\n\nRead the [full guide](https://widget.example.org/guide) for everything else.\n'
-out_dir = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-1823/test_a_candidate_that_loses_on0/out')
+out_dir = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-2494/test_a_candidate_that_loses_on0/out')
 require_clean_review = False
 
     def _restore_lost_content(
         settled: _Settled, *, entry: RegistryEntry, document: FactsDocument, investigation: dict,
         tree_paths: list[str], original: str, out_dir: Path, require_clean_review: bool = False,
     ) -> _Settled:
-        """TC-019c: when the settled candidate's ONLY blocking failures are BC-05/BC-17, keep the units
+        """TC-019c: when the settled candidate fails a restorable check (BC-05/BC-08/BC-17), keep the units
         they name (``readme.repair.restore_units``: the remedy those checks' own text states), re-render
         from the same plan and authored units, and re-judge with the unchanged validators and the
         deterministic reviewer rules. Zero provider calls: the stored plan, authored and coherent units
         are reused, as ``recertify`` reuses a sealed bundle's. Returns ``settled`` unchanged unless a
-        restore both changed something and left the candidate with no blocking failure -- so a run that
-        this cannot rescue behaves exactly as it did before, and the checks are never weakened."""
+        restore changed something and either left no blocking failure, or strictly shrank them without
+        adding a check id, growing a non-restorable check, or adding a blocking review finding (a PARTIAL
+        restore: the restorable content is back and only what restore cannot answer goes on to the repair
+        loop) -- so a run that this cannot improve behaves exactly as it did before, and the checks are
+        never weakened."""
         from repo_presenter.recertify import RESTORE_ROUNDS
     
         composed = settled.composed
         failing = blocking_failures(settled.validation)
         failing_ids = {str(check["id"]) for check in failing}
-        if not failing_ids & RESTORABLE_CHECKS or not failing_ids <= RESTORABLE_CHECKS | RESTORE_COMPANION_CHECKS:
+        if not failing_ids & RESTORABLE_CHECKS:
             return settled
+        # A non-restorable check failing beside the restorable ones (BC-02's unproven build command,
+        # say) used to rule the whole restore out, which stranded the restorable losses: they are not
+        # sent to the model (``_without_restorable``), so nothing could ever recover them (measured: Cells
+        # Cpp, BC-02 + BC-05 + BC-17 on inherited_unit:010.list/041/044, no restore ever ran). The restore
+        # now runs for the restorable part regardless; ``_strictly_fewer_failures`` below keeps the result
+        # only when no new check id appears, no non-restorable check grows, and something is cleared, so
+        # the surviving non-restorable defects go on to the repair loop with the content already back.
         holdable = holdable_sections(document)
         included = [
             section["section_id"] for section in composed.plan.get("sections", []) if section.get("include")
         ]
         dispositions = composed.dispositions
         restored: list[dict[str, str]] = []
+        skipped: list[dict[str, str]] = []
         readme, tasks, accounted = composed.readme, composed.tasks, composed.accounted
         validation, verdict = settled.validation, settled.verdict
         for _round in range(RESTORE_ROUNDS):
@@ -86,22 +97,20 @@ require_clean_review = False
             ]
             unit_ids = choose_units(
                 details, document, [change["unit_id"] for change in restored],
-                mandatory_checks=("BC-05", "BC-08"),
+                mandatory_checks=("BC-05", "BC-08"), exclude=[s["unit_id"] for s in skipped],
             )
             if not unit_ids:
                 break
-            dispositions, changes = restore_lost_units(dispositions, document, unit_ids, holdable, included)
-            if not changes:
->               dispositions, changes = restore_lost_units(
-                    dispositions, document, unit_ids, holdable, included, include_api_tables=True
-                )
-E               TypeError: <lambda>() got an unexpected keyword argument 'include_api_tables'
+>           dispositions, changes = restore_lost_units(
+                dispositions, document, unit_ids, holdable, included, skipped=skipped
+            )
+E           TypeError: <lambda>() got an unexpected keyword argument 'skipped'
 
-src\repo_presenter\cascade.py:723: TypeError
+src\repo_presenter\cascade.py:795: TypeError
 _ test_restorable_defects_make_zero_model_repair_calls_and_the_candidate_reaches_review _
 
-tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-1823/test_restorable_defects_make_z0')
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000027773A57150>
+tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-2494/test_restorable_defects_make_z0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000291C3A1B750>
 
     def test_restorable_defects_make_zero_model_repair_calls_and_the_candidate_reaches_review(
         tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -109,16 +118,16 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000027773A57150>
 >       run, client, repaired = _settle_run(tmp_path, monkeypatch, restore_in_settle=True)
                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-tests\test_cascade_restore.py:194: 
+tests\test_cascade_restore.py:208: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-tests\test_cascade_restore.py:185: in _settle_run
+tests\test_cascade_restore.py:199: in _settle_run
     run.cascade(max_rounds=3)
 tests\test_cascade_s9.py:97: in cascade
     return run_cascade(
-src\repo_presenter\cascade.py:927: in run_cascade
+src\repo_presenter\cascade.py:1026: in run_cascade
     settled = _restore_lost_content(_settle_s9(**settle), **restoring)
                                     ^^^^^^^^^^^^^^^^^^^^
-src\repo_presenter\cascade.py:653: in _settle_s9
+src\repo_presenter\cascade.py:680: in _settle_s9
     restored = _restore_lost_content(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
@@ -128,33 +137,44 @@ document = FactsDocument(repository='org/Aspose.Widget-FOSS-for-Python', source_
 investigation = {'product_summary': {'text': 'A widget library.', 'fact_ids': ['package:name']}, 'audience': {'text': 'Python develope...]}, 'problems_solved': [{'text': 'Rendering widgets is tedious.', 'fact_ids': ['package:name']}], 'workflows': [], ...}
 tree_paths = ['README.md']
 original = '# Aspose Widget\n\nA widget you can render.\n\n## Usage\n\n```python\nimport aspose_widget_foss\n```\n\n## Limitation...y PNG output is currently supported.\n\nRead the [full guide](https://widget.example.org/guide) for everything else.\n'
-out_dir = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-1823/test_restorable_defects_make_z0/out')
+out_dir = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-2494/test_restorable_defects_make_z0/out')
 require_clean_review = True
 
     def _restore_lost_content(
         settled: _Settled, *, entry: RegistryEntry, document: FactsDocument, investigation: dict,
         tree_paths: list[str], original: str, out_dir: Path, require_clean_review: bool = False,
     ) -> _Settled:
-        """TC-019c: when the settled candidate's ONLY blocking failures are BC-05/BC-17, keep the units
+        """TC-019c: when the settled candidate fails a restorable check (BC-05/BC-08/BC-17), keep the units
         they name (``readme.repair.restore_units``: the remedy those checks' own text states), re-render
         from the same plan and authored units, and re-judge with the unchanged validators and the
         deterministic reviewer rules. Zero provider calls: the stored plan, authored and coherent units
         are reused, as ``recertify`` reuses a sealed bundle's. Returns ``settled`` unchanged unless a
-        restore both changed something and left the candidate with no blocking failure -- so a run that
-        this cannot rescue behaves exactly as it did before, and the checks are never weakened."""
+        restore changed something and either left no blocking failure, or strictly shrank them without
+        adding a check id, growing a non-restorable check, or adding a blocking review finding (a PARTIAL
+        restore: the restorable content is back and only what restore cannot answer goes on to the repair
+        loop) -- so a run that this cannot improve behaves exactly as it did before, and the checks are
+        never weakened."""
         from repo_presenter.recertify import RESTORE_ROUNDS
     
         composed = settled.composed
         failing = blocking_failures(settled.validation)
         failing_ids = {str(check["id"]) for check in failing}
-        if not failing_ids & RESTORABLE_CHECKS or not failing_ids <= RESTORABLE_CHECKS | RESTORE_COMPANION_CHECKS:
+        if not failing_ids & RESTORABLE_CHECKS:
             return settled
+        # A non-restorable check failing beside the restorable ones (BC-02's unproven build command,
+        # say) used to rule the whole restore out, which stranded the restorable losses: they are not
+        # sent to the model (``_without_restorable``), so nothing could ever recover them (measured: Cells
+        # Cpp, BC-02 + BC-05 + BC-17 on inherited_unit:010.list/041/044, no restore ever ran). The restore
+        # now runs for the restorable part regardless; ``_strictly_fewer_failures`` below keeps the result
+        # only when no new check id appears, no non-restorable check grows, and something is cleared, so
+        # the surviving non-restorable defects go on to the repair loop with the content already back.
         holdable = holdable_sections(document)
         included = [
             section["section_id"] for section in composed.plan.get("sections", []) if section.get("include")
         ]
         dispositions = composed.dispositions
         restored: list[dict[str, str]] = []
+        skipped: list[dict[str, str]] = []
         readme, tasks, accounted = composed.readme, composed.tasks, composed.accounted
         validation, verdict = settled.validation, settled.verdict
         for _round in range(RESTORE_ROUNDS):
@@ -163,22 +183,20 @@ require_clean_review = True
             ]
             unit_ids = choose_units(
                 details, document, [change["unit_id"] for change in restored],
-                mandatory_checks=("BC-05", "BC-08"),
+                mandatory_checks=("BC-05", "BC-08"), exclude=[s["unit_id"] for s in skipped],
             )
             if not unit_ids:
                 break
-            dispositions, changes = restore_lost_units(dispositions, document, unit_ids, holdable, included)
-            if not changes:
->               dispositions, changes = restore_lost_units(
-                    dispositions, document, unit_ids, holdable, included, include_api_tables=True
-                )
-E               TypeError: <lambda>() got an unexpected keyword argument 'include_api_tables'
+>           dispositions, changes = restore_lost_units(
+                dispositions, document, unit_ids, holdable, included, skipped=skipped
+            )
+E           TypeError: <lambda>() got an unexpected keyword argument 'skipped'
 
-src\repo_presenter\cascade.py:723: TypeError
+src\repo_presenter\cascade.py:795: TypeError
 _ test_a_restorable_bc17_defect_is_never_sent_to_the_model_but_other_defects_still_are _
 
-tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-1823/test_a_restorable_bc17_defect_0')
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000027773A56E50>
+tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-2494/test_a_restorable_bc17_defect_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000291C3BAD220>
 
     def test_a_restorable_bc17_defect_is_never_sent_to_the_model_but_other_defects_still_are(
         tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -189,16 +207,16 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000027773A56E50>
 >       _run, _client, repaired = _settle_run(tmp_path, monkeypatch, restore_in_settle=False)
                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-tests\test_cascade_restore.py:207: 
+tests\test_cascade_restore.py:221: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-tests\test_cascade_restore.py:185: in _settle_run
+tests\test_cascade_restore.py:199: in _settle_run
     run.cascade(max_rounds=3)
 tests\test_cascade_s9.py:97: in cascade
     return run_cascade(
-src\repo_presenter\cascade.py:927: in run_cascade
+src\repo_presenter\cascade.py:1026: in run_cascade
     settled = _restore_lost_content(_settle_s9(**settle), **restoring)
               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-tests\test_cascade_restore.py:178: in <lambda>
+tests\test_cascade_restore.py:192: in <lambda>
     lambda settled, **kw: settled if kw.get("require_clean_review") else real(settled, **kw),
                                                                          ^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
@@ -209,33 +227,44 @@ document = FactsDocument(repository='org/Aspose.Widget-FOSS-for-Python', source_
 investigation = {'product_summary': {'text': 'A widget library.', 'fact_ids': ['package:name']}, 'audience': {'text': 'Python develope...]}, 'problems_solved': [{'text': 'Rendering widgets is tedious.', 'fact_ids': ['package:name']}], 'workflows': [], ...}
 tree_paths = ['README.md']
 original = '# Aspose Widget\n\nA widget you can render.\n\n## Usage\n\n```python\nimport aspose_widget_foss\n```\n\n## Limitation...y PNG output is currently supported.\n\nRead the [full guide](https://widget.example.org/guide) for everything else.\n'
-out_dir = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-1823/test_a_restorable_bc17_defect_0/out')
+out_dir = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-2494/test_a_restorable_bc17_defect_0/out')
 require_clean_review = False
 
     def _restore_lost_content(
         settled: _Settled, *, entry: RegistryEntry, document: FactsDocument, investigation: dict,
         tree_paths: list[str], original: str, out_dir: Path, require_clean_review: bool = False,
     ) -> _Settled:
-        """TC-019c: when the settled candidate's ONLY blocking failures are BC-05/BC-17, keep the units
+        """TC-019c: when the settled candidate fails a restorable check (BC-05/BC-08/BC-17), keep the units
         they name (``readme.repair.restore_units``: the remedy those checks' own text states), re-render
         from the same plan and authored units, and re-judge with the unchanged validators and the
         deterministic reviewer rules. Zero provider calls: the stored plan, authored and coherent units
         are reused, as ``recertify`` reuses a sealed bundle's. Returns ``settled`` unchanged unless a
-        restore both changed something and left the candidate with no blocking failure -- so a run that
-        this cannot rescue behaves exactly as it did before, and the checks are never weakened."""
+        restore changed something and either left no blocking failure, or strictly shrank them without
+        adding a check id, growing a non-restorable check, or adding a blocking review finding (a PARTIAL
+        restore: the restorable content is back and only what restore cannot answer goes on to the repair
+        loop) -- so a run that this cannot improve behaves exactly as it did before, and the checks are
+        never weakened."""
         from repo_presenter.recertify import RESTORE_ROUNDS
     
         composed = settled.composed
         failing = blocking_failures(settled.validation)
         failing_ids = {str(check["id"]) for check in failing}
-        if not failing_ids & RESTORABLE_CHECKS or not failing_ids <= RESTORABLE_CHECKS | RESTORE_COMPANION_CHECKS:
+        if not failing_ids & RESTORABLE_CHECKS:
             return settled
+        # A non-restorable check failing beside the restorable ones (BC-02's unproven build command,
+        # say) used to rule the whole restore out, which stranded the restorable losses: they are not
+        # sent to the model (``_without_restorable``), so nothing could ever recover them (measured: Cells
+        # Cpp, BC-02 + BC-05 + BC-17 on inherited_unit:010.list/041/044, no restore ever ran). The restore
+        # now runs for the restorable part regardless; ``_strictly_fewer_failures`` below keeps the result
+        # only when no new check id appears, no non-restorable check grows, and something is cleared, so
+        # the surviving non-restorable defects go on to the repair loop with the content already back.
         holdable = holdable_sections(document)
         included = [
             section["section_id"] for section in composed.plan.get("sections", []) if section.get("include")
         ]
         dispositions = composed.dispositions
         restored: list[dict[str, str]] = []
+        skipped: list[dict[str, str]] = []
         readme, tasks, accounted = composed.readme, composed.tasks, composed.accounted
         validation, verdict = settled.validation, settled.verdict
         for _round in range(RESTORE_ROUNDS):
@@ -244,22 +273,20 @@ require_clean_review = False
             ]
             unit_ids = choose_units(
                 details, document, [change["unit_id"] for change in restored],
-                mandatory_checks=("BC-05", "BC-08"),
+                mandatory_checks=("BC-05", "BC-08"), exclude=[s["unit_id"] for s in skipped],
             )
             if not unit_ids:
                 break
-            dispositions, changes = restore_lost_units(dispositions, document, unit_ids, holdable, included)
-            if not changes:
->               dispositions, changes = restore_lost_units(
-                    dispositions, document, unit_ids, holdable, included, include_api_tables=True
-                )
-E               TypeError: <lambda>() got an unexpected keyword argument 'include_api_tables'
+>           dispositions, changes = restore_lost_units(
+                dispositions, document, unit_ids, holdable, included, skipped=skipped
+            )
+E           TypeError: <lambda>() got an unexpected keyword argument 'skipped'
 
-src\repo_presenter\cascade.py:723: TypeError
+src\repo_presenter\cascade.py:795: TypeError
 ______ test_without_the_filter_the_same_bc17_defect_is_sent_to_the_model ______
 
-tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-1823/test_without_the_filter_the_sa0')
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000027773C12300>
+tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-2494/test_without_the_filter_the_sa0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000291C3BAEB70>
 
     def test_without_the_filter_the_same_bc17_defect_is_sent_to_the_model(
         tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -268,16 +295,16 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000027773C12300>
 >       _run, _client, repaired = _settle_run(tmp_path, monkeypatch, restore_in_settle=False)
                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-tests\test_cascade_restore.py:218: 
+tests\test_cascade_restore.py:232: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-tests\test_cascade_restore.py:185: in _settle_run
+tests\test_cascade_restore.py:199: in _settle_run
     run.cascade(max_rounds=3)
 tests\test_cascade_s9.py:97: in cascade
     return run_cascade(
-src\repo_presenter\cascade.py:927: in run_cascade
+src\repo_presenter\cascade.py:1026: in run_cascade
     settled = _restore_lost_content(_settle_s9(**settle), **restoring)
               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-tests\test_cascade_restore.py:178: in <lambda>
+tests\test_cascade_restore.py:192: in <lambda>
     lambda settled, **kw: settled if kw.get("require_clean_review") else real(settled, **kw),
                                                                          ^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
@@ -288,33 +315,44 @@ document = FactsDocument(repository='org/Aspose.Widget-FOSS-for-Python', source_
 investigation = {'product_summary': {'text': 'A widget library.', 'fact_ids': ['package:name']}, 'audience': {'text': 'Python develope...]}, 'problems_solved': [{'text': 'Rendering widgets is tedious.', 'fact_ids': ['package:name']}], 'workflows': [], ...}
 tree_paths = ['README.md']
 original = '# Aspose Widget\n\nA widget you can render.\n\n## Usage\n\n```python\nimport aspose_widget_foss\n```\n\n## Limitation...y PNG output is currently supported.\n\nRead the [full guide](https://widget.example.org/guide) for everything else.\n'
-out_dir = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-1823/test_without_the_filter_the_sa0/out')
+out_dir = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-2494/test_without_the_filter_the_sa0/out')
 require_clean_review = False
 
     def _restore_lost_content(
         settled: _Settled, *, entry: RegistryEntry, document: FactsDocument, investigation: dict,
         tree_paths: list[str], original: str, out_dir: Path, require_clean_review: bool = False,
     ) -> _Settled:
-        """TC-019c: when the settled candidate's ONLY blocking failures are BC-05/BC-17, keep the units
+        """TC-019c: when the settled candidate fails a restorable check (BC-05/BC-08/BC-17), keep the units
         they name (``readme.repair.restore_units``: the remedy those checks' own text states), re-render
         from the same plan and authored units, and re-judge with the unchanged validators and the
         deterministic reviewer rules. Zero provider calls: the stored plan, authored and coherent units
         are reused, as ``recertify`` reuses a sealed bundle's. Returns ``settled`` unchanged unless a
-        restore both changed something and left the candidate with no blocking failure -- so a run that
-        this cannot rescue behaves exactly as it did before, and the checks are never weakened."""
+        restore changed something and either left no blocking failure, or strictly shrank them without
+        adding a check id, growing a non-restorable check, or adding a blocking review finding (a PARTIAL
+        restore: the restorable content is back and only what restore cannot answer goes on to the repair
+        loop) -- so a run that this cannot improve behaves exactly as it did before, and the checks are
+        never weakened."""
         from repo_presenter.recertify import RESTORE_ROUNDS
     
         composed = settled.composed
         failing = blocking_failures(settled.validation)
         failing_ids = {str(check["id"]) for check in failing}
-        if not failing_ids & RESTORABLE_CHECKS or not failing_ids <= RESTORABLE_CHECKS | RESTORE_COMPANION_CHECKS:
+        if not failing_ids & RESTORABLE_CHECKS:
             return settled
+        # A non-restorable check failing beside the restorable ones (BC-02's unproven build command,
+        # say) used to rule the whole restore out, which stranded the restorable losses: they are not
+        # sent to the model (``_without_restorable``), so nothing could ever recover them (measured: Cells
+        # Cpp, BC-02 + BC-05 + BC-17 on inherited_unit:010.list/041/044, no restore ever ran). The restore
+        # now runs for the restorable part regardless; ``_strictly_fewer_failures`` below keeps the result
+        # only when no new check id appears, no non-restorable check grows, and something is cleared, so
+        # the surviving non-restorable defects go on to the repair loop with the content already back.
         holdable = holdable_sections(document)
         included = [
             section["section_id"] for section in composed.plan.get("sections", []) if section.get("include")
         ]
         dispositions = composed.dispositions
         restored: list[dict[str, str]] = []
+        skipped: list[dict[str, str]] = []
         readme, tasks, accounted = composed.readme, composed.tasks, composed.accounted
         validation, verdict = settled.validation, settled.verdict
         for _round in range(RESTORE_ROUNDS):
@@ -323,24 +361,56 @@ require_clean_review = False
             ]
             unit_ids = choose_units(
                 details, document, [change["unit_id"] for change in restored],
-                mandatory_checks=("BC-05", "BC-08"),
+                mandatory_checks=("BC-05", "BC-08"), exclude=[s["unit_id"] for s in skipped],
             )
             if not unit_ids:
                 break
-            dispositions, changes = restore_lost_units(dispositions, document, unit_ids, holdable, included)
-            if not changes:
->               dispositions, changes = restore_lost_units(
-                    dispositions, document, unit_ids, holdable, included, include_api_tables=True
-                )
-E               TypeError: <lambda>() got an unexpected keyword argument 'include_api_tables'
+>           dispositions, changes = restore_lost_units(
+                dispositions, document, unit_ids, holdable, included, skipped=skipped
+            )
+E           TypeError: <lambda>() got an unexpected keyword argument 'skipped'
 
-src\repo_presenter\cascade.py:723: TypeError
+src\repo_presenter\cascade.py:795: TypeError
+_ test_a_defect_naming_a_unit_with_a_dangling_pointer_is_still_sent_to_the_repair _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000291C3C69BF0>
+
+    def test_a_defect_naming_a_unit_with_a_dangling_pointer_is_still_sent_to_the_repair(
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        # 026 (no pointer) is restorable and dropped; 025 (pointer) is not restorable, so it stays
+>       assert _without_restorable_left(monkeypatch) == [f"fp-{_POINTER}"]
+E       AssertionError: assert ['fp-inherite...26.paragraph'] == ['fp-inherite...25.paragraph']
+E         
+E         Left contains one more item: 'fp-inherited_unit:026.paragraph'
+E         Use -v to get more diff
+
+tests\test_cascade_restore.py:338: AssertionError
+__ test_negative_control_without_the_pointer_guard_both_defects_are_dropped ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000291C3A57D10>
+
+    def test_negative_control_without_the_pointer_guard_both_defects_are_dropped(
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        import repo_presenter.readme.reconciliation.dispositions as dispositions_module
+    
+        monkeypatch.setattr(dispositions_module, "dangling_pointers", lambda output, facts: [])
+>       assert _without_restorable_left(monkeypatch) == []
+E       AssertionError: assert ['fp-inherite...26.paragraph'] == []
+E         
+E         Left contains 2 more items, first extra item: 'fp-inherited_unit:025.paragraph'
+E         Use -v to get more diff
+
+tests\test_cascade_restore.py:347: AssertionError
 =========================== short test summary info ===========================
 FAILED tests/test_cascade_restore.py::test_a_candidate_that_loses_only_a_link_the_published_readme_prints_reaches_review_restored
 FAILED tests/test_cascade_restore.py::test_restorable_defects_make_zero_model_repair_calls_and_the_candidate_reaches_review
 FAILED tests/test_cascade_restore.py::test_a_restorable_bc17_defect_is_never_sent_to_the_model_but_other_defects_still_are
 FAILED tests/test_cascade_restore.py::test_without_the_filter_the_same_bc17_defect_is_sent_to_the_model
-4 failed, 34 passed in 19.41s
+FAILED tests/test_cascade_restore.py::test_a_defect_naming_a_unit_with_a_dangling_pointer_is_still_sent_to_the_repair
+FAILED tests/test_cascade_restore.py::test_negative_control_without_the_pointer_guard_both_defects_are_dropped
+6 failed, 44 passed in 17.77s
 
 --- stderr ---
 
