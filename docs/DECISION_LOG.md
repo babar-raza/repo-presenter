@@ -4630,3 +4630,29 @@ Real hosted `present.yml` runs from this branch (the workflow exists on `main`, 
   raised from 1 in 6 to 1 in 4 (26 seeded >= 20 still holds at 36 candidates).
 - **Burned seeds:** the seeder takes `--salt` (the workflow run id) so a burned batch is never
   repeated; a failed batch's records stay on their bot branches and count for nothing.
+
+## 2026-11-12: First independently-accepted candidates -- Lane L 3, Lane R 0 (seed run 43217648963)
+
+- **Result of the M9 audit chain's third round**, after fixing the join-key bug (round 1), removing
+  the D15 blind-seed shape (round 2), and adjudicating flags on clean controls (round 3): seeded recall
+  1.00 (24/24), false-flag rate 0.083 (1/12) after adjudication, `batch_passed=true`.
+  `gh attestation verify --signer-workflow acceptance-write.yml@refs/heads/main` passes on the records
+  file. `python ops/checks/portfolio_delivery_count.py --json` (an independent, fresh re-run, not the
+  writer's own report) confirms:
+  - **Lane R independently_accepted: 0.** Lane L independently_accepted: 3 -- aspose-cells-foss/
+    Aspose.Cells-FOSS-for-Java, aspose-email-foss/Aspose.Email-FOSS-for-Cpp, aspose-slides-foss/
+    Aspose.Slides-FOSS-for-.NET (all three recertified clean under current code at the audited
+    revision).
+  - Of the three, only Cells Java is `publication_ready` (R22's allowlist); R15 still blocks any
+    upstream write regardless, until every candidate in both lanes is sealed, validated and passed.
+  - `reviewer_calibration: NOT_PASSED` (frozen iteration-5 record, unchanged -- correct, R10/NN5);
+    `acceptance_calibration: PASSED`.
+- **Not touched:** `project/state.yaml`'s `lane_r_accepted`/`lane_l_accepted` (TC-005-governed) track
+  `scripts/portfolio_status.py`'s older mechanism-passing metric, a different number from this
+  contract's `independently_accepted`. TC-005's own check only guards that field against drift from
+  its own script; it is not the headline number this section records and was correctly left alone.
+- **Open, real gaps surfaced by the three audit rounds, not yet fixed:** Lane R's two `NEEDS_REPAIR`
+  seals (Cells Go: BC-05/BC-17; PDF Java: BC-04/BC-05/BC-17); 13 of 36 Lane R and ~17 of 36 Lane L
+  "pipeline_good" records are blocked only by the frozen `reviewer_calibration: NOT_PASSED` record
+  (`needs_review_only_pass`, no regeneration needed) -- a review-only pass under a PASSED reviewer
+  mechanism is the largest single lever on the count from here, larger than new generation.
