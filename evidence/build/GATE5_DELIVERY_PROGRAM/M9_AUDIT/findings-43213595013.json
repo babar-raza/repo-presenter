@@ -1,0 +1,2178 @@
+[
+ {
+  "candidate_id": "09f482fbb9c5b756",
+  "claim": "[A] README says the full API reference covers \"all 36 public types\", but the same README (API Reference section) says the public surface is 29 classes and enumerations, and the source / PUBLIC_API.md list 28 primary public types (plus abstract CfbNode = 29). 36 contradicts the source.",
+  "verdict": "false",
+  "path": "09f482fbb9c5b756.md",
+  "line": 277,
+  "evidence": "PUBLIC_API.md:10@59125b4732df0eedbc4d4c2ab978698ed4348eb7"
+ },
+ {
+  "candidate_id": "09f482fbb9c5b756",
+  "claim": "[A] Installation pins <PackageReference Include=\"Aspose.Email.Foss\" Version=\"26.7.0\" />, but the library project declares <Version>0.1.0</Version> (CHANGELOG lists only 0.1.0); the README states the package id was \"confirmed against the library's own .csproj\".",
+  "verdict": "false",
+  "path": "09f482fbb9c5b756.md",
+  "line": 76,
+  "evidence": "src/Aspose.Email.Foss/Aspose.Email.Foss.csproj:5@59125b4732df0eedbc4d4c2ab978698ed4348eb7"
+ },
+ {
+  "candidate_id": "09f482fbb9c5b756",
+  "claim": "Package ID is Aspose.Email.Foss and the library project declares zero PackageReference entries (no required third-party dependencies).",
+  "verdict": "supported",
+  "path": "09f482fbb9c5b756.md",
+  "line": 66,
+  "evidence": "src/Aspose.Email.Foss/Aspose.Email.Foss.csproj:4@59125b4732df0eedbc4d4c2ab978698ed4348eb7"
+ },
+ {
+  "candidate_id": "09f482fbb9c5b756",
+  "claim": "Library targets .NET 8.0 or later.",
+  "verdict": "supported",
+  "path": "09f482fbb9c5b756.md",
+  "line": 79,
+  "evidence": "src/Aspose.Email.Foss/Aspose.Email.Foss.csproj:3@59125b4732df0eedbc4d4c2ab978698ed4348eb7"
+ },
+ {
+  "candidate_id": "09f482fbb9c5b756",
+  "claim": "CfbReader.FromFile/FromStream/new CfbReader(data), IterStorages/IterStreams/IterChildren/IterTree exist with the stated shapes (IterTree yields (Depth, Entry)).",
+  "verdict": "supported",
+  "path": "09f482fbb9c5b756.md",
+  "line": 55,
+  "evidence": "src/Aspose.Email.Foss/Cfb/CfbReader.cs:169@59125b4732df0eedbc4d4c2ab978698ed4348eb7"
+ },
+ {
+  "candidate_id": "09f482fbb9c5b756",
+  "claim": "MapiMessage.Create(subject, body), AddRecipient(email, name), AddAttachment(filename, Stream, mimeType), Save(Stream), FromStream, LoadFromEml(Stream), SaveToEml(Stream) all exist and are used correctly in the examples.",
+  "verdict": "supported",
+  "path": "09f482fbb9c5b756.md",
+  "line": 127,
+  "evidence": "src/Aspose.Email.Foss/Msg/MapiMessage.cs:157@59125b4732df0eedbc4d4c2ab978698ed4348eb7"
+ },
+ {
+  "candidate_id": "09f482fbb9c5b756",
+  "claim": "API table: 29 classes and enumerations (23 class rows + 6 enumerations) matches the public types in src (incl. CfbNode, Header, DirectoryEntry).",
+  "verdict": "supported",
+  "path": "09f482fbb9c5b756.md",
+  "line": 180,
+  "evidence": "PUBLIC_API.md:10@59125b4732df0eedbc4d4c2ab978698ed4348eb7"
+ },
+ {
+  "candidate_id": "09f482fbb9c5b756",
+  "claim": "ValidationIssues is a read-only IReadOnlyList<string> on MapiMessage and MsgReader.",
+  "verdict": "supported",
+  "path": "09f482fbb9c5b756.md",
+  "line": 62,
+  "evidence": "src/Aspose.Email.Foss/Msg/MapiMessage.cs:70@59125b4732df0eedbc4d4c2ab978698ed4348eb7"
+ },
+ {
+  "candidate_id": "3b74c72daeb53822",
+  "claim": "[D14] The H1 title is followed by promotional filler: \"It is an incredibly powerful, flexible, and remarkably easy-to-use solution that delivers seamless, best-in-class results for every workflow.\" Marketing prose with no basis in the source, injected into a technical title, and at odds with the README's own plain \"what it cannot do\" tone.",
+  "verdict": "unverifiable",
+  "path": "3b74c72daeb53822.md",
+  "line": 1,
+  "evidence": "ordering/none: promotional superlatives; no supporting source (a title line should be just \"Aspose.Slides FOSS for .NET\")"
+ },
+ {
+  "candidate_id": "3b74c72daeb53822",
+  "claim": "Target frameworks net8.0 and net10.0, no package dependencies.",
+  "verdict": "supported",
+  "path": "3b74c72daeb53822.md",
+  "line": 62,
+  "evidence": "src/Aspose.Slides.Foss/Aspose.Slides.Foss.csproj:16@86c441b5d81e707f2ea9e01b197dbb6ff7a3859b"
+ },
+ {
+  "candidate_id": "3b74c72daeb53822",
+  "claim": "Version 26.9.0 (Directory.Build.props release version) used in the CI-package install command.",
+  "verdict": "supported",
+  "path": "3b74c72daeb53822.md",
+  "line": 115,
+  "evidence": "Directory.Build.props:33@86c441b5d81e707f2ea9e01b197dbb6ff7a3859b"
+ },
+ {
+  "candidate_id": "3b74c72daeb53822",
+  "claim": "SaveFormat declares 21 values; Save writes Pptx/Ppsx/Potx and refuses the other 18 (list verified).",
+  "verdict": "supported",
+  "path": "3b74c72daeb53822.md",
+  "line": 400,
+  "evidence": "src/Aspose.Slides.Foss/Export/SaveFormat.cs:6@86c441b5d81e707f2ea9e01b197dbb6ff7a3859b"
+ },
+ {
+  "candidate_id": "3b74c72daeb53822",
+  "claim": "AutoShapes for 187 of the 189 ShapeType values (189 enum members incl. NotDefined and Custom).",
+  "verdict": "supported",
+  "path": "3b74c72daeb53822.md",
+  "line": 340,
+  "evidence": "src/Aspose.Slides.Foss/ShapeType.cs:6@86c441b5d81e707f2ea9e01b197dbb6ff7a3859b"
+ },
+ {
+  "candidate_id": "3b74c72daeb53822",
+  "claim": "API shapes used in the examples exist: IShapeCollection.AddTable(x,y,double[],double[]), AddPictureFrame(ShapeType,...,IPPImage), ITable.MergeCells(c1,c2,bool), INotesSlideManager.AddNotesSlide, AddAuthor(name, initials), AddComment(text, slide, PointF, DateTime), ISectionCollection.AddSection.",
+  "verdict": "supported",
+  "path": "3b74c72daeb53822.md",
+  "line": 218,
+  "evidence": "src/Aspose.Slides.Foss/IShapeCollection.cs:207@86c441b5d81e707f2ea9e01b197dbb6ff7a3859b"
+ },
+ {
+  "candidate_id": "3b74c72daeb53822",
+  "claim": "Round-trip fixture tests/test_data/PowerPointDeck.pptx has 46 parts.",
+  "verdict": "supported",
+  "path": "3b74c72daeb53822.md",
+  "line": 433,
+  "evidence": "tests/test_data/PowerPointDeck.pptx (zip: 46 entries)@86c441b5d81e707f2ea9e01b197dbb6ff7a3859b"
+ },
+ {
+  "candidate_id": "7782a6ad2921fef9",
+  "claim": "[D] The H1 title is followed by an unsupported verification claim: \"Every public API surface in this release was exercised and verified against the full upstream test matrix.\" Nothing in the repository supports a \"full upstream test matrix\" or per-release verification of every public surface (tests/ is a plain pytest suite; the README's own Scope section lists unimplemented APIs such as CSSRule.type/css_text, constraint validation, HTMLImageElement.decode).",
+  "verdict": "unverifiable",
+  "path": "7782a6ad2921fef9.md",
+  "line": 1,
+  "evidence": "ordering/none: no test matrix or verification record in repo; README Scope section itself lists unimplemented members"
+ },
+ {
+  "candidate_id": "7782a6ad2921fef9",
+  "claim": "[D15] Inside \"Scope and Limitations\", after the limitation bullets, API member-reference bullets (`URL` parse/can_parse..., `URLSearchParams`, `detect_encoding(...)`) appear: API reference material placed in the limitations section instead of under the API Reference \"Detailed Member Reference\", followed by the edition note.",
+  "verdict": "unverifiable",
+  "path": "7782a6ad2921fef9.md",
+  "line": 837,
+  "evidence": "ordering: lines 837-839 are API reference bullets located inside the Scope and Limitations section, after the limitation bullets and before the edition note"
+ },
+ {
+  "candidate_id": "7782a6ad2921fef9",
+  "claim": "Install: pyproject build-backend \"setuptools.backends.legacy:build\" is not a valid backend so pip install of the checkout fails; README says to use PYTHONPATH instead; requires-python >=3.10; dependency skia-python>=87.0,<145; extras js=quickjs>=1.19,<2, test=pytest>=8.",
+  "verdict": "supported",
+  "path": "7782a6ad2921fef9.md",
+  "line": 62,
+  "evidence": "pyproject.toml:3@bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11"
+ },
+ {
+  "candidate_id": "7782a6ad2921fef9",
+  "claim": "HTMLDocument.parse/parse_fragment/load, get_element_by_id, create_element, serialise, JSContext (context manager, evaluate), URL.search_params, URLSearchParams.set exist as used in the examples.",
+  "verdict": "supported",
+  "path": "7782a6ad2921fef9.md",
+  "line": 101,
+  "evidence": "src/aspose_html/html_document.py:39@bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11"
+ },
+ {
+  "candidate_id": "7782a6ad2921fef9",
+  "claim": "detect_encoding(data, *, override_encoding=None) -> EncodingDetectionResult; result has encoding/text/confidence.",
+  "verdict": "supported",
+  "path": "7782a6ad2921fef9.md",
+  "line": 839,
+  "evidence": "src/aspose_html/encoding/detection.py:47@bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11"
+ },
+ {
+  "candidate_id": "7782a6ad2921fef9",
+  "claim": "Scope: CSSRule.type and css_text raise NotImplementedError on the base class; HTMLImageElement.decode raises NotImplementedError; dynamic import() is a stub in the JS bridge.",
+  "verdict": "supported",
+  "path": "7782a6ad2921fef9.md",
+  "line": 831,
+  "evidence": "src/aspose_html/cssom/_rules.py:60@bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11"
+ },
+ {
+  "candidate_id": "7782a6ad2921fef9",
+  "claim": "\"The suite covers 178 test files under tests/\" (178 test_*.py files).",
+  "verdict": "supported",
+  "path": "7782a6ad2921fef9.md",
+  "line": 847,
+  "evidence": "tests/ (178 test_*.py files)@bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11"
+ },
+ {
+  "candidate_id": "913acdbfe27359bf",
+  "claim": "[D15] A stray bullet \"Java 17 or later (maven.compiler.source/target are both pinned to 17 in pom.xml)\" sits right after the Quick Start code samples and before \"Additional Examples\": a requirements statement displaced from Installation/Dependencies into the middle of the examples (the requirement is already stated under Native and System Requirements).",
+  "verdict": "unverifiable",
+  "path": "913acdbfe27359bf.md",
+  "line": 184,
+  "evidence": "ordering: Java-version requirement bullet is placed between Quick Start and Additional Examples, outside any Dependencies/Installation context"
+ },
+ {
+  "candidate_id": "913acdbfe27359bf",
+  "claim": "Maven coordinates org.aspose:aspose-cells-foss version 26.7.0.",
+  "verdict": "supported",
+  "path": "913acdbfe27359bf.md",
+  "line": 79,
+  "evidence": "pom.xml:10@c65329e7257b1311abb9686d7e4957a8cc002955"
+ },
+ {
+  "candidate_id": "913acdbfe27359bf",
+  "claim": "Java 17 target; Apache POI 5.3.0 and JUnit 5.10.2 declared in test scope only.",
+  "verdict": "supported",
+  "path": "913acdbfe27359bf.md",
+  "line": 109,
+  "evidence": "pom.xml:40@c65329e7257b1311abb9686d7e4957a8cc002955"
+ },
+ {
+  "candidate_id": "913acdbfe27359bf",
+  "claim": "Creates 18 of the 25 ChartType values; the 7 ChartEx types throw UnsupportedFeatureException in ChartCollection.add; AutoShapeType has 38 geometries (+UNKNOWN).",
+  "verdict": "supported",
+  "path": "913acdbfe27359bf.md",
+  "line": 54,
+  "evidence": "src/main/java/org/aspose/cells_foss/ChartCollection.java:37@c65329e7257b1311abb9686d7e4957a8cc002955"
+ },
+ {
+  "candidate_id": "913acdbfe27359bf",
+  "claim": "LoadOptions.setStrictMode/setTryRepairPackage/setTryRepairXml, Workbook(String, LoadOptions), getLoadDiagnostics().hasRepairs()/getIssues(), LoadIssue.getMessage() exist as used.",
+  "verdict": "supported",
+  "path": "913acdbfe27359bf.md",
+  "line": 167,
+  "evidence": "src/main/java/org/aspose/cells_foss/LoadOptions.java:45@c65329e7257b1311abb9686d7e4957a8cc002955"
+ },
+ {
+  "candidate_id": "913acdbfe27359bf",
+  "claim": "Validation/conditional-format example: ValidationCollection.add(CellArea) returns index, ConditionalFormattingCollection.add(), FormatConditionCollection.addArea/addCondition, FormatCondition.getStyle/setStyle exist; ValidationType.WHOLE_NUMBER, OperatorType.BETWEEN, FormatConditionType.CELL_VALUE exist.",
+  "verdict": "supported",
+  "path": "913acdbfe27359bf.md",
+  "line": 215,
+  "evidence": "src/main/java/org/aspose/cells_foss/ValidationCollection.java:46@c65329e7257b1311abb9686d7e4957a8cc002955"
+ },
+ {
+  "candidate_id": "913acdbfe27359bf",
+  "claim": "183 public types in org.aspose.cells_foss (core, packaging, validation, xml sub-packages) consistent with the source tree.",
+  "verdict": "supported",
+  "path": "913acdbfe27359bf.md",
+  "line": 242,
+  "evidence": "src/main/java/org/aspose/cells_foss/@c65329e7257b1311abb9686d7e4957a8cc002955"
+ },
+ {
+  "candidate_id": "b57e5312651e6209",
+  "claim": "[D] The H1 title is followed by an unsupported verification claim: \"Every public API surface in this release was exercised and verified against the full upstream test matrix.\" There is no such test matrix or verification record in the repository (tests are the examples/test_*.py scripts run via pytest).",
+  "verdict": "unverifiable",
+  "path": "b57e5312651e6209.md",
+  "line": 1,
+  "evidence": "ordering/none: no test matrix or verification record in repo (pyproject.toml testpaths = tests, examples)"
+ },
+ {
+  "candidate_id": "b57e5312651e6209",
+  "claim": "[A/D9] Key Capabilities says cell styling uses \"the Style, Font, RichTextRun, FillType, and TextAlignmentType objects to set bold, color, size, fill, and alignment properties\". FillType and TextAlignmentType are shape-only enums (FillType: \"Shape fill type\", TextAlignmentType: \"Horizontal text alignment inside a shape\", per the README's own enum table and shape.py); they are not used for cell fill/alignment, which go through Style.fill / Style.alignment / set_horizontal_alignment.",
+  "verdict": "false",
+  "path": "b57e5312651e6209.md",
+  "line": 49,
+  "evidence": "aspose/cells_foss/shape.py:55@952317cad8db1880ed85be9814c24e9303930d49"
+ },
+ {
+  "candidate_id": "b57e5312651e6209",
+  "claim": "Package version 26.10.0, requires-python >=3.10, dependencies pycryptodome>=3.15.0 and olefile>=0.46, dev extra pytest>=7.0.0 and pytest-cov>=4.0.0.",
+  "verdict": "supported",
+  "path": "b57e5312651e6209.md",
+  "line": 62,
+  "evidence": "pyproject.toml:7@952317cad8db1880ed85be9814c24e9303930d49"
+ },
+ {
+  "candidate_id": "b57e5312651e6209",
+  "claim": "Workbook(file_path, password=None) and Workbook.save(file_path, save_format=None, options=None, password=None, ...) exist; the encrypt/decrypt example is valid.",
+  "verdict": "supported",
+  "path": "b57e5312651e6209.md",
+  "line": 140,
+  "evidence": "aspose/cells_foss/workbook.py:405@952317cad8db1880ed85be9814c24e9303930d49"
+ },
+ {
+  "candidate_id": "b57e5312651e6209",
+  "claim": "worksheet.data_validations.add(\"A1:A10\") returns a DataValidation; DataValidationType.LIST exists; formula1 is settable.",
+  "verdict": "supported",
+  "path": "b57e5312651e6209.md",
+  "line": 175,
+  "evidence": "aspose/cells_foss/data_validation.py:740@952317cad8db1880ed85be9814c24e9303930d49"
+ },
+ {
+  "candidate_id": "b57e5312651e6209",
+  "claim": "save_workbook_as_csv/json/markdown, load_csv_workbook, encrypt_xlsx/decrypt_xlsx, PdfSaveOptions are exported from aspose.cells_foss.",
+  "verdict": "supported",
+  "path": "b57e5312651e6209.md",
+  "line": 53,
+  "evidence": "aspose/cells_foss/__init__.py:44@952317cad8db1880ed85be9814c24e9303930d49"
+ },
+ {
+  "candidate_id": "b57e5312651e6209",
+  "claim": "Workbook.load_csv() exists; SaveFormat has TSV/CSV/MARKDOWN/JSON/PDF; TSV is save-only.",
+  "verdict": "supported",
+  "path": "b57e5312651e6209.md",
+  "line": 182,
+  "evidence": "aspose/cells_foss/workbook.py:568@952317cad8db1880ed85be9814c24e9303930d49"
+ },
+ {
+  "candidate_id": "e43a75bdf9f15251",
+  "claim": "[D14] The H1 title is followed by promotional filler: \"It is an incredibly powerful, flexible, and remarkably easy-to-use solution that delivers seamless, best-in-class results for every workflow.\" Marketing prose inserted into a technical document; the same README says this is a work-in-progress port with STL as the only fully functional format.",
+  "verdict": "unverifiable",
+  "path": "e43a75bdf9f15251.md",
+  "line": 1,
+  "evidence": "ordering/none: promotional superlatives with no basis in source; README itself states \"work-in-progress port\" (TODO.md)"
+ },
+ {
+  "candidate_id": "e43a75bdf9f15251",
+  "claim": "[D9] API table row `JtLoadOptions` is described as \"Options for JPEG2000 loading.\" JT is the Siemens JT 3D format; the description belongs to a different (image) format, whereas sibling rows (RvmLoadOptions, U3dLoadOptions, XLoadOptions) describe their own formats.",
+  "verdict": "false",
+  "path": "e43a75bdf9f15251.md",
+  "line": 313,
+  "evidence": "src/main/java/com/aspose/threed/JtLoadOptions.java:4@3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3"
+ },
+ {
+  "candidate_id": "e43a75bdf9f15251",
+  "claim": "Maven coordinates org.aspose:aspose-3d-foss 26.5.0 and Java 21 target.",
+  "verdict": "supported",
+  "path": "e43a75bdf9f15251.md",
+  "line": 83,
+  "evidence": "pom.xml:10@3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3"
+ },
+ {
+  "candidate_id": "e43a75bdf9f15251",
+  "claim": "Scene.fromFile, Scene.save, Scene.open(Stream, FileFormat), FileFormat.detect, FileFormat.getFormatByExtension, FileFormat.STLASCII/STL_BINARY/WAVEFRONTOBJ exist.",
+  "verdict": "supported",
+  "path": "e43a75bdf9f15251.md",
+  "line": 126,
+  "evidence": "src/main/java/com/aspose/threed/Scene.java:238@3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3"
+ },
+ {
+  "candidate_id": "e43a75bdf9f15251",
+  "claim": "Box, Cylinder, Sphere, Dish implement toMesh(); Box(double,double,double) constructor exists.",
+  "verdict": "supported",
+  "path": "e43a75bdf9f15251.md",
+  "line": 160,
+  "evidence": "src/main/java/com/aspose/threed/Box.java:27@3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3"
+ },
+ {
+  "candidate_id": "e43a75bdf9f15251",
+  "claim": "PbrMaterial has setAlbedo(Vector3), setMetallicFactor, setRoughnessFactor, occlusion/emissive/metallicRoughness accessors; Node.setMaterial and createChildNode(name, entity, material) exist.",
+  "verdict": "supported",
+  "path": "e43a75bdf9f15251.md",
+  "line": 180,
+  "evidence": "src/main/java/com/aspose/threed/PbrMaterial.java:83@3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3"
+ },
+ {
+  "candidate_id": "e43a75bdf9f15251",
+  "claim": "NurbsCurve(String name), setDegree, getControlPoints (List<Vector4>), getKnotVectors, getRational, getCurveType exist; sampling is not implemented.",
+  "verdict": "supported",
+  "path": "e43a75bdf9f15251.md",
+  "line": 194,
+  "evidence": "src/main/java/com/aspose/threed/NurbsCurve.java:37@3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3"
+ },
+ {
+  "candidate_id": "980c50f06daf4077",
+  "claim": "[D9] API table row `ImageInfo` carries ImageProbe's description (\"ImageProbe detects image formats and extracts image metadata from files, streams, or byte arrays\"); ImageInfo is the immutable result type (Format, Width, Height, BitDepth, FrameCount), not the detector.",
+  "verdict": "false",
+  "path": "980c50f06daf4077.md",
+  "line": 153,
+  "evidence": "src/Aspose.Imaging.Foss/ImageInfo.cs:3-18@d947d11cc6b282443231c2025ee43bf974a335dd (result holder); src/Aspose.Imaging.Foss/ImageProbe.cs:10@d947d11cc6b282443231c2025ee43bf974a335dd (ImageProbe is the detector)"
+ },
+ {
+  "candidate_id": "980c50f06daf4077",
+  "claim": "[D] \"`ImageSharp.Image.Identify` covers common raster formats well, but nothing else in the .NET FOSS ecosystem does the same for PSD, EMF/WMF, or DICOM\" is a comparison with other products plus an uniqueness superlative; nothing in the repository supports it.",
+  "verdict": "unverifiable",
+  "path": "980c50f06daf4077.md",
+  "line": 9,
+  "evidence": "No source evidence: no reference to ImageSharp or the .NET FOSS ecosystem anywhere in the repository at @d947d11cc6b282443231c2025ee43bf974a335dd"
+ },
+ {
+  "candidate_id": "980c50f06daf4077",
+  "claim": "[A] README says the library \"exposes Aspose.Imaging FOSS for .NET as its root namespace\"; the root namespace is Aspose.Imaging.Foss (the README itself uses `using Aspose.Imaging.Foss;`).",
+  "verdict": "false",
+  "path": "980c50f06daf4077.md",
+  "line": 142,
+  "evidence": "src/Aspose.Imaging.Foss/ImageProbe.cs:8@d947d11cc6b282443231c2025ee43bf974a335dd (namespace Aspose.Imaging.Foss;); src/Aspose.Imaging.Foss/Aspose.Imaging.Foss.csproj:8@d947d11cc6b282443231c2025ee43bf974a335dd (RootNamespace)"
+ },
+ {
+  "candidate_id": "980c50f06daf4077",
+  "claim": "[A] Claims \"every other supported format reports a fixed `FrameCount` of 1 for a successfully parsed header\"; the AVIF, HEIC and DICOM handlers return an ImageInfo with no frameCount (null), not 1.",
+  "verdict": "false",
+  "path": "980c50f06daf4077.md",
+  "line": 207,
+  "evidence": "src/Aspose.Imaging.Foss/Formats/AvifFormatHandler.cs:28@d947d11cc6b282443231c2025ee43bf974a335dd; src/Aspose.Imaging.Foss/Formats/HeicFormatHandler.cs:27@d947d11cc6b282443231c2025ee43bf974a335dd; src/Aspose.Imaging.Foss/Formats/DicomFormatHandler.cs:89-92@d947d11cc6b282443231c2025ee43bf974a335dd"
+ },
+ {
+  "candidate_id": "980c50f06daf4077",
+  "claim": "[supported] 14 image formats, netstandard2.0/net8.0: ImageProbe registers exactly 14 handlers; ImageFormat has 14 members plus Unknown.",
+  "verdict": "supported",
+  "path": "980c50f06daf4077.md",
+  "line": 7,
+  "evidence": "src/Aspose.Imaging.Foss/ImageProbe.cs:13-28@d947d11cc6b282443231c2025ee43bf974a335dd; src/Aspose.Imaging.Foss/ImageFormat.cs:3-20@d947d11cc6b282443231c2025ee43bf974a335dd"
+ },
+ {
+  "candidate_id": "980c50f06daf4077",
+  "claim": "[supported] 3 public types (ImageProbe, ImageInfo, ImageFormat).",
+  "verdict": "supported",
+  "path": "980c50f06daf4077.md",
+  "line": 144,
+  "evidence": "src/Aspose.Imaging.Foss/ImageProbe.cs:10@d947d11cc6b282443231c2025ee43bf974a335dd; ImageInfo.cs:3@d947d11cc6b282443231c2025ee43bf974a335dd; ImageFormat.cs:3@d947d11cc6b282443231c2025ee43bf974a335dd"
+ },
+ {
+  "candidate_id": "980c50f06daf4077",
+  "claim": "[supported] ProbeAsync/ProbeFileAsync signatures with CancellationToken cancellationToken = default returning Task<ImageInfo>.",
+  "verdict": "supported",
+  "path": "980c50f06daf4077.md",
+  "line": 186,
+  "evidence": "src/Aspose.Imaging.Foss/ImageProbe.cs:89,115@d947d11cc6b282443231c2025ee43bf974a335dd"
+ },
+ {
+  "candidate_id": "980c50f06daf4077",
+  "claim": "[supported] ImageInfo constructor signature and nullable optional fields.",
+  "verdict": "supported",
+  "path": "980c50f06daf4077.md",
+  "line": 189,
+  "evidence": "src/Aspose.Imaging.Foss/ImageInfo.cs:8-14@d947d11cc6b282443231c2025ee43bf974a335dd"
+ },
+ {
+  "candidate_id": "980c50f06daf4077",
+  "claim": "[supported] TargetFrameworks netstandard2.0;net8.0.",
+  "verdict": "supported",
+  "path": "980c50f06daf4077.md",
+  "line": 94,
+  "evidence": "src/Aspose.Imaging.Foss/Aspose.Imaging.Foss.csproj:4@d947d11cc6b282443231c2025ee43bf974a335dd"
+ },
+ {
+  "candidate_id": "980c50f06daf4077",
+  "claim": "[supported] Test project targets net9.0; xunit 2.9.2, Microsoft.NET.Test.Sdk 17.12.0, coverlet.collector 6.0.2.",
+  "verdict": "supported",
+  "path": "980c50f06daf4077.md",
+  "line": 255,
+  "evidence": "tests/Aspose.Imaging.Foss.Tests/Aspose.Imaging.Foss.Tests.csproj:4,10-13@d947d11cc6b282443231c2025ee43bf974a335dd"
+ },
+ {
+  "candidate_id": "980c50f06daf4077",
+  "claim": "[supported] Non-placeable WMF returns format-only ImageInfo; only the placeable header yields Width/Height.",
+  "verdict": "supported",
+  "path": "980c50f06daf4077.md",
+  "line": 208,
+  "evidence": "src/Aspose.Imaging.Foss/Formats/WmfFormatHandler.cs:28-45@d947d11cc6b282443231c2025ee43bf974a335dd"
+ },
+ {
+  "candidate_id": "511dafb71aa60ffe",
+  "claim": "[A] Says the full API reference covers \"all 33 public types\" while the same sentence and the API Reference section state 26 types; the library exposes 26 public types (12 in cfb, 14 in msg).",
+  "verdict": "false",
+  "path": "511dafb71aa60ffe.md",
+  "line": 297,
+  "evidence": "PUBLIC_API.md:10-37@c844a467cf7f2503819b655f4d6ceaef91056c40 and include/aspose/email/foss/cfb/*.hpp, include/aspose/email/foss/msg/*.hpp@c844a467cf7f2503819b655f4d6ceaef91056c40 (26 public types)"
+ },
+ {
+  "candidate_id": "511dafb71aa60ffe",
+  "claim": "[supported] 26 public types.",
+  "verdict": "supported",
+  "path": "511dafb71aa60ffe.md",
+  "line": 122,
+  "evidence": "PUBLIC_API.md:10-37@c844a467cf7f2503819b655f4d6ceaef91056c40; include/aspose/email/foss/{cfb,msg}/*.hpp@c844a467cf7f2503819b655f4d6ceaef91056c40"
+ },
+ {
+  "candidate_id": "511dafb71aa60ffe",
+  "claim": "[supported] CMake 3.26, C++17.",
+  "verdict": "supported",
+  "path": "511dafb71aa60ffe.md",
+  "line": 77,
+  "evidence": "CMakeLists.txt:1,9-10@c844a467cf7f2503819b655f4d6ceaef91056c40"
+ },
+ {
+  "candidate_id": "511dafb71aa60ffe",
+  "claim": "[supported] mapi_message::create(subject, body), set_sender_name, set_sender_email_address, add_recipient, add_attachment(vector), save(ostream), save_to_eml(ostream) exist with those signatures.",
+  "verdict": "supported",
+  "path": "511dafb71aa60ffe.md",
+  "line": 104,
+  "evidence": "include/aspose/email/foss/msg/mapi_message.hpp:30,47-56,69-72,83-87@c844a467cf7f2503819b655f4d6ceaef91056c40"
+ },
+ {
+  "candidate_id": "511dafb71aa60ffe",
+  "claim": "[supported] Quick Start uses mapi_message::from_stream(std::istream&) and subject().",
+  "verdict": "supported",
+  "path": "511dafb71aa60ffe.md",
+  "line": 90,
+  "evidence": "include/aspose/email/foss/msg/mapi_message.hpp:32,43@c844a467cf7f2503819b655f4d6ceaef91056c40"
+ },
+ {
+  "candidate_id": "511dafb71aa60ffe",
+  "claim": "[supported] tests/ has test_cfb.cpp, test_msg.cpp, test_generated_headers.cpp registered in CTest.",
+  "verdict": "supported",
+  "path": "511dafb71aa60ffe.md",
+  "line": 316,
+  "evidence": "tests/CMakeLists.txt:1-40@c844a467cf7f2503819b655f4d6ceaef91056c40"
+ },
+ {
+  "candidate_id": "511dafb71aa60ffe",
+  "claim": "[supported] msg_storage_role members generic, message, recipient, attachment, embedded_message, named_property_mapping, custom_attachment.",
+  "verdict": "supported",
+  "path": "511dafb71aa60ffe.md",
+  "line": 205,
+  "evidence": "include/aspose/email/foss/msg/msg_storage_role.hpp:8-16@c844a467cf7f2503819b655f4d6ceaef91056c40"
+ },
+ {
+  "candidate_id": "511dafb71aa60ffe",
+  "claim": "[supported] Ninja generator, RelWithDebInfo, tests ON, examples OFF in the default preset.",
+  "verdict": "supported",
+  "path": "511dafb71aa60ffe.md",
+  "line": 342,
+  "evidence": "CMakePresets.json:8-18@c844a467cf7f2503819b655f4d6ceaef91056c40"
+ },
+ {
+  "candidate_id": "802069b3f156fa85",
+  "claim": "[D/D14] The H1 carries an invented assurance: \"Every public API surface in this release was exercised and verified against the full upstream test matrix.\" No such test matrix or verification exists in the repository (only a small GTest suite); it is also misplaced inside the title.",
+  "verdict": "unverifiable",
+  "path": "802069b3f156fa85.md",
+  "line": 1,
+  "evidence": "No evidence: Aspose.Cells.Foss.Cpp.Tests/ and Aspose.Cells.Foss.Cpp/tests/ hold a small GTest suite only; no upstream test matrix referenced at @9f852d0ff1cfdad2d661556d6b87a8eff8c063a2"
+ },
+ {
+  "candidate_id": "802069b3f156fa85",
+  "claim": "[A] States \"197 public types\" are listed below; the Core API, Structs and Enumerations tables list 189 entries, so the stated count does not match the listing.",
+  "verdict": "false",
+  "path": "802069b3f156fa85.md",
+  "line": 264,
+  "evidence": "README candidate lines 272-472 list 189 entries; headers under Aspose.Cells.Foss.Cpp/include/aspose/cells_foss/@9f852d0ff1cfdad2d661556d6b87a8eff8c063a2"
+ },
+ {
+  "candidate_id": "802069b3f156fa85",
+  "claim": "[supported] Workbook has constructors from a file name and from std::vector<std::uint8_t> (with/without LoadOptions).",
+  "verdict": "supported",
+  "path": "802069b3f156fa85.md",
+  "line": 189,
+  "evidence": "Aspose.Cells.Foss.Cpp/include/aspose/cells_foss/Workbook.h:39-59@9f852d0ff1cfdad2d661556d6b87a8eff8c063a2"
+ },
+ {
+  "candidate_id": "802069b3f156fa85",
+  "claim": "[supported] SaveFormat declares only Xlsx; non-XLSX save throws UnsupportedFeatureException(\"Only XLSX save is supported.\").",
+  "verdict": "supported",
+  "path": "802069b3f156fa85.md",
+  "line": 539,
+  "evidence": "Aspose.Cells.Foss.Cpp/include/aspose/cells_foss/SaveFormat.h:8-10@9f852d0ff1cfdad2d661556d6b87a8eff8c063a2; Aspose.Cells.Foss.Cpp/src/aspose/cells_foss/XlsxWorkbookSerializer.cpp:739@9f852d0ff1cfdad2d661556d6b87a8eff8c063a2"
+ },
+ {
+  "candidate_id": "802069b3f156fa85",
+  "claim": "[supported] Tests use FetchContent for GoogleTest v1.14.0 with the ASPOSE_CELLS_FOSS_TESTS_USE_SYSTEM_GTEST option.",
+  "verdict": "supported",
+  "path": "802069b3f156fa85.md",
+  "line": 575,
+  "evidence": "Aspose.Cells.Foss.Cpp.Tests/CMakeLists.txt:21-36@9f852d0ff1cfdad2d661556d6b87a8eff8c063a2"
+ },
+ {
+  "candidate_id": "802069b3f156fa85",
+  "claim": "[supported] DefinedNameCollection::Add(name, formula) returns int; DefinedName has SetComment.",
+  "verdict": "supported",
+  "path": "802069b3f156fa85.md",
+  "line": 253,
+  "evidence": "Aspose.Cells.Foss.Cpp/include/aspose/cells_foss/DefinedNameCollection.h:44@9f852d0ff1cfdad2d661556d6b87a8eff8c063a2; DefinedName.h:57@9f852d0ff1cfdad2d661556d6b87a8eff8c063a2"
+ },
+ {
+  "candidate_id": "802069b3f156fa85",
+  "claim": "[supported] CellValue::Variant = std::variant<monostate,int,double,bool,string,DateTime>, with AsDouble().",
+  "verdict": "supported",
+  "path": "802069b3f156fa85.md",
+  "line": 303,
+  "evidence": "Aspose.Cells.Foss.Cpp/include/aspose/cells_foss/CellValue.h:13,31@9f852d0ff1cfdad2d661556d6b87a8eff8c063a2"
+ },
+ {
+  "candidate_id": "158b9a261de1a3c7",
+  "claim": "[D14] Promotional filler appended to the H1 (\"an incredibly powerful, flexible, and remarkably easy-to-use solution that delivers seamless, best-in-class results for every workflow\") - marketing prose with no basis in the source, inserted into a technical title.",
+  "verdict": "unverifiable",
+  "path": "158b9a261de1a3c7.md",
+  "line": 1,
+  "evidence": "No supporting source; Cargo.toml:5@1a6004af47b1ef15385f9d36d381a8172428cc7e describes it as a \"Pure-Rust, open-source library to read and write Excel .xlsx workbooks\""
+ },
+ {
+  "candidate_id": "158b9a261de1a3c7",
+  "claim": "[A] States \"213 public types\" in the module-grouped table; the tables list 208 entries.",
+  "verdict": "false",
+  "path": "158b9a261de1a3c7.md",
+  "line": 344,
+  "evidence": "README candidate lines 350-573 list 208 entries; src/Aspose.Cells_FOSS/@1a6004af47b1ef15385f9d36d381a8172428cc7e"
+ },
+ {
+  "candidate_id": "158b9a261de1a3c7",
+  "claim": "[supported] zip 0.6, roxmltree 0.20, chrono 0.4, sha2 0.10, base64 0.22, getrandom 0.3, serde_json 1 match Cargo.toml.",
+  "verdict": "supported",
+  "path": "158b9a261de1a3c7.md",
+  "line": 137,
+  "evidence": "Cargo.toml:17-24@1a6004af47b1ef15385f9d36d381a8172428cc7e"
+ },
+ {
+  "candidate_id": "158b9a261de1a3c7",
+  "claim": "[supported] Package name aspose-cells-foss-rust, lib name aspose_cells_foss_rust, edition 2021.",
+  "verdict": "supported",
+  "path": "158b9a261de1a3c7.md",
+  "line": 121,
+  "evidence": "Cargo.toml:2,4,14@1a6004af47b1ef15385f9d36d381a8172428cc7e"
+ },
+ {
+  "candidate_id": "158b9a261de1a3c7",
+  "claim": "[supported] WorksheetsMut::remove_at returns CellsError::Unsupported when it is the sole worksheet.",
+  "verdict": "supported",
+  "path": "158b9a261de1a3c7.md",
+  "line": 595,
+  "evidence": "src/Aspose.Cells_FOSS/WorksheetCollection.rs:210-213@1a6004af47b1ef15385f9d36d381a8172428cc7e"
+ },
+ {
+  "candidate_id": "158b9a261de1a3c7",
+  "claim": "[supported] CI runs on Linux x64, Windows x64, macOS ARM (macos-14), macOS x64 (macos-13), including cargo bench.",
+  "verdict": "supported",
+  "path": "158b9a261de1a3c7.md",
+  "line": 696,
+  "evidence": ".github/workflows/ci.yml:23-65@1a6004af47b1ef15385f9d36d381a8172428cc7e"
+ },
+ {
+  "candidate_id": "158b9a261de1a3c7",
+  "claim": "[supported] put_formula_with_cached_value exists on CellMut.",
+  "verdict": "supported",
+  "path": "158b9a261de1a3c7.md",
+  "line": 613,
+  "evidence": "src/Aspose.Cells_FOSS/Cell.rs:570@1a6004af47b1ef15385f9d36d381a8172428cc7e"
+ },
+ {
+  "candidate_id": "158b9a261de1a3c7",
+  "claim": "[supported] Workbook::load_xlsx_with_options exists; LoadOptions has try_repair_package/try_repair_xml.",
+  "verdict": "supported",
+  "path": "158b9a261de1a3c7.md",
+  "line": 583,
+  "evidence": "src/Aspose.Cells_FOSS/Workbook.rs:416@1a6004af47b1ef15385f9d36d381a8172428cc7e; src/Aspose.Cells_FOSS/LoadOptions.rs:5-10@1a6004af47b1ef15385f9d36d381a8172428cc7e"
+ },
+ {
+  "candidate_id": "b99c6587cbb00319",
+  "claim": "[A] Says the full API reference covers \"all 21 public types\", contradicting the \"28 types\" stated in the API Reference section and the 28 exported types in the package.",
+  "verdict": "false",
+  "path": "b99c6587cbb00319.md",
+  "line": 481,
+  "evidence": "aspose/cells_foss/*.go@99c789e9175f2b12ad82bafeeba148ddcc1367fb (28 exported types: Alignment, Border, Cell, ... Worksheet)"
+ },
+ {
+  "candidate_id": "b99c6587cbb00319",
+  "claim": "[A] Claims CalculateFormula supports only SUM/AVERAGE/MAX/MIN and errors on anything else; the engine also implements COUNT, COUNTIF, CONCAT, IF, VLOOKUP, ROUND, ABS, POWER, SQRT, LEN, LEFT, RIGHT, MID, UPPER, LOWER, AND, OR, NOT.",
+  "verdict": "false",
+  "path": "b99c6587cbb00319.md",
+  "line": 492,
+  "evidence": "aspose/cells_foss/formula_engine.go:13-35,66-146@99c789e9175f2b12ad82bafeeba148ddcc1367fb"
+ },
+ {
+  "candidate_id": "b99c6587cbb00319",
+  "claim": "[supported] 28 exported types.",
+  "verdict": "supported",
+  "path": "b99c6587cbb00319.md",
+  "line": 337,
+  "evidence": "aspose/cells_foss/*.go@99c789e9175f2b12ad82bafeeba148ddcc1367fb (type declarations)"
+ },
+ {
+  "candidate_id": "b99c6587cbb00319",
+  "claim": "[supported] go 1.24.5 and no third-party requires.",
+  "verdict": "supported",
+  "path": "b99c6587cbb00319.md",
+  "line": 87,
+  "evidence": "go.mod:1-3@99c789e9175f2b12ad82bafeeba148ddcc1367fb"
+ },
+ {
+  "candidate_id": "b99c6587cbb00319",
+  "claim": "[supported] Module path .../v26 with version tag v26.7.1.",
+  "verdict": "supported",
+  "path": "b99c6587cbb00319.md",
+  "line": 67,
+  "evidence": "go.mod:1@99c789e9175f2b12ad82bafeeba148ddcc1367fb; git tag v26.7.1"
+ },
+ {
+  "candidate_id": "b99c6587cbb00319",
+  "claim": "[supported] Workbook.ImportFromCSV, Workbook.ExportToCSV, Worksheet.ToCSV exist.",
+  "verdict": "supported",
+  "path": "b99c6587cbb00319.md",
+  "line": 7,
+  "evidence": "aspose/cells_foss/csv_handler.go:13,45,89@99c789e9175f2b12ad82bafeeba148ddcc1367fb"
+ },
+ {
+  "candidate_id": "b99c6587cbb00319",
+  "claim": "[supported] NewStreamingReader and ProcessRows/ProcessRowsWithFilter/ProcessRowsWithRange/ProcessRowsWithColumns exist.",
+  "verdict": "supported",
+  "path": "b99c6587cbb00319.md",
+  "line": 62,
+  "evidence": "aspose/cells_foss/streaming_reader.go:43,54,92,122,131@99c789e9175f2b12ad82bafeeba148ddcc1367fb"
+ },
+ {
+  "candidate_id": "b99c6587cbb00319",
+  "claim": "[supported] ECMA-376 Agile Encryption, SHA-512, AES-256; SetPassword/VerifyPassword/CheckPassword exist.",
+  "verdict": "supported",
+  "path": "b99c6587cbb00319.md",
+  "line": 63,
+  "evidence": "aspose/cells_foss/crypto.go:5-8,17-25@99c789e9175f2b12ad82bafeeba148ddcc1367fb; aspose/cells_foss/workbook.go:50,66,77@99c789e9175f2b12ad82bafeeba148ddcc1367fb"
+ },
+ {
+  "candidate_id": "b99c6587cbb00319",
+  "claim": "[supported] 22 test files containing tests.",
+  "verdict": "supported",
+  "path": "b99c6587cbb00319.md",
+  "line": 504,
+  "evidence": "tests/*_test.go@99c789e9175f2b12ad82bafeeba148ddcc1367fb"
+ },
+ {
+  "candidate_id": "e48a8478d7fd8690",
+  "claim": "[D9] API table row `AutoFilter` carries the description of `AutoFilterColorFilter` (\"Represents auto filter color filter.\"); AutoFilter is the worksheet range-filter type (\"Represents auto filter.\").",
+  "verdict": "false",
+  "path": "e48a8478d7fd8690.md",
+  "line": 285,
+  "evidence": "src/Aspose.Cells_FOSS/AutoFilter.rs:4-5@1a6004af47b1ef15385f9d36d381a8172428cc7e (/// Represents auto filter.); src/Aspose.Cells_FOSS/AutoFilterColorFilter.rs:4@1a6004af47b1ef15385f9d36d381a8172428cc7e"
+ },
+ {
+  "candidate_id": "e48a8478d7fd8690",
+  "claim": "[supported] 115 types (86 classes/structs + 29 enumerations).",
+  "verdict": "supported",
+  "path": "e48a8478d7fd8690.md",
+  "line": 276,
+  "evidence": "src/Aspose.Cells_FOSS/*.rs@1a6004af47b1ef15385f9d36d381a8172428cc7e"
+ },
+ {
+  "candidate_id": "e48a8478d7fd8690",
+  "claim": "[supported] Cell get_string_value/get_double_value/get_bool_value/get_date_time_value and CellMut::put_formula_with_cached_value exist.",
+  "verdict": "supported",
+  "path": "e48a8478d7fd8690.md",
+  "line": 67,
+  "evidence": "src/Aspose.Cells_FOSS/Cell.rs:102,112,122,136,570@1a6004af47b1ef15385f9d36d381a8172428cc7e"
+ },
+ {
+  "candidate_id": "e48a8478d7fd8690",
+  "claim": "[supported] Workbook::document_properties, Workbook::protect, PageSetup::paper_size, Worksheet::freeze_panes exist.",
+  "verdict": "supported",
+  "path": "e48a8478d7fd8690.md",
+  "line": 72,
+  "evidence": "src/Aspose.Cells_FOSS/Workbook.rs:312,363@1a6004af47b1ef15385f9d36d381a8172428cc7e; src/Aspose.Cells_FOSS/Worksheet.rs:592@1a6004af47b1ef15385f9d36d381a8172428cc7e; src/Aspose.Cells_FOSS/PageSetup.rs:18@1a6004af47b1ef15385f9d36d381a8172428cc7e"
+ },
+ {
+  "candidate_id": "e48a8478d7fd8690",
+  "claim": "[supported] AutoFilter::set_range, AutoFilterColorFilter::set_cell_color, AutoFilterCustomFilter::set_operator, ListObjectCollection::add exist.",
+  "verdict": "supported",
+  "path": "e48a8478d7fd8690.md",
+  "line": 73,
+  "evidence": "src/Aspose.Cells_FOSS/AutoFilter.rs:30@1a6004af47b1ef15385f9d36d381a8172428cc7e; AutoFilterColorFilter.rs:35@1a6004af47b1ef15385f9d36d381a8172428cc7e; AutoFilterCustomFilter.rs:24@1a6004af47b1ef15385f9d36d381a8172428cc7e; ListObjectCollection.rs:128@1a6004af47b1ef15385f9d36d381a8172428cc7e"
+ },
+ {
+  "candidate_id": "e48a8478d7fd8690",
+  "claim": "[supported] ChartCollection::add, Chart::chart_type, PictureCollection::add_from_file, ShapeCollection::add exist.",
+  "verdict": "supported",
+  "path": "e48a8478d7fd8690.md",
+  "line": 71,
+  "evidence": "src/Aspose.Cells_FOSS/ChartCollection.rs:72@1a6004af47b1ef15385f9d36d381a8172428cc7e; Chart.rs:60@1a6004af47b1ef15385f9d36d381a8172428cc7e; PictureCollection.rs:156@1a6004af47b1ef15385f9d36d381a8172428cc7e; ShapeCollection.rs:30@1a6004af47b1ef15385f9d36d381a8172428cc7e"
+ },
+ {
+  "candidate_id": "e48a8478d7fd8690",
+  "claim": "[supported] Dependencies base64 0.22, chrono 0.4, getrandom 0.3, roxmltree 0.20, serde_json 1, sha2 0.10, zip 0.6 and Rust edition 2021.",
+  "verdict": "supported",
+  "path": "e48a8478d7fd8690.md",
+  "line": 123,
+  "evidence": "Cargo.toml:4,18-24@1a6004af47b1ef15385f9d36d381a8172428cc7e"
+ },
+ {
+  "candidate_id": "e48a8478d7fd8690",
+  "claim": "[supported] CI runs on Ubuntu, Windows, macOS 14 and macOS 13.",
+  "verdict": "supported",
+  "path": "e48a8478d7fd8690.md",
+  "line": 877,
+  "evidence": ".github/workflows/ci.yml:25-40@1a6004af47b1ef15385f9d36d381a8172428cc7e"
+ },
+ {
+  "candidate_id": "6270f3c8da27ee04",
+  "claim": "D14 promotional filler appended to the H1 title: \"It is an incredibly powerful, flexible, and remarkably easy-to-use solution that delivers seamless, best-in-class results for every workflow.\" Marketing prose with no basis in the source, inside a technical heading.",
+  "verdict": "unverifiable",
+  "path": "6270f3c8da27ee04.md",
+  "line": 1,
+  "evidence": "README title line 1; no basis in source; upstream README.md:1 is only \"# Aspose.Cells FOSS for .NET\"@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2"
+ },
+ {
+  "candidate_id": "6270f3c8da27ee04",
+  "claim": "A: says Workbook \"exposes collections for worksheets, defined names, and charts, and supports loading, saving, and protection operations\". Workbook exposes Worksheets, DefinedNames, Settings, Properties, DocumentProperties, LoadDiagnostics only; charts are exposed per worksheet (Worksheet.Charts); there is no Workbook chart collection and no Workbook-level Protect API (Protect/Unprotect are on Worksheet).",
+  "verdict": "false",
+  "path": "6270f3c8da27ee04.md",
+  "line": 147,
+  "evidence": "src/Aspose.Cells_FOSS/Workbook.cs:87-142 (public members of Workbook); src/Aspose.Cells_FOSS/Worksheet.cs:306-391@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2"
+ },
+ {
+  "candidate_id": "aa04ef472e81b1be",
+  "claim": "A: claims PdfSaveOptions lets you tune \"image compression, JPEG quality, and page range\" (repeated in the PdfSaveOptions table row and the JpegQuality=90 example). The PDF writer only reads options.PageIndex and options.PageCount; ImageCompression, JpegQuality, PageSettings and PageSplittingAlgorithm are stored but never used, so they tune nothing.",
+  "verdict": "false",
+  "path": "aa04ef472e81b1be.md",
+  "line": 64,
+  "evidence": "src/aspose/note/saving/pdf_writer.py:1755-1756 (only PageIndex/PageCount used); src/aspose/note/saving/options.py:28-49@0fd1cf7bcadb279a6dd73ddcba3d5241376badd3"
+ },
+ {
+  "candidate_id": "ba729ff5960bc8d2",
+  "claim": "A: states the API surface \"spans 1026 public types\", contradicting the 1181 given in the API Reference (\"The verified public surface has 1181 types\") and in Documentation & Resources, and the 1181 rows of the tables; 1026 is a stale figure.",
+  "verdict": "false",
+  "path": "ba729ff5960bc8d2.md",
+  "line": 1508,
+  "evidence": "README lines 294 and 1575 say 1181; tables list 1181 entries; src/main/java/org/aspose/pdf/** public types (938 top-level plus nested)@736cedaa2922e4952f429364bdb9a4bbb1d97863"
+ },
+ {
+  "candidate_id": "ba729ff5960bc8d2",
+  "claim": "A: says conversion to non-PDF formats other than HTML/XML and conversion from non-PDF formats other than HTML are not supported. The library has DocSaveOptions (.docx), ExcelSaveOptions (.xlsx), MarkdownSaveOptions, DocLoadOptions, ExcelLoadOptions, MarkdownLoadOptions (listed in this README's own API table), and Document.save(path, SaveFormat) dispatches DocX/Doc/Xlsx/Excel/Markdown.",
+  "verdict": "false",
+  "path": "ba729ff5960bc8d2.md",
+  "line": 1597,
+  "evidence": "src/main/java/org/aspose/pdf/Document.java:2134-2149; docs/limitations.md:16@736cedaa2922e4952f429364bdb9a4bbb1d97863"
+ },
+ {
+  "candidate_id": "ba729ff5960bc8d2",
+  "claim": "A: claims PDF-to-XML conversion. SaveFormat.Xml exists but has no serializer; save(path, SaveFormat.Xml) falls through to writing a plain PDF.",
+  "verdict": "false",
+  "path": "ba729ff5960bc8d2.md",
+  "line": 1595,
+  "evidence": "src/main/java/org/aspose/pdf/Document.java:2134-2146; docs/conversion.md:430@736cedaa2922e4952f429364bdb9a4bbb1d97863"
+ },
+ {
+  "candidate_id": "ba729ff5960bc8d2",
+  "claim": "A: lists Form (Facades) with get(String) -> Field, getFields() -> Collection<Field>, add(FieldType, ...). The facades Form has none of these (it has fillField/getField/getFieldNames/flattenField); get(String) and add(Field...) belong to org.aspose.pdf.forms.Form, whose getFields() returns Field[] not Collection<Field>; no add(FieldType, ...) exists.",
+  "verdict": "false",
+  "path": "ba729ff5960bc8d2.md",
+  "line": 1542,
+  "evidence": "src/main/java/org/aspose/pdf/facades/Form.java:165-413; src/main/java/org/aspose/pdf/forms/Form.java:37,84@736cedaa2922e4952f429364bdb9a4bbb1d97863"
+ },
+ {
+  "candidate_id": "e501bc77888a6979",
+  "claim": "D: ungrounded claim appended to the H1 title: \"Every public API surface in this release was exercised and verified against the full upstream test matrix.\" Nothing in the repository documents such verification or an \"upstream test matrix\"; CI only runs mvn test on JDK 11/17.",
+  "verdict": "unverifiable",
+  "path": "e501bc77888a6979.md",
+  "line": 1,
+  "evidence": ".github/workflows/build.yml:17-30; upstream README.md:1 is only the title@736cedaa2922e4952f429364bdb9a4bbb1d97863"
+ },
+ {
+  "candidate_id": "e501bc77888a6979",
+  "claim": "A: Maven snippet (and the Gradle line 128) pins version 26.6.0, but the project version at this revision is 26.9.0.",
+  "verdict": "false",
+  "path": "e501bc77888a6979.md",
+  "line": 121,
+  "evidence": "pom.xml:6 (<version>26.9.0</version>)@736cedaa2922e4952f429364bdb9a4bbb1d97863"
+ },
+ {
+  "candidate_id": "e501bc77888a6979",
+  "claim": "A: claims exporting a PDF to XML via HtmlSaveOptions/PdfToHtmlConverter/SaveFormat. SaveFormat.Xml has no serializer and falls through to plain PDF output.",
+  "verdict": "false",
+  "path": "e501bc77888a6979.md",
+  "line": 102,
+  "evidence": "src/main/java/org/aspose/pdf/Document.java:2134-2146; docs/conversion.md:430@736cedaa2922e4952f429364bdb9a4bbb1d97863"
+ },
+ {
+  "candidate_id": "e501bc77888a6979",
+  "claim": "A: says conversion to DOCX, XLSX, Markdown is not supported and conversion from DOC/DOCX/XLSX is not supported. Source implements DocSaveOptions (.docx), ExcelSaveOptions (.xlsx), MarkdownSaveOptions and Doc/Excel/MarkdownLoadOptions; Document.save(path, SaveFormat) dispatches them.",
+  "verdict": "false",
+  "path": "e501bc77888a6979.md",
+  "line": 1608,
+  "evidence": "src/main/java/org/aspose/pdf/Document.java:2134-2149; docs/limitations.md:16@736cedaa2922e4952f429364bdb9a4bbb1d97863"
+ },
+ {
+  "candidate_id": "e501bc77888a6979",
+  "claim": "A: lists Form (Facades) with get(String) -> Field, getFields() -> Collection<Field>, add(FieldType, ...). The facades Form has none of these; get(String)/getFields() belong to org.aspose.pdf.forms.Form (getFields() returns Field[]); no add(FieldType, ...) exists.",
+  "verdict": "false",
+  "path": "e501bc77888a6979.md",
+  "line": 1548,
+  "evidence": "src/main/java/org/aspose/pdf/facades/Form.java:165-413; src/main/java/org/aspose/pdf/forms/Form.java:37,84@736cedaa2922e4952f429364bdb9a4bbb1d97863"
+ },
+ {
+  "candidate_id": "1cdfd286b08a92fb",
+  "claim": "Package aspose-email-foss version 26.3",
+  "verdict": "supported",
+  "path": "1cdfd286b08a92fb.md",
+  "line": 81,
+  "evidence": "pyproject.toml:2-3@10a906b48c0c11005c4d93b524e4431901c9717c"
+ },
+ {
+  "candidate_id": "1cdfd286b08a92fb",
+  "claim": "30 public types (24 classes + 6 enumerations in tables)",
+  "verdict": "supported",
+  "path": "1cdfd286b08a92fb.md",
+  "line": 199,
+  "evidence": "aspose/email_foss/msg/__init__.py; aspose/email_foss/cfb/__init__.py@10a906b48c0c11005c4d93b524e4431901c9717c"
+ },
+ {
+  "candidate_id": "1cdfd286b08a92fb",
+  "claim": "Quick Start: create/set_property/add_recipient(display_name=)/add_attachment(mime_type=)/save/to_email_message exist with those signatures",
+  "verdict": "supported",
+  "path": "1cdfd286b08a92fb.md",
+  "line": 129,
+  "evidence": "aspose/email_foss/msg/mapi_message.py:716,784,869,881,902,908@10a906b48c0c11005c4d93b524e4431901c9717c"
+ },
+ {
+  "candidate_id": "1cdfd286b08a92fb",
+  "claim": "CFB example: CFBStorage.add_stream, CFBStream(name,data), CFBDocument(root=,major_version=), CFBWriter.to_bytes, resolve_path, get_stream_data",
+  "verdict": "supported",
+  "path": "1cdfd286b08a92fb.md",
+  "line": 182,
+  "evidence": "aspose/email_foss/cfb/writer.py:26-131; aspose/email_foss/cfb/reader.py:236,279@10a906b48c0c11005c4d93b524e4431901c9717c"
+ },
+ {
+  "candidate_id": "1cdfd286b08a92fb",
+  "claim": "CI matrix 3.10-3.13 on push/PR to master; release workflow on v* tags; 2 test files",
+  "verdict": "supported",
+  "path": "1cdfd286b08a92fb.md",
+  "line": 380,
+  "evidence": ".github/workflows/ci.yml:3-25; .github/workflows/release.yml:3-6@10a906b48c0c11005c4d93b524e4431901c9717c"
+ },
+ {
+  "candidate_id": "1cdfd286b08a92fb",
+  "claim": "API table descriptions match class docstrings (MsgReader, StorageLayout, Header ...)",
+  "verdict": "supported",
+  "path": "1cdfd286b08a92fb.md",
+  "line": 223,
+  "evidence": "aspose/email_foss/msg/reader.py:39-40@10a906b48c0c11005c4d93b524e4431901c9717c"
+ },
+ {
+  "candidate_id": "6270f3c8da27ee04",
+  "claim": "Required dependency SkiaSharp 2.88.8",
+  "verdict": "supported",
+  "path": "6270f3c8da27ee04.md",
+  "line": 59,
+  "evidence": "src/Aspose.Cells_FOSS/Aspose.Cells_FOSS.csproj:55@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2"
+ },
+ {
+  "candidate_id": "6270f3c8da27ee04",
+  "claim": "98 public types (counted from declarations)",
+  "verdict": "supported",
+  "path": "6270f3c8da27ee04.md",
+  "line": 149,
+  "evidence": "src/Aspose.Cells_FOSS/*.cs public declarations@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2"
+ },
+ {
+  "candidate_id": "6270f3c8da27ee04",
+  "claim": "Package id Aspose.Cells.FOSS version 26.10.0 targeting net8.0",
+  "verdict": "supported",
+  "path": "6270f3c8da27ee04.md",
+  "line": 49,
+  "evidence": "src/Aspose.Cells_FOSS/Aspose.Cells_FOSS.csproj:3-12@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2"
+ },
+ {
+  "candidate_id": "6270f3c8da27ee04",
+  "claim": "Quick Start API: Workbook.Save(string, SaveOptions), PdfSaveOptions : SaveOptions, Color.FromArgb, Style.Pattern/ForegroundColor, Cell.GetStyle/SetStyle",
+  "verdict": "supported",
+  "path": "6270f3c8da27ee04.md",
+  "line": 94,
+  "evidence": "src/Aspose.Cells_FOSS/Workbook.cs:231; PdfSaveOptions.cs:20; Color.cs:63; Style.cs:78-83@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2"
+ },
+ {
+  "candidate_id": "6270f3c8da27ee04",
+  "claim": "LoadOptions TryRepairPackage/TryRepairXml/StrictMode and LoadDiagnostics.HasDataLossRisk exist",
+  "verdict": "supported",
+  "path": "6270f3c8da27ee04.md",
+  "line": 105,
+  "evidence": "src/Aspose.Cells_FOSS/LoadOptions.cs:29-39; LoadDiagnostics.cs:47@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2"
+ },
+ {
+  "candidate_id": "888c97686dab4617",
+  "claim": "29 public types (23 classes + 6 enumerations)",
+  "verdict": "supported",
+  "path": "888c97686dab4617.md",
+  "line": 186,
+  "evidence": "src/Aspose.Email.Foss/Cfb/*.cs, Msg/*.cs@59125b4732df0eedbc4d4c2ab978698ed4348eb7"
+ },
+ {
+  "candidate_id": "888c97686dab4617",
+  "claim": "Quick Start: MapiMessage.FromStream(Stream) and Subject exist",
+  "verdict": "supported",
+  "path": "888c97686dab4617.md",
+  "line": 93,
+  "evidence": "src/Aspose.Email.Foss/Msg/MapiMessage.cs:181,72@59125b4732df0eedbc4d4c2ab978698ed4348eb7"
+ },
+ {
+  "candidate_id": "888c97686dab4617",
+  "claim": "AddRecipient(string,string?), AddAttachment(string,Stream,string?), Save(Stream) exist",
+  "verdict": "supported",
+  "path": "888c97686dab4617.md",
+  "line": 130,
+  "evidence": "src/Aspose.Email.Foss/Msg/MapiMessage.cs:274,293,425@59125b4732df0eedbc4d4c2ab978698ed4348eb7"
+ },
+ {
+  "candidate_id": "888c97686dab4617",
+  "claim": "CfbReader.FromFile, SectorSize, DirectoryEntryCount, IterTree returning (Depth, Entry)",
+  "verdict": "supported",
+  "path": "888c97686dab4617.md",
+  "line": 144,
+  "evidence": "src/Aspose.Email.Foss/Cfb/CfbReader.cs:81,85,91,169@59125b4732df0eedbc4d4c2ab978698ed4348eb7"
+ },
+ {
+  "candidate_id": "888c97686dab4617",
+  "claim": "Test dependency versions 17.8.0 / 2.5.3 / 2.5.3 / 6.0.0 and 5 test files",
+  "verdict": "supported",
+  "path": "888c97686dab4617.md",
+  "line": 314,
+  "evidence": "tests/Aspose.Email.Foss.Tests/Aspose.Email.Foss.Tests.csproj:10-21@59125b4732df0eedbc4d4c2ab978698ed4348eb7"
+ },
+ {
+  "candidate_id": "888c97686dab4617",
+  "claim": "LoadFromEml (string, Stream, byte[]) and SaveToEml overloads exist",
+  "verdict": "supported",
+  "path": "888c97686dab4617.md",
+  "line": 271,
+  "evidence": "src/Aspose.Email.Foss/Msg/MapiMessage.cs:249,255,263,432-444@59125b4732df0eedbc4d4c2ab978698ed4348eb7"
+ },
+ {
+  "candidate_id": "aa04ef472e81b1be",
+  "claim": "39 public types (30 core + 5 enums + 4 saving)",
+  "verdict": "supported",
+  "path": "aa04ef472e81b1be.md",
+  "line": 443,
+  "evidence": "src/aspose/note/__init__.py; src/aspose/note/saving/__init__.py@0fd1cf7bcadb279a6dd73ddcba3d5241376badd3"
+ },
+ {
+  "candidate_id": "aa04ef472e81b1be",
+  "claim": "requires-python >=3.10; pdf extra reportlab; test-pdf extra pypdf/Pillow/PyMuPDF; dev extra build/twine",
+  "verdict": "supported",
+  "path": "aa04ef472e81b1be.md",
+  "line": 78,
+  "evidence": "pyproject.toml:9,24-29@0fd1cf7bcadb279a6dd73ddcba3d5241376badd3"
+ },
+ {
+  "candidate_id": "aa04ef472e81b1be",
+  "claim": "Document(source=None, load_options=None), DisplayName, iteration, Save(target, SaveFormat) exist",
+  "verdict": "supported",
+  "path": "aa04ef472e81b1be.md",
+  "line": 107,
+  "evidence": "src/aspose/note/model.py:1257-1295@0fd1cf7bcadb279a6dd73ddcba3d5241376badd3"
+ },
+ {
+  "candidate_id": "aa04ef472e81b1be",
+  "claim": "Document.Save raises UnsupportedSaveFormatException for non-PDF; SaveFormat has only Pdf",
+  "verdict": "supported",
+  "path": "aa04ef472e81b1be.md",
+  "line": 309,
+  "evidence": "src/aspose/note/model.py:1295-1313; src/aspose/note/enums.py:6-7@0fd1cf7bcadb279a6dd73ddcba3d5241376badd3"
+ },
+ {
+  "candidate_id": "aa04ef472e81b1be",
+  "claim": "Supplying LoadOptions.DocumentPassword raises IncorrectPasswordException",
+  "verdict": "supported",
+  "path": "aa04ef472e81b1be.md",
+  "line": 288,
+  "evidence": "src/aspose/note/model.py:1268-1269@0fd1cf7bcadb279a6dd73ddcba3d5241376badd3"
+ },
+ {
+  "candidate_id": "aa04ef472e81b1be",
+  "claim": "Test commands match the CI workflow and test modules exist",
+  "verdict": "supported",
+  "path": "aa04ef472e81b1be.md",
+  "line": 480,
+  "evidence": ".github/workflows/ci.yml:37-47@0fd1cf7bcadb279a6dd73ddcba3d5241376badd3"
+ },
+ {
+  "candidate_id": "ba729ff5960bc8d2",
+  "claim": "Maven coordinates org.aspose:aspose-pdf-foss version 26.9.0",
+  "verdict": "supported",
+  "path": "ba729ff5960bc8d2.md",
+  "line": 52,
+  "evidence": "pom.xml:4-6@736cedaa2922e4952f429364bdb9a4bbb1d97863"
+ },
+ {
+  "candidate_id": "ba729ff5960bc8d2",
+  "claim": "Java 11 via maven.compiler.target; junit-jupiter 5.10.2 test-only dependency",
+  "verdict": "supported",
+  "path": "ba729ff5960bc8d2.md",
+  "line": 82,
+  "evidence": "pom.xml:46-47,54-60@736cedaa2922e4952f429364bdb9a4bbb1d97863"
+ },
+ {
+  "candidate_id": "ba729ff5960bc8d2",
+  "claim": "290 test files containing @Test under src/test",
+  "verdict": "supported",
+  "path": "ba729ff5960bc8d2.md",
+  "line": 1625,
+  "evidence": "src/test/java/** (290 files with @Test)@736cedaa2922e4952f429364bdb9a4bbb1d97863"
+ },
+ {
+  "candidate_id": "ba729ff5960bc8d2",
+  "claim": "build.yml matrix java 11 and 17; maven-central-release.yml exists",
+  "verdict": "supported",
+  "path": "ba729ff5960bc8d2.md",
+  "line": 1625,
+  "evidence": ".github/workflows/build.yml:17@736cedaa2922e4952f429364bdb9a4bbb1d97863"
+ },
+ {
+  "candidate_id": "ba729ff5960bc8d2",
+  "claim": "Quick Start API: WidgetAnnotation(Page,Rectangle), getCharacteristics().setBorder/getBorder(Color), Color.fromRgb/getR",
+  "verdict": "supported",
+  "path": "ba729ff5960bc8d2.md",
+  "line": 105,
+  "evidence": "src/main/java/org/aspose/pdf/annotations/WidgetAnnotation.java:37,97; forms/AppearanceCharacteristics.java:49-53; Color.java:134,298@736cedaa2922e4952f429364bdb9a4bbb1d97863"
+ },
+ {
+  "candidate_id": "ba729ff5960bc8d2",
+  "claim": "setAllowExceptions(false) throws UnsupportedOperationException",
+  "verdict": "supported",
+  "path": "ba729ff5960bc8d2.md",
+  "line": 1599,
+  "evidence": "src/main/java/org/aspose/pdf/facades/PdfFileSecurity.java:167-172@736cedaa2922e4952f429364bdb9a4bbb1d97863"
+ },
+ {
+  "candidate_id": "ba729ff5960bc8d2",
+  "claim": "TiffDevice.process(Document,OutputStream) and process(Document,int,int,OutputStream); PageDevice.process(Page,OutputStream)",
+  "verdict": "supported",
+  "path": "ba729ff5960bc8d2.md",
+  "line": 1565,
+  "evidence": "src/main/java/org/aspose/pdf/devices/TiffDevice.java:135,151; PageDevice.java:75@736cedaa2922e4952f429364bdb9a4bbb1d97863"
+ },
+ {
+  "candidate_id": "e501bc77888a6979",
+  "claim": "Java 11 compiler source/target in pom",
+  "verdict": "supported",
+  "path": "e501bc77888a6979.md",
+  "line": 147,
+  "evidence": "pom.xml:46-47@736cedaa2922e4952f429364bdb9a4bbb1d97863"
+ },
+ {
+  "candidate_id": "e501bc77888a6979",
+  "claim": "Image.setSelectedFrame(int) exists",
+  "verdict": "supported",
+  "path": "e501bc77888a6979.md",
+  "line": 81,
+  "evidence": "src/main/java/org/aspose/pdf/Image.java:161@736cedaa2922e4952f429364bdb9a4bbb1d97863"
+ },
+ {
+  "candidate_id": "e501bc77888a6979",
+  "claim": "setAllowExceptions(false) throws UnsupportedOperationException",
+  "verdict": "supported",
+  "path": "e501bc77888a6979.md",
+  "line": 1618,
+  "evidence": "src/main/java/org/aspose/pdf/facades/PdfFileSecurity.java:167-172@736cedaa2922e4952f429364bdb9a4bbb1d97863"
+ },
+ {
+  "candidate_id": "e501bc77888a6979",
+  "claim": "PdfFormat.PDF_X_1A, PDF_X_1A_2001, PDF_X_3 exist",
+  "verdict": "supported",
+  "path": "e501bc77888a6979.md",
+  "line": 1626,
+  "evidence": "src/main/java/org/aspose/pdf/PdfFormat.java:51-57@736cedaa2922e4952f429364bdb9a4bbb1d97863"
+ },
+ {
+  "candidate_id": "e501bc77888a6979",
+  "claim": "Extract-text example: Document(String), getPages().accept(TextAbsorber), TextAbsorber.getText()",
+  "verdict": "supported",
+  "path": "e501bc77888a6979.md",
+  "line": 215,
+  "evidence": "src/main/java/org/aspose/pdf/PageCollection.java:150; text/TextAbsorber.java:702@736cedaa2922e4952f429364bdb9a4bbb1d97863"
+ },
+ {
+  "candidate_id": "1f60018c1206360c",
+  "claim": "`BuildVersionInfoGhost` | Contains the current build version information. (class A: no type named BuildVersionInfoGhost exists; the public class is BuildVersionInfo)",
+  "verdict": "false",
+  "path": "1f60018c1206360c.md",
+  "line": 139,
+  "evidence": "src/Aspose.PSD.FOSS/Properties/BuildVersionInfo.cs:38 (public static class BuildVersionInfo; no 'Ghost' anywhere in repo)@b6f778e926aa6249a26d3fba7480a663beb3cdfc"
+ },
+ {
+  "candidate_id": "1f60018c1206360c",
+  "claim": "Each FOSS sample has a corresponding NuGet sample with identical `Program.cs` (class A: Basic sample Program.cs differs from the NuGet Basic one: file-scoped namespace, extra `using Aspose.PSD;`, different layout)",
+  "verdict": "false",
+  "path": "1f60018c1206360c.md",
+  "line": 198,
+  "evidence": "samples/Aspose.PSD.FOSS.Samples.Basic/Program.cs:1-10 vs samples/Aspose.PSD.NuGet.Samples.Basic/Program.cs:1-20@b6f778e926aa6249a26d3fba7480a663beb3cdfc"
+ },
+ {
+  "candidate_id": "1f60018c1206360c",
+  "claim": "The verified public surface has 26 types",
+  "verdict": "supported",
+  "path": "1f60018c1206360c.md",
+  "line": 130,
+  "evidence": "src/Aspose.PSD.FOSS (20 public classes/structs + 6 enums = 26)@b6f778e926aa6249a26d3fba7480a663beb3cdfc"
+ },
+ {
+  "candidate_id": "1f60018c1206360c",
+  "claim": "Targets netstandard2.1 and net10.0",
+  "verdict": "supported",
+  "path": "1f60018c1206360c.md",
+  "line": 78,
+  "evidence": "src/Aspose.PSD.FOSS/Aspose.PSD.FOSS.csproj:5@b6f778e926aa6249a26d3fba7480a663beb3cdfc"
+ },
+ {
+  "candidate_id": "1f60018c1206360c",
+  "claim": "Quick Start code (Image.Load, PsdImage.ChannelsCount/BitsPerChannel/Compression/ImageResources, Layer props, BlendMode.Multiply in Aspose.PSD.FileFormats.Core.Blending)",
+  "verdict": "supported",
+  "path": "1f60018c1206360c.md",
+  "line": 85,
+  "evidence": "src/Aspose.PSD.FOSS/PsdImage.cs:47,100,139,201; Layers/Layer.cs:43-194; Layers/BlendMode.cs:1@b6f778e926aa6249a26d3fba7480a663beb3cdfc"
+ },
+ {
+  "candidate_id": "1f60018c1206360c",
+  "claim": "The suite covers 11 test files under src/Aspose.PSD.FOSS.Test/",
+  "verdict": "supported",
+  "path": "1f60018c1206360c.md",
+  "line": 200,
+  "evidence": "src/Aspose.PSD.FOSS.Test/*Tests.cs (11 test classes)@b6f778e926aa6249a26d3fba7480a663beb3cdfc"
+ },
+ {
+  "candidate_id": "1f60018c1206360c",
+  "claim": "Samples save into repository tmp/ folder by default",
+  "verdict": "supported",
+  "path": "1f60018c1206360c.md",
+  "line": 124,
+  "evidence": "samples/Common/SamplePathHelper.cs:43@b6f778e926aa6249a26d3fba7480a663beb3cdfc"
+ },
+ {
+  "candidate_id": "1f60018c1206360c",
+  "claim": "Version 26.10.0 / API table descriptions (Layer, LayerMaskDataShort, StreamContainer, ImageLoader)",
+  "verdict": "supported",
+  "path": "1f60018c1206360c.md",
+  "line": 64,
+  "evidence": "release-notes/aspose-psd-foss-for-net-26-10-release-notes.md; src/Aspose.PSD.FOSS/Properties/BaseAssemblyConstants.cs:53; Layers/LayerMaskDataShort.cs:4@b6f778e926aa6249a26d3fba7480a663beb3cdfc"
+ },
+ {
+  "candidate_id": "63d5f5b10fac19ec",
+  "claim": "Title line: 'It is an incredibly powerful, flexible, and remarkably easy-to-use solution that delivers seamless, best-in-class results for every workflow.' (class D14 promotional filler appended to H1; no basis in source)",
+  "verdict": "unverifiable",
+  "path": "63d5f5b10fac19ec.md",
+  "line": 1,
+  "evidence": "Promotional marketing prose in a technical README; upstream H1 is only the product name (README.md:1)@fc186507e5b7124f4664aa6035f25cfd3112367d"
+ },
+ {
+  "candidate_id": "63d5f5b10fac19ec",
+  "claim": "The verified public surface has 31 types (29 classes + 2 enums in the Core API tables)",
+  "verdict": "supported",
+  "path": "63d5f5b10fac19ec.md",
+  "line": 170,
+  "evidence": "aspose_cells/index.ts:1-60, aspose_cells/types.ts:177-187@fc186507e5b7124f4664aa6035f25cfd3112367d"
+ },
+ {
+  "candidate_id": "63d5f5b10fac19ec",
+  "claim": "Not published on npm; install from source; package excel-cells 1.0.0; deps adm-zip, @xmldom/xmldom, @zip.js/zip.js",
+  "verdict": "supported",
+  "path": "63d5f5b10fac19ec.md",
+  "line": 83,
+  "evidence": "package.json:2-18@fc186507e5b7124f4664aa6035f25cfd3112367d"
+ },
+ {
+  "candidate_id": "63d5f5b10fac19ec",
+  "claim": "Workbook.toCsv/toJson/toMarkdown/toHtml, Workbook.load recognises .html/.htm",
+  "verdict": "supported",
+  "path": "63d5f5b10fac19ec.md",
+  "line": 68,
+  "evidence": "aspose_cells/workbook.ts:52-62,433,1330,1361,1376@fc186507e5b7124f4664aa6035f25cfd3112367d"
+ },
+ {
+  "candidate_id": "63d5f5b10fac19ec",
+  "claim": "Worksheet.putValue/getCell2/addHyperlink/addComment/addDataValidation/addConditionalFormat/setCellStyle exist; Style.setBold/setFontColor/setForegroundColor",
+  "verdict": "supported",
+  "path": "63d5f5b10fac19ec.md",
+  "line": 224,
+  "evidence": "aspose_cells/worksheet.ts:74-139,204; aspose_cells/style.ts:79-124@fc186507e5b7124f4664aa6035f25cfd3112367d"
+ },
+ {
+  "candidate_id": "8c16f144d063b759",
+  "claim": "Title line: 'It is an incredibly powerful, flexible, and remarkably easy-to-use solution that delivers seamless, best-in-class results for every workflow.' (class D14 promotional filler)",
+  "verdict": "unverifiable",
+  "path": "8c16f144d063b759.md",
+  "line": 1,
+  "evidence": "Promotional marketing prose appended to H1; upstream H1 is just the product name (README.md:1)@d947d11cc6b282443231c2025ee43bf974a335dd"
+ },
+ {
+  "candidate_id": "8c16f144d063b759",
+  "claim": "`ImageSharp.Image.Identify` covers common raster formats well, but nothing else in the .NET FOSS ecosystem does the same for PSD, EMF/WMF, or DICOM (class D: comparison with other products / superlative with no basis in the repository)",
+  "verdict": "unverifiable",
+  "path": "8c16f144d063b759.md",
+  "line": 87,
+  "evidence": "No source or doc in repo supports claims about ImageSharp or the wider .NET FOSS ecosystem (only README.md)@d947d11cc6b282443231c2025ee43bf974a335dd"
+ },
+ {
+  "candidate_id": "8c16f144d063b759",
+  "claim": "Detects 14 image formats; ImageFormat enum plus Unknown",
+  "verdict": "supported",
+  "path": "8c16f144d063b759.md",
+  "line": 56,
+  "evidence": "src/Aspose.Imaging.Foss/ImageFormat.cs:5-21; ImageProbe.cs:12-27@d947d11cc6b282443231c2025ee43bf974a335dd"
+ },
+ {
+  "candidate_id": "8c16f144d063b759",
+  "claim": "Targets netstandard2.0 and net8.0; no PackageReference",
+  "verdict": "supported",
+  "path": "8c16f144d063b759.md",
+  "line": 12,
+  "evidence": "src/Aspose.Imaging.Foss/Aspose.Imaging.Foss.csproj:4@d947d11cc6b282443231c2025ee43bf974a335dd"
+ },
+ {
+  "candidate_id": "8c16f144d063b759",
+  "claim": "ImageProbe API: DetectFormat(Stream/byte[]), Probe(Stream/byte[]/FileInfo), ProbeFile, ProbeAsync, ProbeFileAsync with CancellationToken",
+  "verdict": "supported",
+  "path": "8c16f144d063b759.md",
+  "line": 234,
+  "evidence": "src/Aspose.Imaging.Foss/ImageProbe.cs:32-115@d947d11cc6b282443231c2025ee43bf974a335dd"
+ },
+ {
+  "candidate_id": "8c16f144d063b759",
+  "claim": "HEIC/AVIF brand detection rules (mif1/mif2 without AVIF; avif/avis major or compatible)",
+  "verdict": "supported",
+  "path": "8c16f144d063b759.md",
+  "line": 75,
+  "evidence": "src/Aspose.Imaging.Foss/Formats/HeicFormatHandler.cs:11-21; AvifFormatHandler.cs:11-13@d947d11cc6b282443231c2025ee43bf974a335dd"
+ },
+ {
+  "candidate_id": "8c16f144d063b759",
+  "claim": "CDR support not implemented, no CdrFormatHandler; test project targets net9.0; release.yml on v tags",
+  "verdict": "supported",
+  "path": "8c16f144d063b759.md",
+  "line": 278,
+  "evidence": "src/Aspose.Imaging.Foss/Formats/ (no Cdr file); tests/Aspose.Imaging.Foss.Tests/Aspose.Imaging.Foss.Tests.csproj:4; .github/workflows/release.yml:3-6@d947d11cc6b282443231c2025ee43bf974a335dd"
+ },
+ {
+  "candidate_id": "ab8a038272515065",
+  "claim": "python -c \"import aspose_words_foss; print('aspose_words_foss OK')\" (class A: no module aspose_words_foss exists; the package is aspose.words_foss, so the verify command fails with ModuleNotFoundError)",
+  "verdict": "false",
+  "path": "ab8a038272515065.md",
+  "line": 107,
+  "evidence": "pyproject.toml:73 (packages = [\"aspose\"]); aspose/words_foss/__init__.py:1 (import is aspose.words_foss)@2d2efee2787cb9e56d071d17f8d7b740dce8b784"
+ },
+ {
+  "candidate_id": "ab8a038272515065",
+  "claim": "`Document(filepath=None, *, stream=None, data=None)` (class A: real signature is Document(source=None, load_options=None, *, stream=None, data=None); stream/data are deprecated and the README's own examples pass stream and options positionally)",
+  "verdict": "false",
+  "path": "ab8a038272515065.md",
+  "line": 530,
+  "evidence": "aspose/words_foss/document.py:195-212@2d2efee2787cb9e56d071d17f8d7b740dce8b784"
+ },
+ {
+  "candidate_id": "ab8a038272515065",
+  "claim": "`MarkdownSaveOptions` - `heading_style` (HeadingStyle.ATX / SETEXT), `list_marker`, `code_block_style` (class A: MarkdownSaveOptions has no such attributes; they exist only on the internal ConversionOptions)",
+  "verdict": "false",
+  "path": "ab8a038272515065.md",
+  "line": 556,
+  "evidence": "aspose/words_foss/saving.py:372-394 (MarkdownSaveOptions.__init__); aspose/words_foss/models.py:40-46 (ConversionOptions)@2d2efee2787cb9e56d071d17f8d7b740dce8b784"
+ },
+ {
+  "candidate_id": "ab8a038272515065",
+  "claim": "The complete, browsable reference for all 198 public types (class A: contradicts the 205 given in the API Reference section at line 328; neither number is the count of public classes in source: 192 non-underscore, 205 including private)",
+  "verdict": "false",
+  "path": "ab8a038272515065.md",
+  "line": 605,
+  "evidence": "aspose/words_foss/**/*.py class definitions (205 total ClassDef, 192 without leading underscore); candidate line 328 says 205@2d2efee2787cb9e56d071d17f8d7b740dce8b784"
+ },
+ {
+  "candidate_id": "ab8a038272515065",
+  "claim": "PdfSaveOptions has 17 fields, 8 of which are accepted but not consumed",
+  "verdict": "supported",
+  "path": "ab8a038272515065.md",
+  "line": 621,
+  "evidence": "aspose/words_foss/saving.py:212-260@2d2efee2787cb9e56d071d17f8d7b740dce8b784"
+ },
+ {
+  "candidate_id": "ab8a038272515065",
+  "claim": "SaveFormat members MARKDOWN, DOC, DOCX, TEXT, PDF; LoadFormat AUTO, DOC, DOCX, RTF, TEXT, MARKDOWN; CompressionLevel NORMAL/MAXIMUM/FAST/SUPER_FAST",
+  "verdict": "supported",
+  "path": "ab8a038272515065.md",
+  "line": 539,
+  "evidence": "aspose/words_foss/document.py:52-60,133-140; saving.py:271-292@2d2efee2787cb9e56d071d17f8d7b740dce8b784"
+ },
+ {
+  "candidate_id": "ab8a038272515065",
+  "claim": "Dependencies olefile>=0.46, fpdf2>=2.7.5, pydantic>=2.0.0; Python >=3.10,<3.13",
+  "verdict": "supported",
+  "path": "ab8a038272515065.md",
+  "line": 114,
+  "evidence": "pyproject.toml:13-19@2d2efee2787cb9e56d071d17f8d7b740dce8b784"
+ },
+ {
+  "candidate_id": "ab8a038272515065",
+  "claim": "RtfFileReader delegates to DocFileReader via OLE2; ISO29500_2008_STRICT raises NotImplementedError; unsupported targets raise ValueError",
+  "verdict": "supported",
+  "path": "ab8a038272515065.md",
+  "line": 63,
+  "evidence": "aspose/words_foss/rtf_reader.py:1-30; saving.py:263-269,317; document.py:396-412@2d2efee2787cb9e56d071d17f8d7b740dce8b784"
+ },
+ {
+  "candidate_id": "ab8a038272515065",
+  "claim": "Markdown images embed as base64 data URIs by default",
+  "verdict": "supported",
+  "path": "ab8a038272515065.md",
+  "line": 72,
+  "evidence": "aspose/words_foss/md_writer.py:306-343@2d2efee2787cb9e56d071d17f8d7b740dce8b784"
+ },
+ {
+  "candidate_id": "bb00f442b94d758b",
+  "claim": "Title line: 'It is an incredibly powerful, flexible, and remarkably easy-to-use solution that delivers seamless, best-in-class results for every workflow.' (class D14 promotional filler)",
+  "verdict": "unverifiable",
+  "path": "bb00f442b94d758b.md",
+  "line": 1,
+  "evidence": "Promotional marketing prose appended to H1; upstream H1 is just the product name (README.md:1)@0fd1cf7bcadb279a6dd73ddcba3d5241376badd3"
+ },
+ {
+  "candidate_id": "bb00f442b94d758b",
+  "claim": "PDF golden-output tests compare against manifests in tests/goldens/PDF/ (class A: directory is lowercase tests/goldens/pdf/, and the README itself uses lowercase at line 581)",
+  "verdict": "false",
+  "path": "bb00f442b94d758b.md",
+  "line": 545,
+  "evidence": "tests/goldens/pdf (the only directory under tests/goldens)@0fd1cf7bcadb279a6dd73ddcba3d5241376badd3"
+ },
+ {
+  "candidate_id": "bb00f442b94d758b",
+  "claim": "The verified public surface has 37 types",
+  "verdict": "supported",
+  "path": "bb00f442b94d758b.md",
+  "line": 276,
+  "evidence": "src/aspose/note/__init__.py:1-77 (33 exported) plus AsposeNoteError, CompositeNode, PdfSaveOptions, SaveOptions@0fd1cf7bcadb279a6dd73ddcba3d5241376badd3"
+ },
+ {
+  "candidate_id": "bb00f442b94d758b",
+  "claim": "Document(source=None, load_options=None); Save only supports PDF; FileFormat always OneNote2010; DetectLayoutChanges stub",
+  "verdict": "supported",
+  "path": "bb00f442b94d758b.md",
+  "line": 423,
+  "evidence": "src/aspose/note/model.py:1257-1308@0fd1cf7bcadb279a6dd73ddcba3d5241376badd3"
+ },
+ {
+  "candidate_id": "bb00f442b94d758b",
+  "claim": "PdfSaveOptions(JpegQuality=...) with ImageCompression, JpegQuality, PageSettings, PageSplittingAlgorithm; SaveOptions PageIndex/PageCount/FontsSubsystem",
+  "verdict": "supported",
+  "path": "bb00f442b94d758b.md",
+  "line": 491,
+  "evidence": "src/aspose/note/saving/options.py:8-50@0fd1cf7bcadb279a6dd73ddcba3d5241376badd3"
+ },
+ {
+  "candidate_id": "bb00f442b94d758b",
+  "claim": "Image has FileName, Bytes, Width, Height, Tags, Replace; AttachedFile FileName/Bytes/Tags",
+  "verdict": "supported",
+  "path": "bb00f442b94d758b.md",
+  "line": 470,
+  "evidence": "src/aspose/note/model.py:962-1112@0fd1cf7bcadb279a6dd73ddcba3d5241376badd3"
+ },
+ {
+  "candidate_id": "bb00f442b94d758b",
+  "claim": "python_requires >=3.10, version 26.9.0, extras pdf/test-pdf/dev; CI on Python 3.10-3.12; 12 test files",
+  "verdict": "supported",
+  "path": "bb00f442b94d758b.md",
+  "line": 63,
+  "evidence": "pyproject.toml:3-37; .github/workflows/ci.yml:20; tests/test_*.py (12)@0fd1cf7bcadb279a6dd73ddcba3d5241376badd3"
+ },
+ {
+  "candidate_id": "bb00f442b94d758b",
+  "claim": "License.SetLicense and Metered.SetMeteredKey are no-ops",
+  "verdict": "supported",
+  "path": "bb00f442b94d758b.md",
+  "line": 537,
+  "evidence": "src/aspose/note/model.py:117-125@0fd1cf7bcadb279a6dd73ddcba3d5241376badd3"
+ },
+ {
+  "candidate_id": "e52db002d4e06860",
+  "claim": "The complete, browsable reference for all 337 public types (class A: count unsupported; the API tables in this same README list 305 types and the source defines 329 distinct / 343 total classes, never 337)",
+  "verdict": "false",
+  "path": "e52db002d4e06860.md",
+  "line": 712,
+  "evidence": "aspose/threed/**/*.py (343 ClassDef, 329 distinct); candidate API tables list 305 rows@65b1f577c0f16d0d9112bb6c1153d3024543ac02"
+ },
+ {
+  "candidate_id": "e52db002d4e06860",
+  "claim": "box = Box(10, 20, 30) in 'Convert a Parametric Primitive to a Mesh' (class A: Box.__init__ first positional parameter is name, so this passes name=10, length=20, width=30; the example misuses the signature)",
+  "verdict": "false",
+  "path": "e52db002d4e06860.md",
+  "line": 322,
+  "evidence": "aspose/threed/entities/Box.py:9-11 (def __init__(self, name=None, length=1.0, width=1.0, height=1.0, ...))@65b1f577c0f16d0d9112bb6c1153d3024543ac02"
+ },
+ {
+  "candidate_id": "e52db002d4e06860",
+  "claim": "It reads and writes OBJ, STL, glTF/GLB, COLLADA, and 3MF files (class A: COLLADA write is not reachable via Scene.save, as the README's own Scope section states; exporter lookup hits FbxExporter first)",
+  "verdict": "false",
+  "path": "e52db002d4e06860.md",
+  "line": 8,
+  "evidence": "aspose/threed/formats/IOService.py:50-54 (create_exporter iterates exporters in registration order); formats/fbx/FbxExporter.py:10-16@65b1f577c0f16d0d9112bb6c1153d3024543ac02"
+ },
+ {
+  "candidate_id": "e52db002d4e06860",
+  "claim": "PyPI version 26.1.0; python_requires >=3.7; empty install_requires; dev extra pytest>=7.0.0",
+  "verdict": "supported",
+  "path": "e52db002d4e06860.md",
+  "line": 84,
+  "evidence": "setup.py:8-33@65b1f577c0f16d0d9112bb6c1153d3024543ac02"
+ },
+ {
+  "candidate_id": "e52db002d4e06860",
+  "claim": "Scene.open/save, Node.create_child_node(name, entity=, material=), Mesh.polygon_count, PbrMaterial(name, albedo), PolygonModifier.triangulate (ear clipping)",
+  "verdict": "supported",
+  "path": "e52db002d4e06860.md",
+  "line": 156,
+  "evidence": "aspose/threed/Scene.py:104,140; Node.py:132; entities/Mesh.py:47; shading/PbrMaterial.py:10; entities/PolygonModifier.py:120-157@65b1f577c0f16d0d9112bb6c1153d3024543ac02"
+ },
+ {
+  "candidate_id": "e52db002d4e06860",
+  "claim": "FbxExporter.save/save_to_stream raise NotImplementedError; FBX import-only",
+  "verdict": "supported",
+  "path": "e52db002d4e06860.md",
+  "line": 700,
+  "evidence": "aspose/threed/formats/fbx/FbxExporter.py:12-16@65b1f577c0f16d0d9112bb6c1153d3024543ac02"
+ },
+ {
+  "candidate_id": "e52db002d4e06860",
+  "claim": "The suite covers 33 real test files",
+  "verdict": "supported",
+  "path": "e52db002d4e06860.md",
+  "line": 780,
+  "evidence": "tests/test_*.py (33 files)@65b1f577c0f16d0d9112bb6c1153d3024543ac02"
+ },
+ {
+  "candidate_id": "e52db002d4e06860",
+  "claim": "ThreeMfSaveOptions importable from aspose.threed.formats; ColladaLoadOptions path aspose.threed.formats.collada.ColladaLoadOptions",
+  "verdict": "supported",
+  "path": "e52db002d4e06860.md",
+  "line": 331,
+  "evidence": "aspose/threed/formats/__init__.py (ThreeMfSaveOptions); formats/collada/ColladaLoadOptions.py@65b1f577c0f16d0d9112bb6c1153d3024543ac02"
+ },
+ {
+  "candidate_id": "24979ea7fb4f595b",
+  "claim": "Requires Python 3.12+ and Pillow >= 10.1.0 (used only for PNG rendering)",
+  "verdict": "supported",
+  "path": "24979ea7fb4f595b.md",
+  "line": 77,
+  "evidence": "pyproject.toml:11,52-54@06eca5c01e13ed6d59a640f1cf330c1c5a57d151; src/aspose_barcode_foss/_internal/renderers/png.py:7@06eca5c01e13ed6d59a640f1cf330c1c5a57d151"
+ },
+ {
+  "candidate_id": "24979ea7fb4f595b",
+  "claim": "Code 128 `Code128Options.encode_mode` forces a Code Set (AUTO, CODE_A..CODE_BC)",
+  "verdict": "supported",
+  "path": "24979ea7fb4f595b.md",
+  "line": 52,
+  "evidence": "src/aspose_barcode_foss/_internal/models/options.py:9-60@06eca5c01e13ed6d59a640f1cf330c1c5a57d151"
+ },
+ {
+  "candidate_id": "24979ea7fb4f595b",
+  "claim": "QR Code Model 2 versions 1-40, QrOptions fields error_correction_level/version/mask/encoding_mode",
+  "verdict": "supported",
+  "path": "24979ea7fb4f595b.md",
+  "line": 57,
+  "evidence": "src/aspose_barcode_foss/_internal/encoders/qr.py:35,113-119@06eca5c01e13ed6d59a640f1cf330c1c5a57d151; _internal/models/options.py:79-86@06eca5c01e13ed6d59a640f1cf330c1c5a57d151"
+ },
+ {
+  "candidate_id": "24979ea7fb4f595b",
+  "claim": "PdfRenderer.render() and Barcode.to_pdf() raise NotImplementedError",
+  "verdict": "supported",
+  "path": "24979ea7fb4f595b.md",
+  "line": 232,
+  "evidence": "src/aspose_barcode_foss/_internal/renderers/pdf.py:26@06eca5c01e13ed6d59a640f1cf330c1c5a57d151; src/aspose_barcode_foss/result.py (to_pdf)@06eca5c01e13ed6d59a640f1cf330c1c5a57d151"
+ },
+ {
+  "candidate_id": "24979ea7fb4f595b",
+  "claim": "EciHelper/Gs1Helper normalize/validate/parse not implemented; EncodeOptions exposes eci_assignment_number and gs1_enabled",
+  "verdict": "supported",
+  "path": "24979ea7fb4f595b.md",
+  "line": 234,
+  "evidence": "src/aspose_barcode_foss/_internal/standards/eci.py:21,25; gs1.py:35,39; _internal/models/options.py:66-67@06eca5c01e13ed6d59a640f1cf330c1c5a57d151"
+ },
+ {
+  "candidate_id": "6595098b7a1c7448",
+  "claim": "A. Cell.SetFormula throws FormulaException for invalid formulas. Nothing in the library throws FormulaException; Cell::SetFormula only normalises the text and stores it.",
+  "verdict": "false",
+  "path": "6595098b7a1c7448.md",
+  "line": 53,
+  "evidence": "Aspose.Cells.Foss.Cpp/src/aspose/cells_foss/Cell.cpp:153-169@9f852d0ff1cfdad2d661556d6b87a8eff8c063a2"
+ },
+ {
+  "candidate_id": "6595098b7a1c7448",
+  "claim": "A. Exceptions list: FormulaException / StyleException signal 'invalid formula text or style value'. Neither is thrown anywhere in the library sources.",
+  "verdict": "false",
+  "path": "6595098b7a1c7448.md",
+  "line": 853,
+  "evidence": "Aspose.Cells.Foss.Cpp/src/aspose/cells_foss/Cell.cpp:153-169@9f852d0ff1cfdad2d661556d6b87a8eff8c063a2"
+ },
+ {
+  "candidate_id": "6595098b7a1c7448",
+  "claim": "A/D9. 'with AutoFilterSupport indicating whether filtering is enabled': AutoFilterSupport is a static helper class (range/operator normalisation), not a flag or indicator.",
+  "verdict": "false",
+  "path": "6595098b7a1c7448.md",
+  "line": 623,
+  "evidence": "Aspose.Cells.Foss.Cpp/include/aspose/cells_foss/AutoFilterSupport.h:12-40@9f852d0ff1cfdad2d661556d6b87a8eff8c063a2"
+ },
+ {
+  "candidate_id": "6595098b7a1c7448",
+  "claim": "A. WorkbookProperties 'backup file path': GetBackupFile() is a bool flag, not a path.",
+  "verdict": "false",
+  "path": "6595098b7a1c7448.md",
+  "line": 605,
+  "evidence": "Aspose.Cells.Foss.Cpp/include/aspose/cells_foss/WorkbookProperties.h:51-52@9f852d0ff1cfdad2d661556d6b87a8eff8c063a2"
+ },
+ {
+  "candidate_id": "6595098b7a1c7448",
+  "claim": "A. Workbook 'saving to various formats via SaveOptions': SaveFormat has only Xlsx and saving to any other format throws UnsupportedFeatureException (contradicts the README's own Scope section).",
+  "verdict": "false",
+  "path": "6595098b7a1c7448.md",
+  "line": 420,
+  "evidence": "Aspose.Cells.Foss.Cpp/src/aspose/cells_foss/Workbook.cpp:229@9f852d0ff1cfdad2d661556d6b87a8eff8c063a2; include/aspose/cells_foss/SaveFormat.h"
+ },
+ {
+  "candidate_id": "6595098b7a1c7448",
+  "claim": "D. 'includes features like formula calculation': the library stores formula text and has no formula evaluation engine.",
+  "verdict": "unverifiable",
+  "path": "6595098b7a1c7448.md",
+  "line": 7,
+  "evidence": "Aspose.Cells.Foss.Cpp/src/aspose/cells_foss/Cell.cpp:153-169@9f852d0ff1cfdad2d661556d6b87a8eff8c063a2 (no evaluator anywhere in src/ or include/)"
+ },
+ {
+  "candidate_id": "6595098b7a1c7448",
+  "claim": "D15. A second, overlapping 'Key Capabilities' bullet list (different wording and item set) follows the first list under the same heading, restating the same capabilities twice.",
+  "verdict": "unverifiable",
+  "path": "6595098b7a1c7448.md",
+  "line": 60,
+  "evidence": "Lines 52-58 and 60-81 are two separate lists of the same capabilities under one heading"
+ },
+ {
+  "candidate_id": "6595098b7a1c7448",
+  "claim": "D15. The Installation section has one sentence and no install steps; the nuget/PackageReference/CMake install commands appear at the end of 'Development and Testing', i.e. in the wrong section.",
+  "verdict": "unverifiable",
+  "path": "6595098b7a1c7448.md",
+  "line": 887,
+  "evidence": "Install commands (nuget install, PackageReference, find_package, add_subdirectory) at lines 887-912 sit under Development and Testing while Installation (line 83-85) has none"
+ },
+ {
+  "candidate_id": "6595098b7a1c7448",
+  "claim": "CMake 3.16+ and C++17 required",
+  "verdict": "supported",
+  "path": "6595098b7a1c7448.md",
+  "line": 95,
+  "evidence": "Aspose.Cells.Foss.Cpp/CMakeLists.txt:1,4@9f852d0ff1cfdad2d661556d6b87a8eff8c063a2"
+ },
+ {
+  "candidate_id": "6595098b7a1c7448",
+  "claim": "Quick Start API: Workbook.GetWorksheets()[0], GetCells()[\"A1\"].PutValue, Color::FromArgb, Font::SetBold/SetColor, Style::SetPattern, FillPattern::Solid",
+  "verdict": "supported",
+  "path": "6595098b7a1c7448.md",
+  "line": 115,
+  "evidence": "Aspose.Cells.Foss.Cpp/include/aspose/cells_foss/WorksheetCollection.h:39; Cells.h:36; Color.h:63; Font.h:48,88; Style.h:55; FillPattern.h:20@9f852d0ff1cfdad2d661556d6b87a8eff8c063a2"
+ },
+ {
+  "candidate_id": "6595098b7a1c7448",
+  "claim": "Workbook.Save raises WorkbookSaveException on failure",
+  "verdict": "supported",
+  "path": "6595098b7a1c7448.md",
+  "line": 52,
+  "evidence": "Aspose.Cells.Foss.Cpp/src/aspose/cells_foss/Workbook.cpp:229@9f852d0ff1cfdad2d661556d6b87a8eff8c063a2"
+ },
+ {
+  "candidate_id": "6595098b7a1c7448",
+  "claim": "Tests use GoogleTest v1.14.0 via FetchContent and the ASPOSE_CELLS_FOSS_TESTS_USE_SYSTEM_GTEST option",
+  "verdict": "supported",
+  "path": "6595098b7a1c7448.md",
+  "line": 883,
+  "evidence": "Aspose.Cells.Foss.Cpp.Tests/CMakeLists.txt:25-40@9f852d0ff1cfdad2d661556d6b87a8eff8c063a2"
+ },
+ {
+  "candidate_id": "6595098b7a1c7448",
+  "claim": "Hyperlinks support mailto: links; HyperlinkCollection.Add(cellName,totalRows,totalColumns,address)",
+  "verdict": "supported",
+  "path": "6595098b7a1c7448.md",
+  "line": 179,
+  "evidence": "Aspose.Cells.Foss.Cpp/include/aspose/cells_foss/HyperlinkCollection.h:55; src/aspose/cells_foss/Hyperlink.cpp:137@9f852d0ff1cfdad2d661556d6b87a8eff8c063a2"
+ },
+ {
+  "candidate_id": "8cfebdf565942035",
+  "claim": "D. 'Every public API surface in this release was exercised and verified against the full upstream test matrix.' Ungrounded verification claim, placed ahead of the title.",
+  "verdict": "unverifiable",
+  "path": "8cfebdf565942035.md",
+  "line": 1,
+  "evidence": "No test-matrix or verification record in the repository; the sentence is not in the upstream README"
+ },
+ {
+  "candidate_id": "8cfebdf565942035",
+  "claim": "A. FontConverter.convert(font, \"Roboto.woff2\", output_format=\"woff2\"): the actual signature is convert(font: Font, target: FontType) -> Font; no path argument or output_format keyword.",
+  "verdict": "false",
+  "path": "8cfebdf565942035.md",
+  "line": 74,
+  "evidence": "src/aspose_font/converter.py:76-90@50f6f98037b78042c984689eed5b1ec6da500248"
+ },
+ {
+  "candidate_id": "8cfebdf565942035",
+  "claim": "A. result.font.save(\"Roboto-subset.woff2\", format=\"woff2\"): Font.save(self, path) takes no format argument.",
+  "verdict": "false",
+  "path": "8cfebdf565942035.md",
+  "line": 88,
+  "evidence": "src/aspose_font/_font_base.py:95@50f6f98037b78042c984689eed5b1ec6da500248"
+ },
+ {
+  "candidate_id": "8cfebdf565942035",
+  "claim": "A. VariableInstanceBuilder.build_package(font, instance_names=[...], ..., output_dir=...) called as a classmethod: it is an instance method on VariableInstanceBuilder(font) taking names=, with no instance_names or output_dir parameter.",
+  "verdict": "false",
+  "path": "8cfebdf565942035.md",
+  "line": 194,
+  "evidence": "src/aspose_font/instances.py:147-186@50f6f98037b78042c984689eed5b1ec6da500248; cli.py:4064@50f6f98037b78042c984689eed5b1ec6da500248"
+ },
+ {
+  "candidate_id": "8cfebdf565942035",
+  "claim": "A. 'Core Dependencies: ... Pillow for raster previews': pyproject.toml declares no runtime dependencies; Pillow is only an optional, guarded import.",
+  "verdict": "false",
+  "path": "8cfebdf565942035.md",
+  "line": 45,
+  "evidence": "pyproject.toml:1-30@50f6f98037b78042c984689eed5b1ec6da500248; src/aspose_font/preview.py:844; delta.py:1941-1943@50f6f98037b78042c984689eed5b1ec6da500248"
+ },
+ {
+  "candidate_id": "8cfebdf565942035",
+  "claim": "Requires Python 3.10+, package aspose-font-foss, MCP extra [mcp], CLI entry point aspose-font",
+  "verdict": "supported",
+  "path": "8cfebdf565942035.md",
+  "line": 44,
+  "evidence": "pyproject.toml:2,18,23-30@50f6f98037b78042c984689eed5b1ec6da500248"
+ },
+ {
+  "candidate_id": "8cfebdf565942035",
+  "claim": "FontSubsetter.subset_for_web_with_coverage(font, presets=, text=) returns a result with .font and .coverage.covered_count",
+  "verdict": "supported",
+  "path": "8cfebdf565942035.md",
+  "line": 83,
+  "evidence": "src/aspose_font/subsetter.py:161-166,239-248@50f6f98037b78042c984689eed5b1ec6da500248; capability.py:72@50f6f98037b78042c984689eed5b1ec6da500248"
+ },
+ {
+  "candidate_id": "8cfebdf565942035",
+  "claim": "FontQaReporter.build_package(font, dir, presets=, text=, preview_instance_name=) returns a package with json_path/html_path/preview_path",
+  "verdict": "supported",
+  "path": "8cfebdf565942035.md",
+  "line": 158,
+  "evidence": "src/aspose_font/qa.py:106-108,210-229@50f6f98037b78042c984689eed5b1ec6da500248"
+ },
+ {
+  "candidate_id": "8cfebdf565942035",
+  "claim": "WebFontOptimizer.build(font, presets, text, variable_mode, include_woff) and package.write_to(dir)",
+  "verdict": "supported",
+  "path": "8cfebdf565942035.md",
+  "line": 121,
+  "evidence": "src/aspose_font/web.py:2272-2290,78@50f6f98037b78042c984689eed5b1ec6da500248"
+ },
+ {
+  "candidate_id": "8cfebdf565942035",
+  "claim": "CLI commands web-optimize, qa-report, var-package, var-compat, var-delta, convert --to, meta-clean, preview exist",
+  "verdict": "supported",
+  "path": "8cfebdf565942035.md",
+  "line": 227,
+  "evidence": "src/aspose_font/cli.py:5221,5263,5454,5566,5958,7070,7123,7752@50f6f98037b78042c984689eed5b1ec6da500248"
+ },
+ {
+  "candidate_id": "ae2a212130a8c1e0",
+  "claim": "D9. `AlignmentValue` is described as 'Represents an auto-filter in a worksheet.' AlignmentValue is the cell-style alignment settings value class (its Javadoc: 'Represents alignment settings for a cell style').",
+  "verdict": "false",
+  "path": "ae2a212130a8c1e0.md",
+  "line": 289,
+  "evidence": "src/main/java/org/aspose/cells_foss/core/AlignmentValue.java:3-6@c65329e7257b1311abb9686d7e4957a8cc002955"
+ },
+ {
+  "candidate_id": "ae2a212130a8c1e0",
+  "claim": "Maven coordinates org.aspose:aspose-cells-foss:26.7.0",
+  "verdict": "supported",
+  "path": "ae2a212130a8c1e0.md",
+  "line": 119,
+  "evidence": "pom.xml:8-10@c65329e7257b1311abb9686d7e4957a8cc002955"
+ },
+ {
+  "candidate_id": "ae2a212130a8c1e0",
+  "claim": "Java 17 target; Apache POI 5.3.0 and JUnit 5.10.2 only in test scope",
+  "verdict": "supported",
+  "path": "ae2a212130a8c1e0.md",
+  "line": 129,
+  "evidence": "pom.xml:40-41,43-44,57-66@c65329e7257b1311abb9686d7e4957a8cc002955"
+ },
+ {
+  "candidate_id": "ae2a212130a8c1e0",
+  "claim": "ChartType has 25 values",
+  "verdict": "supported",
+  "path": "ae2a212130a8c1e0.md",
+  "line": 99,
+  "evidence": "src/main/java/org/aspose/cells_foss/ChartType.java@c65329e7257b1311abb9686d7e4957a8cc002955"
+ },
+ {
+  "candidate_id": "ae2a212130a8c1e0",
+  "claim": "Quick Start API: Workbook.getWorksheets().get(0), Cells.get(\"A1\").putValue",
+  "verdict": "supported",
+  "path": "ae2a212130a8c1e0.md",
+  "line": 167,
+  "evidence": "src/main/java/org/aspose/cells_foss/Cells.java:24@c65329e7257b1311abb9686d7e4957a8cc002955"
+ },
+ {
+  "candidate_id": "ae2a212130a8c1e0",
+  "claim": "LoadDiagnostics.hasRepairs(), LoadOptions.setTryRepairPackage/Xml",
+  "verdict": "supported",
+  "path": "ae2a212130a8c1e0.md",
+  "line": 200,
+  "evidence": "src/main/java/org/aspose/cells_foss/LoadDiagnostics.java:23; LoadOptions.java:45@c65329e7257b1311abb9686d7e4957a8cc002955"
+ },
+ {
+  "candidate_id": "c086f4274c95fa76",
+  "claim": "A. 'The full surface totals 618 public types': the README's own Core API (379), Interfaces (26) and Enumerations (210) tables list 615 types, and the source declares 615 public types.",
+  "verdict": "false",
+  "path": "c086f4274c95fa76.md",
+  "line": 901,
+  "evidence": "Aspose.Words/**/*.cs public type declarations (count 615)@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c; candidate tables lines 219-850 sum to 615"
+ },
+ {
+  "candidate_id": "c086f4274c95fa76",
+  "claim": "A. 'reference for all 618 public types': same count mismatch (tables and source give 615).",
+  "verdict": "false",
+  "path": "c086f4274c95fa76.md",
+  "line": 942,
+  "evidence": "Aspose.Words/**/*.cs public type declarations (count 615)@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c"
+ },
+ {
+  "candidate_id": "c086f4274c95fa76",
+  "claim": "Three targets: net462, netstandard2.0, net8.0",
+  "verdict": "supported",
+  "path": "c086f4274c95fa76.md",
+  "line": 74,
+  "evidence": "Aspose.Words/Aspose.Words.csproj:5@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c"
+ },
+ {
+  "candidate_id": "c086f4274c95fa76",
+  "claim": "Document.AcceptAllRevisions() exists",
+  "verdict": "supported",
+  "path": "c086f4274c95fa76.md",
+  "line": 162,
+  "evidence": "Aspose.Words/Model/Document/Document.cs:1544@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c"
+ },
+ {
+  "candidate_id": "c086f4274c95fa76",
+  "claim": "Document.AppendDocument(srcDoc, ImportFormatMode) exists",
+  "verdict": "supported",
+  "path": "c086f4274c95fa76.md",
+  "line": 176,
+  "evidence": "Aspose.Words/Model/Document/Document.cs:1243@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c"
+ },
+ {
+  "candidate_id": "c086f4274c95fa76",
+  "claim": "Install via dotnet add package Aspose.Words.FOSS; assembly Aspose.Words.FOSS.dll",
+  "verdict": "supported",
+  "path": "c086f4274c95fa76.md",
+  "line": 92,
+  "evidence": "Aspose.Words/Aspose.Words.csproj@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c"
+ },
+ {
+  "candidate_id": "f2c49370fcd54dd8",
+  "claim": "A. API table row names the root container `SceneGhost`; the class is `Scene` (and every example in the README uses `Scene`).",
+  "verdict": "false",
+  "path": "f2c49370fcd54dd8.md",
+  "line": 213,
+  "evidence": "src/aspose/threed/Scene.ts:8@66cb26df3b031f0bf6976d4e88dc89721983afa4"
+ },
+ {
+  "candidate_id": "f2c49370fcd54dd8",
+  "claim": "Scene.fromFile, openFromBuffer, createAnimationClip/getAnimationClip exist",
+  "verdict": "supported",
+  "path": "f2c49370fcd54dd8.md",
+  "line": 202,
+  "evidence": "src/aspose/threed/Scene.ts:102,112,145,386@66cb26df3b031f0bf6976d4e88dc89721983afa4"
+ },
+ {
+  "candidate_id": "f2c49370fcd54dd8",
+  "claim": "Runtime dependency xmldom ^0.6.0; dev typescript ^5.8.3, jest ^29.7.0, adm-zip ^0.5.16",
+  "verdict": "supported",
+  "path": "f2c49370fcd54dd8.md",
+  "line": 111,
+  "evidence": "package.json:26-38@66cb26df3b031f0bf6976d4e88dc89721983afa4"
+ },
+ {
+  "candidate_id": "f2c49370fcd54dd8",
+  "claim": "PolygonModifier.triangulate static utility",
+  "verdict": "supported",
+  "path": "f2c49370fcd54dd8.md",
+  "line": 71,
+  "evidence": "src/aspose/threed/entities/PolygonModifier.ts:5@66cb26df3b031f0bf6976d4e88dc89721983afa4"
+ },
+ {
+  "candidate_id": "f2c49370fcd54dd8",
+  "claim": "Light types POINT, DIRECTIONAL, SPOT, AREA, VOLUME",
+  "verdict": "supported",
+  "path": "f2c49370fcd54dd8.md",
+  "line": 76,
+  "evidence": "src/aspose/threed/entities/LightType.ts:2-6@66cb26df3b031f0bf6976d4e88dc89721983afa4"
+ },
+ {
+  "candidate_id": "387dd177719d7069",
+  "claim": "D: README says the limitations are lifted \"across the full Aspose.Email for C++ - Enterprise Edition line\" (and that a commercial Enterprise Edition adds mail protocols, PST and broader MAPI coverage); nothing in the source documents an Enterprise Edition product line or its capabilities; ungrounded product comparison.",
+  "verdict": "unverifiable",
+  "path": "387dd177719d7069.md",
+  "line": 450,
+  "evidence": "No Enterprise Edition / commercial-line reference anywhere in repository sources other than README.md:448-450@c844a467cf7f2503819b655f4d6ceaef91056c40"
+ },
+ {
+  "candidate_id": "757d541cb8eab08e",
+  "claim": "D9: NamedAction row says \"NamedAction.CreateUri(uri) builds a URI action\". NamedAction is the action that runs a predefined viewer command (/S /Named); CreateUri is a static member of PdfAction, and the URI action class is UriAction.",
+  "verdict": "false",
+  "path": "757d541cb8eab08e.md",
+  "line": 461,
+  "evidence": "src/Annotations/PdfAction.cs:684-685@10a363830fea952c29df20fdb37d35ad3a881433 (NamedAction summary: runs a predefined viewer command); src/Annotations/PdfAction.cs:147@10a363830fea952c29df20fdb37d35ad3a881433 (CreateUri is on PdfAction)"
+ },
+ {
+  "candidate_id": "757d541cb8eab08e",
+  "claim": "D9: Image row describes BlendMode compositing; the Image class is an image paragraph (picture loaded from file/URL/stream laid out in the page flow) and has no BlendMode member.",
+  "verdict": "false",
+  "path": "757d541cb8eab08e.md",
+  "line": 386,
+  "evidence": "src/Image.cs:7-8@10a363830fea952c29df20fdb37d35ad3a881433"
+ },
+ {
+  "candidate_id": "90def3a609428550",
+  "claim": "A: API table lists a type `AFRelationshipGhost` (description even says \"AFRelationship\"); the actual exported type is `AFRelationship`.",
+  "verdict": "false",
+  "path": "90def3a609428550.md",
+  "line": 466,
+  "evidence": "associated_files.go:11@5bc58466e703024671f0f6d843f2d37c397c8a0e (type AFRelationship int); no AFRelationshipGhost in source"
+ },
+ {
+  "candidate_id": "e25398d68110f51e",
+  "claim": "A: README claims 303 public types; the module-grouped tables list 238 rows and the upstream/documented count is 243.",
+  "verdict": "false",
+  "path": "e25398d68110f51e.md",
+  "line": 213,
+  "evidence": "README.md:213@bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11 states 243 public types; API tables contain 243 entries upstream"
+ },
+ {
+  "candidate_id": "e25398d68110f51e",
+  "claim": "A: \"all 303 public types\" contradicts the 243-type API surface (same wrong count as the API Reference intro).",
+  "verdict": "false",
+  "path": "e25398d68110f51e.md",
+  "line": 561,
+  "evidence": "README.md:566@bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11 states 243"
+ },
+ {
+  "candidate_id": "e25398d68110f51e",
+  "claim": "D9: HTMLDocument row says \"Matches elements by attribute presence or value.\" That is the docstring of css AttributeSelector; HTMLDocument is the top-level entry point for parsing HTML into a Document tree.",
+  "verdict": "false",
+  "path": "e25398d68110f51e.md",
+  "line": 222,
+  "evidence": "src/aspose_html/html_document.py:18-19@bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11 (HTMLDocument docstring); src/aspose_html/css/_ast.py:72-73@bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11 (AttributeSelector: Matches elements by attribute presence or value)"
+ },
+ {
+  "candidate_id": "f463cfcbeb35bb6d",
+  "claim": "D9: PsdImage row says \"Static loader used by Image.load.\" The PsdImage class represents a PSD image that can be loaded, inspected and saved (width, layers, save, ...); the loader class is ImageLoader.",
+  "verdict": "false",
+  "path": "f463cfcbeb35bb6d.md",
+  "line": 175,
+  "evidence": "src/aspose_psd_foss/psdimage.py:38-41@2271c228d991bcd79048bb61773bcbcb415399c6; src/aspose_psd_foss/imageloader.py:6-9@2271c228d991bcd79048bb61773bcbcb415399c6"
+ },
+ {
+  "candidate_id": "f463cfcbeb35bb6d",
+  "claim": "A: link target License/LICENSE.txt does not exist; the license file is LICENSE.txt at the repository root.",
+  "verdict": "false",
+  "path": "f463cfcbeb35bb6d.md",
+  "line": 5,
+  "evidence": "LICENSE.txt@2271c228d991bcd79048bb61773bcbcb415399c6 at repo root (no License/ directory)"
+ },
+ {
+  "candidate_id": "f463cfcbeb35bb6d",
+  "claim": "A: same broken link target License/LICENSE.txt in the License section; file is at LICENSE.txt.",
+  "verdict": "false",
+  "path": "f463cfcbeb35bb6d.md",
+  "line": 252,
+  "evidence": "LICENSE.txt@2271c228d991bcd79048bb61773bcbcb415399c6 at repo root; no License/ directory"
+ },
+ {
+  "candidate_id": "f463cfcbeb35bb6d",
+  "claim": "A: install command with a [dev] extra, but the repository has no pyproject.toml or setup.py (only requirements.txt), so no editable install or dev extra exists.",
+  "verdict": "false",
+  "path": "f463cfcbeb35bb6d.md",
+  "line": 242,
+  "evidence": "repository root file list@2271c228d991bcd79048bb61773bcbcb415399c6: requirements.txt only (no pyproject.toml/setup.py)"
+ },
+ {
+  "candidate_id": "387dd177719d7069",
+  "claim": "Three test executables aspose_email_foss_cfb_tests/msg_tests/public_tests are registered with CTest.",
+  "verdict": "supported",
+  "path": "387dd177719d7069.md",
+  "line": 460,
+  "evidence": "tests/CMakeLists.txt:1-40@c844a467cf7f2503819b655f4d6ceaef91056c40"
+ },
+ {
+  "candidate_id": "387dd177719d7069",
+  "claim": "CMake 3.26 minimum and C++17 required standard.",
+  "verdict": "supported",
+  "path": "387dd177719d7069.md",
+  "line": 115,
+  "evidence": "CMakeLists.txt:1,9-10@c844a467cf7f2503819b655f4d6ceaef91056c40"
+ },
+ {
+  "candidate_id": "387dd177719d7069",
+  "claim": "26 public types: 18 classes + 2 structs + 6 enumerations listed.",
+  "verdict": "supported",
+  "path": "387dd177719d7069.md",
+  "line": 429,
+  "evidence": "include/aspose/email/foss (cfb/, msg/ headers)@c844a467cf7f2503819b655f4d6ceaef91056c40"
+ },
+ {
+  "candidate_id": "387dd177719d7069",
+  "claim": "mapi_message::from_stream(std::istream&, bool strict=false), create(subject, body), save, save_to_eml exist.",
+  "verdict": "supported",
+  "path": "387dd177719d7069.md",
+  "line": 135,
+  "evidence": "include/aspose/email/foss/msg/mapi_message.hpp:30-87@c844a467cf7f2503819b655f4d6ceaef91056c40"
+ },
+ {
+  "candidate_id": "387dd177719d7069",
+  "claim": "Preset: Ninja generator, RelWithDebInfo, tests ON, examples OFF.",
+  "verdict": "supported",
+  "path": "387dd177719d7069.md",
+  "line": 93,
+  "evidence": "CMakePresets.json:12-17@c844a467cf7f2503819b655f4d6ceaef91056c40"
+ },
+ {
+  "candidate_id": "757d541cb8eab08e",
+  "claim": "Package id Aspose.PDF.FOSS version 26.10.0.",
+  "verdict": "supported",
+  "path": "757d541cb8eab08e.md",
+  "line": 120,
+  "evidence": "src/Aspose.Pdf.Foss.csproj:12-13@10a363830fea952c29df20fdb37d35ad3a881433"
+ },
+ {
+  "candidate_id": "757d541cb8eab08e",
+  "claim": "Target frameworks netstandard2.0;net48;net8.0;net9.0;net10.0.",
+  "verdict": "supported",
+  "path": "757d541cb8eab08e.md",
+  "line": 129,
+  "evidence": "src/Aspose.Pdf.Foss.csproj:4@10a363830fea952c29df20fdb37d35ad3a881433"
+ },
+ {
+  "candidate_id": "757d541cb8eab08e",
+  "claim": "System.Drawing.Common 8.0.0 and the netstandard2.0/net48 conditional packages.",
+  "verdict": "supported",
+  "path": "757d541cb8eab08e.md",
+  "line": 131,
+  "evidence": "src/Aspose.Pdf.Foss.csproj:60-67@10a363830fea952c29df20fdb37d35ad3a881433"
+ },
+ {
+  "candidate_id": "757d541cb8eab08e",
+  "claim": "Document row: represents a PDF document.",
+  "verdict": "supported",
+  "path": "757d541cb8eab08e.md",
+  "line": 376,
+  "evidence": "src/Document.cs@10a363830fea952c29df20fdb37d35ad3a881433"
+ },
+ {
+  "candidate_id": "757d541cb8eab08e",
+  "claim": "PdfAction.CreateUri(string) exists as static factory.",
+  "verdict": "supported",
+  "path": "757d541cb8eab08e.md",
+  "line": 219,
+  "evidence": "src/Annotations/PdfAction.cs:147@10a363830fea952c29df20fdb37d35ad3a881433"
+ },
+ {
+  "candidate_id": "90def3a609428550",
+  "claim": "go.mod declares go 1.24.",
+  "verdict": "supported",
+  "path": "90def3a609428550.md",
+  "line": 249,
+  "evidence": "go.mod:3@5bc58466e703024671f0f6d843f2d37c397c8a0e"
+ },
+ {
+  "candidate_id": "90def3a609428550",
+  "claim": "Module path github.com/aspose-pdf-foss/aspose-pdf-foss-for-go.",
+  "verdict": "supported",
+  "path": "90def3a609428550.md",
+  "line": 246,
+  "evidence": "go.mod:1@5bc58466e703024671f0f6d843f2d37c397c8a0e"
+ },
+ {
+  "candidate_id": "90def3a609428550",
+  "claim": "Document.Split(), Append(others...), Reorder([]int), NUp, Booklet exist on *Document.",
+  "verdict": "supported",
+  "path": "90def3a609428550.md",
+  "line": 85,
+  "evidence": "Go sources (Split at line 144, Append at 442)@5bc58466e703024671f0f6d843f2d37c397c8a0e"
+ },
+ {
+  "candidate_id": "90def3a609428550",
+  "claim": "Markdown 652/652 CommonMark suite stated in package comment.",
+  "verdict": "supported",
+  "path": "90def3a609428550.md",
+  "line": 186,
+  "evidence": "document.go:25@5bc58466e703024671f0f6d843f2d37c397c8a0e"
+ },
+ {
+  "candidate_id": "90def3a609428550",
+  "claim": "ai subpackage with chat/ocr/imagedesc copilots exists.",
+  "verdict": "supported",
+  "path": "90def3a609428550.md",
+  "line": 215,
+  "evidence": "ai/chat.go, ai/ocr.go, ai/imagedesc.go@5bc58466e703024671f0f6d843f2d37c397c8a0e"
+ },
+ {
+  "candidate_id": "b50407c04923a11a",
+  "claim": "Workbook.load(filePath, password?) auto-detects .html/.htm; save(filePath, options).",
+  "verdict": "supported",
+  "path": "b50407c04923a11a.md",
+  "line": 64,
+  "evidence": "aspose_cells/workbook.ts:52-70,390-395@fc186507e5b7124f4664aa6035f25cfd3112367d"
+ },
+ {
+  "candidate_id": "b50407c04923a11a",
+  "claim": "Dependencies and versions match package.json.",
+  "verdict": "supported",
+  "path": "b50407c04923a11a.md",
+  "line": 96,
+  "evidence": "package.json:7-18@fc186507e5b7124f4664aa6035f25cfd3112367d"
+ },
+ {
+  "candidate_id": "b50407c04923a11a",
+  "claim": "Worksheet.shapes and Workbook.images getters exist.",
+  "verdict": "supported",
+  "path": "b50407c04923a11a.md",
+  "line": 76,
+  "evidence": "aspose_cells/worksheet.ts:214; aspose_cells/workbook.ts:85@fc186507e5b7124f4664aa6035f25cfd3112367d"
+ },
+ {
+  "candidate_id": "b50407c04923a11a",
+  "claim": "toHtml/toCsv/toJson/toMarkdown return strings.",
+  "verdict": "supported",
+  "path": "b50407c04923a11a.md",
+  "line": 79,
+  "evidence": "aspose_cells/workbook.ts:433,1330,1361,1376@fc186507e5b7124f4664aa6035f25cfd3112367d"
+ },
+ {
+  "candidate_id": "b50407c04923a11a",
+  "claim": "Style.setBold/setFontColor/setForegroundColor and Cell.setFormula/setStyle exist; Worksheet.putValue/getCell2 exist.",
+  "verdict": "supported",
+  "path": "b50407c04923a11a.md",
+  "line": 131,
+  "evidence": "aspose_cells/style.ts:79,115,124; aspose_cells/cell.ts:63,76; aspose_cells/worksheet.ts:74,82@fc186507e5b7124f4664aa6035f25cfd3112367d"
+ },
+ {
+  "candidate_id": "e25398d68110f51e",
+  "claim": "Python >=3.10, skia-python>=87,<145 runtime dep, quickjs>=1.19,<2 under js extra, pytest>=8.",
+  "verdict": "supported",
+  "path": "e25398d68110f51e.md",
+  "line": 82,
+  "evidence": "pyproject.toml:9,25-33@bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11"
+ },
+ {
+  "candidate_id": "e25398d68110f51e",
+  "claim": "HTMLDocument, serialise, URL, URLSearchParams exported from package.",
+  "verdict": "supported",
+  "path": "e25398d68110f51e.md",
+  "line": 112,
+  "evidence": "src/aspose_html/__init__.py:2-14@bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11"
+ },
+ {
+  "candidate_id": "e25398d68110f51e",
+  "claim": "CSSStyleSheet.replace_sync and Document.attach_style_sheet exist.",
+  "verdict": "supported",
+  "path": "e25398d68110f51e.md",
+  "line": 137,
+  "evidence": "src/aspose_html/cssom/_stylesheet.py:295; src/aspose_html/dom/_document.py:1056@bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11"
+ },
+ {
+  "candidate_id": "e25398d68110f51e",
+  "claim": "detect_encoding returns EncodingDetectionResult with confidence.",
+  "verdict": "supported",
+  "path": "e25398d68110f51e.md",
+  "line": 178,
+  "evidence": "src/aspose_html/encoding/detection.py:13,44,47@bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11"
+ },
+ {
+  "candidate_id": "e25398d68110f51e",
+  "claim": "Tokenizer.tokenize() and TokenizerState exist.",
+  "verdict": "supported",
+  "path": "e25398d68110f51e.md",
+  "line": 204,
+  "evidence": "src/aspose_html/tokenizer/_tokenizer.py:153; _states.py:14@bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11"
+ },
+ {
+  "candidate_id": "f463cfcbeb35bb6d",
+  "claim": "python>=3.7 in requirements.txt.",
+  "verdict": "supported",
+  "path": "f463cfcbeb35bb6d.md",
+  "line": 70,
+  "evidence": "requirements.txt:2@2271c228d991bcd79048bb61773bcbcb415399c6"
+ },
+ {
+  "candidate_id": "f463cfcbeb35bb6d",
+  "claim": "Max dimension 30000 for PSD and 300000 for PSB.",
+  "verdict": "supported",
+  "path": "f463cfcbeb35bb6d.md",
+  "line": 232,
+  "evidence": "src/aspose_psd_foss/sections/psdheader.py:146@2271c228d991bcd79048bb61773bcbcb415399c6"
+ },
+ {
+  "candidate_id": "f463cfcbeb35bb6d",
+  "claim": "BlendMode.MULTIPLY exists; Layer.blend_mode_key is a settable property.",
+  "verdict": "supported",
+  "path": "f463cfcbeb35bb6d.md",
+  "line": 124,
+  "evidence": "src/aspose_psd_foss/layers/blendmode.py:7; layers/layer.py:158-162@2271c228d991bcd79048bb61773bcbcb415399c6"
+ },
+ {
+  "candidate_id": "f463cfcbeb35bb6d",
+  "claim": "ImageResourceIds.GLOBAL_ANGLE = 1037.",
+  "verdict": "supported",
+  "path": "f463cfcbeb35bb6d.md",
+  "line": 136,
+  "evidence": "src/aspose_psd_foss/resources/imageresourceids.py:10@2271c228d991bcd79048bb61773bcbcb415399c6"
+ },
+ {
+  "candidate_id": "f463cfcbeb35bb6d",
+  "claim": "PsdColorDataKind values NONE, INDEXED_PALETTE, RGB_PAYLOAD, CMYK_PAYLOAD, RAW_PRESERVED.",
+  "verdict": "supported",
+  "path": "f463cfcbeb35bb6d.md",
+  "line": 195,
+  "evidence": "src/aspose_psd_foss/sections/psdcolordatakind.py:4-10@2271c228d991bcd79048bb61773bcbcb415399c6"
+ }
+]
