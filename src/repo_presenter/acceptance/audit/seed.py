@@ -50,6 +50,7 @@ from cryptography.fernet import Fernet, InvalidToken
 __all__ = [
     "CLEAN_SHAPE",
     "DEFECT_SHAPES",
+    "BLIND_SHAPES",
     "OPERATORS_BY_SHAPE",
     "SHAPE_BY_OPERATOR",
     "SeedingError",
@@ -69,6 +70,15 @@ __all__ = [
 #: section 4.1 table lists as M8's own corpus-building mutants - one set of operators, two
 #: consumers (M8 calibration and M9 seeding). See this card's closeout for the exact scope.
 DEFECT_SHAPES: tuple[str, ...] = ("A", "D", "D9", "D14", "D15")
+
+#: The shapes the blind M9 batch seeds. The design gate (section 4.3) requires A/D/D9. D14 (promotional
+#: filler) is always a real, detectable defect, so it is kept. D15 (``incoherent_reorder``) is NOT
+#: seeded blind: the operator swaps the first two non-title paragraphs, which in these READMEs are
+#: usually the badge line and the intro, and swapping those leaves a coherent document -- the seed is
+#: not a defect, so no correct auditor can be expected to flag it (round 1 and 2 of 2026-11-12 missed
+#: 11 of 13 D15 seeds while catching ~96% of the rest). It stays available to M8's corpus, which labels
+#: its own cases, until a D15 operator that guarantees an incoherent result exists.
+BLIND_SHAPES: tuple[str, ...] = ("A", "D", "D9", "D14")
 
 #: Tag used for an unmodified "clean control" copy - never one of ``DEFECT_SHAPES``.
 CLEAN_SHAPE = "clean"

@@ -93,13 +93,13 @@ def test_select_candidates_skips_seals_with_no_readme_or_an_error(monkeypatch):
     assert "own:repo-L-0" in repos
 
 
-def test_build_seed_plan_reaches_at_least_20_seeded_from_24_real_shaped_candidates():
+def test_build_seed_plan_reaches_at_least_20_seeded_from_36_real_shaped_candidates():
     by_lane = {"L": [], "R": []}
     for lane in ("L", "R"):
-        for i in range(12):
+        for i in range(18):
             by_lane[lane].append((f"own:{lane}-{i}", _seal(f"{lane}widget{i}", lane, i)))
     case_index, manifest = run_m9_seeder.build_seed_plan(by_lane)
-    assert len(case_index) == 24
+    assert len(case_index) == 36
     seeded = [m for m in manifest if m["shape"] != CLEAN_SHAPE]
     clean = [m for m in manifest if m["shape"] == CLEAN_SHAPE]
     assert len(seeded) >= 20
@@ -178,3 +178,9 @@ def test_a_different_salt_rotates_which_candidates_are_controls_so_a_burned_batc
 
     assert controls(0) != controls(1) and controls(1) != controls(2)
     assert run_m9_seeder.build_seed_plan(by_lane, 0) == run_m9_seeder.build_seed_plan(by_lane, 0)
+
+
+def test_the_blind_batch_never_seeds_the_reorder_shape_that_can_leave_a_coherent_document():
+    by_lane = {"L": [(f"own:{i}", _seal(f"w{i}", "L", i)) for i in range(30)], "R": []}
+    _index, manifest = run_m9_seeder.build_seed_plan(by_lane)
+    assert {m["shape"] for m in manifest} <= {"A", "D", "D9", "D14", CLEAN_SHAPE}

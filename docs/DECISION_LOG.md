@@ -4602,3 +4602,31 @@ Real hosted `present.yml` runs from this branch (the workflow exists on `main`, 
   of the secret (2026-11-09) is readable from any branch and is to be deleted by the owner.
 - **Stale text:** `summarize`'s docstring in `ops/checks/portfolio_delivery_count.py` still says the
   attested path is "NOT YET used"; it is now used.
+
+## 2026-11-12: M9 rounds 1-2 failed their gates; root causes fixed (join key, D15 seed validity, flag adjudication, control share)
+
+- **Round 1 (seed run 43208002268):** first writer run scored recall 0.000 -- a bug in my writer: the
+  seeder's manifest keys entries `candidate_id = repo@lane@rev` while auditors and the case index use
+  the hashed `case_id`; findings never joined. Fixed (`key_manifest_by_case_id`) with a regression test
+  built from the seeder's real manifest shape (it fails without the fix). Corrected score: recall
+  0.793 (23/29), false-flag 0.429 (3/7).
+- **Round 2 (seed run 43213595013):** recall 0.742 (23/31), false-flag 0.600 (3/5). Post-audit
+  diagnostics show 11 of the 13 misses over both rounds were D15 `incoherent_reorder` at line 3, even
+  after the auditor brief named the class; the other seeded shapes were caught at ~96%.
+- **Root cause of the D15 misses:** the operator swaps the first two non-title paragraphs, which in
+  these READMEs are normally the badge line and the intro; the swap leaves a coherent document. The
+  seed is not a defect, so a correct auditor should not flag it. The design's M9 gate requires A/D/D9
+  blind seeds (section 4.3, M9 row); my plan text had listed all five shapes. Corrected: blind batches
+  seed `BLIND_SHAPES = (A, D, D9, D14)`; D15 stays in M8's corpus until an operator that guarantees an
+  incoherent result exists. Thresholds are unchanged (recall >= 0.90, false-flag <= 0.10).
+- **Flags on clean controls were real defects**, not auditor errors (a false FrameCount claim, an
+  overstated type count, a wrong test-golden path in a generated README, swapped API-table
+  descriptions). Counting them as auditor false flags made the gate measure candidate quality, with 5-7
+  controls so that one real typo failed the batch. Corrected: a flag on a control is adjudicated
+  against the pinned source by a second independent check; CONFIRMED -> that candidate fails (it can
+  never be accepted); REFUTED -> counts against the auditor; unadjudicated -> counts against both
+  (fail closed).
+- **Controls:** only an unmodified clean control can become an accepted record, so the control share is
+  raised from 1 in 6 to 1 in 4 (26 seeded >= 20 still holds at 36 candidates).
+- **Burned seeds:** the seeder takes `--salt` (the workflow run id) so a burned batch is never
+  repeated; a failed batch's records stay on their bot branches and count for nothing.

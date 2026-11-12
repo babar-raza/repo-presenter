@@ -38,7 +38,7 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from repo_presenter.acceptance.audit.seed import (  # noqa: E402
     CLEAN_SHAPE,
-    DEFECT_SHAPES,
+    BLIND_SHAPES,
     SeedingError,
     clean_control,
     encrypt_seed_manifest,
@@ -47,9 +47,11 @@ from repo_presenter.acceptance.audit.seed import (  # noqa: E402
 from repo_presenter.core.state.bundle_store import seal_history  # noqa: E402
 
 MIN_PER_LANE = 10
-#: Roughly 1 in 6 candidates stays a clean control (false-flag-rate measurement needs some, but
+#: Roughly 1 in 4 candidates stays a clean control -- only a clean control can become an accepted
+#: record, so a larger share means more candidates can be accepted per batch (>= 20 seeded still
+#: holds at the 36 candidates of the full portfolio). Formerly 1 in 6 (false-flag-rate measurement needs some, but
 #: the design minimum of >=20 SEEDED cases across ~24 available candidates leaves little room).
-CLEAN_EVERY = 6
+CLEAN_EVERY = 4
 
 
 def select_candidates(remote: str = "origin", scratch: Path | None = None):
@@ -70,7 +72,7 @@ def build_seed_plan(by_lane: dict[str, list], salt: int = 0) -> tuple[list[dict]
     real hosted run select identically given the same seal history."""
     case_index: list[dict] = []
     manifest: list[dict] = []
-    shape_cycle = list(DEFECT_SHAPES)
+    shape_cycle = list(BLIND_SHAPES)
     for lane, entries in sorted(by_lane.items()):
         shape_i = salt  # a burned batch's seeds must not repeat: rotate shapes and controls by salt
         for i, (repository, seal) in enumerate(entries):
