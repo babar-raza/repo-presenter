@@ -396,7 +396,8 @@ def seal_history(
                     "--no-tags",
                     backend._remote,
                     f"+{BUNDLE_REF_PREFIX}/*:{_HISTORY_REF_PREFIX}/*",
-                ]
+                ],
+                timeout=1500,  # the full seal history measured ~6 min on 2026-11-12; 120s never finished
             )
             if fetched.returncode != 0:
                 raise BundleStoreError(

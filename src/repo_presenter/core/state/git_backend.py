@@ -174,9 +174,9 @@ class GitStateBackend:
     def __exit__(self, *_exc_info: object) -> None:
         self.close()
 
-    def _run_remote_git(self, args: list[str]) -> subprocess.CompletedProcess[str]:
+    def _run_remote_git(self, args: list[str], timeout: float = 120) -> subprocess.CompletedProcess[str]:
         auth_env = github_https_auth_env(self._token)
-        result = run_git(args, cwd=self._git_cwd, env=auth_env or None)
+        result = run_git(args, cwd=self._git_cwd, env=auth_env or None, timeout=timeout)
         # G7-W01 (docs/THREAT_MODEL.md area 1): the token reaches git only via the process-local
         # `http.extraheader` env var (`github_https_auth_env`, never a URL or a file), and a
         # well-behaved git/libcurl never echoes a request header's value back in its own stdout or
