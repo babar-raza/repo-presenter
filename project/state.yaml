@@ -185,7 +185,7 @@ owner_review_status:
 
 release_gate_dashboard:
   generated_by: gatecli
-  generated_at: '2026-11-11T15:33:36Z'
+  generated_at: '2026-11-12T05:20:26Z'
   note: Tool-generated from gateverify.rebuild_state() -- never hand-edit this block.
     Historical current_gate/active_work_item below are preserved bootstrap-era narrative,
     not this cursor; this block is the real, evidence-derived release-gate status
@@ -228,11 +228,11 @@ release_gate_dashboard:
     receipt: GATE0_AUTHORITY/TC-004/receipt.json
   - id: TC-005
     gate: GATE0_AUTHORITY
-    status: STALE_RECEIPT
+    status: VERIFICATION_FAILED
     attempt: 0
     blocker:
-      class: STALE_RECEIPT
-      summary: card definition changed since this receipt was generated -- re-verify
+      class: VERIFICATION_FAILED
+      summary: negative-control patch did not apply
   - id: TC-006
     gate: GATE1_QUALITY
     status: ACCEPTED
@@ -391,17 +391,17 @@ release_gate_dashboard:
     receipt: GATE5_DELIVERY_PROGRAM/TC-019b/receipt.json
   - id: TC-019c
     gate: GATE5_DELIVERY_PROGRAM
-    status: STALE_RECEIPT
+    status: ACCEPTED
     attempt: 0
-    blocker:
-      class: STALE_RECEIPT
-      summary: card definition changed since this receipt was generated -- re-verify
+    blocker: null
+    commit: caaa8a21fd5eafe4557fdc6fa0dd7bd83089a0bb
+    receipt: GATE5_DELIVERY_PROGRAM/TC-019c/receipt.json
   - id: TC-020
     gate: GATE5_DELIVERY_PROGRAM
     status: ACCEPTED
     attempt: 0
     blocker: null
-    commit: 95c4ecacb2762d7a0bdfea61d81ca3d10a378f59
+    commit: 04f91578188d0b03f19c21ad4c0607804deb1222
     receipt: GATE5_DELIVERY_PROGRAM/TC-020/receipt.json
   - id: TC-021
     gate: GATE5_DELIVERY_PROGRAM
@@ -484,7 +484,6 @@ release_gate_dashboard:
   - TC-005
   - TC-011
   - TC-012b
-  - TC-019c
 current_gate:
   id: P1_PORTFOLIO_SCALE
   status: ACCEPTED

@@ -56,14 +56,14 @@ requires:
 network: true
 negative_control:
   mutate: |-
-    python -c "import pathlib; p = pathlib.Path('project/state.yaml'); s = p.read_text(encoding='utf-8'); s2 = s.replace('lane_r_accepted: 10', 'lane_r_accepted: 999'); p.write_text(s2, encoding='utf-8')"
+    python -c "import pathlib, re; p = pathlib.Path('project/state.yaml'); s = p.read_text(encoding='utf-8'); s2 = re.sub('lane_r_accepted: [0-9]+', 'lane_r_accepted: 999', s); p.write_text(s2, encoding='utf-8')"
   rationale: >
     Replaces today's known-current recorded value with an implausible sentinel (999) that can
     never coincidentally match whatever the live script actually reports -- a real falsification
-    of today's content, without regex or backslashes crossing the YAML/shell boundary (the exact
-    shape ops/SUPERVISOR.md's own falsifier-authoring rule warns against). As the real recorded
-    number changes over time, this mutate line will stop matching and should be refreshed to the
-    then-current value the same way any negative control is maintained alongside its card.
+    of the recorded count, whatever it currently is. 2026-11-12: matches any number with the
+    backslash-free pattern [0-9]+, because the earlier literal 'lane_r_accepted: 10' stopped
+    matching once the recorded count moved (the mutation silently changed nothing and the control
+    reported "patch did not apply"), which made this card unverifiable by construction.
 evidence:
   - docs/RELEASE_CONTRACT_P1-P5.md
   - project/state.yaml
