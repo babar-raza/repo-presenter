@@ -1,0 +1,52 @@
+id: TC-028a
+gate: GATE5_DELIVERY_PROGRAM
+track: no-regression-gate
+executor: worker
+purpose: >
+  First slice of the plan's TC-028 (no-regression gate hardening, findings F6/F27). The merge gate
+  `recertify.gate()` protects R10 ("no passing seal may start failing unless each case is a
+  justified genuine defect") but has three holes: (1) a justification is accepted when each newly
+  failing check id is a SUBSTRING of the free text, so `BC-1` is "named" by a sentence about
+  `BC-17`; (2) the comparison key includes the seal commit, so a lane whose LATEST seal was replaced
+  by a new commit that fails never meets its earlier RECERTIFIED baseline row and passes the gate
+  with a lost count; (3) the CLI trusts the working baseline when the base baseline is absent or
+  unreadable. This card closes (1) and (2) inside `gate()` (pure function) and adds the CLI fail-
+  closed behaviour for (3): an explicitly passed `--base-baseline` that cannot be read fails the
+  gate; no flag keeps today's first-adoption behaviour. Self-contained: you never read the plan.
+depends_on:
+  - TC-024
+write_paths:
+  - src/repo_presenter/recertify.py
+  - tests/test_recertify_gate.py
+satisfies:
+  - REQ-REPAIR-001
+source_refs:
+  - file: src/repo_presenter/recertify.py
+    anchor: "def gate("
+inputs: []
+actions:
+  - "In gate(): match newly failing check ids as whole tokens (split the justification on non-identifier characters; `BC-17` must not satisfy `BC-1`, and a check id inside a longer id never counts)."
+  - "In gate(): also compare per (repository, lane): if the base baseline records any RECERTIFIED row for that lane and the latest seal now fails, that is a regression unless the same justified-NEEDS_REPAIR rule holds for that seal's working-baseline row; a seal commit absent from the base is judged against the lane's base row."
+  - "CLI --gate: an explicit --base-baseline path that does not exist or is not valid JSON fails with a clear message and exit 1."
+  - "Tests in tests/test_recertify_gate.py (new file; do not edit tests/test_recertify.py) with real baseline-row shapes from data/recertification_baseline.json."
+checks:
+  - command: |-
+      python -m pytest tests/test_recertify_gate.py tests/test_recertify.py -q
+    expect: exit 0
+    timeout_seconds: 600
+    proves:
+      - REQ-REPAIR-001
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -X utf8 -c "import pathlib; p = pathlib.Path('src/repo_presenter/recertify.py'); nl = chr(10); t = p.read_text(encoding='utf-8'); p.write_text(t + nl + 'gate = lambda results, baseline, base_baseline=None: []' + nl, encoding='utf-8')"
+  rationale: >
+    Replaces gate() with one that never reports a problem, which must fail the new tests asserting a
+    substring-justified and a replaced-seal regression are reported.
+evidence:
+  - src/repo_presenter/recertify.py
+closeout:
+  - "The CI step that produces the base baseline (.github/workflows/ci.yml) is supervisor-owned and is changed separately."
+recovery: "Revert recertify.py's gate()/CLI hunk and the new test file."

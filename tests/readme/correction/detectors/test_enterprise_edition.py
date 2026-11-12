@@ -154,3 +154,74 @@ def test_a_bare_commercial_product_is_not_resolved_without_the_enterprise_fact(
 ) -> None:
     ctx = make_context(_ONE_NAME_README, make_facts())
     assert enterprise_edition_naming(ctx).edits == ()
+
+
+# --- the H1 fallback (2026-11-09): no prose mention at all, real VS0 Slides-FOSS-for-Java case ---
+
+#: The real H1 and line 754 text as actually published upstream (fetched 2026-11-09 via
+#: ``gh api repos/aspose-slides-foss/Aspose.Slides-FOSS-for-Java/readme``) -- this README names no
+#: commercial product anywhere in its prose at all (its sibling links on the lines just above are
+#: to other FOSS editions, not the commercial one), which is exactly why VS0 found this case
+#: un-auto-fixable before this detector version: ``_single_named_product`` returned ``None``.
+_SLIDES_JAVA_H1 = "# Aspose.Slides FOSS for Java\n"
+_SLIDES_JAVA_LINE_754 = (
+    "**When you want the commercial product instead:** if you need to render or convert.\n"
+)
+
+
+def test_the_real_slides_java_bare_commercial_product_is_now_resolved_from_the_h1(
+    make_context: Any, make_facts: Any, make_fact: Any
+) -> None:
+    readme = _SLIDES_JAVA_H1 + "\n" + _SLIDES_JAVA_LINE_754
+    enterprise = make_fact(
+        ENTERPRISE_FACT_ID, "https://products.aspose.com/slides/java/",
+        attributes={"level": "platform"},
+    )
+    ctx = make_context(readme, make_facts(enterprise))
+    result = enterprise_edition_naming(ctx)
+    bare = [e for e in result.edits if e.original == "the commercial product"]
+    assert len(bare) == 1
+    (edit,) = bare
+    assert edit.replacement == "Aspose.Slides for Java — Enterprise Edition"
+    assert result.findings == ()
+
+
+def test_the_h1_fallback_truncates_to_the_family_name_when_the_enterprise_target_is_family_level(
+    make_context: Any, make_facts: Any, make_fact: Any
+) -> None:
+    readme = "# Aspose.Words FOSS for Python\n\nSee the commercial product for the full feature set.\n"
+    enterprise = make_fact(
+        ENTERPRISE_FACT_ID, "https://products.aspose.com/words/",
+        attributes={"level": "family"},
+    )
+    ctx = make_context(readme, make_facts(enterprise))
+    (edit,) = [e for e in enterprise_edition_naming(ctx).edits if e.original == "the commercial product"]
+    assert edit.replacement == "Aspose.Words — Enterprise Edition"
+
+
+def test_a_prose_mention_still_wins_over_the_h1_fallback(
+    make_context: Any, make_facts: Any, make_fact: Any
+) -> None:
+    """The H1 fallback only fires when sole_product is None -- a real prose mention (even of a
+    DIFFERENT platform than the H1's own, an edge case this test deliberately exercises) is never
+    silently overridden by it."""
+    readme = (
+        "# Aspose.Words FOSS for Python\n\n"
+        "See the commercial Aspose.Words for .NET for comparison, and the commercial product "
+        "for the full feature set.\n"
+    )
+    enterprise = make_fact(ENTERPRISE_FACT_ID, "https://products.aspose.com/words/net/")
+    ctx = make_context(readme, make_facts(enterprise))
+    (edit,) = [e for e in enterprise_edition_naming(ctx).edits if e.original == "the commercial product"]
+    assert edit.replacement == "Aspose.Words for .NET — Enterprise Edition"
+
+
+def test_the_h1_fallback_never_fires_without_the_enterprise_fact(
+    make_context: Any, make_facts: Any
+) -> None:
+    readme = _SLIDES_JAVA_H1 + "\n" + _SLIDES_JAVA_LINE_754
+    ctx = make_context(readme, make_facts())  # no link_target:product.enterprise fact
+    result = enterprise_edition_naming(ctx)
+    assert result.edits == ()
+    (finding,) = result.findings
+    assert "not guessed" in finding.reason and "commercial product" in finding.reason

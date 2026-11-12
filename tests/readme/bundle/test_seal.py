@@ -174,6 +174,39 @@ def test_seal_candidate_writes_a_real_manifest_with_every_required_artifact(tmp_
         assert (result.bundle / name).is_file()
 
 
+def test_seal_candidate_records_canaries_in_the_manifest_and_a_vacuous_case_is_empty(
+    tmp_path: Path,
+) -> None:
+    """TC-024 part d: the manifest carries per-candidate canary ids and outcomes, computed from
+    exactly the README being staged. The default fixture's README has no paragraph anywhere near
+    the operator's/rule's shared 120-character threshold, so no canary is admitted -- ``{}``, not
+    a silently vacuous ``True``."""
+    inputs = _inputs(tmp_path)
+    result = seal_candidate(inputs)
+    manifest = json.loads((result.bundle / BUNDLE_MANIFEST_NAME).read_text(encoding="utf-8"))
+    assert manifest["canaries"] == {}
+
+
+def test_seal_candidate_canary_catches_a_repeated_long_paragraph(tmp_path: Path) -> None:
+    long_paragraph = (
+        "This widget library renders every supported shape to PNG and SVG with a single call, "
+        "and the renderer preserves color fidelity across every output format it supports today."
+    )
+    assert len(long_paragraph) >= 120
+
+    def _duplicate(out_dir: Path) -> None:
+        (out_dir / "README.coherent.md").write_text(
+            f"# Widget\n\n{long_paragraph}\n\n{long_paragraph}\n",
+            encoding="utf-8",
+            newline="\n",
+        )
+
+    inputs = _inputs(tmp_path, mutate_out_dir=_duplicate)
+    result = seal_candidate(inputs)
+    manifest = json.loads((result.bundle / BUNDLE_MANIFEST_NAME).read_text(encoding="utf-8"))
+    assert manifest["canaries"] == {"duplicate_paragraph": True}
+
+
 def test_seal_candidate_falls_back_to_rendered_readme_when_no_coherent_readme_exists(
     tmp_path: Path,
 ) -> None:

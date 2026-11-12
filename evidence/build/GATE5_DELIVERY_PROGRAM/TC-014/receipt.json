@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "card": "TC-014",
+  "gate": "GATE5_DELIVERY_PROGRAM",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-07T18:34:53Z",
+  "base_rev": "1fec3a4e42e42988c0e32838fdd88210f55d03d8",
+  "head_rev": "f90d1baf787a57434e68af4de83863ff4e9e8697",
+  "card_sha256": "57ee8eff624a65c5d29dec6ed1b3e26595b628b2fb7e870d80cc5fda262bec49",
+  "checker_fileset_sha256": "a162b555d03dc455aed624559de48714e090bc8f726918347945af41316aff78",
+  "checker_fileset_scheme": "v3",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [
+      "src/repo_presenter/acceptance/audit/__init__.py",
+      "src/repo_presenter/acceptance/audit/attest.py",
+      "src/repo_presenter/acceptance/audit/score.py",
+      "src/repo_presenter/acceptance/audit/seed.py",
+      "tests/acceptance/audit/test_attest.py",
+      "tests/acceptance/audit/test_score.py",
+      "tests/acceptance/audit/test_seed.py"
+    ],
+    "violations": [],
+    "evaluated": true
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python -m pytest tests/acceptance/audit/test_seed.py -q",
+          "exit_code": 0,
+          "duration_s": 2.2,
+          "stdout_sha256": "7008a4f9d0ee1d735dcab820e0a848dd1303a66514cbc619bb6446fd3f1d251b"
+        },
+        {
+          "command": "python -m pytest tests/acceptance/audit/test_score.py -q",
+          "exit_code": 0,
+          "duration_s": 1.514,
+          "stdout_sha256": "66cc078cc8ebf35e386cbc2ca44f5876ce414a6eabfa3961da7f1d18d9263f06"
+        },
+        {
+          "command": "python -m pytest tests/acceptance/audit/test_attest.py -q",
+          "exit_code": 0,
+          "duration_s": 1.42,
+          "stdout_sha256": "72516163bf025765baea35619e90d0b5418248f5eed1cf4faef2061134dfe0d6"
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python -m pytest tests/acceptance/audit/test_seed.py -q",
+          "exit_code": 0,
+          "duration_s": 1.578,
+          "stdout_sha256": "61f4ce0f9b73a5c99f068fa5735a6fa30d03e07e4b08079fe141e299da59e68c"
+        },
+        {
+          "command": "python -m pytest tests/acceptance/audit/test_score.py -q",
+          "exit_code": 0,
+          "duration_s": 1.537,
+          "stdout_sha256": "66cc078cc8ebf35e386cbc2ca44f5876ce414a6eabfa3961da7f1d18d9263f06"
+        },
+        {
+          "command": "python -m pytest tests/acceptance/audit/test_attest.py -q",
+          "exit_code": 0,
+          "duration_s": 1.63,
+          "stdout_sha256": "1e7a2b94a32f949d284e67d2078d58730be5434f1e92caa42f6fbbb78b1816a2"
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -X utf8 -c \"import pathlib; p = pathlib.Path('src/repo_presenter/acceptance/audit/score.py'); s = p.read_text(encoding='utf-8'); s2 = s.replace('recall', 'recal_BROKEN'); p.write_text(s2, encoding='utf-8')\"",
+    "patch_sha256": "cf85ea91ae6710a01c78c21e1e9c199e767d8fe4161ccd03dc9fc2abb6298867",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      0,
+      2,
+      0
+    ],
+    "tree_changed": [
+      "M src/repo_presenter/acceptance/audit/score.py"
+    ]
+  },
+  "accepted": true,
+  "reason": "all gates passed"
+}

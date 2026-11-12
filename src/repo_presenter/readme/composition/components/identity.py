@@ -16,12 +16,19 @@ import re
 from repo_presenter.core.registry.models import RegistryEntry
 
 
-def product_name(entry: RegistryEntry) -> str:
-    """``Aspose.3D-FOSS-for-Python`` -> ``Aspose.3D FOSS for Python``."""
-    parts = [part for part in entry.name.split("-") if part]
+def product_name_of_repository(repository: str) -> str:
+    """The canonical product name from an ``owner/Aspose.3D-FOSS-for-Python`` repository slug (or
+    the bare name): the same derivation ``product_name`` makes from a registry entry, for callers
+    that hold only a ``FactsDocument`` (whose ``repository`` is that slug)."""
+    parts = [part for part in repository.split("/")[-1].split("-") if part]
     if len(parts) > 2 and parts[0] == "Aspose" and parts[2].upper() == "FOSS":
         parts[:2] = [f"{parts[0]}.{parts[1]}"]
     return " ".join(parts)
+
+
+def product_name(entry: RegistryEntry) -> str:
+    """``Aspose.3D-FOSS-for-Python`` -> ``Aspose.3D FOSS for Python``."""
+    return product_name_of_repository(entry.name)
 
 
 def product_name_tokens(name: str) -> frozenset[str]:
@@ -38,7 +45,13 @@ def _noncanonical_name_pattern(canonical: str) -> re.Pattern[str]:
     head, tail = (segments, []) if foss is None else (segments[: foss + 1], segments[foss + 1 :])
     pattern = _NAME_SEPARATOR.join(re.escape(part) for part in head)
     if tail:
-        rest = _NAME_SEPARATOR.join(re.escape(part) for part in tail)
+        # "Cpp" is how the registry spells the C++ platform; the maintainers write "C++" (Aspose.PDF
+        # FOSS for C++, Aspose.Slides FOSS for C++), and BC-12 holds them to "for Cpp". The tail is
+        # all-or-nothing, so without this alias only the head matched and a rewrite left "for C++"
+        # dangling after the canonical name.
+        rest = _NAME_SEPARATOR.join(
+            r"(?:Cpp|C\+\+)" if part.lower() == "cpp" else re.escape(part) for part in tail
+        )
         pattern += f"(?:{_NAME_SEPARATOR}{rest})?"
     return re.compile(r"(?<![A-Za-z0-9])" + pattern + r"(?![A-Za-z0-9])", re.IGNORECASE)
 
@@ -99,24 +112,32 @@ def _is_spelling_of_the_name(found: str, canonical: str, before: str, after: str
     return _ANOTHER_TAIL.match(after) is None
 
 
-def canonicalise_name_variants(text: str, canonical: str) -> str:
+def canonicalise_name_variants(text: str, canonical: str, *, protect: re.Pattern[str] | None = None) -> str:
     """``text`` with every separator, case or suffix variant of ``canonical`` that stands for the
-    product name in running prose rewritten to ``canonical``."""
+    product name in running prose rewritten to ``canonical``.
+
+    Fenced blocks and inline code spans are left alone; so is anything ``protect`` matches (a caller
+    passes link destinations and bare URLs). A variant that spans a blank line is not a name and is
+    never rewritten; one broken across a single line wrap ("Aspose.Cells" / "FOSS") is, exactly as
+    BC-12 reads it."""
     pattern = _noncanonical_name_pattern(canonical)
 
     def _rewrite(segment: str, base: int) -> str:
         def _replace(match: re.Match[str]) -> str:
             start, end = base + match.start(), base + match.end()
             before, after = text[max(0, start - 24) : start], text[end : end + 24]
+            if re.search(r"\n[ \t]*\r?\n", match.group(0)):
+                return match.group(0)  # a blank line inside it: two paragraphs, not a name
             if _is_spelling_of_the_name(match.group(0), canonical, before, after):
                 return canonical
             return match.group(0)
 
         return pattern.sub(_replace, segment)
 
+    skip = _CODE if protect is None else re.compile(f"{_CODE.pattern}|{protect.pattern}", re.DOTALL)
     out: list[str] = []
     cursor = 0
-    for code in _CODE.finditer(text):
+    for code in skip.finditer(text):
         out.append(_rewrite(text[cursor : code.start()], cursor))
         out.append(code.group(0))
         cursor = code.end()

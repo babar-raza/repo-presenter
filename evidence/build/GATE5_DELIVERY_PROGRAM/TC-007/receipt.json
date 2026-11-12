@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "card": "TC-007",
+  "gate": "GATE5_DELIVERY_PROGRAM",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-09T16:24:54Z",
+  "base_rev": "bd8f4362fff8c26639549eddc3ef47dee92f9c2e",
+  "head_rev": "e55f8be6d8ab3102353a860c03245639406b8a32",
+  "card_sha256": "84a0d4d2aab2204a2ce165ff922b3694f67f187184a7a4314b69d986e402226a",
+  "checker_fileset_sha256": "8312817c7dfce51b076913bef46c86447a20dc94637bcf579555bb653f8d9124",
+  "checker_fileset_scheme": "v3",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [
+      "data/acceptance_calibration.json"
+    ],
+    "violations": [],
+    "evaluated": true
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python ops/checks/calibration_status.py PASSED --file data/acceptance_calibration.json --matrix data/acceptance_responsibility.json",
+          "exit_code": 0,
+          "duration_s": 0.196,
+          "stdout_sha256": "77fb3bc7754e48b5a7162489b089571161c8a542601bb0abd6a1b4c4edddd428"
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python ops/checks/calibration_status.py PASSED --file data/acceptance_calibration.json --matrix data/acceptance_responsibility.json",
+          "exit_code": 0,
+          "duration_s": 0.218,
+          "stdout_sha256": "77fb3bc7754e48b5a7162489b089571161c8a542601bb0abd6a1b4c4edddd428"
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -X utf8 -c \"import json, pathlib; p = pathlib.Path('data/acceptance_calibration.json'); d = json.loads(p.read_text(encoding='utf-8')); [c.update(status='NOT_PASSED') for c in d['certificates'] if c.get('mechanism_class') == 'M1']; p.write_text(json.dumps(d, indent=2), encoding='utf-8')\"",
+    "patch_sha256": "21f2b5838bc0c168579e63ac38931402bfe1cd9a5bab09c0db57558ba89f0eca",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      1
+    ],
+    "tree_changed": [
+      "M data/acceptance_calibration.json"
+    ]
+  },
+  "accepted": true,
+  "reason": "all gates passed"
+}

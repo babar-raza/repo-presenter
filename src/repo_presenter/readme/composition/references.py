@@ -42,6 +42,9 @@ _TABLE_ROW = re.compile(r"^\s*\|.*\|\s*$")
 _SENTENCE_END = re.compile(r"(?<=[.!?])\s+(?=[A-Z`*\[(])")
 _MARKUP = re.compile(r"[*_`]+|\[([^\]]*)\]\([^)]*\)")
 _SPACE = re.compile(r"\s+")
+_CONTENT_LINK = re.compile(r"\[[^\]]*\]\((?!#)[^)\s]+[^)]*\)")
+_CODE_SPAN = re.compile(r"`[^`]+`")
+_POINTER_MAX_WORDS = 25
 
 _KIND_WORDS = {
     "table": "table",
@@ -83,6 +86,11 @@ _UNDER = re.compile(
     r"\b(?:listed|described|documented|covered|explained|detailed|found)\s+(?:in full\s+)?"
     r"(?:under|in)\s+(?:the\s+)?[\"“'‘]?"
     r"(?P<name>[A-Z][A-Za-z0-9&/' -]{2,48}?)[\"”'’]?\s*[.;,]?\s*$"
+)
+# A capitalised verb before the kind word ("See Examples below") is a sentence opening, not part
+# of a Title-Case heading name.
+_POINTING_VERBS = frozenset(
+    {"the", "this", "these", "those", "every", "each", "all", "any", "see", "refer", "view", "read", "check", "use", "run", "try", "find", "consult", "browse"}
 )
 _GENERIC_SECTION_NAMES = frozenset(
     {"this", "that", "next", "previous", "following", "above", "below"}
@@ -212,12 +220,39 @@ def positional_only(text: str) -> bool:
     """Every sentence of ``text`` points at something by position ("the example above", "the
     following table"): it states nothing a reader loses when the block it points at is printed
     elsewhere, and kept out of its place it is a dangling reference (BC-07). Used by
-    ``validation/supersession.py`` so superseding such a sentence is not judged a content loss."""
+    ``validation/supersession.py`` so superseding such a sentence is not judged a content loss.
+
+    A content-rich text is never positional-only even when it contains a pointer phrase: one that
+    carries a link to a file or URL (an in-page ``(#anchor)`` link is navigation), inline code, or
+    more than ``_POINTER_MAX_WORDS`` words names things a reader loses when it is superseded
+    (Aspose.PDF-FOSS-for-Cpp: "Additional Examples below extends this into ... [`examples/12.cpp`]
+    ...")."""
+    if _CONTENT_LINK.search(text) or _CODE_SPAN.search(text):
+        return False
+    if len(_plain(_SPACE.sub(" ", text)).split()) > _POINTER_MAX_WORDS:
+        return False
     sentences = [_plain(raw) for raw in _SENTENCE_END.split(_SPACE.sub(" ", text))]
     sentences = [sentence for sentence in sentences if sentence]
     return bool(sentences) and all(
         _DIRECT.search(sentence) or _FOLLOWING.search(sentence) for sentence in sentences
     )
+
+
+def _cased(raw: str) -> str:
+    """``_plain`` without the lower-casing."""
+    return _SPACE.sub(" ", _MARKUP.sub(lambda m: m.group(1) or "", raw)).strip()
+
+
+def _heading_name(cased: str, match: re.Match[str]) -> bool:
+    """Whether a ``_DIRECT`` match (found in the lower-cased ``_plain`` of ``cased``) is a
+    Title-Case heading name, not a pointer: the kind word is capitalised and the word before it
+    is too ("Additional Examples below extends this into ...", PDF-Cpp). "the examples below"
+    and a sentence-initial "Examples below" stay pointers."""
+    if not cased[match.start("kind") :][:1].isupper():
+        return False
+    before = cased[: match.start("kind")].split()
+    word = before[-1] if before else ""
+    return word[:1].isupper() and word.isalpha() and word.lower() not in _POINTING_VERBS
 
 
 def dangling_references(readme: str) -> list[DanglingReference]:
@@ -234,8 +269,11 @@ def dangling_references(readme: str) -> list[DanglingReference]:
             sentence = _plain(raw)
             if not sentence:
                 continue
+            cased = _cased(raw)
             reasons: list[str] = []
             for match in _DIRECT.finditer(sentence):
+                if len(cased) == len(sentence) and _heading_name(cased, match):
+                    continue
                 wanted = _KIND_WORDS[match.group("kind").lower()]
                 below = match.group("way").lower() == "below"
                 lo, hi = (position + 1, end) if below else (start, position)

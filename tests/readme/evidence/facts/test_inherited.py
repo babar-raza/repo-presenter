@@ -503,3 +503,96 @@ def test_oversized_split_never_fires_when_rc06_already_split_the_list() -> None:
     assert len(split) == len(many_symbols)
     assert len(split) != -(-item_count // LIST_SPLIT_CHUNK_SIZE)
     assert [u.sub_ordinal for u in split] == list(range(1, len(many_symbols) + 1))
+
+
+# --- an image-only line is a badge row only when it is a header row or every image is a badge ----
+
+_PAGE_EXAMPLE_RESULTS = """# Aspose.Page FOSS for Python
+
+## Examples
+
+### Example Results
+
+![XPS to PDF to PNG result](readme.resources/mb03.png)
+
+![PS to PDF to PNG result](readme.resources/TestImages.png)
+
+![PS to image sample](readme.resources/RGB10.png)
+"""
+
+_HEADER_BADGES = """# Aspose.Cells FOSS for .NET
+
+[![NuGet](https://img.shields.io/nuget/v/Aspose.Cells.FOSS.svg)](https://www.nuget.org/packages/Aspose.Cells.FOSS/) [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+## Install
+"""
+
+
+def _kinds(text: str) -> list[str]:
+    from repo_presenter.readme.evidence.facts.inherited import inventory_units
+
+    return [unit.unit_type for unit in inventory_units(text)]
+
+
+def test_body_images_under_a_sub_heading_are_paragraphs_not_badge_rows() -> None:
+    """Real lines from Aspose.Page-FOSS-for-Python: three example-result screenshots, which the
+    renderer must be able to print (it never prints a badge_row unit)."""
+    kinds = _kinds(_PAGE_EXAMPLE_RESULTS)
+    assert kinds.count("badge_row") == 0
+    assert kinds.count("paragraph") == 3
+
+
+def test_a_header_badge_row_directly_under_the_title_stays_a_badge_row() -> None:
+    kinds = _kinds(_HEADER_BADGES)
+    assert kinds == ["heading", "badge_row", "heading"]
+
+
+def test_a_badge_only_line_under_a_sub_heading_still_counts_when_every_image_fills_a_slot() -> None:
+    text = (
+        "# Product\n\n## Status\n\n"
+        "[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)\n"
+    )
+    assert "badge_row" in _kinds(text)
+
+
+# Real lines 1, 99-121 and 460 of Aspose.Cells-FOSS-for-Go's live README: the Installation section
+# contains a bare "# ..." heading (a maintainer-authoring quirk, not a second document title).
+_STRAY_MID_DOCUMENT_H1 = """# Aspose.Cells FOSS for Go
+
+## Installation
+
+```bash
+go get github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Go/v26/aspose/cells_foss
+```
+
+# Requires **Go 1.24.5+** (see `go.mod`). Depends only on the Go standard library — no third-party modules.
+
+The module supports Go 1.24.5 or later and has zero third-party dependencies.
+
+## Dependencies
+
+No required third-party package dependencies.
+
+## Documentation & Resources
+
+- [Getting started guide](https://docs.aspose.org/cells/go/)
+"""
+
+
+def test_a_stray_mid_document_h1_does_not_overwrite_the_title_in_later_sections() -> None:
+    """Before the fix, the stray "# Requires ..." heading reset the whole breadcrumb stack
+    (``del heading_path[0:]``), so every later unit's ``section`` carried its text as a bogus
+    prefix instead of the real title ("Requires ... modules. > Documentation & Resources" instead
+    of "Aspose.Cells FOSS for Go > Documentation & Resources") -- BC-05/BC-17 then reported real,
+    correctly-dispositioned content as lost because the restore/placement lookup never matched it."""
+    units = inventory_units(_STRAY_MID_DOCUMENT_H1)
+    by_source = {u.source.splitlines()[0]: u for u in units}
+    stray = by_source["# Requires **Go 1.24.5+** (see `go.mod`). Depends only on the Go standard library — no third-party modules."]
+    assert stray.heading_level == 2  # clamped: not a second document root
+    assert stray.section == "Aspose.Cells FOSS for Go"
+    dependencies = by_source["No required third-party package dependencies."]
+    assert dependencies.section == "Aspose.Cells FOSS for Go > Dependencies"
+    resources = by_source["- [Getting started guide](https://docs.aspose.org/cells/go/)"]
+    assert resources.section == "Aspose.Cells FOSS for Go > Documentation & Resources"
+    assert "Requires" not in dependencies.section
+    assert "Requires" not in resources.section

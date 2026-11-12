@@ -25,14 +25,18 @@ DETECTORS: dict[str, Detector] = {}
 #: test_detector_versions.py``, which also pins each module's source so an unversioned logic
 #: change cannot pass quietly.
 DETECTOR_VERSIONS: dict[str, str] = {
+    "absent_type_row": "1",
     "broken_link": "1",
-    "enterprise_edition_naming": "2",
+    "enterprise_edition_naming": "3",
     "failing_example": "1",
     "format_overclaim": "2",
     "report_gaps": "1",
     "second_h1": "1",
+    "stale_package_version": "4",
+    "stale_type_count": "1",
     "stray_fence": "1",
     "unclosed_details": "1",
+    "versioned_link_target": "1",
 }
 
 

@@ -121,7 +121,10 @@ def unstated(
         return [line for line in _code_lines(unit_text) if line not in document][:6]
     missing: list[str] = []
     for anchor_kind, anchor in _anchors(unit_text):
-        if anchor not in document:
+        # A call spelling (``Worksheet.Cells()``) names the same identifier as ``Worksheet.Cells``:
+        # the README stating the identifier states it (Cells Go, 2026-11-10); arguments still count.
+        bare = anchor[:-2].rstrip() if anchor_kind == "span" and anchor.endswith("()") else anchor
+        if bare not in document:
             missing.append(f"{anchor_kind} {anchor!r}")
     block_stems: list[set[str]] | None = None
     for sentence in _sentences(unit_text, kind):

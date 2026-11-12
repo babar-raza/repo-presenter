@@ -326,12 +326,11 @@ def cmd_review(args) -> int:
 # tick / doctor / resume-brief
 # --------------------------------------------------------------------------
 def cmd_tick(args) -> int:
-    state = load_yaml(STATE_FILE) if STATE_FILE.exists() else {}
-    print(f"gate: {state.get('current_gate', {}).get('id')} "
-          f"[{state.get('current_gate', {}).get('status')}]")
-    awi = state.get("active_work_item")
-    if awi:
-        print(f"active work item: {awi.get('id')} [{awi.get('status')}]")
+    # 2026-11-07 (docs/DELIVERY_PLAN_2026-11-07.md Step 0 routine fix): state.yaml's
+    # current_gate/active_work_item are bootstrap-era narrative (state.yaml's own dashboard
+    # note), superseded by the derived card rows below. Printing them here misled a reader
+    # into treating a 2026-11-03 snapshot as live status; tick now reports only what the
+    # evidence-derived rebuild actually computes.
     cards = all_cards()
     if cards:
         rows, _ = gateverify.rebuild_state()

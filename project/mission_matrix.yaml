@@ -29,8 +29,8 @@ rows:
      next_action: "TC-009b non-mutating publication proof after TC-007", external_effect_prohibited: "any upstream branch/PR"}
   - {id: G5, title: "Proven GitHub App integration", status: PARTIAL,
      implementation: PARTIAL, test: YES, real_execution: NONE, independent_verification: NONE,
-     evidence: [.github/workflows/mint-app-token.yml, src/repo_presenter/github/token_provenance.py],
-     gaps: "0 real token mints; TC-009a open", next_action: "TC-009a", external_effect_prohibited: "writes with the App token to non-allowed repos"}
+     evidence: [.github/workflows/mint-app-token.yml, src/repo_presenter/github/token_provenance.py, evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json],
+     gaps: "corrected 2026-11-07: TC-009a is ACCEPTED and 1 real scoped mint is proven (run 42200695015, minted true, 0 upstream writes); real PR/issue publication through that token is not yet proven, see TC-009b", next_action: "TC-009b non-mutating publication proof", external_effect_prohibited: "writes with the App token to non-allowed repos"}
   - {id: G6, title: "Autonomous Docker + Actions production", status: PARTIAL,
      implementation: PARTIAL, test: PARTIAL, real_execution: PARTIAL, independent_verification: NONE,
      evidence: [.github/workflows/present.yml, Dockerfile],

@@ -35,7 +35,12 @@ from repo_presenter.readme.composition.link_budget import (
     resolve_link_budget,
 )
 from repo_presenter.readme.composition.policy import PlanningPolicy
-from repo_presenter.readme.composition.renderer import BADGE_ORDER, badge_slot
+from repo_presenter.readme.composition.renderer import (
+    BADGE_ORDER,
+    EXTRA_BADGE_SLOT,
+    badge_slot,
+    line_counts,
+)
 
 # The markers an example fact's evidence carries once it has actually run.
 EXECUTION_MARKERS = (": EXECUTED", ": COMPILED")
@@ -68,6 +73,22 @@ def readme_link_budget(
     )
 
 
+def effective_visible_lines_budget(policy: PlanningPolicy, benchmark_readme: str | None) -> int:
+    """The visible-line budget BC-07 holds a candidate to: ``max(policy budget, the published
+    README's own visible lines)`` when a benchmark README is present, else the policy budget.
+
+    Supervisor ruling 2026-11-10 (owner goals R2, top authority: the published README is the
+    minimum quality floor, so the floor must be satisfiable). Measured: published aspose.org
+    READMEs run 545-598 lines (Cells Go, Cpp), so a candidate that keeps the floor (BC-17) can never
+    fit a fixed 300 visible lines. Only the LINE budget relaxes; BC-07's other sub-rules (the Core API
+    table's rows against the verified public types, one H1, badge order, fences, narration, ...)
+    are untouched."""
+    if not benchmark_readme:
+        return policy.visible_lines_budget
+    published_visible, _total = line_counts(benchmark_readme)
+    return max(policy.visible_lines_budget, published_visible)
+
+
 def badge_problems(row: str, expected: Sequence[tuple[str, str]]) -> list[str]:
     """Why the badge ``row`` breaks the contract, against the badges the facts support.
 
@@ -76,10 +97,20 @@ def badge_problems(row: str, expected: Sequence[tuple[str, str]]) -> list[str]:
     out of order, or differ from the supported badge for its slot, because a badge no fact
     supports is a fabricated one.
     """
-    supported = dict(expected)
+    supported = {slot: markdown for slot, markdown in expected if slot != EXTRA_BADGE_SLOT}
+    extras = {markdown for slot, markdown in expected if slot == EXTRA_BADGE_SLOT}
     problems: list[str] = []
     seen: list[str] = []
+    extra_seen: set[str] = set()
     for token in _BADGE.findall(row):
+        if token in extras:
+            # A maintainers' badge the slot badges did not carry (renderer._carried_extra_badges):
+            # verified by being exactly the badge the renderer derives, always after the slots.
+            if token in extra_seen:
+                problems.append(f"duplicate carried badge {token[:60]!r}")
+            extra_seen.add(token)
+            seen.append(EXTRA_BADGE_SLOT)
+            continue
         slot = badge_slot(token)
         if slot is None:
             problems.append(f"badge {token[:60]!r} fills no recognized slot")
@@ -95,7 +126,9 @@ def badge_problems(row: str, expected: Sequence[tuple[str, str]]) -> list[str]:
             problems.append(
                 f"{slot} badge differs from the verified one: {token[:80]!r}"
             )
-    ranks = [BADGE_ORDER.index(slot) for slot in seen]
+    ranks = [
+        len(BADGE_ORDER) if slot == EXTRA_BADGE_SLOT else BADGE_ORDER.index(slot) for slot in seen
+    ]
     if ranks != sorted(ranks):
         problems.append(
             f"badge order {', '.join(seen)} breaks the stable order {', '.join(BADGE_ORDER)}"

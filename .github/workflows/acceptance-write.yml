@@ -1,0 +1,108 @@
+name: acceptance-write
+
+# The hosted acceptance writer: the ONLY thing the counter trusts to say a candidate passed the
+# M9 audit. Consumes a prior audit-seed.yml run (encrypted manifest + case index) and the
+# COMMITTED, frozen auditor findings, applies the audit gates (scripts/run_acceptance_writer.py),
+# writes acceptance-records-<seed_run_id>.json, attests that file (Sigstore, signer = this
+# workflow on main) and commits it to the bot branch acceptance-record/run-<seed_run_id>-<writer run id> (one branch per writer run, so a corrected re-run never collides with an earlier one; a failed audit's record stays and counts for nothing).
+# ops/checks/portfolio_delivery_count.py counts a record only if `gh attestation verify` ties the
+# file to this exact workflow on refs/heads/main, so a hand-pushed file counts for nothing.
+
+on:
+  workflow_dispatch:
+    inputs:
+      seed_run_id:
+        description: "the audit-seed.yml run id whose manifest + case index to use"
+        required: true
+        type: string
+      findings_path:
+        description: "path (on main) to the committed, frozen auditor findings JSON"
+        required: true
+        type: string
+      adjudications_path:
+        description: "optional path (on main) to the committed, frozen adjudications of flags on clean controls"
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: write       # only to push the bot record branch
+  id-token: write       # Sigstore signing for the attestation
+  attestations: write
+  actions: read         # to download the seeder run's artifacts
+
+concurrency:
+  group: acceptance-write
+  cancel-in-progress: false
+
+jobs:
+  write:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: acceptance-audit
+    steps:
+      - name: Refuse to run anywhere but main
+        run: |
+          if [ "$GITHUB_REF" != "refs/heads/main" ]; then
+            echo "acceptance-write must run on refs/heads/main, got $GITHUB_REF" >&2
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install
+        run: python -m pip install -e .
+
+      - name: Fetch the durable state refs (the seals being re-certified)
+        run: git fetch origin '+refs/repository-presenter-state/*:refs/repository-presenter-state/*'
+
+      - name: Download the seeder run's encrypted manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: m9-seed-manifest-${{ inputs.seed_run_id }}
+          path: ${{ runner.temp }}/acc/manifest
+          run-id: ${{ inputs.seed_run_id }}
+          github-token: ${{ github.token }}
+
+      - name: Download the seeder run's case index
+        uses: actions/download-artifact@v4
+        with:
+          name: m9-seed-candidates-${{ inputs.seed_run_id }}
+          path: ${{ runner.temp }}/acc/candidates
+          run-id: ${{ inputs.seed_run_id }}
+          github-token: ${{ github.token }}
+
+      - name: Write the acceptance records
+        env:
+          AUDIT_SEED_KEY: ${{ secrets.AUDIT_SEED_KEY }}
+          ADJ: ${{ inputs.adjudications_path }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/acc/out"
+          python scripts/run_acceptance_writer.py \
+            --seed-run-id "${{ inputs.seed_run_id }}" \
+            --manifest "$RUNNER_TEMP/acc/manifest/seed_manifest.enc" \
+            --findings "${{ inputs.findings_path }}" \
+            --case-index "$RUNNER_TEMP/acc/candidates/case_index.json" \
+            ${ADJ:+--adjudications "$ADJ"} \
+            --out "$RUNNER_TEMP/acc/out/acceptance-records-${{ inputs.seed_run_id }}.json"
+
+      - name: Attest the records file
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: ${{ runner.temp }}/acc/out/acceptance-records-${{ inputs.seed_run_id }}.json
+
+      - name: "Commit the records file to its bot branch (no force, so a re-run fails closed)"
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "acceptance-record/run-${{ inputs.seed_run_id }}-${{ github.run_id }}"
+          cp "$RUNNER_TEMP/acc/out/acceptance-records-${{ inputs.seed_run_id }}.json" .
+          git add -f "acceptance-records-${{ inputs.seed_run_id }}.json"
+          git commit -m "Acceptance records for seed run ${{ inputs.seed_run_id }} (attested)"
+          git push origin "acceptance-record/run-${{ inputs.seed_run_id }}-${{ github.run_id }}"

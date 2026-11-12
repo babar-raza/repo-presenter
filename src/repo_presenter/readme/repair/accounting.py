@@ -33,6 +33,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any, NamedTuple
 
+from repo_presenter.readme.composition.components.shell import SEMANTIC_SHELL
 from repo_presenter.readme.composition.coverage import carries_hard_tokens, states_all
 from repo_presenter.readme.composition.list_coverage import stems
 from repo_presenter.readme.composition.placement import (
@@ -41,7 +42,12 @@ from repo_presenter.readme.composition.placement import (
     planned_fact_ids,
     renderer_fact_ids,
 )
-from repo_presenter.readme.reconciliation.dispositions import rendering_fact_ids
+from repo_presenter.readme.reconciliation.dispositions import (
+    _DETAILS_WRAPPER_CLOSE,
+    _DETAILS_WRAPPER_OPEN,
+    _RENDERER_OWNED_COLLAPSIBLES,
+    rendering_fact_ids,
+)
 from repo_presenter.readme.review.independent_reviewer import (
     heading_printed,
     unprinted_kept_units,
@@ -59,6 +65,10 @@ RATIONALE_HEADING = (
     "Heading owned by the renderer: {section} prints its own headings, so this inherited "
     "heading is not printed as written."
 )
+RATIONALE_BADGES = (
+    "Superseded by the {section} the renderer prints from the verified facts: every link this "
+    "badge row carried is printed in the README."
+)
 RATIONALE_DIAGRAM = (
     "Superseded by the At a Glance diagram the renderer draws from the verified formats "
     "and capabilities."
@@ -74,6 +84,10 @@ RATIONALE_EXAMPLE_HEADING = (
 RATIONALE_LEAD_HEADING = (
     "Omitted with the example it introduced: that example is contradicted ({facts}), so its "
     "heading has nothing left to introduce."
+)
+RATIONALE_WRAPPER = (
+    "Collapsible wrapper owned by the renderer: the {section} section prints its own "
+    "<details> wrapper, so this inherited wrapper tag is not printed as written."
 )
 MERMAID_FENCE = "mermaid"
 EXAMPLE_SECTIONS = frozenset({"quick_start", "additional_examples"})
@@ -275,16 +289,29 @@ def _payload_row(
 def _example_heading(
     entry: Mapping[str, Any], candidate: Candidate, known: frozenset[str], section: str
 ) -> _Decision | None:
-    """A kept heading that introduced a SUPPORTED example the section prints under its own title."""
+    """A kept heading that introduced an example (SUPPORTED, or UNRESOLVED and reprinted with a
+    not-verified note) whose code the README prints under an example section's own title.
+
+    The section is the heading's own destination when that is an example section; otherwise the
+    destination of the code block it introduced (a heading S4 kept into ``opening`` over an
+    example S4 moved into ``additional_examples``). Either way the example's code must be printed."""
     payload = _payload_row(str(entry.get("unit_id", "")), candidate)
     if payload is None:
         return None
     unit_id, row = payload
-    facts = _examples(row, candidate, "SUPPORTED", known)
+    destination = section if section in EXAMPLE_SECTIONS else row.get("destination_section")
+    if destination not in EXAMPLE_SECTIONS:
+        return None
+    facts = sorted(
+        {
+            *_examples(row, candidate, "SUPPORTED", known),
+            *_examples(row, candidate, "UNRESOLVED", known),
+        }
+    )
     text = _unit_values(candidate).get(unit_id, "")
     if not facts or not _code_printed(text, candidate):
         return None
-    return _Decision(section, RATIONALE_EXAMPLE_HEADING, facts)
+    return _Decision(str(destination), RATIONALE_EXAMPLE_HEADING, facts)
 
 
 def _lead_heading_omitted(
@@ -354,6 +381,46 @@ def _uncited_heading(
     return _Decision(destination, rationale, facts)
 
 
+def _identity_fact(candidate: Candidate, known: frozenset[str]) -> str | None:
+    """The repository's own SUPPORTED identity fact: always real and always true of it."""
+    return next(
+        (
+            fact.id
+            for fact in candidate.facts.by_kind("identity")
+            if fact.polarity == "SUPPORTED" and fact.id in known
+        ),
+        None,
+    )
+
+
+def _details_wrapper(
+    placement: Placement, candidate: Candidate, known: frozenset[str]
+) -> _Decision | None:
+    """A kept inherited ``<details>`` wrapper tag (the opener with or without its ``<summary>``,
+    or the bare closer) the render does not print. The sections that collapse their content
+    (``api_reference``, ``additional_examples``) print their own wrapper and never the inherited
+    one, so a kept wrapper claims an effect that does not happen; the disposition that matches is
+    ``SUPERSEDE_REDUNDANT``, citing the repository's identity fact (a wrapper tag carries no
+    content of its own to cite). Only a wrapper tag: any other HTML block is left alone."""
+    value = _unit_values(candidate).get(placement.unit_id)
+    if value is None or not (
+        _DETAILS_WRAPPER_OPEN.match(value) or _DETAILS_WRAPPER_CLOSE.match(value)
+    ):
+        return None
+    identity = _identity_fact(candidate, known)
+    if identity is None:
+        return None
+    included = _included_sections(candidate.plan)
+    section = placement.destination
+    if section not in included:
+        section = next(
+            (name for name in sorted(_RENDERER_OWNED_COLLAPSIBLES) if name in included), None
+        )
+    if section is None:
+        return None
+    return _Decision(section, RATIONALE_WRAPPER.format(section=section.replace("_", " ")), [identity])
+
+
 def _uncited_kept_heading_identity(
     entry: Mapping[str, Any], candidate: Candidate, known: frozenset[str]
 ) -> _Decision | None:
@@ -416,19 +483,86 @@ def _uncited_kept_heading_identity(
     }
     if destination not in included:
         return None
-    identity = next(
-        (
-            fact.id
-            for fact in candidate.facts.by_kind("identity")
-            if fact.polarity == "SUPPORTED" and fact.id in known
-        ),
-        None,
-    )
+    identity = _identity_fact(candidate, known)
     if identity is None:
         return None
     return _Decision(
         destination, RATIONALE_HEADING.format(section=destination.replace("_", " ")), [identity]
     )
+
+
+def _heading_level(text: str) -> int:
+    return len(text) - len(text.lstrip("#"))
+
+
+def _deferred_subheading(
+    entry: Mapping[str, Any], candidate: Candidate, known: frozenset[str]
+) -> _Decision | None:
+    """A sub-heading S4 parked (``DEFER_UNRESOLVED``, no fact) under a heading that a section the
+    renderer builds deterministically from facts prints itself.
+
+    Measured live (aspose-psd-foss/Aspose.PSD-FOSS-for-Python): the maintainers' ``## Dependencies``
+    held ``### Required``, ``### Native / System`` and ``### Development``; S4 deferred all three
+    ("rendered deterministically by the dependencies section") and the render printed the
+    section's own ``### Required Package Dependencies``, so ``live_readme_loss`` refused the three
+    headings. A section of owner ``D`` prints its own sub-headings and never an inherited one as
+    written (``renders_verbatim``): the heading belongs to that section, citing the facts it
+    renders from. Only when the heading is not printed, the parent heading above it is printed and
+    is a ``D`` section's own title, and that section renders from SUPPORTED facts; what the
+    sub-heading introduced is judged by its own disposition (BC-17, ``disposition_coverage``), not
+    here."""
+    unit_id = str(entry.get("unit_id", ""))
+    values = _unit_values(candidate)
+    value = values.get(unit_id)
+    match = _ORDINAL.match(unit_id)
+    if (
+        value is None
+        or match is None
+        or not unit_id.endswith(".heading")
+        or entry.get("disposition") != "DEFER_UNRESOLVED"
+        or any(fact_id in known for fact_id in entry.get("fact_ids") or [])
+        or heading_printed(value, candidate.readme)
+    ):
+        return None
+    level = _heading_level(value)
+    parent: str | None = None
+    for ordinal, other in sorted(
+        (
+            (int(m.group(1)), other)
+            for other in values
+            if other.endswith(".heading")
+            and (m := _ORDINAL.match(other)) is not None
+            and int(m.group(1)) < int(match.group(1))
+        ),
+        reverse=True,
+    ):
+        if _heading_level(values[other]) < level:
+            parent = values[other]
+            break
+    if parent is None or not heading_printed(parent, candidate.readme):
+        return None
+    included = {
+        str(item.get("section_id"))
+        for item in candidate.plan.get("sections", [])
+        if item.get("include")
+    }
+    section = next(
+        (
+            shell
+            for shell in SEMANTIC_SHELL
+            if shell.owner == "D"
+            and shell.heading is not None
+            and shell.id in included
+            and heading_printed(parent, f"## {shell.heading}")
+        ),
+        None,
+    )
+    if section is None:
+        return None
+    facts = sorted(set(rendering_fact_ids(section.id, candidate.facts)) & known)
+    if not facts:
+        return None
+    return _Decision(section.id, RATIONALE_HEADING.format(section=section.id.replace("_", " ")), facts)
 
 
 def _included_sections(plan: Mapping[str, Any]) -> list[str]:
@@ -629,6 +763,41 @@ def _uncited_contradicted_omission(
     return _Decision(None, rationale, facts, "OMIT_UNSUPPORTED")
 
 
+def _badge_row(
+    placement: Placement,
+    entry: Mapping[str, Any],
+    candidate: Candidate,
+    known: frozenset[str],
+) -> _Decision | None:
+    """A kept inherited badge row. The renderer prints its own badges and banner from facts and
+    never an inherited badge row as written (``placement._RENDERED_ELSEWHERE``), so a row S4 kept
+    (``VERIFIED_PRESERVE``/``VERIFIED_MOVE``) claims an effect that does not happen; the
+    disposition that matches what happened is ``SUPERSEDE_REDUNDANT`` into the badges (or banner)
+    section, citing the facts that section renders (``rendering_fact_ids``, the very rule S4's own
+    supersession of a badge row cites).
+
+    Only when the row is in fact redundant: every link the row carries must still be printed
+    somewhere in the README (``coverage.carries_hard_tokens``). A badge, banner or license link the
+    published README prints and the candidate lost is R2 content loss, not a redundancy, and is
+    left to the reviewer's ``live_readme_loss`` and to the badge rendering that must carry it."""
+    value = _unit_values(candidate).get(placement.unit_id)
+    if value is None or not carries_hard_tokens(value, candidate.readme):
+        return None
+    included = set(_included_sections(candidate.plan))
+    chosen = entry.get("destination_section")
+    section = (
+        chosen
+        if chosen in {"badges", "banner"} and chosen in included
+        else next((name for name in ("badges", "banner") if name in included), None)
+    )
+    if section is None:
+        return None
+    facts = sorted(set(rendering_fact_ids(section, candidate.facts)) & known)
+    if not facts:
+        return None
+    return _Decision(section, RATIONALE_BADGES.format(section=section), facts)
+
+
 def _decide(
     placement: Placement,
     entry: Mapping[str, Any],
@@ -650,13 +819,17 @@ def _decide(
         return None
     if unit_id.endswith(".heading"):
         facts = _heading_facts(placement, candidate, known)
-        if not facts and section in EXAMPLE_SECTIONS:
+        if not facts:
             return _example_heading(entry, candidate, known, section)
         if not facts:
             return None
         return _Decision(
             section, RATIONALE_HEADING.format(section=section.replace("_", " ")), facts
         )
+    if unit_id.endswith(".badge_row"):
+        return _badge_row(placement, entry, candidate, known)
+    if unit_id.endswith(".html_block"):
+        return _details_wrapper(placement, candidate, known)
     if unit_id.endswith(".code_block") and _is_mermaid(placement.text):
         facts = _diagram_fact_ids(candidate.plan, known)
         if not facts or not _drawn(candidate.plan, candidate.readme):
@@ -708,7 +881,10 @@ def account_unprinted_units(
     unprinted = {
         unit
         for unit, _disposition in unprinted_kept_units(
-            candidate.readme, facts=candidate.facts, dispositions=candidate.dispositions
+            candidate.readme,
+            facts=candidate.facts,
+            dispositions=candidate.dispositions,
+            slot_equivalence=False,
         )
     }
     by_unit = {p.unit_id: p for p in placements_of(candidate)}
@@ -744,6 +920,9 @@ def account_unprinted_units(
         if decided is None:
             decided = _uncited_redundant_omission(entry, candidate, known)
             reason = "uncited_redundant_omission"
+        if decided is None:
+            decided = _deferred_subheading(entry, candidate, known)
+            reason = "deferred_subheading"
         if decided is None:
             continue
         was = str(entry.get("disposition"))

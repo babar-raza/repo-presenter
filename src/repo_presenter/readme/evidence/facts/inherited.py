@@ -111,7 +111,19 @@ _LEADING_IDENTIFIER = re.compile(r"^`([A-Za-z_][A-Za-z0-9_]*)`")
 # the unit spells (``Aspose.Pdf.Foss.Tests`` for tests/Aspose.Pdf.Foss.Tests.csproj), so prose may
 # name the test project in a code span rather than leave a bare dotted name BC-12 reads as a short
 # spelling of the product.
-INHERITED_UNITS_VERSION = "4"
+#
+# "4" -> "5" (2026-11-10): an image-only line under a sub-heading whose images fill no badge slot is
+# a `paragraph`, not a `badge_row` (Page Python's three "Example Results" screenshots were typed
+# `badge_row`, which the renderer never prints, so the content was unrestorable). Unit kinds (hence
+# ids) of those lines change for NEW generations; sealed bundles keep their stored facts.
+#
+# "5" -> "6" (2026-11-10): a bare "# ..." heading after the document's first heading is clamped to
+# level 2, not treated as a second document root (Aspose.Cells FOSS for Go's Installation section
+# contains "# Requires **Go 1.24.5+** ..." as a heading, mid-document; resetting the whole
+# breadcrumb stack for it corrupted every later unit's `section` attribute with a bogus "... > "
+# prefix, which made BC-05/BC-17 report real content lost under the wrong destination). `section`
+# attributes (hence restore's destination lookups) change for units at or after such a heading.
+INHERITED_UNITS_VERSION = "6"
 
 # This change's own thresholds (module docstring has the full survey and justification): a plain
 # list that RC-06 leaves whole (no member-reference match) is still split into fixed-size chunks
@@ -157,6 +169,18 @@ def _is_badge_row(inline: Token) -> bool:
         for child in children
     )
     return has_image and only_badge_parts
+
+
+def _fills_only_badge_slots(inline: Token) -> bool:
+    """Whether every image of an image-only paragraph is recognisably a badge or banner
+    (``parity_gate.badge_slot_of_url``). A body image -- a screenshot, a diagram, an example result
+    -- fills no slot and is content."""
+    from repo_presenter.readme.parity_gate import badge_slot_of_url
+
+    images = [child for child in inline.children or [] if child.type == "image"]
+    return bool(images) and all(
+        badge_slot_of_url(str(child.attrGet("src") or "")) is not None for child in images
+    )
 
 
 def _block_end(tokens: list[Token], start: int) -> int:
@@ -264,6 +288,7 @@ def inventory_units(
     units: list[InheritedUnit] = []
     block_ordinal = 0
     heading_path: list[str] = []
+    seen_heading = False
     index = 0
     while index < len(tokens):
         token = tokens[index]
@@ -279,6 +304,17 @@ def inventory_units(
         heading_level: int | None = None
         if unit_type == "heading":
             heading_level = int(token.tag[1])
+            if seen_heading and heading_level == 1:
+                # A document has exactly one true top-level heading: its title, the first heading
+                # the file opens with. A later bare "# ..." is a maintainer-authoring quirk, not a
+                # second document root (Aspose.Cells FOSS for Go's Installation section contains
+                # "# Requires **Go 1.24.5+** (see `go.mod`). ..." as a heading, mid-document).
+                # Resetting the whole breadcrumb stack for it corrupted every later heading's
+                # ``section`` ("Requires ... modules. > Documentation & Resources" instead of
+                # "Documentation & Resources"), which made BC-05/BC-17 report the content lost and
+                # under the wrong destination. Treat it as a sibling of the surrounding h2 context.
+                heading_level = 2
+            seen_heading = True
             heading_text = tokens[index + 1].content.strip()
             del heading_path[heading_level - 1 :]
             heading_path.extend([""] * (heading_level - 1 - len(heading_path)))
@@ -286,7 +322,17 @@ def inventory_units(
             section = " > ".join(part for part in heading_path[:-1] if part)
         else:
             section = " > ".join(part for part in heading_path if part)
-            if unit_type == "paragraph" and _is_badge_row(tokens[index + 1]):
+            # A `badge_row` is a header badge row: an image-only line that sits directly under
+            # the document title (no sub-heading in its section path, the form the renderer's
+            # `_upstream_badge_row` reads), or one whose every image fills a recognised badge slot.
+            # Any other image-only line under a sub-heading (Page Python's "Example Results"
+            # screenshots) is content: a `paragraph`, which placement prints. The renderer never
+            # prints a `badge_row` unit, so mislabelling content here made it unrestorable (R2).
+            if (
+                unit_type == "paragraph"
+                and _is_badge_row(tokens[index + 1])
+                and (" > " not in section or _fills_only_badge_slots(tokens[index + 1]))
+            ):
                 unit_type = "badge_row"
         if not source.strip():
             index = end_index + 1

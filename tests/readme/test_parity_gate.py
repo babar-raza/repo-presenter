@@ -257,6 +257,17 @@ def test_lost_api_identifier_fails():
     assert not d.passed and d.numbers["api_identifiers"]["lost"] == 1
 
 
+def test_api_identifier_still_present_under_a_longer_qualified_prefix_is_not_lost():
+    """A renderer that disambiguates two short, overlapping class names (``GraphInfo`` in both
+    ``pdf`` and ``drawing``) by printing their package prefix still carries the bare identifier --
+    a preceding dot must not break the word-boundary match (measured on Aspose.PDF-FOSS-for-Java:
+    GraphInfo, PatternColorSpace, Config, FontRepository, FormField, SplitPlan and Token were all
+    printed only in qualified form and every one registered as a false BC-17 loss)."""
+    readme = benchmark().replace("Call `Widget.Save()`", "Call `Thing.Widget.Save()`")
+    d = dim(run(cand(readme)), "technical_content")
+    assert d.passed and d.numbers["api_identifiers"]["lost"] == 0
+
+
 def test_lost_install_command_fails_and_verified_replacement_is_accounted():
     readme = benchmark().replace(
         "dotnet add package Foo.Bar", "dotnet add package Other"
@@ -277,6 +288,29 @@ def test_lost_install_command_fails_and_verified_replacement_is_accounted():
         ]["accounted"]
         == 1
     )
+
+
+def test_registry_install_of_an_unconfirmed_package_is_accounted_not_lost():
+    """BC-02 forbids printing the registry install of a package whose ownership the registry does not
+    confirm (Aspose.3D-FOSS-for-Python), so BC-17 must not demand the maintainers' copy of it."""
+    readme = benchmark().replace(
+        "dotnet add package Foo.Bar", "git clone https://example.com/foo.git"
+    )
+    unconfirmed = {
+        **fact("install_command:dotnet", "install_command", "dotnet add package Foo.Bar", "UNRESOLVED"),
+        "evidence": [
+            {
+                "path": "https://api.nuget.org/x",
+                "detail": "package registry: a distribution of this name exists, but ownership "
+                "not confirmed: the registry's project URLs point at another repository",
+            }
+        ],
+    }
+    facts = [unconfirmed if f["id"] == "install_command:dotnet" else f for f in base_facts()]
+    numbers = dim(run(cand(readme, facts=facts)), "technical_content").numbers["install_commands"]
+    assert numbers["lost"] == 0 and numbers["accounted"] == 1
+    # with no ownership reading on the install fact it is still owed
+    assert dim(run(cand(readme)), "technical_content").numbers["install_commands"]["lost"] == 1
 
 
 def test_version_number_lost_fails_unless_updated_to_the_verified_version():
@@ -592,3 +626,275 @@ def test_a_maintainer_diagram_is_owed_unless_the_candidate_draws_its_own():
     assert not without.passed
     with_own = dim(run(cand(benchmark() + "\n" + OWN_DIAGRAM), bench=bench), "technical_content")
     assert with_own.passed
+
+
+# --- 7 maintainability -------------------------------------------------------------------------
+
+
+def test_heading_nested_more_than_one_level_deeper_fails():
+    bench = benchmark().replace("## Support", "## Support")  # unchanged baseline
+    deeper = benchmark().replace("## Support", "#### Support")
+    d = dim(run(cand(deeper)), "maintainability")
+    assert not d.passed and d.numbers["heading_depth_violations"] == 1
+    assert "Support" in d.details[0]
+
+
+def test_heading_nested_one_level_deeper_passes():
+    one_deeper = benchmark().replace("## Support", "### Support")
+    d = dim(run(cand(one_deeper)), "maintainability")
+    assert d.passed and d.numbers["heading_depth_violations"] == 0
+
+
+def test_a_paragraph_more_than_twice_the_benchmarks_longest_fails():
+    long_paragraph = " ".join(["word"] * 400)
+    readme = benchmark().replace(
+        "Ask questions on the community forum, where maintainers answer support requests within two business days.",
+        long_paragraph,
+    )
+    d = dim(run(cand(readme)), "maintainability")
+    assert not d.passed and d.numbers["long_paragraphs"] == 1
+
+
+def test_an_emptied_section_that_had_content_fails():
+    emptied = benchmark().replace(
+        "Ask questions on the community forum, where maintainers answer support requests within two business days.",
+        "",
+    )
+    d = dim(run(cand(emptied)), "maintainability")
+    assert not d.passed and d.numbers["emptied_sections"] == 1
+    assert "Support" in d.details[0]
+
+
+def test_maintainability_passes_a_well_formed_candidate():
+    d = dim(run(cand()), "maintainability")
+    assert d.passed and d.numbers["heading_depth_violations"] == 0
+
+
+# --- 8 required sections -----------------------------------------------------------------------
+
+
+def _with_required_section(name: str) -> str:
+    return "\n".join(
+        [
+            "# Foo for .NET",
+            "",
+            f"## {name}",
+            "",
+            "Real content for this section.",
+            "",
+        ]
+    )
+
+
+def test_a_backbone_section_entirely_absent_fails_even_without_a_disposition_excuse():
+    bench = _with_required_section("Dependencies")
+    missing = bench.replace("## Dependencies", "## Something Else")
+    d = dim(run(cand(missing, facts=[]), bench=bench), "required_sections")
+    assert not d.passed and d.numbers["missing"] == 1
+    assert "Dependencies" in d.details[0]
+
+
+def test_a_non_backbone_benchmark_section_is_not_this_dimensions_concern():
+    bench = _with_required_section("Troubleshooting")
+    missing = bench.replace("## Troubleshooting", "## Something Else")
+    d = dim(run(cand(missing, facts=[]), bench=bench), "required_sections")
+    assert d.passed and d.numbers["carried_by_benchmark"] == 0
+
+
+def test_a_backbone_section_present_passes():
+    bench = _with_required_section("License")
+    d = dim(run(cand(bench, facts=[]), bench=bench), "required_sections")
+    assert d.passed and d.numbers["carried_by_benchmark"] == 1 and d.numbers["missing"] == 0
+
+
+# --- 9 badge / banner completeness --------------------------------------------------------------
+
+
+BADGE_ROW = (
+    "[![NuGet version](https://img.shields.io/nuget/v/Foo.Bar.svg)](https://nuget.org) "
+    "[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)\n"
+)
+BANNER_LINE = (
+    "[![Foo for .NET](https://products.aspose.org/media/foo/net/banner-readme.png)]"
+    "(https://products.aspose.org/foo/net/)\n"
+)
+
+
+def _with_badges_and_banner(text: str) -> str:
+    lines = text.splitlines()
+    return "\n".join([lines[0], "", BADGE_ROW, BANNER_LINE, *lines[1:]])
+
+
+def test_a_missing_banner_fails_when_the_benchmark_carries_one():
+    bench = _with_badges_and_banner(benchmark())
+    without_banner = bench.replace(BANNER_LINE, "")
+    d = dim(run(cand(without_banner), bench=bench), "badge_banner_completeness")
+    assert not d.passed and d.numbers["benchmark_has_banner"] and not d.numbers["candidate_has_banner"]
+    assert "banner" in d.details[0]
+
+
+def test_a_shrunk_badge_row_fails():
+    bench = _with_badges_and_banner(benchmark())
+    one_badge = bench.replace(
+        " [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)", ""
+    )
+    d = dim(run(cand(one_badge), bench=bench), "badge_banner_completeness")
+    assert not d.passed and d.numbers["badge_deficit"] == 1
+
+
+def test_badge_and_banner_parity_passes():
+    bench = _with_badges_and_banner(benchmark())
+    d = dim(run(cand(bench), bench=bench), "badge_banner_completeness")
+    assert d.passed and d.numbers["badge_deficit"] == 0
+
+
+def test_no_badge_or_banner_in_the_benchmark_is_not_this_dimensions_concern():
+    d = dim(run(cand()), "badge_banner_completeness")
+    assert d.passed and d.numbers["benchmark_badges"] == 0 and not d.numbers["benchmark_has_banner"]
+
+
+# --- self-parity: the same text as both candidate and benchmark must pass every dimension -------
+
+
+def _committed_benchmark_texts() -> list[tuple[str, str]]:
+    """Real README texts this repository already has committed for parity work: the one real
+    sealed Lane candidate text under ``candidates/`` (docs/PARITY_BENCHMARK_PILOT.md), and the
+    live upstream README snapshots committed per repository under
+    ``evidence/build/P1_PORTFOLIO_SCALE`` (the same texts ``parity_gate.fetch_benchmark`` would
+    read live, captured once so this proof needs no network)."""
+    root = pg.REPO_ROOT
+    named = [
+        (
+            "candidates/aspose-3d-foss",
+            root
+            / "candidates"
+            / "aspose-3d-foss__Aspose.3D-FOSS-for-.NET"
+            / "52b0f00ebf28a0b4173921725ff170685ec2c502"
+            / "README.md",
+        ),
+        (
+            "live_readme/3d-net",
+            root
+            / "evidence/build/P1_PORTFOLIO_SCALE/aspose-3d-foss__Aspose.3D-FOSS-for-.NET"
+            / "live_readme.md",
+        ),
+        (
+            "live_readme/imaging-net",
+            root
+            / "evidence/build/P1_PORTFOLIO_SCALE/aspose-imaging-foss__Aspose.Imaging-FOSS-for-.NET"
+            / "live_readme.md",
+        ),
+        (
+            "live_readme/cells-rust",
+            root
+            / "evidence/build/P1_PORTFOLIO_SCALE/aspose-cells-foss__Aspose.Cells-FOSS-for-Rust"
+            / "live_readme.md",
+        ),
+        (
+            "live_readme/email-net",
+            root
+            / "evidence/build/P1_PORTFOLIO_SCALE/aspose-email-foss__Aspose.Email-FOSS-for-.Net"
+            / "live_readme.md",
+        ),
+        (
+            "live_readme/barcode-python",
+            root
+            / "evidence/build/P1_PORTFOLIO_SCALE/aspose-barcode-foss__Aspose.BarCode-FOSS-for-Python"
+            / "live_readme.md",
+        ),
+    ]
+    return [(label, path.read_text(encoding="utf-8")) for label, path in named]
+
+
+SELF_PARITY_TEXTS = _committed_benchmark_texts() + [("synthetic_small_fixture", benchmark())]
+
+
+@pytest.mark.parametrize("label,text", SELF_PARITY_TEXTS, ids=[t[0] for t in SELF_PARITY_TEXTS])
+def test_self_parity_on_every_committed_benchmark_text(label, text):
+    """M7 self-parity 1.00 (docs/design/2026-11-06-acceptance-redesign.md section 4.1): the same
+    text as both candidate and benchmark must report full parity on every dimension this module
+    computes -- a dimension that reads differently depending on which text is "candidate" vs
+    "benchmark" is asymmetric and wrong, whatever its number looks like on a real asymmetric pair.
+    Lane L is used throughout (empty facts/dispositions are sufficient for it; Lane R's own
+    self-parity, with full facts/dispositions, is already proven above for the synthetic fixture)."""
+    candidate = pg.SealedCandidate("L", text, ())
+    result = pg.evaluate("self-parity", candidate, text)
+    assert result.parity, pg.render([result])
+    assert {d.name for d in result.dimensions} == set(pg.DIMENSIONS)
+    assert all(d.passed for d in result.dimensions), [
+        (d.name, d.numbers, d.details) for d in result.dimensions if not d.passed
+    ]
+
+
+def test_self_parity_holds_for_lane_r_with_full_dispositions_too():
+    """The existing synthetic fixture already exercises Lane R's own disposition/fact accounting
+    (test_identical_candidate_reaches_parity_on_every_dimension); this asserts it by name for every
+    current dimension, so a future dimension added without updating that test cannot pass silently
+    un-exercised under Lane R."""
+    result = run(cand())
+    assert result.parity
+    assert {d.name for d in result.dimensions} == set(pg.DIMENSIONS)
+
+
+def test_a_version_is_held_by_the_unit_printing_it_not_by_one_printing_a_longer_number() -> None:
+    """Slides Cpp: ``set_font_height(24.0)`` (a sample call) was blamed on the CI paragraph that
+    prints ``Ubuntu 24.04``, because ``"24.0" in "...24.04..."``; BC-17 then asked to restore a unit
+    that never held the number."""
+    units = (
+        {"id": "inherited_unit:108.paragraph", "kind": "inherited_unit",
+         "value": "CI runs on Ubuntu 22.04 and 24.04 with GCC."},
+        {"id": "inherited_unit:090.code_block", "kind": "inherited_unit",
+         "value": "fmt.set_font_height(24.0);"},
+    )
+    candidate = pg.SealedCandidate("R", "", units, (), ())
+    accounting = pg.Accounting(candidate)
+    assert accounting.loss_units("24.0") == ("inherited_unit:090.code_block",)
+    assert accounting.loss_units("24.04") == ("inherited_unit:108.paragraph",)
+
+
+def test_an_identifier_is_held_only_by_a_unit_printing_it_as_a_whole_token() -> None:
+    """Email Cpp: the enum value ``red`` was held by units printing "Required" / "registered"."""
+    units = (
+        {"id": "inherited_unit:021.paragraph", "kind": "inherited_unit",
+         "value": "Required: a registered license."},
+        {"id": "inherited_unit:030.table", "kind": "inherited_unit",
+         "value": "| Name | Value |\n| red | 1 |\n| green | 2 |"},
+        {"id": "inherited_unit:040.paragraph", "kind": "inherited_unit",
+         "value": "Call `Page.BeginLayer(ctx)` to start; see Page.BeginLayer."},
+    )
+    accounting = pg.Accounting(pg.SealedCandidate("R", "", units, (), ()))
+    assert accounting.loss_units("red") == ("inherited_unit:030.table",)
+    assert accounting.loss_units("Page.BeginLayer") == ("inherited_unit:040.paragraph",)
+    assert accounting.loss_units("Page.BeginLayer()") == ("inherited_unit:040.paragraph",)
+    # case-sensitive; a longer word does not hold its prefix
+    assert accounting.loss_units("Required") == ("inherited_unit:021.paragraph",)
+    assert accounting.loss_units("Requir") == ()
+    # non-identifier items (spaces/punctuation) keep the substring behaviour
+    assert accounting.loss_units("a registered license") == ("inherited_unit:021.paragraph",)
+
+
+def test_rewrite_dropping_an_unverified_example_accounts_for_its_code_fence_only() -> None:
+    """Slides Cpp ``102.list``: a VERIFIED_REWRITE that dropped an unverified example (BC-03)."""
+    fence = 'pres.save("report.pdf", SaveFormat::PDF); // throws std::invalid_argument'
+    unit = {"id": "inherited_unit:102.list", "kind": "inherited_unit",
+            "value": f"- Saving may fail.\n\n{FENCE}cpp\n{fence}\n{FENCE}\n- See https://x.example/limits"}
+
+    def acct(rationale: str, disposition: str = "VERIFIED_REWRITE") -> pg.Accounting:
+        row = {"unit_id": unit["id"], "disposition": disposition, "fact_ids": [],
+               "rationale": rationale}
+        return pg.Accounting(pg.SealedCandidate("R", "", (unit,), (row,), ()))
+
+    cited = "Restated: it embeds an unverified code example BC-03 forbids. Scope limits."
+    assert acct(cited).reason(fence, code=True) is not None
+    assert acct(cited).loss_units(fence, code=True) == ()
+    # not other item kinds the same rewrite dropped
+    assert acct(cited).reason("https://x.example/limits") is None
+    assert acct(cited).loss_units("https://x.example/limits") == (unit["id"],)
+    # no exemption without the rationale
+    assert acct("Rewritten for scope.").reason(fence, code=True) is None
+    # the SAME marker still exempts the fence after zero-call restore converts the disposition
+    # away from VERIFIED_REWRITE (restore_units.py carries the marker forward precisely so this
+    # holds; Slides Cpp, hosted, 2026-11-11 -- see restore_units.py's own rationale-preservation
+    # test for the conversion itself)
+    assert acct(cited, "VERIFIED_PRESERVE").reason(fence, code=True) is not None
+    assert acct(cited, "PRESERVE_ATTRIBUTED").loss_units(fence, code=True) == ()

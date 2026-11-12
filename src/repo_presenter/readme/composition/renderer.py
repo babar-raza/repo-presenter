@@ -19,7 +19,7 @@ import re
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote, urlsplit
+from urllib.parse import quote, unquote, urlsplit
 
 from repo_presenter.core.ecosystems import spec_for
 from repo_presenter.core.examples import printed_example
@@ -316,6 +316,9 @@ def anchor(heading: str) -> str:
 
 
 BADGE_ORDER: tuple[str, ...] = ("package", "runtime", "build", "license", "contributors")
+#: The slot name ``badge_slots`` gives each maintainers' badge carried after the slot badges
+#: (``_carried_extra_badges``); any number of them, always last, never in ``BADGE_ORDER``.
+EXTRA_BADGE_SLOT = "extra"
 
 
 def contributors_target(repository: str) -> str:
@@ -361,9 +364,9 @@ def _badge_target(href: str) -> str:
     return href.strip().removeprefix("./").rstrip("/").casefold()
 
 
-def upstream_badges(context: RenderContext) -> list[tuple[str, str, str]]:
-    """The maintainers' header badges as ``(slot, markdown as written, link target)``, first per
-    slot: the linked badges of the live README's first top-level badge row (banner excluded)."""
+def _upstream_badge_row(context: RenderContext) -> list[tuple[str, str, str]]:
+    """Every linked badge of the live README's first top-level badge row (banner excluded) as
+    ``(image url, markdown as written, link target)``, in the order the maintainers wrote them."""
     rows = [
         fact
         for fact in context.facts.by_kind("inherited_unit")
@@ -373,17 +376,25 @@ def upstream_badges(context: RenderContext) -> list[tuple[str, str, str]]:
     banner = banner_target(context.facts.facts)
     banner_image = banner[0].value if banner is not None else None
     for fact in sorted(rows, key=lambda f: f.id):
-        found: list[tuple[str, str, str]] = []
-        for match in _LINKED_BADGE.finditer(fact.value):
-            image, href = match.group(1), match.group(2)
-            if image == banner_image or not image.startswith("https://"):
-                continue
-            slot = badge_slot(match.group(0))
-            if slot is not None and all(slot != seen for seen, _, _ in found):
-                found.append((slot, match.group(0), href))
+        found = [
+            (match.group(1), match.group(0), match.group(2))
+            for match in _LINKED_BADGE.finditer(fact.value)
+            if match.group(1) != banner_image and match.group(1).startswith("https://")
+        ]
         if found:
             return found
     return []
+
+
+def upstream_badges(context: RenderContext) -> list[tuple[str, str, str]]:
+    """The maintainers' header badges as ``(slot, markdown as written, link target)``, first per
+    slot: the linked badges of the live README's first top-level badge row (banner excluded)."""
+    found: list[tuple[str, str, str]] = []
+    for _image, markdown, href in _upstream_badge_row(context):
+        slot = badge_slot(markdown)
+        if slot is not None and all(slot != seen for seen, _, _ in found):
+            found.append((slot, markdown, href))
+    return found
 
 
 def badge_slots(context: RenderContext) -> list[tuple[str, str]]:
@@ -408,7 +419,138 @@ def badge_slots(context: RenderContext) -> list[tuple[str, str]]:
                 own[slot] = markdown
         elif slot in _LINK_VERIFIED_SLOTS and _badge_target(href) in verified:
             own[slot] = markdown
-    return [(slot, own[slot]) for slot in BADGE_ORDER if slot in own]
+    standard = [(slot, own[slot]) for slot in BADGE_ORDER if slot in own]
+    return standard + [(EXTRA_BADGE_SLOT, markdown) for markdown in _carried_extra_badges(context, standard)]
+
+
+def _image_key(url: str) -> str:
+    return url.strip().casefold()
+
+
+_PACKAGE_VERSION_BADGE = re.compile(
+    r"^https://img\.shields\.io/(?:pypi|nuget|npm|maven-central|crates|packagist|gem|go)/v/"
+)
+_VERSION_TOKEN = re.compile(r"\d+(?:\.\d+)*")
+#: A static ``/badge/`` runtime badge's own label, read as its first ``Label-Value-Color`` segment,
+#: can verify against a build-tool's own minimum-version fact instead of the language-runtime floor
+#: (``EcosystemSpec.floor_fact_id``) when its label names that tool. Real case (Aspose.PDF FOSS for
+#: C++: the maintainers' header has both a ``C++-20`` badge, verified against the language floor,
+#: AND a ``CMake-3.20+`` badge -- a second, genuinely different fact, ``package:cmake_minimum``, not
+#: a second reading of the same floor). Extend this mapping for another ecosystem's own build tool
+#: the same way; a label not listed here still falls back to the language floor, unchanged.
+_BUILD_TOOL_FLOOR_FACTS: dict[str, str] = {"cmake": "package:cmake_minimum"}
+_BADGE_LABEL = re.compile(r"^https://img\.shields\.io/badge/([^-]+)-")
+
+
+def _extra_badge_asserts_only_verified(
+    context: RenderContext, image: str, standard: list[tuple[str, str]]
+) -> bool:
+    """Whether carrying the maintainers' badge ``image`` asserts nothing the facts do not back.
+
+    A badge is carried only if it is self-verifying or a fact verifies its text, never merely
+    because it is in the live README (the contract in ``validation.rules.badge_problems`` and
+    ``test_registry_checks`` forbids a badge no fact supports):
+    * a dynamic shields.io badge (``issues``, ``pyversions``, ...: its text is computed live from
+      the repository or registry) -- except a package-VERSION badge when a slot badge already names
+      the package, which would be a second package;
+    * a static shields.io ``/badge/`` runtime badge whose version numbers are exactly the verified
+      runtime-floor fact's ("Rust-2021 edition" against floor ``2021``), or, when its own label
+      names a known build tool (``_BUILD_TOOL_FLOOR_FACTS``), that tool's own minimum-version fact
+      ("CMake-3.20+" against ``package:cmake_minimum``) instead of the language floor.
+    Build-status and license badges are never carried this way: only their own facts verify them;
+    an unrecognized host is not carried."""
+    if not image.startswith("https://img.shields.io/"):
+        return False
+    if "/actions/workflows/" in image:
+        return False
+    if not image.startswith("https://img.shields.io/badge/"):
+        if _PACKAGE_VERSION_BADGE.match(image):
+            return all(slot != "package" for slot, _ in standard)
+        return True
+    if badge_slot(f"![]({image})") != "runtime" or "License-" in image:
+        return False
+    floor_fact_id = context.spec.floor_fact_id
+    label_match = _BADGE_LABEL.match(image)
+    if label_match is not None:
+        tool_fact_id = _BUILD_TOOL_FLOOR_FACTS.get(label_match.group(1).casefold())
+        if tool_fact_id is not None:
+            floor_fact_id = tool_fact_id
+    floor = context.fact(floor_fact_id) if floor_fact_id else None
+    if floor is None or floor.polarity != "SUPPORTED":
+        return False
+    tokens = set(_VERSION_TOKEN.findall(_badge_value_segment(image)))
+    return bool(tokens) and tokens <= set(_VERSION_TOKEN.findall(floor.value))
+
+
+def _badge_value_segment(image: str) -> str:
+    """The ``Value`` of a ``.../badge/Label-Value-Color`` image, unquoted, query stripped: version
+    tokens are read from this segment alone, never the trailing colour. A shields.io hex colour
+    (``064F8C``) starts with digits of its own, so reading the whole tail -- as the floor check
+    once did -- picked up a spurious token the floor fact never has and rejected a real match
+    (Aspose.PDF FOSS for C++: ``CMake-3.20+-064F8C`` against the verified floor ``3.20``)."""
+    stem = unquote(image.rsplit("/", 1)[-1].split("?", 1)[0])
+    segments = stem.split("-")
+    return segments[1] if len(segments) >= 2 else stem
+
+
+def _carried_extra_badges(
+    context: RenderContext, standard: list[tuple[str, str]]
+) -> list[str]:
+    """The maintainers' own header badges the slot badges above did not carry, as written.
+
+    R2 makes the published README the quality floor, and BC-17 reports a badge image or link the
+    candidate loses (a shields.io ``issues`` badge, a ``pyversions`` badge, a Rust edition badge
+    linking ``Cargo.toml``). The badge row is rendered from facts and no inherited ``badge_row``
+    unit is ever printed, so no disposition can restore those; this does, deterministically. A
+    maintainers' badge is carried here only when its image is not already in a slot badge (the
+    renderer's own, or the maintainers' version that replaced it), its link target is not
+    CONTRADICTED by a ``link_target`` fact, and it asserts nothing unverified
+    (:func:`_extra_badge_asserts_only_verified`). Nothing is edited: each badge is appended as the
+    maintainers wrote it, in their order, once per image."""
+    carried = {
+        _image_key(match.group(1))
+        for _slot, markdown in standard
+        for match in _IMAGE_URL.finditer(markdown)
+    }
+    contradicted = {
+        _badge_target(fact.value)
+        for fact in context.facts.by_kind("link_target")
+        if fact.polarity == "CONTRADICTED" and fact.value
+    }
+    extras: list[str] = []
+    verified = {
+        _badge_target(fact.value)
+        for fact in context.facts.by_kind("link_target")
+        if fact.polarity == "SUPPORTED" and fact.value
+    }
+    for image, markdown, href in _upstream_badge_row(context):
+        key = _image_key(image)
+        if key in carried or _badge_target(href) in contradicted:
+            continue
+        if not _extra_badge_asserts_only_verified(context, image, standard):
+            continue
+        # The same rule an upstream badge already follows to take a package or contributors slot:
+        # its link must be a SUPPORTED link_target fact, not merely not contradicted.
+        if badge_slot(markdown) in _LINK_VERIFIED_SLOTS and _badge_target(href) not in verified:
+            continue
+        carried.add(key)
+        extras.append(_alt_without_edition_name(markdown))
+    return extras
+
+
+_BADGE_ALT = re.compile(r"^(\[!\[)([^\]]*)(\])")
+
+
+def _alt_without_edition_name(markdown: str) -> str:
+    """The badge as written, except that a capitalised "Xxx Edition" in its alt text (BC-06 forbids
+    any edition name but Enterprise Edition in public text: the maintainers' "Rust Edition" badge)
+    is lower-cased to "Xxx edition", exactly how the renderer's own runtime badge words it. The
+    image and the link are untouched; only the alt text's capital letter changes."""
+    match = _BADGE_ALT.match(markdown)
+    if match is None:
+        return markdown
+    alt = re.sub(r"(?<!Enterprise )\bEdition\b", "edition", match.group(2))
+    return f"{match.group(1)}{alt}{match.group(3)}{markdown[match.end():]}"
 
 
 def _own_badge_slots(context: RenderContext) -> list[tuple[str, str]]:
@@ -519,6 +661,25 @@ def _dependencies(context: RenderContext) -> list[str]:
             "No required third-party package dependencies; in "
             f"`{marker.evidence[0].path}`, {clause}."
         )
+    else:
+        # No manifest declared a dependency and no `dependency:none` marker exists (PSD Python has
+        # no dependency manifest at all): the published README still prints a Dependencies section
+        # (R2 floor), and the verified `package_trait:stdlib_only.*` fact states the same thing
+        # from source. Facts only: nothing is printed without that SUPPORTED fact.
+        stdlib = next(
+            (
+                fact
+                for fact in context.supported("package_trait")
+                if fact.id.startswith("package_trait:stdlib_only.") and fact.evidence
+            ),
+            None,
+        )
+        if stdlib is not None:
+            lines.extend(["### Required Package Dependencies", ""])
+            lines.append(
+                f"No required third-party package dependencies: the package {stdlib.value} "
+                f"(`{stdlib.evidence[0].path}`)."
+            )
     if optional:
         lines.extend(["", "### Optional Dependencies", ""])
         lines.extend(_extra_bullet(fact) for fact in optional)
@@ -763,7 +924,40 @@ def _symbol_description(context: RenderContext, fact: Fact) -> str:
         return f"Defined as `{signature}`."
     if not text:
         text = f"Public {attributes.get('symbol_kind', 'symbol')}."
-    return context.canonical(text.replace("|", "/").replace("`", ""))
+    return _stub_marked(context, fact, context.canonical(text.replace("|", "/").replace("`", "")))
+
+
+def _stub_marked(context: RenderContext, fact: Fact, description: str) -> str:
+    """``description`` with a type or member the maintainers' own limitation statements say only
+    throws (``validation.surface_claims.StubIndex``) described as such, not as working.
+
+    Measured 2026-11-10 (Aspose.3D-FOSS-for-Python, batch 1): the Core API row for ``Watermark``
+    printed its docstring ("Utility to encode/decode blind watermark ...") while the README's own
+    limitations say ``Watermark.decode_watermark`` only throws, so BC-14 / claim_contradiction
+    blocked the seal. The rule's remedy is "describe it as not implemented or omit it". A whole
+    stubbed type reads "Not implemented."; a type with stubbed members keeps its description and
+    says so. Mechanical, from facts only; no unit text is edited, and a type the index does not
+    name is returned unchanged. The row's first cell is what the validator judges, so the owner is
+    that cell's first segment, exactly as ``surface_claims._stub_findings`` takes it."""
+    from repo_presenter.readme.validation.surface_claims import StubIndex
+
+    cached = getattr(context, "_stub_cache", None)
+    if cached is None:
+        index = StubIndex(context.facts)
+        cached = (index, api_reference_names(context.facts) if index else {})
+        context._stub_cache = cached  # type: ignore[attr-defined]
+    stubs, names = cached
+    if not stubs:
+        return description
+    owner = names.get(fact.value, fact.value).split(".", 1)[0]
+    if owner in stubs.types:
+        return "Not implemented."
+    if stubs.members.get(owner):
+        # Inside the first sentence: the validator judges one sentence at a time, so a suffix after
+        # the description's final full stop would be a separate sentence and miss the limitation cue.
+        body = description.rstrip().removesuffix(".")
+        return f"{body} (some members not implemented)."
+    return description
 
 
 def _member_summary(context: RenderContext, fact: Fact) -> str:
@@ -1294,7 +1488,53 @@ def render_readme(
             continue
         heading = [f"## {section.heading}", ""] if section.heading else []
         blocks.append("\n".join(heading + body).rstrip("\n"))
-    return collapse_document_blank_runs("\n\n".join(blocks) + "\n")
+    return correct_stated_type_counts(
+        collapse_document_blank_runs("\n\n".join(blocks) + "\n"), facts
+    )
+
+
+def correct_stated_type_counts(text: str, facts: FactsDocument) -> str:
+    """``text`` with every "N public types" / "N ... classes[ and enumerations]" statement that
+    the facts' own public surface contradicts corrected to the facts' number, prose outside fenced
+    code blocks only.
+
+    Measured 2026-11-10 (Pareto #2 across the first generation batch): the PUBLISHED aspose.org
+    READMEs themselves print stale counts (Go "14 public types" against 192 SUPPORTED
+    ``public_symbol`` facts; Java 183, Cpp 197, HTML 243) and the candidate inherits them verbatim,
+    so BC-14 and the reviewer's claim_contradiction block it. The validator is right and the
+    benchmark is stale, so the target is the corrected count. The substitution is exactly the one
+    ``readme.repair.zero_call_restore.restore_stated_count`` defines (accepted under TC-019a):
+    digits only, the sentence's own words untouched, nothing when the count already matches or the
+    facts compute no type count. Fenced code is never edited (a sample may legitimately print a
+    number)."""
+    from repo_presenter.readme.repair.zero_call_restore import restore_stated_count
+
+    out: list[str] = []
+    chunk: list[str] = []
+    inside = False
+
+    def flush() -> None:
+        if not chunk:
+            return
+        block = "\n".join(chunk)
+        out.append(restore_stated_count(block, facts) or block)
+        chunk.clear()
+
+    for line in text.split("\n"):
+        fence = line.strip().startswith(("```", "~~~"))
+        if fence and not inside:
+            flush()
+            inside = True
+            out.append(line)
+        elif fence and inside:
+            inside = False
+            out.append(line)
+        elif inside:
+            out.append(line)
+        else:
+            chunk.append(line)
+    flush()
+    return "\n".join(out)
 
 
 def collapse_document_blank_runs(text: str) -> str:

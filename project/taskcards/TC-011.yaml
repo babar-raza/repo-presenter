@@ -1,59 +1,72 @@
 id: TC-011
-gate: GATE3_PORTFOLIO
+gate: GATE5_DELIVERY_PROGRAM
 track: portfolio-delivery
 executor: supervisor
 purpose: >
-  Reach P1 as amended by owner ruling R4 (docs/CONSOLIDATED_GOALS_2026-11-06.md, 2026-11-06):
-  about 25 independently accepted Lane R candidates AND about 25 independently accepted Lane L
-  candidates, COUNTED INDEPENDENTLY -- the two product sets may differ; neither lane is measured
-  by the other. Release threshold: 25 per lane. "Independently accepted" means the lane's durable
-  state record (state refs) is pipeline-good AND its sealed bundle verifies and carries a MODEL
-  review ACCEPT made under reviewer calibration PASSED, at exactly the reviewer logic and prompt
-  version data/reviewer_calibration.json currently certifies as PASSED. Pipeline-good records
-  under a NOT_PASSED (or version-mismatched) reviewer do not count and are reported separately
-  as pipeline_good_uncalibrated. Acceptance is NOT upstream delivery: the counter measures five
-  outcomes separately and per lane -- (a) Lane R independently accepted, (b) Lane L independently
-  accepted, (c) publication-ready (accepted + R3 allowlisted; the runtime publish gates are
-  enforced by propose.effect at write time), (d) external effect executed (PR confirmed via the
-  GitHub API), (e) live-verified upstream (merged + live README byte-equal to the sealed
-  candidate, via the GitHub API). This card gates on (a) and (b) only; upstream delivery (d)/(e)
-  is a separately gated outcome (`portfolio_delivery_count.py --live-verified N`), never folded
-  into this threshold. 2026-11-06 re-author: supersedes the 2026-11-04 text that required 25
-  COMMON repositories with BOTH lanes pipeline-good plus one live-delivered output each, counted
-  from a hand-editable evidence/delivery_ledger.json; that history stays in version control and
-  in docs/RELEASE_CONTRACT_P1-P5.md, the rule itself is retired. Blocked on calibration passing
-  (TC-007). Still depends on TC-008a (a portfolio campaign must not burn unnecessary provider
-  calls). TC-009b (a real, proven publication path) is no longer a dependency: under R4 it gates
-  the separate delivery outcome, not acceptance; TC-012a still depends on both. Measured
-  2026-11-06: Lane R 9 pipeline-good (7 uncalibrated, 2 not traceable to a sealed model ACCEPT),
-  Lane L 12 (11 uncalibrated, 1 not traceable); 0 independently accepted in either lane; 0
-  publication-ready, 0 effects executed, 0 live-verified.
+  2026-11-07 RE-AUTHOR (docs/DELIVERY_PLAN_2026-11-07.md section 5 and section 6.1;
+  second-architect-audit fix #2 in docs/reviews/2026-11-07-plan-reconciliation.md): this card's
+  2026-11-06 text (below, preserved for history) counted a sealed model ACCEPT made under
+  `data/reviewer_calibration.json`'s own PASSED status. That file is now frozen forever at
+  NOT_PASSED (owner ruling R10/R18's own history: five calibration iterations never passed it,
+  and no future work may try to pass it again) -- a card whose negative control still mutates
+  that file is vacuous once the rest of the system has moved on, per the second architect audit's
+  own finding ("TC-011's negative control mutates reviewer_calibration.json to NOT_PASSED;
+  TC-024 freezes that file at NOT_PASSED, so the mutation changes nothing and the control can't
+  bite"). This card now counts ONLY attested `independently-accepted` records under TC-013's new
+  contract (`data/acceptance_calibration.json` derived from `data/acceptance_responsibility.json`
+  via TC-022b's harness, with TC-014's audit and attestation -- see TC-007's matching re-author).
+  Release threshold is unchanged: about 25 independently accepted Lane R candidates AND about 25
+  independently accepted Lane L candidates (owner ruling R4), counted independently, with Lane L
+  additionally bound by owner ruling R20 (strict R5; "done" may mean every repository reaching a
+  terminal outcome rather than literally 25, reported alongside the raw count, never instead of
+  it -- see docs/DELIVERY_PLAN_2026-11-07.md section 6.1's metrics table). The five separately
+  measured outcomes ((a) Lane R accepted, (b) Lane L accepted, (c) publication-ready, (d) effect
+  executed, (e) live-verified) are unchanged in shape; only what makes (a)/(b) true has changed.
+
+  ORIGINAL TEXT (2026-11-06, historical, superseded -- the P1/R4 framing and the five-outcome
+  shape it describes are still correct and carried forward above): "Reach P1 as amended by owner
+  ruling R4: about 25 independently accepted Lane R candidates AND about 25 independently
+  accepted Lane L candidates, COUNTED INDEPENDENTLY -- the two product sets may differ; neither
+  lane is measured by the other. 'Independently accepted' means the lane's durable state record
+  is pipeline-good AND its sealed bundle verifies and carries a MODEL review ACCEPT made under
+  reviewer calibration PASSED, at exactly the reviewer logic and prompt version
+  data/reviewer_calibration.json currently certifies as PASSED. [...] Measured 2026-11-06: Lane R
+  9 pipeline-good (7 uncalibrated, 2 not traceable to a sealed model ACCEPT), Lane L 12 (11
+  uncalibrated, 1 not traceable); 0 independently accepted in either lane."
 depends_on:
   - TC-007
-  - TC-008a
+  - TC-013
+  - TC-022b
+  - TC-024
+  - TC-025
 write_paths:
   - docs/RELEASE_CONTRACT_P1-P5.md
-  - evidence/build/GATE3_PORTFOLIO/TC-011/**
+  - evidence/build/GATE5_DELIVERY_PROGRAM/TC-011/**
 satisfies:
   - REQ-P1-001
+  - REQ-ACCEPT-005
 source_refs:
-  - file: docs/RELEASE_CONTRACT_P1-P5.md
-    anchor: "Gap to P1's 25-common-products target"
+  - file: docs/DELIVERY_PLAN_2026-11-07.md
+    anchor: "6.1 Metrics (separate, never summed)"
   - file: docs/CONSOLIDATED_GOALS_2026-11-06.md
     anchor: "R4 | Accepted-candidate target"
+  - file: docs/reviews/2026-11-07-plan-reconciliation.md
+    anchor: "Second independent architect audit"
 inputs: []
 actions:
-  - "Continue the fix-queue sweep per lane; count a repository-lane toward P1 only once its sealed
-     candidate carries a model ACCEPT made under a PASSED, version-matching reviewer calibration
-     (ops/checks/portfolio_delivery_count.py decides this from state refs and sealed bundles,
-     never from a typed marker)."
+  - "Switch the counter's acceptance classification to TC-013's attested record reader; count a
+     repository-lane toward P1 only once it holds a verified, attested independently-accepted
+     record -- never from the old reviewer_calibration.json path, and never from a hand-editable
+     marker."
+  - "Report Lane L's R20 completion state (every repository terminal) alongside, never instead
+     of, its raw accepted-count n/25."
   - "Track publication readiness, executed effects and live-verified upstream results with the
-     same counter (--live-verified N), separately from acceptance."
+     same counter (--live-verified N), separately from acceptance, unchanged in shape."
 checks:
-  # 2026-11-06 re-author (owner ruling R4): per-lane independent acceptance, derived from the
-  # durable state refs, the sealed bundles' review verdicts and the fail-closed calibration
-  # reader. No editable marker/ledger file is read as evidence. Today's honest result: 0/25 per
-  # lane (calibration NOT_PASSED), so the first check correctly fails.
+  # 2026-11-07 re-author: per-lane independent acceptance, derived from TC-013's attested
+  # acceptance records (never the frozen data/reviewer_calibration.json). Today's honest result:
+  # 0/25 per lane (data/acceptance_calibration.json does not exist yet), so the first check
+  # correctly fails until TC-007/TC-022b land.
   - command: |-
       python ops/checks/portfolio_delivery_count.py --per-lane 25
     expect: exit 0
@@ -66,25 +79,36 @@ checks:
     timeout_seconds: 120
     proves:
       - REQ-P1-001
+  - command: |-
+      python -m pytest tests/acceptance -q -k "attestation or record"
+    expect: exit 0
+    timeout_seconds: 300
+    proves:
+      - REQ-ACCEPT-005
 requires:
   - python
 network: true
 negative_control:
   mutate: |-
-    python -X utf8 -c "import json, pathlib; p = pathlib.Path('data/reviewer_calibration.json'); d = json.loads(p.read_text(encoding='utf-8')); d['status'] = 'NOT_PASSED'; p.write_text(json.dumps(d, indent=2), encoding='utf-8')"
+    python -X utf8 -c "import json, pathlib; p = pathlib.Path('data/acceptance_calibration.json'); d = json.loads(p.read_text(encoding='utf-8')); d['status'] = 'NOT_PASSED'; p.write_text(json.dumps(d, indent=2), encoding='utf-8')"
   rationale: >
-    A semantic break of the one predicate every acceptance rests on: once calibration has
-    PASSED and >=25 per lane are accepted, re-marking the reviewer NOT_PASSED must turn every
-    sealed model ACCEPT into pipeline_good_uncalibrated and drop both lanes to 0, so the first
-    check fails. (Before calibration passes, the clean run already fails honestly.)
+    A semantic break of the one predicate every acceptance now rests on: once
+    data/acceptance_calibration.json has PASSED and >=25 per lane are accepted, re-marking it
+    NOT_PASSED must turn every attested record back into mechanism-passing (never accepted) and
+    drop both lanes to 0, so the first check fails. This mutates the file TC-013/TC-022b actually
+    write, not the frozen data/reviewer_calibration.json the pre-2026-11-07 version of this
+    control mutated -- the exact defect the second architect audit found.
 evidence:
   - project/state.yaml
   - ops/checks/portfolio_delivery_count.py
   - tests/ops/test_portfolio_delivery_count.py
+  - data/acceptance_calibration.json
 closeout:
-  - "ACCEPTED here certifies per-lane independent acceptance only (a calibrated model ACCEPT per
-     lane, 25 per lane), never upstream delivery. Delivery is reported by the same counter's
-     publication_ready / effect_executed / live_verified columns (GitHub API derived) and gated
-     separately with --live-verified N; do not describe P1 as delivered from this card alone."
+  - "ACCEPTED here certifies per-lane independent acceptance only (a calibrated, attested ACCEPT
+     per lane under TC-013's contract, 25 per lane or R20's reported completion for Lane L),
+     never upstream delivery. Delivery is reported by the same counter's publication_ready /
+     effect_executed / live_verified columns (GitHub API derived) and gated separately with
+     --live-verified N; do not describe P1 as delivered from this card alone."
 recovery: "Revert ops/checks/portfolio_delivery_count.py, tests/ops/test_portfolio_delivery_count.py
-  and this card together; they are one change."
+  and this card together; they are one change. data/reviewer_calibration.json and
+  data/acceptance_calibration.json are both unaffected by reverting this card alone."

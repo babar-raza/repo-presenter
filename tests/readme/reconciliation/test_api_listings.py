@@ -126,3 +126,46 @@ def test_a_kept_member_listing_prints_inside_the_collapsed_api_reference() -> No
     baseline = render_readme(make_entry(), facts, plan, _units(), without)
     # Collapsed: the listing adds no visible line.
     assert line_counts(readme)[0] == line_counts(baseline)[0]
+
+
+def test_a_kept_member_table_prints_inside_the_collapsed_api_reference_too() -> None:
+    """R2 keeps the maintainers' member tables the published README prints; BC-07 counts only the
+    renderer's own type tables, so a kept table is placed like a kept list (3D .NET `050.table`)."""
+    table_id = "inherited_unit:022.table"
+    table = (
+        "| Member | Notes |\n|---|---|\n"
+        "| `render(scale)` | Renders at a scale. |\n"
+        "| `save_png(path)` | Writes a PNG. |"
+    )
+    base = _facts()
+    facts = replace(
+        base,
+        facts=(
+            *base.facts,
+            Fact(
+                table_id,
+                "inherited_unit",
+                table,
+                (Evidence("README.md", "section 'Aspose Widget > API Reference > Rendering'"),),
+                attributes={"section": "Aspose Widget > API Reference > Rendering"},
+            ),
+        ),
+    )
+    assert table_id in api_listing_units(facts)
+    output = _with("VERIFIED_PRESERVE", "api_reference")
+    output["dispositions"].append(
+        {
+            "unit_id": table_id,
+            "disposition": "VERIFIED_PRESERVE",
+            "destination_section": "api_reference",
+            "fact_ids": ["public_symbol:aspose_widget_foss.widget.render"],
+            "rationale": "The member table.",
+        }
+    )
+    plan = _plan()
+    plan_checks(plan, facts, dispositions=output, ecosystem="python")
+    decision = next(d for d in placements(plan, output, facts, "python") if d.unit_id == table_id)
+    assert decision.outcome == "placed"
+    readme = render_readme(make_entry(), facts, plan, _units(), output)
+    assert "| `save_png(path)` | Writes a PNG. |" in readme
+    assert readme.index("| `save_png(path)` | Writes a PNG. |") < readme.index("</details>", readme.index("## API Reference"))

@@ -1,0 +1,79 @@
+name: audit-seed
+
+# M9 hosted seeder (TC-014's seed.py logic, wired 2026-11-09 -- docs/design/2026-11-06-
+# acceptance-redesign.md section 4.3). Selects >=10 real sealed candidates per lane from this
+# repository's own bundle-ref history, seeds a defect (or keeps a clean control) into each, and
+# encrypts the ground-truth manifest with AUDIT_SEED_KEY (environment: acceptance-audit) so
+# neither the supervisor nor the auditor can see which candidates were seeded before the audit
+# is committed. Candidate IDENTITY (repository/lane/revision) is never blinded -- the auditor
+# needs it to check claims against the real, pinned source; only WHICH candidates carry a
+# seeded defect, and what it was, is encrypted.
+#
+# Manual dispatch only: this spends a fresh real seed batch, which should never happen
+# accidentally on every push. Runs on `main` so the Environment's restriction (owner action 1)
+# actually applies.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write  # only to commit this run's commitment hash to its own branch
+
+concurrency:
+  group: audit-seed
+  cancel-in-progress: false
+
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: acceptance-audit
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # seal_history needs the full bundle-ref history, not a shallow clone
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install
+        run: python -m pip install -e .
+
+      - name: Seed real candidates (encrypted manifest; candidates named by case_id, not shape)
+        env:
+          AUDIT_SEED_KEY: ${{ secrets.AUDIT_SEED_KEY }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/m9-seed"
+          python scripts/run_m9_seeder.py --out-dir "$RUNNER_TEMP/m9-seed" --salt "$GITHUB_RUN_ID"
+
+      - name: Upload candidates + case index (ephemeral artifact, not committed)
+        uses: actions/upload-artifact@v4
+        with:
+          name: m9-seed-candidates-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/m9-seed/candidates/
+            ${{ runner.temp }}/m9-seed/case_index.json
+          retention-days: 30
+
+      - name: Upload the encrypted manifest (ephemeral artifact -- the scorer decrypts it later)
+        uses: actions/upload-artifact@v4
+        with:
+          name: m9-seed-manifest-${{ github.run_id }}
+          path: ${{ runner.temp }}/m9-seed/seed_manifest.enc
+          retention-days: 90
+
+      - name: Commit this run's commitment hash (permanent, public, proves the manifest cannot
+          be swapped after the audit starts)
+        run: |
+          mkdir -p evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT
+          cp "$RUNNER_TEMP/m9-seed/commitment.sha256" \
+            "evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/commitment-${GITHUB_RUN_ID}.sha256"
+          cp "$RUNNER_TEMP/m9-seed/case_index.json" \
+            "evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/case_index-${GITHUB_RUN_ID}.json"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "audit-seed/run-${GITHUB_RUN_ID}"
+          git add -f evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/
+          git commit -m "M9 audit seed run ${GITHUB_RUN_ID}: commitment hash + case index (GATE5_DELIVERY_PROGRAM/M9_AUDIT)"
+          git push origin "audit-seed/run-${GITHUB_RUN_ID}"

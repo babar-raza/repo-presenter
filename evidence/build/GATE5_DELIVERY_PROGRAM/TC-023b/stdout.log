@@ -1,0 +1,44 @@
+
+===== CLEAN RUN 1 =====
+$ python -m pytest tests/readme/review/test_prose_judge_live.py tests/readme/review/test_prose_judge.py tests/core/llm/test_jobs.py tests/core/llm/test_budget.py -q
+--- stdout ---
+................................................................         [100%]
+64 passed in 3.08s
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python -m pytest tests/readme/review/test_prose_judge_live.py tests/readme/review/test_prose_judge.py tests/core/llm/test_jobs.py tests/core/llm/test_budget.py -q
+--- stdout ---
+................................................................         [100%]
+64 passed in 2.91s
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M src/repo_presenter/readme/review/prose_judge_live.py
+$ python -m pytest tests/readme/review/test_prose_judge_live.py tests/readme/review/test_prose_judge.py tests/core/llm/test_jobs.py tests/core/llm/test_budget.py -q
+--- stdout ---
+
+=================================== ERRORS ====================================
+________ ERROR collecting tests/readme/review/test_prose_judge_live.py ________
+ImportError while importing test module 'C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-b9j8kofp\tests\readme\review\test_prose_judge_live.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\readme\review\test_prose_judge_live.py:24: in <module>
+    from repo_presenter.readme.review import prose_judge_live
+src\repo_presenter\readme\review\prose_judge_live.py:89: in <module>
+    from repo_presenter.core.llm.budget import DEFAULT_BUDGET_PATH, _disabled_check_budget, record_spend
+E   ImportError: cannot import name '_disabled_check_budget' from 'repo_presenter.core.llm.budget' (C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-b9j8kofp\src\repo_presenter\core\llm\budget.py)
+=========================== short test summary info ===========================
+ERROR tests/readme/review/test_prose_judge_live.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.50s
+
+--- stderr ---
+

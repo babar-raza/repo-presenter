@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "card": "TC-015",
+  "gate": "GATE5_DELIVERY_PROGRAM",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-09T14:15:00Z",
+  "base_rev": "c1a6dd1fd99868c8565ffd2120dcf8c23e4163d7",
+  "head_rev": "8ccd5715b4647bd5e2011356b7d5ef89ddf7767e",
+  "card_sha256": "3daddff67db5c656ca3c7351ce5ed8a43e7cc21e50a294ad79a905851bb29c88",
+  "checker_fileset_sha256": "de62481a513aa9665afe06193a4deb480fc4e48dcb0c751f1ca45acb2d4ec3c2",
+  "checker_fileset_scheme": "v3",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [
+      "src/repo_presenter/core/llm/budget.py",
+      "tests/core/llm/test_budget.py"
+    ],
+    "violations": [],
+    "evaluated": true
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python -m pytest tests/core/llm/test_budget.py tests/core/llm/test_jobs.py -q",
+          "exit_code": 0,
+          "duration_s": 3.862,
+          "stdout_sha256": "b313d57c311ad0a2e62c11e8ce0ba48b9995f8680db33da56f82e21f97536304"
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python -m pytest tests/core/llm/test_budget.py tests/core/llm/test_jobs.py -q",
+          "exit_code": 0,
+          "duration_s": 3.171,
+          "stdout_sha256": "c751834aa59d6dd77a4b3f2ea28f8aa49f2911bbfc8f4c72938438788de3a40e"
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -c \"import pathlib; p = pathlib.Path('src/repo_presenter/core/llm/budget.py'); s = p.read_text(encoding='utf-8'); s2 = s.replace('def check_budget', 'def _disabled_check_budget'); p.write_text(s2, encoding='utf-8')\"",
+    "patch_sha256": "b5d1154fe8e2eabaaf1eba5b956911409bba1db51b91020486b10ee6a99c8436",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      4
+    ],
+    "tree_changed": [
+      "M src/repo_presenter/core/llm/budget.py"
+    ]
+  },
+  "accepted": true,
+  "reason": "all gates passed"
+}

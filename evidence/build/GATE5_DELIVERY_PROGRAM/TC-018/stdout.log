@@ -1,0 +1,131 @@
+
+===== CLEAN RUN 1 =====
+$ python -m pytest tests/readme/obligations tests/readme/validation/test_supersession_obligations.py -q
+--- stdout ---
+........................................................................ [ 13%]
+........................................................................ [ 27%]
+........................................................................ [ 41%]
+........................................................................ [ 54%]
+........................................................................ [ 68%]
+........................................................................ [ 82%]
+........................................................................ [ 95%]
+......................                                                   [100%]
+526 passed in 4.25s
+
+--- stderr ---
+
+$ python scripts/build_content_ledger.py --self-test
+--- stdout ---
+self-test: 9 piece(s) -- must_carry=3 may_drop=3 undecided=3 ; 1 must_carry piece(s) not stated
+OK: build_content_ledger.py self-test passed
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python -m pytest tests/readme/obligations tests/readme/validation/test_supersession_obligations.py -q
+--- stdout ---
+........................................................................ [ 13%]
+........................................................................ [ 27%]
+........................................................................ [ 41%]
+........................................................................ [ 54%]
+........................................................................ [ 68%]
+........................................................................ [ 82%]
+........................................................................ [ 95%]
+......................                                                   [100%]
+526 passed in 4.30s
+
+--- stderr ---
+
+$ python scripts/build_content_ledger.py --self-test
+--- stdout ---
+self-test: 9 piece(s) -- must_carry=3 may_drop=3 undecided=3 ; 1 must_carry piece(s) not stated
+OK: build_content_ledger.py self-test passed
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M src/repo_presenter/readme/obligations/classify.py
+$ python -m pytest tests/readme/obligations tests/readme/validation/test_supersession_obligations.py -q
+--- stdout ---
+
+=================================== ERRORS ====================================
+_________ ERROR collecting tests/readme/obligations/test_classify.py __________
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py:508: in importtestmodule
+    mod = import_path(
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\pathlib.py:596: in import_path
+    importlib.import_module(module_name)
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1395: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\assertion\rewrite.py:188: in exec_module
+    exec(co, module.__dict__)
+tests\readme\obligations\test_classify.py:42: in <module>
+    from repo_presenter.readme.obligations.classify import Unit, UnitFacts, classify_unit
+src\repo_presenter\readme\obligations\__init__.py:17: in <module>
+    from repo_presenter.readme.obligations.classify import (
+E     File "C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-se8v7vhf\src\repo_presenter\readme\obligations\classify.py", line 234
+E       _disabled_def classify_unit(
+E                     ^^^^^^^^^^^^^
+E   SyntaxError: invalid syntax
+__________ ERROR collecting tests/readme/obligations/test_ledger.py ___________
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py:508: in importtestmodule
+    mod = import_path(
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\pathlib.py:596: in import_path
+    importlib.import_module(module_name)
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1395: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\assertion\rewrite.py:188: in exec_module
+    exec(co, module.__dict__)
+tests\readme\obligations\test_ledger.py:16: in <module>
+    from repo_presenter.readme.obligations.ledger import (
+src\repo_presenter\readme\obligations\__init__.py:17: in <module>
+    from repo_presenter.readme.obligations.classify import (
+E     File "C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-se8v7vhf\src\repo_presenter\readme\obligations\classify.py", line 234
+E       _disabled_def classify_unit(
+E                     ^^^^^^^^^^^^^
+E   SyntaxError: invalid syntax
+=========================== short test summary info ===========================
+ERROR tests/readme/obligations/test_classify.py
+ERROR tests/readme/obligations/test_ledger.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 2 errors during collection !!!!!!!!!!!!!!!!!!!
+2 errors in 0.52s
+
+--- stderr ---
+
+$ python scripts/build_content_ledger.py --self-test
+--- stdout ---
+
+--- stderr ---
+Traceback (most recent call last):
+  File "C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-se8v7vhf\scripts\build_content_ledger.py", line 36, in <module>
+    from repo_presenter.readme.obligations.ledger import (  # noqa: E402
+    ...<4 lines>...
+    )
+  File "C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-se8v7vhf\src\repo_presenter\readme\obligations\__init__.py", line 17, in <module>
+    from repo_presenter.readme.obligations.classify import (
+    ...<6 lines>...
+    )
+  File "C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-se8v7vhf\src\repo_presenter\readme\obligations\classify.py", line 234
+    _disabled_def classify_unit(
+                  ^^^^^^^^^^^^^
+SyntaxError: invalid syntax
+

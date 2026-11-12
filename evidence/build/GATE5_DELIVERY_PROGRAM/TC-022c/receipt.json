@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "card": "TC-022c",
+  "gate": "GATE5_DELIVERY_PROGRAM",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-09T16:54:16Z",
+  "base_rev": "094c0c7a1c1c01a0f6354e233ad5f3ec21b4cf6b",
+  "head_rev": "bd3096bcfb52a562967d3bc7cb8234d9edc69af6",
+  "card_sha256": "f5b6aa511b56557532460e55307d43ba6a6ee5654e010e5093de058d1f63d607",
+  "checker_fileset_sha256": "1abad126e0a649d58b3d135c1bd7a6fd5d8e433f185427a401e76d498f75531c",
+  "checker_fileset_scheme": "v3",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [
+      "src/repo_presenter/acceptance/responsibility.py",
+      "tests/acceptance/test_responsibility.py"
+    ],
+    "violations": [],
+    "evaluated": true
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python -m pytest tests/acceptance/test_responsibility.py -q",
+          "exit_code": 0,
+          "duration_s": 3.515,
+          "stdout_sha256": "daeeeae4bf8d68b762163d903b7ff852a3427aabd71376a6286207fc2514bc75"
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python -m pytest tests/acceptance/test_responsibility.py -q",
+          "exit_code": 0,
+          "duration_s": 1.999,
+          "stdout_sha256": "661cc27a2db83afc41ffb9cb1dfa7f808a3742eaaa8ed5e185534ce62c7aa5eb"
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -X utf8 -c \"import pathlib; p = pathlib.Path('src/repo_presenter/acceptance/responsibility.py'); t = p.read_text(encoding='utf-8'); q = chr(34); old = q + 'D14' + q + ': (' + q + 'M6' + q; new = q + 'D14' + q + ': (' + q + 'M8' + q; t2 = t.replace(old, new); p.write_text(t2, encoding='utf-8')\"",
+    "patch_sha256": "57a97a3f76b80dd3ed9bf05ca17a9ef137bf9fa0f9822ea164cdcc4f12617393",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      1
+    ],
+    "tree_changed": [
+      "M src/repo_presenter/acceptance/responsibility.py"
+    ]
+  },
+  "accepted": true,
+  "reason": "all gates passed"
+}

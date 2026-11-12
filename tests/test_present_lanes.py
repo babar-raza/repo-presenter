@@ -90,7 +90,10 @@ def assert_lanes_are_independent(workflow: dict[str, Any]) -> None:
 
 def test_the_workflow_keeps_both_lanes_independent_and_the_existing_structure() -> None:
     workflow = _load_workflow()
-    assert set(workflow["jobs"]) == {"facts", "present"}
+    # TC-021 (GATE5_DELIVERY_PROGRAM, 2026-11-07) added a third job, sandbox-execute: a hosted,
+    # permissions: {}, no-secret job that proves candidate code can run in the hardened sandbox
+    # (see docs/DELIVERY_PLAN_2026-11-07.md section 6.4). This is intentional, not drift.
+    assert set(workflow["jobs"]) == {"facts", "present", "sandbox-execute"}
     assert_facts_job_is_unprivileged(workflow)
     assert_present_job_runs_no_repository_code(workflow)
     assert_lanes_are_independent(workflow)

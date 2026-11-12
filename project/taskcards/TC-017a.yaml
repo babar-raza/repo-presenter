@@ -1,0 +1,184 @@
+id: TC-017a
+gate: GATE5_DELIVERY_PROGRAM
+track: independent-probes
+executor: worker
+purpose: >
+  Part of the 2026-11-07 delivery program (docs/DELIVERY_PLAN_2026-11-07.md section 8.2, row
+  TC-017a; the worker never reads that document, only this card). depends_on: []. Build
+  independent export-surface probes for the ecosystems that have none today, so a claim about
+  "how many public types" or "is X exported" can be checked by a second, genuinely separate code
+  path -- never by re-asking the same engine that already produced the claim.
+
+  Context, self-contained. `src/repo_presenter/extractors/surface/extractor.py`'s
+  `surface_symbols` function (around line 220) is the main extractor's own symbol walk. Its own
+  docstring (lines 228-235) already documents the problem this card exists to fix: the vendored
+  engine marks a declaration `reachable: False` by a best-effort scan that is "measurably wrong
+  in both directions for Rust" (it called `semver::Version`, defined in `lib.rs`, unreachable by
+  mistake, and `aho_corasick::AhoCorasick`, re-exported through nested braces, unreachable by
+  mistake too) -- so `surface_symbols` already refuses to trust that mark alone; it drops an
+  entry only when a caller-supplied `confirms_unreachable` function independently agrees (read
+  that parameter and the `if entry.get("reachable") is False and confirms_unreachable is not
+  None and confirms_unreachable(entry): continue` block, lines 263-268). Nobody has ever supplied
+  that independent confirmation function. This card builds it for every ecosystem, plus the
+  count/exists primitives the acceptance mechanisms need.
+
+  Per-ecosystem starting point, read each file before writing anything against it:
+  - Python: `src/repo_presenter/extractors/platforms/python_surface.py` already has a genuinely
+    independent `ast`-based reader (`PublicSurface`, `_literal_all` reading `__all__`, a name is
+    public when it has no leading underscore and -- read `_public_name` -- is in `__all__` when
+    one is declared). REUSE it; do not reimplement.
+  - TypeScript: `src/repo_presenter/extractors/platforms/typescript_barrel.py` already has
+    `entry_barrel`, `reexported_bindings`, `reexported_names` -- an independent reader of the
+    package's actual barrel file. REUSE it; do not reimplement.
+  - C++: `src/repo_presenter/extractors/surface/_vendor/aspose_extraction/lang/cpp.py`'s
+    `export_surface` (around line 92) always returns `(None, None)` -- "No reachability signal
+    implemented for C++ yet". The main engine DOES already tag `visibility: "internal"` for C++
+    using `api_surface.py`'s `_CPP_ONLY_VENDOR_SEGMENTS = frozenset({"internal"})` (around line
+    100) -- a path-segment filter for headers under an `internal/` directory. That tag comes from
+    the SAME engine this card must check independently, so do not simply trust it: build a new,
+    separate function that re-derives public/private from the header tree yourself (public =
+    declared in a header under the package's include root, excluding any path with an `internal`
+    segment -- the same rule, re-implemented from scratch by reading the actual header paths on
+    disk, not by reading `api_surface.py`'s own output).
+  - Java: `lang/java.py`'s `export_surface` (around line 90) always returns `(None, None)` -- "No
+    reachability signal implemented for Java yet". Build a new, independent syntactic reader:
+    public top-level and nested types/members are declarations carrying the `public` keyword (and
+    for nested members, their enclosing type must also be `public`), read directly from the
+    source text/a simple parse, never from the main engine's own symbol table.
+  - Go: `lang/go.py`'s `export_surface` (around line 111) always returns `(None, None)` -- "No
+    reachability signal implemented for Go yet". Build a new, independent syntactic reader:
+    an identifier is exported per Go's own rule (first letter uppercase) at package scope, read
+    directly from the source text, never from the main engine's symbol table.
+  - .NET: `lang/csharp.py`'s `export_surface` (around line 164) returns ONLY a deny-list of
+    `internal_names` (membership means UNREACHABLE -- read the docstring's own "polarity note"
+    carefully, it is the opposite test from Python/Rust's `export_surface`). This is not a
+    positive public-surface reader. Build a new, independent one: a type/member is public when its
+    declared accessibility is `public` (or the implicit default for an interface member), read
+    directly from the source text, never assembled from the existing deny-list alone (a name
+    absent from the deny-list is not thereby proven public -- `protected`/`internal` members are
+    also absent from a pure internal-name deny-list; your reader must look at the actual
+    declared keyword, not merely the absence of one name from one list).
+  - Rust: `lang/rust.py`'s `export_surface` (around line 169) already reads `pub use` re-exports
+    from the crate root and returns `(reachable_names, scope_root)`. Its own docstring already
+    says the dispatcher that consumes it, `api_surface._compute_reachable`, "never applies a
+    path-scoping test". Wrap this existing reader as the `confirms_unreachable` function
+    `surface_symbols` already accepts (see above) -- do not re-derive Rust exports from scratch,
+    reuse `export_surface`'s own output, but gate it: only report "confirmed unreachable" when
+    the name is absent from `reexported_names` (a `pub use` re-export list you build the same way
+    `lang/rust.py` already does) AND the name's own declaration in `lib.rs` lacks a bare `pub`
+    (read `tree_helpers.py`'s existing bare-`pub` check, cited in prior investigation as requiring
+    a bare `pub`, not `pub(crate)` or similar) -- i.e., use the engine's own data, but require two
+    independent negative signals to agree before confirming unreachability, never one alone.
+
+  Build these as new, standalone functions in a new module
+  `src/repo_presenter/acceptance/probes/__init__.py` plus one file per ecosystem under
+  `src/repo_presenter/acceptance/probes/` (e.g. `cpp.py`, `java.py`, `go.py`, `dotnet.py`,
+  `rust.py`, and thin wrappers `python.py`/`typescript.py` that just call the existing readers
+  above). Each ecosystem module exposes exactly three functions with this shape (adjust parameter
+  names to what each reader naturally needs, document any difference in the module docstring):
+  - `count(repo_root: Path, kind: str) -> int | None` -- counts public symbols of `kind`
+    ("type"/"method"/"enum_member"/whatever the ecosystem's own vocabulary already uses
+    elsewhere in this codebase -- check `SurfaceSymbol.symbol_kind`'s existing values in
+    `extractor.py` before inventing new ones), or `None` when the probe cannot determine a count
+    for that kind in that ecosystem (never return 0 to mean "could not tell").
+  - `exists(repo_root: Path, qualified_name: str) -> bool | None` -- `True`/`False` when the probe
+    can tell, `None` (meaning genuinely UNKNOWN) when it cannot. `None` must never be treated as
+    either `True` or `False` by any caller -- this is the single most important contract property
+    of this card; a later card (TC-017b) depends on `None` being distinguishable from both.
+  - `exported(repo_root: Path, qualified_name: str) -> bool | None` -- same three-valued contract,
+    specifically "is this identifier reachable from the ecosystem's own public entry point"
+    (`__all__` for Python, the barrel for TypeScript, the include-root/`internal` rule for C++,
+    the `public` keyword for Java/.NET, the capitalization rule for Go, `pub use` plus bare `pub`
+    agreement for Rust).
+
+  Gate/test requirement: for each ecosystem, write at least 3 real test cases (synthetic fixture
+  source trees under `tests/acceptance/probes/fixtures/<ecosystem>/` is fine, or real excerpts if
+  you have them) covering: one genuinely public symbol your probe correctly reports
+  `exists=True, exported=True`; one genuinely private/internal symbol your probe correctly
+  reports `exported=False` (or `True, False` if it exists but is not exported); and one symbol
+  your probe cannot determine, correctly reporting `None`, never guessing `True` or `False`. For
+  C++ specifically, also test the exact shape this card's context describes: a declaration under
+  an `internal/` path segment is reported `exported=False` by YOUR independent reader, matching
+  (but not calling into) what `api_surface.py`'s own filter already does. For Rust, test that a
+  name reachable only via `pub use` plus a bare `pub` declaration is NOT confirmed unreachable
+  even if the vendored engine's own `reachable` mark says `False` (the exact
+  `aho_corasick::AhoCorasick` shape from the extractor.py docstring).
+depends_on: []
+write_paths:
+  - src/repo_presenter/acceptance/probes/__init__.py
+  - src/repo_presenter/acceptance/probes/cpp.py
+  - src/repo_presenter/acceptance/probes/java.py
+  - src/repo_presenter/acceptance/probes/go.py
+  - src/repo_presenter/acceptance/probes/dotnet.py
+  - src/repo_presenter/acceptance/probes/rust.py
+  - src/repo_presenter/acceptance/probes/python.py
+  - src/repo_presenter/acceptance/probes/typescript.py
+  - tests/acceptance/probes/test_cpp.py
+  - tests/acceptance/probes/test_java.py
+  - tests/acceptance/probes/test_go.py
+  - tests/acceptance/probes/test_dotnet.py
+  - tests/acceptance/probes/test_rust.py
+  - tests/acceptance/probes/test_python.py
+  - tests/acceptance/probes/test_typescript.py
+  - tests/acceptance/probes/fixtures/**
+satisfies:
+  - REQ-PROBE-001
+  - REQ-PROBE-002
+source_refs:
+  - file: src/repo_presenter/extractors/surface/extractor.py
+    anchor: "def surface_symbols"
+  - file: src/repo_presenter/extractors/surface/_vendor/aspose_extraction/lang/cpp.py
+    anchor: "def export_surface"
+  - file: src/repo_presenter/extractors/surface/_vendor/aspose_extraction/lang/rust.py
+    anchor: "def export_surface"
+  - file: src/repo_presenter/extractors/platforms/python_surface.py
+    anchor: "class PublicSurface"
+  - file: src/repo_presenter/extractors/platforms/typescript_barrel.py
+    anchor: "def reexported_names"
+inputs: []
+actions:
+  - "Read extractor.py's surface_symbols docstring and the confirms_unreachable contract in full
+     before writing any probe."
+  - "For Python and TypeScript, write thin wrapper modules that call the existing independent
+     readers; do not reimplement their logic."
+  - "For C++, Java, Go and .NET, write new, genuinely independent readers from source text/paths,
+     never importing or calling the main engine's own symbol table for the decision itself."
+  - "For Rust, wrap the existing export_surface reader as a confirms_unreachable-shaped function
+     requiring two independent negative signals (absent from pub-use re-exports AND no bare pub
+     declaration) before confirming unreachability."
+  - "Write the three-valued count/exists/exported contract (True/False/None, None never coerced)
+     for every ecosystem, with real test fixtures proving at least one True, one False and one
+     None case per ecosystem."
+checks:
+  - command: |-
+      python -m pytest tests/acceptance/probes -q
+    expect: exit 0
+    timeout_seconds: 300
+    proves:
+      - REQ-PROBE-001
+      - REQ-PROBE-002
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -X utf8 -c "import pathlib; p = pathlib.Path('src/repo_presenter/acceptance/probes/cpp.py'); t = p.read_text(encoding='utf-8'); marker = 'def exported'; t2 = t.replace(marker, '_disabled_' + marker, 1); p.write_text(t2, encoding='utf-8')"
+  rationale: >
+    Renames the C++ probe's exported() function so any test calling it raises AttributeError
+    instead of running the real independent check, proving the test suite actually exercises the
+    real probe function rather than a path that happens to pass regardless of whether it exists.
+    Built with chr-free string construction (no backslashes, no escaped quotes), matching
+    ops/SUPERVISOR.md's falsifier-authoring rule.
+evidence:
+  - src/repo_presenter/acceptance/probes/
+  - tests/acceptance/probes/
+closeout:
+  - "This card does not wire these probes into the claim-proof pipeline or the obligations
+     inventory -- that is TC-017b's and TC-018's job. It only builds and tests the probes
+     themselves as standalone, independently callable functions."
+  - "A probe's None (genuinely unknown) answer must never be silently treated as True or False by
+     any code this card adds; if a caller outside this card's own tests needs that guarantee
+     enforced structurally rather than by convention, note it as a follow-up, do not add scope
+     here."
+recovery: "Revert the new src/repo_presenter/acceptance/probes/ package and its tests; nothing
+  else in the codebase calls these functions yet, so no other behavior is affected."

@@ -16,6 +16,24 @@ The Lane L analogue of ``cascade.py`` (``plans/PLAN_lane_l_hosted.md``). One pro
 Every artifact is written as bytes (or ``newline="\\n"`` text): a sealed artifact is hashed by its
 exact bytes, so a default newline would give CRLF on Windows and LF on Linux and no rerun could be
 byte-identical across machines. No path, time or host name enters any artifact.
+
+TC-025 built, but deliberately does not wire into this module's own call path, two further pieces
+a future hosted caller (TC-024) composes around it, both pure and independently tested:
+
+* ``repo_presenter.lane_l_trigger``: the R5(a) baseline-and-trigger decision (should this
+  repository even be attempted today?) and the three-outcome taxonomy
+  (``EDIT_CANDIDATE``/``NO_ACTION_JUSTIFIED``/``NOT_APPLICABLE``) that replaces today's single
+  ``PresentFailure`` no-action case;
+* ``repo_presenter.readme_findings`` (``append_finding``/``read_findings``) and this module's
+  ``readme.correction.report.finding_rows`` bridge: every defect this run's own engine could not
+  repair, as a durable, cross-run register row.
+
+Neither changes this function's signature or behaviour: ``run_lane_l`` still makes exactly the one
+provider call it always has, and a caller that does not pass the new pieces in sees no different
+result. The net-improvement relaxation of the old all-or-nothing L-05 rule (point 4) is already
+live, in ``lane_l_review.holdout_findings``/``lane_l_review.net_improvement`` -- that one *does*
+change what this module's own ``review_correction`` call is willing to accept, without any change
+to this file.
 """
 
 from __future__ import annotations

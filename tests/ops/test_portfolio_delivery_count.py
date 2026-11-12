@@ -194,3 +194,28 @@ def test_upstream_delivery_is_a_separate_gate_from_acceptance():
     summary = pdc.summarize(outcomes, PASSED)
     assert pdc.evaluate(summary, 25, None) == []
     assert pdc.evaluate(summary, None, 1) == ["live_verified (R+L) 0 < 1"]
+
+
+def test_acceptance_calibration_is_reported_separately_from_the_frozen_reviewer_calibration():
+    # 2026-11-09: the new TC-013 contract's global status is reported ALONGSIDE the frozen,
+    # historical reviewer_calibration field -- never silently reused as if they were one thing.
+    from repo_presenter.acceptance.record import AcceptanceCertificates
+
+    complete = AcceptanceCertificates(
+        required_mechanisms=frozenset({"M1"}), certified_mechanisms=frozenset({"M1"})
+    )
+    summary = pdc.summarize([], NOT_PASSED, complete)
+    assert summary["reviewer_calibration"] == "NOT_PASSED"
+    assert summary["acceptance_calibration"] == "PASSED"
+
+
+def test_acceptance_calibration_reports_not_measured_when_omitted_and_not_passed_when_incomplete():
+    from repo_presenter.acceptance.record import AcceptanceCertificates
+
+    omitted = pdc.summarize([], PASSED)
+    assert omitted["acceptance_calibration"] == "not measured"
+    incomplete = AcceptanceCertificates(
+        required_mechanisms=frozenset({"M1", "M8"}), certified_mechanisms=frozenset({"M1"}),
+    )
+    summary = pdc.summarize([], PASSED, incomplete)
+    assert summary["acceptance_calibration"] == "NOT_PASSED"

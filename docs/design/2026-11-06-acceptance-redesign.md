@@ -1,6 +1,12 @@
 # Independent acceptance, redesigned from first principles (R12) — 2026-11-06
 
-Status: **DESIGN, not yet adopted**. This document contains no code. It was written with zero provider calls, from:
+Status: **ADOPTED** (`docs/DECISION_LOG.md`, "2026-11-06: acceptance redesign adopted (R12; stage S0)"). This
+header read "not yet adopted" after that decision-log entry already recorded adoption; corrected 2026-11-07
+(`docs/DELIVERY_PLAN_2026-11-07.md` Step 0 routine fix). The card map in §6 is superseded by
+`docs/DELIVERY_PLAN_2026-11-07.md` §8.2, which re-sequences and renumbers S0-S12 as TC-012c and TC-013 through
+TC-035 (see that document's §4 "second architect audit" items 2, 8 and 9 for why); this document's own stages,
+mechanisms (M1-M10), properties (AP-1..12) and hidden factors (H1-H20) remain the substantive design and are
+still binding. This document contains no code. It was written with zero provider calls, from:
 `AGENTS.md` (R9–R14), `docs/CONSOLIDATED_GOALS_2026-11-06.md` (Parts A and B), `docs/RELEASE_CONTRACT_P1-P5.md`,
 `data/reviewer_calibration.json`, every reviewer-calibration investigation (2026-10-27 iterations 1–3, 2026-11-05
 iteration 4, 2026-11-06 root cause, iteration-5 plan and result, the unsupported-claim class audit, the

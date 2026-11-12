@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "card": "TC-013",
+  "gate": "GATE5_DELIVERY_PROGRAM",
+  "generated_by": "gatecli",
+  "generated_at": "2026-11-09T18:30:39Z",
+  "base_rev": "f9d009e530f0f097347c33f7e1b6af6c3d3eea1e",
+  "head_rev": "2970de08e21241fbd58652a722500fddc7168f6e",
+  "card_sha256": "e5767ccf89d13fa7e62b049b06c0525fb84f6b3f9a772f1d8a9e9a963c1d9411",
+  "checker_fileset_sha256": "10b2d4ec7024c39fbceb4f33e4e55dbbef5bfb69952f127d28154aeb3ac62551",
+  "checker_fileset_scheme": "v3",
+  "fingerprint": {
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "scope": {
+    "ok": true,
+    "changed_paths": [
+      "src/repo_presenter/acceptance/__init__.py",
+      "src/repo_presenter/acceptance/record.py",
+      "src/repo_presenter/authorization/refusals.py",
+      "src/repo_presenter/propose/effect.py",
+      "tests/acceptance/test_attestation.py",
+      "tests/acceptance/test_build_and_classify.py",
+      "tests/acceptance/test_certificates.py",
+      "tests/acceptance/test_effect_gate3b.py",
+      "tests/acceptance/test_frozen_reviewer_calibration.py",
+      "tests/acceptance/test_record.py",
+      "tests/github/test_write_authorization.py",
+      "tests/propose/test_effect.py"
+    ],
+    "violations": [],
+    "evaluated": true
+  },
+  "runs": [
+    {
+      "run": 1,
+      "checks": [
+        {
+          "command": "python -m pytest tests/acceptance -q",
+          "exit_code": 0,
+          "duration_s": 30.6,
+          "stdout_sha256": "ccf5c40dfef542b67f5cad4377018023655c927e8988d5c7355633e9cddfe7ae"
+        },
+        {
+          "command": "python -m pytest tests/github/test_write_authorization.py -q -k effect",
+          "exit_code": 0,
+          "duration_s": 8.718,
+          "stdout_sha256": "e2a666bdef712e5cfb2a4e43d1339367f4b193e8ac985f4555c92ef3180f4a43"
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "run": 2,
+      "checks": [
+        {
+          "command": "python -m pytest tests/acceptance -q",
+          "exit_code": 0,
+          "duration_s": 20.209,
+          "stdout_sha256": "5b0f55210ab693b65680c03f020f330d68e3f4c10381f1c963e85459b1bdc381"
+        },
+        {
+          "command": "python -m pytest tests/github/test_write_authorization.py -q -k effect",
+          "exit_code": 0,
+          "duration_s": 6.582,
+          "stdout_sha256": "49287f96f71423aaa71e11f48283c6e0692261decd5fc3cc6812f81d3b73e761"
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "negative_control": {
+    "kind": "mutate",
+    "patch": "python -X utf8 -c \"import pathlib; p = pathlib.Path('src/repo_presenter/acceptance/record.py'); t = p.read_text(encoding='utf-8'); p.write_text(t.replace('independently-accepted', 'provisionally-accepted'), encoding='utf-8')\"",
+    "patch_sha256": "06b306903935d6ac0dfcaa617de7a61fb00cdf01363502d3bc3661d22c7e8f88",
+    "applied": true,
+    "patch_applied_failed": true,
+    "exit_codes": [
+      1,
+      0
+    ],
+    "tree_changed": [
+      "M src/repo_presenter/acceptance/record.py"
+    ]
+  },
+  "accepted": true,
+  "reason": "all gates passed"
+}

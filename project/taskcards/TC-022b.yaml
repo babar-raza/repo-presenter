@@ -1,0 +1,129 @@
+id: TC-022b
+gate: GATE5_DELIVERY_PROGRAM
+track: acceptance-calibration
+executor: worker
+purpose: >
+  Build the harness that measures mechanisms M1 through M7 and M10 (NOT M8, the prose judge --
+  that is a separate card, TC-023) plus the deterministic end-to-end gates, against the frozen
+  A1 registration (TC-022a). depends_on: [TC-022a]. self-contained context follows; the worker
+  never reads docs/DELIVERY_PLAN_2026-11-07.md or docs/design/2026-11-06-acceptance-redesign.md.
+
+  Thresholds to implement exactly as stated, none lowered:
+  - M1 (freshness/provenance): recall >= 0.90; determinism == 1.00.
+  - M2 (claim proof -- line provenance, closed/open world, verification-narrative ban): recall
+    >= 0.90 per owned defect class; clean-twin false-reject rate <= 0.04.
+  - M3 (example execution): recall >= 0.90 per ecosystem; false-CONTRADICTED rate <= 0.02.
+  - M4, M6 (install/package/registry/links; public-text form): recall >= 0.90.
+  - M5 (preservation -- the R14 drop-decision rule table applied as verification): recall >=
+    0.90; agreement with the R14 decision corpus == 1.00 (every one of the already-decided
+    `data/drop_decisions.json` entries must be reproduced exactly, since those are a frozen
+    regression fixture, not a sample); false-reject rate <= 0.02, counted JOINTLY with M7 (i.e.
+    the sum of M5's and M7's false rejects on the same shared clean-twin pool must not exceed
+    0.02).
+  - M7 (benchmark parity against the published aspose.org README where one exists live
+    upstream): recall >= 0.90; self-parity (a benchmark README scored against itself) == 1.00.
+  - M10 (Lane L edit justification and minimality): recall >= 0.90. This mechanism's real
+    implementation is TC-025 (a separate card, Lane L rebuild); if TC-025 has not yet landed when
+    this card is built, measure M10 only on whatever Lane L minimality/justification checks
+    already exist today (`src/repo_presenter/lane_l_review.py`'s L-01/L-02 holdouts), and report
+    this measurement as provisional in the harness's own output -- do not block this card on
+    TC-025 landing first, and do not silently skip M10 either.
+  - End to end (deterministic mechanisms only, M8 excluded): real A+D on-target recall >= 0.90;
+    every mutation operator >= 0.90; clean-twin false-reject rate <= 0.10, with the same n>=30/
+    n>=50 minimums TC-022a's registration either met or honestly reported falling short of.
+
+  Build the harness under `src/repo_presenter/acceptance/` (new module(s); see write_paths) as
+  PURE, testable scoring functions: given a set of cases (TC-022a's registration shape) and a
+  set of per-case mechanism verdicts, compute recall/false-reject/agreement/self-parity per the
+  thresholds above, and produce a result object matching the shape the real
+  `data/acceptance_calibration.json` must have (per-mechanism status, version, corpus digest,
+  gates, provider_calls=0 for every mechanism this card measures). This card's OWN checks must
+  prove the scoring logic is correct against small, worker-constructed fixtures with KNOWN
+  correct answers (e.g. a fixture where you know in advance the recall must compute to exactly
+  0.90 or exactly fail it) -- it must NOT require the real A1 registration or any live mechanism
+  implementation to exist yet; wire the real integration (calling the actual M1-M7/M10
+  mechanisms over the real A1) as a separate, later step once TC-022a's real committed
+  registration and the mechanisms themselves (TC-016 through TC-021, TC-025) all exist -- note
+  this explicitly in closeout, do not pretend this card performs a live measurement.
+
+  Writing the real, hosted-attested `data/acceptance_calibration.json` is OUT OF SCOPE for a
+  worker card: `data/**` is in `ops/gatectl.py`'s `GLOBAL_DENY` (confirm this yourself before
+  choosing write_paths), and the real file may only ever be written by TC-014's attested hosted
+  writer once that exists. This card's write_paths therefore never include any path under
+  `data/`.
+
+  R10 determinism requirement for the harness itself (distinct from M1's own "determinism ==
+  1.00" gate, which is about the MECHANISM under test, not this harness): running this harness
+  twice over an unchanged input set (same cases, same per-case verdicts) must produce a
+  byte-identical result object, with zero provider calls, since the harness does no inference of
+  its own -- it only scores already-computed verdicts. Prove this with a test.
+depends_on:
+  - TC-022a
+write_paths:
+  - src/repo_presenter/acceptance/calibration_harness.py
+  - tests/acceptance/test_acceptance_calibration_harness.py
+satisfies:
+  - REQ-CALIB-001
+  - REQ-CALIB-002
+source_refs:
+  - file: data/reviewer_calibration.json
+    anchor: "status"
+  - file: data/drop_decisions.json
+    anchor: "decisions"
+  - file: src/repo_presenter/lane_l_review.py
+    anchor: "L-01"
+  - file: ops/gatectl.py
+    anchor: "GLOBAL_DENY"
+  - file: project/taskcards/TC-022a.yaml
+    anchor: "registration"
+inputs: []
+actions:
+  - "Write src/repo_presenter/acceptance/calibration_harness.py: pure scoring functions for each
+     of M1-M7 and M10's thresholds above, and an end-to-end aggregate scorer, producing a result
+     object shaped like the real data/acceptance_calibration.json schema (per-mechanism status,
+     version, corpus digest, gates, provider_calls)."
+  - "Write tests/acceptance/test_acceptance_calibration_harness.py with worker-constructed fixtures proving
+     each threshold's scoring math is correct at known boundary values (e.g. a fixture exactly at
+     0.90 recall passes, one at 0.89 fails), plus the R14 100%-agreement check against a small
+     fixture mirroring data/drop_decisions.json's shape, plus the harness's own two-run
+     determinism."
+  - "Explicitly mark the M10 measurement path as provisional when TC-025's real Lane L minimality
+     checks are not yet available, falling back to today's L-01/L-02 holdouts, and make this
+     fallback visible in the result object (a field naming which implementation M10 was measured
+     against), not silent."
+checks:
+  - command: |-
+      python -m pytest tests/acceptance/test_acceptance_calibration_harness.py -q
+    expect: exit 0
+    timeout_seconds: 300
+    proves:
+      - REQ-CALIB-001
+      - REQ-CALIB-002
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -X utf8 -c "import pathlib; p = pathlib.Path('src/repo_presenter/acceptance/calibration_harness.py'); t = p.read_text(encoding='utf-8'); p.write_text(t.replace('0.90', '0.50'), encoding='utf-8')"
+  rationale: >
+    Lowers every 0.90 recall threshold the harness enforces to 0.50, which must flip at least one
+    of the worker's own boundary fixtures (constructed to sit just below 0.90) from FAIL to PASS,
+    proving the tests actually pin the real numeric thresholds from this card's purpose rather
+    than merely checking that a status field has some value. If no fixture in the worker's test
+    suite sits in the 0.50-0.90 range for any mechanism, the negative control is replaced in the
+    same commit with one targeting a fixture that does, since a mutation that changes nothing
+    observable is not a valid falsifier.
+evidence:
+  - src/repo_presenter/acceptance/calibration_harness.py
+  - tests/acceptance/test_acceptance_calibration_harness.py
+closeout:
+  - "This card does not run a live measurement against the real A1 registration or any real
+     mechanism implementation, and does not write data/acceptance_calibration.json. Once TC-022a's
+     real registration is frozen and TC-016/TC-017a/TC-017b/TC-018/TC-020/TC-021 (and, for M10,
+     ideally TC-025) are accepted, the supervisor wires this harness to the real inputs and, once
+     TC-014's attested hosted writer exists, that writer -- not this card and not a worker --
+     produces the real, committed, attested data/acceptance_calibration.json."
+  - "TC-007 and TC-011's re-authored checks read data/acceptance_calibration.json once it is real;
+     this card's own passing tests are not evidence that TC-007/TC-011 can be marked ACCEPTED."
+recovery: "Revert src/repo_presenter/acceptance/calibration_harness.py and its test; no committed
+  data file exists yet for this card to have touched."

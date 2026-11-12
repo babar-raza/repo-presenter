@@ -3,21 +3,19 @@
   "card": "TC-012",
   "gate": "GATE4_PRODUCTION",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-04T18:44:10Z",
-  "base_rev": "a2972556cfc0ddfa520d8c6e2188d1687fa6754f",
-  "head_rev": "6335d8e1de5ee0f7d032ce8b552062ffb369a607",
+  "generated_at": "2026-11-11T15:33:14Z",
+  "base_rev": "f837bb7f28b29af368532f5e475cb71cd6699125",
+  "head_rev": "9b7d9808d32ec367694f4a73185cc46872a11669",
   "card_sha256": "b0eb5254cbaf9dda33c8f3a6d4d64285b890787ec35f1a52aed95892d0ae2a88",
-  "checker_fileset_sha256": "58c9a52d248167f075a960cdc5a231332cfb4b4e4f325dbd5131f12c5c7e714a",
-  "checker_fileset_scheme": "v2",
+  "checker_fileset_sha256": "b69c0e8fb6cf5007737c3b1d4a315b40d46db6149a227fda945f0098eb876f69",
+  "checker_fileset_scheme": "v3",
   "fingerprint": {
-    "python": "3.13.18",
-    "platform": "Linux-6.18.44-fc-v233-x86_64-with-glibc2.39"
+    "python": "3.13.15",
+    "platform": "Windows-11-10.0.26300-SP0"
   },
   "scope": {
     "ok": true,
-    "changed_paths": [
-      "Dockerfile"
-    ],
+    "changed_paths": [],
     "violations": [],
     "evaluated": true
   },
@@ -28,13 +26,13 @@
         {
           "command": "python -m pytest tests/test_present_schedule.py tests/test_present_lanes.py tests/test_present.py tests/test_scheduled_execution_gate.py -q",
           "exit_code": 0,
-          "duration_s": 13.065,
-          "stdout_sha256": "1d843e0d2774e34a556cbf2c705a82d470f9bc2b92594518f5edfb4ae2f30c86"
+          "duration_s": 98.938,
+          "stdout_sha256": "5e4ee585105c5b0bdd03b8a81276985f3e147c323e578bb9efbea65bf05e4003"
         },
         {
           "command": "python ops/checks/marker_check.py Dockerfile \"FROM\"",
           "exit_code": 0,
-          "duration_s": 0.028,
+          "duration_s": 0.123,
           "stdout_sha256": "3ba2b9104d4cc40ed0cb8406ec68e85cbeb33ce95b1346246302fd54826d347b"
         }
       ],
@@ -46,13 +44,13 @@
         {
           "command": "python -m pytest tests/test_present_schedule.py tests/test_present_lanes.py tests/test_present.py tests/test_scheduled_execution_gate.py -q",
           "exit_code": 0,
-          "duration_s": 17.803,
-          "stdout_sha256": "06d6d0af4e13af566727627c5cabe5641c67d0b11581a3a921e0c9d2338f34e1"
+          "duration_s": 107.33,
+          "stdout_sha256": "e5f09bf805aad410295b22f6a0bd15f403946d42181f5a0c5be8743377d513bf"
         },
         {
           "command": "python ops/checks/marker_check.py Dockerfile \"FROM\"",
           "exit_code": 0,
-          "duration_s": 0.029,
+          "duration_s": 0.102,
           "stdout_sha256": "3ba2b9104d4cc40ed0cb8406ec68e85cbeb33ce95b1346246302fd54826d347b"
         }
       ],

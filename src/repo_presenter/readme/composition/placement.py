@@ -38,6 +38,7 @@ from repo_presenter.readme.evidence.facts.commands import (
     RELEASE_WORKFLOW_FACT_ID,
 )
 from repo_presenter.readme.evidence.facts.links import heading_slug
+from repo_presenter.readme.validation.surface_claims import kept_unit_form
 
 #: The disposition that keeps maintainer-authored content no fact can confirm, printed as written
 #: with its attribution recorded internally only, never printed (docs/MAINTAINER_CONTENT_PRESERVATION.md, owner requirement
@@ -529,14 +530,18 @@ def placements(
             | renderer_fact_ids(destination, facts, plan)
             | lead_in_of
         )
-        # A kept API-member listing in the (collapsed) API Reference prints as written, never
+        # A kept API-member listing (list OR table: R2 keeps the maintainers' member tables, and
+        # BC-07 counts only the renderer's own type tables) in the (collapsed) API Reference prints
+        # as written, never
         # dropped on a shared fact: the generated surface names the members, but the listing's
         # signatures and notes are what the maintainer wrote, and a kept unit the README does not
         # print is a disposition_coverage loss (Cells-Rust Lane R, 2026-11-06: superseded, BC-05
         # failed; kept visible, BC-07's budget failed; kept here and dropped as overlap, the
         # reviewer's disposition_coverage failed). Collapsed content costs no visible line.
         owes = _table_owes_its_rows(unit_id, destination, text_known=destinations is not None) or (
-            destination == "api_reference" and unit_id.endswith(".list") and unit_id in api_listings
+            destination == "api_reference"
+            and unit_id.endswith((".list", ".table"))
+            and unit_id in api_listings
         )
         overlap = (
             ()
@@ -551,6 +556,10 @@ def placements(
         ):
             overlap = (unit_id,)
         text = unit.value
+        # ONE printable form per kept unit (BC-05, disposition_coverage, BC-12): a table without
+        # the rows naming types the public surface lacks (BC-14 i), and the product named as BC-12
+        # requires wherever the maintainers' own wording used a short variant of it.
+        text = kept_unit_form(unit_id, text, facts)
         also: tuple[str, ...] = ()
         topical = False
         if destinations is not None:

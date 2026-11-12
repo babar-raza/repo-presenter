@@ -78,6 +78,15 @@ def test_the_same_items_are_trimmed_once_the_document_names_every_identifier() -
     assert not carries_identity_tokens(CAPABILITIES, AUTHORED, API)
     # An unqualified `IterTree()` is carried by the bare word, as the parity gate reads it.
     assert carries_identity_tokens("- Walk with `IterTree()`.", "walks `IterTree` nodes", API)
+    # A qualified identifier printed under a LONGER prefix than the benchmark's own still carries
+    # it -- a preceding dot must not break the match (measured on Aspose.PDF-FOSS-for-Java: the
+    # renderer disambiguated overlapping short class names from different packages by prefixing
+    # them, e.g. `drawing.GraphInfo`, and the dot-excluding boundary read every one as uncovered).
+    assert carries_identity_tokens(
+        "- Also `Reader.FromStream` and `Writer.ToBytes` with `Reader.FromFile`.\n",
+        "built on `Legacy.Reader.FromStream`, `Legacy.Writer.ToBytes` and `Legacy.Reader.FromFile`",
+        API,
+    )
 
 
 DEV_DEPENDENCIES = (

@@ -1,0 +1,13 @@
+# Owner action 3 (docs/DELIVERY_PLAN_2026-11-07.md section 3, "Owner actions"): CODEOWNERS with
+# required owner review on the acceptance contract, the audit mechanism, and the data they certify
+# against. Without this, the supervisor could change the writer it is judged by. This file alone
+# only names the owner as required reviewer; it has no effect until branch protection on `main`
+# (and this working branch's eventual merge target) is configured to require CODEOWNERS review --
+# that toggle is the owner's own GitHub repository-settings action, not something committable here.
+
+/ops/audit/                                    @babar-raza
+/.github/workflows/audit-*.yml                 @babar-raza
+/data/acceptance_calibration.json              @babar-raza
+/data/acceptance_responsibility.json           @babar-raza
+/ops/checks/calibration_status.py              @babar-raza
+/src/repo_presenter/acceptance/                 @babar-raza

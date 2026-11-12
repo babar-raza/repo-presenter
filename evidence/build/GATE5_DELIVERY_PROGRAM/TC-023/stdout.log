@@ -1,0 +1,57 @@
+
+===== CLEAN RUN 1 =====
+$ python -m pytest tests/readme/review/test_prose_judge.py -q
+--- stdout ---
+.......................                                                  [100%]
+23 passed in 0.31s
+
+--- stderr ---
+
+$ python -X utf8 -c "import pathlib,sys; t = pathlib.Path('src/repo_presenter/readme/review/prose_judge.py').read_text(encoding='utf-8'); sys.exit(1 if 'gpt-oss' in t or 'gpt_oss' in t else 0)"
+--- stdout ---
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python -m pytest tests/readme/review/test_prose_judge.py -q
+--- stdout ---
+.......................                                                  [100%]
+23 passed in 0.26s
+
+--- stderr ---
+
+$ python -X utf8 -c "import pathlib,sys; t = pathlib.Path('src/repo_presenter/readme/review/prose_judge.py').read_text(encoding='utf-8'); sys.exit(1 if 'gpt-oss' in t or 'gpt_oss' in t else 0)"
+--- stdout ---
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M src/repo_presenter/readme/review/prose_judge.py
+$ python -m pytest tests/readme/review/test_prose_judge.py -q
+--- stdout ---
+
+=================================== ERRORS ====================================
+__________ ERROR collecting tests/readme/review/test_prose_judge.py ___________
+ImportError while importing test module 'C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-8sukm325\tests\readme\review\test_prose_judge.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\readme\review\test_prose_judge.py:20: in <module>
+    from repo_presenter.readme.review.prose_judge import (
+E   ImportError: cannot import name 'INCONCLUSIVE' from 'repo_presenter.readme.review.prose_judge' (C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-8sukm325\src\repo_presenter\readme\review\prose_judge.py)
+=========================== short test summary info ===========================
+ERROR tests/readme/review/test_prose_judge.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.30s
+
+--- stderr ---
+
+$ python -X utf8 -c "import pathlib,sys; t = pathlib.Path('src/repo_presenter/readme/review/prose_judge.py').read_text(encoding='utf-8'); sys.exit(1 if 'gpt-oss' in t or 'gpt_oss' in t else 0)"
+--- stdout ---
+
+--- stderr ---
+

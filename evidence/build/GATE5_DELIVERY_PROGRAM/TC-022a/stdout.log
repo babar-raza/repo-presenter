@@ -1,0 +1,145 @@
+
+===== CLEAN RUN 1 =====
+$ python -m pytest tests/acceptance/test_registration.py -q
+--- stdout ---
+.................                                                        [100%]
+17 passed in 0.37s
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python -m pytest tests/acceptance/test_registration.py -q
+--- stdout ---
+.................                                                        [100%]
+17 passed in 0.28s
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M src/repo_presenter/acceptance/registration.py
+$ python -m pytest tests/acceptance/test_registration.py -q
+--- stdout ---
+F.......F......F.                                                        [100%]
+================================== FAILURES ===================================
+___________________ test_digest_is_deterministic_and_pinned ___________________
+
+    def test_digest_is_deterministic_and_pinned() -> None:
+        records = _fixture_records()
+        first = select_a1(records, per_class_min=1, clean_twin_min=1)
+        second = select_a1(list(reversed(records)), per_class_min=1, clean_twin_min=1)
+    
+        # Same inputs, reordered -> the exact same digest (order-independence).
+        assert first.digest == second.digest
+    
+        # A literal, pinned SHA-256 value: computed once from this exact fixture and frozen here so a
+        # mutation that swaps the hash algorithm (sha256 -> md5) changes the digest this module
+        # produces and breaks this assertion, not just an internal self-consistency check that would
+        # pass under any hash function.
+>       assert first.digest == "9919f36a679ccc015bfbde253a6bbea8bf6619dc05f9e3c6cb65555395047fc9"
+E       AssertionError: assert 'b06cfb09887c...a4e757be099c7' == '9919f36a679c...5555395047fc9'
+E         
+E         - 9919f36a679ccc015bfbde253a6bbea8bf6619dc05f9e3c6cb65555395047fc9
+E         + b06cfb09887ced4b278a4e757be099c7
+
+tests\acceptance\test_registration.py:85: AssertionError
+___________ test_load_calibration_registration_from_a_small_fixture ___________
+
+    def test_load_calibration_registration_from_a_small_fixture() -> None:
+        document = {
+            "schema": "reviewer-calibration-registration/1",
+            "cases": [
+                {
+                    "case": "own:x/clean",
+                    "base": "own:x",
+                    "role": "clean",
+                    "klass": None,
+                    "readme_sha256": "abc123",
+                    "defect_sha256": None,
+                },
+                {
+                    "case": "own:x/real:unsupported_claim:0",
+                    "base": "own:x",
+                    "role": "real_defect",
+                    "klass": "unsupported_claim",
+                    "readme_sha256": "abc123",
+                    "defect_sha256": "def456",
+                },
+            ],
+        }
+        records = load_calibration_registration(document)
+        by_id = {record.case_id: record for record in records}
+        assert by_id["own:x/clean"].is_clean_twin is True
+>       assert by_id["own:x/clean"].digest == "abc123"
+E       AssertionError: assert '585ade9ca510...efbf7d57377c0' == 'abc123'
+E         
+E         - abc123
+E         + 585ade9ca5109a70d7aefbf7d57377c0
+
+tests\acceptance\test_registration.py:243: AssertionError
+_____________ test_real_build_reports_the_honest_zero_call_floor ______________
+
+    @pytest.mark.skipif(
+        not (AUDIT_MARKDOWN.is_file() and CALIBRATION_REGISTRATION.is_file() and SEALED_BASELINE.is_file()),
+        reason="the real committed source files are not present in this checkout",
+    )
+    def test_real_build_reports_the_honest_zero_call_floor() -> None:
+        registration, unmatched = build_a1_from_existing_data(
+            audit_markdown_path=AUDIT_MARKDOWN,
+            calibration_registration_path=CALIBRATION_REGISTRATION,
+            sealed_baseline_path=SEALED_BASELINE,
+        )
+    
+        # Every one of the 113 hand-audited case ids in the audit markdown matches a case already in
+        # the calibration registration -- no drift between the two committed documents.
+        assert unmatched == []
+    
+        # The real per-class counts found by the 2026-11-06 unsupported-claim-class audit (section 1):
+        # unsupported_claim A=13/B=69/C=14/D=4/E=0 and contradiction A=10/B=1/C=0/D=0/E=2.
+        assert registration.shortfall.per_class_achieved == {
+            "A": 23,
+            "B": 70,
+            "C": 14,
+            "D": 4,
+            "E": 2,
+        }
+        # Only B reaches the n>=30 minimum from existing data alone; this is reported honestly, not
+        # padded and not silently lowered.
+        assert registration.shortfall.per_class_shortfall == {
+            "A": 7,
+            "B": 0,
+            "C": 16,
+            "D": 26,
+            "E": 28,
+        }
+        assert registration.shortfall.met is False
+        assert registration.shortfall.short_classes() == ["A", "C", "D", "E"]
+    
+        # Clean twins (28 registered "clean" + 23 "unscored_twin" + 27 sealed RECERTIFIED-clean) reach the
+        # n>=50 minimum from existing data alone. 27: the sealed baseline now holds 35 seals (re-certified
+        # under current code); load_sealed_baseline() counts every RECERTIFIED seal with no failing
+        # checks as a clean twin, so the count follows the baseline honestly (60 -> 73 -> 78): a derived
+        # number, not a target.
+        assert registration.shortfall.clean_twin_achieved == 78
+        assert registration.shortfall.clean_twin_shortfall == 0
+    
+        assert len(registration.labelled_cases) == 113
+        assert registration.second_labeller.stand_in is True
+        assert registration.second_labeller.sample_size == 23  # ceil(113 * 0.2)
+    
+        # The digest is a real SHA-256 hex digest and is itself deterministic across two builds.
+>       assert len(registration.digest) == 64
+E       AssertionError: assert 32 == 64
+E        +  where 32 = len('0fe6f02d89e63dc2476f88b942f07b34')
+E        +    where '0fe6f02d89e63dc2476f88b942f07b34' = A1Registration(labelled_cases=(CaseRecord(case_id='ref:words-python/real:unsupported_claim:8', source='calibration_reg..._in=True, sample_size=23, agreement=0.0, method='simple_majority_baseline'), digest='0fe6f02d89e63dc2476f88b942f07b34').digest
+
+tests\acceptance\test_registration.py:395: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/acceptance/test_registration.py::test_digest_is_deterministic_and_pinned
+FAILED tests/acceptance/test_registration.py::test_load_calibration_registration_from_a_small_fixture
+FAILED tests/acceptance/test_registration.py::test_real_build_reports_the_honest_zero_call_floor
+3 failed, 14 passed in 0.49s
+
+--- stderr ---
+

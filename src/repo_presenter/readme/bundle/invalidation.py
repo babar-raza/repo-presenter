@@ -228,6 +228,13 @@ ARTIFACT_SCOPES: dict[str, str] = {
     # changed one is a changed source, so it invalidates); the edit list is the engine's output.
     "README.original.md": "facts",
     "corrections.json": "correction",
+    # lane_l_review.review_correction's own record: the deterministic review's holdout findings
+    # plus R21's residuals, written by the REVIEWING stage, never by correction itself (it is
+    # produced from the correction result, not alongside it). Measured: Aspose.Cells-FOSS-for-
+    # Rust's existing Lane L seal re-sealing after R21's residuals field was added -- holdouts.json
+    # differs from the stored seal's, and scope_of_artifact raised "no invalidation scope" for it,
+    # failing every such re-seal closed instead of routing the change to REVIEWING.
+    "holdouts.json": "reviewer",
 }
 # Lane L's README and patch are written by the correction engine, not by Lane R's authoring stage,
 # so the same artifact name routes to a different scope when it differs in a Lane L bundle.

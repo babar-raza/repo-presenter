@@ -1,0 +1,95 @@
+
+===== CLEAN RUN 1 =====
+$ python -m pytest tests/readme/evidence/facts/test_examples.py tests/extractors/platforms/test_example_verifier_outcomes.py tests/readme/correction/ tests/readme/validation/test_provenance.py -q
+--- stdout ---
+........................................................................ [ 57%]
+.....................................................                    [100%]
+125 passed in 1.09s
+
+--- stderr ---
+
+
+===== CLEAN RUN 2 =====
+$ python -m pytest tests/readme/evidence/facts/test_examples.py tests/extractors/platforms/test_example_verifier_outcomes.py tests/readme/correction/ tests/readme/validation/test_provenance.py -q
+--- stdout ---
+........................................................................ [ 57%]
+.....................................................                    [100%]
+125 passed in 3.34s
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M src/repo_presenter/readme/evidence/facts/examples.py
+$ python -m pytest tests/readme/evidence/facts/test_examples.py tests/extractors/platforms/test_example_verifier_outcomes.py tests/readme/correction/ tests/readme/validation/test_provenance.py -q
+--- stdout ---
+..F..F.F................................................................ [ 57%]
+.....................................................                    [100%]
+================================== FAILURES ===================================
+_ test_each_outcome_maps_to_its_own_polarity_and_confidence[TIMED_OUT-UNRESOLVED-0.5] _
+
+outcome = 'TIMED_OUT', polarity = 'UNRESOLVED', confidence = 0.5
+
+    @pytest.mark.parametrize(
+        ("outcome", "polarity", "confidence"),
+        [
+            ("EXECUTED", "SUPPORTED", 1.0),
+            ("FAILED", "CONTRADICTED", 1.0),
+            ("TIMED_OUT", "UNRESOLVED", 0.5),
+            ("NEEDS_INPUT", "UNRESOLVED", 0.5),
+            ("NOT_VERIFIED", "UNRESOLVED", 0.5),
+        ],
+    )
+    def test_each_outcome_maps_to_its_own_polarity_and_confidence(
+        outcome: ExampleOutcome, polarity: str, confidence: float
+    ) -> None:
+        candidate = _candidate()
+        receipt = _receipt(outcome)
+        (fact,) = example_facts([candidate], [receipt], "examples.json")
+>       assert fact.polarity == polarity
+E       AssertionError: assert 'CONTRADICTED' == 'UNRESOLVED'
+E         
+E         - UNRESOLVED
+E         + CONTRADICTED
+
+tests\readme\evidence\facts\test_examples.py:55: AssertionError
+___________ test_a_timeout_is_never_as_certain_as_a_genuine_failure ___________
+
+    def test_a_timeout_is_never_as_certain_as_a_genuine_failure() -> None:
+        """The one confirmed defect this card fixes: a timeout proves only that the harness could
+        not finish checking the example in time, not that the example is wrong -- so it must never
+        be recorded at the same confidence as a real, executed failure."""
+        candidate = _candidate()
+        timed_out = example_facts([candidate], [_receipt("TIMED_OUT")], "examples.json")[0]
+        failed = example_facts([candidate], [_receipt("FAILED")], "examples.json")[0]
+>       assert timed_out.polarity == "UNRESOLVED"
+E       AssertionError: assert 'CONTRADICTED' == 'UNRESOLVED'
+E         
+E         - UNRESOLVED
+E         + CONTRADICTED
+
+tests\readme\evidence\facts\test_examples.py:66: AssertionError
+___________ test_a_timed_out_example_never_becomes_a_lane_l_finding ___________
+
+    def test_a_timed_out_example_never_becomes_a_lane_l_finding() -> None:
+        """Downstream check (TC-016): an UNRESOLVED example-fact polarity -- including one that
+        started life as TIMED_OUT -- must never reach the correction detector as a reported defect.
+        Only CONTRADICTED ever does (``readme/correction/detectors/examples.py``'s own
+        ``fact.polarity != "CONTRADICTED"`` guard)."""
+        candidate = _candidate()
+        (timed_out_fact,) = example_facts([candidate], [_receipt("TIMED_OUT")], "examples.json")
+>       assert timed_out_fact.polarity == "UNRESOLVED"
+E       AssertionError: assert 'CONTRADICTED' == 'UNRESOLVED'
+E         
+E         - UNRESOLVED
+E         + CONTRADICTED
+
+tests\readme\evidence\facts\test_examples.py:92: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/readme/evidence/facts/test_examples.py::test_each_outcome_maps_to_its_own_polarity_and_confidence[TIMED_OUT-UNRESOLVED-0.5]
+FAILED tests/readme/evidence/facts/test_examples.py::test_a_timeout_is_never_as_certain_as_a_genuine_failure
+FAILED tests/readme/evidence/facts/test_examples.py::test_a_timed_out_example_never_becomes_a_lane_l_finding
+3 failed, 122 passed in 0.77s
+
+--- stderr ---
+

@@ -1,0 +1,147 @@
+id: TC-023
+gate: GATE5_DELIVERY_PROGRAM
+track: acceptance-calibration
+executor: worker
+purpose: >
+  Build M8, a NEW, narrow prose-only judge, to replace the old monolithic reviewer's role in the
+  acceptance critical path. depends_on: [TC-015, TC-022a]. Self-contained context (the worker
+  never reads docs/DELIVERY_PLAN_2026-11-07.md or docs/design/2026-11-06-acceptance-redesign.md).
+
+  Why a new, narrow judge. The existing reviewer (`src/repo_presenter/readme/review/independent_reviewer.py`,
+  prompt `prompts/independent_review.yaml`) is asked to prove twelve different kinds of
+  correctness in one call: factual accuracy, claim support, preservation, structure, AND prose
+  quality together. `data/reviewer_calibration.json` (frozen, iteration 5: status NOT_PASSED,
+  logic version 10, prompt version 21, model qwen3-next, 786 provider calls, 13,821,256 tokens)
+  records that this approach has failed five calibration iterations. Read
+  `docs/investigations/2026-11-06-reviewer-rootcause.md` for the measured reviewer-stability
+  numbers across iterations (observed range roughly 0.70-0.90, i.e. qwen3-next does not reliably
+  return the same verdict on a repeated, byte-identical request even at temperature 0 / seed 1).
+  M8's whole purpose is to take ONLY the one job a model is plausibly suited for -- prose
+  quality judgement -- away from everything else (facts, claims, structure), which move to
+  separate deterministic mechanisms (other cards, not this one) that do not depend on model
+  judgement at all.
+
+  M8's exact scope: given ONLY prose lines from a candidate README (no facts packet, no source
+  code, no fact-checking burden of any kind), classify each line/span into exactly one of four
+  categories -- `promotional`, `generic_template`, `incoherent`, `misleading_framing` -- or none
+  of them; separately, for a whole section, answer one pairwise question: "is this section at
+  least as clear and usable as the benchmark's section of the same purpose?" (yes/no); and
+  separately again, for an inherited type description NOT backed by a full docstring fact (the
+  "M8-S" sub-question), answer whether the description is a fair paraphrase of the type's real
+  signature shown beside it. These three question shapes are independent prompts/calls, never
+  combined into one mega-prompt -- that combination is exactly the H3/H4/H6 mistake (needle in a
+  haystack, one weak skill sinking the whole verdict, correlated blind spots between a model
+  that both writes and reviews) the rootcause document and the five failed iterations already
+  demonstrate; keep each call narrow.
+
+  Model route (owner ruling, binding): qwen3-next only, for this and every other product model
+  call in this repository -- do not add or reference any other model id (e.g. gpt-oss is
+  explicitly eliminated project-wide; see the existing [[qwen3-next-only-no-gpt-oss]] convention
+  if available, or simply: never introduce a second model route in this card's code).
+
+  Sequential majority voting (the reliability mechanism, since qwen3-next is not deterministic):
+  for a given classification call, draw once. If the first draw's verdict is later confirmed by
+  a second, independent draw of the SAME call, stop at two draws and accept the agreeing verdict.
+  If the second draw disagrees with the first, draw a third time and accept whichever verdict two
+  of the three draws agree on (majority of three); if all three draws disagree with each other
+  (no majority), the call is INCONCLUSIVE and must be reported as such, never silently resolved
+  to any one of the three. Implement this voting algorithm as a PURE, deterministic state
+  machine, parameterized by an injectable sequence of draws (a callable or iterator the caller
+  supplies) -- so this card's own tests exercise the full state machine (2-draw agreement,
+  3-draw majority, 3-draw no-majority/INCONCLUSIVE) using fake, scripted draw sequences, with
+  ZERO real provider calls anywhere in this card's own checks.
+
+  Thresholds this judge must eventually reach (measured later, in TC-022a's A1 registration's M8
+  slice, NOT by this card -- see scope note below): recall >= 0.90 per category; false-reject
+  rate <= 0.02; JSON-validity rate >= 0.90; stability (repeat-draw agreement) >= 0.90; capped at
+  500 real provider calls for that future measurement.
+
+  Scope boundary, explicit and binding (owner ruling R26 in this project's governance): this
+  card builds the JUDGE'S CONTRACT and VOTING LOGIC, and proves them correct against fakes. It
+  does NOT run the real ~500-call calibration measurement against A1 (that is real budgeted
+  spend, a separate future step once a provider budget is actually allocated -- see
+  `src/repo_presenter/core/llm/jobs.py` for how a real call would eventually be wired, but do not
+  wire a live call in this card). It also does NOT pre-emptively build, wire, or enable any
+  fallback path for what happens if M8 fails its real calibration (sometimes called "rung (c)" in
+  this project's governance: removing the judge from the critical path in favor of a
+  deterministic wording ban plus a separate audit mechanism). That fallback is authorized only
+  AFTER a real, recorded M8 calibration failure actually occurs -- which has not happened, because
+  the real calibration has not been run yet. Do not build, stub, or leave a half-built fallback
+  switch in this card's code; if you find yourself tempted to add one "just in case", stop and
+  leave a comment explaining why it is out of scope instead.
+depends_on:
+  - TC-015
+  - TC-022a
+write_paths:
+  - prompts/m8/prose_judge.yaml
+  - src/repo_presenter/readme/review/prose_judge.py
+  - tests/readme/review/test_prose_judge.py
+satisfies:
+  - REQ-JUDGE-001
+  - REQ-JUDGE-002
+source_refs:
+  - file: data/reviewer_calibration.json
+    anchor: "status"
+  - file: src/repo_presenter/readme/review/independent_reviewer.py
+    anchor: "ReviewVerdict"
+  - file: prompts/independent_review.yaml
+    anchor: "prompt"
+  - file: docs/investigations/2026-11-06-reviewer-rootcause.md
+    anchor: "stability"
+inputs: []
+actions:
+  - "Write prompts/prose_judge.yaml: three narrow prompt shapes (4-category classification,
+     pairwise benchmark comparison, M8-S paraphrase check), each self-contained, none combined,
+     none given a facts packet or source code."
+  - "Write src/repo_presenter/readme/review/prose_judge.py: the pure sequential-majority-voting
+     state machine (injectable draw source), plus typed request/response shapes for the three
+     prompt forms, plus a result object reporting INCONCLUSIVE explicitly when no majority forms
+     across three draws."
+  - "Write tests/readme/review/test_prose_judge.py covering: 2-draw agreement stops early;
+     2-draw disagreement triggers a third draw; 3-draw majority resolves to the majority verdict;
+     3-draw no-majority resolves to INCONCLUSIVE and is reported as such, never silently
+     defaulted to any category; the module makes zero real provider calls anywhere in the test
+     suite (assert via a call-counting fake, not by inspection alone)."
+  - "Confirm (by reading, and if useful by grep) that no gpt-oss or other non-qwen3-next model id
+     appears anywhere in this card's new code."
+checks:
+  - command: |-
+      python -m pytest tests/readme/review/test_prose_judge.py -q
+    expect: exit 0
+    timeout_seconds: 300
+    proves:
+      - REQ-JUDGE-001
+      - REQ-JUDGE-002
+  - command: |-
+      python -X utf8 -c "import pathlib,sys; t = pathlib.Path('src/repo_presenter/readme/review/prose_judge.py').read_text(encoding='utf-8'); sys.exit(1 if 'gpt-oss' in t or 'gpt_oss' in t else 0)"
+    expect: exit 0
+    timeout_seconds: 10
+    proves:
+      - REQ-JUDGE-002
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -X utf8 -c "import pathlib; p = pathlib.Path('src/repo_presenter/readme/review/prose_judge.py'); t = p.read_text(encoding='utf-8'); p.write_text(t.replace('INCONCLUSIVE', 'promotional'), encoding='utf-8')"
+  rationale: >
+    Forces the no-majority case to silently resolve to a specific category instead of reporting
+    INCONCLUSIVE. This must break the 3-draw no-majority test, proving that test actually checks
+    for the INCONCLUSIVE outcome rather than merely checking that the function returns without
+    raising. If the worker's implementation names this state differently, the negative control is
+    updated in the same commit to target whatever name is actually used, per ops/SUPERVISOR.md's
+    falsifier rule against a textual mutation that silently stops matching after a refactor.
+evidence:
+  - src/repo_presenter/readme/review/prose_judge.py
+  - prompts/prose_judge.yaml
+  - tests/readme/review/test_prose_judge.py
+closeout:
+  - "This card performs no real provider calls and runs no real calibration against A1. A
+     separate, future, explicitly budgeted step measures M8 against A1's M8 slice (cap 500 real
+     calls) once a provider budget exists; only a recorded failure of THAT real measurement
+     authorizes building the rung-(c) fallback this card deliberately does not build."
+  - "Do not mark TC-007/TC-011 or any acceptance-contract card as satisfied by this card's
+     passing tests alone; M8 is uncalibrated until the real measurement runs."
+recovery: "Revert prompts/prose_judge.yaml, src/repo_presenter/readme/review/prose_judge.py and
+  its test; the old monolithic reviewer path is untouched and unaffected, since this card never
+  modifies independent_reviewer.py or independent_review.yaml."

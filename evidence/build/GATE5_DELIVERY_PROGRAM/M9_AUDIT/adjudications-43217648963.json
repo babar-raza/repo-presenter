@@ -1,0 +1,188 @@
+[
+ {
+  "candidate_id": "387dd177719d7069",
+  "line": 450,
+  "adjudication": "refuted",
+  "reason": "The Enterprise Edition wording is carried over from the maintainers' own README at the pinned revision (README.md:446-450, same link and claims), so it is an upstream statement, not an invented comparison; the candidate only rephrases the final clause tautologically."
+ },
+ {
+  "candidate_id": "8cfebdf565942035",
+  "line": 74,
+  "adjudication": "confirmed",
+  "reason": "src/aspose_font/converter.py:77 defines convert(font: Font, target: FontType) -> Font, so passing a path and output_format= raises TypeError."
+ },
+ {
+  "candidate_id": "8cfebdf565942035",
+  "line": 88,
+  "adjudication": "confirmed",
+  "reason": "src/aspose_font/_font_base.py:95 defines save(self, path) with no format keyword and no subclass overrides it; format conversion is save_to_format (line 105)."
+ },
+ {
+  "candidate_id": "8cfebdf565942035",
+  "line": 194,
+  "adjudication": "confirmed",
+  "reason": "src/aspose_font/instances.py:166 build_package is an instance method taking names=..., with no instance_names or output_dir parameters, and VariableInstanceBuilder.__init__ takes the font (line 150)."
+ },
+ {
+  "candidate_id": "8cfebdf565942035",
+  "line": 207,
+  "adjudication": "confirmed",
+  "reason": "src/aspose_font/cli.py:7759 makes output_dir a required positional of var-package and no --output-dir option exists there (only --stat-policy via _add_stat_policy_arg at line 7843), so the command line is rejected."
+ },
+ {
+  "candidate_id": "8cfebdf565942035",
+  "line": 233,
+  "adjudication": "confirmed",
+  "reason": "src/aspose_font/cli.py:7759-7762 requires positional output_dir for var-package; --output-dir is not defined for that subcommand."
+ },
+ {
+  "candidate_id": "8cfebdf565942035",
+  "line": 290,
+  "adjudication": "confirmed",
+  "reason": "No package.py exists at the pinned revision; Makefile:build runs python -m build."
+ },
+ {
+  "candidate_id": "8cfebdf565942035",
+  "line": 45,
+  "adjudication": "confirmed",
+  "reason": "pyproject.toml declares no runtime dependencies (only dev and mcp extras); Pillow is only lazily imported for embedded bitmap decoding (src/aspose_font/preview.py:844,1270) and previews use the built-in _encode_png_rgb."
+ },
+ {
+  "candidate_id": "aa04ef472e81b1be",
+  "line": 327,
+  "adjudication": "confirmed",
+  "reason": "AttachmentTagFlowable is a function-local class (src/aspose/note/saving/pdf_writer.py:1362), not importable or exported (saving/__init__.py __all__ lists only SaveOptions and PdfSaveOptions), yet it is listed in the Supported Public API Surface."
+ },
+ {
+  "candidate_id": "aa04ef472e81b1be",
+  "line": 328,
+  "adjudication": "confirmed",
+  "reason": "OutlinePrefixFlowable is a function-local class (src/aspose/note/saving/pdf_writer.py:1238), not importable or exported, yet it is listed in the Supported Public API Surface."
+ },
+ {
+  "candidate_id": "e52db002d4e06860",
+  "line": 712,
+  "adjudication": "confirmed",
+  "reason": "Upstream README.md:712 says 305 public types and the source defines ~339 unique (343 total) non-underscore classes under aspose/, so '337' matches neither and is an ungrounded figure."
+ },
+ {
+  "candidate_id": "e52db002d4e06860",
+  "line": 322,
+  "adjudication": "confirmed",
+  "reason": "aspose/threed/entities/Box.py:11 signature is __init__(self, name=None, length=1.0, width=1.0, height=1.0,...), so Box(10, 20, 30) sets name=10, length=20, width=30, height=1 rather than a 10x20x30 box."
+ },
+ {
+  "candidate_id": "8c16f144d063b759",
+  "line": 206,
+  "adjudication": "confirmed",
+  "reason": "src/Aspose.Imaging.Foss/ImageProbe.cs:32 DetectFormat calls FindHandler directly (no EnsureSeekable) and the comment at :121-122 says it 'doesn't buffer the whole stream the way Probe does'; only Probe (:43) buffers."
+ },
+ {
+  "candidate_id": "8c16f144d063b759",
+  "line": 109,
+  "adjudication": "confirmed",
+  "reason": "Formats/AvifFormatHandler.cs:28, HeicFormatHandler.cs:27 and DicomFormatHandler.cs:89 construct ImageInfo without frameCount, so FrameCount is null, not 1, for these formats."
+ },
+ {
+  "candidate_id": "8c16f144d063b759",
+  "line": 265,
+  "adjudication": "confirmed",
+  "reason": "Same defect: DICOM (DicomFormatHandler.cs:89), AVIF (AvifFormatHandler.cs:28) and HEIC (HeicFormatHandler.cs:27) leave FrameCount null, contradicting 'every other supported format reports a fixed 1'."
+ },
+ {
+  "candidate_id": "8c16f144d063b759",
+  "line": 87,
+  "adjudication": "confirmed",
+  "reason": "The claim that nothing else in the .NET FOSS ecosystem identifies PSD/EMF/WMF/DICOM is an ecosystem-wide superlative with no basis anywhere in the repository source (src/Aspose.Imaging.Foss/ImageProbe.cs only shows this library's own handlers)."
+ },
+ {
+  "candidate_id": "f463cfcbeb35bb6d",
+  "line": 252,
+  "adjudication": "confirmed",
+  "reason": "Repository root contains LICENSE.txt and no License/ directory, so the License/LICENSE.txt link target (README.md:5 and :252) is broken."
+ },
+ {
+  "candidate_id": "f463cfcbeb35bb6d",
+  "line": 136,
+  "adjudication": "confirmed",
+  "reason": "src/aspose_psd_foss/psdimage.py:174-179 returns PreservedResourceBlock objects whose attribute is self.id (preservedresourceblock.py:11) with no resource_id attribute, so res.resource_id raises AttributeError."
+ },
+ {
+  "candidate_id": "f463cfcbeb35bb6d",
+  "line": 242,
+  "adjudication": "confirmed",
+  "reason": "git ls-files at the pinned revision has no setup.py, pyproject.toml or setup.cfg (only requirements.txt), so `pip install -e \".[dev]\"` cannot work."
+ },
+ {
+  "candidate_id": "e48a8478d7fd8690",
+  "line": 644,
+  "adjudication": "confirmed",
+  "reason": "src/Aspose.Cells_FOSS/ConditionalFormattingCollection.rs:24 count(&self) -> usize returns only a number, so 'count to list them' misdescribes it."
+ },
+ {
+  "candidate_id": "e48a8478d7fd8690",
+  "line": 794,
+  "adjudication": "confirmed",
+  "reason": "src/Aspose.Cells_FOSS/WorksheetCollection.rs:107 add(&mut self, name) -> Result<usize, CellsError>, not bare usize as the README signature states."
+ },
+ {
+  "candidate_id": "6595098b7a1c7448",
+  "line": 53,
+  "adjudication": "confirmed",
+  "reason": "Cell::SetFormula (Aspose.Cells.Foss.Cpp/src/aspose/cells_foss/Cell.cpp:153) only normalizes and stores the text, and FormulaException is never thrown anywhere in src (only defined in FormulaException.cpp:6)."
+ },
+ {
+  "candidate_id": "6595098b7a1c7448",
+  "line": 7,
+  "adjudication": "confirmed",
+  "reason": "No formula evaluator exists in the source (only CalculationProperties settings and a number-format EvaluateCondition at DisplayTextFormatterSupport.cpp:345); Cell.cpp:153 SetFormula just stores text, so 'formula calculation' is ungrounded."
+ },
+ {
+  "candidate_id": "6595098b7a1c7448",
+  "line": 867,
+  "adjudication": "confirmed",
+  "reason": "include/aspose/cells_foss/LoadFormat.h:7-13 declares Auto=0 and Xlsx=1, so 'LoadFormat and SaveFormat each declare a single Xlsx member' is wrong (only SaveFormat.h:7-11 has one member)."
+ },
+ {
+  "candidate_id": "1cdfd286b08a92fb",
+  "line": 7,
+  "adjudication": "confirmed",
+  "reason": "aspose/email_foss/msg/mapi_message.py:619 from_email_message only accepts an already-parsed EmailMessage and no .eml reader exists, which the README itself concedes at README.md:376 ('Direct .eml file parsing is not implemented')."
+ },
+ {
+  "candidate_id": "1cdfd286b08a92fb",
+  "line": 111,
+  "adjudication": "confirmed",
+  "reason": "pyproject.toml:10 uses `requires-python = \">=3.10\"`, not `python_requires`, so the README's named key is wrong."
+ },
+ {
+  "candidate_id": "ba729ff5960bc8d2",
+  "line": 1508,
+  "adjudication": "confirmed",
+  "reason": "README.md:1508 says 1026 public types while README.md:294 and :1575 say 1181, so the README contradicts itself."
+ },
+ {
+  "candidate_id": "ba729ff5960bc8d2",
+  "line": 1595,
+  "adjudication": "confirmed",
+  "reason": "docs/limitations.md:35 and docs/conversion.md:430 state SaveFormat.Xml is not implemented and Document.save(String, SaveFormat) (Document.java:2134-2145) falls through to plain save(filePath), so 'converts PDF to ... XML' is false."
+ },
+ {
+  "candidate_id": "ba729ff5960bc8d2",
+  "line": 1597,
+  "adjudication": "confirmed",
+  "reason": "Document.java:2135-2142 saves to DOCX/DOC, XLSX/Excel and Markdown, and DocLoadOptions/ExcelLoadOptions/MarkdownLoadOptions exist, so the claim that non-PDF conversions other than HTML/XML are unsupported is false."
+ },
+ {
+  "candidate_id": "ba729ff5960bc8d2",
+  "line": 1542,
+  "adjudication": "confirmed",
+  "reason": "Document.getForm() returns org.aspose.pdf.forms.Form (Document.java:19,1231) with Field[] getFields() and add(Field) (forms/Form.java:84,263), while facades/Form.java has no get(String)->Field, getFields() or add(FieldType,...)."
+ },
+ {
+  "candidate_id": "ba729ff5960bc8d2",
+  "line": 1562,
+  "adjudication": "confirmed",
+  "reason": "devices/TiffDevice.java:31 declares `public class TiffDevice` with no superclass, unlike PngDevice.java:16 which extends PageDevice."
+ }
+]

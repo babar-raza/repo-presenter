@@ -203,6 +203,62 @@ def _no_github(_args: list[str]) -> bytes | None:
     raise AssertionError("no GitHub call expected")
 
 
+# --- TC-024: the seal-path contract's _model_accept -----------------------------------------------
+
+
+def test_model_accept_rejects_a_deterministic_only_verdict() -> None:
+    """A deterministic-only ACCEPT (no model ever asked) never re-certifies as accepted -- the
+    one invariant present.py's own "no LLM review...never sealed" refusal protects at seal time,
+    mirrored here for a STORED review being re-read."""
+    assert recertify._model_accept({"verdict": "ACCEPT", "model_verdict": None}) is False
+    assert recertify._model_accept({"verdict": "ACCEPT"}) is False
+    assert recertify._model_accept(None) is False
+    assert recertify._model_accept({}) is False
+
+
+def test_model_accept_rejects_a_non_accept_verdict() -> None:
+    assert recertify._model_accept({"verdict": "REJECT", "model_verdict": "ACCEPT"}) is False
+
+
+def test_model_accept_no_longer_requires_the_old_reviewers_own_accept() -> None:
+    """TC-024's actual behavior change: ``verdict == "ACCEPT"`` already means (by
+    ``readme.review.verdict.fold_verdict``'s own invariant) that any ``REJECT_*`` the old
+    reviewer's one call returned was deterministically cleared -- non-negotiable 5 is enforced
+    there, not by also demanding the old reviewer's single call said ACCEPT outright. The OLD
+    ``_model_accept`` (``verdict == "ACCEPT" and model_verdict == "ACCEPT"``) would have rejected
+    this; TC-024's accepts it."""
+    assert recertify._model_accept(
+        {"verdict": "ACCEPT", "model_verdict": "REJECT_PRESENTATION"}
+    ) is True
+
+
+def test_model_accept_rejects_a_unit_m8_marked_reject_or_inconclusive() -> None:
+    base = {"verdict": "ACCEPT", "model_verdict": "ACCEPT"}
+    assert recertify._model_accept(
+        {**base, "unit_reviews": [{"unit": "u1", "m8": {"status": "reject"}}]}
+    ) is False
+    assert recertify._model_accept(
+        {**base, "unit_reviews": [{"unit": "u1", "m8": {"status": "inconclusive"}}]}
+    ) is False
+
+
+def test_model_accept_accepts_unit_m8_not_run_ok_or_absent() -> None:
+    """Every status this card's own code can actually produce today (no real M8 provider call is
+    wired yet -- TC-023's own scope boundary, owner ruling R26) reads as "no objection", and a
+    seal made before this card (no ``"m8"`` key at all) is read the same way."""
+    base = {"verdict": "ACCEPT", "model_verdict": "ACCEPT"}
+    assert recertify._model_accept(
+        {**base, "unit_reviews": [{"unit": "u1", "m8": {"status": "not_run"}}]}
+    ) is True
+    assert recertify._model_accept(
+        {**base, "unit_reviews": [{"unit": "u1", "m8": {"status": "ok"}}]}
+    ) is True
+    assert recertify._model_accept(
+        {**base, "unit_reviews": [{"unit": "u1"}]}  # no "m8" key at all (a pre-TC-024 seal)
+    ) is True
+    assert recertify._model_accept(base) is True  # no unit_reviews at all
+
+
 # --- D1: renderer N -> N+1, zero calls, still counts ----------------------------------------------
 
 
@@ -557,3 +613,53 @@ def test_a_platform_ecosystem_spec_is_registered_before_recertifying(
     entry = SimpleNamespace(repository="o/n", ecosystem="rust")
     rc.recertify_bundle(tmp_path / "missing", "R", entry=entry, source=None)
     assert asked == ["rust"]
+
+
+# --- TC-019b: zero-call restore of a unit a parity check names as lost ------------------------------
+
+
+def test_restore_re_dispositions_a_unit_a_check_names_and_writes_a_verifying_seal(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, no_provider: list[str]
+) -> None:
+    bundle = seal_lane_r(tmp_path, monkeypatch, renderer="35")
+    unit = "inherited_unit:024.paragraph"  # SUPERSEDE_REDUNDANT -> development_testing in the seal
+    kept = {"VERIFIED_PRESERVE", "VERIFIED_MOVE", "PRESERVE_ATTRIBUTED"}
+
+    def lost_unless_kept(candidate: Any) -> list[Failure]:
+        entry = next(e for e in candidate.dispositions["dispositions"] if e["unit_id"] == unit)
+        if entry["disposition"] in kept:
+            return []
+        return [
+            Failure(
+                "RECONCILING",
+                f"{unit} holds h2 'Examples', which the published README prints and this candidate "
+                "loses (section_coverage): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE)",
+                unit=unit,
+            )
+        ]
+
+    judges = dict(blocking.JUDGES)
+    judges["BC-17"] = lost_unless_kept
+    monkeypatch.setattr(blocking, "JUDGES", judges)
+
+    common = dict(entry=entry(), source=source(), current_version_set="current", seal_commit="c" * 40)
+    dry = recertify.recertify_bundle(bundle, LANE_R, **common)
+    assert dry.outcome == OUTCOME_NEEDS_REPAIR and "BC-17" in dry.failing_checks
+    assert "restored_units.json" not in dry.artifacts  # the dry counter and the gate never restore
+
+    rec = recertify.recertify_bundle(bundle, LANE_R, restore=True, **common)
+    assert rec.outcome == OUTCOME_RECERTIFIED, rec.details
+    restored = json.loads(rec.artifacts["restored_units.json"])["restored"]
+    assert [r["unit_id"] for r in restored] == [unit]
+    assert restored[0]["was"].startswith("SUPERSEDE_REDUNDANT")
+    assert rec.provider_calls == 0 and no_provider == []
+
+    written = recertify.write_recertified(
+        bundle, rec, candidates_root=tmp_path / "repaired", prompts=load_manifests(PROMPTS),
+        seal_commit="c" * 40,
+    )
+    assert verify_bundle(written, LANE_R) is not None
+    after = {e["unit_id"]: e for e in json.loads((written / "dispositions.json").read_text())["dispositions"]}
+    before = {e["unit_id"]: e for e in json.loads((bundle / "dispositions.json").read_text())["dispositions"]}
+    assert after[unit]["disposition"] in kept and before[unit]["disposition"] == "SUPERSEDE_REDUNDANT"
+    assert {k: v for k, v in after.items() if k != unit} == {k: v for k, v in before.items() if k != unit}

@@ -356,6 +356,16 @@ def validation_defects(
                 "details": details,
                 "failures": own_failures,
             }
+            # A must-correct failure (BC-18) owes one specific correction: the quote is the text a
+            # repair must stop printing and the instruction is what the source says instead. Both
+            # are fields of the failure record, copied here only when present, so every other
+            # check's defect record is unchanged.
+            owed = [f for f in own_failures if f.get("quote")]
+            if owed:
+                record["quote"] = owed[0]["quote"]
+                record["instruction"] = " ".join(
+                    dict.fromkeys(str(f.get("instruction") or "") for f in owed)
+                ).strip()
             defects.append(
                 Defect(
                     defect_fingerprint(

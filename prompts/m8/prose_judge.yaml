@@ -1,0 +1,164 @@
+# M8: the narrow, prose-only judge (TC-023). Three independent prompt shapes -- a four-category
+# classification, a whole-section pairwise benchmark comparison, and the M8-S type-paraphrase
+# sub-question -- each self-contained and never combined into one call. None of the three is
+# given a facts packet or source code: the whole point of M8 is to take ONLY prose-quality
+# judgement away from the old monolithic reviewer (see
+# src/repo_presenter/readme/review/independent_reviewer.py and
+# src/repo_presenter/readme/review/llm_review.py for that reviewer's own, much larger packet);
+# facts, claims and structure move to separate deterministic mechanisms this file has nothing to
+# do with.
+#
+# NOT yet loaded through core.llm.prompts.load_manifests(): that loader's JOB_STAGES dict names
+# exactly six existing jobs (repository_investigation, source_reconciliation,
+# presentation_planning, section_authoring, independent_review, targeted_repair) and fails the
+# whole prompts/ directory closed if it finds any other file there (see
+# src/repo_presenter/core/llm/prompts.py::load_manifests -- its "holds files that are not job
+# manifests" check). Giving M8 its own place in that governed registry (a seventh job id, or a
+# separate registry entirely) is a decision for the future, separately budgeted card that wires
+# M8's first live provider call (see TC-023's own scope note: this card deliberately makes none).
+# This file is loaded only by this card's own small, local loader
+# (repo_presenter.readme.review.prose_judge.load_prose_judge_prompts), which validates its shape
+# and model_route and nothing else; it is inert until that future wiring exists.
+model_route: qwen3-next
+route_rationale: >-
+  Owner ruling (binding, project-wide, 2026-10-27): qwen3-next is the only model route for any
+  product model call in this repository. The previously withdrawn model is eliminated
+  project-wide; no second model route is ever introduced here, including for M8.
+
+classification:
+  purpose: >-
+    Classify ONE prose line or span of a candidate README into exactly one of four defect
+    categories, or none of them. The model is shown only the span itself and the category
+    definitions below -- no facts packet, no source code, no other section of the candidate, no
+    pairwise or paraphrase question in the same call.
+  categories:
+    promotional: >-
+      Marketing language a neutral technical document would not carry (superlatives, sales
+      framing, unearned enthusiasm) in place of a factual description of what the project does.
+      A comparison to other tools is NOT by itself promotional when it states a specific,
+      verifiable technical fact (what a step requires, what a format needs, what an API call
+      does) rather than a subjective claim of superiority -- for example, "most libraries
+      require X; this one does not" describes a concrete technical difference and is not
+      promotional merely for mentioning other libraries. Only mark it promotional when the
+      comparison itself is vague, unverifiable, or uses evaluative language ("better",
+      "faster", "superior") rather than a specific, checkable fact.
+    generic_template: >-
+      Boilerplate that reads as if generated for any project and not specific to this one --
+      true of nothing in particular about this repository, or equally true of every repository.
+    incoherent: >-
+      The span does not parse as a sentence a reader could act on: a dangling clause, a
+      non-sequitur, or a sentence that contradicts itself within its own bounds.
+    misleading_framing: >-
+      Not a factual falsehood (a separate, deterministic mechanism already checks that) but a
+      framing of a true fact that a reasonable reader would misjudge -- for example implying a
+      feature is unique to this project when nothing supports that, or implying an optional step
+      is required.
+    none: The span exhibits none of the above; no category applies.
+  sampling:
+    temperature: 0.0
+    max_output_tokens: 200
+    seed: 1
+    response_format: json_schema
+  system: >-
+    You judge the prose quality of one short span from a software project's README. You are not
+    asked whether anything in it is factually true -- only whether it reads as promotional,
+    generic template filler, incoherent, or misleadingly framed, by the definitions you are given.
+    Pick exactly one category, or "none" if no category fits.
+  user_template: |-
+    Span to classify:
+    ---
+    ${span_text}
+    ---
+    Return your answer as the single required field of the output schema.
+  output:
+    schema:
+      type: object
+      required: [category]
+      additionalProperties: false
+      properties:
+        category:
+          enum: [promotional, generic_template, incoherent, misleading_framing, none]
+
+pairwise_benchmark_comparison:
+  purpose: >-
+    For one whole section, answer a single yes/no pairwise question: is this section at least as
+    clear and usable as the benchmark's section of the same purpose? No facts packet, no source
+    code, no classification or paraphrase question in the same call.
+  sampling:
+    temperature: 0.0
+    max_output_tokens: 150
+    seed: 1
+    response_format: json_schema
+  system: >-
+    You compare two README sections that serve the same purpose: one from a candidate document,
+    one from a benchmark reference. Answer only whether the candidate's section is at least as
+    clear and usable as the benchmark's -- not whether either is factually accurate. Clarity and
+    usability include the ORDER the parts appear in, not only whether the same information is
+    present: a section is NOT at least as clear if a sentence, command, or step appears in a
+    place that would confuse a reader following it in order -- for example, a command printed
+    before the sentence that introduces what the command does, or a step described after a
+    later step that depends on it. Read both sections top to bottom as a reader would, and judge
+    whether the candidate's order of presentation is at least as easy to follow, in addition to
+    containing at least as much of the same content.
+  user_template: |-
+    Purpose both sections serve: ${purpose}
+
+    Candidate section:
+    ---
+    ${candidate_section}
+    ---
+
+    Benchmark section:
+    ---
+    ${benchmark_section}
+    ---
+    Is the candidate section at least as clear and usable as the benchmark section?
+  output:
+    schema:
+      type: object
+      required: [at_least_as_good]
+      additionalProperties: false
+      properties:
+        at_least_as_good:
+          type: boolean
+
+m8s_paraphrase_check:
+  purpose: >-
+    For one inherited type description that is NOT backed by a full docstring fact, answer a
+    single yes/no question: is the description a fair paraphrase of the type's real signature
+    shown beside it? No facts packet, no source code beyond the one signature, no other question
+    in the same call.
+  sampling:
+    temperature: 0.0
+    max_output_tokens: 150
+    seed: 1
+    response_format: json_schema
+  system: >-
+    You check one inherited description of a type against that type's real signature. Answer
+    only whether the description is a fair paraphrase of the signature -- not whether the type is
+    useful, well-named, or anything else. A bare signature (a name and its parameters) rarely
+    spells out behavior in words, so judge whether the description is a PLAUSIBLE, NON-
+    CONTRADICTORY characterization of what the name and parameters suggest -- not whether the
+    signature's own text already states every word of the description. Answer true (fair
+    paraphrase) whenever the description is consistent with the name and parameters, even if it
+    adds detail the signature alone does not spell out; answer false only when the description
+    claims something the name or parameters contradict, or describes a clearly unrelated type.
+  user_template: |-
+    Description as the candidate states it:
+    ---
+    ${description}
+    ---
+
+    The type's real signature:
+    ---
+    ${real_signature}
+    ---
+    Is the description a fair paraphrase of the real signature?
+  output:
+    schema:
+      type: object
+      required: [fair_paraphrase]
+      additionalProperties: false
+      properties:
+        fair_paraphrase:
+          type: boolean

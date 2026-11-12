@@ -45,7 +45,8 @@ loop used to repair S4 defects only -- widened to every stage ``repair_defect`` 
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
+import sys
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
@@ -98,6 +99,7 @@ from repo_presenter.readme.investigation.dossier import (
     investigation_schema,
     write_investigation,
 )
+from repo_presenter.readme.reconciliation.destinations import holdable_sections
 from repo_presenter.readme.reconciliation.dispositions import (
     coordinate_neighbor_promises,
     merge_dispositions,
@@ -117,6 +119,12 @@ from repo_presenter.readme.repair.accounting import (
     Accounted,
     account_unprinted_units,
     accounting_document,
+)
+from repo_presenter.readme.repair.restore_units import (
+    choose_units,
+    failing_unit_ids,
+    restore_lost_units,
+    vacated_sections,
 )
 from repo_presenter.readme.repair.targeted import (
     MAX_SETTLE_ROUNDS,
@@ -403,14 +411,33 @@ def _compose(
     *, entry: RegistryEntry, document: FactsDocument, investigation: dict, ecosystem: str,
     tree_paths: list[str], original_bytes: bytes, out_dir: Path, prompts: PromptRegistry,
     config: GatewayConfig, ledger: Ledger, store: CallStore, context: JobContext,
+    dispositions_override: dict[str, Any] | None = None,
 ) -> _Composition:
     """S4 through S8, then account for the kept units the render does not print (S9).
 
     Every artifact lands in ``out_dir``; a repaired S4 batch is read back from the call store, so
-    a second pass asks the provider only for what the repair changed."""
+    a second pass asks the provider only for what the repair changed.
+
+    ``dispositions_override``, when given, is used in place of a fresh ``_run_reconciliation``
+    call (zero provider calls for S4). Without it, a recompose that follows a zero-call restore
+    (``_restore_lost_content``) silently discards that restore's reshaping and rebuilds S4 from
+    raw reconciliation output -- the ONLY two states ``_run_reconciliation`` itself ever produces
+    for a fixed document, so a restore that merged a split authoring task back into one (the
+    shape a later repair's call-store key was computed against) is undone the moment the next
+    round recomposes, orphaning the repair under a hash the re-split recompose never looks up
+    again. Measured live on Aspose.Slides-FOSS-for-Cpp: restore merged two "opening" authoring
+    tasks into one, a model-review repair was accepted and stored under that merged task's key,
+    then the next S10 recompose rebuilt "opening" as two tasks again from raw dispositions,
+    neither matching the repair's key -- the rendered README, and the review call made against
+    it, both reverted to the pre-repair text, and the already-rejected candidate's review
+    verdict came back from cache byte-identical to the one the repair was meant to fix."""
     common = {"config": config, "ledger": ledger, "store": store, "context": context}
-    dispositions = _run_reconciliation(
-        entry=entry, document=document, investigation=investigation, prompts=prompts, **common
+    dispositions = (
+        dispositions_override
+        if dispositions_override is not None
+        else _run_reconciliation(
+            entry=entry, document=document, investigation=investigation, prompts=prompts, **common
+        )
     )
     write_dispositions(dispositions, out_dir / "dispositions.json")
     # What the planning, authoring and coherence calls are made from. dispositions.json is
@@ -510,13 +537,70 @@ def _settle_defects(
             repairer=repairer,
         ),
     ]
-    return [defect for defect in found if defect.repairable]
+    repairable = [defect for defect in found if defect.repairable]
+    return _without_restorable(repairable, composed=composed, document=document)
+
+
+def _without_restorable(
+    defects: list[Defect], *, composed: _Composition, document: FactsDocument
+) -> list[Defect]:
+    """Leave out what the zero-call restore (``_restore_lost_content``) answers, so the model is
+    asked only about what restore cannot fix. A BC-05/BC-08/BC-17 failure line naming an inherited
+    unit that ``restore_lost_units`` can keep verbatim is dropped from its defect (a defect left
+    with no failure line is dropped whole). Hosted Aspose.3D-FOSS-for-TypeScript (head 98a10a9) sent
+    ~45 such maintainers' member-table defects, two calls each, every one rejected, and spent the
+    100-call invocation budget before the restore could run."""
+    named: dict[int, dict[str, list[str]]] = {}
+    for index, defect in enumerate(defects):
+        if defect.source != "validation" or defect.label not in RESTORABLE_CHECKS:
+            continue
+        failures = defect.record.get("failures") or []
+        lines = [str(f.get("detail", "")) for f in failures] or [
+            str(d) for d in defect.record.get("details") or []
+        ]
+        named[index] = {
+            line: failing_unit_ids([f"{defect.label}: {line}"], checks=(defect.label,))
+            for line in lines
+        }
+    every = list(dict.fromkeys(u for lines in named.values() for ids in lines.values() for u in ids))
+    if not every:
+        return defects
+    included = [
+        section["section_id"] for section in composed.plan.get("sections", []) if section.get("include")
+    ]
+    _, changes = restore_lost_units(
+        composed.dispositions, document, every, holdable_sections(document), included
+    )
+    restorable = {change["unit_id"] for change in changes}
+    if not restorable:
+        return defects
+    kept: list[Defect] = []
+    for index, defect in enumerate(defects):
+        lines = named.get(index)
+        if lines is None:
+            kept.append(defect)
+            continue
+        answered = {
+            line for line, ids in lines.items() if ids and all(unit in restorable for unit in ids)
+        }
+        if not answered:
+            kept.append(defect)
+            continue
+        if len(answered) == len(lines):
+            continue  # every line of this defect is a restore's to answer
+        record = dict(defect.record)
+        record["failures"] = [
+            f for f in record.get("failures") or [] if str(f.get("detail", "")) not in answered
+        ]
+        record["details"] = [d for d in record.get("details") or [] if str(d) not in answered]
+        kept.append(replace(defect, record=record))
+    return kept
 
 
 def _repair_defects(
     *, defects: list[Defect], composed: _Composition, investigation: dict, entry: RegistryEntry,
     document: FactsDocument, prompts: PromptRegistry, config: GatewayConfig, ledger: Ledger,
-    store: CallStore, context: JobContext, repairs: RepairLedger,
+    store: CallStore, context: JobContext, repairs: RepairLedger, benchmark: str = "",
 ) -> bool:
     """One targeted repair per fresh defect, each a ``run_job`` call routed by its own causal
     stage (``repair.loop.repair_defect``: S4's per-unit patch, S5's plan revision, or S6's section
@@ -535,7 +619,7 @@ def _repair_defects(
             else composed.dispositions
         ),
         plan=composed.plan, tasks=composed.tasks, name=product_name(entry),
-        readme=composed.readme, units=composed.coherent_units,
+        readme=composed.readme, units=composed.coherent_units, benchmark=benchmark,
     )
     fresh = merge_equivalent([d for d in defects if not repairs.attempted(d.fingerprint)])
     for defect in defects:
@@ -561,9 +645,15 @@ def _settle_s9(
     tree_paths: list[str], original_bytes: bytes, original: str, out_dir: Path,
     prompts: PromptRegistry, config: GatewayConfig, ledger: Ledger, store: CallStore,
     context: JobContext, repairs: RepairLedger, max_rounds: int,
+    dispositions_override: dict[str, Any] | None = None,
 ) -> _Settled:
     """Compose, validate and review deterministically, repairing S4 defects, until nothing fresh
-    is repairable or ``max_rounds`` passes have been made. No model reviews here (S10 follows)."""
+    is repairable or ``max_rounds`` passes have been made. No model reviews here (S10 follows).
+
+    ``dispositions_override`` carries a prior round's zero-call restore into this call's FIRST
+    ``_compose`` only (see ``_compose``'s own docstring) -- an S4 defect repaired during THIS
+    call's own loop (below) genuinely changes dispositions, so every round after the first goes
+    back to a fresh ``_run_reconciliation``, exactly as before this parameter existed."""
     rounds = 0
     while True:
         rounds += 1
@@ -571,6 +661,7 @@ def _settle_s9(
             entry=entry, document=document, investigation=investigation, ecosystem=ecosystem,
             tree_paths=tree_paths, original_bytes=original_bytes, out_dir=out_dir,
             prompts=prompts, config=config, ledger=ledger, store=store, context=context,
+            dispositions_override=dispositions_override if rounds == 1 else None,
         )
         candidate = _candidate(
             entry, document, composed.plan, composed.coherent_units, composed.dispositions,
@@ -584,6 +675,19 @@ def _settle_s9(
         write_review_verdict(verdict, out_dir / REVIEW_VERDICT_FILENAME)
         if rounds >= max_rounds:
             break
+        # Zero-call restore BEFORE any model repair: when the only blocking failures are content
+        # the restore keeps verbatim, the candidate is settled without asking the model anything.
+        restored = _restore_lost_content(
+            _Settled(composed, validation, verdict, rounds), entry=entry, document=document,
+            investigation=investigation, tree_paths=tree_paths, original=original, out_dir=out_dir,
+            require_clean_review=True,
+        )
+        if restored.composed is not composed:
+            if not blocking_failures(restored.validation):
+                return restored
+            # A PARTIAL restore (fewer blocking failures, none new) is the improved candidate the
+            # model repair continues from; the S9 loop recomposes and the final restore re-applies.
+            composed, validation, verdict = restored.composed, restored.validation, restored.verdict
         defects = _settle_defects(
             composed=composed, validation=validation, verdict=verdict, entry=entry,
             document=document, prompts=prompts,
@@ -591,10 +695,193 @@ def _settle_s9(
         if not defects or not _repair_defects(
             defects=defects, composed=composed, investigation=investigation, entry=entry,
             document=document, prompts=prompts, config=config, ledger=ledger, store=store,
-            context=context, repairs=repairs,
+            context=context, repairs=repairs, benchmark=original,
         ):
             break
     return _Settled(composed, validation, verdict, rounds)
+
+
+#: The blocking checks a zero-call restore can answer: content the published README prints that the
+#: settled candidate lost (BC-17), a superseded unit whose replacement does not carry it (BC-05), and
+#: a ``VERIFIED_REWRITE`` unit whose kept command/example the render does not print (BC-08, answered
+#: by returning that unit to ``VERIFIED_PRESERVE``; hosted PDF Go ``025.paragraph``).
+#: A candidate that also fails any other blocking check is left exactly as it was.
+RESTORABLE_CHECKS = frozenset({"BC-05", "BC-08", "BC-17"})
+#: Checks that move with the printed content (the line budget and fence rules): a restore may change
+#: them either way, so ``_strictly_fewer_failures`` holds them to "no more details than before". The
+#: restore gate itself no longer lists them -- any restorable failure now starts a restore.
+RESTORE_COMPANION_CHECKS = frozenset({"BC-07"})
+RESTORED_UNITS_FILENAME = "restored_units.json"
+
+
+def _strictly_fewer_failures(old: list[dict[str, Any]], new: list[dict[str, Any]]) -> bool:
+    """Whether ``new`` blocking failures are a strict improvement on ``old``: no check id outside the
+    old set, no restorable-check item (BC-05/BC-08/BC-17 detail) outside the old items, no companion
+    check (BC-07) with more details than before, and at least one item or check id cleared."""
+    old_ids = {str(check["id"]) for check in old}
+    new_ids = {str(check["id"]) for check in new}
+    if not new_ids <= old_ids:
+        return False
+
+    def items(checks: list[dict[str, Any]]) -> set[tuple[str, str]]:
+        return {
+            (str(check["id"]), str(detail))
+            for check in checks if str(check["id"]) in RESTORABLE_CHECKS
+            for detail in check.get("details") or [str(check.get("message", ""))]
+        }
+
+    def sizes(checks: list[dict[str, Any]]) -> dict[str, int]:
+        return {
+            str(check["id"]): len(check.get("details") or [1])
+            for check in checks if str(check["id"]) not in RESTORABLE_CHECKS
+        }
+
+    old_items, new_items = items(old), items(new)
+    old_sizes, new_sizes = sizes(old), sizes(new)
+    if not new_items <= old_items or any(n > old_sizes.get(i, 0) for i, n in new_sizes.items()):
+        return False
+    return new_items < old_items or new_ids < old_ids or any(
+        new_sizes.get(i, 0) < n for i, n in old_sizes.items()
+    )
+
+
+def _restore_lost_content(
+    settled: _Settled, *, entry: RegistryEntry, document: FactsDocument, investigation: dict,
+    tree_paths: list[str], original: str, out_dir: Path, require_clean_review: bool = False,
+) -> _Settled:
+    """TC-019c: when the settled candidate fails a restorable check (BC-05/BC-08/BC-17), keep the units
+    they name (``readme.repair.restore_units``: the remedy those checks' own text states), re-render
+    from the same plan and authored units, and re-judge with the unchanged validators and the
+    deterministic reviewer rules. Zero provider calls: the stored plan, authored and coherent units
+    are reused, as ``recertify`` reuses a sealed bundle's. Returns ``settled`` unchanged unless a
+    restore changed something and either left no blocking failure, or strictly shrank them without
+    adding a check id, growing a non-restorable check, or adding a blocking review finding (a PARTIAL
+    restore: the restorable content is back and only what restore cannot answer goes on to the repair
+    loop) -- so a run that this cannot improve behaves exactly as it did before, and the checks are
+    never weakened."""
+    from repo_presenter.recertify import RESTORE_ROUNDS
+
+    composed = settled.composed
+    failing = blocking_failures(settled.validation)
+    failing_ids = {str(check["id"]) for check in failing}
+    if not failing_ids & RESTORABLE_CHECKS:
+        return settled
+    # A non-restorable check failing beside the restorable ones (BC-02's unproven build command,
+    # say) used to rule the whole restore out, which stranded the restorable losses: they are not
+    # sent to the model (``_without_restorable``), so nothing could ever recover them (measured: Cells
+    # Cpp, BC-02 + BC-05 + BC-17 on inherited_unit:010.list/041/044, no restore ever ran). The restore
+    # now runs for the restorable part regardless; ``_strictly_fewer_failures`` below keeps the result
+    # only when no new check id appears, no non-restorable check grows, and something is cleared, so
+    # the surviving non-restorable defects go on to the repair loop with the content already back.
+    holdable = holdable_sections(document)
+    included = [
+        section["section_id"] for section in composed.plan.get("sections", []) if section.get("include")
+    ]
+    dispositions = composed.dispositions
+    restored: list[dict[str, str]] = []
+    skipped: list[dict[str, str]] = []
+    readme, tasks, accounted = composed.readme, composed.tasks, composed.accounted
+    validation, verdict = settled.validation, settled.verdict
+    for _round in range(RESTORE_ROUNDS):
+        details = [
+            f"{check['id']}: {detail}" for check in failing for detail in check.get("details") or []
+        ]
+        unit_ids = choose_units(
+            details, document, [change["unit_id"] for change in restored],
+            mandatory_checks=("BC-05", "BC-08"), exclude=[s["unit_id"] for s in skipped],
+        )
+        if not unit_ids:
+            break
+        dispositions, changes = restore_lost_units(
+            dispositions, document, unit_ids, holdable, included, skipped=skipped
+        )
+        if not changes:
+            dispositions, changes = restore_lost_units(
+                dispositions, document, unit_ids, holdable, included, include_api_tables=True,
+                skipped=skipped,
+            )
+        if not changes:
+            break
+        restored.extend(changes)
+        readme = render_readme(entry, document, composed.plan, composed.coherent_units, dispositions)
+        tasks = authoring_tasks(
+            entry, document, investigation, dispositions, composed.plan,
+            restored_out=vacated_sections(restored),
+        )
+        candidate = _candidate(
+            entry, document, composed.plan, composed.coherent_units, dispositions, readme,
+            tree_paths, tasks, benchmark=original,
+        )
+        accounted_dispositions, accounted = account_unprinted_units(candidate)
+        if accounted and render_readme(
+            entry, document, composed.plan, composed.coherent_units, accounted_dispositions
+        ) == readme:
+            dispositions = accounted_dispositions
+        else:
+            accounted = []
+        candidate = _candidate(
+            entry, document, composed.plan, composed.coherent_units, dispositions, readme,
+            tree_paths, tasks, benchmark=original,
+        )
+        validation = validate_candidate(candidate, out_dir, [])
+        verdict = review_candidate(
+            readme_text=readme, units=composed.coherent_units.get("units", []), facts=document,
+            dispositions=dispositions, original_readme=original,
+        )
+        failing = blocking_failures(validation)
+        if not failing:
+            break
+    if restored and failing:
+        # Observation only: say what the restore did and what it could not clear, so a rescue that
+        # fell short is diagnosable from the run log instead of guessed at.
+        print(
+            f"restore: {len(restored)} unit(s) restored but blocking still fails: "
+            + "; ".join(str(c['id']) + ' ' + '|'.join(str(d)[:140] for d in (c.get('details') or [])[:3]) for c in failing),
+            file=sys.stderr,
+        )
+    if not restored:
+        return settled
+    if failing:
+        # Partial restore: kept only when the blocking failures strictly shrink and nothing outside
+        # the old set appears (BC-07 must not newly fail), and the deterministic review gains no
+        # blocking finding. Otherwise the candidate is left exactly as it was.
+        if not _strictly_fewer_failures(blocking_failures(settled.validation), failing) or len(
+            verdict.blocking_findings
+        ) > len(settled.verdict.blocking_findings):
+            return settled
+    elif require_clean_review and verdict.blocking_findings:
+        return settled  # the S9 loop still has review defects to repair; write nothing yet
+    write_dispositions(dispositions, out_dir / "dispositions.json")
+    (out_dir / ACCOUNTING_FILENAME).write_text(
+        json.dumps(accounting_document(accounted), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
+    (out_dir / "README.coherent.md").write_text(readme, encoding="utf-8", newline="\n")
+    (out_dir / "README.patch.diff").write_text(
+        render_patch(original, readme), encoding="utf-8", newline="\n"
+    )
+    (out_dir / RESTORED_UNITS_FILENAME).write_text(
+        json.dumps({"restored": restored, "skipped_for_pointer": skipped}, indent=2, sort_keys=True)
+        + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
+    write_review_verdict(verdict, out_dir / REVIEW_VERDICT_FILENAME)
+    return _Settled(
+        replace(
+            composed,
+            dispositions=dispositions,
+            # Restore's reshaping becomes the new planning baseline too, not just the render-time
+            # value: a recompose that follows this restore (``_settle_s9``'s ``dispositions_override``)
+            # must see the SAME disposition shape ``tasks`` was built from here, or it re-derives
+            # authoring tasks from the stale pre-restore shape and orphans anything keyed against
+            # this one (e.g. a restore-merged section repaired at S10).
+            planned_dispositions=dispositions,
+            readme=readme, tasks=tasks, accounted=accounted,
+        ),
+        validation, verdict, settled.rounds,
+    )
 
 
 def _review_defects(
@@ -732,7 +1019,11 @@ def run_cascade(
         "ledger": ledger, "store": store, "context": context, "repairs": repairs,
         "max_rounds": max_rounds,
     }
-    settled = _settle_s9(**settle)
+    restoring = {
+        "entry": entry, "document": document, "investigation": investigation,
+        "tree_paths": tree_paths, "original": original, "out_dir": out_dir,
+    }
+    settled = _restore_lost_content(_settle_s9(**settle), **restoring)
     rounds = settled.rounds
     verdict = settled.verdict
     review_rounds = 0
@@ -756,11 +1047,26 @@ def run_cascade(
         if not defects or not _repair_defects(
             defects=defects, composed=settled.composed, investigation=investigation, entry=entry,
             document=document, prompts=prompts, config=config, ledger=ledger, store=store,
-            context=context, repairs=repairs,
+            context=context, repairs=repairs, benchmark=original,
         ):
             break
         review_rounds += 1
-        settled = _settle_s9(**settle)
+        # Carry the restore's own planning baseline into the recompose (_settle_s9's docstring):
+        # this round's repair was keyed against settled.composed's tasks, which already reflect
+        # whatever _restore_lost_content reshaped (e.g. a split section merged into one) --
+        # planned_dispositions, not dispositions, because the latter also carries this round's
+        # accounting (readme.repair.accounting), an output-only adjustment planning/authoring
+        # were never run against; feeding it back in as if it were would mismatch the packet
+        # _run_planning/_run_authoring already cached and force a needless fresh call. A plain
+        # fresh _settle_s9(**settle) call (no override at all) forgets the restore's reshaping,
+        # rebuilds S4 from raw reconciliation, and silently orphans the repair under a task shape
+        # nothing looks up again (measured live, Aspose.Slides-FOSS-for-Cpp: a repaired "opening"
+        # never reached the rendered README because the recompose re-split it before authoring
+        # ran).
+        settled = _restore_lost_content(
+            _settle_s9(**settle, dispositions_override=settled.composed.planned_dispositions),
+            **restoring,
+        )
         rounds += settled.rounds
         verdict = settled.verdict
     composed, validation = settled.composed, settled.validation

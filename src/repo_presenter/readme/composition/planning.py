@@ -30,6 +30,7 @@ from typing import Any
 from urllib.parse import unquote
 
 from repo_presenter.core.facts import (
+    EVIDENCE_ONLY_KINDS,
     FACT_KINDS,
     POLARITIES,
     FactsDocument,
@@ -248,6 +249,19 @@ def _examples_summary(facts: FactsDocument) -> dict[str, Any]:
     }
 
 
+def packet_fact_kinds(manifest: PromptManifest) -> tuple[str, ...]:
+    """The fact kinds the planner is shown AND may cite: the manifest's own list, or - when it
+    names none - every kind EXCEPT the evidence-only source-detail kinds (``EVIDENCE_ONLY_KINDS``:
+    implementation, project_file, internal_symbol, ... they can number in the thousands and are
+    evidence a validator binds to, never composition input). Falling back to every kind put ~0.8M
+    tokens of them in Words .NET's planning request (gateway HTTP 400, 2026-11-10; planning calls
+    that succeeded were 224-235k tokens). The packet and the citable-ID enum share this one
+    function so they can never disagree about what the plan may cite."""
+    if manifest.packet.fact_kinds:
+        return tuple(manifest.packet.fact_kinds)
+    return tuple(kind for kind in FACT_KINDS if kind not in EVIDENCE_ONLY_KINDS)
+
+
 def planning_packet(
     entry: RegistryEntry,
     facts: FactsDocument,
@@ -263,7 +277,7 @@ def planning_packet(
     shell = [
         {**section, "condition_holds": conditions[section["id"]]} for section in shell_packet()
     ]
-    kinds = manifest.packet.fact_kinds or FACT_KINDS
+    kinds = packet_fact_kinds(manifest)
     return {
         "repository": entry.repository,
         "facts": _capped_facts(facts, kinds),
@@ -313,7 +327,7 @@ def citable_fact_ids(
 ) -> list[str]:
     """Every fact ID a plan may write, sorted."""
     supported = {fact.id for fact in facts.facts if fact.polarity == "SUPPORTED"}
-    kinds = manifest.packet.fact_kinds or FACT_KINDS
+    kinds = packet_fact_kinds(manifest)
     shown = {record["id"] for record in _capped_facts(facts, kinds)}
     shown.update(_examples_summary(facts)["verified_ids"])
     shown.update(r["id"] for records in _verified_formats(facts).values() for r in records)
@@ -518,6 +532,9 @@ def _apply_links(output: dict[str, Any], missing: list[Any]) -> None:
     output["links"] = [*output.get("links", []), *missing]
 
 
+_CORRECTED_LIST_DISPOSITIONS = frozenset({"CORRECT_WITH_EVIDENCE"})
+
+
 def _kept_list_links(
     output: dict[str, Any], facts: FactsDocument, dispositions: dict[str, Any] | None
 ) -> dict[str, str]:
@@ -538,17 +555,35 @@ def _kept_list_links(
         for link in output.get("links", [])
         if link.get("section_id") == "documentation_resources"
     }
+    values = {
+        fact.id: fact.value for fact in facts.by_kind("link_target") if fact.polarity == "SUPPORTED"
+    }
     required: dict[str, str] = {}
     for entry in dispositions.get("dispositions", []):
         unit = str(entry.get("unit_id", ""))
+        disposition = entry.get("disposition")
+        # A list the model CORRECTED (VERIFIED_REWRITE is covered by _required_link_sections) is
+        # still a list of links: Documentation and Resources is the only section that prints a
+        # link bullet, so a corrected docs list filed under any other section (Cells Go's
+        # 055.list, corrected into scope_limitations) loses every link the plan did not already
+        # carry. Only the links the unit's own text prints count (a fact cited purely as evidence
+        # is not a link to print).
+        corrected = disposition in _CORRECTED_LIST_DISPOSITIONS
         if (
-            entry.get("disposition") not in PLACED
-            or entry.get("destination_section") != "documentation_resources"
+            not (
+                (disposition in PLACED and entry.get("destination_section") == "documentation_resources")
+                or corrected
+            )
             or not unit.endswith(".list")
             or len(list_items(texts.get(unit, ""))) < 2
         ):
             continue
-        targets = [str(i) for i in entry.get("fact_ids") or [] if str(i) in assignable]
+        targets = [
+            str(i)
+            for i in entry.get("fact_ids") or []
+            if str(i) in assignable
+            and (not corrected or values.get(str(i), "") in texts.get(unit, ""))
+        ]
         if planned_here.intersection(targets):
             required.update(dict.fromkeys(targets, "documentation_resources"))
     return required
@@ -603,6 +638,67 @@ def _placed_into(dispositions: dict[str, Any] | None, section: str) -> bool:
         entry.get("disposition") in PLACED and entry.get("destination_section") == section
         for entry in dispositions.get("dispositions", [])
     )
+
+
+def _settle_excluded_link_sections(
+    output: dict[str, Any],
+    facts: FactsDocument,
+    included: set[str],
+    *,
+    protected: set[str],
+) -> bool:
+    """Settle a model-chosen link assignment to a section the plan itself excludes, rather than
+    rejecting the whole plan twice (3D TypeScript: links assigned to ``quick_start`` and
+    ``additional_examples`` while both were excluded).
+
+    A link renders only in ``documentation_resources`` (plus the kept lists reconciliation places),
+    so the assignment names a home the plan does not have, not a different decision. In order:
+    a link whose URL another link already carries in an included section is dropped (it is
+    printed there); otherwise it moves to ``documentation_resources`` when that section can hold
+    it (a verified, non-shell link target and the section is not absent for this repository).
+    A link no included section can hold (documentation_resources absent for this repository) is
+    dropped from the assignment rather than failing the plan; an id that is not a verified link
+    target is left as written, so the existing check still rejects it. A link a disposition requires (``protected``) is never touched. Returns whether any
+    assignment changed."""
+    links = output.get("links")
+    if not isinstance(links, list):
+        return False
+    values = {
+        fact.id: fact.value for fact in facts.by_kind("link_target") if fact.polarity == "SUPPORTED"
+    }
+    carried = {
+        values[str(link.get("link_fact_id"))]
+        for link in links
+        if isinstance(link, dict)
+        and link.get("section_id") in included
+        and str(link.get("link_fact_id")) in values
+    }
+    home_open = section_conditions(facts, DEFAULT_POLICY).get("documentation_resources") is not False
+    settled: list[Any] = []
+    changed = False
+    for link in links:
+        target = str(link.get("link_fact_id")) if isinstance(link, dict) else ""
+        if (
+            not isinstance(link, dict)
+            or link.get("section_id") in included
+            or target in protected
+            or target in _SHELL_OWNED_LINKS
+            or target not in values
+        ):
+            settled.append(link)
+            continue
+        if values[target] in carried:
+            changed = True
+            continue
+        if home_open:
+            settled.append({**link, "section_id": "documentation_resources"})
+            carried.add(values[target])
+            changed = True
+            continue
+        changed = True  # no included section can hold it: drop the assignment, not the plan
+    if changed:
+        output["links"] = settled
+    return changed
 
 
 def _documentation_resources_holds(
@@ -810,6 +906,23 @@ def plan_checks(
     link_facts = {
         fact.id: fact.value for fact in facts.by_kind("link_target") if fact.polarity == "SUPPORTED"
     }
+    if _settle_excluded_link_sections(
+        output,
+        facts,
+        included,
+        protected={
+            *_required_link_sections(dispositions),
+            *_kept_list_links(output, facts, dispositions),
+        },
+    ):
+        # The settlement may have given documentation_resources its first link: re-decide it.
+        conditions["documentation_resources"] = _documentation_resources_holds(
+            output, facts, dispositions
+        )
+        output["sections"] = [
+            _decision(section, conditions[section.id]) for section in SEMANTIC_SHELL
+        ]
+        included = {entry["section_id"] for entry in output["sections"] if entry["include"]}
     unrenderable_anchors = _unrenderable_anchor_ids(facts)
     required_link_sections = {
         **_required_link_sections(dispositions),

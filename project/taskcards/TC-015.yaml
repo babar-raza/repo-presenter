@@ -1,0 +1,150 @@
+id: TC-015
+gate: GATE5_DELIVERY_PROGRAM
+track: provider-budget
+executor: worker
+purpose: >
+  Part of the 2026-11-07 delivery program (docs/DELIVERY_PLAN_2026-11-07.md section 8.2, row
+  TC-015; the worker never reads that document, only this card). depends_on: []. Build the
+  provider-call budget gate owner ruling R25 requires: a 9,000-call / 100,000,000-token envelope
+  for the whole delivery program, spent in capped batches, with every zero-inference activity
+  (recertification, deterministic checks, rule-based decisions, cache/store replay) passing
+  through completely uncharged, and every genuine fresh model call refused outright unless an
+  open, un-exhausted batch exists to charge it to.
+
+  Context, self-contained. `data/provider_budget.json` already exists in this repository (written
+  2026-11-07 from the owner's ruling) with this exact shape: top-level `total_calls_cap` (9000),
+  `total_tokens_cap` (100000000), `batch_size_repositories` (6), `per_batch_cap_multiplier` (1.5),
+  `stop_rule_cost_per_sealed_candidate_multiplier` (2.0), `spent: {calls, tokens}` (both 0 today),
+  and `batches: []` (empty today -- no batch has been opened). Read that file verbatim before
+  writing any code against it; do not assume field names, read them. The file's own schema (if
+  you add structure to `batches[]`) should record, per batch: an id, the repositories/lanes it
+  covers, its own calls/tokens cap (= the previous batch's measured calls-per-sealed-candidate x
+  `per_batch_cap_multiplier`, or `total_calls_cap`/`total_tokens_cap` for the very first batch when
+  there is no previous batch to measure from), and running `calls_spent`/`tokens_spent` totals.
+
+  The real provider-call boundary is `src/repo_presenter/core/llm/jobs.py`'s `run_job` function.
+  Read it in full. It already has a genuine cache-hit / fresh-call split: it computes
+  `request_sha256` and calls `store.get(request_sha256)` (around line 611); when that returns a
+  stored value it is a REPLAY (zero network calls, returns at line 660 without ever reaching the
+  retry loop) and must never be charged against the budget. Only when `stored is None`, or the
+  stored output fails re-validation (`cache_stale`, output is None after re-parsing), does the
+  function fall through to the `for ask in (1, 2, 3):` loop (around line 671) and actually call
+  `run_with_retry("llm_call", functools.partial(attempts.call, config, current))` (around line
+  684) -- THIS is the one real product-inference call site in the whole Lane R/L pipeline that
+  this card must gate. Nothing else in the codebase makes a provider call outside this function
+  (confirm this yourself with a repository-wide search for the gateway client / `openai` SDK
+  usage before writing the gate, so you are gating the real boundary, not a guess).
+
+  Build `src/repo_presenter/core/llm/budget.py`, a new module with:
+  (a) An `InferenceClass` enum/Literal with at least `NO_INFERENCE`, `REPLAY`, `SUPERVISORY`,
+      `PRODUCT` (matching docs/DELIVERY_PLAN_2026-11-07.md section 7's four classes; the worker
+      does not need to read that document, this restates the four names and their meaning: a
+      `NO_INFERENCE` activity makes no model call of any kind -- e.g. recertification, rule
+      checks; `REPLAY` is exactly the `run_job` cache-hit path described above; `SUPERVISORY` is
+      a Claude/Codex session doing manual review or prompt-tuning work, never gated by this
+      module at all since it is not a qwen3-next product call; `PRODUCT` is a genuine fresh
+      qwen3-next inference call, the only class this gate ever blocks).
+  (b) A pure function, e.g. `check_budget(budget_path: Path, estimated_tokens: int | None = None)
+      -> None`, that raises a new `BudgetExceededError` (or similar, your naming) when: the budget
+      file at `budget_path` does not exist or does not parse; OR there is no currently-open batch
+      in `batches[]` (an "open" batch is your own definition -- document it in the module's
+      docstring, e.g. the last entry in `batches[]` whose `calls_spent` has not yet reached its own
+      cap); OR the open batch's `calls_spent + 1` would exceed its own calls cap; OR (when
+      `estimated_tokens` is given) `spent.tokens + estimated_tokens` would exceed
+      `total_tokens_cap`, or the open batch's `tokens_spent + estimated_tokens` would exceed its
+      own tokens cap. It must NOT raise, and must do nothing, when called for any class other than
+      `PRODUCT`.
+  (c) A function, e.g. `record_spend(budget_path: Path, calls: int, tokens: int) -> None`, called
+      only after a `PRODUCT` call actually succeeds, that atomically updates `spent.calls`,
+      `spent.tokens`, and the currently-open batch's own running totals, writing the file back
+      with `encoding="utf-8"` and a trailing newline consistent with the file's current
+      formatting (read how other `data/*.json` files in this repository are written, e.g. grep for
+      `json.dumps` call sites that write under `data/`, and match that style -- canonical,
+      sorted-key JSON is this project's convention; confirm by reading one such call site before
+      choosing your own formatting).
+  (d) Wire `run_job` (`src/repo_presenter/core/llm/jobs.py`) so that: the cache-hit/replay path
+      (returns at line ~660) calls neither (b) nor (c) -- it is already exempt by construction,
+      just do not insert a call into that branch; immediately before entering the `for ask in (1,
+      2, 3):` retry loop (i.e. once you know a fresh call is actually about to be attempted), call
+      `check_budget` with the module-level default budget path
+      (`REPO_ROOT / "data" / "provider_budget.json"`, following this file's own existing
+      `REPO_ROOT`-relative path convention -- read the top of `jobs.py` or a sibling module for
+      the exact pattern already used) so a missing or exhausted budget raises BEFORE any network
+      request is made; after a successful `ask` attempt returns a `JobResult` (the `store.put(...)
+      return JobResult(...)` branch around line 702-711), call `record_spend` with the real
+      `prompt_tokens`/`completion_tokens`/`total_tokens` the reply actually reported (these fields
+      already exist on the `CallRecord`/reply objects this function builds -- read how
+      `total_tokens` is computed elsewhere in this file rather than inventing a new source).
+depends_on: []
+write_paths:
+  - src/repo_presenter/core/llm/budget.py
+  - src/repo_presenter/core/llm/jobs.py
+  - tests/core/llm/test_budget.py
+  - tests/core/llm/test_jobs.py
+satisfies:
+  - REQ-BUDGET-001
+source_refs:
+  - file: data/provider_budget.json
+    anchor: "total_calls_cap"
+  - file: src/repo_presenter/core/llm/jobs.py
+    anchor: "def run_job"
+inputs: []
+actions:
+  - "Read data/provider_budget.json verbatim; do not assume its field names."
+  - "Read src/repo_presenter/core/llm/jobs.py's run_job in full, confirming the exact line where
+     the cache-hit/replay path returns and the exact line where a fresh call is about to be made,
+     before writing any gating code."
+  - "Write src/repo_presenter/core/llm/budget.py: the InferenceClass names, check_budget(),
+     record_spend(), and a documented definition of what makes a batch 'open'."
+  - "Wire check_budget() immediately before run_job's fresh-call retry loop, and record_spend()
+     immediately after a successful fresh call, touching no other call site."
+  - "Write tests/core/llm/test_budget.py: unit tests of check_budget()/record_spend() against a
+     fixture budget file (tmp_path, never the real data/provider_budget.json) covering: missing
+     file raises; no open batch raises; a call within an open batch's cap succeeds and
+     record_spend updates spent.calls/tokens and the batch's own running totals; a call that
+     would exceed the open batch's calls or tokens cap raises; total_tokens_cap is independently
+     enforced even if the open batch's own cap has headroom."
+  - "Extend tests/core/llm/test_jobs.py (read its existing fakes for run_job's provider boundary
+     first) with cases proving: a REPLAY (cache-hit) call never touches the budget file at all
+     (no read, no write -- assert this with a budget file that would immediately raise if
+     consulted, or by monkeypatching check_budget to fail the test if called); a fresh PRODUCT
+     call with no budget file present raises before the fake transport is ever invoked (prove the
+     fake transport's call count stays 0); a fresh PRODUCT call within budget succeeds and the
+     budget file's spent totals increase by the fake reply's real token counts."
+checks:
+  - command: |-
+      python -m pytest tests/core/llm/test_budget.py tests/core/llm/test_jobs.py -q
+    expect: exit 0
+    timeout_seconds: 180
+    proves:
+      - REQ-BUDGET-001
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -c "import pathlib; p = pathlib.Path('src/repo_presenter/core/llm/budget.py'); s = p.read_text(encoding='utf-8'); s2 = s.replace('def check_budget', 'def _disabled_check_budget'); p.write_text(s2, encoding='utf-8')"
+  rationale: >
+    Renames the gate function so any call site that still refers to check_budget raises
+    AttributeError/ImportError instead of running the real gate, which the test-collection or
+    test-execution step must then fail on (either test_budget.py's own import breaks, or
+    test_jobs.py's "missing budget file raises before the fake transport is invoked" case stops
+    raising because the gate it depends on no longer runs) -- proving the suite actually exercises
+    the real gate function rather than a code path that happens to pass regardless of whether the
+    gate exists. No backslashes or quote-juggling: a straight substring rename via real Python
+    text replacement, per ops/SUPERVISOR.md's falsifier-authoring rule.
+evidence:
+  - src/repo_presenter/core/llm/budget.py
+  - tests/core/llm/test_budget.py
+  - tests/core/llm/test_jobs.py
+closeout:
+  - "This card gates PRODUCT calls only. It does not open, size, or close any batch in
+     data/provider_budget.json's batches[] list -- that is the supervisor's own ongoing
+     responsibility (per owner ruling R25) as actual batches of repositories are worked, not
+     something this card's code decides unattended."
+  - "Nothing in this card may read, log, or transmit the gateway's own credential values
+     (GPT_OSS_ENDPOINT / GPT_OSS_API_KEY) -- only call counts and token counts the gateway's own
+     reply already reports."
+recovery: "Revert src/repo_presenter/core/llm/budget.py, the jobs.py wiring, and the two test
+  files; data/provider_budget.json's spent/batches fields are unaffected since the gate was never
+  live."

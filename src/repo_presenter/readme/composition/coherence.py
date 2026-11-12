@@ -52,6 +52,7 @@ from repo_presenter.readme.composition.authoring_retry import (
     withdraw_out_of_slot_citations,
 )
 from repo_presenter.readme.composition.components.identity import product_name
+from repo_presenter.readme.composition.text_hygiene import MAX_UNIT_CHARS
 from repo_presenter.readme.composition.output_bounds import (
     largest_slot_citation_count,
     omittable_count,
@@ -350,6 +351,105 @@ def recover_coherence_content_loss(
                 else unit.get("fact_ids", [])
             )
             changed = True
+    return output if changed else None
+
+
+def recover_coherence_overlong_units(
+    output: dict[str, Any], *, existing_units: list[dict[str, Any]]
+) -> dict[str, Any] | None:
+    """Last-resort correction for S8 coherence's own ``run_job`` call: a unit whose revision runs
+    past ``MAX_UNIT_CHARS`` while its own pre-coherence text fits is reverted, in full, to that
+    text and its fact_ids - losing nothing, since the pre-coherence unit already passed every
+    check the revision is being held to.
+
+    Measured live (aspose-slides-foss/Aspose.Slides-FOSS-for-Python, 2026-11-10, batch 1): the
+    ``opening`` unit was 737 characters before coherence; attempt 1 dropped cited facts, attempt 2
+    kept them by piling API names into 2066 characters, past the 1500 cap, and the run died."""
+    units = output.get("units")
+    if not isinstance(units, list):
+        return None
+    existing_by_key = {
+        (str(unit.get("section")), str(unit.get("slot"))): unit for unit in existing_units
+    }
+    changed = False
+    for unit in units:
+        if not isinstance(unit, dict) or len(str(unit.get("text", ""))) <= MAX_UNIT_CHARS:
+            continue
+        existing = existing_by_key.get((str(unit.get("section")), str(unit.get("slot"))))
+        if existing is None or len(str(existing.get("text", ""))) > MAX_UNIT_CHARS:
+            continue
+        unit["text"] = existing.get("text", unit.get("text"))
+        existing_fact_ids = existing.get("fact_ids")
+        if isinstance(existing_fact_ids, list):
+            unit["fact_ids"] = list(existing_fact_ids)
+        changed = True
+    return output if changed else None
+
+
+#: Shortest prose paragraph whose repeat counts as a duplicate: the independent reviewer's
+#: ``duplicate_paragraph`` rule (``review.independent_reviewer.MIN_DUPLICATE_CHARS``) uses the same cut.
+_COHERENCE_MIN_DUPLICATE_CHARS = 120
+
+
+def _normalized_paragraphs(text: str) -> list[str]:
+    """The paragraphs of ``text`` (blank-line separated), whitespace-collapsed and case-folded,
+    keeping only those long enough to be a duplicate defect when repeated."""
+    keys = (" ".join(chunk.casefold().split()) for chunk in re.split(r"\n\s*\n", text))
+    return [key for key in keys if len(key) >= _COHERENCE_MIN_DUPLICATE_CHARS]
+
+
+def recover_coherence_duplicated_units(
+    output: dict[str, Any], *, existing_units: list[dict[str, Any]]
+) -> dict[str, Any] | None:
+    """Last-resort correction for S8 coherence's own ``run_job`` call: a revised unit that now
+    carries a paragraph it did not carry before AND that another unit of the assembled document
+    already prints is reverted, in full, to its pre-coherence text and fact_ids.
+
+    Measured live (Aspose.Email-FOSS-for-Cpp, Lane R, 2026-11-10): coherence rewrote the
+    ``api_reference`` intro into a verbatim copy of an inherited ``mapi_message`` paragraph further
+    down; the independent reviewer then rejected the README (``duplicate_paragraph``, "paragraph
+    occurs 2 times"). The pre-coherence unit never had the problem, so reverting loses nothing."""
+    units = output.get("units")
+    if not isinstance(units, list):
+        return None
+    key_of = lambda unit: (str(unit.get("section")), str(unit.get("slot")))  # noqa: E731
+    existing_by_key = {key_of(unit): unit for unit in existing_units}
+    current: dict[tuple[str, str], str] = {
+        key: str(unit.get("text", "")) for key, unit in existing_by_key.items()
+    }
+    for unit in units:
+        if isinstance(unit, dict):
+            current[key_of(unit)] = str(unit.get("text", ""))
+    changed = False
+    for unit in units:
+        if not isinstance(unit, dict):
+            continue
+        key = key_of(unit)
+        existing = existing_by_key.get(key)
+        if existing is None or str(existing.get("text", "")) == str(unit.get("text", "")):
+            continue
+        had = set(_normalized_paragraphs(str(existing.get("text", ""))))
+        introduced = {
+            paragraph
+            for paragraph in _normalized_paragraphs(str(unit.get("text", "")))
+            if paragraph not in had
+        }
+        if not introduced:
+            continue
+        elsewhere = {
+            paragraph
+            for other_key, text in current.items()
+            if other_key != key
+            for paragraph in _normalized_paragraphs(text)
+        }
+        if not introduced & elsewhere:
+            continue
+        unit["text"] = existing.get("text", unit.get("text"))
+        existing_fact_ids = existing.get("fact_ids")
+        if isinstance(existing_fact_ids, list):
+            unit["fact_ids"] = list(existing_fact_ids)
+        current[key] = str(unit["text"])
+        changed = True
     return output if changed else None
 
 
@@ -742,11 +842,19 @@ def recover_coherence_regressions(
     if slot_fixed is not None:
         output = slot_fixed
         changed = True
+    overlong_fixed = recover_coherence_overlong_units(output, existing_units=existing_units)
+    if overlong_fixed is not None:
+        output = overlong_fixed
+        changed = True
     content_fixed = recover_coherence_content_loss(
         output, existing_units=existing_units, facts=facts
     )
     if content_fixed is not None:
         output = content_fixed
+        changed = True
+    duplicate_fixed = recover_coherence_duplicated_units(output, existing_units=existing_units)
+    if duplicate_fixed is not None:
+        output = duplicate_fixed
         changed = True
     carry_fixed = recover_coherence_carried_units(
         output, existing_units=existing_units, tasks=tasks

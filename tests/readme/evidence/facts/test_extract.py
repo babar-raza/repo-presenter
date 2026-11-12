@@ -118,6 +118,7 @@ def test_facts_document_for_a_local_clone(
         "identity:ecosystem",
         "identity:family",
         "identity:platform",
+        "identity:product-knowledge-refresh",
         "identity:repository",
         "identity:revision",
         "import_path:aspose",
@@ -1413,3 +1414,94 @@ def test_a_registry_less_install_is_admitted_on_the_measured_build_when_no_examp
         fact, CPP_ENTRY, [snippet_failed], MeasuredBuild(False, "", "failed")
     )
     assert refused.polarity == "UNRESOLVED"
+
+
+# --- product_knowledge_refresh: a declared pipeline stage, called from the real entry point ----
+
+
+def test_product_knowledge_refresh_runs_as_part_of_a_normal_facts_extraction(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """CONSOLIDATED_GOALS_2026-11-06.md section 4: the product/platform knowledge refresh must be
+    a declared pipeline stage with its own evidence, not merely an incidental fact kind nothing
+    names. This proves ``extract_facts`` (the real entry point, not a unit test of the function in
+    isolation) actually calls ``product_pages.product_knowledge_refresh`` and records a named,
+    distinctly-tagged artifact for it in the resulting facts document."""
+    from repo_presenter.readme.evidence.facts import product_pages
+
+    monkeypatch.setattr(product_pages, "_REFRESH_CACHE", {})
+    monkeypatch.setattr(
+        python_registry,
+        "fetch_project_json",
+        lambda url, transport=None: httpx.Response(404, json={"message": "Not Found"}),
+    )
+    # A single live platform variant (never ambiguous), matching test_product_pages.py's own
+    # pattern -- an ambiguous enterprise lookup names a family URL that was never itself probed,
+    # which would make this test about that unrelated branch instead of the refresh stage.
+    live = {
+        "https://products.aspose.com/example/python-net/",
+        "https://products.aspose.org/example/python/",
+        "https://products.aspose.org/media/example/python/banner-readme.png",
+    }
+    monkeypatch.setattr(
+        links, "fetch_status", lambda url: (200 if url in live else 404, url)
+    )
+    source = _canary_like_source(tmp_path)
+    clone = pinned_read_only_clone(str(source), tmp_path / "clone")
+    snapshot = capture_snapshot(ENTRY.repository, clone)
+    plugin = plugin_for(ENTRY.ecosystem)
+    tree_paths = list_tree_paths(clone.path)
+
+    document, _ = extract_facts(
+        ENTRY, snapshot, clone.path, tree_paths, plugin, plugin.detect_manifest(clone.path)
+    )
+
+    by_id = {fact.id: fact for fact in document.facts}
+    refresh = by_id[product_pages.REFRESH_FACT_ID]
+    assert refresh.kind == "identity"
+    assert refresh.attributes is not None
+    assert refresh.attributes["stage"] == "product_knowledge_refresh"
+    # First-ever reading for this revision: nothing to have changed from.
+    assert refresh.attributes["changed"] == "false"
+    assert refresh.attributes["product_homepage_status"] == "200"
+    assert refresh.attributes["enterprise_target_status"] == "200"
+    # The ordinary product-page facts are still produced alongside it.
+    assert "link_target:product.homepage" in by_id
+    assert "link_target:product.enterprise" in by_id
+    assert "link_target:product.banner" in by_id
+
+
+def test_product_knowledge_refresh_reports_changed_against_its_own_revisions_cache(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A second extraction of the SAME revision whose live pages now answer differently is
+    reported as changed; re-running the identical extraction again is not."""
+    from repo_presenter.readme.evidence.facts import product_pages
+
+    monkeypatch.setattr(product_pages, "_REFRESH_CACHE", {})
+    monkeypatch.setattr(
+        python_registry,
+        "fetch_project_json",
+        lambda url, transport=None: httpx.Response(404, json={"message": "Not Found"}),
+    )
+    source = _canary_like_source(tmp_path)
+    clone = pinned_read_only_clone(str(source), tmp_path / "clone")
+    snapshot = capture_snapshot(ENTRY.repository, clone)
+    plugin = plugin_for(ENTRY.ecosystem)
+    tree_paths = list_tree_paths(clone.path)
+    manifest = plugin.detect_manifest(clone.path)
+
+    monkeypatch.setattr(links, "fetch_status", lambda url: (200, url))
+    first, _ = extract_facts(ENTRY, snapshot, clone.path, tree_paths, plugin, manifest)
+    first_refresh = {f.id: f for f in first.facts}[product_pages.REFRESH_FACT_ID]
+    assert first_refresh.attributes["changed"] == "false"
+
+    again_unchanged, _ = extract_facts(ENTRY, snapshot, clone.path, tree_paths, plugin, manifest)
+    again_refresh = {f.id: f for f in again_unchanged.facts}[product_pages.REFRESH_FACT_ID]
+    assert again_refresh.attributes["changed"] == "false"
+
+    monkeypatch.setattr(links, "fetch_status", lambda url: (404, url))
+    changed, _ = extract_facts(ENTRY, snapshot, clone.path, tree_paths, plugin, manifest)
+    changed_refresh = {f.id: f for f in changed.facts}[product_pages.REFRESH_FACT_ID]
+    assert changed_refresh.attributes["changed"] == "true"
+    assert changed_refresh.attributes["product_homepage_status"] == "404"

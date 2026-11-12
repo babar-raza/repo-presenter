@@ -1,0 +1,168 @@
+id: TC-017b
+gate: GATE5_DELIVERY_PROGRAM
+track: claim-proof
+executor: worker
+purpose: >
+  Part of the 2026-11-07 delivery program (docs/DELIVERY_PLAN_2026-11-07.md section 8.2, row
+  TC-017b; the worker never reads that document, only this card). depends_on: [TC-017a, TC-016].
+  Close the common-mode gap the main extractor's own facts can create: today's mechanical claim
+  checks largely trust facts the SAME engine produced, so an extractor bug can both write a wrong
+  fact and fail to flag the claim it then wrongly supports. Add (1) a line-provenance classifier
+  distinguishing a printed line's origin, (2) a closed-world rule for generated text and an
+  open-world rule for inherited text, (3) TC-017a's independent probes wired in as a SECOND,
+  non-same-origin signal wherever a claim check currently relies on facts alone, and (4) a ban on
+  generated verification narrative with no real verification record behind it.
+
+  Context, self-contained. `src/repo_presenter/readme/validation/surface_claims.py` (742 lines,
+  module docstring: "BC-14, rules (h)-(m)") already implements several mechanical checks:
+  `type_counts`/`_count_findings` (public-type count mismatches), `_table_findings` plus
+  `_surface_names` (a README API-table row naming a type that does not exist or is not public),
+  `_stub_findings` (a member described as working whose implementation only throws
+  `NotImplemented`/`Unsupported`), `_example_findings` (a CONTRADICTED example fact printed
+  verbatim), `_name_findings`/`_generated_findings`. READ `_surface_names` in full (around line
+  206): it builds its "known names"/"type names" sets ENTIRELY from `facts.facts` -- the same
+  facts document the main extractor produced. This is the common-mode gap: if the extractor's own
+  symbol walk is wrong about what exists or is exported, `_surface_names` inherits that wrongness
+  and `_table_findings` cannot catch a claim that happens to match the wrong fact. TC-017a built
+  independent probes (`src/repo_presenter/acceptance/probes/`: `count`, `exists`, `exported`,
+  each ecosystem, three-valued True/False/None, None never coerced) specifically to give this
+  module a second, genuinely separate signal. Read `src/repo_presenter/readme/validation/claims.py`
+  too (version/publication findings, a different mechanical family, lines ~215-512) to see the
+  existing `ClaimFinding` shape your new findings must match.
+
+  Work item 1 -- line provenance (new module, do not confuse with existing unit/disposition
+  machinery though you should read it first): build
+  `src/repo_presenter/readme/validation/line_provenance.py` exposing a function, e.g.
+  `classify(printed_readme: str, live_readme: str) -> dict[int, Literal["inherited",
+  "generated"]]` (or an equivalent per-line/per-unit mapping -- match whatever granularity
+  `readme/validation/units.py` already uses for the rest of this pipeline; read it first so your
+  classifier's output composes with the existing unit model rather than inventing a parallel
+  one). A line/unit is `inherited` when it is byte-traceable, after whitespace normalization, to
+  a unit of the live README (read `readme/reconciliation/dispositions.py`'s docstring for how
+  "inherited" units are already modeled there, and reuse that notion rather than re-deriving it
+  from raw text diffing if the information is already available to you from the candidate's own
+  dispositions/corrections record). Everything else is `generated`.
+
+  Work item 2 -- closed/open world. For every `generated` line: every checkable token (a number,
+  an identifier naming a surface symbol, a version string, a format name, a platform name, a
+  standard name, a count) must be entailed by either (a) a fact the line's unit already cites
+  (read how `_finding`/`ClaimFinding` already track a citation), or (b) a TC-017a probe answering
+  `True` for the specific question that token asks (e.g. a generated sentence claiming "183
+  public types" is entailed only if `probes.<ecosystem>.count(repo_root, "type") == 183`, not
+  merely because a fact of kind `public_symbol` happens to total 183 -- wire the probe as an
+  ADDITIONAL required signal for generated counts/exists/exported claims, alongside the existing
+  fact-citation check, not a replacement for it). If neither a cited fact nor a probe entails the
+  token, REJECT (a new `ClaimFinding`). For every `inherited` line: never reject merely for lacking
+  a supporting fact (this is the open-world rule -- a true inherited sentence the facts happen not
+  to mention must never be flagged, per goals: preserving maintainer content). An inherited line
+  is rejected ONLY when a fact or a TC-017a probe POSITIVELY CONTRADICTS it (e.g. the probe's
+  `exists`/`exported` returns `False` for a name the inherited sentence asserts exists, or a
+  CONTRADICTED example fact matches it). A probe answering `None` (genuinely unknown) must never
+  by itself justify rejecting an inherited line, and must never by itself justify accepting a
+  generated line's claim either -- `None` means "this check could not help," nothing more.
+
+  Work item 3 -- wire the probes into the existing mechanical checks, specifically:
+  `_table_findings`/`_surface_names` (around lines 206-237): when a README API-table row names a
+  type, check it against the ecosystem's TC-017a `exists`/`exported` probe IN ADDITION to the
+  existing fact-based `_surface_names` set; if the probe says `False` where the facts said the
+  name was fine, that is now itself a finding (the probe caught what the same-origin facts
+  missed) -- read `_table_findings` in full before changing it, to wire this additively rather
+  than replacing the existing, working fact-based check. `type_counts`/`_count_findings`: cross-
+  check a generated count claim against the relevant ecosystem's `probes.<ecosystem>.count(...)`
+  the same way, when the repository's ecosystem is determinable from the facts document (read
+  how ecosystem is already recorded there).
+
+  Work item 4 -- verification-narrative ban. A `generated` line may never state or imply that
+  something was "verified", "tested", "exercised", "confirmed working" (or an equivalent plain-
+  English paraphrase -- use judgement, this is a semantic ban not a fixed keyword list, but start
+  from a small, explicit keyword/phrase set you can point to in the code) unless a real
+  verification record backs it: an `EXECUTED`/`SUPPORTED` example fact with `confidence=1.0`
+  (post-TC-016's TIMED_OUT fix: NOT merely "not UNRESOLVED" -- only a genuinely passed execution
+  counts). Add this as a new finding function in `surface_claims.py` or a sibling module, wired
+  into the same `surface_findings` aggregator (read its signature, around line 732, and match it).
+
+  Test against real cases where you have direct access: the 113-case audit documented in your
+  inherited context (if available) names real class-A (false, mechanically checkable) and
+  class-D (generator-authored, unsupported) cases with file:line evidence, and real class-B
+  cases (true statements the facts happened to miss) that MUST NOT be rejected by your new open-
+  world rule -- if you have access to that material, use it directly; if not, construct synthetic
+  cases mirroring each shape (a wrong type count, a non-existent name in a table row, a stub
+  described as working, an invented "183 public types organized into one module" style generated
+  claim with no fact behind it, and a true-but-unfactual inherited sentence like a correct enum-
+  member list the facts extractor happens not to record) and prove: real false/generated claims
+  are now caught (on-target recall improves measurably over the pre-TC-017b baseline for at least
+  the categories this card adds signal for); the true-but-unfactual inherited sentence is NOT
+  rejected (false-reject stays at or below whatever this suite measured before your change -- it
+  must not regress).
+depends_on:
+  - TC-017a
+  - TC-016
+write_paths:
+  - src/repo_presenter/readme/validation/line_provenance.py
+  - src/repo_presenter/readme/validation/claims.py
+  - src/repo_presenter/readme/validation/surface_claims.py
+  - tests/readme/validation/test_line_provenance.py
+  - tests/readme/validation/test_claims_mechanical.py
+  - tests/readme/validation/test_surface_claims_probes.py
+satisfies:
+  - REQ-CLAIM-001
+  - REQ-CLAIM-002
+  - REQ-CLAIM-003
+source_refs:
+  - file: src/repo_presenter/readme/validation/surface_claims.py
+    anchor: "def _surface_names"
+  - file: src/repo_presenter/readme/validation/surface_claims.py
+    anchor: "def _table_findings"
+  - file: src/repo_presenter/readme/validation/claims.py
+    anchor: "class ClaimFinding"
+  - file: project/taskcards/TC-017a.yaml
+    anchor: "count/exists/exported"
+inputs: []
+actions:
+  - "Read _surface_names, _table_findings, type_counts/_count_findings, _stub_findings,
+     _example_findings and ClaimFinding in full before changing anything."
+  - "Build readme/validation/line_provenance.py's inherited/generated classifier, reusing the
+     existing unit/disposition model rather than re-deriving provenance from scratch."
+  - "Wire TC-017a's probes additively into _table_findings and type_counts/_count_findings as a
+     second signal, never replacing the existing fact-based checks."
+  - "Implement the closed-world rule for generated lines and the open-world (positive-
+     contradiction-only) rule for inherited lines, with None from a probe never treated as either
+     True or False."
+  - "Add the verification-narrative ban as a new finding wired into surface_findings."
+  - "Prove, with real or synthetic test cases, that real false/generated claims are now caught
+     and that true-but-unfactual inherited sentences are never rejected."
+checks:
+  - command: |-
+      python -m pytest tests/readme/validation/test_line_provenance.py tests/readme/validation/test_claims_mechanical.py tests/readme/validation/test_surface_claims_probes.py tests/readme/validation/test_claims.py -q
+    expect: exit 0
+    timeout_seconds: 300
+    proves:
+      - REQ-CLAIM-001
+      - REQ-CLAIM-002
+      - REQ-CLAIM-003
+requires:
+  - python
+network: false
+negative_control:
+  mutate: |-
+    python -X utf8 -c "import pathlib; p = pathlib.Path('src/repo_presenter/readme/validation/surface_claims.py'); t = p.read_text(encoding='utf-8'); marker = 'def _table_findings'; t2 = t.replace(marker, '_disabled_' + marker, 1); p.write_text(t2, encoding='utf-8')"
+  rationale: >
+    Renames _table_findings so any caller (including this card's own probe-wiring) raises
+    AttributeError instead of running the real mechanical check, proving the suite actually
+    exercises the real, wired-up function rather than a path that happens to pass regardless.
+    No backslashes or escaped quotes, per ops/SUPERVISOR.md's falsifier-authoring rule.
+evidence:
+  - src/repo_presenter/readme/validation/line_provenance.py
+  - src/repo_presenter/readme/validation/surface_claims.py
+  - tests/readme/validation/test_line_provenance.py
+  - tests/readme/validation/test_claims_mechanical.py
+  - tests/readme/validation/test_surface_claims_probes.py
+closeout:
+  - "Report the measured on-target recall and false-reject numbers from your own test suite as
+     this card's result; do not claim a portfolio-wide recall figure this card's narrow test set
+     cannot support."
+  - "The open-world rule (inherited text never rejected for lacking a supporting fact) is the
+     single most goal-critical property this card adds -- if any test for it is weakened or
+     skipped, say so explicitly rather than silently narrowing scope."
+recovery: "Revert line_provenance.py and the probe-wiring changes to surface_claims.py/claims.py;
+  existing sealed candidates are unaffected until next recertified or repaired (R10)."

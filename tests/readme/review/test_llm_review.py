@@ -28,7 +28,12 @@ from repo_presenter.readme.review.independent_reviewer import (
     write_review_verdict,
 )
 from repo_presenter.readme.review.llm_review import (
+    M8_INCONCLUSIVE,
+    M8_NOT_RUN,
+    M8_OK,
+    M8_REJECT,
     blocked_predicate,
+    m8_blocking_units,
     review_with_model,
 )
 from repo_presenter.readme.review.packet import review_schema
@@ -217,6 +222,44 @@ def test_an_accept_reply_is_one_provider_call_and_a_model_reviewed_accept(
     ]
     assert record.job == "independent_review" and record.stage == "S10"
     assert record.effective_model == "qwen3-next" and record.invocation_id == "inv-1"
+
+
+def test_every_unit_record_carries_an_m8_field_not_run_until_a_real_call_is_wired(
+    harness: Harness, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """TC-024 part a: ``review_verdict.json``'s shape now carries TC-023's per-unit M8 slot.
+    Nothing in this module makes a real M8 provider call yet (owner ruling R26 -- TC-023's own
+    scope boundary), so every record this module writes carries ``M8_NOT_RUN`` -- never silently
+    omitted, and never anything that would block sealing on its own."""
+    install(monkeypatch, [completion(reply())])
+    verdict = harness.review()
+    assert len(verdict.unit_reviews) == 1
+    assert verdict.unit_reviews[0]["m8"] == {
+        "status": M8_NOT_RUN,
+        "shape": None,
+        "verdict": None,
+    }
+    assert m8_blocking_units(verdict.unit_reviews) == ()
+
+
+def test_m8_blocking_units_blocks_on_reject_or_inconclusive_never_on_not_run_or_ok() -> None:
+    """``m8_blocking_units`` (TC-024 part b) is the one place a caller reads whether M8 ever
+    recorded an actual objection -- pure, offline, no provider/call-store access at all."""
+    passing = [
+        {"unit": "u1", "m8": {"status": M8_NOT_RUN}},
+        {"unit": "u2", "m8": {"status": M8_OK}},
+        {"unit": "u3"},  # a pre-TC-024 record with no "m8" key at all
+        "not-a-mapping",  # defensive: never raises on a malformed entry
+    ]
+    assert m8_blocking_units(passing) == ()
+
+    blocking = [
+        {"unit": "u1", "m8": {"status": M8_NOT_RUN}},
+        {"unit": "u2", "m8": {"status": M8_REJECT}},
+        {"unit": "u3", "m8": {"status": M8_INCONCLUSIVE}},
+        {"unit": "u2", "m8": {"status": M8_REJECT}},  # same label, not duplicated
+    ]
+    assert m8_blocking_units(blocking) == ("u2", "u3")
 
 
 def test_the_verdict_file_records_what_a_reader_needs_to_audit_it(
