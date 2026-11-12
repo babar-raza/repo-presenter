@@ -90,7 +90,7 @@ jobs:
         with:
           subject-path: ${{ runner.temp }}/acc/out/acceptance-records-${{ inputs.seed_run_id }}.json
 
-      - name: Commit the records file to its bot branch (no force: a re-run fails closed)
+      - name: "Commit the records file to its bot branch (no force, so a re-run fails closed)"
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
