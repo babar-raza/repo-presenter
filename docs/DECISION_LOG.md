@@ -4576,3 +4576,29 @@ Real hosted `present.yml` runs from this branch (the workflow exists on `main`, 
   whole unit as `SUPERSEDE_REDUNDANT` by `api_reference` (which only covers the class rows) may
   be the wrong disposition for its non-class content. Not fixed here; the fix above was applied
   and PDF Java relaunched to measure how much it now clears on its own.
+
+## 2026-11-12: Audit chain completed -- attested acceptance writer + counter reader; plan §5.3/§6.2 corrected (no CODEOWNERS review)
+
+- **Why accepted stayed at 0 despite 13 R / 20 L mechanism-passing candidates:** the audit execution
+  chain did not exist -- no acceptance writer, no counter path that could read an attested record,
+  workflows not on `main`, no `acceptance-audit` environment, no key. More generation would not have
+  moved the count. Earlier reports calling the pipeline "built" were wrong and were corrected.
+- **Plan correction (owner action 3 of `DELIVERY_PLAN_2026-11-07.md` §3 / §5.3):** "required
+  CODEOWNERS review on acceptance paths" is dropped. A solo-owner repository cannot satisfy it, so it
+  would block the plan forever. Replacement control: the counter counts a record only when
+  `gh attestation verify --signer-workflow acceptance-write.yml@refs/heads/main` passes, the workflow
+  refuses to run off `main`, and the `acceptance-audit` environment is restricted to `main`.
+  Residual risk, stated plainly: anyone who can merge to `main` can change the writer; the owner is the
+  only such person.
+- **Revision binding:** an audit counts only for the revision it audited. If a repository is resealed
+  at a newer revision, the older audit stops counting (`LaneOutcome.revision` vs the attested
+  revision). Test: `test_an_audit_of_an_older_revision_does_not_count_after_the_repository_is_resealed`.
+- **Only a clean control can be accepted.** The writer sets `audit_passed` only for the unmodified
+  sealed README, never a seeded copy, and only when the whole batch clears seeded recall >= 0.90 and
+  false-flag <= 0.10. Evidence validity is structural for now (`citations_checked: structural`);
+  checking cited lines against the pinned clone is a later strengthening, and canaries are empty.
+- **Key handling:** `AUDIT_SEED_KEY` lives only in the `acceptance-audit` environment, was generated
+  and stored in one step by the owner, and the supervisor has never seen it. An older repo-level copy
+  of the secret (2026-11-09) is readable from any branch and is to be deleted by the owner.
+- **Stale text:** `summarize`'s docstring in `ops/checks/portfolio_delivery_count.py` still says the
+  attested path is "NOT YET used"; it is now used.
