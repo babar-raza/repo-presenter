@@ -182,3 +182,53 @@ def test_a_manifest_in_the_seeders_real_shape_is_joined_to_findings_by_case_id(t
     assert rc == 0 and doc["gates"]["seeded_recall"]["matched"] == 10
     assert doc["batch_passed"] is True
     assert {r["case_id"] for r in doc["records"] if r["audit_passed"]} == {f"clean{i:02d}" for i in range(10)}
+
+
+def _flag(case_id: str, line: int = 3, verdict: str = "false") -> dict:
+    return {"candidate_id": case_id, "claim": "x", "verdict": verdict, "path": "README.md", "line": line}
+
+
+def _adjudicated(manifest, flags, adjudications):
+    case_index = _case_index(manifest)
+    return writer.build_records_document(
+        "42", case_index, manifest, _catch_all(manifest) + flags, _certified(case_index), adjudications=adjudications
+    )
+
+
+def test_a_flag_on_a_clean_control_confirmed_by_an_independent_check_fails_that_candidate_not_the_auditor():
+    manifest = _manifest(n_seeded=10, n_clean=10)
+    doc = _adjudicated(manifest, [_flag("c0")], [{"candidate_id": "c0", "line": 3, "adjudication": "confirmed"}])
+    assert doc["batch_passed"] is True and doc["gates"]["false_flag_rate"]["matched"] == 0
+    verdicts = {r["case_id"]: r["audit_passed"] for r in doc["records"] if r["role"] == "clean_control"}
+    assert verdicts["c0"] is False and all(v for k, v in verdicts.items() if k != "c0")
+
+
+def test_a_refuted_flag_counts_against_the_auditor_but_does_not_block_the_candidate():
+    manifest = _manifest(n_seeded=10, n_clean=20)
+    doc = _adjudicated(manifest, [_flag("c0")], [{"candidate_id": "c0", "line": 3, "adjudication": "refuted"}])
+    assert doc["gates"]["false_flag_rate"]["matched"] == 1
+    assert next(r for r in doc["records"] if r["case_id"] == "c0")["audit_passed"] is True
+
+
+def test_an_unadjudicated_flag_still_counts_against_the_auditor_and_blocks_the_candidate():
+    manifest = _manifest(n_seeded=10, n_clean=20)
+    doc = _adjudicated(manifest, [_flag("c0")], [])
+    assert doc["gates"]["false_flag_rate"]["matched"] == 1
+    assert next(r for r in doc["records"] if r["case_id"] == "c0")["audit_passed"] is False
+
+
+def test_an_adjudication_for_a_different_line_or_a_garbage_verdict_changes_nothing():
+    manifest = _manifest(n_seeded=10, n_clean=20)
+    doc = _adjudicated(
+        manifest, [_flag("c0")],
+        [{"candidate_id": "c0", "line": 9, "adjudication": "confirmed"}, {"candidate_id": "c0", "line": 3, "adjudication": "yes"}],
+    )
+    assert doc["gates"]["false_flag_rate"]["matched"] == 1
+
+
+def test_the_document_names_the_seeded_defects_the_auditors_missed():
+    manifest = _manifest(n_seeded=10, n_clean=10)
+    findings = [f for f in _catch_all(manifest) if f["candidate_id"] != "s3"]
+    case_index = _case_index(manifest)
+    doc = writer.build_records_document("42", case_index, manifest, findings, _certified(case_index))
+    assert [m["case_id"] for m in doc["missed_seeded"]] == ["s3"] and doc["batch_passed"] is True

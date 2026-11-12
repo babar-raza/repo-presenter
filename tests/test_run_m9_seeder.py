@@ -164,3 +164,17 @@ def test_dry_run_selects_and_plans_but_writes_nothing(monkeypatch, tmp_path):
     assert rc == 0
     assert not (tmp_path / "candidates").exists()
     assert not (tmp_path / "seed_manifest.enc").exists()
+
+
+def test_a_different_salt_rotates_which_candidates_are_controls_so_a_burned_batch_is_not_repeated():
+    by_lane = {"L": [], "R": []}
+    for lane in ("L", "R"):
+        for i in range(12):
+            by_lane[lane].append((f"own:{lane}-{i}", _seal(f"{lane}widget{i}", lane, i)))
+
+    def controls(salt):
+        _index, manifest = run_m9_seeder.build_seed_plan(by_lane, salt)
+        return {m["case_id"] for m in manifest if m["shape"] == CLEAN_SHAPE}
+
+    assert controls(0) != controls(1) and controls(1) != controls(2)
+    assert run_m9_seeder.build_seed_plan(by_lane, 0) == run_m9_seeder.build_seed_plan(by_lane, 0)

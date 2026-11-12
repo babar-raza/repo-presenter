@@ -45,7 +45,7 @@ jobs:
           AUDIT_SEED_KEY: ${{ secrets.AUDIT_SEED_KEY }}
         run: |
           mkdir -p "$RUNNER_TEMP/m9-seed"
-          python scripts/run_m9_seeder.py --out-dir "$RUNNER_TEMP/m9-seed"
+          python scripts/run_m9_seeder.py --out-dir "$RUNNER_TEMP/m9-seed" --salt "$GITHUB_RUN_ID"
 
       - name: Upload candidates + case index (ephemeral artifact, not committed)
         uses: actions/upload-artifact@v4

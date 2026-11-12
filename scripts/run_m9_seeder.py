@@ -65,18 +65,18 @@ def select_candidates(remote: str = "origin", scratch: Path | None = None):
     return by_lane
 
 
-def build_seed_plan(by_lane: dict[str, list]) -> tuple[list[dict], list[dict]]:
+def build_seed_plan(by_lane: dict[str, list], salt: int = 0) -> tuple[list[dict], list[dict]]:
     """(case_index_entries, manifest_records) -- deterministic, ordered, so a dry run and the
     real hosted run select identically given the same seal history."""
     case_index: list[dict] = []
     manifest: list[dict] = []
     shape_cycle = list(DEFECT_SHAPES)
     for lane, entries in sorted(by_lane.items()):
-        shape_i = 0
+        shape_i = salt  # a burned batch's seeds must not repeat: rotate shapes and controls by salt
         for i, (repository, seal) in enumerate(entries):
             readme_text = seal.readme.decode("utf-8", errors="replace")
             case_id = hashlib.sha256(f"{repository}|{lane}|{seal.revision}".encode()).hexdigest()[:16]
-            if i % CLEAN_EVERY == 0:
+            if (i + salt) % CLEAN_EVERY == 0:
                 result = clean_control(f"{repository}@{lane}@{seal.revision}", readme_text)
             else:
                 shape = shape_cycle[shape_i % len(shape_cycle)]
@@ -100,6 +100,7 @@ def main() -> int:
     parser.add_argument("--out-dir", type=Path, required=True)
     parser.add_argument("--remote", default="origin")
     parser.add_argument("--dry-run", action="store_true", help="select and plan, write nothing")
+    parser.add_argument("--salt", type=int, default=0, help="rotate which candidates are controls and which shapes they get (use the workflow run id)")
     args = parser.parse_args()
 
     by_lane = select_candidates(remote=args.remote)
@@ -108,7 +109,7 @@ def main() -> int:
             print(f"WARNING: lane {lane} has only {len(entries)} sealed candidates "
                   f"(design minimum {MIN_PER_LANE})", file=sys.stderr)
 
-    case_index, manifest = build_seed_plan(by_lane)
+    case_index, manifest = build_seed_plan(by_lane, args.salt)
     seeded_count = sum(1 for m in manifest if m["shape"] != CLEAN_SHAPE)
     print(f"selected {sum(len(v) for v in by_lane.values())} candidates "
           f"({len(by_lane.get('L', []))} L, {len(by_lane.get('R', []))} R); "

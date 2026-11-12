@@ -75,8 +75,25 @@ def evidence_validity(findings: Sequence[Mapping[str, Any]]) -> tuple[bool, str]
     return True, ""
 
 
+def _adjudication_index(adjudications: Sequence[Mapping[str, Any]]) -> dict[tuple[str, int], str]:
+    """(case_id, line) -> 'confirmed' | 'refuted' for flags raised on clean controls. An
+    adjudication is a second, independent check of the flag against the pinned source: a CONFIRMED
+    flag is a real defect in the candidate (the candidate fails, the auditor was right); a REFUTED
+    flag is an auditor false flag. Anything else is ignored, so an unadjudicated flag keeps
+    counting against the auditor (fail closed)."""
+    index: dict[tuple[str, int], str] = {}
+    for item in adjudications:
+        verdict = item.get("adjudication")
+        line = item.get("line")
+        if verdict in ("confirmed", "refuted") and isinstance(line, int) and not isinstance(line, bool):
+            index[(str(item.get("candidate_id")), line)] = verdict
+    return index
+
+
 def evaluate_gates(
-    manifest: Sequence[Mapping[str, Any]], findings: Sequence[Mapping[str, Any]]
+    manifest: Sequence[Mapping[str, Any]],
+    findings: Sequence[Mapping[str, Any]],
+    adjudications: Sequence[Mapping[str, Any]] = (),
 ) -> tuple[dict[str, Any], list[str]]:
     """(gate numbers, reasons the audit fails). An empty reason list means every gate holds."""
     reasons: list[str] = []
@@ -98,7 +115,13 @@ def evaluate_gates(
     except (ScoringError, KeyError) as error:
         reasons.append(f"seeded recall undefined: {error}")
     try:
-        flag = false_flag_rate(findings, clean_ids)
+        adjudicated = _adjudication_index(adjudications)
+        # A flag an independent check CONFIRMED is a true finding, not an auditor false flag.
+        counted = [
+            f for f in findings
+            if adjudicated.get((str(f.get("candidate_id")), f.get("line"))) != "confirmed"
+        ]
+        flag = false_flag_rate(counted, clean_ids)
         gates["false_flag_rate"] = {"matched": flag.matched, "total": flag.total, "rate": flag.rate}
         if flag.rate > FALSE_FLAG_RATE_MAX:
             reasons.append(f"false-flag rate {flag.rate:.3f} > {FALSE_FLAG_RATE_MAX}")
@@ -115,10 +138,17 @@ def build_records_document(
     recertified: Recertified,
     *,
     dry_run: bool = False,
+    adjudications: Sequence[Mapping[str, Any]] = (),
 ) -> dict[str, Any]:
-    gates, reasons = evaluate_gates(manifest, findings)
+    gates, reasons = evaluate_gates(manifest, findings, adjudications)
+    adjudicated = _adjudication_index(adjudications)
     shapes = {str(m.get("candidate_id")): m.get("shape") for m in manifest}
-    flagged = {str(f.get("candidate_id")) for f in findings if f.get("verdict") in FLAGGED_VERDICTS}
+    # a candidate is blocked by any flag that was not REFUTED by the independent check
+    flagged = {
+        str(f.get("candidate_id")) for f in findings
+        if f.get("verdict") in FLAGGED_VERDICTS
+        and adjudicated.get((str(f.get("candidate_id")), f.get("line"))) != "refuted"
+    }
     batch_passed = not reasons
     records: list[dict[str, Any]] = []
     for entry in case_index:
@@ -135,9 +165,18 @@ def build_records_document(
             "canaries": {},
             "audit_passed": bool(batch_passed and clean and case_id not in flagged),
         })
+    # Post-audit diagnostics: this document is written only AFTER the findings are frozen, so
+    # naming what was missed cannot leak into the audit it describes.
+    caught = {(str(f.get("candidate_id")), f.get("line")) for f in findings if f.get("verdict") in FLAGGED_VERDICTS}
+    missed = [
+        {"case_id": str(m["candidate_id"]), "shape": m.get("shape"), "operator": m.get("operator"), "line": m.get("line")}
+        for m in manifest
+        if m.get("shape") != CLEAN_SHAPE and (str(m["candidate_id"]), m.get("line")) not in caught
+    ]
     return {
         "schema": SCHEMA, "seed_run_id": str(seed_run_id), "dry_run": dry_run,
         "gates": gates, "batch_passed": batch_passed, "failed_reasons": reasons,
+        "missed_seeded": missed,
         "records": records,
     }
 
@@ -148,6 +187,8 @@ def main(argv: Sequence[str] | None = None, *, recertify: Callable[[], Recertifi
     parser.add_argument("--manifest", type=Path, required=True, help="seed_manifest.enc (plain JSON with --dry-run)")
     parser.add_argument("--findings", type=Path, required=True)
     parser.add_argument("--case-index", type=Path, required=True)
+    parser.add_argument("--adjudications", type=Path, default=None,
+                        help="frozen JSON list of independent adjudications of flags on clean controls")
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--remote", default="origin")
@@ -164,9 +205,11 @@ def main(argv: Sequence[str] | None = None, *, recertify: Callable[[], Recertifi
     manifest = key_manifest_by_case_id(manifest)
     findings = json.loads(args.findings.read_text(encoding="utf-8"))
     case_index = json.loads(args.case_index.read_text(encoding="utf-8"))
+    adjudications = json.loads(args.adjudications.read_text(encoding="utf-8")) if args.adjudications else []
     recertified = (recertify or (lambda: recertified_from_remote(args.remote)))()
     document = build_records_document(
-        args.seed_run_id, case_index, manifest, findings, recertified, dry_run=args.dry_run
+        args.seed_run_id, case_index, manifest, findings, recertified, dry_run=args.dry_run,
+        adjudications=adjudications,
     )
     args.out.write_text(json.dumps(document, indent=2, sort_keys=True), encoding="utf-8")
     passed = sum(1 for r in document["records"] if r["audit_passed"])
