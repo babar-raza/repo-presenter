@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, Literal
 
 from repo_presenter.core.facts import FactsDocument
@@ -41,6 +42,11 @@ class Failure:
     detail: str
     section: str | None = None
     unit: str | None = None
+    #: Set only by a check that owes a specific correction (BC-18): the exact README text that is
+    #: wrong and the one-sentence instruction a repair is handed. Carried as fields so the repair
+    #: loop never parses ``detail``.
+    quote: str | None = None
+    instruction: str | None = None
 
 
 @dataclass(frozen=True)
@@ -63,6 +69,11 @@ class Candidate:
     #: R2 floor BC-17 (``validation/parity.py``) measures content loss against. ``None`` when not
     #: handed over (a calibration source); unlike ``original_readme`` it is never digest-checked.
     benchmark_readme: str | None = None
+    #: Which lane the candidate belongs to. ``"R"`` (the default; every Candidate this module has
+    #: ever been handed is a Lane R composition) or ``"L"``. BC-18 owes corrections to Lane R only.
+    lane: str = "R"
+    #: The findings register BC-18 reads; ``None`` is ``readme_findings.DEFAULT_FINDINGS_PATH``.
+    findings_path: Path | None = None
 
 
 def earliest(failures: Sequence[Failure]) -> CausalStage | None:

@@ -76,7 +76,7 @@ JAVA3D_DOCS_LIST = "- **[Getting started guide](https://docs.aspose.org/3d/java/
 JAVA3D_SCOPE_LIST = "- STL (import and export) is the only format that is fully functional in the published `26.5.0` package; a handful of other formats have recognized options classes registered with `FileFormat` but no working load/save path behind them in that package — see [FILE_FORMATS.md](FILE_FORMATS.md) for format-by-format notes, keeping in mind its summary table and later detail sections don't fully agree with each other.\n- OBJ import has a real, working parser in the upstream GitHub source, but the currently published Maven Central artifact was built from an older state and still ships a stub there — do not rely on OBJ import from the published package (see Upstream Issues in this repository, and build from source instead if you need it).\n- Several of the recognized-but-unfinished formats above fail silently rather than with an error: loading or saving through them can return successfully while producing no real data, so don't rely on catching an exception to detect the gap — check the actual output.\n- Additional format coverage beyond STL (including proprietary and high-performance formats) is a commercial-edition feature; see the closing note below.\n- A handful of primitive-shape classes have a mesh-conversion method that is present but not yet implemented; `Box`, `Cylinder`, `Sphere`, and `Dish` are confirmed to convert correctly.\n- `NurbsCurve` exposes its full control-point/knot/degree data model, but sampling points along the curve is not yet implemented.\n- `PbrSpecularMaterial`'s accessors are unimplemented in this edition; the PBR material capability described above uses the alternative that works.\n- Licensing, trial, and DRM-related functionality (`License`, `Metered`) is intentionally excluded, as are cryptographic helpers and ZIP-packaged file-system read/write — none of these apply to the FOSS edition.\n- Scene rendering is not implemented in this edition."
 
 
-"""The twelve blocking checks: a sound candidate passes ten and pends two; each failure names
+"""The thirteen blocking checks (BC-18 must-correct is a no-op without a register quote): a sound candidate passes ten and pends two; each failure names
 its causal stage; validation.json is deterministic."""
 
 ENTRY = RegistryEntry.model_validate(
@@ -3430,6 +3430,7 @@ PORTED_CHECK_IDS = (
     "BC-12",
     "BC-14",
     "BC-17",
+    "BC-18",
 )
 
 

@@ -35,6 +35,7 @@ from repo_presenter.readme.validation.failures import (
 )
 from repo_presenter.readme.validation.install import install_failures
 from repo_presenter.readme.validation.links import link_failures
+from repo_presenter.readme.validation.must_correct import must_correct_failures
 from repo_presenter.readme.validation.parity import parity_failures
 from repo_presenter.readme.validation.provenance import (
     claim_failures,
@@ -64,6 +65,7 @@ JUDGES: dict[str, Callable[[Candidate], list[Failure]]] = {
     "BC-12": canonical_name_failures,
     "BC-14": claim_failures,
     "BC-17": parity_failures,
+    "BC-18": must_correct_failures,
 }
 CHECK_NAMES: dict[str, str] = {
     "BC-01": "Source revision pinned; original README bytes exact; every fact carries evidence",
@@ -78,6 +80,7 @@ CHECK_NAMES: dict[str, str] = {
     "BC-12": "Every product-name position spells the registry's canonical product name",
     "BC-14": "Version, install command and publication statements agree with the facts",
     "BC-17": "Parity (R2): no content of the published README is lost without a non-loss reason",
+    "BC-18": "Must-correct: no open findings-register quote (a confirmed false claim) is still printed",
 }
 
 
@@ -122,6 +125,11 @@ def validate_candidate(
                         **(
                             {"unit_id": failure.unit}
                             if failure.unit is not None
+                            else {}
+                        ),
+                        **(
+                            {"quote": failure.quote, "instruction": failure.instruction}
+                            if failure.quote is not None
                             else {}
                         ),
                     }

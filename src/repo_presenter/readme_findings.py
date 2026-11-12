@@ -61,6 +61,14 @@ class FindingRecord:
     status: str
     first_seen_at: str  # ISO 8601 date ("YYYY-MM-DD"); the register names no machine or time of day
     resolved_at: str | None = None
+    #: Optional "must-correct" obligation (owner priority: Lane R candidates sealed with real,
+    #: independently confirmed false claims). ``quote`` is the exact README text that is wrong,
+    #: ``truth`` one sentence of what the source says instead; ``evidence`` carries the
+    #: ``path:line@revision`` that proves it. Both default to empty and are written to the register
+    #: only when set, so a row without them is byte-identical to the original schema and every
+    #: pre-existing register still loads.
+    quote: str = ""
+    truth: str = ""
 
     def __post_init__(self) -> None:
         if not self.repository:
@@ -92,7 +100,7 @@ class FindingRecord:
         return (self.repository, self.description)
 
     def to_record(self) -> dict[str, Any]:
-        return {
+        record: dict[str, Any] = {
             "repository": self.repository,
             "description": self.description,
             "evidence": self.evidence,
@@ -101,6 +109,11 @@ class FindingRecord:
             "first_seen_at": self.first_seen_at,
             "resolved_at": self.resolved_at,
         }
+        if self.quote:
+            record["quote"] = self.quote
+        if self.truth:
+            record["truth"] = self.truth
+        return record
 
     @classmethod
     def from_record(cls, raw: Any) -> FindingRecord:
@@ -115,6 +128,8 @@ class FindingRecord:
                 status=str(raw["status"]),
                 first_seen_at=str(raw["first_seen_at"]),
                 resolved_at=None if raw.get("resolved_at") is None else str(raw["resolved_at"]),
+                quote=str(raw.get("quote") or ""),
+                truth=str(raw.get("truth") or ""),
             )
         except KeyError as exc:
             raise FindingsRegisterError(f"a finding record is missing {exc.args[0]!r}") from exc
@@ -169,11 +184,14 @@ def append_finding(
     route: str,
     first_seen_at: str,
     status: str = STATUS_OPEN,
+    quote: str | None = None,
+    truth: str | None = None,
 ) -> FindingRecord:
     """Record one defect a lane's own detectors found. A finding already on record for this exact
     ``(repository, description)`` is updated in place (its evidence, route and status refreshed,
     its ``first_seen_at`` left exactly as it was); otherwise a new row is appended. Returns the
-    row as it stands after the write."""
+    row as it stands after the write. ``quote``/``truth`` (the must-correct obligation) are set
+    when given and otherwise left as the existing row has them."""
     records = read_findings(path)
     index_by_key = {record.key(): index for index, record in enumerate(records)}
     key = (repository, description)
@@ -186,6 +204,8 @@ def append_finding(
             route=route,
             status=status,
             resolved_at=resolved_at,
+            quote=records[index].quote if quote is None else quote,
+            truth=records[index].truth if truth is None else truth,
         )
         records[index] = updated
     else:
@@ -196,6 +216,8 @@ def append_finding(
             route=route,
             status=status,
             first_seen_at=first_seen_at,
+            quote=quote or "",
+            truth=truth or "",
         )
         records.append(updated)
     _write(path, records)
@@ -221,3 +243,20 @@ def resolve_finding(
             _write(path, records)
             return updated
     return None
+
+
+def must_correct_rows(
+    repository: str, path: Path = DEFAULT_FINDINGS_PATH
+) -> list[FindingRecord]:
+    """The OPEN Lane R rows of one repository that carry a ``quote``: the false README claims a
+    candidate for that repository must not print (``readme/validation/must_correct.py``, BC-18).
+    A missing register is an empty list; an unreadable one raises ``FindingsRegisterError``, which
+    the blocking check treats as "nothing owed"."""
+    return [
+        record
+        for record in read_findings(path)
+        if record.repository == repository
+        and record.route == LANE_R
+        and record.status == STATUS_OPEN
+        and record.quote
+    ]
