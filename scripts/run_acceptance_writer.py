@@ -139,15 +139,33 @@ def build_records_document(
     *,
     dry_run: bool = False,
     adjudications: Sequence[Mapping[str, Any]] = (),
+    verbatim_baseline: Callable[[str, int], bool] | None = None,
 ) -> dict[str, Any]:
     gates, reasons = evaluate_gates(manifest, findings, adjudications)
     adjudicated = _adjudication_index(adjudications)
     shapes = {str(m.get("candidate_id")): m.get("shape") for m in manifest}
-    # a candidate is blocked by any flag that was not REFUTED by the independent check
+    lanes = {str(e["case_id"]): str(e["lane"]) for e in case_index}
+    # R21/R20: a CONFIRMED defect on a Lane L line that is verbatim maintainer text in the baseline
+    # README is a recorded residual (the candidate did not introduce it), not a blocker.
+    residuals: dict[str, list[int]] = {}
+
+    def _residual(case_id: str, line: Any) -> bool:
+        if (
+            verbatim_baseline is not None and lanes.get(case_id) == "L"
+            and adjudicated.get((case_id, line)) == "confirmed" and isinstance(line, int)
+            and verbatim_baseline(case_id, line)
+        ):
+            residuals.setdefault(case_id, []).append(line)
+            return True
+        return False
+
+    # a candidate is blocked by any flag that was not REFUTED by the independent check, or that is
+    # a Lane L residual
     flagged = {
         str(f.get("candidate_id")) for f in findings
         if f.get("verdict") in FLAGGED_VERDICTS
         and adjudicated.get((str(f.get("candidate_id")), f.get("line"))) != "refuted"
+        and not _residual(str(f.get("candidate_id")), f.get("line"))
     }
     batch_passed = not reasons
     records: list[dict[str, Any]] = []
@@ -164,6 +182,7 @@ def build_records_document(
             "mechanism_verdicts": {"recertify": validated},
             "canaries": {},
             "audit_passed": bool(batch_passed and clean and case_id not in flagged),
+            **({"residual_lines": sorted(set(residuals[case_id]))} if case_id in residuals else {}),
         })
     # Post-audit diagnostics: this document is written only AFTER the findings are frozen, so
     # naming what was missed cannot leak into the audit it describes.
@@ -179,6 +198,42 @@ def build_records_document(
         "missed_seeded": missed,
         "records": records,
     }
+
+
+def baseline_checker(case_index: Sequence[Mapping[str, Any]], candidates_dir: Path) -> Callable[[str, int], bool]:
+    """(case_id, 1-based line) -> True when that candidate line, stripped, is a non-empty line of the
+    upstream README at the audited revision (fetched once per case; unreachable means False, so a
+    missing baseline never turns a blocker into a residual)."""
+    import urllib.request
+
+    by_case = {str(e["case_id"]): e for e in case_index}
+    cache: dict[str, tuple[list[str], set[str]] | None] = {}
+
+    def load(case_id: str) -> tuple[list[str], set[str]] | None:
+        if case_id not in cache:
+            entry = by_case[case_id]
+            try:
+                cand = (candidates_dir / f"{case_id}.md").read_text(encoding="utf-8").splitlines()
+                request = urllib.request.Request(
+                    f"https://api.github.com/repos/{entry['repository']}/readme?ref={entry['revision']}",
+                    headers={"Accept": "application/vnd.github.raw", "User-Agent": "acceptance-writer"}
+                    | ({"Authorization": f"Bearer {os.environ['GITHUB_TOKEN']}"} if os.environ.get("GITHUB_TOKEN") else {}),
+                )
+                with urllib.request.urlopen(request, timeout=60) as response:
+                    base = {ln.strip() for ln in response.read().decode("utf-8").splitlines() if ln.strip()}
+                cache[case_id] = (cand, base)
+            except Exception:  # noqa: BLE001 -- unverifiable is not verbatim
+                cache[case_id] = None
+        return cache[case_id]
+
+    def verbatim(case_id: str, line: int) -> bool:
+        loaded = load(case_id)
+        if loaded is None or not 1 <= line <= len(loaded[0]):
+            return False
+        text = loaded[0][line - 1].strip()
+        return bool(text) and text in loaded[1]
+
+    return verbatim
 
 
 def main(argv: Sequence[str] | None = None, *, recertify: Callable[[], Recertified] | None = None) -> int:
@@ -210,6 +265,7 @@ def main(argv: Sequence[str] | None = None, *, recertify: Callable[[], Recertifi
     document = build_records_document(
         args.seed_run_id, case_index, manifest, findings, recertified, dry_run=args.dry_run,
         adjudications=adjudications,
+        verbatim_baseline=None if args.dry_run else baseline_checker(case_index, args.case_index.parent / "candidates"),
     )
     args.out.write_text(json.dumps(document, indent=2, sort_keys=True), encoding="utf-8")
     passed = sum(1 for r in document["records"] if r["audit_passed"])

@@ -232,3 +232,41 @@ def test_the_document_names_the_seeded_defects_the_auditors_missed():
     case_index = _case_index(manifest)
     doc = writer.build_records_document("42", case_index, manifest, findings, _certified(case_index))
     assert [m["case_id"] for m in doc["missed_seeded"]] == ["s3"] and doc["batch_passed"] is True
+
+
+def _lane_l(manifest):
+    return [{**c, "lane": "L"} for c in _case_index(manifest)]
+
+
+def test_a_confirmed_defect_on_verbatim_maintainer_text_is_a_lane_l_residual_not_a_blocker():
+    manifest = _manifest(n_seeded=10, n_clean=10)
+    case_index = _lane_l(manifest)
+    doc = writer.build_records_document(
+        "42", case_index, manifest, _catch_all(manifest) + [_flag("c0")], _certified(case_index),
+        adjudications=[{"candidate_id": "c0", "line": 3, "adjudication": "confirmed"}],
+        verbatim_baseline=lambda case, line: case == "c0" and line == 3,
+    )
+    rec = next(r for r in doc["records"] if r["case_id"] == "c0")
+    assert rec["audit_passed"] is True and rec["residual_lines"] == [3]
+
+
+def test_a_confirmed_defect_on_a_changed_lane_l_line_or_in_lane_r_still_blocks():
+    manifest = _manifest(n_seeded=10, n_clean=10)
+    adj = [{"candidate_id": "c0", "line": 3, "adjudication": "confirmed"}]
+    for case_index, verbatim in ((_lane_l(manifest), lambda c, n: False), (_case_index(manifest), lambda c, n: True)):
+        doc = writer.build_records_document(
+            "42", case_index, manifest, _catch_all(manifest) + [_flag("c0")], _certified(case_index),
+            adjudications=adj, verbatim_baseline=verbatim,
+        )
+        rec = next(r for r in doc["records"] if r["case_id"] == "c0")
+        assert rec["audit_passed"] is False and "residual_lines" not in rec
+
+
+def test_an_unconfirmed_flag_is_never_turned_into_a_residual():
+    manifest = _manifest(n_seeded=10, n_clean=20)
+    case_index = _lane_l(manifest)
+    doc = writer.build_records_document(
+        "42", case_index, manifest, _catch_all(manifest) + [_flag("c0")], _certified(case_index),
+        verbatim_baseline=lambda case, line: True,
+    )
+    assert next(r for r in doc["records"] if r["case_id"] == "c0")["audit_passed"] is False
