@@ -142,6 +142,7 @@ class LaneOutcome:
     failing_checks: list[str] = field(default_factory=list)
     regenerations: int = 0
     needs_review_only_pass: bool = False
+    revision: str = ""  # the upstream revision the latest seal was made at; an audit binds to it
 
     @property
     def independently_accepted(self) -> bool:
@@ -462,6 +463,7 @@ def certified_outcomes(
     head.sealed_by_current = bool(certification.sealed_by_current)
     head.failing_checks = list(certification.failing_checks)
     head.regenerations = int(certification.regenerations)
+    head.revision = str(getattr(certification, "revision", "") or "")
     head.version_set = (certification.sealed_version_set or "")[:12]
     if latest is not None:
         head.evidence_source = latest.source
@@ -526,7 +528,119 @@ def outcomes_for_lane(
     return result
 
 
-def collect(remote: str = "origin") -> tuple[list[LaneOutcome], Any, Any]:
+ATTESTATION_REPO = "babar-raza/repo-presenter"
+ACCEPTANCE_WRITER = f"{ATTESTATION_REPO}/.github/workflows/acceptance-write.yml"
+RECORD_BRANCH_PREFIX = "acceptance-record/"
+RECORDS_SCHEMA = "acceptance-records/1"
+
+#: (branch, file name, bytes) for every acceptance-records file found on a bot record branch.
+RecordFetcher = Callable[[], list[tuple[str, str, bytes]]]
+
+
+def fetch_record_files(remote: str = "origin") -> list[tuple[str, str, bytes]]:
+    """Every ``acceptance-records-*.json`` on every ``acceptance-record/*`` branch. Any git failure
+    yields nothing for that branch: an unreachable record is not a record."""
+    def git(*args: str) -> bytes | None:
+        try:
+            done = subprocess.run(["git", *args], capture_output=True, timeout=120, check=False)
+        except (OSError, subprocess.TimeoutExpired):
+            return None
+        return done.stdout if done.returncode == 0 else None
+
+    listing = git("ls-remote", "--heads", remote, f"{RECORD_BRANCH_PREFIX}*")
+    found: list[tuple[str, str, bytes]] = []
+    for line in (listing or b"").decode("utf-8", "replace").splitlines():
+        parts = line.split()
+        if len(parts) != 2 or not parts[1].startswith("refs/heads/"):
+            continue
+        branch = parts[1].removeprefix("refs/heads/")
+        ref = f"refs/remotes/{remote}/{branch}"
+        if git("fetch", "-q", remote, f"+refs/heads/{branch}:{ref}") is None:
+            continue
+        names = git("ls-tree", "--name-only", ref) or b""
+        for name in names.decode("utf-8", "replace").splitlines():
+            if name.startswith("acceptance-records-") and name.endswith(".json"):
+                blob = git("show", f"{ref}:{name}")
+                if blob is not None:
+                    found.append((branch, name, blob))
+    return found
+
+
+def _gh_with_repo(args: list[str]) -> "subprocess.CompletedProcess[bytes]":
+    # `gh attestation verify` refuses to run without --repo/--owner; the acceptance contract's
+    # own wrapper (acceptance/record.py) does not pass one.
+    return subprocess.run([*args, "--repo", ATTESTATION_REPO], capture_output=True, timeout=120, check=False)
+
+
+def read_attested_acceptances(
+    fetcher: RecordFetcher | None = None,
+    gh_runner: Any = None,
+    remote: str = "origin",
+) -> dict[tuple[str, str], str]:
+    """{(repository, lane): revision} for every clean-control record that is INDEPENDENTLY ACCEPTED
+    or higher under ``acceptance.record.classify`` with a VERIFIED attestation from the hosted
+    acceptance writer on ``main``. A missing branch, file, attestation or field is simply absent;
+    nothing here raises. A ``dry_run`` document or one with another schema is ignored."""
+    from repo_presenter.acceptance.record import (
+        DELIVERED, INDEPENDENTLY_ACCEPTED, LIVE_VERIFIED, PUBLICATION_READY, classify,
+    )
+
+    counted = {INDEPENDENTLY_ACCEPTED, PUBLICATION_READY, DELIVERED, LIVE_VERIFIED}
+    try:
+        files = (fetcher or (lambda: fetch_record_files(remote)))()
+    except Exception:  # noqa: BLE001 -- a broken fetch is "no records", never a crash or a pass
+        return {}
+    accepted: dict[tuple[str, str], str] = {}
+    with tempfile.TemporaryDirectory(prefix="acc-records-") as tmp:
+        for index, (branch, name, blob) in enumerate(files):
+            try:
+                document = json.loads(blob)
+                records = document["records"]
+                if document.get("schema") != RECORDS_SCHEMA or document.get("dry_run") is not False:
+                    continue
+                path = Path(tmp) / f"{index}-{Path(name).name}"
+                path.write_bytes(blob)
+                for record in records:
+                    if record.get("role") != "clean_control":
+                        continue
+                    state = classify(
+                        str(record["repository"]), str(record["lane"]),
+                        sealed=True,
+                        deterministically_validated=record.get("deterministically_validated") is True,
+                        mechanism_verdicts=dict(record.get("mechanism_verdicts") or {}),
+                        canaries=dict(record.get("canaries") or {}),
+                        audit_passed=record.get("audit_passed") is True,
+                        attestation_path=path,
+                        expected_workflow=ACCEPTANCE_WRITER,
+                        gh_runner=gh_runner or _gh_with_repo,
+                    )
+                    if state in counted:
+                        accepted[(str(record["repository"]), str(record["lane"]))] = str(record.get("revision", ""))
+            except Exception:  # noqa: BLE001 -- malformed record: contributes nothing
+                continue
+    return accepted
+
+
+def apply_attested(
+    outcomes: list[LaneOutcome], attested: dict[tuple[str, str], str], allowlist: dict[str, Any]
+) -> None:
+    """Make an attested acceptance record the ONLY road into the accepted bucket. The frozen
+    ``reviewer_calibration`` path may still have produced ACCEPTED in ``classify_lane``; that is
+    demoted here unless an attested record exists, and only the CURRENT version set can count."""
+    for o in outcomes:
+        if not o.pipeline_good:
+            continue
+        audited_revision = attested.get((o.repository, o.lane))
+        if o.current and audited_revision and audited_revision == o.revision:
+            o.bucket = ACCEPTED
+            o.reason = "attested independently-accepted record from the hosted acceptance writer"
+        elif o.bucket == ACCEPTED:
+            o.bucket = UNCALIBRATED
+            o.reason = "no attested independently-accepted record (M9 audit not passed or not attested)"
+        o.publication_ready = o.independently_accepted and allowlisted_for_pr(allowlist, o.repository)
+
+
+def collect(remote: str = "origin", record_fetcher: RecordFetcher | None = None, gh_runner: Any = None) -> tuple[list[LaneOutcome], Any, Any]:
     from repo_presenter.acceptance.record import load_certificates
     from repo_presenter.core.registry.loader import load_registry
     from repo_presenter.core.state.git_backend import GitStateBackend
@@ -563,6 +677,7 @@ def collect(remote: str = "origin") -> tuple[list[LaneOutcome], Any, Any]:
         finally:
             for backend in backends.values():
                 backend.close()
+    apply_attested(outcomes, read_attested_acceptances(record_fetcher, gh_runner, remote), allowlist)
     return outcomes, calibration, acceptance_certificates
 
 
