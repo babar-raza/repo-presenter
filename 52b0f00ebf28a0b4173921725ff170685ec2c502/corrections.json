@@ -1,0 +1,125 @@
+{
+  "confinement": {
+    "edits": 1,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "c1fce1751129792a393d56806efa09ac9ecac3c11e5a4ac5e7a9e89cb5df7ef9",
+  "edits": [
+    {
+      "detector": "stale_package_version",
+      "end": 5237,
+      "evidence": [
+        {
+          "fact_id": "package:published_version",
+          "kind": "package",
+          "status": "SUPPORTED",
+          "value": "26.1.0"
+        }
+      ],
+      "index": 0,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 104,
+      "original": "is not published to NuGet",
+      "rationale": "line 104 says the package is not published to NuGet; the package registry already lists it at '26.1.0'",
+      "replacement": "is published to NuGet",
+      "start": 5212
+    }
+  ],
+  "lane": "L",
+  "original_sha256": "33f661e6ab08486896169f7a1a27c6a4c318600b4a7efdd3eaa13d8b411062c1",
+  "outcome": "REFUSED_LANE_R_RECOMMENDED",
+  "readme_path": "README.md",
+  "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-.NET",
+  "schema_version": 1,
+  "source_revision": "52b0f00ebf28a0b4173921725ff170685ec2c502",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {
+    "FALSE_CLAIM_FIX": 1
+  },
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "public_symbol:aspose.threed.formats.chunk"
+      ],
+      "line": 0,
+      "reason": "1 of 293 verified public types are named nowhere in the README; would fill API Reference: public_symbol:aspose.threed.formats.chunk",
+      "text": ""
+    },
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "format:input.dae",
+        "format:output.dae"
+      ],
+      "line": 0,
+      "reason": "2 verified format(s) named nowhere in the README; would fill At a Glance or Key Capabilities: format:input.dae, format:output.dae",
+      "text": ""
+    },
+    {
+      "defect": true,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 34,
+      "reason": "the README marks 'U3D' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim",
+      "text": "i1[\"An existing FBX, COLLADA, OBJ, STL, PLY, or U3D file\"]"
+    },
+    {
+      "defect": true,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 36,
+      "reason": "the README marks 'RVM' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim",
+      "text": "i3[\"An existing 3MF or RVM file (Microsoft 3MF, AVEVA PDMS RVM)\"]"
+    },
+    {
+      "defect": true,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 56,
+      "reason": "the README marks 'U3D' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim",
+      "text": "o1[\"FBX, COLLADA, OBJ, STL, PLY, or U3D file\"]"
+    },
+    {
+      "defect": true,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 58,
+      "reason": "the README marks 'RVM' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim",
+      "text": "o3[\"3MF or RVM file (Microsoft 3MF, AVEVA PDMS RVM)\"]"
+    },
+    {
+      "defect": true,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 59,
+      "reason": "the README marks 'AMF' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim",
+      "text": "o4[\"AMF or HTML5 (Aspose 3D Web viewer) output\"]"
+    },
+    {
+      "defect": true,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 59,
+      "reason": "the README marks 'HTML5' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim",
+      "text": "o4[\"AMF or HTML5 (Aspose 3D Web viewer) output\"]"
+    },
+    {
+      "defect": true,
+      "detector": "failing_example",
+      "fact_ids": [
+        "example:003"
+      ],
+      "line": 165,
+      "reason": "the example verifier recorded a failure for the example on lines 165-173: example 3: FAILED; Program.cs(3,41): error CS1503: Argument 2: cannot convert from 'Aspose.ThreeD.FileFormat' to 'System.Threading.CancellationToken'",
+      "text": "using Aspose.ThreeD;"
+    }
+  ]
+}

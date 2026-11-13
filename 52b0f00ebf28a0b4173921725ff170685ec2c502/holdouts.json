@@ -1,0 +1,106 @@
+{
+  "checks": [
+    {
+      "details": [],
+      "id": "L-01",
+      "name": "Every change is a listed, evidenced edit; the text outside them is unchanged",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-02",
+      "name": "A second run of the correction over the same inputs gives the same bytes",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-03",
+      "name": "No claim in the final README contradicts a verified fact",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-04",
+      "name": "Nothing of the live README is lost unless an evidenced edit accounts for it",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-05",
+      "name": "An unrepaired defect blocks unless this run is itself a net improvement (R21)",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-06",
+      "name": "A run over the corrected text finds nothing further to correct (recorded, not blocking)",
+      "verdict": "PASS"
+    }
+  ],
+  "lane": "L",
+  "residuals": [
+    {
+      "detail": "the README describes `Watermark` as working ('| Watermark | Embeds and extracts text watermarks in 3D files, with optional password protection.'), but inherited_unit:061.list states `Watermark` only throws (a stub): describe it as not implemented or omit it",
+      "kind": "claim_contradiction",
+      "line": 450,
+      "quote": "| `Watermark` | Embeds and extracts text watermarks in 3D files, with optional password protection. |",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "format_overclaim: the README marks 'U3D' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim",
+      "kind": "unrepaired_defect",
+      "line": 34,
+      "quote": "i1[\"An existing FBX, COLLADA, OBJ, STL, PLY, or U3D file\"]",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "format_overclaim: the README marks 'RVM' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim",
+      "kind": "unrepaired_defect",
+      "line": 36,
+      "quote": "i3[\"An existing 3MF or RVM file (Microsoft 3MF, AVEVA PDMS RVM)\"]",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "format_overclaim: the README marks 'U3D' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim",
+      "kind": "unrepaired_defect",
+      "line": 56,
+      "quote": "o1[\"FBX, COLLADA, OBJ, STL, PLY, or U3D file\"]",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "format_overclaim: the README marks 'RVM' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim",
+      "kind": "unrepaired_defect",
+      "line": 58,
+      "quote": "o3[\"3MF or RVM file (Microsoft 3MF, AVEVA PDMS RVM)\"]",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "format_overclaim: the README marks 'AMF' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim",
+      "kind": "unrepaired_defect",
+      "line": 59,
+      "quote": "o4[\"AMF or HTML5 (Aspose 3D Web viewer) output\"]",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "format_overclaim: the README marks 'HTML5' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim",
+      "kind": "unrepaired_defect",
+      "line": 59,
+      "quote": "o4[\"AMF or HTML5 (Aspose 3D Web viewer) output\"]",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 165-173: example 3: FAILED; Program.cs(3,41): error CS1503: Argument 2: cannot convert from 'Aspose.ThreeD.FileFormat' to 'System.Threading.CancellationToken'",
+      "kind": "unrepaired_defect",
+      "line": 165,
+      "quote": "using Aspose.ThreeD;",
+      "rule": "lane_l_unrepaired_defect"
+    }
+  ],
+  "review_logic_version": "3",
+  "schema_version": 1,
+  "source_revision": "52b0f00ebf28a0b4173921725ff170685ec2c502",
+  "summary": {
+    "fail": 0,
+    "pass": 6
+  }
+}
