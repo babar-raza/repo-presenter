@@ -8,8 +8,16 @@ rendered README, and names where it is printed so the existing per-unit S4 patch
 ``repair/loop.py::_repair_reconciliation``) or per-section S6 repair (an authored section) is handed
 the quote and the truth as its instruction.
 
+No recurrence (owner, 2026-11-13: "an already caught problem should not reappear"): every quoted
+row of the repository whose route is the candidate's lane is a permanent regression check, OPEN or
+RESOLVED (``readme_findings.regression_rows``); only a row recorded as refuted (``is_refuted``: its
+claim was true after all) never blocks. An OPEN row keeps its repair instruction and citation; a
+RESOLVED row that is printed again is handed its stored truth as the instruction (it is not
+citable -- the citation lookup stays OPEN-only). A Lane L candidate is held only to ``lane_l``-route
+rows, a Lane R candidate only to ``lane_r``-route rows.
+
 It is a no-op -- and so changes no existing seal's outcome -- when the register is missing, empty or
-unreadable for the repository, when the candidate is Lane L, or when no open row carries a quote.
+unreadable for the repository, or when no such row carries a quote.
 
 The confirmed row is itself the evidence this check trusts, so a repair answering it may cite the
 row (``FindingRecord.citation_id``, ``finding:<hex>``) wherever a disposition cites a fact:
@@ -35,12 +43,14 @@ from repo_presenter.readme.validation.units import placements_of
 from repo_presenter.readme_findings import (
     CITATION_PREFIX,
     DEFAULT_FINDINGS_PATH,
+    LANE_L,
     LANE_R,
     STATUS_OPEN,
     FindingRecord,
     FindingsRegisterError,
     must_correct_rows,
     read_findings,
+    regression_rows,
 )
 
 
@@ -190,13 +200,23 @@ def _instruction(row: FindingRecord) -> str:
     )
 
 
+def _regression_instruction(row: FindingRecord) -> str:
+    truth = row.truth or "remove or correct the claim"
+    return (
+        f"The README text {row.quote!r} was confirmed false ({row.description}) and corrected before"
+        f"; it must never be printed again. Correct it: {truth}"
+        + (f" (evidence: {row.evidence})" if row.evidence else "")
+    )
+
+
 def must_correct_failures(candidate: Candidate) -> list[Failure]:
-    """One failure per place an open register quote is still printed."""
-    if candidate.lane.upper() in ("L", "LANE_L"):
-        return []
+    """One failure per place a register quote (an open row, or a resolved one printed again) is
+    printed."""
+    route = LANE_L if candidate.lane.upper() in ("L", "LANE_L") else LANE_R
     try:
-        rows = must_correct_rows(
+        rows = regression_rows(
             candidate.entry.repository,
+            route,
             candidate.findings_path if candidate.findings_path is not None else DEFAULT_FINDINGS_PATH,
         )
     except (OSError, ValueError, FindingsRegisterError):
@@ -212,8 +232,12 @@ def must_correct_failures(candidate: Candidate) -> list[Failure]:
     failures: list[Failure] = []
     for row in printed:
         quote = _squash(row.quote)
-        instruction = _instruction(row)
-        detail = f"open finding ({row.description}) still printed: {instruction}"
+        if row.status == STATUS_OPEN:
+            instruction = _instruction(row)
+            detail = f"open finding ({row.description}) still printed: {instruction}"
+        else:
+            instruction = _regression_instruction(row)
+            detail = f"resolved finding ({row.description}) printed again: {instruction}"
         units = [unit for unit, text in placed if quote in text]
         if units:
             failures.extend(

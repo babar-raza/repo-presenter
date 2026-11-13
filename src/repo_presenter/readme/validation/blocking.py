@@ -80,7 +80,7 @@ CHECK_NAMES: dict[str, str] = {
     "BC-12": "Every product-name position spells the registry's canonical product name",
     "BC-14": "Version, install command and publication statements agree with the facts",
     "BC-17": "Parity (R2): no content of the published README is lost without a non-loss reason",
-    "BC-18": "Must-correct: no open findings-register quote (a confirmed false claim) is still printed",
+    "BC-18": "Must-correct: no findings-register quote (a confirmed false claim, open or resolved, never a refuted one) is printed",
 }
 
 

@@ -27,6 +27,7 @@ from repo_presenter.readme_findings import (
     append_finding,
     must_correct_rows,
     read_findings,
+    regression_rows,
     resolve_finding,
 )
 
@@ -114,11 +115,46 @@ def test_lane_l_passes(tmp_path: Path) -> None:
     assert must_correct_failures(_candidate(path, lane="L")) == []
 
 
-def test_resolved_row_passes(tmp_path: Path) -> None:
+def test_resolved_row_quote_reappearing_fails_with_its_truth(tmp_path: Path) -> None:
+    """Owner, 2026-11-13: an already caught problem must not reappear. A RESOLVED row is a
+    permanent regression check; it is not citable (citations stay OPEN-only), and its stored
+    truth is the repair instruction."""
     path = _register(tmp_path, quote=UNIT_QUOTE, truth=TRUTH)
     resolve_finding(path, repository=REPO, description="false claim", resolved_at="2026-11-13")
     assert must_correct_rows(REPO, path) == []
+    (failure,) = must_correct_failures(_candidate(path))
+    assert failure.quote == UNIT_QUOTE and TRUTH in failure.instruction
+    assert "printed again" in failure.detail and "finding:" not in failure.instruction
+    document = _validate(_candidate(path), tmp_path)
+    assert shared._verdicts(document)["BC-18"] == "FAIL"
+
+
+def test_resolved_row_whose_quote_is_gone_passes(tmp_path: Path) -> None:
+    path = _register(tmp_path, quote="a sentence the README never prints", truth=TRUTH)
+    resolve_finding(path, repository=REPO, description="false claim", resolved_at="2026-11-13")
     assert must_correct_failures(_candidate(path)) == []
+
+
+def test_refuted_row_never_blocks(tmp_path: Path) -> None:
+    """A row recorded as REFUTED (its claim was true after all, e.g. the Email .NET 26.7.0 rows)
+    must not block the true text it quotes."""
+    path = _register(
+        tmp_path, quote=UNIT_QUOTE, truth=TRUTH,
+        evidence="REFUTED 2026-11-13 by the sealed facts: package:published_version = 26.7.0",
+    )
+    resolve_finding(path, repository=REPO, description="false claim", resolved_at="2026-11-13")
+    assert regression_rows(REPO, LANE_R, path) == []
+    assert must_correct_failures(_candidate(path)) == []
+
+
+def test_lane_l_candidate_is_held_to_lane_l_rows_only(tmp_path: Path) -> None:
+    path = _register(tmp_path, quote=UNIT_QUOTE, truth=TRUTH, route=LANE_L)
+    (failure,) = must_correct_failures(_candidate(path, lane="L"))
+    assert failure.quote == UNIT_QUOTE
+    # ...and a Lane R candidate is not held to a lane_l row, nor a Lane L one to a lane_r row.
+    assert must_correct_failures(_candidate(path)) == []
+    lane_r = _register(tmp_path / "r", quote=UNIT_QUOTE, truth=TRUTH)
+    assert must_correct_failures(_candidate(lane_r, lane="L")) == []
 
 
 def test_lane_l_route_other_repository_and_quoteless_rows_do_not_count(tmp_path: Path) -> None:
