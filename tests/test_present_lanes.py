@@ -96,7 +96,7 @@ def test_the_workflow_keeps_both_lanes_independent_and_the_existing_structure() 
     # R37 (2026-11-13) added a fourth, schedule-only job, cohort: it plans each scheduled fire,
     # reserves budget and dispatches one run of this workflow per repository; it runs no lane
     # (tests/test_present_cohort.py pins its shape).
-    assert set(workflow["jobs"]) == {"cohort", "facts", "present", "sandbox-execute"}
+    assert set(workflow["jobs"]) == {"cohort", "facts", "present", "chain", "sandbox-execute"}
     assert_facts_job_is_unprivileged(workflow)
     assert_present_job_runs_no_repository_code(workflow)
     assert_lanes_are_independent(workflow)

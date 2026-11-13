@@ -3,11 +3,11 @@
   "card": "TC-012",
   "gate": "GATE4_PRODUCTION",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-13T13:49:02Z",
-  "base_rev": "dac27952a4949cdf449f6f033f0712b70f75bc6a",
-  "head_rev": "42485328f62d238d80d11a93d4c8c677921bc96b",
+  "generated_at": "2026-11-13T20:17:25Z",
+  "base_rev": "b067b7360d4225586e716e5276200e5a28b3bd2c",
+  "head_rev": "6ac7cd9a201e213b70c82303ee7fe7b11fb9b333",
   "card_sha256": "b0eb5254cbaf9dda33c8f3a6d4d64285b890787ec35f1a52aed95892d0ae2a88",
-  "checker_fileset_sha256": "24e8e532958b89b50d346e77cfeb2c2b2e90a25cd532f296e2effafdefa6ab8d",
+  "checker_fileset_sha256": "2c71f5aeb13c653d602dc3a847dce1d383c8131888550840bf5d5a64052d93d5",
   "checker_fileset_scheme": "v3",
   "fingerprint": {
     "python": "3.13.18",
@@ -16,8 +16,6 @@
   "scope": {
     "ok": true,
     "changed_paths": [
-      "scripts/scheduled_execution_gate.py",
-      "scripts/select_scheduled_cohort.py",
       "tests/test_present_schedule.py"
     ],
     "violations": [],
@@ -30,13 +28,13 @@
         {
           "command": "python -m pytest tests/test_present_schedule.py tests/test_present_lanes.py tests/test_present.py tests/test_scheduled_execution_gate.py -q",
           "exit_code": 0,
-          "duration_s": 12.654,
-          "stdout_sha256": "e31f5bce38aaf22c6fbf533e7c878bb5de99f5d8a8aa44c71029f01c6d5e8ef6"
+          "duration_s": 12.888,
+          "stdout_sha256": "1bcbce159e04c8ec58c6c4fb27de411addd9030af234089d4694fab9038469bf"
         },
         {
           "command": "python ops/checks/marker_check.py Dockerfile \"FROM\"",
           "exit_code": 0,
-          "duration_s": 0.029,
+          "duration_s": 0.022,
           "stdout_sha256": "3ba2b9104d4cc40ed0cb8406ec68e85cbeb33ce95b1346246302fd54826d347b"
         }
       ],
@@ -48,13 +46,13 @@
         {
           "command": "python -m pytest tests/test_present_schedule.py tests/test_present_lanes.py tests/test_present.py tests/test_scheduled_execution_gate.py -q",
           "exit_code": 0,
-          "duration_s": 12.516,
-          "stdout_sha256": "1a62dbc552f2ff83761c39fe4351b10a7257d2baad868e6d84a45bd1646628fd"
+          "duration_s": 12.211,
+          "stdout_sha256": "827fe15c83c32e48b1884f1df7814c3d7c5ea528760344af51a72b34608c0e1e"
         },
         {
           "command": "python ops/checks/marker_check.py Dockerfile \"FROM\"",
           "exit_code": 0,
-          "duration_s": 0.022,
+          "duration_s": 0.029,
           "stdout_sha256": "3ba2b9104d4cc40ed0cb8406ec68e85cbeb33ce95b1346246302fd54826d347b"
         }
       ],

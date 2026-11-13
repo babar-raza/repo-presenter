@@ -847,7 +847,9 @@ items:
       - "2026-11-13 branch k03-k05-surface: tree_helpers.csharp_active_modifiers reads a split '#if X public #else internal #endif' modifier from the Release branch (both tree-sitter shapes: preproc_if parent, and the ERROR-node recovery when a file holds several); _in_excluded_preproc_branch no longer applies the modifier's condition to the whole declaration; api_surface skips types inside a definitely-false #if branch and types nested in a non-public type (C#, Java). Re-extracted at the pinned revisions: Words 618 -> 615 public types (DocumentPositionMovement, INodeCollection, NodeEnumerator dropped, exactly the review's three), 3D .NET 293 -> 292 (Chunk dropped); Cells .NET and Email .NET unchanged"
       - "rule (h) also holds a count the sentence says 'is listed below' to the table rows that follow (fewer rows = finding), worded without the stated number so a Lane L count edit leaves it a residual. Replay, zero calls: the Cells C++ '195 public types -- is listed below' row is flagged; with re-extracted facts all 4 Words K05 rows and the 3D .NET Chunk row are flagged (6 of 6 registered K05 rows)"
       - "R10: recertify --gate --base-baseline <origin/main baseline> OK after justifying two genuine Lane L defects the listed-count check finds (Cells C++ 51d077c2ad1b L-03+L-05: 197 stated, 189 listed; HTML Python c1526e9d7b92 L-03: 303 stated, 238 listed). Certified on the same seals: origin/main code R 1 / L 26, this branch R 1 / L 24"
-    next_action: "Lane L correction: when a correction removes absent-type rows or changes a stated count, also make a 'listed below' count agree with the rows (deterministic edit) so Cells C++ and HTML Python re-certify; hosted re-seal of Words .NET and 3D .NET Lane R under extractor 7; R41 run id; done only then"
+      - "2026-11-13 branch lane-l-listed-count: Lane L detector listed_type_count (v1) keeps the facts' total and states the listed rows ('303 public types in total, 238 of them listed below by module'; '— 195 public types — has 189 of them listed below': a total that was the table's own row count, with rows removed as absent, becomes the facts' count 197 -> 195); no row dropped (R14); 'are listed'/'as follows' fail closed. BC-14 rule (h): surface_claims.states_listed_count accepts a sentence that states exactly the listed number. Tests: tests/readme/correction/detectors/test_listed_type_count.py over the verbatim API Reference sections of both sealed READMEs (tests/fixtures/listed_count/)"
+      - "zero-call recertify --all --remote origin (read-only, no seal written): Lane L 24 -> 26, Lane R 1 -> 1; Cells C++ and HTML Python Lane L NEEDS_REPAIR -> RECERTIFIED, nothing else changed; Cells C++ example 2 compile failure carried as an R21 residual (net_improvement true). recertify --gate --base-baseline <origin/main baseline>: OK, 45 seals, certified R 1 / L 26; dashboard_matches_live --no-loss OK (state.yaml lane_l_accepted resynced 24 -> 26); data/recertification_baseline.json rows RECERTIFIED"
+    next_action: "merge, then the hosted recertify --write on main writes the two re-certified Lane L seals (R41 run id); hosted re-seal of Words .NET and 3D .NET Lane R under extractor 7; done only then"
     updated: "2026-11-13"
 
   - id: BL-066
@@ -987,4 +989,46 @@ items:
       - "2026-11-13: classification of every repair attempt in the four logs (gh run view <id> --log) recorded in the DECISION_LOG entry for BL-076"
       - "2026-11-13: tests/readme/repair/test_repair_robustness_bl076.py (12 regression tests from the logged shapes) pass; replay on the real sealed bundles of 3D .NET and 3D Python: restore keeps 050.table / 060.table / 010.list PRESERVE_ATTRIBUTED citing 7 / 5 / 1 register rows, no register quote printed, every withheld span register-backed (parity_gate.withheld_by_finding)"
     next_action: "supervisor merges; the hosted re-run of the four cells (R41 re-verification of every candidate via recertify.yml) is the closing evidence; renderer-printed facts defects (Cells .NET Style.Borders/Style.Font/Workbook.Save docstrings) are owned by the extractor/facts workers"
+    updated: "2026-11-13"
+
+  - id: BL-078
+    title: "Lane L: a deterministic holdout refusal over a restored call store failed LEDGER_NO_RECORDS instead of reporting the refusal"
+    type: defect
+    source: "hosted present run 43489976823 (job present, aspose-3d-foss/Aspose.3D-FOSS-for-.NET), Lane L: NoOpProofError [LEDGER_NO_RECORDS] invocation 3ffcb442763a41a4acc72a8cc121e0f1; same shape in run 43473790998 (invocation df27ef742d534aea802ef7d02730b28c)"
+    priority: P1
+    status: active
+    implementation_path: "existing Lane L stage only (R27): lane_l_run.run_lane_l reads its call count with core/noop_proof.measure_invocation (the no-op proof's measure, which requires >= 1 record) only when the verdict was model-reviewed; a verdict folded by holdout_findings dispatched no job and counts its stamped provider calls with core/noop_proof.count_provider_calls (zero records is a valid zero)"
+    acceptance: "regression test from the logged shape (restored lane-l ledger + deterministic refusal) reports the refusal naming Lane R, not LEDGER_NO_RECORDS; the falsifier (a model-reviewed verdict whose invocation stamped no record, over a restored ledger) still fails LEDGER_NO_RECORDS; R10 gate OK; next hosted Lane L run of 3D .NET reports its real holdout outcome"
+    evidence:
+      - "2026-11-13: gh run view 43489976823 --log: Lane L ran 12 s, no review call, cache restored .present-work/lane-l/llm_cache from key ...-43473790998; gh run list --workflow present.yml -L 30: Lane L ran in 2 runs (43489976823, 43473790998), both failed this way"
+      - "2026-11-13: tests/test_lane_l_hosted.py::test_a_deterministic_refusal_over_a_restored_call_store_reports_the_refusal_not_a_noop_proof fails on origin/main with the exact logged message (version set 7e884dc3acd6) and passes with the fix; ...::test_a_model_reviewed_run_that_recorded_nothing_over_a_restored_ledger_still_fails_the_proof passes"
+    next_action: "supervisor merges; the next hosted Lane L run of 3D .NET (and every Lane L cell refused by its holdouts) is the closing evidence (R41)"
+    updated: "2026-11-13"
+
+  - id: BL-077
+    title: "Autonomous engine stops after every cohort: workflow_run never fires for GITHUB_TOKEN-dispatched present runs"
+    type: defect
+    source: "hosted 2026-11-13: cohorts dispatched at 17:32 and 19:12 finished; no cohort-chain run followed either"
+    priority: P0
+    status: active
+    implementation_path: "present.yml least-privilege 'chain' job (actions: write only, always(), dispatched runs only) dispatches cohort-chain.yml on main; cohort-chain.yml accepts workflow_dispatch from main; planner's in-flight hold keeps one cohort at a time"
+    acceptance: "after merge, the last run of a hosted cohort is followed by a cohort-chain run (event workflow_dispatch) that plans the next cohort, with no manual kick; evidence = both run ids"
+    evidence:
+      - "tests: test_cohort_chain.py (trigger + main-only request), test_present_cohort.py, test_present_lanes.py, test_present_schedule.py::test_a_planner_dispatched_run_requests_the_next_planner_pass_with_least_privilege; TC-012 re-verified ACCEPTED"
+    next_action: "merge, then confirm on the next hosted cohort"
+  - id: BL-079
+    title: "Repair accepted revisions that still printed the false claim (or a sibling one), repaired sections never reached the README after a partial restore, and the renderer printed never-thrown exception docstrings"
+    type: defect
+    source: "hosted Lane R runs 43489976823 (3D .NET), 43489981024 (3D Python), 43489984973 (Cells .NET) and 43489988826 (Cells C++) all failed after repair (code after BL-076, before PR #67); supervisor brief 2026-11-13 (classes A and B)"
+    priority: P0
+    status: active
+    depends_on: [BL-076]
+    implementation_path: "existing repair stage and renderer only (R27): repair/loop.py (reject_still_failing: every S4/S5/S6 revision is rendered and re-judged by the BC-02/BC-14/BC-18 judges before it is accepted; the defect's own failure still printed, or any of them printed anew, rejects it with the rule's own text for the job's re-ask); repair/targeted.py (repair_packet names the facts the rule text cites, contradicting_facts; REPAIR_LOGIC_VERSION 4); review/defect_bridge.py (a deterministic finding carries its evidence); cascade._settle_s9 (repairs keyed against the composition the next round reproduces, not a partial restore's; plan/section-only rounds recompose from the same dispositions); validation/code_path_claims.py (rule j7 reads 'usage of' and the package's own version; refuted_thrown_description); composition/renderer.py (_not_thrown_marked: a never-thrown type's Core API row prints 'Declared; not thrown by library code.')"
+    acceptance: "a hosted re-run of the four cells under the fixed code records no 'repaired' attempt whose revision the final validation or deterministic review rejects for the same or a BC-02/BC-14/BC-18 sibling rule, no 'the causing section was not in the call store' after a partial restore, and no Core API row saying a never-thrown type is thrown; R10 gate OK; R41: every candidate of both lanes re-verified under the fixed code (recertify run id and per-lane result)"
+    evidence:
+      - "2026-11-13: classification of every accepted-but-failed repair attempt in the four logs (gh run view <id> --log) recorded in the DECISION_LOG entry for BL-079"
+      - "2026-11-13: tests/readme/repair/test_repair_revalidation.py (23 tests from the logged shapes) pass; with the guard, the base-composition keying or the renderer fix reverted, 6 of them fail (negative control)"
+      - "2026-11-13: facts re-extracted locally (present --stage facts) at the four pinned revisions; the sealed bundles' plan/units/dispositions re-rendered under them print 'Declared; not thrown by library code.' for 3D Python's 7 and 3D .NET's 1 never-thrown types and claim_findings finds no never-thrown row; the Cells .NET repair revision 'demonstrating usage of Aspose.Cells FOSS for .NET version 26.10.0.0' is now a BC-14 (j7) finding, the BC-18 revision 'via a local project reference' is not"
+      - "2026-11-13: PYTHONPATH=src python -m repo_presenter.recertify --gate --remote origin --base-baseline <origin/main baseline>: OK, no seal that re-certified in the baseline regressed (45 seals checked; certified lane R 1, lane L 24)"
+    next_action: "supervisor merges; the hosted re-run of the four cells and the R41 re-verification of every candidate (recertify.yml) are the closing evidence. Not decided here: the mixed round (an S4 repair beside S6 repairs after a reshaping restore) still recomposes from fresh reconciliation; ASSUMPTION: rare, to be confirmed from the re-run's repairs.json"
     updated: "2026-11-13"

@@ -96,7 +96,12 @@ progress:
   # rows, so its L-05 failing example is no longer an R21 residual) and HTML Python (c1526e9d7b92: "303 public types
   # in total, listed below" over 238 rows) -- genuine defects, justified per seal in
   # data/recertification_baseline.json (R10); no seal is deleted. Origin/main code on the same seals: R 1, L 26.
-  lane_l_accepted: 24
+  # RESYNCED 2026-11-13 (lane_l_accepted 24 -> 26, BL-065) after re-running `ops/checks/dashboard_matches_live.py
+  # --no-loss` (live L=26) and `python -m repo_presenter.recertify --gate` (OK): the new Lane L detector
+  # listed_type_count makes the "listed below" sentence true (Cells C++ "— 195 public types — has 189 of them listed
+  # below"; HTML Python "303 public types in total, 238 of them listed below"), so both seals re-certify again, Cells
+  # C++ with its failing example carried as an R21 residual. Zero calls; no seal written (the hosted recertify does).
+  lane_l_accepted: 26
   lane_l_corrected_non_empty_patch: 15
   lane_l_blocked: 0
   # RESYNCED 2026-11-13 (lane_r_accepted 13 -> 0) after re-running `ops/checks/dashboard_matches_live.py`
@@ -215,7 +220,7 @@ owner_review_status:
 
 release_gate_dashboard:
   generated_by: gatecli
-  generated_at: '2026-11-13T19:30:23Z'
+  generated_at: '2026-11-13T20:17:25Z'
   note: Tool-generated from gateverify.rebuild_state() -- never hand-edit this block.
     Historical current_gate/active_work_item below are preserved bootstrap-era narrative,
     not this cursor; this block is the real, evidence-derived release-gate status
@@ -289,7 +294,7 @@ release_gate_dashboard:
     status: ACCEPTED
     attempt: 0
     blocker: null
-    commit: 332f0194435aa7c15789fe5d37e42060ec9e7312
+    commit: 6ac7cd9a201e213b70c82303ee7fe7b11fb9b333
     receipt: GATE1_QUALITY/TC-008a/receipt.json
   - id: TC-009
     gate: GATE2_INTEGRATIONS
@@ -342,7 +347,7 @@ release_gate_dashboard:
     status: ACCEPTED
     attempt: 0
     blocker: null
-    commit: 42485328f62d238d80d11a93d4c8c677921bc96b
+    commit: 6ac7cd9a201e213b70c82303ee7fe7b11fb9b333
     receipt: GATE4_PRODUCTION/TC-012/receipt.json
   - id: TC-012a
     gate: GATE4_PRODUCTION
@@ -445,7 +450,7 @@ release_gate_dashboard:
     status: ACCEPTED
     attempt: 0
     blocker: null
-    commit: fdf24b90e594ae4baa3b250402a4e9b28b4d1f55
+    commit: dbcab1ab77d3103e58c1fdc4f99b0e8cb9b6838f
     receipt: GATE5_DELIVERY_PROGRAM/TC-022a/receipt.json
   - id: TC-022b
     gate: GATE5_DELIVERY_PROGRAM

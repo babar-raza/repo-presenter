@@ -31,9 +31,9 @@ def test_the_cohort_job_runs_only_as_the_planner_with_least_privilege_and_no_sec
     (cohort-chain.yml, run-request `cohort`); never on a dispatch or a targeted call."""
     workflow = _load_workflow()
     cohort = _cohort(workflow)
-    assert cohort["if"] == (
+    assert " ".join(cohort["if"].split()) == (
         "github.event_name == 'schedule' || "
-        "(github.event_name == 'workflow_run' && inputs.repository == '')"
+        "((github.event_name == 'workflow_run' || github.event_name == 'workflow_dispatch') && inputs.repository == '')"
     )
     assert cohort["concurrency"] == {"group": "present-cohort-planner", "cancel-in-progress": False}
     assert cohort["permissions"] == {"contents": "write", "actions": "write"}

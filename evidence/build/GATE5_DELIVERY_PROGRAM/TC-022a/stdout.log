@@ -3,7 +3,7 @@
 $ python -m pytest tests/acceptance/test_registration.py -q
 --- stdout ---
 .................                                                        [100%]
-17 passed in 0.23s
+17 passed in 0.39s
 
 --- stderr ---
 
@@ -127,8 +127,9 @@ ______________ test_real_build_reports_the_honest_zero_call_floor ______________
         # independent fact-check registered confirmed false claims in both, so they are NEEDS_REPAIR on BC-18.
         # 77 -> 76 (2026-11-13, BL-063..BL-065 baseline rewrite): Cells C++ and HTML Python Lane L are
         # NEEDS_REPAIR on the justified K05 listed-count defect (-2); Cells Go Lane R's newer seal
-        # re-certifies (+1). Verified on the tree merged with main after PR #66 (baseline per-seal union).
-        assert registration.shortfall.clean_twin_achieved == 76
+        # re-certifies (+1). Verified on the tree merged with main after PR #66 (baseline per-seal union). 76 -> 78 (2026-11-13, BL-065
+        # listed-count correction): the Cells C++ and HTML Python Lane L seals re-certify again.
+        assert registration.shortfall.clean_twin_achieved == 78
         assert registration.shortfall.clean_twin_shortfall == 0
     
         assert len(registration.labelled_cases) == 113
@@ -138,15 +139,15 @@ ______________ test_real_build_reports_the_honest_zero_call_floor ______________
         # The digest is a real SHA-256 hex digest and is itself deterministic across two builds.
 >       assert len(registration.digest) == 64
 E       AssertionError: assert 32 == 64
-E        +  where 32 = len('7bbe65b9ab4601b42e8c1f05cf2bdbb0')
-E        +    where '7bbe65b9ab4601b42e8c1f05cf2bdbb0' = A1Registration(labelled_cases=(CaseRecord(case_id='ref:words-python/real:unsupported_claim:8', source='calibration_reg..._in=True, sample_size=23, agreement=0.0, method='simple_majority_baseline'), digest='7bbe65b9ab4601b42e8c1f05cf2bdbb0').digest
+E        +  where 32 = len('d8eaf3b4ef367f6525727e5fec613103')
+E        +    where 'd8eaf3b4ef367f6525727e5fec613103' = A1Registration(labelled_cases=(CaseRecord(case_id='ref:words-python/real:unsupported_claim:8', source='calibration_reg..._in=True, sample_size=23, agreement=0.0, method='simple_majority_baseline'), digest='d8eaf3b4ef367f6525727e5fec613103').digest
 
-tests/acceptance/test_registration.py:402: AssertionError
+tests/acceptance/test_registration.py:403: AssertionError
 =========================== short test summary info ============================
 FAILED tests/acceptance/test_registration.py::test_digest_is_deterministic_and_pinned
 FAILED tests/acceptance/test_registration.py::test_load_calibration_registration_from_a_small_fixture
 FAILED tests/acceptance/test_registration.py::test_real_build_reports_the_honest_zero_call_floor
-3 failed, 14 passed in 0.27s
+3 failed, 14 passed in 0.28s
 
 --- stderr ---
 

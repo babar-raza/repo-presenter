@@ -5483,3 +5483,157 @@ test. Certified on the same seals: origin/main code R 1 / L 26; this branch R 1 
 correction that would make a "listed below" count agree with its rows is a follow-up on BL-065.
 
 Backlog: BL-063, BL-064, BL-065
+
+## 2026-11-13: BL-065 — Lane L states a "listed below" count truthfully (Cells C++, HTML Python re-certify)
+
+Fix worker under R10/R14/R21/R35/R36(b)/R41. Zero provider calls; no new stage or record type (R27): one detector in
+the existing Lane L correction registry, and the matching BC-14 rule (h) reading.
+
+**Defect (verified on the seals).** Both Lane L corrections were themselves the cause: Cells C++ (51d077c2ad1b) said "The
+full public surface — 197 public types — is listed below" over 197 rows; `absent_type_row` removed 8 rows naming no
+public type (`BitReader`, `XmlParser`, `Workbook_Impl`, three `*_Iterator`s, `HuffmanTable`, `ParsedNumericFormat`),
+leaving 189; the facts record 195 public types. HTML Python (c1526e9d7b92) said "243 public types in total, listed below
+by module" over 243 rows; `stale_type_count` made it 303 (the facts' count) and `absent_type_row` removed 5 rows, leaving
+238. So each corrected README introduced a false "listed below" claim, which made the run no net improvement (R21) —
+for Cells C++ that is also why its failing example stopped being an R21 residual (L-05).
+
+**Decision: which statement is true.** N = rows is false (189/238 are not the public-type counts); N = facts keeps the
+listing claim false; adding rows would invent descriptions; dropping rows is forbidden (R14). The true and smallest
+statement keeps the facts' total and states how many the table lists: "… 303 public types in total, 238 of them listed
+below by module"; "— 195 public types — has 189 of them listed below". A total above the facts is otherwise kept
+(`stale_type_count`'s rule, maintainers may count unrecorded kinds) except when it was the sentence's own table row
+count and rows of that table were removed as absent: then it demonstrably counted non-public types and becomes the facts'
+count (Cells C++ 197 -> 195). "are listed" and "as follows" fail closed (no short true rewording; the finding stays).
+
+**Built.** `readme/correction/detectors/listed_type_count.py` (DETECTOR_VERSIONS `listed_type_count: 1`, pinned): judges
+the count the corrected README will state (`stale_type_count`'s replacement) against the rows `absent_type_row` leaves;
+`FALSE_CLAIM_FIX` edits, one line fragment each, citing public_symbol facts; not a layout-only detector, so it counts as
+a content defect fix in `lane_l_review.net_improvement`. BC-14 rule (h): `surface_claims.states_listed_count` — a sentence
+that states exactly the listed number ("M of them" / "of which M") is no longer a finding; any other number still is.
+
+**Evidence (zero calls).** `recertify --all --remote origin` (read-only): before (this branch's base) Lane L 24, Lane R 1;
+after Lane L 26, Lane R 1 — Cells C++ and HTML Python Lane L NEEDS_REPAIR -> RECERTIFIED, nothing else changed. Cells C++
+L-05: with the run a net improvement again, the example 2 compile failure (example_002.cpp:10:48, no `operator[]` for a
+string key) is an R21 residual (holdouts.json and PR description only, never README text), so the seal certifies. Tests:
+`tests/readme/correction/detectors/test_listed_type_count.py` over the verbatim API Reference sections of both sealed
+live READMEs (`tests/fixtures/listed_count/`), controls (already true, "are listed", above-facts total kept), and the
+rule (h) reading; `test_r21_residuals.py` updated (its "listed below" residual is now repaired); `test_registration.py` clean twins 76 -> 78 (derived from the baseline). R10 gate: OK, 45 seals, certified R 1 / L 26; `dashboard_matches_live.py --no-loss` OK after resyncing `project/state.yaml` lane_l_accepted 24 -> 26.
+`data/recertification_baseline.json`: both rows RECERTIFIED (their NEEDS_REPAIR justifications removed).
+
+**Does NOT decide.** No seal was written or published (`--write` not run): the hosted recertify on merge (R41) writes the
+re-certified seals and records the run id. Words .NET / 3D .NET Lane R re-seal under extractor 7 is still open on BL-065.
+
+Backlog: BL-065
+
+## 2026-11-13: BL-078 — Lane L's zero-job refusal path read its call count with the no-op proof's measure
+
+**Shape.** Hosted run 43489976823 (aspose-3d-foss/Aspose.3D-FOSS-for-.NET) Lane L failed in 12 s with
+`NoOpProofError: [LEDGER_NO_RECORDS] ledger.jsonl: no record belongs to invocation 3ffcb442...`; run 43473790998 failed
+the same way. Those are the only two Lane L executions in the last 30 present runs, so every Lane L run that reached
+`run_lane_l` hit it.
+
+**Root cause (first principles).** Not a missing recording and not an id or path mismatch between lanes (Lane R and
+Lane L use separate workspaces, `cascade/` and `lane-l/`, and separate invocations). `lane_l_review.review_correction`
+folds the verdict from `holdout_findings` without dispatching any job when a holdout fails, so the invocation correctly
+writes no ledger record. `run_lane_l` then measured provider calls with `measure_invocation` whenever `ledger.jsonl`
+existed, and the workflow's cache restore (`.present-work/lane-l/llm_cache`, key ...-43473790998) leaves the previous
+run's ledger in place. `measure_invocation`'s premise ("a rerun that reused stored outputs records each reuse") is
+right for a no-op proof, wrong for an invocation that dispatched no job. On a fresh runner (no ledger) the same run
+reported the refusal correctly (`test_a_defect_the_engine_may_not_repair_is_refused_before_the_model_is_asked`), so the
+outcome depended on cache state, and the real refusal naming Lane R was masked.
+
+**Fix (existing component, R27).** `run_lane_l` uses `measure_invocation` (strict) only when `verdict.model_reviewed`;
+a folded verdict counts its stamped provider calls with the new `noop_proof.count_provider_calls` (no records = 0; a
+stray call is still counted and reported). The proof is not weakened: `measure_invocation`, `verify_noop_pair` and
+`seal_candidate` are unchanged, and a model-reviewed verdict whose invocation stamped nothing still fails
+`LEDGER_NO_RECORDS` (falsifier test). A folded verdict never reaches a seal (`_lane_l_and_seal` raises on REJECT /
+no model review). Lane R's cascade always dispatches authoring jobs before measuring, so it is outside this class.
+
+**Evidence.** The regression test reproduces the logged message verbatim on origin/main code (same version set
+7e884dc3acd6) and passes with the fix. Zero provider calls.
+
+Backlog: BL-078
+
+## 2026-11-13 — BL-077: the engine continues itself after every cohort
+
+**Finding.** `cohort-chain.yml` never ran after a present run finished. It ran only after recertify runs,
+which a push starts. GitHub does not start `workflow_run` workflows for runs created with `GITHUB_TOKEN`,
+and the cohort planner dispatches every present run that way. So the loop stopped after each cohort:
+cohorts were dispatched at 17:32 and 19:12 on 2026-11-13, and nothing followed either. The hourly cron
+did not restart it reliably (R37).
+
+**Decision.** Each planner-dispatched present run ends with a least-privilege `chain` job: actions:
+write only, no checkout, no secret, always(). The job dispatches `cohort-chain.yml` on main. A
+`workflow_dispatch` made with `GITHUB_TOKEN` is allowed to start a run. The planner's in-flight hold is
+unchanged, so only the last finishing run of a cohort dispatches the next one, and the chain cannot fan
+out. The credentialed present job keeps `contents: write` alone.
+
+Backlog: BL-077
+
+## 2026-11-13: BL-079 — a repair is accepted only when its revision no longer prints the false claim; repaired sections reach the README; never-thrown docstrings are not printed
+
+**Evidence.** `gh run view <id> --log` (job "present") of 43489976823 (3D .NET), 43489981024 (3D Python), 43489984973
+(Cells .NET), 43489988826 (Cells C++), code after BL-076 and before PR #67. The artifacts could not be downloaded (blob
+host refused by this session's proxy); facts were re-extracted locally at the four pinned revisions
+(`present --stage facts`) and the sealed bundle refs supplied plan, units and dispositions.
+
+**Classification of every repair attempt the logs record as `repaired` whose candidate still failed.**
+A = accepted while its revision still violated its own rule or a BC-02/BC-14/BC-18 sibling; B = the failing line is a
+renderer-printed docstring row no repair can reach; C = the repaired text never reached the README.
+
+| Run | Attempt (logged) | Class | Why |
+|---|---|---|---|
+| Cells .NET | S6 BC-18 samples link -> "... via a local project reference." | C | correct revision; the final README printed the pre-repair "demonstrating how to use `Aspose.Cells.FOSS` version 26.10.0" (the final claim_contradiction quote) |
+| Cells .NET | S6 BC-14 samples link -> "... demonstrating usage of Aspose.Cells FOSS for .NET version 26.10.0.0." | A | revised the BC-18 revision (same store key) back into the samples-use-the-package claim; rule (j7) read neither "usage of" nor the product's prose name, no check re-ran on the revision, and `project_file:samples.product_reference` (evidence-only) was never in the packet |
+| Cells C++ | S4 BC-02 development_testing block -> VERIFIED_PRESERVE | A | kept the block printing `cmake --build build`; BC-02 failed at the end (the only remaining failure); `install_command:cmake` (UNRESOLVED) was never in the packet |
+| Cells C++ | S6 BC-14 Style hub, "regenerated it fresh" | C (signature) | "the causing section was not in the call store": the repair was keyed against the partial restore's tasks |
+| 3D .NET | S6 claim_contradiction:1 scope_limitations -> RenderFactory dropped | C | final README printed the pre-repair line 768 (`RenderFactory`, `NurbsSurface.ToMesh` "all throw `NotImplementedException`") |
+| 3D .NET | S6 BC-14 -> "PLY import and export work through Scene.Open and Scene.Save." | A (latent) | rendered, its code spans make it a BC-14 finding (`implementation:throws...ply.createloadoptions`); masked by C |
+| 3D .NET | final claim_contradiction `DriverException` | B | Core API row from the type's docstring ("Exception raised by internal rendering drivers.") |
+| 3D Python | S6 claim_contradiction:7 / :9 (".dae" dropped), and :7+:9 "regenerated it fresh" | C | final README printed the pre-repair lines 716 and 809 with `.dae` |
+| 3D Python | S4 BC-14 OMIT_UNSUPPORTED "the table lists classes that are never thrown" | B | the seven failing rows (`ExportException`, `ImportException`, `ParseException`, `TrialException`, `DriverException`, `InitializationException`, `ShaderException`) are renderer Core API rows; no disposition prints them |
+
+(The other `repaired` attempts — Cells C++ 041/412e/050 omissions, the exceptions VERIFIED_REWRITE and the scope
+CORRECT_WITH_EVIDENCE, 3D Python's BC-18/BC-17/BC-07 entries — left no failing check of their own.)
+
+**Root causes and decisions (existing repair stage and renderer, R27; zero calls).**
+1. *Class A — acceptance judged only the causing stage's own checks.* `reject_printed_quote` (S4) matches the finding's
+   quote, so a reworded claim or a validation defect with no quote (BC-02) passed; S6/S5 had nothing. Decision: before a
+   revision is accepted (`repair/loop.reject_still_failing`, S4/S5/S6), it is rendered with the same plan/units/
+   dispositions as the stage's stored output and both are judged by the BC-02/BC-14/BC-18 judges; the revision is
+   rejected when a failure of the defect's own is not printed fewer times, or any failure is printed more times, with the
+   rule's own detail ("BC-14 still fails on this revision, which is the defect: ...", "this revision makes BC-02 fail:
+   ...") quoted back in the job's re-ask. BC-05/BC-08/BC-17 are not re-run: a VERIFIED_REWRITE prints only after
+   re-authoring, so they keep their own guards. The packet now names the facts the rule text cites
+   (`defect.contradicting_facts`: `implementation:never_thrown.*`, `project_file:samples.product_reference`,
+   `install_command:cmake` with its polarity and attributes); every other packet is byte-identical. Deterministic review
+   findings carry their `evidence` so the guard reads the rule's own text from a field. Rule (j7) also reads "usage of"
+   and a sentence that gives the package's own version (`package:version`/`package:published_version`) without its id.
+2. *Class C — repairs keyed against a partial restore.* `_settle_s9` handed `_repair_defects` the restored composition,
+   whose tasks are built from the restored dispositions, while the next round's `_compose` reconciled afresh: the repair
+   was stored under a request hash nothing looked up, the pre-repair section was served from the store, and a repair of a
+   restored task found "the causing section was not in the call store" and paid for a fresh call (INTERPRETATION: the
+   logs show the restore line and these two signatures, not the kept restore itself; the artifacts were not readable,
+   and no other path serves the pre-repair section from the store after an accepted S6 repair). Decision: the repair
+   is keyed against the composition the round's calls were made from; after plan/section-only repairs the next round
+   recomposes from those same dispositions (`dispositions_override`), after an S4 repair from a fresh reconciliation as
+   before; the final restore re-applies.
+3. *Class B — renderer-printed docstring the facts refute.* Decision: a Core API row of a type an
+   `implementation:never_thrown` fact covers, whose description says when it is thrown (rule (j2)'s own row test,
+   `code_path_claims.refuted_thrown_description`), prints "Declared; not thrown by library code." The row is kept (the
+   type is real public API); the docstring is replaced whole because its "thrown when" clause cannot be split reliably
+   from the rest ("This is raised in Scene.Open/Scene.Save when no licenses are applied."). The judgement is the rule's,
+   so renderer and validator cannot disagree. Gets-or-sets (K03) and stubs (`_stub_marked`) were already handled.
+   `REPAIR_LOGIC_VERSION` 4.
+
+**Proof.** `tests/readme/repair/test_repair_revalidation.py` (23 tests from the logged shapes: the seven real 3D Python
+docstrings, the Cells .NET texts, the Cells C++ cmake block and UNRESOLVED fact, the partial-restore round); reverting
+the guard, the keying or the renderer fix fails 6 of them. Re-rendering the sealed 3D .NET/Python bundles under the
+re-extracted facts prints the fact-true rows and claim_findings finds no never-thrown row. R10 gate
+(`recertify --gate --remote origin --base-baseline <origin/main baseline>`): OK, 45 seals checked, none regressed.
+
+**Does NOT decide.** A round that repairs S4 beside S6 after a reshaping restore still recomposes from a fresh
+reconciliation (rare; to be confirmed from the re-run). Done only after the hosted re-run of the four cells and the R41
+re-verification of every candidate.
+
+Backlog: BL-079

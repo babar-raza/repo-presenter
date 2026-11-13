@@ -52,10 +52,12 @@ def _evaluate(expression: str, context: dict[str, Any]) -> bool:
     return bool(eval(python, {"__builtins__": {}}, {}))  # noqa: S307 -- literals only, built above
 
 
-def _ctx(event: str, repository: str = "", run: dict[str, str] | None = None) -> dict[str, Any]:
+def _ctx(
+    event: str, repository: str = "", run: dict[str, str] | None = None, ref_name: str = "main", dispatch_id: str = ""
+) -> dict[str, Any]:
     return {
-        "github": {"event_name": event, "event": {"workflow_run": run or {}}},
-        "inputs": {"repository": repository},
+        "github": {"event_name": event, "ref_name": ref_name, "event": {"workflow_run": run or {}}},
+        "inputs": {"repository": repository, "dispatch_id": dispatch_id},
     }
 
 
@@ -69,6 +71,7 @@ def _ctx(event: str, repository: str = "", run: dict[str, str] | None = None) ->
         (_ctx("workflow_run"), True, False),  # cohort-chain.yml / run-request `cohort` (no target)
         (_ctx("workflow_run", "o/a"), False, True),  # run-request `present` (a target)
         (_ctx("workflow_dispatch", "o/a"), False, True),  # a run the planner dispatched, or by hand
+        (_ctx("workflow_dispatch"), True, False),  # cohort-chain.yml requested by a finished worker (BL-077)
     ],
 )
 def test_present_runs_the_planner_or_the_transaction_never_both(context, cohort, facts) -> None:
@@ -101,7 +104,11 @@ def test_one_planner_at_a_time_whoever_started_it() -> None:
 def test_the_chain_reacts_to_finished_work_on_main_and_never_to_itself() -> None:
     doc = _load("cohort-chain.yml")
     on = _on(doc)
-    assert set(on) == {"workflow_run"}, "no schedule/push of its own: present.yml's schedule is the heartbeat"
+    assert set(on) == {"workflow_run", "workflow_dispatch"}, (
+        "no schedule/push of its own: present.yml's schedule is the heartbeat; workflow_dispatch is the "
+        "request a finished planner-dispatched run makes (BL-077: GITHUB_TOKEN runs never fire workflow_run)"
+    )
+    assert on["workflow_dispatch"] in (None, {}), "a request carries no input"
     run = on["workflow_run"]
     assert run["types"] == ["completed"] and run["branches"] == ["main"]
     assert set(run["workflows"]) == {"present", "audit-seed", "acceptance-write", "recertify"}
@@ -135,6 +142,12 @@ def test_the_chain_only_calls_the_planner_with_least_privilege() -> None:
 def test_the_chain_fires_on_worker_and_m9_completions_only(run, fires) -> None:
     job = _load("cohort-chain.yml")["jobs"]["cohort"]
     assert _evaluate(job["if"], _ctx("workflow_run", run=run)) is fires
+
+
+@pytest.mark.parametrize(("ref_name", "fires"), [("main", True), ("feature", False)])
+def test_a_requested_chain_link_runs_only_from_main(ref_name, fires) -> None:
+    job = _load("cohort-chain.yml")["jobs"]["cohort"]
+    assert _evaluate(job["if"], _ctx("workflow_dispatch", ref_name=ref_name)) is fires
 
 
 # --- run-request `cohort` -----------------------------------------------------------------------

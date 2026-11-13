@@ -2,14 +2,14 @@
 ===== CLEAN RUN 1 =====
 $ python ops/checks/execution_proof.py evidence/build/GATE1_QUALITY/TC-008a/call_count_proof.json warm_unchanged_rerun_calls=0 cold_runner_calls=0 evicted_cache_calls=0 corrupt_evidence_fail_closed=True
 --- stdout ---
-OK: evidence\build\GATE1_QUALITY\TC-008a\call_count_proof.json records a real execution proof matching all 4 requirement(s)
+OK: evidence/build/GATE1_QUALITY/TC-008a/call_count_proof.json records a real execution proof matching all 4 requirement(s)
 
 --- stderr ---
 
 $ python -m pytest tests/core/test_preflight.py tests/test_present.py tests/test_lane_l_hosted.py -q
 --- stdout ---
-.......................................................                  [100%]
-55 passed in 327.89s (0:05:27)
+.........................................................                [100%]
+57 passed in 35.04s
 
 --- stderr ---
 
@@ -17,14 +17,14 @@ $ python -m pytest tests/core/test_preflight.py tests/test_present.py tests/test
 ===== CLEAN RUN 2 =====
 $ python ops/checks/execution_proof.py evidence/build/GATE1_QUALITY/TC-008a/call_count_proof.json warm_unchanged_rerun_calls=0 cold_runner_calls=0 evicted_cache_calls=0 corrupt_evidence_fail_closed=True
 --- stdout ---
-OK: evidence\build\GATE1_QUALITY\TC-008a\call_count_proof.json records a real execution proof matching all 4 requirement(s)
+OK: evidence/build/GATE1_QUALITY/TC-008a/call_count_proof.json records a real execution proof matching all 4 requirement(s)
 
 --- stderr ---
 
 $ python -m pytest tests/core/test_preflight.py tests/test_present.py tests/test_lane_l_hosted.py -q
 --- stdout ---
-.......................................................                  [100%]
-55 passed in 285.72s (0:04:45)
+.........................................................                [100%]
+57 passed in 35.23s
 
 --- stderr ---
 
@@ -39,9 +39,9 @@ FAIL: warm_unchanged_rerun_calls: expected '0', got 3
 
 $ python -m pytest tests/core/test_preflight.py tests/test_present.py tests/test_lane_l_hosted.py -q
 --- stdout ---
-......................................F................                  [100%]
-================================== FAILURES ===================================
-_______ test_committed_p5_proof_is_derivable_from_its_own_measurements ________
+......................................F..................                [100%]
+=================================== FAILURES ===================================
+________ test_committed_p5_proof_is_derivable_from_its_own_measurements ________
 
     def test_committed_p5_proof_is_derivable_from_its_own_measurements() -> None:
         """The committed TC-008a call-count proof must be a function of its recorded per-scenario
@@ -57,10 +57,10 @@ _______ test_committed_p5_proof_is_derivable_from_its_own_measurements ________
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'per_scenario_requests_by_lane'
 
-tests\test_present.py:1060: KeyError
-=========================== short test summary info ===========================
+tests/test_present.py:1060: KeyError
+=========================== short test summary info ============================
 FAILED tests/test_present.py::test_committed_p5_proof_is_derivable_from_its_own_measurements
-1 failed, 54 passed in 301.75s (0:05:01)
+1 failed, 56 passed in 42.35s
 
 --- stderr ---
 

@@ -51,6 +51,10 @@ PINS: dict[str, tuple[tuple[str, ...], str]] = {
         ("1",),
         "ea2956b8beed9d4f9f1bb3af15ffd3cdb02f9ab83d62f6a1f7a1d68a51f80fe7",
     ),
+    "listed_type_count.py": (
+        ("1",),
+        "d6f3603cfaafb4c57957c9c650a1c32972472ec5b60288ad41bf9005ad57b903",
+    ),
     "links.py": (
         ("2",),
         "59fa698291ad1610f892ba7d5a452dc17054d979d43eb29da50bc2dc2f90d881",

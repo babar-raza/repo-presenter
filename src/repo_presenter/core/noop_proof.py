@@ -403,6 +403,21 @@ def measure_invocation(ledger: Path, invocation_id: str) -> Measurement:
     )
 
 
+def count_provider_calls(ledger: Path, invocation_id: str) -> int:
+    """The provider calls ``invocation_id`` stamped in ``ledger``, where having no record at all
+    is a valid answer (zero).
+
+    For an invocation that dispatched no job (a Lane L verdict folded by a deterministic holdout
+    before the reviewer was asked), never for a proof: a rerun claiming it reused stored outputs
+    is measured with :func:`measure_invocation`, which still fails ``LEDGER_NO_RECORDS``.
+    """
+    return sum(
+        1
+        for record in _load(ledger)
+        if record.invocation_id == invocation_id and record.disposition == "provider_call"
+    )
+
+
 def require_zero_provider_calls(measurement: Measurement, ledger: str) -> None:
     if measurement.provider_calls != 0:
         raise NoOpProofError(

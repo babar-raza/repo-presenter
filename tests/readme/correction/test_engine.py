@@ -69,6 +69,7 @@ def test_every_registered_detector_is_loaded_by_name() -> None:
         "failing_example",
         "format_overclaim",
         "glance_layout",
+        "listed_type_count",
         "report_gaps",
         "second_h1",
         "stale_package_version",

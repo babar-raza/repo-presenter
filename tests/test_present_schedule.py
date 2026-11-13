@@ -145,3 +145,24 @@ def test_the_present_job_reads_the_resolved_target_from_the_facts_job_not_raw_in
         env = step["env"]
         assert "needs.facts.outputs.repository" in str(env["INPUT_REPOSITORY"]), name
         assert "needs.facts.outputs.ecosystem" in str(env["INPUT_ECOSYSTEM"]), name
+
+
+def test_a_planner_dispatched_run_requests_the_next_planner_pass_with_least_privilege():
+    """BL-077 (R37): runs the cohort planner dispatches are created with GITHUB_TOKEN, and GitHub
+    never starts workflow_run workflows for those, so cohort-chain.yml cannot see them finish.
+    Each dispatched run must therefore end by requesting the next planner pass itself -- even when
+    its lanes failed -- from a job that holds nothing but actions: write and no secret."""
+    workflow = _load_workflow()
+    chain = workflow["jobs"]["chain"]
+    assert chain["needs"] == "present"
+    condition = chain["if"]
+    assert "always()" in condition, "a failed run must still continue the loop"
+    assert "github.event_name == 'workflow_dispatch'" in condition
+    assert "inputs.dispatch_id != ''" in condition, "only runs the planner dispatched continue the chain"
+    assert chain["permissions"] == {"actions": "write"}
+    text = json.dumps(chain)
+    assert "secrets." not in text
+    assert not any("uses" in step for step in chain["steps"]), "no checkout: nothing to read, nothing to run"
+    (step,) = chain["steps"]
+    assert "gh workflow run cohort-chain.yml" in step["run"] and "--ref main" in step["run"]
+    assert step["env"]["GH_TOKEN"] == "${{ github.token }}"

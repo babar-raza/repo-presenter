@@ -108,7 +108,9 @@ jobs:
   # ledger ref in this repository's state namespace (it never pushes a branch); actions: write only
   # to dispatch this workflow.
   cohort:
-    if: github.event_name == 'schedule' || (github.event_name == 'workflow_run' && inputs.repository == '')
+    if: >-
+      github.event_name == 'schedule' ||
+      ((github.event_name == 'workflow_run' || github.event_name == 'workflow_dispatch') && inputs.repository == '')
     # One planner at a time, whoever started it (heartbeat, chain or override): a second planner
     # waits and then reads the reservations the first one wrote, so it holds instead of dispatching
     # a second cohort (scripts/select_scheduled_cohort.py, `held`). A job-level group, so it binds
@@ -527,6 +529,29 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
+  # R37 continuation (BL-077). A run the cohort planner dispatched (dispatch_id set) ends by asking
+  # for the next planner pass. cohort-chain.yml's workflow_run trigger never saw these completions:
+  # GitHub does not start workflow_run workflows for runs created with GITHUB_TOKEN, which is how
+  # the planner dispatches, so the loop stopped after every cohort (hosted 2026-11-13: the cohorts
+  # dispatched at 17:32 and 19:12 finished and nothing followed). A workflow_dispatch made with
+  # GITHUB_TOKEN does start a run. The planner holds while any cell of the cohort is in flight, so
+  # only the last finishing run's request dispatches the next cohort; the chain cannot fan out. Its
+  # own job, so the credentialed present job keeps contents: write alone; always(), so a failed run
+  # still continues the loop. No checkout, no secret.
+  chain:
+    needs: present
+    if: ${{ always() && github.event_name == 'workflow_dispatch' && inputs.dispatch_id != '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: write  # dispatch cohort-chain.yml only
+    steps:
+      - name: Request the next planner pass
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: gh workflow run cohort-chain.yml --repo "$REPOSITORY" --ref main
+
   # TC-021: proves the SANDBOX MECHANISM is a safe, working place to later run model-written
   # example repair (deferred to Phase 2 under a provider budget -- this job runs no
   # candidate-produced code yet). workflow_dispatch-only, deliberately NOT a `needs:` of facts or
@@ -536,7 +561,7 @@ jobs:
   sandbox-execute:
     # Not for the runs the scheduled cohort job dispatches (dispatch_id set): this proof is
     # infrastructure validation, not part of any repository's transaction.
-    if: github.event_name == 'workflow_dispatch' && inputs.dispatch_id == ''
+    if: github.event_name == 'workflow_dispatch' && inputs.repository != '' && inputs.dispatch_id == ''
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions: {}
