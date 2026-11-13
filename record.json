@@ -5,7 +5,7 @@
   "provider_repository_id": 1246258574,
   "registry_revision": null,
   "active_transaction_id": "743ec0d97311433195edb2047c11145c",
-  "state": "ACCEPTED",
+  "state": "INVALIDATED",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "attempt under version set a6b436407f14: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-18; nothing sealed",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-13T17:49:12.397146+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:43473807336",
     "acquired_at": "2026-11-13T17:33:45.918824+00:00",
@@ -26,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "d736f61ac8d249dd98bf4ec467173c28",
+    "transition_id": "993a5ae8b6314efca5f854f3ae64615d",
     "transaction_id": "743ec0d97311433195edb2047c11145c",
     "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp",
-    "from_state": "REVIEWING",
-    "to_state": "ACCEPTED",
-    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
-    "occurred_at": "2026-11-11T12:56:21.274191+00:00",
+    "from_state": "ACCEPTED",
+    "to_state": "INVALIDATED",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-11-13T17:49:11.913779+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp",
     "output_manifest": "candidates/aspose-cells-foss__Aspose.Cells-FOSS-for-Cpp/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 134,
+  "state_version": 135,
   "recent_trigger_dedup_keys": {
     "run:40555595204:aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp": "a355a427933a4c5e8d543429f22050e0",
     "run:40571540396:aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp": "886cefd3f4934c8b90359a383ef158f6",
