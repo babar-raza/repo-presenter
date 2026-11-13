@@ -5288,3 +5288,72 @@ older pending one.
 trigger after a merge, with its run id and per-lane counts.
 
 Backlog: BL-060
+
+## 2026-11-13 — BL-002: a vendor-published registry package is the repository's own; no evidence wording in any README
+
+**Owner feedback (P0, verbatim in `project/backlog.yaml` BL-002).** The 3D Python Lane R README (seal @ 65b1f577c0f1)
+printed "The package `aspose-3d-foss` could not be confirmed on PyPI (package registry: a distribution of this name
+exists, but ownership not confirmed: the registry's project URLs point at another repository)." Both halves were
+wrong: PyPI `aspose-3d-foss` 26.1.0 is Aspose's (author `Aspose`, homepage `github.com/aspose-3d/Aspose.3D-for-Python`,
+the vendor's legacy repository), and the sentence was an install fact's evidence detail printed verbatim.
+
+**Root causes (two classes, fixed once each).**
+- (A) `core/package_registry.points_at_repository` accepted only the exact `owner/name` (plus a GitHub rename
+  redirect), so a vendor-published package whose URL names a renamed or legacy vendor repository was "another
+  repository's". Portfolio classification of every sealed install/distribution fact (R36(b)(1)): published 30,
+  not_published 10, no_registry 4, ownership_unconfirmed 2 — both 3D Python (Lane R and Lane L).
+- (B) `composition/renderer._installation` printed `install.evidence[-1].detail` for every non-SUPPORTED install, and no
+  check refused evidence vocabulary in a README. Portfolio: 2 stored seal READMEs carried it (3D Python R, Email C++ R).
+  BL-003's review (class K11, routed here) found the same class in renderer text ("The verified public surface has N
+  types.", "It covers all N verified public types") on every Lane R seal with an API Reference, in authored Core API
+  rows ("<qualified name> is a public symbol with members ..."), and `text`/`excel`/`markdown` format facts upper-cased
+  as terms ("region of TEXT").
+
+**Rules.**
+1. **Vendor ownership** (`core/package_registry.vendor_owned`, applied in the PyPI observer and the shared surface
+   observer for NuGet/Maven/npm/Go): a published distribution is the repository's own when (a) the vendor is derived
+   from the repository's organization `<vendor>-<product>-foss` (every `data/registry.json` entry → `aspose`; any other
+   owner has no vendor and keeps the exact-match rule), (b) the registry's publisher is that vendor — an author /
+   maintainer / owner naming it as a whole word, an e-mail at `<vendor>.com|.org`, a Maven group whose reversed domain
+   is the vendor's, a Go module path in a vendor organization — and (c) at least one of the registry's own project /
+   source URLs is vendor-owned: `github.com/<vendor>/…` or `github.com/<vendor>-*/…` (any current, renamed or legacy
+   repository name), or a host `<vendor>.com` / `<vendor>.org` or a subdomain (`products.aspose.org`). Case-insensitive.
+   (d) The name asked about is always the manifest's own or the one the maintainers' README installs (structural in every
+   caller). crates.io's crate document names no publisher (the vendored adapter's `verified_owner` is the crate id), so
+   a crate keeps the exact-match rule. Refused (negative controls, tests): `requests`, `left-pad`, a vendor URL with a
+   foreign publisher, a vendor name with a foreign URL, look-alike organizations (`asposefan`) and hosts
+   (`aspose.com.example.net`, `notaspose.com`).
+2. **No unconfirmed state is a reader-facing statement.** CONTRADICTED is stated plainly ("`x` is not yet published on
+   PyPI."); an install the registry neither confirmed nor contradicted omits the registry claim (R36 alternative "omit
+   the claim") and gives the proven source checkout; with nothing proven, one plain sentence keeps the section ("No
+   install command for `x` is available."). Renderer counts read "The public API has N types." / "It covers all N public
+   types"; the review scope classifier accepts both spellings (sealed bundles carry the old one).
+3. **Blocking check (BC-07, `validation/public_text.analysis_markers`, next to the R9 attribution check).** Any README
+   prose line (code fences excluded) carrying registry-reading details (`package registry:`, "unreachable", "answered
+   ambiguously", "could not be confirmed on", "none could not be read"), ownership verdicts ("ownership not confirmed",
+   "project URLs point at another repository", "the registry's"), fact polarities in upper case (`UNRESOLVED`,
+   `SUPPORTED`, `CONTRADICTED`, `NOT_VERIFIED`), fact-id / record vocabulary (`package:name`, `facts.json`, "fact id",
+   "evidence detail"), "verified public surface/types" or "is a public symbol" fails. Not refused, measured on all 27 live
+   maintainer READMEs (0 matches) and the sealed Lane L READMEs: the plain English words "fact" and "evidence"
+   ("after the fact", "QA evidence report"), "unreachable objects", and "This checkout" (Cells .NET maintainers' own text).
+4. `text`, `excel`, `markdown` join `terminology.WORD_EXTENSIONS`: ordinary words, never upper-cased terms.
+
+**Evidence.** Tests from the real `pypi.org/pypi/<name>/json` documents of 2026-11-13 (3D, Cells, PSD Python;
+`requests` as the foreign control): `tests/core/test_vendor_ownership.py`, fixtures
+`tests/extractors/platforms/fixtures/pypi_bl002/`; `tests/readme/validation/test_public_text_analysis_vocabulary.py`
+(sealed leak lines fail, sealed maintainer lines pass, renderer output clean). Live read 2026-11-13: aspose-3d-foss,
+aspose-cells-foss, aspose-psd-foss → owned; requests → not. Scan of every latest seal (45 bundle refs): stored READMEs
+119 leaking lines in 18 seals (all 18 Lane R; 0 Lane L) → re-rendered by current code (zero calls) 90 lines in 4 seals,
+all stored authored units the renderer cannot change: 3D .NET R (53 rows), Email .NET R (24), Words .NET R (12), PSD .NET
+R (1). Those four were already NEEDS_REPAIR (BC-05/BC-18); BC-07 is added to their `data/recertification_baseline.json`
+rows with an R10 justification (genuine defects). Zero-call R10 gate (`recertify --gate --remote origin
+--base-baseline <origin/main baseline>`): OK, 45 seals, no regression; certified under current code lane R 0, lane L 26
+(unchanged from the base branch). 3D Python Lane R re-renders without the claim (RECERTIFIED on BC-07; NEEDS_REPAIR
+only on BC-18 from BL-003's register); its install fact becomes SUPPORTED only on a hosted re-extraction (stored facts
+are not re-read), so BL-002 stays active until a hosted run re-seals it (R41). Commits: `6ab8782` (rules 1-3), `8587246` (K11, rule 4, baseline).
+
+**Does NOT decide**: whether a registry package whose publisher is the vendor but whose URLs name no vendor site is the
+repository's (it stays unconfirmed); crates.io owner lookups (no owners endpoint is read today); the Lane R re-runs
+themselves (hosted, R37).
+
+Backlog: BL-002, BL-049

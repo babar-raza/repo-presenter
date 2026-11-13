@@ -63,8 +63,16 @@ items:
     status: active
     implementation_path: "(a) registry ownership rule accepts a package Aspose publishes whose project URL is an Aspose-owned repository (renamed/legacy org) and which the maintainers' README installs; (b) a blocking check that no internal analysis wording (registry/evidence/fact vocabulary) is ever printed in a README; (c) re-run affected Lane R cells through the pipeline"
     acceptance: "PyPI aspose-3d-foss (homepage github.com/aspose-3d/Aspose.3D-for-Python, author Aspose) judged confirmed; no README in the portfolio contains internal evidence wording (check passes on every seal); 3D Python Lane R re-sealed without the claim"
-    evidence: ["verified 2026-11-13: pypi.org/pypi/aspose-3d-foss/json -> version 26.1.0, author Aspose, project_urls Homepage github.com/aspose-3d/Aspose.3D-for-Python"]
-    next_action: "fix worker dispatched"
+    evidence:
+      - "verified 2026-11-13: pypi.org/pypi/aspose-3d-foss/json -> version 26.1.0, author Aspose, project_urls Homepage github.com/aspose-3d/Aspose.3D-for-Python"
+      - "(a) rule core/package_registry.vendor_owned (vendor from <vendor>-<product>-foss org; vendor publisher AND vendor-owned project URL; renamed/legacy names; PyPI + NuGet/Maven/npm/Go); commit 6ab8782 on branch bl-002-registry-ownership; tests tests/core/test_vendor_ownership.py from real PyPI JSON (3D, Cells, PSD Python owned; requests, left-pad, squatter/look-alike refused)"
+      - "live read 2026-11-13 through observe_pypi: aspose-3d-foss, aspose-cells-foss, aspose-psd-foss -> repository_matched True; requests -> False"
+      - "(b) renderer never prints evidence detail; BC-07 validation/public_text.analysis_markers blocks evidence/analysis vocabulary (6ab8782) and BL-003 class K11 wording (8587246); tests tests/readme/validation/test_public_text_analysis_vocabulary.py; 0 matches over 27 live maintainer READMEs"
+      - "scan of all 45 latest seals: stored READMEs 119 leaking lines in 18 seals (all Lane R) -> re-rendered under current code (zero calls) 90 lines in 4 seals (stored authored units: 3D .NET R, Email .NET R, Words .NET R, PSD .NET R; already NEEDS_REPAIR, BC-07 justified per R10 in data/recertification_baseline.json)"
+      - "R10: python -m repo_presenter.recertify --gate --remote origin --base-baseline <origin/main baseline> -> OK, 45 seals, no regression; certified lane R 0 / lane L 26 (same as base); full pytest 6197 passed (1 known deselect); ops/gatecli.py validate OK"
+      - "NOT yet: 3D Python Lane R install fact is stored UNRESOLVED; it becomes SUPPORTED only on hosted re-extraction (R41 portfolio re-verification pending)"
+    next_action: "merge branch bl-002-registry-ownership; hosted Lane R re-run of 3D Python (re-extract -> pip install aspose-3d-foss SUPPORTED) and of 3D .NET, Email .NET, Words .NET, PSD .NET (re-author K11 rows); then post-merge recertify --all --write for the R41 reverified line"
+    updated: "2026-11-13"
 
   - id: BL-003
     title: "Independent false-claim review of every Lane R candidate (distinct agents), findings into the register so the pipeline repairs them"
