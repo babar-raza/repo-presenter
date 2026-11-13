@@ -1102,14 +1102,17 @@ def _register_refuted(context: RenderContext, line: str) -> bool:
     register withholds nothing."""
     quotes = getattr(context, "_register_quotes_cache", None)
     if quotes is None:
+        from repo_presenter.readme.validation import must_correct
         from repo_presenter.readme_findings import (
-            FindingsRegisterError,
             LANE_R,
+            FindingsRegisterError,
             regression_rows,
         )
 
         try:
-            rows = regression_rows(context.entry.repository, LANE_R)
+            # BC-18's own default register (``must_correct.DEFAULT_FINDINGS_PATH``), read at call
+            # time, so the renderer and the check it answers always read the same rows.
+            rows = regression_rows(context.entry.repository, LANE_R, must_correct.DEFAULT_FINDINGS_PATH)
         except (OSError, ValueError, FindingsRegisterError):
             rows = []
         quotes = [" ".join(row.quote.split()) for row in rows if row.quote.strip()]

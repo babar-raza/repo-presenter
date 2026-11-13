@@ -5701,3 +5701,82 @@ Watermark cell edit makes the run a net improvement; 11 residuals recorded in ho
 the four cells and the R41 re-verification of every candidate.
 
 Backlog: BL-080, BL-081
+
+## 2026-11-13: BL-081/BL-082 — portfolio table over eight hosted cells; register-refuted examples unselectable, section replies bounded, withheld blocks not "lost"
+
+**Evidence.** Adds the newer cohort on the same code (main f62e4af): `gh run view <id> --log` of 43516323114 (Cells C++
+R), 43516326802 (Cells Java R), 43516330798 (Cells Python R), 43516334907 (Cells Rust R), to the four runs of the BL-080
+entry. Local: Cells Rust facts re-extracted at 1a6004af; the sealed bundles of all 18 Lane R products (facts, plan,
+dispositions, content_units, ledger.jsonl) read from `refs/repository-presenter-state/bundles/*`.
+
+**New cells: every final blocker and repair attempt.**
+- Cells C++ R: REJECT, 3 LLM unsupported_claim, all in authored `scope_limitations` units (F01 "does not support
+  conditional formatting, data validation, hyperlinks, or page setup operations"; F02/F03 "supports only ... methods"
+  lists for AutoFilter/AutoFilterDynamicFilter and DefinedName). Repair F01+F02+F03 unrepairable: "change R01 claims
+  'units[2].text' changed ('The library does not support ...' to ''), but ... identical value there". BC-14 (Style
+  unit) repaired; claim_contradiction:0 unrepairable, same ledger refusal.
+- Cells Java R: REJECT, 1 live_readme_loss "code block 'mvn compile'". The BC-18 repair had kept
+  `inherited_unit:054.code_block` VERIFIED_PRESERVE citing `finding:cb66691e4f5b`, so the renderer printed it without
+  the register-false `mvn javadoc:javadoc   # generates docs/apidocs/index.html`; the loss rule compared the live block
+  whole. Two blocking rules contradicted each other on one block (the BC-07 repair also succeeded).
+- Cells Python R (no LLM review): BC-05 x2 (section fit: Scope and Limitations states the license), BC-07 x2 (kept
+  maintainer heading `### Export a workbook` (`inherited_unit:023.heading`) not title case; kept
+  `inherited_unit:008.paragraph` "Install the package from PyPI:" ends with a colon and nothing follows), BC-18 x1
+  (`style.font.color = "#FF0000"`, the renderer printing `example:003`). Repairs: BC-05 repaired (did not hold);
+  BC-18 unrepairable (ledger refusal: "units[1].text changed ('Apply bold red font styling to a cell.' to '')" -- the
+  model tried to blank the example's heading unit); BC-07 one repaired, one "no stored disposition ... is named".
+- Cells Rust R: JobError "section_authoring: output truncated at the manifest's max_output_tokens (8000)"; nothing
+  else ran.
+
+**Portfolio Pareto (8 cells: 74 blocking findings plus 1 cell-killing JobError).**
+
+| Class | Count | Cells | Status |
+|---|---|---|---|
+| C2 authored row calls properties "methods" | 25 | 3D Py | fixed (BL-080) |
+| C3 Lane L residuals blocked, no content edit | 18 | 3D .NET L | fixed (BL-080) |
+| C1 kind-list rule misreads | 16 | 3D Py | fixed (BL-080) |
+| C6 repair refused by the changes-ledger check (a blank text the S6 schema cannot express, or a claimed path that did not move) | 5 (C++ F01-F03, 3D Py .dae, Cells Py BC-18 attempt) | C++, 3D Py, Cells Py | left (BL-083) |
+| C11 Cells Python kept-text section fit / formatting (BC-05 x2, BC-07 x2) | 4 | Cells Py | left (BL-083) |
+| C5 planned example prints a register-confirmed false line | 3 | 3D .NET R x2, Cells Py x1 | fixed (BL-081) |
+| C10 live_readme_loss vs a register-withheld kept block | 1 | Cells Java | fixed (BL-082) |
+| C4 register-refuted hub bullet | 1 | Cells .NET | fixed (BL-080) |
+| C9 section_authoring reply over max_output_tokens | 1 cell | Cells Rust | fixed (BL-082) |
+
+The C++ three are counted under C6 because their only repair path died there; the findings themselves are LLM
+factuality judgements on authored "supports only ..." lists, which a model re-run decides.
+
+**C9, decided from first principles with measured sizes.** 743 section_authoring calls in the 18 sealed ledgers:
+median 1158 completion tokens, p99 4832, largest success 5833 of 8000. Sealed units: non-type unit p95 923 JSON chars
+(n=623), omitted entry p95 218 (n=626). The Rust api_reference task (re-extracted) has 13 slots and 88 facts its reply
+may list in `omitted` (the prompt asks for every uncited accepted fact): 13 x 923 + ~58 x 218 = ~24,600 chars, about
+8,200 tokens at 3 chars a token -- the truncation. The part that grows with the input is `omitted`, internal
+accounting that is never printed. Raising `max_output_tokens` changes the section_authoring manifest, hence every
+section call's request hash and every candidate's version set (a portfolio-wide regeneration), and would need ~3x to
+cover the bounded worst case. Splitting the task means re-deriving per-chunk packets (spellings, must-carry, kept
+lists) inside the section builder. Decision: bound the output in the existing decoder-bounds module
+(`output_bounds.omitted_cap`): when a non-type task's reply at p95 sizes would exceed 75% of `max_output_tokens`,
+`omitted.maxItems` is capped to what fits, never below the must-carry units (the only omissions a check reads). Tasks
+that fit keep their schema byte for byte. Churn, measured over the sealed bundles: 13 tasks in 10 products change
+request hash (one re-paid call each), nothing else. No owner budget cap is touched.
+
+**C5.** `planning.register_refuted_example_ids`: a SUPPORTED example whose code prints a regression-row quote of the
+repository (BC-18's own register) is not selectable (schema enums, the packet's verified ids, plan_checks, section
+conditions). Sealed 3D .NET facts: example:001 and example:002 are excluded and four remain; Cells Python: example:003
+is excluded. The stored plans then fail plan_checks and S5 re-plans (one model call each).
+
+**C10.** `independent_reviewer._withheld_kept_fences`: a live fence that a kept code block prints in its
+register-withheld form (`must_correct.without_quoted_lines`, the block's disposition citing the row) is not lost --
+the reading `unprinted_kept_units` already gives it.
+
+The renderer's register reads now go through `must_correct.DEFAULT_FINDINGS_PATH` (BC-18's own default), so the
+suite's register isolation applies to them.
+
+**Proof.** tests/readme/composition/test_omitted_cap_bl082.py (5), tests/readme/review/
+test_live_loss_withheld_block_bl082.py (3, the real register row and live block), tests/readme/composition/
+test_register_refuted_examples_bl081.py (3), each with a negative control.
+
+**Does NOT decide.** C6 (BL-083: map a repair's blank-text change to a plan-level slot drop, or explain the claimed
+path from a call store) and C11 (BL-083). Whether S5 re-plans and the LLM reviews accept. Done only after the hosted
+re-run of the eight cells and the R41 re-verification.
+
+Backlog: BL-081, BL-082, BL-083

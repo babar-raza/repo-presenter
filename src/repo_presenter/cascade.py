@@ -315,7 +315,9 @@ def _run_authoring(
     tasks = authoring_tasks(entry, document, investigation, dispositions, plan)
     outputs: dict[str, dict] = {}
     for task in tasks:
-        call_schema = bound_authoring_citations(authoring_schema(loaded, task), task)
+        call_schema = bound_authoring_citations(
+            authoring_schema(loaded, task), task, loaded.manifest.sampling.max_output_tokens
+        )
 
         def checks(output: dict, task=task) -> list[str]:
             return unit_checks(output, task, document, name, dispositions=dispositions)
