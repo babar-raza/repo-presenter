@@ -4895,3 +4895,19 @@ already ruled the paraphrase does not carry the unit. Evidence: Aspose.Cells-FOS
 `073.list` (h2 'Constraints') restored VERIFIED_PRESERVE with the rewrite's fact IDs and dropped as overlap (coverage
 0.79 < 0.80), BC-17 still failing after restore; with the rule it prints (coverage 1.0) and only BC-18 remains.
 Regressions: `tests/readme/repair/test_restore_carries_section.py`.
+
+---
+
+## 2026-11-13: owner ruling R38 — Mandatory Principle: Pipeline-First Execution, First Principles, and Pareto Optimization
+
+Owner, verbatim instruction: "Add the following to governing rulings. Make sure the agent working on task must check it
+from time to time." followed by the full principle, recorded verbatim in `docs/R38_PIPELINE_FIRST.md` (sections 1–6 and
+the acceptance criterion: "A task is not considered complete merely because its immediate output exists. Its execution
+must be reproducible through the governed pipeline, its results must be verified, and the required evidence must be
+available.").
+
+Recorded as **R38**: `docs/RULINGS.md` row and pre-work checklist item 10; Part B row; `CLAUDE.md` summary. "Check it
+from time to time" is enforced mechanically: a `UserPromptSubmit` hook in `.claude/settings.json` re-injects
+`docs/R38_CHECKPOINT.md` into the working agent's context on every owner prompt (in addition to the SessionStart print of
+`docs/RULINGS.md`), the supervisor includes the R38 check in every worker brief, and `tests/test_rulings_in_focus.py`
+fails CI if the full text, the checkpoint or the hook disappears.
