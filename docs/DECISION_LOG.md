@@ -4929,3 +4929,18 @@ close, reopen; end-to-end test) and is reused per R38. Supervisor decisions unde
 Aspose.3D-FOSS-for-TypeScript (the owner's example; its five open issues are the first monitored set), widening is the
 owner's call; R39 amends R22 ("issue filing stays off"), R17 (sandbox only) and R7 for issues on pilot repositories only —
 every issue must still be a verified, reproducible, deduplicated product/source defect; PRs stay under R15/R22.
+
+---
+
+## 2026-11-13: owner ruling R40 — persistent, autonomously managed backlog; owner review feedback recorded
+
+Owner ruling recorded verbatim in `docs/R40_BACKLOG.md` with the supervisor's independent verification (the existing
+`project/mission_matrix.yaml` is reused and extended, not replaced; Actions executes repeatable pipeline work, while code
+changes are selected and worked by scheduled agent sessions and always land through PR + CI + gates — the one stated
+feasibility limit). Backlog seeded as `project/backlog.yaml` (BL-001..BL-018), CI-checked by `ops/checks/backlog_check.py`.
+Owner review-page feedback recorded as items: BL-002 (P0 false claim, 3D Python Lane R: aspose-3d-foss "not confirmed on
+PyPI" — verified wrong: PyPI author Aspose, homepage the Aspose-owned github.com/aspose-3d/Aspose.3D-for-Python — and raw
+internal evidence wording printed publicly), BL-003 (independent false-claim review of every Lane R candidate), BL-004
+(3D .NET section placement), BL-005 (API descriptions), BL-007 (At a Glance layout), BL-009 (review page, Lane R diff),
+BL-010 (release-notes link: RELEASE_NOTES.md verified absent at the pinned revision, at HEAD and in all history; prefer a
+verified Releases target over unlinking).
