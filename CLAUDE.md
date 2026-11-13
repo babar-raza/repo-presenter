@@ -1,6 +1,6 @@
 # CLAUDE.md — Repository Presenter
 
-**STOP — before anything else, read `docs/RULINGS.md` in full.** It holds every binding owner ruling (R1–R38) and the
+**STOP — before anything else, read `docs/RULINGS.md` in full.** It holds every binding owner ruling (R1–R39) and the
 pre-work checklist; a SessionStart hook prints it into every new session, and `tests/test_rulings_in_focus.py` fails
 CI if this pointer or any ruling disappears. Then read `AGENTS.md`.
 
