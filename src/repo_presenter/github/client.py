@@ -94,6 +94,33 @@ class UpstreamWriteForbiddenError(RepositoryMetadataError):
     or not allowed for this effect."""
 
 
+class PortfolioIncompleteError(UpstreamWriteForbiddenError):
+    """Owner ruling R15: an upstream pull-request effect was refused before any request was made
+    because not every active repository has a terminal outcome in both lanes
+    (``repo_presenter.propose.portfolio_gate``)."""
+
+    code = "portfolio_incomplete"
+
+
+def portfolio_readiness() -> Any:
+    """The R15 portfolio predicate, computed afresh on every upstream pull-request authorization
+    (never cached). A module-level seam so a test substitutes the reader, never the decision."""
+    from repo_presenter.propose.portfolio_gate import portfolio_readiness as compute
+
+    return compute()
+
+
+def _require_portfolio_complete(slug: str) -> None:
+    try:
+        readiness = portfolio_readiness()
+        ready = readiness.ready is True
+        reason = readiness.reason()
+    except Exception as exc:  # noqa: BLE001 -- fail closed: an unreadable predicate is not ready
+        ready, reason = False, f"portfolio readiness unreadable ({type(exc).__name__}: {exc})"
+    if not ready:
+        raise PortfolioIncompleteError(f"write refused: {slug}: {reason}")
+
+
 @dataclass(frozen=True)
 class WriteGrant:
     """What :func:`authorize_write` cleared: one repository, one effect."""
@@ -165,6 +192,8 @@ def authorize_write(repository: str, effect: str) -> WriteGrant:
     * The control repository -> allowed for every known effect, exactly as before R3.
     * Any other repository -> allowed only when ``data/upstream_write_allowlist.json`` loads
       cleanly AND lists it AND lists ``effect`` for it. ``internal`` is never grantable upstream.
+    * An upstream ``pull_request`` additionally requires the R15 portfolio predicate
+      (:func:`portfolio_readiness`) to hold; otherwise :class:`PortfolioIncompleteError`.
 
     Raises :class:`UpstreamWriteForbiddenError`; never makes a request."""
     if effect not in KNOWN_EFFECTS:
@@ -194,6 +223,12 @@ def authorize_write(repository: str, effect: str) -> WriteGrant:
         raise UpstreamWriteForbiddenError(
             f"write refused: {slug} is allowlisted for {sorted(entry.effects)}, not {effect!r}"
         )
+    if effect == "pull_request":
+        # Owner ruling R15 (with R16/R20/R24/R33): no upstream branch push or pull request before
+        # every active repository has a terminal outcome in both lanes. Last, after every cheap
+        # refusal; every upstream ref/contents/pull-request request reaches it via
+        # ``authorize_request``. Issues (R39) are a different effect and never reach it.
+        _require_portfolio_complete(slug)
     return WriteGrant(
         repository=slug, effect=effect, upstream=True, draft_required=entry.first_pr_as_draft
     )
