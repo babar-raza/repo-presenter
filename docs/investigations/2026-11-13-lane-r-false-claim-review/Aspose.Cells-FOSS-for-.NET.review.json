@@ -1,0 +1,187 @@
+{
+  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-.NET",
+  "revision": "f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2",
+  "seal": "269b6ae5d8f7859b27e027a49cc5f15b2cbdfeda",
+  "readme": "git show 269b6ae5d8f7:f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2/README.md",
+  "items": [
+    {
+      "quote": "- `Borders`: Gets or sets border settings.",
+      "verdict": "FALSE",
+      "truth": "Style.Borders has a private setter (`public Borders Borders { get; private set; }`), so it is get-only for callers; mutate the returned Borders instead.",
+      "evidence": "src/Aspose.Cells_FOSS/Style.cs:73@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2",
+      "section": "API Reference > Style",
+      "index": 0,
+      "root_cause": "K03_MEMBER_KIND_ACCESSOR",
+      "reverified": true
+    },
+    {
+      "quote": "- `Font`: Gets or sets the font settings.",
+      "verdict": "FALSE",
+      "truth": "Style.Font has a private setter (`public Font Font { get; private set; }`); it is get-only for callers.",
+      "evidence": "src/Aspose.Cells_FOSS/Style.cs:68@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2",
+      "section": "API Reference > Style",
+      "index": 1,
+      "root_cause": "K03_MEMBER_KIND_ACCESSOR",
+      "reverified": true
+    },
+    {
+      "quote": "The `Style` class enables formatting of cells through properties such as `Font`, `Color`, `FillPattern`, and `Border`",
+      "verdict": "FALSE",
+      "truth": "Style has no Color, FillPattern or Border property; its properties are Font, Borders, Pattern (of type FillPattern), ForegroundColor and BackgroundColor.",
+      "evidence": "src/Aspose.Cells_FOSS/Style.cs:68-88@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2",
+      "section": "API Reference > Style",
+      "index": 2,
+      "root_cause": "K04_MEMBER_MISATTRIBUTION",
+      "reverified": true
+    },
+    {
+      "quote": "- `Save`: Saves the workbook to an XLSX file using default save options.",
+      "verdict": "MISLEADING",
+      "truth": "Workbook.Save(string) switches to SaveFormat.Pdf when the file name ends in .pdf, and there are four more Save overloads (SaveFormat/SaveOptions, file or Stream), so it does not always write XLSX.",
+      "evidence": "src/Aspose.Cells_FOSS/Workbook.cs:207-216,223,231,245,253@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2",
+      "section": "API Reference > Workbook",
+      "index": 3,
+      "root_cause": "K02_BEHAVIOR_BEYOND_CODE_PATH",
+      "reverified": false
+    },
+    {
+      "quote": "classes to organize and sort worksheet content",
+      "verdict": "MISLEADING",
+      "truth": "AutoFilterSortState and AutoFilterSortCondition only store sort-state metadata (Ref, Descending, SortBy, CustomList). No method sorts or reorders cell data, and FilterColumn does not hide rows.",
+      "evidence": "src/Aspose.Cells_FOSS/AutoFilterSortState.cs:26-97@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2; src/Aspose.Cells_FOSS/AutoFilterSortCondition.cs:24-82@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2",
+      "section": "Key Capabilities",
+      "index": 4,
+      "root_cause": "K02_BEHAVIOR_BEYOND_CODE_PATH",
+      "reverified": false
+    },
+    {
+      "quote": "`Aspose.Cells_FOSS.Style`, `Font`, `Color`, `FillPattern`, and `Border` classes",
+      "verdict": "MISLEADING",
+      "truth": "Color is a struct and FillPattern is an enum, not classes.",
+      "evidence": "src/Aspose.Cells_FOSS/Color.cs:11@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2; src/Aspose.Cells_FOSS/FillPattern.cs:9@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2",
+      "section": "Key Capabilities",
+      "index": 5,
+      "root_cause": "K03_MEMBER_KIND_ACCESSOR",
+      "reverified": true
+    },
+    {
+      "quote": "It runs on Windows, Linux, and macOS, and does not require Microsoft Excel or any native Office installation.",
+      "verdict": "MISLEADING",
+      "truth": "Aspose.Cells.FOSS depends on SkiaSharp 2.88.8 for PDF rendering, and SkiaSharp 2.88.8 pulls native libSkiaSharp assets only for Win32 and macOS; PDF export on Linux needs SkiaSharp.NativeAssets.Linux, which the package does not declare, so the Linux / no-native-installation statement is unqualified.",
+      "evidence": "https://api.nuget.org/v3-flatcontainer/skiasharp/2.88.8/skiasharp.nuspec dependencies group net6.0 (only NativeAssets.Win32 + NativeAssets.macOS); https://api.nuget.org/v3-flatcontainer/aspose.cells.foss/26.10.0/aspose.cells.foss.nuspec dependencies (SkiaSharp only); src/Aspose.Cells_FOSS/Aspose.Cells_FOSS.csproj:53-54@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2; src/Aspose.Cells_FOSS/Aspose.Cells_FOSS.csproj:54@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2 (SkiaSharp 2.88.8)",
+      "section": "Dependencies",
+      "index": 6,
+      "root_cause": "K06_DEPENDENCY_FROM_PROJECT_FILE",
+      "reverified": true,
+      "review_quote": "- Requires .NET `net8.0` (`TargetFramework` in `src/Aspose.Cells_FOSS/Aspose.Cells_FOSS.csproj`).",
+      "review_truth": "This is the only item under Native and System Requirements, but the SkiaSharp 2.88.8 dependency (used by the PDF renderer) pulls native libSkiaSharp assets only for Win32 and macOS. Linux needs SkiaSharp.NativeAssets.Linux, which Aspose.Cells.FOSS does not declare, so the 'runs on Linux' claim is unqualified for PDF export."
+    },
+    {
+      "quote": "outlines how to contribute code, report issues, and interact with",
+      "verdict": "UNSUPPORTED",
+      "truth": "agents.md says it 'defines how agents should work in this checkout'. It covers agent working rules and has no contribution workflow or issue-reporting guidance.",
+      "evidence": "agents.md:5@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2 (no 'contribut' or 'issue' text anywhere in its 168 lines)",
+      "section": "Documentation & Resources",
+      "index": 7,
+      "root_cause": "K07_REPO_DOCUMENT_UNREAD",
+      "reverified": false
+    },
+    {
+      "quote": "example projects demonstrating how to use `Aspose.Cells.FOSS` version 26.10.0",
+      "verdict": "MISLEADING",
+      "truth": "All 15 sample projects use a ProjectReference to the in-repo source project, not the published 26.10.0 NuGet package.",
+      "evidence": "samples/Aspose.Cells_FOSS.Samples.Basic/Aspose.Cells_FOSS.Samples.Basic.csproj:10@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2",
+      "section": "Documentation & Resources",
+      "index": 8,
+      "root_cause": "K07_REPO_DOCUMENT_UNREAD",
+      "reverified": true
+    },
+    {
+      "quote": "This checkout does not contain a tests/ directory, so the builds verify compilation",
+      "verdict": "INTERNAL_WORDING",
+      "truth": "This is agent-facing analysis phrasing ('this checkout') copied from agents.md, and it is repeated almost word for word at the end of the section ('This checkout does not contain a `tests/` directory. These builds check compilation...'). It is true that there is no tests/ directory.",
+      "evidence": "agents.md:15,79@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2",
+      "section": "Development and Testing",
+      "index": 9,
+      "root_cause": "K11_INTERNAL_WORDING",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-002 internal wording)"
+    },
+    {
+      "quote": "with the main library and basic sample each built from their respective project files",
+      "verdict": "INTERNAL_WORDING",
+      "truth": "This is generated analysis prose describing the repo's assets, not user guidance. It restates the build commands that follow it.",
+      "evidence": "src/Aspose.Cells_FOSS/Aspose.Cells_FOSS.csproj:1@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2; samples/Aspose.Cells_FOSS.Samples.Basic/Aspose.Cells_FOSS.Samples.Basic.csproj:1@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2",
+      "section": "Development and Testing",
+      "index": 10,
+      "root_cause": "K11_INTERNAL_WORDING",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-002 internal wording)"
+    },
+    {
+      "quote": "<PackageReference Include=\"Aspose.Cells.FOSS\" Version=\"26.10.0.0\" />",
+      "verdict": "MISPLACED",
+      "truth": "This is a package consumption snippet (it was in Installation in the live README), not a build-from-source step. The registry version is 26.10.0, and 26.10.0.0 is the csproj form.",
+      "evidence": "src/Aspose.Cells_FOSS/Aspose.Cells_FOSS.csproj:12@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2; https://api.nuget.org/v3-flatcontainer/aspose.cells.foss/index.json versions[-1]=26.10.0; README.md:39-41@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2",
+      "section": "Development and Testing",
+      "index": 11,
+      "root_cause": "K12_PLACEMENT_DUPLICATION",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-004 placement)"
+    },
+    {
+      "quote": "This project is licensed under the [MIT License](License/LICENSE.txt).",
+      "verdict": "MISPLACED",
+      "truth": "The license statement is in Development and Testing and repeats the License section, which links the identical root LICENSE.txt.",
+      "evidence": "License/LICENSE.txt@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2 (byte-identical to LICENSE.txt)",
+      "section": "Development and Testing",
+      "index": 12,
+      "root_cause": "K12_PLACEMENT_DUPLICATION",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-004 placement)"
+    },
+    {
+      "quote": "The verified public surface has 98 types.",
+      "verdict": "INTERNAL_WORDING",
+      "truth": "The count of 98 public types matches the source, but 'verified public surface' is pipeline or audit wording, not product documentation.",
+      "evidence": "src/Aspose.Cells_FOSS/*.cs@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2 (98 public class/struct/enum/interface declarations, all in namespace Aspose.Cells_FOSS)",
+      "section": "API Reference",
+      "index": 13,
+      "root_cause": "K11_INTERNAL_WORDING",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-002 internal wording)"
+    },
+    {
+      "quote": "Encapsulates a single worksheet and its supported v0.1 worksheet features.",
+      "verdict": "INTERNAL_WORDING",
+      "truth": "'v0.1' is an internal milestone label copied from the XML doc comment. The shipped package version is 26.10.0.",
+      "evidence": "src/Aspose.Cells_FOSS/Worksheet.cs:9@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2; src/Aspose.Cells_FOSS/Aspose.Cells_FOSS.csproj:12@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2",
+      "section": "API Reference > Core API",
+      "index": 14,
+      "root_cause": "K11_INTERNAL_WORDING",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-002 internal wording)"
+    },
+    {
+      "quote": "reads Excel files and writes Excel and PDF files",
+      "verdict": "MISLEADING",
+      "truth": "Only .xlsx is supported: LoadFormat has only Auto and Xlsx, and SaveFormat has only Xlsx and Pdf. 'Excel files' suggests .xls, .xlsb and .xlsm too, which the README's own Scope section rules out.",
+      "evidence": "src/Aspose.Cells_FOSS/LoadFormat.cs@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2; src/Aspose.Cells_FOSS/SaveFormat.cs@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2",
+      "section": "Intro",
+      "index": 15,
+      "root_cause": "K02_BEHAVIOR_BEYOND_CODE_PATH",
+      "reverified": true
+    },
+    {
+      "quote": "- The netstandard2.0 target has been removed, so applications targeting",
+      "verdict": "MISPLACED",
+      "truth": "This is a migration/breaking-change note from the release notes (in the live README it sat in the intro), not a scope limitation. The next paragraph repeats it verbatim.",
+      "evidence": "src/Aspose.Cells_FOSS/Aspose.Cells_FOSS.csproj:36-39@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2; README.md:11@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2",
+      "section": "Scope and Limitations",
+      "index": 16,
+      "root_cause": "K12_PLACEMENT_DUPLICATION",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-004 placement)"
+    }
+  ]
+}

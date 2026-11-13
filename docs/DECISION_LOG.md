@@ -4944,3 +4944,25 @@ internal evidence wording printed publicly), BL-003 (independent false-claim rev
 (3D .NET section placement), BL-005 (API descriptions), BL-007 (At a Glance layout), BL-009 (review page, Lane R diff),
 BL-010 (release-notes link: RELEASE_NOTES.md verified absent at the pinned revision, at HEAD and in all history; prefer a
 verified Releases target over unlinking).
+
+---
+
+## 2026-11-13: BL-003 Lane R false-claim review registered (68 rows); BC-18 made a permanent no-recurrence check
+
+Supervisor decision under R10/R14/R36(b)/R40 and owner message 2026-11-13 ("These registers must be auto filled, and an
+already caught problem should not reappear"). **Register.** Five independent fact-check reviews of the five certified
+Lane R seals (3D .NET 03b940a46f7b, 3D Python 4812255e83c2, Cells .NET 269b6ae5d8f7, Email .NET e8cc8cca4d3a, Words .NET
+56668e8abf63) gave 105 findings; 36 were re-verified against pinned clones and the registries, 3 dropped (Words "307 test
+files" refuted -- exactly 307 .cs files declare a test method; Words CodePages line true for the source build; Words
+ILRepack line true, an omission only), 6 quotes tightened so none can match correct text, 1 second printing added. 68
+FALSE/UNSUPPORTED/MISLEADING rows were appended (72 -> 140) through the new importer
+`python -m repo_presenter.readme_findings import`, which refuses a quote not printed exactly N times (the bare
+`dotnet build` lesson). INTERNAL_WORDING/MISPLACED stay with BL-002/BL-004. Inputs, decisions and the 12 root-cause
+classes: `docs/investigations/2026-11-13-lane-r-false-claim-review.md`; one backlog item per class (BL-019..BL-029).
+**R10.** All five seals now fail BC-18 only -- genuine defects, justified per seal in
+`data/recertification_baseline.json` (superseded Cells/Email Lane R rows replaced by their latest seals); Lane R live
+certified 5 -> 0, `project/state.yaml` resynced. **No recurrence.** BC-18 now holds a candidate to every quoted register
+row of its repository and lane, OPEN or RESOLVED (`readme_findings.regression_rows`); a row whose evidence begins
+`REFUTED` never blocks (the two Email .NET 26.7.0 rows). A RESOLVED row printed again gets its stored truth as the repair
+instruction and is not citable. No RESOLVED non-refuted row exists today, so no seal newly fails from this change.
+Auto-fill (hosted fact-check stage writing the register to a bot store) and class generalisation are BL-031/BL-032.
