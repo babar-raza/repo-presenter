@@ -1,11 +1,30 @@
 {
   "confinement": {
-    "edits": 1,
+    "edits": 2,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "ba86d55b318da847d7c9b4751a3a11efe15a497871a5d395e1e00d51d08cd7e1",
+  "corrected_sha256": "5f37cd02e53dae58c6b5338a2be074ddad197762a51c00933b5b40d83f8757e3",
   "edits": [
+    {
+      "detector": "glance_layout",
+      "end": 2154,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:30"
+        }
+      ],
+      "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 31,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing MSG file (Outlook Message)\"]\n    i2[\"An existing EML file (RFC 5322 / MIME)\"]\n    i3[\"An existing CFB container (Compound File Binary)\"]\n  end\n  PRODUCT[\"Aspose.Email FOSS for C++\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Low-level CFB container read, build, and write\"]\n    c2[\"Low-level MSG document read and write\"]\n    c3[\"High-level message creation and editing\"]\n    c4[\"Recipients and attachments, including embedded messages\"]\n    c5[\"MSG/EML interoperability\"]\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"MSG files (Outlook Message)\"]\n    o2[\"EML files (RFC 5322 / MIME)\"]\n    o3[\"CFB containers (Compound File Binary)\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 1920 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 714 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing MSG file<br/>(Outlook Message)\"]\n    i2[\"An existing EML file<br/>(RFC 5322 / MIME)\"]\n    i3[\"An existing CFB<br/>container (Compound<br/>File Binary)\"]\n  end\n  PRODUCT[\"Aspose.Email FOSS for C++\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Low-level CFB<br/>container read, build,<br/>and write\"]\n    c2[\"Low-level MSG document<br/>read and write\"]\n    c3[\"High-level message<br/>creation and editing\"]\n    c4[\"Recipients and<br/>attachments, including<br/>embedded messages\"]\n    c5[\"MSG/EML<br/>interoperability\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c5\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"MSG files (Outlook<br/>Message)\"]\n    o2[\"EML files (RFC 5322 /<br/>MIME)\"]\n    o3[\"CFB containers<br/>(Compound File Binary)\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 1318
+    },
     {
       "detector": "enterprise_edition_naming",
       "end": 22898,
@@ -17,7 +36,7 @@
           "value": "https://products.aspose.com/email/cpp/"
         }
       ],
-      "index": 0,
+      "index": 1,
       "kind": "FALSE_CLAIM_FIX",
       "line": 450,
       "original": "commercial product",
@@ -39,6 +58,7 @@
     "provider_calls": 0
   },
   "summary": {
+    "DIAGRAM_FIX": 1,
     "FALSE_CLAIM_FIX": 1
   },
   "unapplied": [

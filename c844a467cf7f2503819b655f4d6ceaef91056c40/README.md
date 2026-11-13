@@ -28,29 +28,34 @@ exposes both a low-level container API (`cfb_reader`/`cfb_writer`,
 ## At a Glance
 
 ```mermaid
-flowchart TD
+flowchart TB
   subgraph StartingPoints["Starting Points"]
     direction TB
-    i1["An existing MSG file (Outlook Message)"]
-    i2["An existing EML file (RFC 5322 / MIME)"]
-    i3["An existing CFB container (Compound File Binary)"]
+    i1["An existing MSG file<br/>(Outlook Message)"]
+    i2["An existing EML file<br/>(RFC 5322 / MIME)"]
+    i3["An existing CFB<br/>container (Compound<br/>File Binary)"]
   end
   PRODUCT["Aspose.Email FOSS for C++"]
   subgraph Capabilities["Core Capabilities"]
     direction TB
-    c1["Low-level CFB container read, build, and write"]
-    c2["Low-level MSG document read and write"]
-    c3["High-level message creation and editing"]
-    c4["Recipients and attachments, including embedded messages"]
-    c5["MSG/EML interoperability"]
+    c1["Low-level CFB<br/>container read, build,<br/>and write"]
+    c2["Low-level MSG document<br/>read and write"]
+    c3["High-level message<br/>creation and editing"]
+    c4["Recipients and<br/>attachments, including<br/>embedded messages"]
+    c5["MSG/EML<br/>interoperability"]
+    c1 ~~~ c4
+    c2 ~~~ c5
+    c3 ~~~ c5
   end
   subgraph Outputs["Outputs"]
     direction TB
-    o1["MSG files (Outlook Message)"]
-    o2["EML files (RFC 5322 / MIME)"]
-    o3["CFB containers (Compound File Binary)"]
+    o1["MSG files (Outlook<br/>Message)"]
+    o2["EML files (RFC 5322 /<br/>MIME)"]
+    o3["CFB containers<br/>(Compound File Binary)"]
   end
   StartingPoints --> PRODUCT --> Capabilities --> Outputs
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
 ```
 
 ## Key Capabilities
