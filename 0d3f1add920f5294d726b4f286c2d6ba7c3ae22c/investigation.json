@@ -1,0 +1,221 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:platform",
+      "package:target_framework",
+      "install_command:dotnet"
+    ],
+    "text": "Developers building .NET applications who need to create, read, edit, and convert Word documents programmatically without licensing costs, especially those targeting .NET Framework 4.6.2+, .NET 6/8/10, Windows, Linux, or macOS."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.document",
+        "public_symbol:aspose.words.documentbuilder",
+        "public_symbol:aspose.words.paragraph",
+        "public_symbol:aspose.words.tablestyle",
+        "public_symbol:aspose.words.bookmark",
+        "public_symbol:aspose.words.comment"
+      ],
+      "text": "Create documents from scratch using Document or DocumentBuilder, add text, formatting, tables, lists, sections, headers, footers, bookmarks, and comments.",
+      "title": "Create and edit documents"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.paragraphformat",
+        "public_symbol:aspose.words.style",
+        "public_symbol:aspose.words.pagesetup",
+        "public_symbol:aspose.words.border",
+        "public_symbol:aspose.words.shading"
+      ],
+      "text": "Apply paragraph and character formatting, manage styles, control page layout with PageSetup, and adjust borders, shading, and text orientation.",
+      "title": "Format and style content"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.saveformat",
+        "public_symbol:aspose.words.loadformat",
+        "public_symbol:aspose.words.document"
+      ],
+      "text": "Convert between DOCX, Markdown, and plain text formats using Save with SaveFormat values and Load with LoadFormat options.",
+      "title": "Convert document formats"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.revision",
+        "public_symbol:aspose.words.revisioncollection",
+        "public_symbol:aspose.words.document"
+      ],
+      "text": "Inspect, accept, or reject tracked changes and revisions using Revision, RevisionCollection, and Document methods.",
+      "title": "Process tracked changes"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.document",
+        "public_symbol:aspose.words.importformatmode",
+        "public_symbol:aspose.words.node"
+      ],
+      "text": "Append, clone, and import content between documents using AppendDocument and ImportNode with ImportFormatMode options.",
+      "title": "Merge and combine documents"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.drawing",
+        "public_symbol:aspose.words.fields",
+        "public_symbol:aspose.words.tables"
+      ],
+      "text": "Access embedded Chart objects through Shape nodes, read and modify series values, axes, legend, and data labels without rendering to images.",
+      "title": "Inspect and modify charts"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.digitalsignatures",
+        "public_symbol:aspose.words.document"
+      ],
+      "text": "Check whether a DOCX file is digitally signed and untampered, inspect certificate details, or remove signatures using DigitalSignature APIs.",
+      "title": "Verify digital signatures"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.protectiontype",
+        "public_symbol:aspose.words.document",
+        "public_symbol:aspose.words.vba"
+      ],
+      "text": "Protect documents with passwords using ProtectionType and Unprotect methods, and round-trip macro-enabled files (DOCM/DOTM) with VBA projects intact.",
+      "title": "Protect documents"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "text": "No page layout or rendering capabilities; cannot save to PDF, XPS, or image formats, and layout-dependent field values evaluate to placeholders."
+    },
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "text": "Limited format support; only DOCX, Markdown, and plain text are read and written, excluding DOC, RTF, ODT, HTML, and EPUB."
+    },
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "text": "No mail merge, LINQ Reporting, document comparison, document signing, or embedded-font subsetting functionality."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:platform",
+        "package:target_framework"
+      ],
+      "text": "Enables programmatic Word document processing in .NET without Microsoft Office automation, supporting cross-platform deployment on Windows, Linux, and macOS."
+    },
+    {
+      "fact_ids": [
+        "license:spdx",
+        "package:name",
+        "public_symbol:aspose.words"
+      ],
+      "text": "Provides a free, open-source alternative to commercial document processing libraries with a compatible API, allowing migration from other solutions or avoiding licensing fees."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.saveformat",
+        "public_symbol:aspose.words.loadformat"
+      ],
+      "text": "Supports document conversion between DOCX, Markdown, and plain text formats, facilitating interoperability with other systems and documentation workflows."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.revision",
+        "public_symbol:aspose.words.bookmark",
+        "public_symbol:aspose.words.tablestyle"
+      ],
+      "text": "Enables inspection and modification of tracked changes, comments, bookmarks, tables, and other document elements through a comprehensive object model."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:family",
+      "identity:platform",
+      "identity:repository",
+      "package:name",
+      "package:published_version",
+      "package:target_framework"
+    ],
+    "text": "Aspose.Words FOSS for .NET is an open-source .NET library derived from the genuine Aspose.Words commercial codebase, providing document processing capabilities for DOCX, Markdown, and plain text without requiring Microsoft Word."
+  },
+  "uncertainties": [
+    "The exact set of formats supported beyond DOCX, Markdown, and plain text is not fully specified in the fact dossier.",
+    "Whether the library supports reading or writing RTF, ODT, or HTML is not confirmed by the fact dossier despite the README mentioning them as unsupported.",
+    "The specific behavior of layout-dependent fields like page numbers in TOC is described in the README but not directly verified by fact IDs.",
+    "The exact mechanism and limitations of VBA macro round-tripping are not detailed in the fact dossier.",
+    "Whether chart rendering to images is supported is not confirmed by the fact dossier despite the README stating it is not included.",
+    "The scope of SkiaSharp usage on Linux and dependency requirements beyond the README are not fully detailed in the fact dossier.",
+    "The exact test coverage and gold file comparison mechanism is described in the README but not directly verified by fact IDs.",
+    "The behavior of the DocumentReaderPluginLoadException and related plugin system is not detailed in the fact dossier."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.document",
+        "public_symbol:aspose.words.documentbuilder",
+        "public_symbol:aspose.words.paragraph",
+        "public_symbol:aspose.words.tablestyle",
+        "public_symbol:aspose.words.saveformat"
+      ],
+      "name": "Create and edit documents",
+      "text": "Developers create new documents using Document or DocumentBuilder, add content like paragraphs, tables, and bookmarks, and save in supported formats."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.document",
+        "public_symbol:aspose.words.saveformat",
+        "public_symbol:aspose.words.loadformat"
+      ],
+      "name": "Convert document formats",
+      "text": "Load a DOCX file and save it as Markdown or plain text, or vice versa, using the Save method with appropriate SaveFormat values."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.revision",
+        "public_symbol:aspose.words.revisioncollection",
+        "public_symbol:aspose.words.document"
+      ],
+      "name": "Process tracked changes",
+      "text": "Load a document with tracked changes, inspect revisions, and accept or reject them programmatically using Revision and RevisionCollection APIs."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.document",
+        "public_symbol:aspose.words.importformatmode"
+      ],
+      "name": "Merge documents",
+      "text": "Append content from one document to another using AppendDocument with ImportFormatMode to combine documents while preserving formatting."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.drawing",
+        "public_symbol:aspose.words.fields",
+        "public_symbol:aspose.words.tables"
+      ],
+      "name": "Inspect embedded charts",
+      "text": "Access Chart objects through Shape nodes, read and modify series data, axes, and data labels without rendering the chart to an image."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:build-command",
+        "build_test_asset:test-command",
+        "build_test_asset:tests"
+      ],
+      "name": "Build and test from source",
+      "text": "Clone the repository, run dotnet build Aspose.Words.sln to compile, and dotnet test Aspose.Words.sln to execute tests in Aspose.Words.Tests/."
+    }
+  ]
+}

@@ -1,0 +1,447 @@
+{
+  "coherence": {
+    "applied": true,
+    "revised": [
+      "enterprise_relationship/context"
+    ]
+  },
+  "omitted": [
+    {
+      "fact_id": "inherited_unit:032.heading",
+      "reason": "Inherited heading not part of the opening unit's content scope.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:033.paragraph",
+      "reason": "Inherited paragraph describes additional examples location, not the product's actions.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:074.heading",
+      "reason": "Inherited heading not part of the opening unit's content scope.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:075.paragraph",
+      "reason": "Inherited paragraph describes historical development, not the product's actions.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:076.paragraph",
+      "reason": "Inherited paragraph describes historical development, not the product's actions.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:077.paragraph",
+      "reason": "Inherited paragraph describes engineering tooling, not the product's actions.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:078.paragraph",
+      "reason": "Inherited paragraph describes source code value, not the product's actions.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "install_command:dotnet",
+      "reason": "Installation command belongs in an installation section, not the opening.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "license:spdx",
+      "reason": "License information belongs in a license section, not the opening.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:009.list",
+      "reason": "The inherited list is not cited by any capability slot and is not part of the required units.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:010.paragraph",
+      "reason": "The inherited paragraph is not cited by any capability slot and is not part of the required units.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:066.paragraph",
+      "reason": "Its substance is incorporated into the scope unit's description of the edition's free status and removed subsystems.",
+      "section": "scope_limitations"
+    },
+    {
+      "fact_id": "inherited_unit:082.paragraph",
+      "reason": "This fact is a call to action about starring the repository, not a statement about what the commercial product adds, and does not support any required content for this section.",
+      "section": "enterprise_relationship"
+    }
+  ],
+  "schema_version": 1,
+  "units": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.bookmark",
+        "public_symbol:aspose.words.comment",
+        "public_symbol:aspose.words.document",
+        "public_symbol:aspose.words.documentbuilder",
+        "public_symbol:aspose.words.paragraph",
+        "public_symbol:aspose.words.tablestyle",
+        "public_symbol:aspose.words.border",
+        "public_symbol:aspose.words.pagesetup",
+        "public_symbol:aspose.words.paragraphformat",
+        "public_symbol:aspose.words.shading",
+        "public_symbol:aspose.words.style",
+        "public_symbol:aspose.words.loadformat",
+        "public_symbol:aspose.words.saveformat",
+        "public_symbol:aspose.words.revision",
+        "public_symbol:aspose.words.revisioncollection",
+        "public_symbol:aspose.words.importformatmode",
+        "public_symbol:aspose.words.node",
+        "public_symbol:aspose.words.drawing",
+        "public_symbol:aspose.words.fields",
+        "public_symbol:aspose.words.tables",
+        "public_symbol:aspose.words.digitalsignatures",
+        "public_symbol:aspose.words.protectiontype",
+        "public_symbol:aspose.words.vba"
+      ],
+      "section": "opening",
+      "slot": "opening",
+      "text": "Aspose.Words FOSS for .NET reads and writes DOCX, DOCM, DOTX, DOTM, Flat OPC, Markdown, and plain text formats using Aspose.Words.LoadFormat and Aspose.Words.SaveFormat. It processes tracked changes with Aspose.Words.Revision, bookmarks with Aspose.Words.Bookmark, and table styles with Aspose.Words.TableStyle. The library provides a document model based on Aspose.Words.Document, Aspose.Words.DocumentBuilder, and related types for programmatic document creation and modification."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.bookmark",
+        "public_symbol:aspose.words.comment",
+        "public_symbol:aspose.words.document",
+        "public_symbol:aspose.words.documentbuilder",
+        "public_symbol:aspose.words.paragraph",
+        "public_symbol:aspose.words.tablestyle"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "Create documents from scratch using the full document object model or the high-level DocumentBuilder, and edit existing DOCX files including text, formatting, styles, tables, lists, sections, headers and footers, bookmarks, comments, footnotes, and shapes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.border",
+        "public_symbol:aspose.words.pagesetup",
+        "public_symbol:aspose.words.paragraphformat",
+        "public_symbol:aspose.words.shading",
+        "public_symbol:aspose.words.style"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:2",
+      "text": "Format and style content using ParagraphFormat, Style, PageSetup, Border, and Shading to control paragraph properties, character and paragraph styles, page layout, borders, and shading effects."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.document",
+        "public_symbol:aspose.words.loadformat",
+        "public_symbol:aspose.words.saveformat"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "Convert documents between DOCX, Markdown, and plain text using SaveFormat and LoadFormat to read and write files in these formats."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.document",
+        "public_symbol:aspose.words.revision",
+        "public_symbol:aspose.words.revisioncollection"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:4",
+      "text": "Process tracked changes by inspecting, accepting, or rejecting revisions through the Revision and RevisionCollection classes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.document",
+        "public_symbol:aspose.words.importformatmode",
+        "public_symbol:aspose.words.node"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "Merge and combine documents by appending, cloning, and importing content between documents using ImportFormatMode and Node operations."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.drawing",
+        "public_symbol:aspose.words.fields",
+        "public_symbol:aspose.words.tables"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:6",
+      "text": "Inspect and modify embedded charts by accessing series values, axes, legend, and data-label formatting through Chart, ChartSeries, ChartAxis, and ChartDataLabel; chart data round-trips intact."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.digitalsignatures",
+        "public_symbol:aspose.words.document"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:7",
+      "text": "Verify digital signatures by checking whether a DOCX is signed and untampered, inspecting the certificates, or removing signatures using DigitalSignatures."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.document",
+        "public_symbol:aspose.words.protectiontype",
+        "public_symbol:aspose.words.vba"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:8",
+      "text": "Protect documents using ProtectionType to apply different protection modes and round-trip macro-enabled files with their VBA projects intact using Vba."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "inherited_unit:046.paragraph",
+        "package:name",
+        "package:published_version",
+        "package:target_framework",
+        "public_symbol:aspose.words.document",
+        "public_symbol:aspose.words.documentbuilder"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "Aspose.Words FOSS for .NET provides the Document class as the primary entry point for loading, creating, and manipulating documents, with DocumentBuilder offering a cursor-based approach to insert content. The Document class supports operations such as appending documents, accepting revisions, and saving to various formats."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.document",
+        "public_symbol:aspose.words.documentbuilder",
+        "public_symbol:aspose.words.paragraph",
+        "public_symbol:aspose.words.saveformat"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.words.document",
+      "text": "The Aspose.Words.Document class represents a document loaded from a file or stream, or created empty, and provides methods such as AppendDocument, AcceptAllRevisions, and Save to manipulate and persist its content, with Paragraph and SaveFormat supporting node-level editing and output formatting."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.document",
+        "public_symbol:aspose.words.revision",
+        "public_symbol:aspose.words.revisioncollection"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.words.revision",
+      "text": "The Aspose.Words.Revision class represents a tracked change in a document, with methods to accept or reject individual revisions, while Aspose.Words.RevisionCollection provides bulk operations such as AcceptAll to manage all tracked changes in the document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.drawing",
+        "public_symbol:aspose.words.fields",
+        "public_symbol:aspose.words.tables"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.words.drawing",
+      "text": "Aspose.Words.Drawing provides support for working with shapes and charts in documents, while Aspose.Words.Fields and Aspose.Words.Tables enable insertion and manipulation of fields and tabular content respectively."
+    },
+    {
+      "fact_ids": [
+        "link_target:009"
+      ],
+      "section": "documentation_resources",
+      "slot": "link:link_target:009",
+      "text": "Additional examples demonstrate practical usage scenarios for Aspose.Words FOSS for .NET."
+    },
+    {
+      "fact_ids": [
+        "link_target:014"
+      ],
+      "section": "documentation_resources",
+      "slot": "link:link_target:014",
+      "text": "Documentation & resources provides guidance and supporting materials for Aspose.Words FOSS for .NET."
+    },
+    {
+      "fact_ids": [
+        "link_target:028"
+      ],
+      "section": "documentation_resources",
+      "slot": "link:link_target:028",
+      "text": "Open an issue to report bugs or request features for Aspose.Words FOSS for .NET."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "inherited_unit:012.table",
+        "inherited_unit:013.paragraph",
+        "package:name",
+        "package:published_version",
+        "package:target_framework"
+      ],
+      "section": "scope_limitations",
+      "slot": "scope",
+      "text": "Aspose.Words FOSS for .NET reads and writes DOCX, DOCM, DOTX, DOTM, Flat OPC, Markdown, and plain text formats, and supports .NET Standard 2.0, .NET 8.0, and .NET Framework 4.62."
+    },
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:1",
+      "text": "It does not save to PDF, XPS, or images, nor does it support printing, and layout-dependent field values such as page numbers in a table of contents or NUMPAGES evaluate to zero."
+    },
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:2",
+      "text": "Additional formats such as DOC, RTF, ODT, HTML, and EPUB are not read or written in this edition."
+    },
+    {
+      "fact_ids": [
+        "install_command:dotnet"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:3",
+      "text": "Mail merge, LINQ Reporting, document comparison, document signing, and embedded-font subsetting are not included."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:build-command",
+        "build_test_asset:test-command",
+        "build_test_asset:tests",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "inherited_unit:017.paragraph",
+        "inherited_unit:018.paragraph",
+        "inherited_unit:019.code_block",
+        "inherited_unit:020.paragraph",
+        "inherited_unit:070.heading",
+        "inherited_unit:071.paragraph",
+        "inherited_unit:072.code_block",
+        "inherited_unit:073.paragraph",
+        "inherited_unit:085.paragraph",
+        "package:name",
+        "package:published_version",
+        "package:target_framework"
+      ],
+      "section": "development_testing",
+      "slot": "summary",
+      "text": "The toolchain requires a recent .NET SDK and uses the dotnet CLI to build the solution and run tests. Tests are implemented with NUnit 3 and reside in the Aspose.Words.Tests/ directory, where many compare generated output against gold files under TestGold/ and report mismatches with diff-style failure messages. The project layout includes Aspose.Words/ as the engine, Aspose.Foundation/ as supporting infrastructure, and Aspose.Words.Tests/ as the test suite, with code-style conventions documented in AGENTS.md."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:069.paragraph"
+      ],
+      "section": "enterprise_relationship",
+      "slot": "context",
+      "text": "If your project grows into needing any of the above, the commercial Aspose.Words for .NET has all of it. And because this library is that codebase, upgrading is essentially swapping the package reference. Your code carries over."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.words.buildingblocks.buildingblock.remove.body.invalidoperationexception",
+        "public_symbol:aspose.words.buildingblocks.buildingblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words.buildingblocks.buildingblock",
+      "text": "Aspose.Words.BuildingBlocks.BuildingBlock is a public symbol with members Accept, AcceptEnd, AcceptStart, AppendChild, Behavior, BuildingBlock, Category, and Clone, and its Remove method throws InvalidOperationException conditionally."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.words.document.backgroundshape.setter.argumentexception",
+        "implementation:throws.aspose.words.document.defaulttabstop.setter.argumentoutofrangeexception",
+        "implementation:throws.aspose.words.document.remove.body.invalidoperationexception",
+        "public_symbol:aspose.words.document"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words.document",
+      "text": "Aspose.Words.Document is a public symbol with members Accept, AcceptAllRevisions, AcceptEnd, AcceptStart, AppendChild, AppendDocument, AttachedTemplate, and AutomaticallyUpdateStyles, and its BackgroundShape setter throws ArgumentException conditionally, its DefaultTabStop setter throws ArgumentOutOfRangeException conditionally, and its Remove method throws InvalidOperationException conditionally."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.documentpositionmovement"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words.documentpositionmovement",
+      "text": "Aspose.Words.DocumentPositionMovement is a public symbol."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.words.drawing.imagedata.brightness.setter.argumentoutofrangeexception",
+        "implementation:throws.aspose.words.drawing.imagedata.contrast.setter.argumentoutofrangeexception",
+        "public_symbol:aspose.words.drawing.imagedata"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words.drawing.imagedata",
+      "text": "Aspose.Words.Drawing.ImageData is a public symbol with members BiLevel, Borders, Brightness, ChromaKey, Contrast, CropBottom, CropLeft, and CropRight, and its Brightness setter throws ArgumentOutOfRangeException conditionally and its Contrast setter throws ArgumentOutOfRangeException conditionally."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.drawing.shadowtype"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words.drawing.shadowtype",
+      "text": "Aspose.Words.Drawing.ShadowType is a public symbol."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.drawing.shapemarkuplanguage"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words.drawing.shapemarkuplanguage",
+      "text": "Aspose.Words.Drawing.ShapeMarkupLanguage is a public symbol."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.fields.ibibliographystylesprovider"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words.fields.ibibliographystylesprovider",
+      "text": "Aspose.Words.Fields.IBibliographyStylesProvider is a public symbol with member GetStyle."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.inodecollection"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words.inodecollection",
+      "text": "Aspose.Words.INodeCollection is a public symbol."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.lists.list"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words.lists.list",
+      "text": "Aspose.Words.Lists.List is a public symbol with members CompareTo, Document, Equals, GetHashCode, HasSameTemplate, IsListStyleDefinition, IsListStyleReference, and IsMultiLevel."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.nodeenumerator"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words.nodeenumerator",
+      "text": "Aspose.Words.NodeEnumerator is a public symbol with members Current, Dispose, MoveNext, and Reset."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words.revisiontype"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words.revisiontype",
+      "text": "Aspose.Words.RevisionType is a public symbol."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.words.tabstopcollection.add.body.argumentnullexception",
+        "public_symbol:aspose.words.tabstopcollection"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words.tabstopcollection",
+      "text": "Aspose.Words.TabStopCollection is a public symbol with members Add, After, Before, Clear, Count, Equals, GetHashCode, and GetIndexByPosition, and its Add method throws ArgumentNullException conditionally."
+    }
+  ]
+}
