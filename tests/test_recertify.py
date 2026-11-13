@@ -516,7 +516,7 @@ def test_an_uncalibrated_reviewer_is_reported_as_needing_a_review_only_pass() ->
     [head] = pdc.outcomes_for_lane("o/a", LANE_R, None, [sealed], [], "v2" * 32, calibration, {},
                                    _no_github, certification=_rec("o/a"))
     assert head.bucket == pdc.UNCALIBRATED and head.needs_review_only_pass
-    assert "review-only pass" in head.reason and "no regeneration" in head.reason
+    assert "attested M9 audit" in head.reason and "no regeneration" in head.reason
     assert pdc.summarize([head], calibration)["lane_r"]["needs_review_only_pass"] == ["o/a"]
 
 
