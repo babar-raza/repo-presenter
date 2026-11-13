@@ -5,7 +5,7 @@
   "provider_repository_id": 1037981320,
   "registry_revision": null,
   "active_transaction_id": "c82ecf48cafb4073952d8ffddd009ea7",
-  "state": "INVALIDATED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -18,12 +18,12 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "attempt under version set 2e1cacfdb7dc: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-07; nothing sealed",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-09T21:09:57.008241+00:00",
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "INVALIDATED",
+    "occurred_at": "2026-11-13T22:06:54.911252+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 2
   },
   "lease": null,
   "last_transition": {
@@ -40,12 +40,12 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 25,
+  "state_version": 26,
   "recent_trigger_dedup_keys": {
     "run:41079931367:aspose-cells-foss/Aspose.Cells-FOSS-for-Python": "4f81f55eb8ca49b5bf2bfeb31fa1b818",
     "run:41085542283:aspose-cells-foss/Aspose.Cells-FOSS-for-Python": "7c41933a4a6f4c519ebf93054960eb99",
     "run:41180182633:aspose-cells-foss/Aspose.Cells-FOSS-for-Python": "326b9291735c4a5babc3198661a55c0d",
     "run:41284660808:aspose-cells-foss/Aspose.Cells-FOSS-for-Python": "c82ecf48cafb4073952d8ffddd009ea7"
   },
-  "recovery_count": 1
+  "recovery_count": 2
 }
