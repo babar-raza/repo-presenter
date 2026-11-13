@@ -26,35 +26,37 @@ dependency-free, header-and-source C++17 library with no external runtime depend
 ## At a Glance
 
 ```mermaid
-flowchart TD
+flowchart TB
   subgraph StartingPoints["Starting Points"]
     direction TB
-    i1["An existing .xlsx workbook (file path or in-memory stream)"]
+    i1["An existing .xlsx<br/>workbook (file path or<br/>in-memory stream)"]
   end
   PRODUCT["Aspose.Cells FOSS for C++"]
   subgraph Capabilities["Core Capabilities"]
-    direction LR
-    subgraph capl[" "]
-      direction TB
-      c1["Create or load .xlsx workbooks"]
-      c2["Read and write cell values and formulas"]
-      c3["Apply cell styling: fonts, fills, borders, alignment"]
-      c4["Merge cell ranges and format numbers"]
-      c5["Control worksheet view and protection settings"]
-    end
-    subgraph capr[" "]
-      direction TB
-      c6["Apply conditional formatting and data validation"]
-      c7["Manage hyperlinks and defined names"]
-      c8["Configure page setup and print settings"]
-      c9["Read and write document properties"]
-    end
+    direction TB
+    c1["Create or load .xlsx<br/>workbooks"]
+    c2["Read and write cell<br/>values and formulas"]
+    c3["Apply cell styling:<br/>fonts, fills, borders,<br/>alignment"]
+    c4["Merge cell ranges and<br/>format numbers"]
+    c5["Control worksheet view<br/>and protection<br/>settings"]
+    c6["Apply conditional<br/>formatting and data<br/>validation"]
+    c7["Manage hyperlinks and<br/>defined names"]
+    c8["Configure page setup<br/>and print settings"]
+    c9["Read and write<br/>document properties"]
+    c1 ~~~ c4
+    c2 ~~~ c5
+    c3 ~~~ c6
+    c4 ~~~ c7
+    c5 ~~~ c8
+    c6 ~~~ c9
   end
   subgraph Outputs["Outputs"]
     direction TB
-    o1[".xlsx workbook (file path or binary stream)"]
+    o1[".xlsx workbook (file<br/>path or binary stream)"]
   end
   StartingPoints --> PRODUCT --> Capabilities --> Outputs
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
 ```
 
 ## Key Capabilities

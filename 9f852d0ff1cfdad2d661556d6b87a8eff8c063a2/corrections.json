@@ -1,11 +1,30 @@
 {
   "confinement": {
-    "edits": 9,
+    "edits": 10,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "26310dba4464ea287a9a0b05829a27d2a395602de307081c34a13a6999e8406e",
+  "corrected_sha256": "43b5aaf8ab146e14fff3f2eee21f7da384d10bc30e738019388fbba65052e731",
   "edits": [
+    {
+      "detector": "glance_layout",
+      "end": 2723,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:28"
+        }
+      ],
+      "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 29,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing .xlsx workbook (file path or in-memory stream)\"]\n  end\n  PRODUCT[\"Aspose.Cells FOSS for C++\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction LR\n    subgraph capl[\" \"]\n      direction TB\n      c1[\"Create or load .xlsx workbooks\"]\n      c2[\"Read and write cell values and formulas\"]\n      c3[\"Apply cell styling: fonts, fills, borders, alignment\"]\n      c4[\"Merge cell ranges and format numbers\"]\n      c5[\"Control worksheet view and protection settings\"]\n    end\n    subgraph capr[\" \"]\n      direction TB\n      c6[\"Apply conditional formatting and data validation\"]\n      c7[\"Manage hyperlinks and defined names\"]\n      c8[\"Configure page setup and print settings\"]\n      c9[\"Read and write document properties\"]\n    end\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\".xlsx workbook (file path or binary stream)\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 1967 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 699 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing .xlsx<br/>workbook (file path or<br/>in-memory stream)\"]\n  end\n  PRODUCT[\"Aspose.Cells FOSS for C++\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Create or load .xlsx<br/>workbooks\"]\n    c2[\"Read and write cell<br/>values and formulas\"]\n    c3[\"Apply cell styling:<br/>fonts, fills, borders,<br/>alignment\"]\n    c4[\"Merge cell ranges and<br/>format numbers\"]\n    c5[\"Control worksheet view<br/>and protection<br/>settings\"]\n    c6[\"Apply conditional<br/>formatting and data<br/>validation\"]\n    c7[\"Manage hyperlinks and<br/>defined names\"]\n    c8[\"Configure page setup<br/>and print settings\"]\n    c9[\"Read and write<br/>document properties\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c6\n    c4 ~~~ c7\n    c5 ~~~ c8\n    c6 ~~~ c9\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\".xlsx workbook (file<br/>path or binary stream)\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 1725
+    },
     {
       "detector": "absent_type_row",
       "end": 11309,
@@ -59,7 +78,7 @@
           "value": "Aspose.Cells_FOSS.AutoFilter.SetRange"
         }
       ],
-      "index": 0,
+      "index": 1,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 280,
       "original": "| `AutoFilterCustomFilterCollection_Iterator` | Class in the Cells CPP API. |\n",
@@ -120,7 +139,7 @@
           "value": "Aspose.Cells_FOSS.AutoFilter.SetRange"
         }
       ],
-      "index": 1,
+      "index": 2,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 287,
       "original": "| `AutoFilterSortConditionCollection_Iterator` | Class in the Cells CPP API. |\n",
@@ -181,7 +200,7 @@
           "value": "Aspose.Cells_FOSS.AutoFilter.SetRange"
         }
       ],
-      "index": 2,
+      "index": 3,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 294,
       "original": "| `BitReader` | Internal bit-level reader used while inflating DEFLATE-compressed ZIP entry data. |\n",
@@ -242,7 +261,7 @@
           "value": "Aspose.Cells_FOSS.AutoFilter.SetRange"
         }
       ],
-      "index": 3,
+      "index": 4,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 336,
       "original": "| `FilterColumnCollection_Iterator` | Class in the Cells CPP API. |\n",
@@ -303,7 +322,7 @@
           "value": "Aspose.Cells_FOSS.AutoFilter.SetRange"
         }
       ],
-      "index": 4,
+      "index": 5,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 432,
       "original": "| `XmlParser` | Internal recursive-descent XML parser used to build an `XmlDocument`'s node tree. |\n",
@@ -364,7 +383,7 @@
           "value": "Aspose.Cells_FOSS.AutoFilter.SetRange"
         }
       ],
-      "index": 5,
+      "index": 6,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 445,
       "original": "| `HuffmanTable` | Struct with 2 methods and 4 properties. |\n",
@@ -425,7 +444,7 @@
           "value": "Aspose.Cells_FOSS.AutoFilter.SetRange"
         }
       ],
-      "index": 6,
+      "index": 7,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 446,
       "original": "| `ParsedNumericFormat` | Struct with 10 properties. |\n",
@@ -486,7 +505,7 @@
           "value": "Aspose.Cells_FOSS.AutoFilter.SetRange"
         }
       ],
-      "index": 7,
+      "index": 8,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 447,
       "original": "| `Workbook_Impl` | Struct with 1 method and 7 properties. |\n",
@@ -505,7 +524,7 @@
           "value": "https://products.aspose.com/cells/cpp/"
         }
       ],
-      "index": 8,
+      "index": 9,
       "kind": "FALSE_CLAIM_FIX",
       "line": 567,
       "original": "commercial product",
@@ -527,6 +546,7 @@
     "provider_calls": 0
   },
   "summary": {
+    "DIAGRAM_FIX": 1,
     "FALSE_CLAIM_FIX": 1,
     "TABLE_ROW_REMOVAL": 8
   },
