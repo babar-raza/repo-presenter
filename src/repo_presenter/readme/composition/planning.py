@@ -105,6 +105,42 @@ def _supported(facts: FactsDocument, kind: str) -> list[str]:
     return [fact.id for fact in facts.by_kind(kind) if fact.polarity == "SUPPORTED"]  # type: ignore[arg-type]
 
 
+def register_refuted_example_ids(facts: FactsDocument) -> frozenset[str]:
+    """The SUPPORTED example facts whose code prints a line a findings-register row of this
+    repository confirms false (``readme_findings.regression_rows``, Lane R: OPEN or RESOLVED, never
+    refuted), read from BC-18's own default register so the plan and the check agree.
+
+    Decision (BL-081, 2026-11-13): such an example is not selectable. The renderer prints a planned
+    example's code verbatim from its fact, so no section or disposition repair can reach the false
+    line, and BC-18 then fails the candidate on every run. Measured: hosted Lane R runs
+    43513031042 (3D .NET Quick Start ``scene.Save("output.fbx", FileFormat.FBX7400Binary);``, the
+    S6 repair answered no-op twice) and 43516330798 (Cells Python ``example:003``,
+    ``style.font.color = "#FF0000"``; the repair tried to blank the example's heading unit). The
+    example stays a SUPPORTED fact (it compiles); only the plan's choice of what to print skips it."""
+    from repo_presenter.readme.validation import must_correct
+    from repo_presenter.readme_findings import LANE_R, FindingsRegisterError, regression_rows
+
+    try:
+        rows = regression_rows(facts.repository, LANE_R, must_correct.DEFAULT_FINDINGS_PATH)
+    except (OSError, ValueError, FindingsRegisterError):
+        return frozenset()
+    quotes = [" ".join(row.quote.split()) for row in rows if row.quote.strip()]
+    if not quotes:
+        return frozenset()
+    return frozenset(
+        fact.id
+        for fact in facts.by_kind("example")
+        if fact.polarity == "SUPPORTED"
+        and any(quote in " ".join(line.split()) for line in fact.value.splitlines() for quote in quotes)
+    )
+
+
+def selectable_example_ids(facts: FactsDocument) -> list[str]:
+    """The SUPPORTED examples a plan may select: every one but ``register_refuted_example_ids``."""
+    refuted = register_refuted_example_ids(facts)
+    return [i for i in _supported(facts, "example") if i not in refuted]
+
+
 def _product_name(facts: FactsDocument) -> str:
     """The product's own display name, derived from ``facts.repository``."""
     slug = facts.repository.rsplit("/", 1)[-1]
@@ -147,8 +183,8 @@ def section_conditions(
         "banner": banner_target(facts.facts) is not None,
         "at_a_glance": True,
         "dependencies": bool(_supported(facts, "dependency")),
-        "quick_start": bool(_supported(facts, "example")),
-        "additional_examples": len(_supported(facts, "example")) >= 2,
+        "quick_start": bool(selectable_example_ids(facts)),
+        "additional_examples": len(selectable_example_ids(facts)) >= 2,
         "api_reference": True,
         "documentation_resources": bool(links),
         "development_testing": bool(facts.by_kind("build_test_asset")),
@@ -252,7 +288,11 @@ def _examples_summary(facts: FactsDocument) -> dict[str, Any]:
         if fact.polarity != "SUPPORTED":
             withheld[fact.polarity] += 1
     return {
-        "verified_ids": sorted(record["id"] for record in bounded_records(facts, {"example"})),
+        "verified_ids": sorted(
+            record["id"]
+            for record in bounded_records(facts, {"example"})
+            if record["id"] not in register_refuted_example_ids(facts)
+        ),
         "withheld": withheld,
     }
 
@@ -403,7 +443,10 @@ def planning_schema(
 ) -> dict[str, Any]:
     """The planning schema specialised for this repository."""
     schema = copy.deepcopy(manifest.manifest.output.schema_)
-    verified = sorted(record["id"] for record in bounded_records(facts, {"example"}))
+    refuted = register_refuted_example_ids(facts)
+    verified = sorted(
+        record["id"] for record in bounded_records(facts, {"example"}) if record["id"] not in refuted
+    )
     properties = schema["properties"]
     deviations = properties.get("deviations", {}).get("items", {}).get("properties", {})
     if "section_id" in deviations:
@@ -489,9 +532,7 @@ _BackstopApply = Callable[[dict[str, Any], list[Any]], None]
 def _missing_additional_examples(
     output: dict[str, Any], facts: FactsDocument, dispositions: dict[str, Any] | None
 ) -> list[str]:
-    verified_examples = sorted(
-        fact.id for fact in facts.by_kind("example") if fact.polarity == "SUPPORTED"
-    )
+    verified_examples = sorted(selectable_example_ids(facts))
     starts = {output.get("quick_start_example_id"), output.get("second_quick_start_example_id")}
     starts -= {None}
     additional = [i for i in output.get("additional_example_ids", []) if i not in starts]
@@ -830,9 +871,7 @@ def plan_checks(
     """Why the plan may not be used, beyond schema and binding; empty when every rule holds."""
     errors: list[str] = []
     conditions = section_conditions(facts, policy)
-    verified_examples = sorted(
-        fact.id for fact in facts.by_kind("example") if fact.polarity == "SUPPORTED"
-    )
+    verified_examples = sorted(selectable_example_ids(facts))
     starts = {output.get("quick_start_example_id"), output.get("second_quick_start_example_id")}
     starts -= {None}
     conditions["additional_examples"] = bool(set(verified_examples) - starts)
@@ -943,11 +982,14 @@ def plan_checks(
                     f"at_a_glance capability title {title!r} {problem}; shorten the title"
                 )
 
-    examples = {i for i in supported if i.startswith("example:")}
+    examples = set(selectable_example_ids(facts))
     quick = output.get("quick_start_example_id")
     if "quick_start" in included:
         if quick not in examples:
-            errors.append(f"quick_start_example_id must be a SUPPORTED example; got {quick!r}")
+            errors.append(
+                f"quick_start_example_id must be a selectable SUPPORTED example; got {quick!r} (an "
+                "example whose code prints a line the findings register confirms false is not)"
+            )
     elif quick is not None:
         errors.append(f"quick_start_example_id is null when quick_start is omitted; got {quick!r}")
     second = output.get("second_quick_start_example_id")
@@ -959,6 +1001,12 @@ def plan_checks(
     additional = output.get("additional_example_ids", [])
     if quick in additional or second in additional or len(set(additional)) != len(additional):
         errors.append("additional_example_ids must be distinct and exclude the quick start")
+    refuted = sorted(i for i in additional if i not in examples)
+    if refuted:
+        errors.append(
+            f"additional_example_ids must be selectable SUPPORTED examples; got {', '.join(refuted)}"
+            " (an example whose code prints a line the findings register confirms false is not)"
+        )
     if ("additional_examples" in included) != bool(additional):
         errors.append(
             "additional_example_ids are given exactly when additional_examples is included"

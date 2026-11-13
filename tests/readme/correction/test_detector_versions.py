@@ -72,8 +72,8 @@ PINS: dict[str, tuple[tuple[str, ...], str]] = {
         "7c836b19f79488ef3f857c9e9b40df9813d717539e4cfe26050227ea9871c573",
     ),
     "type_description.py": (
-        ("1",),
-        "77d72be4a90eddaa366c27a8c8c555429d9f23aff9f5803c926399934c7f0ccf",
+        ("2",),
+        "d27bc30388456f21a3f557db6445bb57518523fd488e6c79d1bd538694762c70",
     ),
     "versioned_link_target.py": (
         ("1",),

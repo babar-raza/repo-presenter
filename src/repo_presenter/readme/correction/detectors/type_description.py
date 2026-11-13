@@ -21,6 +21,10 @@ does not guess: the cell is reported (``NO_DOC_COMMENT``, not a defect the run c
 authored prose can describe such a type, which is Lane R's job). A cell of any other shape is the
 maintainers' own description and is never touched.
 
+Version 2 (BL-080, 2026-11-13): a cell of any shape that a SUPPORTED fact refutes as a whole -- an
+exception type described as thrown that no library code throws, a stub described as working -- is
+replaced by the fact-true text the Lane R renderer prints for the same type (:func:`fact_true_cell`).
+
 :func:`cell_shape` is the one classification of a description cell, shared with
 ``scripts/measure_type_descriptions.py`` (the portfolio Pareto measurement), so the measurement and
 the correction cannot disagree about which cells are bad.
@@ -29,6 +33,7 @@ the correction cannot disagree about which cells are bad.
 from __future__ import annotations
 
 import re
+from typing import Any
 
 from repo_presenter.core.facts import Fact
 from repo_presenter.extractors.surface.doc_text import is_bookkeeping, usable_doc
@@ -125,11 +130,64 @@ def description_rows(ctx: Context) -> list[tuple[int, int, str, str]]:
     return rows
 
 
+#: What a whole-stub type's cell reads after the correction: the Lane R renderer's own wording
+#: (``composition.renderer._stub_marked``), so both lanes describe the type the same way.
+STUB_DESCRIPTION = "Not implemented."
+
+
+def fact_true_cell(
+    ctx: Context, name: str, fact: Fact, cell: str, stubs: Any = None
+) -> tuple[str, str, str] | None:
+    """``(replacement, refuting fact id, why)`` when a SUPPORTED fact refutes the maintainers'
+    description cell of ``name`` as a whole, else ``None``:
+
+    * an exception type the cell says is thrown ("Exception raised by internal rendering
+      drivers.") while an ``implementation`` fact says no library code throws or constructs it
+      (``code_path_claims.refuted_thrown_description``, the rule's own judgement) reads
+      ``NOT_THROWN_DESCRIPTION``, exactly as the Lane R renderer prints it (BL-079);
+    * a type the maintainers' own limitation statements say only throws
+      (``surface_claims.StubIndex``), described as working, reads ``STUB_DESCRIPTION`` -- unless
+      every method body of the type was read and returns a value (``type_returns_values``): the
+      limitation statement is then the false one (3D .NET's ``RenderFactory``), and the cell is
+      left as written.
+
+    Decision (BL-080, 2026-11-13): replace the cell, keep the row. The type is real public API;
+    only what the cell says it does is false, and the row's other cells are untouched. Measured:
+    Aspose.3D-FOSS-for-.NET, hosted Lane L run 43513031042, REJECTed with 18 blocking findings
+    because the run made no content edit, so not one pre-existing defect could ride as an R21
+    residual; four of them were such cells (``DriverException``, ``ExportException``,
+    ``ImportException``, ``InitializationException``) and one ``Watermark``, all maintainer text
+    this correction can make fact-true."""
+    from repo_presenter.readme.validation.code_path_claims import (
+        NOT_THROWN_DESCRIPTION,
+        refuted_thrown_description,
+        type_returns_values,
+    )
+    from repo_presenter.readme.validation.surface_claims import StubIndex, describes_as_working
+
+    plain = _plain(cell)
+    refuting = refuted_thrown_description(fact.value, plain, ctx.facts)
+    if refuting is not None and plain != NOT_THROWN_DESCRIPTION:
+        return NOT_THROWN_DESCRIPTION, refuting, "says the type is thrown, but no library code throws it"
+    stubs = stubs if stubs is not None else StubIndex(ctx.facts)
+    short = name.rsplit(".", 1)[-1]
+    if (
+        short in stubs.types
+        and describes_as_working(plain)
+        and not type_returns_values(short, ctx.facts)
+    ):
+        return STUB_DESCRIPTION, stubs.types[short], "describes a stub as working"
+    return None
+
+
 @detector(DETECTOR)
 def type_description(ctx: Context) -> DetectorResult:
     types = type_facts_by_name(list(ctx.facts.facts))
     if not types:
         return DetectorResult()
+    from repo_presenter.readme.validation.surface_claims import StubIndex
+
+    stubs = StubIndex(ctx.facts)
     edits: list[Edit] = []
     findings: list[Finding] = []
     for number, offset, name, cell in description_rows(ctx):
@@ -139,6 +197,23 @@ def type_description(ctx: Context) -> DetectorResult:
             continue  # no such type, or two types of that name documented differently
         fact = candidates[0]
         docstring = docs.pop()
+        refuted = fact_true_cell(ctx, name, fact, cell, stubs)
+        if refuted is not None:
+            replacement, refuting, why = refuted
+            if len(cell) <= MAX_SPAN and ctx.readme[offset : offset + len(cell)] == cell:
+                edits.append(
+                    Edit(
+                        kind=FALSE_CLAIM_FIX,
+                        detector=DETECTOR,
+                        start=offset,
+                        end=offset + len(cell),
+                        original=cell,
+                        replacement=replacement,
+                        fact_ids=(fact.id, refuting),
+                        rationale=f"line {number}: the cell {cell!r} {why}; {refuting} says so",
+                    )
+                )
+            continue
         shape = cell_shape(cell, docstring, fact.value)
         if shape not in NON_DESCRIPTIVE:
             continue

@@ -1196,7 +1196,9 @@ def _regenerate_section(
         result = run_job(
             loaded, task.packet, config=rc.config, facts=rc.facts, ledger=rc.ledger,
             store=rc.store, context=rc.context,
-            call_schema=bound_authoring_citations(authoring_schema(loaded, task), task),
+            call_schema=bound_authoring_citations(
+                authoring_schema(loaded, task), task, loaded.manifest.sampling.max_output_tokens
+            ),
             checks=checks, recover=recover, narrow=authoring_narrowing(task, loaded),
         )
     except JobError:
@@ -1208,7 +1210,9 @@ def _task_key(rc: RepairContext, loaded: LoadedManifest, task: SectionTask) -> s
     return request_hash(
         loaded,
         task.packet,
-        bound_authoring_citations(authoring_schema(loaded, task), task),
+        bound_authoring_citations(
+            authoring_schema(loaded, task), task, loaded.manifest.sampling.max_output_tokens
+        ),
         model=effective_model(loaded, rc.context),
     )
 

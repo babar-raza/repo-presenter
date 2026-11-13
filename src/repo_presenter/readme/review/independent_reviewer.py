@@ -574,6 +574,44 @@ def _code_fence_accounting_units(
     ]
 
 
+def _withheld_kept_fences(
+    facts: FactsDocument, dispositions: Mapping[str, Any], printed_fences: Sequence[str]
+) -> set[str]:
+    """The live fenced blocks a kept code block prints in its withheld form: the block's
+    disposition cites OPEN findings-register rows, so the renderer prints it without exactly the
+    lines those rows confirm false (``must_correct.without_quoted_lines``), and that form is
+    printed. The block is kept, not lost -- the same reading ``unprinted_kept_units`` gives it.
+
+    Measured (BL-082, hosted Lane R run 43516326802, Aspose.Cells-FOSS-for-Java): the BC-18 repair
+    kept the build block citing ``finding:cb66691e4f5b`` so ``mvn javadoc:javadoc   # generates
+    docs/apidocs/index.html`` was withheld, and this rule then REJECTed the candidate for losing
+    "code block 'mvn compile'" -- the block the repair had kept. Two blocking rules pulling opposite
+    ways on one block."""
+    from repo_presenter.readme.validation.must_correct import (
+        cited_finding_quotes,
+        without_quoted_lines,
+    )
+
+    units = _inherited_units(facts)
+    found: set[str] = set()
+    for row in _dispositions_list(dispositions):
+        unit = str(row.get("unit_id", ""))
+        if row.get("disposition") not in KEPT_DISPOSITIONS or not unit.endswith(".code_block"):
+            continue
+        if unit not in units:
+            continue
+        quotes = cited_finding_quotes(row.get("fact_ids") or (), facts.repository)
+        if not quotes:
+            continue
+        form = without_quoted_lines(units[unit], quotes)
+        if form == units[unit]:
+            continue
+        kept = _read_markdown(form).fences
+        if kept and all(any(body in other for other in printed_fences) for body in kept):
+            found.update(_read_markdown(units[unit]).fences)
+    return found
+
+
 def live_readme_loss_rule(
     original_readme: str,
     readme_text: str,
@@ -615,12 +653,14 @@ def live_readme_loss_rule(
             is_unconfirmed_registry_install(line, unconfirmed) for line in lines
         )
 
+    withheld = _withheld_kept_fences(facts, dispositions, new.fences)
     for fence in old.fences:
         if (
             not any(fence in other for other in new.fences)
             and not accounted(fence)
             and not any(fence in _code(unit) for unit in fence_accounting)
             and not refused_install(fence)
+            and fence not in withheld
         ):
             lost.append(
                 (fence, f"code block {fence.splitlines()[0][:50] if fence else ''!r}")
