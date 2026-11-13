@@ -1,14 +1,34 @@
 {
   "confinement": {
-    "edits": 0,
+    "edits": 1,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "ae56f632fba7ee468f7a617b24a35050e045d588313174fabc4c4e3f46c925fc",
-  "edits": [],
+  "corrected_sha256": "fb1999018db9b8d0c4f3931b0306cd060d96c74967ee5e7770846cc77ae3bdc6",
+  "edits": [
+    {
+      "detector": "glance_layout",
+      "end": 2379,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:30"
+        }
+      ],
+      "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 31,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing OBJ, STL, or glTF file (.gltf/.glb)\"]\n    i2[\"An existing FBX or COLLADA file\"]\n    i3[\"An existing 3MF (3D Manufacturing Format) archive\"]\n  end\n  PRODUCT[\"Aspose.3D FOSS for TypeScript\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction LR\n    subgraph capl[\" \"]\n      direction TB\n      c1[\"Scene graph construction and traversal\"]\n      c2[\"Mesh and vertex-attribute construction\"]\n      c3[\"Material assignment (Lambert, Phong, PBR)\"]\n    end\n    subgraph capr[\" \"]\n      direction TB\n      c4[\"Camera and light placement\"]\n      c5[\"Keyframe animation\"]\n      c6[\"Multi-format import and export\"]\n    end\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"STL or glTF file\"]\n    o2[\"FBX or COLLADA file\"]\n    o3[\"3MF (3D Manufacturing Format) archive\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 1193 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 684 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing OBJ, STL,<br/>or glTF file<br/>(.gltf/.glb)\"]\n    i2[\"An existing FBX or<br/>COLLADA file\"]\n    i3[\"An existing 3MF (3D<br/>Manufacturing Format)<br/>archive\"]\n  end\n  PRODUCT[\"Aspose.3D FOSS for TypeScript\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Scene graph<br/>construction and<br/>traversal\"]\n    c2[\"Mesh and<br/>vertex-attribute<br/>construction\"]\n    c3[\"Material assignment<br/>(Lambert, Phong, PBR)\"]\n    c4[\"Camera and light<br/>placement\"]\n    c5[\"Keyframe animation\"]\n    c6[\"Multi-format import<br/>and export\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c6\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"STL or glTF file\"]\n    o2[\"FBX or COLLADA file\"]\n    o3[\"3MF (3D Manufacturing<br/>Format) archive\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 1442
+    }
+  ],
   "lane": "L",
   "original_sha256": "ae56f632fba7ee468f7a617b24a35050e045d588313174fabc4c4e3f46c925fc",
-  "outcome": "NO_CHANGE_WARRANTED",
+  "outcome": "CORRECTED",
   "readme_path": "README.md",
   "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript",
   "schema_version": 1,
@@ -18,7 +38,9 @@
     "idempotent": true,
     "provider_calls": 0
   },
-  "summary": {},
+  "summary": {
+    "DIAGRAM_FIX": 1
+  },
   "unapplied": [
     {
       "defect": false,
