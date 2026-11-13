@@ -93,7 +93,10 @@ from repo_presenter.readme.evidence.facts.product_pages import banner_target, en
 # 37 (2026-11-13): the At a Glance diagram is drawn top to bottom, at most three nodes to a row, labels
 # wrapped (owner feedback: "At a Glance should practically be At a Glance"); same nodes, new layout.
 # Sealed candidates take it by zero-call re-certification (R10), never by regeneration.
-RENDERER_VERSION = "37"
+# 38 (2026-11-13, BL-080): a Core API row's member list the facts refute ("x, y, dot ... methods" with
+# x and y properties) is spelled "members", and a Detailed Member Reference bullet the findings
+# register confirms false is not printed (hosted runs 43513034263, 43513037866).
+RENDERER_VERSION = "38"
 ADDITIONAL_EXAMPLES_SUMMARY = "View Additional Examples"
 API_SURFACE_SUMMARY = "View the Complete Public API Surface"
 README_FILENAME = "README.md"
@@ -997,8 +1000,21 @@ def _symbol_description(context: RenderContext, fact: Fact) -> str:
         return f"Defined as `{signature}`."
     if not text:
         text = f"Public {attributes.get('symbol_kind', 'symbol')}."
-    described = context.canonical(text.replace("|", "/").replace("`", ""))
+    described = _kind_true(context, fact, context.canonical(text.replace("|", "/").replace("`", "")))
     return _stub_marked(context, fact, _not_thrown_marked(context, fact, described))
+
+
+def _kind_true(context: RenderContext, fact: Fact, description: str) -> str:
+    """``description`` with the kind word of a member list the facts refute spelled "members"
+    (``surface_claims.kind_true_text``, BL-080): the row's own rule decides, so the renderer never
+    prints a row BC-14 / claim_contradiction would refute for calling properties methods."""
+    from repo_presenter.readme.validation.surface_claims import MemberIndex, kind_true_text
+
+    index = getattr(context, "_member_index_cache", None)
+    if index is None:
+        index = MemberIndex(context.facts)
+        context._member_index_cache = index  # type: ignore[attr-defined]
+    return kind_true_text(description, fact, context.facts, index)
 
 
 def _not_thrown_marked(context: RenderContext, fact: Fact, description: str) -> str:
@@ -1068,6 +1084,38 @@ def _member_summary(context: RenderContext, fact: Fact) -> str:
         return ""
     text, _ = elide_noncanonical(docstring, context.name)
     return context.canonical(text.replace("|", "/").replace("`", "")).strip()
+
+
+def _register_refuted(context: RenderContext, line: str) -> bool:
+    """Whether ``line``, a Detailed Member Reference bullet the renderer prints from a member's own
+    doc comment, holds the quote of a findings-register row of this repository that BC-18 holds a
+    Lane R candidate to (``readme_findings.regression_rows``: OPEN or RESOLVED, never refuted).
+
+    Decision (BL-080, 2026-11-13): omit the bullet, citing the confirmed row (R36 (a)(2): omit
+    the claim citing what contradicts it). The bullet is the doc comment of one member, and the
+    register confirms it misleading; no authored or inherited unit prints it, so no repair can
+    reach it (the repair ledger's "facts defect"), and the facts are the maintainers' own words,
+    which the extractor records faithfully. The member stays in the Core API surface; only the
+    false summary line goes. Measured: Aspose.Cells-FOSS-for-.NET, hosted Lane R run 43513037866,
+    whose one blocking finding was "- `Save`: Saves the workbook to an XLSX file using default save
+    options." (``Workbook.Save(string)`` switches to PDF for a .pdf name). A missing or unreadable
+    register withholds nothing."""
+    quotes = getattr(context, "_register_quotes_cache", None)
+    if quotes is None:
+        from repo_presenter.readme_findings import (
+            FindingsRegisterError,
+            LANE_R,
+            regression_rows,
+        )
+
+        try:
+            rows = regression_rows(context.entry.repository, LANE_R)
+        except (OSError, ValueError, FindingsRegisterError):
+            rows = []
+        quotes = [" ".join(row.quote.split()) for row in rows if row.quote.strip()]
+        context._register_quotes_cache = quotes  # type: ignore[attr-defined]
+    squashed = " ".join(line.split())
+    return any(quote in squashed for quote in quotes)
 
 
 def quoted_evidence_elisions(context: RenderContext) -> list[tuple[str, str]]:
@@ -1144,9 +1192,12 @@ def _api_reference(context: RenderContext) -> list[str]:
             lines.append(context.unit(sid, f"hub:{hub['symbol_fact_id']}"))
             owned = sorted(hub_methods.get(symbol.value, []), key=lambda f: f.value)
             bullets = [
-                f"- `{f.value.rsplit('.', 1)[-1]}`: {summary}"
+                bullet
                 for f in owned
                 if (summary := _member_summary(context, f))
+                and not _register_refuted(
+                    context, bullet := f"- `{f.value.rsplit('.', 1)[-1]}`: {summary}"
+                )
             ]
             if bullets:
                 lines.append("")

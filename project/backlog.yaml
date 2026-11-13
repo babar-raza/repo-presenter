@@ -1033,3 +1033,34 @@ items:
       - "2026-11-13: PYTHONPATH=src python -m repo_presenter.recertify --gate --remote origin --base-baseline <origin/main baseline>: OK, no seal that re-certified in the baseline regressed (45 seals checked; certified lane R 1, lane L 24)"
     next_action: "supervisor merges; the hosted re-run of the four cells and the R41 re-verification of every candidate (recertify.yml) are the closing evidence. Not decided here: the mixed round (an S4 repair beside S6 repairs after a reshaping restore) still recomposes from fresh reconciliation; ASSUMPTION: rare, to be confirmed from the re-run's repairs.json"
     updated: "2026-11-13"
+  - id: BL-080
+    title: "The four hosted cells that still failed after BL-079: member-kind rule misreads, authored rows calling properties methods, a register-refuted renderer bullet, and Lane L residuals that blocked for want of one content edit"
+    type: defect
+    source: "hosted present runs 43513031042 (3D .NET Lane R and Lane L), 43513034263 (3D Python Lane R) and 43513037866 (Cells .NET Lane R) on main f62e4af, after PRs #66-#68; supervisor brief 2026-11-13"
+    priority: P0
+    status: active
+    depends_on: [BL-079]
+    implementation_path: "existing rule, renderer and Lane L detector only (R27): readme/validation/surface_claims.py (_kind_word_qualifies_list, _last_item_named, _list_owner, kind_true_text, describes_as_working); readme/composition/renderer.py (_kind_true on Core API rows, _register_refuted on hub bullets; RENDERER_VERSION 38); readme/correction/detectors/type_description.py v2 (fact_true_cell); readme/validation/code_path_claims.py (type_returns_values)"
+    acceptance: "a hosted re-run of the four cells under the fixed code shows no claim_contradiction kind finding on a verb/conjunct list, no Core API row calling a property a method, no BC-18 on a register-quoted hub bullet, and 3D .NET Lane L passing its deterministic holdouts (net improvement, residuals in holdouts.json); R10 gate OK; R41: every candidate of both lanes re-verified under the fixed code (recertify run id and per-lane result)"
+    evidence:
+      - "2026-11-13: every final blocking finding and repair attempt of the four logs classified (63 findings, six classes) in the DECISION_LOG entry for BL-080"
+      - "2026-11-13: 3D Python facts re-extracted locally at 65b1f577; the 41 logged kind rows reproduce 41 findings on main, 25 under the rule fix, 0 after kind_true_text (zero provider calls)"
+      - "2026-11-13: tests/readme/validation/test_kind_lists_bl080.py (15), tests/readme/composition/test_register_refuted_member_bullet.py (3), tests/readme/correction/detectors/test_type_description_fact_true.py (5) pass, each with negative controls"
+      - "2026-11-13: recertify --repository aspose-3d-foss/Aspose.3D-FOSS-for-.NET --lane L (zero calls): NEEDS_REPAIR (L-03, L-05) on main -> RECERTIFIED (Watermark cell made fact-true; 11 residuals recorded); Cells .NET Lane R recertify no longer reports the Save/Borders/Font BC-18 bullets"
+      - "2026-11-13: PYTHONPATH=src python -m repo_presenter.recertify --gate --remote origin --base-baseline <origin/main baseline>: OK, no seal that re-certified in the baseline regressed (45 seals checked); certified under current code lane R 1, lane L 27 (was 26: 3D .NET Lane L NEEDS_REPAIR -> RECERTIFIED)"
+      - "2026-11-13: full suite (pytest -q --deselect test_every_candidate_gets_an_honest_receipt): 6334 passed, 29 skipped; ops/gatecli.py validate OK, no STALE receipt; ops/checks/backlog_check.py OK"
+    next_action: "supervisor merges; the hosted re-run of the four cells and the R41 re-verification (recertify.yml) are the closing evidence. ASSUMPTION: the hosted Lane L facts (with implementation:never_thrown) also make the four exception cells fact-true, as the unit test shows; the LLM review of 3D .NET Lane L is not decided here"
+    updated: "2026-11-13"
+  - id: BL-081
+    title: "3D .NET Lane R plans a Quick Start example the register confirms throws; a 3D Python .dae repair refused by the changes-ledger truthfulness check"
+    type: defect
+    source: "hosted present runs 43513031042 (3D .NET Lane R: BC-18 on scene.Save(..., FileFormat.FBX7400Binary/WavefrontOBJ)) and 43513034263 (3D Python Lane R: claim_contradiction .dae output via a stub, repair refused 'the causal stage's own input and this revision hold the identical value there'); BL-080 classification"
+    priority: P0
+    status: open
+    depends_on: [BL-080]
+    implementation_path: "planning.py (planning_schema enum, plan_checks, examples summary): an example fact whose code prints a regression_rows quote is not selectable, so S5 re-plans with another verified example (needs one S5 call); repair/loop.py routes such a BC-18 quote as renderer-printed from the example fact instead of to S6; the .dae case: read the re-run's repairs.json/call store to see why the claimed units[0] path held the same value, then fix the ledger check or the packet"
+    acceptance: "a hosted 3D .NET Lane R re-run prints no register-quoted line from an example fact; the 3D Python .dae finding is repaired or its refusal is explained from the call store; R10 gate OK"
+    evidence:
+      - "2026-11-13: logs of 43513031042 and 43513034263 (gh run view --log); the sealed 3D .NET bundle's dispositions show inherited_unit:024.code_block SUPERSEDE_REDUNDANT 'printed by the example section from the verified example fact' example:001"
+    next_action: "after BL-080 merges and the cells re-run; the .dae case cannot be decided from logs alone (artifacts unreadable through the proxy)"
+    updated: "2026-11-13"

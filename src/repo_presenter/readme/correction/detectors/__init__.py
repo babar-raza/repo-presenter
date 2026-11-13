@@ -38,7 +38,7 @@ DETECTOR_VERSIONS: dict[str, str] = {
     "stale_package_version": "5",
     "stale_type_count": "1",
     "stray_fence": "1",
-    "type_description": "1",
+    "type_description": "2",
     "unclosed_details": "1",
     "versioned_link_target": "1",
 }

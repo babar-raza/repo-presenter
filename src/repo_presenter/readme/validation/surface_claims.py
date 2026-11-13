@@ -68,7 +68,7 @@ defect, not a composition one) and every other to COMPOSING with its section.
 from __future__ import annotations
 
 import re
-from collections.abc import Collection, Iterable
+from collections.abc import Collection, Iterable, Mapping
 from pathlib import Path
 
 from repo_presenter.core.facts import Fact, FactKind, FactsDocument
@@ -989,6 +989,22 @@ def _list_items(text: str) -> list[tuple[str, bool]]:
     return items
 
 
+def _kind_word_qualifies_list(text: str, match: re.Match[str]) -> bool:
+    """Whether a trailing kind word ("A, B and C methods") really qualifies the list before it.
+
+    It does not when the word right before the kind word is a conjunction or stop word ("read-only
+    properties for key and compound, and methods to add tokens": "methods" is a new conjunct), or
+    when the list follows "to" (the infinitives of "provides methods to find, get, and remove
+    properties": verbs whose object is the kind word, not member names). Measured on
+    Aspose.3D-FOSS-for-Python (hosted Lane R run 43513034263): sixteen of the 42 blocking
+    claim_contradiction findings were such rows, e.g. ``FbxElement.key`` "called a method"."""
+    raw = [part.strip() for part in _LIST_SPLIT.split(match.group("list")) if part.strip()]
+    if not raw or raw[-1].strip("`").removesuffix("()").lower() in _LIST_STOPWORDS:
+        return False
+    before = text[: match.start("list")].rstrip().rsplit(None, 1)
+    return not (before and before[-1].lower() == "to")
+
+
 def _kind_lists(text: str) -> list[tuple[int, int, str, list[tuple[str, bool]], bool]]:
     """(start, end, claimed kind, items, kind word first) for every "the methods A, B and C" /
     "A and B properties" list in ``text``, non-overlapping, leftmost first."""
@@ -997,6 +1013,8 @@ def _kind_lists(text: str) -> list[tuple[int, int, str, list[tuple[str, bool]], 
         for match in pattern.finditer(text):
             items = _list_items(match.group("list"))
             if pattern is _KIND_AFTER and len(items) < 2:
+                continue
+            if pattern is _KIND_AFTER and not _kind_word_qualifies_list(text, match):
                 continue
             if not items:
                 continue
@@ -1049,6 +1067,23 @@ def _owner_before(
     return before[-1] if before else default
 
 
+def _last_item_named(
+    index: MemberIndex, owner: Fact, members: Mapping[str, list[Fact]], item: tuple[str, bool]
+) -> bool:
+    """Whether the item a trailing kind word follows is a name at all: written as a code span, a
+    member or value of ``owner``, or a type the facts hold. "and provides methods" ends a list of
+    member names with an English verb, and the kind word then qualifies none of them."""
+    name, spanned = item
+    if spanned or "." in name:
+        return True
+    return (
+        name in members
+        or index.has_value(owner, name)
+        or name == owner.value.rsplit(".", 1)[-1]
+        or bool(index.resolve(name))
+    )
+
+
 def _ecosystem_family(facts: FactsDocument) -> str:
     return (_ecosystem(facts) or "").lower()
 
@@ -1058,6 +1093,103 @@ def _type_kind_ok(claimed: str, declared: str, ecosystem: str) -> bool:
         return True
     # A C++ struct is a class (public default access); a Go/Rust struct has no "class" to be.
     return claimed == "class" and declared == "struct" and ecosystem not in ("net", "dotnet")
+
+
+def _list_owner(
+    index: MemberIndex,
+    text: str,
+    start: int,
+    end: int,
+    mentions: list[tuple[int, list[Fact]]],
+    default_owner: list[Fact],
+    items: list[tuple[str, bool]],
+    kind_first: bool,
+) -> Fact | None:
+    """The one type a member-kind list's names belong to (named right after it, else before it,
+    else the table row's own type), or ``None`` when it is not one type or the kind word qualifies
+    nothing listed ("holds control points, deformers, and provides methods to ...": the word a
+    trailing kind word follows is a verb, not a name)."""
+    after = _OWNER_AFTER.match(text, end)
+    owners = (
+        index.resolve(after.group("owner"))
+        if after is not None and index.resolve(after.group("owner"))
+        else _owner_before(index, mentions, start, default_owner, items)
+    )
+    if len(owners) != 1:
+        return None
+    owner = owners[0]
+    if not kind_first and not _last_item_named(index, owner, index.members_of(owner), items[-1]):
+        return None
+    return owner
+
+
+def _misnamed_kinds(
+    index: MemberIndex, owner: Fact, name: str, claimed: str
+) -> tuple[Fact, str, set[str]] | None:
+    """``(type, member, recorded kinds)`` when the facts record ``name`` (a member of ``owner``,
+    or a dotted ``Type.member``) as no kind the README's word ``claimed`` may name; else ``None``
+    (right kind, not a member, or a kind the facts do not record)."""
+    target, member = owner, name
+    if "." in name:
+        prefix, _, member = name.rpartition(".")
+        resolved = index.resolve(prefix)
+        if len(resolved) != 1:
+            return None
+        target = resolved[0]
+    found = index.members_of(target).get(member)
+    if not found:
+        return None
+    kinds = {member_kind(fact, target.value.rsplit(".", 1)[-1]) for fact in found}
+    if None in kinds or kinds & _CLAIMED_MEMBER_KINDS[claimed]:
+        return None
+    return target, member, {k for k in kinds if k}
+
+
+#: The kind words a list's kind word is rewritten to when the facts refute it: "members" names
+#: every member kind truthfully.
+_NEUTRAL_KIND_WORD = {True: "members", False: "member"}
+
+
+def kind_true_text(text: str, owner: Fact, facts: FactsDocument, index: MemberIndex | None = None) -> str:
+    """``text`` (one API table row's description of ``owner``) with the kind word of every member
+    list the facts refute -- "x, y, dot, length, normalize, and parse methods" where ``x`` and
+    ``y`` are properties -- spelled "members", which names each listed member truthfully; the
+    names, their order and every other word are kept.
+
+    Decision (BL-080, 2026-11-13): rewrite the one false word, do not drop the row or the list.
+    The list is the facts' own member names (the author was given them with their kinds, and still
+    called properties methods); only the kind word is false. Measured: Aspose.3D-FOSS-for-Python,
+    hosted Lane R run 43513034263, 25 of its 42 blocking claim_contradiction findings were such
+    authored Core API rows (``Vector3.x``, ``Matrix4.determinant`` ...) that two targeted repairs
+    could not reword. The judgement is the rule's own (``_kind_lists``, ``_list_owner``,
+    ``_misnamed_kinds``), so the renderer and BC-14 / claim_contradiction cannot disagree; a row
+    the rule does not refute is returned unchanged."""
+    index = index if index is not None else MemberIndex(facts)
+    lists = _kind_lists(text) if index else []
+    if not lists:
+        return text
+    mentions = _mentions(index, text, [(start, end) for start, end, *_ in lists])
+    rewritten = text
+    for start, end, claimed, items, kind_first in reversed(lists):
+        if claimed in _CLAIMED_TYPE_KINDS or claimed == "member":
+            continue
+        list_owner = _list_owner(index, text, start, end, mentions, [owner], items, kind_first)
+        if list_owner is None:
+            continue
+        if not any(_misnamed_kinds(index, list_owner, name, claimed) for name, _ in items):
+            continue
+        pattern = _KIND_BEFORE if kind_first else _KIND_AFTER
+        match = pattern.match(text, start)
+        if match is None or match.end() != end:
+            continue
+        word = match.group("kind")
+        plural = word.lower() not in {"method", "constructor", "property", "field", "constant"}
+        neutral = _NEUTRAL_KIND_WORD[plural]
+        if word[:1].isupper():
+            neutral = neutral.capitalize()
+        k_start, k_end = match.span("kind")
+        rewritten = rewritten[:k_start] + neutral + rewritten[k_end:]
+    return rewritten
 
 
 def _list_findings(
@@ -1097,15 +1229,9 @@ def _list_findings(
                         )
                     )
             continue
-        after = _OWNER_AFTER.match(text, end)
-        owners = (
-            index.resolve(after.group("owner"))
-            if after is not None and index.resolve(after.group("owner"))
-            else _owner_before(index, mentions, start, default_owner, items)
-        )
-        if len(owners) != 1:
+        owner = _list_owner(index, text, start, end, mentions, default_owner, items, kind_first)
+        if owner is None:
             continue
-        owner = owners[0]
         owner_name = owner.value.rsplit(".", 1)[-1]
         members = index.members_of(owner)
         settables: list[bool | None] = []
@@ -1591,6 +1717,13 @@ class StubIndex:
 
     def __bool__(self) -> bool:
         return bool(self.types or self.members)
+
+
+def describes_as_working(description: str) -> bool:
+    """Whether a type's description says it does something (rule (j)'s own reading, so a Lane L
+    correction and the rule agree): a capability verb and no limitation cue."""
+    plain = description.replace("`", " ")
+    return not _LIMITATION_CUE.search(plain) and bool(_CAPABILITY_VERB.search(_CODE_SPAN.sub(" ", description)))
 
 
 def _stub_findings(

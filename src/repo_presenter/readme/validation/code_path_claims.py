@@ -373,6 +373,13 @@ class _Bodies:
         )
 
 
+def type_returns_values(name: str, facts: FactsDocument) -> bool:
+    """Whether every method body of type ``name`` was read and holds no throw (rule (j4)'s own
+    reading): a limitation statement saying the type only throws is then refuted, so nothing may
+    describe it as a stub (BL-080: the Lane L correction's stub cell)."""
+    return _Bodies(facts).type_does_not_throw(_last(name))
+
+
 def _throw_findings(sentences: Iterable[Sentence], facts: FactsDocument, make: Make) -> list[ClaimFinding]:
     bodies = _Bodies(facts)
     if not bodies.no_throw:

@@ -5637,3 +5637,67 @@ reconciliation (rare; to be confirmed from the re-run). Done only after the host
 re-verification of every candidate.
 
 Backlog: BL-079
+
+## 2026-11-13: BL-080 — the four hosted cells that still failed after BL-079: findings classified, the three top classes fixed at the root
+
+**Evidence.** `gh run view <id> -R babar-raza/repo-presenter --log` (job "present") of 43513031042 (3D .NET Lane R and
+Lane L), 43513034263 (3D Python Lane R) and 43513037866 (Cells .NET Lane R), all on main f62e4af (after PRs #66-#68).
+Artifacts could not be downloaded (blob host refused by the proxy). 3D Python facts were re-extracted locally at
+65b1f577 (`present --stage facts`); the sealed bundle refs (`refs/repository-presenter-state/bundles/*`, all four at the
+runs' own revisions) supplied the Lane L live README and facts and the Cells .NET units. Every logged final finding was
+reproduced locally with zero provider calls (41/41 3D Python kind findings from the logged rows; 12 of 18 Lane L
+findings from the sealed Lane L facts, the other 6 need the never-thrown facts the sealed facts predate).
+
+**Every final blocking finding, by run.**
+
+| Run / cell | Final blocking | Printed by | Class |
+|---|---|---|---|
+| 43513034263 3D Python R | 25 x claim_contradiction "calls `X.y` a method ... the facts record it as a property" (BoundingBox center/extent/maximum, FVector2 x/y, FVector3 x/y/z, Matrix4 m00/m01/m02/determinant, Vector2 x/y/length/length2, Vector3 x/y/z/length/length2, Vector4 x/y/z/w) | authored type units (S6 `api_reference#types-*`), Core API rows | C2 genuine wrong kind word |
+| same | 16 x the same rule on Geometry.deformers, Mesh.edges, Node.entity, PropertyCollection.count/.get, Scene.library, Collada/Fbx/Gltf/ObjFormat.extension/.version, FbxElement.key/.compound | authored type units | C1 rule misreads the row |
+| same | 1 x ".dae output reachable only through a stub" (line 1087) | authored unit (S6) | C6 repair refused by the ledger check |
+| 43513037866 Cells .NET R | 1 x BC-18 "- `Save`: Saves the workbook to an XLSX file using default save options." | renderer, hub bullet from `public_symbol:aspose.cells_foss.workbook.save` | C4 register-refuted renderer line |
+| 43513031042 3D .NET R | 2 x BC-18 `scene.Save("output.fbx", FileFormat.FBX7400Binary);`, `scene.Save("output.obj", FileFormat.WavefrontOBJ);` | renderer, Quick Start code from the planned example fact (`quick_start_example_id`) | C5 plan selects a register-refuted example |
+| 43513031042 3D .NET L | 11 claim_contradiction (Property-GLTF GetExtra/SetExtra, VertexElementTangent Tangents, Driver/Export/Import/InitializationException thrown, FileFormat static instances, RenderFactory and NurbsSurface.ToMesh "throw", Watermark working) + 7 lane_l_unrepaired_defect (format_overclaim U3D/RVM x2, AMF, HTML5; failing_example line 165 CS1503) | maintainer text, unchanged (every line number is the live README's own) | C3 R21 residuals that blocked because the run made no content edit |
+
+None of the Lane L findings is text our correction introduced: the run made no content edit (the layout-only redraw does
+not count, `net_improvement` point 1), so R21 could not carry a single pre-existing defect.
+
+**Repair attempts and outcomes (as logged).** Cells .NET: BC-18 agents.md link repaired; BC-14 samples reworded,
+repaired; BC-18 Save unrepairable ("facts defect ... printed by the renderer"). 3D .NET R: one merged BC-18 S6 repair,
+unrepairable ("matches the causal stage's own output unchanged" twice: the lines are the example fact's code, not the
+section's units). 3D Python: claim_contradiction:41 repaired; :42 (.dae) and :43 unrepairable ("change R01 claims
+'units[0].text' changed ..., but the causal stage's own input and this revision hold the identical value there"); BC-14
+x2 unrepairable (one the same ledger refusal, one "BC-14 still fails on this revision ... BoundingBox.center a method");
+BC-07 repaired. 3D .NET L: no repair stage (deterministic holdouts, no model call).
+
+**Pareto (blocking findings removed across the four runs, 63 in all).**
+
+| Class | Findings | Fix | Status |
+|---|---|---|---|
+| C2 authored row calls properties "methods" | 25 | renderer `_kind_true` / `surface_claims.kind_true_text`: the kind word of a list the rule refutes prints "members" | fixed |
+| C3 Lane L residuals blocked (no content edit) | 18 | `type_description` v2: a cell a fact refutes as a whole (never-thrown exception described as thrown; a maintainer-declared stub described as working, unless its bodies return values) prints the Lane R renderer's fact-true text; the run then makes a verified content edit, R21 holds, and the 13 others ride as residuals | fixed (deterministic holdouts); the LLM review still decides |
+| C1 rule misreads verb/conjunct lists | 16 | `_kind_word_qualifies_list` (a trailing kind word after a stop word, or a list after "to", qualifies nothing) and `_last_item_named` (the word a trailing kind word follows must be a name) | fixed |
+| C5 planned example prints a register quote | 2 | not fixed: needs the plan's example choice to exclude register-refuted examples (schema enum, plan_checks, packet) and a fresh S5 call | left (BL-081) |
+| C4 register-refuted hub bullet | 1 | renderer `_register_refuted`: a Detailed Member Reference bullet a regression row of the repository quotes is not printed | fixed |
+| C6 .dae repair refused by the ledger check | 1 | not fixed: the refusal is the item-93 truthfulness guard comparing the model's own `changes[]` path; why both sides were identical cannot be told without the run's call store; needs a model re-run (the saved cache replays it) | left (BL-081) |
+
+Fixed: 60 of 63 (C1+C2 = 41 of 3D Python's 42; C4 = Cells .NET's only one; C3 = all 18 of 3D .NET L as blockers).
+
+**Decisions.** (1) Rewrite one false word, never drop the row: the list is the facts' own member names, only "methods"
+is false; "members" names each truthfully and the same rule judges the rewrite. (2) Omit the register-refuted bullet,
+citing the OPEN row (R36 (a)(2)); the member stays in the Core API. (3) Lane L replaces only the refuted cell, with the
+text Lane R prints for the same type, so both lanes agree; a stub statement the source refutes (RenderFactory's bodies
+return values) is not trusted. `RENDERER_VERSION` 38, `type_description` detector version 2; the reviewer rule change
+only removes false findings, so `REVIEWER_LOGIC_VERSION` is unchanged (BL-063 precedent).
+
+**Proof.** tests/readme/validation/test_kind_lists_bl080.py (15, logged rows), tests/readme/composition/
+test_register_refuted_member_bullet.py (3, real register row), tests/readme/correction/detectors/
+test_type_description_fact_true.py (5, live README rows), each with negative controls. Local zero-call: the 41 logged
+3D Python rows give 25 findings under the rule fix and 0 after `kind_true_text`; Cells .NET Lane R recertify no longer
+reports the Save (nor the Borders/Font) BC-18 rows; 3D .NET Lane L recertify goes NEEDS_REPAIR -> RECERTIFIED (the
+Watermark cell edit makes the run a net improvement; 11 residuals recorded in holdouts.json).
+
+**Does NOT decide.** C5/C6 (BL-081). Whether the LLM reviews of the re-run accept. Done only after the hosted re-run of
+the four cells and the R41 re-verification of every candidate.
+
+Backlog: BL-080, BL-081
